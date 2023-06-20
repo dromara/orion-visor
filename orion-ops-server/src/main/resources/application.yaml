@@ -1,0 +1,31 @@
+server:
+  port: 9200
+
+spring:
+  application:
+    name: orion-ops-server
+  profiles:
+    active: dev
+  main:
+    # 允许循环依赖
+    allow-circular-references: true
+  # Servlet 配置
+  servlet:
+    # 文件上传相关配置项
+    multipart:
+      # 单个文件大小
+      max-file-size: 16MB
+      # 设置总上传的文件大小
+      max-request-size: 32MB
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+orion:
+  # 版本
+  version: @revision@
+  api:
+    # 公共api前缀
+    prefix: /orion-api
+    # 是否开启跨域
+    cors: true

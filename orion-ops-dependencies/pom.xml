@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.orion.ops</groupId>
+    <artifactId>orion-ops-dependencies</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+
+    <description>项目所有依赖</description>
+    <url>https://github.com/lijiahangmax/orion-ops-pro</url>
+
+    <properties>
+        <revision>1.0.0</revision>
+        <spring.boot.version>2.7.11</spring.boot.version>
+        <orion.all.version>1.0.5</orion.all.version>
+        <lombok.version>1.18.26</lombok.version>
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- orion-kit -->
+            <dependency>
+                <groupId>io.github.lijiahangmax</groupId>
+                <artifactId>orion-all</artifactId>
+                <version>${orion.all.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>orion-log</artifactId>
+                        <groupId>io.github.lijiahangmax</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- orion-ops-starter -->
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-banner</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- spring -->
+
+            <!-- other -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>
