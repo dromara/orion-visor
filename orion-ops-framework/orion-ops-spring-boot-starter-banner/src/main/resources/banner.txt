@@ -9,3 +9,4 @@ ${AnsiColor.BRIGHT_GREEN}:: Application Name     ${AnsiColor.BLUE}${spring.appli
 ${AnsiColor.BRIGHT_GREEN}:: Application Version  ${AnsiColor.BLUE}${orion.version}
 ${AnsiColor.BRIGHT_GREEN}:: SpringBoot Version   ${AnsiColor.BLUE}${spring-boot.version}
 ${AnsiColor.BRIGHT_GREEN}:: Active Profile       ${AnsiColor.BLUE}${spring.profiles.active}
+${AnsiColor.DEFAULT}

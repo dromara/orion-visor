@@ -21,11 +21,37 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
 orion:
   # 版本
   version: @revision@
+  # api 信息
   api:
     # 公共api前缀
     prefix: /orion-api
     # 是否开启跨域
     cors: true
+  # 文档配置
+  swagger:
+    title: orion-ops-pro 运维平台
+    description: 一站式提供运维功能
+    version: ${orion.version}
+    url: https://github.com/lijiahangmax/orion-ops-pro
+    email: ljh1553488six@139.com
+    license: Apache-2.0
+    license-url: https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE

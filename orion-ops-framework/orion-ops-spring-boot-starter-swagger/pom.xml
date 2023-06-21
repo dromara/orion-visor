@@ -9,43 +9,34 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>orion-ops-common</artifactId>
+    <artifactId>orion-ops-spring-boot-starter-swagger</artifactId>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 
-    <description>项目公共基准包</description>
+    <description>项目 swagger 配置包</description>
     <url>https://github.com/lijiahangmax/orion-ops-pro</url>
 
     <dependencies>
         <dependency>
-            <groupId>io.github.lijiahangmax</groupId>
-            <artifactId>orion-all</artifactId>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-common</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <!-- mapstruct -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-jdk8</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
         <!-- doc -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <scope>provided</scope>
+        </dependency>
+
+        <!-- knife4j -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

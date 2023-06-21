@@ -15,6 +15,8 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -27,6 +29,8 @@ import java.util.List;
 
 /**
  * web 配置类
+ * <p>
+ * TODO XSS 后续选择性的配置
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -38,12 +42,12 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
     @Value("${orion.api.prefix}")
     private String orionApiPrefix;
 
-    // TODO XSS
-
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         // 公共 api 前缀
-        configurer.addPathPrefix(orionApiPrefix, clazz -> clazz.isAnnotationPresent(RestController.class));
+        AntPathMatcher antPathMatcher = new AntPathMatcher(".");
+        configurer.addPathPrefix(orionApiPrefix, clazz -> clazz.isAnnotationPresent(RestController.class)
+                && antPathMatcher.match("com.orion.ops.**.controller.**", clazz.getPackage().getName())); // 仅仅匹配 controller 包
     }
 
     /**
