@@ -16,6 +16,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.Filter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,8 +73,8 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
-        // 转换器
-        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        // json 转换器
+        FastJsonHttpMessageConverter jsonConverter = new FastJsonHttpMessageConverter();
         // 配置
         FastJsonConfig config = new FastJsonConfig();
         // 支持的类型
@@ -84,7 +86,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
                 MediaType.TEXT_HTML,
                 MediaType.TEXT_XML
         );
-        converter.setSupportedMediaTypes(mediaTypes);
+        jsonConverter.setSupportedMediaTypes(mediaTypes);
         // 序列化配置
         config.setSerializerFeatures(
                 SerializerFeature.DisableCircularReferenceDetect,
@@ -92,8 +94,18 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.IgnoreNonFieldGetter
         );
-        converter.setFastJsonConfig(config);
-        return new HttpMessageConverters(converter);
+        jsonConverter.setFastJsonConfig(config);
+        // 先获取默认转换器
+        List<HttpMessageConverter<?>> defaultConverters = new HttpMessageConverters().getConverters();
+        List<HttpMessageConverter<?>> newConverters = new ArrayList<>();
+        // 将 byte converter 添加至首位 - fix swagger api 返回base64报错
+        newConverters.add(new ByteArrayHttpMessageConverter());
+        // 添加自定义 converter - using WrapperResultHandler
+        newConverters.add(jsonConverter);
+        // 添加默认 converter
+        newConverters.addAll(defaultConverters);
+        // 设置不添加默认 converter
+        return new HttpMessageConverters(false, newConverters);
     }
 
     /**
