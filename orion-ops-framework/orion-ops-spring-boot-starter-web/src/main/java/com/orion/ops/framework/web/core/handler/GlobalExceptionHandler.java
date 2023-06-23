@@ -47,8 +47,7 @@ public class GlobalExceptionHandler {
         return HttpWrapper.error(ex.getMessage());
     }
 
-    // TODO datasource starter
-    // @ExceptionHandler(value = DataAccessResourceFailureException.class)
+    @ExceptionHandler(value = DataAccessResourceFailureException.class)
     public HttpWrapper<?> dataAccessResourceFailureExceptionHandler(HttpServletRequest request, Exception ex) {
         log.error("dataAccessResourceFailureExceptionHandler url: {}, 抛出异常: {}, message: {}", request.getRequestURI(), ex.getClass(), ex.getMessage(), ex);
         return HttpWrapper.error(ExceptionMessageConst.NETWORK_FLUCTUATION);

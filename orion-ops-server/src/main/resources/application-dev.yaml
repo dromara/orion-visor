@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    druid:
+      url:
+      username:
+      password:
+      initial-size: 0
+      min-idle: 1
+      max-active: 5
+

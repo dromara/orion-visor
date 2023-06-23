@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    druid:
+      url:
+      username:
+      password:
+      # 初始连接数
+      initial-size: 5
+      # 最小连接池数量
+      min-idle: 5
+      # 最大连接池数量
+      max-active: 20
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+      filter:
+        stat:
+          enabled: true
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+knife4j:
+  enable: false

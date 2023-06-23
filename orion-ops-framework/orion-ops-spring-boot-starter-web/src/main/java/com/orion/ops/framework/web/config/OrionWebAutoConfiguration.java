@@ -69,7 +69,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * @return http json 转换器
+     * @return http message 转换器
      */
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
@@ -97,15 +97,15 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         jsonConverter.setFastJsonConfig(config);
         // 先获取默认转换器
         List<HttpMessageConverter<?>> defaultConverters = new HttpMessageConverters().getConverters();
-        List<HttpMessageConverter<?>> newConverters = new ArrayList<>();
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
         // 将 byte converter 添加至首位 - fix swagger api 返回base64报错
-        newConverters.add(new ByteArrayHttpMessageConverter());
+        converters.add(new ByteArrayHttpMessageConverter());
         // 添加自定义 converter - using WrapperResultHandler
-        newConverters.add(jsonConverter);
+        converters.add(jsonConverter);
         // 添加默认 converter
-        newConverters.addAll(defaultConverters);
+        converters.addAll(defaultConverters);
         // 设置不添加默认 converter
-        return new HttpMessageConverters(false, newConverters);
+        return new HttpMessageConverters(false, converters);
     }
 
     /**

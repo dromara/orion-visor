@@ -9,7 +9,6 @@ spring:
   main:
     # 允许循环依赖
     allow-circular-references: true
-  # Servlet 配置
   servlet:
     # 文件上传相关配置项
     multipart:
@@ -20,6 +19,40 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始连接数
+      initial-size: 5
+      # 最小连接池数量
+      min-idle: 5
+      # 最大连接池数量
+      max-active: 20
+      # 配置获取连接等待超时的时间
+      max-wait: 600000
+      # 检测间隔
+      time-between-eviction-runs-millis: 60000
+      # 最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      # 最大生存的时间
+      max-evictable-idle-time-millis: 900000
+      validation-query: SELECT 1
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username:
+        login-password:
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 800
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
 
 springdoc:
   api-docs:

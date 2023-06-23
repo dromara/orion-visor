@@ -20,6 +20,7 @@
         <module>orion-ops-spring-boot-starter-web</module>
         <module>orion-ops-spring-boot-starter-banner</module>
         <module>orion-ops-spring-boot-starter-swagger</module>
+        <module>orion-ops-spring-boot-starter-datasource</module>
     </modules>
 
 </project>
