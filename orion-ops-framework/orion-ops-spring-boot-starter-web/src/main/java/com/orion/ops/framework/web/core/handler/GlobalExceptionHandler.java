@@ -7,7 +7,7 @@ import com.orion.lang.exception.argument.HttpWrapperException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.exception.argument.RpcWrapperException;
 import com.orion.lang.utils.Exceptions;
-import com.orion.ops.framework.common.enums.ExceptionMessageConst;
+import com.orion.ops.framework.common.constant.ExceptionMessageConst;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.EncryptedDocumentException;
 import org.springframework.dao.DataAccessResourceFailureException;

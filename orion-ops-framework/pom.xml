@@ -21,6 +21,7 @@
         <module>orion-ops-spring-boot-starter-banner</module>
         <module>orion-ops-spring-boot-starter-swagger</module>
         <module>orion-ops-spring-boot-starter-datasource</module>
+        <module>orion-ops-spring-boot-starter-mybatis</module>
     </modules>
 
 </project>

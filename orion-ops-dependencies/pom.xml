@@ -75,6 +75,11 @@
                 <artifactId>orion-ops-spring-boot-starter-datasource</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-mybatis</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- spring -->
 

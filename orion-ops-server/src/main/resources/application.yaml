@@ -54,6 +54,16 @@ spring:
           config:
             multi-statement-allow: true
 
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-not-delete-value: 1
+      logic-delete-value: 2
+
 springdoc:
   api-docs:
     enabled: true

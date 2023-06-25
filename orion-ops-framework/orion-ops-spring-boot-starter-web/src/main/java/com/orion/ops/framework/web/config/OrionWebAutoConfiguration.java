@@ -4,7 +4,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.orion.lang.utils.collect.Lists;
-import com.orion.ops.framework.common.enums.FilterOrderConst;
+import com.orion.ops.framework.common.constant.FilterOrderConst;
 import com.orion.ops.framework.web.core.filter.TraceIdFilter;
 import com.orion.ops.framework.web.core.handler.GlobalExceptionHandler;
 import com.orion.ops.framework.web.core.handler.WrapperResultHandler;

@@ -1,6 +1,6 @@
 package com.orion.ops.framework.web.config;
 
-import com.orion.ops.framework.common.enums.InterceptorOrderConst;
+import com.orion.ops.framework.common.constant.InterceptorOrderConst;
 import com.orion.ops.framework.web.core.interceptor.LogPrintInterceptor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

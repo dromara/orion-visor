@@ -1,9 +1,9 @@
 spring:
   datasource:
     druid:
-      url:
-      username:
-      password:
+      url: jdbc:mysql://127.0.0.1:3306/orion-ops-pro?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
+      username: root
+      password: Data@123456
       # 初始连接数
       initial-size: 5
       # 最小连接池数量

@@ -1,0 +1,100 @@
+package com.orion.ops.framework.mybatis.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.orion.ops.framework.mybatis.query.DataQuery;
+
+import java.util.Collection;
+
+/**
+ * 公共 mapper
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2023/6/23 18:42
+ */
+public interface IMapper<T> extends BaseMapper<T> {
+
+    /**
+     * 批量插入
+     *
+     * @param entities entities
+     * @return 是否成功
+     */
+    default boolean insertBatch(Collection<T> entities) {
+        return Db.saveBatch(entities);
+    }
+
+    /**
+     * 批量插入
+     *
+     * @param entities entities
+     * @param size     size
+     * @return 是否成功
+     */
+    default boolean insertBatch(Collection<T> entities, int size) {
+        return Db.saveBatch(entities, size);
+    }
+
+    /**
+     * 批量更新 (通过id)
+     *
+     * @param entities entities
+     * @return 是否成功
+     */
+    default boolean updateBatch(Collection<T> entities) {
+        return Db.updateBatchById(entities);
+    }
+
+    /**
+     * 批量更新 (通过id)
+     *
+     * @param entities entities
+     * @param size     size
+     * @return 是否成功
+     */
+    default boolean updateBatch(Collection<T> entities, int size) {
+        return Db.updateBatchById(entities, size);
+    }
+
+    /**
+     * 插入或更新 (通过id)
+     *
+     * @param entity entity
+     * @return 是否成功
+     */
+    default boolean insertOrUpdate(T entity) {
+        return Db.saveOrUpdate(entity);
+    }
+
+    /**
+     * 批量插入或更新 (通过id)
+     *
+     * @param entities entities
+     * @return 是否成功
+     */
+    default boolean insertOrUpdateBatch(Collection<T> entities) {
+        return Db.saveOrUpdateBatch(entities);
+    }
+
+    /**
+     * 批量插入或更新 (通过id)
+     *
+     * @param entities entities
+     * @param size     size
+     * @return 是否成功
+     */
+    default boolean insertOrUpdateBatch(Collection<T> entities, int size) {
+        return Db.saveOrUpdateBatch(entities, size);
+    }
+
+    /**
+     * 获取 DataQuery 对象
+     *
+     * @return DataQuery
+     */
+    default DataQuery<T> of() {
+        return DataQuery.of(this);
+    }
+
+}

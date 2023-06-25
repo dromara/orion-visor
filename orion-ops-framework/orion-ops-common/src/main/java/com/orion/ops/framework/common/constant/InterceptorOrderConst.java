@@ -1,4 +1,4 @@
-package com.orion.ops.framework.common.enums;
+package com.orion.ops.framework.common.constant;
 
 /**
  * 拦截器排序常量
