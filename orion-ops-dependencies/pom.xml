@@ -23,6 +23,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <mybatis-plus-generator.version>3.5.3.1</mybatis-plus-generator.version>
+        <velocity.version>2.3</velocity.version>
         <druid.version>1.2.16</druid.version>
     </properties>
 
@@ -138,6 +139,11 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
                 <version>${mybatis-plus-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>${velocity.version}</version>
             </dependency>
 
         </dependencies>
