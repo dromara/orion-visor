@@ -44,6 +44,14 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-mybatis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-job</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-websocket</artifactId>
+        </dependency>
 
         <!-- orion-ops biz-modules -->
 

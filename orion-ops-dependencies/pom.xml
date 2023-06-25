@@ -81,8 +81,23 @@
                 <artifactId>orion-ops-spring-boot-starter-mybatis</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-job</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-websocket</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
-            <!-- spring -->
+            <!-- websocket -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-websocket</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
 
             <!-- lombok -->
             <dependency>

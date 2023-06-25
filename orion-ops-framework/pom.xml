@@ -22,6 +22,8 @@
         <module>orion-ops-spring-boot-starter-swagger</module>
         <module>orion-ops-spring-boot-starter-datasource</module>
         <module>orion-ops-spring-boot-starter-mybatis</module>
+        <module>orion-ops-spring-boot-starter-job</module>
+        <module>orion-ops-spring-boot-starter-websocket</module>
     </modules>
 
 </project>
