@@ -1,9 +1,13 @@
 package com.orion.ops.framework.mybatis.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.orion.ops.framework.common.constant.FilterOrderConst;
+import com.orion.ops.framework.common.filter.FilterCreator;
+import com.orion.ops.framework.mybatis.cache.RowCacheClearFilter;
 import com.orion.ops.framework.mybatis.handler.FieldFillHandler;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -24,6 +28,14 @@ public class OrionMybatisAutoConfiguration {
     @Bean
     public MetaObjectHandler defaultMetaObjectHandler() {
         return new FieldFillHandler();
+    }
+
+    /**
+     * @return mybatis 缓存清理过滤器
+     */
+    @Bean
+    public FilterRegistrationBean<RowCacheClearFilter> rowCacheClearFilterBean() {
+        return FilterCreator.create(new RowCacheClearFilter(), FilterOrderConst.MYBATIS_CACHE_CLEAR_FILTER);
     }
 
 }

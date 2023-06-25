@@ -13,4 +13,6 @@ public interface FilterOrderConst {
 
     int TRICE_ID_FILTER = Integer.MIN_VALUE + 10;
 
+    int MYBATIS_CACHE_CLEAR_FILTER = Integer.MIN_VALUE + 100000;
+
 }

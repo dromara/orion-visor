@@ -5,6 +5,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.FilterOrderConst;
+import com.orion.ops.framework.common.filter.FilterCreator;
 import com.orion.ops.framework.web.core.filter.TraceIdFilter;
 import com.orion.ops.framework.web.core.handler.GlobalExceptionHandler;
 import com.orion.ops.framework.web.core.handler.WrapperResultHandler;
@@ -25,7 +26,6 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.Filter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +124,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         // 创建 UrlBasedCorsConfigurationSource 对象
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return createFilterBean(new CorsFilter(source), FilterOrderConst.CORS_FILTER);
+        return FilterCreator.create(new CorsFilter(source), FilterOrderConst.CORS_FILTER);
     }
 
     /**
@@ -132,21 +132,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public FilterRegistrationBean<TraceIdFilter> traceIdFilterBean() {
-        return createFilterBean(new TraceIdFilter(), FilterOrderConst.TRICE_ID_FILTER);
-    }
-
-    /**
-     * 创建过滤器
-     *
-     * @param filter filter
-     * @param order  order
-     * @param <T>    type
-     * @return filter bean
-     */
-    public static <T extends Filter> FilterRegistrationBean<T> createFilterBean(T filter, Integer order) {
-        FilterRegistrationBean<T> bean = new FilterRegistrationBean<>(filter);
-        bean.setOrder(order);
-        return bean;
+        return FilterCreator.create(new TraceIdFilter(), FilterOrderConst.TRICE_ID_FILTER);
     }
 
 }
