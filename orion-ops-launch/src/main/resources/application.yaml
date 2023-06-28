@@ -64,6 +64,9 @@ spring:
     type: REDIS
     redis:
       time-to-live: 1h
+  output:
+    ansi:
+      enabled: detect
 
 mybatis-plus:
   configuration:
@@ -90,6 +93,21 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
+logging:
+  file:
+    path: ${user.home}/orion/logs/orion-ops-pro
+    name: ${logging.file.path}/app.log
+  logback:
+    rollingpolicy:
+      clean-history-on-start: false
+      file-name-pattern: ${logging.file.path}/rolling/orion-ops-rolling-%d{yyyy-MM-dd}.%i.gz
+      max-history: 30
+      max-file-size: 16MB
+      total-size-cap: 0B
+  pattern:
+    console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %boldBlue([%X{tid}]) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
+    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%X{tid}] [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
 
 orion:
   # 版本

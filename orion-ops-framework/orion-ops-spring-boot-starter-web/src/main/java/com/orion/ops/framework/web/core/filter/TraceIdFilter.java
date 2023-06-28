@@ -2,6 +2,7 @@ package com.orion.ops.framework.web.core.filter;
 
 import com.orion.lang.id.UUIds;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
+import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,19 +22,26 @@ public class TraceIdFilter extends OncePerRequestFilter {
 
     private static final String TRACE_ID_HEADER = "trace-id";
 
+    private static final String TRACE_ID_MDC = "tid";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             // 获 traceId
             String traceId = UUIds.random32();
+            // 设置应用上下文
             TraceIdHolder.set(traceId);
+            // 设置日志上下文
+            MDC.put(TRACE_ID_MDC, traceId);
             // 设置响应头
             response.setHeader(TRACE_ID_HEADER, traceId);
             // 执行请求
             filterChain.doFilter(request, response);
         } finally {
-            // 清理缓存
+            // 清理应用上下文
             TraceIdHolder.remove();
+            // 清理日志上下文
+            MDC.clear();
         }
     }
 

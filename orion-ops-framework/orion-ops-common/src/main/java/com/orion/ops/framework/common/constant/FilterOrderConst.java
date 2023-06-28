@@ -9,9 +9,9 @@ package com.orion.ops.framework.common.constant;
  */
 public interface FilterOrderConst {
 
-    int CORS_FILTER = Integer.MIN_VALUE;
+    int TRICE_ID_FILTER = Integer.MIN_VALUE + 1000;
 
-    int TRICE_ID_FILTER = Integer.MIN_VALUE + 10;
+    int CORS_FILTER = Integer.MIN_VALUE + 2000;
 
     int MYBATIS_CACHE_CLEAR_FILTER = Integer.MIN_VALUE + 100000;
 
