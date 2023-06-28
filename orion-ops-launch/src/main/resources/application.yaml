@@ -60,6 +60,10 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  cache:
+    type: REDIS
+    redis:
+      time-to-live: 1h
 
 mybatis-plus:
   configuration:

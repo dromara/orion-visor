@@ -17,6 +17,12 @@ spring:
       filter:
         stat:
           enabled: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: lijiahang
+    timeout: 3000
 
 springdoc:
   api-docs:

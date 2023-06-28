@@ -25,6 +25,7 @@
         <mybatis-plus-generator.version>3.5.3.1</mybatis-plus-generator.version>
         <velocity.version>2.3</velocity.version>
         <druid.version>1.2.16</druid.version>
+        <redisson.version>3.18.0</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -89,6 +90,11 @@
             <dependency>
                 <groupId>com.orion.ops</groupId>
                 <artifactId>orion-ops-spring-boot-starter-websocket</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-redis</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -159,6 +165,19 @@
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
                 <version>${velocity.version}</version>
+            </dependency>
+
+            <!-- redis -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-actuator</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>

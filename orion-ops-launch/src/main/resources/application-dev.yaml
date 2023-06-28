@@ -7,6 +7,12 @@ spring:
       initial-size: 0
       min-idle: 1
       max-active: 5
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: lijiahang
+    timeout: 3000
 
 mybatis-plus:
   configuration:

@@ -52,6 +52,10 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-websocket</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-redis</artifactId>
+        </dependency>
 
         <!-- orion-ops biz-modules -->
 
