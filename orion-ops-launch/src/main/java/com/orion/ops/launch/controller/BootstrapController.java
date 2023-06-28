@@ -1,4 +1,4 @@
-package com.orion.ops.server.controller;
+package com.orion.ops.launch.controller;
 
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: orion-ops-server
+    name: orion-ops-launch
   profiles:
     active: dev
   main:

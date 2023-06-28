@@ -30,7 +30,7 @@ public class BannerApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String line = AnsiCode.GLOSS_GREEN.stain(":: orion-ops-server v" + version + " 服务已启动(" + env + ") ::\n") +
+        String line = AnsiCode.GLOSS_GREEN.stain(":: orion-ops-launch v" + version + " 服务已启动(" + env + ") ::\n") +
                 AnsiCode.GLOSS_GREEN.stain(":: swagger 文档      ") +
                 AnsiCode.GLOSS_BLUE.stain("http://127.0.0.1:" + port + "/doc.html\n") +
                 AnsiCode.GLOSS_GREEN.stain(":: druid console    ") +

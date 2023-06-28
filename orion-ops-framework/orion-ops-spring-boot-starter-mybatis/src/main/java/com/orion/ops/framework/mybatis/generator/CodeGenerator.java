@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
 import com.orion.ops.framework.mybatis.domain.BaseDO;
 import com.orion.ops.framework.mybatis.mapper.IMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author Jiahang Li
@@ -111,6 +112,8 @@ public class CodeGenerator {
                 .enableFileOverride()
                 // mapper 配置
                 .mapperBuilder()
+                // dao 添加 @Mapper
+                .mapperAnnotation(Mapper.class)
                 // mapper 父类
                 .superClass(IMapper.class)
                 // 生成 BaseResultMap

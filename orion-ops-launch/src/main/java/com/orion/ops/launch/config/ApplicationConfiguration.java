@@ -1,4 +1,4 @@
-package com.orion.ops.server.config;
+package com.orion.ops.launch.config;
 
 import com.orion.spring.SpringHolder;
 import org.springframework.context.annotation.Bean;

@@ -16,7 +16,7 @@
     <modules>
         <module>orion-ops-dependencies</module>
         <module>orion-ops-framework</module>
-        <module>orion-ops-server</module>
+        <module>orion-ops-launch</module>
     </modules>
 
     <properties>

@@ -5,6 +5,7 @@ import com.orion.ops.framework.common.constant.FilterOrderConst;
 import com.orion.ops.framework.common.filter.FilterCreator;
 import com.orion.ops.framework.mybatis.cache.RowCacheClearFilter;
 import com.orion.ops.framework.mybatis.handler.FieldFillHandler;
+import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Bean;
  * @since 2023/6/23 18:35
  */
 @AutoConfiguration
-@MapperScan(value = "com.orion.ops.module.*.dao", lazyInitialization = "true")
+@MapperScan(value = "com.orion.ops.module.*.dao", annotationClass = Mapper.class, lazyInitialization = "true")
 public class OrionMybatisAutoConfiguration {
 
     /**

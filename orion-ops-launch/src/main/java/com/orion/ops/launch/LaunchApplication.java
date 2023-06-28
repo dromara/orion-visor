@@ -1,4 +1,4 @@
-package com.orion.ops.server;
+package com.orion.ops.launch;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -10,11 +10,11 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
  * @version 1.0.0
  * @since 2023/6/19 16:55
  */
-@SpringBootApplication(scanBasePackages = {"com.orion.ops.server", "com.orion.ops.module"})
-public class OrionOpsApplication {
+@SpringBootApplication(scanBasePackages = {"com.orion.ops.launch", "com.orion.ops.module"})
+public class LaunchApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(OrionOpsApplication.class).run(args);
+        new SpringApplicationBuilder(LaunchApplication.class).run(args);
     }
 
 }

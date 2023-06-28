@@ -23,7 +23,9 @@ public class UserHandshakeInterceptor implements HandshakeInterceptor {
         attributes.put(WsAttr.USER, 1);
         // if (user == null){
         //     return false;
+        // response.setStatusCode(HttpStatus.MULTI_STATUS);
         // }
+        // HttpSessionHandshakeInterceptor
         return true;
     }
 
