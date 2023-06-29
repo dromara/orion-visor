@@ -13,6 +13,7 @@ import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.web.core.config.LogPrinterConfig;
+import com.orion.ops.framework.common.utils.Desensitizes;
 import io.swagger.v3.oas.annotations.Operation;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -74,17 +75,14 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
         // 忽略字段过滤器
         PropertyFilter ignoreFilter = (Object object, String name, Object value) -> !config.getField().getIgnore().contains(name);
         // 脱敏字段过滤器
-        ValueFilter desensitizationFilter = (Object object, String name, Object value) -> {
-            if (config.getField().getDesensitization().contains(name)) {
-                String s = Objects1.toString(value);
-                // Safes.mix()
-                // TODO
-                return "xxxxxx";
+        ValueFilter desensitizeFilter = (Object object, String name, Object value) -> {
+            if (config.getField().getDesensitize().contains(name)) {
+                return Desensitizes.mix(Objects1.toString(value), 1, 1);
             } else {
                 return value;
             }
         };
-        this.fieldFilter = new SerializeFilter[]{ignoreFilter, desensitizationFilter};
+        this.fieldFilter = new SerializeFilter[]{ignoreFilter, desensitizeFilter};
     }
 
     @Override

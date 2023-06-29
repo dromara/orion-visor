@@ -118,7 +118,7 @@ logging:
       ignore:
         - password,newPassword
         - metrics
-      desensitization:
+      desensitize:
         - phone,phoneNumber
         - email,sendEmail
 

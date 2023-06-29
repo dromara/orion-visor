@@ -29,7 +29,7 @@
       "description": "忽略打印的字段."
     },
     {
-      "name": "logging.printer.field.desensitization",
+      "name": "logging.printer.field.desensitize",
       "type": "java.util.List",
       "description": "需要脱敏的字段."
     },

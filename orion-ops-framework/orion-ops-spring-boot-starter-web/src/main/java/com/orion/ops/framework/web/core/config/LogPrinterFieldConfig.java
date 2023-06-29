@@ -23,14 +23,14 @@ public class LogPrinterFieldConfig {
     /**
      * 脱敏的字段
      */
-    private List<String> desensitization;
+    private List<String> desensitize;
 
     public void setIgnore(List<String> ignore) {
         this.ignore = Utils.parseStringList(ignore);
     }
 
-    public void setDesensitization(List<String> desensitization) {
-        this.desensitization = Utils.parseStringList(desensitization);
+    public void setDesensitize(List<String> desensitize) {
+        this.desensitize = Utils.parseStringList(desensitize);
     }
 
 }

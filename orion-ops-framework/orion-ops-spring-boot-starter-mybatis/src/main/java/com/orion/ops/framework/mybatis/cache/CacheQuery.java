@@ -53,7 +53,7 @@ public class CacheQuery<T> {
     @SuppressWarnings("unchecked")
     public <R> R get(Class<R> c) {
         T row = this.get();
-        // TODO FIXME mapstruct
+        // TODO mapstruct
         return (R) row;
     }
 
