@@ -108,6 +108,19 @@ logging:
   pattern:
     console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %boldBlue([%X{tid}]) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
     file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%X{tid}] [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+  printer:
+    mode: PRETTY
+    expression: 'execution (* com.orion.ops.**.controller.*.*(..)) && !@annotation(com.orion.ops.framework.common.annotation.IgnoreLog)'
+    headers:
+      - user-agent,accept
+      - content-type
+    field:
+      ignore:
+        - password,newPassword
+        - metrics
+      desensitization:
+        - phone,phoneNumber
+        - email,sendEmail
 
 orion:
   # 版本
@@ -118,7 +131,6 @@ orion:
     prefix: /orion-api
     # 是否开启跨域
     cors: true
-  # 文档配置
   swagger:
     title: orion-ops-pro 运维平台
     description: 一站式提供运维功能

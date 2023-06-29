@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * @version 1.0.0
  * @since 2022/4/20 10:33
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface IgnoreLog {

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ITypeHandler<P, R> extends TypeHandler<R> {
 
-    // TODO KIT
+    // FIXME KIT
     String COMMA = ",";
 
     /**
@@ -25,7 +25,7 @@ public interface ITypeHandler<P, R> extends TypeHandler<R> {
     R getResult(P param);
 
     /**
-     * // TODO kit
+     * // FIXME kit
      * 用 , 连接
      *
      * @param list list

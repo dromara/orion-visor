@@ -28,7 +28,7 @@ package com.orion.ops.framework.common.utils;
  * \033[?25l  隐藏光标
  * \033[?25h  显示光标
  * <p>
- * TODO 后续直接使用kit
+ * FIXME KIT
  *
  * @author Jiahang Li
  * @version 1.0.0
