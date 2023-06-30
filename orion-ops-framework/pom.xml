@@ -25,6 +25,8 @@
         <module>orion-ops-spring-boot-starter-job</module>
         <module>orion-ops-spring-boot-starter-websocket</module>
         <module>orion-ops-spring-boot-starter-redis</module>
+        <module>orion-ops-spring-boot-starter-desensitize</module>
+        <module>orion-ops-spring-boot-starter-log</module>
     </modules>
 
 </project>
