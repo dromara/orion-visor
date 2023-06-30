@@ -28,7 +28,7 @@ public class OrionDesensitizeAutoConfiguration {
      */
     @Bean
     @ConditionalOnBean(FastJsonHttpMessageConverter.class)
-    public DesensitizeValueSerializeFilter desensitizeResultHandler(FastJsonHttpMessageConverter converter) {
+    public DesensitizeValueSerializeFilter desensitizeValueSerializeFilter(FastJsonHttpMessageConverter converter) {
         DesensitizeValueSerializeFilter desensitizeFilter = new DesensitizeValueSerializeFilter();
         // 获取 json 配置
         FastJsonConfig config = converter.getFastJsonConfig();

@@ -28,7 +28,7 @@ public class OrionLogPrinterConfiguration {
      * @param config config
      * @return 美化日志打印器
      */
-    @Bean
+    @Bean(initMethod = "init")
     @ConditionalOnProperty(value = "logging.printer.mode", havingValue = "pretty")
     public LogPrinterInterceptor prettyPrinter(LogPrinterConfig config) {
         return new PrettyLogPrinterInterceptor(config);
@@ -38,7 +38,7 @@ public class OrionLogPrinterConfiguration {
      * @param config config
      * @return 单行日志打印器
      */
-    @Bean
+    @Bean(initMethod = "init")
     @ConditionalOnProperty(value = "logging.printer.mode", havingValue = "row")
     public LogPrinterInterceptor rowPrinter(LogPrinterConfig config) {
         return new RowLogPrinterInterceptor(config);

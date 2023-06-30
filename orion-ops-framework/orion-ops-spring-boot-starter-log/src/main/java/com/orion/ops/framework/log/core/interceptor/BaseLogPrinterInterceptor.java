@@ -6,6 +6,7 @@ import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.lang.utils.Objects1;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Annotations;
 import com.orion.lang.utils.reflect.Classes;
@@ -16,12 +17,15 @@ import com.orion.ops.framework.common.utils.Desensitizes;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -34,10 +38,6 @@ import java.util.function.Predicate;
  */
 public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor {
 
-    private static final String EMPTY_ARG = "<EMPTY>";
-
-    private static final String ERROR_ARG = "<ERROR>";
-
     /**
      * 请求头过滤器
      */
@@ -46,7 +46,12 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
     /**
      * 字段过滤器
      */
-    protected SerializeFilter[] fieldFilter;
+    protected SerializeFilter[] fieldFilters;
+
+    /**
+     * 脱敏配置
+     */
+    private final LogPrinterConfig config;
 
     /**
      * api 描述
@@ -58,20 +63,23 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
      */
     private final Map<String, boolean[]> ignoreParameter;
 
+    @SuppressWarnings("ALL")
+    @Autowired(required = false)
+    @Qualifier("desensitizeValueSerializeFilter")
+    private ValueFilter desensitizeValueSerializeFilter;
+
     public BaseLogPrinterInterceptor(LogPrinterConfig config) {
+        this.config = config;
         this.summaryMapping = Maps.newMap();
         this.ignoreParameter = Maps.newMap();
-        this.init(config);
     }
 
-    /**
-     * 初始化
-     *
-     * @param config config
-     */
-    protected void init(LogPrinterConfig config) {
+    @Override
+    public void init() {
         // 请求头过滤器
         this.headerFilter = header -> config.getHeaders().contains(header);
+        // 字段过滤器
+        List<SerializeFilter> fieldFilterList = Lists.newList();
         // 忽略字段过滤器
         PropertyFilter ignoreFilter = (Object object, String name, Object value) -> !config.getField().getIgnore().contains(name);
         // 脱敏字段过滤器
@@ -82,7 +90,13 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
                 return value;
             }
         };
-        this.fieldFilter = new SerializeFilter[]{ignoreFilter, desensitizeFilter};
+        fieldFilterList.add(ignoreFilter);
+        fieldFilterList.add(desensitizeFilter);
+        // 注解脱敏 未引入
+        if (desensitizeValueSerializeFilter != null) {
+            fieldFilterList.add(desensitizeValueSerializeFilter);
+        }
+        this.fieldFilters = fieldFilterList.toArray(new SerializeFilter[0]);
     }
 
     @Override
@@ -182,7 +196,7 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
                 return EMPTY_ARG;
             } else if (printCount == 1) {
                 // 单个打印参数
-                return JSON.toJSONString(args[lastPrintIndex], fieldFilter);
+                return JSON.toJSONString(args[lastPrintIndex], fieldFilters);
             } else {
                 // 多个打印参数
                 JSONArray arr = new JSONArray();
@@ -191,7 +205,7 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
                         arr.add(args[i]);
                     }
                 }
-                return JSON.toJSONString(arr, fieldFilter);
+                return JSON.toJSONString(arr, fieldFilters);
             }
         } catch (Exception e) {
             return ERROR_ARG;
@@ -206,7 +220,7 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
      */
     protected String responseToString(Object o) {
         try {
-            return JSON.toJSONString(o, fieldFilter);
+            return JSON.toJSONString(o, fieldFilters);
         } catch (Exception e) {
             return ERROR_ARG;
         }
