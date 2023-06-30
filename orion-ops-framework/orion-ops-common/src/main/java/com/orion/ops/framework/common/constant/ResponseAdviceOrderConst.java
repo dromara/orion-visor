@@ -9,8 +9,6 @@ package com.orion.ops.framework.common.constant;
  */
 public interface ResponseAdviceOrderConst {
 
-    int DESENSITIZE = Integer.MIN_VALUE + 2000;
-
-    int WRAPPER = Integer.MIN_VALUE + 3000;
+    int WRAPPER = Integer.MIN_VALUE + 1000;
 
 }

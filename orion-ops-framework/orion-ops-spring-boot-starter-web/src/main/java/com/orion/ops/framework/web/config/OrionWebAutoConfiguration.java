@@ -69,12 +69,12 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * @return http message 转换器
+     * @return http message json 转换器
      */
     @Bean
-    public HttpMessageConverters fastJsonHttpMessageConverters() {
+    public FastJsonHttpMessageConverter fastJsonHttpMessageConverter() {
         // json 转换器
-        FastJsonHttpMessageConverter jsonConverter = new FastJsonHttpMessageConverter();
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
         // 配置
         FastJsonConfig config = new FastJsonConfig();
         // 支持的类型
@@ -86,7 +86,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
                 MediaType.TEXT_HTML,
                 MediaType.TEXT_XML
         );
-        jsonConverter.setSupportedMediaTypes(mediaTypes);
+        converter.setSupportedMediaTypes(mediaTypes);
         // 序列化配置
         config.setSerializerFeatures(
                 SerializerFeature.DisableCircularReferenceDetect,
@@ -94,7 +94,15 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.IgnoreNonFieldGetter
         );
-        jsonConverter.setFastJsonConfig(config);
+        converter.setFastJsonConfig(config);
+        return converter;
+    }
+
+    /**
+     * @return http message 转换器列表
+     */
+    @Bean
+    public HttpMessageConverters httpMessageConverters(FastJsonHttpMessageConverter jsonConverter) {
         // 先获取默认转换器
         List<HttpMessageConverter<?>> defaultConverters = new HttpMessageConverters().getConverters();
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
