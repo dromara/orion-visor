@@ -5,8 +5,10 @@ import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.define.wrapper.RpcWrapper;
 import com.orion.ops.framework.common.annotation.IgnoreWrapper;
 import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.common.constant.ResponseAdviceOrderConst;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -15,12 +17,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * 返回值处理器
+ * 公共返回值包装处理器
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/15 17:38
  */
+@Order(ResponseAdviceOrderConst.WRAPPER)
 @ControllerAdvice
 public class WrapperResultHandler implements ResponseBodyAdvice<Object> {
 

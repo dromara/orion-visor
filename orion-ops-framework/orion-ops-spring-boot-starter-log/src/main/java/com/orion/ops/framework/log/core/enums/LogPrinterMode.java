@@ -1,4 +1,4 @@
-package com.orion.ops.framework.web.core.enums;
+package com.orion.ops.framework.log.core.enums;
 
 /**
  * 日志打印模型

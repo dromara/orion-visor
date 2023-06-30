@@ -1,4 +1,4 @@
-package com.orion.ops.framework.web.core.utils;
+package com.orion.ops.framework.log.core.utils;
 
 import java.util.Arrays;
 import java.util.List;

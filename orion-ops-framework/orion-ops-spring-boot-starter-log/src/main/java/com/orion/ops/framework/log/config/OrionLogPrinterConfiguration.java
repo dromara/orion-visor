@@ -1,10 +1,10 @@
-package com.orion.ops.framework.web.config;
+package com.orion.ops.framework.log.config;
 
 import com.orion.ops.framework.common.constant.InterceptorOrderConst;
-import com.orion.ops.framework.web.core.config.LogPrinterConfig;
-import com.orion.ops.framework.web.core.interceptor.LogPrinterInterceptor;
-import com.orion.ops.framework.web.core.interceptor.PrettyLogPrinterInterceptor;
-import com.orion.ops.framework.web.core.interceptor.RowLogPrinterInterceptor;
+import com.orion.ops.framework.log.core.config.LogPrinterConfig;
+import com.orion.ops.framework.log.core.interceptor.LogPrinterInterceptor;
+import com.orion.ops.framework.log.core.interceptor.PrettyLogPrinterInterceptor;
+import com.orion.ops.framework.log.core.interceptor.RowLogPrinterInterceptor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

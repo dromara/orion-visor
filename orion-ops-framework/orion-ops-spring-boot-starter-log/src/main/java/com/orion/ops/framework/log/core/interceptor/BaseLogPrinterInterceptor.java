@@ -1,4 +1,4 @@
-package com.orion.ops.framework.web.core.interceptor;
+package com.orion.ops.framework.log.core.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -12,8 +12,8 @@ import com.orion.lang.utils.reflect.Classes;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
-import com.orion.ops.framework.web.core.config.LogPrinterConfig;
 import com.orion.ops.framework.common.utils.Desensitizes;
+import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import org.aopalliance.intercept.MethodInvocation;
 

@@ -61,7 +61,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * @return 通用返回结果处理器
+     * @return 公共返回值包装处理器
      */
     @Bean
     public WrapperResultHandler wrapperResultHandler() {

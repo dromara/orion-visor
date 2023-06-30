@@ -1,6 +1,6 @@
-package com.orion.ops.framework.web.core.config;
+package com.orion.ops.framework.log.core.config;
 
-import com.orion.ops.framework.web.core.utils.Utils;
+import com.orion.ops.framework.log.core.utils.Utils;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -1,4 +1,4 @@
-package com.orion.ops.framework.web.core.interceptor;
+package com.orion.ops.framework.log.core.interceptor;
 
 import org.aopalliance.intercept.MethodInterceptor;
 

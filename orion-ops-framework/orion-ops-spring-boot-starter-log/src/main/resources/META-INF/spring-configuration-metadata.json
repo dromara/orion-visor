@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "logging.printer",
+      "type": "com.orion.ops.framework.log.core.config.LogPrinterConfig",
+      "sourceType": "com.orion.ops.framework.log.core.config.LogPrinterConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "logging.printer.mode",
+      "type": "com.orion.ops.framework.log.core.enums.LogPrinterMode",
+      "description": "日志打印模型.",
+      "defaultValue": "NONE"
+    },
+    {
+      "name": "logging.printer.expression",
+      "type": "java.lang.String",
+      "description": "aspectj 表达式."
+    },
+    {
+      "name": "logging.printer.headers",
+      "type": "java.util.List",
+      "description": "需要打印的 HttpHandlers."
+    },
+    {
+      "name": "logging.printer.field.ignore",
+      "type": "java.util.List",
+      "description": "忽略打印的字段."
+    },
+    {
+      "name": "logging.printer.field.desensitize",
+      "type": "java.util.List",
+      "description": "需要脱敏的字段."
+    }
+  ]
+}

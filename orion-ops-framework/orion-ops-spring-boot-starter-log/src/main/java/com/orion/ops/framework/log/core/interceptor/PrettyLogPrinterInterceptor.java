@@ -1,9 +1,9 @@
-package com.orion.ops.framework.web.core.interceptor;
+package com.orion.ops.framework.log.core.interceptor;
 
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.time.Dates;
-import com.orion.ops.framework.web.core.config.LogPrinterConfig;
+import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
