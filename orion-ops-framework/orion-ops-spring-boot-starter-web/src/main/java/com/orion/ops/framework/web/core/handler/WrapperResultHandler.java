@@ -34,7 +34,6 @@ public class WrapperResultHandler implements ResponseBodyAdvice<Object> {
             return false;
         }
         return !methodParameter.hasMethodAnnotation(IgnoreWrapper.class);
-        // && methodParameter.getExecutable().getAnnotatedReturnType().getType() != Void.TYPE;
     }
 
     @Override

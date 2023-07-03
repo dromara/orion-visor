@@ -27,7 +27,7 @@ import java.util.Optional;
  * @since 2023/6/29 10:36
  */
 @Slf4j
-public class RowLogPrinterInterceptor extends BaseLogPrinterInterceptor implements LogFieldConst {
+public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor implements LogFieldConst {
 
     public RowLogPrinterInterceptor(LogPrinterConfig config) {
         super(config);
@@ -76,21 +76,23 @@ public class RowLogPrinterInterceptor extends BaseLogPrinterInterceptor implemen
         fields.put(PARAMETER, this.requestToString(method, invocation.getArguments()));
         log.info("api请求-开始 {}", JSON.toJSONString(fields));
         fields.clear();
-        fields = null;
     }
 
     @Override
-    protected void responsePrinter(Date startTime, String traceId, Object ret) {
+    protected void responsePrinter(Date startTime, String traceId, MethodInvocation invocation, Object ret) {
         Date endTime = new Date();
         // 响应日志
         Map<String, Object> fields = new LinkedHashMap<>();
         fields.put(TRACE_ID, traceId);
         fields.put(END, Dates.format(endTime, Dates.YMD_HMSS));
         fields.put(USED, endTime.getTime() - startTime.getTime() + "ms");
-        fields.put(RESPONSE, this.responseToString(ret));
+        if (invocation.getMethod().getReturnType().equals(Void.TYPE)) {
+            fields.put(RESPONSE, VOID_RES);
+        } else {
+            fields.put(RESPONSE, this.responseToString(ret));
+        }
         log.info("api请求-结束 {}", JSON.toJSONString(fields));
         fields.clear();
-        fields = null;
     }
 
     @Override
@@ -104,7 +106,6 @@ public class RowLogPrinterInterceptor extends BaseLogPrinterInterceptor implemen
         fields.put(ERROR_DIGEST, Exceptions.getDigest(throwable));
         log.error("api请求-异常 {}", JSON.toJSONString(fields));
         fields.clear();
-        fields = null;
     }
 
 }

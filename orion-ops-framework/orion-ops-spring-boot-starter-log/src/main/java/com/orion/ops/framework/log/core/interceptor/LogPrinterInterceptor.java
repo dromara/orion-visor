@@ -15,6 +15,8 @@ public interface LogPrinterInterceptor extends MethodInterceptor {
 
     String ERROR_ARG = "<ERROR>";
 
+    String VOID_RES = "<VOID>";
+
     /**
      * 初始化
      */

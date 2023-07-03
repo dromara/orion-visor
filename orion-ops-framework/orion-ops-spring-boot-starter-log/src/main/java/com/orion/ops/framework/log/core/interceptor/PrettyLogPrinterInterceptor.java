@@ -23,7 +23,7 @@ import java.util.Optional;
  * @since 2023/6/29 10:36
  */
 @Slf4j
-public class PrettyLogPrinterInterceptor extends BaseLogPrinterInterceptor {
+public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
 
     public PrettyLogPrinterInterceptor(LogPrinterConfig config) {
         super(config);
@@ -75,14 +75,19 @@ public class PrettyLogPrinterInterceptor extends BaseLogPrinterInterceptor {
     }
 
     @Override
-    protected void responsePrinter(Date startTime, String traceId, Object ret) {
+    protected void responsePrinter(Date startTime, String traceId, MethodInvocation invocation, Object ret) {
         Date endTime = new Date();
         // 响应日志
         StringBuilder responseLog = new StringBuilder("\napi请求-结束\n")
                 .append("\ttraceId: ").append(traceId).append('\n')
                 .append("\tend: ").append(Dates.format(endTime, Dates.YMD_HMSS)).append('\n')
-                .append("\tused: ").append(endTime.getTime() - startTime.getTime()).append("ms \n")
-                .append("\tresponse: ").append(this.responseToString(ret));
+                .append("\tused: ").append(endTime.getTime() - startTime.getTime()).append("ms \n");
+
+        if (invocation.getMethod().getReturnType().equals(Void.TYPE)) {
+            responseLog.append("\tresponse: ").append(VOID_RES);
+        } else {
+            responseLog.append("\tresponse: ").append(this.responseToString(ret));
+        }
         log.info(responseLog.toString());
     }
 

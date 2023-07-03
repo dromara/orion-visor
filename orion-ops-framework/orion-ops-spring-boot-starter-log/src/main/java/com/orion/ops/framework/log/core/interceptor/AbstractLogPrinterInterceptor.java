@@ -36,7 +36,7 @@ import java.util.function.Predicate;
  * @version 1.0.0
  * @since 2023/6/29 10:36
  */
-public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor {
+public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterceptor {
 
     /**
      * 请求头过滤器
@@ -68,7 +68,7 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
     @Qualifier("desensitizeValueSerializeFilter")
     private ValueFilter desensitizeValueSerializeFilter;
 
-    public BaseLogPrinterInterceptor(LogPrinterConfig config) {
+    public AbstractLogPrinterInterceptor(LogPrinterConfig config) {
         this.config = config;
         this.summaryMapping = Maps.newMap();
         this.ignoreParameter = Maps.newMap();
@@ -109,7 +109,7 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
             // 执行方法
             Object ret = invocation.proceed();
             // 打印响应日志
-            this.responsePrinter(startTime, traceId, ret);
+            this.responsePrinter(startTime, traceId, invocation, ret);
             return ret;
         } catch (Throwable t) {
             // 打印异常日志
@@ -130,11 +130,12 @@ public abstract class BaseLogPrinterInterceptor implements LogPrinterInterceptor
     /**
      * 打印响应信息
      *
-     * @param startTime 开始时间
-     * @param traceId   traceId
-     * @param ret       return
+     * @param startTime  开始时间
+     * @param traceId    traceId
+     * @param invocation invocation
+     * @param ret        return
      */
-    protected abstract void responsePrinter(Date startTime, String traceId, Object ret);
+    protected abstract void responsePrinter(Date startTime, String traceId, MethodInvocation invocation, Object ret);
 
     /**
      * 打印异常信息
