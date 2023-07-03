@@ -1,0 +1,126 @@
+package com.orion.ops.framework.storage.core.client;
+
+import com.orion.lang.id.UUIds;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
+import com.orion.ops.framework.common.meta.TraceIdHolder;
+
+import java.io.InputStream;
+
+/**
+ * 文件客户端 基类
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2023/6/30 17:24
+ */
+public abstract class AbstractFileClient<Config extends FileClientConfig> implements FileClient {
+
+    protected Config config;
+
+    public AbstractFileClient(Config config) {
+        this.config = config;
+    }
+
+    @Override
+    public String upload(String path, byte[] content) throws Exception {
+        return this.doUpload(path, Streams.toInputStream(content), true, true);
+    }
+
+    @Override
+    public String upload(String path, byte[] content, boolean overrideIfExist) throws Exception {
+        return this.doUpload(path, Streams.toInputStream(content), true, overrideIfExist);
+    }
+
+    @Override
+    public String upload(String path, InputStream in) throws Exception {
+        return this.doUpload(path, in, false, true);
+    }
+
+    @Override
+    public String upload(String path, InputStream in, boolean autoClose) throws Exception {
+        return this.doUpload(path, in, autoClose, true);
+    }
+
+    @Override
+    public String upload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) throws Exception {
+        return this.doUpload(path, in, autoClose, overrideIfExist);
+    }
+
+    @Override
+    public byte[] getContent(String path) throws Exception {
+        try (InputStream in = this.doDownload(path)) {
+            return Streams.toByteArray(in);
+        }
+    }
+
+    @Override
+    public InputStream getContentInputStream(String path) throws Exception {
+        return this.doDownload(path);
+    }
+
+    /**
+     * 执行上传操作
+     *
+     * @param path            path
+     * @param in              in
+     * @param autoClose       autoClose
+     * @param overrideIfExist 文件存在是否覆盖
+     * @return path
+     * @throws Exception Exception
+     */
+    protected abstract String doUpload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) throws Exception;
+
+    /**
+     * 执行下载操作
+     *
+     * @param path path
+     * @return stream
+     * @throws Exception Exception
+     */
+    protected abstract InputStream doDownload(String path) throws Exception;
+
+    /**
+     * 获取返回路径 用于客户端返回
+     *
+     * @param path path
+     * @return returnPath
+     */
+    protected abstract String getReturnPath(String path);
+
+    /**
+     * 获取实际存储路径 用于服务端的存储
+     *
+     * @param returnPath returnPath
+     * @return absolutePath
+     */
+    protected abstract String getAbsolutePath(String returnPath);
+
+    /**
+     * 获取文件路径 拼接前缀
+     *
+     * @param path 路径
+     * @return 文件名称
+     */
+    protected String getFilePath(String path) {
+        // 无需拼接
+        if (!config.isNameAppendTraceId()) {
+            return path;
+        }
+        // 名称前缀
+        String traceId = TraceIdHolder.get();
+        if (traceId == null) {
+            traceId = UUIds.random32();
+        }
+        String prefix = traceId + "_";
+        String name = Files1.getFileName(path);
+        // 只是文件名
+        if (name.equals(path)) {
+            return prefix + name;
+        }
+        // 包含路径
+        String parentPath = Files1.getParentPath(path);
+        return parentPath + prefix + name;
+    }
+
+}

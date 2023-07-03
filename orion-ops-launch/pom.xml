@@ -64,6 +64,11 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-storage</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- orion-ops biz-modules -->
 

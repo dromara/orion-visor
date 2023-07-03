@@ -139,3 +139,8 @@ orion:
     email: ljh1553488six@139.com
     license: Apache-2.0
     license-url: https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE
+  storage:
+    local:
+      nameAppendTraceId: true
+      storagePath: ${user.home}
+      basePath: /orion/storage/orion-ops-pro

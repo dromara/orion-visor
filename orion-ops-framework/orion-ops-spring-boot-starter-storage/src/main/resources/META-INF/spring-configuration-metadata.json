@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "name": "orion.storage",
+      "type": "com.orion.ops.framework.storage.config.StorageConfig",
+      "sourceType": "com.orion.ops.framework.storage.config.StorageConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.storage.local.nameAppendTraceId",
+      "type": "java.lang.Boolean",
+      "description": "是否自动拼接 traceId 前缀. 没有则使用 UUID.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.storagePath",
+      "type": "java.lang.String",
+      "description": "存储路径.",
+      "defaultValue": ""
+    },
+    {
+      "name": "orion.storage.local.basePath",
+      "type": "java.lang.String",
+      "description": "基础路径.",
+      "defaultValue": ""
+    }
+  ]
+}
