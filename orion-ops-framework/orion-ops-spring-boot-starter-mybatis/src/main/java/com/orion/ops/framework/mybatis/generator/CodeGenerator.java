@@ -13,9 +13,12 @@ import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
+import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.domain.BaseDO;
 import com.orion.ops.framework.mybatis.mapper.IMapper;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.io.File;
 
 /**
  * @author Jiahang Li
@@ -25,14 +28,16 @@ public class CodeGenerator {
     public static void main(String[] args) {
         String outputDir = "D:/MP/";
         String author = Const.ORION_AUTHOR;
-        String url = "jdbc:mysql://127.0.0.1:3306/orion-ops-pro?characterEncoding=utf8";
-        String username = "root";
-        String password = "Data@123456";
-
         // 表名
         String[] tables = {"user_info"};
         // 模块
         String module = "user";
+        // 连接
+        File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
+        YmlExt yaml = YmlExt.load(yamlFile);
+        String url = yaml.getValue("spring.datasource.druid.url");
+        String username = yaml.getValue("spring.datasource.druid.username");
+        String password = yaml.getValue("spring.datasource.druid.password");
 
         // 执行
         runGenerator(outputDir, author,
@@ -140,11 +145,11 @@ public class CodeGenerator {
                 // 映射文件的包
                 .xml("mapper")
                 // service接口的包
-                .service("ignore.service")
+                .service("service")
                 // serviceImpl接口的包
-                .serviceImpl("ignore.service.impl")
+                .serviceImpl("service.impl")
                 // controller接口的包
-                .controller("ignore.controller")
+                .controller("controller")
                 // 构建
                 .build();
 
@@ -156,7 +161,7 @@ public class CodeGenerator {
                 .strategy(stConfig)
                 // 整合包名策略
                 .packageInfo(pkConfig)
-                // TODO 自定义convert文件
+                // TODO 自定义convert文件 request VO
                 // .injection()
                 // TODO 自定义模板以及convert文件
                 // .template()

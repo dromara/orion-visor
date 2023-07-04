@@ -20,8 +20,18 @@ public class Conditions {
      * @param <T> T
      * @return wrapper
      */
-    public static <T> LambdaQueryWrapper<T> validateWrapper() {
+    public static <T> LambdaQueryWrapper<T> wrapper() {
         return new ValidateLambdaWrapper<>();
+    }
+
+    /**
+     * 条件有效性验证 wrapper
+     *
+     * @param <T> T
+     * @return wrapper
+     */
+    public static <T> LambdaQueryWrapper<T> wrapper(Class<T> clazz) {
+        return new ValidateLambdaWrapper<>(clazz);
     }
 
 }

@@ -17,6 +17,17 @@ import java.util.Collection;
  */
 public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
 
+    public ValidateLambdaWrapper() {
+    }
+
+    public ValidateLambdaWrapper(T entity) {
+        super(entity);
+    }
+
+    public ValidateLambdaWrapper(Class<T> entityClass) {
+        super(entityClass);
+    }
+
     /**
      * 有效性验证
      *

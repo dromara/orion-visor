@@ -1,8 +1,9 @@
-package com.orion.ops.framework.mybatis.cache;
+package com.orion.ops.framework.mybatis.query;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orion.lang.define.wrapper.Store;
 import com.orion.lang.utils.Valid;
+import com.orion.ops.framework.mybatis.cache.RowCacheHolder;
 
 import java.io.Serializable;
 
@@ -22,6 +23,8 @@ public class CacheQuery<T> {
     private final BaseMapper<T> dao;
 
     private Serializable id;
+
+    private boolean force;
 
     private CacheQuery(BaseMapper<T> dao, Serializable id) {
         this.dao = dao;
@@ -50,6 +53,16 @@ public class CacheQuery<T> {
         return this;
     }
 
+    /**
+     * 强制查询
+     *
+     * @return this
+     */
+    public CacheQuery<T> force() {
+        this.force = true;
+        return this;
+    }
+
     @SuppressWarnings("unchecked")
     public <R> R get(Class<R> c) {
         T row = this.get();
@@ -60,11 +73,14 @@ public class CacheQuery<T> {
     @SuppressWarnings("unchecked")
     public T get() {
         Class<? extends BaseMapper<T>> mapperClass = (Class<? extends BaseMapper<T>>) dao.getClass();
-        // 从缓存中获取
-        Store<T> store = RowCacheHolder.get(mapperClass, id);
-        // 设置过缓存
-        if (store != null) {
-            return store.get();
+        // 不查询缓存
+        if (!force) {
+            // 从缓存中获取
+            Store<T> store = RowCacheHolder.get(mapperClass, id);
+            // 设置过缓存
+            if (store != null) {
+                return store.get();
+            }
         }
         // 查询
         T row = dao.selectById(id);
