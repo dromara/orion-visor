@@ -2,6 +2,7 @@ package com.orion.ops.framework.desensitize.core.filter;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ValueFilter;
+import com.orion.lang.utils.Desensitizes;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
@@ -9,7 +10,6 @@ import com.orion.lang.utils.reflect.Annotations;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.annotation.Desensitize;
 import com.orion.ops.framework.common.annotation.DesensitizeObject;
-import com.orion.ops.framework.common.utils.Desensitizes;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

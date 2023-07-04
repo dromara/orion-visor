@@ -19,7 +19,7 @@ public class UserHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-        // TODO 获取当前用户
+        // FIXME 获取当前用户
         attributes.put(WsAttr.USER, 1);
         // if (user == null){
         //     return false;

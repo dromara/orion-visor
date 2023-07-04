@@ -1,6 +1,6 @@
 package com.orion.ops.framework.banner.core;
 
-import com.orion.ops.framework.common.utils.AnsiCode;
+import com.orion.lang.utils.ansi.AnsiCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;

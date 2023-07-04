@@ -16,7 +16,8 @@
     <properties>
         <revision>1.0.0</revision>
         <spring.boot.version>2.7.11</spring.boot.version>
-        <orion.all.version>1.0.5</orion.all.version>
+        <orion.all.version>1.0.6</orion.all.version>
+        <aspectj.version>1.9.7</aspectj.version>
         <lombok.version>1.18.26</lombok.version>
         <springdoc.version>1.6.15</springdoc.version>
         <knife4j.version>4.1.0</knife4j.version>
@@ -118,6 +119,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-websocket</artifactId>
                 <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!-- aspect -->
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
             </dependency>
 
             <!-- lombok -->

@@ -53,7 +53,7 @@ public class DataQuery<T> {
         return Optional.ofNullable(dao.selectOne(wrapper));
     }
 
-    // TODO mapstruct
+    // FIXME mapstruct
     public <R> Optional<R> get(Class<R> c) {
         return Optional.ofNullable(dao.selectOne(wrapper))
                 .map(s -> Converts.to(s, c));
@@ -63,7 +63,7 @@ public class DataQuery<T> {
         return dao.selectList(wrapper).stream();
     }
 
-    // TODO mapstruct
+    // FIXME mapstruct
     public <R> List<R> list(Class<R> c) {
         return Converts.toList(dao.selectList(wrapper), c);
     }
@@ -80,7 +80,7 @@ public class DataQuery<T> {
         return this.dataGrid(Function.identity());
     }
 
-    // TODO mapstruct
+    // FIXME mapstruct
     public <R> DataGrid<R> dataGrid(Class<R> c) {
         return this.dataGrid(t -> Converts.to(t, c));
     }

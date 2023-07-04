@@ -27,6 +27,12 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!-- datasource -->
         <dependency>
             <groupId>com.orion.ops</groupId>

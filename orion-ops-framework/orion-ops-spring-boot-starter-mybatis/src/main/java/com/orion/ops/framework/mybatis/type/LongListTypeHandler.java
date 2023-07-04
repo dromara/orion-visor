@@ -1,6 +1,8 @@
 package com.orion.ops.framework.mybatis.type;
 
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.constant.Const;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
@@ -28,7 +30,7 @@ public class LongListTypeHandler implements ITypeHandler<String, List<Long>> {
     @Override
     public void setParameter(PreparedStatement ps, int i, List<Long> res, JdbcType jdbcType) throws SQLException {
         // 设置占位符
-        ps.setString(i, this.join(res));
+        ps.setString(i, Lists.join(res));
     }
 
     @Override
@@ -51,7 +53,7 @@ public class LongListTypeHandler implements ITypeHandler<String, List<Long>> {
         if (value == null) {
             return null;
         }
-        return Arrays.stream(value.split(COMMA))
+        return Arrays.stream(value.split(Const.COMMA))
                 .filter(Strings::isNumber)
                 .map(Long::valueOf)
                 .collect(Collectors.toList());

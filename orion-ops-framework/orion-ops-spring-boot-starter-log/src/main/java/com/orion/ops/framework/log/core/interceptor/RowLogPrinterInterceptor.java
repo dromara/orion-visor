@@ -55,7 +55,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
         if (!Strings.isEmpty(summary)) {
             fields.put(SUMMARY, summary);
         }
-        // TODO 登陆用户
+        // FIXME 登陆用户
         // http
         if (request != null) {
             // remoteAddr

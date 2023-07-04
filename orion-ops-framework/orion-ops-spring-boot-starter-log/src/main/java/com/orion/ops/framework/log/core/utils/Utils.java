@@ -1,5 +1,7 @@
 package com.orion.ops.framework.log.core.utils;
 
+import com.orion.lang.constant.Const;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +36,7 @@ public class Utils {
         return Optional.ofNullable(list)
                 .map(List::stream)
                 .orElseGet(Stream::empty)
-                // FIXME kit
-                .map(s -> s.split(","))
+                .map(s -> s.split(Const.COMMA))
                 .flatMap(Arrays::stream)
                 .map(String::trim)
                 .map(mapper)

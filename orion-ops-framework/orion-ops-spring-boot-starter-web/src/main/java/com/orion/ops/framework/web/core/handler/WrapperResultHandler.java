@@ -48,7 +48,8 @@ public class WrapperResultHandler implements ResponseBodyAdvice<Object> {
             wrapper = new HttpWrapper<>().data(body);
         }
         if (response instanceof ServletServerHttpResponse) {
-            ((ServletServerHttpResponse) response).getServletResponse().setContentType(StandardContentType.APPLICATION_JSON);
+            ((ServletServerHttpResponse) response).getServletResponse()
+                    .setContentType(StandardContentType.APPLICATION_JSON_UTF8);
         }
         return wrapper;
     }

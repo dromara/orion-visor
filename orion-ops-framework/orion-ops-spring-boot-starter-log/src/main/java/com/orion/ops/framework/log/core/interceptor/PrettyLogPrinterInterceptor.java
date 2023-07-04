@@ -51,7 +51,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         if (!Strings.isEmpty(summary)) {
             requestLog.append("\tsummary: ").append(summary).append('\n');
         }
-        // TODO 登陆用户
+        // FIXME 登陆用户
         // http
         if (request != null) {
             // remoteAddr

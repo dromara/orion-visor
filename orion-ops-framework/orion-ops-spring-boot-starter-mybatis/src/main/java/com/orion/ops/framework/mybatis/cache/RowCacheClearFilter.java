@@ -24,7 +24,7 @@ public class RowCacheClearFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } finally {
             // 清理缓存
-            // TODO test
+            // TODO TEST
             RowCacheHolder.remove();
         }
     }

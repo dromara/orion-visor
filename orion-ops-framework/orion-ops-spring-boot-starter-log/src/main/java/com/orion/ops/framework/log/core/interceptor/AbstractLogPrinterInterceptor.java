@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
+import com.orion.lang.utils.Desensitizes;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
@@ -13,7 +14,6 @@ import com.orion.lang.utils.reflect.Classes;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
-import com.orion.ops.framework.common.utils.Desensitizes;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import org.aopalliance.intercept.MethodInvocation;
@@ -270,10 +270,8 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
                 continue;
             }
             // 是否为代理对象 (bean)
-            if (arg != null) {
-                if (Classes.isJdkProxy(arg) || Classes.isCglibProxy(arg)) {
-                    ignored[i] = true;
-                }
+            if (Classes.isJdkProxy(arg) || Classes.isCglibProxy(arg)) {
+                ignored[i] = true;
             }
         }
         return ignored;

@@ -31,7 +31,7 @@ public class FieldFillHandler implements MetaObjectHandler {
                 baseDO.setUpdateTime(now);
             }
 
-            // TODO 当前用户
+            // FIXME 当前用户
             Long userId = null;
             // 创建人
             if (Objects.nonNull(userId) && Objects.isNull(baseDO.getCreator())) {
@@ -54,7 +54,7 @@ public class FieldFillHandler implements MetaObjectHandler {
 
         // 更新人
         Object updater = getFieldValByName("updater", metaObject);
-        // TODO 当前用户
+        // FIXME 当前用户
         Long userId = null;
         if (Objects.nonNull(userId) && Objects.isNull(updater)) {
             setFieldValByName("updater", userId.toString(), metaObject);
