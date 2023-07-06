@@ -1,11 +1,10 @@
 package com.orion.ops.framework.storage.core.client.local;
 
+import com.orion.lang.utils.io.FileWriters;
 import com.orion.lang.utils.io.Files1;
-import com.orion.lang.utils.io.Streams;
 import com.orion.ops.framework.storage.core.client.AbstractFileClient;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * 本地文件客户端
@@ -31,13 +30,7 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
         // 获取实际文件路径
         String absolutePath = this.getAbsolutePath(returnPath);
         // 上传文件
-        try (OutputStream out = Files1.openOutputStreamFast(absolutePath)) {
-            Streams.transfer(in, out);
-        } finally {
-            if (autoClose) {
-                Streams.close(in);
-            }
-        }
+        FileWriters.writeFast(absolutePath, in, autoClose);
         return returnPath;
     }
 

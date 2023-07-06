@@ -1,4 +1,4 @@
-package com.orion.ops.framework.log.core.utils;
+package com.orion.ops.framework.common.utils;
 
 import com.orion.lang.constant.Const;
 
@@ -16,9 +16,9 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 2023/6/28 23:21
  */
-public class Utils {
+public class ConfigUtils {
 
-    private Utils() {
+    private ConfigUtils() {
     }
 
     public static List<String> parseStringList(List<String> list) {

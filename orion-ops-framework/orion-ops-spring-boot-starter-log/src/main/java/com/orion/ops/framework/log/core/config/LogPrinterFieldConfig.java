@@ -1,6 +1,6 @@
 package com.orion.ops.framework.log.core.config;
 
-import com.orion.ops.framework.log.core.utils.Utils;
+import com.orion.ops.framework.common.utils.ConfigUtils;
 import lombok.Data;
 
 import java.util.List;
@@ -26,11 +26,11 @@ public class LogPrinterFieldConfig {
     private List<String> desensitize;
 
     public void setIgnore(List<String> ignore) {
-        this.ignore = Utils.parseStringList(ignore);
+        this.ignore = ConfigUtils.parseStringList(ignore);
     }
 
     public void setDesensitize(List<String> desensitize) {
-        this.desensitize = Utils.parseStringList(desensitize);
+        this.desensitize = ConfigUtils.parseStringList(desensitize);
     }
 
 }

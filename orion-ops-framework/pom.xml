@@ -28,6 +28,7 @@
         <module>orion-ops-spring-boot-starter-desensitize</module>
         <module>orion-ops-spring-boot-starter-log</module>
         <module>orion-ops-spring-boot-starter-storage</module>
+        <module>orion-ops-spring-boot-starter-security</module>
     </modules>
 
 </project>

@@ -6,6 +6,8 @@ import com.orion.lang.utils.Valid;
 import com.orion.ops.framework.mybatis.cache.RowCacheHolder;
 
 import java.io.Serializable;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * 缓存查询器
@@ -63,30 +65,26 @@ public class CacheQuery<T> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public <R> R get(Class<R> c) {
-        T row = this.get();
-        // FIXME mapstruct
-        return (R) row;
+    public <R> Optional<R> get(Function<T, R> mapper) {
+        Valid.notNull(mapper, "convert function is null");
+        return this.get().map(mapper);
     }
 
     @SuppressWarnings("unchecked")
-    public T get() {
+    public Optional<T> get() {
         Class<? extends BaseMapper<T>> mapperClass = (Class<? extends BaseMapper<T>>) dao.getClass();
         // 不查询缓存
         if (!force) {
             // 从缓存中获取
             Store<T> store = RowCacheHolder.get(mapperClass, id);
-            // 设置过缓存
-            if (store != null) {
-                return store.get();
-            }
+            return Optional.ofNullable(store)
+                    .map(Store::get);
         }
         // 查询
         T row = dao.selectById(id);
         // 设置缓存
         RowCacheHolder.set(mapperClass, id, row);
-        return row;
+        return Optional.ofNullable(row);
     }
 
 }

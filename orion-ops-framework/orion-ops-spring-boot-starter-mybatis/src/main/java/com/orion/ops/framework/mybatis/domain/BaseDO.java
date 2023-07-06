@@ -44,10 +44,10 @@ public class BaseDO implements Serializable {
     private String updater;
 
     /**
-     * 是否删除 1未删除 2已删除
+     * 是否删除 0未删除 1已删除
      *
-     * @see com.orion.lang.constant.Const#NOT_DELETED
-     * @see com.orion.lang.constant.Const#IS_DELETED
+     * @see com.orion.ops.framework.common.constant.Const#NOT_DELETE
+     * @see com.orion.ops.framework.common.constant.Const#IS_DELETED
      */
     @TableLogic
     private Boolean deleted;

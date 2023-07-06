@@ -9,13 +9,10 @@ import com.orion.lang.utils.Desensitizes;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
-import com.orion.lang.utils.reflect.Annotations;
 import com.orion.lang.utils.reflect.Classes;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
-import io.swagger.v3.oas.annotations.Operation;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,11 +51,6 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
     private final LogPrinterConfig config;
 
     /**
-     * api 描述
-     */
-    private final Map<String, String> summaryMapping;
-
-    /**
      * 忽略的参数
      */
     private final Map<String, boolean[]> ignoreParameter;
@@ -70,7 +62,6 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
 
     public AbstractLogPrinterInterceptor(LogPrinterConfig config) {
         this.config = config;
-        this.summaryMapping = Maps.newMap();
         this.ignoreParameter = Maps.newMap();
     }
 
@@ -145,29 +136,6 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
      * @param throwable ex
      */
     protected abstract void errorPrinter(Date startTime, String traceId, Throwable throwable);
-
-    /**
-     * 获取 api 描述
-     *
-     * @param m method
-     * @return summary
-     */
-    protected String getApiSummary(Method m) {
-        // 缓存中获取描述
-        String key = m.toString();
-        String cache = summaryMapping.get(key);
-        if (cache != null) {
-            return cache;
-        }
-        // 获取注解描述
-        Operation operation = Annotations.getAnnotation(m, Operation.class);
-        String summary = Const.EMPTY;
-        if (operation != null) {
-            summary = operation.summary();
-        }
-        summaryMapping.put(key, summary);
-        return summary;
-    }
 
     /**
      * 请求参数 json

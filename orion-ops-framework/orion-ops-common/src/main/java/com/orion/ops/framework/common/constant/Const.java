@@ -12,4 +12,8 @@ public class Const implements com.orion.lang.constant.Const {
     private Const() {
     }
 
+    public static final Integer NOT_DELETE = 0;
+
+    public static final Integer IS_DELETED = 1;
+
 }

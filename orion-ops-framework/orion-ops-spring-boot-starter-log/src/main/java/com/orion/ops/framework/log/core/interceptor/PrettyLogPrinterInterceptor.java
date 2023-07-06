@@ -3,6 +3,7 @@ package com.orion.ops.framework.log.core.interceptor;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.time.Dates;
+import com.orion.ops.framework.common.utils.SwaggerUtils;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         // 开始时间
         requestLog.append("\tstart: ").append(Dates.format(startTime, Dates.YMD_HMSS)).append('\n');
         // api 描述
-        String summary = this.getApiSummary(invocation.getMethod());
+        String summary = SwaggerUtils.getOperationSummary(invocation.getMethod());
         if (!Strings.isEmpty(summary)) {
             requestLog.append("\tsummary: ").append(summary).append('\n');
         }

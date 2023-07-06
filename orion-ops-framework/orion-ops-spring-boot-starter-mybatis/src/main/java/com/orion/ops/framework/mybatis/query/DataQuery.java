@@ -7,7 +7,6 @@ import com.orion.lang.define.wrapper.PageRequest;
 import com.orion.lang.define.wrapper.Pager;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
-import com.orion.lang.utils.convert.Converts;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,19 +52,19 @@ public class DataQuery<T> {
         return Optional.ofNullable(dao.selectOne(wrapper));
     }
 
-    // FIXME mapstruct
-    public <R> Optional<R> get(Class<R> c) {
+    public <R> Optional<R> get(Function<T, R> mapper) {
+        Valid.notNull(mapper, "convert function is null");
         return Optional.ofNullable(dao.selectOne(wrapper))
-                .map(s -> Converts.to(s, c));
+                .map(mapper);
     }
 
     public Stream<T> list() {
         return dao.selectList(wrapper).stream();
     }
 
-    // FIXME mapstruct
-    public <R> List<R> list(Class<R> c) {
-        return Converts.toList(dao.selectList(wrapper), c);
+    public <R> List<R> list(Function<T, R> mapper) {
+        Valid.notNull(mapper, "convert function is null");
+        return Lists.map(dao.selectList(wrapper), mapper);
     }
 
     public Long count() {
@@ -80,13 +79,8 @@ public class DataQuery<T> {
         return this.dataGrid(Function.identity());
     }
 
-    // FIXME mapstruct
-    public <R> DataGrid<R> dataGrid(Class<R> c) {
-        return this.dataGrid(t -> Converts.to(t, c));
-    }
-
-    public <R> DataGrid<R> dataGrid(Function<T, R> convert) {
-        Valid.notNull(convert, "convert is null");
+    public <R> DataGrid<R> dataGrid(Function<T, R> mapper) {
+        Valid.notNull(mapper, "convert function is null");
         Valid.notNull(page, "page is null");
         Valid.notNull(wrapper, "wrapper is null");
         Long count = dao.selectCount(wrapper);
@@ -96,7 +90,7 @@ public class DataQuery<T> {
         if (next) {
             wrapper.last(pager.getSql());
             List<R> rows = dao.selectList(wrapper).stream()
-                    .map(convert)
+                    .map(mapper)
                     .collect(Collectors.toList());
             pager.setRows(rows);
         } else {

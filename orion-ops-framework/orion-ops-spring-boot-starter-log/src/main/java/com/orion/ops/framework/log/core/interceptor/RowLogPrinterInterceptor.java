@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.time.Dates;
+import com.orion.ops.framework.common.utils.SwaggerUtils;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import com.orion.ops.framework.log.core.enums.LogFieldConst;
 import com.orion.web.servlet.web.Servlets;
@@ -51,7 +52,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
         // 开始时间
         fields.put(START, Dates.format(startTime, Dates.YMD_HMSS));
         // api 描述
-        String summary = this.getApiSummary(invocation.getMethod());
+        String summary = SwaggerUtils.getOperationSummary(invocation.getMethod());
         if (!Strings.isEmpty(summary)) {
             fields.put(SUMMARY, summary);
         }

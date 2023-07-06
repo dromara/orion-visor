@@ -1,6 +1,6 @@
 package com.orion.ops.framework.log.core.config;
 
-import com.orion.ops.framework.log.core.utils.Utils;
+import com.orion.ops.framework.common.utils.ConfigUtils;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -32,7 +32,7 @@ public class LogPrinterConfig {
     }
 
     public void setHeaders(List<String> headers) {
-        this.headers = Utils.parseStringList(headers, String::toLowerCase);
+        this.headers = ConfigUtils.parseStringList(headers, String::toLowerCase);
     }
 
 }
