@@ -67,6 +67,8 @@ public enum ErrorCode implements CodeInfo {
 
     VCS_OPETATOR_ERROR(714, "仓库操作执行失败"),
 
+    DIABLED_ERROR(715, "数据已被禁用"),
+
     ;
 
     ErrorCode(int code, String message) {
