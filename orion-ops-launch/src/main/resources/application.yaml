@@ -133,7 +133,7 @@ orion:
     cors: true
   swagger:
     title: orion-ops-pro 运维平台
-    description: 一站式提供运维功能
+    description: 一站式运维服务平台
     version: ${orion.version}
     url: https://github.com/lijiahangmax/orion-ops-pro
     email: ljh1553488six@139.com
@@ -141,10 +141,22 @@ orion:
     license-url: https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE
   storage:
     local:
-      nameAppendTraceId: true
-      storagePath: ${user.home}
-      basePath: /orion/storage/orion-ops-pro
+      enabled: true
+      name-append-trace-id: true
+      storage-path: ${user.home}
+      base-path: /orion/storage/orion-ops-pro
   security:
     password-encoder-length: 4
     # 匿名接口
     permit-url:
+      - ${orion.api.prefix}/server/bootstrap/health
+  crypto:
+    # aes加密器
+    aes:
+      enabled: true
+      working-mode: ECB
+      padding-mode: PKCS5_PADDING
+      # 加密秘钥
+      secret-key: I66AndrKWrwXjtBL
+      use-generator-key: true
+      generator-key-length: 128

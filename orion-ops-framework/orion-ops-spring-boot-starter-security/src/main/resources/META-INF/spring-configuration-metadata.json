@@ -4,6 +4,16 @@
       "name": "orion.security",
       "type": "com.orion.ops.framework.security.config.SecurityConfig",
       "sourceType": "com.orion.ops.framework.security.config.SecurityConfig"
+    },
+    {
+      "name": "orion.crypto",
+      "type": "com.orion.ops.framework.security.config.CryptoConfig",
+      "sourceType": "com.orion.ops.framework.security.config.CryptoConfig"
+    },
+    {
+      "name": "orion.crypto.aes",
+      "type": "com.orion.ops.framework.security.core.crypto.aes.AesCryptoConfig",
+      "sourceType": "com.orion.ops.framework.security.core.crypto.aes.AesCryptoConfig"
     }
   ],
   "properties": [
@@ -17,6 +27,56 @@
       "name": "orion.security.permit-url",
       "type": "java.util.List",
       "description": "匿名接口."
+    },
+    {
+      "name": "orion.crypto.aes.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用.",
+      "defaultValue": "false"
+    },
+    {
+      "name": "orion.crypto.aes.working-mode",
+      "type": "com.orion.lang.utils.crypto.enums.WorkingMode",
+      "description": "加密模式.",
+      "defaultValue": "ECB"
+    },
+    {
+      "name": "orion.crypto.aes.padding-mode",
+      "type": "com.orion.lang.utils.crypto.enums.PaddingMode",
+      "description": "填充模式.",
+      "defaultValue": "PKCS5_PADDING"
+    },
+    {
+      "name": "orion.crypto.aes.secret-key",
+      "type": "java.lang.String",
+      "description": "加密秘钥."
+    },
+    {
+      "name": "orion.crypto.aes.use-generator-key",
+      "type": "java.lang.Boolean",
+      "description": "是否生成秘钥.",
+      "defaultValue": "true"
+    },
+    {
+      "name": "orion.crypto.aes.generator-key-length",
+      "type": "java.lang.Integer",
+      "description": "生成的秘钥长度 128 192 256bytes.",
+      "defaultValue": "128"
+    },
+    {
+      "name": "orion.crypto.aes.iv",
+      "type": "java.lang.String",
+      "description": "向量 长度为 16bytes."
+    },
+    {
+      "name": "orion.crypto.aes.gcm",
+      "type": "java.lang.String",
+      "description": "GCM 模式参数 长度为 96 104 112 120 128bytes."
+    },
+    {
+      "name": "orion.crypto.aes.aad",
+      "type": "java.lang.String",
+      "description": "GCM 模式 aad."
     }
   ]
 }

@@ -36,3 +36,13 @@ knife4j:
 logging:
   printer:
     mode: ROW
+
+orion:
+  crypto:
+    aes:
+      enabled: true
+      working-mode: ECB
+      padding-mode: PKCS5_PADDING
+      # 加密秘钥
+      secret-key: uQeacXV8b3isvKLK
+      generator-key: true
