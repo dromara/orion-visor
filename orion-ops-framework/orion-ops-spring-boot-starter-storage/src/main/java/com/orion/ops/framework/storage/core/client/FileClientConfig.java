@@ -13,6 +13,11 @@ import lombok.Data;
 public class FileClientConfig {
 
     /**
+     * 是否启用
+     */
+    protected boolean enabled;
+
+    /**
      * 是否自动拼接 traceId 前缀. 没有则使用 UUID
      */
     protected boolean nameAppendTraceId;

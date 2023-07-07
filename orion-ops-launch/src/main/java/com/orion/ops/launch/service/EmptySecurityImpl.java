@@ -27,7 +27,6 @@ public class EmptySecurityImpl implements SecurityFrameworkService {
 
     @Override
     public LoginUser getUserByToken(String token) {
-        // TODO MOCK
         LoginUser user = new LoginUser();
         user.setId(123L);
         user.setUsername("username");

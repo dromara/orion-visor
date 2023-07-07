@@ -4,23 +4,34 @@
       "name": "orion.storage",
       "type": "com.orion.ops.framework.storage.config.StorageConfig",
       "sourceType": "com.orion.ops.framework.storage.config.StorageConfig"
+    },
+    {
+      "name": "orion.storage.local",
+      "type": "com.orion.ops.framework.storage.core.client.local.LocalFileClientConfig",
+      "sourceType": "com.orion.ops.framework.storage.core.client.local.LocalFileClientConfig"
     }
   ],
   "properties": [
     {
-      "name": "orion.storage.local.nameAppendTraceId",
+      "name": "orion.storage.local.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.name-append-trace-id",
       "type": "java.lang.Boolean",
       "description": "是否自动拼接 traceId 前缀. 没有则使用 UUID.",
       "defaultValue": false
     },
     {
-      "name": "orion.storage.local.storagePath",
+      "name": "orion.storage.local.storage-path",
       "type": "java.lang.String",
       "description": "存储路径.",
       "defaultValue": ""
     },
     {
-      "name": "orion.storage.local.basePath",
+      "name": "orion.storage.local.base-path",
       "type": "java.lang.String",
       "description": "基础路径.",
       "defaultValue": ""
