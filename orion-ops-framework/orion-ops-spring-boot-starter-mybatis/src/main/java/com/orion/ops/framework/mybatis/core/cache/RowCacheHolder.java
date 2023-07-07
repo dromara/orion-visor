@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.cache;
+package com.orion.ops.framework.mybatis.core.cache;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orion.lang.define.collect.MultiHashMap;

@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.query;
+package com.orion.ops.framework.mybatis.core.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 

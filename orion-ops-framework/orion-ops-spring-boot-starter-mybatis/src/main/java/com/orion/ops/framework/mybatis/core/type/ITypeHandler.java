@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.type;
+package com.orion.ops.framework.mybatis.core.type;
 
 import org.apache.ibatis.type.TypeHandler;
 

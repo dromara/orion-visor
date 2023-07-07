@@ -1,8 +1,8 @@
-package com.orion.ops.launch.config;
+package com.orion.ops.framework.common.config;
 
 import com.orion.spring.SpringHolder;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * 应用配置类
@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0.0
  * @since 2023/6/20 10:34
  */
-@Configuration
-public class ApplicationConfiguration {
+@AutoConfiguration
+public class OrionCommonAutoConfiguration {
 
     /**
      * @return spring 容器工具类

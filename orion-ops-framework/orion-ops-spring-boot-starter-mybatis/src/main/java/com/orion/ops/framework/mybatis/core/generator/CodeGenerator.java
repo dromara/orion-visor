@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.generator;
+package com.orion.ops.framework.mybatis.core.generator;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -14,8 +14,8 @@ import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.ext.yml.YmlExt;
-import com.orion.ops.framework.mybatis.domain.BaseDO;
-import com.orion.ops.framework.mybatis.mapper.IMapper;
+import com.orion.ops.framework.mybatis.core.domain.BaseDO;
+import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;

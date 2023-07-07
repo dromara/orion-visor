@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.type;
+package com.orion.ops.framework.mybatis.core.type;
 
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;

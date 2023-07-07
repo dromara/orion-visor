@@ -1,8 +1,8 @@
-package com.orion.ops.framework.mybatis.mapper;
+package com.orion.ops.framework.mybatis.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import com.orion.ops.framework.mybatis.query.DataQuery;
+import com.orion.ops.framework.mybatis.core.query.DataQuery;
 
 import java.util.Collection;
 

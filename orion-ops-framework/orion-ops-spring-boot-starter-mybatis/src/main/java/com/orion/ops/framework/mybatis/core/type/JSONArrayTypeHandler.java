@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.type;
+package com.orion.ops.framework.mybatis.core.type;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

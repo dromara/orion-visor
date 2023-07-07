@@ -1,7 +1,7 @@
-package com.orion.ops.framework.mybatis.handler;
+package com.orion.ops.framework.mybatis.core.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.orion.ops.framework.mybatis.domain.BaseDO;
+import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.Date;

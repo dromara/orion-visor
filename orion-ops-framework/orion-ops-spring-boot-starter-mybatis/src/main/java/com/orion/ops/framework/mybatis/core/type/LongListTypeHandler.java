@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.type;
+package com.orion.ops.framework.mybatis.core.type;
 
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * TODO TEST
- * varchar -> List<Integer>
+ * varchar -> List<Long>
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -25,37 +25,37 @@ import java.util.stream.Collectors;
  */
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(List.class)
-public class IntegerListTypeHandler implements ITypeHandler<String, List<Integer>> {
+public class LongListTypeHandler implements ITypeHandler<String, List<Long>> {
 
     @Override
-    public void setParameter(PreparedStatement ps, int i, List<Integer> res, JdbcType jdbcType) throws SQLException {
+    public void setParameter(PreparedStatement ps, int i, List<Long> res, JdbcType jdbcType) throws SQLException {
         // 设置占位符
         ps.setString(i, Lists.join(res));
     }
 
     @Override
-    public List<Integer> getResult(ResultSet rs, String columnName) throws SQLException {
+    public List<Long> getResult(ResultSet rs, String columnName) throws SQLException {
         return this.getResult(rs.getString(columnName));
     }
 
     @Override
-    public List<Integer> getResult(ResultSet rs, int columnIndex) throws SQLException {
+    public List<Long> getResult(ResultSet rs, int columnIndex) throws SQLException {
         return this.getResult(rs.getString(columnIndex));
     }
 
     @Override
-    public List<Integer> getResult(CallableStatement cs, int columnIndex) throws SQLException {
+    public List<Long> getResult(CallableStatement cs, int columnIndex) throws SQLException {
         return this.getResult(cs.getString(columnIndex));
     }
 
     @Override
-    public List<Integer> getResult(String value) {
+    public List<Long> getResult(String value) {
         if (value == null) {
             return null;
         }
         return Arrays.stream(value.split(Const.COMMA))
                 .filter(Strings::isNumber)
-                .map(Integer::valueOf)
+                .map(Long::valueOf)
                 .collect(Collectors.toList());
     }
 

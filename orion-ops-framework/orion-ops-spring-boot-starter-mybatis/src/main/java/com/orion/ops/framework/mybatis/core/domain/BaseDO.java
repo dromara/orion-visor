@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.domain;
+package com.orion.ops.framework.mybatis.core.domain;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
