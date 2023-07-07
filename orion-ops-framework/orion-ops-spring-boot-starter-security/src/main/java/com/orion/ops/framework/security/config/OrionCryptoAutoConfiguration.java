@@ -1,7 +1,7 @@
 package com.orion.ops.framework.security.config;
 
+import com.orion.ops.framework.common.crypto.ValueCrypto;
 import com.orion.ops.framework.common.utils.CryptoUtils;
-import com.orion.ops.framework.security.core.crypto.ValueCrypto;
 import com.orion.ops.framework.security.core.crypto.aes.AesCryptoProcessor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -32,8 +32,7 @@ public class OrionCryptoAutoConfiguration {
     @Bean(initMethod = "init")
     @ConditionalOnProperty(value = "orion.crypto.aes.enabled", havingValue = "true")
     public ValueCrypto aes() {
-        AesCryptoProcessor processor = new AesCryptoProcessor(config.getAes());
-        processor.init();
+        ValueCrypto processor = new AesCryptoProcessor(config.getAes());
         // 设置工具委托类 委托需要与 @Primary 相同, 否则会导致工具类和bean的结果不同
         CryptoUtils.delegate = processor;
         return processor;

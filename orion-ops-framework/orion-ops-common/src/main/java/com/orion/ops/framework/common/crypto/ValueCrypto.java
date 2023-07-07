@@ -1,4 +1,4 @@
-package com.orion.ops.framework.security.core.crypto;
+package com.orion.ops.framework.common.crypto;
 
 import com.orion.lang.utils.crypto.symmetric.SymmetricCrypto;
 

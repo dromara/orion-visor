@@ -1,5 +1,7 @@
 package com.orion.ops.framework.security.core.crypto;
 
+import com.orion.ops.framework.common.crypto.ValueCrypto;
+
 /**
  * 数据加密器
  *
