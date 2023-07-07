@@ -66,7 +66,7 @@ spring:
       time-to-live: 1h
   output:
     ansi:
-      enabled: detect
+      enabled: DETECT
 
 mybatis-plus:
   configuration:
@@ -92,7 +92,7 @@ springdoc:
 knife4j:
   enable: true
   setting:
-    language: zh_cn
+    language: ZH_CN
 
 logging:
   file:
@@ -144,3 +144,7 @@ orion:
       nameAppendTraceId: true
       storagePath: ${user.home}
       basePath: /orion/storage/orion-ops-pro
+  security:
+    password-encoder-length: 4
+    # 匿名接口
+    permit-url:

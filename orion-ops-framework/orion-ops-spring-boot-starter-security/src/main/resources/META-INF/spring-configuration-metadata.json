@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "orion.security",
+      "type": "com.orion.ops.framework.security.config.SecurityConfig",
+      "sourceType": "com.orion.ops.framework.security.config.SecurityConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.security.password-encoder-length",
+      "type": "java.lang.Integer",
+      "description": "加密复杂度.",
+      "defaultValue": 4
+    },
+    {
+      "name": "orion.security.permit-url",
+      "type": "java.util.List",
+      "description": "匿名接口."
+    }
+  ]
+}

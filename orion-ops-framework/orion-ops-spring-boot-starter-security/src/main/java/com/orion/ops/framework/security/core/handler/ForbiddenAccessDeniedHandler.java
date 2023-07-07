@@ -1,0 +1,30 @@
+package com.orion.ops.framework.security.core.handler;
+
+import com.orion.ops.framework.common.constant.ErrorCode;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.web.servlet.web.Servlets;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * 权限不足处理器
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2023/7/6 16:01
+ */
+@Slf4j
+public class ForbiddenAccessDeniedHandler implements AccessDeniedHandler {
+
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException {
+        log.warn("AccessDeniedHandlerImpl-handle-无权限 {} {}", SecurityUtils.getLoginUserId(), request.getRequestURI());
+        Servlets.writeHttpWrapper(response, ErrorCode.FORBIDDEN.getWrapper());
+    }
+
+}
