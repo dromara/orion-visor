@@ -22,14 +22,16 @@
             <artifactId>orion-ops-common</artifactId>
         </dependency>
 
+        <!-- security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
 

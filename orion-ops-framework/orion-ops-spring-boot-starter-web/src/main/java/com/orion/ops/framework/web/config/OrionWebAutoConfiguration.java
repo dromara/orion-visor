@@ -49,7 +49,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         // 公共 api 前缀
         AntPathMatcher antPathMatcher = new AntPathMatcher(".");
         configurer.addPathPrefix(orionApiPrefix, clazz -> clazz.isAnnotationPresent(RestController.class)
-                && antPathMatcher.match("com.orion.ops.**.controller.**", clazz.getPackage().getName())); // 仅仅匹配 controller 包
+                && antPathMatcher.match("com.orion.ops.**.controller.**", clazz.getPackage().getName()));
     }
 
     /**

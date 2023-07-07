@@ -33,12 +33,10 @@ public class SecurityUtils {
      */
     public static String obtainAuthorization(HttpServletRequest request) {
         String authorization = request.getHeader(StandardHttpHeader.AUTHORIZATION);
-        // todo mock
-        authorization = "Bearer 1213";
         if (Strings.isEmpty(authorization)) {
             return null;
         }
-        if (!authorization.contains(Const.BEARER)) {
+        if (!authorization.contains(Const.BEARER) || authorization.length() <= 7) {
             return null;
         }
         return authorization.substring(7).trim();

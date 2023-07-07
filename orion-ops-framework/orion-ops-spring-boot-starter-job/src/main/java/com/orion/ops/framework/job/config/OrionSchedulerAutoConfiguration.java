@@ -20,7 +20,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 public class OrionSchedulerAutoConfiguration {
 
     /**
-     * @return 调取器
+     * @return 任务调度器
      */
     @Bean
     public TaskScheduler taskScheduler() {

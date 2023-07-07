@@ -52,7 +52,11 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         if (!Strings.isEmpty(summary)) {
             requestLog.append("\tsummary: ").append(summary).append('\n');
         }
-        // FIXME 登陆用户
+        // 登陆用户
+        Long loginUserId = securityHolder.getLoginUserId();
+        if (loginUserId != null) {
+            requestLog.append("\tuser: ").append(loginUserId).append('\n');
+        }
         // http
         if (request != null) {
             // remoteAddr

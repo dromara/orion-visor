@@ -1,5 +1,7 @@
 package com.orion.ops.framework.common.meta;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+
 /**
  * traceId 持有者
  *
@@ -15,8 +17,7 @@ public class TraceIdHolder {
     /**
      * 请求序列
      */
-    private static final ThreadLocal<String> HOLDER = new ThreadLocal<>();
-    ;
+    private static final ThreadLocal<String> HOLDER = new TransmittableThreadLocal<>();
 
     public static String get() {
         return HOLDER.get();

@@ -1,11 +1,13 @@
 package com.orion.ops.framework.websocket.interceptor;
 
+import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.websocket.constant.WsAttr;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -17,10 +19,13 @@ import java.util.Map;
  */
 public class UserHandshakeInterceptor implements HandshakeInterceptor {
 
+    @Resource
+    private SecurityHolder securityHolder;
+
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-        // FIXME 获取当前用户
-        attributes.put(WsAttr.USER, 1);
+        // TODO TEST
+        attributes.put(WsAttr.USER, securityHolder.getLoginUserId());
         // if (user == null){
         //     return false;
         // response.setStatusCode(HttpStatus.MULTI_STATUS);

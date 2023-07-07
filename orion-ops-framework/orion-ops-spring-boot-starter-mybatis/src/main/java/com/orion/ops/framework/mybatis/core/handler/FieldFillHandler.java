@@ -1,9 +1,11 @@
 package com.orion.ops.framework.mybatis.core.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import org.apache.ibatis.reflection.MetaObject;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,6 +17,9 @@ import java.util.Objects;
  * @since 2023/6/23 19:01
  */
 public class FieldFillHandler implements MetaObjectHandler {
+
+    @Resource
+    private SecurityHolder securityHolder;
 
     @Override
     public void insertFill(MetaObject metaObject) {
@@ -31,8 +36,8 @@ public class FieldFillHandler implements MetaObjectHandler {
                 baseDO.setUpdateTime(now);
             }
 
-            // FIXME 当前用户
-            Long userId = null;
+            // TODO TEST
+            Long userId = securityHolder.getLoginUserId();
             // 创建人
             if (Objects.nonNull(userId) && Objects.isNull(baseDO.getCreator())) {
                 baseDO.setCreator(userId.toString());
@@ -46,18 +51,20 @@ public class FieldFillHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        // 更新时间
-        Object modifyTime = getFieldValByName("updateTime", metaObject);
-        if (Objects.isNull(modifyTime)) {
-            setFieldValByName("updateTime", new Date(), metaObject);
-        }
+        if (Objects.nonNull(metaObject) && metaObject.getOriginalObject() instanceof BaseDO) {
+            // 更新时间
+            Object updateTime = getFieldValByName("updateTime", metaObject);
+            if (Objects.isNull(updateTime)) {
+                setFieldValByName("updateTime", new Date(), metaObject);
+            }
 
-        // 更新人
-        Object updater = getFieldValByName("updater", metaObject);
-        // FIXME 当前用户
-        Long userId = null;
-        if (Objects.nonNull(userId) && Objects.isNull(updater)) {
-            setFieldValByName("updater", userId.toString(), metaObject);
+            // 更新人
+            Object updater = getFieldValByName("updater", metaObject);
+            // TODO TEST
+            Long userId = securityHolder.getLoginUserId();
+            if (Objects.nonNull(userId) && Objects.isNull(updater)) {
+                setFieldValByName("updater", userId.toString(), metaObject);
+            }
         }
     }
 

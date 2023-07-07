@@ -12,11 +12,13 @@ import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Classes;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
+import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.lang.annotation.Annotation;
@@ -54,6 +56,9 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
      * 忽略的参数
      */
     private final Map<String, boolean[]> ignoreParameter;
+
+    @Resource
+    protected SecurityHolder securityHolder;
 
     @SuppressWarnings("ALL")
     @Autowired(required = false)
