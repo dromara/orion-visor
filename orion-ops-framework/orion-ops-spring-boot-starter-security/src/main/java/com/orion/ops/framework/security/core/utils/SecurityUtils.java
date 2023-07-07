@@ -22,6 +22,8 @@ import java.util.Collections;
  */
 public class SecurityUtils {
 
+    private static final int BEARER_PREFIX_LEN = 7;
+
     private SecurityUtils() {
     }
 
@@ -36,10 +38,10 @@ public class SecurityUtils {
         if (Strings.isEmpty(authorization)) {
             return null;
         }
-        if (!authorization.contains(Const.BEARER) || authorization.length() <= 7) {
+        if (!authorization.contains(Const.BEARER) || authorization.length() <= BEARER_PREFIX_LEN) {
             return null;
         }
-        return authorization.substring(7).trim();
+        return authorization.substring(BEARER_PREFIX_LEN).trim();
     }
 
     /**

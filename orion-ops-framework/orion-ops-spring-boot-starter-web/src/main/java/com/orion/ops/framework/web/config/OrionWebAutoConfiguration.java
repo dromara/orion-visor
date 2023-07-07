@@ -26,6 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +95,9 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.IgnoreNonFieldGetter
         );
+        config.setCharset(StandardCharsets.UTF_8);
         converter.setFastJsonConfig(config);
+        converter.setDefaultCharset(StandardCharsets.UTF_8);
         return converter;
     }
 
