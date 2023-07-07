@@ -27,6 +27,7 @@
         <velocity.version>2.3</velocity.version>
         <druid.version>1.2.16</druid.version>
         <redisson.version>3.18.0</redisson.version>
+        <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
     </properties>
 
     <dependencyManagement>
@@ -206,6 +207,13 @@
                         <artifactId>spring-boot-starter-actuator</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!-- transmittable -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
 
         </dependencies>
