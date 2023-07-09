@@ -1,6 +1,6 @@
 package com.orion.ops.framework.banner.core;
 
-import com.orion.lang.utils.ansi.AnsiCode;
+import com.orion.lang.utils.ansi.AnsiColor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -30,15 +30,15 @@ public class BannerApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String line = AnsiCode.GLOSS_GREEN.stain(":: orion-ops-launch v" + version + " 服务已启动(" + env + ") ::\n") +
-                AnsiCode.GLOSS_GREEN.stain(":: swagger 文档      ") +
-                AnsiCode.GLOSS_BLUE.stain("http://127.0.0.1:" + port + "/doc.html\n") +
-                AnsiCode.GLOSS_GREEN.stain(":: druid console    ") +
-                AnsiCode.GLOSS_BLUE.stain("http://127.0.0.1:" + port + "/druid/index.html\n") +
-                AnsiCode.GLOSS_GREEN.stain(":: server 心跳检测    ") +
-                AnsiCode.GLOSS_BLUE +
+        String line = AnsiColor.GLOSS_GREEN.color(":: orion-ops-launch v" + version + " 服务已启动(" + env + ") ::\n") +
+                AnsiColor.GLOSS_GREEN.color(":: swagger 文档      ") +
+                AnsiColor.GLOSS_BLUE.color("http://127.0.0.1:" + port + "/doc.html\n") +
+                AnsiColor.GLOSS_GREEN.color(":: druid console    ") +
+                AnsiColor.GLOSS_BLUE.color("http://127.0.0.1:" + port + "/druid/index.html\n") +
+                AnsiColor.GLOSS_GREEN.color(":: server 健康检测    ") +
+                AnsiColor.GLOSS_BLUE +
                 "curl -X GET --location \"http://127.0.0.1:" + port + apiPrefix + "/server/bootstrap/health\"" +
-                AnsiCode.SUFFIX;
+                AnsiColor.SUFFIX;
         System.out.println(line);
     }
 
