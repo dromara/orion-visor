@@ -2,6 +2,7 @@ package com.orion.ops.launch.controller;
 
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0.0
  * @since 2023/6/19 17:08
  */
+@Tag(name = "launch - 启动服务")
 @RestWrapper
 @RestController
 @RequestMapping("/server/bootstrap")

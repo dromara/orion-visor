@@ -15,7 +15,7 @@ public enum ErrorCode implements CodeInfo {
 
     BAD_REQUEST(400, "参数验证失败"),
 
-    UNAUTHORIZED(401, "会话过期"),
+    UNAUTHORIZED(401, "当前认证信息已失效, 请重新登录"),
 
     FORBIDDEN(403, "无操作权限"),
 

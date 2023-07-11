@@ -11,6 +11,10 @@ import com.alibaba.ttl.TransmittableThreadLocal;
  */
 public class TraceIdHolder {
 
+    public static final String TRACE_ID_HEADER = "trace-id";
+
+    public static final String TRACE_ID_MDC = "tid";
+
     private TraceIdHolder() {
     }
 

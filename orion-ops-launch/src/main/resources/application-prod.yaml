@@ -33,16 +33,17 @@ springdoc:
 knife4j:
   enable: false
 
-logging:
-  printer:
-    mode: ROW
-
 orion:
+  logging:
+    printer:
+      mode: ROW
   crypto:
     aes:
-      enabled: true
-      working-mode: ECB
-      padding-mode: PKCS5_PADDING
       # 加密秘钥
       secret-key: uQeacXV8b3isvKLK
-      generator-key: true
+  thread:
+    pool:
+      core-pool-size: 8
+      max-pool-size: 16
+      queue-capacity: 200
+      keep-alive-seconds: 300

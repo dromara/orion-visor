@@ -1,0 +1,35 @@
+{
+  "groups": [
+    {
+      "name": "orion.thread.pool",
+      "type": "com.orion.ops.framework.common.config.ThreadPoolConfig",
+      "sourceType": "com.orion.ops.framework.common.config.ThreadPoolConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.thread.pool.core-pool-size",
+      "type": "java.lang.Integer",
+      "description": "核心线程数量",
+      "defaultValue": "8"
+    },
+    {
+      "name": "orion.thread.pool.max-pool-size",
+      "type": "java.lang.Integer",
+      "description": "最大线程数量.",
+      "defaultValue": "16"
+    },
+    {
+      "name": "orion.thread.pool.queue-capacity",
+      "type": "java.lang.Integer",
+      "description": "队列容量.",
+      "defaultValue": "200"
+    },
+    {
+      "name": "orion.thread.pool.keep-alive-seconds",
+      "type": "java.lang.Integer",
+      "description": "活跃时间.",
+      "defaultValue": "300"
+    }
+  ]
+}
