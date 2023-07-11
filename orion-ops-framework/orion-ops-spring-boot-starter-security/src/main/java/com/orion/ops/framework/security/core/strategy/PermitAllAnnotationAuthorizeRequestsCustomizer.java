@@ -56,7 +56,7 @@ public class PermitAllAnnotationAuthorizeRequestsCustomizer extends AuthorizeReq
         Set<String> deleteList = new HashSet<>();
         Set<String> requestList = new HashSet<>();
         // 获取 RequestMappingHandlerMapping
-        RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+        RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
         // 获得接口对应的 HandlerMethod
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         // 获得有 @PermitAll 注解的接口

@@ -1,6 +1,5 @@
 package com.orion.ops.framework.datasource.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
 import com.orion.ops.framework.datasource.core.filter.DruidAdRemoveFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -9,8 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
 
 /**
  * 数据源配置类
@@ -23,14 +20,6 @@ import javax.sql.DataSource;
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableConfigurationProperties(DruidStatProperties.class)
 public class OrionDatasourceAutoConfiguration {
-
-    /**
-     * @return druid 数据源
-     */
-    @Bean
-    public DataSource druidDataSource() {
-        return new DruidDataSource();
-    }
 
     /**
      * @param properties 配置

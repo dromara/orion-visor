@@ -20,10 +20,6 @@ import java.io.IOException;
  */
 public class TraceIdFilter extends OncePerRequestFilter {
 
-    private static final String TRACE_ID_HEADER = "trace-id";
-
-    private static final String TRACE_ID_MDC = "tid";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -32,9 +28,9 @@ public class TraceIdFilter extends OncePerRequestFilter {
             // 设置应用上下文
             TraceIdHolder.set(traceId);
             // 设置日志上下文
-            MDC.put(TRACE_ID_MDC, traceId);
+            MDC.put(TraceIdHolder.TRACE_ID_MDC, traceId);
             // 设置响应头
-            response.setHeader(TRACE_ID_HEADER, traceId);
+            response.setHeader(TraceIdHolder.TRACE_ID_HEADER, traceId);
             // 执行请求
             filterChain.doFilter(request, response);
         } finally {

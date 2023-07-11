@@ -6,12 +6,13 @@ import com.orion.ops.framework.log.core.interceptor.LogPrinterInterceptor;
 import com.orion.ops.framework.log.core.interceptor.PrettyLogPrinterInterceptor;
 import com.orion.ops.framework.log.core.interceptor.RowLogPrinterInterceptor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+
+import javax.annotation.Resource;
 
 /**
  * 全局日志打印配置类
@@ -24,37 +25,36 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties(LogPrinterConfig.class)
 public class OrionLogPrinterConfiguration {
 
+    @Resource
+    private LogPrinterConfig config;
+
     /**
-     * @param config config
      * @return 美化日志打印器
      */
     @Bean(initMethod = "init")
-    @ConditionalOnProperty(value = "logging.printer.mode", havingValue = "pretty")
-    public LogPrinterInterceptor prettyPrinter(LogPrinterConfig config) {
+    @ConditionalOnProperty(value = "orion.logging.printer.mode", havingValue = "pretty")
+    public LogPrinterInterceptor prettyPrinter() {
         return new PrettyLogPrinterInterceptor(config);
     }
 
     /**
-     * @param config config
      * @return 单行日志打印器
      */
     @Bean(initMethod = "init")
-    @ConditionalOnProperty(value = "logging.printer.mode", havingValue = "row")
-    public LogPrinterInterceptor rowPrinter(LogPrinterConfig config) {
+    @ConditionalOnProperty(value = "orion.logging.printer.mode", havingValue = "row")
+    public LogPrinterInterceptor rowPrinter() {
         return new RowLogPrinterInterceptor(config);
     }
 
     /**
      * @param logPrinterInterceptor logPrinterInterceptor
-     * @param expression            切面表达式
      * @return 日志打印切面
      */
     @Bean
     @ConditionalOnBean(LogPrinterInterceptor.class)
-    public AspectJExpressionPointcutAdvisor logPrinterAdvisor(LogPrinterInterceptor logPrinterInterceptor,
-                                                              @Value("${logging.printer.expression}") String expression) {
+    public AspectJExpressionPointcutAdvisor logPrinterAdvisor(LogPrinterInterceptor logPrinterInterceptor) {
         AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
-        advisor.setExpression(expression);
+        advisor.setExpression(config.getExpression());
         advisor.setAdvice(logPrinterInterceptor);
         advisor.setOrder(InterceptorOrderConst.LOG_FILTER);
         return advisor;

@@ -14,7 +14,7 @@ import java.util.List;
  * @since 2023/6/28 22:36
  */
 @Data
-@ConfigurationProperties("logging.printer")
+@ConfigurationProperties("orion.logging.printer")
 public class LogPrinterConfig {
 
     /**
@@ -26,6 +26,11 @@ public class LogPrinterConfig {
      * 显示的请求头
      */
     private List<String> headers;
+
+    /**
+     * 切面表达式
+     */
+    private String expression;
 
     public void setField(LogPrinterFieldConfig field) {
         this.field = field;
