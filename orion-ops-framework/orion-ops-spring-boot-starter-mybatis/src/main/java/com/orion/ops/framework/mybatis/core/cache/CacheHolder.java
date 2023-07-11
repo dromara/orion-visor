@@ -13,9 +13,9 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2023/6/25 14:21
  */
-public class RowCacheHolder {
+public class CacheHolder {
 
-    private RowCacheHolder() {
+    private CacheHolder() {
     }
 
     /**

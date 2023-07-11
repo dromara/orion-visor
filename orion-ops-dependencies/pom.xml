@@ -16,7 +16,7 @@
     <properties>
         <revision>1.0.0</revision>
         <spring.boot.version>2.7.11</spring.boot.version>
-        <orion.all.version>1.0.6</orion.all.version>
+        <orion.kit.revision>1.0.6</orion.kit.revision>
         <aspectj.version>1.9.7</aspectj.version>
         <lombok.version>1.18.26</lombok.version>
         <springdoc.version>1.6.15</springdoc.version>
@@ -27,6 +27,7 @@
         <velocity.version>2.3</velocity.version>
         <druid.version>1.2.16</druid.version>
         <redisson.version>3.18.0</redisson.version>
+        <spring-boot-admin.version>2.7.10</spring-boot-admin.version>
         <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
     </properties>
 
@@ -44,7 +45,7 @@
             <dependency>
                 <groupId>io.github.lijiahangmax</groupId>
                 <artifactId>orion-all</artifactId>
-                <version>${orion.all.version}</version>
+                <version>${orion.kit.revision}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>orion-log</artifactId>
@@ -117,6 +118,11 @@
             <dependency>
                 <groupId>com.orion.ops</groupId>
                 <artifactId>orion-ops-spring-boot-starter-security</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-monitor</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -207,6 +213,25 @@
                         <artifactId>spring-boot-starter-actuator</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!-- actuator -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!-- admin -->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${spring-boot-admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin.version}</version>
             </dependency>
 
             <!-- transmittable -->

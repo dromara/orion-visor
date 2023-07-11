@@ -3,7 +3,7 @@ package com.orion.ops.framework.mybatis.core.query;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orion.lang.define.wrapper.Store;
 import com.orion.lang.utils.Valid;
-import com.orion.ops.framework.mybatis.core.cache.RowCacheHolder;
+import com.orion.ops.framework.mybatis.core.cache.CacheHolder;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -76,14 +76,14 @@ public class CacheQuery<T> {
         // 不查询缓存
         if (!force) {
             // 从缓存中获取
-            Store<T> store = RowCacheHolder.get(mapperClass, id);
+            Store<T> store = CacheHolder.get(mapperClass, id);
             return Optional.ofNullable(store)
                     .map(Store::get);
         }
         // 查询
         T row = dao.selectById(id);
         // 设置缓存
-        RowCacheHolder.set(mapperClass, id, row);
+        CacheHolder.set(mapperClass, id, row);
         return Optional.ofNullable(row);
     }
 

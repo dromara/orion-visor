@@ -1,6 +1,5 @@
 package com.orion.ops.framework.security.core.strategy;
 
-import com.orion.ops.framework.security.config.AuthorizeRequestsCustomizer;
 import com.orion.ops.framework.security.config.SecurityConfig;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;

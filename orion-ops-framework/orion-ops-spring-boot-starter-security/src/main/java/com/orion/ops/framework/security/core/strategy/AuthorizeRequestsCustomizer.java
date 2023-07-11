@@ -1,4 +1,4 @@
-package com.orion.ops.framework.security.config;
+package com.orion.ops.framework.security.core.strategy;
 
 import org.springframework.core.Ordered;
 import org.springframework.security.config.Customizer;

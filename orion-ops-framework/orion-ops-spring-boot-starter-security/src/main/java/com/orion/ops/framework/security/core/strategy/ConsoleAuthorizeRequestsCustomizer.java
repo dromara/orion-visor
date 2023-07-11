@@ -1,6 +1,5 @@
 package com.orion.ops.framework.security.core.strategy;
 
-import com.orion.ops.framework.security.config.AuthorizeRequestsCustomizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
@@ -15,8 +14,11 @@ public class ConsoleAuthorizeRequestsCustomizer extends AuthorizeRequestsCustomi
 
     private final String adminSeverContextPath;
 
-    public ConsoleAuthorizeRequestsCustomizer(String adminSeverContextPath) {
+    private final String managementEndpoints;
+
+    public ConsoleAuthorizeRequestsCustomizer(String adminSeverContextPath, String managementEndpoints) {
         this.adminSeverContextPath = adminSeverContextPath;
+        this.managementEndpoints = managementEndpoints;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class ConsoleAuthorizeRequestsCustomizer extends AuthorizeRequestsCustomi
                 // druid 监控
                 .antMatchers("/druid/**").anonymous()
                 // actuator 安全配置 TODO TEST
-                .antMatchers("/actuator", "/actuator/**").anonymous()
+                .antMatchers(managementEndpoints, managementEndpoints + "/**").anonymous()
                 // admin 安全配置 TODO TEST
                 .antMatchers(adminSeverContextPath, adminSeverContextPath + "/**").anonymous();
     }

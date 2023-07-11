@@ -29,6 +29,7 @@
         <module>orion-ops-spring-boot-starter-log</module>
         <module>orion-ops-spring-boot-starter-storage</module>
         <module>orion-ops-spring-boot-starter-security</module>
+        <module>orion-ops-spring-boot-starter-monitor</module>
     </modules>
 
 </project>

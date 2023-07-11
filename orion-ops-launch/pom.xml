@@ -77,6 +77,10 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-monitor</artifactId>
+        </dependency>
 
         <!-- orion-ops biz-modules -->
 

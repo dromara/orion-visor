@@ -15,7 +15,7 @@ import java.io.IOException;
  * @version 1.0.0
  * @since 2023/6/25 15:14
  */
-public class RowCacheClearFilter extends OncePerRequestFilter {
+public class CacheClearFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -25,7 +25,7 @@ public class RowCacheClearFilter extends OncePerRequestFilter {
         } finally {
             // 清理缓存
             // TODO TEST
-            RowCacheHolder.remove();
+            CacheHolder.remove();
         }
     }
 

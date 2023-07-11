@@ -163,11 +163,13 @@ public class OrionSecurityAutoConfiguration {
 
     /**
      * @param adminSeverContextPath adminSeverContextPath
+     * @param managementEndpoints   managementEndpoints
      * @return 控制台安全策略
      */
     @Bean
-    public ConsoleAuthorizeRequestsCustomizer consoleAuthorizeRequestsCustomizer(@Value("${spring.boot.admin.context-path:''}") String adminSeverContextPath) {
-        return new ConsoleAuthorizeRequestsCustomizer(adminSeverContextPath);
+    public ConsoleAuthorizeRequestsCustomizer consoleAuthorizeRequestsCustomizer(@Value("${spring.boot.admin.context-path:''}") String adminSeverContextPath,
+                                                                                 @Value("${management.endpoints.web.base-path:''}") String managementEndpoints) {
+        return new ConsoleAuthorizeRequestsCustomizer(adminSeverContextPath, managementEndpoints);
     }
 
     /**

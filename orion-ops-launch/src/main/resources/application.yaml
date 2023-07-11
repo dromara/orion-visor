@@ -67,6 +67,20 @@ spring:
   output:
     ansi:
       enabled: DETECT
+  boot:
+    admin:
+      context-path: /admin
+      client:
+        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
+        instance:
+          service-host-type: IP
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'
 
 mybatis-plus:
   configuration:
@@ -106,32 +120,26 @@ logging:
       max-file-size: 16MB
       total-size-cap: 0B
   pattern:
-    console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %boldBlue([%X{tid}]) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
+    console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %boldBlue([%X{tid}]) %clr([%22.22t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
     file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%X{tid}] [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
-  printer:
-    mode: PRETTY
-    expression: 'execution (* com.orion.ops.**.controller.*.*(..)) && !@annotation(com.orion.ops.framework.common.annotation.IgnoreLog)'
-    headers:
-      - user-agent,accept
-      - content-type
-    field:
-      ignore:
-        - password,newPassword
-        - metrics
-      desensitize:
-        - phone,phoneNumber
-        - email,sendEmail
+  level:
+    com.orion.ops.launch.controller.BootstrapController: INFO
 
 orion:
   # 版本
   version: @revision@
-  # api 信息
   api:
     # 公共api前缀
     prefix: /orion-api
     # 是否开启跨域
     cors: true
+  serializer:
+    # 不支持的序列化类型
+    unsupported-classes:
+      - de.codecentric.boot.admin.server.web.InstancesController
+      - org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler
   swagger:
+    # swagger 配置
     title: orion-ops-pro 运维平台
     description: 一站式运维服务平台
     version: ${orion.version}
@@ -139,7 +147,23 @@ orion:
     email: ljh1553488six@139.com
     license: Apache-2.0
     license-url: https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE
+  logging:
+    # 全局日志打印
+    printer:
+      mode: PRETTY
+      expression: 'execution (* com.orion.ops.**.controller.*.*(..)) && !@annotation(com.orion.ops.framework.common.annotation.IgnoreLog)'
+      headers:
+        - user-agent,accept
+        - content-type
+      field:
+        ignore:
+          - password,newPassword
+          - metrics
+        desensitize:
+          - phone,phoneNumber
+          - email,sendEmail
   storage:
+    # 本地文件存储
     local:
       enabled: true
       name-append-trace-id: true
@@ -160,3 +184,10 @@ orion:
       secret-key: I66AndrKWrwXjtBL
       use-generator-key: true
       generator-key-length: 128
+  thread:
+    # 线程池配置
+    pool:
+      core-pool-size: 2
+      max-pool-size: 4
+      keep-alive-seconds: 180
+      queue-capacity: 30
