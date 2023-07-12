@@ -1,6 +1,8 @@
 package com.orion.ops.framework.redis.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -20,6 +22,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @since 2023/6/28 14:44
  */
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_REDIS)
 @EnableCaching
 @EnableConfigurationProperties({CacheProperties.class})
 public class OrionRedisAutoConfiguration {

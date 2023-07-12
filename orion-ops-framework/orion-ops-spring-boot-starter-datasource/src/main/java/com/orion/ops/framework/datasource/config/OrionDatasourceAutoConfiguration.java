@@ -1,8 +1,10 @@
 package com.orion.ops.framework.datasource.config;
 
 import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.datasource.core.filter.DruidAdRemoveFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @since 2023/6/23 17:22
  */
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_DATASOURCE)
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableConfigurationProperties(DruidStatProperties.class)
 public class OrionDatasourceAutoConfiguration {

@@ -1,7 +1,9 @@
 package com.orion.ops.framework.banner.config;
 
 import com.orion.ops.framework.banner.core.BannerApplicationRunner;
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Bean;
  * @since 2023/6/15 16:16
  */
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_BANNER)
 public class OrionBannerAutoConfiguration {
 
     /**

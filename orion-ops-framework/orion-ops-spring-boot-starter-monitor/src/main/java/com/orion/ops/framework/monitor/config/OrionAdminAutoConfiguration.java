@@ -2,10 +2,11 @@ package com.orion.ops.framework.monitor.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import de.codecentric.boot.admin.server.utils.jackson.AdminServerModule;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -19,7 +20,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  */
 @EnableAdminServer
 @AutoConfiguration
-@AutoConfigureAfter(name = "com.orion.ops.framework.web.config.OrionWebAutoConfiguration")
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_MONITOR)
 public class OrionAdminAutoConfiguration {
 
     /**

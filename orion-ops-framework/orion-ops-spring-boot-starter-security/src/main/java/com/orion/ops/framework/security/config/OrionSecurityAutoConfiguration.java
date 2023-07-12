@@ -1,5 +1,6 @@
 package com.orion.ops.framework.security.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.security.core.context.TransmittableThreadLocalSecurityContextHolderStrategy;
 import com.orion.ops.framework.security.core.filter.TokenAuthenticationFilter;
 import com.orion.ops.framework.security.core.handler.AuthenticationEntryPointHandler;
@@ -11,6 +12,7 @@ import com.orion.ops.framework.security.core.strategy.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -40,6 +42,7 @@ import java.util.List;
  * @since 2023/7/6 15:05
  */
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SECURITY)
 @EnableConfigurationProperties(SecurityConfig.class)
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class OrionSecurityAutoConfiguration {
@@ -115,8 +118,8 @@ public class OrionSecurityAutoConfiguration {
      * @return token 认证过滤器
      */
     @Bean
-    @ConditionalOnBean(SecurityFrameworkService.class)
-    public TokenAuthenticationFilter authenticationTokenFilter(SecurityFrameworkService delegate) {
+    @ConditionalOnBean(SecurityFrameworkServiceDelegate.class)
+    public TokenAuthenticationFilter authenticationTokenFilter(SecurityFrameworkServiceDelegate delegate) {
         return new TokenAuthenticationFilter(delegate);
     }
 

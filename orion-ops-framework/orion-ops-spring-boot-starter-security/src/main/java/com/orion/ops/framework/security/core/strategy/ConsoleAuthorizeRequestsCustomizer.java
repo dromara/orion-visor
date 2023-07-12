@@ -29,9 +29,9 @@ public class ConsoleAuthorizeRequestsCustomizer extends AuthorizeRequestsCustomi
                 .antMatchers("/swagger-resources/**", "/webjars/**", "/*/api-docs").anonymous()
                 // druid 监控
                 .antMatchers("/druid/**").anonymous()
-                // actuator 安全配置 TODO TEST
+                // actuator 安全配置
                 .antMatchers(managementEndpoints, managementEndpoints + "/**").anonymous()
-                // admin 安全配置 TODO TEST
+                // admin
                 .antMatchers(adminSeverContextPath, adminSeverContextPath + "/**").anonymous();
     }
 

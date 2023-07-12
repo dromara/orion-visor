@@ -1,6 +1,8 @@
 package com.orion.ops.framework.job.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,6 +19,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  */
 @EnableScheduling
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_JOB)
 public class OrionSchedulerAutoConfiguration {
 
     /**

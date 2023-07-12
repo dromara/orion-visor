@@ -1,8 +1,10 @@
 package com.orion.ops.framework.common.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.thread.ThreadPoolMdcTaskExecutor;
 import com.orion.spring.SpringHolder;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -20,6 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @EnableAsync
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_COMMON)
 @EnableConfigurationProperties(ThreadPoolConfig.class)
 public class OrionCommonAutoConfiguration {
 

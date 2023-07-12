@@ -1,8 +1,10 @@
 package com.orion.ops.framework.websocket.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.websocket.core.WebsocketContainerConfig;
 import com.orion.ops.framework.websocket.interceptor.UserHandshakeInterceptor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -18,6 +20,7 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
  */
 @EnableWebSocket
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_WEBSOCKET)
 @EnableConfigurationProperties(WebsocketContainerConfig.class)
 public class OrionWebsocketAutoConfiguration {
 

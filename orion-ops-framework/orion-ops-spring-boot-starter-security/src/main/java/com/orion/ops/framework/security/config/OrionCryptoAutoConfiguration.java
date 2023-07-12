@@ -1,9 +1,11 @@
 package com.orion.ops.framework.security.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.crypto.ValueCrypto;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.security.core.crypto.aes.AesCryptoProcessor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
  */
 @AutoConfiguration
 @EnableConfigurationProperties(CryptoConfig.class)
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SECURITY_CRYPTO)
 public class OrionCryptoAutoConfiguration {
 
     @Resource

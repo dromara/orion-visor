@@ -1,5 +1,6 @@
 package com.orion.ops.framework.swagger.config;
 
+import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -15,6 +16,7 @@ import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
 import org.springdoc.core.providers.JavadocProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -39,6 +41,7 @@ import java.util.Optional;
 @EnableConfigurationProperties(SwaggerProperties.class)
 @ConditionalOnProperty(prefix = "springdoc.api-docs", name = "enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfiguration
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SWAGGER)
 public class OrionSwaggerAutoConfiguration {
 
     private static String orionApiPrefix;
