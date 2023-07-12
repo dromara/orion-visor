@@ -2,6 +2,7 @@ package com.orion.ops.framework.mybatis.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.orion.ops.framework.mybatis.core.query.CacheQuery;
 import com.orion.ops.framework.mybatis.core.query.DataQuery;
 
 import java.util.Collection;
@@ -95,6 +96,15 @@ public interface IMapper<T> extends BaseMapper<T> {
      */
     default DataQuery<T> of() {
         return DataQuery.of(this);
+    }
+
+    /**
+     * 获取 CacheQuery 对象
+     *
+     * @return CacheQuery
+     */
+    default CacheQuery<T> cache() {
+        return CacheQuery.of(this);
     }
 
 }

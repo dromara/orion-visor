@@ -1,0 +1,41 @@
+package ${package.Entity};
+
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+import java.util.List;
+
+/**
+ * $!{table.comment} 转换器
+ *
+ * @author ${author}
+ * @version 1.0.0
+ * @since ${date}
+ */
+@Mapper
+@SuppressWarnings("ALL")
+public interface ${entity}Convert {
+
+        ${entity}Convert MAPPER = Mappers.getMapper(${entity}Convert.class);
+
+    ${entity} toDomain(${entity}Request request);
+
+        ${entity}DTO toDto(${entity}Request request);
+
+        ${entity}VO toVo(${entity} domain);
+
+        ${entity}DTO toDto(${entity} domain);
+
+    List<${entity}VO> toVoListForDomain(List<${entity}> domain);
+
+    List<${entity}DTO> toDtoListForDomain(List<${entity}> domain);
+
+        ${entity}VO toVo(${entity}DTO dto);
+
+    ${entity} toDto(${entity}DTO dto);
+
+    List<${entity}VO> toVoListForDto(List<${entity}DTO> dto);
+
+    List<${entity}> toDoListForDto(List<${entity}DTO> dto);
+
+}

@@ -3,6 +3,7 @@ package com.orion.ops.framework.mybatis.core.domain;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
 
@@ -19,37 +20,28 @@ import java.util.Date;
 @Data
 public class BaseDO implements Serializable {
 
-    /**
-     * 创建时间
-     */
     @TableField(fill = FieldFill.INSERT)
+    @Schema(description = "创建时间")
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @Schema(description = "修改时间")
     private Date updateTime;
 
-    /**
-     * 创建人
-     */
     @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
+    @Schema(description = "创建人")
     private String creator;
 
-    /**
-     * 更新人
-     */
     @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
+    @Schema(description = "修改人")
     private String updater;
 
     /**
-     * 是否删除 0未删除 1已删除
-     *
      * @see com.orion.ops.framework.common.constant.Const#NOT_DELETE
      * @see com.orion.ops.framework.common.constant.Const#IS_DELETED
      */
     @TableLogic
+    @Schema(description = "是否删除 0未删除 1已删除")
     private Boolean deleted;
 
 }

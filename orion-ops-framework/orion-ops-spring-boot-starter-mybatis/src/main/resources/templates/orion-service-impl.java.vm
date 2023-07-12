@@ -1,0 +1,28 @@
+package ${package.ServiceImpl};
+
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+    #if(${table.serviceInterface})
+    import ${package.Service}.${table.serviceName};
+    #end
+import ${superServiceImplClassPackage};
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+/**
+ * $!{table.comment} 服务实现类
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Slf4j
+@Service
+#if(${kotlin})
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>()#if(${table.serviceInterface}), ${table.serviceName}#end {
+
+        }
+#else
+        public class ${table.serviceImplName} implements ${table.serviceName} {
+
+        }
+#end

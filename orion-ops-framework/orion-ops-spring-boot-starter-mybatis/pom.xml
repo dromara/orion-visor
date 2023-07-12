@@ -28,12 +28,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- datasource -->
-        <dependency>
-            <groupId>com.orion.ops</groupId>
-            <artifactId>orion-ops-spring-boot-starter-datasource</artifactId>
-        </dependency>
-
         <!-- mybatis -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -46,6 +40,19 @@
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
+        </dependency>
+
+        <!-- doc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- mysql -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
         </dependency>
     </dependencies>
 
