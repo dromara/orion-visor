@@ -62,8 +62,8 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
 
     @SuppressWarnings("ALL")
     @Autowired(required = false)
-    @Qualifier("desensitizeValueSerializeFilter")
-    private ValueFilter desensitizeValueSerializeFilter;
+    @Qualifier("desensitizeValueFilter")
+    private ValueFilter desensitizeValueFilter;
 
     public AbstractLogPrinterInterceptor(LogPrinterConfig config) {
         this.config = config;
@@ -89,8 +89,8 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
         fieldFilterList.add(ignoreFilter);
         fieldFilterList.add(desensitizeFilter);
         // 注解脱敏 未引入
-        if (desensitizeValueSerializeFilter != null) {
-            fieldFilterList.add(desensitizeValueSerializeFilter);
+        if (desensitizeValueFilter != null) {
+            fieldFilterList.add(desensitizeValueFilter);
         }
         this.fieldFilters = fieldFilterList.toArray(new SerializeFilter[0]);
     }

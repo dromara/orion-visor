@@ -133,11 +133,6 @@ orion:
     prefix: /orion-api
     # 是否开启跨域
     cors: true
-  serializer:
-    # 不支持的序列化类型
-    unsupported-classes:
-      - de.codecentric.boot.admin.server.web.InstancesController
-      - org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler
   swagger:
     # swagger 配置
     title: orion-ops-pro 运维平台

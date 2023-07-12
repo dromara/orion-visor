@@ -8,8 +8,8 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Annotations;
 import com.orion.lang.utils.reflect.Fields;
-import com.orion.ops.framework.common.annotation.Desensitize;
-import com.orion.ops.framework.common.annotation.DesensitizeObject;
+import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
+import com.orion.ops.framework.desensitize.core.annotation.DesensitizeObject;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -17,13 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 脱敏序列化器
+ * fastjson 脱敏序列化器
+ * <p>
+ * 用于全局日志打印
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/30 12:19
  */
-public class DesensitizeValueSerializeFilter implements ValueFilter {
+public class DesensitizeValueFilter implements ValueFilter {
 
     private static final Map<String, Map<String, Desensitize>> DESENSITIZE_FIELDS = new HashMap<>();
 
@@ -32,7 +34,7 @@ public class DesensitizeValueSerializeFilter implements ValueFilter {
         if (object == null || value == null) {
             return value;
         }
-        Desensitize config = doDesensitizeField(object, name);
+        Desensitize config = this.doDesensitizeField(object, name);
         // 无需脱敏
         if (config == null) {
             return value;

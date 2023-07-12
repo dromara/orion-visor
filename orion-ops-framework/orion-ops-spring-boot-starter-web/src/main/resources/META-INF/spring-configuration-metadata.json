@@ -14,11 +14,6 @@
       "name": "orion.api.cors",
       "type": "java.lang.Boolean",
       "description": "是否开启 cors 过滤器."
-    },
-    {
-      "name": "orion.serializer.unsupported-classes",
-      "type": "java.util.List",
-      "description": "不支持的序列化类型."
     }
   ]
 }

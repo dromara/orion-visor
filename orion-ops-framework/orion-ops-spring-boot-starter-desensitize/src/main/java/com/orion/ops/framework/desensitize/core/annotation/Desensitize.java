@@ -1,4 +1,8 @@
-package com.orion.ops.framework.common.annotation;
+package com.orion.ops.framework.desensitize.core.annotation;
+
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.orion.ops.framework.desensitize.core.serializer.DesensitizeJsonSerializer;
 
 import java.lang.annotation.*;
 
@@ -14,6 +18,8 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@JacksonAnnotationsInside
+@JsonSerialize(using = DesensitizeJsonSerializer.class)
 public @interface Desensitize {
 
     /**
