@@ -3,7 +3,7 @@ package com.orion.ops.framework.mybatis.core.query;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.PageRequest;
+import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.lang.define.wrapper.Pager;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
@@ -25,7 +25,7 @@ public class DataQuery<T> {
 
     private final BaseMapper<T> dao;
 
-    private PageRequest page;
+    private IPageRequest page;
 
     private LambdaQueryWrapper<T> wrapper;
 
@@ -38,7 +38,7 @@ public class DataQuery<T> {
         return new DataQuery<>(dao);
     }
 
-    public DataQuery<T> page(PageRequest page) {
+    public DataQuery<T> page(IPageRequest page) {
         this.page = Valid.notNull(page, "page is null");
         return this;
     }

@@ -1,12 +1,15 @@
-package ${package.Entity};
+package ${currentPackage};
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
+import ${package.Entity}.*;
+    #foreach($pkg in ${customFilePackages})
+    import ${pkg}.*;
+    #end
 import java.util.List;
 
 /**
- * $!{table.comment} 转换器
+ * $!{table.comment} 内部对象转换器
  *
  * @author ${author}
  * @version 1.0.0
@@ -14,28 +17,18 @@ import java.util.List;
  */
 @Mapper
 @SuppressWarnings("ALL")
-public interface ${entity}Convert {
+public interface ${type}Convert {
 
-        ${entity}Convert MAPPER = Mappers.getMapper(${entity}Convert.class);
+        ${type}Convert MAPPER = Mappers.getMapper(${type}Convert.class);
 
-    ${entity} toDomain(${entity}Request request);
+        ${type}DO to(${type}CreateRequest request);
 
-        ${entity}DTO toDto(${entity}Request request);
+        ${type}DO to(${type}UpdateRequest request);
 
-        ${entity}VO toVo(${entity} domain);
+        ${type}DO to(${type}QueryRequest request);
 
-        ${entity}DTO toDto(${entity} domain);
+        ${type}VO to(${type}DO request);
 
-    List<${entity}VO> toVoListForDomain(List<${entity}> domain);
-
-    List<${entity}DTO> toDtoListForDomain(List<${entity}> domain);
-
-        ${entity}VO toVo(${entity}DTO dto);
-
-    ${entity} toDto(${entity}DTO dto);
-
-    List<${entity}VO> toVoListForDto(List<${entity}DTO> dto);
-
-    List<${entity}> toDoListForDto(List<${entity}DTO> dto);
+    List<${type}VO> to(List<${type}DO> list);
 
 }

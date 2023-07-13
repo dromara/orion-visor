@@ -11,4 +11,6 @@ public interface ErrorMessage {
 
     String PARAM_MISSING = "{} 不能为空";
 
+    String ID_MISSING = "id 不能为空";
+
 }

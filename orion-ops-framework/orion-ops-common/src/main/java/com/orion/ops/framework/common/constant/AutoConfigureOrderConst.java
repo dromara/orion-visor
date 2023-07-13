@@ -2,6 +2,8 @@ package com.orion.ops.framework.common.constant;
 
 /**
  * 自动装配排序常量
+ * <p>
+ * 实际遵循 DependsOn
  *
  * @author Jiahang Li
  * @version 1.0.0

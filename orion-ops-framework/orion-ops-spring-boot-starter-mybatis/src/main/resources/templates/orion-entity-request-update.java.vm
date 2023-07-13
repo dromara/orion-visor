@@ -1,0 +1,35 @@
+package ${currentPackage};
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.*;
+
+/**
+ * $!{table.comment} 更新请求对象
+ *
+ * @author ${author}
+ * @version 1.0.0
+ * @since ${date}
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "${type}UpdateRequest", description = "$!{table.comment} 更新请求对象")
+public class ${type}UpdateRequest implements Serializable {
+    #foreach($field in ${table.fields})
+
+        #if("$!field.comment" != "")
+        @Schema(description = "${field.comment}")
+        #end
+    private ${field.propertyType} ${field.propertyName};
+    #end
+
+}

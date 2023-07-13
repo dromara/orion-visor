@@ -2,6 +2,7 @@ package com.orion.ops.framework.common.constant;
 
 import com.orion.lang.define.wrapper.CodeInfo;
 import com.orion.lang.define.wrapper.HttpWrapper;
+import com.orion.lang.utils.Exceptions;
 
 /**
  * 错误码
@@ -69,6 +70,10 @@ public enum ErrorCode implements CodeInfo {
 
     DIABLED_ERROR(715, "数据已被禁用"),
 
+    DATA_PRESENT(716, "数据已存在"),
+
+    DATA_ABESENT(717, "数据不存在"),
+
     ;
 
     ErrorCode(int code, String message) {
@@ -125,6 +130,13 @@ public enum ErrorCode implements CodeInfo {
      */
     public HttpWrapper<?> getWrapper() {
         return wrapper;
+    }
+
+    /**
+     * @return 获取异常
+     */
+    public RuntimeException exception() {
+        return Exceptions.httpWrapper(this);
     }
 
 }

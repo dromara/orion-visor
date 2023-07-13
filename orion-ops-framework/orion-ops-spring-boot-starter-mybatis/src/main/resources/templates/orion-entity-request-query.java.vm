@@ -1,0 +1,31 @@
+package ${currentPackage};
+
+import com.orion.ops.framework.common.entity.PageRequest;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+
+import java.util.*;
+
+/**
+ * $!{table.comment} 查询请求对象
+ *
+ * @author ${author}
+ * @version 1.0.0
+ * @since ${date}
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Schema(name = "${type}QueryRequest", description = "$!{table.comment} 查询请求对象")
+public class ${type}QueryRequest extends PageRequest {
+    #foreach($field in ${table.fields})
+
+        #if("$!field.comment" != "")
+        @Schema(description = "${field.comment}")
+        #end
+    private ${field.propertyType} ${field.propertyName};
+    #end
+
+}

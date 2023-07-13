@@ -1,28 +1,129 @@
 package ${package.ServiceImpl};
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.constant.ErrorCode;
+import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.mybatis.core.query.Conditions;
+    #foreach($pkg in ${customFilePackages})
+    import ${pkg}.*;
+    #end
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
-    #if(${table.serviceInterface})
-    import ${package.Service}.${table.serviceName};
-    #end
-import ${superServiceImplClassPackage};
+import ${package.Service}.${table.serviceName};
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * $!{table.comment} 服务实现类
  *
  * @author ${author}
+ * @version 1.0.0
  * @since ${date}
  */
 @Slf4j
 @Service
-#if(${kotlin})
-open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>()#if(${table.serviceInterface}), ${table.serviceName}#end {
+public class ${table.serviceImplName} implements ${table.serviceName} {
+
+// TODO 需要自行实现 page 和 check 方法
+
+@Resource
+private ${type}DAO ${typeLower}DAO;
+
+@Override
+public Long create${type}(${type}CreateRequest request){
+        // 转换
+    ${type}DO record= ${type}Convert.MAPPER.to(request);
+        record.setId(null);
+        // 查询是否存在
+        if(this.check${type}Present(record)){
+        throw ErrorCode.DATA_PRESENT.exception();
+        }
+        // 插入
+        int effect= ${typeLower}DAO.insert(record);
+        log.info("${type}Service-add${type} effect: {}, domain: {}",effect,JSON.toJSONString(record));
+        return record.getId();
+        }
+
+@Override
+public Integer update${type}(${type}UpdateRequest request){
+        // 转换
+    ${type}DO record= ${type}Convert.MAPPER.to(request);
+        Valid.notNull(request.getId(),ErrorMessage.ID_MISSING);
+        // 查询是否存在
+        if(this.check${type}Present(record)){
+        throw ErrorCode.DATA_PRESENT.exception();
+        }
+        // 更新
+        int effect= ${typeLower}DAO.updateById(record);
+        log.info("${type}Service-update${type} effect: {}, domain: {}",effect,JSON.toJSONString(record));
+        return effect;
+        }
+
+@Override
+public ${type}VO get${type}(Long id){
+        // 查询
+    ${type}DO record= ${typeLower}DAO.selectById(id);
+        if(record==null){
+        throw ErrorCode.DATA_ABESENT.exception();
+        }
+        // 转换
+        return ${type}Convert.MAPPER.to(record);
+        }
+
+@Override
+public List<${type}VO> get${type}List(List<Long> idList){
+        // 查询
+        List<${type}DO> records= ${typeLower}DAO.selectBatchIds(idList);
+        if(records.isEmpty()){
+        return Lists.empty();
+        }
+        // 转换
+        return ${type}Convert.MAPPER.to(records);
+        }
+
+@Override
+public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request){
+        // 构造条件
+        LambdaQueryWrapper<${type}DO> wrapper=Conditions.wrapper(${type}DO.class);
+        // 查询
+        return ${typeLower}DAO.of()
+        .wrapper(wrapper)
+        .page(request)
+        .dataGrid(${type}Convert.MAPPER::to);
+        }
+
+@Override
+public Integer delete${type}(Long id){
+        return ${typeLower}DAO.deleteById(id);
+        }
+
+@Override
+public Integer batchDelete${type}(List<Long> idList){
+        return ${typeLower}DAO.deleteBatchIds(idList);
+        }
+
+/**
+ * 检测对象是否存在
+ *
+ * @param domain domain
+ * @return 是否存在
+ */
+private boolean check${type}Present(${type}DO domain){
+        // 构造条件
+        LambdaQueryWrapper<${type}DO> wrapper=Conditions.wrapper(${type}DO.class)
+        .eq(${type}DO::getId,domain.getId());
+        // .eq(XXXDO::getXXX, domain.getXXX());
+        // 检查是否存在
+        return ${typeLower}DAO.of()
+        .wrapper(wrapper)
+        .present();
+        }
 
         }
-#else
-        public class ${table.serviceImplName} implements ${table.serviceName} {
-
-        }
-#end

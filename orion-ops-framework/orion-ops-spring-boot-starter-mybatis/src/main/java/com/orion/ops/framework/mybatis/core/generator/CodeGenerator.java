@@ -17,6 +17,9 @@ import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器
@@ -90,7 +93,7 @@ public class CodeGenerator {
                 .injection(injectionConfig);
 
         // 执行
-        ag.execute();
+        ag.execute(new VelocityTemplateEngine());
     }
 
     /**
@@ -254,11 +257,11 @@ public class CodeGenerator {
     private static TemplateConfig getTemplateConfig() {
         TemplateConfig tplConfig = new TemplateConfig.Builder()
                 .controller("/templates/orion-controller.java.vm")
-                .entity("/templates/orion-domain.java.vm")
+                .entity("/templates/orion-entity-do.java.vm")
                 .service("/templates/orion-service.java.vm")
                 .serviceImpl("/templates/orion-service-impl.java.vm")
-                .mapper("/templates/orion-dao.java.vm")
-                .xml("/templates/orion-mapper.xml")
+                .mapper("/templates/orion-mapper.java.vm")
+                .xml("/templates/orion-mapper.xml.vm")
                 .build();
         return tplConfig;
     }
@@ -269,48 +272,42 @@ public class CodeGenerator {
      * @return 注入配置
      */
     private static InjectionConfig getInjectionConfig() {
-        // vo 文件
-        CustomFile voFile = new CustomFile.Builder()
-                .enableFileOverride()
-                .templatePath("/templates/orion-vo.java.vm")
-                .fileName("VO.java")
-                .packageName("vo")
-                .build();
+        String[][] customFileDefineArr = new String[][]{
+                // vo 文件
+                new String[]{"/templates/orion-entity-vo.java.vm", "%sVO.java", "entity.vo"},
+                // dto 文件
+                new String[]{"/templates/orion-entity-dto.java.vm", "%sDTO.java", "entity.dto"},
+                // create request 文件
+                new String[]{"/templates/orion-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request"},
+                // update request 文件
+                new String[]{"/templates/orion-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request"},
+                // query request 文件
+                new String[]{"/templates/orion-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request"},
+                // convert 文件
+                new String[]{"/templates/orion-convert.java.vm", "%sConvert.java", "convert"},
+                // convert provider 文件
+                new String[]{"/templates/orion-convert-provider.java.vm", "%sProviderConvert.java", "convert"},
+        };
 
-        // dto 文件
-        CustomFile dtoFile = new CustomFile.Builder()
-                .enableFileOverride()
-                .templatePath("/templates/orion-dto.java.vm")
-                .fileName("DTO.java")
-                .packageName("dto")
-                .build();
-
-        // request 文件
-        CustomFile requestFile = new CustomFile.Builder()
-                .enableFileOverride()
-                .templatePath("/templates/orion-request.java.vm")
-                .fileName("Request.java")
-                .packageName("request")
-                .build();
-
-        // convert 文件
-        CustomFile convertFile = new CustomFile.Builder()
-                .enableFileOverride()
-                .templatePath("/templates/orion-convert.java.vm")
-                .fileName("Convert.java")
-                .packageName("convert")
-                .build();
+        // 构建文件
+        List<CustomFile> customerFiles = Arrays.stream(customFileDefineArr)
+                .map(s -> {
+                    return new CustomFile.Builder()
+                            // 覆盖文件
+                            .enableFileOverride()
+                            // 模板路径
+                            .templatePath(s[0])
+                            // 文件名
+                            .fileName(s[1])
+                            // 包名
+                            .packageName(s[2])
+                            .build();
+                }).collect(Collectors.toList());
 
         // 注入配置
         InjectionConfig injection = new InjectionConfig.Builder()
-                // vo 文件
-                .customFile(voFile)
-                // dto 文件
-                .customFile(dtoFile)
-                // request 文件
-                .customFile(requestFile)
-                // convert 文件
-                .customFile(convertFile)
+                // 自定义 文件
+                .customFile(customerFiles)
                 // 构建
                 .build();
         return injection;

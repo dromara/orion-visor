@@ -1,5 +1,0 @@
-### 心跳检测
-GET http://{{baseUrl}}/server/bootstrap/health
-Accept: application/json
-
-###

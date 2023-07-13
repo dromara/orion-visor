@@ -1,18 +1,75 @@
 package ${package.Service};
 
-import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
+import com.orion.lang.define.wrapper.DataGrid;
+    #foreach($pkg in ${customFilePackages})
+    import ${pkg}.*;
+    #end
+
+import java.util.List;
 
 /**
  * $!{table.comment} 服务类
  *
  * @author ${author}
+ * @version 1.0.0
  * @since ${date}
  */
-#if(${kotlin})
-interface ${table.serviceName} : ${superServiceClass}<${entity}>
-#else
 public interface ${table.serviceName} {
 
+        /**
+         * 插入$!{table.comment}
+         *
+         * @param request request
+         * @return id
+         */
+        Long create${type}(${type}CreateRequest request);
+
+        /**
+         * 通过 id 更新$!{table.comment}
+         *
+         * @param request request
+         * @return effect
+         */
+        Integer update${type}(${type}UpdateRequest request);
+
+        /**
+         * 通过 id 查询$!{table.comment}
+         *
+         * @param id id
+         * @return row
+         */
+    ${type}VO get${type}(Long id);
+
+        /**
+         * 通过 id 批量查询$!{table.comment}
+         *
+         * @param idList idList
+         * @return rows
+         */
+        List<${type}VO> get${type}List(List<Long> idList);
+
+        /**
+         * 分页查询$!{table.comment}
+         *
+         * @param request request
+         * @return rows
+         */
+        DataGrid<${type}VO> get${type}Page(${type}QueryRequest request);
+
+        /**
+         * 通过 id 删除$!{table.comment}
+         *
+         * @param id id
+         * @return effect
+         */
+        Integer delete${type}(Long id);
+
+        /**
+         * 通过 id 批量删除$!{table.comment}
+         *
+         * @param idList idList
+         * @return effect
+         */
+        Integer batchDelete${type}(List<Long> idList);
+
         }
-#end
