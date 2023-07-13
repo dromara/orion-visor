@@ -1,4 +1,4 @@
-package com.orion.ops.launch.service;
+package com.orion.ops.module.infra.framework.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -6,7 +6,7 @@ import com.orion.ops.framework.security.core.service.SecurityFrameworkService;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO 基建模块实现 现在默认实现
+ * TODO 依赖用户服务 现在默认实现
  *
  * @author Jiahang Li
  * @version 1.0.0

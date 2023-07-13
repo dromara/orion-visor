@@ -82,7 +82,12 @@
             <artifactId>orion-ops-spring-boot-starter-monitor</artifactId>
         </dependency>
 
-        <!-- orion-ops biz-modules -->
+        <!-- orion-ops modules -->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-module-infra-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
     </dependencies>
 
