@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.constant.FilterOrderConst;
 import com.orion.ops.framework.common.filter.FilterCreator;
+import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.mybatis.core.cache.CacheClearFilter;
 import com.orion.ops.framework.mybatis.core.handler.FieldFillHandler;
+import com.orion.ops.framework.mybatis.core.utils.DomainFillUtils;
 import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -29,7 +31,9 @@ public class OrionMybatisAutoConfiguration {
      * @return 字段填充元数据处理器
      */
     @Bean
-    public MetaObjectHandler defaultMetaObjectHandler() {
+    public MetaObjectHandler defaultMetaObjectHandler(SecurityHolder securityHolder) {
+        // 设置填充工具参数
+        DomainFillUtils.setSecurityHolder(securityHolder);
         return new FieldFillHandler();
     }
 

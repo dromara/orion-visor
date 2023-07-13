@@ -23,7 +23,6 @@ import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
-import com.orion.lang.define.Console;
 import com.orion.lang.utils.Strings;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -35,6 +34,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -49,7 +49,13 @@ import java.util.stream.Collectors;
  */
 public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
+    private Map<String, String> tableComment;
+
     private VelocityEngine velocityEngine;
+
+    public VelocityTemplateEngine(Map<String, String> tableComment) {
+        this.tableComment = tableComment;
+    }
 
     {
         try {
@@ -62,7 +68,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     @Override
     @NotNull
     public VelocityTemplateEngine init(@NotNull ConfigBuilder configBuilder) {
-        if (null == velocityEngine) {
+        if (velocityEngine == null) {
             Properties p = new Properties();
             p.setProperty(ConstVal.VM_LOAD_PATH_KEY, ConstVal.VM_LOAD_PATH_VALUE);
             p.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, StringPool.EMPTY);
@@ -92,6 +98,24 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         return filePath.endsWith(dotVm) ? filePath : filePath + dotVm;
     }
 
+    /**
+     * 插入 api 注释
+     *
+     * @param tableInfo tableInfo
+     * @param objectMap objectMap
+     */
+    private void putApiComment(TableInfo tableInfo, Map<String, Object> objectMap) {
+        Map<String, String> map = new HashMap<>();
+        objectMap.put("apiComment", map);
+        String comment = tableInfo.getComment();
+        map.put("create", "创建" + comment);
+        map.put("update", "通过 id 更新" + comment);
+        map.put("get", "通过 id 查询" + comment);
+        map.put("list", "通过 id 批量查询" + comment);
+        map.put("query", "分页查询" + comment);
+        map.put("delete", "通过 id 删除" + comment);
+        map.put("batchDelete", "通过 id 批量删除" + comment);
+    }
 
     /**
      * 输出自定义模板文件
@@ -103,13 +127,24 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      */
     @Override
     protected void outputCustomFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        // 替换业务注释
+        String comment = tableComment.get(tableInfo.getName());
+        if (comment != null) {
+            tableInfo.setComment(comment);
+        }
+
+        // http 注释标识
+        objectMap.put("httpComment", "###");
+
+        // 实体名称
         String domainName = tableInfo.getEntityName();
         String mappingHyphen = objectMap.get("controllerMappingHyphen").toString();
-        // 实际实体名称
         String entityName = domainName.substring(0, domainName.length() - 2);
         objectMap.put("type", entityName);
         objectMap.put("typeLower", Strings.firstLower(entityName));
         objectMap.put("typeHyphen", mappingHyphen.substring(0, mappingHyphen.length() - 3));
+        // 注释
+        this.putApiComment(tableInfo, objectMap);
 
         // 自定义文件的包
         List<String> customFilePackages = customFiles.stream()
@@ -128,7 +163,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             String currentPackage = getConfigBuilder().getPackageConfig().getParent() + "." + file.getPackageName();
             // 设置当前包
             objectMap.put("currentPackage", currentPackage);
-            objectMap.forEach(Console::trace);
 
             // 文件路径
             String filePath = StringUtils.isNotBlank(file.getFilePath()) ? file.getFilePath() : parentPath;
@@ -140,4 +174,5 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             outputFile(new File(fileName), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
     }
+
 }

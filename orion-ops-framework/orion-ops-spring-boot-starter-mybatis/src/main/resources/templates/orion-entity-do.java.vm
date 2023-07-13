@@ -8,7 +8,7 @@ import lombok.*;
 import java.util.*;
 
 /**
- * $!{table.comment} 数据库对象
+ * $!{table.comment} 实体对象
  *
  * @author ${author}
  * @version 1.0.0
@@ -20,9 +20,9 @@ import java.util.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 #if(${table.convert})
-@TableName("${schemaName}${table.name}")
+@TableName(value = "${schemaName}${table.name}", autoResultMap = true)
 #end
-@Schema(name = "${entity}", description = "$!{table.comment} 数据库对象")
+@Schema(name = "${entity}", description = "$!{table.comment} 实体对象")
 #if(${superEntityClass})
 public class ${entity} extends ${superEntityClass}#if(${activeRecord})<${entity}>#end {
 #elseif(${entitySerialVersionUID})

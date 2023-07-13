@@ -16,9 +16,13 @@ import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,13 +35,19 @@ import java.util.stream.Collectors;
 public class CodeGenerator {
 
     public static void main(String[] args) {
+        @NotNull
         String outputDir = "D:/MP/";
+        @NotNull
         String author = Const.ORION_AUTHOR;
-        // 表名
-        String[] tables = {"test_table"};
+        @NotEmpty
+        String[] tables = {"test_table", "table_copy"};
+        // 表业务注释 需要和表一一对应 null则为表注释
+        @NotEmpty
+        String[] comment = {"用户", "复制"};
         // 模块
+        @NotNull
         String module = "infra";
-        // 连接
+        // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
         YmlExt yaml = YmlExt.load(yamlFile);
         String url = yaml.getValue("spring.datasource.druid.url");
@@ -47,8 +57,7 @@ public class CodeGenerator {
         // 执行
         runGenerator(outputDir, author,
                 url, username, password,
-                tables,
-                module);
+                tables, comment, module);
     }
 
     /**
@@ -60,7 +69,11 @@ public class CodeGenerator {
                                      String username,
                                      String password,
                                      String[] tables,
+                                     String[] comment,
                                      String module) {
+        // 创建引擎
+        VelocityTemplateEngine engine = getEngine(tables, comment);
+
         // 获取全局配置
         GlobalConfig globalConfig = getGlobalConfig(outputDir, author);
 
@@ -93,7 +106,26 @@ public class CodeGenerator {
                 .injection(injectionConfig);
 
         // 执行
-        ag.execute(new VelocityTemplateEngine());
+        ag.execute(engine);
+    }
+
+    /**
+     * 获取渲染引擎
+     *
+     * @param tables  表
+     * @param comment 表注释
+     * @return
+     */
+    private static VelocityTemplateEngine getEngine(String[] tables, String[] comment) {
+        if (tables.length != comment.length) {
+            throw new IllegalArgumentException("表称与业务注释长度不匹配");
+        }
+        // 业务注释
+        Map<String, String> tableComment = new HashMap<>();
+        for (int i = 0; i < tables.length; i++) {
+            tableComment.put(tables[i], comment[i]);
+        }
+        return new VelocityTemplateEngine(tableComment);
     }
 
     /**
@@ -273,6 +305,8 @@ public class CodeGenerator {
      */
     private static InjectionConfig getInjectionConfig() {
         String[][] customFileDefineArr = new String[][]{
+                // http 文件
+                new String[]{"/templates/orion-controller.http.vm", "%sController.http", "controller"},
                 // vo 文件
                 new String[]{"/templates/orion-entity-vo.java.vm", "%sVO.java", "entity.vo"},
                 // dto 文件

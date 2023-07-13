@@ -13,8 +13,6 @@ import java.util.function.Function;
  * 缓存查询器
  * <p>
  * 查询会存入缓存
- * <p>
- * TODO test
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -58,10 +56,12 @@ public class CacheQuery<T> {
     /**
      * 强制查询
      *
+     * @param id id
      * @return this
      */
-    public CacheQuery<T> force() {
+    public CacheQuery<T> force(Serializable id) {
         this.force = true;
+        this.id = id;
         return this;
     }
 
@@ -70,20 +70,20 @@ public class CacheQuery<T> {
         return this.get().map(mapper);
     }
 
-    @SuppressWarnings("unchecked")
     public Optional<T> get() {
-        Class<? extends BaseMapper<T>> mapperClass = (Class<? extends BaseMapper<T>>) dao.getClass();
         // 不查询缓存
         if (!force) {
             // 从缓存中获取
-            Store<T> store = CacheHolder.get(mapperClass, id);
-            return Optional.ofNullable(store)
-                    .map(Store::get);
+            Store<T> store = CacheHolder.get(dao, id);
+            // 命中直接返回
+            if (store != null) {
+                return Optional.of(store).map(Store::get);
+            }
         }
         // 查询
         T row = dao.selectById(id);
         // 设置缓存
-        CacheHolder.set(mapperClass, id, row);
+        CacheHolder.set(dao, id, row);
         return Optional.ofNullable(row);
     }
 

@@ -44,21 +44,21 @@ public class ${table.controllerName} {
     private ${type}Service ${typeLower}Service;
 
     @PostMapping("/create")
-    @Operation(summary = "创建$!{table.comment}")
+    @Operation(summary = "${apiComment.create}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:create')")
     public Long create${type}(@Validated @RequestBody ${type}CreateRequest request) {
         return ${typeLower}Service.create${type}(request);
     }
 
     @PutMapping("/update")
-    @Operation(summary = "更新$!{table.comment}")
+    @Operation(summary = "${apiComment.update}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
     public Integer update${type}(@Validated @RequestBody ${type}UpdateRequest request) {
         return ${typeLower}Service.update${type}(request);
     }
 
     @GetMapping("/get")
-    @Operation(summary = "通过id查询$!{table.comment}")
+    @Operation(summary = "${apiComment.get}")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public ${type}VO get${type}(@RequestParam("id") Long id) {
@@ -66,7 +66,7 @@ public class ${table.controllerName} {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "通过id批量查询$!{table.comment}")
+    @Operation(summary = "${apiComment.list}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public List<${type}VO> get${type}List(@RequestParam("idList") List<Long> idList) {
@@ -74,14 +74,14 @@ public class ${table.controllerName} {
     }
 
     @PostMapping("/query")
-    @Operation(summary = "分页查询$!{table.comment}")
+    @Operation(summary = "${apiComment.query}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public DataGrid<${type}VO> get${type}Page(@Validated @RequestBody ${type}QueryRequest request) {
         return ${typeLower}Service.get${type}Page(request);
     }
 
     @PutMapping("/delete")
-    @Operation(summary = "删除$!{table.comment}")
+    @Operation(summary = "${apiComment.delete}")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer delete${type}(@RequestParam("id") Long id) {
@@ -89,7 +89,7 @@ public class ${table.controllerName} {
     }
 
     @PutMapping("/delete-batch")
-    @Operation(summary = "批量删除$!{table.comment}")
+    @Operation(summary = "${apiComment.batchDelete}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {

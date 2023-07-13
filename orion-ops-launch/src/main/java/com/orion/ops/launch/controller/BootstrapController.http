@@ -2,9 +2,3 @@
 GET {{baseUrl}}/server/bootstrap/health
 Authorization: {{token}}
 
-
-###
-GET http://127.0.0.1:9200/infra/test-table/get
-Authorization: {{token}}
-
-###

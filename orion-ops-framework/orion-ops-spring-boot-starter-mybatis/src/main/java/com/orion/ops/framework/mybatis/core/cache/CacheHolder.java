@@ -21,34 +21,34 @@ public class CacheHolder {
     /**
      * 缓存
      * <p>
-     * key: mapperClass
+     * key: mapper
      * value: id > row
      */
-    private static final ThreadLocal<MultiHashMap<Class<? extends BaseMapper<?>>, Serializable, Store<?>>> HOLDER = ThreadLocal.withInitial(MultiHashMap::new);
+    private static final ThreadLocal<MultiHashMap<BaseMapper<?>, Serializable, Store<?>>> HOLDER = ThreadLocal.withInitial(MultiHashMap::new);
 
     /**
      * 获取缓存
      *
-     * @param mapperClass mapperClass
-     * @param id          id
-     * @param <T>         domain
+     * @param mapper mapper
+     * @param id     id
+     * @param <T>    domain
      * @return cacheWrapper
      */
     @SuppressWarnings("unchecked")
-    public static <T> Store<T> get(Class<? extends BaseMapper<?>> mapperClass, Serializable id) {
-        return (Store<T>) HOLDER.get().get(mapperClass, id);
+    public static <T> Store<T> get(BaseMapper<?> mapper, Serializable id) {
+        return (Store<T>) HOLDER.get().get(mapper, id);
     }
 
     /**
      * 设置缓存
      *
-     * @param mapperClass mapperClass
-     * @param id          id
-     * @param row         row
-     * @param <T>         domainClass
+     * @param mapper mapper
+     * @param id     id
+     * @param row    row
+     * @param <T>    domainClass
      */
-    public static <T> void set(Class<? extends BaseMapper<T>> mapperClass, Serializable id, T row) {
-        HOLDER.get().put(mapperClass, id, new Store<>(row));
+    public static <T> void set(BaseMapper<T> mapper, Serializable id, T row) {
+        HOLDER.get().put(mapper, id, new Store<>(row));
     }
 
     /**

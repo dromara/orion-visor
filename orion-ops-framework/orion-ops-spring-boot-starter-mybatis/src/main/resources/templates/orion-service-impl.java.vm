@@ -31,8 +31,6 @@ import java.util.List;
 @Service
 public class ${table.serviceImplName} implements ${table.serviceName} {
 
-    // TODO 需要自行实现 page 和 check 方法
-
     @Resource
     private ${type}DAO ${typeLower}DAO;
 
@@ -42,7 +40,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         ${type}DO record = ${type}Convert.MAPPER.to(request);
         record.setId(null);
         // 查询是否存在
-        this.checkTestTablePresent(record);
+        this.check${type}Present(record);
         // 插入
         int effect = ${typeLower}DAO.insert(record);
         log.info("${type}Service-add${type} effect: {}, domain: {}", effect, JSON.toJSONString(record));
@@ -55,7 +53,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         ${type}DO record = ${type}Convert.MAPPER.to(request);
         Valid.notNull(record.getId(), ErrorMessage.ID_MISSING);
         // 查询是否存在
-        this.checkTestTablePresent(record);
+        this.check${type}Present(record);
         // 更新
         int effect = ${typeLower}DAO.updateById(record);
         log.info("${type}Service-update${type} effect: {}, domain: {}", effect, JSON.toJSONString(record));
@@ -87,7 +85,10 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request) {
         // 构造条件
-        LambdaQueryWrapper<${type}DO> wrapper = Conditions.wrapper(${type}DO.class);
+        LambdaQueryWrapper<${type}DO> wrapper = Conditions.wrapper(${type}DO.class)
+        #foreach($field in ${table.fields})
+                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())#if(!$foreach.hasNext);#end
+        #end
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)
@@ -97,12 +98,16 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public Integer delete${type}(Long id) {
-        return ${typeLower}DAO.deleteById(id);
+        int effect = ${typeLower}DAO.deleteById(id);
+        log.info("${type}Service-delete${type} id: {}, effect: {}", id, effect);
+        return effect;
     }
 
     @Override
     public Integer batchDelete${type}(List<Long> idList) {
-        return ${typeLower}DAO.deleteBatchIds(idList);
+        int effect = ${typeLower}DAO.deleteBatchIds(idList);
+        log.info("${type}Service-batchDelete${type} idList: {}, effect: {}", JSON.toJSONString(idList), effect);
+        return effect;
     }
 
     /**
@@ -113,12 +118,16 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     private void check${type}Present(${type}DO domain) {
         // 构造条件
         LambdaQueryWrapper<${type}DO> wrapper = Conditions.wrapper(${type}DO.class)
-                .eq(${type}DO::getId, domain.getId());
-        // .eq(XXXDO::getXXX, domain.getXXX());
+                // 更新时忽略当前记录
+                .ne(${type}DO::getId, domain.getId())
+                // 用其他字段做重复校验
+                #foreach($field in ${table.fields})
+                #if("$!field.propertyName" != "id")
+                .eq(${type}DO::get${field.capitalName}, domain.get${field.capitalName}())#if(!$foreach.hasNext);#end
+                #end
+                #end
         // 检查是否存在
-        boolean present = testTableDAO.of()
-            .wrapper(wrapper)
-            .present();
+        boolean present = ${typeLower}DAO.of().wrapper(wrapper).present();
         if (present) {
             throw ErrorCode.DATA_PRESENT.exception();
         }

@@ -22,12 +22,14 @@ import java.util.*;
 @AllArgsConstructor
 @Schema(name = "${type}CreateRequest", description = "$!{table.comment} 创建请求对象")
 public class ${type}CreateRequest implements Serializable {
-    #foreach($field in ${table.fields})
 
+    #foreach($field in ${table.fields})
+    #if("$!field.propertyName" != "id")
     #if("$!field.comment" != "")
     @Schema(description = "${field.comment}")
     #end
     private ${field.propertyType} ${field.propertyName};
-    #end
 
+    #end
+    #end
 }

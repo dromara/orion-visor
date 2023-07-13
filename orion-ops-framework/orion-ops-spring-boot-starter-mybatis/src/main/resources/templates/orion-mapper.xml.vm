@@ -29,10 +29,7 @@
 #if(${baseColumnList})
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        #foreach($field in ${table.commonFields})
-            ${field.columnName},
-        #end
-        ${table.fieldNames}
+        #foreach($field in ${table.commonFields})#if(${foreach.count} == 1)        #end${field.columnName}, #end${table.fieldNames}
     </sql>
 
 #end

@@ -17,7 +17,7 @@ import java.util.List;
 public interface ${table.serviceName} {
 
     /**
-     * 插入$!{table.comment}
+     * ${apiComment.create}
      *
      * @param request request
      * @return id
@@ -25,7 +25,7 @@ public interface ${table.serviceName} {
     Long create${type}(${type}CreateRequest request);
 
     /**
-     * 通过 id 更新$!{table.comment}
+     * ${apiComment.update}
      *
      * @param request request
      * @return effect
@@ -33,7 +33,7 @@ public interface ${table.serviceName} {
     Integer update${type}(${type}UpdateRequest request);
 
     /**
-     * 通过 id 查询$!{table.comment}
+     * ${apiComment.get}
      *
      * @param id id
      * @return row
@@ -41,7 +41,7 @@ public interface ${table.serviceName} {
     ${type}VO get${type}(Long id);
 
     /**
-     * 通过 id 批量查询$!{table.comment}
+     * ${apiComment.list}
      *
      * @param idList idList
      * @return rows
@@ -49,7 +49,7 @@ public interface ${table.serviceName} {
     List<${type}VO> get${type}List(List<Long> idList);
 
     /**
-     * 分页查询$!{table.comment}
+     * ${apiComment.query}
      *
      * @param request request
      * @return rows
@@ -57,7 +57,7 @@ public interface ${table.serviceName} {
     DataGrid<${type}VO> get${type}Page(${type}QueryRequest request);
 
     /**
-     * 通过 id 删除$!{table.comment}
+     * ${apiComment.delete}
      *
      * @param id id
      * @return effect
@@ -65,7 +65,7 @@ public interface ${table.serviceName} {
     Integer delete${type}(Long id);
 
     /**
-     * 通过 id 批量删除$!{table.comment}
+     * ${apiComment.batchDelete}
      *
      * @param idList idList
      * @return effect

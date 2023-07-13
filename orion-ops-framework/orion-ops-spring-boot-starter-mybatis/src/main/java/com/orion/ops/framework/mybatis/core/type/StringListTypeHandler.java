@@ -13,14 +13,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * TODO TEST
  * varchar -> List<String>
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/25 10:33
  */
-@MappedJdbcTypes(JdbcType.VARCHAR)
+@MappedJdbcTypes({JdbcType.CHAR, JdbcType.VARCHAR})
 @MappedTypes(List.class)
 public class StringListTypeHandler implements ITypeHandler<String, List<String>> {
 

@@ -151,7 +151,10 @@ public class OrionSwaggerAutoConfiguration {
                 .name(HttpHeaders.AUTHORIZATION)
                 .description("认证 Token")
                 .in(String.valueOf(SecurityScheme.In.HEADER))
-                .schema(new StringSchema()._default("Bearer ").name("NAME").description("认证 Token"));
+                .schema(new StringSchema()
+                        ._default("Bearer 1")
+                        .name(HttpHeaders.AUTHORIZATION)
+                        .description("认证 Token"));
     }
 
     @Value("${orion.api.prefix}")

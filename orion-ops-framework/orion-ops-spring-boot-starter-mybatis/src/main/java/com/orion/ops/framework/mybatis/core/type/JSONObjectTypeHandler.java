@@ -12,20 +12,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * TODO TEST
  * varchar -> JSONObject
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/25 10:33
  */
-@MappedJdbcTypes(JdbcType.VARCHAR)
+@MappedJdbcTypes({JdbcType.CHAR, JdbcType.VARCHAR})
 @MappedTypes(JSONObject.class)
 public class JSONObjectTypeHandler implements ITypeHandler<String, JSONObject> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, JSONObject res, JdbcType jdbcType) throws SQLException {
-        // todo TEST NULL
         // 设置占位符
         ps.setString(i, res.toString());
     }

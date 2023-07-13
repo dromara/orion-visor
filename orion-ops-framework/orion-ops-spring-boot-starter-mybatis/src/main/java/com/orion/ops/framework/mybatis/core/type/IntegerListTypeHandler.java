@@ -16,14 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO TEST
  * varchar -> List<Integer>
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/25 10:33
  */
-@MappedJdbcTypes(JdbcType.VARCHAR)
+@MappedJdbcTypes({JdbcType.CHAR, JdbcType.VARCHAR})
 @MappedTypes(List.class)
 public class IntegerListTypeHandler implements ITypeHandler<String, List<Integer>> {
 
