@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * mybatis 配置类
- * TODO 扫描的包
  *
  * @author Jiahang Li
  * @version 1.0.0

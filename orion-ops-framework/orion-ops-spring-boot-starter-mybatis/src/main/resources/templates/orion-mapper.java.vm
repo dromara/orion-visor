@@ -18,4 +18,4 @@ import ${mapperAnnotationClass.name};
 #end
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
 
-        }
+}

@@ -22,9 +22,9 @@ import java.util.*;
 public class ${type}QueryRequest extends PageRequest {
     #foreach($field in ${table.fields})
 
-        #if("$!field.comment" != "")
-        @Schema(description = "${field.comment}")
-        #end
+    #if("$!field.comment" != "")
+    @Schema(description = "${field.comment}")
+    #end
     private ${field.propertyType} ${field.propertyName};
     #end
 

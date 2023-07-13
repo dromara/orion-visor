@@ -74,8 +74,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BindException.class)
     public HttpWrapper<?> paramBindExceptionHandler(BindException ex) {
         log.error("paramBindExceptionHandler", ex);
-        FieldError error = ex.getFieldError();
-        return ErrorCode.BAD_REQUEST.wrapper().msg(Objects.requireNonNull(error).getDefaultMessage());
+        FieldError error = Objects.requireNonNull(ex.getFieldError());
+        return ErrorCode.BAD_REQUEST.wrapper().msg(error.getField() + " " + error.getDefaultMessage());
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)

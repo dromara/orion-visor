@@ -3,9 +3,9 @@ package ${currentPackage};
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ${package.Entity}.*;
-    #foreach($pkg in ${customFilePackages})
-    import ${pkg}.*;
-    #end
+#foreach($pkg in ${customFilePackages})
+import ${pkg}.*;
+#end
 import java.util.List;
 
 /**
@@ -18,16 +18,16 @@ import java.util.List;
 @Mapper
 @SuppressWarnings("ALL")
 public interface ${type}Convert {
+    
+    ${type}Convert MAPPER = Mappers.getMapper(${type}Convert.class);
 
-        ${type}Convert MAPPER = Mappers.getMapper(${type}Convert.class);
+    ${type}DO to(${type}CreateRequest request);
 
-        ${type}DO to(${type}CreateRequest request);
+    ${type}DO to(${type}UpdateRequest request);
 
-        ${type}DO to(${type}UpdateRequest request);
+    ${type}DO to(${type}QueryRequest request);
 
-        ${type}DO to(${type}QueryRequest request);
-
-        ${type}VO to(${type}DO request);
+    ${type}VO to(${type}DO request);
 
     List<${type}VO> to(List<${type}DO> list);
 

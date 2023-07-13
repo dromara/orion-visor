@@ -15,7 +15,6 @@ import org.hibernate.validator.constraints.Range;
 @Data
 public class PageRequest implements IPageRequest {
 
-    // TODO TEST
     @Range(min = 1, max = 10000)
     @Schema(description = "页码")
     private int page;

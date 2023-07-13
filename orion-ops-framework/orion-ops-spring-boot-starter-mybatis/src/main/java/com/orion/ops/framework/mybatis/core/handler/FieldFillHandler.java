@@ -21,6 +21,8 @@ public class FieldFillHandler implements MetaObjectHandler {
     @Resource
     private SecurityHolder securityHolder;
 
+    // TODO 删除fill baseConst
+
     @Override
     public void insertFill(MetaObject metaObject) {
         if (Objects.nonNull(metaObject) && metaObject.getOriginalObject() instanceof BaseDO) {
@@ -36,7 +38,6 @@ public class FieldFillHandler implements MetaObjectHandler {
                 baseDO.setUpdateTime(now);
             }
 
-            // TODO TEST
             Long userId = securityHolder.getLoginUserId();
             // 创建人
             if (Objects.nonNull(userId) && Objects.isNull(baseDO.getCreator())) {
@@ -60,7 +61,6 @@ public class FieldFillHandler implements MetaObjectHandler {
 
             // 更新人
             Object updater = getFieldValByName("updater", metaObject);
-            // TODO TEST
             Long userId = securityHolder.getLoginUserId();
             if (Objects.nonNull(userId) && Objects.isNull(updater)) {
                 setFieldValByName("updater", userId.toString(), metaObject);

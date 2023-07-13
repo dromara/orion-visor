@@ -55,7 +55,7 @@ public class OrionSwaggerAutoConfiguration {
         Map<String, SecurityScheme> securitySchemas = this.buildSecuritySchemes();
         OpenAPI api = new OpenAPI()
                 // 接口信息
-                .info(buildInfo(properties))
+                .info(this.buildInfo(properties))
                 // 接口安全配置
                 .components(new Components().securitySchemes(securitySchemas));
         securitySchemas.keySet()
@@ -109,13 +109,12 @@ public class OrionSwaggerAutoConfiguration {
                 propertyResolverUtils, openApiBuilderCustomizers, serverBaseUrlCustomizers, javadocProvider);
     }
 
-
     /**
      * @return 所有模块的 api 分组
      */
     @Bean
     public GroupedOpenApi allGroupedOpenApi() {
-        return buildGroupedOpenApi("全部", "");
+        return buildGroupedOpenApi("全部", "*");
     }
 
     /**

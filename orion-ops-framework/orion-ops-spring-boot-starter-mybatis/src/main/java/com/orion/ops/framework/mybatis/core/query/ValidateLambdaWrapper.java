@@ -7,8 +7,6 @@ import com.orion.lang.utils.Strings;
 import java.util.Collection;
 
 /**
- * TODO TEST
- * <p>
  * 有效性验证 wrapper
  *
  * @author Jiahang Li
@@ -38,22 +36,22 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
         for (Object object : objects) {
             // 非 null 检测
             if (object == null) {
-                return false;
+                return true;
             }
             // 字符串 非空校验
             if (object instanceof String) {
                 if (Strings.isBlank((String) object)) {
-                    return false;
+                    return true;
                 }
             }
             // 集合 非空校验
             if (object instanceof Collection<?>) {
                 if (((Collection<?>) object).isEmpty()) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     @Override

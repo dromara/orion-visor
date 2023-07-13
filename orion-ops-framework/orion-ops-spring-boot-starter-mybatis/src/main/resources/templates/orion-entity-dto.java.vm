@@ -1,9 +1,7 @@
 package ${currentPackage};
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.io.Serializable;
-
 import lombok.*;
 
 import java.util.*;
@@ -25,9 +23,9 @@ public class ${type}DTO implements Serializable {
     private static final long serialVersionUID = 1L;
     #foreach($field in ${table.fields})
 
-        #if("$!field.comment" != "")
-        @Schema(description = "${field.comment}")
-        #end
+    #if("$!field.comment" != "")
+    @Schema(description = "${field.comment}")
+    #end
     private ${field.propertyType} ${field.propertyName};
     #end
 

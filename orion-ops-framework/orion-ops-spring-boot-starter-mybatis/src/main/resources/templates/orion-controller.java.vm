@@ -3,12 +3,12 @@ package ${package.Controller};
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import ${package.Service}.*;
-    #foreach($pkg in ${customFilePackages})
-    import ${pkg}.*;
-    #end
-    #if(${superControllerClassPackage})
-    import ${superControllerClassPackage};
-    #end
+#foreach($pkg in ${customFilePackages})
+import ${pkg}.*;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,61 +40,61 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
 #end
 
-@Resource
-private ${type}Service ${typeLower}Service;
+    @Resource
+    private ${type}Service ${typeLower}Service;
 
-@PostMapping("/create")
-@Operation(summary = "创建$!{table.comment}")
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:create')")
-public Long create${type}(@Validated ${type}CreateRequest request){
+    @PostMapping("/create")
+    @Operation(summary = "创建$!{table.comment}")
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:create')")
+    public Long create${type}(@Validated @RequestBody ${type}CreateRequest request) {
         return ${typeLower}Service.create${type}(request);
-        }
+    }
 
-@PutMapping("/update")
-@Operation(summary = "更新$!{table.comment}")
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
-public Integer update${type}(@Validated ${type}UpdateRequest request){
+    @PutMapping("/update")
+    @Operation(summary = "更新$!{table.comment}")
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
+    public Integer update${type}(@Validated @RequestBody ${type}UpdateRequest request) {
         return ${typeLower}Service.update${type}(request);
-        }
+    }
 
-@GetMapping("/get")
-@Operation(summary = "通过id查询$!{table.comment}")
-@Parameter(name = "id", description = "id", required = true)
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-public ${type}VO get${type}(@RequestParam("id") Long id){
+    @GetMapping("/get")
+    @Operation(summary = "通过id查询$!{table.comment}")
+    @Parameter(name = "id", description = "id", required = true)
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
+    public ${type}VO get${type}(@RequestParam("id") Long id) {
         return ${typeLower}Service.get${type}(id);
-        }
+    }
 
-@GetMapping("/list")
-@Operation(summary = "通过id批量查询$!{table.comment}")
-@Parameter(name = "idList", description = "idList", required = true)
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-public List<${type}VO> get${type}List(@RequestParam("idList") List<Long> idList){
+    @GetMapping("/list")
+    @Operation(summary = "通过id批量查询$!{table.comment}")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
+    public List<${type}VO> get${type}List(@RequestParam("idList") List<Long> idList) {
         return ${typeLower}Service.get${type}List(idList);
-        }
+    }
 
-@PostMapping("/query")
-@Operation(summary = "分页查询$!{table.comment}")
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-public DataGrid<${type}VO> get${type}Page(@Validated @RequestBody ${type}QueryRequest request){
+    @PostMapping("/query")
+    @Operation(summary = "分页查询$!{table.comment}")
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
+    public DataGrid<${type}VO> get${type}Page(@Validated @RequestBody ${type}QueryRequest request) {
         return ${typeLower}Service.get${type}Page(request);
-        }
+    }
 
-@PutMapping("/delete")
-@Operation(summary = "删除$!{table.comment}")
-@Parameter(name = "id", description = "id", required = true)
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
-public Integer delete${type}(@RequestParam("id") Long id){
+    @PutMapping("/delete")
+    @Operation(summary = "删除$!{table.comment}")
+    @Parameter(name = "id", description = "id", required = true)
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
+    public Integer delete${type}(@RequestParam("id") Long id) {
         return ${typeLower}Service.delete${type}(id);
-        }
+    }
 
-@PutMapping("/delete-batch")
-@Operation(summary = "批量删除$!{table.comment}")
-@Parameter(name = "idList", description = "idList", required = true)
-@PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
-public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList){
+    @PutMapping("/delete-batch")
+    @Operation(summary = "批量删除$!{table.comment}")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
+    public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {
         return ${typeLower}Service.batchDelete${type}(idList);
-        }
+    }
 
-        }
+}
 

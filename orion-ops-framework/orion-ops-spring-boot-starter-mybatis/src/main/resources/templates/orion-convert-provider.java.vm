@@ -3,9 +3,9 @@ package ${currentPackage};
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ${package.Entity}.*;
-    #foreach($pkg in ${customFilePackages})
-    import ${pkg}.*;
-    #end
+#foreach($pkg in ${customFilePackages})
+import ${pkg}.*;
+#end
 import java.util.List;
 
 /**
@@ -19,11 +19,11 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public interface ${type}ProviderConvert {
 
-        ${type}ProviderConvert MAPPER = Mappers.getMapper(${type}ProviderConvert.class);
+    ${type}ProviderConvert MAPPER = Mappers.getMapper(${type}ProviderConvert.class);
 
-        ${type}DO to(${type}DTO dto);
+    ${type}DO to(${type}DTO dto);
 
-        ${type}DTO to(${type}DO dto);
+    ${type}DTO to(${type}DO dto);
 
     List<${type}DO> toDO(List<${type}DTO> list);
 
