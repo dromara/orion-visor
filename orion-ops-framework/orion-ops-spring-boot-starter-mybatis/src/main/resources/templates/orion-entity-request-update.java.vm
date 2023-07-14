@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * $!{table.comment} 更新请求对象
  *
@@ -24,6 +27,11 @@ import java.util.*;
 public class ${type}UpdateRequest implements Serializable {
     #foreach($field in ${table.fields})
 
+    #if("$field.propertyType" == "String")
+    @NotBlank
+    #else
+    @NotNull
+    #end
     #if("$!field.comment" != "")
     @Schema(description = "${field.comment}")
     #end

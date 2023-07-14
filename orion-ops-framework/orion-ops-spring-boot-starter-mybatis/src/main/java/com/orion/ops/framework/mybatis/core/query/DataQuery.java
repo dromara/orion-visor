@@ -7,6 +7,7 @@ import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.lang.define.wrapper.Pager;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.constant.Const;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,9 +34,19 @@ public class DataQuery<T> {
         this.dao = dao;
     }
 
+    private DataQuery(BaseMapper<T> dao, LambdaQueryWrapper<T> wrapper) {
+        this.dao = dao;
+        this.wrapper = wrapper;
+    }
+
     public static <T> DataQuery<T> of(BaseMapper<T> dao) {
         Valid.notNull(dao, "dao is null");
         return new DataQuery<>(dao);
+    }
+
+    public static <T> DataQuery<T> of(BaseMapper<T> dao, LambdaQueryWrapper<T> wrapper) {
+        Valid.notNull(dao, "dao is null");
+        return new DataQuery<>(dao, wrapper);
     }
 
     public DataQuery<T> page(IPageRequest page) {
@@ -45,6 +56,11 @@ public class DataQuery<T> {
 
     public DataQuery<T> wrapper(LambdaQueryWrapper<T> wrapper) {
         this.wrapper = Valid.notNull(wrapper, "wrapper is null");
+        return this;
+    }
+
+    public DataQuery<T> only() {
+        this.wrapper.last(Const.LIMIT_1);
         return this;
     }
 

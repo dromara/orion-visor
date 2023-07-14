@@ -41,6 +41,11 @@
       "name": "orion.swagger.license-url",
       "type": "java.lang.String",
       "description": "swagger 项目license-url."
+    },
+    {
+      "name": "orion.swagger.grouped-api",
+      "type": "java.util.Map",
+      "description": "grouped api 配置."
     }
   ]
 }

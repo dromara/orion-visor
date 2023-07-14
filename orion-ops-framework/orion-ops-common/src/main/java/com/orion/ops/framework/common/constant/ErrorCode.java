@@ -70,10 +70,6 @@ public enum ErrorCode implements CodeInfo {
 
     DIABLED_ERROR(715, "数据已被禁用"),
 
-    DATA_PRESENT(716, "数据已存在"),
-
-    DATA_ABESENT(717, "数据不存在"),
-
     ;
 
     ErrorCode(int code, String message) {

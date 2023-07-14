@@ -40,10 +40,10 @@ public class CodeGenerator {
         @NotNull
         String author = Const.ORION_AUTHOR;
         @NotEmpty
-        String[] tables = {"test_table", "table_copy"};
+        String[] tables = {"system_user"};
         // 表业务注释 需要和表一一对应 null则为表注释
         @NotEmpty
-        String[] comment = {"用户", "复制"};
+        String[] comment = {"用户"};
         // 模块
         @NotNull
         String module = "infra";

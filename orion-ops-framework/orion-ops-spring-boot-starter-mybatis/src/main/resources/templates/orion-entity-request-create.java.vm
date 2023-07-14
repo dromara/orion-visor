@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * $!{table.comment} 创建请求对象
  *
@@ -25,6 +28,11 @@ public class ${type}CreateRequest implements Serializable {
 
     #foreach($field in ${table.fields})
     #if("$!field.propertyName" != "id")
+    #if("$field.propertyType" == "String")
+    @NotBlank
+    #else
+    @NotNull
+    #end
     #if("$!field.comment" != "")
     @Schema(description = "${field.comment}")
     #end

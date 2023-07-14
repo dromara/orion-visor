@@ -142,6 +142,11 @@ orion:
     email: ljh1553488six@139.com
     license: Apache-2.0
     license-url: https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE
+    grouped-api:
+      infra:
+        group: "infra - 基建模块"
+        path: "infra"
+
   logging:
     # 全局日志打印
     printer:

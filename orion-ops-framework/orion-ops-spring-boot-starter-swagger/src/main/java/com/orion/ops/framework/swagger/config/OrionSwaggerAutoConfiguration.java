@@ -15,6 +15,7 @@ import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
 import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
 import org.springdoc.core.providers.JavadocProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -44,14 +45,15 @@ import java.util.Optional;
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SWAGGER)
 public class OrionSwaggerAutoConfiguration {
 
-    private static String orionApiPrefix;
+    @Value("${orion.api.prefix}")
+    private String orionApiPrefix;
 
     /**
      * @param properties 配置
-     * @return API
+     * @return OpenAPI
      */
     @Bean
-    public OpenAPI createApi(SwaggerProperties properties) {
+    public OpenAPI openApi(SwaggerProperties properties) {
         Map<String, SecurityScheme> securitySchemas = this.buildSecuritySchemes();
         OpenAPI api = new OpenAPI()
                 // 接口信息
@@ -104,27 +106,26 @@ public class OrionSwaggerAutoConfiguration {
                                          Optional<List<OpenApiBuilderCustomizer>> openApiBuilderCustomizers,
                                          Optional<List<ServerBaseUrlCustomizer>> serverBaseUrlCustomizers,
                                          Optional<JavadocProvider> javadocProvider) {
-
         return new OpenAPIService(openAPI, securityParser, springDocConfigProperties,
                 propertyResolverUtils, openApiBuilderCustomizers, serverBaseUrlCustomizers, javadocProvider);
     }
 
     /**
+     * @param properties  properties
+     * @param beanFactory beanFactory
      * @return 所有模块的 api 分组
      */
     @Bean
-    public GroupedOpenApi allGroupedOpenApi() {
-        return buildGroupedOpenApi("全部", "*");
-    }
-
-    /**
-     * 构建 api 分组
-     *
-     * @param group group
-     * @return group
-     */
-    public static GroupedOpenApi buildGroupedOpenApi(String group) {
-        return buildGroupedOpenApi(group, group);
+    public GroupedOpenApi allGroupedOpenApi(ConfigurableListableBeanFactory beanFactory,
+                                            SwaggerProperties properties) {
+        // 全部
+        GroupedOpenApi all = buildGroupedOpenApi("全部", "*");
+        // 注册模块分组 api
+        properties.getGroupedApi().forEach((t, v) -> {
+            GroupedOpenApi api = buildGroupedOpenApi(v.getGroup(), v.getPath());
+            beanFactory.registerSingleton(t + "GroupedOpenApi", api);
+        });
+        return all;
     }
 
     /**
@@ -134,7 +135,7 @@ public class OrionSwaggerAutoConfiguration {
      * @param path  path
      * @return group
      */
-    public static GroupedOpenApi buildGroupedOpenApi(String group, String path) {
+    private GroupedOpenApi buildGroupedOpenApi(String group, String path) {
         return GroupedOpenApi.builder()
                 .group(group)
                 .pathsToMatch(orionApiPrefix + "/" + path + "/**")
@@ -146,7 +147,7 @@ public class OrionSwaggerAutoConfiguration {
     /**
      * @return Authorization 认证请求头参数
      */
-    private static Parameter buildSecurityHeaderParameter() {
+    private Parameter buildSecurityHeaderParameter() {
         return new Parameter()
                 .name(HttpHeaders.AUTHORIZATION)
                 .description("认证 Token")
@@ -155,11 +156,6 @@ public class OrionSwaggerAutoConfiguration {
                         ._default("Bearer 1")
                         .name(HttpHeaders.AUTHORIZATION)
                         .description("认证 Token"));
-    }
-
-    @Value("${orion.api.prefix}")
-    public void setOrionApiPrefix(String orionApiPrefix) {
-        OrionSwaggerAutoConfiguration.orionApiPrefix = orionApiPrefix;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.orion.ops.framework.mybatis.core.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.orion.ops.framework.mybatis.core.query.CacheQuery;
+import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.mybatis.core.query.DataQuery;
 
 import java.util.Collection;
@@ -90,12 +92,29 @@ public interface IMapper<T> extends BaseMapper<T> {
     }
 
     /**
+     * @return 获取 wrapper
+     */
+    default LambdaQueryWrapper<T> wrapper() {
+        return Conditions.wrapper();
+    }
+
+    /**
      * 获取 DataQuery 对象
      *
      * @return DataQuery
      */
     default DataQuery<T> of() {
         return DataQuery.of(this);
+    }
+
+    /**
+     * 获取 DataQuery 对象
+     *
+     * @param wrapper wrapper
+     * @return DataQuery
+     */
+    default DataQuery<T> of(LambdaQueryWrapper<T> wrapper) {
+        return DataQuery.of(this, wrapper);
     }
 
     /**

@@ -3,6 +3,8 @@ package com.orion.ops.framework.swagger.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Map;
+
 /**
  * @author Jiahang Li
  * @version 1.0.0
@@ -51,5 +53,25 @@ public class SwaggerProperties {
      * license-url
      */
     private String licenseUrl;
+
+    /**
+     * api 分组
+     */
+    private Map<String, GroupedApiConfig> groupedApi;
+
+    @Data
+    public static class GroupedApiConfig {
+
+        /**
+         * 名称
+         */
+        private String group;
+
+        /**
+         * 路径
+         */
+        private String path;
+
+    }
 
 }
