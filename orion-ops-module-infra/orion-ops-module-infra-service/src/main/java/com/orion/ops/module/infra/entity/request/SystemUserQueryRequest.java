@@ -43,7 +43,7 @@ public class SystemUserQueryRequest extends PageRequest {
     private String email;
 
     @Schema(description = "用户状态 0正常 1停用 2锁定")
-    private Byte status;
+    private Integer status;
 
     @Schema(description = "最后登录时间")
     private Date lastLoginTime;

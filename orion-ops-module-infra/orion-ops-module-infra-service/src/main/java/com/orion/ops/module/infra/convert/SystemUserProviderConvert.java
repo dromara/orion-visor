@@ -17,14 +17,13 @@ import java.util.List;
  * @since 2023-7-13 18:42
  */
 @Mapper
-@SuppressWarnings("ALL")
 public interface SystemUserProviderConvert {
 
     SystemUserProviderConvert MAPPER = Mappers.getMapper(SystemUserProviderConvert.class);
 
     SystemUserDO to(SystemUserDTO dto);
 
-    SystemUserDTO to(SystemUserDO dto);
+    SystemUserDTO to(SystemUserDO domain);
 
     List<SystemUserDO> toDO(List<SystemUserDTO> list);
 

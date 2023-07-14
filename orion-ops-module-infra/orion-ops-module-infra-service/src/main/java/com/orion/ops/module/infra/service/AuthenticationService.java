@@ -1,6 +1,9 @@
 package com.orion.ops.module.infra.service;
 
+import com.orion.lang.define.wrapper.Pair;
 import com.orion.ops.module.infra.entity.request.UserLoginRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 认证服务
@@ -14,16 +17,25 @@ public interface AuthenticationService {
     /**
      * 登陆
      *
-     * @param request request
+     * @param request        request
+     * @param servletRequest servletRequest
      * @return token
      */
-    String login(UserLoginRequest request);
+    String login(UserLoginRequest request, HttpServletRequest servletRequest);
 
     /**
      * 登出
      *
-     * @param token token
+     * @param servletRequest servletRequest
      */
-    void logout(String token);
+    void logout(HttpServletRequest servletRequest);
+
+    /**
+     * 获取 token pair
+     *
+     * @param loginToken loginToken
+     * @return pair
+     */
+    Pair<Long, Long> getLoginTokenPair(String loginToken);
 
 }

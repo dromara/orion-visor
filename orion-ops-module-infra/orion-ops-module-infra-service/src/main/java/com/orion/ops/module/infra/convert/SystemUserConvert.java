@@ -1,12 +1,14 @@
 package com.orion.ops.module.infra.convert;
 
+import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.module.infra.entity.domain.SystemUserDO;
+import com.orion.ops.module.infra.entity.request.SystemUserCreateRequest;
+import com.orion.ops.module.infra.entity.request.SystemUserQueryRequest;
+import com.orion.ops.module.infra.entity.request.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import com.orion.ops.module.infra.entity.domain.*;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.entity.request.*;
-import com.orion.ops.module.infra.convert.*;
+
 import java.util.List;
 
 /**
@@ -17,9 +19,8 @@ import java.util.List;
  * @since 2023-7-13 18:42
  */
 @Mapper
-@SuppressWarnings("ALL")
 public interface SystemUserConvert {
-    
+
     SystemUserConvert MAPPER = Mappers.getMapper(SystemUserConvert.class);
 
     SystemUserDO to(SystemUserCreateRequest request);
@@ -28,8 +29,11 @@ public interface SystemUserConvert {
 
     SystemUserDO to(SystemUserQueryRequest request);
 
-    SystemUserVO to(SystemUserDO request);
+    SystemUserVO to(SystemUserDO domain);
 
     List<SystemUserVO> to(List<SystemUserDO> list);
+
+    LoginUser toLoginUser(SystemUserDO domain);
+
 
 }

@@ -55,7 +55,7 @@ public class SystemUserDO extends BaseDO {
 
     @Schema(description = "用户状态 0正常 1停用 2锁定")
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     @Schema(description = "最后登录时间")
     @TableField("last_login_time")

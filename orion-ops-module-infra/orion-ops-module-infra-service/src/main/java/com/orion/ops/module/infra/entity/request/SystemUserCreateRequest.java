@@ -52,7 +52,7 @@ public class SystemUserCreateRequest implements Serializable {
 
     @NotNull
     @Schema(description = "用户状态 0正常 1停用 2锁定")
-    private Byte status;
+    private Integer status;
 
     @NotNull
     @Schema(description = "最后登录时间")
