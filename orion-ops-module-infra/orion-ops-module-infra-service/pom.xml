@@ -34,12 +34,6 @@
             <artifactId>orion-ops-spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- swagger -->
-        <dependency>
-            <groupId>com.orion.ops</groupId>
-            <artifactId>orion-ops-spring-boot-starter-swagger</artifactId>
-        </dependency>
-
         <!-- redis -->
         <dependency>
             <groupId>com.orion.ops</groupId>

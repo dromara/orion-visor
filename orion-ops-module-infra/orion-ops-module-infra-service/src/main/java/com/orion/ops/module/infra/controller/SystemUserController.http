@@ -1,0 +1,74 @@
+### 创建用户
+POST {{baseUrl}}/infra/system-user/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "username": "",
+  "password": "",
+  "nickname": "",
+  "avatar": "",
+  "mobile": "",
+  "email": "",
+  "status": "",
+  "lastLoginTime": ""
+}
+
+
+### 通过 id 更新用户
+PUT {{baseUrl}}/infra/system-user/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "username": "",
+  "password": "",
+  "nickname": "",
+  "avatar": "",
+  "mobile": "",
+  "email": "",
+  "status": "",
+  "lastLoginTime": ""
+}
+
+
+### 通过 id 查询用户
+GET {{baseUrl}}/infra/system-user/get?id=1
+Authorization: {{token}}
+
+
+### 通过 id 批量查询用户
+GET {{baseUrl}}/infra/system-user/list?idList=1,2,3
+Authorization: {{token}}
+
+
+### 分页查询用户
+POST {{baseUrl}}/infra/system-user/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "username": "",
+  "password": "",
+  "nickname": "",
+  "avatar": "",
+  "mobile": "",
+  "email": "",
+  "status": "",
+  "lastLoginTime": ""
+}
+
+
+### 通过 id 删除用户
+DELETE {{baseUrl}}/infra/system-user/delete?id=1
+Authorization: {{token}}
+
+
+### 通过 id 批量删除用户
+DELETE {{baseUrl}}/infra/system-user/delete-batch?idList=1,2,3
+Authorization: {{token}}
+
+
+
