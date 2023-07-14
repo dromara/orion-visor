@@ -88,6 +88,8 @@ public class PermitAllAnnotationAuthorizeRequestsCustomizer extends AuthorizeReq
                     case DELETE:
                         deleteList.addAll(urls);
                         break;
+                    default:
+                        break;
                 }
             });
         });

@@ -16,7 +16,6 @@ import java.util.List;
  * @since ${date}
  */
 @Mapper
-@SuppressWarnings("ALL")
 public interface ${type}Convert {
     
     ${type}Convert MAPPER = Mappers.getMapper(${type}Convert.class);
@@ -27,7 +26,7 @@ public interface ${type}Convert {
 
     ${type}DO to(${type}QueryRequest request);
 
-    ${type}VO to(${type}DO request);
+    ${type}VO to(${type}DO domain);
 
     List<${type}VO> to(List<${type}DO> list);
 

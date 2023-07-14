@@ -178,6 +178,7 @@ orion:
   crypto:
     # aes加密器
     aes:
+      primary: true
       enabled: true
       working-mode: ECB
       padding-mode: PKCS5_PADDING

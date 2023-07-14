@@ -64,21 +64,29 @@ public class DataQuery<T> {
         return this;
     }
 
-    public Optional<T> get() {
+    public T get() {
+        return dao.selectOne(wrapper);
+    }
+
+    public Optional<T> optional() {
         return Optional.ofNullable(dao.selectOne(wrapper));
     }
 
-    public <R> Optional<R> get(Function<T, R> mapper) {
+    public <R> Optional<R> optional(Function<T, R> mapper) {
         Valid.notNull(mapper, "convert function is null");
         return Optional.ofNullable(dao.selectOne(wrapper))
                 .map(mapper);
     }
 
-    public Stream<T> list() {
+    public List<T> list() {
+        return dao.selectList(wrapper);
+    }
+
+    public Stream<T> stream() {
         return dao.selectList(wrapper).stream();
     }
 
-    public <R> List<R> list(Function<T, R> mapper) {
+    public <R> List<R> stream(Function<T, R> mapper) {
         Valid.notNull(mapper, "convert function is null");
         return Lists.map(dao.selectList(wrapper), mapper);
     }

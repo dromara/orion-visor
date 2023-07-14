@@ -13,6 +13,11 @@ import lombok.Data;
 public class CryptoConfig {
 
     /**
+     * 是否为默认加密器
+     */
+    protected boolean primary;
+
+    /**
      * 是否启用
      */
     protected boolean enabled;

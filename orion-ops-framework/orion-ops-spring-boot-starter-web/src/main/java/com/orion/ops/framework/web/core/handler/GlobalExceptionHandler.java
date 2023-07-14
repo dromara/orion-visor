@@ -67,27 +67,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public HttpWrapper<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
-        log.error("missingServletRequestParameterExceptionHandler", ex);
-        return ErrorCode.BAD_REQUEST.wrapper().msg(Strings.format(ErrorMessage.PARAM_MISSING, ex.getParameterName()));
+        String message = Strings.format(ErrorMessage.PARAM_MISSING, ex.getParameterName());
+        log.error("missingServletRequestParameterExceptionHandler {}", message);
+        return ErrorCode.BAD_REQUEST.wrapper().msg(message);
     }
 
     @ExceptionHandler(value = BindException.class)
     public HttpWrapper<?> paramBindExceptionHandler(BindException ex) {
-        log.error("paramBindExceptionHandler", ex);
         FieldError error = Objects.requireNonNull(ex.getFieldError());
-        return ErrorCode.BAD_REQUEST.wrapper().msg(error.getField() + " " + error.getDefaultMessage());
+        String message = error.getField() + " " + error.getDefaultMessage();
+        log.error("paramBindExceptionHandler {}", message);
+        return ErrorCode.BAD_REQUEST.wrapper().msg(message);
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     public HttpWrapper<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        log.error("constraintViolationExceptionHandler", ex);
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
-        return ErrorCode.BAD_REQUEST.wrapper().msg(Objects.requireNonNull(constraintViolation).getMessage());
+        String message = Objects.requireNonNull(constraintViolation).getMessage();
+        log.error("constraintViolationExceptionHandler {}", message);
+        return ErrorCode.BAD_REQUEST.wrapper().msg(message);
     }
 
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     public HttpWrapper<?> httpRequestMethodNotSupportedExceptionHandler(Exception ex) {
-        log.error("httpRequestMethodNotSupportedExceptionHandler", ex);
+        log.error("httpRequestMethodNotSupportedExceptionHandler {}", ex.getMessage());
         return ErrorCode.METHOD_NOT_ALLOWED.getWrapper();
     }
 
@@ -118,7 +121,7 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class
     })
     public HttpWrapper<?> invalidArgumentExceptionHandler(Exception ex) {
-        log.error("invalidArgumentExceptionHandler", ex);
+        log.error("invalidArgumentExceptionHandler {}", ex.getMessage());
         return ErrorCode.BAD_REQUEST.wrapper().msg(ex.getMessage());
     }
 

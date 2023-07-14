@@ -1,6 +1,6 @@
 package com.orion.ops.framework.common.utils;
 
-import com.orion.lang.utils.crypto.symmetric.SymmetricCrypto;
+import com.orion.ops.framework.common.crypto.ValueCrypto;
 
 /**
  * 加密工具类
@@ -11,10 +11,7 @@ import com.orion.lang.utils.crypto.symmetric.SymmetricCrypto;
  */
 public class CryptoUtils {
 
-    /**
-     * 加密器 供 framework 赋值
-     */
-    public static SymmetricCrypto delegate;
+    private static ValueCrypto delegate;
 
     /**
      * 加密
@@ -116,6 +113,30 @@ public class CryptoUtils {
      */
     public static boolean verify(byte[] plain, byte[] text) {
         return delegate.verify(plain, text);
+    }
+
+    /**
+     * 加密后 base62 编码
+     *
+     * @param plain 明文
+     * @return 密文
+     */
+    public static String encryptBase62(String plain) {
+        return delegate.encryptBase62(plain);
+    }
+
+    /**
+     * base62 解码后解密
+     *
+     * @param text 密文
+     * @return 明文
+     */
+    public static String decryptBase62(String text) {
+        return delegate.decryptBase62(text);
+    }
+
+    public static void setDelegate(ValueCrypto delegate) {
+        CryptoUtils.delegate = delegate;
     }
 
 }

@@ -16,14 +16,13 @@ import java.util.List;
  * @since ${date}
  */
 @Mapper
-@SuppressWarnings("ALL")
 public interface ${type}ProviderConvert {
 
     ${type}ProviderConvert MAPPER = Mappers.getMapper(${type}ProviderConvert.class);
 
     ${type}DO to(${type}DTO dto);
 
-    ${type}DTO to(${type}DO dto);
+    ${type}DTO to(${type}DO domain);
 
     List<${type}DO> toDO(List<${type}DTO> list);
 

@@ -1,9 +1,8 @@
 package com.orion.ops.framework.security.core.utils;
 
 import com.orion.lang.constant.StandardHttpHeader;
-import com.orion.lang.utils.Strings;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.utils.Kits;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,8 +21,6 @@ import java.util.Collections;
  */
 public class SecurityUtils {
 
-    private static final int BEARER_PREFIX_LEN = 7;
-
     private SecurityUtils() {
     }
 
@@ -34,14 +31,7 @@ public class SecurityUtils {
      * @return token
      */
     public static String obtainAuthorization(HttpServletRequest request) {
-        String authorization = request.getHeader(StandardHttpHeader.AUTHORIZATION);
-        if (Strings.isEmpty(authorization)) {
-            return null;
-        }
-        if (!authorization.contains(Const.BEARER) || authorization.length() <= BEARER_PREFIX_LEN) {
-            return null;
-        }
-        return authorization.substring(BEARER_PREFIX_LEN).trim();
+        return Kits.getAuthorization(request.getHeader(StandardHttpHeader.AUTHORIZATION));
     }
 
     /**

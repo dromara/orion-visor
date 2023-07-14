@@ -1,6 +1,7 @@
 package com.orion.ops.framework.security.core.crypto;
 
 import com.orion.ops.framework.common.crypto.ValueCrypto;
+import com.orion.ops.framework.common.utils.CryptoUtils;
 
 /**
  * 数据加密器
@@ -15,6 +16,10 @@ public abstract class CryptoProcessor<Config extends CryptoConfig> implements Va
 
     protected CryptoProcessor(Config config) {
         this.config = config;
+        // 设置为默认加密器
+        if (config.isPrimary()) {
+            CryptoUtils.setDelegate(this);
+        }
     }
 
     /**
