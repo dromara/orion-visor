@@ -165,6 +165,7 @@ orion:
   storage:
     # 本地文件存储
     local:
+      primary: true
       enabled: true
       name-append-trace-id: true
       storage-path: ${user.home}

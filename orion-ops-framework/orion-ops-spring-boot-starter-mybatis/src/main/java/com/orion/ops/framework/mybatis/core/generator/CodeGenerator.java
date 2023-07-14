@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
-import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.ext.yml.YmlExt;
@@ -19,6 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.sql.Types;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -164,16 +163,13 @@ public class CodeGenerator {
     private static DataSourceConfig getDataSourceConfig(String url, String username, String password) {
         DataSourceConfig dsConfig = new DataSourceConfig.Builder(url, username, password)
                 // 转换器
-                .typeConvert(new MySqlTypeConvert() {
-                    @Override
-                    public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
-                        if (fieldType.toLowerCase().contains("bit")) {
+                .typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
+                    switch (metaInfo.getJdbcType().TYPE_CODE) {
+                        case Types.BIT:
+                        case Types.TINYINT:
                             return DbColumnType.INTEGER;
-                        }
-                        if (fieldType.toLowerCase().contains("tinyint")) {
-                            return DbColumnType.INTEGER;
-                        }
-                        return super.processTypeConvert(globalConfig, fieldType);
+                        default:
+                            return typeRegistry.getColumnType(metaInfo);
                     }
                 })
                 // 查询器

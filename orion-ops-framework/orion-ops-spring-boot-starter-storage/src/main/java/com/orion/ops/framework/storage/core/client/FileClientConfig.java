@@ -13,6 +13,11 @@ import lombok.Data;
 public class FileClientConfig {
 
     /**
+     * 是否为默认客户端
+     */
+    protected boolean primary;
+
+    /**
      * 是否启用
      */
     protected boolean enabled;

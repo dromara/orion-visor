@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/server/bootstrap")
 public class BootstrapController {
 
-    @Operation(summary = "检测心跳")
+    @Operation(summary = "健康检测")
     @GetMapping("/health")
     public String health() {
         return "server ok";

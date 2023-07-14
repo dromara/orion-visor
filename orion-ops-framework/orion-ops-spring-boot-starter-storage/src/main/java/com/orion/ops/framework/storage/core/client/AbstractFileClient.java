@@ -20,6 +20,10 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
 
     public AbstractFileClient(Config config) {
         this.config = config;
+        // 设置默认文件客户端
+        if (config.isPrimary()) {
+            PrimaryFileClient.delegate = this;
+        }
     }
 
     @Override
