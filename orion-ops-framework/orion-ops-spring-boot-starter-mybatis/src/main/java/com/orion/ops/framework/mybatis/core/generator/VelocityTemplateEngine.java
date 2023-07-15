@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
-    private Map<String, String> tableComment;
+    private final Map<String, String> tableComment;
 
     private VelocityEngine velocityEngine;
 

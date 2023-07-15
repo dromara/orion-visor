@@ -19,22 +19,29 @@ import lombok.NoArgsConstructor;
 public class LoginTokenDTO {
 
     /**
-     * 状态
+     * 用户id
      */
-    private Integer status;
+    private Long id;
 
     /**
-     * 登陆时间
+     * token 状态
+     *
+     * @see com.orion.ops.module.infra.enums.LoginTokenStatusEnum
+     */
+    private Integer tokenStatus;
+
+    /**
+     * 登陆时间/其他设备登陆时间
      */
     private Long loginTime;
 
     /**
-     * 登陆 ip
+     * 登陆 ip/其他设备登陆 ip
      */
     private String ip;
 
     /**
-     * 登陆地址
+     * 登陆地址/其他设备登陆地址
      */
     private String location;
 

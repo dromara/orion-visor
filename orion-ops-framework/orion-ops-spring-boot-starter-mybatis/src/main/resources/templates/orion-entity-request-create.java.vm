@@ -1,16 +1,16 @@
 package ${currentPackage};
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.*;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * $!{table.comment} 创建请求对象
@@ -29,6 +29,7 @@ public class ${type}CreateRequest implements Serializable {
     #foreach($field in ${table.fields})
     #if("$!field.propertyName" != "id")
     #if("$field.propertyType" == "String")
+    @Size(max = $field.metaInfo.length)
     @NotBlank
     #else
     @NotNull

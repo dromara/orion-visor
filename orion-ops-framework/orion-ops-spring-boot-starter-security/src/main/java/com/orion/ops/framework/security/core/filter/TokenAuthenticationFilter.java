@@ -1,5 +1,6 @@
 package com.orion.ops.framework.security.core.filter;
 
+import com.orion.lang.exception.argument.HttpWrapperException;
 import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -45,8 +46,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                     SecurityUtils.setLoginUser(loginUser, request);
                 }
             }
+        } catch (HttpWrapperException e) {
+            log.error("TokenAuthenticationFilter.doFilterInternal auth error", e);
+            Servlets.writeHttpWrapper(response, e.getWrapper());
         } catch (Exception e) {
-            log.error("TokenAuthenticationFilter.doFilterInternal error", e);
+            log.error("TokenAuthenticationFilter.doFilterInternal parser error", e);
             Servlets.writeHttpWrapper(response, ErrorCode.INTERNAL_SERVER_ERROR.getWrapper());
             return;
         }
