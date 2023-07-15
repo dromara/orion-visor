@@ -47,8 +47,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (HttpWrapperException e) {
-            log.error("TokenAuthenticationFilter.doFilterInternal auth error", e);
+            log.error("TokenAuthenticationFilter.doFilterInternal auth error {}", e.getWrapper().getMsg());
             Servlets.writeHttpWrapper(response, e.getWrapper());
+            return;
         } catch (Exception e) {
             log.error("TokenAuthenticationFilter.doFilterInternal parser error", e);
             Servlets.writeHttpWrapper(response, ErrorCode.INTERNAL_SERVER_ERROR.getWrapper());

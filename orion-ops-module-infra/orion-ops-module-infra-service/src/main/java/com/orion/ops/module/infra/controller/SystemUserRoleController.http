@@ -1,0 +1,56 @@
+### 创建用户角色关联
+POST {{baseUrl}}/infra/system-user-role/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": "",
+  "roleId": ""
+}
+
+
+### 通过 id 更新用户角色关联
+PUT {{baseUrl}}/infra/system-user-role/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "userId": "",
+  "roleId": ""
+}
+
+
+### 通过 id 查询用户角色关联
+GET {{baseUrl}}/infra/system-user-role/get?id=1
+Authorization: {{token}}
+
+
+### 通过 id 批量查询用户角色关联
+GET {{baseUrl}}/infra/system-user-role/list?idList=1,2,3
+Authorization: {{token}}
+
+
+### 分页查询用户角色关联
+POST {{baseUrl}}/infra/system-user-role/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "userId": "",
+  "roleId": ""
+}
+
+
+### 通过 id 删除用户角色关联
+DELETE {{baseUrl}}/infra/system-user-role/delete?id=1
+Authorization: {{token}}
+
+
+### 通过 id 批量删除用户角色关联
+DELETE {{baseUrl}}/infra/system-user-role/delete-batch?idList=1,2,3
+Authorization: {{token}}
+
+
+

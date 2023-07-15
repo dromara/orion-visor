@@ -119,10 +119,10 @@ public class OrionSwaggerAutoConfiguration {
     public GroupedOpenApi allGroupedOpenApi(ConfigurableListableBeanFactory beanFactory,
                                             SwaggerProperties properties) {
         // 全部
-        GroupedOpenApi all = buildGroupedOpenApi("全部", "*");
+        GroupedOpenApi all = this.buildGroupedOpenApi("全部", "*");
         // 注册模块分组 api
         properties.getGroupedApi().forEach((t, v) -> {
-            GroupedOpenApi api = buildGroupedOpenApi(v.getGroup(), v.getPath());
+            GroupedOpenApi api = this.buildGroupedOpenApi(v.getGroup(), v.getPath());
             beanFactory.registerSingleton(t + "GroupedOpenApi", api);
         });
         return all;
