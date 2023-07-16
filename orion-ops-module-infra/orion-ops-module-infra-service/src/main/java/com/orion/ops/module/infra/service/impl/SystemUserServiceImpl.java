@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-14 10:16
+ * @since 2023-7-16 22:46
  */
 @Slf4j
 @Service
@@ -38,24 +38,27 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 转换
         SystemUserDO record = SystemUserConvert.MAPPER.to(request);
         record.setId(null);
-        // 查询是否存在
+        // 查询数据是否冲突
         this.checkSystemUserPresent(record);
         // 插入
         int effect = systemUserDAO.insert(record);
-        log.info("SystemUserService-createSystemUser effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        log.info("SystemUserService-createSystemUser effect: {}, record: {}", effect, JSON.toJSONString(record));
         return record.getId();
     }
 
     @Override
     public Integer updateSystemUser(SystemUserUpdateRequest request) {
+        // 查询
+        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        SystemUserDO record = systemUserDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
-        SystemUserDO record = SystemUserConvert.MAPPER.to(request);
-        Valid.notNull(record.getId(), ErrorMessage.ID_MISSING);
-        // 查询是否存在
-        this.checkSystemUserPresent(record);
+        SystemUserDO updateRecord = SystemUserConvert.MAPPER.to(request);
+        // 查询数据是否冲突
+        this.checkSystemUserPresent(updateRecord);
         // 更新
-        int effect = systemUserDAO.updateById(record);
-        log.info("SystemUserService-updateSystemUser effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        int effect = systemUserDAO.updateById(updateRecord);
+        log.info("SystemUserService-updateSystemUser effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         return effect;
     }
 
@@ -91,7 +94,8 @@ public class SystemUserServiceImpl implements SystemUserService {
                 .eq(SystemUserDO::getMobile, request.getMobile())
                 .eq(SystemUserDO::getEmail, request.getEmail())
                 .eq(SystemUserDO::getStatus, request.getStatus())
-                .eq(SystemUserDO::getLastLoginTime, request.getLastLoginTime());
+                .eq(SystemUserDO::getLastLoginTime, request.getLastLoginTime())
+                .orderByDesc(SystemUserDO::getId);
         // 查询
         return systemUserDAO.of()
                 .wrapper(wrapper)

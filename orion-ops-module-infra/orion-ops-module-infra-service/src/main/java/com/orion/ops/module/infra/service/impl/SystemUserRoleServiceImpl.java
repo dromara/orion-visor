@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-16 22:46
  */
 @Slf4j
 @Service
@@ -38,24 +38,27 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         // 转换
         SystemUserRoleDO record = SystemUserRoleConvert.MAPPER.to(request);
         record.setId(null);
-        // 查询是否存在
+        // 查询数据是否冲突
         this.checkSystemUserRolePresent(record);
         // 插入
         int effect = systemUserRoleDAO.insert(record);
-        log.info("SystemUserRoleService-createSystemUserRole effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        log.info("SystemUserRoleService-createSystemUserRole effect: {}, record: {}", effect, JSON.toJSONString(record));
         return record.getId();
     }
 
     @Override
     public Integer updateSystemUserRole(SystemUserRoleUpdateRequest request) {
+        // 查询
+        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        SystemUserRoleDO record = systemUserRoleDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
-        SystemUserRoleDO record = SystemUserRoleConvert.MAPPER.to(request);
-        Valid.notNull(record.getId(), ErrorMessage.ID_MISSING);
-        // 查询是否存在
-        this.checkSystemUserRolePresent(record);
+        SystemUserRoleDO updateRecord = SystemUserRoleConvert.MAPPER.to(request);
+        // 查询数据是否冲突
+        this.checkSystemUserRolePresent(updateRecord);
         // 更新
-        int effect = systemUserRoleDAO.updateById(record);
-        log.info("SystemUserRoleService-updateSystemUserRole effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        int effect = systemUserRoleDAO.updateById(updateRecord);
+        log.info("SystemUserRoleService-updateSystemUserRole effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         return effect;
     }
 
@@ -85,7 +88,8 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         LambdaQueryWrapper<SystemUserRoleDO> wrapper = systemUserRoleDAO.wrapper()
                 .eq(SystemUserRoleDO::getId, request.getId())
                 .eq(SystemUserRoleDO::getUserId, request.getUserId())
-                .eq(SystemUserRoleDO::getRoleId, request.getRoleId());
+                .eq(SystemUserRoleDO::getRoleId, request.getRoleId())
+                .orderByDesc(SystemUserRoleDO::getId);
         // 查询
         return systemUserRoleDAO.of()
                 .wrapper(wrapper)

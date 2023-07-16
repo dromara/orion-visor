@@ -31,6 +31,11 @@ public class LoginTokenDTO {
     private Integer tokenStatus;
 
     /**
+     * 已续签次数
+     */
+    private Integer refreshCount;
+
+    /**
      * 登陆时间/其他设备登陆时间
      */
     private Long loginTime;

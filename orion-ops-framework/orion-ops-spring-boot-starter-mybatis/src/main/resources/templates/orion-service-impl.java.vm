@@ -22,7 +22,7 @@ import java.util.List;
  * $!{table.comment} 服务实现类
  *
  * @author ${author}
- * @version 1.0.0
+ * @version ${since}
  * @since ${date}
  */
 @Slf4j
@@ -37,24 +37,27 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 转换
         ${type}DO record = ${type}Convert.MAPPER.to(request);
         record.setId(null);
-        // 查询是否存在
+        // 查询数据是否冲突
         this.check${type}Present(record);
         // 插入
         int effect = ${typeLower}DAO.insert(record);
-        log.info("${type}Service-create${type} effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        log.info("${type}Service-create${type} effect: {}, record: {}", effect, JSON.toJSONString(record));
         return record.getId();
     }
 
     @Override
     public Integer update${type}(${type}UpdateRequest request) {
+        // 查询
+        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        ${type}DO record = ${typeLower}DAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
-        ${type}DO record = ${type}Convert.MAPPER.to(request);
-        Valid.notNull(record.getId(), ErrorMessage.ID_MISSING);
-        // 查询是否存在
-        this.check${type}Present(record);
+        ${type}DO updateRecord = ${type}Convert.MAPPER.to(request);
+        // 查询数据是否冲突
+        this.check${type}Present(updateRecord);
         // 更新
-        int effect = ${typeLower}DAO.updateById(record);
-        log.info("${type}Service-update${type} effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        int effect = ${typeLower}DAO.updateById(updateRecord);
+        log.info("${type}Service-update${type} effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         return effect;
     }
 
@@ -83,8 +86,9 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 构造条件
         LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.wrapper()
         #foreach($field in ${table.fields})
-                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())#if(!$foreach.hasNext);#end
+                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())
         #end
+                .orderByDesc(${type}DO::getId);
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)

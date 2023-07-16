@@ -13,6 +13,7 @@ import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
 import com.orion.ops.module.infra.enums.MenuStatusEnum;
 import com.orion.ops.module.infra.enums.RoleStatusEnum;
 import com.orion.ops.module.infra.service.PermissionService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 
 /**
  * 权限服务
+ * <p>
+ * TODO 分布式缓存解决方案?
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -36,6 +39,7 @@ public class PermissionServiceImpl implements PermissionService {
     /**
      * 菜单缓存
      */
+    @Getter
     private final Map<String, SystemRoleDO> roleCache = new HashMap<>();
 
     /**
@@ -43,11 +47,13 @@ public class PermissionServiceImpl implements PermissionService {
      *
      * @see #roleMenuCache
      */
+    @Getter
     private final List<SystemMenuCacheDTO> menuCache = new ArrayList<>();
 
     /**
      * 角色菜单关联
      */
+    @Getter
     private final Map<String, List<SystemMenuCacheDTO>> roleMenuCache = new HashMap<>();
 
     @Resource
@@ -64,7 +70,6 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @PostConstruct
     public void initRoleMenuCache() {
-        // TODO 分布式解决方案?
         long start = System.currentTimeMillis();
         log.info("initRoleMenuCache-start");
         // 加载所有角色
@@ -102,6 +107,13 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public boolean rolesHasRole(List<String> roles, String role) {
+        // 检查是否为超级管理员
+        for (String r : roles) {
+            // 是否为超级管理员
+            if (RoleDefine.isAdmin(r) && this.checkRoleEnabled(r)) {
+                return true;
+            }
+        }
         // 检查是否包含
         if (!roles.contains(role)) {
             return false;
@@ -113,20 +125,16 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean rolesHasPermission(List<String> roles, String permission) {
         // 检查是否为超级管理员
-        for (String role : roles) {
-            // 角色是否启用
-            if (this.checkRoleEnabled(role)) {
-                continue;
-            }
+        for (String r : roles) {
             // 是否为超级管理员
-            if (RoleDefine.isAdmin(role)) {
+            if (RoleDefine.isAdmin(r) && this.checkRoleEnabled(r)) {
                 return true;
             }
         }
         // 检查普通角色是否有此权限
         for (String role : roles) {
             // 角色是否启用
-            if (this.checkRoleEnabled(role)) {
+            if (!this.checkRoleEnabled(role)) {
                 continue;
             }
             // 获取角色权限列表

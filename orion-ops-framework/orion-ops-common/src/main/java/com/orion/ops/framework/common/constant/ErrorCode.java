@@ -3,6 +3,7 @@ package com.orion.ops.framework.common.constant;
 import com.orion.lang.define.wrapper.CodeInfo;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 
 /**
  * 错误码
@@ -36,39 +37,43 @@ public enum ErrorCode implements CodeInfo {
 
     INTERNAL_SERVER_ERROR(500, "系统异常"),
 
-    // -------------------- 自定义 --------------------
+    // -------------------- 自定义 - 业务 --------------------
 
-    NETWORK_FLUCTUATION(700, "当前环境网路波动"),
+    OTHER_DEVICE_LOGIN(700, "该账号于 {} 已在其他设备登陆 {}({})"),
 
-    HTTP_API(701, "api 调用异常"),
+    // -------------------- 自定义 - 通用 --------------------
 
-    IO_EXCEPTION(702, "网络异常"),
+    NETWORK_FLUCTUATION(900, "当前环境网路波动"),
 
-    SQL_EXCEPTION(703, "数据异常"),
+    HTTP_API(901, "api 调用异常"),
 
-    SFTP_EXCEPTION(704, "操作失败"),
+    IO_EXCEPTION(902, "网络异常"),
 
-    EXCEL_PASSWORD_ERROR(705, "文档密码错误"),
+    SQL_EXCEPTION(903, "数据异常"),
 
-    PASER_FAILED(706, "解析失败"),
+    SFTP_EXCEPTION(904, "操作失败"),
 
-    ENCRYPT_ERROR(707, "数据加密异常"),
+    EXCEL_PASSWORD_ERROR(905, "文档密码错误"),
 
-    DECRYPT_ERROR(708, "数据解密异常"),
+    PASER_FAILED(906, "解析失败"),
 
-    EXPRESSION_ERROR(709, "表达式错误"),
+    ENCRYPT_ERROR(907, "数据加密异常"),
 
-    TASK_EXECUTE_ERROR(710, "任务执行异常"),
+    DECRYPT_ERROR(908, "数据解密异常"),
 
-    CONNECT_ERROR(711, "建立连接失败"),
+    EXPRESSION_ERROR(909, "表达式错误"),
 
-    INTERRUPT_ERROR(712, "操作中断"),
+    TASK_EXECUTE_ERROR(910, "任务执行异常"),
 
-    UNSAFE_OPERATOR(713, "不安全的操作"),
+    CONNECT_ERROR(911, "建立连接失败"),
 
-    VCS_OPETATOR_ERROR(714, "仓库操作执行失败"),
+    INTERRUPT_ERROR(912, "操作中断"),
 
-    DIABLED_ERROR(715, "数据已被禁用"),
+    UNSAFE_OPERATOR(913, "不安全的操作"),
+
+    VCS_OPETATOR_ERROR(914, "仓库操作执行失败"),
+
+    DIABLED_ERROR(915, "数据已被禁用"),
 
     ;
 
@@ -133,6 +138,14 @@ public enum ErrorCode implements CodeInfo {
      */
     public RuntimeException exception() {
         return Exceptions.httpWrapper(this);
+    }
+
+    /**
+     * @param params 错误信息参数
+     * @return 获取异常
+     */
+    public RuntimeException exception(Object... params) {
+        return Exceptions.httpWrapper(this.toHttpWrapper().msg(Strings.format(this.message, params)));
     }
 
 }

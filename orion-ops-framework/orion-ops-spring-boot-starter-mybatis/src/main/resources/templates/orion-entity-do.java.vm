@@ -11,7 +11,7 @@ import java.util.*;
  * $!{table.comment} 实体对象
  *
  * @author ${author}
- * @version 1.0.0
+ * @version ${since}
  * @since ${date}
  */
 @Data

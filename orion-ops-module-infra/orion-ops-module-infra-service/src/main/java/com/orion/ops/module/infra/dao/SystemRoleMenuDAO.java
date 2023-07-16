@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.dao;
 
-import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
+import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,9 +10,22 @@ import org.apache.ibatis.annotations.Mapper;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-16 22:31
  */
 @Mapper
 public interface SystemRoleMenuDAO extends IMapper<SystemRoleMenuDO> {
+
+    /**
+     * 获取全部条件
+     *
+     * @param entity entity
+     * @return 全部条件
+     */
+    default LambdaQueryWrapper<SystemRoleMenuDO> condition(SystemRoleMenuDO entity) {
+        return this.wrapper()
+                .eq(SystemRoleMenuDO::getId, entity.getId())
+                .eq(SystemRoleMenuDO::getRoleId, entity.getRoleId())
+                .eq(SystemRoleMenuDO::getMenuId, entity.getMenuId());
+    }
 
 }

@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.utils.Strings;
+import com.orion.ops.framework.common.constant.Const;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -135,6 +136,8 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
         // http 注释标识
         objectMap.put("httpComment", "###");
+        // 版本
+        objectMap.put("since", Const.VERSION);
 
         // 实体名称
         String domainName = tableInfo.getEntityName();

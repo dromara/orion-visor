@@ -12,6 +12,11 @@ public class Const implements com.orion.lang.constant.Const {
     private Const() {
     }
 
+    /**
+     * 同 ${orion.version} 迭代时候需要手动更改
+     */
+    public static String VERSION = "1.0.0";
+
     public static final Integer NOT_DELETE = 0;
 
     public static final Integer IS_DELETED = 1;

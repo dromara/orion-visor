@@ -10,7 +10,7 @@ import java.util.*;
  * $!{table.comment} 视图响应对象
  *
  * @author ${author}
- * @version 1.0.0
+ * @version ${since}
  * @since ${date}
  */
 @Data

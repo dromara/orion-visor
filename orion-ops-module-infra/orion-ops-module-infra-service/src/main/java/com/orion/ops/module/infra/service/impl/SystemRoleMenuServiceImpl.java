@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-16 22:46
  */
 @Slf4j
 @Service
@@ -38,24 +38,27 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
         // 转换
         SystemRoleMenuDO record = SystemRoleMenuConvert.MAPPER.to(request);
         record.setId(null);
-        // 查询是否存在
+        // 查询数据是否冲突
         this.checkSystemRoleMenuPresent(record);
         // 插入
         int effect = systemRoleMenuDAO.insert(record);
-        log.info("SystemRoleMenuService-createSystemRoleMenu effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        log.info("SystemRoleMenuService-createSystemRoleMenu effect: {}, record: {}", effect, JSON.toJSONString(record));
         return record.getId();
     }
 
     @Override
     public Integer updateSystemRoleMenu(SystemRoleMenuUpdateRequest request) {
+        // 查询
+        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        SystemRoleMenuDO record = systemRoleMenuDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
-        SystemRoleMenuDO record = SystemRoleMenuConvert.MAPPER.to(request);
-        Valid.notNull(record.getId(), ErrorMessage.ID_MISSING);
-        // 查询是否存在
-        this.checkSystemRoleMenuPresent(record);
+        SystemRoleMenuDO updateRecord = SystemRoleMenuConvert.MAPPER.to(request);
+        // 查询数据是否冲突
+        this.checkSystemRoleMenuPresent(updateRecord);
         // 更新
-        int effect = systemRoleMenuDAO.updateById(record);
-        log.info("SystemRoleMenuService-updateSystemRoleMenu effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        int effect = systemRoleMenuDAO.updateById(updateRecord);
+        log.info("SystemRoleMenuService-updateSystemRoleMenu effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         return effect;
     }
 
@@ -85,7 +88,8 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
         LambdaQueryWrapper<SystemRoleMenuDO> wrapper = systemRoleMenuDAO.wrapper()
                 .eq(SystemRoleMenuDO::getId, request.getId())
                 .eq(SystemRoleMenuDO::getRoleId, request.getRoleId())
-                .eq(SystemRoleMenuDO::getMenuId, request.getMenuId());
+                .eq(SystemRoleMenuDO::getMenuId, request.getMenuId())
+                .orderByDesc(SystemRoleMenuDO::getId);
         // 查询
         return systemRoleMenuDAO.of()
                 .wrapper(wrapper)

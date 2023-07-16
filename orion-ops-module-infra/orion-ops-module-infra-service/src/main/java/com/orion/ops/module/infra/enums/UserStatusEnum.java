@@ -15,14 +15,14 @@ import lombok.Getter;
 public enum UserStatusEnum {
 
     /**
-     * 0 正常
+     * 0 停用
      */
-    NORMAL(0),
+    DISABLED(0),
 
     /**
-     * 1 停用
+     * 1 启用
      */
-    DISABLED(1),
+    ENABLED(1),
 
     /**
      * 2 锁定

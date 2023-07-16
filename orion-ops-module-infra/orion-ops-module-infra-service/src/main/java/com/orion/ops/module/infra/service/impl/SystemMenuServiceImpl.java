@@ -6,13 +6,12 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.module.infra.convert.SystemMenuConvert;
-import com.orion.ops.module.infra.dao.SystemMenuDAO;
+import com.orion.ops.module.infra.entity.vo.*;
+import com.orion.ops.module.infra.entity.dto.*;
+import com.orion.ops.module.infra.entity.request.*;
+import com.orion.ops.module.infra.convert.*;
 import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
-import com.orion.ops.module.infra.entity.request.SystemMenuCreateRequest;
-import com.orion.ops.module.infra.entity.request.SystemMenuQueryRequest;
-import com.orion.ops.module.infra.entity.request.SystemMenuUpdateRequest;
-import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
+import com.orion.ops.module.infra.dao.SystemMenuDAO;
 import com.orion.ops.module.infra.service.SystemMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ import java.util.List;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-16 22:46
  */
 @Slf4j
 @Service
@@ -39,24 +38,27 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 转换
         SystemMenuDO record = SystemMenuConvert.MAPPER.to(request);
         record.setId(null);
-        // 查询是否存在
+        // 查询数据是否冲突
         this.checkSystemMenuPresent(record);
         // 插入
         int effect = systemMenuDAO.insert(record);
-        log.info("SystemMenuService-createSystemMenu effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        log.info("SystemMenuService-createSystemMenu effect: {}, record: {}", effect, JSON.toJSONString(record));
         return record.getId();
     }
 
     @Override
     public Integer updateSystemMenu(SystemMenuUpdateRequest request) {
+        // 查询
+        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        SystemMenuDO record = systemMenuDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
-        SystemMenuDO record = SystemMenuConvert.MAPPER.to(request);
-        Valid.notNull(record.getId(), ErrorMessage.ID_MISSING);
-        // 查询是否存在
-        this.checkSystemMenuPresent(record);
+        SystemMenuDO updateRecord = SystemMenuConvert.MAPPER.to(request);
+        // 查询数据是否冲突
+        this.checkSystemMenuPresent(updateRecord);
         // 更新
-        int effect = systemMenuDAO.updateById(record);
-        log.info("SystemMenuService-updateSystemMenu effect: {}, domain: {}", effect, JSON.toJSONString(record));
+        int effect = systemMenuDAO.updateById(updateRecord);
+        log.info("SystemMenuService-updateSystemMenu effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         return effect;
     }
 
@@ -95,7 +97,8 @@ public class SystemMenuServiceImpl implements SystemMenuService {
                 .eq(SystemMenuDO::getIcon, request.getIcon())
                 .eq(SystemMenuDO::getPath, request.getPath())
                 .eq(SystemMenuDO::getComponentName, request.getComponentName())
-                .eq(SystemMenuDO::getComponent, request.getComponent());
+                .eq(SystemMenuDO::getComponent, request.getComponent())
+                .orderByDesc(SystemMenuDO::getId);
         // 查询
         return systemMenuDAO.of()
                 .wrapper(wrapper)

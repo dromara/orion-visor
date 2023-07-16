@@ -61,7 +61,7 @@ public class SystemUserUpdateRequest implements Serializable {
     private String email;
 
     @NotNull
-    @Schema(description = "用户状态 0正常 1停用 2锁定")
+    @Schema(description = "用户状态 0停用 1启用 2锁定")
     private Integer status;
 
     @NotNull

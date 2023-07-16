@@ -12,7 +12,7 @@ import java.util.List;
  * $!{table.comment} 内部对象转换器
  *
  * @author ${author}
- * @version 1.0.0
+ * @version ${since}
  * @since ${date}
  */
 @Mapper

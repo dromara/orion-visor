@@ -39,10 +39,10 @@ public class CodeGenerator {
         @NotNull
         String author = Const.ORION_AUTHOR;
         @NotEmpty
-        String[] tables = {"system_role", "system_user_role", "system_menu", "system_role_menu"};
+        String[] tables = {"system_user", "system_role", "system_user_role", "system_menu", "system_role_menu"};
         // 表业务注释 需要和表一一对应 null则为表注释
         @NotEmpty
-        String[] comment = {"角色", "用户角色关联", "菜单", "角色菜单关联"};
+        String[] comment = {"用户", "角色", "用户角色关联", "菜单", "角色菜单关联"};
         // 模块
         @NotNull
         String module = "infra";

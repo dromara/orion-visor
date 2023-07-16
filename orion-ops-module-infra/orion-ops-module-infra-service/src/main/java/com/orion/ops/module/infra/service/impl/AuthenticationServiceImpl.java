@@ -18,13 +18,16 @@ import com.orion.ops.framework.common.utils.Kits;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
+import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.UserCacheKeyDefine;
+import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.UserLoginRequest;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
+import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.web.servlet.web.Servlets;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // 允许凭证续签
     private final boolean allowRefresh = true;
     // 凭证续签最大次数
-    private final int maxRefreshCount = 5;
+    private final int maxRefreshCount = 3;
     // 失败锁定次数
     private final int maxFailedLoginCount = 5;
 
@@ -62,6 +66,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Resource
     private SystemUserDAO systemUserDAO;
+
+    @Resource
+    private SystemUserRoleDAO systemUserRoleDAO;
+
+    @Resource
+    private PermissionService permissionService;
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -81,8 +91,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.checkUserStatus(user.getStatus());
         // 设置上次登录时间
         this.setLastLoginTime(user.getId());
-        // 设置缓存
-        this.setUserCache(user);
+        // 检查用户缓存
+        this.setUserCacheIfPresent(() -> user);
         // 删除登陆失败次数缓存
         redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername()));
         // 获取登陆 ip
@@ -90,7 +100,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String location = IpUtils.getLocation(remoteAddr);
         long current = System.currentTimeMillis();
         // 不允许多端登陆
-        if (!false) {
+        if (!allowMultiDevice) {
             // 无效化其他缓存
             this.invalidOtherDeviceToken(user.getId(), current, remoteAddr, location);
         }
@@ -105,6 +115,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (loginToken == null) {
             return;
         }
+        // 获取 token 信息
         Pair<Long, Long> pair = this.getLoginTokenPair(loginToken);
         if (pair == null) {
             return;
@@ -118,7 +129,61 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Pair<Long, Long> getLoginTokenPair(String loginToken) {
+    public LoginUser getLoginUser(Long userId) {
+        // 获取用户缓存信息
+        return this.setUserCacheIfPresent(() -> systemUserDAO.selectById(userId));
+    }
+
+    @Override
+    public LoginTokenDTO getLoginTokenInfo(String loginToken, boolean checkRefresh) {
+        // 获取登陆 key pair
+        Pair<Long, Long> pair = this.getLoginTokenPair(loginToken);
+        if (pair == null) {
+            return null;
+        }
+        // 获取登陆 key value
+        String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(pair.getKey(), pair.getValue());
+        String loginCache = redisTemplate.opsForValue().get(loginKey);
+        if (loginCache != null) {
+            return JSON.parseObject(loginCache, LoginTokenDTO.class);
+        }
+        // loginToken 不存在 需要查询 refreshToken
+        if (!checkRefresh || !allowRefresh) {
+            return null;
+        }
+        String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(pair.getKey(), pair.getValue());
+        String refreshCache = redisTemplate.opsForValue().get(refreshKey);
+        // 未查询到刷新key直接返回
+        if (refreshCache == null) {
+            return null;
+        }
+        // 执行续签操作
+        LoginTokenDTO refresh = JSON.parseObject(refreshCache, LoginTokenDTO.class);
+        int refreshCount = refresh.getRefreshCount() + 1;
+        refresh.setRefreshCount(refreshCount);
+        // 设置登陆缓存
+        redisTemplate.opsForValue().set(loginKey, JSON.toJSONString(refresh),
+                UserCacheKeyDefine.LOGIN_TOKEN.getTimeout(),
+                UserCacheKeyDefine.LOGIN_TOKEN.getUnit());
+        if (refreshCount < maxRefreshCount) {
+            // 小于续签最大次数 则再次设置 refreshToken
+            redisTemplate.opsForValue().set(refreshKey, JSON.toJSONString(refresh),
+                    UserCacheKeyDefine.LOGIN_REFRESH.getTimeout(),
+                    UserCacheKeyDefine.LOGIN_REFRESH.getUnit());
+        } else {
+            // 大于等于续签最大次数 则删除
+            redisTemplate.delete(refreshKey);
+        }
+        return refresh;
+    }
+
+    /**
+     * 获取 token pair
+     *
+     * @param loginToken loginToken
+     * @return pair
+     */
+    private Pair<Long, Long> getLoginTokenPair(String loginToken) {
         if (loginToken == null) {
             return null;
         }
@@ -162,7 +227,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return true;
         }
         // 刷新登陆失败缓存
-        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
+        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         Long failedLoginCount = redisTemplate.opsForValue().increment(failedCountKey);
         // 用户不存在
         if (user == null) {
@@ -222,21 +287,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /**
      * 设置用户缓存
      *
-     * @param user user
+     * @param supplier supplier
+     * @return 用户缓存
      */
-    private void setUserCache(SystemUserDO user) {
-        String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
+    private LoginUser setUserCacheIfPresent(Supplier<SystemUserDO> supplier) {
+        SystemUserDO user = supplier.get();
+        Long id = user.getId();
+        String userInfoKey = UserCacheKeyDefine.USER_INFO.format(id);
         String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
         // 缓存存在
         if (userInfoCache != null) {
-            return;
+            return JSON.parseObject(userInfoCache, LoginUser.class);
         }
         // 设置缓存
         LoginUser loginUser = SystemUserConvert.MAPPER.toLoginUser(user);
-        // TODO 查询角色
+        // 查询用户角色
+        List<Long> roleIds = systemUserRoleDAO.selectRoleByUserId(id);
+        List<String> roleCodeList = permissionService.getRoleCache()
+                .values()
+                .stream()
+                .filter(s -> roleIds.contains(s.getId()))
+                .map(SystemRoleDO::getCode)
+                .collect(Collectors.toList());
+        loginUser.setRoles(roleCodeList);
         redisTemplate.opsForValue().set(userInfoKey, JSON.toJSONString(loginUser),
                 UserCacheKeyDefine.USER_INFO.getTimeout(),
                 UserCacheKeyDefine.USER_INFO.getUnit());
+        return loginUser;
     }
 
     /**
@@ -258,12 +335,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .stream()
                     .filter(Objects::nonNull)
                     .map(s -> JSON.parseObject(s, LoginTokenDTO.class))
-                    .filter(s -> LoginTokenStatusEnum.OK.getStatus().equals(s.getStatus()))
+                    .filter(s -> LoginTokenStatusEnum.OK.getStatus().equals(s.getTokenStatus()))
                     .collect(Collectors.toList());
             // 修改登陆信息
             for (LoginTokenDTO loginTokenInfo : loginTokenInfoList) {
                 String deviceLoginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, loginTokenInfo.getLoginTime());
-                loginTokenInfo.setStatus(LoginTokenStatusEnum.OTHER_DEVICE.getStatus());
+                loginTokenInfo.setTokenStatus(LoginTokenStatusEnum.OTHER_DEVICE.getStatus());
                 loginTokenInfo.setLoginTime(loginTime);
                 loginTokenInfo.setIp(remoteAddr);
                 loginTokenInfo.setLocation(location);
@@ -297,7 +374,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 生成 loginToken
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, loginTime);
         LoginTokenDTO loginValue = LoginTokenDTO.builder()
-                .status(LoginTokenStatusEnum.OK.getStatus())
+                .id(id)
+                .tokenStatus(LoginTokenStatusEnum.OK.getStatus())
+                .refreshCount(0)
                 .ip(remoteAddr)
                 .loginTime(loginTime)
                 .location(location)
@@ -308,7 +387,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 生成 refreshToken
         if (allowRefresh) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, loginTime);
-            redisTemplate.opsForValue().set(refreshKey, "1",
+            redisTemplate.opsForValue().set(refreshKey, JSON.toJSONString(loginValue),
                     UserCacheKeyDefine.LOGIN_REFRESH.getTimeout(),
                     UserCacheKeyDefine.LOGIN_REFRESH.getUnit());
         }

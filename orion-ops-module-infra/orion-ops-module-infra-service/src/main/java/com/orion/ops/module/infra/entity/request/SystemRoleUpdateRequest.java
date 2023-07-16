@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * 角色 更新请求对象
@@ -34,14 +33,5 @@ public class SystemRoleUpdateRequest implements Serializable {
     @NotBlank
     @Schema(description = "角色名称")
     private String name;
-
-    @Size(max = 32)
-    @NotBlank
-    @Schema(description = "角色编码")
-    private String code;
-
-    @NotNull
-    @Schema(description = "状态 0停用 1启用")
-    private Integer status;
 
 }
