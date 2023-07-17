@@ -1,6 +1,7 @@
 package com.orion.ops.framework.redis.config;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
+import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -29,18 +30,19 @@ public class OrionRedisAutoConfiguration {
 
     /**
      * @param redisConnectionFactory factory
-     * @param <T>                    T
      * @return RedisTemplate
      */
     @Bean
-    public <T> RedisTemplate<String, T> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, T> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setValueSerializer(RedisSerializer.string());
         redisTemplate.setHashKeySerializer(RedisSerializer.string());
         redisTemplate.setHashValueSerializer(RedisSerializer.string());
         redisTemplate.afterPropertiesSet();
+        // 将其设置到 RedisUtils
+        RedisUtils.setRedisTemplate(redisTemplate);
         return redisTemplate;
     }
 

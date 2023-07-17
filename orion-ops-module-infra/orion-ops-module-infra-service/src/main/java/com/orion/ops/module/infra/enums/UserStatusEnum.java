@@ -33,4 +33,16 @@ public enum UserStatusEnum {
 
     private final Integer status;
 
+    public static UserStatusEnum of(Integer status) {
+        if (status == null) {
+            return null;
+        }
+        for (UserStatusEnum value : values()) {
+            if (value.status.equals(status)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
 }

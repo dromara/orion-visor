@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public interface UserCacheKeyDefine {
 
-    CacheKeyDefine USER_INFO = new CacheKeyDefine("user:info:{}", "用户信息 ${id}", 30, TimeUnit.DAYS);
+    CacheKeyDefine USER_INFO = new CacheKeyDefine("user:info:{}", "用户信息 ${id}");
 
     CacheKeyDefine LOGIN_FAILED_COUNT = new CacheKeyDefine("user:failed:{}", "用户登陆失败次数 ${username}", 3, TimeUnit.DAYS);
 

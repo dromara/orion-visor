@@ -1,5 +1,7 @@
 package com.orion.ops.framework.redis.core.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.io.Streams;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
@@ -8,6 +10,7 @@ import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * redis 工具类
@@ -18,32 +21,32 @@ import java.util.Set;
  */
 public class RedisUtils {
 
+    private static RedisTemplate<String, String> redisTemplate;
+
     private RedisUtils() {
     }
 
     /**
-     * 扫描key
+     * 扫描 key
      *
-     * @param redisTemplate redisTemplate
-     * @param match         匹配值
-     * @param count         数量
+     * @param match 匹配值
+     * @param count 数量
      * @return keys
      */
-    public static Set<String> scanKeys(RedisTemplate<?, ?> redisTemplate, String match, int count) {
-        return scanKeys(redisTemplate, ScanOptions.scanOptions()
+    public static Set<String> scanKeys(String match, int count) {
+        return scanKeys(ScanOptions.scanOptions()
                 .match(match)
                 .count(count)
                 .build());
     }
 
     /**
-     * 扫描key
+     * 扫描 key
      *
-     * @param redisTemplate redisTemplate
-     * @param scanOptions   scan
+     * @param scanOptions scan
      * @return keys
      */
-    public static Set<String> scanKeys(RedisTemplate<?, ?> redisTemplate, ScanOptions scanOptions) {
+    public static Set<String> scanKeys(ScanOptions scanOptions) {
         return redisTemplate.execute((RedisCallback<Set<String>>) connection -> {
             Set<String> keys = new HashSet<>();
             Cursor<byte[]> cursor = connection.scan(scanOptions);
@@ -55,4 +58,76 @@ public class RedisUtils {
         });
     }
 
+    /**
+     * 获取并且设置 json
+     *
+     * @param define    define
+     * @param type      type
+     * @param processor processor
+     * @param params    params
+     * @param <T>       type
+     */
+    public static <T> void processSetJson(CacheKeyDefine define, Class<T> type, Consumer<T> processor, Object... params) {
+        processSetJson(define.format(params), define, type, processor);
+    }
+
+    /**
+     * 获取并且设置 json
+     *
+     * @param key       key
+     * @param define    define
+     * @param type      type
+     * @param processor processor
+     * @param <T>       type
+     */
+    public static <T> void processSetJson(String key, CacheKeyDefine define, Class<T> type, Consumer<T> processor) {
+        String value = redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return;
+        }
+        // 转换
+        T cache = JSON.parseObject(value, type);
+        // 执行处理逻辑
+        processor.accept(cache);
+        // 重新设置
+        setJson(key, define, cache);
+    }
+
+    /**
+     * 设置 json
+     *
+     * @param key    key
+     * @param define define
+     * @param value  value
+     */
+    public static void setJson(String key, CacheKeyDefine define, Object value) {
+        if (define.getTimeout() == 0) {
+            // 不过期
+            redisTemplate.opsForValue().set(key, JSON.toJSONString(value));
+        } else {
+            // 过期
+            redisTemplate.opsForValue().set(key, JSON.toJSONString(value),
+                    define.getTimeout(),
+                    define.getUnit());
+        }
+    }
+
+    /**
+     * 设置过期时间
+     *
+     * @param key    key
+     * @param define define
+     */
+    public static void setExpire(String key, CacheKeyDefine define) {
+        if (define.getTimeout() != 0) {
+            // 设置过期时间
+            redisTemplate.expire(key, define.getTimeout(), define.getUnit());
+        }
+    }
+
+    public static void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
+        RedisUtils.redisTemplate = redisTemplate;
+    }
+
 }
+

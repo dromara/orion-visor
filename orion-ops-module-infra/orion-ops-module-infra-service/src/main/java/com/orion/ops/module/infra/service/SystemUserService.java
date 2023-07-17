@@ -1,9 +1,7 @@
 package com.orion.ops.module.infra.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.infra.entity.request.user.SystemUserCreateRequest;
-import com.orion.ops.module.infra.entity.request.user.SystemUserQueryRequest;
-import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 
 import java.util.List;
@@ -32,6 +30,14 @@ public interface SystemUserService {
      * @return effect
      */
     Integer updateSystemUser(SystemUserUpdateRequest request);
+
+    /**
+     * 修改用户状态
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer updateUserStatus(SystemUserUpdateStatusRequest request);
 
     /**
      * 通过 id 查询用户
@@ -66,11 +72,10 @@ public interface SystemUserService {
     Integer deleteSystemUser(Long id);
 
     /**
-     * 通过 id 批量删除用户
+     * 重置密码
      *
-     * @param idList idList
-     * @return effect
+     * @param request request
      */
-    Integer batchDeleteSystemUser(List<Long> idList);
+    void resetPassword(UserResetPasswordRequest request);
 
 }

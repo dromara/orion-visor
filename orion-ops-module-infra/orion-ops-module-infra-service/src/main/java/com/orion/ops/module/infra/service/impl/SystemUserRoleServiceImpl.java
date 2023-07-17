@@ -1,24 +1,30 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.module.infra.convert.SystemUserRoleConvert;
+import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.module.infra.dao.SystemRoleDAO;
+import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
+import com.orion.ops.module.infra.define.UserCacheKeyDefine;
+import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
+import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserRoleDO;
-import com.orion.ops.module.infra.entity.request.role.SystemUserRoleCreateRequest;
-import com.orion.ops.module.infra.entity.request.role.SystemUserRoleQueryRequest;
-import com.orion.ops.module.infra.entity.request.role.SystemUserRoleUpdateRequest;
-import com.orion.ops.module.infra.entity.vo.SystemUserRoleVO;
+import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRoleRequest;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户角色关联 服务实现类
@@ -32,102 +38,79 @@ import java.util.List;
 public class SystemUserRoleServiceImpl implements SystemUserRoleService {
 
     @Resource
+    private SystemUserDAO systemUserDAO;
+
+    @Resource
+    private SystemRoleDAO systemRoleDAO;
+
+    @Resource
     private SystemUserRoleDAO systemUserRoleDAO;
 
     @Override
-    public Long createSystemUserRole(SystemUserRoleCreateRequest request) {
-        // 转换
-        SystemUserRoleDO record = SystemUserRoleConvert.MAPPER.to(request);
-        record.setId(null);
-        // 查询数据是否冲突
-        this.checkSystemUserRolePresent(record);
-        // 插入
-        int effect = systemUserRoleDAO.insert(record);
-        log.info("SystemUserRoleService-createSystemUserRole effect: {}, record: {}", effect, JSON.toJSONString(record));
-        return record.getId();
-    }
-
-    @Override
-    public Integer updateSystemUserRole(SystemUserRoleUpdateRequest request) {
-        // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        SystemUserRoleDO record = systemUserRoleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 转换
-        SystemUserRoleDO updateRecord = SystemUserRoleConvert.MAPPER.to(request);
-        // 查询数据是否冲突
-        this.checkSystemUserRolePresent(updateRecord);
-        // 更新
-        int effect = systemUserRoleDAO.updateById(updateRecord);
-        log.info("SystemUserRoleService-updateSystemUserRole effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+    public Integer deleteUserRoles(SystemUserUpdateRoleRequest request) {
+        Long userId = request.getId();
+        // 删除用户关联
+        Integer effect = systemUserRoleDAO.deleteByUserId(userId);
+        // 更新缓存中的角色
+        RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+            s.setRoles(null);
+        }, userId);
         return effect;
     }
 
     @Override
-    public SystemUserRoleVO getSystemUserRole(Long id) {
-        // 查询
-        SystemUserRoleDO record = systemUserRoleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 转换
-        return SystemUserRoleConvert.MAPPER.to(record);
-    }
-
-    @Override
-    public List<SystemUserRoleVO> getSystemUserRoleList(List<Long> idList) {
-        // 查询
-        List<SystemUserRoleDO> records = systemUserRoleDAO.selectBatchIds(idList);
-        if (records.isEmpty()) {
-            return Lists.empty();
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateUserRoles(SystemUserUpdateRoleRequest request) {
+        Long userId = request.getId();
+        Set<String> roleCodeList = request.getRoles();
+        // 查询用户
+        SystemUserDO record = systemUserDAO.selectById(userId);
+        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        // 查询角色
+        List<SystemRoleDO> userRoles = systemRoleDAO.selectByCodeList(roleCodeList);
+        // 检查角色是否存在
+        if (userRoles.size() != roleCodeList.size()) {
+            // 有不存在的角色
+            List<String> userRoleCodes = userRoles.stream()
+                    .map(SystemRoleDO::getCode)
+                    .collect(Collectors.toList());
+            for (String roleCode : roleCodeList) {
+                // 角色不存在
+                if (!userRoleCodes.contains(roleCode)) {
+                    throw ErrorCode.ROLE_PRESENT.exception(roleCode);
+                }
+            }
         }
-        // 转换
-        return SystemUserRoleConvert.MAPPER.to(records);
-    }
-
-    @Override
-    public DataGrid<SystemUserRoleVO> getSystemUserRolePage(SystemUserRoleQueryRequest request) {
-        // 构造条件
-        LambdaQueryWrapper<SystemUserRoleDO> wrapper = systemUserRoleDAO.wrapper()
-                .eq(SystemUserRoleDO::getId, request.getId())
-                .eq(SystemUserRoleDO::getUserId, request.getUserId())
-                .eq(SystemUserRoleDO::getRoleId, request.getRoleId())
-                .orderByDesc(SystemUserRoleDO::getId);
-        // 查询
-        return systemUserRoleDAO.of()
-                .wrapper(wrapper)
-                .page(request)
-                .dataGrid(SystemUserRoleConvert.MAPPER::to);
-    }
-
-    @Override
-    public Integer deleteSystemUserRole(Long id) {
-        int effect = systemUserRoleDAO.deleteById(id);
-        log.info("SystemUserRoleService-deleteSystemUserRole id: {}, effect: {}", id, effect);
+        // 删除用户角色关联
+        Integer effect = systemUserRoleDAO.deleteByUserId(userId);
+        // 重新添加用户角色关联
+        List<SystemUserRoleDO> addUserRoles = userRoles.stream().map(s -> {
+            SystemUserRoleDO ur = new SystemUserRoleDO();
+            ur.setUserId(userId);
+            ur.setRoleId(s.getId());
+            return ur;
+        }).collect(Collectors.toList());
+        systemUserRoleDAO.insertBatch(addUserRoles);
+        // 更新缓存中的角色
+        RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+            s.setRoles(new ArrayList<>(roleCodeList));
+        }, userId);
         return effect;
     }
 
+    @Async("asyncExecutor")
     @Override
-    public Integer batchDeleteSystemUserRole(List<Long> idList) {
-        int effect = systemUserRoleDAO.deleteBatchIds(idList);
-        log.info("SystemUserRoleService-batchDeleteSystemUserRole idList: {}, effect: {}", JSON.toJSONString(idList), effect);
-        return effect;
-    }
-
-    /**
-     * 检测对象是否存在
-     *
-     * @param domain domain
-     */
-    private void checkSystemUserRolePresent(SystemUserRoleDO domain) {
-        // 构造条件
-        LambdaQueryWrapper<SystemUserRoleDO> wrapper = systemUserRoleDAO.wrapper()
-                // 更新时忽略当前记录
-                .ne(SystemUserRoleDO::getId, domain.getId())
-                // 用其他字段做重复校验
-                .eq(SystemUserRoleDO::getUserId, domain.getUserId())
-                .eq(SystemUserRoleDO::getRoleId, domain.getRoleId());
-        // 检查是否存在
-        boolean present = systemUserRoleDAO.of().wrapper(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+    public void asyncDeleteUserCacheRole(String roleCode, List<Long> userIdList) {
+        for (Long userId : userIdList) {
+            RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+                List<String> roles = s.getRoles();
+                if (Lists.isEmpty(roles)) {
+                    return;
+                }
+                // 移除角色
+                roles.remove(roleCode);
+            }, userId);
+        }
     }
 
 }

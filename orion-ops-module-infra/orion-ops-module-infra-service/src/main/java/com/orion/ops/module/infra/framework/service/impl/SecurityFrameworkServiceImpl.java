@@ -7,6 +7,7 @@ import com.orion.ops.framework.security.core.service.SecurityFrameworkService;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
+import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.PermissionService;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,10 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
         // 检查 token 状态
         this.checkTokenStatus(tokenInfo);
         // 获取登陆信息
-        return authenticationService.getLoginUser(tokenInfo.getId());
+        LoginUser user = authenticationService.getLoginUser(tokenInfo.getId());
+        // 检查用户状态
+        this.checkUserStatus(user);
+        return user;
     }
 
     /**
@@ -86,6 +90,19 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
                     Dates.format(new Date(loginToken.getLoginTime()), Dates.MD_HM),
                     loginToken.getIp(),
                     loginToken.getLocation());
+        }
+    }
+
+    /**
+     * 检查用户状态
+     *
+     * @param user user
+     */
+    private void checkUserStatus(LoginUser user) {
+        if (UserStatusEnum.DISABLED.getStatus().equals(user.getStatus())) {
+            throw ErrorCode.USER_DISABLED.exception();
+        } else if (UserStatusEnum.LOCKED.getStatus().equals(user.getStatus())) {
+            throw ErrorCode.USER_LOCKED.exception();
         }
     }
 

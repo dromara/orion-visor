@@ -2,7 +2,7 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
-import com.orion.ops.module.infra.entity.request.auth.UserLoginRequest;
+import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +14,16 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2023/7/13 22:15
  */
 public interface AuthenticationService {
+
+    // TODO 配置化
+    // 允许多端登陆
+    boolean allowMultiDevice = true;
+    // 允许凭证续签
+    boolean allowRefresh = true;
+    // 凭证续签最大次数
+    int maxRefreshCount = 3;
+    // 失败锁定次数
+    int maxFailedLoginCount = 5;
 
     /**
      * 登陆

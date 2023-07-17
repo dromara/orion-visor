@@ -28,4 +28,16 @@ public interface SystemRoleMenuDAO extends IMapper<SystemRoleMenuDO> {
                 .eq(SystemRoleMenuDO::getMenuId, entity.getMenuId());
     }
 
+    /**
+     * 通过 roleId 删除
+     *
+     * @param roleId roleId
+     * @return effect
+     */
+    default Integer deleteByRoleId(Long roleId) {
+        LambdaQueryWrapper<SystemRoleMenuDO> wrapper = this.wrapper()
+                .eq(SystemRoleMenuDO::getRoleId, roleId);
+        return this.delete(wrapper);
+    }
+
 }

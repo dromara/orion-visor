@@ -32,18 +32,57 @@ public interface SystemUserRoleDAO extends IMapper<SystemUserRoleDO> {
     }
 
     /**
-     * 查询用户的全部角色id
+     * 查询用户的全部 roleId
      *
      * @param userId userId
      * @return roleId
      */
-    default List<Long> selectRoleByUserId(Long userId) {
+    default List<Long> selectRoleIdByUserId(Long userId) {
         LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
                 .select(SystemUserRoleDO::getRoleId)
                 .eq(SystemUserRoleDO::getUserId, userId);
         return this.selectList(wrapper).stream()
                 .map(SystemUserRoleDO::getRoleId)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 查询角色的全部 userId
+     *
+     * @param roleId roleId
+     * @return userId
+     */
+    default List<Long> selectUserIdByRoleId(Long roleId) {
+        LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
+                .select(SystemUserRoleDO::getUserId)
+                .eq(SystemUserRoleDO::getRoleId, roleId);
+        return this.selectList(wrapper).stream()
+                .map(SystemUserRoleDO::getUserId)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 通过 userId 删除
+     *
+     * @param userId userId
+     * @return effect
+     */
+    default Integer deleteByUserId(Long userId) {
+        LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
+                .eq(SystemUserRoleDO::getUserId, userId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 roleId 删除
+     *
+     * @param roleId roleId
+     * @return effect
+     */
+    default Integer deleteByRoleId(Long roleId) {
+        LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
+                .eq(SystemUserRoleDO::getRoleId, roleId);
+        return this.delete(wrapper);
     }
 
 }

@@ -41,11 +41,17 @@ public enum ErrorCode implements CodeInfo {
 
     OTHER_DEVICE_LOGIN(700, "该账号于 {} 已在其他设备登陆 {}({})"),
 
+    USER_DISABLED(701, "当前用户已禁用"),
+
+    USER_LOCKED(702, "当前用户已被锁定"),
+
+    ROLE_PRESENT(703, "角色 [{}] 不存在"),
+
     // -------------------- 自定义 - 通用 --------------------
 
     NETWORK_FLUCTUATION(900, "当前环境网路波动"),
 
-    HTTP_API(901, "api 调用异常"),
+    HTTP_API_REQUEST_ERROR(901, "api 调用异常"),
 
     IO_EXCEPTION(902, "网络异常"),
 
@@ -74,6 +80,8 @@ public enum ErrorCode implements CodeInfo {
     VCS_OPETATOR_ERROR(914, "仓库操作执行失败"),
 
     DIABLED_ERROR(915, "数据已被禁用"),
+
+    UNSUPPOETED(916, "不支持此操作"),
 
     ;
 

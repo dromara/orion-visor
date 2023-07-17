@@ -5,6 +5,9 @@ import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * 角色 Mapper 接口
  *
@@ -27,6 +30,18 @@ public interface SystemRoleDAO extends IMapper<SystemRoleDO> {
                 .eq(SystemRoleDO::getName, entity.getName())
                 .eq(SystemRoleDO::getCode, entity.getCode())
                 .eq(SystemRoleDO::getStatus, entity.getStatus());
+    }
+
+    /**
+     * 通过编码查询角色
+     *
+     * @param codeList codeList
+     * @return roles
+     */
+    default List<SystemRoleDO> selectByCodeList(Collection<String> codeList) {
+        LambdaQueryWrapper<SystemRoleDO> wrapper = this.wrapper()
+                .in(SystemRoleDO::getCode, codeList);
+        return this.selectList(wrapper);
     }
 
 }

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 /**
  * 用户 查询请求对象
@@ -29,17 +28,9 @@ public class SystemUserQueryRequest extends PageRequest {
     @Schema(description = "用户名")
     private String username;
 
-    @Size(max = 64)
-    @Schema(description = "密码")
-    private String password;
-
     @Size(max = 16)
     @Schema(description = "花名")
     private String nickname;
-
-    @Size(max = 500)
-    @Schema(description = "头像地址")
-    private String avatar;
 
     @Size(max = 15)
     @Schema(description = "手机号")
@@ -51,8 +42,5 @@ public class SystemUserQueryRequest extends PageRequest {
 
     @Schema(description = "用户状态 0停用 1启用 2锁定")
     private Integer status;
-
-    @Schema(description = "最后登录时间")
-    private Date lastLoginTime;
 
 }

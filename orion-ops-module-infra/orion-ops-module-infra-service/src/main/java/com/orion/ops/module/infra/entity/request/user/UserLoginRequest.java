@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request.auth;
+package com.orion.ops.module.infra.entity.request.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -13,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
  * @since 2023/7/13 22:16
  */
 @Data
+@Schema(name = "UserLoginRequest", description = "登陆请求")
 public class UserLoginRequest {
 
     @NotEmpty

@@ -54,7 +54,7 @@ public class SystemRoleController {
 
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 更新角色状态")
-    @PreAuthorize("@ss.hasPermission('infra:system-role:update')")
+    @PreAuthorize("@ss.hasPermission('infra:system-role:update-status')")
     public Integer updateRoleStatus(@Validated @RequestBody SystemRoleStatusRequest request) {
         return systemRoleService.updateRoleStatus(request);
     }
@@ -88,14 +88,6 @@ public class SystemRoleController {
     @PreAuthorize("@ss.hasPermission('infra:system-role:delete')")
     public Integer deleteSystemRole(@RequestParam("id") Long id) {
         return systemRoleService.deleteSystemRole(id);
-    }
-
-    @PutMapping("/delete-batch")
-    @Operation(summary = "通过 id 批量删除角色")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:system-role:delete')")
-    public Integer batchDeleteSystemRole(@RequestParam("idList") List<Long> idList) {
-        return systemRoleService.batchDeleteSystemRole(idList);
     }
 
 }

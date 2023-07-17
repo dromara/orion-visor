@@ -74,12 +74,4 @@ public interface SystemRoleService {
      */
     Integer deleteSystemRole(Long id);
 
-    /**
-     * 通过 id 批量删除角色
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer batchDeleteSystemRole(List<Long> idList);
-
 }

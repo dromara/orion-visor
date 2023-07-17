@@ -206,7 +206,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {HttpRequestException.class})
     public HttpWrapper<?> httpApiRequestExceptionHandler(Exception ex) {
         log.error("httpApiRequestExceptionHandler", ex);
-        return ErrorCode.HTTP_API.getWrapper();
+        return ErrorCode.HTTP_API_REQUEST_ERROR.getWrapper();
     }
 
     @ExceptionHandler(value = VcsException.class)

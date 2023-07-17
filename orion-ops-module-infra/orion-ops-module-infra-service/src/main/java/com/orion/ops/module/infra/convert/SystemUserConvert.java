@@ -5,6 +5,7 @@ import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.request.user.SystemUserCreateRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserQueryRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateStatusRequest;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -28,6 +29,8 @@ public interface SystemUserConvert {
     SystemUserDO to(SystemUserUpdateRequest request);
 
     SystemUserDO to(SystemUserQueryRequest request);
+
+    SystemUserDO to(SystemUserUpdateStatusRequest request);
 
     SystemUserVO to(SystemUserDO domain);
 
