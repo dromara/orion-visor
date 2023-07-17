@@ -19,6 +19,43 @@ import java.util.Collection;
 public interface IMapper<T> extends BaseMapper<T> {
 
     /**
+     * 获取 ValidateLambdaWrapper 对象
+     *
+     * @return 获取 wrapper
+     */
+    default LambdaQueryWrapper<T> wrapper() {
+        return Conditions.wrapper();
+    }
+
+    /**
+     * 获取 DataQuery 对象
+     *
+     * @return DataQuery
+     */
+    default DataQuery<T> of() {
+        return DataQuery.of(this);
+    }
+
+    /**
+     * 获取 DataQuery 对象
+     *
+     * @param wrapper wrapper
+     * @return DataQuery
+     */
+    default DataQuery<T> of(LambdaQueryWrapper<T> wrapper) {
+        return DataQuery.of(this, wrapper);
+    }
+
+    /**
+     * 获取 CacheQuery 对象
+     *
+     * @return CacheQuery
+     */
+    default CacheQuery<T> cache() {
+        return CacheQuery.of(this);
+    }
+
+    /**
      * 批量插入
      *
      * @param entities entities
@@ -89,41 +126,6 @@ public interface IMapper<T> extends BaseMapper<T> {
      */
     default boolean insertOrUpdateBatch(Collection<T> entities, int size) {
         return Db.saveOrUpdateBatch(entities, size);
-    }
-
-    /**
-     * @return 获取 wrapper
-     */
-    default LambdaQueryWrapper<T> wrapper() {
-        return Conditions.wrapper();
-    }
-
-    /**
-     * 获取 DataQuery 对象
-     *
-     * @return DataQuery
-     */
-    default DataQuery<T> of() {
-        return DataQuery.of(this);
-    }
-
-    /**
-     * 获取 DataQuery 对象
-     *
-     * @param wrapper wrapper
-     * @return DataQuery
-     */
-    default DataQuery<T> of(LambdaQueryWrapper<T> wrapper) {
-        return DataQuery.of(this, wrapper);
-    }
-
-    /**
-     * 获取 CacheQuery 对象
-     *
-     * @return CacheQuery
-     */
-    default CacheQuery<T> cache() {
-        return CacheQuery.of(this);
     }
 
 }

@@ -11,8 +11,10 @@ import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.request.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.SystemRoleQueryRequest;
+import com.orion.ops.module.infra.entity.request.SystemRoleStatusRequest;
 import com.orion.ops.module.infra.entity.request.SystemRoleUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemRoleVO;
+import com.orion.ops.module.infra.enums.RoleStatusEnum;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.SystemRoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色 服务实现类
@@ -63,7 +66,6 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
-        // 查询数据是否冲突
         // 查询名称是否存在
         this.checkNamePresent(updateRecord);
         // 查询编码是否存在
@@ -74,6 +76,25 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 设置到缓存
         SystemRoleDO roleCache = permissionService.getRoleCache().get(record.getCode());
         roleCache.setName(updateRecord.getName());
+        return effect;
+    }
+
+    @Override
+    public Integer updateRoleStatus(SystemRoleStatusRequest request) {
+        // 查询
+        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        SystemRoleDO record = systemRoleDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 转换
+        SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
+        Integer status = updateRecord.getStatus();
+        Valid.notNull(RoleStatusEnum.of(status), ErrorMessage.INVALID_PARAM);
+        // 更新
+        int effect = systemRoleDAO.updateById(updateRecord);
+        log.info("SystemRoleService-updateRoleStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+        // 修改缓存状态
+        SystemRoleDO roleCache = permissionService.getRoleCache().get(record.getCode());
+        roleCache.setStatus(status);
         return effect;
     }
 
@@ -117,6 +138,13 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     public Integer deleteSystemRole(Long id) {
         int effect = systemRoleDAO.deleteById(id);
         log.info("SystemRoleService-deleteSystemRole id: {}, effect: {}", id, effect);
+        // 删除缓存
+        Map<String, SystemRoleDO> roleCache = permissionService.getRoleCache();
+        roleCache.values()
+                .stream()
+                .filter(s -> s.getId().equals(id))
+                .findFirst()
+                .ifPresent(s -> roleCache.remove(s.getCode()));
         return effect;
     }
 
@@ -124,6 +152,13 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     public Integer batchDeleteSystemRole(List<Long> idList) {
         int effect = systemRoleDAO.deleteBatchIds(idList);
         log.info("SystemRoleService-batchDeleteSystemRole idList: {}, effect: {}", JSON.toJSONString(idList), effect);
+        // 删除缓存
+        Map<String, SystemRoleDO> roleCache = permissionService.getRoleCache();
+        roleCache.values()
+                .stream()
+                .filter(s -> idList.contains(s.getId()))
+                .map(SystemRoleDO::getCode)
+                .forEach(roleCache::remove);
         return effect;
     }
 

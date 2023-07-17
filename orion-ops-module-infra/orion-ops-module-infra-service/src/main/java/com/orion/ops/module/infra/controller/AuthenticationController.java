@@ -9,6 +9,7 @@ import com.orion.ops.module.infra.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,6 @@ public class AuthenticationController {
     @PostMapping("/login")
     public UserLoginVO login(@Validated @RequestBody UserLoginRequest request,
                              HttpServletRequest servletRequest) {
-        // 验证登陆
         String token = authenticationService.login(request, servletRequest);
         return UserLoginVO.builder().token(token).build();
     }
@@ -50,9 +50,22 @@ public class AuthenticationController {
     @Operation(summary = "登出")
     @GetMapping("/logout")
     public HttpWrapper<?> logout(HttpServletRequest servletRequest) {
-        // 登出
         authenticationService.logout(servletRequest);
         return HttpWrapper.ok();
+    }
+
+    @Operation(summary = "测试1")
+    @GetMapping("/test1")
+    @PreAuthorize("@ss.hasPermission('a')")
+    public String test1() {
+        return "123";
+    }
+
+    @Operation(summary = "测试2")
+    @GetMapping("/test2")
+    @PreAuthorize("@ss.hasRole('update')")
+    public String test2() {
+        return "123";
     }
 
 }

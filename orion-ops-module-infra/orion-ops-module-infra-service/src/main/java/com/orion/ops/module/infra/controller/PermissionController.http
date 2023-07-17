@@ -1,0 +1,5 @@
+### 初始化缓存
+GET {{baseUrl}}/infra/permission/init-cache
+Authorization: {{token}}
+
+

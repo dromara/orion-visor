@@ -13,7 +13,13 @@ public interface ErrorMessage {
 
     String ID_MISSING = "id 不能为空";
 
+    String INVALID_PARAM = "参数错误";
+
     String DATA_PRESENT = "数据已存在";
+
+    String NAME_PRESENT = "名称已存在";
+
+    String CODE_PRESENT = "编码已存在";
 
     String DATA_ABSENT = "数据不存在";
 

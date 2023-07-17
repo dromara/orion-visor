@@ -2,11 +2,12 @@ package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.module.infra.service.*;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.entity.request.*;
-import com.orion.ops.module.infra.convert.*;
+import com.orion.ops.module.infra.entity.request.SystemRoleCreateRequest;
+import com.orion.ops.module.infra.entity.request.SystemRoleQueryRequest;
+import com.orion.ops.module.infra.entity.request.SystemRoleStatusRequest;
+import com.orion.ops.module.infra.entity.request.SystemRoleUpdateRequest;
+import com.orion.ops.module.infra.entity.vo.SystemRoleVO;
+import com.orion.ops.module.infra.service.SystemRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,6 +50,13 @@ public class SystemRoleController {
     @PreAuthorize("@ss.hasPermission('infra:system-role:update')")
     public Integer updateSystemRole(@Validated @RequestBody SystemRoleUpdateRequest request) {
         return systemRoleService.updateSystemRole(request);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "通过 id 更新角色状态")
+    @PreAuthorize("@ss.hasPermission('infra:system-role:update')")
+    public Integer updateRoleStatus(@Validated @RequestBody SystemRoleStatusRequest request) {
+        return systemRoleService.updateRoleStatus(request);
     }
 
     @GetMapping("/get")

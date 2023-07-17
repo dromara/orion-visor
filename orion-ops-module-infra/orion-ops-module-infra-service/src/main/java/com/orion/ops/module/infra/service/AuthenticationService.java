@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.lang.define.wrapper.Pair;
+import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.UserLoginRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,11 +32,20 @@ public interface AuthenticationService {
     void logout(HttpServletRequest servletRequest);
 
     /**
-     * 获取 token pair
+     * 获取登陆用户信息
      *
-     * @param loginToken loginToken
-     * @return pair
+     * @param userId userId
+     * @return loginUser
      */
-    Pair<Long, Long> getLoginTokenPair(String loginToken);
+    LoginUser getLoginUser(Long userId);
+
+    /**
+     * 获取 token 信息
+     *
+     * @param loginToken   loginToken
+     * @param checkRefresh 是否检查 refreshToken
+     * @return tokenInfo
+     */
+    LoginTokenDTO getLoginTokenInfo(String loginToken, boolean checkRefresh);
 
 }

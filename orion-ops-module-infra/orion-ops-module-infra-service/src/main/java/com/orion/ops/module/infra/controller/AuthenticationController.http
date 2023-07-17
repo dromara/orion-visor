@@ -1,0 +1,23 @@
+### 登陆 - admin 用户
+POST {{baseUrl}}/infra/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "21232f297a57a5a743894a0e4a801fc3"
+}
+
+
+### 登陆
+POST {{baseUrl}}/infra/auth/login
+Content-Type: application/json
+
+{
+  "username": "",
+  "password": ""
+}
+
+
+### 通过 id 更新菜单
+GET {{baseUrl}}/infra/auth/logout
+Authorization: {{token}}

@@ -28,4 +28,16 @@ public enum RoleStatusEnum {
 
     private final Integer status;
 
+    public static RoleStatusEnum of(Integer status) {
+        if (status == null) {
+            return null;
+        }
+        for (RoleStatusEnum value : values()) {
+            if (value.status.equals(status)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
 }

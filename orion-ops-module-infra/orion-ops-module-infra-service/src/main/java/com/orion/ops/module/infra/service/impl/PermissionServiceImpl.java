@@ -65,13 +65,14 @@ public class PermissionServiceImpl implements PermissionService {
     @Resource
     private SystemRoleMenuDAO systemRoleMenuDAO;
 
-    /**
-     * 初始化缓存
-     */
     @PostConstruct
-    public void initRoleMenuCache() {
+    @Override
+    public void initPermissionCache() {
         long start = System.currentTimeMillis();
         log.info("initRoleMenuCache-start");
+        roleCache.clear();
+        menuCache.clear();
+        roleMenuCache.clear();
         // 加载所有角色
         List<SystemRoleDO> roles = systemRoleDAO.selectList(null);
         Map<Long, SystemRoleDO> roleRel = roles.stream()

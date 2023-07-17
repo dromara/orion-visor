@@ -23,6 +23,8 @@ public interface SystemRoleConvert {
 
     SystemRoleDO to(SystemRoleCreateRequest request);
 
+    SystemRoleDO to(SystemRoleStatusRequest request);
+
     SystemRoleDO to(SystemRoleUpdateRequest request);
 
     SystemRoleDO to(SystemRoleQueryRequest request);
