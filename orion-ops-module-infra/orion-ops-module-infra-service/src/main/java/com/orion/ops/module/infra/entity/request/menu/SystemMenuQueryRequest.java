@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.menu;
 
 import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-17 11:39
  */
 @Data
 @Builder

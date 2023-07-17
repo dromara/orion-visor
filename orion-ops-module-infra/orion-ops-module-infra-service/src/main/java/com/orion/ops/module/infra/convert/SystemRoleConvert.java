@@ -1,12 +1,14 @@
 package com.orion.ops.module.infra.convert;
 
+import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleStatusRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleUpdateRequest;
+import com.orion.ops.module.infra.entity.vo.SystemRoleVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import com.orion.ops.module.infra.entity.domain.*;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.entity.request.*;
-import com.orion.ops.module.infra.convert.*;
+
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ import java.util.List;
  */
 @Mapper
 public interface SystemRoleConvert {
-    
+
     SystemRoleConvert MAPPER = Mappers.getMapper(SystemRoleConvert.class);
 
     SystemRoleDO to(SystemRoleCreateRequest request);

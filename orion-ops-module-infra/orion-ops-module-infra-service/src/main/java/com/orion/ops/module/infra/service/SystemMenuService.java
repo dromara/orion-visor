@@ -1,10 +1,10 @@
 package com.orion.ops.module.infra.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.entity.request.*;
-import com.orion.ops.module.infra.convert.*;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
+import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-17 11:39
  */
 public interface SystemMenuService {
 

@@ -2,9 +2,9 @@ package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.module.infra.entity.request.SystemUserCreateRequest;
-import com.orion.ops.module.infra.entity.request.SystemUserQueryRequest;
-import com.orion.ops.module.infra.entity.request.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserCreateRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserQueryRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.service.SystemUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,6 +89,9 @@ public class SystemUserController {
     public Integer batchDeleteSystemUser(@RequestParam("idList") List<Long> idList) {
         return systemUserService.batchDeleteSystemUser(idList);
     }
+
+    // 修改状态
+    // 设置角色
 
 }
 

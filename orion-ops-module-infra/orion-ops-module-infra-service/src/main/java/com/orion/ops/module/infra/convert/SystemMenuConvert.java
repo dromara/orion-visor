@@ -2,9 +2,9 @@ package com.orion.ops.module.infra.convert;
 
 import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
-import com.orion.ops.module.infra.entity.request.SystemMenuCreateRequest;
-import com.orion.ops.module.infra.entity.request.SystemMenuQueryRequest;
-import com.orion.ops.module.infra.entity.request.SystemMenuUpdateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-17 11:39
  */
 @Mapper
 public interface SystemMenuConvert {

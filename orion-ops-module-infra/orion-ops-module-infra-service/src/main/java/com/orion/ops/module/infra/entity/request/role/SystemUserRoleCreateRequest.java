@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -6,11 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * 用户角色关联 创建请求对象

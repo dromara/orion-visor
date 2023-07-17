@@ -35,7 +35,7 @@ public class PermissionController {
 
     @GetMapping("/init-cache")
     @Operation(summary = "初始化缓存")
-    @PreAuthorize("@ss.hasPermission('infra:system-role:init')")
+    @PreAuthorize("@ss.hasRole('admin')")
     public HttpWrapper<?> initCache() {
         permissionService.initPermissionCache();
         return HttpWrapper.ok();

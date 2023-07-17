@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.menu;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,25 +10,20 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
 
 /**
- * 菜单 更新请求对象
+ * 菜单 创建请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-7-16 01:19
+ * @since 2023-7-17 11:39
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemMenuUpdateRequest", description = "菜单 更新请求对象")
-public class SystemMenuUpdateRequest implements Serializable {
-
-    @NotNull
-    @Schema(description = "id")
-    private Long id;
+@Schema(name = "SystemMenuCreateRequest", description = "菜单 创建请求对象")
+public class SystemMenuCreateRequest implements Serializable {
 
     @NotNull
     @Schema(description = "父id")

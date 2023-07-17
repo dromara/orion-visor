@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -35,10 +36,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -50,12 +50,15 @@ import java.util.stream.Collectors;
  */
 public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
-    private final Map<String, String> tableComment;
+    private static final String REQUEST_PACKAGE_REPLACER = "request.%s";
+
+    private final Map<String, GenTable> tables;
 
     private VelocityEngine velocityEngine;
 
-    public VelocityTemplateEngine(Map<String, String> tableComment) {
-        this.tableComment = tableComment;
+    public VelocityTemplateEngine(GenTable[] tables) {
+        this.tables = Arrays.stream(tables)
+                .collect(Collectors.toMap(GenTable::getTableName, Function.identity()));
     }
 
     {
@@ -100,12 +103,83 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
+     * 创建自定义文件副本对象
+     *
+     * @param originCustomerFile originCustomerFile
+     * @return backup
+     */
+    private List<CustomFile> createCustomFilesBackup(@NotNull List<CustomFile> originCustomerFile) {
+        // 生成文件副本
+        List<CustomFile> customFiles = originCustomerFile.stream().map(s -> {
+            return new CustomFile.Builder()
+                    .enableFileOverride()
+                    .templatePath(s.getTemplatePath())
+                    .filePath(s.getFilePath())
+                    .fileName(s.getFileName())
+                    .packageName(s.getPackageName())
+                    .build();
+        }).collect(Collectors.toList());
+        return customFiles;
+    }
+
+    /**
+     * 替换自定义文件包
+     *
+     * @param customFiles 自定义文件
+     * @param tableInfo   tableInfo
+     * @param objectMap   objectMap
+     */
+    private void replacePackageName(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        // 替换包名
+        customFiles.forEach(s -> {
+            // 反射调用 setter 方法
+            BiConsumer<String, Object> callSetter = (field, value) -> Fields.setFieldValue(s, field, value);
+            String packageName = s.getPackageName();
+            // 替换 Request.java 文件包名
+            if (packageName.contains(REQUEST_PACKAGE_REPLACER)) {
+                String replacePackage = String.format(packageName, tables.get(tableInfo.getName()).getRequestPackage());
+                callSetter.accept("packageName", replacePackage);
+            }
+        });
+        // 自定义文件的包 (导入用)
+        List<String> customFilePackages = customFiles.stream()
+                .filter(s -> s.getTemplatePath().contains(".java.vm"))
+                .map(CustomFile::getPackageName)
+                .map(s -> getConfigBuilder().getPackageConfig().getParent() + "." + s)
+                .distinct()
+                .collect(Collectors.toList());
+        objectMap.put("customFilePackages", customFilePackages);
+    }
+
+    /**
+     * 插入表元数据
+     *
+     * @param tableInfo tableInfo
+     * @param objectMap objectMap
+     */
+    private void addTableMeta(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        // http 注释标识
+        objectMap.put("httpComment", "###");
+        // 版本
+        objectMap.put("since", Const.VERSION);
+        // 替换业务注释
+        tableInfo.setComment(tables.get(tableInfo.getName()).getComment());
+        // 实体名称
+        String domainName = tableInfo.getEntityName();
+        String mappingHyphen = objectMap.get("controllerMappingHyphen").toString();
+        String entityName = domainName.substring(0, domainName.length() - 2);
+        objectMap.put("type", entityName);
+        objectMap.put("typeLower", Strings.firstLower(entityName));
+        objectMap.put("typeHyphen", mappingHyphen.substring(0, mappingHyphen.length() - 3));
+    }
+
+    /**
      * 插入 api 注释
      *
      * @param tableInfo tableInfo
      * @param objectMap objectMap
      */
-    private void putApiComment(TableInfo tableInfo, Map<String, Object> objectMap) {
+    private void addApiCommentMeta(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
         Map<String, String> map = new HashMap<>();
         objectMap.put("apiComment", map);
         String comment = tableInfo.getComment();
@@ -118,46 +192,16 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         map.put("batchDelete", "通过 id 批量删除" + comment);
     }
 
-    /**
-     * 输出自定义模板文件
-     *
-     * @param customFiles 自定义模板文件列表
-     * @param tableInfo   表信息
-     * @param objectMap   渲染数据
-     * @since 3.5.3
-     */
     @Override
     protected void outputCustomFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-        // 替换业务注释
-        String comment = tableComment.get(tableInfo.getName());
-        if (comment != null) {
-            tableInfo.setComment(comment);
-        }
-
-        // http 注释标识
-        objectMap.put("httpComment", "###");
-        // 版本
-        objectMap.put("since", Const.VERSION);
-
-        // 实体名称
-        String domainName = tableInfo.getEntityName();
-        String mappingHyphen = objectMap.get("controllerMappingHyphen").toString();
-        String entityName = domainName.substring(0, domainName.length() - 2);
-        objectMap.put("type", entityName);
-        objectMap.put("typeLower", Strings.firstLower(entityName));
-        objectMap.put("typeHyphen", mappingHyphen.substring(0, mappingHyphen.length() - 3));
-        // 注释
-        this.putApiComment(tableInfo, objectMap);
-
-        // 自定义文件的包
-        List<String> customFilePackages = customFiles.stream()
-                .filter(s -> s.getTemplatePath().contains(".java.vm"))
-                .map(CustomFile::getPackageName)
-                .map(s -> getConfigBuilder().getPackageConfig().getParent() + "." + s)
-                .distinct()
-                .collect(Collectors.toList());
-        // 设置导入的包
-        objectMap.put("customFilePackages", customFilePackages);
+        // 创建自定义文件副本文件
+        customFiles = this.createCustomFilesBackup(customFiles);
+        // 替换自定义包名
+        this.replacePackageName(customFiles, tableInfo, objectMap);
+        // 添加表元数据
+        this.addTableMeta(tableInfo, objectMap);
+        // 添加注释元数据
+        this.addApiCommentMeta(tableInfo, objectMap);
 
         // 生成文件
         String parentPath = getPathInfo(OutputFile.parent);
@@ -173,7 +217,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                 filePath = filePath + File.separator + file.getPackageName();
                 filePath = filePath.replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
             }
-            String fileName = filePath + File.separator + String.format(file.getFileName(), entityName);
+            String fileName = filePath + File.separator + String.format(file.getFileName(), objectMap.get("type"));
             outputFile(new File(fileName), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
     }

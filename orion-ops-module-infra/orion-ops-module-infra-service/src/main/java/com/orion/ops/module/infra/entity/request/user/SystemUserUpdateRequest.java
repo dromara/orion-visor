@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户 创建请求对象
+ * 用户 更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -23,8 +23,12 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemUserCreateRequest", description = "用户 创建请求对象")
-public class SystemUserCreateRequest implements Serializable {
+@Schema(name = "SystemUserUpdateRequest", description = "用户 更新请求对象")
+public class SystemUserUpdateRequest implements Serializable {
+
+    @NotNull
+    @Schema(description = "id")
+    private Long id;
 
     @Size(max = 32)
     @NotBlank

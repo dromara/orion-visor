@@ -23,7 +23,7 @@ import com.orion.ops.module.infra.define.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
-import com.orion.ops.module.infra.entity.request.UserLoginRequest;
+import com.orion.ops.module.infra.entity.request.auth.UserLoginRequest;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;

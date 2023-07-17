@@ -14,14 +14,10 @@ import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -34,18 +30,20 @@ import java.util.stream.Collectors;
 public class CodeGenerator {
 
     public static void main(String[] args) {
-        @NotNull
+        // 输出路径
         String outputDir = "D:/MP/";
-        @NotNull
+        // 作者
         String author = Const.ORION_AUTHOR;
-        @NotEmpty
-        String[] tables = {"system_user", "system_role", "system_user_role", "system_menu", "system_role_menu"};
-        // 表业务注释 需要和表一一对应 null则为表注释
-        @NotEmpty
-        String[] comment = {"用户", "角色", "用户角色关联", "菜单", "角色菜单关联"};
         // 模块
-        @NotNull
         String module = "infra";
+        // 生成的表 表 - 业务注释 - request文件的包前缀
+        GenTable[] tables = {
+                new GenTable("system_user", "用户", "user"),
+                new GenTable("system_role", "角色", "role"),
+                new GenTable("system_user_role", "用户角色关联", "role"),
+                new GenTable("system_menu", "菜单", "menu"),
+                new GenTable("system_role_menu", "角色菜单关联", "menu")
+        };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
         YmlExt yaml = YmlExt.load(yamlFile);
@@ -56,7 +54,7 @@ public class CodeGenerator {
         // 执行
         runGenerator(outputDir, author,
                 url, username, password,
-                tables, comment, module);
+                tables, module);
     }
 
     /**
@@ -67,11 +65,10 @@ public class CodeGenerator {
                                      String url,
                                      String username,
                                      String password,
-                                     String[] tables,
-                                     String[] comment,
+                                     GenTable[] tables,
                                      String module) {
         // 创建引擎
-        VelocityTemplateEngine engine = getEngine(tables, comment);
+        VelocityTemplateEngine engine = getEngine(tables);
 
         // 获取全局配置
         GlobalConfig globalConfig = getGlobalConfig(outputDir, author);
@@ -111,20 +108,11 @@ public class CodeGenerator {
     /**
      * 获取渲染引擎
      *
-     * @param tables  表
-     * @param comment 表注释
-     * @return
+     * @param tables 表
+     * @return 渲染引擎
      */
-    private static VelocityTemplateEngine getEngine(String[] tables, String[] comment) {
-        if (tables.length != comment.length) {
-            throw new IllegalArgumentException("表称与业务注释长度不匹配");
-        }
-        // 业务注释
-        Map<String, String> tableComment = new HashMap<>();
-        for (int i = 0; i < tables.length; i++) {
-            tableComment.put(tables[i], comment[i]);
-        }
-        return new VelocityTemplateEngine(tableComment);
+    private static VelocityTemplateEngine getEngine(GenTable[] tables) {
+        return new VelocityTemplateEngine(tables);
     }
 
     /**
@@ -185,10 +173,13 @@ public class CodeGenerator {
      * @param tables 生成的表名
      * @return 策略配置
      */
-    private static StrategyConfig getStrategyConfig(String[] tables) {
+    private static StrategyConfig getStrategyConfig(GenTable[] tables) {
+        String[] tableNames = Arrays.stream(tables)
+                .map(GenTable::getTableName)
+                .toArray(String[]::new);
         StrategyConfig stConfig = new StrategyConfig.Builder()
                 // 生成的表
-                .addInclude(tables)
+                .addInclude(tableNames)
                 // 全局大写命名
                 .enableCapitalMode()
                 // 实体配置
@@ -308,11 +299,11 @@ public class CodeGenerator {
                 // dto 文件
                 new String[]{"/templates/orion-entity-dto.java.vm", "%sDTO.java", "entity.dto"},
                 // create request 文件
-                new String[]{"/templates/orion-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request"},
+                new String[]{"/templates/orion-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
                 // update request 文件
-                new String[]{"/templates/orion-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request"},
+                new String[]{"/templates/orion-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request.%s"},
                 // query request 文件
-                new String[]{"/templates/orion-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request"},
+                new String[]{"/templates/orion-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
                 // convert 文件
                 new String[]{"/templates/orion-convert.java.vm", "%sConvert.java", "convert"},
                 // convert provider 文件

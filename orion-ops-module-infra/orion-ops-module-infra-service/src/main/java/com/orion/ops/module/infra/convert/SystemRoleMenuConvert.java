@@ -1,12 +1,13 @@
 package com.orion.ops.module.infra.convert;
 
+import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleMenuCreateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleMenuQueryRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleMenuUpdateRequest;
+import com.orion.ops.module.infra.entity.vo.SystemRoleMenuVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import com.orion.ops.module.infra.entity.domain.*;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.entity.request.*;
-import com.orion.ops.module.infra.convert.*;
+
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ import java.util.List;
  */
 @Mapper
 public interface SystemRoleMenuConvert {
-    
+
     SystemRoleMenuConvert MAPPER = Mappers.getMapper(SystemRoleMenuConvert.class);
 
     SystemRoleMenuDO to(SystemRoleMenuCreateRequest request);

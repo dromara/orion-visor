@@ -2,7 +2,7 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
-import com.orion.ops.module.infra.entity.request.UserLoginRequest;
+import com.orion.ops.module.infra.entity.request.auth.UserLoginRequest;
 
 import javax.servlet.http.HttpServletRequest;
 

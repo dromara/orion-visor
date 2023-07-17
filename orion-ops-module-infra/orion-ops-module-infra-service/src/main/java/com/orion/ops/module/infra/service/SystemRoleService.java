@@ -1,10 +1,10 @@
 package com.orion.ops.module.infra.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.infra.entity.request.SystemRoleCreateRequest;
-import com.orion.ops.module.infra.entity.request.SystemRoleQueryRequest;
-import com.orion.ops.module.infra.entity.request.SystemRoleStatusRequest;
-import com.orion.ops.module.infra.entity.request.SystemRoleUpdateRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleStatusRequest;
+import com.orion.ops.module.infra.entity.request.role.SystemRoleUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemRoleVO;
 
 import java.util.List;

@@ -1,11 +1,10 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.role;
 
 import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.Size;
-import java.util.*;
 
 /**
  * 角色 查询请求对象

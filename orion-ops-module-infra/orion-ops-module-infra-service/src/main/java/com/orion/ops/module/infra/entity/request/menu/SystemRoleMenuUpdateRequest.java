@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.menu;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 角色 更新状态请求对象
+ * 角色菜单关联 更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,15 +20,19 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemRoleStatusRequest", description = "角色 更新状态请求对象")
-public class SystemRoleStatusRequest implements Serializable {
+@Schema(name = "SystemRoleMenuUpdateRequest", description = "角色菜单关联 更新请求对象")
+public class SystemRoleMenuUpdateRequest implements Serializable {
 
     @NotNull
     @Schema(description = "id")
     private Long id;
 
     @NotNull
-    @Schema(description = "状态 0停用 1启用")
-    private Integer status;
+    @Schema(description = "角色id")
+    private Long roleId;
+
+    @NotNull
+    @Schema(description = "菜单id")
+    private Long menuId;
 
 }

@@ -3,13 +3,12 @@ package com.orion.ops.module.infra.controller;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.module.infra.entity.request.UserLoginRequest;
+import com.orion.ops.module.infra.entity.request.auth.UserLoginRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,18 +53,16 @@ public class AuthenticationController {
         return HttpWrapper.ok();
     }
 
-    @Operation(summary = "测试1")
-    @GetMapping("/test1")
-    @PreAuthorize("@ss.hasPermission('a')")
-    public String test1() {
-        return "123";
+    @Operation(summary = "登陆")
+    @PutMapping("/reset-password")
+    public UserLoginVO resetPassword(@Validated @RequestBody UserLoginRequest request,
+                             HttpServletRequest servletRequest) {
+        String token = authenticationService.login(request, servletRequest);
+        return UserLoginVO.builder().token(token).build();
     }
 
-    @Operation(summary = "测试2")
-    @GetMapping("/test2")
-    @PreAuthorize("@ss.hasRole('update')")
-    public String test2() {
-        return "123";
-    }
+// 修改密码
+// 重置密码
+
 
 }

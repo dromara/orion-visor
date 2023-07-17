@@ -1,14 +1,11 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.menu;
 
 import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.Size;
-import java.util.*;
-
 /**
- * 用户角色关联 查询请求对象
+ * 角色菜单关联 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -19,16 +16,16 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SystemUserRoleQueryRequest", description = "用户角色关联 查询请求对象")
-public class SystemUserRoleQueryRequest extends PageRequest {
+@Schema(name = "SystemRoleMenuQueryRequest", description = "角色菜单关联 查询请求对象")
+public class SystemRoleMenuQueryRequest extends PageRequest {
 
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "用户id")
-    private Long userId;
-
     @Schema(description = "角色id")
     private Long roleId;
+
+    @Schema(description = "菜单id")
+    private Long menuId;
 
 }

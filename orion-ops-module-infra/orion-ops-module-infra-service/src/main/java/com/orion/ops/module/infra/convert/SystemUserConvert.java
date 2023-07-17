@@ -2,9 +2,9 @@ package com.orion.ops.module.infra.convert;
 
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
-import com.orion.ops.module.infra.entity.request.SystemUserCreateRequest;
-import com.orion.ops.module.infra.entity.request.SystemUserQueryRequest;
-import com.orion.ops.module.infra.entity.request.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserCreateRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserQueryRequest;
+import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request;
+package com.orion.ops.module.infra.entity.request.role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
 
 /**
- * 用户角色关联 更新请求对象
+ * 角色 更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -23,19 +22,16 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemUserRoleUpdateRequest", description = "用户角色关联 更新请求对象")
-public class SystemUserRoleUpdateRequest implements Serializable {
+@Schema(name = "SystemRoleUpdateRequest", description = "角色 更新请求对象")
+public class SystemRoleUpdateRequest implements Serializable {
 
     @NotNull
     @Schema(description = "id")
     private Long id;
 
-    @NotNull
-    @Schema(description = "用户id")
-    private Long userId;
-
-    @NotNull
-    @Schema(description = "角色id")
-    private Long roleId;
+    @Size(max = 32)
+    @NotBlank
+    @Schema(description = "角色名称")
+    private String name;
 
 }
