@@ -3,12 +3,13 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.convert.SystemMenuConvert;
 import com.orion.ops.module.infra.dao.SystemMenuDAO;
 import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateParentRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
@@ -45,6 +46,12 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         int effect = systemMenuDAO.insert(record);
         log.info("SystemMenuService-createSystemMenu effect: {}, record: {}", effect, JSON.toJSONString(record));
         return record.getId();
+    }
+
+    @Override
+    public Long createParentMenu(SystemMenuCreateParentRequest request) {
+        System.out.println(Valid.valid(request));
+        return 1L;
     }
 
     @Override

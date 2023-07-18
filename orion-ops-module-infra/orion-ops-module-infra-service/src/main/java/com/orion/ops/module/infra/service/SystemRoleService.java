@@ -51,12 +51,11 @@ public interface SystemRoleService {
     SystemRoleVO getSystemRole(Long id);
 
     /**
-     * 通过 id 批量查询角色
+     * 查询所有角色
      *
-     * @param idList idList
      * @return rows
      */
-    List<SystemRoleVO> getSystemRoleList(List<Long> idList);
+    List<SystemRoleVO> getSystemRoleList();
 
     /**
      * 分页查询角色

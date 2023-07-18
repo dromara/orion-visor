@@ -48,12 +48,11 @@ public interface SystemUserService {
     SystemUserVO getSystemUser(Long id);
 
     /**
-     * 通过 id 批量查询用户
+     * 查询所有用户
      *
-     * @param idList idList
      * @return rows
      */
-    List<SystemUserVO> getSystemUserList(List<Long> idList);
+    List<SystemUserVO> getSystemUserList();
 
     /**
      * 分页查询用户

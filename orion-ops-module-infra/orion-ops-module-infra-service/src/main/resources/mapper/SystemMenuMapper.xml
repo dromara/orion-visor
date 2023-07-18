@@ -15,6 +15,7 @@
         <result column="permission" property="permission"/>
         <result column="type" property="type"/>
         <result column="sort" property="sort"/>
+        <result column="visible" property="visible"/>
         <result column="status" property="status"/>
         <result column="cache" property="cache"/>
         <result column="icon" property="icon"/>
@@ -25,7 +26,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        create_time, update_time, creator, updater, deleted, id, parent_id, name, permission, type, sort, status, cache, icon, path, component_name, component
+        create_time, update_time, creator, updater, deleted, id, parent_id, name, permission, type, sort, visible, status, cache, icon, path, component_name, component
     </sql>
 
 </mapper>

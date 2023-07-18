@@ -3,9 +3,9 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.convert.SystemRoleConvert;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemRoleMenuDAO;
@@ -98,7 +98,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
         Integer status = updateRecord.getStatus();
-        Valid.notNull(RoleStatusEnum.of(status), ErrorMessage.INVALID_PARAM);
+        Valid.valid(RoleStatusEnum::of, status);
         // 更新
         int effect = systemRoleDAO.updateById(updateRecord);
         log.info("SystemRoleService-updateRoleStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
@@ -118,9 +118,9 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     @Override
-    public List<SystemRoleVO> getSystemRoleList(List<Long> idList) {
+    public List<SystemRoleVO> getSystemRoleList() {
         // 查询
-        List<SystemRoleDO> records = systemRoleDAO.selectBatchIds(idList);
+        List<SystemRoleDO> records = systemRoleDAO.selectList(null);
         if (records.isEmpty()) {
             return Lists.empty();
         }

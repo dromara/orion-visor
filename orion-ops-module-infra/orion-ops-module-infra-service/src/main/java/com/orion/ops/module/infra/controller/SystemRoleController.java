@@ -68,11 +68,10 @@ public class SystemRoleController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "通过 id 批量查询角色")
-    @Parameter(name = "idList", description = "idList", required = true)
+    @Operation(summary = "查询所有角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
-    public List<SystemRoleVO> getSystemRoleList(@RequestParam("idList") List<Long> idList) {
-        return systemRoleService.getSystemRoleList(idList);
+    public List<SystemRoleVO> getSystemRoleList() {
+        return systemRoleService.getSystemRoleList();
     }
 
     @PostMapping("/query")

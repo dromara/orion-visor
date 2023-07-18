@@ -62,13 +62,12 @@ public class RedisUtils {
      * 获取并且设置 json
      *
      * @param define    define
-     * @param type      type
      * @param processor processor
      * @param params    params
      * @param <T>       type
      */
-    public static <T> void processSetJson(CacheKeyDefine define, Class<T> type, Consumer<T> processor, Object... params) {
-        processSetJson(define.format(params), define, type, processor);
+    public static <T> void processSetJson(CacheKeyDefine define, Consumer<T> processor, Object... params) {
+        processSetJson(define.format(params), define, processor);
     }
 
     /**
@@ -76,17 +75,17 @@ public class RedisUtils {
      *
      * @param key       key
      * @param define    define
-     * @param type      type
      * @param processor processor
      * @param <T>       type
      */
-    public static <T> void processSetJson(String key, CacheKeyDefine define, Class<T> type, Consumer<T> processor) {
+    @SuppressWarnings("unchecked")
+    public static <T> void processSetJson(String key, CacheKeyDefine define, Consumer<T> processor) {
         String value = redisTemplate.opsForValue().get(key);
         if (value == null) {
             return;
         }
         // 转换
-        T cache = JSON.parseObject(value, type);
+        T cache = (T) JSON.parseObject(value, define.getType());
         // 执行处理逻辑
         processor.accept(cache);
         // 重新设置

@@ -1,10 +1,10 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
@@ -52,7 +52,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         // 删除用户关联
         Integer effect = systemUserRoleDAO.deleteByUserId(userId);
         // 更新缓存中的角色
-        RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setRoles(null);
         }, userId);
         return effect;
@@ -92,7 +92,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         }).collect(Collectors.toList());
         systemUserRoleDAO.insertBatch(addUserRoles);
         // 更新缓存中的角色
-        RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setRoles(new ArrayList<>(roleCodeList));
         }, userId);
         return effect;
@@ -102,7 +102,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     @Override
     public void asyncDeleteUserCacheRole(String roleCode, List<Long> userIdList) {
         for (Long userId : userIdList) {
-            RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+            RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
                 List<String> roles = s.getRoles();
                 if (Lists.isEmpty(roles)) {
                     return;

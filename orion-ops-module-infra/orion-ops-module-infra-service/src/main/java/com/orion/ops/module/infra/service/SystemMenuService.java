@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateParentRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
@@ -24,6 +25,14 @@ public interface SystemMenuService {
      * @return id
      */
     Long createSystemMenu(SystemMenuCreateRequest request);
+
+    /**
+     * 创建菜单 父菜单
+     *
+     * @param request request
+     * @return id
+     */
+    Long createParentMenu(SystemMenuCreateParentRequest request);
 
     /**
      * 通过 id 更新菜单

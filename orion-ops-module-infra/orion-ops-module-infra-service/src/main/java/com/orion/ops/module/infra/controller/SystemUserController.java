@@ -94,11 +94,10 @@ public class SystemUserController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "通过 id 批量查询用户")
-    @Parameter(name = "idList", description = "idList", required = true)
+    @Operation(summary = "查询所有用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
-    public List<SystemUserVO> getSystemUserList(@RequestParam("idList") List<Long> idList) {
-        return systemUserService.getSystemUserList(idList);
+    public List<SystemUserVO> getSystemUserList() {
+        return systemUserService.getSystemUserList();
     }
 
     @PostMapping("/query")

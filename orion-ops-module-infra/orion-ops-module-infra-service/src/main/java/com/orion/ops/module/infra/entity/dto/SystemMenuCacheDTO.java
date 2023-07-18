@@ -26,7 +26,7 @@ public class SystemMenuCacheDTO {
     @Schema(description = "菜单权限")
     private String permission;
 
-    @Schema(description = "菜单类型 1目录 2菜单 3功能")
+    @Schema(description = "菜单类型 1父菜单 2子菜单 3功能")
     private Integer type;
 
     @Schema(description = "排序")

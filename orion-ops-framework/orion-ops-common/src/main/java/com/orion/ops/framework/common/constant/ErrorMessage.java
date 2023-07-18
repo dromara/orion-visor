@@ -9,7 +9,9 @@ package com.orion.ops.framework.common.constant;
  */
 public interface ErrorMessage {
 
-    String PARAM_MISSING = "{} 不能为空";
+    String MISSING = "{} 不能为空";
+
+    String PARAM_MISSING = "参数不能为空";
 
     String ID_MISSING = "id 不能为空";
 

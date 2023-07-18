@@ -8,6 +8,7 @@ import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.exception.argument.RpcWrapperException;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public HttpWrapper<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
-        String message = Strings.format(ErrorMessage.PARAM_MISSING, ex.getParameterName());
+        String message = Strings.format(ErrorMessage.MISSING, ex.getParameterName());
         log.error("missingServletRequestParameterExceptionHandler {}", message);
         return ErrorCode.BAD_REQUEST.wrapper().msg(message);
     }
@@ -75,15 +76,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BindException.class)
     public HttpWrapper<?> paramBindExceptionHandler(BindException ex) {
         FieldError error = Objects.requireNonNull(ex.getFieldError());
-        String message = error.getField() + " " + error.getDefaultMessage();
+        String message = error.getField() + Const.SPACE + error.getDefaultMessage();
         log.error("paramBindExceptionHandler {}", message);
         return ErrorCode.BAD_REQUEST.wrapper().msg(message);
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     public HttpWrapper<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
-        String message = Objects.requireNonNull(constraintViolation).getMessage();
+        ConstraintViolation<?> violation = Objects.requireNonNull(ex.getConstraintViolations().iterator().next());
+        String message = violation.getPropertyPath().toString() + Const.SPACE + violation.getMessage();
         log.error("constraintViolationExceptionHandler {}", message);
         return ErrorCode.BAD_REQUEST.wrapper().msg(message);
     }

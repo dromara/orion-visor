@@ -3,12 +3,12 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
@@ -79,7 +79,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         int effect = systemUserDAO.updateById(updateRecord);
         log.info("SystemUserService-updateSystemUser effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 更新缓存中的花名
-        RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setNickname(request.getNickname());
         }, id);
         return effect;
@@ -92,8 +92,7 @@ public class SystemUserServiceImpl implements SystemUserService {
             throw ErrorCode.UNSUPPOETED.exception();
         }
         // 检查状态
-        UserStatusEnum status = UserStatusEnum.of(request.getStatus());
-        Valid.notNull(status, ErrorMessage.INVALID_PARAM);
+        UserStatusEnum status = Valid.valid(UserStatusEnum::of, request.getStatus());
         if (!status.equals(UserStatusEnum.DISABLED) && !status.equals(UserStatusEnum.ENABLED)) {
             throw ErrorCode.BAD_REQUEST.exception();
         }
@@ -110,7 +109,7 @@ public class SystemUserServiceImpl implements SystemUserService {
             redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         }
         // 更新缓存中的status
-        RedisUtils.processSetJson(UserCacheKeyDefine.USER_INFO, LoginUser.class, s -> {
+        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setStatus(request.getStatus());
         }, id);
         return effect;
@@ -126,9 +125,9 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    public List<SystemUserVO> getSystemUserList(List<Long> idList) {
+    public List<SystemUserVO> getSystemUserList() {
         // 查询
-        List<SystemUserDO> records = systemUserDAO.selectBatchIds(idList);
+        List<SystemUserDO> records = systemUserDAO.selectList(null);
         if (records.isEmpty()) {
             return Lists.empty();
         }
