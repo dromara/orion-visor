@@ -29,4 +29,6 @@ public class Const implements com.orion.lang.constant.Const {
 
     public static final String INTRANET_IP = "内网IP";
 
+    public static final Long ROOT_MENU_ID = 0L;
+
 }

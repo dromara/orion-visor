@@ -27,7 +27,11 @@ public interface ErrorMessage {
 
     String USERNAME_PRESENT = "用户名已存在";
 
-    String ROLE_ABSENT = "角色已存在";
+    String ROLE_ABSENT = "角色不存在";
+
+    String PARENT_MENU_ABSENT = "父菜单不存在";
+
+    String PARENT_MENU_MUST_PARENT = "上级菜单必须为父菜单";
 
     String DATA_ABSENT = "数据不存在";
 

@@ -1,10 +1,9 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateParentRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateStatusRequest;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 
 import java.util.List;
@@ -27,14 +26,6 @@ public interface SystemMenuService {
     Long createSystemMenu(SystemMenuCreateRequest request);
 
     /**
-     * 创建菜单 父菜单
-     *
-     * @param request request
-     * @return id
-     */
-    Long createParentMenu(SystemMenuCreateParentRequest request);
-
-    /**
      * 通过 id 更新菜单
      *
      * @param request request
@@ -51,35 +42,27 @@ public interface SystemMenuService {
     SystemMenuVO getSystemMenu(Long id);
 
     /**
-     * 通过 id 批量查询菜单
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<SystemMenuVO> getSystemMenuList(List<Long> idList);
-
-    /**
-     * 分页查询菜单
+     * 查询菜单
      *
      * @param request request
      * @return rows
      */
-    DataGrid<SystemMenuVO> getSystemMenuPage(SystemMenuQueryRequest request);
+    List<SystemMenuVO> getSystemMenuList(SystemMenuQueryRequest request);
 
     /**
-     * 通过 id 删除菜单
+     * 通过 id 级联更新菜单状态
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer updateSystemMenuStatus(SystemMenuUpdateStatusRequest request);
+
+    /**
+     * 通过 id 级联删除菜单
      *
      * @param id id
      * @return effect
      */
     Integer deleteSystemMenu(Long id);
-
-    /**
-     * 通过 id 批量删除菜单
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer batchDeleteSystemMenu(List<Long> idList);
 
 }

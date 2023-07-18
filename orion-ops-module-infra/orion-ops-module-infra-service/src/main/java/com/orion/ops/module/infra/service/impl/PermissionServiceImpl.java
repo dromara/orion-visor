@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class PermissionServiceImpl implements PermissionService {
 
     /**
-     * 菜单缓存
+     * 角色缓存
      */
     @Getter
     private final Map<String, SystemRoleDO> roleCache = new HashMap<>();

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
 /**
  * 菜单 视图响应对象
@@ -64,16 +64,8 @@ public class SystemMenuVO implements Serializable {
     @Schema(description = "组件地址")
     private String component;
 
-    @Schema(description = "创建时间")
-    private Date createTime;
+    @Schema(description = "子节点")
+    private List<SystemMenuVO> children;
 
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
 
 }

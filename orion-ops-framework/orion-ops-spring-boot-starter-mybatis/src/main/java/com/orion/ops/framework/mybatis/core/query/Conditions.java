@@ -1,6 +1,9 @@
 package com.orion.ops.framework.mybatis.core.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+
+import java.util.Collection;
 
 /**
  * 条件构建类
@@ -32,6 +35,19 @@ public class Conditions {
      */
     public static <T> LambdaQueryWrapper<T> wrapper(Class<T> clazz) {
         return new ValidateLambdaWrapper<>(clazz);
+    }
+
+    /**
+     * id list
+     *
+     * @param idMapping idMapping
+     * @param ids       ids
+     * @param <T>       T
+     * @param <ID>      ID
+     * @return wrapper
+     */
+    public static <T, ID> LambdaQueryWrapper<T> id(SFunction<T, ID> idMapping, Collection<ID> ids) {
+        return new ValidateLambdaWrapper<T>().in(idMapping, ids);
     }
 
 }

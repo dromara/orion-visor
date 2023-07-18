@@ -28,4 +28,16 @@ public enum MenuStatusEnum {
 
     private final Integer status;
 
+    public static MenuStatusEnum of(Integer status) {
+        if (status == null) {
+            return null;
+        }
+        for (MenuStatusEnum value : values()) {
+            if (value.status.equals(status)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
 }

@@ -6,10 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 /**
- * 菜单 查询请求对象
+ * 菜单 更新状态对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -19,16 +19,14 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemMenuQueryRequest", description = "菜单 查询请求对象")
-public class SystemMenuQueryRequest {
+@Schema(name = "SystemMenuUpdateStatusRequest", description = "菜单 更新状态对象")
+public class SystemMenuUpdateStatusRequest {
 
-    @Size(max = 32)
-    @Schema(description = "菜单名称")
-    private String name;
+    @NotNull
+    @Schema(description = "id")
+    private Long id;
 
-    @Schema(description = "菜单类型 1父菜单 2子菜单 3功能")
-    private Integer type;
-
+    @NotNull
     @Schema(description = "菜单状态 0停用 1启用")
     private Integer status;
 

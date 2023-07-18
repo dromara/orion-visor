@@ -17,12 +17,12 @@ public enum MenuTypeEnum {
     /**
      * 父菜单
      */
-    PARENT(1),
+    PARENT_MENU(1),
 
     /**
      * 子菜单
      */
-    ITEM(2),
+    SUB_MENU(2),
 
     /**
      * 功能

@@ -1,10 +1,11 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateStatusRequest;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.service.SystemMenuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,15 +41,22 @@ public class SystemMenuController {
     @PostMapping("/create")
     @Operation(summary = "创建菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:create')")
-    public Long createSystemMenu(@Validated @RequestBody SystemMenuCreateRequest request) {
+    public Long createSystemMenu(@RequestBody SystemMenuCreateRequest request) {
         return systemMenuService.createSystemMenu(request);
     }
 
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:update')")
-    public Integer updateSystemMenu(@Validated @RequestBody SystemMenuUpdateRequest request) {
+    public Integer updateSystemMenu(@RequestBody SystemMenuUpdateRequest request) {
         return systemMenuService.updateSystemMenu(request);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "通过 id 级联更新菜单状态")
+    @PreAuthorize("@ss.hasPermission('infra:system-menu:update')")
+    public Integer updateSystemMenuStatus(@RequestBody SystemMenuUpdateStatusRequest request) {
+        return systemMenuService.updateSystemMenuStatus(request);
     }
 
     @GetMapping("/get")
@@ -59,35 +67,20 @@ public class SystemMenuController {
         return systemMenuService.getSystemMenu(id);
     }
 
-    @GetMapping("/list")
-    @Operation(summary = "通过 id 批量查询菜单")
-    @Parameter(name = "idList", description = "idList", required = true)
+    @IgnoreLog
+    @PostMapping("/list")
+    @Operation(summary = "查询菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:query')")
-    public List<SystemMenuVO> getSystemMenuList(@RequestParam("idList") List<Long> idList) {
-        return systemMenuService.getSystemMenuList(idList);
-    }
-
-    @PostMapping("/query")
-    @Operation(summary = "分页查询菜单")
-    @PreAuthorize("@ss.hasPermission('infra:system-menu:query')")
-    public DataGrid<SystemMenuVO> getSystemMenuPage(@Validated @RequestBody SystemMenuQueryRequest request) {
-        return systemMenuService.getSystemMenuPage(request);
+    public List<SystemMenuVO> getSystemMenuList(@Validated @RequestBody SystemMenuQueryRequest request) {
+        return systemMenuService.getSystemMenuList(request);
     }
 
     @PutMapping("/delete")
-    @Operation(summary = "通过 id 删除菜单")
+    @Operation(summary = "通过 id 级联删除菜单")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-menu:delete')")
     public Integer deleteSystemMenu(@RequestParam("id") Long id) {
         return systemMenuService.deleteSystemMenu(id);
-    }
-
-    @PutMapping("/delete-batch")
-    @Operation(summary = "通过 id 批量删除菜单")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:system-menu:delete')")
-    public Integer batchDeleteSystemMenu(@RequestParam("idList") List<Long> idList) {
-        return systemMenuService.batchDeleteSystemMenu(idList);
     }
 
 }

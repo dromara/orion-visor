@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 菜单 创建请求对象
+ * 菜单 创建功能请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,8 +22,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemMenuCreateRequest", description = "菜单 创建请求对象")
-public class SystemMenuCreateParentRequest implements Serializable {
+@Schema(name = "SystemMenuCreateFunctionRequest", description = "菜单 创建功能请求对象")
+public class SystemMenuCreateValidFunctionRequest implements Serializable {
 
     @NotNull
     @Schema(description = "父id")
@@ -44,39 +44,7 @@ public class SystemMenuCreateParentRequest implements Serializable {
     private Integer type;
 
     @NotNull
-    @Schema(description = "排序")
-    private Integer sort;
-
-    @NotNull
-    @Schema(description = "是否可见 0不可见 1可见")
-    private Integer visible;
-
-    @NotNull
     @Schema(description = "菜单状态 0停用 1启用")
     private Integer status;
-
-    @NotNull
-    @Schema(description = "菜单缓存 0不缓存 1缓存")
-    private Integer cache;
-
-    @Size(max = 64)
-    @NotBlank
-    @Schema(description = "菜单图标")
-    private String icon;
-
-    @Size(max = 128)
-    @NotBlank
-    @Schema(description = "路由地址")
-    private String path;
-
-    @Size(max = 64)
-    @NotBlank
-    @Schema(description = "组件名称")
-    private String componentName;
-
-    @Size(max = 128)
-    @NotBlank
-    @Schema(description = "组件地址")
-    private String component;
 
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 public interface PermissionService {
 
     /**
-     * 获取 菜单缓存
+     * 获取 角色缓存
      *
      * @return cache
      */
