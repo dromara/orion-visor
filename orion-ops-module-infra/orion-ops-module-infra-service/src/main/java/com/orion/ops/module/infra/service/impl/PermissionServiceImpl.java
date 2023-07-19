@@ -1,7 +1,9 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemMenuConvert;
+import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemMenuDAO;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemRoleMenuDAO;
@@ -10,9 +12,13 @@ import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
+import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
+import com.orion.ops.module.infra.entity.vo.UserBaseInfoVO;
+import com.orion.ops.module.infra.entity.vo.UserPermissionVO;
 import com.orion.ops.module.infra.enums.MenuStatusEnum;
 import com.orion.ops.module.infra.enums.RoleStatusEnum;
 import com.orion.ops.module.infra.service.PermissionService;
+import com.orion.ops.module.infra.service.SystemMenuService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,23 +40,12 @@ import java.util.stream.Collectors;
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
-    /**
-     * 角色缓存
-     */
     @Getter
     private final Map<String, SystemRoleDO> roleCache = new HashMap<>();
 
-    /**
-     * 菜单缓存 以作角色权限直接引用
-     *
-     * @see #roleMenuCache
-     */
     @Getter
     private final List<SystemMenuCacheDTO> menuCache = new ArrayList<>();
 
-    /**
-     * 角色菜单关联
-     */
     @Getter
     private final Map<String, List<SystemMenuCacheDTO>> roleMenuCache = new HashMap<>();
 
@@ -62,6 +57,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Resource
     private SystemRoleMenuDAO systemRoleMenuDAO;
+
+    @Resource
+    private SystemMenuService systemMenuService;
 
     @PostConstruct
     @Override
@@ -105,37 +103,29 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public boolean rolesHasRole(List<String> roles, String role) {
-        // 检查是否为超级管理员
-        for (String r : roles) {
-            // 是否为超级管理员
-            if (RoleDefine.isAdmin(r) && this.checkRoleEnabled(r)) {
-                return true;
-            }
-        }
-        // 检查是否包含
-        if (!roles.contains(role)) {
+    public boolean hasRole(String role) {
+        // 获取用户角色
+        List<String> roles = this.getUserEnabledRoles();
+        if (roles.isEmpty()) {
             return false;
         }
-        // 检查是否启用
-        return this.checkRoleEnabled(role);
+        // 检查是否为超级管理员或包含此角色
+        return RoleDefine.containsAdmin(roles) || roles.contains(role);
     }
 
     @Override
-    public boolean rolesHasPermission(List<String> roles, String permission) {
+    public boolean hasPermission(String permission) {
+        // 获取用户角色
+        List<String> roles = this.getUserEnabledRoles();
+        if (roles.isEmpty()) {
+            return false;
+        }
         // 检查是否为超级管理员
-        for (String r : roles) {
-            // 是否为超级管理员
-            if (RoleDefine.isAdmin(r) && this.checkRoleEnabled(r)) {
-                return true;
-            }
+        if (RoleDefine.containsAdmin(roles)) {
+            return true;
         }
         // 检查普通角色是否有此权限
         for (String role : roles) {
-            // 角色是否启用
-            if (!this.checkRoleEnabled(role)) {
-                continue;
-            }
             // 获取角色权限列表
             List<SystemMenuCacheDTO> menus = roleMenuCache.get(role);
             if (Lists.isEmpty(menus)) {
@@ -151,6 +141,71 @@ public class PermissionServiceImpl implements PermissionService {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<SystemMenuVO> getUserMenuList() {
+        // 获取用户角色
+        List<String> roles = this.getUserEnabledRoles();
+        if (roles.isEmpty()) {
+            return Lists.empty();
+        }
+        // 查询角色菜单
+        List<SystemMenuVO> menus = roles.stream()
+                .map(roleMenuCache::get)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .distinct()
+                .map(SystemMenuConvert.MAPPER::to)
+                .collect(Collectors.toList());
+        // 构建菜单树
+        return systemMenuService.buildSystemMenuTree(menus);
+    }
+
+    @Override
+    public UserPermissionVO getUserPermission() {
+        // 获取用户信息
+        UserBaseInfoVO user = SystemUserConvert.MAPPER.toBaseInfo(SecurityUtils.getLoginUser());
+        // 获取用户角色
+        List<String> roles = this.getUserEnabledRoles();
+        // 获取用户权限
+        List<String> permissions;
+        if (roles.isEmpty()) {
+            permissions = Lists.empty();
+        } else {
+            permissions = roles.stream()
+                    .map(roleMenuCache::get)
+                    .filter(Objects::nonNull)
+                    .flatMap(Collection::stream)
+                    .map(SystemMenuCacheDTO::getPermission)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+        // 组装数据
+        UserPermissionVO vo = new UserPermissionVO().builder()
+                .user(user)
+                .roles(roles)
+                .permissions(permissions)
+                .build();
+        return vo;
+    }
+
+    /**
+     * 获取用户启用的角色
+     *
+     * @return roles
+     */
+    private List<String> getUserEnabledRoles() {
+        // 获取当前用户角色
+        List<String> roles = SecurityUtils.getLoginUser().getRoles();
+        if (Lists.isEmpty(roles)) {
+            return Lists.empty();
+        }
+        // 过滤未启用的角色
+        return roles.stream()
+                .filter(this::checkRoleEnabled)
+                .collect(Collectors.toList());
     }
 
     /**

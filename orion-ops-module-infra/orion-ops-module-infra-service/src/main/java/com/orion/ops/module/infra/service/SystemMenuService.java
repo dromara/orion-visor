@@ -50,6 +50,14 @@ public interface SystemMenuService {
     List<SystemMenuVO> getSystemMenuList(SystemMenuQueryRequest request);
 
     /**
+     * 构建菜单树
+     *
+     * @param menus menus
+     * @return tree
+     */
+    List<SystemMenuVO> buildSystemMenuTree(List<SystemMenuVO> menus);
+
+    /**
      * 通过 id 级联更新菜单状态
      *
      * @param request request

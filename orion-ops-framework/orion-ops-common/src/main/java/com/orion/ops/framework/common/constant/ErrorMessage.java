@@ -29,9 +29,9 @@ public interface ErrorMessage {
 
     String ROLE_ABSENT = "角色不存在";
 
-    String PARENT_MENU_ABSENT = "父菜单不存在";
+    String INVALID_PARENT_MENU = "所选父菜单不合法";
 
-    String PARENT_MENU_MUST_PARENT = "上级菜单必须为父菜单";
+    String PARENT_MENU_ABSENT = "父菜单不存在";
 
     String DATA_ABSENT = "数据不存在";
 

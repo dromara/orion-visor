@@ -1,5 +1,15 @@
-### 初始化缓存
+### 初始化角色权限缓存
 GET {{baseUrl}}/infra/permission/init-cache
+Authorization: {{token}}
+
+
+### 获取用户菜单
+GET {{baseUrl}}/infra/permission/menu
+Authorization: {{token}}
+
+
+### 获取用户权限
+GET {{baseUrl}}/infra/permission/permission
 Authorization: {{token}}
 
 

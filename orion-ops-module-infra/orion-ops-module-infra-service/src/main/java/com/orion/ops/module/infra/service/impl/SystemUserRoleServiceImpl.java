@@ -53,7 +53,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         Integer effect = systemUserRoleDAO.deleteByUserId(userId);
         // 更新缓存中的角色
         RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
-            s.setRoles(null);
+            s.setRoles(Lists.empty());
         }, userId);
         return effect;
     }

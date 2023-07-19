@@ -21,11 +21,9 @@ public interface SystemMenuConvert {
 
     SystemMenuConvert MAPPER = Mappers.getMapper(SystemMenuConvert.class);
 
-    SystemMenuCreateValidMenuRequest toMenuValidate(SystemMenuCreateRequest request);
+    SystemMenuValidMenuRequest toMenuValidate(SystemMenuDO domain);
 
-    SystemMenuCreateValidFunctionRequest toFunctionValidate(SystemMenuCreateRequest request);
-
-    SystemMenuCreateRequest toCreateValidate(SystemMenuUpdateRequest request);
+    SystemMenuValidFunctionRequest toFunctionValidate(SystemMenuDO domain);
 
     SystemMenuDO to(SystemMenuCreateRequest request);
 

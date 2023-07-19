@@ -4,7 +4,6 @@ import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.security.core.service.SecurityFrameworkService;
-import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
@@ -14,11 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 /**
- * 安全包配置
+ * 安全包 实现类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -35,26 +32,14 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
 
     @Override
     public boolean hasPermission(String permission) {
-        List<String> roles = Optional.ofNullable(SecurityUtils.getLoginUser())
-                .map(LoginUser::getRoles)
-                .orElse(null);
-        if (roles == null) {
-            return false;
-        }
         // 检查是否有权限
-        return permissionService.rolesHasPermission(roles, permission);
+        return permissionService.hasPermission(permission);
     }
 
     @Override
     public boolean hasRole(String role) {
-        List<String> roles = Optional.ofNullable(SecurityUtils.getLoginUser())
-                .map(LoginUser::getRoles)
-                .orElse(null);
-        if (roles == null) {
-            return false;
-        }
         // 检查是否有角色
-        return permissionService.rolesHasRole(roles, role);
+        return permissionService.hasRole(role);
     }
 
     @Override

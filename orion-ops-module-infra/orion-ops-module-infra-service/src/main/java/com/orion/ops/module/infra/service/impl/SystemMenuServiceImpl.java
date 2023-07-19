@@ -25,9 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,10 +48,15 @@ public class SystemMenuServiceImpl implements SystemMenuService {
 
     @Override
     public Long createSystemMenu(SystemMenuCreateRequest request) {
-        // 验证参数
-        this.validateCreateRequest(request);
         // 转换
         SystemMenuDO record = SystemMenuConvert.MAPPER.to(request);
+        record.setStatus(MenuStatusEnum.ENABLED.getStatus());
+        // 验证参数
+        this.validateRequest(record, request.getType());
+        // 方法
+        if (record.getSort() == null) {
+            record.setSort(Const.DEFAULT_SORT);
+        }
         // 保存数据
         int effect = systemMenuDAO.insert(record);
         log.info("SystemMenuService-createSystemMenu effect: {}, record: {}", effect, JSON.toJSONString(record));
@@ -69,10 +72,10 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemMenuDO record = systemMenuDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 验证参数
-        this.validateCreateRequest(SystemMenuConvert.MAPPER.toCreateValidate(request));
         // 转换
         SystemMenuDO updateRecord = SystemMenuConvert.MAPPER.to(request);
+        // 验证参数
+        this.validateRequest(updateRecord, record.getType());
         // 更新
         int effect = systemMenuDAO.updateById(updateRecord);
         log.info("SystemMenuService-updateSystemMenu effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
@@ -115,38 +118,54 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         if (menus.isEmpty()) {
             return Lists.empty();
         }
+        // 构建菜单树
+        return this.buildSystemMenuTree(menus);
+    }
+
+    @Override
+    public List<SystemMenuVO> buildSystemMenuTree(List<SystemMenuVO> menus) {
         // id 映射数据
         Map<Long, SystemMenuVO> idMapping = menus.stream()
                 .collect(Collectors.toMap(SystemMenuVO::getId, Function.identity()));
+
+        // 子级节点数据
+        Map<Long, List<SystemMenuVO>> childrenNodesGroup = menus.stream()
+                .collect(Collectors.groupingBy(SystemMenuVO::getParentId));
 
         // 寻找根节点
         List<SystemMenuVO> rootNodes = menus.stream()
                 .filter(s -> idMapping.get(s.getParentId()) == null)
                 .collect(Collectors.toList());
 
-        // 子级节点数据
-        Map<Long, List<SystemMenuVO>> childrenNodesGroup = menus.stream()
-                .collect(Collectors.groupingBy(SystemMenuVO::getParentId));
-
         // 设置子节点
         this.setChildrenNodes(rootNodes, childrenNodesGroup);
         return rootNodes;
     }
 
+    /**
+     * 设置子节点
+     *
+     * @param parentNodes        父节点
+     * @param childrenNodesGroup 子节点组
+     */
     private void setChildrenNodes(List<SystemMenuVO> parentNodes, Map<Long, List<SystemMenuVO>> childrenNodesGroup) {
         // 为空则跳出
         if (Lists.isEmpty(parentNodes)) {
             return;
         }
+        // 排序
+        parentNodes.sort(Comparator.comparing(SystemMenuVO::getType)
+                .thenComparing(SystemMenuVO::getSort)
+                .thenComparing(SystemMenuVO::getId));
         // 设置子节点
         for (SystemMenuVO parentNode : parentNodes) {
             List<SystemMenuVO> childrenNodes = childrenNodesGroup.get(parentNode.getId());
             parentNode.setChildren(childrenNodes);
-            if (Lists.isEmpty(childrenNodes)) {
-                continue;
+            // 非叶子节点继续设置
+            if (Lists.isNotEmpty(childrenNodes)) {
+                // 级联设置
+                this.setChildrenNodes(childrenNodes, childrenNodesGroup);
             }
-            // 级联设置
-            this.setChildrenNodes(childrenNodes, childrenNodesGroup);
         }
     }
 
@@ -232,28 +251,35 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     /**
      * 验证创建菜单参数 不进行重复性校验
      *
-     * @param request request
+     * @param domain domain
+     * @param record record
      */
-    private void validateCreateRequest(SystemMenuCreateRequest request) {
-        Long parentId = request.getParentId();
-        MenuTypeEnum type = Valid.valid(MenuTypeEnum::of, request.getType());
-        // 检查必填参数
+    private void validateRequest(SystemMenuDO domain, Integer menuType) {
+        // 父id不能为当前id
+        Valid.isFalse(Objects.equals(domain.getParentId(), domain.getId()), ErrorMessage.INVALID_PARENT_MENU);
+        // 检查菜单类型
+        MenuTypeEnum type = Valid.valid(MenuTypeEnum::of, menuType);
+        // 验证父菜单参数
         if (MenuTypeEnum.PARENT_MENU.equals(type)) {
             // 父菜单创建的 parentId 为 0
-            request.setParentId(Const.ROOT_MENU_ID);
+            domain.setParentId(Const.ROOT_MENU_ID);
             // 验证必填参数
-            Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(request));
-        } else if (MenuTypeEnum.SUB_MENU.equals(type)) {
+            Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
+            return;
+        }
+        // 验证 parentId 是否存在
+        SystemMenuDO parent = Valid.notNull(systemMenuDAO.selectById(domain.getParentId()), ErrorMessage.PARENT_MENU_ABSENT);
+        // 验证子菜单/功能参数
+        if (MenuTypeEnum.SUB_MENU.equals(type)) {
             // 验证必填参数
-            Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(request));
-            // 检查 parentId 是否为为父菜单
-            SystemMenuDO parent = Valid.notNull(systemMenuDAO.selectById(parentId), ErrorMessage.PARENT_MENU_ABSENT);
-            Valid.eq(parent.getType(), MenuTypeEnum.PARENT_MENU.getType());
+            Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
+            // 父级必须为父菜单
+            Valid.eq(parent.getType(), MenuTypeEnum.PARENT_MENU.getType(), ErrorMessage.INVALID_PARENT_MENU);
         } else if (MenuTypeEnum.FUNCTION.equals(type)) {
             // 验证必填参数
-            Valid.valid(SystemMenuConvert.MAPPER.toFunctionValidate(request));
-            // 检查 parentId 是否存在
-            Valid.notNull(systemMenuDAO.selectById(parentId), ErrorMessage.PARENT_MENU_ABSENT);
+            Valid.valid(SystemMenuConvert.MAPPER.toFunctionValidate(domain));
+            // 父级必须不能为自己
+            Valid.neq(parent.getType(), MenuTypeEnum.FUNCTION.getType(), ErrorMessage.INVALID_PARENT_MENU);
         }
     }
 

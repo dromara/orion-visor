@@ -2,6 +2,8 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
+import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
+import com.orion.ops.module.infra.entity.vo.UserPermissionVO;
 
 import java.util.List;
 import java.util.Map;
@@ -42,21 +44,33 @@ public interface PermissionService {
     void initPermissionCache();
 
     /**
-     * 检查角色是否含有此角色 (有效性判断)
+     * 检查当前用户是否含有此角色 (有效性判断)
      *
-     * @param roles roles
-     * @param role  role
+     * @param role role
      * @return 是否包含
      */
-    boolean rolesHasRole(List<String> roles, String role);
+    boolean hasRole(String role);
 
     /**
-     * 检查角色是否含有此权限 (有效性判断)
+     * 检查当前用户是否含有此权限 (有效性判断)
      *
-     * @param roles      roles
      * @param permission permission
      * @return 是否包含
      */
-    boolean rolesHasPermission(List<String> roles, String permission);
+    boolean hasPermission(String permission);
+
+    /**
+     * 获取用户菜单
+     *
+     * @return 菜单
+     */
+    List<SystemMenuVO> getUserMenuList();
+
+    /**
+     * 获取用户权限
+     *
+     * @return 权限信息
+     */
+    UserPermissionVO getUserPermission();
 
 }
