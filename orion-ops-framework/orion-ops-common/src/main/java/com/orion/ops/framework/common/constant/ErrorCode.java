@@ -47,6 +47,8 @@ public enum ErrorCode implements CodeInfo {
 
     ROLE_PRESENT(703, "角色 [{}] 不存在"),
 
+    DATA_ALTER(704, "数据发生改变, 请刷新后重试"),
+
     // -------------------- 自定义 - 通用 --------------------
 
     NETWORK_FLUCTUATION(900, "当前环境网路波动"),

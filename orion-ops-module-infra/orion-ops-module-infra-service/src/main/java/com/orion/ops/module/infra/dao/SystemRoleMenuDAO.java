@@ -5,6 +5,8 @@ import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 角色菜单关联 Mapper 接口
  *
@@ -34,9 +36,21 @@ public interface SystemRoleMenuDAO extends IMapper<SystemRoleMenuDO> {
      * @param roleId roleId
      * @return effect
      */
-    default Integer deleteByRoleId(Long roleId) {
+    default int deleteByRoleId(Long roleId) {
         LambdaQueryWrapper<SystemRoleMenuDO> wrapper = this.wrapper()
                 .eq(SystemRoleMenuDO::getRoleId, roleId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 menuId 删除
+     *
+     * @param menuIdList menuIdList
+     * @return effect
+     */
+    default int deleteByMenuId(List<Long> menuIdList) {
+        LambdaQueryWrapper<SystemRoleMenuDO> wrapper = this.wrapper()
+                .in(SystemRoleMenuDO::getMenuId, menuIdList);
         return this.delete(wrapper);
     }
 

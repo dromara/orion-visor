@@ -2,6 +2,8 @@ package com.orion.ops.framework.mybatis.core.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.utils.Valid;
 
 import java.util.Collection;
 
@@ -38,16 +40,31 @@ public class Conditions {
     }
 
     /**
-     * id list
+     * eq
      *
-     * @param idMapping idMapping
-     * @param ids       ids
-     * @param <T>       T
-     * @param <ID>      ID
+     * @param mapping mapping
+     * @param e       e
+     * @param <T>     T
+     * @param <E>     E
      * @return wrapper
      */
-    public static <T, ID> LambdaQueryWrapper<T> id(SFunction<T, ID> idMapping, Collection<ID> ids) {
-        return new ValidateLambdaWrapper<T>().in(idMapping, ids);
+    public static <T, E> LambdaQueryWrapper<T> eq(SFunction<T, E> mapping, E e) {
+        Valid.notNull(e, ErrorMessage.INVALID_PARAM);
+        return new LambdaQueryWrapper<T>().eq(mapping, e);
+    }
+
+    /**
+     * in
+     *
+     * @param mapping mapping
+     * @param es      es
+     * @param <T>     T
+     * @param <E>     E
+     * @return wrapper
+     */
+    public static <T, E> LambdaQueryWrapper<T> in(SFunction<T, E> mapping, Collection<E> es) {
+        Valid.notEmpty(es, ErrorMessage.INVALID_PARAM);
+        return new LambdaQueryWrapper<T>().in(mapping, es);
     }
 
 }

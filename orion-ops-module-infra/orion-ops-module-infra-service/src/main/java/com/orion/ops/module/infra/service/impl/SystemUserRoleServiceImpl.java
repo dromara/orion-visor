@@ -50,7 +50,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     public Integer deleteUserRoles(SystemUserUpdateRoleRequest request) {
         Long userId = request.getId();
         // 删除用户关联
-        Integer effect = systemUserRoleDAO.deleteByUserId(userId);
+        int effect = systemUserRoleDAO.deleteByUserId(userId);
         // 更新缓存中的角色
         RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setRoles(Lists.empty());
@@ -82,7 +82,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
             }
         }
         // 删除用户角色关联
-        Integer effect = systemUserRoleDAO.deleteByUserId(userId);
+        int effect = systemUserRoleDAO.deleteByUserId(userId);
         // 重新添加用户角色关联
         List<SystemUserRoleDO> addUserRoles = userRoles.stream().map(s -> {
             SystemUserRoleDO ur = new SystemUserRoleDO();
@@ -91,6 +91,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
             return ur;
         }).collect(Collectors.toList());
         systemUserRoleDAO.insertBatch(addUserRoles);
+        effect += addUserRoles.size();
         // 更新缓存中的角色
         RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setRoles(new ArrayList<>(roleCodeList));

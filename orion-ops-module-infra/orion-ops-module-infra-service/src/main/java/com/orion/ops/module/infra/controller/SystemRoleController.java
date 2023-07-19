@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
@@ -59,6 +60,7 @@ public class SystemRoleController {
         return systemRoleService.updateRoleStatus(request);
     }
 
+    @IgnoreLog
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询角色")
     @Parameter(name = "id", description = "id", required = true)
@@ -67,6 +69,7 @@ public class SystemRoleController {
         return systemRoleService.getSystemRole(id);
     }
 
+    @IgnoreLog
     @GetMapping("/list")
     @Operation(summary = "查询所有角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
@@ -74,6 +77,7 @@ public class SystemRoleController {
         return systemRoleService.getSystemRoleList();
     }
 
+    @IgnoreLog
     @PostMapping("/query")
     @Operation(summary = "分页查询角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
@@ -81,7 +85,7 @@ public class SystemRoleController {
         return systemRoleService.getSystemRolePage(request);
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除角色")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-role:delete')")

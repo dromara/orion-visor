@@ -2,12 +2,10 @@ package com.orion.ops.module.infra.controller;
 
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
-import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
-import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
-import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateStatusRequest;
+import com.orion.ops.module.infra.entity.request.menu.*;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.service.SystemMenuService;
+import com.orion.ops.module.infra.service.SystemRoleMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +36,9 @@ public class SystemMenuController {
     @Resource
     private SystemMenuService systemMenuService;
 
+    @Resource
+    private SystemRoleMenuService systemRoleMenuService;
+
     @PostMapping("/create")
     @Operation(summary = "创建菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:create')")
@@ -59,6 +60,14 @@ public class SystemMenuController {
         return systemMenuService.updateSystemMenuStatus(request);
     }
 
+    @PostMapping("/bind")
+    @Operation(summary = "绑定角色菜单")
+    @PreAuthorize("@ss.hasPermission('infra:system-menu:bind')")
+    public Integer bindRoleMenu(@RequestBody SystemMenuBindRequest request) {
+        return systemRoleMenuService.bindRoleMenu(request);
+    }
+
+    @IgnoreLog
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询菜单")
     @Parameter(name = "id", description = "id", required = true)
@@ -75,7 +84,7 @@ public class SystemMenuController {
         return systemMenuService.getSystemMenuList(request);
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "通过 id 级联删除菜单")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-menu:delete')")

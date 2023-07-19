@@ -122,7 +122,7 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class
     })
     public HttpWrapper<?> invalidArgumentExceptionHandler(Exception ex) {
-        log.error("invalidArgumentExceptionHandler {}", ex.getMessage());
+        log.error("invalidArgumentExceptionHandler {}", ex.getMessage(), ex);
         return ErrorCode.BAD_REQUEST.wrapper().msg(ex.getMessage());
     }
 

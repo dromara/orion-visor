@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemMenuConvert;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
@@ -16,6 +17,7 @@ import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.entity.vo.UserBaseInfoVO;
 import com.orion.ops.module.infra.entity.vo.UserPermissionVO;
 import com.orion.ops.module.infra.enums.MenuStatusEnum;
+import com.orion.ops.module.infra.enums.MenuTypeEnum;
 import com.orion.ops.module.infra.enums.RoleStatusEnum;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.SystemMenuService;
@@ -156,6 +158,8 @@ public class PermissionServiceImpl implements PermissionService {
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
                 .distinct()
+                .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
+                .filter(s -> !MenuTypeEnum.FUNCTION.getType().equals(s.getType()))
                 .map(SystemMenuConvert.MAPPER::to)
                 .collect(Collectors.toList());
         // 构建菜单树
@@ -177,18 +181,18 @@ public class PermissionServiceImpl implements PermissionService {
                     .map(roleMenuCache::get)
                     .filter(Objects::nonNull)
                     .flatMap(Collection::stream)
+                    .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
                     .map(SystemMenuCacheDTO::getPermission)
                     .filter(Objects::nonNull)
                     .distinct()
                     .collect(Collectors.toList());
         }
         // 组装数据
-        UserPermissionVO vo = new UserPermissionVO().builder()
+        return UserPermissionVO.builder()
                 .user(user)
                 .roles(roles)
                 .permissions(permissions)
                 .build();
-        return vo;
     }
 
     /**
@@ -198,7 +202,9 @@ public class PermissionServiceImpl implements PermissionService {
      */
     private List<String> getUserEnabledRoles() {
         // 获取当前用户角色
-        List<String> roles = SecurityUtils.getLoginUser().getRoles();
+        List<String> roles = Optional.ofNullable(SecurityUtils.getLoginUser())
+                .map(LoginUser::getRoles)
+                .orElse(Lists.empty());
         if (Lists.isEmpty(roles)) {
             return Lists.empty();
         }

@@ -67,7 +67,7 @@ public interface SystemUserRoleDAO extends IMapper<SystemUserRoleDO> {
      * @param userId userId
      * @return effect
      */
-    default Integer deleteByUserId(Long userId) {
+    default int deleteByUserId(Long userId) {
         LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
                 .eq(SystemUserRoleDO::getUserId, userId);
         return this.delete(wrapper);
@@ -79,7 +79,7 @@ public interface SystemUserRoleDAO extends IMapper<SystemUserRoleDO> {
      * @param roleId roleId
      * @return effect
      */
-    default Integer deleteByRoleId(Long roleId) {
+    default int deleteByRoleId(Long roleId) {
         LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
                 .eq(SystemUserRoleDO::getRoleId, roleId);
         return this.delete(wrapper);

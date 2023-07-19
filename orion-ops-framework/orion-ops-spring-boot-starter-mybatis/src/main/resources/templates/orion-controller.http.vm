@@ -56,4 +56,6 @@ DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/delete-batch?idList=1,2,3
 Authorization: {{token}}
 
 
+${httpComment}
+
 

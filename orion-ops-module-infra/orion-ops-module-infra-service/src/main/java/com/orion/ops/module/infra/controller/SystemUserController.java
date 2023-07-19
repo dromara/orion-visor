@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
@@ -85,6 +86,7 @@ public class SystemUserController {
         return HttpWrapper.ok();
     }
 
+    @IgnoreLog
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询用户")
     @Parameter(name = "id", description = "id", required = true)
@@ -93,6 +95,7 @@ public class SystemUserController {
         return systemUserService.getSystemUser(id);
     }
 
+    @IgnoreLog
     @GetMapping("/list")
     @Operation(summary = "查询所有用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
@@ -100,6 +103,7 @@ public class SystemUserController {
         return systemUserService.getSystemUserList();
     }
 
+    @IgnoreLog
     @PostMapping("/query")
     @Operation(summary = "分页查询用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
@@ -107,7 +111,7 @@ public class SystemUserController {
         return systemUserService.getSystemUserPage(request);
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除用户")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-user:delete')")

@@ -9,6 +9,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.module.infra.convert.SystemMenuConvert;
 import com.orion.ops.module.infra.dao.SystemMenuDAO;
+import com.orion.ops.module.infra.dao.SystemRoleMenuDAO;
 import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
 import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
@@ -23,6 +24,7 @@ import com.orion.ops.module.infra.service.SystemMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -42,6 +44,9 @@ public class SystemMenuServiceImpl implements SystemMenuService {
 
     @Resource
     private SystemMenuDAO systemMenuDAO;
+
+    @Resource
+    private SystemRoleMenuDAO systemRoleMenuDAO;
 
     @Resource
     private PermissionService permissionService;
@@ -180,19 +185,20 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
         // 获取要删除的id
         List<Long> updateIdList = this.getChildrenIdList(id, cache, record.getType());
+        // 修改状态
+        SystemMenuDO update = new SystemMenuDO();
+        update.setStatus(status);
+        int effect = systemMenuDAO.update(update, Conditions.in(SystemMenuDO::getId, updateIdList));
         // 修改引用缓存状态
         cache.stream()
                 .filter(s -> updateIdList.contains(s.getId()))
                 .forEach(s -> s.setStatus(status));
-        // 修改状态
-        SystemMenuDO update = new SystemMenuDO();
-        update.setStatus(status);
-        int effect = systemMenuDAO.update(update, Conditions.id(SystemMenuDO::getId, updateIdList));
         log.info("SystemMenuService-updateSystemMenuStatus updateIdList: {}, effect: {}", JSON.toJSONString(updateIdList), effect);
         return effect;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSystemMenu(Long id) {
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
@@ -201,14 +207,16 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
         // 获取要删除的id
         List<Long> deletedIdList = this.getChildrenIdList(id, cache, record.getType());
+        // 删除菜单
+        int effect = systemMenuDAO.deleteBatchIds(deletedIdList);
+        // 删除角色菜单关联
+        effect += systemRoleMenuDAO.deleteByMenuId(deletedIdList);
         // 删除菜单缓存
         cache.removeIf(s -> deletedIdList.contains(s.getId()));
         // 删除引用缓存
         permissionService.getRoleMenuCache()
                 .values()
                 .forEach(roleMenus -> roleMenus.removeIf(s -> deletedIdList.contains(s.getId())));
-        // 删除
-        int effect = systemMenuDAO.deleteBatchIds(deletedIdList);
         log.info("SystemMenuService-deleteSystemMenu deletedIdList: {}, effect: {}", JSON.toJSONString(deletedIdList), effect);
         return effect;
     }
@@ -222,7 +230,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
      * @return childrenId
      */
     private List<Long> getChildrenIdList(Long id, List<SystemMenuCacheDTO> cache, Integer type) {
-        // 需要移除的菜单id
+        // 需要更新的菜单id
         List<Long> idList = new ArrayList<>();
         idList.add(id);
         // 级联查询
@@ -251,8 +259,8 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     /**
      * 验证创建菜单参数 不进行重复性校验
      *
-     * @param domain domain
-     * @param record record
+     * @param domain   domain
+     * @param menuType menuType
      */
     private void validateRequest(SystemMenuDO domain, Integer menuType) {
         // 父id不能为当前id

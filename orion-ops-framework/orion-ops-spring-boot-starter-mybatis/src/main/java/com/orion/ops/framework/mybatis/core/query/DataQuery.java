@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.lang.define.wrapper.Pager;
+import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
@@ -60,7 +61,7 @@ public class DataQuery<T> {
     }
 
     public DataQuery<T> only() {
-        this.wrapper.last(Const.LIMIT_1);
+        wrapper.last(Const.LIMIT_1);
         return this;
     }
 
@@ -68,27 +69,26 @@ public class DataQuery<T> {
         return dao.selectOne(wrapper);
     }
 
-    public Optional<T> optional() {
-        return Optional.ofNullable(dao.selectOne(wrapper));
+    public <R> R get(Function<T, R> mapper) {
+        Valid.notNull(mapper, "convert function is null");
+        return Objects1.map(dao.selectOne(wrapper), mapper);
     }
 
-    public <R> Optional<R> optional(Function<T, R> mapper) {
-        Valid.notNull(mapper, "convert function is null");
-        return Optional.ofNullable(dao.selectOne(wrapper))
-                .map(mapper);
+    public Optional<T> optional() {
+        return Optional.ofNullable(dao.selectOne(wrapper));
     }
 
     public List<T> list() {
         return dao.selectList(wrapper);
     }
 
-    public Stream<T> stream() {
-        return dao.selectList(wrapper).stream();
-    }
-
-    public <R> List<R> stream(Function<T, R> mapper) {
+    public <R> List<R> list(Function<T, R> mapper) {
         Valid.notNull(mapper, "convert function is null");
         return Lists.map(dao.selectList(wrapper), mapper);
+    }
+
+    public Stream<T> stream() {
+        return dao.selectList(wrapper).stream();
     }
 
     public Long count() {

@@ -17,6 +17,8 @@ public interface ErrorMessage {
 
     String INVALID_PARAM = "参数验证失败";
 
+    String DATA_ABSENT = "数据不存在";
+
     String DATA_PRESENT = "数据已存在";
 
     String NAME_PRESENT = "名称已存在";
@@ -33,16 +35,10 @@ public interface ErrorMessage {
 
     String PARENT_MENU_ABSENT = "父菜单不存在";
 
-    String DATA_ABSENT = "数据不存在";
-
     String USERNAME_PASSWORD_ERROR = "用户名或密码错误";
 
     String MAX_LOGIN_FAILED = "登陆失败次数已上限";
 
     String USER_ABSENT = "用户不存在";
-
-    String USER_DISABLED = "用户已被禁用";
-
-    String USER_LOCKED = "用户已被锁定";
 
 }

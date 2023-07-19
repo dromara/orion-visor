@@ -8,8 +8,8 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.framework.common.crypto.ValueCrypto;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.IpUtils;
@@ -50,9 +50,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-
-    @Resource
-    private ValueCrypto valueCrypto;
 
     @Resource
     private SystemUserDAO systemUserDAO;
@@ -250,10 +247,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void checkUserStatus(Integer status) {
         if (UserStatusEnum.DISABLED.getStatus().equals(status)) {
             // 禁用状态
-            throw Exceptions.argument(ErrorMessage.USER_DISABLED);
+            throw ErrorCode.USER_DISABLED.exception();
         } else if (UserStatusEnum.LOCKED.getStatus().equals(status)) {
             // 锁定状态
-            throw Exceptions.argument(ErrorMessage.USER_LOCKED);
+            throw ErrorCode.USER_LOCKED.exception();
         }
     }
 
