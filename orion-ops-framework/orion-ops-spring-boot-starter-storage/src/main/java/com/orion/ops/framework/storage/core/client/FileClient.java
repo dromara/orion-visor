@@ -65,6 +65,8 @@ public interface FileClient {
      */
     String upload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) throws Exception;
 
+    // TODO getOutputStream
+
     /**
      * 检测文件是否存在
      *

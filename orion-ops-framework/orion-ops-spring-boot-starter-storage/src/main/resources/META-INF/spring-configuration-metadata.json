@@ -25,22 +25,32 @@
       "defaultValue": false
     },
     {
-      "name": "orion.storage.local.name-append-trace-id",
+      "name": "orion.storage.local.timestamp-prefix",
       "type": "java.lang.Boolean",
-      "description": "是否自动拼接 traceId 前缀. 没有则使用 UUID.",
+      "description": "是否使用时间戳作为文件名称前缀.",
       "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.date-directory",
+      "type": "java.lang.Boolean",
+      "description": "是否拼接时间作为文件夹.",
+      "defaultValue": true
+    },
+    {
+      "name": "orion.storage.local.date-pattern",
+      "type": "java.lang.Boolean",
+      "description": "时间文件夹格式.",
+      "defaultValue": "yyyy-MM-dd"
     },
     {
       "name": "orion.storage.local.storage-path",
       "type": "java.lang.String",
-      "description": "存储路径.",
-      "defaultValue": ""
+      "description": "存储路径."
     },
     {
       "name": "orion.storage.local.base-path",
       "type": "java.lang.String",
-      "description": "基础路径.",
-      "defaultValue": ""
+      "description": "基础路径."
     }
   ]
 }

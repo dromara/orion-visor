@@ -29,7 +29,7 @@
       "description": "匿名接口."
     },
     {
-      "name": "orion.crypto.primary.enabled",
+      "name": "orion.crypto.aes.primary",
       "type": "java.lang.Boolean",
       "description": "是否为默认加密器.",
       "defaultValue": "false"

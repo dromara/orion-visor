@@ -1,11 +1,12 @@
 package com.orion.ops.framework.storage.core.client;
 
-import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
-import com.orion.ops.framework.common.meta.TraceIdHolder;
+import com.orion.lang.utils.time.Dates;
+import com.orion.ops.framework.common.constant.Const;
 
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * 文件客户端 基类
@@ -107,24 +108,27 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
      * @return 文件名称
      */
     protected String getFilePath(String path) {
-        // 无需拼接
-        if (!config.isNameAppendTraceId()) {
-            return path;
-        }
-        // 名称前缀
-        String traceId = TraceIdHolder.get();
-        if (traceId == null) {
-            traceId = UUIds.random32();
-        }
-        String prefix = traceId + "_";
+        // 文件名称
         String name = Files1.getFileName(path);
-        // 只是文件名
-        if (name.equals(path)) {
-            return prefix + name;
+        // 名称前缀
+        String prefix = Const.EMPTY;
+        long current = System.currentTimeMillis();
+        if (config.isTimestampPrefix()) {
+            prefix = current + "_";
         }
-        // 包含路径
-        String parentPath = Files1.getParentPath(path);
-        return parentPath + prefix + name;
+        // 时间文件夹
+        String dateDir = Const.EMPTY;
+        if (config.isDateDirectory()) {
+            dateDir = Dates.format(new Date(current), config.getDatePattern()) + Const.SLASH;
+        }
+        if (name.equals(path)) {
+            // 文件名称
+            return dateDir + prefix + name;
+        } else {
+            // 包含路径
+            String parentPath = Files1.getParentPath(path);
+            return dateDir + parentPath + prefix + name;
+        }
     }
 
 }

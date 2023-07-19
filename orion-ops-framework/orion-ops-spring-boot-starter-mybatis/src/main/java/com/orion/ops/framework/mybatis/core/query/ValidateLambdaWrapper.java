@@ -40,15 +40,11 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
             }
             // 字符串 非空校验
             if (object instanceof String) {
-                if (Strings.isBlank((String) object)) {
-                    return true;
-                }
+                return Strings.isEmpty((String) object);
             }
             // 集合 非空校验
             if (object instanceof Collection<?>) {
-                if (((Collection<?>) object).isEmpty()) {
-                    return true;
-                }
+                return ((Collection<?>) object).isEmpty();
             }
         }
         return false;

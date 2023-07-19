@@ -167,7 +167,7 @@ orion:
     local:
       primary: true
       enabled: true
-      name-append-trace-id: true
+      timestamp-prefix: true
       storage-path: ${user.home}
       base-path: /orion/storage/orion-ops-pro
   security:

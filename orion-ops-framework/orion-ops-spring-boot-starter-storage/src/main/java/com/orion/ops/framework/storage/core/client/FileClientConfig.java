@@ -1,5 +1,6 @@
 package com.orion.ops.framework.storage.core.client;
 
+import com.orion.lang.utils.time.Dates;
 import lombok.Data;
 
 /**
@@ -23,8 +24,18 @@ public class FileClientConfig {
     protected boolean enabled;
 
     /**
-     * 是否自动拼接 traceId 前缀. 没有则使用 UUID
+     * 是否使用时间戳作为文件名称前缀
      */
-    protected boolean nameAppendTraceId;
+    protected boolean timestampPrefix;
+
+    /**
+     * 是否拼接时间作为文件夹
+     */
+    protected boolean dateDirectory = true;
+
+    /**
+     * 时间文件夹格式
+     */
+    protected String datePattern = Dates.YMD;
 
 }
