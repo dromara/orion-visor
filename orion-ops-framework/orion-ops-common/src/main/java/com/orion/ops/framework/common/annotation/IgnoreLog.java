@@ -1,5 +1,7 @@
 package com.orion.ops.framework.common.annotation;
 
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,4 +15,12 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface IgnoreLog {
+
+    /**
+     * 日志忽略模式
+     *
+     * @return 日志忽略模式
+     */
+    IgnoreLogMode value() default IgnoreLogMode.ALL;
+
 }

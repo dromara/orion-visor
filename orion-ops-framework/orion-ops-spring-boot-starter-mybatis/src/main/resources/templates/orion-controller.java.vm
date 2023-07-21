@@ -3,6 +3,7 @@ package ${package.Controller};
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import ${package.Service}.*;
 #foreach($pkg in ${customFilePackages})
 import ${pkg}.*;
@@ -58,7 +59,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.update${type}(request);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "${apiComment.get}")
     @Parameter(name = "id", description = "id", required = true)
@@ -67,7 +68,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.get${type}(id);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "${apiComment.list}")
     @Parameter(name = "idList", description = "idList", required = true)
@@ -76,7 +77,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.get${type}List(idList);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "${apiComment.query}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")

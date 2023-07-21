@@ -11,11 +11,15 @@ import org.aopalliance.intercept.MethodInterceptor;
  */
 public interface LogPrinterInterceptor extends MethodInterceptor {
 
-    String EMPTY_ARG = "<EMPTY>";
+    String EMPTY_TAG = "<EMPTY>";
 
-    String ERROR_ARG = "<ERROR>";
+    String ERROR_TAG = "<ERROR>";
 
-    String VOID_RES = "<VOID>";
+    String VOID_TAG = "<VOID>";
+
+    String NULL_TAG = "<NULL>";
+
+    String IGNORED_TAG = "<IGNORED>";
 
     /**
      * 初始化

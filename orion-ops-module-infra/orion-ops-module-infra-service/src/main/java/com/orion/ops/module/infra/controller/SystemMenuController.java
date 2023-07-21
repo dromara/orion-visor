@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.controller;
 
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.module.infra.entity.request.menu.*;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.service.SystemMenuService;
@@ -67,7 +68,7 @@ public class SystemMenuController {
         return systemRoleMenuService.bindRoleMenu(request);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询菜单")
     @Parameter(name = "id", description = "id", required = true)
@@ -76,7 +77,7 @@ public class SystemMenuController {
         return systemMenuService.getSystemMenu(id);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/list")
     @Operation(summary = "查询菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:query')")

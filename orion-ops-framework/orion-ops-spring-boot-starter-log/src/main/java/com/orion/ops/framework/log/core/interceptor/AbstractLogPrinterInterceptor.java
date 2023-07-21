@@ -5,18 +5,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
+import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Desensitizes;
 import com.orion.lang.utils.Objects1;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Classes;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
@@ -24,8 +23,8 @@ import javax.servlet.ServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -36,6 +35,8 @@ import java.util.function.Predicate;
  * @since 2023/6/29 10:36
  */
 public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterceptor {
+
+    private static final ThreadLocal<IgnoreLogMode> IGNORE_LOG_MODE = new ThreadLocal<>();
 
     /**
      * 请求头过滤器
@@ -60,9 +61,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
     @Resource
     protected SecurityHolder securityHolder;
 
-    @SuppressWarnings("ALL")
-    @Autowired(required = false)
-    @Qualifier("desensitizeValueFilter")
+    @Resource
     private ValueFilter desensitizeValueFilter;
 
     public AbstractLogPrinterInterceptor(LogPrinterConfig config) {
@@ -74,8 +73,6 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
     public void init() {
         // 请求头过滤器
         this.headerFilter = header -> config.getHeaders().contains(header);
-        // 字段过滤器
-        List<SerializeFilter> fieldFilterList = Lists.newList();
         // 忽略字段过滤器
         PropertyFilter ignoreFilter = (Object object, String name, Object value) -> !config.getField().getIgnore().contains(name);
         // 脱敏字段过滤器
@@ -86,31 +83,36 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
                 return value;
             }
         };
-        fieldFilterList.add(ignoreFilter);
-        fieldFilterList.add(desensitizeFilter);
-        // 注解脱敏 未引入
-        if (desensitizeValueFilter != null) {
-            fieldFilterList.add(desensitizeValueFilter);
-        }
-        this.fieldFilters = fieldFilterList.toArray(new SerializeFilter[0]);
+        this.fieldFilters = Arrays1.of(ignoreFilter, desensitizeFilter, desensitizeValueFilter);
     }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
+        // 日志忽略模式
+        IgnoreLogMode ignoreLogMode = Optional.ofNullable(invocation.getMethod().getAnnotation(IgnoreLog.class))
+                .map(IgnoreLog::value)
+                .orElse(null);
+        // 如果不打印任何日志 则直接跳出逻辑
+        if (IgnoreLogMode.ALL.equals(ignoreLogMode)) {
+            return invocation.proceed();
+        }
+        IGNORE_LOG_MODE.set(ignoreLogMode);
         Date startTime = new Date();
         String traceId = TraceIdHolder.get();
         // 打印请求日志
-        this.requestPrinter(startTime, traceId, invocation);
+        this.printRequestLog(startTime, traceId, invocation);
         try {
             // 执行方法
             Object ret = invocation.proceed();
             // 打印响应日志
-            this.responsePrinter(startTime, traceId, invocation, ret);
+            this.printResponseLog(startTime, traceId, invocation, ret);
             return ret;
         } catch (Throwable t) {
             // 打印异常日志
-            this.errorPrinter(startTime, traceId, t);
+            this.printExceptionLog(startTime, traceId, t);
             throw t;
+        } finally {
+            IGNORE_LOG_MODE.remove();
         }
     }
 
@@ -121,7 +123,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
      * @param traceId    traceId
      * @param invocation invocation
      */
-    protected abstract void requestPrinter(Date startTime, String traceId, MethodInvocation invocation);
+    protected abstract void printRequestLog(Date startTime, String traceId, MethodInvocation invocation);
 
     /**
      * 打印响应信息
@@ -131,7 +133,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
      * @param invocation invocation
      * @param ret        return
      */
-    protected abstract void responsePrinter(Date startTime, String traceId, MethodInvocation invocation, Object ret);
+    protected abstract void printResponseLog(Date startTime, String traceId, MethodInvocation invocation, Object ret);
 
     /**
      * 打印异常信息
@@ -140,7 +142,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
      * @param traceId   traceId
      * @param throwable ex
      */
-    protected abstract void errorPrinter(Date startTime, String traceId, Throwable throwable);
+    protected abstract void printExceptionLog(Date startTime, String traceId, Throwable throwable);
 
     /**
      * 请求参数 json
@@ -152,7 +154,12 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
     protected String requestToString(Method method, Object[] args) {
         int length = args.length;
         if (length == 0) {
-            return EMPTY_ARG;
+            return EMPTY_TAG;
+        }
+        // 忽略日志
+        IgnoreLogMode ignoreLogMode = IGNORE_LOG_MODE.get();
+        if (IgnoreLogMode.ARGS.equals(ignoreLogMode) || IgnoreLogMode.ARGS_RET.equals(ignoreLogMode)) {
+            return IGNORED_TAG;
         }
         try {
             // 检查是否需要忽略字段
@@ -167,7 +174,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
             }
             if (printCount == 0) {
                 // 无打印参数
-                return EMPTY_ARG;
+                return EMPTY_TAG;
             } else if (printCount == 1) {
                 // 单个打印参数
                 return JSON.toJSONString(args[lastPrintIndex], fieldFilters);
@@ -182,7 +189,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
                 return JSON.toJSONString(arr, fieldFilters);
             }
         } catch (Exception e) {
-            return ERROR_ARG;
+            return ERROR_TAG;
         }
     }
 
@@ -193,10 +200,18 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
      * @return json
      */
     protected String responseToString(Object o) {
+        if (o == null) {
+            return NULL_TAG;
+        }
+        // 忽略日志
+        IgnoreLogMode ignoreLogMode = IGNORE_LOG_MODE.get();
+        if (IgnoreLogMode.RET.equals(ignoreLogMode) || IgnoreLogMode.ARGS_RET.equals(ignoreLogMode)) {
+            return IGNORED_TAG;
+        }
         try {
             return JSON.toJSONString(o, fieldFilters);
         } catch (Exception e) {
-            return ERROR_ARG;
+            return ERROR_TAG;
         }
     }
 

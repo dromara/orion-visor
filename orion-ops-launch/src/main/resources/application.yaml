@@ -151,7 +151,7 @@ orion:
     # 全局日志打印
     printer:
       mode: PRETTY
-      expression: 'execution (* com.orion.ops..*.controller..*.*(..)) && !@annotation(com.orion.ops.framework.common.annotation.IgnoreLog)'
+      expression: 'execution (* com.orion.ops..*.controller..*.*(..))'
       headers:
         - user-agent,accept
         - content-type

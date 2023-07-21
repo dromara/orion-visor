@@ -31,7 +31,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
     }
 
     @Override
-    protected void requestPrinter(Date startTime, String traceId, MethodInvocation invocation) {
+    protected void printRequestLog(Date startTime, String traceId, MethodInvocation invocation) {
         StringBuilder requestLog = new StringBuilder("\napi请求-开始\n");
         // http请求信息
         HttpServletRequest request = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
@@ -80,7 +80,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
     }
 
     @Override
-    protected void responsePrinter(Date startTime, String traceId, MethodInvocation invocation, Object ret) {
+    protected void printResponseLog(Date startTime, String traceId, MethodInvocation invocation, Object ret) {
         Date endTime = new Date();
         // 响应日志
         StringBuilder responseLog = new StringBuilder("\napi请求-结束\n")
@@ -89,7 +89,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
                 .append("\tused: ").append(endTime.getTime() - startTime.getTime()).append("ms \n");
 
         if (invocation.getMethod().getReturnType().equals(Void.TYPE)) {
-            responseLog.append("\tresponse: ").append(VOID_RES);
+            responseLog.append("\tresponse: ").append(VOID_TAG);
         } else {
             responseLog.append("\tresponse: ").append(this.responseToString(ret));
         }
@@ -97,7 +97,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
     }
 
     @Override
-    protected void errorPrinter(Date startTime, String traceId, Throwable throwable) {
+    protected void printExceptionLog(Date startTime, String traceId, Throwable throwable) {
         Date endTime = new Date();
         // 异常日志
         StringBuilder errorLog = new StringBuilder("\napi请求-异常\n")

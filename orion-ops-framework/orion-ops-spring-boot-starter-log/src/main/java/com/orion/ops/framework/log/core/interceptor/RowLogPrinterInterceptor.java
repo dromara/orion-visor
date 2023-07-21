@@ -35,7 +35,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
     }
 
     @Override
-    protected void requestPrinter(Date startTime, String traceId, MethodInvocation invocation) {
+    protected void printRequestLog(Date startTime, String traceId, MethodInvocation invocation) {
         // http请求信息
         HttpServletRequest request = Optional.ofNullable(RequestContextHolder.getRequestAttributes())
                 .map(s -> (ServletRequestAttributes) s)
@@ -81,7 +81,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
     }
 
     @Override
-    protected void responsePrinter(Date startTime, String traceId, MethodInvocation invocation, Object ret) {
+    protected void printResponseLog(Date startTime, String traceId, MethodInvocation invocation, Object ret) {
         Date endTime = new Date();
         // 响应日志
         Map<String, Object> fields = new LinkedHashMap<>();
@@ -89,7 +89,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
         fields.put(END, Dates.format(endTime, Dates.YMD_HMSS));
         fields.put(USED, endTime.getTime() - startTime.getTime() + "ms");
         if (invocation.getMethod().getReturnType().equals(Void.TYPE)) {
-            fields.put(RESPONSE, VOID_RES);
+            fields.put(RESPONSE, VOID_TAG);
         } else {
             fields.put(RESPONSE, this.responseToString(ret));
         }
@@ -98,7 +98,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
     }
 
     @Override
-    protected void errorPrinter(Date startTime, String traceId, Throwable throwable) {
+    protected void printExceptionLog(Date startTime, String traceId, Throwable throwable) {
         Date endTime = new Date();
         // 异常日志
         Map<String, Object> fields = new LinkedHashMap<>();

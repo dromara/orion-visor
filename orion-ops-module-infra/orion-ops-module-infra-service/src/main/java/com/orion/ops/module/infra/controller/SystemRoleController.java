@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleStatusRequest;
@@ -60,7 +61,7 @@ public class SystemRoleController {
         return systemRoleService.updateRoleStatus(request);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询角色")
     @Parameter(name = "id", description = "id", required = true)
@@ -69,7 +70,7 @@ public class SystemRoleController {
         return systemRoleService.getSystemRole(id);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询所有角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
@@ -77,7 +78,7 @@ public class SystemRoleController {
         return systemRoleService.getSystemRoleList();
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")

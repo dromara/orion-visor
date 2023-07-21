@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.controller;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.entity.vo.UserPermissionVO;
 import com.orion.ops.module.infra.service.PermissionService;
@@ -45,14 +46,14 @@ public class PermissionController {
         return HttpWrapper.ok();
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/menu")
     @Operation(summary = "获取用户菜单")
     public List<SystemMenuVO> getUserMenuList() {
         return permissionService.getUserMenuList();
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/permission")
     @Operation(summary = "获取用户权限")
     public UserPermissionVO getUserPermission() {
