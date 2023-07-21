@@ -1,5 +1,7 @@
 package com.orion.ops.framework.storage.core.client;
 
+import com.orion.ops.framework.common.file.FileClient;
+
 import java.io.InputStream;
 
 /**

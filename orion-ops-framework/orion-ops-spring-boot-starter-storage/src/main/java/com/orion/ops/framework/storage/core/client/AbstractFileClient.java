@@ -4,6 +4,8 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.file.FileClient;
+import com.orion.ops.framework.common.utils.FileClientUtils;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -24,6 +26,7 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
         // 设置默认文件客户端
         if (config.isPrimary()) {
             PrimaryFileClient.delegate = this;
+            FileClientUtils.setDelegate(this);
         }
     }
 

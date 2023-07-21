@@ -25,7 +25,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.reflect.Fields;
-import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.constant.OrionOpsProConst;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -161,7 +161,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // http 注释标识
         objectMap.put("httpComment", "###");
         // 版本
-        objectMap.put("since", Const.VERSION);
+        objectMap.put("since", OrionOpsProConst.VERSION);
         // 替换业务注释
         tableInfo.setComment(tables.get(tableInfo.getName()).getComment());
         // 实体名称

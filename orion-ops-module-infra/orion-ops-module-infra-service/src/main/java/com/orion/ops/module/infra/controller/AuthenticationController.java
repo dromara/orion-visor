@@ -50,8 +50,8 @@ public class AuthenticationController {
         return UserLoginVO.builder().token(token).build();
     }
 
-    @IgnoreLog
     @PermitAll
+    @IgnoreLog
     @Operation(summary = "登出")
     @GetMapping("/logout")
     public HttpWrapper<?> logout(HttpServletRequest servletRequest) {

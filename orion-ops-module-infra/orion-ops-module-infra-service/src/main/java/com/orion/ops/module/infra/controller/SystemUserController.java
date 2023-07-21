@@ -5,6 +5,7 @@ import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
@@ -56,7 +57,7 @@ public class SystemUserController {
         return systemUserService.updateSystemUser(request);
     }
 
-    // TODO 修改头像
+    // TODO 修改头像 最后再说 可有可无的功能 要是有 http 文件需求就写
 
     @PutMapping("/update-status")
     @Operation(summary = "修改用户状态")
@@ -86,7 +87,7 @@ public class SystemUserController {
         return HttpWrapper.ok();
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询用户")
     @Parameter(name = "id", description = "id", required = true)
@@ -95,7 +96,7 @@ public class SystemUserController {
         return systemUserService.getSystemUser(id);
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询所有用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
@@ -103,7 +104,7 @@ public class SystemUserController {
         return systemUserService.getSystemUserList();
     }
 
-    @IgnoreLog
+    @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")

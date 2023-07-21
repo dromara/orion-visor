@@ -7,7 +7,7 @@ import com.orion.ops.framework.desensitize.core.serializer.DesensitizeJsonSerial
 import java.lang.annotation.*;
 
 /**
- * 脱敏配置元注解
+ * FastJson / Jackson 脱敏配置元注解
  * <p>
  * 标注在字段上则标记该字段执行 http 序列化时脱敏
  *

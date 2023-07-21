@@ -65,26 +65,31 @@ public class CacheQuery<T> {
         return this;
     }
 
-    public <R> Optional<R> get(Function<T, R> mapper) {
+    public <R> Optional<R> optional(Function<T, R> mapper) {
         Valid.notNull(mapper, "convert function is null");
-        return this.get().map(mapper);
+        return Optional.ofNullable(this.get())
+                .map(mapper);
     }
 
-    public Optional<T> get() {
+    public Optional<T> optional() {
+        return Optional.ofNullable(this.get());
+    }
+
+    public T get() {
         // 不查询缓存
         if (!force) {
             // 从缓存中获取
             Store<T> store = CacheHolder.get(dao, id);
             // 命中直接返回
             if (store != null) {
-                return Optional.of(store).map(Store::get);
+                return store.get();
             }
         }
         // 查询
         T row = dao.selectById(id);
         // 设置缓存
         CacheHolder.set(dao, id, row);
-        return Optional.ofNullable(row);
+        return row;
     }
 
 }

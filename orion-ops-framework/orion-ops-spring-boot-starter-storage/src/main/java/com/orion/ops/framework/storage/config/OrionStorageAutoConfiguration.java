@@ -1,7 +1,7 @@
 package com.orion.ops.framework.storage.config;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
-import com.orion.ops.framework.storage.core.client.FileClient;
+import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.storage.core.client.PrimaryFileClient;
 import com.orion.ops.framework.storage.core.client.local.LocalFileClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -31,16 +31,16 @@ public class OrionStorageAutoConfiguration {
     private StorageConfig config;
 
     /**
-     * 默认文件客户端
+     * @return 默认文件客户端
      */
-    @Bean
+    @Bean(name = "primaryFileClient")
     @Primary
     public FileClient primaryFileClient() {
         return new PrimaryFileClient();
     }
 
     /**
-     * 本地文件客户端
+     * @return 本地文件客户端
      */
     @Bean
     @ConditionalOnProperty(value = "orion.storage.local.enabled", havingValue = "true")

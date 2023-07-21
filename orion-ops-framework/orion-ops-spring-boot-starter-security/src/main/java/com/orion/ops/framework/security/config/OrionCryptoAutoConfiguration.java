@@ -2,12 +2,14 @@ package com.orion.ops.framework.security.config;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.crypto.ValueCrypto;
+import com.orion.ops.framework.security.core.crypto.PrimaryValueCrypto;
 import com.orion.ops.framework.security.core.crypto.aes.AesCryptoProcessor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 import javax.annotation.Resource;
 
@@ -27,11 +29,20 @@ public class OrionCryptoAutoConfiguration {
     private CryptoConfig config;
 
     /**
+     * @return 默认加密器
+     */
+    @Bean(name = "valueCrypto")
+    @Primary
+    public ValueCrypto primaryValueCrypto() {
+        return new PrimaryValueCrypto();
+    }
+
+    /**
      * @return aes 加密器
      */
     @Bean(initMethod = "init")
     @ConditionalOnProperty(value = "orion.crypto.aes.enabled", havingValue = "true")
-    public ValueCrypto aes() {
+    public ValueCrypto aesValueCrypto() {
         return new AesCryptoProcessor(config.getAes());
     }
 

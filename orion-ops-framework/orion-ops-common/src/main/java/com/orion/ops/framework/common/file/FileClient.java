@@ -1,4 +1,4 @@
-package com.orion.ops.framework.storage.core.client;
+package com.orion.ops.framework.common.file;
 
 import java.io.InputStream;
 

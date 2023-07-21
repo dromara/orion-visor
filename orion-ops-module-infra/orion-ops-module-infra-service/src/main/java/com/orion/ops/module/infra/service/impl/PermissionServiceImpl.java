@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 权限服务
@@ -153,11 +154,20 @@ public class PermissionServiceImpl implements PermissionService {
             return Lists.empty();
         }
         // 查询角色菜单
-        List<SystemMenuVO> menus = roles.stream()
-                .map(roleMenuCache::get)
-                .filter(Objects::nonNull)
-                .flatMap(Collection::stream)
-                .distinct()
+        Stream<SystemMenuCacheDTO> mergeStream;
+        if (RoleDefine.containsAdmin(roles)) {
+            // 管理员拥有全部权限
+            mergeStream = menuCache.stream();
+        } else {
+            // 当前用户所适配的角色
+            mergeStream = roles.stream()
+                    .map(roleMenuCache::get)
+                    .filter(Objects::nonNull)
+                    .flatMap(Collection::stream)
+                    .distinct();
+        }
+        // 状态过滤
+        List<SystemMenuVO> menus = mergeStream
                 .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
                 .filter(s -> !MenuTypeEnum.FUNCTION.getType().equals(s.getType()))
                 .map(SystemMenuConvert.MAPPER::to)

@@ -4,6 +4,8 @@ import com.orion.ops.framework.common.crypto.ValueCrypto;
 
 /**
  * 加密工具类
+ * <p>
+ * PrimaryValueCrypto 代理类工具
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -12,6 +14,9 @@ import com.orion.ops.framework.common.crypto.ValueCrypto;
 public class CryptoUtils {
 
     private static ValueCrypto delegate;
+
+    private CryptoUtils() {
+    }
 
     /**
      * 加密
