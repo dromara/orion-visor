@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemMenuConvert;
@@ -156,10 +157,10 @@ public class PermissionServiceImpl implements PermissionService {
         // 查询角色菜单
         Stream<SystemMenuCacheDTO> mergeStream;
         if (RoleDefine.containsAdmin(roles)) {
-            // 管理员拥有全部权限
+            // 管理员拥有全部菜单
             mergeStream = menuCache.stream();
         } else {
-            // 当前用户所适配的角色
+            // 当前用户所适配的角色菜单
             mergeStream = roles.stream()
                     .map(roleMenuCache::get)
                     .filter(Objects::nonNull)
@@ -187,15 +188,21 @@ public class PermissionServiceImpl implements PermissionService {
         if (roles.isEmpty()) {
             permissions = Lists.empty();
         } else {
-            permissions = roles.stream()
-                    .map(roleMenuCache::get)
-                    .filter(Objects::nonNull)
-                    .flatMap(Collection::stream)
-                    .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
-                    .map(SystemMenuCacheDTO::getPermission)
-                    .filter(Objects::nonNull)
-                    .distinct()
-                    .collect(Collectors.toList());
+            if (RoleDefine.containsAdmin(roles)) {
+                // 管理员拥有全部权限
+                permissions = Lists.of(Const.ASTERISK);
+            } else {
+                // 当前用户所适配的角色的权限
+                permissions = roles.stream()
+                        .map(roleMenuCache::get)
+                        .filter(Objects::nonNull)
+                        .flatMap(Collection::stream)
+                        .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
+                        .map(SystemMenuCacheDTO::getPermission)
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .collect(Collectors.toList());
+            }
         }
         // 组装数据
         return UserPermissionVO.builder()

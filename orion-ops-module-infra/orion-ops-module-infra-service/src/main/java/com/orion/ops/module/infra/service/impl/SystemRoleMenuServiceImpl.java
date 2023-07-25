@@ -60,7 +60,7 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
         // 查询菜单列表
         List<SystemMenuDO> menuList = systemMenuDAO.selectBatchIds(menuIdList);
         if (menuIdList.size() != menuList.size()) {
-            throw ErrorCode.DATA_ALTER.exception();
+            throw ErrorCode.CONFLICT.exception();
         }
         // 查询角色菜单
         List<Long> beforeMenuIdList = systemRoleMenuDAO.of()

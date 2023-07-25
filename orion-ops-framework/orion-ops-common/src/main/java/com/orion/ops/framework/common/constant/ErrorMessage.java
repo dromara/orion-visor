@@ -31,6 +31,8 @@ public interface ErrorMessage {
 
     String ROLE_ABSENT = "角色不存在";
 
+    String ROLE_CODE_ABSENT = "角色 [{}] 不存在";
+
     String INVALID_PARENT_MENU = "所选父菜单不合法";
 
     String PARENT_MENU_ABSENT = "父菜单不存在";

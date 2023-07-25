@@ -6,7 +6,12 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 
 /**
- * 错误码
+ * 用于定义错误码
+ * <p>
+ * 1. http 通用 status
+ * 2. 前端需要特殊处理
+ * 3. @ExceptionHandler 全局异常
+ * 其他情况可以定义在 ExceprionMessage 中
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -14,6 +19,8 @@ import com.orion.lang.utils.Strings;
  */
 @SuppressWarnings("ALL")
 public enum ErrorCode implements CodeInfo {
+
+    // -------------------- http message --------------------
 
     BAD_REQUEST(400, "参数验证失败"),
 
@@ -27,7 +34,7 @@ public enum ErrorCode implements CodeInfo {
 
     REQUEST_TIMEOUT(408, "处理超时"),
 
-    CONFLICT(409, "状态发生改变, 请刷新后重试"),
+    CONFLICT(409, "数据状态发生改变, 请刷新后重试"),
 
     PAYLOAD_TOO_LARGE(413, "请求过大"),
 
@@ -44,10 +51,6 @@ public enum ErrorCode implements CodeInfo {
     USER_DISABLED(701, "当前用户已禁用"),
 
     USER_LOCKED(702, "当前用户已被锁定"),
-
-    ROLE_PRESENT(703, "角色 [{}] 不存在"),
-
-    DATA_ALTER(704, "数据发生改变, 请刷新后重试"),
 
     // -------------------- 自定义 - 通用 --------------------
 

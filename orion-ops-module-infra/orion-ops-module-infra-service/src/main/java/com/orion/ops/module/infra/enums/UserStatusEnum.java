@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.enums;
 
+import com.orion.ops.framework.common.constant.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -43,6 +44,21 @@ public enum UserStatusEnum {
             }
         }
         return null;
+    }
+
+    /**
+     * 检查用户状态
+     *
+     * @param status status
+     */
+    public static void checkUserStatus(Integer status) {
+        if (UserStatusEnum.DISABLED.getStatus().equals(status)) {
+            // 禁用状态
+            throw ErrorCode.USER_DISABLED.exception();
+        } else if (UserStatusEnum.LOCKED.getStatus().equals(status)) {
+            // 锁定状态
+            throw ErrorCode.USER_LOCKED.exception();
+        }
     }
 
 }

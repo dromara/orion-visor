@@ -8,7 +8,6 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.common.constant.Const;
-import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.CryptoUtils;
@@ -75,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         boolean passwordCorrect = this.checkPassword(request, user);
         Valid.isTrue(passwordCorrect, ErrorMessage.USERNAME_PASSWORD_ERROR);
         // 检查用户状态
-        this.checkUserStatus(user.getStatus());
+        UserStatusEnum.checkUserStatus(user.getStatus());
         // 设置上次登录时间
         this.setLastLoginTime(user.getId());
         // 检查用户缓存
@@ -237,21 +236,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             RedisUtils.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
         }
         return false;
-    }
-
-    /**
-     * 检查用户状态
-     *
-     * @param status status
-     */
-    private void checkUserStatus(Integer status) {
-        if (UserStatusEnum.DISABLED.getStatus().equals(status)) {
-            // 禁用状态
-            throw ErrorCode.USER_DISABLED.exception();
-        } else if (UserStatusEnum.LOCKED.getStatus().equals(status)) {
-            // 锁定状态
-            throw ErrorCode.USER_LOCKED.exception();
-        }
     }
 
     /**

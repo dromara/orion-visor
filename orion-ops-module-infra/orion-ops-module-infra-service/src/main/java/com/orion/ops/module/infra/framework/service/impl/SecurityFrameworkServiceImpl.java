@@ -54,7 +54,7 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
         // 获取登陆信息
         LoginUser user = authenticationService.getLoginUser(tokenInfo.getId());
         // 检查用户状态
-        this.checkUserStatus(user);
+        UserStatusEnum.checkUserStatus(user.getStatus());
         return user;
     }
 
@@ -75,19 +75,6 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
                     Dates.format(new Date(loginToken.getLoginTime()), Dates.MD_HM),
                     loginToken.getIp(),
                     loginToken.getLocation());
-        }
-    }
-
-    /**
-     * 检查用户状态
-     *
-     * @param user user
-     */
-    private void checkUserStatus(LoginUser user) {
-        if (UserStatusEnum.DISABLED.getStatus().equals(user.getStatus())) {
-            throw ErrorCode.USER_DISABLED.exception();
-        } else if (UserStatusEnum.LOCKED.getStatus().equals(user.getStatus())) {
-            throw ErrorCode.USER_LOCKED.exception();
         }
     }
 

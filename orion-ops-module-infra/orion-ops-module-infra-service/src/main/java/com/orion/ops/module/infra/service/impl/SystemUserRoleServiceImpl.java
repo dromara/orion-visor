@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
-import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
@@ -75,10 +74,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
                     .map(SystemRoleDO::getCode)
                     .collect(Collectors.toList());
             for (String roleCode : roleCodeList) {
-                // 角色不存在
-                if (!userRoleCodes.contains(roleCode)) {
-                    throw ErrorCode.ROLE_PRESENT.exception(roleCode);
-                }
+                Valid.in(roleCode, userRoleCodes, ErrorMessage.ROLE_CODE_ABSENT, roleCode);
             }
         }
         // 删除用户角色关联
