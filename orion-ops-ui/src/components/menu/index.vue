@@ -31,19 +31,19 @@
       const selectedKey = ref<string[]>([]);
 
       const goto = (item: RouteRecordRaw) => {
-        // Open external link
+        // 打开外链
         if (regexUrl.test(item.path)) {
           openWindow(item.path);
           selectedKey.value = [item.name as string];
           return;
         }
-        // Eliminate external link side effects
+        // 设置 selectedKey
         const { hideInMenu, activeMenu } = item.meta as RouteMeta;
         if (route.name === item.name && !hideInMenu && !activeMenu) {
           selectedKey.value = [item.name as string];
           return;
         }
-        // Trigger router change
+        // 触发跳转
         router.push({
           name: item.name,
         });
@@ -64,7 +64,7 @@
           }
         };
         menuTree.value.forEach((el: RouteRecordRaw) => {
-          if (isFind) return; // Performance optimization
+          if (isFind) return;
           backtrack(el, [el.name as string]);
         });
         return result;

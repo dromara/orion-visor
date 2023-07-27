@@ -1,17 +1,21 @@
 <template>
   <div class="navbar">
+    <!-- 左侧按钮 -->
     <div class="left-side">
       <a-space>
+        <!-- FIXME -->
+        <!-- LOGO -->
         <img
           alt="logo"
           src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
         />
+        <!-- 标头 -->
         <a-typography-title
           :style="{ margin: 0, fontSize: '18px' }"
-          :heading="5"
-        >
-          Arco Pro
+          :heading="5">
+          Orion Ops Pro
         </a-typography-title>
+        <!-- 收缩菜单 -->
         <icon-menu-fold
           v-if="!topMenu && appStore.device === 'mobile'"
           style="font-size: 22px; cursor: pointer"
@@ -19,40 +23,41 @@
         />
       </a-space>
     </div>
+    <!-- 顶部菜单 -->
     <div class="center-side">
       <Menu v-if="topMenu" />
     </div>
+    <!-- 右侧按钮 -->
     <ul class="right-side">
-      <li>
+      <!-- 搜索 -->
+      <li v-if="false">
         <a-tooltip :content="$t('settings.search')">
-          <a-button class="nav-btn" type="outline" :shape="'circle'">
+          <a-button class="nav-btn" type="outline" shape="circle">
             <template #icon>
               <icon-search />
             </template>
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <!-- 切换语言 -->
+      <li v-if="false">
         <a-tooltip :content="$t('settings.language')">
           <a-button
             class="nav-btn"
             type="outline"
             :shape="'circle'"
-            @click="setDropDownVisible"
-          >
+            @click="setUserInfoVisible">
             <template #icon>
               <icon-language />
             </template>
           </a-button>
         </a-tooltip>
-        <a-dropdown trigger="click" @select="changeLocale as any">
-          <div ref="triggerBtn" class="trigger-btn"></div>
+        <a-dropdown trigger="click" @select="changeLocale">
+          <div ref="refUserInfoTrigger" class="trigger-btn"></div>
           <template #content>
-            <a-doption
-              v-for="item in locales"
-              :key="item.value"
-              :value="item.value"
-            >
+            <a-doption v-for="item in locales"
+                       :key="item.value"
+                       :value="item.value">
               <template #icon>
                 <icon-check v-show="item.value === currentLocale" />
               </template>
@@ -61,20 +66,16 @@
           </template>
         </a-dropdown>
       </li>
+      <!-- 暗色模式 -->
       <li>
-        <a-tooltip
-          :content="
-            theme === 'light'
+        <a-tooltip :content="theme === 'light'
               ? $t('settings.navbar.theme.toDark')
-              : $t('settings.navbar.theme.toLight')
-          "
-        >
+              : $t('settings.navbar.theme.toLight')">
           <a-button
             class="nav-btn"
             type="outline"
             :shape="'circle'"
-            @click="handleToggleTheme"
-          >
+            @click="handleToggleTheme">
             <template #icon>
               <icon-moon-fill v-if="theme === 'dark'" />
               <icon-sun-fill v-else />
@@ -82,7 +83,8 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <!-- 消息列表 -->
+      <li v-if="false">
         <a-tooltip :content="$t('settings.navbar.alerts')">
           <div class="message-box-trigger">
             <a-badge :count="9" dot>
@@ -90,8 +92,7 @@
                 class="nav-btn"
                 type="outline"
                 :shape="'circle'"
-                @click="setPopoverVisible"
-              >
+                @click="setMessageBoxVisible">
                 <icon-notification />
               </a-button>
             </a-badge>
@@ -101,28 +102,23 @@
           trigger="click"
           :arrow-style="{ display: 'none' }"
           :content-style="{ padding: 0, minWidth: '400px' }"
-          content-class="message-popover"
-        >
-          <div ref="refBtn" class="ref-btn"></div>
+          content-class="message-popover">
+          <div ref="refMessageBoxTrigger" class="ref-btn"></div>
           <template #content>
             <message-box />
           </template>
         </a-popover>
       </li>
+      <!-- 全屏模式 -->
       <li>
-        <a-tooltip
-          :content="
-            isFullscreen
+        <a-tooltip :content="isFullscreen
               ? $t('settings.navbar.screen.toExit')
-              : $t('settings.navbar.screen.toFull')
-          "
-        >
+              : $t('settings.navbar.screen.toFull')">
           <a-button
             class="nav-btn"
             type="outline"
-            :shape="'circle'"
-            @click="toggleFullScreen"
-          >
+            shape="circle"
+            @click="toggleFullScreen">
             <template #icon>
               <icon-fullscreen-exit v-if="isFullscreen" />
               <icon-fullscreen v-else />
@@ -130,37 +126,31 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <!-- 页面配置 -->
+      <li v-if="false">
         <a-tooltip :content="$t('settings.title')">
           <a-button
             class="nav-btn"
             type="outline"
-            :shape="'circle'"
-            @click="setVisible"
-          >
+            shape="circle"
+            @click="setSettingVisible">
             <template #icon>
               <icon-settings />
             </template>
           </a-button>
         </a-tooltip>
       </li>
+      <!-- 用户信息 -->
       <li>
         <a-dropdown trigger="click">
+          <!-- 头像 -->
           <a-avatar
             :size="32"
-            :style="{ marginRight: '8px', cursor: 'pointer' }"
-          >
-            <img alt="avatar" :src="avatar" />
+            :style="{ cursor: 'pointer', backgroundColor: '#3370ff' }">
+            {{ nickname }}
           </a-avatar>
           <template #content>
-            <a-doption>
-              <a-space @click="switchRoles">
-                <icon-tag />
-                <span>
-                  {{ $t('messageBox.switchRoles') }}
-                </span>
-              </a-space>
-            </a-doption>
+            <!-- 用户信息 -->
             <a-doption>
               <a-space @click="$router.push({ name: 'Info' })">
                 <icon-user />
@@ -169,6 +159,7 @@
                 </span>
               </a-space>
             </a-doption>
+            <!-- 用户设置 -->
             <a-doption>
               <a-space @click="$router.push({ name: 'Setting' })">
                 <icon-settings />
@@ -177,6 +168,7 @@
                 </span>
               </a-space>
             </a-doption>
+            <!-- 退出登录 -->
             <a-doption>
               <a-space @click="handleLogout">
                 <icon-export />
@@ -200,6 +192,7 @@
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
+  import { triggerMouseEvent } from '@/utils';
   import Menu from '@/components/menu/index.vue';
   import MessageBox from '../message-box/index.vue';
 
@@ -209,56 +202,56 @@
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const locales = [...LOCALE_OPTIONS];
-  const avatar = computed(() => {
-    return userStore.avatar;
+  const nickname = computed(() => {
+    return userStore.nickname?.substring(0, 1);
   });
+  const topMenu = computed(() => appStore.topMenu && appStore.menu);
+
+  // 当前主题
   const theme = computed(() => {
     return appStore.theme;
   });
-  const topMenu = computed(() => appStore.topMenu && appStore.menu);
-  const isDark = useDark({
+
+  // 主题
+  const darkTheme = useDark({
     selector: 'body',
     attribute: 'arco-theme',
     valueDark: 'dark',
     valueLight: 'light',
     storageKey: 'arco-theme',
     onChanged(dark: boolean) {
-      // overridden default behavior
       appStore.toggleTheme(dark);
     },
   });
-  const toggleTheme = useToggle(isDark);
+
+  // 切换主题
   const handleToggleTheme = () => {
-    toggleTheme();
+    useToggle(darkTheme)();
   };
-  const setVisible = () => {
+
+  // 打开系统设置
+  const setSettingVisible = () => {
     appStore.updateSettings({ globalSettings: true });
   };
-  const refBtn = ref();
-  const triggerBtn = ref();
-  const setPopoverVisible = () => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    refBtn.value.dispatchEvent(event);
+
+  // 消息触发器 ref
+  const refMessageBoxTrigger = ref();
+  const setMessageBoxVisible = () => {
+    triggerMouseEvent(refMessageBoxTrigger);
   };
+
+  // 个人信息触发器 ref
+  const refUserInfoTrigger = ref();
+  const setUserInfoVisible = () => {
+    triggerMouseEvent(refUserInfoTrigger);
+  };
+
+  // 退出登录
   const handleLogout = () => {
     logout();
   };
-  const setDropDownVisible = () => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    triggerBtn.value.dispatchEvent(event);
-  };
-  const switchRoles = async () => {
-    const res = await userStore.switchRoles();
-    Message.success(res as string);
-  };
+
+  // 注入收缩菜单
   const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
 </script>
 
@@ -283,7 +276,6 @@
 
   .right-side {
     display: flex;
-    padding-right: 20px;
     list-style: none;
 
     :deep(.locale-select) {

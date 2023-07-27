@@ -1,8 +1,9 @@
 <template>
-  <a-layout-footer class="footer">Arco Pro</a-layout-footer>
+  <a-layout-footer class="footer">Orion Ops Pro</a-layout-footer>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+</script>
 
 <style lang="less" scoped>
   .footer {

@@ -6,30 +6,19 @@ const USER: AppRouteRecordRaw = {
   name: 'user',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'menu.user',
-    icon: 'icon-user',
+    locale: 'USER',
     requiresAuth: true,
-    order: 7,
+    icon: 'icon-dashboard',
+    order: 0,
   },
   children: [
     {
-      path: 'info',
-      name: 'Info',
-      component: () => import('@/views/user/info/index.vue'),
+      path: 'userChild',
+      name: 'userChild',
+      component: () => import('@/views/user/child/index.vue'),
       meta: {
-        locale: 'menu.user.info',
+        locale: '用户子页面',
         requiresAuth: true,
-        roles: ['*'],
-      },
-    },
-    {
-      path: 'setting',
-      name: 'Setting',
-      component: () => import('@/views/user/setting/index.vue'),
-      meta: {
-        locale: 'menu.user.setting',
-        requiresAuth: true,
-        roles: ['*'],
       },
     },
   ],

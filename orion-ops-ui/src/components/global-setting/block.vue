@@ -24,6 +24,7 @@
     type?: string;
     defaultVal?: boolean | string | number;
   }
+
   defineProps({
     title: {
       type: String,
@@ -37,19 +38,19 @@
     },
   });
   const appStore = useAppStore();
-  const handleChange = async ({
-    key,
-    value,
-  }: {
+
+  /**
+   * 修改配置
+   */
+  const handleChange = async ({ key, value, }: {
     key: string;
     value: unknown;
   }) => {
+    // 色弱模式
     if (key === 'colorWeak') {
       document.body.style.filter = value ? 'invert(80%)' : 'none';
     }
-    if (key === 'menuFromServer' && value) {
-      await appStore.fetchServerMenuConfig();
-    }
+    // 顶部菜单
     if (key === 'topMenu') {
       appStore.updateSettings({
         menuCollapse: false,

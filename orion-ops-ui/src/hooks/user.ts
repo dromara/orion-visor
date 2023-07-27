@@ -9,9 +9,9 @@ export default function useUser() {
   const logout = async (logoutTo?: string) => {
     await userStore.logout();
     const currentRoute = router.currentRoute.value;
-    Message.success('登出成功');
+    Message.success('已退出登录');
     router.push({
-      name: logoutTo && typeof logoutTo === 'string' ? logoutTo : 'login',
+      name: logoutTo || 'login',
       query: {
         ...router.currentRoute.value.query,
         redirect: currentRoute.name as string,

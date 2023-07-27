@@ -4,17 +4,16 @@ import { useUserStore } from '@/store';
 function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
   const { value } = binding;
   const userStore = useUserStore();
-  const { role } = userStore;
-
+  // TODO TEST
   if (Array.isArray(value)) {
     if (value.length > 0) {
-      const hasPermission = value.includes(role);
+      const hasPermission = userStore.permission?.includes(value as any as string);
       if (!hasPermission && el.parentNode) {
         el.parentNode.removeChild(el);
       }
     }
   } else {
-    throw new Error(`need roles! Like v-permission="['admin','user']"`);
+    throw new Error(`need permission! Like v-permission="['permission']"`);
   }
 }
 
@@ -24,5 +23,5 @@ export default {
   },
   updated(el: HTMLElement, binding: DirectiveBinding) {
     checkPermission(el, binding);
-  }
+  },
 };

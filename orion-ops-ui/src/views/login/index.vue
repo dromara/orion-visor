@@ -5,13 +5,16 @@
         alt="logo"
         src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
       />
-      <div class="logo-text">Arco Design Pro</div>
+      <div class="logo-text">Orion Ops Pro</div>
     </div>
+    <!-- 左侧 banner -->
     <LoginBanner />
     <div class="content">
       <div class="content-inner">
+        <!-- 登录表单 -->
         <LoginForm />
       </div>
+      <!-- 页脚 -->
       <div class="footer">
         <Footer />
       </div>

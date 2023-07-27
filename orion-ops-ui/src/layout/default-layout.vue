@@ -1,10 +1,12 @@
 <template>
   <a-layout class="layout" :class="{ mobile: appStore.hideMenu }">
+    <!-- tab bar -->
     <div v-if="navbar" class="layout-navbar">
       <NavBar />
     </div>
     <a-layout>
       <a-layout>
+        <!-- 左侧菜单栏 -->
         <a-layout-sider
           v-if="renderMenu"
           v-show="!hideMenu"
@@ -15,12 +17,12 @@
           :width="menuWidth"
           :style="{ paddingTop: navbar ? '60px' : '' }"
           :hide-trigger="true"
-          @collapse="setCollapsed"
-        >
+          @collapse="setCollapsed">
           <div class="menu-wrapper">
             <Menu />
           </div>
         </a-layout-sider>
+        <!-- 顶部菜单栏 -->
         <a-drawer
           v-if="hideMenu"
           :visible="drawerVisible"
@@ -28,10 +30,10 @@
           :footer="false"
           mask-closable
           :closable="false"
-          @cancel="drawerCancel"
-        >
+          @cancel="drawerCancel">
           <Menu />
         </a-drawer>
+        <!-- body -->
         <a-layout class="layout-content" :style="paddingStyle">
           <TabBar v-if="appStore.tabBar" />
           <a-layout-content>
@@ -71,35 +73,46 @@
   const menuWidth = computed(() => {
     return appStore.menuCollapse ? 48 : appStore.menuWidth;
   });
+
   const collapsed = computed(() => {
     return appStore.menuCollapse;
   });
+
   const paddingStyle = computed(() => {
-    const paddingLeft =
-      renderMenu.value && !hideMenu.value
-        ? { paddingLeft: `${menuWidth.value}px` }
-        : {};
+    const paddingLeft = renderMenu.value && !hideMenu.value
+      ? { paddingLeft: `${menuWidth.value}px` }
+      : {};
     const paddingTop = navbar.value ? { paddingTop: navbarHeight } : {};
     return { ...paddingLeft, ...paddingTop };
   });
+
+  /**
+   * 设置菜单展开状态
+   */
   const setCollapsed = (val: boolean) => {
-    if (!isInit.value) return; // for page initialization menu state problem
+    if (!isInit.value) return;
     appStore.updateSettings({ menuCollapse: val });
   };
+
+  // 监听权限变化
   watch(
-    () => userStore.role,
-    (roleValue) => {
-      if (roleValue && !permission.accessRouter(route))
-        router.push({ name: 'notFound' });
+    () => userStore.permission,
+    (permissionValue) => {
+      if (permissionValue && !permission.accessRouter(route))
+        router.push({ name: 'forbidden' });
     }
   );
+
   const drawerVisible = ref(false);
   const drawerCancel = () => {
     drawerVisible.value = false;
   };
+
+  // 对外暴露触发收缩菜单
   provide('toggleDrawerMenu', () => {
     drawerVisible.value = !drawerVisible.value;
   });
+
   onMounted(() => {
     isInit.value = true;
   });

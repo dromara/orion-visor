@@ -1,10 +1,10 @@
 {
-  "name": "arco-design-pro-vue",
-  "description": "Arco Design Pro for Vue",
+  "name": "orion-ops-pro-ui",
+  "description": "Orion Ops Pro for Vue",
   "version": "1.0.0",
   "private": true,
-  "author": "ArcoDesign Team",
-  "license": "MIT",
+  "author": "Jiahang Li",
+  "license": "Apache 2.0",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts",
     "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
@@ -40,6 +40,7 @@
     "pinia": "^2.0.23",
     "query-string": "^8.0.3",
     "sortablejs": "^1.15.0",
+    "ts-md5": "^1.3.1",
     "vue": "^3.2.40",
     "vue-echarts": "^6.2.3",
     "vue-i18n": "^9.2.2",

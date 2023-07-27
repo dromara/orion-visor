@@ -15,7 +15,7 @@
     @ok="copySettings"
     @cancel="cancel"
   >
-    <template #title> {{ $t('settings.title') }} </template>
+    <template #title> {{ $t('settings.title') }}</template>
     <Block :options="contentOpts" :title="$t('settings.content')" />
     <Block :options="othersOpts" :title="$t('settings.otherSettings')" />
     <a-alert>{{ $t('settings.alertContent') }}</a-alert>
@@ -36,8 +36,16 @@
   const { t } = useI18n();
   const { copy } = useClipboard();
   const visible = computed(() => appStore.globalSettings);
+
+  /**
+   * 内容配置
+   */
   const contentOpts = computed(() => [
-    { name: 'settings.navbar', key: 'navbar', defaultVal: appStore.navbar },
+    {
+      name: 'settings.navbar',
+      key: 'navbar',
+      defaultVal: appStore.navbar
+    },
     {
       name: 'settings.menu',
       key: 'menu',
@@ -48,12 +56,16 @@
       key: 'topMenu',
       defaultVal: appStore.topMenu,
     },
-    { name: 'settings.footer', key: 'footer', defaultVal: appStore.footer },
-    { name: 'settings.tabBar', key: 'tabBar', defaultVal: appStore.tabBar },
     {
-      name: 'settings.menuFromServer',
-      key: 'menuFromServer',
-      defaultVal: appStore.menuFromServer,
+      name: 'settings.footer',
+      key: 'footer',
+      defaultVal:
+      appStore.footer
+    },
+    {
+      name: 'settings.tabBar',
+      key: 'tabBar',
+      defaultVal: appStore.tabBar
     },
     {
       name: 'settings.menuWidth',
@@ -62,6 +74,10 @@
       type: 'number',
     },
   ]);
+
+  /**
+   * 其他配置
+   */
   const othersOpts = computed(() => [
     {
       name: 'settings.colorWeak',
@@ -70,15 +86,26 @@
     },
   ]);
 
+  /**
+   * 取消配置
+   */
   const cancel = () => {
     appStore.updateSettings({ globalSettings: false });
     emit('cancel');
   };
+
+  /**
+   * 复制配置
+   */
   const copySettings = async () => {
     const text = JSON.stringify(appStore.$state, null, 2);
     await copy(text);
     Message.success(t('settings.copySettings.message'));
   };
+
+  /**
+   * 显示菜单
+   */
   const setVisible = () => {
     appStore.updateSettings({ globalSettings: true });
   };

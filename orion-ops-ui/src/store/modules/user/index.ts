@@ -1,33 +1,20 @@
 import { defineStore } from 'pinia';
-import {
-  login as userLogin,
-  logout as userLogout,
-  getUserInfo,
-  LoginData,
-} from '@/api/user';
-import { setToken, clearToken } from '@/utils/auth';
+import { getUserInfo } from '@/api/user';
+import { login as userLogin, LoginRequest, logout as userLogout, } from '@/api/user/auth';
+import { clearToken, setToken } from '@/utils/auth';
+import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
 import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    name: undefined,
+    id: undefined,
+    username: undefined,
+    nickname: undefined,
     avatar: undefined,
-    job: undefined,
-    organization: undefined,
-    location: undefined,
-    email: undefined,
-    introduction: undefined,
-    personalWebsite: undefined,
-    jobName: undefined,
-    organizationName: undefined,
-    locationName: undefined,
-    phone: undefined,
-    registrationDate: undefined,
-    accountId: undefined,
-    certification: undefined,
-    role: '',
+    permission: undefined,
+    roles: undefined,
   }),
 
   getters: {
@@ -37,53 +24,66 @@ const useUserStore = defineStore('user', {
   },
 
   actions: {
-    switchRoles() {
-      return new Promise((resolve) => {
-        this.role = this.role === 'user' ? 'admin' : 'user';
-        resolve(this.role);
-      });
-    },
-    // Set user's information
+    /**
+     * 设置用户信息
+     */
     setInfo(partial: Partial<UserState>) {
       this.$patch(partial);
     },
 
-    // Reset user's information
-    resetInfo() {
-      this.$reset();
-    },
-
-    // Get user's information
+    /**
+     * 获取用户信息
+     */
     async info() {
       const res = await getUserInfo();
-
-      this.setInfo(res.data);
+      this.setInfo({
+        id: 1,
+        username: 'admin',
+        nickname: '管理员',
+        permission: ['*'],
+        roles: ['admin'],
+      });
     },
 
-    // Login
-    async login(loginForm: LoginData) {
+    /**
+     * 登录
+     */
+    async login(loginForm: LoginRequest) {
       try {
-        const res = await userLogin(loginForm);
+        const loginRequest: LoginRequest = {
+          username: loginForm.username,
+          password: md5(loginForm.password),
+        };
+        const res = await userLogin(loginRequest);
         setToken(res.data.token);
       } catch (err) {
         clearToken();
         throw err;
       }
     },
-    logoutCallBack() {
-      const appStore = useAppStore();
-      this.resetInfo();
-      clearToken();
-      removeRouteListener();
-      appStore.clearServerMenu();
-    },
-    // Logout
+
+    /**
+     * 登出
+     */
     async logout() {
       try {
         await userLogout();
       } finally {
         this.logoutCallBack();
       }
+    },
+
+    /**
+     * 登出回调
+     */
+    logoutCallBack() {
+      this.$reset();
+      clearToken();
+      // 移除路由监听器
+      removeRouteListener();
+      // 清空菜单
+      const appStore = useAppStore();
+      appStore.clearMenu();
     },
   },
 });

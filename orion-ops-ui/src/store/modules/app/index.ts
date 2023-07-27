@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
-import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
 import type { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
 import { getMenuList } from '@/api/user';
@@ -22,13 +21,17 @@ const useAppStore = defineStore('app', {
   },
 
   actions: {
-    // Update app settings
+    /**
+     * 更新配置
+     */
     updateSettings(partial: Partial<AppState>) {
       // @ts-ignore-next-line
       this.$patch(partial);
     },
 
-    // Change theme color
+    /**
+     * 修改颜色主题
+     */
     toggleTheme(dark: boolean) {
       if (dark) {
         this.theme = 'dark';
@@ -38,37 +41,40 @@ const useAppStore = defineStore('app', {
         document.body.removeAttribute('arco-theme');
       }
     },
+
+    /**
+     * 切换设备
+     */
     toggleDevice(device: string) {
       this.device = device;
     },
+
+    /**
+     * 切换菜单状态
+     */
     toggleMenu(value: boolean) {
       this.hideMenu = value;
     },
-    async fetchServerMenuConfig() {
-      let notifyInstance: NotificationReturn | null = null;
+
+    /**
+     * 加载菜单
+     */
+    async fetchMenuConfig() {
       try {
-        notifyInstance = Notification.info({
-          id: 'menuNotice', // Keep the instance id the same
-          content: 'loading',
-          closable: true,
-        });
         const { data } = await getMenuList();
         this.serverMenu = data;
-        notifyInstance = Notification.success({
-          id: 'menuNotice',
-          content: 'success',
-          closable: true,
-        });
       } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        notifyInstance = Notification.error({
-          id: 'menuNotice',
-          content: 'error',
+        Notification.error({
+          content: '加载菜单失败',
           closable: true,
         });
       }
     },
-    clearServerMenu() {
+
+    /**
+     * 清空菜单
+     */
+    clearMenu() {
       this.serverMenu = [];
     },
   },

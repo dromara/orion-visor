@@ -10,7 +10,7 @@ const getMessageList = () => {
       title: '郑曦月',
       subTitle: '的私信',
       avatar:
-        '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/8361eeb82904210b4f55fab888fe8416.png~tplv-uwbnlip3yd-webp.webp',
+        '123123',
       content: '审批请求已发送，请查收',
       time: '今天 12:30:01',
     },

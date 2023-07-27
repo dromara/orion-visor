@@ -4,30 +4,26 @@ import { useUserStore } from '@/store';
 export default function usePermission() {
   const userStore = useUserStore();
   return {
+    // TODO test
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
       return (
         !route.meta?.requiresAuth ||
-        !route.meta?.roles ||
-        route.meta?.roles?.includes('*') ||
-        route.meta?.roles?.includes(userStore.role)
+        !route.meta?.permission ||
+        userStore.permission?.includes(route.meta?.permission)
       );
     },
-    findFirstPermissionRoute(_routers: any, role = 'admin') {
+    findFirstPermissionRoute(_routers: any, permission: string) {
       const cloneRouters = [..._routers];
       while (cloneRouters.length) {
         const firstElement = cloneRouters.shift();
-        if (
-          firstElement?.meta?.roles?.find((el: string[]) => {
-            return el.includes('*') || el.includes(role);
-          })
-        )
+        if (firstElement?.meta?.permission === permission) {
           return { name: firstElement.name };
+        }
         if (firstElement?.children) {
           cloneRouters.push(...firstElement.children);
         }
       }
       return null;
     },
-    // You can add any rules you want
   };
 }
