@@ -20,13 +20,12 @@
         <result column="cache" property="cache"/>
         <result column="icon" property="icon"/>
         <result column="path" property="path"/>
-        <result column="component_name" property="componentName"/>
         <result column="component" property="component"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        create_time, update_time, creator, updater, deleted, id, parent_id, name, permission, type, sort, visible, status, cache, icon, path, component_name, component
+        create_time, update_time, creator, updater, deleted, id, parent_id, name, permission, type, sort, visible, status, cache, icon, path, component
     </sql>
 
 </mapper>

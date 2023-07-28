@@ -64,15 +64,10 @@ public class SystemMenuCreateRequest implements Serializable {
     @Schema(description = "菜单图标")
     private String icon;
 
-    @Size(max = 128)
+    @Size(max = 256)
     @NotBlank
     @Schema(description = "路由地址")
     private String path;
-
-    @Size(max = 64)
-    @NotBlank
-    @Schema(description = "组件名称")
-    private String componentName;
 
     @Size(max = 128)
     @NotBlank

@@ -49,9 +49,6 @@ public class SystemMenuUpdateRequest implements Serializable {
     @Schema(description = "路由地址")
     private String path;
 
-    @Schema(description = "组件名称")
-    private String componentName;
-
     @Schema(description = "组件地址")
     private String component;
 

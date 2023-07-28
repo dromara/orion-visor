@@ -32,6 +32,9 @@ public class SystemMenuCacheDTO {
     @Schema(description = "排序")
     private Integer sort;
 
+    @Schema(description = "是否可见 0不可见 1可见")
+    private Integer visible;
+
     @Schema(description = "菜单状态 0停用 1启用")
     private Integer status;
 
@@ -43,9 +46,6 @@ public class SystemMenuCacheDTO {
 
     @Schema(description = "路由地址")
     private String path;
-
-    @Schema(description = "组件名称")
-    private String componentName;
 
     @Schema(description = "组件地址")
     private String component;

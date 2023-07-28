@@ -54,13 +54,9 @@ public class SystemMenuQueryRequest extends PageRequest {
     @Schema(description = "菜单图标")
     private String icon;
 
-    @Size(max = 128)
+    @Size(max = 256)
     @Schema(description = "路由地址")
     private String path;
-
-    @Size(max = 64)
-    @Schema(description = "组件名称")
-    private String componentName;
 
     @Size(max = 128)
     @Schema(description = "组件地址")

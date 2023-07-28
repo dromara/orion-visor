@@ -13,7 +13,6 @@ Authorization: {{token}}
   "cache": "",
   "icon": "",
   "path": "",
-  "componentName": "",
   "component": ""
 }
 
@@ -34,7 +33,6 @@ Authorization: {{token}}
   "cache": "",
   "icon": "",
   "path": "",
-  "componentName": "",
   "component": ""
 }
 
@@ -65,7 +63,6 @@ Authorization: {{token}}
   "cache": "",
   "icon": "",
   "path": "",
-  "componentName": "",
   "component": ""
 }
 

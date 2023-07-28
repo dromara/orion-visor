@@ -54,7 +54,7 @@ public class PermissionController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/permission")
+    @GetMapping("/user")
     @Operation(summary = "获取用户权限")
     public UserPermissionVO getUserPermission() {
         return permissionService.getUserPermission();

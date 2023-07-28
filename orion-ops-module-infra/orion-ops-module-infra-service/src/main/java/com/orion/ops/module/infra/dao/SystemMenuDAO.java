@@ -33,7 +33,6 @@ public interface SystemMenuDAO extends IMapper<SystemMenuDO> {
                 .eq(SystemMenuDO::getCache, entity.getCache())
                 .eq(SystemMenuDO::getIcon, entity.getIcon())
                 .eq(SystemMenuDO::getPath, entity.getPath())
-                .eq(SystemMenuDO::getComponentName, entity.getComponentName())
                 .eq(SystemMenuDO::getComponent, entity.getComponent());
     }
 
