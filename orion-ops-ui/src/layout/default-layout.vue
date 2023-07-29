@@ -27,6 +27,7 @@
           v-if="hideMenu"
           :visible="drawerVisible"
           placement="left"
+          :header="false"
           :footer="false"
           mask-closable
           :closable="false"
@@ -47,23 +48,20 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, provide, onMounted } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
-  import { useAppStore, useUserStore } from '@/store';
+  import { computed, onMounted, provide, ref } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { useAppStore } from '@/store';
   import NavBar from '@/components/navbar/index.vue';
   import Menu from '@/components/menu/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  import usePermission from '@/hooks/permission';
   import useResponsive from '@/hooks/responsive';
   import PageLayout from './page-layout.vue';
 
   const isInit = ref(false);
   const appStore = useAppStore();
-  const userStore = useUserStore();
   const router = useRouter();
   const route = useRoute();
-  const permission = usePermission();
   useResponsive(true);
   const navbarHeight = `60px`;
   const navbar = computed(() => appStore.navbar);
@@ -93,15 +91,6 @@
     if (!isInit.value) return;
     appStore.updateSettings({ menuCollapse: val });
   };
-
-  // 监听权限变化
-  watch(
-    () => userStore.permission,
-    (permissionValue) => {
-      if (permissionValue && !permission.accessRouter(route))
-        router.push({ name: 'forbidden' });
-    }
-  );
 
   const drawerVisible = ref(false);
   const drawerCancel = () => {

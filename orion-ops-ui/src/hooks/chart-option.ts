@@ -17,7 +17,6 @@ export default function useChartOption(sourceOption: optionsFn) {
   });
   // echarts support https://echarts.apache.org/zh/theme-builder.html
   // It's not used here
-  // TODO echarts themes
   const chartOption = computed<EChartsOption>(() => {
     return sourceOption(isDark.value);
   });

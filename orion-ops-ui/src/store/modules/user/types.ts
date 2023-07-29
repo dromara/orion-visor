@@ -3,6 +3,6 @@ export interface UserState {
   username?: string;
   nickname?: string;
   avatar?: string;
-  permission?: string[];
   roles?: string[];
+  permission?: string[];
 }

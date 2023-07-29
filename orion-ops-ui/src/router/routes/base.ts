@@ -24,9 +24,6 @@ export const LOGIN_ROUTER: RouteRecordRaw = {
   path: '/login',
   name: LOGIN_ROUTE_NAME,
   component: () => import('@/views/login/index.vue'),
-  meta: {
-    requiresAuth: false,
-  },
 };
 
 /**
@@ -37,7 +34,6 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
   name: 'redirectWrapper',
   component: DEFAULT_LAYOUT,
   meta: {
-    requiresAuth: true,
     hideInMenu: true,
   },
   children: [
@@ -46,7 +42,6 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
       name: REDIRECT_ROUTE_NAME,
       component: () => import('@/views/redirect/index.vue'),
       meta: {
-        requiresAuth: true,
         hideInMenu: true,
       },
     },

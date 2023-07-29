@@ -1,14 +1,12 @@
 import { DirectiveBinding } from 'vue';
-import { useUserStore } from '@/store';
+import usePermission from '@/hooks/permission';
 
 function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
   const { value } = binding;
-  const userStore = useUserStore();
-  // TODO TEST
+  const permission = usePermission();
   if (Array.isArray(value)) {
     if (value.length > 0) {
-      const hasPermission = userStore.permission?.includes(value as any as string);
-      if (!hasPermission && el.parentNode) {
+      if (!permission.hasAnyPermission(value) && el.parentNode) {
         el.parentNode.removeChild(el);
       }
     }

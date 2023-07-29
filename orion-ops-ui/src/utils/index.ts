@@ -58,37 +58,6 @@ export function isEmptyStr(val: any) {
 }
 
 /**
- * 复制到剪切板
- */
-// export function copyToClipboard(content: any) {
-//   const clipboardData = window.clipboardData;
-//   if (clipboardData) {
-//     clipboardData.clearData();
-//     clipboardData.setData('Text', content);
-//     return true;
-//   } else if (document.execCommand) {
-//     const el = document.createElement('textarea');
-//     el.value = content;
-//     el.setAttribute('readonly', '');
-//     el.style.position = 'absolute';
-//     el.style.left = '-9999px';
-//     document.body.appendChild(el);
-//     el.select();
-//     document.execCommand('copy');
-//     document.body.removeChild(el);
-//     return true;
-//   }
-//   return false;
-// }
-
-/**
- * 获取剪切板内容 返回 promise
- */
-export function getClipboardText() {
-  return navigator.clipboard.readText();
-}
-
-/**
  * 格式化时间
  */
 export function dateFormat(date = new Date(), pattern = 'yyyy-MM-dd HH:mm:ss') {

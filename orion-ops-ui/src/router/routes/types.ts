@@ -7,7 +7,7 @@ export type Component<T = any> =
   | (() => Promise<T>);
 
 export interface AppRouteRecordRaw {
-  path: string;
+  path?: string;
   name?: string | symbol;
   meta?: RouteMeta;
   redirect?: string;

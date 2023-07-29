@@ -1,25 +1,8 @@
 import type { RouteLocationNormalized } from 'vue-router';
 import { defineStore } from 'pinia';
-import { DEFAULT_TAB, DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME, } from '@/router/constants';
+import { DEFAULT_TAB, DEFAULT_ROUTE_NAME, BAN_TAB_LIST, routerToTag } from '@/router/constants';
 import { isString } from '@/utils/is';
 import { TabBarState, TagProps } from './types';
-
-/**
- * router 转 tag
- */
-const formatTag = (route: RouteLocationNormalized): TagProps => {
-  const { name, meta, fullPath, query } = route;
-  return {
-    title: meta.locale || '',
-    name: String(name),
-    fullPath,
-    query,
-    ignoreCache: meta.ignoreCache,
-  };
-};
-
-// 不添加的 tab 集合
-const BAN_LIST = [REDIRECT_ROUTE_NAME];
 
 const useTabBarStore = defineStore('tabBar', {
   state: (): TabBarState => ({
@@ -41,8 +24,8 @@ const useTabBarStore = defineStore('tabBar', {
      * 添加 tab
      */
     updateTabList(route: RouteLocationNormalized) {
-      if (BAN_LIST.includes(route.name as string)) return;
-      this.tagList.push(formatTag(route));
+      if (BAN_TAB_LIST.includes(route.name as string)) return;
+      this.tagList.push(routerToTag(route));
       if (!route.meta.ignoreCache) {
         this.cacheTabList.add(route.name as string);
       }

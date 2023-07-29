@@ -15,5 +15,7 @@ export interface AppState {
   device: string;
   tabBar: boolean;
   serverMenu: RouteRecordNormalized[];
+  menuFetched: boolean;
+
   [key: string]: unknown;
 }
