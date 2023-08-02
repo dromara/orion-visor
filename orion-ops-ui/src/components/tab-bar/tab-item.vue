@@ -17,33 +17,33 @@
       </span>
     </span>
     <template #content>
-      <a-doption :disabled="disabledReload" :value="Eaction.reload">
+      <a-doption :disabled="disabledReload" :value="Option.reload">
         <icon-refresh />
         <span>重新加载</span>
       </a-doption>
       <a-doption
-        class="sperate-line"
+        class="group-line"
         :disabled="disabledCurrent"
-        :value="Eaction.current">
+        :value="Option.current">
         <icon-close />
         <span>关闭当前标签页</span>
       </a-doption>
-      <a-doption :disabled="disabledLeft" :value="Eaction.left">
+      <a-doption :disabled="disabledLeft" :value="Option.left">
         <icon-to-left />
         <span>关闭左侧标签页</span>
       </a-doption>
       <a-doption
-        class="sperate-line"
+        class="group-line"
         :disabled="disabledRight"
-        :value="Eaction.right">
+        :value="Option.right">
         <icon-to-right />
         <span>关闭右侧标签页</span>
       </a-doption>
-      <a-doption :value="Eaction.others">
+      <a-doption :value="Option.others">
         <icon-swap />
         <span>关闭其它标签页</span>
       </a-doption>
-      <a-doption :value="Eaction.all">
+      <a-doption :value="Option.all">
         <icon-folder-delete />
         <span>关闭全部标签页</span>
       </a-doption>
@@ -58,8 +58,7 @@
   import type { TagProps } from '@/store/modules/tab-bar/types';
   import { DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from '@/router/constants';
 
-  // eslint-disable-next-line no-shadow
-  enum Eaction {
+  enum Option {
     reload = 'reload',
     current = 'current',
     left = 'left',
@@ -126,48 +125,46 @@
   const actionSelect = async (value: any) => {
     const { itemData, index } = props;
     const copyTagList = [...tagList.value];
-    if (value === Eaction.current) {
+    if (value === Option.current) {
       // 关闭当前
       tagClose(itemData, index);
-    } else if (value === Eaction.left) {
+    } else if (value === Option.left) {
       // 关闭左侧
       const currentRouteIdx = findCurrentRouteIndex();
       copyTagList.splice(1, props.index - 1);
 
       tabBarStore.freshTabList(copyTagList);
       if (currentRouteIdx < index) {
-        router.push({ name: itemData.name });
+        await router.push({ name: itemData.name });
       }
-    } else if (value === Eaction.right) {
+    } else if (value === Option.right) {
       // 关闭右侧
       const currentRouteIdx = findCurrentRouteIndex();
       copyTagList.splice(props.index + 1);
 
       tabBarStore.freshTabList(copyTagList);
       if (currentRouteIdx > index) {
-        router.push({ name: itemData.name });
+        await router.push({ name: itemData.name });
       }
-    } else if (value === Eaction.others) {
+    } else if (value === Option.others) {
       // 关闭其他
       const filterList = tagList.value.filter((el, idx) => {
         return idx === 0 || idx === props.index;
       });
       tabBarStore.freshTabList(filterList);
-      router.push({ name: itemData.name });
-    } else if (value === Eaction.reload) {
+      await router.push({ name: itemData.name });
+    } else if (value === Option.reload) {
       // 重新加载
       tabBarStore.deleteCache(itemData);
       await router.push({
         name: REDIRECT_ROUTE_NAME,
-        params: {
-          path: route.fullPath,
-        },
+        params: { path: route.fullPath },
       });
       tabBarStore.addCache(itemData.name);
     } else {
       // 关闭全部
       tabBarStore.resetTabList();
-      router.push({ name: DEFAULT_ROUTE_NAME });
+      await router.push({ name: DEFAULT_ROUTE_NAME });
     }
   };
 </script>
@@ -206,7 +203,7 @@
     }
   }
 
-  .sperate-line {
+  .group-line {
     border-bottom: 1px solid var(--color-neutral-3);
   }
 </style>

@@ -78,7 +78,6 @@
        * 监听路由 设置打开的 key
        */
       listenerRouteChange((newRoute) => {
-        // TODO
         const { activeMenu, hideInMenu } = newRoute.meta;
         if (!hideInMenu || activeMenu) {
           const menuOpenKeys = findMenuOpenKeys(

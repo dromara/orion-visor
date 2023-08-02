@@ -15,9 +15,6 @@ const USER: AppRouteRecordRaw = {
       path: '/user/userChild2',
       name: 'userChild2',
       component: () => import('@/views/user/child2/index.vue'),
-      meta: {
-        noAffix: true
-      }
     },
   ],
 };

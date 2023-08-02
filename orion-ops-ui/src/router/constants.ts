@@ -35,13 +35,10 @@ export const DEFAULT_TAB = {
 /**
  * router 转 tag
  */
-// TODO 获取后端meta
 export const routerToTag = (route: RouteLocationNormalized): TagProps => {
-  console.log(route);
-  // TODO 还是得需要 name 和 meta 的映射
   const { name, meta, fullPath, query } = route;
   return {
-    title: meta.locale || 'me',
+    title: meta.locale || '',
     name: String(name),
     fullPath,
     query,

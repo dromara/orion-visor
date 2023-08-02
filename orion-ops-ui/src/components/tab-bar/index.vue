@@ -21,6 +21,7 @@
 <script lang="ts" setup>
   import { computed, onUnmounted, ref, watch } from 'vue';
   import type { RouteLocationNormalized } from 'vue-router';
+  import { routerToTag } from '@/router/constants';
   import { listenerRouteChange, removeRouteListener, } from '@/utils/route-listener';
   import { useAppStore, useTabBarStore } from '@/store';
   import TabItem from './tab-item.vue';
@@ -46,16 +47,13 @@
   /**
    * 监听路由变化
    */
-  // TODO
   listenerRouteChange((route: RouteLocationNormalized) => {
-    console.log(route);
-    console.log(!route.meta.noAffix);
     if (
-      !route.meta.noAffix && // todo 改一下
+      !route.meta.noAffix &&
       !tagList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
-      console.log('updateTabList', route);
-      tabBarStore.updateTabList(route);
+      // 固定并且没有此 tab 则添加
+      tabBarStore.addTab(routerToTag(route), route.meta?.ignoreCache as unknown as any);
     }
   }, true);
 

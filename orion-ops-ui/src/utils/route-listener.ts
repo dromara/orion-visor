@@ -9,9 +9,7 @@ let latestRoute: RouteLocationNormalized;
 
 export function setRouteEmitter(to: RouteLocationNormalized) {
   emitter.emit(key, to);
-  // TODO 这里寻找
   latestRoute = to;
-  console.log('change', to);
 }
 
 /**

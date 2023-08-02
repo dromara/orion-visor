@@ -1,12 +1,12 @@
-import type { Router, RouteRecordNormalized } from 'vue-router';
+import type { Router } from 'vue-router';
 import NProgress from 'nprogress';
 import { useAppStore } from '@/store';
 import { NOT_FOUND_ROUTER_NAME, WHITE_ROUTER_LIST } from '../constants';
+import usePermission from '@/hooks/permission';
 
 export default function setupPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     const appStore = useAppStore();
-
     // 未加载菜单 并且 不在白名单内 则加载菜单
     if (
       !appStore.menuFetched &&
@@ -15,25 +15,20 @@ export default function setupPermissionGuard(router: Router) {
       // 加载菜单
       await appStore.fetchMenuConfig();
     }
-    // 检查路由是否存在于授权路由中
-    const menuConfig = [...appStore.appAsyncMenus, ...WHITE_ROUTER_LIST];
-    let exist = false;
-    while (menuConfig.length && !exist) {
-      const element = menuConfig.shift();
-      if (element?.name === to.name) exist = true;
-
-      if (element?.children) {
-        menuConfig.push(
-          ...(element.children as unknown as RouteRecordNormalized[])
-        );
-      }
+    // 检测是否可以访问
+    const permission = usePermission();
+    const access = permission.accessRouter(to);
+    // 刚进入页面时 重定向的 meta 是空的
+    if (access && to.meta.locale === undefined && appStore.menuFetched) {
+      to.meta = to.matched[to.matched.length - 1].meta;
     }
-    if (!exist) {
-      // 页面不存在
-      next({ name: NOT_FOUND_ROUTER_NAME });
-    } else {
+
+    if (access) {
       // 正常跳转
       next();
+    } else {
+      // 页面不存在
+      next({ name: NOT_FOUND_ROUTER_NAME });
     }
     NProgress.done();
   });
