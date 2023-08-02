@@ -43,6 +43,7 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
       component: () => import('@/views/redirect/index.vue'),
       meta: {
         hideInMenu: true,
+        noAffix: true
       },
     },
   ],

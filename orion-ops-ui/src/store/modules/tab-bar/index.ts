@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized } from 'vue-router';
 import { defineStore } from 'pinia';
-import { DEFAULT_TAB, DEFAULT_ROUTE_NAME, BAN_TAB_LIST, routerToTag } from '@/router/constants';
+import { DEFAULT_TAB, DEFAULT_ROUTE_NAME, routerToTag } from '@/router/constants';
 import { isString } from '@/utils/is';
 import { TabBarState, TagProps } from './types';
 
@@ -24,7 +24,6 @@ const useTabBarStore = defineStore('tabBar', {
      * 添加 tab
      */
     updateTabList(route: RouteLocationNormalized) {
-      if (BAN_TAB_LIST.includes(route.name as string)) return;
       this.tagList.push(routerToTag(route));
       if (!route.meta.ignoreCache) {
         this.cacheTabList.add(route.name as string);

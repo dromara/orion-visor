@@ -1,22 +1,25 @@
 import 'vue-router';
 
+/**
+ * 前端覆盖后端
+ */
 declare module 'vue-router' {
   interface RouteMeta {
-    // 后端赋值
+    // 图标
     icon?: string;
-    // 后端赋值
+    // 名称
     locale?: string;
-    // 后端赋值
+    // 排序
     order?: number;
-    // 后端赋值 是否隐藏菜单
+    // 是否隐藏菜单
     hideInMenu?: boolean;
-    // 后端赋值 是否隐藏子菜单
+    // 是否隐藏子菜单
     hideChildrenInMenu?: boolean;
-    // 后端赋值 是否添加到 tab
+    // 是否添加到 tab
     noAffix?: boolean;
-    // 前端赋值 是否忽略缓存
+    // 是否忽略缓存
     ignoreCache?: boolean;
-    // 不赋值
+    // 是否活跃
     activeMenu?: string;
   }
 }

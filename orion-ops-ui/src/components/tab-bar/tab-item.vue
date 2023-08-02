@@ -2,20 +2,17 @@
   <a-dropdown
     trigger="contextMenu"
     :popup-max-height="false"
-    @select="actionSelect"
-  >
+    @select="actionSelect">
     <span
       class="arco-tag arco-tag-size-medium arco-tag-checked"
       :class="{ 'link-activated': itemData.fullPath === $route.fullPath }"
-      @click="goto(itemData)"
-    >
+      @click="goto(itemData)">
       <span class="tag-link">
-        {{ $t(itemData.title) }}
+        {{ itemData.title }}
       </span>
       <span
         class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
-        @click.stop="tagClose(itemData, index)"
-      >
+        @click.stop="tagClose(itemData, index)">
         <icon-close />
       </span>
     </span>
@@ -27,8 +24,7 @@
       <a-doption
         class="sperate-line"
         :disabled="disabledCurrent"
-        :value="Eaction.current"
-      >
+        :value="Eaction.current">
         <icon-close />
         <span>关闭当前标签页</span>
       </a-doption>
@@ -39,8 +35,7 @@
       <a-doption
         class="sperate-line"
         :disabled="disabledRight"
-        :value="Eaction.right"
-      >
+        :value="Eaction.right">
         <icon-to-right />
         <span>关闭右侧标签页</span>
       </a-doption>
@@ -113,6 +108,9 @@
     return props.index === tagList.value.length - 1;
   });
 
+  /**
+   * 关闭 tag
+   */
   const tagClose = (tag: TagProps, idx: number) => {
     tabBarStore.deleteTab(idx, tag);
     if (props.itemData.fullPath === route.fullPath) {
@@ -124,12 +122,15 @@
   const findCurrentRouteIndex = () => {
     return tagList.value.findIndex((el) => el.fullPath === route.fullPath);
   };
+
   const actionSelect = async (value: any) => {
     const { itemData, index } = props;
     const copyTagList = [...tagList.value];
     if (value === Eaction.current) {
+      // 关闭当前
       tagClose(itemData, index);
     } else if (value === Eaction.left) {
+      // 关闭左侧
       const currentRouteIdx = findCurrentRouteIndex();
       copyTagList.splice(1, props.index - 1);
 
@@ -138,6 +139,7 @@
         router.push({ name: itemData.name });
       }
     } else if (value === Eaction.right) {
+      // 关闭右侧
       const currentRouteIdx = findCurrentRouteIndex();
       copyTagList.splice(props.index + 1);
 
@@ -146,14 +148,15 @@
         router.push({ name: itemData.name });
       }
     } else if (value === Eaction.others) {
+      // 关闭其他
       const filterList = tagList.value.filter((el, idx) => {
         return idx === 0 || idx === props.index;
       });
       tabBarStore.freshTabList(filterList);
       router.push({ name: itemData.name });
     } else if (value === Eaction.reload) {
+      // 重新加载
       tabBarStore.deleteCache(itemData);
-      console.log(route.fullPath);
       await router.push({
         name: REDIRECT_ROUTE_NAME,
         params: {
@@ -162,6 +165,7 @@
       });
       tabBarStore.addCache(itemData.name);
     } else {
+      // 关闭全部
       tabBarStore.resetTabList();
       router.push({ name: DEFAULT_ROUTE_NAME });
     }

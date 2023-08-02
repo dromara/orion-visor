@@ -4,7 +4,7 @@
       <div class="tab-bar-box">
         <div class="tab-bar-scroll">
           <div class="tags-wrap">
-            <tab-item
+            <TabItem
               v-for="(tag, index) in tagList"
               :key="tag.fullPath"
               :index="index"
@@ -19,14 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, onUnmounted } from 'vue';
+  import { computed, onUnmounted, ref, watch } from 'vue';
   import type { RouteLocationNormalized } from 'vue-router';
-  import {
-    listenerRouteChange,
-    removeRouteListener,
-  } from '@/utils/route-listener';
+  import { listenerRouteChange, removeRouteListener, } from '@/utils/route-listener';
   import { useAppStore, useTabBarStore } from '@/store';
-  import tabItem from './tab-item.vue';
+  import TabItem from './tab-item.vue';
 
   const appStore = useAppStore();
   const tabBarStore = useTabBarStore();
@@ -45,11 +42,19 @@
       affixRef.value.updatePosition();
     }
   );
+
+  /**
+   * 监听路由变化
+   */
+  // TODO
   listenerRouteChange((route: RouteLocationNormalized) => {
+    console.log(route);
+    console.log(!route.meta.noAffix);
     if (
-      !route.meta.noAffix &&
+      !route.meta.noAffix && // todo 改一下
       !tagList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
+      console.log('updateTabList', route);
       tabBarStore.updateTabList(route);
     }
   }, true);
@@ -66,7 +71,7 @@
 
     .tab-bar-box {
       display: flex;
-      padding: 0 0 0 20px;
+      padding: 0 0 0 6px;
       background-color: var(--color-bg-2);
       border-bottom: 1px solid var(--color-border);
 

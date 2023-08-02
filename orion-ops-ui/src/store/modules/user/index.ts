@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import { getUserInfo } from '@/api/user';
-import { login as userLogin, LoginRequest, logout as userLogout, } from '@/api/user/auth';
+import { getUserPermission, login as userLogin, LoginRequest, logout as userLogout } from '@/api/user/auth';
 import { clearToken, setToken } from '@/utils/auth';
 import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
@@ -13,8 +12,8 @@ const useUserStore = defineStore('user', {
     username: undefined,
     nickname: undefined,
     avatar: undefined,
-    permission: undefined,
     roles: undefined,
+    permission: undefined,
   }),
 
   getters: {
@@ -35,13 +34,14 @@ const useUserStore = defineStore('user', {
      * 获取用户信息
      */
     async info() {
-      const res = await getUserInfo();
+      const { data } = await getUserPermission();
       this.setInfo({
-        id: 1,
-        username: 'admin',
-        nickname: '管理员',
-        permission: ['*'],
-        roles: ['admin'],
+        id: data.user.id,
+        username: data.user.username,
+        nickname: data.user.nickname,
+        avatar: data.user.avatar,
+        roles: data.roles,
+        permission: data.permissions,
       });
     },
 
@@ -54,7 +54,9 @@ const useUserStore = defineStore('user', {
           username: loginForm.username,
           password: md5(loginForm.password),
         };
+        // 执行登陆
         const res = await userLogin(loginRequest);
+        // 设置登陆 token
         setToken(res.data.token);
       } catch (err) {
         clearToken();
@@ -69,6 +71,7 @@ const useUserStore = defineStore('user', {
       try {
         await userLogout();
       } finally {
+        // 登出回调
         this.logoutCallBack();
       }
     },

@@ -1,23 +1,21 @@
 import type { Router, RouteRecordNormalized } from 'vue-router';
 import NProgress from 'nprogress';
-import usePermission from '@/hooks/permission';
 import { useAppStore } from '@/store';
-import { WHITE_ROUTER_LIST, NOT_FOUND_ROUTER_NAME, FORBIDDEN_ROUTER_NAME } from '../constants';
+import { NOT_FOUND_ROUTER_NAME, WHITE_ROUTER_LIST } from '../constants';
 
 export default function setupPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     const appStore = useAppStore();
-    const permission = usePermission();
 
-    // 未加载菜单 并且 未从白名单中找到 to.name
+    // 未加载菜单 并且 不在白名单内 则加载菜单
     if (
-      !appStore.appAsyncMenus.length &&
+      !appStore.menuFetched &&
       !WHITE_ROUTER_LIST.find((el) => el.name === to.name)
     ) {
       // 加载菜单
       await appStore.fetchMenuConfig();
     }
-    // 检查路由是否存在
+    // 检查路由是否存在于授权路由中
     const menuConfig = [...appStore.appAsyncMenus, ...WHITE_ROUTER_LIST];
     let exist = false;
     while (menuConfig.length && !exist) {
@@ -30,14 +28,9 @@ export default function setupPermissionGuard(router: Router) {
         );
       }
     }
-    // 检查是否有权限
-    const permissionsAllow = permission.accessRouter(to);
     if (!exist) {
       // 页面不存在
       next({ name: NOT_FOUND_ROUTER_NAME });
-    } else if (!permissionsAllow) {
-      // 无权限
-      next({ name: FORBIDDEN_ROUTER_NAME });
     } else {
       // 正常跳转
       next();

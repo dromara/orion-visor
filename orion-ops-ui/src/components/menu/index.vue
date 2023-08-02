@@ -30,6 +30,9 @@
       const openKeys = ref<string[]>([]);
       const selectedKey = ref<string[]>([]);
 
+      /**
+       * 跳转
+       */
       const goto = (item: RouteRecordRaw) => {
         // 打开外链
         if (regexUrl.test(item.path)) {
@@ -48,6 +51,7 @@
           name: item.name,
         });
       };
+
       const findMenuOpenKeys = (target: string) => {
         const result: string[] = [];
         let isFind = false;
@@ -69,9 +73,14 @@
         });
         return result;
       };
+
+      /**
+       * 监听路由 设置打开的 key
+       */
       listenerRouteChange((newRoute) => {
-        const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;
-        if (requiresAuth && (!hideInMenu || activeMenu)) {
+        // TODO
+        const { activeMenu, hideInMenu } = newRoute.meta;
+        if (!hideInMenu || activeMenu) {
           const menuOpenKeys = findMenuOpenKeys(
             (activeMenu || newRoute.name) as string
           );
@@ -84,11 +93,14 @@
           ];
         }
       }, true);
+
+      // 展开菜单
       const setCollapse = (val: boolean) => {
         if (appStore.device === 'desktop')
           appStore.updateSettings({ menuCollapse: val });
       };
 
+      // 渲染菜单
       const renderSubMenu = () => {
         function travel(_route: RouteRecordRaw[], nodes = []) {
           if (_route) {
@@ -103,7 +115,8 @@
                     key={element?.name}
                     v-slots={{
                       icon,
-                      title: () => h(compile(t(element?.meta?.locale || ''))),
+                      // 去除国际化 title: () => h(compile(t(element?.meta?.locale || ''))),
+                      title: () => h(compile(element?.meta?.locale || '')),
                     }}
                   >
                     {travel(element?.children)}
@@ -114,7 +127,7 @@
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {t(element?.meta?.locale || '')}
+                    {element?.meta?.locale || ''}
                   </a-menu-item>
                 );
               nodes.push(node as never);
@@ -157,6 +170,15 @@
       &:not(.arco-icon-down) {
         font-size: 18px;
       }
+    }
+
+    .arco-menu-icon {
+      margin-right: 10px !important;
+    }
+
+    .arco-menu-indent-list {
+      width: 28px;
+      display: inline-block;
     }
   }
 </style>

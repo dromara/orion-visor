@@ -81,7 +81,9 @@
     if (!errors) {
       setLoading(true);
       try {
+        // 执行登陆
         await userStore.login(values as LoginData);
+        // 跳转路由
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({
           name: (redirect as string) || 'workplace',

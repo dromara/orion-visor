@@ -4,26 +4,46 @@ import { useUserStore } from '@/store';
 export default function usePermission() {
   const userStore = useUserStore();
   return {
-    // TODO test
+    /**
+     * 是否可访问路由
+     */
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
-      return (
-        !route.meta?.requiresAuth ||
-        !route.meta?.permission ||
-        userStore.permission?.includes(route.meta?.permission)
-      );
+      // route.name
+      // TODO
     },
-    findFirstPermissionRoute(_routers: any, permission: string) {
-      const cloneRouters = [..._routers];
-      while (cloneRouters.length) {
-        const firstElement = cloneRouters.shift();
-        if (firstElement?.meta?.permission === permission) {
-          return { name: firstElement.name };
-        }
-        if (firstElement?.children) {
-          cloneRouters.push(...firstElement.children);
-        }
-      }
-      return null;
+
+    /**
+     * 是否有权限
+     */
+    hasPermission(permission: string) {
+      return userStore.permission?.includes('*') ||
+        userStore.permission?.includes(permission);
     },
+
+    /**
+     * 是否有权限
+     */
+    hasAnyPermission(permission: string[]) {
+      return userStore.permission?.includes('*') ||
+        permission.map(s => userStore.permission?.includes(s))
+        .filter(Boolean).length > 0;
+    },
+
+    /**
+     * 是否有角色
+     */
+    hasRole(role: string) {
+      return userStore.roles?.includes('admin') ||
+        userStore.roles?.includes(role);
+    },
+
+    /**
+     * 是否有角色
+     */
+    hasAnyRole(role: string[]) {
+      return userStore.roles?.includes('*') ||
+        role.map(s => userStore.roles?.includes(s))
+        .filter(Boolean).length > 0;
+    }
   };
 }
