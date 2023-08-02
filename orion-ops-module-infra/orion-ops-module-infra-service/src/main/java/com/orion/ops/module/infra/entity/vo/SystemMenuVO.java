@@ -55,10 +55,10 @@ public class SystemMenuVO implements Serializable {
     @Schema(description = "菜单图标")
     private String icon;
 
-    @Schema(description = "路由地址")
+    @Schema(description = "链接地址")
     private String path;
 
-    @Schema(description = "组件地址")
+    @Schema(description = "组件名称")
     private String component;
 
     @Schema(description = "子节点")

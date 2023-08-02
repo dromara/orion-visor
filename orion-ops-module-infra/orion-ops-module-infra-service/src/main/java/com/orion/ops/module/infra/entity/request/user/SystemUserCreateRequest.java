@@ -24,18 +24,18 @@ import java.io.Serializable;
 @Schema(name = "SystemUserCreateRequest", description = "用户 创建请求对象")
 public class SystemUserCreateRequest implements Serializable {
 
-    @Size(max = 32)
     @NotBlank
+    @Size(max = 32)
     @Schema(description = "用户名")
     private String username;
 
-    @Size(max = 64)
     @NotBlank
+    @Size(max = 64)
     @Schema(description = "密码")
     private String password;
 
-    @Size(max = 16)
     @NotBlank
+    @Size(max = 16)
     @Schema(description = "花名")
     private String nickname;
 

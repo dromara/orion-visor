@@ -29,8 +29,8 @@ public class SystemMenuValidFunctionRequest implements Serializable {
     @Schema(description = "父id")
     private Long parentId;
 
-    @Size(max = 32)
     @NotBlank
+    @Size(max = 32)
     @Schema(description = "菜单名称")
     private String name;
 

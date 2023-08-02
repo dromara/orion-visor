@@ -66,11 +66,11 @@ public class SystemMenuDO extends BaseDO {
     @TableField("icon")
     private String icon;
 
-    @Schema(description = "路由地址")
+    @Schema(description = "链接地址")
     @TableField("path")
     private String path;
 
-    @Schema(description = "组件地址")
+    @Schema(description = "组件名称")
     @TableField("component")
     private String component;
 

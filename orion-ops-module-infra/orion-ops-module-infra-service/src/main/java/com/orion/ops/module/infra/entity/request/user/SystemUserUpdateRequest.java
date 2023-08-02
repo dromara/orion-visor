@@ -29,8 +29,8 @@ public class SystemUserUpdateRequest implements Serializable {
     @Schema(description = "id")
     private Long id;
 
-    @Size(max = 16)
     @NotBlank
+    @Size(max = 16)
     @Schema(description = "花名")
     private String nickname;
 

@@ -28,8 +28,8 @@ public class ${type}UpdateRequest implements Serializable {
     #foreach($field in ${table.fields})
 
     #if("$field.propertyType" == "String")
-    @Size(max = $field.metaInfo.length)
     @NotBlank
+    @Size(max = $field.metaInfo.length)
     #else
     @NotNull
     #end
