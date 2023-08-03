@@ -95,6 +95,10 @@
                 display: none;
               }
             }
+
+            .tag-link {
+              user-select: none;
+            }
           }
         }
       }

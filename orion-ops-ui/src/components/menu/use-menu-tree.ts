@@ -1,6 +1,5 @@
 import { computed } from 'vue';
 import { RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
-import usePermission from '@/hooks/permission';
 import { useAppStore } from '@/store';
 import { cloneDeep } from 'lodash';
 

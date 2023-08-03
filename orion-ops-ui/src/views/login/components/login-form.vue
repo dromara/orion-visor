@@ -57,7 +57,7 @@
   import { useI18n } from 'vue-i18n';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import type { LoginData } from '@/api/user';
+  import type { LoginRequest } from '@/api/user/auth';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -82,7 +82,7 @@
       setLoading(true);
       try {
         // 执行登陆
-        await userStore.login(values as LoginData);
+        await userStore.login(values as LoginRequest);
         // 跳转路由
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({

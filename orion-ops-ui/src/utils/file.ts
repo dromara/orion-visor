@@ -1,4 +1,4 @@
-import { isEmptyStr } from '@/utils/index';
+import { isEmptyStr } from './index';
 
 /**
  * 获取 base64 实际数据

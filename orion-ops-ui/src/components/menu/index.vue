@@ -179,5 +179,9 @@
       width: 28px;
       display: inline-block;
     }
+
+    .arco-menu-title {
+      user-select: none;
+    }
   }
 </style>

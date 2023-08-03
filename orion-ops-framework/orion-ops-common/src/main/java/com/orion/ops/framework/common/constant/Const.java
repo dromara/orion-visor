@@ -26,6 +26,6 @@ public class Const implements com.orion.lang.constant.Const {
 
     public static final Long ROOT_MENU_ID = 0L;
 
-    public static final Integer DEFAULT_SORT = 0;
+    public static final Integer DEFAULT_SORT = 10;
 
 }

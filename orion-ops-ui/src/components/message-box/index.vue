@@ -6,7 +6,7 @@
           <span> {{ item.title }}{{ formatUnreadLength(item.key) }} </span>
         </template>
         <a-result v-if="!renderList.length" status="404">
-          <template #subtitle> {{ $t('messageBox.noContent') }} </template>
+          <template #subtitle> {{ $t('messageBox.noContent') }}</template>
         </a-result>
         <List
           :render-list="renderList"
@@ -31,7 +31,7 @@
     setMessageStatus,
     MessageRecord,
     MessageListType,
-  } from '@/api/message';
+  } from '@/api/message/message';
   import useLoading from '@/hooks/loading';
   import List from './list.vue';
 
@@ -40,6 +40,7 @@
     title: string;
     avatar?: string;
   }
+
   const { loading, setLoading } = useLoading(true);
   const messageType = ref('message');
   const { t } = useI18n();
@@ -65,6 +66,7 @@
       title: t('messageBox.tab.title.todo'),
     },
   ];
+
   async function fetchSourceData() {
     setLoading(true);
     try {
@@ -76,11 +78,13 @@
       setLoading(false);
     }
   }
+
   async function readMessage(data: MessageListType) {
     const ids = data.map((item) => item.id);
     await setMessageStatus({ ids });
     fetchSourceData();
   }
+
   const renderList = computed(() => {
     return messageData.messageList.filter(
       (item) => messageType.value === item.type
@@ -116,12 +120,15 @@
   :deep(.arco-list-item-meta) {
     align-items: flex-start;
   }
+
   :deep(.arco-tabs-nav) {
     padding: 14px 0 12px 16px;
     border-bottom: 1px solid var(--color-neutral-3);
   }
+
   :deep(.arco-tabs-content) {
     padding-top: 0;
+
     .arco-result-subtitle {
       color: rgb(var(--gray-6));
     }
