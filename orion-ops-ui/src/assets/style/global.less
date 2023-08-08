@@ -17,11 +17,9 @@ body {
 }
 
 .echarts-tooltip-diy {
-  background: linear-gradient(
-    304.17deg,
+  background: linear-gradient(304.17deg,
     rgba(253, 254, 255, 0.6) -6.04%,
-    rgba(244, 247, 252, 0.6) 85.2%
-  ) !important;
+  rgba(244, 247, 252, 0.6) 85.2%) !important;
   border: none !important;
   backdrop-filter: blur(10px) !important;
   /* Note: backdrop-filter has minimal browser support */
@@ -75,12 +73,20 @@ body {
 
   & > .arco-card-header {
     height: auto;
-    padding: 20px;
+    padding: 16px;
     border: none;
   }
 
   & > .arco-card-body {
-    padding: 0 20px 20px 20px;
+    padding: 0 16px 16px 16px;
+  }
+}
+
+.a-query-header-grid {
+  .arco-grid-item {
+    &:last-child {
+      display: flex !important;
+    }
   }
 }
 

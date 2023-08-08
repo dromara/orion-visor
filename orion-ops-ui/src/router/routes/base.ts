@@ -55,7 +55,7 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
 export const FORBIDDEN_ROUTE: RouteRecordRaw = {
   path: '/:pathMatch(.*)*',
   name: FORBIDDEN_ROUTER_NAME,
-  component: () => import('@/views/base/forbidden/index.vue'),
+  component: () => import('@/views/exception/forbidden/index.vue'),
 };
 
 /**
@@ -64,7 +64,7 @@ export const FORBIDDEN_ROUTE: RouteRecordRaw = {
 export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   path: '/:pathMatch(.*)*',
   name: NOT_FOUND_ROUTER_NAME,
-  component: () => import('@/views/base/not-found/index.vue'),
+  component: () => import('@/views/exception/not-found/index.vue'),
 };
 
 export default [

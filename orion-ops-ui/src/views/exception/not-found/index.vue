@@ -1,8 +1,9 @@
 <template>
   <div class="content">
-    <a-result class="result" status="404" subtitle="not found"></a-result>
+    <a-result class="result" status="404" subtitle="糟糕! 页面不见了!" />
     <div class="operation-row">
-      <a-button key="back" type="primary" @click="back"> 返回工作台</a-button>
+      <a-button class="mr8" key="back" type="primary" @click="to('login')">重新登录</a-button>
+      <a-button key="back" type="primary" @click="to('workplace')">返回工作台</a-button>
     </div>
   </div>
 </template>
@@ -11,8 +12,14 @@
   import { useRouter } from 'vue-router';
 
   const router = useRouter();
-  const back = () => {
-    router.push({ name: 'workplace' });
+  const to = (name: string) => {
+    router.push({ name: name });
+  };
+</script>
+
+<script lang="ts">
+  export default {
+    name: 'not-found',
   };
 </script>
 

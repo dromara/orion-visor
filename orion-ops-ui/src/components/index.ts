@@ -1,5 +1,6 @@
 import { App } from 'vue';
 import { use } from 'echarts/core';
+import AQueryHeader from '@dangojs/a-query-header';
 import { CanvasRenderer } from 'echarts/renderers';
 import { BarChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
 import {
@@ -29,5 +30,6 @@ export default {
   install(Vue: App) {
     Vue.component('Chart', Chart);
     Vue.component('Breadcrumb', Breadcrumb);
+    Vue.component('a-query-header', AQueryHeader);
   },
 };

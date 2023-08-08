@@ -30,6 +30,8 @@
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.44.7",
+    "@dangojs/a-query-header": "^0.0.31",
+    "@sanqi377/arco-vue-icon-picker": "^1.0.7",
     "@vueuse/core": "^9.3.0",
     "axios": "^0.24.0",
     "dayjs": "^1.11.5",

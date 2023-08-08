@@ -1,11 +1,17 @@
 import axios from 'axios';
 import { UserState } from '@/store/modules/user/types';
 
+/**
+ * 登陆请求
+ */
 export interface LoginRequest {
   username: string;
   password: string;
 }
 
+/**
+ * 登陆响应
+ */
 export interface LoginResponse {
   token: string;
 }
