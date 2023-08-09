@@ -32,7 +32,11 @@ const useMenuStore = defineStore('menu', {
           return node;
         }).filter(Boolean);
       };
-      return render([{ name: '根目录', id: 0 }, ...state.menus]);
+      return [{
+        key: 0,
+        title: '根目录',
+        children: render([...state.menus])
+      }];
     }
   },
 
@@ -60,12 +64,12 @@ const useMenuStore = defineStore('menu', {
       // 子级
       for (let e of arr) {
         if (e.children && e.children.length) {
-          // @ts-ignore
-          if (this.findParent(e.children, id) !== null) {
+          if (this.findParentMenu(e.children, id)) {
             return e.children;
           }
         }
       }
+      return null;
     },
 
     /**

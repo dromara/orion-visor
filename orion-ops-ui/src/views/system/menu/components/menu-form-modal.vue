@@ -15,16 +15,16 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '440px' }"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 19 }"
+              :style="{ width: '460px' }"
+              :label-col-props="{ span: 6 }"
+              :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 上级菜单 -->
         <a-form-item field="parentId" label="上级菜单">
-          <menu-tree-selector v-model="formModel.parentId"
-                              :disabled="!!(isAddHandle && formModel.id)" />
+          <menu-tree-selector v-model:model-value="formModel.parentId"
+                              :disabled="formModel.type === MenuTypeEnum.PARENT_MENU.value" />
         </a-form-item>
-        <!-- 名称 -->
+        <!-- 菜单名称 -->
         <a-form-item field="name" label="菜单名称">
           <a-input v-model="formModel.name" placeholder="请输入菜单名称" />
         </a-form-item>
@@ -35,7 +35,9 @@
                          :options="toOptions(MenuTypeEnum)" />
         </a-form-item>
         <!-- 菜单图标 -->
-        <a-form-item field="icon" label="菜单图标">
+        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+                     field="icon"
+                     label="菜单图标">
           <icon-picker v-model:icon="formModel.icon">
             <template #iconSelect>
               <a-input v-model="formModel.icon" placeholder="请选择菜单图标" />
@@ -43,19 +45,26 @@
           </icon-picker>
         </a-form-item>
         <!-- 菜单权限 -->
-        <a-form-item field="permission" label="菜单权限">
+        <a-form-item v-if="formModel.type === MenuTypeEnum.FUNCTION.value"
+                     field="permission"
+                     label="菜单权限">
           <a-input v-model="formModel.permission"
                    placeholder="菜单权限 infra:system-menu:query"
                    allow-clear />
         </a-form-item>
         <!-- 外链地址 -->
-        <a-form-item field="path" label="外链地址">
+        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+                     field="path"
+                     label="外链地址"
+                     tooltip="输入组件名称后则不会生效">
           <a-input v-model="formModel.path"
                    placeholder="外链地址与组件名称二选一"
                    allow-clear />
         </a-form-item>
         <!-- 组件名称 -->
-        <a-form-item field="component" label="组件名称">
+        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+                     field="component"
+                     label="组件名称">
           <a-input v-model="formModel.component"
                    placeholder="路由组件名称"
                    allow-clear />
@@ -67,14 +76,20 @@
                           :style="{ width: '120px' }"
                           allow-clear />
         </a-form-item>
-        <!-- 可见状态 -->
-        <a-form-item field="type" label="可见状态">
+        <!-- 是否可见 -->
+        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+                     field="type"
+                     label="是否可见"
+                     tooltip="选择隐藏后不会在菜单以及 tab 中显示 但是可以访问">
           <a-radio-group type="button"
                          v-model="formModel.visible"
                          :options="toOptions(MenuVisibleEnum)" />
         </a-form-item>
-        <!-- 缓存状态 -->
-        <a-form-item field="type" label="缓存状态">
+        <!-- 是否缓存 -->
+        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+                     field="type"
+                     label="是否缓存"
+                     tooltip="选择缓存后则会使用 keep-alive 缓存组件">
           <a-radio-group type="button"
                          v-model="formModel.cache"
                          :options="toOptions(MenuCacheEnum)" />
@@ -91,7 +106,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, watch, watchEffect } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../type/form.rules';
@@ -100,6 +115,7 @@
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
   import MenuTreeSelector from '@/views/system/menu/components/menu-tree-selector.vue';
   import { createMenu, updateMenu } from '@/api/system/menu';
+  import { keysIn } from 'lodash';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -107,28 +123,39 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
+  const defaultForm = () => {
+    return {
+      id: undefined,
+      parentId: 0,
+      name: undefined,
+      type: MenuTypeEnum.PARENT_MENU.value,
+      permission: undefined,
+      sort: 10,
+      visible: MenuVisibleEnum.SHOW.value,
+      cache: MenuCacheEnum.SHOW.value,
+      icon: undefined,
+      path: undefined,
+      component: undefined,
+    };
+  };
+
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>({
-    id: undefined,
-    parentId: undefined,
-    name: undefined,
-    type: undefined,
-    permission: undefined,
-    sort: undefined,
-    visible: undefined,
-    cache: undefined,
-    icon: undefined,
-    path: undefined,
-    component: undefined,
-  });
+  const formModel = reactive<Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
+
+  // 选择根目录 parentId就是 0
+  watch(() => formModel.type, () => {
+    if (formModel.type === MenuTypeEnum.PARENT_MENU.value) {
+      formModel.parentId = 0;
+    }
+  });
 
   // 打开新增
   const openAdd = (record: any) => {
     title.value = '添加菜单';
     isAddHandle.value = true;
-    renderForm(record);
+    renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
 
@@ -136,11 +163,9 @@
   const openUpdate = (record: any) => {
     title.value = '修改菜单';
     isAddHandle.value = false;
-    renderForm(record);
+    renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
-
-  defineExpose({ openAdd, openUpdate });
 
   // 渲染表单
   const renderForm = (record: any) => {
@@ -148,6 +173,8 @@
       formModel[k] = record[k];
     });
   };
+
+  defineExpose({ openAdd, openUpdate });
 
   // 确定
   const handlerOk = async () => {
@@ -161,14 +188,14 @@
       if (isAddHandle.value) {
         // 新增
         await createMenu(formModel as any);
-        emits('added', { ...formModel });
+        emits('added');
       } else {
         // 修改
         await updateMenu(formModel as any);
-        emits('updated', { ...formModel });
+        emits('updated');
       }
       // 清空
-      // handlerClear();
+      handlerClear();
     } catch (e) {
       return false;
     } finally {
@@ -185,7 +212,6 @@
   const handlerClear = () => {
     setLoading(false);
     setVisible(false);
-    renderForm({});
   };
 
 </script>

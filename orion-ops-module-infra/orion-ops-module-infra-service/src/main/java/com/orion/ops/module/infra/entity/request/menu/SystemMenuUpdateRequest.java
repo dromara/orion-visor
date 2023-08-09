@@ -37,6 +37,9 @@ public class SystemMenuUpdateRequest implements Serializable {
     @Schema(description = "排序")
     private Integer sort;
 
+    @Schema(description = "菜单类型 1父菜单 2子菜单 3功能")
+    private Integer type;
+
     @Schema(description = "是否可见 0不可见 1可见")
     private Integer visible;
 

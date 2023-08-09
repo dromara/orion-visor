@@ -64,5 +64,4 @@ public class SystemMenuVO implements Serializable {
     @Schema(description = "子节点")
     private List<SystemMenuVO> children;
 
-
 }

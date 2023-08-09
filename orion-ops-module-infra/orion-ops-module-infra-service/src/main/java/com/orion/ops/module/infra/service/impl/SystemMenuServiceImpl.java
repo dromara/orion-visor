@@ -80,7 +80,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 转换
         SystemMenuDO updateRecord = SystemMenuConvert.MAPPER.to(request);
         // 验证参数
-        this.validateRequest(updateRecord, record.getType());
+        this.validateRequest(updateRecord, request.getType());
         // 更新
         int effect = systemMenuDAO.updateById(updateRecord);
         log.info("SystemMenuService-updateSystemMenu effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));

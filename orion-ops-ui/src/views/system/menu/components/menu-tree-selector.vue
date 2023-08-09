@@ -1,11 +1,10 @@
 <template>
-  <a-tree-select :default-value="modelValue"
+  <a-tree-select v-model:model-value="value"
                  :data="treeData"
                  :disabled="disabled"
                  :allow-search="true"
                  :filter-tree-node="filterTreeNode"
-                 placeholder="请选择上级菜单"
-                 @change="onChange" />
+                 placeholder="请选择上级菜单" />
 </template>
 
 <script lang="ts">
@@ -16,12 +15,23 @@
 
 <script lang="ts" setup>
   import { useMenuStore } from '@/store';
+  import { computed } from 'vue';
 
-  defineProps(['modelValue', 'disabled']);
+  const props = defineProps({
+    modelValue: Number,
+    disabled: Boolean
+  });
+
   const emits = defineEmits(['update:modelValue']);
-  const onChange = (e: any) => {
-    emits('update:modelValue', e);
-  };
+
+  const value = computed({
+    get() {
+      return props.modelValue;
+    },
+    set(e) {
+      emits('update:modelValue', e);
+    }
+  });
 
   // 树数据
   const menuStore = useMenuStore();

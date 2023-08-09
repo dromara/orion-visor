@@ -49,7 +49,6 @@ public class SystemMenuValidMenuRequest implements Serializable {
     @Schema(description = "菜单缓存 0不缓存 1缓存")
     private Integer cache;
 
-    @NotBlank
     @Size(max = 64)
     @Schema(description = "菜单图标")
     private String icon;

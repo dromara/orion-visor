@@ -96,11 +96,6 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         // 默认 objectMapper
         ObjectMapper objectMapper = converter.getObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        // 序列化配置
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Long.class, ToStringSerializer.instance);
-        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
-        objectMapper.registerModule(module);
         return converter;
     }
 

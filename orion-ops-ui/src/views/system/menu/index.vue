@@ -6,8 +6,8 @@
                 @openUpdate="(e) => modal.openUpdate(e)" />
     <!-- 添加修改框 -->
     <menu-form-modal ref="modal"
-                     @added="(e) => table.addedCallback(e)"
-                     @updated="(e) => table.updatedCallback(e)" />
+                     @added="() => table.addedCallback()"
+                     @updated="() => table.updatedCallback()" />
   </div>
 </template>
 

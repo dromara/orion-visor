@@ -97,7 +97,8 @@
             {{ getEnumValue(record.status, MenuStatusEnum) }}
           </a-tag>
           <!-- 显示状态 -->
-          <a-tag :color="getEnumValue(record.visible, MenuVisibleEnum,'color')">
+          <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
+                 :color="getEnumValue(record.visible, MenuVisibleEnum,'color')">
             {{ getEnumValue(record.visible, MenuVisibleEnum) }}
           </a-tag>
         </a-space>
@@ -110,7 +111,7 @@
                     size="mini"
                     v-if="record.type !== MenuTypeEnum.FUNCTION.value"
                     v-permission="['infra:system-menu:create']"
-                    @click="emits('openAdd', { id: record.id, parentId: record.id })">
+                    @click="emits('openAdd', { parentId: record.id })">
             新增
           </a-button>
           <!-- 修改 -->
@@ -192,13 +193,13 @@
   };
 
   // 添加后回调
-  const addedCallback = (record: any) => {
-    console.log('addCallback', record);
+  const addedCallback = () => {
+    loadMenuData();
   };
 
   // 更新后回调
-  const updatedCallback = (record: any) => {
-    console.log('updateCallback', record);
+  const updatedCallback = () => {
+    loadMenuData();
   };
 
   defineExpose({
