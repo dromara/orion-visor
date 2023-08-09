@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.core.generator;
+package com.orion.ops.launch.generator;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -12,6 +12,8 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
+import com.orion.ops.module.infra.enums.RoleStatusEnum;
+import com.orion.ops.module.infra.enums.UserStatusEnum;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -36,13 +38,15 @@ public class CodeGenerator {
         String author = Const.ORION_AUTHOR;
         // 模块
         String module = "infra";
-        // 生成的表 表 - 业务注释 - request文件的包前缀
+        // 生成的表
         GenTable[] tables = {
-                new GenTable("system_user", "用户", "user"),
-                new GenTable("system_role", "角色", "role"),
-                new GenTable("system_user_role", "用户角色关联", "role"),
+                new GenTable("system_user", "用户", "user")
+                        .vue("user/user", "user", "user")
+                        .enums(UserStatusEnum.class),
+                new GenTable("system_role", "角色", "role")
+                        .vue("user/role", "user", "role")
+                        .enums(RoleStatusEnum.class),
                 new GenTable("system_menu", "菜单", "menu"),
-                new GenTable("system_role_menu", "角色菜单关联", "menu")
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -275,12 +279,12 @@ public class CodeGenerator {
      */
     private static TemplateConfig getTemplateConfig() {
         TemplateConfig tplConfig = new TemplateConfig.Builder()
-                .controller("/templates/orion-controller.java.vm")
-                .entity("/templates/orion-entity-do.java.vm")
-                .service("/templates/orion-service.java.vm")
-                .serviceImpl("/templates/orion-service-impl.java.vm")
-                .mapper("/templates/orion-mapper.java.vm")
-                .xml("/templates/orion-mapper.xml.vm")
+                .controller("/templates/orion-server-controller.java.vm")
+                .entity("/templates/orion-server-entity-do.java.vm")
+                .service("/templates/orion-server-service.java.vm")
+                .serviceImpl("/templates/orion-server-service-impl.java.vm")
+                .mapper("/templates/orion-server-mapper.java.vm")
+                .xml("/templates/orion-server-mapper.xml.vm")
                 .build();
         return tplConfig;
     }
@@ -293,21 +297,35 @@ public class CodeGenerator {
     private static InjectionConfig getInjectionConfig() {
         String[][] customFileDefineArr = new String[][]{
                 // http 文件
-                new String[]{"/templates/orion-controller.http.vm", "%sController.http", "controller"},
+                new String[]{"/templates/orion-server-controller.http.vm", "%sController.http", "controller"},
                 // vo 文件
-                new String[]{"/templates/orion-entity-vo.java.vm", "%sVO.java", "entity.vo"},
+                new String[]{"/templates/orion-server-entity-vo.java.vm", "%sVO.java", "entity.vo"},
                 // dto 文件
-                new String[]{"/templates/orion-entity-dto.java.vm", "%sDTO.java", "entity.dto"},
+                new String[]{"/templates/orion-server-entity-dto.java.vm", "%sDTO.java", "entity.dto"},
                 // create request 文件
-                new String[]{"/templates/orion-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
                 // update request 文件
-                new String[]{"/templates/orion-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request.%s"},
                 // query request 文件
-                new String[]{"/templates/orion-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
                 // convert 文件
-                new String[]{"/templates/orion-convert.java.vm", "%sConvert.java", "convert"},
+                new String[]{"/templates/orion-server-convert.java.vm", "%sConvert.java", "convert"},
                 // convert provider 文件
-                new String[]{"/templates/orion-convert-provider.java.vm", "%sProviderConvert.java", "convert"},
+                new String[]{"/templates/orion-server-convert-provider.java.vm", "%sProviderConvert.java", "convert"},
+                // vue api 文件
+                new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${apiPath}"},
+                // vue views index.ts 文件
+                new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${viewsPath}"},
+                // vue form-modal.vue 文件
+                new String[]{"/templates/orion-vue-views-components-form-modal.vue.vm", "${feature}-form-modal.vue", "vue/views/${viewsPath}/components"},
+                // vue table.vue 文件
+                new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${viewsPath}/components"},
+                // vue enum.types.ts 文件
+                new String[]{"/templates/orion-vue-views-types-enum.types.ts.vm", "enum.types.ts", "vue/views/${viewsPath}/types"},
+                // vue form.rules.ts 文件
+                new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${viewsPath}/types"},
+                // vue table.vue 文件
+                new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${viewsPath}/types"},
         };
 
         // 构建文件

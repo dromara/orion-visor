@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.orion.ops.framework.mybatis.core.generator;
+package com.orion.ops.launch.generator;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.config.ConstVal;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
@@ -24,6 +23,8 @@ import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
 import org.apache.velocity.Template;
@@ -203,8 +204,30 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // 添加注释元数据
         this.addApiCommentMeta(tableInfo, objectMap);
 
-        // 生成文件
+        // 生成后端文件
+        List<CustomFile> serverFiles = customFiles.stream()
+                .filter(s -> !this.isVueFile(s.getTemplatePath()))
+                .collect(Collectors.toList());
+        this.generatorServerFile(serverFiles, tableInfo, objectMap);
+        // 生成前端文件
+        if (tables.get(tableInfo.getName()).isGenVue()) {
+            List<CustomFile> vueFiles = customFiles.stream()
+                    .filter(s -> this.isVueFile(s.getTemplatePath()))
+                    .collect(Collectors.toList());
+            this.generatorVueFile(vueFiles, tableInfo, objectMap);
+        }
+    }
+
+    /**
+     * 生成后端文件
+     *
+     * @param customFiles customFiles
+     * @param tableInfo   tableInfo
+     * @param objectMap   objectMap
+     */
+    private void generatorServerFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
         String parentPath = getPathInfo(OutputFile.parent);
+        // 生成文件
         customFiles.forEach(file -> {
             // 获取 parent package
             String currentPackage = getConfigBuilder().getPackageConfig().getParent() + "." + file.getPackageName();
@@ -212,14 +235,45 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             objectMap.put("currentPackage", currentPackage);
 
             // 文件路径
-            String filePath = StringUtils.isNotBlank(file.getFilePath()) ? file.getFilePath() : parentPath;
-            if (StringUtils.isNotBlank(file.getPackageName())) {
-                filePath = filePath + File.separator + file.getPackageName();
-                filePath = filePath.replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
-            }
+            String filePath = parentPath + File.separator + file.getPackageName()
+                    .replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
             String fileName = filePath + File.separator + String.format(file.getFileName(), objectMap.get("type"));
-            outputFile(new File(fileName), objectMap, file.getTemplatePath(), file.isFileOverride());
+            outputFile(Files1.newFile(fileName), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
+    }
+
+    /**
+     * 生成前端文件
+     *
+     * @param customFiles customFiles
+     * @param tableInfo   tableInfo
+     * @param objectMap   objectMap
+     */
+    private void generatorVueFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
+        GenTable table = tables.get(tableInfo.getName());
+        BeanMap beanMap = BeanMap.create(table, "enums");
+
+        // 生成文件
+        customFiles.forEach(file -> {
+            // 文件路径
+            String filePath = outPath
+                    + "/" + Strings.format(file.getPackageName(), beanMap)
+                    + "/" + Strings.format(file.getFileName(), beanMap);
+            // 输出文件
+            this.outputFile(Files1.newFile(filePath), objectMap, file.getTemplatePath(), file.isFileOverride());
+        });
+    }
+
+    /**
+     * 是否为 vue 文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为 vue 文件
+     */
+    private boolean isVueFile(String templatePath) {
+        return templatePath.endsWith(".ts.vm") ||
+                templatePath.endsWith(".vue.vm");
     }
 
 }
