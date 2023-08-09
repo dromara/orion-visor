@@ -1,5 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
+           body-class="modal-form"
            title-align="start"
            :title="title"
            :top="80"
@@ -212,17 +213,12 @@
   const handlerClear = () => {
     setLoading(false);
     setVisible(false);
+    // 触发 watch 防止第二次加载变成根目录
+    renderForm(defaultForm());
   };
 
 </script>
 
 <style lang="less" scoped>
-  :deep(.arco-form) {
-    &-item {
-      &:last-child {
-        margin-bottom: 0 !important;
-      }
-    }
-  }
 
 </style>

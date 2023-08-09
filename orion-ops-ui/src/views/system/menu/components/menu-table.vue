@@ -93,14 +93,25 @@
       <template #status="{ record }">
         <a-space>
           <!-- 菜单状态 -->
-          <a-tag :color="getEnumValue(record.status, MenuStatusEnum,'color')">
-            {{ getEnumValue(record.status, MenuStatusEnum) }}
-          </a-tag>
+          <a-popconfirm position="top"
+                        type="warning"
+                        :content="`确定要将当前节点以及所有子节点改为${toggleEnumValue(record.status, MenuStatusEnum, 'label')}?`"
+                        @ok="updateStatus(record.id, toggleEnumValue(record.status, MenuStatusEnum))">
+            <a-tag :color="getEnumValue(record.status, MenuStatusEnum,'color')" class="pointer">
+              {{ getEnumValue(record.status, MenuStatusEnum) }}
+            </a-tag>
+          </a-popconfirm>
           <!-- 显示状态 -->
-          <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
-                 :color="getEnumValue(record.visible, MenuVisibleEnum,'color')">
-            {{ getEnumValue(record.visible, MenuVisibleEnum) }}
-          </a-tag>
+          <a-popconfirm position="top"
+                        type="warning"
+                        :content="`确定要将当前节点以及所有子节点改为${toggleEnumValue(record.visible, MenuVisibleEnum, 'label')}?`"
+                        @ok="updateVisible(record.id, toggleEnumValue(record.visible, MenuVisibleEnum))">
+            <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
+                   :color="getEnumValue(record.visible, MenuVisibleEnum,'color')"
+                   class="pointer">
+              {{ getEnumValue(record.visible, MenuVisibleEnum) }}
+            </a-tag>
+          </a-popconfirm>
         </a-space>
       </template>
       <!-- 操作 -->
@@ -147,14 +158,14 @@
 <script lang="ts" setup>
   import { reactive, ref, onUnmounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getMenuList, deleteMenu, MenuQueryResponse } from '@/api/system/menu';
-  import { toOptions, getEnumValue } from '@/utils/enum';
+  import { getMenuList, deleteMenu, updateMenuStatus, MenuQueryResponse } from '@/api/system/menu';
+  import { toOptions, getEnumValue, toggleEnumValue } from '@/utils/enum';
   import { MenuStatusEnum, MenuVisibleEnum, MenuTypeEnum } from '../type/enum.types';
   import columns from '../type/table.columns';
   import { Message } from '@arco-design/web-vue';
-  import { useMenuStore } from '@/store';
+  import { useCacheStore } from '@/store';
 
-  const menuStore = useMenuStore();
+  const cacheStore = useCacheStore();
 
   const formRef = ref<any>();
   const formModel = reactive({
@@ -176,8 +187,31 @@
       setFetchLoading(true);
       // 调用删除接口
       await deleteMenu(id);
+
+      // 获取父菜单
+      const findParentMenu = (arr: any, id: number): any => {
+        if (!arr || !arr.length) {
+          return null;
+        }
+        // 当前级
+        for (let e of arr) {
+          if (e.id === id) {
+            return arr;
+          }
+        }
+        // 子级
+        for (let e of arr) {
+          if (e.children && e.children.length) {
+            if (findParentMenu(e.children, id)) {
+              return e.children;
+            }
+          }
+        }
+        return null;
+      };
+
       // 获取父级容器
-      const parent = menuStore.findParentMenu(tableRenderData.value, id) as unknown as MenuQueryResponse[];
+      const parent = findParentMenu(tableRenderData.value, id) as unknown as MenuQueryResponse[];
       if (parent) {
         // 删除
         for (let i = 0; i < parent.length; i++) {
@@ -212,7 +246,7 @@
       setFetchLoading(true);
       const { data } = await getMenuList(formModel);
       tableRenderData.value = data as MenuQueryResponse[];
-      menuStore.updateMenu(tableRenderData.value);
+      cacheStore.updateMenu(tableRenderData.value);
     } finally {
       setFetchLoading(false);
     }
@@ -230,9 +264,21 @@
     tableRef.value.expandAll(expandStatus.value = !expandStatus.value);
   };
 
+  // 修改状态
+  const updateStatus = async (id: number, status: number) => {
+    await updateMenuStatus({ id, status });
+    await loadMenuData();
+  };
+
+  // 修改可见状态
+  const updateVisible = async (id: number, visible: number) => {
+    await updateMenuStatus({ id, visible });
+    await loadMenuData();
+  };
+
   // 卸载时清除 store
   onUnmounted(() => {
-    menuStore.reset();
+    cacheStore.resetMenu();
   });
 
 </script>

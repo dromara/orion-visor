@@ -1,6 +1,6 @@
 import { MenuQueryResponse } from '@/api/system/menu';
 
-export interface MenuState {
+export interface CacheState {
   menus: MenuQueryResponse[],
 
   [key: string]: unknown;

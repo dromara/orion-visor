@@ -1,6 +1,6 @@
 <template>
   <a-tree-select v-model:model-value="value"
-                 :data="treeData"
+                 :data="treeData()"
                  :disabled="disabled"
                  :allow-search="true"
                  :filter-tree-node="filterTreeNode"
@@ -14,8 +14,9 @@
 </script>
 
 <script lang="ts" setup>
-  import { useMenuStore } from '@/store';
+  import { useCacheStore } from '@/store';
   import { computed } from 'vue';
+  import { TreeNodeData } from '@arco-design/web-vue';
 
   const props = defineProps({
     modelValue: Number,
@@ -34,8 +35,33 @@
   });
 
   // 树数据
-  const menuStore = useMenuStore();
-  const treeData = menuStore.treeData;
+  const cacheStore = useCacheStore();
+  const treeData = (): TreeNodeData[] => {
+    let render = (arr: any[]): TreeNodeData[] => {
+      return arr.map((s) => {
+        // 非 function
+        if (s.type === 3) {
+          return null as unknown as TreeNodeData;
+        }
+        // 当前节点
+        const node = {
+          key: s.id,
+          title: s.name,
+          children: undefined as unknown
+        } as TreeNodeData;
+        // 子节点
+        if (s.children && s.children.length) {
+          node.children = render(s.children);
+        }
+        return node;
+      }).filter(Boolean);
+    };
+    return [{
+      key: 0,
+      title: '根目录',
+      children: render([...cacheStore.menus])
+    }];
+  };
 
   // 搜索
   const filterTreeNode = (searchValue: string, nodeData: { title: string; }) => {

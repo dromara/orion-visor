@@ -26,7 +26,9 @@ public class SystemMenuUpdateStatusRequest {
     @Schema(description = "id")
     private Long id;
 
-    @NotNull
+    @Schema(description = "是否可见 0不可见 1可见")
+    private Integer visible;
+
     @Schema(description = "菜单状态 0停用 1启用")
     private Integer status;
 

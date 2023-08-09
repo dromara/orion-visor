@@ -19,6 +19,7 @@ import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateStatusRequ
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.enums.MenuStatusEnum;
 import com.orion.ops.module.infra.enums.MenuTypeEnum;
+import com.orion.ops.module.infra.enums.MenuVisibleEnum;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.SystemMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -177,22 +178,37 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     @Override
     public Integer updateSystemMenuStatus(SystemMenuUpdateStatusRequest request) {
         Long id = request.getId();
-        Integer status = Valid.valid(MenuStatusEnum::of, request.getStatus()).getStatus();
+        Integer status = request.getStatus();
+        Integer visible = request.getVisible();
+        if (status != null) {
+            Valid.valid(MenuStatusEnum::of, status);
+        }
+        if (visible != null) {
+            Valid.valid(MenuVisibleEnum::of, visible);
+        }
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 从缓存中查询
         List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
-        // 获取要删除的id
+        // 获取要更新的id
         List<Long> updateIdList = this.getChildrenIdList(id, cache, record.getType());
         // 修改状态
         SystemMenuDO update = new SystemMenuDO();
         update.setStatus(status);
+        update.setVisible(visible);
         int effect = systemMenuDAO.update(update, Conditions.in(SystemMenuDO::getId, updateIdList));
         // 修改引用缓存状态
         cache.stream()
                 .filter(s -> updateIdList.contains(s.getId()))
-                .forEach(s -> s.setStatus(status));
+                .forEach(s -> {
+                    if (status != null) {
+                        s.setStatus(status);
+                    }
+                    if (visible != null) {
+                        s.setVisible(visible);
+                    }
+                });
         log.info("SystemMenuService-updateSystemMenuStatus updateIdList: {}, effect: {}", JSON.toJSONString(updateIdList), effect);
         return effect;
     }

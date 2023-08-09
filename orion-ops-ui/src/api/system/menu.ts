@@ -9,6 +9,7 @@ export interface MenuCreateRequest {
   permission?: string;
   type?: number;
   sort?: number;
+  visible?: number;
   cache?: number;
   icon?: string;
   path?: string;
@@ -20,6 +21,7 @@ export interface MenuCreateRequest {
  */
 export interface MenuUpdateRequest extends MenuCreateRequest {
   id: number;
+  status?: number;
 }
 
 /**
@@ -68,6 +70,13 @@ export function createMenu(request: MenuCreateRequest) {
  */
 export function updateMenu(request: MenuUpdateRequest) {
   return axios.put<MenuQueryResponse[]>('/infra/system-menu/update', request);
+}
+
+/**
+ * 修改菜单状态
+ */
+export function updateMenuStatus(request: MenuUpdateRequest) {
+  return axios.put<MenuQueryResponse[]>('/infra/system-menu/update-status', request);
 }
 
 /**
