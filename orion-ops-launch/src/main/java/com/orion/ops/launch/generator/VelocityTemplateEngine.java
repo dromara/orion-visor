@@ -22,7 +22,10 @@ import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
+import com.orion.lang.define.collect.MultiLinkedHashMap;
+import com.orion.lang.utils.Enums;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.VariableStyles;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
@@ -253,6 +256,15 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
         GenTable table = tables.get(tableInfo.getName());
         BeanMap beanMap = BeanMap.create(table, "enums");
+        // 功能名称首字母大写
+        beanMap.put("featureFirstUpper", Strings.firstUpper(table.getFeature()));
+        // 功能名称全大写
+        beanMap.put("featureAllUpper", table.getFeature().toUpperCase());
+        // 枚举
+        beanMap.put("enums", this.getEnumMap(table));
+        System.out.println( this.getEnumMap(table));
+        objectMap.put("vue", beanMap);
+
 
         // 生成文件
         customFiles.forEach(file -> {
@@ -274,6 +286,24 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     private boolean isVueFile(String templatePath) {
         return templatePath.endsWith(".ts.vm") ||
                 templatePath.endsWith(".vue.vm");
+    }
+
+    /**
+     * 获取枚举 map
+     *
+     * @param table table
+     * @return enums
+     */
+    private Object getEnumMap(GenTable table) {
+        List<Class<? extends Enum<?>>> enums = table.getEnums();
+        Map<String, MultiLinkedHashMap<String, String, Object>> enumMap = new LinkedHashMap<>();
+        for (Class<? extends Enum<?>> e : enums) {
+            // 大驼峰文件名称转为蛇形大写
+            String enumTypeName = VariableStyles.BIG_HUMP.toSerpentine(e.getSimpleName()).toUpperCase();
+            MultiLinkedHashMap<String, String, Object> fieldValueMap = Enums.getFieldValueMap(e);
+            enumMap.put(enumTypeName, fieldValueMap);
+        }
+        return enumMap;
     }
 
 }

@@ -1,1 +1,44 @@
-orion-vue-views-types-table.columns.ts.vm
+import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+
+const columns = [
+  {
+    title: 'id',
+    dataIndex: 'id',
+    slotName: 'id',
+    width: 70,
+    fixed: 'left',
+  }, #foreach($field in ${table.fields}){
+    title: '${field.comment}',
+    dataIndex: '${field.propertyName}',
+    slotName: '${field.propertyName}',
+    align: 'center',
+    width: 100,
+    #if(${field.propertyType} == 'String')
+    ellipsis: true,
+    tooltip: true,
+    #end
+  }, #end{
+    title: '创建时间',
+    dataIndex: 'createTime',
+    slotName: 'createTime',
+  }, {
+    title: '修改时间',
+    dataIndex: 'updateTime',
+    slotName: 'updateTime',
+  }, {
+    title: '创建人',
+    dataIndex: 'creator',
+    slotName: 'creator',
+  }, {
+    title: '修改人',
+    dataIndex: 'updater',
+    slotName: 'updater',
+  }, {
+    title: '操作',
+    slotName: 'option',
+    width: 158,
+    fixed: 'right',
+  }
+] as TableColumnData[];
+
+export default columns;

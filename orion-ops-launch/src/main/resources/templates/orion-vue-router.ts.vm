@@ -1,0 +1,17 @@
+import { DEFAULT_LAYOUT } from '../base';
+import { AppRouteRecordRaw } from '../types';
+
+const $vue.featureAllUpper: AppRouteRecordRaw = {
+  name: '$vue.module',
+  path: '/$vue.module',
+  component: DEFAULT_LAYOUT,
+  children: [
+    {
+      name: '$vue.module$vue.featureFirstUpper',
+      path: '/$vue.module/$vue.featureFirstUpper',
+      component: () => import('@/views/$vue.module/$vue.feature/index.vue'),
+    },
+  ],
+};
+
+export default $vue.featureAllUpper;

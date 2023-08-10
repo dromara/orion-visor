@@ -1,1 +1,126 @@
-api
+import axios from 'axios';
+import qs from 'query-string';
+import { DataGrid, Pagination } from '@/types/global';
+
+/**
+ * ${table.comment}创建请求
+ */
+export interface ${vue.featureFirstUpper}CreateRequest {
+  #foreach($field in ${table.fields})
+  #if("$!field.propertyName" != "id")
+  #if("$field.propertyType" == "String" || "$field.propertyType" == "Date")
+  ${field.propertyName}?: string;
+  #elseif("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+  ${field.propertyName}?: number;
+  #elseif("$field.propertyType" == "Boolean")
+  ${field.propertyName}?: boolean;
+  #else
+  ${field.propertyName}?: any;
+  #end
+  #end
+  #end
+}
+
+/**
+ * ${table.comment}更新请求
+ */
+export interface ${vue.featureFirstUpper}UpdateRequest extends ${vue.featureFirstUpper}CreateRequest {
+  id: number;
+}
+
+/**
+ * ${table.comment}查询请求
+ */
+export interface ${vue.featureFirstUpper}QueryRequest extends Pagination {
+  #foreach($field in ${table.fields})
+  #if("$field.propertyType" == "String" || "$field.propertyType" == "Date")
+  ${field.propertyName}?: string;
+  #elseif("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+  ${field.propertyName}?: number;
+  #elseif("$field.propertyType" == "Boolean")
+  ${field.propertyName}?: boolean;
+  #else
+  ${field.propertyName}?: any;
+  #end
+  #end
+}
+
+/**
+ * ${table.comment}查询响应
+ */
+export interface ${vue.featureFirstUpper}QueryResponse {
+  #foreach($field in ${table.fields})
+  #if("$field.propertyType" == "String")
+  ${field.propertyName}?: string;
+  #elseif("$field.propertyType" == "Integer" || "$field.propertyType" == "Long" || "$field.propertyType" == "Date")
+  ${field.propertyName}?: number;
+  #elseif("$field.propertyType" == "Boolean")
+  ${field.propertyName}?: boolean;
+  #else
+  ${field.propertyName}?: any;
+  #end
+  #end
+  createTime: number;
+  updateTime: number;
+  creator: string;
+  updater: string;
+}
+
+/**
+ * $apiComment.create
+ */
+export function create${vue.featureFirstUpper}(request: ${vue.featureFirstUpper}CreateRequest) {
+  return axios.post('/${package.ModuleName}/${typeHyphen}/create', request);
+}
+
+/**
+ * $apiComment.update
+ */
+export function update${vue.featureFirstUpper}(request: ${vue.featureFirstUpper}UpdateRequest) {
+  return axios.put('/${package.ModuleName}/${typeHyphen}/update', request);
+}
+
+/**
+ * $apiComment.get
+ */
+export function get${vue.featureFirstUpper}(id: number) {
+  return axios.get<${vue.featureFirstUpper}QueryResponse>('/${package.ModuleName}/${typeHyphen}/get', { params: { id } });
+}
+
+/**
+ * $apiComment.list
+ */
+export function get${vue.featureFirstUpper}List(idList: Array<number>) {
+  return axios.get<${vue.featureFirstUpper}QueryResponse[]>('/${package.ModuleName}/${typeHyphen}/list', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
+}
+
+/**
+ * $apiComment.query
+ */
+export function get${vue.featureFirstUpper}Page(request: ${vue.featureFirstUpper}QueryRequest) {
+  return axios.post<DataGrid<${vue.featureFirstUpper}QueryResponse>>('/${package.ModuleName}/${typeHyphen}/query', request);
+}
+
+/**
+ * $apiComment.delete
+ */
+export function delete${vue.featureFirstUpper}(id: number) {
+  return axios.delete('/${package.ModuleName}/${typeHyphen}/delete', { params: { id } });
+}
+
+/**
+ * $apiComment.batchDelete
+ */
+export function batchDelete${vue.featureFirstUpper}(idList: Array<number>) {
+  return axios.delete('/${package.ModuleName}/${typeHyphen}/delete-batch', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
+}

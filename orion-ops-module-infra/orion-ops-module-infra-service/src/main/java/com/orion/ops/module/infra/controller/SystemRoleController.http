@@ -60,11 +60,3 @@ Authorization: {{token}}
 ### 通过 id 删除角色
 DELETE {{baseUrl}}/infra/system-role/delete?id=1
 Authorization: {{token}}
-
-
-### 通过 id 批量删除角色
-DELETE {{baseUrl}}/infra/system-role/delete-batch?idList=1,2,3
-Authorization: {{token}}
-
-
-

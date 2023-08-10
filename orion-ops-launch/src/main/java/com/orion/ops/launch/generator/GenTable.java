@@ -39,14 +39,9 @@ public class GenTable {
     private boolean genVue;
 
     /**
-     * views 父目录
+     * 模块 用于文件名称生成
      */
-    private String viewsPath;
-
-    /**
-     * api 文件目录
-     */
-    private String apiPath;
+    private String module;
 
     /**
      * 功能 用于文件名称生成
@@ -68,15 +63,13 @@ public class GenTable {
     /**
      * 生成 vue 模板
      *
-     * @param viewsPath viewsPath
-     * @param apiPath   apiPath
-     * @param feature   feature
+     * @param module  module
+     * @param feature feature
      * @return this
      */
-    public GenTable vue(String viewsPath, String apiPath, String feature) {
+    public GenTable vue(String module, String feature) {
         this.genVue = true;
-        this.viewsPath = viewsPath;
-        this.apiPath = apiPath;
+        this.module = module;
         this.feature = feature;
         return this;
     }

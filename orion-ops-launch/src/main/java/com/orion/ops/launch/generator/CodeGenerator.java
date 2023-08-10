@@ -41,10 +41,10 @@ public class CodeGenerator {
         // 生成的表
         GenTable[] tables = {
                 new GenTable("system_user", "用户", "user")
-                        .vue("user/user", "user", "user")
+                        .vue("user", "user")
                         .enums(UserStatusEnum.class),
                 new GenTable("system_role", "角色", "role")
-                        .vue("user/role", "user", "role")
+                        .vue("user", "role")
                         .enums(RoleStatusEnum.class),
                 new GenTable("system_menu", "菜单", "menu"),
         };
@@ -129,6 +129,7 @@ public class CodeGenerator {
     private static GlobalConfig getGlobalConfig(String outputDir, String author) {
         // 全局配置
         GlobalConfig gbConfig = new GlobalConfig.Builder()
+                .disableOpenDir()
                 // 设置作者
                 .author(author)
                 // 生成路径
@@ -313,19 +314,21 @@ public class CodeGenerator {
                 // convert provider 文件
                 new String[]{"/templates/orion-server-convert-provider.java.vm", "%sProviderConvert.java", "convert"},
                 // vue api 文件
-                new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${apiPath}"},
+                new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${module}"},
+                // vue router 文件
+                new String[]{"/templates/orion-vue-router.ts.vm", "${module}.${feature}.ts", "vue/router/routes/modules"},
                 // vue views index.ts 文件
-                new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${viewsPath}"},
+                new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${module}/${feature}"},
                 // vue form-modal.vue 文件
-                new String[]{"/templates/orion-vue-views-components-form-modal.vue.vm", "${feature}-form-modal.vue", "vue/views/${viewsPath}/components"},
+                new String[]{"/templates/orion-vue-views-components-form-modal.vue.vm", "${feature}-form-modal.vue", "vue/views/${module}/${feature}/components"},
                 // vue table.vue 文件
-                new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${viewsPath}/components"},
+                new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
                 // vue enum.types.ts 文件
-                new String[]{"/templates/orion-vue-views-types-enum.types.ts.vm", "enum.types.ts", "vue/views/${viewsPath}/types"},
+                new String[]{"/templates/orion-vue-views-types-enum.types.ts.vm", "enum.types.ts", "vue/views/${module}/${feature}/types"},
                 // vue form.rules.ts 文件
-                new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${viewsPath}/types"},
+                new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${module}/${feature}/types"},
                 // vue table.vue 文件
-                new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${viewsPath}/types"},
+                new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${module}/${feature}/types"},
         };
 
         // 构建文件

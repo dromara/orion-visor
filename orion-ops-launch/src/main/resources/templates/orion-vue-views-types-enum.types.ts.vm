@@ -1,1 +1,18 @@
-e.types.ts
+#foreach($enumEntity in ${vue.enums.entrySet()})
+/**
+ *
+ */
+export const $enumEntity.key = {
+#foreach($enumEntityItem in $enumEntity.value.entrySet())
+  $enumEntityItem.key: {
+    value: null,
+    label: '',
+    color: '',
+    #foreach($enumEntityItemFields in $enumEntityItem.value.entrySet())
+    $enumEntityItemFields.key: '$enumEntityItemFields.value',
+    #end
+  }
+#end
+}
+
+#end

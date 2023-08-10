@@ -71,10 +71,3 @@ Authorization: {{token}}
 DELETE {{baseUrl}}/infra/system-menu/delete?id=1
 Authorization: {{token}}
 
-
-### 通过 id 批量删除菜单
-DELETE {{baseUrl}}/infra/system-menu/delete-batch?idList=1,2,3
-Authorization: {{token}}
-
-
-
