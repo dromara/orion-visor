@@ -26,9 +26,13 @@ export interface PostData {
 export interface Pagination {
   page?: number;
   limit?: number;
-  current?: number;
-  pageSize?: number;
-  total?: number;
+}
+
+export interface DataGrid<T> {
+  page: number;
+  limit: number;
+  total: number;
+  rows: T[];
 }
 
 export type TimeRanger = [string, string];

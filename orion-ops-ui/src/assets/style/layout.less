@@ -7,18 +7,52 @@
 
 .table-search-card {
   width: 100%;
+  padding-top: 16px;
   margin-bottom: 16px;
+
+  .arco-form-item {
+    margin-bottom: 0;
+  }
+}
+
+.table-bar-handle {
+  display: flex;
+  align-items: center;
+  justify-content: end
 }
 
 .table-card {
   width: 100%;
+
+  .arco-card-header {
+    padding: 8px 16px 0 16px;
+
+    .arco-card-header-title {
+      display: flex;
+      justify-content: space-between;
+
+      .table-title {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+  }
+
 }
 
 .table-wrapper {
-  margin-top: 16px;
+  &-8 {
+    margin-top: 8px;
+  }
+
+  &-16 {
+    margin-top: 16px;
+  }
 }
 
-.table-option-wrapper {
+.table-handle-wrapper {
   .arco-btn-text {
     padding: 0 8px;
   }

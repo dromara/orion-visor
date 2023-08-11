@@ -1,7 +1,7 @@
 <template>
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
-    <a-row style="margin-top: 16px">
+    <a-row>
       <!-- 搜索框 -->
       <a-col :span="12">
         <a-form :model="formModel"
@@ -30,7 +30,7 @@
         </a-form>
       </a-col>
       <!-- 操作 -->
-      <a-col :span="12" class="form-option">
+      <a-col :span="12" class="table-bar-handle">
         <a-space>
           <!-- 新增 -->
           <a-button type="primary"
@@ -69,7 +69,7 @@
   <!-- 表格 -->
   <a-card class="general-card table-card">
     <a-table row-key="id"
-             class="table-wrapper"
+             class="table-wrapper-16"
              ref="tableRef"
              label-align="left"
              :loading="fetchLoading"
@@ -115,8 +115,8 @@
         </a-space>
       </template>
       <!-- 操作 -->
-      <template #option="{ record }">
-        <div class="table-option-wrapper">
+      <template #handle="{ record }">
+        <div class="table-handle-wrapper">
           <!-- 新增 -->
           <a-button type="text"
                     size="mini"
@@ -158,17 +158,17 @@
 <script lang="ts" setup>
   import { reactive, ref, onUnmounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getMenuList, deleteMenu, updateMenuStatus, MenuQueryResponse } from '@/api/system/menu';
+  import { getMenuList, deleteMenu, updateMenuStatus, MenuQueryRequest, MenuQueryResponse } from '@/api/system/menu';
   import { toOptions, getEnumValue, toggleEnumValue } from '@/utils/enum';
-  import { MenuStatusEnum, MenuVisibleEnum, MenuTypeEnum } from '../type/enum.types';
-  import columns from '../type/table.columns';
+  import { MenuStatusEnum, MenuVisibleEnum, MenuTypeEnum } from '../types/enum.types';
+  import columns from '../types/table.columns';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
 
   const cacheStore = useCacheStore();
 
   const formRef = ref<any>();
-  const formModel = reactive({
+  const formModel = reactive<MenuQueryRequest>({
     name: undefined,
     status: undefined
   });
@@ -220,7 +220,7 @@
           }
         }
       }
-      Message.success({ content: '删除成功' });
+      Message.success('删除成功');
     } finally {
       setFetchLoading(false);
     }
@@ -284,13 +284,5 @@
 </script>
 
 <style lang="less" scoped>
-  .form-option {
-    display: flex;
-    align-items: center;
-    justify-content: end
-  }
 
-  :deep(.arco-form-item) {
-    margin-bottom: 0 !important;
-  }
 </style>

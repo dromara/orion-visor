@@ -19,8 +19,9 @@
 
 <script lang="ts" setup>
   import MenuTable from '@/views/system/menu/components/menu-table.vue';
-  import { ref } from 'vue';
   import MenuFormModal from '@/views/system/menu/components/menu-form-modal.vue';
+
+  import { ref } from 'vue';
 
   const table = ref<any>();
   const modal = ref<any>();

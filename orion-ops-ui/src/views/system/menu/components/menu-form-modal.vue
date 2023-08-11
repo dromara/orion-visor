@@ -107,16 +107,15 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref, watch, watchEffect } from 'vue';
+  import { reactive, ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../type/form.rules';
-  import { MenuTypeEnum, MenuVisibleEnum, MenuCacheEnum } from '../type/enum.types';
+  import formRules from '../types/form.rules';
+  import { MenuTypeEnum, MenuVisibleEnum, MenuCacheEnum } from '../types/enum.types';
   import { toOptions } from '@/utils/enum';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
   import MenuTreeSelector from '@/views/system/menu/components/menu-tree-selector.vue';
   import { createMenu, updateMenu } from '@/api/system/menu';
-  import { keysIn } from 'lodash';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -57,10 +57,12 @@ export function isEmptyStr(val: any) {
   return typeof (val) === 'undefined' || val == null || val === '';
 }
 
+export const YMD_HMS = 'yyyy-MM-dd HH:mm:ss';
+
 /**
  * 格式化时间
  */
-export function dateFormat(date = new Date(), pattern = 'yyyy-MM-dd HH:mm:ss') {
+export function dateFormat(date = new Date(), pattern = YMD_HMS) {
   const o = {
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),

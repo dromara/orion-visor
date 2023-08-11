@@ -49,7 +49,7 @@ const columns = [
     tooltip: true,
   }, {
     title: '操作',
-    slotName: 'option',
+    slotName: 'handle',
     width: 158,
     fixed: 'right',
   }
