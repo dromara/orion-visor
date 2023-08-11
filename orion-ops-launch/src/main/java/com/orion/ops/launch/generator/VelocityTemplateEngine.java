@@ -256,6 +256,8 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
         GenTable table = tables.get(tableInfo.getName());
         BeanMap beanMap = BeanMap.create(table, "enums");
+        // 模块名称首字母大写
+        beanMap.put("moduleFirstUpper", Strings.firstUpper(table.getModule()));
         // 功能名称首字母大写
         beanMap.put("featureFirstUpper", Strings.firstUpper(table.getFeature()));
         // 功能名称全大写

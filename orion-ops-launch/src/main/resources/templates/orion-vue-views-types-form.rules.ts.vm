@@ -1,6 +1,6 @@
 import { FieldRule } from '@arco-design/web-vue';
-
 #foreach($field in ${table.fields})
+#if("$!field.propertyName" != "id")
 #if(${field.propertyType} == 'String')
 export const ${field.propertyName} = [{
   required: true,
@@ -15,10 +15,13 @@ export const ${field.propertyName} = [{
   message: '请输入${field.comment}'
 }] as FieldRule[];
 #end
+#end
 
 #end
 export default {
 #foreach($field in ${table.fields})
+#if("$!field.propertyName" != "id")
   ${field.propertyName},
+#end
 #end
 } as Record<string, FieldRule | FieldRule[]>;

@@ -13,6 +13,7 @@ import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.enums.RoleStatusEnum;
+import com.orion.ops.module.infra.enums.TestTableStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -40,13 +41,16 @@ public class CodeGenerator {
         String module = "infra";
         // 生成的表
         GenTable[] tables = {
-                new GenTable("system_user", "用户", "user")
-                        .vue("user", "user")
-                        .enums(UserStatusEnum.class),
-                new GenTable("system_role", "角色", "role")
-                        .vue("user", "role")
-                        .enums(RoleStatusEnum.class),
-                new GenTable("system_menu", "菜单", "menu"),
+                new GenTable("test_table", "表", "test")
+                        .vue("test", "table")
+                        .enums(TestTableStatusEnum.class),
+                // new GenTable("system_user", "用户", "user")
+                //         .vue("user", "user")
+                //         .enums(UserStatusEnum.class),
+                // new GenTable("system_role", "角色", "role")
+                //         .vue("user", "role")
+                //         .enums(RoleStatusEnum.class),
+                // new GenTable("system_menu", "菜单", "menu"),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -129,7 +133,6 @@ public class CodeGenerator {
     private static GlobalConfig getGlobalConfig(String outputDir, String author) {
         // 全局配置
         GlobalConfig gbConfig = new GlobalConfig.Builder()
-                .disableOpenDir()
                 // 设置作者
                 .author(author)
                 // 生成路径

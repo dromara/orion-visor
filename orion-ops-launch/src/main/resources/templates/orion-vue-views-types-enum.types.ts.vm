@@ -11,7 +11,7 @@ export const $enumEntity.key = {
     #foreach($enumEntityItemFields in $enumEntityItem.value.entrySet())
     $enumEntityItemFields.key: '$enumEntityItemFields.value',
     #end
-  }
+  },
 #end
 }
 

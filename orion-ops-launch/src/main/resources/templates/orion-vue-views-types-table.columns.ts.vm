@@ -1,4 +1,5 @@
 import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+import { formatMilliSecond, YMD_HMS } from '@/utils';
 
 const columns = [
   {
@@ -6,8 +7,9 @@ const columns = [
     dataIndex: 'id',
     slotName: 'id',
     width: 70,
+    align: 'left',
     fixed: 'left',
-  }, #foreach($field in ${table.fields}){
+  }, #foreach($field in ${table.fields})#if("$!field.propertyName" != "id"){
     title: '${field.comment}',
     dataIndex: '${field.propertyName}',
     slotName: '${field.propertyName}',
@@ -17,14 +19,20 @@ const columns = [
     ellipsis: true,
     tooltip: true,
     #end
-  }, #end{
+  }, #end#end{
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
+    render: ({ record }) => {
+      return formatMilliSecond(record.createTime, YMD_HMS);
+    },
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',
     slotName: 'updateTime',
+    render: ({ record }) => {
+      return formatMilliSecond(record.createTime, YMD_HMS);
+    },
   }, {
     title: '创建人',
     dataIndex: 'creator',
@@ -35,10 +43,11 @@ const columns = [
     slotName: 'updater',
   }, {
     title: '操作',
-    slotName: 'option',
-    width: 158,
+    slotName: 'handle',
+    width: 130,
+    align: 'center',
     fixed: 'right',
-  }
+  },
 ] as TableColumnData[];
 
 export default columns;
