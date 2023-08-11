@@ -27,7 +27,10 @@
         #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
           <a-input-number v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" />
         #elseif("$field.propertyType" == "Date")
-          <a-date-picker v-model="formModel.${field.propertyName}" placeholder="请选择${field.comment}" show-time />
+          <a-date-picker v-model="formModel.${field.propertyName}"
+                         style="width: 100%"
+                         placeholder="请选择${field.comment}"
+                         show-time />
         #else
           <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" />
         #end
@@ -61,7 +64,7 @@
   const defaultForm = () => {
     return {
     #foreach($field in ${table.fields})
-      ${field.propertyName}: underfined,
+      ${field.propertyName}: undefined,
     #end
     };
   };

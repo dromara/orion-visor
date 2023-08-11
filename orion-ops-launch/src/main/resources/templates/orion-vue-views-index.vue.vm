@@ -2,12 +2,12 @@
   <div class="layout-container">
     <!-- 表格 -->
     <${vue.feature}-table ref="table"
-                 @openAdd="() => modal.openAdd()"
-                 @openUpdate="(e) => modal.openUpdate(e)" />
+                  @openAdd="() => modal.openAdd()"
+                  @openUpdate="(e) => modal.openUpdate(e)" />
     <!-- 添加修改框 -->
     <${vue.feature}-form-modal ref="modal"
-                      @added="() => table.addedCallback()"
-                      @updated="() => table.updatedCallback()" />
+                       @added="() => table.addedCallback()"
+                       @updated="() => table.updatedCallback()" />
   </div>
 </template>
 
@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
   import ${vue.featureFirstUpper}Table from './components/${vue.feature}-table.vue';
-  import ${vue.featureFirstUpper}Modal from './components/${vue.feature}-form-modal.vue';
+  import ${vue.featureFirstUpper}FormModal from './components/${vue.feature}-form-modal.vue';
   import { ref } from 'vue';
 
   const table = ref();

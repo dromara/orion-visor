@@ -1,5 +1,5 @@
 import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
-import { formatMilliSecond, YMD_HMS } from '@/utils';
+import { dateFormat } from '@/utils';
 
 const columns = [
   {
@@ -14,24 +14,27 @@ const columns = [
     dataIndex: '${field.propertyName}',
     slotName: '${field.propertyName}',
     align: 'center',
-    width: 100,
     #if(${field.propertyType} == 'String')
     ellipsis: true,
     tooltip: true,
+    #elseif(${field.propertyType} == 'Date')
+    render: ({ record }) => {
+      return dateFormat(new Date(record.${field.propertyName}));
+    },
     #end
   }, #end#end{
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
     render: ({ record }) => {
-      return formatMilliSecond(record.createTime, YMD_HMS);
+      return dateFormat(new Date(record.createTime));
     },
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',
     slotName: 'updateTime',
     render: ({ record }) => {
-      return formatMilliSecond(record.createTime, YMD_HMS);
+      return dateFormat(new Date(record.createTime));
     },
   }, {
     title: '创建人',

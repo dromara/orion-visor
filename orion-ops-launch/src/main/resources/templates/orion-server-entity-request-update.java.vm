@@ -1,5 +1,6 @@
 package ${currentPackage};
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,9 @@ public class ${type}UpdateRequest implements Serializable {
     #end
     #if("$!field.comment" != "")
     @Schema(description = "${field.comment}")
+    #end
+    #if("$field.propertyType" == "Date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     #end
     private ${field.propertyType} ${field.propertyName};
     #end

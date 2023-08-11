@@ -12,9 +12,6 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
-import com.orion.ops.module.infra.enums.RoleStatusEnum;
-import com.orion.ops.module.infra.enums.TestTableStatusEnum;
-import com.orion.ops.module.infra.enums.UserStatusEnum;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -41,9 +38,6 @@ public class CodeGenerator {
         String module = "infra";
         // 生成的表
         GenTable[] tables = {
-                new GenTable("test_table", "表", "test")
-                        .vue("test", "table")
-                        .enums(TestTableStatusEnum.class),
                 // new GenTable("system_user", "用户", "user")
                 //         .vue("user", "user")
                 //         .enums(UserStatusEnum.class),
