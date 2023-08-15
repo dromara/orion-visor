@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 菜单 绑定角色请求对象
+ * 角色 绑定菜单请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,8 +22,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemMenuBindRequest", description = "菜单 绑定角色请求对象")
-public class SystemMenuBindRequest implements Serializable {
+@Schema(name = "SystemRoleBindMenuRequest", description = "角色 绑定菜单请求对象")
+public class SystemRoleBindMenuRequest implements Serializable {
 
     @NotNull
     @Schema(description = "roleId")
@@ -31,6 +31,6 @@ public class SystemMenuBindRequest implements Serializable {
 
     @NotEmpty
     @Schema(description = "菜单id集合")
-    private List<Long> idList;
+    private List<Long> menuIdList;
 
 }

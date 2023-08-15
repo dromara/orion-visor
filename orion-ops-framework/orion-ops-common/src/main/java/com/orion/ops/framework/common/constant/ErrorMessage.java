@@ -43,4 +43,6 @@ public interface ErrorMessage {
 
     String USER_ABSENT = "用户不存在";
 
+    String UNABLE_OPERATE_ADMIN_ROLE = "无法操作管理员账号";
+
 }

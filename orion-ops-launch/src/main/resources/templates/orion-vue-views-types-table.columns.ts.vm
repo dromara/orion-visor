@@ -19,13 +19,14 @@ const columns = [
     tooltip: true,
     #elseif(${field.propertyType} == 'Date')
     render: ({ record }) => {
-      return dateFormat(new Date(record.${field.propertyName}));
+      return record.${field.propertyName} && dateFormat(new Date(record.${field.propertyName}));
     },
     #end
   }, #end#end{
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
+    align: 'center',
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
     },
@@ -33,8 +34,9 @@ const columns = [
     title: '修改时间',
     dataIndex: 'updateTime',
     slotName: 'updateTime',
+    align: 'center',
     render: ({ record }) => {
-      return dateFormat(new Date(record.createTime));
+      return dateFormat(new Date(record.updateTime));
     },
   }, {
     title: '创建人',

@@ -7,7 +7,7 @@
                     @reset="fetchTableData">
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
-      <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="60px">
+      <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
       #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
         <a-input-number v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear/>
       #elseif("$field.propertyType" == "Date")
@@ -26,9 +26,11 @@
   <!-- 表格 -->
   <a-card class="general-card table-card">
     <template #title>
+      <!-- 左侧标题 -->
       <div class="table-title">
         ${table.comment}列表
       </div>
+      <!-- 右侧按钮 -->
       <div class="table-bar-handle">
         <a-space>
           <!-- 新增 -->
@@ -87,9 +89,10 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button type="text" size="mini"
-                      status="danger"
-                      v-permission="['${package.ModuleName}:${typeHyphen}:delete']">
+            <a-button v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+                      type="text"
+                      size="mini"
+                      status="danger">
               删除
             </a-button>
           </a-popconfirm>

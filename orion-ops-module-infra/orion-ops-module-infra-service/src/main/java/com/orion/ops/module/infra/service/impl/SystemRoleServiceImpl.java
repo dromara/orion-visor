@@ -10,6 +10,7 @@ import com.orion.ops.module.infra.convert.SystemRoleConvert;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemRoleMenuDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
+import com.orion.ops.module.infra.define.RoleDefine;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
@@ -95,6 +96,8 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 检查是否为管理员账号
+        Valid.isTrue(!RoleDefine.isAdmin(record.getCode()), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
         Integer status = updateRecord.getStatus();
@@ -135,8 +138,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .eq(SystemRoleDO::getId, request.getId())
                 .like(SystemRoleDO::getName, request.getName())
                 .eq(SystemRoleDO::getCode, request.getCode())
-                .eq(SystemRoleDO::getStatus, request.getStatus())
-                .orderByDesc(SystemRoleDO::getId);
+                .eq(SystemRoleDO::getStatus, request.getStatus());
         // 查询
         return systemRoleDAO.of()
                 .wrapper(wrapper)
@@ -151,6 +153,8 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         String code = record.getCode();
+        // 检查是否为管理员账号
+        Valid.isTrue(!RoleDefine.isAdmin(code), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 删除角色
         int effect = systemRoleDAO.deleteById(id);
         log.info("SystemRoleService-deleteSystemRole id: {}, effect: {}", id, effect);

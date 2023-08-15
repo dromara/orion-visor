@@ -4,11 +4,13 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleBindMenuRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleStatusRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemRoleVO;
+import com.orion.ops.module.infra.service.SystemRoleMenuService;
 import com.orion.ops.module.infra.service.SystemRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,6 +41,9 @@ public class SystemRoleController {
 
     @Resource
     private SystemRoleService systemRoleService;
+
+    @Resource
+    private SystemRoleMenuService systemRoleMenuService;
 
     @PostMapping("/create")
     @Operation(summary = "创建角色")
@@ -86,12 +91,26 @@ public class SystemRoleController {
         return systemRoleService.getSystemRolePage(request);
     }
 
+    @GetMapping("/get-menu-id")
+    @Operation(summary = "获取角色菜单id")
+    @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
+    public List<Long> getRoleMenuIdList(@RequestParam("roleId") Long roleId) {
+        return systemRoleMenuService.getRoleMenuIdList(roleId);
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除角色")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-role:delete')")
     public Integer deleteSystemRole(@RequestParam("id") Long id) {
         return systemRoleService.deleteSystemRole(id);
+    }
+
+    @PutMapping("/bind")
+    @Operation(summary = "绑定角色菜单")
+    @PreAuthorize("@ss.hasPermission('infra:system-role:bind-menu')")
+    public Integer bindRoleMenu(@RequestBody SystemRoleBindMenuRequest request) {
+        return systemRoleMenuService.bindRoleMenu(request);
     }
 
 }

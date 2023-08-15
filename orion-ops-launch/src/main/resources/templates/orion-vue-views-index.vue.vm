@@ -4,7 +4,7 @@
     <${vue.feature}-table ref="table"
                   @openAdd="() => modal.openAdd()"
                   @openUpdate="(e) => modal.openUpdate(e)" />
-    <!-- 添加修改框 -->
+    <!-- 添加修改模态框 -->
     <${vue.feature}-form-modal ref="modal"
                        @added="() => table.addedCallback()"
                        @updated="() => table.updatedCallback()" />
@@ -13,7 +13,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}${vue.featureAllUpper}'
+    name: '${vue.module}${vue.featureFirstUpper}'
   };
 </script>
 

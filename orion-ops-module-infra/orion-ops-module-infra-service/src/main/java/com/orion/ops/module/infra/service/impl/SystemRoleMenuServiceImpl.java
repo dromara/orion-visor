@@ -14,7 +14,7 @@ import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
-import com.orion.ops.module.infra.entity.request.menu.SystemMenuBindRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleBindMenuRequest;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.SystemRoleMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,15 +52,20 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer bindRoleMenu(SystemMenuBindRequest request) {
+    public Integer bindRoleMenu(SystemRoleBindMenuRequest request) {
         Long roleId = request.getRoleId();
-        List<Long> menuIdList = request.getIdList();
+        List<Long> menuIdList = request.getMenuIdList();
         // 检查角色是否存在
         SystemRoleDO role = Valid.notNull(systemRoleDAO.selectById(roleId), ErrorMessage.ROLE_ABSENT);
         // 查询菜单列表
-        List<SystemMenuDO> menuList = systemMenuDAO.selectBatchIds(menuIdList);
-        if (menuIdList.size() != menuList.size()) {
-            throw ErrorCode.CONFLICT.exception();
+        List<SystemMenuDO> menuList;
+        if (menuIdList.isEmpty()) {
+            menuList = Lists.empty();
+        } else {
+            menuList = systemMenuDAO.selectBatchIds(menuIdList);
+            if (menuIdList.size() != menuList.size()) {
+                throw ErrorCode.CONFLICT.exception();
+            }
         }
         // 查询角色菜单
         List<Long> beforeMenuIdList = systemRoleMenuDAO.of()
@@ -104,6 +109,14 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
         roleCache.clear();
         roleCache.addAll(SystemMenuConvert.MAPPER.toCache(menuList));
         return effect;
+    }
+
+    @Override
+    public List<Long> getRoleMenuIdList(Long roleId) {
+        return systemRoleMenuDAO.selectList(Conditions.eq(SystemRoleMenuDO::getRoleId, roleId))
+                .stream()
+                .map(SystemRoleMenuDO::getMenuId)
+                .collect(Collectors.toList());
     }
 
 }

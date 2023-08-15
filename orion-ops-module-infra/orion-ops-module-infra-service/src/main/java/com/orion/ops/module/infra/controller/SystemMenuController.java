@@ -37,9 +37,6 @@ public class SystemMenuController {
     @Resource
     private SystemMenuService systemMenuService;
 
-    @Resource
-    private SystemRoleMenuService systemRoleMenuService;
-
     @PostMapping("/create")
     @Operation(summary = "创建菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:create')")
@@ -56,16 +53,9 @@ public class SystemMenuController {
 
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 级联更新菜单状态")
-    @PreAuthorize("@ss.hasPermission('infra:system-menu:update')")
+    @PreAuthorize("@ss.hasPermission('infra:system-menu:update-status')")
     public Integer updateSystemMenuStatus(@RequestBody SystemMenuUpdateStatusRequest request) {
         return systemMenuService.updateSystemMenuStatus(request);
-    }
-
-    @PostMapping("/bind")
-    @Operation(summary = "绑定角色菜单")
-    @PreAuthorize("@ss.hasPermission('infra:system-menu:bind')")
-    public Integer bindRoleMenu(@RequestBody SystemMenuBindRequest request) {
-        return systemRoleMenuService.bindRoleMenu(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
