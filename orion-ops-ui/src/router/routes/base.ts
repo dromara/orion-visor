@@ -53,7 +53,7 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
  * 403 页面
  */
 export const FORBIDDEN_ROUTE: RouteRecordRaw = {
-  path: '/:pathMatch(.*)*',
+  path: '/403',
   name: FORBIDDEN_ROUTER_NAME,
   component: () => import('@/views/exception/forbidden/index.vue'),
 };
@@ -62,7 +62,8 @@ export const FORBIDDEN_ROUTE: RouteRecordRaw = {
  * 404 页面
  */
 export const NOT_FOUND_ROUTE: RouteRecordRaw = {
-  path: '/:pathMatch(.*)*',
+  // path: '/:pathMatch(.*)*',
+  path: '/404',
   name: NOT_FOUND_ROUTER_NAME,
   component: () => import('@/views/exception/not-found/index.vue'),
 };

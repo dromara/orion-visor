@@ -7,14 +7,14 @@ const USER: AppRouteRecordRaw = {
   component: DEFAULT_LAYOUT,
   children: [
     {
-      path: '/user/userChild1',
-      name: 'userChild1',
-      component: () => import('@/views/user/child1/index.vue'),
+      name: 'userRole',
+      path: '/user/role',
+      component: () => import('@/views/user/role/index.vue'),
     },
     {
-      path: '/user/userChild2',
-      name: 'userChild2',
-      component: () => import('@/views/user/child2/index.vue'),
+      name: 'userUser',
+      path: '/user/user',
+      component: () => import('@/views/user/user/index.vue'),
     },
   ],
 };

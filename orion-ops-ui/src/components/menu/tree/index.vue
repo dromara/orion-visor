@@ -33,10 +33,19 @@
       /**
        * 跳转
        */
-      const goto = (item: RouteRecordRaw) => {
+      const goto = (e: any, item: RouteRecordRaw) => {
         // 打开外链
         if (regexUrl.test(item.path)) {
           openWindow(item.path);
+          selectedKey.value = [item.name as string];
+          return;
+        }
+        // 新页面打开
+        if (e.ctrlKey) {
+          const { href } = router.resolve({
+            name: item.name,
+          });
+          openWindow(href);
           selectedKey.value = [item.name as string];
           return;
         }
@@ -124,7 +133,7 @@
                   <a-menu-item
                     key={element?.name}
                     v-slots={{ icon }}
-                    onClick={() => goto(element)}
+                    onClick={($event: any) => goto($event, element)}
                   >
                     {element?.meta?.locale || ''}
                   </a-menu-item>

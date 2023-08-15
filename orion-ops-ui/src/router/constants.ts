@@ -18,9 +18,15 @@ export const DEFAULT_ROUTE_FULL_PATH = '/dashboard/workplace';
  */
 export const WHITE_ROUTER_LIST = [
   { name: LOGIN_ROUTE_NAME, children: [] },
+  { name: REDIRECT_ROUTE_NAME, children: [] },
+];
+
+/**
+ * 状态路由
+ */
+export const STATUS_ROUTER_LIST = [
   { name: NOT_FOUND_ROUTER_NAME, children: [] },
   { name: FORBIDDEN_ROUTER_NAME, children: [] },
-  { name: REDIRECT_ROUTE_NAME, children: [] },
 ];
 
 /**

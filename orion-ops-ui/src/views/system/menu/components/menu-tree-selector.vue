@@ -4,7 +4,7 @@
                  :disabled="disabled"
                  :allow-search="true"
                  :filter-tree-node="filterTreeNode"
-                 placeholder="请选择上级菜单" />
+                 placeholder="请选择菜单" />
 </template>
 
 <script lang="ts">
@@ -20,7 +20,7 @@
 
   const props = defineProps({
     modelValue: Number,
-    disabled: Boolean
+    disabled: Boolean,
   });
 
   const emits = defineEmits(['update:modelValue']);

@@ -122,7 +122,7 @@
                     size="mini"
                     v-if="record.type !== MenuTypeEnum.FUNCTION.value"
                     v-permission="['infra:system-menu:create']"
-                    @click="emits('openAdd', { parentId: record.id })">
+                    @click="emits('openAdd', { parentId: record.id, type: record.type })">
             新增
           </a-button>
           <!-- 修改 -->
@@ -276,7 +276,7 @@
     await loadMenuData();
   };
 
-  // 卸载时清除 store
+  // 卸载时清除 menu cache
   onUnmounted(() => {
     cacheStore.resetMenu();
   });

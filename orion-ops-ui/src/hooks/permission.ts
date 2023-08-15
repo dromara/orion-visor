@@ -1,6 +1,6 @@
 import { RouteLocationNormalized, RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
 import { useAppStore, useUserStore } from '@/store';
-import { WHITE_ROUTER_LIST } from '@/router/constants';
+import { STATUS_ROUTER_LIST, WHITE_ROUTER_LIST } from '@/router/constants';
 
 export default function usePermission() {
   const appStore = useAppStore();
@@ -10,8 +10,12 @@ export default function usePermission() {
      * 是否可访问路由
      */
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
+      // 没有名字证明路由不存在
+      if (route.name === undefined) {
+        return false;
+      }
       // 检查路由是否存在于授权路由中
-      const menuConfig = [...appStore.appAsyncMenus, ...WHITE_ROUTER_LIST];
+      const menuConfig = [...appStore.appAsyncMenus, ...WHITE_ROUTER_LIST, ...STATUS_ROUTER_LIST];
       let exist = false;
       while (menuConfig.length && !exist) {
         const element = menuConfig.shift();

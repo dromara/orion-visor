@@ -4,7 +4,7 @@
     <menu-table ref="table"
                 @openAdd="(e) => modal.openAdd(e)"
                 @openUpdate="(e) => modal.openUpdate(e)" />
-    <!-- 添加修改框 -->
+    <!-- 添加修改模态框 -->
     <menu-form-modal ref="modal"
                      @added="() => table.addedCallback()"
                      @updated="() => table.updatedCallback()" />

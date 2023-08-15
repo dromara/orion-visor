@@ -192,7 +192,7 @@
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import { triggerMouseEvent } from '@/utils';
-  import Menu from '@/components/menu/index.vue';
+  import Menu from '@/components/menu/tree/index.vue';
   import MessageBox from '../message-box/index.vue';
 
   const appStore = useAppStore();

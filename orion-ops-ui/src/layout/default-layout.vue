@@ -52,7 +52,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import { useAppStore } from '@/store';
   import NavBar from '@/components/navbar/index.vue';
-  import Menu from '@/components/menu/index.vue';
+  import Menu from '@/components/menu/tree/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
   import useResponsive from '@/hooks/responsive';

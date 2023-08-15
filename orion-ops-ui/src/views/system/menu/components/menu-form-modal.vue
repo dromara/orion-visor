@@ -114,8 +114,9 @@
   import { MenuTypeEnum, MenuVisibleEnum, MenuCacheEnum } from '../types/enum.types';
   import { toOptions } from '@/utils/enum';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
-  import MenuTreeSelector from '@/views/system/menu/components/menu-tree-selector.vue';
+  import MenuTreeSelector from './menu-tree-selector.vue';
   import { createMenu, updateMenu } from '@/api/system/menu';
+  import { Message } from '@arco-design/web-vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -155,7 +156,11 @@
   const openAdd = (record: any) => {
     title.value = '添加菜单';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm(), ...record });
+    renderForm({ ...defaultForm(), parentId: record.parentId });
+    // 如果是父菜单默认选中子菜单 如果是子菜单默认选中功能
+    if (record.type === 1 || record.type === 2) {
+      formModel.type = record.type + 1;
+    }
     setVisible(true);
   };
 
@@ -185,13 +190,20 @@
       if (error) {
         return false;
       }
+      if (formModel.parentId === 0
+        && (formModel.type === MenuTypeEnum.SUB_MENU.value || formModel.type === MenuTypeEnum.FUNCTION.value)) {
+        Message.error('创建子目录或功能时 父菜单不能为根目录');
+        return false;
+      }
       if (isAddHandle.value) {
         // 新增
         await createMenu(formModel as any);
+        Message.success('创建成功');
         emits('added');
       } else {
         // 修改
         await updateMenu(formModel as any);
+        Message.success('修改成功');
         emits('updated');
       }
       // 清空
