@@ -328,6 +328,8 @@ public class CodeGenerator {
                 new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${module}/${feature}/types"},
                 // vue table.vue 文件
                 new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${module}/${feature}/types"},
+                // sql menu.sql 文件
+                new String[]{"/templates/orion-sql-menu.sql.vm", "${feature}-menu.sql", "sql"},
         };
 
         // 构建文件

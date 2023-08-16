@@ -209,7 +209,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
         // 生成后端文件
         List<CustomFile> serverFiles = customFiles.stream()
-                .filter(s -> !this.isVueFile(s.getTemplatePath()))
+                .filter(s -> this.isServerFile(s.getTemplatePath()))
                 .collect(Collectors.toList());
         this.generatorServerFile(serverFiles, tableInfo, objectMap);
         // 生成前端文件
@@ -264,7 +264,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         beanMap.put("featureAllUpper", table.getFeature().toUpperCase());
         // 枚举
         beanMap.put("enums", this.getEnumMap(table));
-        System.out.println( this.getEnumMap(table));
         objectMap.put("vue", beanMap);
 
 
@@ -280,14 +279,64 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
+     * 生成 sql 文件
+     *
+     * @param customFiles customFiles
+     * @param tableInfo   tableInfo
+     * @param objectMap   objectMap
+     */
+    private void generatorSqlFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
+        GenTable table = tables.get(tableInfo.getName());
+        BeanMap beanMap = BeanMap.create(table, "enums");
+        // 模块名称首字母大写
+        beanMap.put("moduleFirstUpper", Strings.firstUpper(table.getModule()));
+        // 功能名称首字母大写
+        beanMap.put("featureFirstUpper", Strings.firstUpper(table.getFeature()));
+        // 功能名称全大写
+        beanMap.put("featureAllUpper", table.getFeature().toUpperCase());
+        objectMap.put("vue", beanMap);
+
+        // 生成文件
+        customFiles.forEach(file -> {
+            // 文件路径
+            String filePath = outPath
+                    + "/" + Strings.format(file.getPackageName(), beanMap)
+                    + "/" + Strings.format(file.getFileName(), beanMap);
+            // 输出文件
+            this.outputFile(Files1.newFile(filePath), objectMap, file.getTemplatePath(), file.isFileOverride());
+        });
+    }
+
+    /**
+     * 是否为后端文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为后端文件
+     */
+    private boolean isServerFile(String templatePath) {
+        return templatePath.startsWith("orion-server");
+    }
+
+    /**
      * 是否为 vue 文件
      *
      * @param templatePath templatePath
      * @return 是否为 vue 文件
      */
     private boolean isVueFile(String templatePath) {
-        return templatePath.endsWith(".ts.vm") ||
-                templatePath.endsWith(".vue.vm");
+        return templatePath.contains("orion-vue-") ||
+                templatePath.contains("orion-sql-menu.sql");
+    }
+
+    /**
+     * 是否为 sql 文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为 sql 文件
+     */
+    private boolean isSqlFile(String templatePath) {
+        return templatePath.contains("orion-sql-");
     }
 
     /**
