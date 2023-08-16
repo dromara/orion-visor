@@ -83,7 +83,7 @@
             </a-button>
           </a-popconfirm>
           <!-- 绑定菜单 -->
-          <a-button v-permission="['infra:system-menu:bind']"
+          <a-button v-permission="['infra:system-role:bind-menu']"
                     :disabled="record.code === 'admin'"
                     type="text"
                     size="mini"

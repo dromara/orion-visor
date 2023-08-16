@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +44,11 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     private SystemUserRoleDAO systemUserRoleDAO;
 
     @Override
+    public List<Long> getUserRoleIdList(Long userId) {
+        return systemUserRoleDAO.selectRoleIdByUserId(userId);
+    }
+
+    @Override
     public Integer deleteUserRoles(SystemUserUpdateRoleRequest request) {
         Long userId = request.getId();
         // 删除用户关联
@@ -61,20 +64,20 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     @Transactional(rollbackFor = Exception.class)
     public Integer updateUserRoles(SystemUserUpdateRoleRequest request) {
         Long userId = request.getId();
-        Set<String> roleCodeList = request.getRoles();
+        List<Long> roleIdList = request.getRoleIdList();
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(userId);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
         // 查询角色
-        List<SystemRoleDO> userRoles = systemRoleDAO.selectByCodeList(roleCodeList);
+        List<SystemRoleDO> userRoles = systemRoleDAO.selectBatchIds(roleIdList);
         // 检查角色是否存在
-        if (userRoles.size() != roleCodeList.size()) {
+        if (roleIdList.size() != userRoles.size()) {
             // 有不存在的角色
-            List<String> userRoleCodes = userRoles.stream()
-                    .map(SystemRoleDO::getCode)
+            List<Long> userRoleIdLists = userRoles.stream()
+                    .map(SystemRoleDO::getId)
                     .collect(Collectors.toList());
-            for (String roleCode : roleCodeList) {
-                Valid.in(roleCode, userRoleCodes, ErrorMessage.ROLE_CODE_ABSENT, roleCode);
+            for (Long roleId : roleIdList) {
+                Valid.in(roleId, userRoleIdLists, ErrorMessage.ROLE_CODE_ABSENT, roleId);
             }
         }
         // 删除用户角色关联
@@ -90,7 +93,10 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         effect += addUserRoles.size();
         // 更新缓存中的角色
         RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
-            s.setRoles(new ArrayList<>(roleCodeList));
+            List<String> roleCodeList = userRoles.stream()
+                    .map(SystemRoleDO::getCode)
+                    .collect(Collectors.toList());
+            s.setRoles(roleCodeList);
         }, userId);
         return effect;
     }

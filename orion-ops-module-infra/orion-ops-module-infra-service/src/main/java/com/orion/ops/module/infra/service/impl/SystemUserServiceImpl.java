@@ -144,8 +144,7 @@ public class SystemUserServiceImpl implements SystemUserService {
                 .like(SystemUserDO::getNickname, request.getNickname())
                 .like(SystemUserDO::getMobile, request.getMobile())
                 .like(SystemUserDO::getEmail, request.getEmail())
-                .eq(SystemUserDO::getStatus, request.getStatus())
-                .orderByDesc(SystemUserDO::getId);
+                .eq(SystemUserDO::getStatus, request.getStatus());
         // 查询
         return systemUserDAO.of()
                 .wrapper(wrapper)

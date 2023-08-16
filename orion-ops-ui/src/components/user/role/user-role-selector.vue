@@ -1,0 +1,60 @@
+<template>
+  <a-select v-model:model-value="value"
+            :options="optionData()"
+            :allow-search="true"
+            :multiple="multiple"
+            :loading="loading"
+            :filter-option="filterOption"
+            placeholder="请选择角色" />
+</template>
+
+<script lang="ts">
+  export default {
+    name: 'user-role-selector'
+  };
+</script>
+
+<script lang="ts" setup>
+  import { computed } from 'vue';
+  import { useCacheStore } from '@/store';
+  import { SelectOptionData } from '@arco-design/web-vue';
+  import { RoleStatusEnum } from '@/views/user/role/types/enum.types';
+
+  const props = defineProps({
+    modelValue: Object,
+    loading: Boolean,
+    multiple: Boolean,
+  });
+
+  const emits = defineEmits(['update:modelValue']);
+
+  const value = computed({
+    get() {
+      return props.modelValue;
+    },
+    set(e) {
+      emits('update:modelValue', e);
+    }
+  });
+
+  // 选项数据
+  const cacheStore = useCacheStore();
+  const optionData = (): SelectOptionData[] => {
+    return cacheStore.roles.map(s => {
+      return {
+        label: `${s.name} (${s.code})`,
+        disabled: s.status === RoleStatusEnum.DISABLED.value,
+        value: s.id,
+      };
+    });
+  };
+
+  // 搜索
+  const filterOption = (searchValue: string, option: { label: string; }) => {
+    return option.label.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
+  };
+</script>
+
+<style scoped>
+
+</style>

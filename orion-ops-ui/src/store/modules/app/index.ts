@@ -110,7 +110,7 @@ const useAppStore = defineStore('app', {
         // 未配置菜单
         if (this.serverMenu.length === 0) {
           Notification.error({
-            content: '该用户未配置菜单, 请先配置',
+            content: '该用户未配置菜单, 请先联系管理员配置',
             closable: true,
           });
         }

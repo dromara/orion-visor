@@ -70,19 +70,19 @@ public class SystemUserController {
     @Operation(summary = "修改用户角色")
     @PreAuthorize("@ss.hasPermission('infra:system-user:update-role')")
     public Integer updateUserRole(@Validated @RequestBody SystemUserUpdateRoleRequest request) {
-        if (Lists.isEmpty(request.getRoles())) {
+        if (Lists.isEmpty(request.getRoleIdList())) {
             // 删除用户角色
             return systemUserRoleService.deleteUserRoles(request);
         } else {
-            // 更新用户橘色
+            // 更新用户角色
             return systemUserRoleService.updateUserRoles(request);
         }
     }
 
     @PutMapping("/reset-password")
-    @Operation(summary = "重置密码")
+    @Operation(summary = "重置用户密码")
     @PreAuthorize("@ss.hasPermission('infra:system-user:reset-password')")
-    public HttpWrapper<?> resetPassword(@Validated @RequestBody UserResetPasswordRequest request) {
+    public HttpWrapper<?> resetUserPassword(@Validated @RequestBody UserResetPasswordRequest request) {
         systemUserService.resetPassword(request);
         return HttpWrapper.ok();
     }
@@ -102,6 +102,14 @@ public class SystemUserController {
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
     public List<SystemUserVO> getSystemUserList() {
         return systemUserService.getSystemUserList();
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-roles")
+    @Operation(summary = "查询用户的角色id")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
+    public List<Long> getUserRoleIdList(@RequestParam("userId") Long userId) {
+        return systemUserRoleService.getUserRoleIdList(userId);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

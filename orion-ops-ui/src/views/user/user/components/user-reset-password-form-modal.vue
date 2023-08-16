@@ -2,8 +2,8 @@
   <a-modal v-model:visible="visible"
            body-class="modal-form"
            title-align="start"
-           :title="title"
-           :top="80"
+           title="重置密码"
+           :top="120"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -18,29 +18,18 @@
               label-align="right"
               :style="{ width: '460px' }"
               :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
-              :rules="formRules">
+              :wrapper-col-props="{ span: 18 }">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" :disabled="!isAddHandle" placeholder="请输入用户名" />
+          <a-input v-model="formModel.username" :disabled="true" />
         </a-form-item>
         <!-- 花名 -->
         <a-form-item field="nickname" label="花名">
-          <a-input v-model="formModel.nickname" placeholder="请输入花名" />
+          <a-input v-model="formModel.nickname" :disabled="true" />
         </a-form-item>
         <!-- 密码 -->
-        <a-form-item v-if="isAddHandle"
-                     field="password"
-                     label="密码">
-          <a-input-password v-model="formModel.password" placeholder="请输入密码" />
-        </a-form-item>
-        <!-- 手机号 -->
-        <a-form-item field="mobile" label="手机号">
-          <a-input v-model="formModel.mobile" placeholder="请输入手机号" />
-        </a-form-item>
-        <!-- 邮箱 -->
-        <a-form-item field="email" label="邮箱">
-          <a-input v-model="formModel.email" placeholder="请输入邮箱" />
+        <a-form-item field="password" label="新密码" :rules="password">
+          <a-input-password v-model="formModel.password" placeholder="请输入新密码" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -49,7 +38,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-user-form-modal'
+    name: 'user-user-reset-password-form-modal'
   };
 </script>
 
@@ -57,45 +46,28 @@
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/form.rules';
-  import { createUser, updateUser } from '@/api/user/user';
+  import { password } from '../types/form.rules';
+  import { resetUserPassword } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import { md5 } from '@/utils';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const title = ref<string>();
-  const isAddHandle = ref<boolean>(true);
-
   const defaultForm = () => {
     return {
       id: undefined,
       username: undefined,
-      password: undefined,
       nickname: undefined,
-      mobile: undefined,
-      email: undefined,
+      password: undefined,
     };
   };
 
   const formRef = ref<any>();
   const formModel = reactive<Record<string, any>>(defaultForm());
 
-  const emits = defineEmits(['added', 'updated']);
-
-  // 打开新增
-  const openAdd = () => {
-    title.value = '添加用户';
-    isAddHandle.value = true;
-    renderForm({ ...defaultForm() });
-    setVisible(true);
-  };
-
-  // 打开修改
-  const openUpdate = (record: any) => {
-    title.value = '修改用户';
-    isAddHandle.value = false;
+  // 打开
+  const open = (record: any) => {
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -107,7 +79,7 @@
     });
   };
 
-  defineExpose({ openAdd, openUpdate });
+  defineExpose({ open });
 
   // 确定
   const handlerOk = async () => {
@@ -118,17 +90,12 @@
       if (error) {
         return false;
       }
-      if (isAddHandle.value) {
-        // 新增
-        await createUser({ ...formModel, password: md5(formModel.password) } as any);
-        Message.success('创建成功');
-        emits('added');
-      } else {
-        // 修改
-        await updateUser(formModel as any);
-        Message.success('修改成功');
-        emits('updated');
-      }
+      // 修改
+      await resetUserPassword({
+        id: formModel.id,
+        password: md5(formModel.password)
+      } as any);
+      Message.success('修改成功');
       // 清空
       handlerClear();
     } catch (e) {

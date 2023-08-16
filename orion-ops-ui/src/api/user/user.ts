@@ -20,7 +20,7 @@ export interface UserCreateRequest {
  */
 export interface UserUpdateRequest extends UserCreateRequest {
   id: number;
-  roles?: Array<number>;
+  roleIdList?: Array<number>;
   password?: string;
 }
 
@@ -104,6 +104,13 @@ export function getUser(id: number) {
  */
 export function getUserList() {
   return axios.get<UserQueryResponse[]>('/infra/system-user/list');
+}
+
+/**
+ * 查询用户的 roleId
+ */
+export function getUserRoleIdList(userId: number) {
+  return axios.get<Array<number>>('/infra/system-user/get-roles', { params: { userId } });
 }
 
 /**

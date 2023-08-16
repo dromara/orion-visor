@@ -260,7 +260,7 @@
       setFetchLoading(true);
       const { data } = await getMenuList(formModel);
       tableRenderData.value = data as MenuQueryResponse[];
-      cacheStore.updateMenu(tableRenderData.value);
+      cacheStore.updateMenus(tableRenderData.value);
     } finally {
       setFetchLoading(false);
     }
@@ -303,7 +303,7 @@
 
   // 卸载时清除 menu cache
   onUnmounted(() => {
-    cacheStore.resetMenu();
+    cacheStore.resetMenus();
   });
 
 </script>

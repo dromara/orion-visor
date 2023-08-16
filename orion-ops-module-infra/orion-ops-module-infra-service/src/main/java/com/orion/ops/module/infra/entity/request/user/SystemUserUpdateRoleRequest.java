@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 /**
  * 用户 更新角色请求对象
@@ -28,7 +28,7 @@ public class SystemUserUpdateRoleRequest implements Serializable {
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "角色编码")
-    private Set<String> roles;
+    @Schema(description = "roleIdList")
+    private List<Long> roleIdList;
 
 }

@@ -107,6 +107,7 @@
           <!-- 重置密码 -->
           <a-button type="text"
                     size="mini"
+                    :disabled="record.id === userStore.id"
                     v-permission="['infra:system-user:reset-password']"
                     @click="emits('openResetPassword', record)">
             重置密码

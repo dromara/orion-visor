@@ -2,7 +2,7 @@
   <div class="content">
     <a-result class="result" status="403" subtitle="您没有访问该资源的权限" />
     <div class="operation-row">
-      <a-button class="mr8" key="back" type="primary" @click="to('login')">重新登录</a-button>
+      <a-button class="mr8" key="back" type="primary" @click="logout">重新登录</a-button>
       <a-button key="back" type="primary" @click="to('workplace')">返回工作台</a-button>
     </div>
   </div>
@@ -10,10 +10,18 @@
 
 <script lang="ts" setup>
   import { useRouter } from 'vue-router';
+  import { useUserStore } from '@/store';
 
   const router = useRouter();
   const to = (name: string) => {
     router.push({ name: name });
+  };
+
+  // 重新登录
+  const logout = () => {
+    const userStore = useUserStore();
+    userStore.logout();
+    to('login');
   };
 </script>
 
