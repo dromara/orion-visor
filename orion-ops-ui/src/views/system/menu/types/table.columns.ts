@@ -38,7 +38,6 @@ const columns = [
     title: '组件名称',
     dataIndex: 'component',
     slotName: 'component',
-    width: 150,
     ellipsis: true,
     tooltip: true,
   }, {

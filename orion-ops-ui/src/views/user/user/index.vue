@@ -2,12 +2,12 @@
   <div class="layout-container">
     <!-- 表格 -->
     <user-table ref="table"
-                  @openAdd="() => modal.openAdd()"
-                  @openUpdate="(e) => modal.openUpdate(e)" />
+                @openAdd="() => modal.openAdd()"
+                @openUpdate="(e) => modal.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <user-form-modal ref="modal"
-                       @added="() => table.addedCallback()"
-                       @updated="() => table.updatedCallback()" />
+                     @added="() => table.addedCallback()"
+                     @updated="() => table.updatedCallback()" />
   </div>
 </template>
 

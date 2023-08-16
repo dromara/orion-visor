@@ -1,7 +1,7 @@
 /**
  * 角色状态
  */
-export const ROLE_STATUS_ENUM = {
+export const RoleStatusEnum = {
   DISABLED: {
     value: 0,
     label: '停用',

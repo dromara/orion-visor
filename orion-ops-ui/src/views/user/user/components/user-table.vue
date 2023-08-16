@@ -6,44 +6,33 @@
                     @submit="fetchTableData"
                     @reset="fetchTableData">
       <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="60px">
-        <a-input-number v-model="formModel.id" placeholder="请输入id" allow-clear/>
+      <a-form-item field="id" label="id" label-col-flex="50px">
+        <a-input-number v-model="formModel.id" placeholder="请输入id" allow-clear />
       </a-form-item>
       <!-- 用户名 -->
-      <a-form-item field="username" label="用户名" label-col-flex="60px">
-        <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear/>
-      </a-form-item>
-      <!-- 密码 -->
-      <a-form-item field="password" label="密码" label-col-flex="60px">
-        <a-input v-model="formModel.password" placeholder="请输入密码" allow-clear/>
+      <a-form-item field="username" label="用户名" label-col-flex="50px">
+        <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
       </a-form-item>
       <!-- 花名 -->
-      <a-form-item field="nickname" label="花名" label-col-flex="60px">
-        <a-input v-model="formModel.nickname" placeholder="请输入花名" allow-clear/>
+      <a-form-item field="nickname" label="花名" label-col-flex="50px">
+        <a-input v-model="formModel.nickname" placeholder="请输入花名" allow-clear />
       </a-form-item>
-      <!-- 头像地址 -->
-      <a-form-item field="avatar" label="头像地址" label-col-flex="60px">
-        <a-input v-model="formModel.avatar" placeholder="请输入头像地址" allow-clear/>
+      <!-- 用户状态 -->
+      <a-form-item field="status" label="用户状态 " label-col-flex="50px">
+        <a-select
+          v-model="formModel.status"
+          :options="toOptions(UserStatusEnum)"
+          placeholder="请选择用户状态"
+          allow-clear
+        />
       </a-form-item>
       <!-- 手机号 -->
-      <a-form-item field="mobile" label="手机号" label-col-flex="60px">
-        <a-input v-model="formModel.mobile" placeholder="请输入手机号" allow-clear/>
+      <a-form-item field="mobile" label="手机号" label-col-flex="50px">
+        <a-input v-model="formModel.mobile" placeholder="请输入手机号" allow-clear />
       </a-form-item>
       <!-- 邮箱 -->
-      <a-form-item field="email" label="邮箱" label-col-flex="60px">
-        <a-input v-model="formModel.email" placeholder="请输入邮箱" allow-clear/>
-      </a-form-item>
-      <!-- 用户状态 0停用 1启用 2锁定 -->
-      <a-form-item field="status" label="用户状态 0停用 1启用 2锁定" label-col-flex="60px">
-        <a-input-number v-model="formModel.status" placeholder="请输入用户状态 0停用 1启用 2锁定" allow-clear/>
-      </a-form-item>
-      <!-- 最后登录时间 -->
-      <a-form-item field="lastLoginTime" label="最后登录时间" label-col-flex="60px">
-        <a-date-picker v-model="formModel.lastLoginTime"
-                       style="width: 100%"
-                       placeholder="请选择最后登录时间"
-                       show-time
-                       allow-clear/>
+      <a-form-item field="email" label="邮箱" label-col-flex="50px">
+        <a-input v-model="formModel.email" placeholder="请输入邮箱" allow-clear />
       </a-form-item>
     </a-query-header>
   </a-card>
@@ -66,21 +55,6 @@
               <icon-plus />
             </template>
           </a-button>
-          <!-- 删除 -->
-          <a-popconfirm position="br"
-                        type="warning"
-                        :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
-                        @ok="deleteSelectRows">
-            <a-button v-permission="['infra:system-user:delete']"
-                      type="secondary"
-                      status="danger"
-                      :disabled="selectedKeys.length === 0">
-              删除
-              <template #icon>
-                <icon-delete />
-              </template>
-            </a-button>
-          </a-popconfirm>
         </a-space>
       </div>
     </template>
@@ -91,22 +65,58 @@
              label-align="left"
              :loading="loading"
              :columns="columns"
-             v-model:selectedKeys="selectedKeys"
-             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
+      <!-- 状态 -->
+      <template #status="{ record }">
+        <a-tag :color="getEnumValue(record.status, UserStatusEnum,'color')">
+          {{ getEnumValue(record.status, UserStatusEnum) }}
+        </a-tag>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <!-- 启用/停用 -->
+          <a-popconfirm :content="`确定要${UserStatusEnum.ENABLED.value === record.status
+                        ? UserStatusEnum.DISABLED.label
+                        : UserStatusEnum.ENABLED.label}当前用户?`"
+                        position="left"
+                        type="warning"
+                        @ok="updateStatus(record)">
+            <a-button type="text"
+                      size="mini"
+                      :disabled="record.id === userStore.id"
+                      v-permission="['infra:system-user:update-status']">
+              {{
+                UserStatusEnum.ENABLED.value === record.status
+                  ? UserStatusEnum.DISABLED.label
+                  : UserStatusEnum.ENABLED.label
+              }}
+            </a-button>
+          </a-popconfirm>
           <!-- 修改 -->
           <a-button type="text"
                     size="mini"
                     v-permission="['infra:system-user:update']"
                     @click="emits('openUpdate', record)">
             修改
+          </a-button>
+          <!-- 重置密码 -->
+          <a-button type="text"
+                    size="mini"
+                    v-permission="['infra:system-user:reset-password']"
+                    @click="emits('openResetPassword', record)">
+            重置密码
+          </a-button>
+          <!-- 分配角色 -->
+          <a-button type="text"
+                    size="mini"
+                    v-permission="['infra:system-user:update-role']"
+                    @click="emits('openUpdateRole', record)">
+            分配角色
           </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
@@ -115,6 +125,7 @@
                         @ok="deleteRow(record)">
             <a-button type="text" size="mini"
                       status="danger"
+                      :disabled="record.id === userStore.id"
                       v-permission="['infra:system-user:delete']">
               删除
             </a-button>
@@ -133,19 +144,20 @@
 
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { batchDeleteUser, deleteUser, getUserPage, UserQueryRequest, UserQueryResponse } from '@/api/user/user';
+  import { deleteUser, getUserPage, updateUserStatus, UserQueryRequest, UserQueryResponse } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { defaultPagination, defaultRowSelection } from '@/types/table';
+  import { UserStatusEnum } from '../types/enum.types';
+  import { defaultPagination } from '@/types/table';
+  import { toOptions, getEnumValue } from '@/utils/enum';
+  import { useUserStore } from '@/store';
 
   const tableRenderData = ref<UserQueryResponse[]>();
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openUpdateRole']);
 
   const pagination = reactive(defaultPagination());
-  const selectedKeys = ref<number[]>([]);
-  const rowSelection = reactive(defaultRowSelection());
 
   const formModel = reactive<UserQueryRequest>({
     id: undefined,
@@ -159,20 +171,7 @@
     lastLoginTime: undefined,
   });
 
-  // 删除选中行
-  const deleteSelectRows = async () => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await batchDeleteUser(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
-      selectedKeys.value = [];
-      // 重新加载数据
-      await fetchTableData();
-    } finally {
-      setLoading(false);
-    }
-  };
+  const userStore = useUserStore();
 
   // 删除当前行
   const deleteRow = async ({ id }: { id: number }) => {
@@ -183,6 +182,25 @@
       Message.success('删除成功');
       // 重新加载数据
       await fetchTableData();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 更新状态
+  const updateStatus = async (record: any) => {
+    try {
+      setLoading(true);
+      // 更新状态
+      const newStatus = UserStatusEnum.ENABLED.value === record.status
+        ? UserStatusEnum.DISABLED
+        : UserStatusEnum.ENABLED;
+      await updateUserStatus({
+        id: record.id,
+        status: newStatus.value
+      });
+      Message.success(`${newStatus.label}成功`);
+      record.status = newStatus.value;
     } finally {
       setLoading(false);
     }

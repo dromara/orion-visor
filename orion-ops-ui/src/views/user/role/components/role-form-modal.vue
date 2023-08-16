@@ -3,7 +3,7 @@
            body-class="modal-form"
            title-align="start"
            :title="title"
-           :top="120"
+           :top="80"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"

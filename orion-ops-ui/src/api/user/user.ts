@@ -1,5 +1,4 @@
 import axios from 'axios';
-import qs from 'query-string';
 import { DataGrid, Pagination } from '@/types/global';
 
 /**
@@ -21,6 +20,8 @@ export interface UserCreateRequest {
  */
 export interface UserUpdateRequest extends UserCreateRequest {
   id: number;
+  roles?: Array<number>;
+  password?: string;
 }
 
 /**
@@ -44,7 +45,6 @@ export interface UserQueryRequest extends Pagination {
 export interface UserQueryResponse {
   id?: number;
   username?: string;
-  password?: string;
   nickname?: string;
   avatar?: string;
   mobile?: string;
@@ -72,6 +72,27 @@ export function updateUser(request: UserUpdateRequest) {
 }
 
 /**
+ * 修改用户状态
+ */
+export function updateUserStatus(request: UserUpdateRequest) {
+  return axios.put('/infra/system-user/update-status', request);
+}
+
+/**
+ * 修改用户角色
+ */
+export function updateUserRole(request: UserUpdateRequest) {
+  return axios.put('/infra/system-user/update-role', request);
+}
+
+/**
+ * 重置用户密码
+ */
+export function resetUserPassword(request: UserUpdateRequest) {
+  return axios.put('/infra/system-user/reset-password', request);
+}
+
+/**
  * 通过 id 查询用户
  */
 export function getUser(id: number) {
@@ -79,15 +100,10 @@ export function getUser(id: number) {
 }
 
 /**
- * 通过 id 批量查询用户
+ * 查询所有用户
  */
-export function getUserList(idList: Array<number>) {
-  return axios.get<UserQueryResponse[]>('/infra/system-user/list', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
+export function getUserList() {
+  return axios.get<UserQueryResponse[]>('/infra/system-user/list');
 }
 
 /**
@@ -104,14 +120,3 @@ export function deleteUser(id: number) {
   return axios.delete('/infra/system-user/delete', { params: { id } });
 }
 
-/**
- * 通过 id 批量删除用户
- */
-export function batchDeleteUser(idList: Array<number>) {
-  return axios.delete('/infra/system-user/delete-batch', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
-}

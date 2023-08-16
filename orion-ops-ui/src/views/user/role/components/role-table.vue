@@ -17,7 +17,7 @@
       <a-form-item field="status" label="角色状态" label-col-flex="50px">
         <a-select v-model="formModel.status"
                   placeholder="请选择角色状态"
-                  :options="toOptions(ROLE_STATUS_ENUM)"
+                  :options="toOptions(RoleStatusEnum)"
                   allow-clear />
       </a-form-item>
     </a-query-header>
@@ -62,24 +62,24 @@
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
-        <a-tag :color="getEnumValue(record.status, ROLE_STATUS_ENUM,'color')">
-          {{ getEnumValue(record.status, ROLE_STATUS_ENUM) }}
+        <a-tag :color="getEnumValue(record.status, RoleStatusEnum,'color')">
+          {{ getEnumValue(record.status, RoleStatusEnum) }}
         </a-tag>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 修改状态 -->
-          <a-popconfirm :content="`确定要${toggleEnumValue(record.status, ROLE_STATUS_ENUM, 'label')}当前角色吗?`"
+          <a-popconfirm :content="`确定要${toggleEnumValue(record.status, RoleStatusEnum, 'label')}当前角色吗?`"
                         position="left"
                         type="warning"
                         @ok="toggleRoleStatus(record)">
             <a-button v-permission="['infra:system-role:delete']"
                       :disabled="record.code === 'admin'"
-                      :status="toggleEnumValue(record.status, ROLE_STATUS_ENUM, 'status')"
+                      :status="toggleEnumValue(record.status, RoleStatusEnum, 'status')"
                       type="text"
                       size="mini">
-              {{ toggleEnumValue(record.status, ROLE_STATUS_ENUM, 'label') }}
+              {{ toggleEnumValue(record.status, RoleStatusEnum, 'label') }}
             </a-button>
           </a-popconfirm>
           <!-- 绑定菜单 -->
@@ -128,7 +128,7 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { ROLE_STATUS_ENUM } from '../types/enum.types';
+  import { RoleStatusEnum } from '../types/enum.types';
   import { toOptions, getEnumValue, toggleEnumValue, toggleEnum } from '@/utils/enum';
   import { defaultPagination } from '@/types/table';
 
@@ -149,7 +149,7 @@
   const toggleRoleStatus = async (record: any) => {
     try {
       setLoading(true);
-      const toggleStatus = toggleEnum(record.status, ROLE_STATUS_ENUM);
+      const toggleStatus = toggleEnum(record.status, RoleStatusEnum);
       // 调用修改接口
       await updateRoleStatus({ id: record.id, status: toggleStatus.value });
       Message.success(`${toggleStatus.label}成功`);

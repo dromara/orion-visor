@@ -3,7 +3,7 @@
            body-class="modal-form"
            title-align="start"
            :title="title"
-           :top="120"
+           :top="80"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -22,19 +22,17 @@
               :rules="formRules">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" placeholder="请输入用户名" />
+          <a-input v-model="formModel.username" :disabled="!isAddHandle" placeholder="请输入用户名" />
         </a-form-item>
         <!-- 密码 -->
-        <a-form-item field="password" label="密码">
-          <a-input v-model="formModel.password" placeholder="请输入密码" />
+        <a-form-item v-if="isAddHandle"
+                     field="password"
+                     label="密码">
+          <a-input-password v-model="formModel.password" placeholder="请输入密码" />
         </a-form-item>
         <!-- 花名 -->
         <a-form-item field="nickname" label="花名">
           <a-input v-model="formModel.nickname" placeholder="请输入花名" />
-        </a-form-item>
-        <!-- 头像地址 -->
-        <a-form-item field="avatar" label="头像地址">
-          <a-input v-model="formModel.avatar" placeholder="请输入头像地址" />
         </a-form-item>
         <!-- 手机号 -->
         <a-form-item field="mobile" label="手机号">
@@ -43,17 +41,6 @@
         <!-- 邮箱 -->
         <a-form-item field="email" label="邮箱">
           <a-input v-model="formModel.email" placeholder="请输入邮箱" />
-        </a-form-item>
-        <!-- 用户状态 0停用 1启用 2锁定 -->
-        <a-form-item field="status" label="用户状态 0停用 1启用 2锁定">
-          <a-input-number v-model="formModel.status" placeholder="请输入用户状态 0停用 1启用 2锁定" />
-        </a-form-item>
-        <!-- 最后登录时间 -->
-        <a-form-item field="lastLoginTime" label="最后登录时间">
-          <a-date-picker v-model="formModel.lastLoginTime"
-                         style="width: 100%"
-                         placeholder="请选择最后登录时间"
-                         show-time />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -73,6 +60,7 @@
   import formRules from '../types/form.rules';
   import { createUser, updateUser } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
+  import { md5 } from '@/utils';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -86,11 +74,8 @@
       username: undefined,
       password: undefined,
       nickname: undefined,
-      avatar: undefined,
       mobile: undefined,
       email: undefined,
-      status: undefined,
-      lastLoginTime: undefined,
     };
   };
 
@@ -135,7 +120,7 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createUser(formModel as any);
+        await createUser({ ...formModel, password: md5(formModel.password) } as any);
         Message.success('创建成功');
         emits('added');
       } else {

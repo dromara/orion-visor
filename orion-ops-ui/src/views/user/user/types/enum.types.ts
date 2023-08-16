@@ -1,27 +1,21 @@
 /**
- *
+ *用户状态
  */
-export const USER_STATUS_ENUM = {
+export const UserStatusEnum = {
   DISABLED: {
-    value: null,
-    label: '',
-    color: '',
-    status: '0',
-    name: 'DISABLED',
+    value: 0,
+    label: '停用',
+    color: 'orange',
   },
   ENABLED: {
-    value: null,
-    label: '',
-    color: '',
-    status: '1',
-    name: 'ENABLED',
+    value: 1,
+    label: '启用',
+    color: 'blue',
   },
   LOCKED: {
-    value: null,
-    label: '',
-    color: '',
-    status: '2',
-    name: 'LOCKED',
+    value: 2,
+    label: '锁定',
+    color: 'orange',
   },
-}
+};
 

@@ -26,6 +26,7 @@ const columns = [
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
+    width: 180,
     align: 'center',
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
