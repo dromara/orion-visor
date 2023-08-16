@@ -18,6 +18,7 @@ const columns = [
     ellipsis: true,
     tooltip: true,
     #elseif(${field.propertyType} == 'Date')
+    width: 180,
     render: ({ record }) => {
       return record.${field.propertyName} && dateFormat(new Date(record.${field.propertyName}));
     },
@@ -27,6 +28,7 @@ const columns = [
     dataIndex: 'createTime',
     slotName: 'createTime',
     align: 'center',
+    width: 180,
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
     },
@@ -35,6 +37,7 @@ const columns = [
     dataIndex: 'updateTime',
     slotName: 'updateTime',
     align: 'center',
+    width: 180,
     render: ({ record }) => {
       return dateFormat(new Date(record.updateTime));
     },

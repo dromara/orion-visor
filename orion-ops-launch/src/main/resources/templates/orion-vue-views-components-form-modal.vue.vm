@@ -3,7 +3,7 @@
            body-class="modal-form"
            title-align="start"
            :title="title"
-           :top="120"
+           :top="80"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -55,6 +55,8 @@
   import formRules from '../types/form.rules';
   import { create${vue.featureFirstUpper}, update${vue.featureFirstUpper} } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
+  import { } from '../types/enum.types';
+  import { toOptions } from '@/utils/enum';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
