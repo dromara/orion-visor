@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,9 +39,9 @@ public class PermissionController {
     @Resource
     private PermissionService permissionService;
 
-    @GetMapping("/init-cache")
+    @PutMapping("/init-cache")
     @Operation(summary = "初始化角色权限缓存")
-    @PreAuthorize("@ss.hasPermission('infra:system:init-permission-cache')")
+    @PreAuthorize("@ss.hasPermission('infra:system-menu:init-cache')")
     public HttpWrapper<?> initCache() {
         permissionService.initPermissionCache();
         return HttpWrapper.ok();

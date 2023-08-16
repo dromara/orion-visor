@@ -85,3 +85,10 @@ export function updateMenuStatus(request: MenuUpdateRequest) {
 export function deleteMenu(id: number) {
   return axios.delete<MenuQueryResponse[]>('/infra/system-menu/delete', { params: { id } });
 }
+
+/**
+ * 初始化缓存
+ */
+export function initCache() {
+  return axios.put('/infra/permission/init-cache');
+}

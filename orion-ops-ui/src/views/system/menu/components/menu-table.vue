@@ -55,13 +55,27 @@
               <icon-refresh />
             </template>
           </a-button>
-          <!-- 展开 -->
+          <!-- 折叠/展开 -->
           <a-button @click="toggleExpand">
-            折叠/展开
+            {{ expandStatus ? '折叠' : '展开' }}
             <template #icon>
-              <icon-expand />
+              <icon-shrink v-if="expandStatus" />
+              <icon-expand v-else />
             </template>
           </a-button>
+          <!-- 刷新缓存 -->
+          <a-popconfirm content="确定要刷新全局菜单缓存吗?"
+                        position="left"
+                        type="warning"
+                        @ok="doInitCache">
+            <a-button type="primary" status="warning"
+                      v-permission="['infra:system-menu:init-cache']">
+              刷新缓存
+              <template #icon>
+                <icon-sync />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </a-col>
     </a-row>
@@ -158,7 +172,7 @@
 <script lang="ts" setup>
   import { reactive, ref, onUnmounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getMenuList, deleteMenu, updateMenuStatus, MenuQueryRequest, MenuQueryResponse } from '@/api/system/menu';
+  import { getMenuList, deleteMenu, updateMenuStatus, initCache, MenuQueryRequest, MenuQueryResponse } from '@/api/system/menu';
   import { toOptions, getEnumValue, toggleEnumValue } from '@/utils/enum';
   import { MenuStatusEnum, MenuVisibleEnum, MenuTypeEnum } from '../types/enum.types';
   import columns from '../types/table.columns';
@@ -262,6 +276,17 @@
   // 切换展开/折叠
   const toggleExpand = () => {
     tableRef.value.expandAll(expandStatus.value = !expandStatus.value);
+  };
+
+  // 刷新缓存
+  const doInitCache = async () => {
+    try {
+      setFetchLoading(true);
+      await initCache();
+      Message.success('刷新成功');
+    } finally {
+      setFetchLoading(false);
+    }
   };
 
   // 修改状态
