@@ -146,6 +146,9 @@ orion:
       infra:
         group: "infra - 基建模块"
         path: "infra"
+      machine:
+        group: "machine - 机器资源模块"
+        path: "machine"
 
   logging:
     # 全局日志打印

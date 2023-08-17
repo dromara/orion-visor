@@ -18,6 +18,7 @@
         <module>orion-ops-framework</module>
         <module>orion-ops-launch</module>
         <module>orion-ops-module-infra</module>
+        <module>orion-ops-module-machine</module>
     </modules>
 
     <properties>
