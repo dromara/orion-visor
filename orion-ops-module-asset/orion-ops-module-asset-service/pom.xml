@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.orion.ops</groupId>
-        <artifactId>orion-ops-module-machine</artifactId>
+        <artifactId>orion-ops-module-asset</artifactId>
         <version>${revision}</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>orion-ops-module-infra-service</artifactId>
+    <artifactId>orion-ops-module-asset-service</artifactId>
     <packaging>jar</packaging>
 
-    <description>项目机器资源模块</description>
+    <description>项目资产模块</description>
     <url>https://github.com/lijiahangmax/orion-ops-pro</url>
 
     <dependencies>
@@ -31,7 +31,7 @@
         <!-- machine provider -->
         <dependency>
             <groupId>com.orion.ops</groupId>
-            <artifactId>orion-ops-module-machine-provider</artifactId>
+            <artifactId>orion-ops-module-asset-provider</artifactId>
             <version>${revision}</version>
         </dependency>
 

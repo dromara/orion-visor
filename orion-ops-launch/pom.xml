@@ -88,6 +88,11 @@
             <artifactId>orion-ops-module-infra-service</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-module-asset-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
     </dependencies>
 
