@@ -27,9 +27,16 @@ public class GenTable {
     private String comment;
 
     /**
-     * 请求实体包名
+     * 业务实体包名
+     * <p>
+     * request dto 包
      */
-    private String requestPackage;
+    private String bizPackage;
+
+    /**
+     * 是否生成 provider api
+     */
+    private boolean genApi;
 
     // -------------------- 前端 --------------------
 
@@ -53,11 +60,26 @@ public class GenTable {
      */
     private List<Class<? extends Enum<?>>> enums;
 
-    public GenTable(String tableName, String comment, String requestPackage) {
+    public GenTable(String tableName, String comment, String bizPackage) {
+        this(tableName, comment, bizPackage, false);
+    }
+
+    public GenTable(String tableName, String comment, String bizPackage, boolean genApi) {
         this.tableName = tableName;
         this.comment = comment;
-        this.requestPackage = requestPackage;
+        this.bizPackage = bizPackage;
+        this.genApi = genApi;
         this.enums = new ArrayList<>();
+    }
+
+    /**
+     * 是否生成 api
+     *
+     * @return this
+     */
+    public GenTable api() {
+        this.genApi = true;
+        return this;
     }
 
     /**

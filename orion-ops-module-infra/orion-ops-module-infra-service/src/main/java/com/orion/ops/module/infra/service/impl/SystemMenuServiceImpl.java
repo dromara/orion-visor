@@ -209,7 +209,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
                         s.setVisible(visible);
                     }
                 });
-        log.info("SystemMenuService-updateSystemMenuStatus updateIdList: {}, effect: {}", JSON.toJSONString(updateIdList), effect);
+        log.info("SystemMenuService-updateSystemMenuStatus updateIdList: {}, effect: {}", updateIdList, effect);
         return effect;
     }
 
@@ -233,7 +233,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         permissionService.getRoleMenuCache()
                 .values()
                 .forEach(roleMenus -> roleMenus.removeIf(s -> deletedIdList.contains(s.getId())));
-        log.info("SystemMenuService-deleteSystemMenu deletedIdList: {}, effect: {}", JSON.toJSONString(deletedIdList), effect);
+        log.info("SystemMenuService-deleteSystemMenu deletedIdList: {}, effect: {}", deletedIdList, effect);
         return effect;
     }
 
