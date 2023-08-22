@@ -20,12 +20,12 @@ import ${mapperAnnotationClass.name};
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
 
     /**
-     * 获取全部条件
+     * 获取查询条件
      *
      * @param entity entity
-     * @return 全部条件
+     * @return 查询条件
      */
-    default LambdaQueryWrapper<${entity}> condition(${entity} entity) {
+    default LambdaQueryWrapper<${entity}> queryCondition(${entity} entity) {
         return this.wrapper()
         #foreach($field in ${table.fields})
             .eq(${type}DO::get${field.capitalName}, entity.get${field.capitalName}())#if(!$foreach.hasNext);#end

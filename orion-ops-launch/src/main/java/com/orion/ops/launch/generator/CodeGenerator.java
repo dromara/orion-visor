@@ -12,8 +12,6 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
-import com.orion.ops.module.infra.enums.RoleStatusEnum;
-import com.orion.ops.module.infra.enums.UserStatusEnum;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -40,13 +38,10 @@ public class CodeGenerator {
         String module = "infra";
         // 生成的表
         GenTable[] tables = {
-                new GenTable("system_user", "用户", "user")
-                        .vue("user", "user")
-                        .enums(UserStatusEnum.class),
-                new GenTable("system_role", "角色", "role")
-                        .vue("user", "role")
-                        .enums(RoleStatusEnum.class),
-                // new GenTable("system_menu", "菜单", "menu"),
+                // new GenTable("system_user", "用户", "user")
+                //         .vue("user", "user")
+                //         .enums(UserStatusEnum.class),
+                new GenTable("favorite", "收藏", "favorite", true),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -127,8 +122,7 @@ public class CodeGenerator {
      * @return config
      */
     private static GlobalConfig getGlobalConfig(String outputDir, String author) {
-        // 全局配置
-        GlobalConfig gbConfig = new GlobalConfig.Builder()
+        return new GlobalConfig.Builder()
                 // 设置作者
                 .author(author)
                 // 生成路径
@@ -141,7 +135,6 @@ public class CodeGenerator {
                 .commentDate("yyyy-M-d HH:mm")
                 // 构建
                 .build();
-        return gbConfig;
     }
 
     /**
@@ -153,7 +146,7 @@ public class CodeGenerator {
      * @return 数据源配置
      */
     private static DataSourceConfig getDataSourceConfig(String url, String username, String password) {
-        DataSourceConfig dsConfig = new DataSourceConfig.Builder(url, username, password)
+        return new DataSourceConfig.Builder(url, username, password)
                 // 转换器
                 .typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
                     switch (metaInfo.getJdbcType().TYPE_CODE) {
@@ -168,7 +161,6 @@ public class CodeGenerator {
                 .dbQuery(new MySqlQuery())
                 // 构建
                 .build();
-        return dsConfig;
     }
 
     /**
@@ -181,7 +173,8 @@ public class CodeGenerator {
         String[] tableNames = Arrays.stream(tables)
                 .map(GenTable::getTableName)
                 .toArray(String[]::new);
-        StrategyConfig stConfig = new StrategyConfig.Builder()
+        // 策略配置
+        return new StrategyConfig.Builder()
                 // 生成的表
                 .addInclude(tableNames)
                 // 全局大写命名
@@ -240,7 +233,6 @@ public class CodeGenerator {
                 .formatServiceImplFileName("%sServiceImpl")
                 // 构建
                 .build();
-        return stConfig;
     }
 
     /**
@@ -250,7 +242,7 @@ public class CodeGenerator {
      * @return 包名配置
      */
     private static PackageConfig getPackageConfig(String module) {
-        PackageConfig pkConfig = new PackageConfig.Builder()
+        return new PackageConfig.Builder()
                 // 声明父包
                 .parent("com.orion.ops.module")
                 // 模块名称
@@ -269,7 +261,6 @@ public class CodeGenerator {
                 .controller("controller")
                 // 构建
                 .build();
-        return pkConfig;
     }
 
     /**
@@ -278,7 +269,7 @@ public class CodeGenerator {
      * @return 模板配置
      */
     private static TemplateConfig getTemplateConfig() {
-        TemplateConfig tplConfig = new TemplateConfig.Builder()
+        return new TemplateConfig.Builder()
                 .controller("/templates/orion-server-controller.java.vm")
                 .entity("/templates/orion-server-entity-do.java.vm")
                 .service("/templates/orion-server-service.java.vm")
@@ -286,7 +277,6 @@ public class CodeGenerator {
                 .mapper("/templates/orion-server-mapper.java.vm")
                 .xml("/templates/orion-server-mapper.xml.vm")
                 .build();
-        return tplConfig;
     }
 
     /**
@@ -296,12 +286,11 @@ public class CodeGenerator {
      */
     private static InjectionConfig getInjectionConfig() {
         String[][] customFileDefineArr = new String[][]{
+                // -------------------- 后端 - service --------------------
                 // http 文件
                 new String[]{"/templates/orion-server-controller.http.vm", "%sController.http", "controller"},
                 // vo 文件
                 new String[]{"/templates/orion-server-entity-vo.java.vm", "%sVO.java", "entity.vo"},
-                // dto 文件
-                new String[]{"/templates/orion-server-entity-dto.java.vm", "%sDTO.java", "entity.dto"},
                 // create request 文件
                 new String[]{"/templates/orion-server-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
                 // update request 文件
@@ -310,8 +299,22 @@ public class CodeGenerator {
                 new String[]{"/templates/orion-server-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
                 // convert 文件
                 new String[]{"/templates/orion-server-convert.java.vm", "%sConvert.java", "convert"},
+                // -------------------- 后端 - api --------------------
+                // api 文件
+                new String[]{"/templates/orion-server-api-interface.java.vm", "%sApi.java", "api"},
+                // api impl 文件
+                new String[]{"/templates/orion-server-api-impl.java.vm", "%sApiImpl.java", "api.impl"},
+                // dto 文件
+                new String[]{"/templates/orion-server-api-entity-dto.java.vm", "%sDTO.java", "entity.dto.%s"},
+                // create dto 文件
+                new String[]{"/templates/orion-server-api-entity-dto-create.java.vm", "%sCreateDTO.java", "entity.dto.%s"},
+                // update dto 文件
+                new String[]{"/templates/orion-server-api-entity-dto-update.java.vm", "%sUpdateDTO.java", "entity.dto.%s"},
+                // query dto 文件
+                new String[]{"/templates/orion-server-api-entity-dto-query.java.vm", "%sQueryDTO.java", "entity.dto.%s"},
                 // convert provider 文件
-                new String[]{"/templates/orion-server-convert-provider.java.vm", "%sProviderConvert.java", "convert"},
+                new String[]{"/templates/orion-server-api-convert.java.vm", "%sApiConvert.java", "convert"},
+                // -------------------- 前端 --------------------
                 // vue api 文件
                 new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${module}"},
                 // vue router 文件

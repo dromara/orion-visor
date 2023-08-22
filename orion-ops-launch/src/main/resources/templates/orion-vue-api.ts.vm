@@ -74,21 +74,21 @@ export function create${vue.featureFirstUpper}(request: ${vue.featureFirstUpper}
 }
 
 /**
- * $apiComment.update
+ * $apiComment.updateById
  */
 export function update${vue.featureFirstUpper}(request: ${vue.featureFirstUpper}UpdateRequest) {
   return axios.put('/${package.ModuleName}/${typeHyphen}/update', request);
 }
 
 /**
- * $apiComment.get
+ * $apiComment.getById
  */
 export function get${vue.featureFirstUpper}(id: number) {
   return axios.get<${vue.featureFirstUpper}QueryResponse>('/${package.ModuleName}/${typeHyphen}/get', { params: { id } });
 }
 
 /**
- * $apiComment.list
+ * $apiComment.listById
  */
 export function get${vue.featureFirstUpper}List(idList: Array<number>) {
   return axios.get<${vue.featureFirstUpper}QueryResponse[]>('/${package.ModuleName}/${typeHyphen}/list', {
@@ -100,21 +100,28 @@ export function get${vue.featureFirstUpper}List(idList: Array<number>) {
 }
 
 /**
- * $apiComment.query
+ * $apiComment.listAll
+ */
+export function get${vue.featureFirstUpper}ListAll(request: ${vue.featureFirstUpper}QueryRequest) {
+  return axios.post<Array<${vue.featureFirstUpper}QueryResponse>>('/${package.ModuleName}/${typeHyphen}/list-all', request);
+}
+
+/**
+ * $apiComment.queryPage
  */
 export function get${vue.featureFirstUpper}Page(request: ${vue.featureFirstUpper}QueryRequest) {
   return axios.post<DataGrid<${vue.featureFirstUpper}QueryResponse>>('/${package.ModuleName}/${typeHyphen}/query', request);
 }
 
 /**
- * $apiComment.delete
+ * $apiComment.deleteById
  */
 export function delete${vue.featureFirstUpper}(id: number) {
   return axios.delete('/${package.ModuleName}/${typeHyphen}/delete', { params: { id } });
 }
 
 /**
- * $apiComment.batchDelete
+ * $apiComment.batchDeleteById
  */
 export function batchDelete${vue.featureFirstUpper}(idList: Array<number>) {
   return axios.delete('/${package.ModuleName}/${typeHyphen}/delete-batch', {

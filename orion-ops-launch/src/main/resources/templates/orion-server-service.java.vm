@@ -25,31 +25,39 @@ public interface ${table.serviceName} {
     Long create${type}(${type}CreateRequest request);
 
     /**
-     * ${apiComment.update}
+     * ${apiComment.updateById}
      *
      * @param request request
      * @return effect
      */
-    Integer update${type}(${type}UpdateRequest request);
+    Integer update${type}ById(${type}UpdateRequest request);
 
     /**
-     * ${apiComment.get}
+     * ${apiComment.getById}
      *
      * @param id id
      * @return row
      */
-    ${type}VO get${type}(Long id);
+    ${type}VO get${type}ById(Long id);
 
     /**
-     * ${apiComment.list}
+     * ${apiComment.listById}
      *
      * @param idList idList
      * @return rows
      */
-    List<${type}VO> get${type}List(List<Long> idList);
+    List<${type}VO> get${type}ByIdList(List<Long> idList);
 
     /**
-     * ${apiComment.query}
+     * ${apiComment.listAll}
+     *
+     * @param request request
+     * @return rows
+     */
+    List<${type}VO> get${type}List(${type}QueryRequest request);
+
+    /**
+     * ${apiComment.queryPage}
      *
      * @param request request
      * @return rows
@@ -57,19 +65,19 @@ public interface ${table.serviceName} {
     DataGrid<${type}VO> get${type}Page(${type}QueryRequest request);
 
     /**
-     * ${apiComment.delete}
+     * ${apiComment.deleteById}
      *
      * @param id id
      * @return effect
      */
-    Integer delete${type}(Long id);
+    Integer delete${type}ById(Long id);
 
     /**
-     * ${apiComment.batchDelete}
+     * ${apiComment.batchDeleteById}
      *
      * @param idList idList
      * @return effect
      */
-    Integer batchDelete${type}(List<Long> idList);
+    Integer batchDelete${type}ByIdList(List<Long> idList);
 
 }

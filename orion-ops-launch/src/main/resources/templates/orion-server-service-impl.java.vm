@@ -46,7 +46,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
-    public Integer update${type}(${type}UpdateRequest request) {
+    public Integer update${type}ById(${type}UpdateRequest request) {
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         ${type}DO record = ${typeLower}DAO.selectById(id);
@@ -62,7 +62,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
-    public ${type}VO get${type}(Long id) {
+    public ${type}VO get${type}ById(Long id) {
         // 查询
         ${type}DO record = ${typeLower}DAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
@@ -71,7 +71,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
-    public List<${type}VO> get${type}List(List<Long> idList) {
+    public List<${type}VO> get${type}ByIdList(List<Long> idList) {
         // 查询
         List<${type}DO> records = ${typeLower}DAO.selectBatchIds(idList);
         if (records.isEmpty()) {
@@ -82,13 +82,23 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
-    public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request) {
+    public List<${type}VO> get${type}List(${type}QueryRequest request) {
+        // 转换
+        ${type}DO record = ${type}Convert.MAPPER.to(request);
         // 构造条件
-        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.wrapper()
-        #foreach($field in ${table.fields})
-                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())
-        #end
-                .orderByDesc(${type}DO::getId);
+        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.queryCondition(record);
+        // 查询
+        return ${typeLower}DAO.of()
+                .wrapper(wrapper)
+                .list(${type}Convert.MAPPER::to);
+    }
+
+    @Override
+    public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request) {
+        // 转换
+        ${type}DO record = ${type}Convert.MAPPER.to(request);
+        // 构造条件
+        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.queryCondition(record);
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)
@@ -97,16 +107,16 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
-    public Integer delete${type}(Long id) {
+    public Integer delete${type}ById(Long id) {
         int effect = ${typeLower}DAO.deleteById(id);
         log.info("${type}Service-delete${type} id: {}, effect: {}", id, effect);
         return effect;
     }
 
     @Override
-    public Integer batchDelete${type}(List<Long> idList) {
+    public Integer batchDelete${type}ByIdList(List<Long> idList) {
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
-        log.info("${type}Service-batchDelete${type} idList: {}, effect: {}", JSON.toJSONString(idList), effect);
+        log.info("${type}Service-batchDelete${type} idList: {}, effect: {}", idList, effect);
         return effect;
     }
 

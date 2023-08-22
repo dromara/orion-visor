@@ -1,0 +1,37 @@
+package ${currentPackage};
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.*;
+
+/**
+ * $!{table.comment} 查询请求业务对象
+ *
+ * @author ${author}
+ * @version ${since}
+ * @since ${date}
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "${type}QueryDTO", description = "$!{table.comment} 查询请求业务对象")
+public class ${type}QueryDTO implements Serializable {
+    #foreach($field in ${table.fields})
+
+    #if("$field.propertyType" == "String")
+    @Size(max = $field.metaInfo.length)
+    #end
+    #if("$!field.comment" != "")
+    @Schema(description = "${field.comment}")
+    #end
+    private ${field.propertyType} ${field.propertyName};
+    #end
+
+}

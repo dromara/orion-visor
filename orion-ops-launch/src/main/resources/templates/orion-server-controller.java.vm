@@ -53,52 +53,60 @@ public class ${table.controllerName} {
     }
 
     @PutMapping("/update")
-    @Operation(summary = "${apiComment.update}")
+    @Operation(summary = "${apiComment.updateById}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
     public Integer update${type}(@Validated @RequestBody ${type}UpdateRequest request) {
-        return ${typeLower}Service.update${type}(request);
+        return ${typeLower}Service.update${type}ById(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
-    @Operation(summary = "${apiComment.get}")
+    @Operation(summary = "${apiComment.getById}")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public ${type}VO get${type}(@RequestParam("id") Long id) {
-        return ${typeLower}Service.get${type}(id);
+        return ${typeLower}Service.get${type}ById(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
-    @Operation(summary = "${apiComment.list}")
+    @Operation(summary = "${apiComment.listById}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public List<${type}VO> get${type}List(@RequestParam("idList") List<Long> idList) {
-        return ${typeLower}Service.get${type}List(idList);
+        return ${typeLower}Service.get${type}ByIdList(idList);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @PostMapping("/list-all")
+    @Operation(summary = "${apiComment.listAll}")
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
+    public List<${type}VO> get${type}ListAll(@Validated @RequestBody ${type}QueryRequest request) {
+        return ${typeLower}Service.get${type}List(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
-    @Operation(summary = "${apiComment.query}")
+    @Operation(summary = "${apiComment.queryPage}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public DataGrid<${type}VO> get${type}Page(@Validated @RequestBody ${type}QueryRequest request) {
         return ${typeLower}Service.get${type}Page(request);
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "${apiComment.delete}")
+    @Operation(summary = "${apiComment.deleteById}")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer delete${type}(@RequestParam("id") Long id) {
-        return ${typeLower}Service.delete${type}(id);
+        return ${typeLower}Service.delete${type}ById(id);
     }
 
     @DeleteMapping("/delete-batch")
-    @Operation(summary = "${apiComment.batchDelete}")
+    @Operation(summary = "${apiComment.batchDeleteById}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {
-        return ${typeLower}Service.batchDelete${type}(idList);
+        return ${typeLower}Service.batchDelete${type}ByIdList(idList);
     }
 
 }

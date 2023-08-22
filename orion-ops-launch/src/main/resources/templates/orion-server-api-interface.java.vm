@@ -1,0 +1,75 @@
+package ${currentPackage};
+
+#foreach($pkg in ${customApiEntityFilePackages})
+import ${pkg}.*;
+#end
+
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * $!{table.comment} 对外服务类
+ *
+ * @author ${author}
+ * @version ${since}
+ * @since ${date}
+ */
+public interface ${type}Api {
+
+    /**
+     * ${apiComment.create}
+     *
+     * @param dto dto
+     * @return id
+     */
+    Long create${type}(${type}CreateDTO dto);
+
+    /**
+     * ${apiComment.updateById}
+     *
+     * @param dto dto
+     * @return effect
+     */
+    Integer update${type}ById(${type}UpdateDTO dto);
+
+    /**
+     * ${apiComment.getById}
+     *
+     * @param id id
+     * @return row
+     */
+    ${type}DTO get${type}ById(Long id);
+
+    /**
+     * ${apiComment.listById}
+     *
+     * @param idList idList
+     * @return rows
+     */
+    List<${type}DTO> get${type}ByIdList(Collection<Long> idList);
+
+    /**
+     * ${apiComment.listAll}
+     *
+     * @param dto dto
+     * @return rows
+     */
+    List<${type}DTO> get${type}List(${type}QueryDTO dto);
+
+    /**
+     * ${apiComment.deleteById}
+     *
+     * @param id id
+     * @return effect
+     */
+    Integer delete${type}ById(Long id);
+
+    /**
+     * ${apiComment.batchDeleteById}
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer batchDelete${type}ByIdList(Collection<Long> idList);
+
+}

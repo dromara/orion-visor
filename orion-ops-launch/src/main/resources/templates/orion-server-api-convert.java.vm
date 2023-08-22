@@ -1,0 +1,39 @@
+package ${currentPackage};
+
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import ${package.Entity}.*;
+#foreach($pkg in ${customFilePackages})
+import ${pkg}.*;
+#end
+#foreach($pkg in ${customApiEntityFilePackages})
+import ${pkg}.*;
+#end
+import java.util.List;
+
+/**
+ * $!{table.comment} 对外服务对象转换器
+ *
+ * @author ${author}
+ * @version ${since}
+ * @since ${date}
+ */
+@Mapper
+public interface ${type}ApiConvert {
+
+    ${type}ApiConvert MAPPER = Mappers.getMapper(${type}ApiConvert.class);
+
+    ${type}DO to(${type}DTO dto);
+
+    ${type}DTO to(${type}DO domain);
+
+    ${type}DO to(${type}QueryDTO domain);
+
+    ${type}CreateRequest to(${type}CreateDTO domain);
+
+    ${type}UpdateRequest to(${type}UpdateDTO domain);
+
+    List<${type}DTO> toDTO(List<${type}DO> list);
+
+    List<${type}DO> toDomain(List<${type}DTO> list);
+}

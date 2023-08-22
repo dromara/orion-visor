@@ -42,6 +42,7 @@ import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +54,7 @@ import java.util.stream.Collectors;
  */
 public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
-    private static final String REQUEST_PACKAGE_REPLACER = "request.%s";
+    private static final String[] PACKAGE_REPLACER = new String[]{"request.%s", "dto.%s"};
 
     private final Map<String, GenTable> tables;
 
@@ -82,7 +83,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             p.setProperty(Velocity.ENCODING_DEFAULT, ConstVal.UTF8);
             p.setProperty(Velocity.INPUT_ENCODING, ConstVal.UTF8);
             p.setProperty("file.resource.loader.unicode", StringPool.TRUE);
-            velocityEngine = new VelocityEngine(p);
+            this.velocityEngine = new VelocityEngine(p);
         }
         return this;
     }
@@ -95,7 +96,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
              BufferedWriter writer = new BufferedWriter(ow)) {
             template.merge(new VelocityContext(objectMap), writer);
         }
-        LOGGER.debug("模板:" + templatePath + ";  文件:" + outputFile);
+        LOGGER.debug("模板: " + templatePath + "; 文件: " + outputFile);
     }
 
     @Override
@@ -109,20 +110,32 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      * 创建自定义文件副本对象
      *
      * @param originCustomerFile originCustomerFile
+     * @param tableInfo          tableInfo
      * @return backup
      */
-    private List<CustomFile> createCustomFilesBackup(@NotNull List<CustomFile> originCustomerFile) {
+    private List<CustomFile> createCustomFilesBackup(@NotNull List<CustomFile> originCustomerFile,
+                                                     @NotNull TableInfo tableInfo) {
         // 生成文件副本
-        List<CustomFile> customFiles = originCustomerFile.stream().map(s -> {
-            return new CustomFile.Builder()
-                    .enableFileOverride()
-                    .templatePath(s.getTemplatePath())
-                    .filePath(s.getFilePath())
-                    .fileName(s.getFileName())
-                    .packageName(s.getPackageName())
-                    .build();
-        }).collect(Collectors.toList());
-        return customFiles;
+        List<CustomFile> files = originCustomerFile.stream().map(s ->
+                new CustomFile.Builder()
+                        .enableFileOverride()
+                        .templatePath(s.getTemplatePath())
+                        .filePath(s.getFilePath())
+                        .fileName(s.getFileName())
+                        .packageName(s.getPackageName())
+                        .build())
+                .collect(Collectors.toList());
+        // 获取 table
+        GenTable table = tables.get(tableInfo.getName());
+        // 不生成 api 文件
+        if (!table.isGenApi()) {
+            files.removeIf(file -> this.isServerApiFile(file.getTemplatePath()));
+        }
+        // 不生成 vue 文件
+        if (!table.isGenVue()) {
+            files.removeIf(file -> this.isVueFile(file.getTemplatePath()));
+        }
+        return files;
     }
 
     /**
@@ -138,21 +151,36 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             // 反射调用 setter 方法
             BiConsumer<String, Object> callSetter = (field, value) -> Fields.setFieldValue(s, field, value);
             String packageName = s.getPackageName();
-            // 替换 Request.java 文件包名
-            if (packageName.contains(REQUEST_PACKAGE_REPLACER)) {
-                String replacePackage = String.format(packageName, tables.get(tableInfo.getName()).getRequestPackage());
+            // 替换文件业务包名
+            boolean replace = Arrays.stream(PACKAGE_REPLACER).anyMatch(packageName::contains);
+            if (replace) {
+                String replacePackage = String.format(packageName, tables.get(tableInfo.getName()).getBizPackage());
                 callSetter.accept("packageName", replacePackage);
             }
         });
+
+        // 包转换器
+        Function<Predicate<String>, List<String>> packageConverter = conv ->
+                customFiles.stream()
+                        .filter(s -> conv.test(s.getTemplatePath()))
+                        .map(CustomFile::getPackageName)
+                        .map(s -> getConfigBuilder().getPackageConfig().getParent() + "." + s)
+                        .distinct()
+                        .collect(Collectors.toList());
+
         // 自定义文件的包 (导入用)
-        List<String> customFilePackages = customFiles.stream()
-                .filter(s -> s.getTemplatePath().contains(".java.vm"))
-                .map(CustomFile::getPackageName)
-                .map(s -> getConfigBuilder().getPackageConfig().getParent() + "." + s)
-                .distinct()
-                .collect(Collectors.toList());
+        List<String> customFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && !s.contains("orion-server-api"));
         objectMap.put("customFilePackages", customFilePackages);
+
+        // 自定义 api entity 文件的包 (导入用)
+        List<String> customApiEntityFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && s.contains("orion-server-api-entity"));
+        objectMap.put("customApiEntityFilePackages", customApiEntityFilePackages);
+
+        // 自定义 api interface 文件的包 (导入用)
+        List<String> customApiInterfaceFilePackages = packageConverter.apply(s -> s.contains("orion-server-api-interface.java.vm"));
+        objectMap.put("customApiInterfaceFilePackage", customApiInterfaceFilePackages.get(0));
     }
+
 
     /**
      * 插入表元数据
@@ -187,18 +215,19 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         objectMap.put("apiComment", map);
         String comment = tableInfo.getComment();
         map.put("create", "创建" + comment);
-        map.put("update", "通过 id 更新" + comment);
-        map.put("get", "通过 id 查询" + comment);
-        map.put("list", "通过 id 批量查询" + comment);
-        map.put("query", "分页查询" + comment);
-        map.put("delete", "通过 id 删除" + comment);
-        map.put("batchDelete", "通过 id 批量删除" + comment);
+        map.put("updateById", "通过 id 更新" + comment);
+        map.put("getById", "通过 id 查询" + comment);
+        map.put("listById", "通过 id 批量查询" + comment);
+        map.put("listAll", "查询全部" + comment);
+        map.put("queryPage", "分页查询" + comment);
+        map.put("deleteById", "通过 id 删除" + comment);
+        map.put("batchDeleteById", "通过 id 批量删除" + comment);
     }
 
     @Override
     protected void outputCustomFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
         // 创建自定义文件副本文件
-        customFiles = this.createCustomFilesBackup(customFiles);
+        customFiles = this.createCustomFilesBackup(customFiles, tableInfo);
         // 替换自定义包名
         this.replacePackageName(customFiles, tableInfo, objectMap);
         // 添加表元数据
@@ -265,7 +294,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         beanMap.put("enums", this.getEnumMap(table));
         objectMap.put("vue", beanMap);
 
-
         // 生成文件
         customFiles.forEach(file -> {
             // 文件路径
@@ -284,7 +312,17 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      * @return 是否为后端文件
      */
     private boolean isServerFile(String templatePath) {
-        return templatePath.startsWith("orion-server");
+        return templatePath.contains("orion-server");
+    }
+
+    /**
+     * 是否为后端 api 文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为 sql 文件
+     */
+    private boolean isServerApiFile(String templatePath) {
+        return templatePath.contains("orion-server-api");
     }
 
     /**
@@ -296,16 +334,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     private boolean isVueFile(String templatePath) {
         return templatePath.contains("orion-vue-") ||
                 templatePath.contains("orion-sql-menu.sql");
-    }
-
-    /**
-     * 是否为 sql 文件
-     *
-     * @param templatePath templatePath
-     * @return 是否为 sql 文件
-     */
-    private boolean isSqlFile(String templatePath) {
-        return templatePath.contains("orion-sql-");
     }
 
     /**
