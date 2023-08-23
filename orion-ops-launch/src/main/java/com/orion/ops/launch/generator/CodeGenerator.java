@@ -270,12 +270,12 @@ public class CodeGenerator {
      */
     private static TemplateConfig getTemplateConfig() {
         return new TemplateConfig.Builder()
-                .controller("/templates/orion-server-controller.java.vm")
-                .entity("/templates/orion-server-entity-do.java.vm")
-                .service("/templates/orion-server-service.java.vm")
-                .serviceImpl("/templates/orion-server-service-impl.java.vm")
-                .mapper("/templates/orion-server-mapper.java.vm")
-                .xml("/templates/orion-server-mapper.xml.vm")
+                .controller("/templates/orion-server-module-controller.java.vm")
+                .entity("/templates/orion-server-module-entity-do.java.vm")
+                .service("/templates/orion-server-module-service.java.vm")
+                .serviceImpl("/templates/orion-server-module-service-impl.java.vm")
+                .mapper("/templates/orion-server-module-mapper.java.vm")
+                .xml("/templates/orion-server-module-mapper.xml.vm")
                 .build();
     }
 
@@ -288,32 +288,34 @@ public class CodeGenerator {
         String[][] customFileDefineArr = new String[][]{
                 // -------------------- 后端 - service --------------------
                 // http 文件
-                new String[]{"/templates/orion-server-controller.http.vm", "%sController.http", "controller"},
+                new String[]{"/templates/orion-server-module-controller.http.vm", "%sController.http", "controller"},
                 // vo 文件
-                new String[]{"/templates/orion-server-entity-vo.java.vm", "%sVO.java", "entity.vo"},
+                new String[]{"/templates/orion-server-module-entity-vo.java.vm", "%sVO.java", "entity.vo"},
                 // create request 文件
-                new String[]{"/templates/orion-server-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-module-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
                 // update request 文件
-                new String[]{"/templates/orion-server-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-module-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request.%s"},
                 // query request 文件
-                new String[]{"/templates/orion-server-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-module-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
                 // convert 文件
-                new String[]{"/templates/orion-server-convert.java.vm", "%sConvert.java", "convert"},
-                // -------------------- 后端 - api --------------------
+                new String[]{"/templates/orion-server-module-convert.java.vm", "%sConvert.java", "convert"},
+                // junit test 文件
+
+                // -------------------- 后端 - provider --------------------
                 // api 文件
-                new String[]{"/templates/orion-server-api-interface.java.vm", "%sApi.java", "api"},
+                new String[]{"/templates/orion-server-provider-api.java.vm", "%sApi.java", "api"},
                 // api impl 文件
-                new String[]{"/templates/orion-server-api-impl.java.vm", "%sApiImpl.java", "api.impl"},
+                new String[]{"/templates/orion-server-provider-api-impl.java.vm", "%sApiImpl.java", "api.impl"},
                 // dto 文件
-                new String[]{"/templates/orion-server-api-entity-dto.java.vm", "%sDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto.java.vm", "%sDTO.java", "entity.dto.%s"},
                 // create dto 文件
-                new String[]{"/templates/orion-server-api-entity-dto-create.java.vm", "%sCreateDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto-create.java.vm", "%sCreateDTO.java", "entity.dto.%s"},
                 // update dto 文件
-                new String[]{"/templates/orion-server-api-entity-dto-update.java.vm", "%sUpdateDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto-update.java.vm", "%sUpdateDTO.java", "entity.dto.%s"},
                 // query dto 文件
-                new String[]{"/templates/orion-server-api-entity-dto-query.java.vm", "%sQueryDTO.java", "entity.dto.%s"},
-                // convert provider 文件
-                new String[]{"/templates/orion-server-api-convert.java.vm", "%sApiConvert.java", "convert"},
+                new String[]{"/templates/orion-server-provider-entity-dto-query.java.vm", "%sQueryDTO.java", "entity.dto.%s"},
+                // convert 文件
+                new String[]{"/templates/orion-server-provider-convert.java.vm", "%sProviderConvert.java", "convert"},
                 // -------------------- 前端 --------------------
                 // vue api 文件
                 new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${module}"},

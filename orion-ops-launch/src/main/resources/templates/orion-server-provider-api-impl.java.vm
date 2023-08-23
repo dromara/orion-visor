@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Collections;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
-#foreach($pkg in ${customFilePackages})
+#foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
-import ${customApiInterfaceFilePackage}.${type}Api;
+#foreach($pkg in ${customProviderFilePackages})
+import ${pkg}.*;
+#end
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
@@ -16,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,7 +34,7 @@ import java.util.List;
 public class ${type}ApiImpl implements ${type}Api {
 
     @Resource
-    private ${type}Service ${type}Service;
+    private ${type}Service ${typeLower}Service;
     
     @Resource
     private ${type}DAO ${typeLower}DAO;
@@ -40,19 +44,19 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.create${type} request: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
         // 转换
-        ${type}CreateRequest request = ${type}ApiConvert.MAPPER.to(dto);
+        ${type}CreateRequest request = ${type}ProviderConvert.MAPPER.to(dto);
         // 创建
-        return ${type}Service.create${type}(request);
+        return ${typeLower}Service.create${type}(request);
     }
 
     @Override
     public Integer update${type}ById(${type}UpdateDTO dto) {
-        log.info("${type}Api.update${type} request: {}", JSON.toJSONString(dto));
+        log.info("${type}Api.update${type}ById request: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
         // 转换
-        ${type}UpdateRequest request = ${type}ApiConvert.MAPPER.to(dto);
+        ${type}UpdateRequest request = ${type}ProviderConvert.MAPPER.to(dto);
         // 修改
-        return ${type}Service.update${type}(request);
+        return ${typeLower}Service.update${type}ById(request);
     }
 
     @Override
@@ -60,24 +64,24 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.get${type}ById id: {}", id);
         Valid.notNull(id, ErrorMessage.ID_MISSING);
         // 修改
-        ${type}DO record = ${type}DAO.selectById(id);
+        ${type}DO record = ${typeLower}DAO.selectById(id);
         if (record == null) {
             return null;
         }
         // 转换
-        return ${type}ApiConvert.MAPPER.to(record);
+        return ${type}ProviderConvert.MAPPER.to(record);
     }
 
     @Override
-    public List<${type}DTO> get${type}ListById(Collection<Long> idList) {
-        log.info("${type}Api.get${type}ListById idList: {}", idList);
+    public List<${type}DTO> get${type}ByIdList(Collection<Long> idList) {
+        log.info("${type}Api.get${type}ByIdList idList: {}", idList);
         if (Collections.isEmpty(idList)) {
             return new ArrayList<>();
         }
         // 查询
-        List<${type}DO> rows = ${type}DAO.selectBatchIds(idList);
+        List<${type}DO> rows = ${typeLower}DAO.selectBatchIds(idList);
         // 转换
-        return ${type}ApiConvert.MAPPER.toDTO(rows);
+        return ${type}ProviderConvert.MAPPER.toList(rows);
     }
 
     @Override
@@ -85,12 +89,12 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.get${type}List dto: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
         // 转换条件
-        ${type}DO domain = ${type}ApiConvert.MAPPER.to(dto);
+        ${type}DO domain = ${type}ProviderConvert.MAPPER.to(dto);
         // 查询
-        LambdaQueryWrapper<${type}DO> wrapper = ${type}DAO.queryCondition(domain);
-        List<${type}DO> rows = ${type}DAO.selectList(wrapper);
+        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.queryCondition(domain);
+        List<${type}DO> rows = ${typeLower}DAO.selectList(wrapper);
         // 转换结果
-        return ${type}ApiConvert.MAPPER.toDTO(rows);
+        return ${type}ProviderConvert.MAPPER.toList(rows);
     }
 
     @Override
@@ -98,15 +102,15 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.delete${type}ById id: {}", id);
         Valid.notNull(id, ErrorMessage.ID_MISSING);
         // 删除
-        return ${type}DAO.deleteById(id);
+        return ${typeLower}DAO.deleteById(id);
     }
 
     @Override
-    public Integer batchDelete${type}ById(Collection<Long> idList) {
-        log.info("${type}Api.batchDelete${type}ById idList: {}", idList);
+    public Integer batchDelete${type}ByIdList(Collection<Long> idList) {
+        log.info("${type}Api.batchDelete${type}ByIdList idList: {}", idList);
         Valid.notEmpty(idList, ErrorMessage.ID_MISSING);
         // 删除
-        return ${type}DAO.deleteBatchIds(idList);
+        return ${typeLower}DAO.deleteBatchIds(idList);
     }
 
 }

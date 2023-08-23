@@ -3,7 +3,7 @@ package ${currentPackage};
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ${package.Entity}.*;
-#foreach($pkg in ${customFilePackages})
+#foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
 import java.util.List;

@@ -5,7 +5,7 @@ import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import ${package.Service}.*;
-#foreach($pkg in ${customFilePackages})
+#foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
 #if(${superControllerClassPackage})
@@ -70,7 +70,7 @@ public class ${table.controllerName} {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
-    @Operation(summary = "${apiComment.listById}")
+    @Operation(summary = "${apiComment.listByIdList}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
     public List<${type}VO> get${type}List(@RequestParam("idList") List<Long> idList) {
@@ -102,7 +102,7 @@ public class ${table.controllerName} {
     }
 
     @DeleteMapping("/delete-batch")
-    @Operation(summary = "${apiComment.batchDeleteById}")
+    @Operation(summary = "${apiComment.batchDeleteByIdList}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {

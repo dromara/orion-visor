@@ -6,7 +6,7 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
-#foreach($pkg in ${customFilePackages})
+#foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
 import ${package.Entity}.${entity};
@@ -57,7 +57,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         this.check${type}Present(updateRecord);
         // 更新
         int effect = ${typeLower}DAO.updateById(updateRecord);
-        log.info("${type}Service-update${type} effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+        log.info("${type}Service-update${type}ById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         return effect;
     }
 
@@ -109,14 +109,14 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public Integer delete${type}ById(Long id) {
         int effect = ${typeLower}DAO.deleteById(id);
-        log.info("${type}Service-delete${type} id: {}, effect: {}", id, effect);
+        log.info("${type}Service-delete${type}ById id: {}, effect: {}", id, effect);
         return effect;
     }
 
     @Override
     public Integer batchDelete${type}ByIdList(List<Long> idList) {
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
-        log.info("${type}Service-batchDelete${type} idList: {}, effect: {}", idList, effect);
+        log.info("${type}Service-batchDelete${type}ByIdList idList: {}, effect: {}", idList, effect);
         return effect;
     }
 

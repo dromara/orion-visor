@@ -3,10 +3,10 @@ package ${currentPackage};
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ${package.Entity}.*;
-#foreach($pkg in ${customFilePackages})
+#foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
-#foreach($pkg in ${customApiEntityFilePackages})
+#foreach($pkg in ${customProviderEntityFilePackages})
 import ${pkg}.*;
 #end
 import java.util.List;
@@ -19,9 +19,9 @@ import java.util.List;
  * @since ${date}
  */
 @Mapper
-public interface ${type}ApiConvert {
+public interface ${type}ProviderConvert {
 
-    ${type}ApiConvert MAPPER = Mappers.getMapper(${type}ApiConvert.class);
+    ${type}ProviderConvert MAPPER = Mappers.getMapper(${type}ProviderConvert.class);
 
     ${type}DO to(${type}DTO dto);
 
@@ -33,7 +33,8 @@ public interface ${type}ApiConvert {
 
     ${type}UpdateRequest to(${type}UpdateDTO domain);
 
-    List<${type}DTO> toDTO(List<${type}DO> list);
+    List<${type}DTO> toList(List<${type}DO> list);
 
-    List<${type}DO> toDomain(List<${type}DTO> list);
+    List<${type}DO> toList1(List<${type}DTO> list);
+
 }

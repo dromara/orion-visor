@@ -29,7 +29,7 @@ GET {{baseUrl}}/${package.ModuleName}/${typeHyphen}/get?id=1
 Authorization: {{token}}
 
 
-${httpComment} ${apiComment.listById}
+${httpComment} ${apiComment.listByIdList}
 GET {{baseUrl}}/${package.ModuleName}/${typeHyphen}/list?idList=1,2,3
 Authorization: {{token}}
 
@@ -63,7 +63,7 @@ DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/delete?id=1
 Authorization: {{token}}
 
 
-${httpComment} ${apiComment.batchDeleteById}
+${httpComment} ${apiComment.batchDeleteByIdList}
 DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/delete-batch?idList=1,2,3
 Authorization: {{token}}
 

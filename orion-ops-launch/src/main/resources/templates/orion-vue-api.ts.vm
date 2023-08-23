@@ -88,7 +88,7 @@ export function get${vue.featureFirstUpper}(id: number) {
 }
 
 /**
- * $apiComment.listById
+ * $apiComment.listByIdList
  */
 export function get${vue.featureFirstUpper}List(idList: Array<number>) {
   return axios.get<${vue.featureFirstUpper}QueryResponse[]>('/${package.ModuleName}/${typeHyphen}/list', {
@@ -121,7 +121,7 @@ export function delete${vue.featureFirstUpper}(id: number) {
 }
 
 /**
- * $apiComment.batchDeleteById
+ * $apiComment.batchDeleteByIdList
  */
 export function batchDelete${vue.featureFirstUpper}(idList: Array<number>) {
   return axios.delete('/${package.ModuleName}/${typeHyphen}/delete-batch', {

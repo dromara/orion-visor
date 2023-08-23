@@ -34,9 +34,9 @@ public class GenTable {
     private String bizPackage;
 
     /**
-     * 是否生成 provider api
+     * 是否生成对外 api
      */
-    private boolean genApi;
+    private boolean genProviderApi;
 
     // -------------------- 前端 --------------------
 
@@ -64,11 +64,11 @@ public class GenTable {
         this(tableName, comment, bizPackage, false);
     }
 
-    public GenTable(String tableName, String comment, String bizPackage, boolean genApi) {
+    public GenTable(String tableName, String comment, String bizPackage, boolean genProviderApi) {
         this.tableName = tableName;
         this.comment = comment;
         this.bizPackage = bizPackage;
-        this.genApi = genApi;
+        this.genProviderApi = genProviderApi;
         this.enums = new ArrayList<>();
     }
 
@@ -78,7 +78,7 @@ public class GenTable {
      * @return this
      */
     public GenTable api() {
-        this.genApi = true;
+        this.genProviderApi = true;
         return this;
     }
 

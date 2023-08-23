@@ -28,7 +28,7 @@ public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
     default LambdaQueryWrapper<${entity}> queryCondition(${entity} entity) {
         return this.wrapper()
         #foreach($field in ${table.fields})
-            .eq(${type}DO::get${field.capitalName}, entity.get${field.capitalName}())#if(!$foreach.hasNext);#end
+                .eq(${type}DO::get${field.capitalName}, entity.get${field.capitalName}())#if(!$foreach.hasNext);#end
         #end
     }
 

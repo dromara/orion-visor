@@ -1,7 +1,7 @@
 package ${package.Service};
 
 import com.orion.lang.define.wrapper.DataGrid;
-#foreach($pkg in ${customFilePackages})
+#foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
 
@@ -41,7 +41,7 @@ public interface ${table.serviceName} {
     ${type}VO get${type}ById(Long id);
 
     /**
-     * ${apiComment.listById}
+     * ${apiComment.listByIdList}
      *
      * @param idList idList
      * @return rows
@@ -73,7 +73,7 @@ public interface ${table.serviceName} {
     Integer delete${type}ById(Long id);
 
     /**
-     * ${apiComment.batchDeleteById}
+     * ${apiComment.batchDeleteByIdList}
      *
      * @param idList idList
      * @return effect

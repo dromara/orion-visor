@@ -1,6 +1,6 @@
 package ${currentPackage};
 
-#foreach($pkg in ${customApiEntityFilePackages})
+#foreach($pkg in ${customProviderEntityFilePackages})
 import ${pkg}.*;
 #end
 
@@ -41,7 +41,7 @@ public interface ${type}Api {
     ${type}DTO get${type}ById(Long id);
 
     /**
-     * ${apiComment.listById}
+     * ${apiComment.listByIdList}
      *
      * @param idList idList
      * @return rows
@@ -65,7 +65,7 @@ public interface ${type}Api {
     Integer delete${type}ById(Long id);
 
     /**
-     * ${apiComment.batchDeleteById}
+     * ${apiComment.batchDeleteByIdList}
      *
      * @param idList idList
      * @return effect

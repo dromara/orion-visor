@@ -127,9 +127,9 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                 .collect(Collectors.toList());
         // 获取 table
         GenTable table = tables.get(tableInfo.getName());
-        // 不生成 api 文件
-        if (!table.isGenApi()) {
-            files.removeIf(file -> this.isServerApiFile(file.getTemplatePath()));
+        // 不生成对外 api 文件
+        if (!table.isGenProviderApi()) {
+            files.removeIf(file -> this.isServerProviderFile(file.getTemplatePath()));
         }
         // 不生成 vue 文件
         if (!table.isGenVue()) {
@@ -168,17 +168,17 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                         .distinct()
                         .collect(Collectors.toList());
 
-        // 自定义文件的包 (导入用)
-        List<String> customFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && !s.contains("orion-server-api"));
-        objectMap.put("customFilePackages", customFilePackages);
+        // 自定义 module 文件的包 (导入用)
+        List<String> customModuleFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && s.contains("orion-server-module"));
+        objectMap.put("customModuleFilePackages", customModuleFilePackages);
 
-        // 自定义 api entity 文件的包 (导入用)
-        List<String> customApiEntityFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && s.contains("orion-server-api-entity"));
-        objectMap.put("customApiEntityFilePackages", customApiEntityFilePackages);
+        // 自定义 provider entity 文件的包 (导入用)
+        List<String> customProviderEntityFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && s.contains("orion-server-provider-entity"));
+        objectMap.put("customProviderEntityFilePackages", customProviderEntityFilePackages);
 
-        // 自定义 api interface 文件的包 (导入用)
-        List<String> customApiInterfaceFilePackages = packageConverter.apply(s -> s.contains("orion-server-api-interface.java.vm"));
-        objectMap.put("customApiInterfaceFilePackage", customApiInterfaceFilePackages.get(0));
+        // 自定义 provider interface 文件的包 (导入用)
+        List<String> customProviderFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && s.contains("orion-server-provider"));
+        objectMap.put("customProviderFilePackages", customProviderFilePackages);
     }
 
 
@@ -217,11 +217,11 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         map.put("create", "创建" + comment);
         map.put("updateById", "通过 id 更新" + comment);
         map.put("getById", "通过 id 查询" + comment);
-        map.put("listById", "通过 id 批量查询" + comment);
+        map.put("listByIdList", "通过 id 批量查询" + comment);
         map.put("listAll", "查询全部" + comment);
         map.put("queryPage", "分页查询" + comment);
         map.put("deleteById", "通过 id 删除" + comment);
-        map.put("batchDeleteById", "通过 id 批量删除" + comment);
+        map.put("batchDeleteByIdList", "通过 id 批量删除" + comment);
     }
 
     @Override
@@ -316,13 +316,13 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
-     * 是否为后端 api 文件
+     * 是否为后端 provider 文件
      *
      * @param templatePath templatePath
      * @return 是否为 sql 文件
      */
-    private boolean isServerApiFile(String templatePath) {
-        return templatePath.contains("orion-server-api");
+    private boolean isServerProviderFile(String templatePath) {
+        return templatePath.contains("orion-server-provider");
     }
 
     /**
