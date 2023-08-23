@@ -88,13 +88,15 @@ public class ${type}ApiImpl implements ${type}Api {
     public List<${type}DTO> get${type}List(${type}QueryDTO dto) {
         log.info("${type}Api.get${type}List dto: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
-        // 转换条件
-        ${type}DO domain = ${type}ProviderConvert.MAPPER.to(dto);
+        // 条件
+        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.wrapper()
+        #foreach($field in ${table.fields})
+                .eq(${type}DO::get${field.capitalName}, dto.get${field.capitalName}())#if(!$foreach.hasNext);#end
+        #end
         // 查询
-        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.queryCondition(domain);
-        List<${type}DO> rows = ${typeLower}DAO.selectList(wrapper);
-        // 转换结果
-        return ${type}ProviderConvert.MAPPER.toList(rows);
+        return ${typeLower}DAO.of()
+                .wrapper(wrapper)
+                .dataGrid(${type}ProviderConvert.MAPPER::to);
     }
 
     @Override

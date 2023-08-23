@@ -32,7 +32,7 @@ public interface SystemRoleService {
      * @param request request
      * @return effect
      */
-    Integer updateSystemRole(SystemRoleUpdateRequest request);
+    Integer updateSystemRoleById(SystemRoleUpdateRequest request);
 
     /**
      * 更新角色状态
@@ -48,14 +48,14 @@ public interface SystemRoleService {
      * @param id id
      * @return row
      */
-    SystemRoleVO getSystemRole(Long id);
+    SystemRoleVO getSystemRoleById(Long id);
 
     /**
      * 查询所有角色
      *
      * @return rows
      */
-    List<SystemRoleVO> getSystemRoleList();
+    List<SystemRoleVO> getSystemRoleByIdList();
 
     /**
      * 分页查询角色
@@ -71,6 +71,6 @@ public interface SystemRoleService {
      * @param id id
      * @return effect
      */
-    Integer deleteSystemRole(Long id);
+    Integer deleteSystemRoleById(Long id);
 
 }

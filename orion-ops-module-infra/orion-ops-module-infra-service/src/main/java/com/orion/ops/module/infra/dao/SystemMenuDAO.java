@@ -16,12 +16,12 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SystemMenuDAO extends IMapper<SystemMenuDO> {
 
     /**
-     * 获取全部条件
+     * 获取查询条件
      *
      * @param entity entity
-     * @return 全部条件
+     * @return 查询条件
      */
-    default LambdaQueryWrapper<SystemMenuDO> condition(SystemMenuDO entity) {
+    default LambdaQueryWrapper<SystemMenuDO> queryCondition(SystemMenuDO entity) {
         return this.wrapper()
                 .eq(SystemMenuDO::getId, entity.getId())
                 .eq(SystemMenuDO::getParentId, entity.getParentId())

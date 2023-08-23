@@ -29,7 +29,7 @@ public interface SystemUserService {
      * @param request request
      * @return effect
      */
-    Integer updateSystemUser(SystemUserUpdateRequest request);
+    Integer updateSystemUserById(SystemUserUpdateRequest request);
 
     /**
      * 修改用户状态
@@ -45,14 +45,14 @@ public interface SystemUserService {
      * @param id id
      * @return row
      */
-    SystemUserVO getSystemUser(Long id);
+    SystemUserVO getSystemUserById(Long id);
 
     /**
      * 查询所有用户
      *
      * @return rows
      */
-    List<SystemUserVO> getSystemUserList();
+    List<SystemUserVO> getSystemUserByIdList();
 
     /**
      * 分页查询用户
@@ -68,7 +68,7 @@ public interface SystemUserService {
      * @param id id
      * @return effect
      */
-    Integer deleteSystemUser(Long id);
+    Integer deleteSystemUserById(Long id);
 
     /**
      * 重置密码

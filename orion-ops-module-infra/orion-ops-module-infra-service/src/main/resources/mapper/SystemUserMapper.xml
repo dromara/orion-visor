@@ -22,7 +22,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        create_time, update_time, creator, updater, deleted, id, username, password, nickname, avatar, mobile, email, status, last_login_time
+        id, username, password, nickname, avatar, mobile, email, status, last_login_time, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

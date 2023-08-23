@@ -31,7 +31,7 @@ public interface SystemMenuService {
      * @param request request
      * @return effect
      */
-    Integer updateSystemMenu(SystemMenuUpdateRequest request);
+    Integer updateSystemMenuById(SystemMenuUpdateRequest request);
 
     /**
      * 通过 id 查询菜单
@@ -39,7 +39,7 @@ public interface SystemMenuService {
      * @param id id
      * @return row
      */
-    SystemMenuVO getSystemMenu(Long id);
+    SystemMenuVO getSystemMenuById(Long id);
 
     /**
      * 查询菜单
@@ -47,7 +47,7 @@ public interface SystemMenuService {
      * @param request request
      * @return rows
      */
-    List<SystemMenuVO> getSystemMenuList(SystemMenuQueryRequest request);
+    List<SystemMenuVO> getSystemMenuByIdList(SystemMenuQueryRequest request);
 
     /**
      * 构建菜单树

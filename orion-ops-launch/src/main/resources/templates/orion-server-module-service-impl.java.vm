@@ -83,10 +83,8 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public List<${type}VO> get${type}List(${type}QueryRequest request) {
-        // 转换
-        ${type}DO record = ${type}Convert.MAPPER.to(request);
-        // 构造条件
-        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.queryCondition(record);
+        // 条件
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)
@@ -95,10 +93,8 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request) {
-        // 转换
-        ${type}DO record = ${type}Convert.MAPPER.to(request);
-        // 构造条件
-        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.queryCondition(record);
+        // 条件
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)
@@ -139,6 +135,19 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 检查是否存在
         boolean present = ${typeLower}DAO.of().wrapper(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+    }
+	
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    private LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request) {
+        return ${typeLower}DAO.wrapper()
+        #foreach($field in ${table.fields})
+                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())#if(!$foreach.hasNext);#end
+        #end
     }
 
 }

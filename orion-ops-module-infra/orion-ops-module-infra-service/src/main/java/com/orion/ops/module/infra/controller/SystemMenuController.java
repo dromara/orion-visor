@@ -6,7 +6,6 @@ import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.module.infra.entity.request.menu.*;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.service.SystemMenuService;
-import com.orion.ops.module.infra.service.SystemRoleMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +47,7 @@ public class SystemMenuController {
     @Operation(summary = "通过 id 更新菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:update')")
     public Integer updateSystemMenu(@RequestBody SystemMenuUpdateRequest request) {
-        return systemMenuService.updateSystemMenu(request);
+        return systemMenuService.updateSystemMenuById(request);
     }
 
     @PutMapping("/update-status")
@@ -64,7 +63,7 @@ public class SystemMenuController {
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-menu:query')")
     public SystemMenuVO getSystemMenu(@RequestParam("id") Long id) {
-        return systemMenuService.getSystemMenu(id);
+        return systemMenuService.getSystemMenuById(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -72,7 +71,7 @@ public class SystemMenuController {
     @Operation(summary = "查询菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:query')")
     public List<SystemMenuVO> getSystemMenuList(@Validated @RequestBody SystemMenuQueryRequest request) {
-        return systemMenuService.getSystemMenuList(request);
+        return systemMenuService.getSystemMenuByIdList(request);
     }
 
     @DeleteMapping("/delete")

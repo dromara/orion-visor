@@ -66,7 +66,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    public Integer updateSystemUser(SystemUserUpdateRequest request) {
+    public Integer updateSystemUserById(SystemUserUpdateRequest request) {
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemUserDO record = systemUserDAO.selectById(id);
@@ -77,7 +77,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         this.checkNicknamePresent(updateRecord);
         // 更新
         int effect = systemUserDAO.updateById(updateRecord);
-        log.info("SystemUserService-updateSystemUser effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+        log.info("SystemUserService-updateSystemUserById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 更新缓存中的花名
         RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setNickname(request.getNickname());
@@ -116,7 +116,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    public SystemUserVO getSystemUser(Long id) {
+    public SystemUserVO getSystemUserById(Long id) {
         // 查询
         SystemUserDO record = systemUserDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
@@ -125,7 +125,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    public List<SystemUserVO> getSystemUserList() {
+    public List<SystemUserVO> getSystemUserByIdList() {
         // 查询
         List<SystemUserDO> records = systemUserDAO.selectList(null);
         if (records.isEmpty()) {
@@ -154,12 +154,12 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteSystemUser(Long id) {
+    public Integer deleteSystemUserById(Long id) {
         if (id.equals(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
         }
         int effect = systemUserDAO.deleteById(id);
-        log.info("SystemUserService-deleteSystemUser id: {}, effect: {}", id, effect);
+        log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
         // 删除角色关联
         effect += systemUserRoleDAO.deleteByUserId(id);
         // 删除用户缓存 其他的会自动过期

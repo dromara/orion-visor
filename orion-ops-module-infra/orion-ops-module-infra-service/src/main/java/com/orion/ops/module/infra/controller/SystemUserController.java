@@ -54,7 +54,7 @@ public class SystemUserController {
     @Operation(summary = "通过 id 更新用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:update')")
     public Integer updateSystemUser(@Validated @RequestBody SystemUserUpdateRequest request) {
-        return systemUserService.updateSystemUser(request);
+        return systemUserService.updateSystemUserById(request);
     }
 
     // TODO 修改头像 最后再说 可有可无的功能 要是有 http 文件需求就写
@@ -93,7 +93,7 @@ public class SystemUserController {
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
     public SystemUserVO getSystemUser(@RequestParam("id") Long id) {
-        return systemUserService.getSystemUser(id);
+        return systemUserService.getSystemUserById(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -101,7 +101,7 @@ public class SystemUserController {
     @Operation(summary = "查询所有用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
     public List<SystemUserVO> getSystemUserList() {
-        return systemUserService.getSystemUserList();
+        return systemUserService.getSystemUserByIdList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -125,7 +125,7 @@ public class SystemUserController {
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-user:delete')")
     public Integer deleteSystemUser(@RequestParam("id") Long id) {
-        return systemUserService.deleteSystemUser(id);
+        return systemUserService.deleteSystemUserById(id);
     }
 
 }

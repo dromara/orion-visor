@@ -73,7 +73,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     }
 
     @Override
-    public Integer updateSystemMenu(SystemMenuUpdateRequest request) {
+    public Integer updateSystemMenuById(SystemMenuUpdateRequest request) {
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemMenuDO record = systemMenuDAO.selectById(id);
@@ -84,7 +84,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         this.validateRequest(updateRecord, request.getType());
         // 更新
         int effect = systemMenuDAO.updateById(updateRecord);
-        log.info("SystemMenuService-updateSystemMenu effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+        log.info("SystemMenuService-updateSystemMenuById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 重新查询转换为缓存
         SystemMenuCacheDTO cache = SystemMenuConvert.MAPPER.toCache(systemMenuDAO.selectById(id));
         // 获取原始缓存
@@ -100,7 +100,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     }
 
     @Override
-    public SystemMenuVO getSystemMenu(Long id) {
+    public SystemMenuVO getSystemMenuById(Long id) {
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
@@ -109,7 +109,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     }
 
     @Override
-    public List<SystemMenuVO> getSystemMenuList(SystemMenuQueryRequest request) {
+    public List<SystemMenuVO> getSystemMenuByIdList(SystemMenuQueryRequest request) {
         String name = request.getName();
         Integer type = request.getType();
         Integer status = request.getStatus();

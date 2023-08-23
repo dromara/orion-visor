@@ -16,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        create_time, update_time, creator, updater, deleted, id, user_id, role_id
+        id, user_id, role_id, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

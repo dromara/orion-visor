@@ -72,7 +72,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     @Override
-    public Integer updateSystemRole(SystemRoleUpdateRequest request) {
+    public Integer updateSystemRoleById(SystemRoleUpdateRequest request) {
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemRoleDO record = systemRoleDAO.selectById(id);
@@ -83,7 +83,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         this.checkNamePresent(updateRecord);
         // 更新
         int effect = systemRoleDAO.updateById(updateRecord);
-        log.info("SystemRoleService-updateSystemRole effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+        log.info("SystemRoleService-updateSystemRoleById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 设置到缓存
         SystemRoleDO roleCache = permissionService.getRoleCache().get(record.getCode());
         roleCache.setName(updateRecord.getName());
@@ -112,7 +112,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     @Override
-    public SystemRoleVO getSystemRole(Long id) {
+    public SystemRoleVO getSystemRoleById(Long id) {
         // 查询角色
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.ROLE_ABSENT);
@@ -121,7 +121,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     @Override
-    public List<SystemRoleVO> getSystemRoleList() {
+    public List<SystemRoleVO> getSystemRoleByIdList() {
         // 查询
         List<SystemRoleDO> records = systemRoleDAO.selectList(null);
         if (records.isEmpty()) {
@@ -148,7 +148,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteSystemRole(Long id) {
+    public Integer deleteSystemRoleById(Long id) {
         // 查询角色
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);

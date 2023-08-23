@@ -16,12 +16,12 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SystemUserDAO extends IMapper<SystemUserDO> {
 
     /**
-     * 获取全部条件
+     * 获取查询条件
      *
      * @param entity entity
-     * @return 全部条件
+     * @return 查询条件
      */
-    default LambdaQueryWrapper<SystemUserDO> condition(SystemUserDO entity) {
+    default LambdaQueryWrapper<SystemUserDO> queryCondition(SystemUserDO entity) {
         return this.wrapper()
                 .eq(SystemUserDO::getId, entity.getId())
                 .eq(SystemUserDO::getUsername, entity.getUsername())

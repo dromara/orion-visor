@@ -56,7 +56,7 @@ public class SystemRoleController {
     @Operation(summary = "通过 id 更新角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:update')")
     public Integer updateSystemRole(@Validated @RequestBody SystemRoleUpdateRequest request) {
-        return systemRoleService.updateSystemRole(request);
+        return systemRoleService.updateSystemRoleById(request);
     }
 
     @PutMapping("/update-status")
@@ -72,7 +72,7 @@ public class SystemRoleController {
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
     public SystemRoleVO getSystemRole(@RequestParam("id") Long id) {
-        return systemRoleService.getSystemRole(id);
+        return systemRoleService.getSystemRoleById(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -80,7 +80,7 @@ public class SystemRoleController {
     @Operation(summary = "查询所有角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
     public List<SystemRoleVO> getSystemRoleList() {
-        return systemRoleService.getSystemRoleList();
+        return systemRoleService.getSystemRoleByIdList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -103,7 +103,7 @@ public class SystemRoleController {
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-role:delete')")
     public Integer deleteSystemRole(@RequestParam("id") Long id) {
-        return systemRoleService.deleteSystemRole(id);
+        return systemRoleService.deleteSystemRoleById(id);
     }
 
     @PutMapping("/bind")
