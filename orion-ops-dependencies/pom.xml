@@ -29,6 +29,9 @@
         <redisson.version>3.18.0</redisson.version>
         <spring-boot-admin.version>2.7.10</spring-boot-admin.version>
         <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
+        <mockito-inline.version>4.11.0</mockito-inline.version>
+        <jedis-mock.version>1.0.7</jedis-mock.version>
+        <podam.version>7.2.11.RELEASE</podam.version>
     </properties>
 
     <dependencyManagement>
@@ -123,6 +126,11 @@
             <dependency>
                 <groupId>com.orion.ops</groupId>
                 <artifactId>orion-ops-spring-boot-starter-monitor</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-test</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -241,6 +249,47 @@
                 <version>${transmittable-thread-local.version}</version>
             </dependency>
 
+            <!-- test -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>asm</artifactId>
+                        <groupId>org.ow2.asm</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.mockito</groupId>
+                        <artifactId>mockito-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.vaadin.external.google</groupId>
+                        <artifactId>android-json</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- test mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>${mockito-inline.version}</version>
+            </dependency>
+
+            <!-- test redis -->
+            <dependency>
+                <groupId>com.github.fppt</groupId>
+                <artifactId>jedis-mock</artifactId>
+                <version>${jedis-mock.version}</version>
+            </dependency>
+
+            <!-- test entity 随机生成器 -->
+            <dependency>
+                <groupId>uk.co.jemos.podam</groupId>
+                <artifactId>podam</artifactId>
+                <version>${podam.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

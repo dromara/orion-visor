@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_DATASOURCE)
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableConfigurationProperties(DruidStatProperties.class)
-public class OrionDatasourceAutoConfiguration {
+public class OrionDataSourceAutoConfiguration {
 
     /**
      * @param properties 配置
