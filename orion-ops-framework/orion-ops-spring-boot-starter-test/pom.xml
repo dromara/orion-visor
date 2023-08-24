@@ -21,15 +21,17 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-common</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-mybatis</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-datasource</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-redis</artifactId>
         </dependency>
 
         <!-- test -->
@@ -61,6 +63,7 @@
             <groupId>uk.co.jemos.podam</groupId>
             <artifactId>podam</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>

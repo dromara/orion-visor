@@ -1,0 +1,26 @@
+spring:
+  main:
+    lazy-initialization: true
+    banner-mode: OFF
+  datasource:
+    druid:
+      name: orion-ops-pro
+      url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value;
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+      max-active: 1
+      async-init: true
+      initial-size: 1
+      test-while-idle: false
+  sql:
+    init:
+      schema-locations:
+        - classpath:/sql/create-tables-h2-*.sql
+  redis:
+    host: 127.0.0.1
+    port: 16379
+    database: 0
+
+mybatis-plus:
+  lazy-initialization: true

@@ -125,6 +125,8 @@ public class OrionSecurityAutoConfiguration {
 
     /**
      * @return security holder 代理用于内部 framework 调用
+     * <p>
+     * - mybatis fill
      */
     @Bean
     public SecurityHolderDelegate securityHolder() {

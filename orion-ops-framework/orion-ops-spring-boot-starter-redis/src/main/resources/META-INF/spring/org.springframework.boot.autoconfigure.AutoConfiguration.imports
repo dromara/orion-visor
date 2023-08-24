@@ -1,1 +1,2 @@
 com.orion.ops.framework.redis.config.OrionRedisAutoConfiguration
+com.orion.ops.framework.redis.config.OrionCacheAutoConfiguration

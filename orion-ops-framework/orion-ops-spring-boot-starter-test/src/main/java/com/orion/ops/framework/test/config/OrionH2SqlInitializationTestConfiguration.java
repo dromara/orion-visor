@@ -32,12 +32,11 @@ import javax.sql.DataSource;
 public class OrionH2SqlInitializationTestConfiguration {
 
     /**
-     * 数据源脚本初始化 Bean
+     * @return 数据源脚本初始化器
      */
     @Bean
     public DataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
                                                                                    SqlInitializationProperties initializationProperties) {
-        // TODO 看看正常情况下会不会有
         // 初始化配置
         DatabaseInitializationSettings settings = new DatabaseInitializationSettings();
         settings.setSchemaLocations(initializationProperties.getSchemaLocations());

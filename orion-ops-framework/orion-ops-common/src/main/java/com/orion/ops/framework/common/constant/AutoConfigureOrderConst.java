@@ -35,6 +35,8 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_REDIS = Integer.MIN_VALUE + 2000;
 
+    int FRAMEWORK_REDIS_CACHE = Integer.MIN_VALUE + 2050;
+
     int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2100;
 
     int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2200;

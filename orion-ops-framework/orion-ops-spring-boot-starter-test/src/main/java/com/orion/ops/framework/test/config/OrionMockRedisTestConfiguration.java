@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 
 /**
- * 单元测试 redis 初始化
+ * 单元测试 redis mock server 初始化
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,17 +22,16 @@ import org.springframework.context.annotation.Profile;
 public class OrionMockRedisTestConfiguration {
 
     /**
-     * mockRedisServer
+     * @return redisMockServer
      */
     @Bean
-    public RedisServer redisServer(RedisProperties properties) {
-        // TODO 看看正常情况下会不会有
-        RedisServer redisServer = new RedisServer(properties.getPort());
+    public RedisServer redisMockServer(RedisProperties properties) {
+        RedisServer server = new RedisServer(properties.getPort());
         try {
-            redisServer.start();
+            server.start();
         } catch (Exception ignore) {
         }
-        return redisServer;
+        return server;
     }
 
 }

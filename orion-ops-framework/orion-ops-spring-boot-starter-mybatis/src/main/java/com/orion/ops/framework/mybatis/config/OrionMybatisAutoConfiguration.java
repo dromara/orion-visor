@@ -12,7 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
@@ -32,7 +31,6 @@ public class OrionMybatisAutoConfiguration {
      * @return 字段填充元数据处理器
      */
     @Bean
-    @ConditionalOnBean(SecurityHolder.class)
     public MetaObjectHandler defaultMetaObjectHandler(SecurityHolder securityHolder) {
         // 设置填充工具参数
         DomainFillUtils.setSecurityHolder(securityHolder);

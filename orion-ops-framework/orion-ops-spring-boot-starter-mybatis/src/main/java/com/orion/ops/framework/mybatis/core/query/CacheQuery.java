@@ -1,7 +1,7 @@
 package com.orion.ops.framework.mybatis.core.query;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.orion.lang.define.wrapper.Store;
+import com.orion.lang.define.wrapper.Ref;
 import com.orion.lang.utils.Valid;
 import com.orion.ops.framework.mybatis.core.cache.CacheHolder;
 
@@ -79,10 +79,10 @@ public class CacheQuery<T> {
         // 不查询缓存
         if (!force) {
             // 从缓存中获取
-            Store<T> store = CacheHolder.get(dao, id);
+            Ref<T> ref = CacheHolder.get(dao, id);
             // 命中直接返回
-            if (store != null) {
-                return store.get();
+            if (ref != null) {
+                return ref.get();
             }
         }
         // 查询
