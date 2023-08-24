@@ -1,0 +1,105 @@
+package ${currentPackage};
+
+import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.test.core.base.BaseUnitTest;
+import com.orion.ops.framework.test.core.utils.EntityRandoms;
+#foreach($pkg in ${customModuleFilePackages})
+import ${pkg}.*;
+#end
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Import;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * $!{table.comment} 服务单元测试
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2023/8/23 10:36
+ */
+@Slf4j
+@Import(${type}ServiceImpl.class)
+public class ${type}ServiceTests extends BaseUnitTest {
+
+    @Resource
+    private ${type}Service ${typeLower}Service;
+
+    private static Long lastId;
+
+    @Test
+    @Order(1)
+    public void create${type}Test() {
+        ${type}CreateRequest req = EntityRandoms.random(${type}CreateRequest.class);
+        lastId = ${typeLower}Service.create${type}(req);
+        assertNotNull(lastId);
+    }
+
+    @Test
+    @Order(2)
+    public void update${type}ByIdTest() {
+        ${type}UpdateRequest req = EntityRandoms.random(${type}UpdateRequest.class);
+        req.setId(lastId);
+        Integer effect = ${typeLower}Service.update${type}ById(req);
+        assertEquals(effect, 1);
+    }
+
+    @Test
+    @Order(3)
+    public void get${type}ByIdTest() {
+        ${type}VO row = ${typeLower}Service.get${type}ById(lastId);
+        assertNotNull(row);
+    }
+
+    @Test
+    @Order(4)
+    public void get${type}ByIdListTest() {
+        List<${type}VO> rows = ${typeLower}Service.get${type}ByIdList(Lists.of(lastId));
+        assertFalse(rows.isEmpty());
+    }
+
+    @Test
+    @Order(5)
+    public void get${type}ListTest() {
+        List<${type}VO> rows = ${typeLower}Service.get${type}List(new ${type}QueryRequest());
+        assertFalse(rows.isEmpty());
+    }
+
+    @Test
+    @Order(6)
+    public void get${type}CountTest() {
+        Long count = ${typeLower}Service.get${type}Count(new ${type}QueryRequest());
+        assertEquals(count, 1L);
+    }
+
+    @Test
+    @Order(7)
+    public void get${type}PageTest() {
+        ${type}QueryRequest request = new ${type}QueryRequest();
+        request.setPage(1);
+        request.setLimit(1);
+        DataGrid<${type}VO> dataGrid = ${typeLower}Service.get${type}Page(request);
+        assertFalse(dataGrid.isEmpty());
+    }
+
+    @Test
+    @Order(8)
+    public void delete${type}ByIdTest() {
+        Integer effect = ${typeLower}Service.delete${type}ById(lastId);
+        assertEquals(effect, 1);
+    }
+
+    @Test
+    @Order(9)
+    public void batchDelete${type}ByIdListTest() {
+        Integer effect = ${typeLower}Service.batchDelete${type}ByIdList(Lists.of(lastId));
+        assertEquals(effect, 0);
+    }
+
+}

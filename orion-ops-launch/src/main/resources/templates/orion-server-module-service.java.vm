@@ -62,7 +62,7 @@ public interface ${table.serviceName} {
      * @param request request
      * @return count
      */
-    Long get${type}Count(Favorite${type}Request request);
+    Long get${type}Count(${type}QueryRequest request);
 
     /**
      * ${apiComment.queryPage}

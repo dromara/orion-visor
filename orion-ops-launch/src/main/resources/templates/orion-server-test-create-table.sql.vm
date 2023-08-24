@@ -1,0 +1,17 @@
+-- $!{table.comment}
+DROP TABLE IF EXISTS `${table.name}`;
+CREATE TABLE `${table.name}`
+(
+    `id`          BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id',
+    #foreach($field in ${table.fields})
+    #if("$!field.propertyName" != "id")
+    `${field.columnName}` ${field.metaInfo.jdbcType}(${field.metaInfo.length})#if(!$field.metaInfo.nullable) NOT NULL#end#if($null.isNull($field.metaInfo.defaultValue) || "$!{field.metaInfo.defaultValue}" == "") DEFAULT NULL#else DEFAULT#if(${field.propertyType} == 'String') '${field.metaInfo.defaultValue}'#else ${field.metaInfo.defaultValue}#end#end COMMENT '$!{field.metaInfo.remarks}',
+    #end
+    #end
+    `create_time` DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `creator`     VARCHAR(64) DEFAULT NULL COMMENT '创建人',
+    `updater`     VARCHAR(64) DEFAULT NULL COMMENT '更新人',
+    `deleted`     TINYINT     DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`)
+);

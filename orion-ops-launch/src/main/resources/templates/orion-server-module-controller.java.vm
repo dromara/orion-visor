@@ -1,6 +1,7 @@
 package ${package.Controller};
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
@@ -89,7 +90,7 @@ public class ${table.controllerName} {
     @PostMapping("/query")
     @Operation(summary = "${apiComment.queryPage}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-    public DataGrid<${type}VO> get${type}Page(@Validated @RequestBody ${type}QueryRequest request) {
+    public DataGrid<${type}VO> get${type}Page(@Validated(IPageRequest.class) @RequestBody ${type}QueryRequest request) {
         return ${typeLower}Service.get${type}Page(request);
     }
 

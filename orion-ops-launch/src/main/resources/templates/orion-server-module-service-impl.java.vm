@@ -144,7 +144,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         boolean present = ${typeLower}DAO.of().wrapper(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
-	
+
     /**
      * 构建查询 wrapper
      *

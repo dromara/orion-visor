@@ -38,6 +38,11 @@ public class GenTable {
      */
     private boolean genProviderApi;
 
+    /**
+     * 是否生成单元测试
+     */
+    private boolean genUnitTest;
+
     // -------------------- 前端 --------------------
 
     /**
@@ -61,24 +66,31 @@ public class GenTable {
     private List<Class<? extends Enum<?>>> enums;
 
     public GenTable(String tableName, String comment, String bizPackage) {
-        this(tableName, comment, bizPackage, false);
-    }
-
-    public GenTable(String tableName, String comment, String bizPackage, boolean genProviderApi) {
         this.tableName = tableName;
         this.comment = comment;
         this.bizPackage = bizPackage;
-        this.genProviderApi = genProviderApi;
+        this.genProviderApi = true;
+        this.genUnitTest = true;
         this.enums = new ArrayList<>();
     }
 
     /**
-     * 是否生成 api
+     * 忽略生成 api
      *
      * @return this
      */
-    public GenTable api() {
-        this.genProviderApi = true;
+    public GenTable ignoreApi() {
+        this.genProviderApi = false;
+        return this;
+    }
+
+    /**
+     * 忽略生成单元测试
+     *
+     * @return this
+     */
+    public GenTable ignoreTest() {
+        this.genUnitTest = false;
         return this;
     }
 

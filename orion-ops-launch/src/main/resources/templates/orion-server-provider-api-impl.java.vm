@@ -35,7 +35,7 @@ public class ${type}ApiImpl implements ${type}Api {
 
     @Resource
     private ${type}Service ${typeLower}Service;
-    
+
     @Resource
     private ${type}DAO ${typeLower}DAO;
 
@@ -93,11 +93,11 @@ public class ${type}ApiImpl implements ${type}Api {
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)
-                .dataGrid(${type}ProviderConvert.MAPPER::to);
+                .list(${type}ProviderConvert.MAPPER::to);
     }
 
     @Override
-    public Long get${type}Count(FavoriteQueryDTO dto) {
+    public Long get${type}Count(${type}QueryDTO dto) {
         log.info("${type}Api.get${type}Count dto: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
         // 条件

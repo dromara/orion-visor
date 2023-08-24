@@ -16,7 +16,7 @@ spring:
   sql:
     init:
       schema-locations:
-        - classpath:/sql/create-tables-h2-*.sql
+        - classpath:/sql/create-table-h2-*.sql
   redis:
     host: 127.0.0.1
     port: 16379

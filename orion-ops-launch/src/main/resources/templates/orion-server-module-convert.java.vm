@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Mapper
 public interface ${type}Convert {
-    
+
     ${type}Convert MAPPER = Mappers.getMapper(${type}Convert.class);
 
     ${type}DO to(${type}CreateRequest request);

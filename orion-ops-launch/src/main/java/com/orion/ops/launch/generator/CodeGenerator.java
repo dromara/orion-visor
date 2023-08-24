@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
+import com.orion.lang.utils.ansi.AnsiColor;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
@@ -41,7 +42,7 @@ public class CodeGenerator {
                 // new GenTable("system_user", "用户", "user")
                 //         .vue("user", "user")
                 //         .enums(UserStatusEnum.class),
-                new GenTable("favorite", "收藏", "favorite", true),
+                new GenTable("favorite", "收藏", "favorite"),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -102,6 +103,9 @@ public class CodeGenerator {
 
         // 执行
         ag.execute(engine);
+
+        // 打印提示信息
+        printTips();
     }
 
     /**
@@ -286,54 +290,57 @@ public class CodeGenerator {
      */
     private static InjectionConfig getInjectionConfig() {
         String[][] customFileDefineArr = new String[][]{
-                // -------------------- 后端 - service --------------------
+                // -------------------- 后端 - module --------------------
                 // http 文件
-                new String[]{"/templates/orion-server-module-controller.http.vm", "%sController.http", "controller"},
+                new String[]{"/templates/orion-server-module-controller.http.vm", "${type}Controller.http", "controller"},
                 // vo 文件
-                new String[]{"/templates/orion-server-module-entity-vo.java.vm", "%sVO.java", "entity.vo"},
+                new String[]{"/templates/orion-server-module-entity-vo.java.vm", "${type}VO.java", "entity.vo"},
                 // create request 文件
-                new String[]{"/templates/orion-server-module-entity-request-create.java.vm", "%sCreateRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-module-entity-request-create.java.vm", "${type}CreateRequest.java", "entity.request.${bizPackage}"},
                 // update request 文件
-                new String[]{"/templates/orion-server-module-entity-request-update.java.vm", "%sUpdateRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-module-entity-request-update.java.vm", "${type}UpdateRequest.java", "entity.request.${bizPackage}"},
                 // query request 文件
-                new String[]{"/templates/orion-server-module-entity-request-query.java.vm", "%sQueryRequest.java", "entity.request.%s"},
+                new String[]{"/templates/orion-server-module-entity-request-query.java.vm", "${type}QueryRequest.java", "entity.request.${bizPackage}"},
                 // convert 文件
-                new String[]{"/templates/orion-server-module-convert.java.vm", "%sConvert.java", "convert"},
-                // junit test 文件
-
+                new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
                 // -------------------- 后端 - provider --------------------
                 // api 文件
-                new String[]{"/templates/orion-server-provider-api.java.vm", "%sApi.java", "api"},
+                new String[]{"/templates/orion-server-provider-api.java.vm", "${type}Api.java", "api"},
                 // api impl 文件
-                new String[]{"/templates/orion-server-provider-api-impl.java.vm", "%sApiImpl.java", "api.impl"},
+                new String[]{"/templates/orion-server-provider-api-impl.java.vm", "${type}ApiImpl.java", "api.impl"},
                 // dto 文件
-                new String[]{"/templates/orion-server-provider-entity-dto.java.vm", "%sDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto.java.vm", "${type}DTO.java", "entity.dto.${bizPackage}"},
                 // create dto 文件
-                new String[]{"/templates/orion-server-provider-entity-dto-create.java.vm", "%sCreateDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto-create.java.vm", "${type}CreateDTO.java", "entity.dto.${bizPackage}"},
                 // update dto 文件
-                new String[]{"/templates/orion-server-provider-entity-dto-update.java.vm", "%sUpdateDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto-update.java.vm", "${type}UpdateDTO.java", "entity.dto.${bizPackage}"},
                 // query dto 文件
-                new String[]{"/templates/orion-server-provider-entity-dto-query.java.vm", "%sQueryDTO.java", "entity.dto.%s"},
+                new String[]{"/templates/orion-server-provider-entity-dto-query.java.vm", "${type}QueryDTO.java", "entity.dto.${bizPackage}"},
                 // convert 文件
-                new String[]{"/templates/orion-server-provider-convert.java.vm", "%sProviderConvert.java", "convert"},
+                new String[]{"/templates/orion-server-provider-convert.java.vm", "${type}ProviderConvert.java", "convert"},
+                // -------------------- 后端 - test --------------------
+                // unit test 文件
+                new String[]{"/templates/orion-server-test-service-tests.java.vm", "${type}ServiceTests.java", "service.impl"},
+                // create table sql 文件
+                new String[]{"/templates/orion-server-test-create-table.sql.vm", "create-table-h2-${tableName}.sql", "sql"},
                 // -------------------- 前端 --------------------
-                // vue api 文件
+                // api 文件
                 new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${module}"},
-                // vue router 文件
+                // router 文件
                 new String[]{"/templates/orion-vue-router.ts.vm", "${module}.${feature}.ts", "vue/router/routes/modules"},
-                // vue views index.ts 文件
+                // views index.ts 文件
                 new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${module}/${feature}"},
-                // vue form-modal.vue 文件
+                // form-modal.vue 文件
                 new String[]{"/templates/orion-vue-views-components-form-modal.vue.vm", "${feature}-form-modal.vue", "vue/views/${module}/${feature}/components"},
-                // vue table.vue 文件
+                // table.vue 文件
                 new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
-                // vue enum.types.ts 文件
+                // enum.types.ts 文件
                 new String[]{"/templates/orion-vue-views-types-enum.types.ts.vm", "enum.types.ts", "vue/views/${module}/${feature}/types"},
-                // vue form.rules.ts 文件
+                // form.rules.ts 文件
                 new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${module}/${feature}/types"},
-                // vue table.vue 文件
+                // table.vue 文件
                 new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${module}/${feature}/types"},
-                // sql menu.sql 文件
+                // menu.sql 文件
                 new String[]{"/templates/orion-sql-menu.sql.vm", "${feature}-menu.sql", "sql"},
         };
 
@@ -353,12 +360,23 @@ public class CodeGenerator {
                 }).collect(Collectors.toList());
 
         // 注入配置
-        InjectionConfig injection = new InjectionConfig.Builder()
+        return new InjectionConfig.Builder()
                 // 自定义 文件
                 .customFile(customerFiles)
                 // 构建
                 .build();
-        return injection;
+    }
+
+    /**
+     * 打印提示信息
+     */
+    private static void printTips() {
+        String line = AnsiColor.GLOSS_GREEN.color(":: 代码生成完毕 ::\n") +
+                AnsiColor.GLOSS_BLUE.color("- 后端代码复制后请先 clean 模块父工程\n") +
+                AnsiColor.GLOSS_BLUE.color("- 后端代码复制后请先执行单元测试检测是否正常\n") +
+                AnsiColor.GLOSS_BLUE.color("- vue 代码需要注意同一模块的 router 需要自行合并\n") +
+                AnsiColor.SUFFIX;
+        System.out.print(line);
     }
 
 }

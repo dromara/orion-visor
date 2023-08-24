@@ -42,7 +42,7 @@ public class BaseDO implements Serializable {
      */
     @TableLogic
     @Schema(description = "是否删除 0未删除 1已删除")
-    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.BIT)
+    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.TINYINT)
     private Boolean deleted;
 
 }

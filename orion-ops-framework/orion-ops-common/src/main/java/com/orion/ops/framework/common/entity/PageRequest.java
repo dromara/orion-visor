@@ -15,11 +15,11 @@ import org.hibernate.validator.constraints.Range;
 @Data
 public class PageRequest implements IPageRequest {
 
-    @Range(min = 1, max = 10000)
+    @Range(min = 1, max = 10000, groups = IPageRequest.class)
     @Schema(description = "页码")
     private int page;
 
-    @Range(min = 1, max = 100)
+    @Range(min = 1, max = 100, groups = IPageRequest.class)
     @Schema(description = "大小")
     private int limit;
 
