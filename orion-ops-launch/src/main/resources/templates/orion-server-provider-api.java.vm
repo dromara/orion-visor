@@ -57,6 +57,14 @@ public interface ${type}Api {
     List<${type}DTO> get${type}List(${type}QueryDTO dto);
 
     /**
+     * ${apiComment.queryCount}
+     *
+     * @param dto dto
+     * @return count
+     */
+    Long get${type}Count(${type}QueryDTO dto);
+
+    /**
      * ${apiComment.deleteById}
      *
      * @param id id

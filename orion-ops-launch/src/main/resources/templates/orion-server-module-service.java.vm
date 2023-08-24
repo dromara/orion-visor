@@ -57,6 +57,14 @@ public interface ${table.serviceName} {
     List<${type}VO> get${type}List(${type}QueryRequest request);
 
     /**
+     * ${apiComment.queryCount}
+     *
+     * @param request request
+     * @return count
+     */
+    Long get${type}Count(Favorite${type}Request request);
+
+    /**
      * ${apiComment.queryPage}
      *
      * @param request request

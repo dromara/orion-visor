@@ -92,6 +92,14 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
+    public Long get${type}Count(${type}QueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return ${typeLower}DAO.selectCount(wrapper);
+    }
+
+    @Override
     public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request) {
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);

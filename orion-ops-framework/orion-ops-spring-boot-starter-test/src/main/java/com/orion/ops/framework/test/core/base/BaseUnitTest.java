@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @version 1.0.0
  * @since 2023/8/23 15:12
  */
+@Commit
+@Transactional(rollbackFor = Exception.class)
 @ActiveProfiles("unit-test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Transactional(rollbackFor = Exception.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = BaseUnitTest.Application.class)
 public class BaseUnitTest {
 

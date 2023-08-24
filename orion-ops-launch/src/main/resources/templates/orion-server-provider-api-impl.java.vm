@@ -89,14 +89,21 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.get${type}List dto: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
         // 条件
-        LambdaQueryWrapper<${type}DO> wrapper = ${typeLower}DAO.wrapper()
-        #foreach($field in ${table.fields})
-                .eq(${type}DO::get${field.capitalName}, dto.get${field.capitalName}())#if(!$foreach.hasNext);#end
-        #end
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
         // 查询
         return ${typeLower}DAO.of()
                 .wrapper(wrapper)
                 .dataGrid(${type}ProviderConvert.MAPPER::to);
+    }
+
+    @Override
+    public Long get${type}Count(FavoriteQueryDTO dto) {
+        log.info("${type}Api.get${type}Count dto: {}", JSON.toJSONString(dto));
+        Valid.valid(dto);
+        // 条件
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
+        // 查询
+        return ${typeLower}DAO.selectCount(wrapper);
     }
 
     @Override
@@ -113,6 +120,19 @@ public class ${type}ApiImpl implements ${type}Api {
         Valid.notEmpty(idList, ErrorMessage.ID_MISSING);
         // 删除
         return ${typeLower}DAO.deleteBatchIds(idList);
+    }
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param dto dto
+     * @return wrapper
+     */
+    private LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryDTO dto) {
+        return ${typeLower}DAO.wrapper()
+        #foreach($field in ${table.fields})
+                .eq(${type}DO::get${field.capitalName}, dto.get${field.capitalName}())#if(!$foreach.hasNext);#end
+        #end
     }
 
 }

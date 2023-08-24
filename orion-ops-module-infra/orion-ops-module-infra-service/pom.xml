@@ -51,6 +51,12 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-storage</artifactId>
         </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-test</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
