@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.HttpWrapper;
+import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
@@ -116,7 +117,7 @@ public class SystemUserController {
     @PostMapping("/query")
     @Operation(summary = "分页查询用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
-    public DataGrid<SystemUserVO> getSystemUserPage(@Validated @RequestBody SystemUserQueryRequest request) {
+    public DataGrid<SystemUserVO> getSystemUserPage(@Validated(IPageRequest.class) @RequestBody SystemUserQueryRequest request) {
         return systemUserService.getSystemUserPage(request);
     }
 

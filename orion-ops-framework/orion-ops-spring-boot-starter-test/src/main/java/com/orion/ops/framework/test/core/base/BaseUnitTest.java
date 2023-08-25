@@ -2,12 +2,13 @@ package com.orion.ops.framework.test.core.base;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
+import com.orion.ops.framework.common.config.OrionCommonAutoConfiguration;
 import com.orion.ops.framework.datasource.config.OrionDataSourceAutoConfiguration;
 import com.orion.ops.framework.mybatis.config.OrionMybatisAutoConfiguration;
 import com.orion.ops.framework.redis.config.OrionRedisAutoConfiguration;
 import com.orion.ops.framework.test.config.OrionH2SqlInitializationTestConfiguration;
+import com.orion.ops.framework.test.config.OrionMockBeanTestConfiguration;
 import com.orion.ops.framework.test.config.OrionMockRedisTestConfiguration;
-import com.orion.ops.framework.test.config.OrionSecurityTestConfiguration;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
@@ -35,8 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BaseUnitTest {
 
     @Import({
-            // security
-            OrionSecurityTestConfiguration.class,
+            // holder
+            OrionCommonAutoConfiguration.class,
+            // mock
+            OrionMockBeanTestConfiguration.class,
             // datasource
             OrionDataSourceAutoConfiguration.class,
             DruidDataSourceAutoConfigure.class,

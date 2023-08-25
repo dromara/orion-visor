@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
@@ -87,7 +88,7 @@ public class SystemRoleController {
     @PostMapping("/query")
     @Operation(summary = "分页查询角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
-    public DataGrid<SystemRoleVO> getSystemRolePage(@Validated @RequestBody SystemRoleQueryRequest request) {
+    public DataGrid<SystemRoleVO> getSystemRolePage(@Validated(IPageRequest.class) @RequestBody SystemRoleQueryRequest request) {
         return systemRoleService.getSystemRolePage(request);
     }
 

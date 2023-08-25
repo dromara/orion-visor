@@ -50,6 +50,8 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
+  "page": 1,
+  "limit": 10,
   "id": "",
   "name": "",
   "code": "",
@@ -60,3 +62,6 @@ Authorization: {{token}}
 ### 通过 id 删除角色
 DELETE {{baseUrl}}/infra/system-role/delete?id=1
 Authorization: {{token}}
+
+
+###

@@ -148,6 +148,10 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // 不生成对外 api 文件
         if (!table.isGenProviderApi()) {
             files.removeIf(file -> this.isServerProviderFile(file.getTemplatePath()));
+            // 不生成对外 api 单元测试文件
+            if (table.isGenUnitTest()) {
+                files.removeIf(file -> this.isServerProviderTestFile(file.getTemplatePath()));
+            }
         }
         // 不生成单元测试文件
         if (!table.isGenUnitTest()) {
@@ -341,6 +345,16 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      */
     private boolean isServerProviderFile(String templatePath) {
         return templatePath.contains("orion-server-provider");
+    }
+
+    /**
+     * 是否为后端 provider 单元测试文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为后端 provider 单元测试文件
+     */
+    private boolean isServerProviderTestFile(String templatePath) {
+        return templatePath.contains("orion-server-test-api");
     }
 
     /**

@@ -4,6 +4,7 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.test.core.base.BaseUnitTest;
 import com.orion.ops.framework.test.core.utils.EntityRandoms;
+import ${package.Service}.*;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @Slf4j
 @Import(${type}ServiceImpl.class)
-public class ${type}ServiceTests extends BaseUnitTest {
+public class ${type}ServiceImplTests extends BaseUnitTest {
 
     @Resource
     private ${type}Service ${typeLower}Service;

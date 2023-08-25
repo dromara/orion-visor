@@ -319,8 +319,10 @@ public class CodeGenerator {
                 // convert 文件
                 new String[]{"/templates/orion-server-provider-convert.java.vm", "${type}ProviderConvert.java", "convert"},
                 // -------------------- 后端 - test --------------------
-                // unit test 文件
-                new String[]{"/templates/orion-server-test-service-tests.java.vm", "${type}ServiceTests.java", "service.impl"},
+                // service unit test 文件
+                new String[]{"/templates/orion-server-test-service-impl-tests.java.vm", "${type}ServiceImplTests.java", "service.impl"},
+                // api unit test 文件
+                new String[]{"/templates/orion-server-test-api-impl-tests.java.vm", "${type}ApiImplTests.java", "api.impl"},
                 // create table sql 文件
                 new String[]{"/templates/orion-server-test-create-table.sql.vm", "create-table-h2-${tableName}.sql", "sql"},
                 // -------------------- 前端 --------------------

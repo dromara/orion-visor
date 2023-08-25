@@ -49,6 +49,8 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
+  "page": 1,
+  "limit": 10,
   "id": "",
   "username": "",
   "password": "",
@@ -65,3 +67,5 @@ Authorization: {{token}}
 DELETE {{baseUrl}}/infra/system-user/delete?id=1
 Authorization: {{token}}
 
+
+###

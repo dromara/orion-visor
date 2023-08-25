@@ -47,27 +47,9 @@ GET {{baseUrl}}/infra/system-menu/list?idList=1,2,3
 Authorization: {{token}}
 
 
-### 分页查询菜单
-POST {{baseUrl}}/infra/system-menu/query
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "parentId": "",
-  "name": "",
-  "permission": "",
-  "type": "",
-  "sort": "",
-  "status": "",
-  "cache": "",
-  "icon": "",
-  "path": "",
-  "component": ""
-}
-
-
 ### 通过 id 删除菜单
 DELETE {{baseUrl}}/infra/system-menu/delete?id=1
 Authorization: {{token}}
 
+
+###
