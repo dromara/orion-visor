@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.ansi.AnsiColor;
+import com.orion.lang.utils.ansi.AnsiAppender;
+import com.orion.lang.utils.ansi.style.AnsiFont;
+import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
@@ -373,11 +375,12 @@ public class CodeGenerator {
      * 打印提示信息
      */
     private static void printTips() {
-        String line = AnsiColor.GLOSS_GREEN.color(":: 代码生成完毕 ::\n") +
-                AnsiColor.GLOSS_BLUE.color("- 后端代码复制后请先 clean 模块父工程\n") +
-                AnsiColor.GLOSS_BLUE.color("- 后端代码复制后请先执行单元测试检测是否正常\n") +
-                AnsiColor.GLOSS_BLUE.color("- vue 代码需要注意同一模块的 router 需要自行合并\n") +
-                AnsiColor.SUFFIX;
+        String line = AnsiAppender.create()
+                .append(AnsiForeground.BRIGHT_GREEN.and(AnsiFont.BOLD), "\n:: 代码生成完毕 ^_^ ::\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 模块父工程\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先执行单元测试检测是否正常\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
+                .toString();
         System.out.print(line);
     }
 
