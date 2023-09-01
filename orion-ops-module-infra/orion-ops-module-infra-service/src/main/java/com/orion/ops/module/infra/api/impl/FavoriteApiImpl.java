@@ -94,15 +94,27 @@ public class FavoriteApiImpl implements FavoriteApi {
     @Override
     @Async("asyncExecutor")
     public void deleteFavoriteByUserId(Long userId) {
+        if (userId == null) {
+            return;
+        }
+        // 删除缓存
         List<String> favoriteKeyList = Arrays.stream(FavoriteTypeEnum.values())
                 .map(s -> FavoriteCacheKeyDefine.FAVORITE.format(s, userId))
                 .collect(Collectors.toList());
         redisTemplate.delete(favoriteKeyList);
+        // 删除库
+        FavoriteQueryRequest request = new FavoriteQueryRequest();
+        request.setUserId(userId);
+        favoriteService.deleteFavorite(request);
     }
 
     @Override
     @Async("asyncExecutor")
     public void deleteFavoriteByUserIdList(List<Long> userIdList) {
+        if (Lists.isEmpty(userIdList)) {
+            return;
+        }
+        // 删除缓存
         List<String> favoriteKeyList = new ArrayList<>();
         for (Long userId : userIdList) {
             Arrays.stream(FavoriteTypeEnum.values())
@@ -110,11 +122,18 @@ public class FavoriteApiImpl implements FavoriteApi {
                     .forEach(favoriteKeyList::add);
         }
         redisTemplate.delete(favoriteKeyList);
+        // 删除库
+        FavoriteQueryRequest request = new FavoriteQueryRequest();
+        request.setUserIdList(userIdList);
+        favoriteService.deleteFavorite(request);
     }
 
     @Override
     @Async("asyncExecutor")
     public void deleteFavoriteByRelId(Long relId) {
+        if (relId == null) {
+            return;
+        }
         // 只删除数据库 redis 等自动失效
         FavoriteQueryRequest request = new FavoriteQueryRequest();
         request.setRelId(relId);
@@ -123,6 +142,9 @@ public class FavoriteApiImpl implements FavoriteApi {
 
     @Override
     public void deleteFavoriteByRelIdList(List<Long> relIdList) {
+        if (Lists.isEmpty(relIdList)) {
+            return;
+        }
         // 只删除数据库 redis 等自动失效
         FavoriteQueryRequest request = new FavoriteQueryRequest();
         request.setRelIdList(relIdList);

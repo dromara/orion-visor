@@ -34,23 +34,8 @@ public class RedisUtils {
      * @return keys
      */
     public static Set<String> scanKeys(String match) {
-        // TODO TEST
         return scanKeys(ScanOptions.scanOptions()
                 .match(match)
-                .build());
-    }
-
-    /**
-     * 扫描 key
-     *
-     * @param match 匹配值
-     * @param count 数量
-     * @return keys
-     */
-    public static Set<String> scanKeys(String match, int count) {
-        return scanKeys(ScanOptions.scanOptions()
-                .match(match)
-                .count(count)
                 .build());
     }
 
