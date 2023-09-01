@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.*;
+import java.math.*;
 
 /**
  * $!{table.comment} 查询请求业务对象

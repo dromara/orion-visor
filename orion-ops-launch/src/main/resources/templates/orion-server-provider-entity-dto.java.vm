@@ -5,6 +5,7 @@ import java.io.Serializable;
 import lombok.*;
 
 import java.util.*;
+import java.math.*;
 
 /**
  * $!{table.comment} 业务对象

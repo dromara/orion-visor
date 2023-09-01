@@ -1,10 +1,11 @@
 package ${currentPackage};
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.*;
+import java.math.*;
 
 /**
  * $!{table.comment} 视图响应对象

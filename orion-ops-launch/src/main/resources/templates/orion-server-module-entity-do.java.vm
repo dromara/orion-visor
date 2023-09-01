@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.*;
+import java.math.*;
 
 /**
  * $!{table.comment} 实体对象

@@ -25,4 +25,5 @@ VALUES
   (@TMP_SUB_ID, '查询$vue.comment', '${package.ModuleName}:${typeHyphen}:query', 3, 10),
   (@TMP_SUB_ID, '创建$vue.comment', '${package.ModuleName}:${typeHyphen}:create', 3, 20),
   (@TMP_SUB_ID, '修改$vue.comment', '${package.ModuleName}:${typeHyphen}:update', 3, 30),
-  (@TMP_SUB_ID, '删除$vue.comment', '${package.ModuleName}:${typeHyphen}:delete', 3, 40);
+  (@TMP_SUB_ID, '删除$vue.comment', '${package.ModuleName}:${typeHyphen}:delete', 3, 40),
+  (@TMP_SUB_ID, '导出$vue.comment', '${package.ModuleName}:${typeHyphen}:export', 3, 50);

@@ -303,6 +303,8 @@ public class CodeGenerator {
                 new String[]{"/templates/orion-server-module-entity-request-update.java.vm", "${type}UpdateRequest.java", "entity.request.${bizPackage}"},
                 // query request 文件
                 new String[]{"/templates/orion-server-module-entity-request-query.java.vm", "${type}QueryRequest.java", "entity.request.${bizPackage}"},
+                // export 文件
+                new String[]{"/templates/orion-server-module-entity-export.java.vm", "${type}Export.java", "entity.export"},
                 // convert 文件
                 new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
                 // -------------------- 后端 - provider --------------------
@@ -350,18 +352,17 @@ public class CodeGenerator {
 
         // 构建文件
         List<CustomFile> customerFiles = Arrays.stream(customFileDefineArr)
-                .map(s -> {
-                    return new CustomFile.Builder()
-                            // 覆盖文件
-                            .enableFileOverride()
-                            // 模板路径
-                            .templatePath(s[0])
-                            // 文件名
-                            .fileName(s[1])
-                            // 包名
-                            .packageName(s[2])
-                            .build();
-                }).collect(Collectors.toList());
+                .map(s -> new CustomFile.Builder()
+                        // 覆盖文件
+                        .enableFileOverride()
+                        // 模板路径
+                        .templatePath(s[0])
+                        // 文件名
+                        .fileName(s[1])
+                        // 包名
+                        .packageName(s[2])
+                        .build())
+                .collect(Collectors.toList());
 
         // 注入配置
         return new InjectionConfig.Builder()

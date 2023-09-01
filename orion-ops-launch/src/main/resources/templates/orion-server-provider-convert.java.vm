@@ -1,7 +1,5 @@
 package ${currentPackage};
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import ${package.Entity}.*;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
@@ -9,6 +7,9 @@ import ${pkg}.*;
 #foreach($pkg in ${customProviderEntityFilePackages})
 import ${pkg}.*;
 #end
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
 import java.util.List;
 
 /**

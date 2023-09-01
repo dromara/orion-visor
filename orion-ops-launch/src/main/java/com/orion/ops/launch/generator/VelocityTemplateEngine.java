@@ -249,6 +249,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         map.put("queryPage", "分页查询" + comment);
         map.put("deleteById", "通过 id 删除" + comment);
         map.put("batchDeleteByIdList", "通过 id 批量删除" + comment);
+        map.put("export", "导出" + comment);
     }
 
     /**

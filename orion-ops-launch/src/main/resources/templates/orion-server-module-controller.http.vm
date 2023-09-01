@@ -70,4 +70,16 @@ DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/delete-batch?idList=1,2,3
 Authorization: {{token}}
 
 
+${httpComment} ${apiComment.export}
+POST {{baseUrl}}/${package.ModuleName}/${typeHyphen}/export
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  #foreach($field in ${table.fields})
+  "${field.propertyName}": ""#if($foreach.hasNext),#end
+  #end
+}
+
+
 ${httpComment}

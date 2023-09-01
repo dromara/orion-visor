@@ -131,3 +131,10 @@ export function batchDelete${vue.featureFirstUpper}(idList: Array<number>) {
     }
   });
 }
+
+/**
+ * $apiComment.export
+ */
+export function export${vue.featureFirstUpper}(request: ${vue.featureFirstUpper}QueryRequest) {
+  return axios.post('/${package.ModuleName}/${typeHyphen}/export', request);
+}

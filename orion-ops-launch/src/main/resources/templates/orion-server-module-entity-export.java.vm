@@ -1,0 +1,63 @@
+package ${currentPackage};
+
+import com.orion.lang.utils.time.Dates;
+import com.orion.office.excel.annotation.ExportField;
+import com.orion.office.excel.annotation.ExportSheet;
+import com.orion.office.excel.annotation.ExportTitle;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+
+import java.io.Serializable;
+import java.util.*;
+import java.math.*;
+
+/**
+ * $!{table.comment} 导出对象
+ *
+ * @author ${author}
+ * @version ${since}
+ * @since ${date}
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ExportTitle(title = ${type}Export.TITLE)
+@ExportSheet(name = "$!{table.comment}", filterHeader = true, freezeHeader = true, indexToSort = true)
+@Schema(name = "${type}Export", description = "$!{table.comment}导出对象")
+public class ${type}Export implements Serializable {
+
+    public static final String TITLE = "$!{table.comment}导出";
+    #foreach($field in ${table.fields})
+
+    #if("$!field.comment" != "")
+    @Schema(description = "${field.comment}")
+    #end
+    #if("$field.propertyType" == "Date")
+    @ExportField(index = ${foreach.index}, header = "${field.comment}", width = 16, format = Dates.YMD_HMS)
+    #else
+    @ExportField(index = ${foreach.index}, header = "${field.comment}", width = 16)
+    #end
+    private ${field.propertyType} ${field.propertyName};
+    #end
+
+    @ExportField(index = $table.fields.size(), header = "创建时间", width = 16, format = Dates.YMD_HMS)
+    @Schema(description = "创建时间")
+    private Date createTime;
+
+    #set($updateTimeIndex=$table.fields.size() + 1)
+    @Schema(description = "修改时间")
+    @ExportField(index = $updateTimeIndex, header = "修改时间", width = 16, format = Dates.YMD_HMS)
+    private Date updateTime;
+
+    #set($creatorIndex=$table.fields.size() + 2)
+    @Schema(description = "创建人")
+    @ExportField(index = $creatorIndex, header = "创建人", width = 16)
+    private String creator;
+
+    #set($updaterIndex=$table.fields.size() + 3)
+    @Schema(description = "修改人")
+    @ExportField(index = $updaterIndex, header = "修改人", width = 16)
+    private String updater;
+
+}

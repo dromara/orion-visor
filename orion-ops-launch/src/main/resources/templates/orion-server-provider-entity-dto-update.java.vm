@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.*;
+import java.math.*;
 
 /**
  * $!{table.comment} 更新请求业务对象

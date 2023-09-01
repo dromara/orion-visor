@@ -110,5 +110,13 @@ public class ${table.controllerName} {
         return ${typeLower}Service.batchDelete${type}ByIdList(idList);
     }
 
+    @PostMapping("/export")
+    @Operation(summary = "${apiComment.export}")
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:export')")
+    public void export${type}(@Validated @RequestBody ${type}QueryRequest request,
+                                 HttpServletResponse response) throws IOException {
+        ${typeLower}Service.export${type}(request, response);
+    }
+
 }
 
