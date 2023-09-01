@@ -291,7 +291,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void invalidOtherDeviceToken(Long id, long loginTime, String remoteAddr, String location) {
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
         // 获取登陆信息
-        Set<String> loginKeyList = RedisUtils.scanKeys(loginKey, 100);
+        Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
         if (!loginKeyList.isEmpty()) {
             // 获取有效登陆信息
             List<LoginTokenDTO> loginTokenInfoList = redisTemplate.opsForValue()
@@ -314,7 +314,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 删除续签信息
         if (allowRefresh) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*");
-            Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey, 100);
+            Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey);
             if (!refreshKeyList.isEmpty()) {
                 redisTemplate.delete(refreshKeyList);
             }

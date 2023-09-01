@@ -2,6 +2,7 @@ package com.orion.ops.framework.redis.core.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Streams;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
@@ -24,6 +25,19 @@ public class RedisUtils {
     private static RedisTemplate<String, String> redisTemplate;
 
     private RedisUtils() {
+    }
+
+    /**
+     * 扫描 key
+     *
+     * @param match 匹配值
+     * @return keys
+     */
+    public static Set<String> scanKeys(String match) {
+        // TODO TEST
+        return scanKeys(ScanOptions.scanOptions()
+                .match(match)
+                .build());
     }
 
     /**
@@ -90,6 +104,28 @@ public class RedisUtils {
         processor.accept(cache);
         // 重新设置
         setJson(key, define, cache);
+    }
+
+    /**
+     * 设置 json
+     *
+     * @param key    key
+     * @param define define
+     * @param value  value
+     */
+    public static void set(String key, CacheKeyDefine define, Object value) {
+        if (value == null) {
+            value = Strings.EMPTY;
+        }
+        if (define.getTimeout() == 0) {
+            // 不过期
+            redisTemplate.opsForValue().set(key, value.toString());
+        } else {
+            // 过期
+            redisTemplate.opsForValue().set(key, value.toString(),
+                    define.getTimeout(),
+                    define.getUnit());
+        }
     }
 
     /**

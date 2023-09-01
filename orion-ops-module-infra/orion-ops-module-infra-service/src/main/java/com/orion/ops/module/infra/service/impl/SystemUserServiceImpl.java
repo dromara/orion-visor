@@ -181,14 +181,14 @@ public class SystemUserServiceImpl implements SystemUserService {
         redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         // 删除登陆缓存
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
-        Set<String> loginKeyList = RedisUtils.scanKeys(loginKey, 100);
+        Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
         if (!loginKeyList.isEmpty()) {
             redisTemplate.delete(loginKeyList);
         }
         // 删除续签信息
         if (AuthenticationService.allowRefresh) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*");
-            Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey, 100);
+            Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey);
             if (!refreshKeyList.isEmpty()) {
                 redisTemplate.delete(refreshKeyList);
             }
