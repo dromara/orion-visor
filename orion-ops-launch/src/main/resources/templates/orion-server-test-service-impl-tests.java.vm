@@ -53,34 +53,45 @@ public class ${type}ServiceImplTests extends BaseUnitTest {
 
     @Test
     @Order(3)
+    public void update${type}Test() {
+        ${type}QueryRequest query = new ${type}QueryRequest();
+        query.setId(lastId);
+        ${type}UpdateRequest req = EntityRandoms.random(${type}UpdateRequest.class);
+        req.setId(null);
+        Integer effect = ${typeLower}Service.update${type}(query, req);
+        assertEquals(effect, 1);
+    }
+
+    @Test
+    @Order(4)
     public void get${type}ByIdTest() {
         ${type}VO row = ${typeLower}Service.get${type}ById(lastId);
         assertNotNull(row);
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void get${type}ByIdListTest() {
         List<${type}VO> rows = ${typeLower}Service.get${type}ByIdList(Lists.of(lastId));
         assertFalse(rows.isEmpty());
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void get${type}ListTest() {
         List<${type}VO> rows = ${typeLower}Service.get${type}List(new ${type}QueryRequest());
         assertFalse(rows.isEmpty());
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void get${type}CountTest() {
         Long count = ${typeLower}Service.get${type}Count(new ${type}QueryRequest());
         assertEquals(count, 1L);
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void get${type}PageTest() {
         ${type}QueryRequest request = new ${type}QueryRequest();
         request.setPage(1);
@@ -90,16 +101,24 @@ public class ${type}ServiceImplTests extends BaseUnitTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void delete${type}ByIdTest() {
         Integer effect = ${typeLower}Service.delete${type}ById(lastId);
         assertEquals(effect, 1);
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void batchDelete${type}ByIdListTest() {
         Integer effect = ${typeLower}Service.batchDelete${type}ByIdList(Lists.of(lastId));
+        assertEquals(effect, 0);
+    }
+
+    @Test
+    @Order(11)
+    public void delete${type}Test() {
+        ${type}QueryRequest query = new ${type}QueryRequest();
+        Integer effect = ${typeLower}Service.delete${type}(query);
         assertEquals(effect, 0);
     }
 

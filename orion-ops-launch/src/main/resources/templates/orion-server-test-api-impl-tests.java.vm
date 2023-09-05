@@ -1,6 +1,5 @@
 package ${currentPackage};
 
-import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.test.core.base.BaseUnitTest;
 import com.orion.ops.framework.test.core.utils.EntityRandoms;
@@ -53,43 +52,62 @@ public class ${type}ApiImplTests extends BaseUnitTest {
 
     @Test
     @Order(3)
+    public void update${type}Test() {
+        ${type}QueryDTO query = new ${type}QueryDTO();
+        query.setId(lastId);
+        ${type}UpdateDTO req = EntityRandoms.random(${type}UpdateDTO.class);
+        req.setId(null);
+        Integer effect = ${typeLower}Api.update${type}(query, req);
+        assertEquals(effect, 1);
+    }
+
+    @Test
+    @Order(4)
     public void get${type}ByIdTest() {
         ${type}DTO row = ${typeLower}Api.get${type}ById(lastId);
         assertNotNull(row);
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void get${type}ByIdListTest() {
         List<${type}DTO> rows = ${typeLower}Api.get${type}ByIdList(Lists.of(lastId));
         assertFalse(rows.isEmpty());
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void get${type}ListTest() {
         List<${type}DTO> rows = ${typeLower}Api.get${type}List(new ${type}QueryDTO());
         assertFalse(rows.isEmpty());
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void get${type}CountTest() {
         Long count = ${typeLower}Api.get${type}Count(new ${type}QueryDTO());
         assertEquals(count, 1L);
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void delete${type}ByIdTest() {
         Integer effect = ${typeLower}Api.delete${type}ById(lastId);
         assertEquals(effect, 1);
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void batchDelete${type}ByIdListTest() {
         Integer effect = ${typeLower}Api.batchDelete${type}ByIdList(Lists.of(lastId));
+        assertEquals(effect, 0);
+    }
+
+    @Test
+    @Order(10)
+    public void delete${type}Test() {
+        ${type}QueryDTO dto = new ${type}QueryDTO();
+        Integer effect = ${typeLower}Api.delete${type}(dto);
         assertEquals(effect, 0);
     }
 

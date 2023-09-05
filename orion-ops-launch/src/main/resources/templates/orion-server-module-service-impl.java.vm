@@ -41,6 +41,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public Long create${type}(${type}CreateRequest request) {
+        log.info("${type}Service-create${type} record: {}", JSON.toJSONString(record));
         // 转换
         ${type}DO record = ${type}Convert.MAPPER.to(request);
         record.setId(null);
@@ -48,12 +49,13 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         this.check${type}Present(record);
         // 插入
         int effect = ${typeLower}DAO.insert(record);
-        log.info("${type}Service-create${type} effect: {}, record: {}", effect, JSON.toJSONString(record));
+        log.info("${type}Service-create${type} effect: {}", effect);
         return record.getId();
     }
 
     @Override
     public Integer update${type}ById(${type}UpdateRequest request) {
+        log.info("${type}Service-update${type}ById updateRecord: {}", JSON.toJSONString(updateRecord));
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         ${type}DO record = ${typeLower}DAO.selectById(id);
@@ -64,7 +66,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         this.check${type}Present(updateRecord);
         // 更新
         int effect = ${typeLower}DAO.updateById(updateRecord);
-        log.info("${type}Service-update${type}ById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
+        log.info("${type}Service-update${type}ById effect: {}", effect);
         return effect;
     }
 
@@ -132,15 +134,17 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public Integer delete${type}ById(Long id) {
+        log.info("${type}Service-delete${type}ById id: {}", id);
         int effect = ${typeLower}DAO.deleteById(id);
-        log.info("${type}Service-delete${type}ById id: {}, effect: {}", id, effect);
+        log.info("${type}Service-delete${type}ById effect: {}", effect);
         return effect;
     }
 
     @Override
     public Integer batchDelete${type}ByIdList(List<Long> idList) {
+        log.info("${type}Service-batchDelete${type}ByIdList idList: {}", idList);
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
-        log.info("${type}Service-batchDelete${type}ByIdList idList: {}, effect: {}", idList, effect);
+        log.info("${type}Service-batchDelete${type}ByIdList effect: {}", effect);
         return effect;
     }
 
@@ -157,12 +161,14 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public void export${type}(${type}QueryRequest request, HttpServletResponse response) throws IOException {
+        log.info("${type}Service.export${type} request: {}", JSON.toJSONString(request));
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
         List<${type}Export> rows = ${typeLower}DAO.of()
                 .wrapper(wrapper)
-                .list(${type}Convert.MAPPER::export);
+                .list(${type}Convert.MAPPER::toExport);
+        log.info("${type}Service.export${type} size: {}", rows.size());
         // 导出
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ExcelExport.create(${type}Export.class)

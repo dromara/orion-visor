@@ -69,17 +69,17 @@ public class FavoriteApiImpl implements FavoriteApi {
             request.setUserId(userId);
             request.setType(typeName);
             cacheRelIdList = favoriteService.getFavoriteRelIdList(request);
-            // 设置 -1 到缓存防止穿透
+            // 添加默认值 防止穿透
             if (cacheRelIdList.isEmpty()) {
-                cacheRelIdList.add(Const.L_N_1);
+                cacheRelIdList.add(Const.NONE_ID);
             }
             // 设置缓存
             RedisUtils.listPushAll(key, cacheRelIdList, String::valueOf);
             // 设置过期时间
             RedisUtils.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
         }
-        // 尝试删除防止穿透的 key
-        cacheRelIdList.remove(Const.L_N_1);
+        // 删除防止穿透的 key
+        cacheRelIdList.remove(Const.NONE_ID);
         return CompletableFuture.completedFuture(cacheRelIdList);
     }
 

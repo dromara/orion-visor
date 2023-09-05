@@ -1,8 +1,8 @@
 package ${package.Mapper};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import ${package.Entity}.${entity};
 import ${superMapperClassPackage};
+import ${package.Entity}.${entity};
 #if(${mapperAnnotationClass})
 import ${mapperAnnotationClass.name};
 #end

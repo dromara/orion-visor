@@ -28,4 +28,6 @@ public class Const implements com.orion.lang.constant.Const {
 
     public static final Integer DEFAULT_SORT = 10;
 
+    public static final Long NONE_ID = -1L;
+
 }

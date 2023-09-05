@@ -59,7 +59,7 @@ public class ${table.controllerName} {
     @PutMapping("/update")
     @Operation(summary = "${apiComment.updateById}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
-    public Integer update${type}(@Validated @RequestBody(Id.class) ${type}UpdateRequest request) {
+    public Integer update${type}(@Validated(Id.class) @RequestBody ${type}UpdateRequest request) {
         return ${typeLower}Service.update${type}ById(request);
     }
 

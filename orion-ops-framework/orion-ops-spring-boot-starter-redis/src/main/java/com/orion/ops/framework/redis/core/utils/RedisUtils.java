@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * redis 工具类
@@ -23,6 +24,7 @@ import java.util.function.Function;
  * @version 1.0.0
  * @since 2021/11/6 11:09
  */
+@SuppressWarnings("unchecked")
 public class RedisUtils {
 
     private static RedisTemplate<String, String> redisTemplate;
@@ -80,7 +82,6 @@ public class RedisUtils {
      * @param processor processor
      * @param <T>       type
      */
-    @SuppressWarnings("unchecked")
     public static <T> void processSetJson(String key, CacheKeyDefine define, Consumer<T> processor) {
         String value = redisTemplate.opsForValue().get(key);
         if (value == null) {
@@ -168,6 +169,24 @@ public class RedisUtils {
     }
 
     /**
+     * 查询 list 区间
+     *
+     * @param key    key
+     * @param define define
+     * @return list
+     */
+    public static <T> List<T> listRangeJson(String key, CacheKeyDefine define) {
+        // 查询列表
+        List<String> elements = redisTemplate.opsForList().range(key, 0, -1);
+        if (elements == null) {
+            return Lists.newList();
+        }
+        return (List<T>) elements.stream()
+                .map(s -> JSON.parseObject(s, define.getType()))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * list 添加元素
      *
      * @param key    key
@@ -177,6 +196,66 @@ public class RedisUtils {
      */
     public static <T> void listPushAll(String key, List<T> list, Function<T, String> mapper) {
         redisTemplate.opsForList().rightPushAll(key, Lists.map(list, mapper));
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key  key
+     * @param list list
+     * @param <T>  T
+     */
+    public static <T> void listPushAllJson(String key, List<T> list) {
+        List<String> values = list.stream()
+                .map(JSON::toJSONString)
+                .collect(Collectors.toList());
+        redisTemplate.opsForList().rightPushAll(key, values);
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param value  value
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void listPush(String key, T value, Function<T, String> mapper) {
+        redisTemplate.opsForList().rightPush(key, mapper.apply(value));
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     */
+    public static <T> void listPushJson(String key, T value) {
+        redisTemplate.opsForList().rightPush(key, JSON.toJSONString(value));
+    }
+
+    /**
+     * list 删除元素
+     *
+     * @param key    key
+     * @param value  value
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void listRemove(String key, T value, Function<T, String> mapper) {
+        redisTemplate.opsForList().remove(key, 1, mapper.apply(value));
+    }
+
+    /**
+     * list 删除元素
+     *
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     */
+    public static <T> void listRemoveJson(String key, T value) {
+        redisTemplate.opsForList().remove(key, 1, JSON.toJSONString(value));
     }
 
     /**

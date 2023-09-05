@@ -1,0 +1,23 @@
+### 创建标签枚举
+POST {{baseUrl}}/infra/tag/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "TAG1",
+  "type": "HOST"
+}
+
+
+### 查询标签枚举
+GET {{baseUrl}}/infra/tag/list?type=HOST
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### 通过 id 删除标签枚举
+DELETE {{baseUrl}}/infra/tag/delete?id=2
+Authorization: {{token}}
+
+
+###

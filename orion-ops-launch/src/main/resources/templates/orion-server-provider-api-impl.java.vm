@@ -1,4 +1,4 @@
-package ${package.ServiceImpl};
+package ${currentPackage};
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -126,7 +126,9 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.delete${type}ById id: {}", id);
         Valid.notNull(id, ErrorMessage.ID_MISSING);
         // 删除
-        return ${typeLower}DAO.deleteById(id);
+        int effect = ${typeLower}DAO.deleteById(id);
+        log.info("${type}Api.delete${type}ById effect: {}", effect);
+        return effect;
     }
 
     @Override
@@ -134,7 +136,9 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.batchDelete${type}ByIdList idList: {}", idList);
         Valid.notEmpty(idList, ErrorMessage.ID_MISSING);
         // 删除
-        return ${typeLower}DAO.deleteBatchIds(idList);
+        int effect = ${typeLower}DAO.deleteBatchIds(idList);
+        log.info("${type}Api.batchDelete${type}ByIdList effect: {}", effect);
+        return effect;
     }
 
     @Override
@@ -144,7 +148,9 @@ public class ${type}ApiImpl implements ${type}Api {
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
         // 删除
-        return ${typeLower}DAO.delete(wrapper);
+        int effect = ${typeLower}DAO.delete(wrapper);
+        log.info("${type}Api.delete${type} effect: {}", effect);
+        return effect;
     }
 
     /**
