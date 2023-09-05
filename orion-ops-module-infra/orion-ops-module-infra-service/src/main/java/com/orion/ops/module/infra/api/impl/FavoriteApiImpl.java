@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.api.impl;
 
-import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
@@ -52,43 +51,36 @@ public class FavoriteApiImpl implements FavoriteApi {
         favoriteService.addFavorite(request);
         // 获取缓存
         String key = FavoriteCacheKeyDefine.FAVORITE.format(typeName, userId);
-        String cache = redisTemplate.opsForValue().get(key);
-        List<Long> relIdList;
-        if (Strings.isBlank(cache)) {
-            relIdList = Lists.newList();
-        } else {
-            relIdList = Arrays.stream(cache.split(Const.COMMA))
-                    .map(Long::valueOf)
-                    .collect(Collectors.toList());
-        }
-        // 插入缓存
-        relIdList.add(relId);
-        RedisUtils.set(key, FavoriteCacheKeyDefine.FAVORITE, Lists.join(relIdList));
+        RedisUtils.listPushAll(key, Lists.singleton(relId), String::valueOf);
+        // 设置过期时间
+        RedisUtils.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
     }
 
     @Override
     @Async("asyncExecutor")
     public Future<List<Long>> getFavoriteRelIdList(FavoriteTypeEnum type, Long userId) {
-        // 获取缓存
         String typeName = type.name();
         String key = FavoriteCacheKeyDefine.FAVORITE.format(typeName, userId);
-        String cache = redisTemplate.opsForValue().get(key);
-        List<Long> relIdList;
-        if (cache != null) {
-            // 不为 null 则获取缓存
-            relIdList = Arrays.stream(cache.split(Const.COMMA))
-                    .map(Long::valueOf)
-                    .collect(Collectors.toList());
-        } else {
-            // 为 null 从数据库获取
+        // 获取缓存
+        List<Long> cacheRelIdList = RedisUtils.listRange(key, Long::valueOf);
+        if (cacheRelIdList.isEmpty()) {
+            // 查询数据库
             FavoriteQueryRequest request = new FavoriteQueryRequest();
             request.setUserId(userId);
             request.setType(typeName);
-            relIdList = favoriteService.getFavoriteRelIdList(request);
+            cacheRelIdList = favoriteService.getFavoriteRelIdList(request);
+            // 设置 -1 到缓存防止穿透
+            if (cacheRelIdList.isEmpty()) {
+                cacheRelIdList.add(Const.L_N_1);
+            }
             // 设置缓存
-            redisTemplate.opsForValue().set(key, Lists.join(relIdList));
+            RedisUtils.listPushAll(key, cacheRelIdList, String::valueOf);
+            // 设置过期时间
+            RedisUtils.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
         }
-        return CompletableFuture.completedFuture(relIdList);
+        // 尝试删除防止穿透的 key
+        cacheRelIdList.remove(Const.L_N_1);
+        return CompletableFuture.completedFuture(cacheRelIdList);
     }
 
     @Override
@@ -141,6 +133,7 @@ public class FavoriteApiImpl implements FavoriteApi {
     }
 
     @Override
+    @Async("asyncExecutor")
     public void deleteFavoriteByRelIdList(List<Long> relIdList) {
         if (Lists.isEmpty(relIdList)) {
             return;

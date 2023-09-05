@@ -1,6 +1,7 @@
 package com.orion.ops.framework.common.entity;
 
 import com.orion.lang.define.wrapper.IPageRequest;
+import com.orion.ops.framework.common.valid.group.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
@@ -15,11 +16,11 @@ import org.hibernate.validator.constraints.Range;
 @Data
 public class PageRequest implements IPageRequest {
 
-    @Range(min = 1, max = 10000, groups = IPageRequest.class)
+    @Range(min = 1, max = 10000, groups = Page.class)
     @Schema(description = "页码")
     private int page;
 
-    @Range(min = 1, max = 100, groups = IPageRequest.class)
+    @Range(min = 1, max = 100, groups = Page.class)
     @Schema(description = "大小")
     private int limit;
 

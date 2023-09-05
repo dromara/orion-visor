@@ -3,6 +3,7 @@ package com.orion.ops.framework.redis.core.utils;
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
@@ -10,8 +11,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * redis 工具类
@@ -130,6 +133,50 @@ public class RedisUtils {
                     define.getTimeout(),
                     define.getUnit());
         }
+    }
+
+    /**
+     * 查询 list 区间
+     *
+     * @param key key
+     * @return list
+     */
+    public static List<String> listRange(String key) {
+        // 查询列表
+        List<String> elements = redisTemplate.opsForList().range(key, 0, -1);
+        if (elements == null) {
+            return Lists.newList();
+        }
+        return elements;
+    }
+
+    /**
+     * 查询 list 区间
+     *
+     * @param key    key
+     * @param mapper mapper
+     * @param <T>    T
+     * @return list
+     */
+    public static <T> List<T> listRange(String key, Function<String, T> mapper) {
+        // 查询列表
+        List<String> elements = redisTemplate.opsForList().range(key, 0, -1);
+        if (elements == null) {
+            return Lists.newList();
+        }
+        return Lists.map(elements, mapper);
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param list   list
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void listPushAll(String key, List<T> list, Function<T, String> mapper) {
+        redisTemplate.opsForList().rightPushAll(key, Lists.map(list, mapper));
     }
 
     /**

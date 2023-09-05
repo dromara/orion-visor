@@ -29,6 +29,8 @@ public interface ${type}Convert {
 
     ${type}VO to(${type}DO domain);
 
+    ${type}Export export(${type}DO domain);
+
     List<${type}VO> to(List<${type}DO> list);
 
 }

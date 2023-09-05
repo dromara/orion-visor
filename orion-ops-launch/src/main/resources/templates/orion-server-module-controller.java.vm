@@ -1,10 +1,11 @@
 package ${package.Controller};
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.framework.common.valid.group.Id;
+import com.orion.ops.framework.common.valid.group.Page;
 import ${package.Service}.*;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
@@ -21,6 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -56,7 +59,7 @@ public class ${table.controllerName} {
     @PutMapping("/update")
     @Operation(summary = "${apiComment.updateById}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
-    public Integer update${type}(@Validated @RequestBody ${type}UpdateRequest request) {
+    public Integer update${type}(@Validated @RequestBody(Id.class) ${type}UpdateRequest request) {
         return ${typeLower}Service.update${type}ById(request);
     }
 
@@ -90,7 +93,7 @@ public class ${table.controllerName} {
     @PostMapping("/query")
     @Operation(summary = "${apiComment.queryPage}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-    public DataGrid<${type}VO> get${type}Page(@Validated(IPageRequest.class) @RequestBody ${type}QueryRequest request) {
+    public DataGrid<${type}VO> get${type}Page(@Validated(Page.class) @RequestBody ${type}QueryRequest request) {
         return ${typeLower}Service.get${type}Page(request);
     }
 
@@ -114,7 +117,7 @@ public class ${table.controllerName} {
     @Operation(summary = "${apiComment.export}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:export')")
     public void export${type}(@Validated @RequestBody ${type}QueryRequest request,
-                                 HttpServletResponse response) throws IOException {
+                              HttpServletResponse response) throws IOException {
         ${typeLower}Service.export${type}(request, response);
     }
 

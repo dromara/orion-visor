@@ -5,6 +5,8 @@ import com.orion.lang.define.wrapper.DataGrid;
 import ${pkg}.*;
 #end
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -31,6 +33,15 @@ public interface ${table.serviceName} {
      * @return effect
      */
     Integer update${type}ById(${type}UpdateRequest request);
+
+    /**
+     * ${apiComment.updateAll}
+     *
+     * @param query  query
+     * @param update update
+     * @return effect
+     */
+    Integer update${type}(${type}QueryRequest query, ${type}UpdateRequest update);
 
     /**
      * ${apiComment.getById}
@@ -87,6 +98,14 @@ public interface ${table.serviceName} {
      * @return effect
      */
     Integer batchDelete${type}ByIdList(List<Long> idList);
+
+    /**
+     * ${apiComment.deleteAll}
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer delete${type}(${type}QueryRequest request);
 
     /**
      * ${apiComment.export}

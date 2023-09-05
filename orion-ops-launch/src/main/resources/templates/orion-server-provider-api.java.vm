@@ -33,6 +33,15 @@ public interface ${type}Api {
     Integer update${type}ById(${type}UpdateDTO dto);
 
     /**
+     * ${apiComment.updateAll}
+     *
+     * @param query  query
+     * @param update update
+     * @return effect
+     */
+    Integer update${type}(${type}QueryDTO query, ${type}UpdateDTO update);
+
+    /**
      * ${apiComment.getById}
      *
      * @param id id
@@ -79,5 +88,13 @@ public interface ${type}Api {
      * @return effect
      */
     Integer batchDelete${type}ByIdList(Collection<Long> idList);
+
+    /**
+     * ${apiComment.deleteAll}
+     *
+     * @param dto dto
+     * @return effect
+     */
+    Integer delete${type}(${type}QueryDTO dto);
 
 }

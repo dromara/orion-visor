@@ -30,9 +30,11 @@ public interface ${type}ProviderConvert {
 
     ${type}DO to(${type}QueryDTO domain);
 
-    ${type}CreateRequest to(${type}CreateDTO domain);
+    ${type}DO to(${type}UpdateDTO update);
 
-    ${type}UpdateRequest to(${type}UpdateDTO domain);
+    ${type}CreateRequest toRequest(${type}CreateDTO request);
+
+    ${type}UpdateRequest toRequest(${type}UpdateDTO request);
 
     List<${type}DTO> toList(List<${type}DO> list);
 

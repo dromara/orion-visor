@@ -2,11 +2,12 @@ package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.HttpWrapper;
-import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.framework.common.valid.group.Id;
+import com.orion.ops.framework.common.valid.group.Page;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
@@ -54,7 +55,7 @@ public class SystemUserController {
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:update')")
-    public Integer updateSystemUser(@Validated @RequestBody SystemUserUpdateRequest request) {
+    public Integer updateSystemUser(@Validated(Id.class) @RequestBody SystemUserUpdateRequest request) {
         return systemUserService.updateSystemUserById(request);
     }
 
@@ -117,7 +118,7 @@ public class SystemUserController {
     @PostMapping("/query")
     @Operation(summary = "分页查询用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
-    public DataGrid<SystemUserVO> getSystemUserPage(@Validated(IPageRequest.class) @RequestBody SystemUserQueryRequest request) {
+    public DataGrid<SystemUserVO> getSystemUserPage(@Validated(Page.class) @RequestBody SystemUserQueryRequest request) {
         return systemUserService.getSystemUserPage(request);
     }
 

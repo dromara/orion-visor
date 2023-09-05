@@ -1,10 +1,11 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.framework.common.valid.group.Id;
+import com.orion.ops.framework.common.valid.group.Page;
 import com.orion.ops.module.infra.entity.request.menu.SystemRoleBindMenuRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
@@ -56,14 +57,14 @@ public class SystemRoleController {
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:update')")
-    public Integer updateSystemRole(@Validated @RequestBody SystemRoleUpdateRequest request) {
+    public Integer updateSystemRole(@Validated(Id.class) @RequestBody SystemRoleUpdateRequest request) {
         return systemRoleService.updateSystemRoleById(request);
     }
 
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 更新角色状态")
     @PreAuthorize("@ss.hasPermission('infra:system-role:update-status')")
-    public Integer updateRoleStatus(@Validated @RequestBody SystemRoleStatusRequest request) {
+    public Integer updateRoleStatus(@Validated(Id.class) @RequestBody SystemRoleStatusRequest request) {
         return systemRoleService.updateRoleStatus(request);
     }
 
@@ -88,7 +89,7 @@ public class SystemRoleController {
     @PostMapping("/query")
     @Operation(summary = "分页查询角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
-    public DataGrid<SystemRoleVO> getSystemRolePage(@Validated(IPageRequest.class) @RequestBody SystemRoleQueryRequest request) {
+    public DataGrid<SystemRoleVO> getSystemRolePage(@Validated(Page.class) @RequestBody SystemRoleQueryRequest request) {
         return systemRoleService.getSystemRolePage(request);
     }
 
