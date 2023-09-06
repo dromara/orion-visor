@@ -16,9 +16,16 @@ import java.util.concurrent.TimeUnit;
 public interface TagCacheKeyDefine {
 
     CacheKeyDefine TAG_NAME = new CacheKeyBuilder()
-            .key("tag:{}")
-            .desc("tag名称 ${type}")
+            .key("tag:name:{}")
+            .desc("tag 名称 ${type}")
             .type(TagCacheDTO.class)
+            .timeout(3, TimeUnit.DAYS)
+            .build();
+
+    CacheKeyDefine TAG_REL = new CacheKeyBuilder()
+            .key("tag:rel:{}:{}")
+            .desc("tag 引用 ${type} ${relId}")
+            .type(Long.class)
             .timeout(3, TimeUnit.DAYS)
             .build();
 

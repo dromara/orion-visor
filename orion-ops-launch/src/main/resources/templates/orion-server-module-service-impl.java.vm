@@ -41,7 +41,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public Long create${type}(${type}CreateRequest request) {
-        log.info("${type}Service-create${type} record: {}", JSON.toJSONString(record));
+        log.info("${type}Service-create${type} request: {}", JSON.toJSONString(request));
         // 转换
         ${type}DO record = ${type}Convert.MAPPER.to(request);
         record.setId(null);
@@ -55,7 +55,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public Integer update${type}ById(${type}UpdateRequest request) {
-        log.info("${type}Service-update${type}ById updateRecord: {}", JSON.toJSONString(updateRecord));
+        log.info("${type}Service-update${type}ById request: {}", JSON.toJSONString(request));
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         ${type}DO record = ${typeLower}DAO.selectById(id);

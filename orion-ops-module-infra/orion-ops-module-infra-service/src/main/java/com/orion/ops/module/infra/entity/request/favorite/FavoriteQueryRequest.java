@@ -4,7 +4,6 @@ import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -31,7 +30,6 @@ public class FavoriteQueryRequest extends PageRequest {
     @Schema(description = "引用id")
     private Long relId;
 
-    @Size(max = 12)
     @Schema(description = "收藏类型")
     private String type;
 

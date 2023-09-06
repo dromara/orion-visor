@@ -40,6 +40,34 @@ public interface FavoriteService {
     List<Long> getFavoriteRelIdList(FavoriteQueryRequest request);
 
     /**
+     * 通过 userId 删除收藏
+     *
+     * @param userId userId
+     */
+    void deleteFavoriteByUserId(Long userId);
+
+    /**
+     * 通过 userId 删除收藏
+     *
+     * @param userIdList userId
+     */
+    void deleteFavoriteByUserIdList(List<Long> userIdList);
+
+    /**
+     * 通过 relId 删除收藏
+     *
+     * @param relId relId
+     */
+    void deleteFavoriteByRelId(Long relId);
+
+    /**
+     * 通过 relId 删除收藏
+     *
+     * @param relIdList relIdList
+     */
+    void deleteFavoriteByRelIdList(List<Long> relIdList);
+
+    /**
      * 删除收藏
      *
      * @param request request
