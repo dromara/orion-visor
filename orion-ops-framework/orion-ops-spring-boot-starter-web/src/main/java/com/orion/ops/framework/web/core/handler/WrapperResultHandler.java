@@ -29,11 +29,13 @@ public class WrapperResultHandler implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter methodParameter, @NotNull Class converterType) {
-        // 统一返回值
+        // 检查是否包含统一返回值注解
         if (!methodParameter.getContainingClass().isAnnotationPresent(RestWrapper.class)) {
             return false;
         }
-        return !methodParameter.hasMethodAnnotation(IgnoreWrapper.class);
+        // 检查是否包含忽略返回值注解 && 方法返回值不为 void
+        return !methodParameter.hasMethodAnnotation(IgnoreWrapper.class) &&
+                methodParameter.getExecutable().getAnnotatedReturnType().getType() != Void.TYPE;
     }
 
     @Override

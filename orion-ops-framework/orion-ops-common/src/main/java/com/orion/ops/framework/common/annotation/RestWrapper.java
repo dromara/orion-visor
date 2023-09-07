@@ -7,6 +7,8 @@ import java.lang.annotation.*;
  *
  * @author Jiahang Li
  * @version 1.0.0
+ * @see Void#TYPE
+ * @see IgnoreWrapper
  * @since 2021/4/2 12:34
  */
 @Target({ElementType.TYPE})

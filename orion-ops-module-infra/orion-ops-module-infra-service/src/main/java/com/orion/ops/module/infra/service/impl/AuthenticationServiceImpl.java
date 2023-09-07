@@ -203,6 +203,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param user    user
      * @return 是否正确
      */
+    @SuppressWarnings("ALL")
     private boolean checkPassword(UserLoginRequest request, SystemUserDO user) {
         // 密码正确
         if (user != null && user.getPassword().equals(Signatures.md5(request.getPassword()))) {
@@ -288,6 +289,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param remoteAddr remoteAddr
      * @param location   location
      */
+    @SuppressWarnings("ALL")
     private void invalidOtherDeviceToken(Long id, long loginTime, String remoteAddr, String location) {
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
         // 获取登陆信息

@@ -1,8 +1,5 @@
 package com.orion.ops.module.infra.entity.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -21,11 +18,9 @@ public class TagCacheDTO {
 
     @EqualsAndHashCode.Include
     @Schema(description = "id")
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @Schema(description = "标签名称")
-    @TableField("name")
     private String name;
 
 }

@@ -44,7 +44,7 @@ public class CodeGenerator {
                 // new GenTable("system_user", "用户", "user")
                 //         .vue("user", "user")
                 //         .enums(UserStatusEnum.class),
-                new GenTable("tag", "标签枚举", "tag"),
+                new GenTable("tag_rel", "标签引用", "tag").ignoreTest(),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");

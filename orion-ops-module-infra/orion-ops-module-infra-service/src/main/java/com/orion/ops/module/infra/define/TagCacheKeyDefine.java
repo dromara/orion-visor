@@ -25,7 +25,7 @@ public interface TagCacheKeyDefine {
     CacheKeyDefine TAG_REL = new CacheKeyBuilder()
             .key("tag:rel:{}:{}")
             .desc("tag 引用 ${type} ${relId}")
-            .type(Long.class)
+            .type(TagCacheDTO.class)
             .timeout(3, TimeUnit.DAYS)
             .build();
 
