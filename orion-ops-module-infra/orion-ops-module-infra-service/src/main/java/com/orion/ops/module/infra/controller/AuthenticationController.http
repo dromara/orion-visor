@@ -18,6 +18,6 @@ Content-Type: application/json
 }
 
 
-### 通过 id 更新菜单
+### 登出
 GET {{baseUrl}}/infra/auth/logout
 Authorization: {{token}}
