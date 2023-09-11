@@ -1,8 +1,8 @@
 import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
-const MENU: AppRouteRecordRaw = {
-  name: 'menu',
+const SYSTEM: AppRouteRecordRaw = {
+  name: 'system',
   path: '/system',
   component: DEFAULT_LAYOUT,
   children: [
@@ -14,4 +14,4 @@ const MENU: AppRouteRecordRaw = {
   ],
 };
 
-export default MENU;
+export default SYSTEM;
