@@ -56,23 +56,17 @@ public interface FavoriteService {
     /**
      * 通过 relId 删除收藏
      *
+     * @param type  type
      * @param relId relId
      */
-    void deleteFavoriteByRelId(Long relId);
+    void deleteFavoriteByRelId(String type, Long relId);
 
     /**
      * 通过 relId 删除收藏
      *
+     * @param type      type
      * @param relIdList relIdList
      */
-    void deleteFavoriteByRelIdList(List<Long> relIdList);
-
-    /**
-     * 删除收藏
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer deleteFavorite(FavoriteQueryRequest request);
+    void deleteFavoriteByRelIdList(String type, List<Long> relIdList);
 
 }

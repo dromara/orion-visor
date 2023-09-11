@@ -67,6 +67,16 @@ public class TagRelServiceImpl implements TagRelService {
     }
 
     @Override
+    public void setTagRel(String type, Long relId, List<Long> tagIdList) {
+        // 删除
+        this.deleteRelId(type, relId);
+        // 添加
+        if (!Lists.isEmpty(tagIdList)) {
+            this.addTagRel(type, relId, tagIdList);
+        }
+    }
+
+    @Override
     public List<TagCacheDTO> getRelTags(String type, Long relId) {
         // 查询缓存
         String cacheKey = TagCacheKeyDefine.TAG_REL.format(type, relId);

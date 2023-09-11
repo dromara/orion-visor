@@ -23,6 +23,15 @@ public interface TagRelService {
     void addTagRel(String type, Long relId, List<Long> tagIdList);
 
     /**
+     * 设置标签引用
+     *
+     * @param type      type
+     * @param relId     relId
+     * @param tagIdList tagIdList
+     */
+    void setTagRel(String type, Long relId, List<Long> tagIdList);
+
+    /**
      * 获取引用 tag
      *
      * @param type  type

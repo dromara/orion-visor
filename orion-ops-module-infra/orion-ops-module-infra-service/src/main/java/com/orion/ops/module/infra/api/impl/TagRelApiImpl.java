@@ -4,6 +4,7 @@ import com.orion.ops.module.infra.api.TagRelApi;
 import com.orion.ops.module.infra.convert.TagProviderConvert;
 import com.orion.ops.module.infra.entity.dto.TagCacheDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
+import com.orion.ops.module.infra.enums.TagTypeEnum;
 import com.orion.ops.module.infra.service.TagRelService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,21 +30,27 @@ public class TagRelApiImpl implements TagRelApi {
 
     @Override
     @Async("asyncExecutor")
-    public void addTagRel(String type, Long relId, List<Long> tagIdList) {
-        tagRelService.addTagRel(type, relId, tagIdList);
+    public void addTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList) {
+        tagRelService.addTagRel(type.name(), relId, tagIdList);
     }
 
     @Override
     @Async("asyncExecutor")
-    public Future<List<TagDTO>> getRelTags(String type, Long relId) {
-        List<TagCacheDTO> values = tagRelService.getRelTags(type, relId);
+    public void setTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList) {
+        tagRelService.setTagRel(type.name(), relId, tagIdList);
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public Future<List<TagDTO>> getRelTags(TagTypeEnum type, Long relId) {
+        List<TagCacheDTO> values = tagRelService.getRelTags(type.name(), relId);
         return CompletableFuture.completedFuture(TagProviderConvert.MAPPER.toList(values));
     }
 
     @Override
     @Async("asyncExecutor")
-    public Future<List<List<TagDTO>>> getRelTags(String type, List<Long> relIdList) {
-        List<List<TagDTO>> values = tagRelService.getRelTags(type, relIdList)
+    public Future<List<List<TagDTO>>> getRelTags(TagTypeEnum type, List<Long> relIdList) {
+        List<List<TagDTO>> values = tagRelService.getRelTags(type.name(), relIdList)
                 .stream()
                 .map(TagProviderConvert.MAPPER::toList)
                 .collect(Collectors.toList());
@@ -51,13 +58,15 @@ public class TagRelApiImpl implements TagRelApi {
     }
 
     @Override
-    public Integer deleteRelId(String type, Long relId) {
-        return tagRelService.deleteRelId(type, relId);
+    @Async("asyncExecutor")
+    public void deleteRelId(TagTypeEnum type, Long relId) {
+        tagRelService.deleteRelId(type.name(), relId);
     }
 
     @Override
-    public Integer deleteRelIdList(String type, List<Long> relIdList) {
-        return tagRelService.deleteRelIdList(type, relIdList);
+    @Async("asyncExecutor")
+    public void deleteRelIdList(TagTypeEnum type, List<Long> relIdList) {
+        tagRelService.deleteRelIdList(type.name(), relIdList);
     }
 
 }

@@ -44,7 +44,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         log.info("${type}Service-create${type} request: {}", JSON.toJSONString(request));
         // 转换
         ${type}DO record = ${type}Convert.MAPPER.to(request);
-        record.setId(null);
         // 查询数据是否冲突
         this.check${type}Present(record);
         // 插入
@@ -108,9 +107,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return ${typeLower}DAO.of()
-                .wrapper(wrapper)
-                .list(${type}Convert.MAPPER::to);
+        return ${typeLower}DAO.of(wrapper).list(${type}Convert.MAPPER::to);
     }
 
     @Override
@@ -126,8 +123,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return ${typeLower}DAO.of()
-                .wrapper(wrapper)
+        return ${typeLower}DAO.of(wrapper)
                 .page(request)
                 .dataGrid(${type}Convert.MAPPER::to);
     }
@@ -165,9 +161,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        List<${type}Export> rows = ${typeLower}DAO.of()
-                .wrapper(wrapper)
-                .list(${type}Convert.MAPPER::toExport);
+        List<${type}Export> rows = ${typeLower}DAO.of(wrapper).list(${type}Convert.MAPPER::toExport);
         log.info("${type}Service.export${type} size: {}", rows.size());
         // 导出
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -196,7 +190,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
                 #end
                 #end
         // 检查是否存在
-        boolean present = ${typeLower}DAO.of().wrapper(wrapper).present();
+        boolean present = ${typeLower}DAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 

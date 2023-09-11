@@ -38,7 +38,7 @@ public class TransmittableThreadLocalSecurityContextHolderStrategy implements Se
 
     @Override
     public void setContext(SecurityContext context) {
-        Valid.notNull(context, "Only non-null SecurityContext instances are permitted");
+        Valid.notNull(context, "only non-null SecurityContext instances are permitted");
         CONTEXT_HOLDER.set(context);
     }
 

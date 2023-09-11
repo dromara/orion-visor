@@ -58,7 +58,6 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     public Long createSystemRole(SystemRoleCreateRequest request) {
         // 转换
         SystemRoleDO record = SystemRoleConvert.MAPPER.to(request);
-        record.setId(null);
         // 查询名称是否存在
         this.checkNamePresent(record);
         // 查询编码是否存在
@@ -140,8 +139,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .eq(SystemRoleDO::getCode, request.getCode())
                 .eq(SystemRoleDO::getStatus, request.getStatus());
         // 查询
-        return systemRoleDAO.of()
-                .wrapper(wrapper)
+        return systemRoleDAO.of(wrapper)
                 .page(request)
                 .dataGrid(SystemRoleConvert.MAPPER::to);
     }
@@ -185,7 +183,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .ne(SystemRoleDO::getId, domain.getId())
                 .eq(SystemRoleDO::getName, domain.getName());
         // 检查是否存在
-        boolean present = systemRoleDAO.of().wrapper(wrapper).present();
+        boolean present = systemRoleDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.NAME_PRESENT);
     }
 
@@ -201,7 +199,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .ne(SystemRoleDO::getId, domain.getId())
                 .eq(SystemRoleDO::getCode, domain.getCode());
         // 检查是否存在
-        boolean present = systemRoleDAO.of().wrapper(wrapper).present();
+        boolean present = systemRoleDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.CODE_PRESENT);
     }
 

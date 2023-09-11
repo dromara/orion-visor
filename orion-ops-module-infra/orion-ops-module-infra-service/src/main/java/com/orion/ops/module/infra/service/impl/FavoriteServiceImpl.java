@@ -45,7 +45,6 @@ public class FavoriteServiceImpl implements FavoriteService {
     public Long addFavorite(FavoriteCreateRequest request) {
         // 转换
         FavoriteDO record = FavoriteConvert.MAPPER.to(request);
-        record.setId(null);
         // 插入
         int effect = favoriteDAO.insert(record);
         log.info("FavoriteService-addFavorite effect: {}, record: {}", effect, JSON.toJSONString(record));
@@ -62,9 +61,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         // 条件
         LambdaQueryWrapper<FavoriteDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return favoriteDAO.of()
-                .wrapper(wrapper)
-                .list(FavoriteConvert.MAPPER::to);
+        return favoriteDAO.of(wrapper).list(FavoriteConvert.MAPPER::to);
     }
 
     @Override
@@ -78,8 +75,7 @@ public class FavoriteServiceImpl implements FavoriteService {
             // 条件
             LambdaQueryWrapper<FavoriteDO> wrapper = this.buildQueryWrapper(request);
             // 查询数据库
-            cacheRelIdList = favoriteDAO.of()
-                    .wrapper(wrapper)
+            cacheRelIdList = favoriteDAO.of(wrapper)
                     .stream()
                     .map(FavoriteDO::getRelId)
                     .distinct()
@@ -134,33 +130,27 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public void deleteFavoriteByRelId(Long relId) {
+    public void deleteFavoriteByRelId(String type, Long relId) {
         if (relId == null) {
             return;
         }
         FavoriteQueryRequest request = new FavoriteQueryRequest();
+        request.setType(type);
         request.setRelId(relId);
         // 只删除数据库 redis 等自动失效
         favoriteDAO.delete(this.buildQueryWrapper(request));
     }
 
     @Override
-    public void deleteFavoriteByRelIdList(List<Long> relIdList) {
+    public void deleteFavoriteByRelIdList(String type, List<Long> relIdList) {
         if (Lists.isEmpty(relIdList)) {
             return;
         }
         FavoriteQueryRequest request = new FavoriteQueryRequest();
+        request.setType(type);
         request.setRelIdList(relIdList);
         // 只删除数据库 redis 等自动失效
         favoriteDAO.delete(this.buildQueryWrapper(request));
-    }
-
-    @Override
-    public Integer deleteFavorite(FavoriteQueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<FavoriteDO> wrapper = this.buildQueryWrapper(request);
-        // 删除
-        return favoriteDAO.delete(wrapper);
     }
 
     /**

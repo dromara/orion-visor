@@ -69,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 获取登陆用户
         LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
                 .eq(SystemUserDO::getUsername, request.getUsername());
-        SystemUserDO user = systemUserDAO.of(wrapper).only().get();
+        SystemUserDO user = systemUserDAO.of(wrapper).getOne();
         // 检查密码
         boolean passwordCorrect = this.checkPassword(request, user);
         Valid.isTrue(passwordCorrect, ErrorMessage.USERNAME_PASSWORD_ERROR);

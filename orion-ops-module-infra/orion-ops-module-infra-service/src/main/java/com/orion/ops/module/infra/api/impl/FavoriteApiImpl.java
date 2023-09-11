@@ -51,23 +51,27 @@ public class FavoriteApiImpl implements FavoriteApi {
     }
 
     @Override
-    public void deleteFavoriteByUserId(Long userId) {
+    @Async("asyncExecutor")
+    public void deleteByUserId(Long userId) {
         favoriteService.deleteFavoriteByUserId(userId);
     }
 
     @Override
-    public void deleteFavoriteByUserIdList(List<Long> userIdList) {
+    @Async("asyncExecutor")
+    public void deleteByUserIdList(List<Long> userIdList) {
         favoriteService.deleteFavoriteByUserIdList(userIdList);
     }
 
     @Override
-    public void deleteFavoriteByRelId(Long relId) {
-        favoriteService.deleteFavoriteByRelId(relId);
+    @Async("asyncExecutor")
+    public void deleteByRelId(FavoriteTypeEnum type, Long relId) {
+        favoriteService.deleteFavoriteByRelId(type.name(), relId);
     }
 
     @Override
-    public void deleteFavoriteByRelIdList(List<Long> relIdList) {
-        favoriteService.deleteFavoriteByRelIdList(relIdList);
+    @Async("asyncExecutor")
+    public void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList) {
+        favoriteService.deleteFavoriteByRelIdList(type.name(), relIdList);
     }
 
 }

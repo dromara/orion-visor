@@ -54,7 +54,6 @@ public class SystemUserServiceImpl implements SystemUserService {
     public Long createSystemUser(SystemUserCreateRequest request) {
         // 转换
         SystemUserDO record = SystemUserConvert.MAPPER.to(request);
-        record.setId(null);
         // 查询用户名称是否存在
         this.checkUsernamePresent(record);
         // 查询花名是否存在
@@ -146,8 +145,7 @@ public class SystemUserServiceImpl implements SystemUserService {
                 .like(SystemUserDO::getEmail, request.getEmail())
                 .eq(SystemUserDO::getStatus, request.getStatus());
         // 查询
-        return systemUserDAO.of()
-                .wrapper(wrapper)
+        return systemUserDAO.of(wrapper)
                 .page(request)
                 .dataGrid(SystemUserConvert.MAPPER::to);
     }
@@ -208,7 +206,7 @@ public class SystemUserServiceImpl implements SystemUserService {
                 // 用其他字段做重复校验
                 .eq(SystemUserDO::getUsername, domain.getUsername());
         // 检查是否存在
-        boolean present = systemUserDAO.of().wrapper(wrapper).present();
+        boolean present = systemUserDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.USERNAME_PRESENT);
     }
 
@@ -225,7 +223,7 @@ public class SystemUserServiceImpl implements SystemUserService {
                 // 用其他字段做重复校验
                 .eq(SystemUserDO::getNickname, domain.getNickname());
         // 检查是否存在
-        boolean present = systemUserDAO.of().wrapper(wrapper).present();
+        boolean present = systemUserDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.NICKNAME_PRESENT);
     }
 

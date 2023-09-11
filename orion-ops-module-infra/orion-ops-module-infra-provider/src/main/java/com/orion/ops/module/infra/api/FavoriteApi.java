@@ -37,27 +37,29 @@ public interface FavoriteApi {
      *
      * @param userId userId
      */
-    void deleteFavoriteByUserId(Long userId);
+    void deleteByUserId(Long userId);
 
     /**
      * 通过 userId 删除收藏
      *
      * @param userIdList userId
      */
-    void deleteFavoriteByUserIdList(List<Long> userIdList);
+    void deleteByUserIdList(List<Long> userIdList);
 
     /**
      * 通过 relId 删除收藏
      *
+     * @param type  type
      * @param relId relId
      */
-    void deleteFavoriteByRelId(Long relId);
+    void deleteByRelId(FavoriteTypeEnum type, Long relId);
 
     /**
      * 通过 relId 删除收藏
      *
+     * @param type      type
      * @param relIdList relIdList
      */
-    void deleteFavoriteByRelIdList(List<Long> relIdList);
+    void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList);
 
 }

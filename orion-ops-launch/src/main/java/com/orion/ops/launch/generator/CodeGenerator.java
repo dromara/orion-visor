@@ -38,13 +38,16 @@ public class CodeGenerator {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "infra";
+        String module = "asset";
         // 生成的表
         GenTable[] tables = {
                 // new GenTable("system_user", "用户", "user")
                 //         .vue("user", "user")
                 //         .enums(UserStatusEnum.class),
-                new GenTable("tag_rel", "标签引用", "tag").ignoreTest(),
+                new GenTable("host", "主机", "host")
+                        .vue("asset", "host")
+                        .ignoreTest(),
+                new GenTable("host_config", "主机配置", "host").ignoreTest(),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");

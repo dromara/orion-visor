@@ -37,15 +37,12 @@ public class TagServiceImpl implements TagService {
     public Long createTag(TagCreateRequest request) {
         // 转换
         TagDO record = TagConvert.MAPPER.to(request);
-        record.setId(null);
         // 查询 tag 是否存在
         String type = record.getType();
         LambdaQueryWrapper<TagDO> wrapper = tagDAO.wrapper()
                 .eq(TagDO::getName, record.getName())
                 .eq(TagDO::getType, type);
-        TagDO checkTag = tagDAO.of(wrapper)
-                .only()
-                .get();
+        TagDO checkTag = tagDAO.of(wrapper).getOne();
         if (checkTag != null) {
             return checkTag.getId();
         }

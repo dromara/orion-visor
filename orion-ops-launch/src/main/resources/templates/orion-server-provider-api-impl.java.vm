@@ -106,9 +106,7 @@ public class ${type}ApiImpl implements ${type}Api {
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
         // 查询
-        return ${typeLower}DAO.of()
-                .wrapper(wrapper)
-                .list(${type}ProviderConvert.MAPPER::to);
+        return ${typeLower}DAO.of(wrapper).list(${type}ProviderConvert.MAPPER::to);
     }
 
     @Override

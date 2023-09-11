@@ -60,9 +60,9 @@ public class DataQuery<T> {
         return this;
     }
 
-    public DataQuery<T> only() {
+    public T getOne() {
         wrapper.last(Const.LIMIT_1);
-        return this;
+        return dao.selectOne(wrapper);
     }
 
     public T get() {
