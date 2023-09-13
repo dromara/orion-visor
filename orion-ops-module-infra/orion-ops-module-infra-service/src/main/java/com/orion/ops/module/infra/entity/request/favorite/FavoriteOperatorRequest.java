@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 收藏 创建请求对象
+ * 收藏 操作请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,12 +22,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FavoriteCreateRequest", description = "收藏 创建请求对象")
-public class FavoriteCreateRequest implements Serializable {
-
-    @NotNull
-    @Schema(description = "用户id")
-    private Long userId;
+@Schema(name = "FavoriteOperatorRequest", description = "收藏 操作请求对象")
+public class FavoriteOperatorRequest implements Serializable {
 
     @NotNull
     @Schema(description = "引用id")

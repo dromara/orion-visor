@@ -36,7 +36,4 @@ public class FavoriteQueryRequest extends PageRequest {
     @Schema(description = "用户id")
     private List<Long> userIdList;
 
-    @Schema(description = "引用id")
-    private List<Long> relIdList;
-
 }

@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.api.impl;
 
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.FavoriteApi;
-import com.orion.ops.module.infra.entity.request.favorite.FavoriteCreateRequest;
+import com.orion.ops.module.infra.dao.FavoriteDAO;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteQueryRequest;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 import com.orion.ops.module.infra.service.FavoriteService;
@@ -26,50 +27,34 @@ public class FavoriteApiImpl implements FavoriteApi {
     @Resource
     private FavoriteService favoriteService;
 
-    @Override
-    @Async("asyncExecutor")
-    public void addFavorite(FavoriteTypeEnum type, Long userId, Long relId) {
-        String typeName = type.name();
-        FavoriteCreateRequest request = new FavoriteCreateRequest();
-        request.setUserId(userId);
-        request.setRelId(relId);
-        request.setType(typeName);
-        favoriteService.addFavorite(request);
-    }
+    @Resource
+    private FavoriteDAO favoriteDAO;
 
     @Override
     @Async("asyncExecutor")
     public Future<List<Long>> getFavoriteRelIdList(FavoriteTypeEnum type, Long userId) {
-        FavoriteQueryRequest request = new FavoriteQueryRequest();
-        request.setUserId(userId);
-        request.setType(type.name());
+        Valid.allNotNull(type, userId);
         // 查询
+        FavoriteQueryRequest request = new FavoriteQueryRequest();
+        request.setType(type.name());
+        request.setUserId(userId);
         List<Long> relIdList = favoriteService.getFavoriteRelIdList(request);
         return CompletableFuture.completedFuture(relIdList);
     }
 
     @Override
     @Async("asyncExecutor")
-    public void deleteByUserId(Long userId) {
-        favoriteService.deleteFavoriteByUserId(userId);
-    }
-
-    @Override
-    @Async("asyncExecutor")
-    public void deleteByUserIdList(List<Long> userIdList) {
-        favoriteService.deleteFavoriteByUserIdList(userIdList);
-    }
-
-    @Override
-    @Async("asyncExecutor")
     public void deleteByRelId(FavoriteTypeEnum type, Long relId) {
-        favoriteService.deleteFavoriteByRelId(type.name(), relId);
+        Valid.allNotNull(type, relId);
+        favoriteDAO.deleteFavoriteByRelId(type.name(), relId);
     }
 
     @Override
     @Async("asyncExecutor")
     public void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList) {
-        favoriteService.deleteFavoriteByRelIdList(type.name(), relIdList);
+        Valid.notNull(type);
+        Valid.notEmpty(relIdList);
+        favoriteDAO.deleteFavoriteByRelIdList(type.name(), relIdList);
     }
 
 }

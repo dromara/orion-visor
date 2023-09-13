@@ -1,7 +1,7 @@
 package com.orion.ops.module.infra.convert;
 
 import com.orion.ops.module.infra.entity.domain.FavoriteDO;
-import com.orion.ops.module.infra.entity.request.favorite.FavoriteCreateRequest;
+import com.orion.ops.module.infra.entity.request.favorite.FavoriteOperatorRequest;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteQueryRequest;
 import com.orion.ops.module.infra.entity.vo.FavoriteVO;
 import org.mapstruct.Mapper;
@@ -19,7 +19,7 @@ public interface FavoriteConvert {
 
     FavoriteConvert MAPPER = Mappers.getMapper(FavoriteConvert.class);
 
-    FavoriteDO to(FavoriteCreateRequest request);
+    FavoriteDO to(FavoriteOperatorRequest request);
 
     FavoriteDO to(FavoriteQueryRequest request);
 

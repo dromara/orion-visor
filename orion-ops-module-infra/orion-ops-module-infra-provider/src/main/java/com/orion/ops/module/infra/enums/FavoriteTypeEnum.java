@@ -16,4 +16,16 @@ public enum FavoriteTypeEnum {
 
     ;
 
+    public static FavoriteTypeEnum of(String type) {
+        if (type == null) {
+            return null;
+        }
+        for (FavoriteTypeEnum value : values()) {
+            if (value.name().equals(type)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
 }

@@ -1,0 +1,23 @@
+### 添加收藏
+POST {{baseUrl}}/infra/favorite/add
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "relId": "",
+  "type": "HOST"
+}
+
+
+### 取消收藏
+GET {{baseUrl}}/infra/favorite/cancel
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "relId": "",
+  "type": "HOST"
+}
+
+
+###

@@ -15,15 +15,6 @@ import java.util.concurrent.Future;
 public interface FavoriteApi {
 
     /**
-     * 添加收藏
-     *
-     * @param type   type
-     * @param userId userId
-     * @param relId  relId
-     */
-    void addFavorite(FavoriteTypeEnum type, Long userId, Long relId);
-
-    /**
      * 获取收藏 relId 列表 会有已删除的 id
      *
      * @param type   type
@@ -31,20 +22,6 @@ public interface FavoriteApi {
      * @return relIdList
      */
     Future<List<Long>> getFavoriteRelIdList(FavoriteTypeEnum type, Long userId);
-
-    /**
-     * 通过 userId 删除收藏
-     *
-     * @param userId userId
-     */
-    void deleteByUserId(Long userId);
-
-    /**
-     * 通过 userId 删除收藏
-     *
-     * @param userIdList userId
-     */
-    void deleteByUserIdList(List<Long> userIdList);
 
     /**
      * 通过 relId 删除收藏

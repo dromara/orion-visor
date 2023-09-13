@@ -1,6 +1,6 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.ops.module.infra.entity.request.favorite.FavoriteCreateRequest;
+import com.orion.ops.module.infra.entity.request.favorite.FavoriteOperatorRequest;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteQueryRequest;
 import com.orion.ops.module.infra.entity.vo.FavoriteVO;
 
@@ -21,7 +21,15 @@ public interface FavoriteService {
      * @param request request
      * @return id
      */
-    Long addFavorite(FavoriteCreateRequest request);
+    Long addFavorite(FavoriteOperatorRequest request);
+
+    /**
+     * 删除收藏
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer cancelFavorite(FavoriteOperatorRequest request);
 
     /**
      * 查询收藏列表
@@ -52,21 +60,5 @@ public interface FavoriteService {
      * @param userIdList userId
      */
     void deleteFavoriteByUserIdList(List<Long> userIdList);
-
-    /**
-     * 通过 relId 删除收藏
-     *
-     * @param type  type
-     * @param relId relId
-     */
-    void deleteFavoriteByRelId(String type, Long relId);
-
-    /**
-     * 通过 relId 删除收藏
-     *
-     * @param type      type
-     * @param relIdList relIdList
-     */
-    void deleteFavoriteByRelIdList(String type, List<Long> relIdList);
 
 }

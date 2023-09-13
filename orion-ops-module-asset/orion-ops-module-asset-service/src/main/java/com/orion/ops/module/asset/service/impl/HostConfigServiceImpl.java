@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class HostConfigServiceImpl implements HostConfigService {
 
     @Override
     public HostConfigVO getHostConfig(Long hostId, String type) {
+        Valid.valid(HostConfigTypeEnum::of, type);
         // 查询配置
         HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type);
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
@@ -44,11 +46,11 @@ public class HostConfigServiceImpl implements HostConfigService {
     }
 
     @Override
-    public <T extends HostConfigContent> T getHostConfig(Long hostId, String type, Class<T> clazz) {
+    public <T extends HostConfigContent> T getHostConfig(Long hostId, HostConfigTypeEnum type) {
         // 查询配置
-        HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type);
+        HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type.name());
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
-        return JSON.parseObject(config.getConfig(), clazz);
+        return JSON.parseObject(config.getConfig(), (Type) type.getType());
     }
 
     @Override
@@ -64,7 +66,7 @@ public class HostConfigServiceImpl implements HostConfigService {
     @Override
     public void updateHostConfig(HostConfigUpdateRequest request) {
         String typeValue = request.getType();
-        HostConfigTypeEnum type = HostConfigTypeEnum.of(typeValue);
+        HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, typeValue);
         HostConfigContent requestConfig = JSON.parseObject(request.getConfig(), type.getType());
         // 查询原配置
         HostConfigDO record = hostConfigDAO.getHostConfigByHostId(request.getHostId(), typeValue);

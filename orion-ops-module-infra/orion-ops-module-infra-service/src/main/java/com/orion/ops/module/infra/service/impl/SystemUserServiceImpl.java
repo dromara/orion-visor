@@ -20,6 +20,7 @@ import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
+import com.orion.ops.module.infra.service.FavoriteService;
 import com.orion.ops.module.infra.service.SystemUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -46,6 +47,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Resource
     private SystemUserRoleDAO systemUserRoleDAO;
+
+    @Resource
+    private FavoriteService favoriteService;
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -162,6 +166,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         effect += systemUserRoleDAO.deleteByUserId(id);
         // 删除用户缓存 其他的会自动过期
         redisTemplate.delete(UserCacheKeyDefine.USER_INFO.format(id));
+        // 删除用户收藏
+        favoriteService.deleteFavoriteByUserId(id);
         return effect;
     }
 
@@ -203,7 +209,6 @@ public class SystemUserServiceImpl implements SystemUserService {
         LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
                 // 更新时忽略当前记录
                 .ne(SystemUserDO::getId, domain.getId())
-                // 用其他字段做重复校验
                 .eq(SystemUserDO::getUsername, domain.getUsername());
         // 检查是否存在
         boolean present = systemUserDAO.of(wrapper).present();
@@ -220,7 +225,6 @@ public class SystemUserServiceImpl implements SystemUserService {
         LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
                 // 更新时忽略当前记录
                 .ne(SystemUserDO::getId, domain.getId())
-                // 用其他字段做重复校验
                 .eq(SystemUserDO::getNickname, domain.getNickname());
         // 检查是否存在
         boolean present = systemUserDAO.of(wrapper).present();

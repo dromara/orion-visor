@@ -1,15 +1,16 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.FavoriteConvert;
 import com.orion.ops.module.infra.dao.FavoriteDAO;
 import com.orion.ops.module.infra.define.FavoriteCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.FavoriteDO;
-import com.orion.ops.module.infra.entity.request.favorite.FavoriteCreateRequest;
+import com.orion.ops.module.infra.entity.request.favorite.FavoriteOperatorRequest;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteQueryRequest;
 import com.orion.ops.module.infra.entity.vo.FavoriteVO;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
@@ -42,18 +43,33 @@ public class FavoriteServiceImpl implements FavoriteService {
     private RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public Long addFavorite(FavoriteCreateRequest request) {
+    public Long addFavorite(FavoriteOperatorRequest request) {
+        String type = Valid.valid(FavoriteTypeEnum::of, request.getType()).name();
+        Long userId = SecurityUtils.getLoginUserId();
         // 转换
         FavoriteDO record = FavoriteConvert.MAPPER.to(request);
+        record.setUserId(userId);
         // 插入
         int effect = favoriteDAO.insert(record);
-        log.info("FavoriteService-addFavorite effect: {}, record: {}", effect, JSON.toJSONString(record));
         // 设置缓存
-        String key = FavoriteCacheKeyDefine.FAVORITE.format(request.getType(), request.getUserId());
+        String key = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
         RedisUtils.listPush(key, request.getRelId(), String::valueOf);
         // 设置过期时间
         RedisUtils.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
         return record.getId();
+    }
+
+    @Override
+    public Integer cancelFavorite(FavoriteOperatorRequest request) {
+        String type = Valid.valid(FavoriteTypeEnum::of, request.getType()).name();
+        Long userId = SecurityUtils.getLoginUserId();
+        Long relId = request.getRelId();
+        // 删除库
+        int effect = favoriteDAO.deleteFavorite(type, userId, relId);
+        // 删除缓存
+        String key = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
+        redisTemplate.opsForList().remove(key, 1, relId);
+        return effect;
     }
 
     @Override
@@ -129,30 +145,6 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteDAO.delete(this.buildQueryWrapper(request));
     }
 
-    @Override
-    public void deleteFavoriteByRelId(String type, Long relId) {
-        if (relId == null) {
-            return;
-        }
-        FavoriteQueryRequest request = new FavoriteQueryRequest();
-        request.setType(type);
-        request.setRelId(relId);
-        // 只删除数据库 redis 等自动失效
-        favoriteDAO.delete(this.buildQueryWrapper(request));
-    }
-
-    @Override
-    public void deleteFavoriteByRelIdList(String type, List<Long> relIdList) {
-        if (Lists.isEmpty(relIdList)) {
-            return;
-        }
-        FavoriteQueryRequest request = new FavoriteQueryRequest();
-        request.setType(type);
-        request.setRelIdList(relIdList);
-        // 只删除数据库 redis 等自动失效
-        favoriteDAO.delete(this.buildQueryWrapper(request));
-    }
-
     /**
      * 构建查询 wrapper
      *
@@ -165,8 +157,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .eq(FavoriteDO::getUserId, request.getUserId())
                 .eq(FavoriteDO::getRelId, request.getRelId())
                 .eq(FavoriteDO::getType, request.getType())
-                .in(FavoriteDO::getUserId, request.getUserIdList())
-                .in(FavoriteDO::getRelId, request.getRelIdList());
+                .in(FavoriteDO::getUserId, request.getUserIdList());
     }
 
 }
