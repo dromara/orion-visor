@@ -1,0 +1,64 @@
+### 创建主机
+POST {{baseUrl}}/asset/host/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "",
+  "code": "",
+  "address": ""
+}
+
+
+### 通过 id 更新主机
+PUT {{baseUrl}}/asset/host/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "code": "",
+  "address": ""
+}
+
+
+### 通过 id 查询主机
+GET {{baseUrl}}/asset/host/get?id=1&extra=true&config=true
+Authorization: {{token}}
+
+
+### 查询主机
+POST {{baseUrl}}/asset/host/list-all
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "code": "",
+  "address": ""
+}
+
+
+### 分页查询主机
+POST {{baseUrl}}/asset/host/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "name": "",
+  "code": "",
+  "address": ""
+}
+
+
+### 通过 id 删除主机
+DELETE {{baseUrl}}/asset/host/delete?id=1
+Authorization: {{token}}
+
+
+###
