@@ -4,12 +4,14 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
-import com.orion.ops.framework.common.valid.group.Id;
 import com.orion.ops.framework.common.valid.group.Page;
+import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
+import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +43,9 @@ public class HostController {
     @Resource
     private HostService hostService;
 
+    @Resource
+    private HostConfigService hostConfigService;
+
     @PostMapping("/create")
     @Operation(summary = "创建主机")
     @PreAuthorize("@ss.hasPermission('asset:host:create')")
@@ -51,7 +56,7 @@ public class HostController {
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新主机")
     @PreAuthorize("@ss.hasPermission('asset:host:update')")
-    public Integer updateHost(@Validated(Id.class) @RequestBody HostUpdateRequest request) {
+    public Integer updateHost(@Validated @RequestBody HostUpdateRequest request) {
         return hostService.updateHostById(request);
     }
 
@@ -94,6 +99,34 @@ public class HostController {
     @PreAuthorize("@ss.hasPermission('asset:host:delete')")
     public Integer deleteHost(@RequestParam("id") Long id) {
         return hostService.deleteHostById(id);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-config")
+    @Operation(summary = "查询主机配置")
+    @Parameter(name = "hostId", description = "hostId", required = true)
+    @Parameter(name = "type", description = "配置类型", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host:query')")
+    public HostConfigVO getHostConfig(@RequestParam("hostId") Long hostId,
+                                      @RequestParam(name = "type") String type) {
+        return hostConfigService.getHostConfig(hostId, type);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-config-all")
+    @Operation(summary = "查询主机配置-全部")
+    @Parameter(name = "hostId", description = "hostId", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host:query')")
+    public List<HostConfigVO> getHostConfig(@RequestParam("hostId") Long hostId) {
+        return hostConfigService.getHostConfig(hostId);
+    }
+
+    @PutMapping("/update-config")
+    @Operation(summary = "更新主机配置")
+    @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
+    public boolean updateHostConfig(@Validated @RequestBody HostConfigUpdateRequest request) {
+        hostConfigService.updateHostConfig(request);
+        return true;
     }
 
 }

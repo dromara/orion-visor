@@ -26,7 +26,7 @@ public class HostConfigVO {
     private Long id;
 
     @Schema(description = "version")
-    private String version;
+    private Integer version;
 
     @Schema(description = "config")
     private Map<String, Object> config;

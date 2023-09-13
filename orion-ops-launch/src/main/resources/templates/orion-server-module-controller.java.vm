@@ -4,7 +4,6 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
-import com.orion.ops.framework.common.valid.group.Id;
 import com.orion.ops.framework.common.valid.group.Page;
 import ${package.Service}.*;
 #foreach($pkg in ${customModuleFilePackages})
@@ -59,7 +58,7 @@ public class ${table.controllerName} {
     @PutMapping("/update")
     @Operation(summary = "${apiComment.updateById}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
-    public Integer update${type}(@Validated(Id.class) @RequestBody ${type}UpdateRequest request) {
+    public Integer update${type}(@Validated @RequestBody ${type}UpdateRequest request) {
         return ${typeLower}Service.update${type}ById(request);
     }
 

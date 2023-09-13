@@ -55,7 +55,7 @@ public class SystemUserController {
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:update')")
-    public Integer updateSystemUser(@Validated(Id.class) @RequestBody SystemUserUpdateRequest request) {
+    public Integer updateSystemUser(@Validated @RequestBody SystemUserUpdateRequest request) {
         return systemUserService.updateSystemUserById(request);
     }
 

@@ -1,8 +1,10 @@
 package com.orion.ops.module.asset.convert;
 
 import com.orion.ops.module.asset.entity.domain.HostConfigDO;
+import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -17,6 +19,9 @@ public interface HostConfigConvert {
 
     HostConfigConvert MAPPER = Mappers.getMapper(HostConfigConvert.class);
 
+    @Mapping(target = "config", ignore = true)
     HostConfigVO to(HostConfigDO domain);
+
+    HostConfigDO to(HostConfigUpdateRequest request);
 
 }

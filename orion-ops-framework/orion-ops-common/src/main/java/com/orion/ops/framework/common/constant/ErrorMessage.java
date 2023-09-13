@@ -17,7 +17,11 @@ public interface ErrorMessage {
 
     String INVALID_PARAM = "参数验证失败";
 
+    String DATA_MODIFIED = "数据发生变更, 请刷新后重试";
+
     String DATA_ABSENT = "数据不存在";
+
+    String CONFIG_ABSENT = "配置不存在";
 
     String DATA_PRESENT = "数据已存在";
 
