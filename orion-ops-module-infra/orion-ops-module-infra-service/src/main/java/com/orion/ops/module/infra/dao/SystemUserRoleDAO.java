@@ -19,19 +19,6 @@ import java.util.stream.Collectors;
 public interface SystemUserRoleDAO extends IMapper<SystemUserRoleDO> {
 
     /**
-     * 获取查询条件
-     *
-     * @param entity entity
-     * @return 查询条件
-     */
-    default LambdaQueryWrapper<SystemUserRoleDO> queryCondition(SystemUserRoleDO entity) {
-        return this.wrapper()
-                .eq(SystemUserRoleDO::getId, entity.getId())
-                .eq(SystemUserRoleDO::getUserId, entity.getUserId())
-                .eq(SystemUserRoleDO::getRoleId, entity.getRoleId());
-    }
-
-    /**
      * 查询用户的全部 roleId
      *
      * @param userId userId

@@ -58,6 +58,16 @@ public class TagRelApiImpl implements TagRelApi {
     }
 
     @Override
+    public List<Long> getRelIdByTagId(Long tagId) {
+        return tagRelService.getRelIdByTagId(tagId);
+    }
+
+    @Override
+    public List<Long> getRelIdByTagId(List<Long> tagIdList) {
+        return tagRelService.getRelIdByTagId(tagIdList);
+    }
+
+    @Override
     @Async("asyncExecutor")
     public void deleteRelId(TagTypeEnum type, Long relId) {
         tagRelService.deleteRelId(type.name(), relId);

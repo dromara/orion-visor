@@ -149,6 +149,16 @@ public class TagRelServiceImpl implements TagRelService {
     }
 
     @Override
+    public List<Long> getRelIdByTagId(Long tagId) {
+        return tagRelDAO.selectRelIdByTagId(tagId);
+    }
+
+    @Override
+    public List<Long> getRelIdByTagId(List<Long> tagIdList) {
+        return tagRelDAO.selectRelIdByTagId(tagIdList);
+    }
+
+    @Override
     public Integer deleteRelId(String type, Long relId) {
         // 删除数据库
         TagRelQueryRequest queryRequest = new TagRelQueryRequest();

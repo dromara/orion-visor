@@ -29,6 +29,15 @@ public interface IMapper<T> extends BaseMapper<T> {
     }
 
     /**
+     * 获取 LambdaQueryWrapper 对象
+     *
+     * @return 获取 wrapper
+     */
+    default LambdaQueryWrapper<T> lambda() {
+        return new LambdaQueryWrapper<>();
+    }
+
+    /**
      * 获取 DataQuery 对象
      *
      * @return DataQuery

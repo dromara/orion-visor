@@ -52,6 +52,22 @@ public interface TagRelApi {
     Future<List<List<TagDTO>>> getRelTags(TagTypeEnum type, List<Long> relIdList);
 
     /**
+     * 查询 tag 关联的所有 id
+     *
+     * @param tagId tagId
+     * @return rel
+     */
+    List<Long> getRelIdByTagId(Long tagId);
+
+    /**
+     * 查询 tag 关联的所有 id
+     *
+     * @param tagIdList tagIdList
+     * @return rel
+     */
+    List<Long> getRelIdByTagId(List<Long> tagIdList);
+
+    /**
      * 通过 relId 删除
      *
      * @param type  type

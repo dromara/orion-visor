@@ -18,19 +18,6 @@ import java.util.List;
 public interface SystemRoleMenuDAO extends IMapper<SystemRoleMenuDO> {
 
     /**
-     * 获取查询条件
-     *
-     * @param entity entity
-     * @return 查询条件
-     */
-    default LambdaQueryWrapper<SystemRoleMenuDO> queryCondition(SystemRoleMenuDO entity) {
-        return this.wrapper()
-                .eq(SystemRoleMenuDO::getId, entity.getId())
-                .eq(SystemRoleMenuDO::getRoleId, entity.getRoleId())
-                .eq(SystemRoleMenuDO::getMenuId, entity.getMenuId());
-    }
-
-    /**
      * 通过 roleId 删除
      *
      * @param roleId roleId

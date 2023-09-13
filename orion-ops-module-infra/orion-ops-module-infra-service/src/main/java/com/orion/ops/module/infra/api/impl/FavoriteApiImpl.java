@@ -5,7 +5,6 @@ import com.orion.ops.module.infra.entity.request.favorite.FavoriteCreateRequest;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteQueryRequest;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 import com.orion.ops.module.infra.service.FavoriteService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ import java.util.concurrent.Future;
  * @version 1.0.0
  * @since 2023-9-1 10:30
  */
-@Slf4j
 @Service
 public class FavoriteApiImpl implements FavoriteApi {
 
