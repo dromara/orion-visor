@@ -5,7 +5,7 @@ import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.valid.group.Page;
-import com.orion.ops.module.infra.entity.request.menu.SystemRoleBindMenuRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleStatusRequest;
@@ -107,11 +107,11 @@ public class SystemRoleController {
         return systemRoleService.deleteSystemRoleById(id);
     }
 
-    @PutMapping("/bind")
+    @PutMapping("/grant-menu")
     @Operation(summary = "绑定角色菜单")
-    @PreAuthorize("@ss.hasPermission('infra:system-role:bind-menu')")
-    public Integer bindRoleMenu(@RequestBody SystemRoleBindMenuRequest request) {
-        return systemRoleMenuService.bindRoleMenu(request);
+    @PreAuthorize("@ss.hasPermission('infra:system-role:grant-menu')")
+    public Integer grantRoleMenu(@RequestBody SystemRoleGrantMenuRequest request) {
+        return systemRoleMenuService.grantRoleMenu(request);
     }
 
 }

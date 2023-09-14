@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -306,18 +305,7 @@ public class HostServiceImpl implements HostService {
         List<List<TagDTO>> tagList = null;
         if (tagsFuture != null && (tagList = tagsFuture.get()) != null) {
             for (int i = 0; i < hosts.size(); i++) {
-                List<TagDTO> tags = tagList.get(i);
-                if (Lists.isEmpty(tags)) {
-                    continue;
-                }
-                Map<Long, String> tagMap = tags.stream()
-                        .collect(Collectors.toMap(
-                                TagDTO::getId,
-                                TagDTO::getName,
-                                (v1, v2) -> v2,
-                                LinkedHashMap::new
-                        ));
-                hosts.get(i).setTags(tagMap);
+                hosts.get(i).setTags(tagList.get(i));
             }
         }
         // 设置收藏信息

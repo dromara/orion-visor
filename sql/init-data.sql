@@ -20,7 +20,7 @@ INSERT INTO `system_menu` VALUES (20, 10, '创建角色', 'infra:system-role:cre
 INSERT INTO `system_menu` VALUES (21, 10, '修改角色', 'infra:system-role:update', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:37:33', '2023-08-15 16:42:08', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (22, 10, '更新状态', 'infra:system-role:update-status', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:37:58', '2023-08-15 16:37:58', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (23, 10, '查询角色', 'infra:system-role:query', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:38:26', '2023-08-16 16:58:22', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (24, 10, '绑定菜单', 'infra:system-role:bind-menu', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:39:41', '2023-08-15 16:39:41', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (24, 10, '分配菜单', 'infra:system-role:grant-menu', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:39:41', '2023-08-15 16:39:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (25, 10, '删除角色', 'infra:system-role:delete', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:40:45', '2023-08-15 16:40:45', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (26, 13, '创建菜单', 'infra:system-menu:create', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:41:30', '2023-08-15 16:41:30', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (27, 13, '修改菜单', 'infra:system-menu:update', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-15 16:41:55', '2023-08-15 16:41:55', '1', '1', 0);
@@ -34,6 +34,6 @@ INSERT INTO `system_menu` VALUES (51, 48, '查询用户', 'infra:system-user:que
 INSERT INTO `system_menu` VALUES (52, 48, '删除用户', 'infra:system-user:delete', 3, 40, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:19:24', '2023-08-16 10:19:24', NULL, NULL, 0);
 INSERT INTO `system_menu` VALUES (53, 13, '初始化缓存', 'infra:system-menu:init-cache', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:29:10', '2023-08-16 10:29:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (60, 48, '修改用户状态', 'infra:system-user:update-status', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:04', '2023-08-16 11:49:04', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (61, 48, '修改用户角色', 'infra:system-user:update-role', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:23', '2023-08-16 11:49:23', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (61, 48, '分配用户角色', 'infra:system-user:grant-role', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:23', '2023-08-16 11:49:23', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (62, 48, '重置用户密码', 'infra:system-user:reset-password', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:50', '2023-08-16 11:49:50', '1', '1', 0);
 

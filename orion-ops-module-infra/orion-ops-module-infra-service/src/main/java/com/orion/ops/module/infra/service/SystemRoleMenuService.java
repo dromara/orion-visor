@@ -1,6 +1,6 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.ops.module.infra.entity.request.menu.SystemRoleBindMenuRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import java.util.List;
 public interface SystemRoleMenuService {
 
     /**
-     * 绑定角色菜单
+     * 分配角色菜单
      *
      * @param request request
      * @return effect
      */
-    Integer bindRoleMenu(SystemRoleBindMenuRequest request);
+    Integer grantRoleMenu(SystemRoleGrantMenuRequest request);
 
     /**
      * 获取角色菜单 id

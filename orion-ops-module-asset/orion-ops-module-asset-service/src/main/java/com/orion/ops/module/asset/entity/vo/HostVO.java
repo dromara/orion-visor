@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.entity.vo;
 
+import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,7 +56,7 @@ public class HostVO implements Serializable {
     private Boolean favorite;
 
     @Schema(description = "tags")
-    private Map<Long, String> tags;
+    private List<TagDTO> tags;
 
     @Schema(description = "configs")
     private Map<String, HostConfigVO> configs;

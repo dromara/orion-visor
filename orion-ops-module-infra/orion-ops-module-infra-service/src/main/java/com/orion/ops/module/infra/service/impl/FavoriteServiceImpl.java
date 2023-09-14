@@ -68,7 +68,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         int effect = favoriteDAO.deleteFavorite(type, userId, relId);
         // 删除缓存
         String key = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
-        redisTemplate.opsForList().remove(key, 1, relId);
+        redisTemplate.opsForList().remove(key, 1, relId.toString());
         return effect;
     }
 

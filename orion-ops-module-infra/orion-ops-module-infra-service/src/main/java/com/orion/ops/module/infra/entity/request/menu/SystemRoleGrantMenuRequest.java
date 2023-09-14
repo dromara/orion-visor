@@ -22,8 +22,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemRoleBindMenuRequest", description = "角色 绑定菜单请求对象")
-public class SystemRoleBindMenuRequest implements Serializable {
+@Schema(name = "SystemRoleGrantMenuRequest", description = "角色 绑定菜单请求对象")
+public class SystemRoleGrantMenuRequest implements Serializable {
 
     @NotNull
     @Schema(description = "roleId")

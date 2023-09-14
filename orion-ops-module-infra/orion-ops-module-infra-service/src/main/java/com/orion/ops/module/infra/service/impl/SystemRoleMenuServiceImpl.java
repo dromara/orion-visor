@@ -14,7 +14,7 @@ import com.orion.ops.module.infra.entity.domain.SystemMenuDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
-import com.orion.ops.module.infra.entity.request.menu.SystemRoleBindMenuRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.SystemRoleMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer bindRoleMenu(SystemRoleBindMenuRequest request) {
+    public Integer grantRoleMenu(SystemRoleGrantMenuRequest request) {
         Long roleId = request.getRoleId();
         List<Long> menuIdList = request.getMenuIdList();
         // 检查角色是否存在

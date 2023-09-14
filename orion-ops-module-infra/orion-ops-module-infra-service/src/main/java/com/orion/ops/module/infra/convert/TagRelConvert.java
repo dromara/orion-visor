@@ -24,6 +24,7 @@ public interface TagRelConvert {
     TagRelDO to(TagRelQueryRequest request);
 
     @Mapping(target = "name", source = "tagName")
+    @Mapping(target = "id", source = "tagId")
     TagCacheDTO toCache(TagRelDO domain);
 
     List<TagCacheDTO> toCacheList(List<TagRelDO> list);

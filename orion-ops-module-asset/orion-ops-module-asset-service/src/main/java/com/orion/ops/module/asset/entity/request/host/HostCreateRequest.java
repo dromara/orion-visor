@@ -40,6 +40,7 @@ public class HostCreateRequest implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
+    @Size(max = 5)
     @Schema(description = "tags")
     private List<Long> tags;
 

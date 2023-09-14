@@ -114,7 +114,7 @@ public class HostController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get-config-all")
-    @Operation(summary = "查询主机配置-全部")
+    @Operation(summary = "查询主机配置 - 全部")
     @Parameter(name = "hostId", description = "hostId", required = true)
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
     public List<HostConfigVO> getHostConfig(@RequestParam("hostId") Long hostId) {

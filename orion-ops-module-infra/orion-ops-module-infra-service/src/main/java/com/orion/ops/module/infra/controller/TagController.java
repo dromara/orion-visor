@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,25 +36,22 @@ public class TagController {
     private TagService tagService;
 
     @PostMapping("/create")
-    @Operation(summary = "创建标签枚举")
-    @PreAuthorize("@ss.hasPermission('infra:tag:create')")
+    @Operation(summary = "创建标签")
     public Long createTag(@Validated @RequestBody TagCreateRequest request) {
         return tagService.createTag(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
-    @Operation(summary = "查询标签枚举")
+    @Operation(summary = "查询标签")
     @Parameter(name = "type", description = "type", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:tag:query')")
     public List<TagVO> getTagListAll(@RequestParam("type") String type) {
         return tagService.getTagList(type);
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "通过 id 删除标签枚举")
+    @Operation(summary = "通过 id 删除标签")
     @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:tag:delete')")
     public Integer deleteTag(@RequestParam("id") Long id) {
         return tagService.deleteTagById(id);
     }

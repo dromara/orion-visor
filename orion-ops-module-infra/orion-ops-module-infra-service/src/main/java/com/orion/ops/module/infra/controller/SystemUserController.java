@@ -68,9 +68,9 @@ public class SystemUserController {
         return systemUserService.updateUserStatus(request);
     }
 
-    @PutMapping("/update-role")
-    @Operation(summary = "修改用户角色")
-    @PreAuthorize("@ss.hasPermission('infra:system-user:update-role')")
+    @PutMapping("/grant-role")
+    @Operation(summary = "分配用户角色")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:grant-role')")
     public Integer updateUserRole(@Validated @RequestBody SystemUserUpdateRoleRequest request) {
         if (Lists.isEmpty(request.getRoleIdList())) {
             // 删除用户角色
