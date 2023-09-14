@@ -92,7 +92,7 @@
       // 获取全部角色
       if (!cacheStore.roles?.length) {
         const { data } = await getRoleList();
-        cacheStore.updateRoles(data);
+        cacheStore.set('roles', data);
       }
       // 加载用户角色
       const { data: roleIdList } = await getUserRoleIdList(formModel.id);

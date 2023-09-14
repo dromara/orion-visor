@@ -74,7 +74,7 @@
       if (!cacheStore.menus?.length) {
         // 加载菜单
         const { data: menuData } = await getMenuList({});
-        cacheStore.updateMenus(menuData);
+        cacheStore.set('menus', menuData);
       }
       // 获取角色菜单
       const { data: roleMenuIdList } = await getRoleMenuId(record.id);

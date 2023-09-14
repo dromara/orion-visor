@@ -34,7 +34,7 @@
   // 卸载时清除 menu cache
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.resetMenus();
+    cacheStore.set('menus', []);
   });
 
 </script>

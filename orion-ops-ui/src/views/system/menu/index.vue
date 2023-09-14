@@ -21,9 +21,16 @@
   import MenuTable from '@/views/system/menu/components/menu-table.vue';
   import MenuFormModal from '@/views/system/menu/components/menu-form-modal.vue';
 
-  import { ref } from 'vue';
+  import { onUnmounted, ref } from 'vue';
+  import { useCacheStore } from '@/store';
 
   const table = ref<any>();
   const modal = ref<any>();
+
+  // 卸载时清除 menu cache
+  onUnmounted(() => {
+    const cacheStore = useCacheStore();
+    cacheStore.set('menus', []);
+  });
 
 </script>

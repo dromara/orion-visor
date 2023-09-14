@@ -104,7 +104,7 @@
     // 加载所有展开的key
     eachAllExpandKeys(treeData.value);
   };
-  init();
+  init([]);
 
   // 获取值
   const getValue = () => {

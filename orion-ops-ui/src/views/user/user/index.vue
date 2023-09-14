@@ -39,7 +39,7 @@
   // 卸载时清除 role cache
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.resetRoles();
+    cacheStore.set('roles', []);
   });
 
 </script>
