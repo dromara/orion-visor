@@ -81,8 +81,8 @@ export function updateUserStatus(request: UserUpdateRequest) {
 /**
  * 修改用户角色
  */
-export function updateUserRole(request: UserUpdateRequest) {
-  return axios.put('/infra/system-user/update-role', request);
+export function grantUserRole(request: UserUpdateRequest) {
+  return axios.put('/infra/system-user/grant-role', request);
 }
 
 /**

@@ -70,6 +70,10 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
+      <!-- 用户名 -->
+      <template #username="{ record }">
+        <span class="username-text">{{ record.username }}</span>
+      </template>
       <!-- 状态 -->
       <template #status="{ record }">
         <a-tag :color="getEnumValue(record.status, UserStatusEnum,'color')">
@@ -115,8 +119,8 @@
           <!-- 分配角色 -->
           <a-button type="text"
                     size="mini"
-                    v-permission="['infra:system-user:update-role']"
-                    @click="emits('openUpdateRole', record)">
+                    v-permission="['infra:system-user:grant-role']"
+                    @click="emits('openGrantRole', record)">
             分配角色
           </a-button>
           <!-- 删除 -->
@@ -156,7 +160,7 @@
 
   const tableRenderData = ref<UserQueryResponse[]>();
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openUpdateRole']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 
   const pagination = reactive(defaultPagination());
 
@@ -244,5 +248,7 @@
 </script>
 
 <style lang="less" scoped>
-
+  .username-text {
+    color: rgb(var(--arcoblue-6));
+  }
 </style>

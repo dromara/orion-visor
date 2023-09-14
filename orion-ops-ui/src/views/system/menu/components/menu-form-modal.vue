@@ -111,6 +111,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
+  import { sortStep } from '../types/const';
   import { MenuTypeEnum, MenuVisibleEnum, MenuCacheEnum } from '../types/enum.types';
   import { toOptions } from '@/utils/enum';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
@@ -131,7 +132,7 @@
       name: undefined,
       type: MenuTypeEnum.PARENT_MENU.value,
       permission: undefined,
-      sort: 10,
+      sort: undefined,
       visible: MenuVisibleEnum.SHOW.value,
       cache: MenuCacheEnum.SHOW.value,
       icon: undefined,
@@ -156,7 +157,7 @@
   const openAdd = (record: any) => {
     title.value = '添加菜单';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm(), parentId: record.parentId });
+    renderForm({ ...defaultForm(), parentId: record.parentId, sort: (record.sort || 0) + sortStep });
     // 如果是父菜单默认选中子菜单 如果是子菜单默认选中功能
     if (record.type === 1 || record.type === 2) {
       formModel.type = record.type + 1;

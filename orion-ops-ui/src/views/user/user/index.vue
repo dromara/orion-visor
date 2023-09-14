@@ -5,7 +5,7 @@
                 @openAdd="() => modal.openAdd()"
                 @openUpdate="(e) => modal.openUpdate(e)"
                 @openResetPassword="(e) => resetModal.open(e)"
-                @openUpdateRole="(e) => updateRoleModal.open(e)" />
+                @openGrantRole="(e) => grantRoleModal.open(e)" />
     <!-- 添加修改模态框 -->
     <user-form-modal ref="modal"
                      @added="() => table.addedCallback()"
@@ -13,7 +13,7 @@
     <!-- 重置密码模态框 -->
     <user-reset-password-form-modal ref="resetModal" />
     <!-- 分配角色模态框 -->
-    <user-update-roles-form-modal ref="updateRoleModal" />
+    <user-grant-roles-form-modal ref="grantRoleModal" />
   </div>
 </template>
 
@@ -27,14 +27,14 @@
   import UserTable from './components/user-table.vue';
   import UserFormModal from './components/user-form-modal.vue';
   import UserResetPasswordFormModal from './components/user-reset-password-form-modal.vue';
-  import UserUpdateRolesFormModal from './components/user-update-roles-form-modal.vue';
+  import UserGrantRolesFormModal from './components/user-grant-roles-form-modal.vue';
   import { ref, onUnmounted } from 'vue';
   import { useCacheStore } from '@/store';
 
   const table = ref();
   const modal = ref();
   const resetModal = ref();
-  const updateRoleModal = ref();
+  const grantRoleModal = ref();
 
   // 卸载时清除 role cache
   onUnmounted(() => {

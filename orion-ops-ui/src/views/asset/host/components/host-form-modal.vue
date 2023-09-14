@@ -93,7 +93,8 @@
   const openUpdate = (record: any) => {
     title.value = '修改主机';
     isAddHandle.value = false;
-    renderForm({ ...defaultForm(), ...record });
+    const tags = record?.tags?.map((s: { id: any; }) => s.id);
+    renderForm({ ...defaultForm(), ...record, tags });
     setVisible(true);
   };
 

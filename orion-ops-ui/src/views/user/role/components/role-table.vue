@@ -82,13 +82,13 @@
               {{ toggleEnumValue(record.status, RoleStatusEnum, 'label') }}
             </a-button>
           </a-popconfirm>
-          <!-- 绑定菜单 -->
-          <a-button v-permission="['infra:system-role:bind-menu']"
+          <!-- 分配菜单 -->
+          <a-button v-permission="['infra:system-role:grant-menu']"
                     :disabled="record.code === 'admin'"
                     type="text"
                     size="mini"
-                    @click="emits('openBind', record)">
-            绑定菜单
+                    @click="emits('openGrant', record)">
+            分配菜单
           </a-button>
           <!-- 修改 -->
           <a-button v-permission="['infra:system-role:update']"
@@ -134,7 +134,7 @@
 
   const tableRenderData = ref<RoleQueryResponse[]>();
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openBind']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
   const pagination = reactive(defaultPagination());
 

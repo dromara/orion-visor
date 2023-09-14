@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            body-class="modal-form"
            title-align="start"
-           title="绑定菜单"
+           title="分配菜单"
            :top="80"
            :width="480"
            :body-style="{padding: '16px 16px 0 16px'}"
@@ -38,7 +38,7 @@
 
 <script lang="ts">
   export default {
-    name: 'role-menu-bind-modal'
+    name: 'role-menu-grant-modal'
   };
 </script>
 
@@ -48,7 +48,7 @@
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { getRoleMenuId, bindRoleMenu, RoleMenuBindRequest } from '@/api/user/role';
+  import { getRoleMenuId, grantRoleMenu, RoleGrantMenuRequest } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { getMenuList } from '@/api/system/menu';
@@ -98,11 +98,11 @@
     setLoading(true);
     try {
       // 修改
-      await bindRoleMenu({
+      await grantRoleMenu({
         roleId: roleRecord.id,
         menuIdList: [...tree.value.getValue()]
-      } as RoleMenuBindRequest);
-      Message.success('绑定成功');
+      } as RoleGrantMenuRequest);
+      Message.success('分配成功');
       // 清空
       handlerClear();
     } catch (e) {

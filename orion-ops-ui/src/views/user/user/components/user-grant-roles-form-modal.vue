@@ -40,7 +40,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-user-update-roles-form-modal'
+    name: 'user-user-grant-roles-form-modal'
   };
 </script>
 
@@ -52,7 +52,7 @@
   import UserRoleSelector from '@/components/user/role/user-role-selector.vue';
   import { getRoleList } from '@/api/user/role';
   import { useCacheStore } from '@/store';
-  import { getUserRoleIdList, updateUserRole } from '@/api/user/user';
+  import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
 
   const { visible, setVisible } = useVisible();
   const { loading: saveLoading, setLoading: setSaveLoading } = useLoading();
@@ -108,7 +108,7 @@
   const handlerOk = async () => {
     setSaveLoading(true);
     try {
-      await updateUserRole({
+      await grantUserRole({
         id: formModel.id,
         roleIdList: formModel.roleIdList
       });

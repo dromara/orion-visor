@@ -34,7 +34,7 @@
         <a-space>
           <!-- 新增 -->
           <a-button type="primary"
-                    @click="emits('openAdd',{ parentId: 0 })"
+                    @click="emits('openAdd',{ parentId: 0, sort: getMaxSort(tableRenderData) })"
                     v-permission="['infra:system-menu:create']">
             新增
             <template #icon>
@@ -136,7 +136,7 @@
                     size="mini"
                     v-if="record.type !== MenuTypeEnum.FUNCTION.value"
                     v-permission="['infra:system-menu:create']"
-                    @click="emits('openAdd', { parentId: record.id, type: record.type })">
+                    @click="emits('openAdd', { parentId: record.id, type: record.type, sort: getMaxSort(record.children) })">
             新增
           </a-button>
           <!-- 修改 -->
@@ -299,6 +299,15 @@
   const updateVisible = async (id: number, visible: number) => {
     await updateMenuStatus({ id, visible });
     await loadMenuData();
+  };
+
+  // 获取最大排序
+  const getMaxSort = (array: MenuQueryResponse[]) => {
+    if (array?.length) {
+      return array[array.length - 1].sort;
+    } else {
+      return 0;
+    }
   };
 
 </script>

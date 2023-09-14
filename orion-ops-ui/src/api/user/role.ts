@@ -18,9 +18,9 @@ export interface RoleUpdateRequest extends RoleCreateRequest {
 }
 
 /**
- * 角色 菜单绑定请求
+ * 角色 分配绑定请求
  */
-export interface RoleMenuBindRequest extends RoleCreateRequest {
+export interface RoleGrantMenuRequest extends RoleCreateRequest {
   roleId: number;
   menuIdList: Array<number>;
 }
@@ -99,10 +99,10 @@ export function deleteRole(id: number) {
 }
 
 /**
- * 绑定角色菜单
+ * 分配角色菜单
  */
-export function bindRoleMenu(request: RoleMenuBindRequest) {
-  return axios.put('/infra/system-role/bind', request);
+export function grantRoleMenu(request: RoleGrantMenuRequest) {
+  return axios.put('/infra/system-role/grant-menu', request);
 }
 
 /**

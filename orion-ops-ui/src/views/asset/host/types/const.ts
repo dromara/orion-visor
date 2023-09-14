@@ -1,4 +1,10 @@
 /**
  * tag 颜色
  */
-export const tagColor = ['#FF5E5E', '#0FC6C2', '#CE36FF', '#14C93E', '#168CFF'];
+export const tagColor = [
+  '#52C41A',
+  '#13C2C2',
+  '#1890FF',
+  '#9254de',
+  '#F759AB'
+];
