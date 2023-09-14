@@ -24,8 +24,14 @@ export const address = [{
   message: '主机地址长度不能大于128位'
 }] as FieldRule[];
 
+export const tags = [{
+  maxLength: 5,
+  message: '最多选择5个标签'
+}] as FieldRule[];
+
 export default {
   name,
   code,
   address,
+  tags,
 } as Record<string, FieldRule | FieldRule[]>;

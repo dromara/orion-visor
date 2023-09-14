@@ -1,5 +1,4 @@
 import axios from 'axios';
-import qs from 'query-string';
 import { DataGrid, Pagination } from '@/types/global';
 
 /**
@@ -9,6 +8,7 @@ export interface HostCreateRequest {
   name?: string;
   code?: string;
   address?: string;
+  tags?: Array<number>;
 }
 
 /**
@@ -26,6 +26,10 @@ export interface HostQueryRequest extends Pagination {
   name?: string;
   code?: string;
   address?: string;
+  favorite?: boolean;
+  tags?: Array<number>;
+  extra?: boolean;
+  config?: boolean;
 }
 
 /**
@@ -40,6 +44,28 @@ export interface HostQueryResponse {
   updateTime: number;
   creator: string;
   updater: string;
+  favorite: boolean;
+  tags: Record<number, string>;
+  configs: Record<string, HostConfigQueryResponse>;
+}
+
+/**
+ * 主机配置请求
+ */
+export interface HostConfigRequest {
+  hostId?: number;
+  type?: string;
+  version?: number;
+  config?: string;
+}
+
+/**
+ * 主机配置查询响应
+ */
+export interface HostConfigQueryResponse {
+  id: number;
+  version: number;
+  config: Record<string, any>;
 }
 
 /**
@@ -59,20 +85,8 @@ export function updateHost(request: HostUpdateRequest) {
 /**
  * 通过 id 查询主机
  */
-export function getHost(id: number) {
-  return axios.get<HostQueryResponse>('/asset/host/get', { params: { id } });
-}
-
-/**
- * 通过 id 批量查询主机
- */
-export function getHostList(idList: Array<number>) {
-  return axios.get<HostQueryResponse[]>('/asset/host/list', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
+export function getHost(params: HostQueryRequest) {
+  return axios.get<HostQueryResponse>('/asset/host/get', { params });
 }
 
 /**
@@ -97,13 +111,22 @@ export function deleteHost(id: number) {
 }
 
 /**
- * 通过 id 批量删除主机
+ * 查询主机配置
  */
-export function batchDeleteHost(idList: Array<number>) {
-  return axios.delete('/asset/host/delete-batch', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
+export function getHostConfig(params: HostConfigRequest) {
+  return axios.get<HostConfigQueryResponse>('/asset/host/get-config', { params });
+}
+
+/**
+ * 查询主机配置 - 全部
+ */
+export function getHostConfigAll(params: HostConfigRequest) {
+  return axios.get<Array<HostConfigQueryResponse>>('/asset/host/get-config-all', { params });
+}
+
+/**
+ * 更新主机配置
+ */
+export function updateHostConfig(request: HostConfigRequest) {
+  return axios.put('/asset/host/update-config', request);
 }

@@ -51,6 +51,17 @@ export function md5(plain: string): string {
 }
 
 /**
+ * 获取数据颜色
+ */
+export function dataColor(str: string, colors: string[]): string {
+  let total = 0;
+  for (let i = 0; i < str.length; i++) {
+    total += str.charCodeAt(i);
+  }
+  return colors[total % colors.length];
+}
+
+/**
  * 判断值是否非空
  */
 export function isEmptyStr(val: any) {

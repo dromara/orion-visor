@@ -32,6 +32,14 @@
         <a-form-item field="address" label="主机地址">
           <a-input v-model="formModel.address" placeholder="请输入主机地址" />
         </a-form-item>
+        <!-- 主机标签 -->
+        <a-form-item field="tags" label="主机标签">
+          <tag-multi-selector v-model="formModel.tags"
+                              :allowCreate="true"
+                              :limit="5"
+                              type="HOST"
+                              placeholder="请选择主机标签" />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -50,8 +58,7 @@
   import formRules from '../types/form.rules';
   import { createHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
-  import {} from '../types/enum.types';
-  import { toOptions } from '@/utils/enum';
+  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -65,7 +72,7 @@
       name: undefined,
       code: undefined,
       address: undefined,
-      favorite: undefined,
+      tags: undefined,
     };
   };
 

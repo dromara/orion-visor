@@ -24,6 +24,11 @@ const columns = [
     slotName: 'address',
     align: 'center',
   }, {
+    title: '标签',
+    dataIndex: 'tag',
+    slotName: 'tag',
+    align: 'left',
+  }, {
     title: '操作',
     slotName: 'handle',
     width: 130,

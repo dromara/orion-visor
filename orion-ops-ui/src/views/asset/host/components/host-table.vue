@@ -21,6 +21,15 @@
       <a-form-item field="address" label="主机地址" label-col-flex="50px">
         <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
+      <!-- 主机标签 -->
+      <a-form-item field="tags" label="主机地址" label-col-flex="50px">
+        <tag-multi-selector v-model="formModel.tags"
+                            ref="tagSelector"
+                            :allowCreate="false"
+                            :limit="0"
+                            type="HOST"
+                            placeholder="请选择主机标签" />
+      </a-form-item>
     </a-query-header>
   </a-card>
   <!-- 表格 -->
@@ -33,6 +42,18 @@
       <!-- 右侧按钮 -->
       <div class="table-bar-handle">
         <a-space>
+          <!-- 仅看收藏 -->
+          <a-checkbox v-model="formModel.favorite" @change="fetchTableData()">
+            <template #checkbox="{ checked }">
+              <a-tag :checked="checked"
+                     class="only-favorite"
+                     size="large"
+                     color="arcoblue"
+                     checkable>
+                仅看收藏
+              </a-tag>
+            </template>
+          </a-checkbox>
           <!-- 新增 -->
           <a-button type="primary"
                     v-permission="['asset:host:create']"
@@ -42,21 +63,6 @@
               <icon-plus />
             </template>
           </a-button>
-          <!-- 删除 -->
-          <a-popconfirm position="br"
-                        type="warning"
-                        :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
-                        @ok="deleteSelectRows">
-            <a-button v-permission="['asset:host:delete']"
-                      type="secondary"
-                      status="danger"
-                      :disabled="selectedKeys.length === 0">
-              删除
-              <template #icon>
-                <icon-delete />
-              </template>
-            </a-button>
-          </a-popconfirm>
         </a-space>
       </div>
     </template>
@@ -67,8 +73,6 @@
              label-align="left"
              :loading="loading"
              :columns="columns"
-             v-model:selectedKeys="selectedKeys"
-             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
@@ -79,6 +83,16 @@
         <span class="host-address" title="点击复制" @click="copy(record.address)">
           {{ record.address }}
         </span>
+      </template>
+      <!-- 标签 -->
+      <template #tag="{ record }">
+        <a-space v-if="record.tags">
+          <a-tag v-for="tag in record.tags"
+                 :key="tag.id"
+                 :color="dataColor(tag.name, tagColor)">
+            {{ tag.name }}
+          </a-tag>
+        </a-space>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
@@ -103,10 +117,18 @@
             </a-button>
           </a-popconfirm>
           <!-- 收藏 -->
-          <a-tooltip :content="record.favorite ? '取消收藏' : '收藏'">
-            <icon-star-fill v-if="record.favorite" class="host-favorite host-favorite-choice" />
-            <icon-star v-else class="host-favorite host-favorite-un-choice" />
-          </a-tooltip>
+          <span v-if="record.favorite"
+                title="取消收藏"
+                class="host-favorite host-favorite-choice"
+                @click="() => toggleFavorite(record, record.id)">
+            <icon-star-fill />
+          </span>
+          <span v-else
+                title="收藏"
+                class="host-favorite host-favorite-un-choice"
+                @click="() => toggleFavorite(record, record.id)">
+           <icon-star />
+          </span>
         </div>
       </template>
     </a-table>
@@ -121,45 +143,37 @@
 
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { batchDeleteHost, deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { defaultPagination, defaultRowSelection } from '@/types/table';
-  import {} from '../types/enum.types';
-  import { toOptions } from '@/utils/enum';
+  import { tagColor } from '../types/const';
+  import { defaultPagination } from '@/types/table';
   import useCopy from '@/hooks/copy';
+  import useFavorite from '@/hooks/favorite';
+  import { dataColor } from '@/utils';
+  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
+  import { getTagList } from '@/api/meta/tag';
+  import { useCacheStore } from '@/store';
 
+  const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>();
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
   const pagination = reactive(defaultPagination());
-  const selectedKeys = ref<number[]>([]);
-  const rowSelection = reactive(defaultRowSelection());
   const { copy } = useCopy();
+  const { toggle: toggleFavorite } = useFavorite('HOST');
 
   const formModel = reactive<HostQueryRequest>({
     id: undefined,
     name: undefined,
     code: undefined,
     address: undefined,
+    favorite: undefined,
+    tags: undefined,
+    extra: true
   });
-
-  // 删除选中行
-  const deleteSelectRows = async () => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await batchDeleteHost(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
-      selectedKeys.value = [];
-      // 重新加载数据
-      await fetchTableData();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 删除当前行
   const deleteRow = async ({ id }: { id: number }) => {
@@ -209,6 +223,21 @@
   };
   fetchTableData();
 
+  // 加载 tags
+  const loadTags = async () => {
+    try {
+      const { data } = await getTagList('HOST');
+      // 设置到缓存
+      const cacheStore = useCacheStore();
+      cacheStore.set('tags', data);
+      // 重新初始化
+      tagSelector.value.initOptionData();
+    } catch {
+      Message.error('tag加载失败');
+    }
+  };
+  loadTags();
+
 </script>
 
 <style lang="less" scoped>
@@ -229,14 +258,30 @@
       margin: 0 4px;
     }
 
+
     .host-favorite-choice {
       color: rgb(var(--yellow-6));
+
+      :hover {
+        transition: .2s;
+        color: rgba(232, 203, 12, .9);
+      }
     }
 
     .host-favorite-un-choice {
       color: rgb(var(--gray-6));
-    }
 
+      :hover {
+        transition: .2s;
+        color: rgb(var(--yellow-6));
+      }
+    }
+  }
+
+  .only-favorite {
+    user-select: none;
+    color: rgb(var(--arcoblue-5));
+    background: rgb(var(--gray-2));
   }
 
 </style>
