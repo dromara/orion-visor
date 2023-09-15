@@ -37,7 +37,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -77,10 +76,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserStatusEnum.checkUserStatus(user.getStatus());
         // 设置上次登录时间
         this.setLastLoginTime(user.getId());
-        // 检查用户缓存
-        this.setUserCacheIfPresent(() -> user);
-        // 删除登陆失败次数缓存
-        redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername()));
+        // 删除用户缓存
+        this.deleteUserCache(user);
+        // 重设用户缓存
+        this.setUserCache(user);
         // 获取登陆 ip
         String remoteAddr = Servlets.getRemoteAddr(servletRequest);
         String location = IpUtils.getLocation(remoteAddr);
@@ -115,9 +114,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public LoginUser getLoginUser(Long userId) {
-        // 获取用户缓存信息
-        return this.setUserCacheIfPresent(() -> systemUserDAO.selectById(userId));
+    public LoginUser getLoginUser(Long id) {
+        String userInfoKey = UserCacheKeyDefine.USER_INFO.format(id);
+        String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
+        // 缓存存在
+        if (userInfoCache != null) {
+            return JSON.parseObject(userInfoCache, LoginUser.class);
+        }
+        // 设置缓存并返回
+        return this.setUserCache(systemUserDAO.selectById(id));
     }
 
     @Override
@@ -252,22 +257,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
+     * 删除用户缓存
+     *
+     * @param user user
+     */
+    private void deleteUserCache(SystemUserDO user) {
+        // 用户信息缓存
+        String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
+        // 登陆失败次数缓存
+        String loginFailedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
+        // 删除缓存
+        redisTemplate.delete(Lists.of(userInfoKey, loginFailedCountKey));
+    }
+
+    /**
      * 设置用户缓存
      *
-     * @param supplier supplier
-     * @return 用户缓存
+     * @param user user
+     * @return loginUser
      */
-    private LoginUser setUserCacheIfPresent(Supplier<SystemUserDO> supplier) {
-        SystemUserDO user = supplier.get();
+    private LoginUser setUserCache(SystemUserDO user) {
         Long id = user.getId();
-        String userInfoKey = UserCacheKeyDefine.USER_INFO.format(id);
-        String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
-        // 缓存存在
-        if (userInfoCache != null) {
-            return JSON.parseObject(userInfoCache, LoginUser.class);
-        }
-        // 设置缓存
-        LoginUser loginUser = SystemUserConvert.MAPPER.toLoginUser(user);
         // 查询用户角色
         List<Long> roleIds = systemUserRoleDAO.selectRoleIdByUserId(id);
         List<String> roleCodeList = permissionService.getRoleCache()
@@ -276,6 +286,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .filter(s -> roleIds.contains(s.getId()))
                 .map(SystemRoleDO::getCode)
                 .collect(Collectors.toList());
+        // 设置用户缓存
+        String userInfoKey = UserCacheKeyDefine.USER_INFO.format(id);
+        LoginUser loginUser = SystemUserConvert.MAPPER.toLoginUser(user);
         loginUser.setRoles(roleCodeList);
         RedisUtils.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
         return loginUser;

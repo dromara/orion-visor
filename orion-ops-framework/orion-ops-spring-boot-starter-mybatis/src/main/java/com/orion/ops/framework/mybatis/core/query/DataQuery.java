@@ -2,14 +2,20 @@ package com.orion.ops.framework.mybatis.core.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.IPageRequest;
 import com.orion.lang.define.wrapper.Pager;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.reflect.Classes;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.mybatis.core.domain.BaseDO;
+import com.orion.spring.SpringHolder;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -40,6 +46,20 @@ public class DataQuery<T> {
         this.wrapper = wrapper;
     }
 
+    /**
+     * 通过实体类直接获取 DataQuery
+     *
+     * @param entityClass entityClass
+     * @param <T>         entityClass
+     * @return DataQuery
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends BaseDO> DataQuery<T> create(Class<T> entityClass) {
+        TableInfo table = Valid.notNull(TableInfoHelper.getTableInfo(entityClass), "notfound mapper class");
+        Class<BaseMapper<T>> mapperClass = (Class<BaseMapper<T>>) Classes.loadClass(table.getCurrentNamespace());
+        return new DataQuery<T>(SpringHolder.getBean(mapperClass));
+    }
+
     public static <T> DataQuery<T> of(BaseMapper<T> dao) {
         Valid.notNull(dao, "dao is null");
         return new DataQuery<>(dao);
@@ -60,10 +80,44 @@ public class DataQuery<T> {
         return this;
     }
 
-    public T getOne() {
+    public DataQuery<T> only() {
         wrapper.last(Const.LIMIT_1);
-        return dao.selectOne(wrapper);
+        return this;
     }
+
+    // -------------------- id --------------------
+
+    public T get(Serializable id) {
+        Valid.notNull(id, "id is null");
+        return dao.selectById(id);
+    }
+
+    public <R> R get(Serializable id, Function<T, R> mapper) {
+        Valid.notNull(id, "id is null");
+        Valid.notNull(mapper, "convert function is null");
+        return Objects1.map(dao.selectById(id), mapper);
+    }
+
+    public Optional<T> optional(Serializable id) {
+        Valid.notNull(id, "id is null");
+        return Optional.ofNullable(dao.selectById(id));
+    }
+
+    // -------------------- one --------------------
+
+    public T getOne() {
+        return this.only().get();
+    }
+
+    public <R> R getOne(Function<T, R> mapper) {
+        return this.only().get(mapper);
+    }
+
+    public Optional<T> optionalOne() {
+        return this.only().optional();
+    }
+
+    // -------------------- get --------------------
 
     public T get() {
         return dao.selectOne(wrapper);
@@ -78,6 +132,8 @@ public class DataQuery<T> {
         return Optional.ofNullable(dao.selectOne(wrapper));
     }
 
+    // -------------------- list --------------------
+
     public List<T> list() {
         return dao.selectList(wrapper);
     }
@@ -91,13 +147,21 @@ public class DataQuery<T> {
         return dao.selectList(wrapper).stream();
     }
 
+    // -------------------- statistic --------------------
+
     public Long count() {
         return dao.selectCount(wrapper);
+    }
+
+    public boolean absent() {
+        return dao.selectCount(wrapper) == 0;
     }
 
     public boolean present() {
         return dao.selectCount(wrapper) > 0;
     }
+
+    // -------------------- data grid --------------------
 
     public DataGrid<T> dataGrid() {
         return this.dataGrid(Function.identity());
