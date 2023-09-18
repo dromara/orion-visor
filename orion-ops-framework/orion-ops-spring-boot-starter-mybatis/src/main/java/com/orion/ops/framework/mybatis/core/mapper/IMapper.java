@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * 公共 mapper
+ * 通用 mapper
  *
  * @author Jiahang Li
  * @version 1.0.0
