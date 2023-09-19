@@ -5,10 +5,7 @@ import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.valid.group.Page;
-import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateRequest;
-import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
-import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
-import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
+import com.orion.ops.module.asset.entity.request.host.*;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import com.orion.ops.module.asset.service.HostConfigService;
@@ -124,9 +121,15 @@ public class HostController {
     @PutMapping("/update-config")
     @Operation(summary = "更新主机配置")
     @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
-    public boolean updateHostConfig(@Validated @RequestBody HostConfigUpdateRequest request) {
-        hostConfigService.updateHostConfig(request);
-        return true;
+    public Integer updateHostConfig(@Validated @RequestBody HostConfigUpdateRequest request) {
+        return hostConfigService.updateHostConfig(request);
+    }
+
+    @PutMapping("/update-config-status")
+    @Operation(summary = "更新主机配置状态")
+    @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
+    public Integer updateHostConfigStatus(@Validated @RequestBody HostConfigUpdateStatusRequest request) {
+        return hostConfigService.updateHostConfigStatus(request);
     }
 
 }

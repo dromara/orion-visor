@@ -1,9 +1,10 @@
 package com.orion.ops.module.asset.service;
 
-import com.orion.ops.module.asset.entity.dto.host.HostConfigContent;
 import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateStatusRequest;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public interface HostConfigService {
      * @param type   type
      * @return 配置
      */
-    <T extends HostConfigContent> T getHostConfig(Long hostId, HostConfigTypeEnum type);
+    <T extends HostConfigModel> T getHostConfig(Long hostId, HostConfigTypeEnum type);
 
     /**
      * 获取配置
@@ -46,7 +47,16 @@ public interface HostConfigService {
      * 更新配置
      *
      * @param request request
+     * @return version
      */
-    void updateHostConfig(HostConfigUpdateRequest request);
+    Integer updateHostConfig(HostConfigUpdateRequest request);
+
+    /**
+     * 更新配置状态
+     *
+     * @param request request
+     * @return version
+     */
+    Integer updateHostConfigStatus(HostConfigUpdateStatusRequest request);
 
 }

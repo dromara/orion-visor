@@ -30,4 +30,6 @@ public class Const implements com.orion.lang.constant.Const {
 
     public static final Long NONE_ID = -1L;
 
+    public static final Integer DEFAULT_VERSION = 1;
+
 }

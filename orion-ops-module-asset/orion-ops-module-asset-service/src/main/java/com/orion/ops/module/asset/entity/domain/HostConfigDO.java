@@ -35,6 +35,10 @@ public class HostConfigDO extends BaseDO {
     @TableField("type")
     private String type;
 
+    @Schema(description = "状态 0停用 1启用")
+    @TableField("status")
+    private Integer status;
+
     @Schema(description = "配置详情")
     @TableField("config")
     private String config;
