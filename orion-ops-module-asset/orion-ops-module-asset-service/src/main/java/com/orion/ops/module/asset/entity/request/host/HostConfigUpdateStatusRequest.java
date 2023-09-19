@@ -24,15 +24,15 @@ import java.io.Serializable;
 public class HostConfigUpdateStatusRequest implements Serializable {
 
     @NotNull
-    @Schema(description = "hostId")
-    private Long hostId;
-
-    @NotNull
-    @Schema(description = "配置类型")
-    private String type;
+    @Schema(description = "id")
+    private Long id;
 
     @NotNull
     @Schema(description = "状态 0停用 1启用")
     private Integer status;
+
+    @NotNull
+    @Schema(description = "配置版本号")
+    private Integer version;
 
 }

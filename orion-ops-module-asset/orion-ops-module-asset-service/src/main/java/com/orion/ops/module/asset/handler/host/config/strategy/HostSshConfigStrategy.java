@@ -24,14 +24,10 @@ public class HostSshConfigStrategy implements HostConfigStrategy<HostSshConfigMo
         return HostSshConfigModel.builder()
                 .port(SSH_PORT)
                 .charset(Const.UTF_8)
-                .filenameCharset(Const.UTF_8)
+                .connectTimeout(Const.MS_S_10)
+                .fileNameCharset(Const.UTF_8)
+                .fileContentCharset(Const.UTF_8)
                 .build();
-    }
-
-    @Override
-    public void insertFill(HostSshConfigModel config) {
-        // 加密密码
-        this.checkEncryptPassword(config);
     }
 
     @Override

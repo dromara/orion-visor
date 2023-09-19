@@ -1,6 +1,8 @@
 package com.orion.ops.framework.mybatis.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.constant.FilterOrderConst;
 import com.orion.ops.framework.common.filter.FilterCreator;
@@ -35,6 +37,18 @@ public class OrionMybatisAutoConfiguration {
         // 设置填充工具参数
         DomainFillUtils.setSecurityHolder(securityHolder);
         return new FieldFillHandler();
+    }
+
+    /**
+     * 注册 乐观锁插件
+     *
+     * @return 拦截器
+     */
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        return interceptor;
     }
 
     /**

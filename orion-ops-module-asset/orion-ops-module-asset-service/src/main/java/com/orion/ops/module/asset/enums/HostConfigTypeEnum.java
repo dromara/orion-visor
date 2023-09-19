@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.enums;
 
+import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.config.strategy.HostConfigStrategy;
@@ -19,13 +20,15 @@ public enum HostConfigTypeEnum {
     /**
      * SSH 配置
      */
-    SSH(HostSshConfigModel.class, new HostSshConfigStrategy()),
+    SSH(HostSshConfigModel.class, new HostSshConfigStrategy(), BooleanBit.TRUE.getValue()),
 
     ;
 
     private final Class<? extends HostConfigModel> type;
 
     private final HostConfigStrategy<?> strategy;
+
+    private final Integer defaultStatus;
 
     public static HostConfigTypeEnum of(String type) {
         if (type == null) {
@@ -46,6 +49,10 @@ public enum HostConfigTypeEnum {
     @SuppressWarnings("unchecked")
     public <Config extends HostConfigModel, T extends HostConfigStrategy<Config>> T getStrategy() {
         return (T) strategy;
+    }
+
+    public Integer getDefaultStatus() {
+        return defaultStatus;
     }
 
 }

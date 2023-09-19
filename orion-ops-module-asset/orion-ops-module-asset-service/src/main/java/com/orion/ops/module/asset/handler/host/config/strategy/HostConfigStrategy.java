@@ -21,13 +21,6 @@ public interface HostConfigStrategy<Config extends HostConfigModel> {
     Config getDefault();
 
     /**
-     * 插入填充
-     *
-     * @param config config
-     */
-    void insertFill(Config config);
-
-    /**
      * 更新填充
      *
      * @param before 修改前配置

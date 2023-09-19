@@ -19,6 +19,7 @@ import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
+import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
 import com.orion.ops.module.infra.api.FavoriteApi;
 import com.orion.ops.module.infra.api.TagRelApi;
@@ -57,6 +58,9 @@ public class HostServiceImpl implements HostService {
     private HostConfigDAO hostConfigDAO;
 
     @Resource
+    private HostConfigService hostConfigService;
+
+    @Resource
     private TagRelApi tagRelApi;
 
     @Resource
@@ -79,6 +83,8 @@ public class HostServiceImpl implements HostService {
         if (!Lists.isEmpty(tags)) {
             tagRelApi.addTagRel(TagTypeEnum.HOST, id, tags);
         }
+        // 创建配置
+        hostConfigService.initHostConfig(id);
         return id;
     }
 

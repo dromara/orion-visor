@@ -37,12 +37,20 @@ public class HostSshConfigModel implements HostConfigModel {
     @Schema(description = "身份id")
     private Long identityId;
 
+    @NotNull
+    @Schema(description = "连接超时时间")
+    private Integer connectTimeout;
+
     @NotBlank
-    @Schema(description = "编码")
+    @Schema(description = "SSH输出编码")
     private String charset;
 
     @NotBlank
     @Schema(description = "文件名称编码")
-    private String filenameCharset;
+    private String fileNameCharset;
+
+    @NotBlank
+    @Schema(description = "文件内容编码")
+    private String fileContentCharset;
 
 }

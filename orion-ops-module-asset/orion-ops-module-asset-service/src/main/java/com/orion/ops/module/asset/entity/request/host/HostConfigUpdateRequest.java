@@ -25,12 +25,8 @@ import java.io.Serializable;
 public class HostConfigUpdateRequest implements Serializable {
 
     @NotNull
-    @Schema(description = "hostId")
-    private Long hostId;
-
-    @NotNull
-    @Schema(description = "配置类型")
-    private String type;
+    @Schema(description = "id")
+    private Long id;
 
     @NotBlank
     @Schema(description = "配置详情")

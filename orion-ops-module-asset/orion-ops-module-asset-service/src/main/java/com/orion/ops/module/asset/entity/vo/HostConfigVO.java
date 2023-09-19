@@ -28,6 +28,9 @@ public class HostConfigVO {
     @Schema(description = "version")
     private Integer version;
 
+    @Schema(description = "配置类型")
+    private String type;
+
     @Schema(description = "状态 0停用 1启用")
     private Integer status;
 

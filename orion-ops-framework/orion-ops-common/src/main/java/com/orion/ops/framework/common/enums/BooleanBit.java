@@ -26,14 +26,14 @@ public enum BooleanBit {
 
     ;
 
-    private final Integer v;
+    private final Integer value;
 
     public static BooleanBit of(Integer value) {
         if (value == null) {
             return null;
         }
         for (BooleanBit e : values()) {
-            if (e.v.equals(value)) {
+            if (e.value.equals(value)) {
                 return e;
             }
         }

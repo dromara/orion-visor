@@ -59,4 +59,11 @@ public interface HostConfigService {
      */
     Integer updateHostConfigStatus(HostConfigUpdateStatusRequest request);
 
+    /**
+     * 初始化主机配置
+     *
+     * @param hostId hostId
+     */
+    void initHostConfig(Long hostId);
+
 }

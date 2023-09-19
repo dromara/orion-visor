@@ -105,4 +105,15 @@ public class Valid extends com.orion.lang.utils.Valid {
         return obj;
     }
 
+    /**
+     * 检查是否更新成功
+     *
+     * @param effect effect
+     * @return effect
+     */
+    public static int version(int effect) {
+        isTrue(effect > 0, ErrorMessage.DATA_MODIFIED);
+        return effect;
+    }
+
 }
