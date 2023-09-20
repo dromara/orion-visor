@@ -48,9 +48,11 @@ public class CodeGenerator {
                 //         .enums(UserStatusEnum.class),
                 new GenTable("host_key", "主机秘钥", "host")
                         .vue("asset", "host-key")
+                        .useDrawerForm()
                         .ignoreTest(),
                 new GenTable("host_identity", "主机身份", "host")
                         .vue("asset", "host-identity")
+                        .useDrawerForm()
                         .ignoreTest(),
         };
         // jdbc 配置 - 使用配置文件
@@ -345,6 +347,8 @@ public class CodeGenerator {
                 new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${module}/${feature}"},
                 // form-modal.vue 文件
                 new String[]{"/templates/orion-vue-views-components-form-modal.vue.vm", "${feature}-form-modal.vue", "vue/views/${module}/${feature}/components"},
+                // form-drawer.vue 文件
+                new String[]{"/templates/orion-vue-views-components-form-drawer.vue.vm", "${feature}-form-drawer.vue", "vue/views/${module}/${feature}/components"},
                 // table.vue 文件
                 new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
                 // enum.types.ts 文件

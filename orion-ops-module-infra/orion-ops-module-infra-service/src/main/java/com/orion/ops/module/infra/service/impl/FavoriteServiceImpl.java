@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.FavoriteConvert;
 import com.orion.ops.module.infra.dao.FavoriteDAO;
@@ -53,9 +53,9 @@ public class FavoriteServiceImpl implements FavoriteService {
         int effect = favoriteDAO.insert(record);
         // 设置缓存
         String key = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
-        RedisUtils.listPush(key, request.getRelId(), String::valueOf);
+        RedisLists.push(key, request.getRelId(), String::valueOf);
         // 设置过期时间
-        RedisUtils.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
+        RedisLists.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
         return record.getId();
     }
 
@@ -86,7 +86,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         Long userId = request.getUserId();
         String cacheKey = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
         // 获取缓存
-        List<Long> cacheRelIdList = RedisUtils.listRange(cacheKey, Long::valueOf);
+        List<Long> cacheRelIdList = RedisLists.range(cacheKey, Long::valueOf);
         if (cacheRelIdList.isEmpty()) {
             // 条件
             LambdaQueryWrapper<FavoriteDO> wrapper = this.buildQueryWrapper(request);
@@ -101,9 +101,9 @@ public class FavoriteServiceImpl implements FavoriteService {
                 cacheRelIdList.add(Const.NONE_ID);
             }
             // 设置缓存
-            RedisUtils.listPushAll(cacheKey, cacheRelIdList, String::valueOf);
+            RedisLists.pushAll(cacheKey, cacheRelIdList, String::valueOf);
             // 设置过期时间
-            RedisUtils.setExpire(cacheKey, FavoriteCacheKeyDefine.FAVORITE);
+            RedisLists.setExpire(cacheKey, FavoriteCacheKeyDefine.FAVORITE);
         }
         // 删除防止穿透的 key
         cacheRelIdList.remove(Const.NONE_ID);

@@ -1,13 +1,25 @@
 <template>
   <div class="layout-container">
+    #if($vue.drawerForm)
+    <!-- 表格 -->
+    <${vue.feature}-table ref="table"
+                  @openAdd="() => drawer.openAdd()"
+                  @openUpdate="(e) => drawer.openUpdate(e)" />
+    <!-- 添加修改模态框 -->
+    <${vue.feature}-form-drawer ref="drawer"
+                   @added="() => table.addedCallback()"
+                   @updated="() => table.updatedCallback()" />
+    #else
     <!-- 表格 -->
     <${vue.feature}-table ref="table"
                   @openAdd="() => modal.openAdd()"
                   @openUpdate="(e) => modal.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-modal ref="modal"
-                       @added="() => table.addedCallback()"
-                       @updated="() => table.updatedCallback()" />
+                   @added="() => table.addedCallback()"
+                   @updated="() => table.updatedCallback()" />
+    #end
+
   </div>
 </template>
 
@@ -19,11 +31,20 @@
 
 <script lang="ts" setup>
   import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
+  #if($vue.drawerForm)
+  import ${vue.featureEntity}FormDrawer from './components/${vue.feature}-form-drawer.vue';
+  #else
   import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
+  #end
+
   import { ref } from 'vue';
 
   const table = ref();
+  #if($vue.drawerForm)
+  const drawer = ref();
+  #else
   const modal = ref();
+  #end
 
 </script>
 

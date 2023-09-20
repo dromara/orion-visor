@@ -61,6 +61,11 @@ public class GenTable {
     private String feature;
 
     /**
+     * 使用抽屉表单
+     */
+    private boolean drawerForm;
+
+    /**
      * 生成的枚举文件
      */
     private List<Class<? extends Enum<?>>> enums;
@@ -105,6 +110,16 @@ public class GenTable {
         this.genVue = true;
         this.module = module;
         this.feature = feature;
+        return this;
+    }
+
+    /**
+     * 使用抽屉表单
+     *
+     * @return this
+     */
+    public GenTable useDrawerForm() {
+        this.drawerForm = true;
         return this;
     }
 

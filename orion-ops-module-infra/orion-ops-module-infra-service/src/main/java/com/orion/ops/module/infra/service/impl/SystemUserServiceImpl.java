@@ -9,6 +9,7 @@ import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
@@ -82,7 +83,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         int effect = systemUserDAO.updateById(updateRecord);
         log.info("SystemUserService-updateSystemUserById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 更新缓存中的花名
-        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
+        RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setNickname(request.getNickname());
         }, id);
         return effect;
@@ -112,7 +113,7 @@ public class SystemUserServiceImpl implements SystemUserService {
             redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         }
         // 更新缓存中的status
-        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
+        RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setStatus(request.getStatus());
         }, id);
         return effect;

@@ -14,6 +14,7 @@ import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.IpUtils;
 import com.orion.ops.framework.common.utils.Kits;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
@@ -153,10 +154,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         int refreshCount = refresh.getRefreshCount() + 1;
         refresh.setRefreshCount(refreshCount);
         // 设置登陆缓存
-        RedisUtils.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, refresh);
+        RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, refresh);
         if (refreshCount < maxRefreshCount) {
             // 小于续签最大次数 则再次设置 refreshToken
-            RedisUtils.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, refresh);
+            RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, refresh);
         } else {
             // 大于等于续签最大次数 则删除
             redisTemplate.delete(refreshKey);
@@ -239,7 +240,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             // 修改缓存状态
             LoginUser loginUser = JSON.parseObject(userInfoCache, LoginUser.class);
             loginUser.setStatus(UserStatusEnum.LOCKED.getStatus());
-            RedisUtils.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
+            RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
         }
         return false;
     }
@@ -290,7 +291,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String userInfoKey = UserCacheKeyDefine.USER_INFO.format(id);
         LoginUser loginUser = SystemUserConvert.MAPPER.toLoginUser(user);
         loginUser.setRoles(roleCodeList);
-        RedisUtils.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
+        RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
         return loginUser;
     }
 
@@ -323,7 +324,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 loginTokenInfo.setLoginTime(loginTime);
                 loginTokenInfo.setIp(remoteAddr);
                 loginTokenInfo.setLocation(location);
-                RedisUtils.setJson(deviceLoginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginTokenInfo);
+                RedisStrings.setJson(deviceLoginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginTokenInfo);
             }
         }
         // 删除续签信息
@@ -358,11 +359,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .loginTime(loginTime)
                 .location(location)
                 .build();
-        RedisUtils.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginValue);
+        RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginValue);
         // 生成 refreshToken
         if (allowRefresh) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, loginTime);
-            RedisUtils.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, loginValue);
+            RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, loginValue);
         }
         // 返回token
         return CryptoUtils.encryptBase62(id + ":" + loginTime);

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
-import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.convert.TagRelConvert;
 import com.orion.ops.module.infra.dao.TagDAO;
 import com.orion.ops.module.infra.dao.TagRelDAO;
@@ -63,7 +63,7 @@ public class TagRelServiceImpl implements TagRelService {
         tagRelDAO.insertBatch(tagRelList);
         // 设置缓存
         String cacheKey = TagCacheKeyDefine.TAG_REL.format(type, relId);
-        RedisUtils.setJson(cacheKey, TagCacheKeyDefine.TAG_REL, TagRelConvert.MAPPER.toCacheList(tagRelList));
+        RedisStrings.setJson(cacheKey, TagCacheKeyDefine.TAG_REL, TagRelConvert.MAPPER.toCacheList(tagRelList));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class TagRelServiceImpl implements TagRelService {
             List<TagRelDO> relList = tagRelDAO.selectList(wrapper);
             // 设置缓存
             List<TagCacheDTO> relCacheList = TagRelConvert.MAPPER.toCacheList(relList);
-            RedisUtils.setJson(cacheKey, TagCacheKeyDefine.TAG_REL, relCacheList);
+            RedisStrings.setJson(cacheKey, TagCacheKeyDefine.TAG_REL, relCacheList);
             return relCacheList;
         } else {
             // 返回缓存数据
@@ -135,7 +135,7 @@ public class TagRelServiceImpl implements TagRelService {
                 if (cacheValue == null) {
                     cacheValue = Lists.empty();
                 }
-                RedisUtils.setJson(cacheKey, TagCacheKeyDefine.TAG_REL, cacheValue);
+                RedisStrings.setJson(cacheKey, TagCacheKeyDefine.TAG_REL, cacheValue);
                 emptyCacheMap.put(relId, cacheValue);
             });
             // 设置返回

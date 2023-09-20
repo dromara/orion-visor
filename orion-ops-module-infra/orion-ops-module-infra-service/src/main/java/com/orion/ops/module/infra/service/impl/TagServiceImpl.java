@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
-import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.module.infra.convert.TagConvert;
 import com.orion.ops.module.infra.dao.TagDAO;
 import com.orion.ops.module.infra.define.TagCacheKeyDefine;
@@ -52,8 +52,8 @@ public class TagServiceImpl implements TagService {
         // 设置缓存
         String cacheKey = TagCacheKeyDefine.TAG_NAME.format(type);
         TagCacheDTO cache = TagConvert.MAPPER.toCache(record);
-        RedisUtils.listPushJson(cacheKey, cache);
-        RedisUtils.setExpire(cacheKey, TagCacheKeyDefine.TAG_NAME);
+        RedisLists.pushJson(cacheKey, cache);
+        RedisLists.setExpire(cacheKey, TagCacheKeyDefine.TAG_NAME);
         return record.getId();
     }
 
@@ -61,7 +61,7 @@ public class TagServiceImpl implements TagService {
     public List<TagVO> getTagList(String type) {
         // 查询缓存
         String cacheKey = TagCacheKeyDefine.TAG_NAME.format(type);
-        List<TagCacheDTO> cacheValues = RedisUtils.listRangeJson(cacheKey, TagCacheKeyDefine.TAG_NAME);
+        List<TagCacheDTO> cacheValues = RedisLists.rangeJson(cacheKey, TagCacheKeyDefine.TAG_NAME);
         if (cacheValues.isEmpty()) {
             // 为空则需要查询缓存
             LambdaQueryWrapper<TagDO> wrapper = Conditions.eq(TagDO::getType, type);
@@ -71,8 +71,8 @@ public class TagServiceImpl implements TagService {
                 cacheValues.add(TagCacheDTO.builder().id(Const.NONE_ID).build());
             }
             // 设置到缓存
-            RedisUtils.listPushAllJson(cacheKey, cacheValues);
-            RedisUtils.setExpire(cacheKey, TagCacheKeyDefine.TAG_NAME);
+            RedisLists.pushAllJson(cacheKey, cacheValues);
+            RedisLists.setExpire(cacheKey, TagCacheKeyDefine.TAG_NAME);
         }
         // 删除防止穿透的 key
         cacheValues.removeIf(s -> Const.NONE_ID.equals(s.getId()));
@@ -91,7 +91,7 @@ public class TagServiceImpl implements TagService {
         log.info("TagService-deleteTagById id: {}, effect: {}", id, effect);
         // 删除缓存
         String cacheKey = TagCacheKeyDefine.TAG_NAME.format(tag.getType());
-        RedisUtils.listRemoveJson(cacheKey, TagConvert.MAPPER.toCache(tag));
+        RedisLists.removeJson(cacheKey, TagConvert.MAPPER.toCache(tag));
         return effect;
     }
 
@@ -107,7 +107,7 @@ public class TagServiceImpl implements TagService {
         // 删除缓存
         for (TagDO tag : tagList) {
             String cacheKey = TagCacheKeyDefine.TAG_NAME.format(tag.getType());
-            RedisUtils.listRemoveJson(cacheKey, TagConvert.MAPPER.toCache(tag));
+            RedisLists.removeJson(cacheKey, TagConvert.MAPPER.toCache(tag));
         }
         return effect;
     }

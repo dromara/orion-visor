@@ -1,49 +1,44 @@
 <template>
-  <a-modal v-model:visible="visible"
-           body-class="modal-form"
-           title-align="start"
-           :title="title"
-           :top="80"
-           :align-center="false"
-           :draggable="true"
-           :mask-closable="false"
-           :unmount-on-close="true"
-           :ok-button-props="{ disabled: loading }"
-           :cancel-button-props="{ disabled: loading }"
-           :on-before-ok="handlerOk"
-           @close="handleClose">
+  <a-drawer :visible="visible"
+            :title="title"
+            :width="430"
+            :mask-closable="false"
+            :unmount-on-close="true"
+            :on-before-ok="handlerOk"
+            @cancel="handleClose">
     <a-spin :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
+              :style="{ width: '380px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
-        <!-- 名称 -->
-        <a-form-item field="name" label="名称">
-          <a-input v-model="formModel.name" placeholder="请输入名称" />
+        #foreach($field in ${table.fields})
+        #if("$field.propertyName" != "id")
+        <!-- $field.comment -->
+        <a-form-item field="${field.propertyName}" label="${field.comment}">
+        #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+          <a-input-number v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" />
+        #elseif("$field.propertyType" == "Date")
+          <a-date-picker v-model="formModel.${field.propertyName}"
+                         style="width: 100%"
+                         placeholder="请选择${field.comment}"
+                         show-time />
+        #else
+          <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" />
+        #end
         </a-form-item>
-        <!-- 公钥文本 -->
-        <a-form-item field="publicKey" label="公钥文本">
-          <a-input v-model="formModel.publicKey" placeholder="请输入公钥文本" />
-        </a-form-item>
-        <!-- 私钥文本 -->
-        <a-form-item field="privateKey" label="私钥文本">
-          <a-input v-model="formModel.privateKey" placeholder="请输入私钥文本" />
-        </a-form-item>
-        <!-- 密码 -->
-        <a-form-item field="password" label="密码">
-          <a-input v-model="formModel.password" placeholder="请输入密码" />
-        </a-form-item>
+        #end
+        #end
       </a-form>
     </a-spin>
-  </a-modal>
+  </a-drawer>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'asset-host-key-form-modal'
+    name: '${vue.module}-${vue.feature}-form-drawer'
   };
 </script>
 
@@ -52,10 +47,10 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createHostKey, updateHostKey } from '@/api/asset/host-key';
+  import { create${vue.featureEntity}, update${vue.featureEntity} } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
-  import { } from '../types/enum.types';
-  import { } from '../types/const';
+  import {} from '../types/enum.types';
+  import {} from '../types/const';
   import { toOptions } from '@/utils/enum';
 
   const { visible, setVisible } = useVisible();
@@ -66,11 +61,9 @@
 
   const defaultForm = () => {
     return {
-      id: undefined,
-      name: undefined,
-      publicKey: undefined,
-      privateKey: undefined,
-      password: undefined,
+    #foreach($field in ${table.fields})
+      ${field.propertyName}: undefined,
+    #end
     };
   };
 
@@ -81,7 +74,7 @@
 
   // 打开新增
   const openAdd = () => {
-    title.value = '添加主机秘钥';
+    title.value = '添加${table.comment}';
     isAddHandle.value = true;
     renderForm({ ...defaultForm() });
     setVisible(true);
@@ -89,7 +82,7 @@
 
   // 打开修改
   const openUpdate = (record: any) => {
-    title.value = '修改主机秘钥';
+    title.value = '修改${table.comment}';
     isAddHandle.value = false;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
@@ -115,12 +108,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createHostKey(formModel as any);
+        await create${vue.featureEntity}(formModel as any);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostKey(formModel as any);
+        await update${vue.featureEntity}(formModel as any);
         Message.success('修改成功');
         emits('updated');
       }

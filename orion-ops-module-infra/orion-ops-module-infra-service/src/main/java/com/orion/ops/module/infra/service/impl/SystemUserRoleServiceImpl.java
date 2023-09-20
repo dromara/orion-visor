@@ -4,7 +4,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
@@ -54,7 +54,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         // 删除用户关联
         int effect = systemUserRoleDAO.deleteByUserId(userId);
         // 更新缓存中的角色
-        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
+        RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setRoles(Lists.empty());
         }, userId);
         return effect;
@@ -92,7 +92,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         systemUserRoleDAO.insertBatch(addUserRoles);
         effect += addUserRoles.size();
         // 更新缓存中的角色
-        RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
+        RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             List<String> roleCodeList = userRoles.stream()
                     .map(SystemRoleDO::getCode)
                     .collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     @Async("asyncExecutor")
     public void asyncDeleteUserCacheRole(String roleCode, List<Long> userIdList) {
         for (Long userId : userIdList) {
-            RedisUtils.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
+            RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
                 List<String> roles = s.getRoles();
                 if (Lists.isEmpty(roles)) {
                     return;

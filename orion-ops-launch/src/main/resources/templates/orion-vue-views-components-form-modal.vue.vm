@@ -55,8 +55,8 @@
   import formRules from '../types/form.rules';
   import { create${vue.featureEntity}, update${vue.featureEntity} } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
-  import { } from '../types/enum.types';
-  import { } from '../types/const';
+  import {} from '../types/enum.types';
+  import {} from '../types/const';
   import { toOptions } from '@/utils/enum';
 
   const { visible, setVisible } = useVisible();
