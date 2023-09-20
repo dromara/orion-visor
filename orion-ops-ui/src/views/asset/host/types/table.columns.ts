@@ -31,7 +31,7 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 170,
+    width: 180,
     align: 'right',
     fixed: 'right',
   },

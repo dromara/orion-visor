@@ -53,9 +53,9 @@ export interface HostQueryResponse {
  * 主机配置请求
  */
 export interface HostConfigRequest {
-  hostId?: number;
-  type?: string;
+  id?: number;
   version?: number;
+  status?: number;
   config?: string;
 }
 
@@ -64,7 +64,9 @@ export interface HostConfigRequest {
  */
 export interface HostConfigQueryResponse {
   id: number;
+  type: string;
   version: number;
+  status: number;
   config: Record<string, any>;
 }
 
@@ -129,4 +131,11 @@ export function getHostConfigAll(params: HostConfigRequest) {
  */
 export function updateHostConfig(request: HostConfigRequest) {
   return axios.put('/asset/host/update-config', request);
+}
+
+/**
+ * 更新主机配置状态
+ */
+export function updateHostConfigStatus(request: HostConfigRequest) {
+  return axios.put('/asset/host/update-config-status', request);
 }

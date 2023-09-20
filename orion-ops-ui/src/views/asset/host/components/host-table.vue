@@ -104,6 +104,13 @@
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
+          <!-- 配置 -->
+          <a-button type="text"
+                    size="mini"
+                    v-permission="['asset:host:update-config']"
+                    @click="emits('openUpdateConfig', record)">
+            配置
+          </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -159,7 +166,7 @@
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>();
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
 
   const pagination = reactive(defaultPagination());
   const { copy } = useCopy();

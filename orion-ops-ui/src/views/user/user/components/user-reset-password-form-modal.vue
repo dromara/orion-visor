@@ -94,7 +94,7 @@
       await resetUserPassword({
         id: formModel.id,
         password: md5(formModel.password)
-      } as any);
+      });
       Message.success('修改成功');
       // 清空
       handlerClear();
