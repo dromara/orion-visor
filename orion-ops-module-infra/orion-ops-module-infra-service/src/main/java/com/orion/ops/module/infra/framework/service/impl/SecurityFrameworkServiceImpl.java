@@ -37,6 +37,12 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
     }
 
     @Override
+    public boolean hasAnyPermission(String... permissions) {
+        // 检查是否有权限
+        return permissionService.hasAnyPermission(permissions);
+    }
+
+    @Override
     public boolean hasRole(String role) {
         // 检查是否有角色
         return permissionService.hasRole(role);

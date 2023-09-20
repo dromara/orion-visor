@@ -24,6 +24,14 @@ public interface SecurityFrameworkService {
     boolean hasPermission(String permission);
 
     /**
+     * 检查是否有任意权限
+     *
+     * @param permissions 权限
+     * @return has
+     */
+    boolean hasAnyPermission(String... permissions);
+
+    /**
      * 检查是否有角色
      *
      * @param role 角色

@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.service.impl;
 
+import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -129,17 +130,25 @@ public class PermissionServiceImpl implements PermissionService {
             return true;
         }
         // 检查普通角色是否有此权限
-        for (String role : roles) {
-            // 获取角色权限列表
-            List<SystemMenuCacheDTO> menus = roleMenuCache.get(role);
-            if (Lists.isEmpty(menus)) {
-                continue;
-            }
-            boolean has = menus.stream()
-                    .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
-                    .map(SystemMenuCacheDTO::getPermission)
-                    .filter(Objects::nonNull)
-                    .anyMatch(permission::equals);
+        return roles.stream().anyMatch(s -> this.checkRoleHasPermission(s, permission));
+    }
+
+    @Override
+    public boolean hasAnyPermission(String... permissions) {
+        if (Arrays1.isEmpty(permissions)) {
+            return true;
+        }
+        // 获取用户角色
+        List<String> roles = this.getUserEnabledRoles();
+        if (roles.isEmpty()) {
+            return false;
+        }
+        // 检查是否为超级管理员
+        if (RoleDefine.containsAdmin(roles)) {
+            return true;
+        }
+        for (String permission : permissions) {
+            final boolean has = roles.stream().anyMatch(s -> this.checkRoleHasPermission(s, permission));
             if (has) {
                 return true;
             }
@@ -210,6 +219,27 @@ public class PermissionServiceImpl implements PermissionService {
                 .roles(roles)
                 .permissions(permissions)
                 .build();
+    }
+
+    /**
+     * 检查角色是否有权限
+     *
+     * @param role       role
+     * @param permission permission
+     * @return 是否有权限
+     */
+    private boolean checkRoleHasPermission(String role, String permission) {
+        // 获取角色权限列表
+        List<SystemMenuCacheDTO> menus = roleMenuCache.get(role);
+        if (Lists.isEmpty(menus)) {
+            return false;
+        }
+        // 检查是否有此权限
+        return menus.stream()
+                .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
+                .map(SystemMenuCacheDTO::getPermission)
+                .filter(Objects::nonNull)
+                .anyMatch(permission::equals);
     }
 
     /**

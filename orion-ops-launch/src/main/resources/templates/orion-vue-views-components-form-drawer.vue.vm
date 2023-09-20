@@ -4,6 +4,8 @@
             :width="430"
             :mask-closable="false"
             :unmount-on-close="true"
+            :ok-button-props="{ disabled: loading }"
+            :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
     <a-spin :loading="loading">

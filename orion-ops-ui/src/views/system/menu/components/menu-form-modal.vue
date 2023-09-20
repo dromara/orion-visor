@@ -30,7 +30,9 @@
           <a-input v-model="formModel.name" placeholder="请输入菜单名称" />
         </a-form-item>
         <!-- 菜单类型 -->
-        <a-form-item field="type" label="菜单类型">
+        <a-form-item v-if="isAddHandle"
+                     field="type"
+                     label="菜单类型">
           <a-radio-group type="button"
                          v-model="formModel.type"
                          :options="toOptions(MenuTypeEnum)" />

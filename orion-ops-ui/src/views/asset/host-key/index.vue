@@ -2,12 +2,13 @@
   <div class="layout-container">
     <!-- 表格 -->
     <host-key-table ref="table"
-                  @openAdd="() => drawer.openAdd()"
-                  @openUpdate="(e) => drawer.openUpdate(e)" />
+                    @openView="(e) => drawer.openView(e)"
+                    @openAdd="() => drawer.openAdd()"
+                    @openUpdate="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <host-key-form-drawer ref="drawer"
-                       @added="() => table.addedCallback()"
-                       @updated="() => table.updatedCallback()" />
+                          @added="() => table.addedCallback()"
+                          @updated="() => table.updatedCallback()" />
   </div>
 </template>
 

@@ -1,13 +1,18 @@
 <template>
-  <a-drawer :visible="visible"
+  <a-drawer class="drawer-body-padding-0"
+            :visible="visible"
             :title="title"
             :width="470"
             :mask-closable="false"
             :unmount-on-close="true"
+            :ok-button-props="{ disabled: loading || isViewHandler }"
+            :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin :loading="loading">
-      <a-alert style="margin-bottom: 18px;">请使用 ssh-keygen -m PEM -t rsa 生成秘钥</a-alert>
+    <a-spin class="form-wrapper" :loading="loading">
+      <a-alert class="keygen-alert">
+        请使用 ssh-keygen -m PEM -t rsa 生成秘钥
+      </a-alert>
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
@@ -17,19 +22,23 @@
               :rules="formRules">
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
-          <a-input v-model="formModel.name" placeholder="请输入名称" />
+          <a-input v-model="formModel.name"
+                   :disabled="isViewHandler"
+                   placeholder="请输入名称" />
         </a-form-item>
         <!-- 公钥文本 -->
         <a-form-item field="publicKey" label="公钥">
           <a-upload :auto-upload="false"
                     :show-file-list="false"
-                    draggable
+                    :draggable="true"
+                    :disabled="isViewHandler"
                     @change="selectPublicFile"
                     @click.prevent="() => {}">
             <template #upload-button>
               <a-textarea v-model="formModel.publicKey"
+                          :disabled="isViewHandler"
                           placeholder="请输入公钥文本或将文件拖拽到此处"
-                          :auto-size="{ minRows: 7, maxRows: 7}" />
+                          :auto-size="{ minRows: 8, maxRows: 8}" />
             </template>
           </a-upload>
         </a-form-item>
@@ -37,19 +46,38 @@
         <a-form-item field="privateKey" label="私钥">
           <a-upload :auto-upload="false"
                     :show-file-list="false"
-                    draggable
+                    :draggable="true"
+                    :disabled="isViewHandler"
                     @change="selectPrivateFile"
                     @click.prevent="() => {}">
             <template #upload-button>
               <a-textarea v-model="formModel.privateKey"
+                          :disabled="isViewHandler"
                           placeholder="请输入私钥文本或将文件拖拽到此处"
                           :auto-size="{ minRows: 8, maxRows: 8}" />
             </template>
           </a-upload>
         </a-form-item>
         <!-- 密码 -->
-        <a-form-item field="password" label="密码">
-          <a-input-password v-model="formModel.password" placeholder="请输入私钥密码" />
+        <a-form-item v-if="!isViewHandler"
+                     field="password"
+                     label="密码"
+                     style="justify-content: space-between;">
+          <a-input-password v-model="formModel.password"
+                            :disabled="!formModel.useNewPassword"
+                            class="password-input"
+                            placeholder="请输入私钥密码" />
+          <a-switch v-model="formModel.useNewPassword"
+                    class="password-switch"
+                    type="round"
+                    size="large">
+            <template #checked>
+              使用新密码
+            </template>
+            <template #unchecked>
+              使用原密码
+            </template>
+          </a-switch>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -78,6 +106,7 @@
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
+  const isViewHandler = ref<boolean>(false);
 
   const defaultForm = () => {
     return {
@@ -86,6 +115,7 @@
       publicKey: undefined,
       privateKey: undefined,
       password: undefined,
+      useNewPassword: false
     };
   };
 
@@ -98,6 +128,7 @@
   const openAdd = () => {
     title.value = '添加主机秘钥';
     isAddHandle.value = true;
+    isViewHandler.value = false;
     renderForm({ ...defaultForm() });
     setVisible(true);
   };
@@ -106,10 +137,24 @@
   const openUpdate = async (record: any) => {
     title.value = '修改主机秘钥';
     isAddHandle.value = false;
+    isViewHandler.value = false;
+    await render(record.id);
+  };
+
+  // 打开查看
+  const openView = async (record: any) => {
+    title.value = '主机秘钥';
+    isAddHandle.value = false;
+    isViewHandler.value = true;
+    await render(record.id);
+  };
+
+  // 渲染数据
+  const render = async (id: number) => {
     setVisible(true);
     setLoading(true);
     try {
-      const { data } = await getHostKey(record.id);
+      const { data } = await getHostKey(id);
       renderForm({ ...data });
     } catch (e) {
       setVisible(false);
@@ -125,7 +170,7 @@
     });
   };
 
-  defineExpose({ openAdd, openUpdate });
+  defineExpose({ openAdd, openUpdate, openView });
 
   // 选择公钥文件
   const selectPublicFile = async (fileList: FileItem[]) => {
@@ -182,5 +227,21 @@
 </script>
 
 <style lang="less" scoped>
+  .form-wrapper {
+    width: 100%;
+    padding: 12px 12px 0 12px;
+  }
 
+  .keygen-alert {
+    margin: 0 0 12px 16px;
+    width: calc(100% - 42px);
+  }
+
+  .password-input {
+    width: 240px;
+  }
+
+  .password-switch {
+    margin-left: 16px;
+  }
 </style>

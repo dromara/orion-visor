@@ -47,4 +47,7 @@ public class HostKeyUpdateRequest implements Serializable {
     @Schema(description = "密码")
     private String password;
 
+    @Schema(description = "是否使用新密码")
+    private Boolean useNewPassword;
+
 }

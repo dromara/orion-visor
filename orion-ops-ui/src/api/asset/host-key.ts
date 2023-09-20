@@ -9,6 +9,7 @@ export interface HostKeyCreateRequest {
   publicKey?: string;
   privateKey?: string;
   password?: string;
+  useNewPassword?: boolean;
 }
 
 /**

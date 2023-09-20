@@ -12,17 +12,14 @@ const columns = [
     title: '主机名称',
     dataIndex: 'name',
     slotName: 'name',
-    align: 'center',
   }, {
     title: '主机编码',
     dataIndex: 'code',
     slotName: 'code',
-    align: 'center',
   }, {
     title: '主机地址',
     dataIndex: 'address',
     slotName: 'address',
-    align: 'center',
   }, {
     title: '标签',
     dataIndex: 'tag',

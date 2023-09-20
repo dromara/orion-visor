@@ -52,6 +52,13 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <!-- 查看 -->
+          <a-button type="text"
+                    size="mini"
+                    v-permission="['asset:host-key:detail', 'asset:host-key:update']"
+                    @click="emits('openView', record)">
+            查看
+          </a-button>
           <!-- 修改 -->
           <a-button type="text"
                     size="mini"
@@ -90,13 +97,10 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { defaultPagination } from '@/types/table';
-  import {} from '../types/enum.types';
-  import {} from '../types/const';
-  import { toOptions } from '@/utils/enum';
 
   const tableRenderData = ref<HostKeyQueryResponse[]>();
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const pagination = reactive(defaultPagination());
 
@@ -105,7 +109,6 @@
     name: undefined,
     publicKey: undefined,
     privateKey: undefined,
-    password: undefined,
   });
 
   // 删除当前行

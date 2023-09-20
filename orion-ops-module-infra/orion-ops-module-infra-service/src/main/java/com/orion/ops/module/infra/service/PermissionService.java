@@ -60,6 +60,14 @@ public interface PermissionService {
     boolean hasPermission(String permission);
 
     /**
+     * 检查当前用户是否含任意权限 (有效性判断)
+     *
+     * @param permissions permissions
+     * @return 是否包含
+     */
+    boolean hasAnyPermission(String... permissions);
+
+    /**
      * 获取用户菜单
      *
      * @return 菜单

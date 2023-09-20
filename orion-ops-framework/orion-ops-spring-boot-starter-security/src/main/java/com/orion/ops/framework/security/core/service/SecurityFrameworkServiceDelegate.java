@@ -23,6 +23,11 @@ public class SecurityFrameworkServiceDelegate implements SecurityFrameworkServic
     }
 
     @Override
+    public boolean hasAnyPermission(String... permissions) {
+        return delegate.hasAnyPermission(permissions);
+    }
+
+    @Override
     public boolean hasRole(String role) {
         return delegate.hasRole(role);
     }

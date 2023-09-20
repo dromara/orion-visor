@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
@@ -72,9 +73,16 @@ public class HostKeyServiceImpl implements HostKeyService {
         HostKeyDO updateRecord = HostKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostKeyPresent(updateRecord);
-        String password = updateRecord.getPassword();
-        if (!Strings.isBlank(password)) {
-            updateRecord.setPassword(CryptoUtils.encryptAsString(password));
+        if (Booleans.isTrue(request.getUseNewPassword())) {
+            // 使用新密码
+            String password = updateRecord.getPassword();
+            if (Strings.isBlank(password)) {
+                updateRecord.setPassword(Const.EMPTY);
+            } else {
+                updateRecord.setPassword(CryptoUtils.encryptAsString(password));
+            }
+        } else {
+            updateRecord.setPassword(null);
         }
         // 更新
         int effect = hostKeyDAO.updateById(updateRecord);
@@ -101,7 +109,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         HostKeyDO record = hostKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         String password = record.getPassword();
-        if (password != null) {
+        if (!Strings.isBlank(password)) {
             record.setPassword(CryptoUtils.decryptAsString(password));
         }
         return record;
