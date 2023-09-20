@@ -53,7 +53,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { create${vue.featureFirstUpper}, update${vue.featureFirstUpper} } from '@/api/${vue.module}/${vue.feature}';
+  import { create${vue.featureEntity}, update${vue.featureEntity} } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
   import { } from '../types/enum.types';
   import { } from '../types/const';
@@ -114,12 +114,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await create${vue.featureFirstUpper}(formModel as any);
+        await create${vue.featureEntity}(formModel as any);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await update${vue.featureFirstUpper}(formModel as any);
+        await update${vue.featureEntity}(formModel as any);
         Message.success('修改成功');
         emits('updated');
       }

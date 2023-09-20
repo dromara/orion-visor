@@ -61,7 +61,7 @@ new GenTable("system_role", "角色", "role")
         .ignoreApi()
         // 忽略生成单元测试
         .ignoreTest()
-        // 生成 vue 文件, 一级业务包为 user, 二级业务包为 role
+        // 生成 vue 文件, 一级业务包为 user, 二级业务包为 role (前端命名只能使用脊柱命名法)
         .vue("user", "role")
         // 前端代码生成的枚举对象 可变参数
         .enums(RoleStatusEnum.class);

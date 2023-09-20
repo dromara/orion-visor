@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator;
+package com.orion.ops.launch.generator.core;
 
 import com.orion.lang.utils.collect.Lists;
 import lombok.Data;

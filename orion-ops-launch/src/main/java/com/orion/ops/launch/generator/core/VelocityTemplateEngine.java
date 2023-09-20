@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.orion.ops.launch.generator;
+package com.orion.ops.launch.generator.core;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.config.ConstVal;
@@ -25,6 +25,7 @@ import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.define.collect.MultiLinkedHashMap;
 import com.orion.lang.utils.Enums;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.VariableStyles;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
@@ -309,12 +310,18 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
         GenTable table = tables.get(tableInfo.getName());
         BeanMap beanMap = BeanMap.create(table, "enums");
-        // 模块名称首字母大写
-        beanMap.put("moduleFirstUpper", Strings.firstUpper(table.getModule()));
-        // 功能名称首字母大写
-        beanMap.put("featureFirstUpper", Strings.firstUpper(table.getFeature()));
-        // 功能名称全大写
-        beanMap.put("featureAllUpper", table.getFeature().toUpperCase());
+        // 模块名称实体
+        beanMap.put("moduleEntity", VariableStyles.SPINE.toBigHump(table.getModule()));
+        // 模块名称实体
+        beanMap.put("moduleEntityFirstLower", Strings.firstLower(beanMap.get("moduleEntity")));
+        // 模块名称常量
+        beanMap.put("moduleConst", VariableStyles.SPINE.toSerpentine(table.getModule()).toUpperCase());
+        // 功能名称实体
+        beanMap.put("featureEntity", VariableStyles.SPINE.toBigHump(table.getFeature()));
+        // 功能名称实体
+        beanMap.put("featureEntityFirstLower", Strings.firstLower(beanMap.get("featureEntity")));
+        // 功能名称常量
+        beanMap.put("featureConst", VariableStyles.SPINE.toSerpentine(table.getFeature()).toUpperCase());
         // 枚举
         beanMap.put("enums", this.getEnumMap(table));
         objectMap.put("vue", beanMap);

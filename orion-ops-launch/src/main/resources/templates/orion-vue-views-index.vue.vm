@@ -13,13 +13,13 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}${vue.featureFirstUpper}'
+    name: '${vue.module}-${vue.feature}'
   };
 </script>
 
 <script lang="ts" setup>
-  import ${vue.featureFirstUpper}Table from './components/${vue.feature}-table.vue';
-  import ${vue.featureFirstUpper}FormModal from './components/${vue.feature}-form-modal.vue';
+  import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
+  import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
   import { ref } from 'vue';
 
   const table = ref();
