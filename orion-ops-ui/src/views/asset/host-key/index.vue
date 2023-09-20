@@ -2,10 +2,10 @@
   <div class="layout-container">
     <!-- 表格 -->
     <host-key-table ref="table"
-                  @openAdd="() => modal.openAdd()"
-                  @openUpdate="(e) => modal.openUpdate(e)" />
+                  @openAdd="() => drawer.openAdd()"
+                  @openUpdate="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->
-    <host-key-form-modal ref="modal"
+    <host-key-form-drawer ref="drawer"
                        @added="() => table.addedCallback()"
                        @updated="() => table.updatedCallback()" />
   </div>
@@ -19,11 +19,11 @@
 
 <script lang="ts" setup>
   import HostKeyTable from './components/host-key-table.vue';
-  import HostKeyFormModal from './components/host-key-form-modal.vue';
+  import HostKeyFormDrawer from './components/host-key-form-drawer.vue';
   import { ref } from 'vue';
 
   const table = ref();
-  const modal = ref();
+  const drawer = ref();
 
 </script>
 

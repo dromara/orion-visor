@@ -29,12 +29,6 @@ Authorization: {{token}}
 GET {{baseUrl}}/asset/host-key/get?id=1
 Authorization: {{token}}
 
-
-### 通过 id 批量查询主机秘钥
-GET {{baseUrl}}/asset/host-key/list?idList=1,2,3
-Authorization: {{token}}
-
-
 ### 查询主机秘钥
 POST {{baseUrl}}/asset/host-key/list-all
 Content-Type: application/json
@@ -68,25 +62,5 @@ Authorization: {{token}}
 ### 通过 id 删除主机秘钥
 DELETE {{baseUrl}}/asset/host-key/delete?id=1
 Authorization: {{token}}
-
-
-### 通过 id 批量删除主机秘钥
-DELETE {{baseUrl}}/asset/host-key/delete-batch?idList=1,2,3
-Authorization: {{token}}
-
-
-### 导出主机秘钥
-POST {{baseUrl}}/asset/host-key/export
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "name": "",
-  "publicKey": "",
-  "privateKey": "",
-  "password": ""
-}
-
 
 ###

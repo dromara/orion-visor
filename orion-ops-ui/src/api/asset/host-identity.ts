@@ -110,10 +110,3 @@ export function batchDeleteHostIdentity(idList: Array<number>) {
     }
   });
 }
-
-/**
- * 导出主机身份
- */
-export function exportHostIdentity(request: HostIdentityQueryRequest) {
-  return axios.post('/asset/host-identity/export', request);
-}

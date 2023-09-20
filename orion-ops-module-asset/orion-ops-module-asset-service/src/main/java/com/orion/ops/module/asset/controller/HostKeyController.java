@@ -5,11 +5,11 @@ import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.valid.group.Page;
-import com.orion.ops.module.asset.service.*;
-import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.entity.request.host.*;
-import com.orion.ops.module.asset.entity.export.*;
-import com.orion.ops.module.asset.convert.*;
+import com.orion.ops.module.asset.entity.request.host.HostKeyCreateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostKeyQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostKeyUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostKeyVO;
+import com.orion.ops.module.asset.service.HostKeyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,8 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -58,28 +56,19 @@ public class HostKeyController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
-    @Operation(summary = "通过 id 查询主机秘钥")
+    @Operation(summary = "查询主机秘钥详情")
     @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-key:query')")
+    @PreAuthorize("@ss.hasPermission('asset:host-key:detail')")
     public HostKeyVO getHostKey(@RequestParam("id") Long id) {
         return hostKeyService.getHostKeyById(id);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/list")
-    @Operation(summary = "通过 id 批量查询主机秘钥")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-key:query')")
-    public List<HostKeyVO> getHostKeyList(@RequestParam("idList") List<Long> idList) {
-        return hostKeyService.getHostKeyByIdList(idList);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/list-all")
     @Operation(summary = "查询主机秘钥")
     @PreAuthorize("@ss.hasPermission('asset:host-key:query')")
-    public List<HostKeyVO> getHostKeyListAll(@Validated @RequestBody HostKeyQueryRequest request) {
-        return hostKeyService.getHostKeyList(request);
+    public List<HostKeyVO> getHostKeyListAll() {
+        return hostKeyService.getHostKeyList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -96,22 +85,6 @@ public class HostKeyController {
     @PreAuthorize("@ss.hasPermission('asset:host-key:delete')")
     public Integer deleteHostKey(@RequestParam("id") Long id) {
         return hostKeyService.deleteHostKeyById(id);
-    }
-
-    @DeleteMapping("/delete-batch")
-    @Operation(summary = "通过 id 批量删除主机秘钥")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-key:delete')")
-    public Integer batchDeleteHostKey(@RequestParam("idList") List<Long> idList) {
-        return hostKeyService.batchDeleteHostKeyByIdList(idList);
-    }
-
-    @PostMapping("/export")
-    @Operation(summary = "导出主机秘钥")
-    @PreAuthorize("@ss.hasPermission('asset:host-key:export')")
-    public void exportHostKey(@Validated @RequestBody HostKeyQueryRequest request,
-                              HttpServletResponse response) throws IOException {
-        hostKeyService.exportHostKey(request, response);
     }
 
 }

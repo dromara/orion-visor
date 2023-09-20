@@ -28,16 +28,4 @@ public class HostKeyQueryRequest extends PageRequest {
     @Schema(description = "名称")
     private String name;
 
-    @Size(max = 65535)
-    @Schema(description = "公钥文本")
-    private String publicKey;
-
-    @Size(max = 65535)
-    @Schema(description = "私钥文本")
-    private String privateKey;
-
-    @Size(max = 512)
-    @Schema(description = "密码")
-    private String password;
-
 }

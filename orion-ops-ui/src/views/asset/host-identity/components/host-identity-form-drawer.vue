@@ -1,22 +1,16 @@
 <template>
-  <a-modal v-model:visible="visible"
-           body-class="modal-form"
-           title-align="start"
-           :title="title"
-           :top="80"
-           :align-center="false"
-           :draggable="true"
-           :mask-closable="false"
-           :unmount-on-close="true"
-           :ok-button-props="{ disabled: loading }"
-           :cancel-button-props="{ disabled: loading }"
-           :on-before-ok="handlerOk"
-           @close="handleClose">
+  <a-drawer :visible="visible"
+            :title="title"
+            :width="430"
+            :mask-closable="false"
+            :unmount-on-close="true"
+            :on-before-ok="handlerOk"
+            @cancel="handleClose">
     <a-spin :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
+              :style="{ width: '380px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
@@ -38,12 +32,12 @@
         </a-form-item>
       </a-form>
     </a-spin>
-  </a-modal>
+  </a-drawer>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'asset-host-identity-form-modal'
+    name: 'asset-host-identity-form-drawer'
   };
 </script>
 

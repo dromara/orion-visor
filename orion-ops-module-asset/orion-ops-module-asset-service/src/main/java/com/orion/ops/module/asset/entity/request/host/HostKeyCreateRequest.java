@@ -29,7 +29,6 @@ public class HostKeyCreateRequest implements Serializable {
     @Schema(description = "名称")
     private String name;
 
-    @NotBlank
     @Size(max = 65535)
     @Schema(description = "公钥文本")
     private String publicKey;
@@ -39,7 +38,6 @@ public class HostKeyCreateRequest implements Serializable {
     @Schema(description = "私钥文本")
     private String privateKey;
 
-    @NotBlank
     @Size(max = 512)
     @Schema(description = "密码")
     private String password;

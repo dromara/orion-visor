@@ -1,10 +1,11 @@
 package com.orion.ops.module.asset.convert;
 
-import com.orion.ops.module.asset.entity.domain.*;
-import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.entity.request.host.*;
-import com.orion.ops.module.asset.entity.export.*;
-import com.orion.ops.module.asset.convert.*;
+import com.orion.ops.module.asset.entity.domain.HostKeyDO;
+import com.orion.ops.module.asset.entity.dto.HostKeyCacheDTO;
+import com.orion.ops.module.asset.entity.request.host.HostKeyCreateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostKeyQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostKeyUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostKeyVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -30,7 +31,9 @@ public interface HostKeyConvert {
 
     HostKeyVO to(HostKeyDO domain);
 
-    HostKeyExport toExport(HostKeyDO domain);
+    HostKeyVO to(HostKeyCacheDTO cache);
+
+    HostKeyCacheDTO toCache(HostKeyDO domain);
 
     List<HostKeyVO> to(List<HostKeyDO> list);
 

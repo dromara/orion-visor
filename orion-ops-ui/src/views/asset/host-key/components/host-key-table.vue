@@ -6,24 +6,12 @@
                     @submit="fetchTableData"
                     @reset="fetchTableData">
       <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="50px">
-        <a-input-number v-model="formModel.id" placeholder="请输入id" allow-clear/>
+      <a-form-item field="id" label="id" label-col-flex="30px">
+        <a-input-number v-model="formModel.id" placeholder="请输入id" allow-clear />
       </a-form-item>
       <!-- 名称 -->
-      <a-form-item field="name" label="名称" label-col-flex="50px">
-        <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear/>
-      </a-form-item>
-      <!-- 公钥文本 -->
-      <a-form-item field="publicKey" label="公钥文本" label-col-flex="50px">
-        <a-input v-model="formModel.publicKey" placeholder="请输入公钥文本" allow-clear/>
-      </a-form-item>
-      <!-- 私钥文本 -->
-      <a-form-item field="privateKey" label="私钥文本" label-col-flex="50px">
-        <a-input v-model="formModel.privateKey" placeholder="请输入私钥文本" allow-clear/>
-      </a-form-item>
-      <!-- 密码 -->
-      <a-form-item field="password" label="密码" label-col-flex="50px">
-        <a-input v-model="formModel.password" placeholder="请输入密码" allow-clear/>
+      <a-form-item field="name" label="名称" label-col-flex="30px">
+        <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
     </a-query-header>
   </a-card>
@@ -46,21 +34,6 @@
               <icon-plus />
             </template>
           </a-button>
-          <!-- 删除 -->
-          <a-popconfirm position="br"
-                        type="warning"
-                        :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
-                        @ok="deleteSelectRows">
-            <a-button v-permission="['asset:host-key:delete']"
-                      type="secondary"
-                      status="danger"
-                      :disabled="selectedKeys.length === 0">
-              删除
-              <template #icon>
-                <icon-delete />
-              </template>
-            </a-button>
-          </a-popconfirm>
         </a-space>
       </div>
     </template>
@@ -71,8 +44,6 @@
              label-align="left"
              :loading="loading"
              :columns="columns"
-             v-model:selectedKeys="selectedKeys"
-             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
@@ -114,13 +85,13 @@
 
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { batchDeleteHostKey, deleteHostKey, getHostKeyPage, HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
+  import { deleteHostKey, getHostKeyPage, HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { defaultPagination, defaultRowSelection } from '@/types/table';
-  import { } from '../types/enum.types';
-  import { } from '../types/const';
+  import { defaultPagination } from '@/types/table';
+  import {} from '../types/enum.types';
+  import {} from '../types/const';
   import { toOptions } from '@/utils/enum';
 
   const tableRenderData = ref<HostKeyQueryResponse[]>();
@@ -128,8 +99,6 @@
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
   const pagination = reactive(defaultPagination());
-  const selectedKeys = ref<number[]>([]);
-  const rowSelection = reactive(defaultRowSelection());
 
   const formModel = reactive<HostKeyQueryRequest>({
     id: undefined,
@@ -138,21 +107,6 @@
     privateKey: undefined,
     password: undefined,
   });
-
-  // 删除选中行
-  const deleteSelectRows = async () => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await batchDeleteHostKey(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
-      selectedKeys.value = [];
-      // 重新加载数据
-      await fetchTableData();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 删除当前行
   const deleteRow = async ({ id }: { id: number }) => {

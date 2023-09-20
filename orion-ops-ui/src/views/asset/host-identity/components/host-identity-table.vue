@@ -119,8 +119,8 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { defaultPagination, defaultRowSelection } from '@/types/table';
-  import { } from '../types/enum.types';
-  import { } from '../types/const';
+  import {} from '../types/enum.types';
+  import {} from '../types/const';
   import { toOptions } from '@/utils/enum';
 
   const tableRenderData = ref<HostIdentityQueryResponse[]>();

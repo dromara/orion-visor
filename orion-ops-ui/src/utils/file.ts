@@ -8,12 +8,12 @@ export function getBase64Data(e: string) {
 }
 
 /**
- * 读取文件 base64 返回 promise
+ * 读取文件内容 返回 promise
  */
-export function readFileBase64(e: any) {
+export function readFileText(e: File, encoding = 'UTF-8') {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.readAsDataURL(e);
+    reader.readAsText(e, encoding);
     reader.onload = res => {
       resolve(res.target?.result);
     };
