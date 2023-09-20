@@ -1,0 +1,92 @@
+### 创建主机身份
+POST {{baseUrl}}/asset/host-identity/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "",
+  "username": "",
+  "password": "",
+  "keyId": ""
+}
+
+
+### 通过 id 更新主机身份
+PUT {{baseUrl}}/asset/host-identity/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "username": "",
+  "password": "",
+  "keyId": ""
+}
+
+
+### 通过 id 查询主机身份
+GET {{baseUrl}}/asset/host-identity/get?id=1
+Authorization: {{token}}
+
+
+### 通过 id 批量查询主机身份
+GET {{baseUrl}}/asset/host-identity/list?idList=1,2,3
+Authorization: {{token}}
+
+
+### 查询主机身份
+POST {{baseUrl}}/asset/host-identity/list-all
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "username": "",
+  "password": "",
+  "keyId": ""
+}
+
+
+### 分页查询主机身份
+POST {{baseUrl}}/asset/host-identity/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "name": "",
+  "username": "",
+  "password": "",
+  "keyId": ""
+}
+
+
+### 通过 id 删除主机身份
+DELETE {{baseUrl}}/asset/host-identity/delete?id=1
+Authorization: {{token}}
+
+
+### 通过 id 批量删除主机身份
+DELETE {{baseUrl}}/asset/host-identity/delete-batch?idList=1,2,3
+Authorization: {{token}}
+
+
+### 导出主机身份
+POST {{baseUrl}}/asset/host-identity/export
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "username": "",
+  "password": "",
+  "keyId": ""
+}
+
+
+###
