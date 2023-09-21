@@ -53,7 +53,7 @@
       !tagList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
       // 固定并且没有此 tab 则添加
-      tabBarStore.addTab(routerToTag(route), route.meta?.ignoreCache as unknown as any);
+      tabBarStore.addTab(routerToTag(route), route.meta?.ignoreCache as unknown as boolean);
     }
   }, true);
 

@@ -44,7 +44,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createRole, updateRole } from '@/api/user/role';
+  import { createRole, updateRole, RoleUpdateRequest, } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
 
   const { visible, setVisible } = useVisible();
@@ -53,7 +53,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = () => {
+  const defaultForm = (): RoleUpdateRequest & Record<string, any> => {
     return {
       id: undefined,
       name: undefined,
@@ -62,7 +62,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = reactive<RoleUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -102,12 +102,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createRole(formModel as any);
+        await createRole(formModel);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateRole(formModel as any);
+        await updateRole(formModel);
         Message.success('修改成功');
         emits('updated');
       }

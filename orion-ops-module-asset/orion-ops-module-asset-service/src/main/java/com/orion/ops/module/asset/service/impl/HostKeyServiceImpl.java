@@ -53,6 +53,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         HostKeyDO record = HostKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostKeyPresent(record);
+        // 加密
+        this.encryptKey(record);
         String password = record.getPassword();
         if (!Strings.isBlank(password)) {
             record.setPassword(CryptoUtils.encryptAsString(password));
@@ -78,6 +80,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         HostKeyDO updateRecord = HostKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostKeyPresent(updateRecord);
+        // 加密
+        this.encryptKey(updateRecord);
         // 设置密码
         String newPassword = PasswordModifier.getEncryptNewPassword(request);
         updateRecord.setPassword(newPassword);
@@ -97,6 +101,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 查询
         HostKeyDO record = hostKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 解密秘钥
+        this.decryptKey(record);
         // 转换
         return HostKeyConvert.MAPPER.to(record);
     }
@@ -105,6 +111,9 @@ public class HostKeyServiceImpl implements HostKeyService {
     public HostKeyDO getHostKey(Long id) {
         HostKeyDO record = hostKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 解密秘钥
+        this.decryptKey(record);
+        // 解密密码
         String password = record.getPassword();
         if (!Strings.isBlank(password)) {
             record.setPassword(CryptoUtils.decryptAsString(password));
@@ -204,6 +213,38 @@ public class HostKeyServiceImpl implements HostKeyService {
     public void toSafe(HostKeyVO vo) {
         vo.setPublicKey(null);
         vo.setPrivateKey(null);
+    }
+
+    /**
+     * 加密 公钥 私钥
+     *
+     * @param record record
+     */
+    private void encryptKey(HostKeyDO record) {
+        String publicKey = record.getPublicKey();
+        if (!Strings.isBlank(publicKey)) {
+            record.setPublicKey(CryptoUtils.encryptAsString(publicKey));
+        }
+        String privateKey = record.getPrivateKey();
+        if (!Strings.isBlank(privateKey)) {
+            record.setPrivateKey(CryptoUtils.encryptAsString(privateKey));
+        }
+    }
+
+    /**
+     * 解密 公钥 私钥
+     *
+     * @param record record
+     */
+    private void decryptKey(HostKeyDO record) {
+        String publicKey = record.getPublicKey();
+        if (!Strings.isBlank(publicKey)) {
+            record.setPublicKey(CryptoUtils.decryptAsString(publicKey));
+        }
+        String privateKey = record.getPrivateKey();
+        if (!Strings.isBlank(privateKey)) {
+            record.setPrivateKey(CryptoUtils.decryptAsString(privateKey));
+        }
     }
 
 }

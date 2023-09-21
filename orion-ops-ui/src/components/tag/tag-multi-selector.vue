@@ -37,7 +37,7 @@
       return props.modelValue;
     },
     async set(e) {
-      await checkCreateTag(e as any);
+      await checkCreateTag(e as Array<any>);
       emits('update:modelValue', e);
     }
   });

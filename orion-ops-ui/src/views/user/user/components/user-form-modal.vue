@@ -58,7 +58,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createUser, updateUser } from '@/api/user/user';
+  import { createUser, updateUser, UserUpdateRequest } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import { md5 } from '@/utils';
 
@@ -68,7 +68,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = () => {
+  const defaultForm = (): UserUpdateRequest & Record<string, any> => {
     return {
       id: undefined,
       username: undefined,
@@ -80,7 +80,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = reactive<UserUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -125,7 +125,7 @@
         emits('added');
       } else {
         // 修改
-        await updateUser(formModel as any);
+        await updateUser(formModel);
         Message.success('修改成功');
         emits('updated');
       }

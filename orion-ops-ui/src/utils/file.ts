@@ -111,7 +111,7 @@ export function permission10toString(permission: number) {
   const ps = (permission + '');
   let res = '';
   for (let i = 0; i < ps.length; i++) {
-    const per = ps.charAt(i) as any;
+    const per = ps.charAt(i) as unknown as number;
     if ((per & 4) === 0) {
       res += '-';
     } else {
