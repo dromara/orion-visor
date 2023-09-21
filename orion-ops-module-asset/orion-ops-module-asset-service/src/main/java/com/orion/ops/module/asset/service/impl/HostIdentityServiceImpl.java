@@ -3,28 +3,31 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.collect.Lists;
-import com.orion.office.excel.writer.exporting.ExcelExport;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.framework.common.utils.FileNames;
-import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.entity.request.host.*;
-import com.orion.ops.module.asset.entity.export.*;
-import com.orion.ops.module.asset.convert.*;
-import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
+import com.orion.ops.framework.redis.core.utils.RedisLists;
+import com.orion.ops.module.asset.convert.HostIdentityConvert;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
+import com.orion.ops.module.asset.dao.HostKeyDAO;
+import com.orion.ops.module.asset.define.HostCacheKeyDefine;
+import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
+import com.orion.ops.module.asset.entity.domain.HostKeyDO;
+import com.orion.ops.module.asset.entity.dto.HostIdentityCacheDTO;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
 import com.orion.ops.module.asset.service.HostIdentityService;
-import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 主机身份 服务实现类
@@ -40,9 +43,14 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     @Resource
     private HostIdentityDAO hostIdentityDAO;
 
+    @Resource
+    private HostKeyDAO hostKeyDAO;
+
     @Override
     public Long createHostIdentity(HostIdentityCreateRequest request) {
         log.info("HostIdentityService-createHostIdentity request: {}", JSON.toJSONString(request));
+        // 检查秘钥是否存在
+        this.checkKeyIdPresent(request.getKeyId());
         // 转换
         HostIdentityDO record = HostIdentityConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -50,7 +58,11 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 插入
         int effect = hostIdentityDAO.insert(record);
         log.info("HostIdentityService-createHostIdentity effect: {}", effect);
-        return record.getId();
+        Long id = record.getId();
+        // 设置缓存
+        RedisLists.pushJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));
+        RedisLists.setExpire(HostCacheKeyDefine.HOST_IDENTITY);
+        return id;
     }
 
     @Override
@@ -60,26 +72,23 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         HostIdentityDO record = hostIdentityDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 检查秘钥是否存在
+        this.checkKeyIdPresent(request.getKeyId());
         // 转换
         HostIdentityDO updateRecord = HostIdentityConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostIdentityPresent(updateRecord);
+        // 设置密码
+        String newPassword = PasswordModifier.getEncryptNewPassword(request);
+        updateRecord.setPassword(newPassword);
         // 更新
         int effect = hostIdentityDAO.updateById(updateRecord);
+        // 设置缓存
+        if (!record.getName().equals(updateRecord.getName())) {
+            RedisLists.removeJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));
+            RedisLists.pushJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(updateRecord));
+        }
         log.info("HostIdentityService-updateHostIdentityById effect: {}", effect);
-        return effect;
-    }
-
-    @Override
-    public Integer updateHostIdentity(HostIdentityQueryRequest query, HostIdentityUpdateRequest update) {
-        log.info("HostIdentityService.updateHostIdentity query: {}, update: {}", JSON.toJSONString(query), JSON.toJSONString(update));
-        // 条件
-        LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(query);
-        // 转换
-        HostIdentityDO updateRecord = HostIdentityConvert.MAPPER.to(update);
-        // 更新
-        int effect = hostIdentityDAO.update(updateRecord, wrapper);
-        log.info("HostIdentityService.updateHostIdentity effect: {}", effect);
         return effect;
     }
 
@@ -93,30 +102,27 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     }
 
     @Override
-    public List<HostIdentityVO> getHostIdentityByIdList(List<Long> idList) {
-        // 查询
-        List<HostIdentityDO> records = hostIdentityDAO.selectBatchIds(idList);
-        if (records.isEmpty()) {
-            return Lists.empty();
+    public List<HostIdentityVO> getHostIdentityList() {
+        // 查询缓存
+        List<HostIdentityCacheDTO> list = RedisLists.rangeJson(HostCacheKeyDefine.HOST_IDENTITY);
+        if (list.isEmpty()) {
+            // 查询数据库
+            list = hostIdentityDAO.of().list(HostIdentityConvert.MAPPER::toCache);
+            // 添加默认值 防止穿透
+            if (list.isEmpty()) {
+                list.add(HostIdentityCacheDTO.builder()
+                        .id(Const.NONE_ID)
+                        .build());
+            }
+            // 设置缓存
+            RedisLists.pushAllJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), list);
+            RedisLists.setExpire(HostCacheKeyDefine.HOST_IDENTITY);
         }
-        // 转换
-        return HostIdentityConvert.MAPPER.to(records);
-    }
-
-    @Override
-    public List<HostIdentityVO> getHostIdentityList(HostIdentityQueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return hostIdentityDAO.of(wrapper).list(HostIdentityConvert.MAPPER::to);
-    }
-
-    @Override
-    public Long getHostIdentityCount(HostIdentityQueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return hostIdentityDAO.selectCount(wrapper);
+        // 删除默认值
+        return list.stream()
+                .filter(s -> !s.getId().equals(Const.NONE_ID))
+                .map(HostIdentityConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -124,58 +130,51 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 条件
         LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return hostIdentityDAO.of(wrapper)
+        DataGrid<HostIdentityVO> dataGrid = hostIdentityDAO.of(wrapper)
                 .page(request)
                 .dataGrid(HostIdentityConvert.MAPPER::to);
+        if (dataGrid.isEmpty()) {
+            return dataGrid;
+        }
+        // 设置秘钥名称
+        List<Long> keyIdList = dataGrid.stream()
+                .map(HostIdentityVO::getKeyId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (!keyIdList.isEmpty()) {
+            // 查询秘钥名称
+            Map<Long, String> keyNameMap = hostKeyDAO.selectBatchIds(keyIdList)
+                    .stream()
+                    .collect(Collectors.toMap(HostKeyDO::getId, HostKeyDO::getName));
+            dataGrid.forEach(s -> {
+                if (s.getKeyId() == null) {
+                    return;
+                }
+                s.setKeyName(keyNameMap.get(s.getKeyId()));
+            });
+        }
+        return dataGrid;
     }
 
     @Override
     public Integer deleteHostIdentityById(Long id) {
         log.info("HostIdentityService-deleteHostIdentityById id: {}", id);
+        // 检查数据是否存在
+        HostIdentityDO record = hostIdentityDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 删除数据库
         int effect = hostIdentityDAO.deleteById(id);
+        // TODO config
+
+        // 删除缓存
+        RedisLists.removeJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));
         log.info("HostIdentityService-deleteHostIdentityById effect: {}", effect);
         return effect;
     }
 
-    @Override
-    public Integer batchDeleteHostIdentityByIdList(List<Long> idList) {
-        log.info("HostIdentityService-batchDeleteHostIdentityByIdList idList: {}", idList);
-        int effect = hostIdentityDAO.deleteBatchIds(idList);
-        log.info("HostIdentityService-batchDeleteHostIdentityByIdList effect: {}", effect);
-        return effect;
-    }
-
-    @Override
-    public Integer deleteHostIdentity(HostIdentityQueryRequest request) {
-        log.info("HostIdentityService.deleteHostIdentity request: {}", JSON.toJSONString(request));
-        // 条件
-        LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(request);
-        // 删除
-        int effect = hostIdentityDAO.delete(wrapper);
-        log.info("HostIdentityService.deleteHostIdentity effect: {}", effect);
-        return effect;
-    }
-
-    @Override
-    public void exportHostIdentity(HostIdentityQueryRequest request, HttpServletResponse response) throws IOException {
-        log.info("HostIdentityService.exportHostIdentity request: {}", JSON.toJSONString(request));
-        // 条件
-        LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        List<HostIdentityExport> rows = hostIdentityDAO.of(wrapper).list(HostIdentityConvert.MAPPER::toExport);
-        log.info("HostIdentityService.exportHostIdentity size: {}", rows.size());
-        // 导出
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ExcelExport.create(HostIdentityExport.class)
-                .addRows(rows)
-                .write(out)
-                .close();
-        // 传输
-        Servlets.transfer(response, out.toByteArray(), FileNames.exportName(HostIdentityExport.TITLE));
-    }
-
     /**
-     * 检测对象是否存在
+     * 检查对象是否存在
      *
      * @param domain domain
      */
@@ -185,13 +184,22 @@ public class HostIdentityServiceImpl implements HostIdentityService {
                 // 更新时忽略当前记录
                 .ne(HostIdentityDO::getId, domain.getId())
                 // 用其他字段做重复校验
-                .eq(HostIdentityDO::getName, domain.getName())
-                .eq(HostIdentityDO::getUsername, domain.getUsername())
-                .eq(HostIdentityDO::getPassword, domain.getPassword())
-                .eq(HostIdentityDO::getKeyId, domain.getKeyId());
+                .eq(HostIdentityDO::getName, domain.getName());
         // 检查是否存在
         boolean present = hostIdentityDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+    }
+
+    /**
+     * 检查秘钥是否存在
+     *
+     * @param keyId keyId
+     */
+    private void checkKeyIdPresent(Long keyId) {
+        if (keyId == null) {
+            return;
+        }
+        Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
     }
 
     /**
@@ -203,9 +211,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     private LambdaQueryWrapper<HostIdentityDO> buildQueryWrapper(HostIdentityQueryRequest request) {
         return hostIdentityDAO.wrapper()
                 .eq(HostIdentityDO::getId, request.getId())
-                .eq(HostIdentityDO::getName, request.getName())
-                .eq(HostIdentityDO::getUsername, request.getUsername())
-                .eq(HostIdentityDO::getPassword, request.getPassword())
+                .like(HostIdentityDO::getName, request.getName())
+                .like(HostIdentityDO::getUsername, request.getUsername())
                 .eq(HostIdentityDO::getKeyId, request.getKeyId());
     }
 

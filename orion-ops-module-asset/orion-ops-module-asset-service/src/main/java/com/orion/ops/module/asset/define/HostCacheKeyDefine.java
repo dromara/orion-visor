@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.define;
 
 import com.orion.lang.define.cache.CacheKeyBuilder;
 import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.ops.module.asset.entity.dto.HostIdentityCacheDTO;
 import com.orion.ops.module.asset.entity.dto.HostKeyCacheDTO;
 
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,13 @@ public interface HostCacheKeyDefine {
             .key("host:key:list")
             .desc("主机秘钥列表")
             .type(HostKeyCacheDTO.class)
+            .timeout(3, TimeUnit.DAYS)
+            .build();
+
+    CacheKeyDefine HOST_IDENTITY = new CacheKeyBuilder()
+            .key("host:identity:list")
+            .desc("主机身份列表")
+            .type(HostIdentityCacheDTO.class)
             .timeout(3, TimeUnit.DAYS)
             .build();
 

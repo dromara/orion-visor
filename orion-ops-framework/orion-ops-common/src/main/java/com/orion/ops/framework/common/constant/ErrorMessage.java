@@ -21,6 +21,8 @@ public interface ErrorMessage {
 
     String DATA_ABSENT = "数据不存在";
 
+    String KEY_ABSENT = "秘钥不存在";
+
     String CONFIG_ABSENT = "配置不存在";
 
     String DATA_PRESENT = "数据已存在";

@@ -29,12 +29,23 @@
           <a-input v-model="formModel.username" placeholder="请输入用户名" />
         </a-form-item>
         <!-- 用户密码 -->
-        <a-form-item field="password" label="用户密码">
-          <a-input v-model="formModel.password" placeholder="请输入用户密码" />
+        <a-form-item field="password"
+                     label="用户密码"
+                     style="justify-content: space-between;">
+          <a-input-password v-model="formModel.password"
+                            :disabled="!formModel.useNewPassword"
+                            class="password-input"
+                            placeholder="请输入用户密码" />
+          <a-switch v-model="formModel.useNewPassword"
+                    class="password-switch"
+                    type="round"
+                    size="large"
+                    checked-text="使用新密码"
+                    unchecked-text="使用原密码" />
         </a-form-item>
         <!-- 秘钥id -->
-        <a-form-item field="keyId" label="秘钥id">
-          <a-input-number v-model="formModel.keyId" placeholder="请输入秘钥id" />
+        <a-form-item field="keyId" label="主机秘钥">
+          <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -54,9 +65,7 @@
   import formRules from '../types/form.rules';
   import { createHostIdentity, updateHostIdentity } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
-  import {} from '../types/enum.types';
-  import {} from '../types/const';
-  import { toOptions } from '@/utils/enum';
+  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -70,6 +79,7 @@
       name: undefined,
       username: undefined,
       password: undefined,
+      useNewPassword: false,
       keyId: undefined,
     };
   };
@@ -147,5 +157,11 @@
 </script>
 
 <style lang="less" scoped>
+  .password-input {
+    width: 240px;
+  }
 
+  .password-switch {
+    margin-left: 16px;
+  }
 </style>

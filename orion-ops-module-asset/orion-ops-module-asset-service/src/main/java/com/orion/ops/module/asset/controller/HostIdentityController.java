@@ -5,11 +5,11 @@ import com.orion.ops.framework.common.annotation.IgnoreLog;
 import com.orion.ops.framework.common.annotation.RestWrapper;
 import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.valid.group.Page;
-import com.orion.ops.module.asset.service.*;
-import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.entity.request.host.*;
-import com.orion.ops.module.asset.entity.export.*;
-import com.orion.ops.module.asset.convert.*;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
+import com.orion.ops.module.asset.service.HostIdentityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,8 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -67,19 +65,11 @@ public class HostIdentityController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
-    @Operation(summary = "通过 id 批量查询主机身份")
+    @Operation(summary = "查询主机身份")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('asset:host-identity:query')")
-    public List<HostIdentityVO> getHostIdentityList(@RequestParam("idList") List<Long> idList) {
-        return hostIdentityService.getHostIdentityByIdList(idList);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list-all")
-    @Operation(summary = "查询主机身份")
-    @PreAuthorize("@ss.hasPermission('asset:host-identity:query')")
-    public List<HostIdentityVO> getHostIdentityListAll(@Validated @RequestBody HostIdentityQueryRequest request) {
-        return hostIdentityService.getHostIdentityList(request);
+    public List<HostIdentityVO> getHostIdentityList() {
+        return hostIdentityService.getHostIdentityList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -96,22 +86,6 @@ public class HostIdentityController {
     @PreAuthorize("@ss.hasPermission('asset:host-identity:delete')")
     public Integer deleteHostIdentity(@RequestParam("id") Long id) {
         return hostIdentityService.deleteHostIdentityById(id);
-    }
-
-    @DeleteMapping("/delete-batch")
-    @Operation(summary = "通过 id 批量删除主机身份")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-identity:delete')")
-    public Integer batchDeleteHostIdentity(@RequestParam("idList") List<Long> idList) {
-        return hostIdentityService.batchDeleteHostIdentityByIdList(idList);
-    }
-
-    @PostMapping("/export")
-    @Operation(summary = "导出主机身份")
-    @PreAuthorize("@ss.hasPermission('asset:host-identity:export')")
-    public void exportHostIdentity(@Validated @RequestBody HostIdentityQueryRequest request,
-                              HttpServletResponse response) throws IOException {
-        hostIdentityService.exportHostIdentity(request, response);
     }
 
 }

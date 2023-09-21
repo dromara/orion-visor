@@ -21,4 +21,10 @@
         id, name, username, password, key_id, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <update id="setKeyWithNull">
+        UPDATE host_identity
+        SET key_id = NULL
+        WHERE key_id = #{keyId}
+    </update>
+
 </mapper>

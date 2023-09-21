@@ -1,13 +1,11 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.entity.request.host.*;
-import com.orion.ops.module.asset.entity.export.*;
-import com.orion.ops.module.asset.convert.*;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,15 +34,6 @@ public interface HostIdentityService {
     Integer updateHostIdentityById(HostIdentityUpdateRequest request);
 
     /**
-     * 更新主机身份
-     *
-     * @param query  query
-     * @param update update
-     * @return effect
-     */
-    Integer updateHostIdentity(HostIdentityQueryRequest query, HostIdentityUpdateRequest update);
-
-    /**
      * 通过 id 查询主机身份
      *
      * @param id id
@@ -53,28 +42,11 @@ public interface HostIdentityService {
     HostIdentityVO getHostIdentityById(Long id);
 
     /**
-     * 通过 id 批量查询主机身份
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<HostIdentityVO> getHostIdentityByIdList(List<Long> idList);
-
-    /**
      * 查询主机身份
      *
-     * @param request request
      * @return rows
      */
-    List<HostIdentityVO> getHostIdentityList(HostIdentityQueryRequest request);
-
-    /**
-     * 查询主机身份数量
-     *
-     * @param request request
-     * @return count
-     */
-    Long getHostIdentityCount(HostIdentityQueryRequest request);
+    List<HostIdentityVO> getHostIdentityList();
 
     /**
      * 分页查询主机身份
@@ -91,30 +63,5 @@ public interface HostIdentityService {
      * @return effect
      */
     Integer deleteHostIdentityById(Long id);
-
-    /**
-     * 通过 id 批量删除主机身份
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer batchDeleteHostIdentityByIdList(List<Long> idList);
-
-    /**
-     * 删除主机身份
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer deleteHostIdentity(HostIdentityQueryRequest request);
-
-    /**
-     * 导出主机身份
-     *
-     * @param request  request
-     * @param response response
-     * @throws IOException IOException
-     */
-    void exportHostIdentity(HostIdentityQueryRequest request, HttpServletResponse response) throws IOException;
 
 }

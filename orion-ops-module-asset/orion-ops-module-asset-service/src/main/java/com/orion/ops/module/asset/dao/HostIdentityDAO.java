@@ -1,9 +1,9 @@
 package com.orion.ops.module.asset.dao;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 主机身份 Mapper 接口
@@ -16,18 +16,11 @@ import org.apache.ibatis.annotations.Mapper;
 public interface HostIdentityDAO extends IMapper<HostIdentityDO> {
 
     /**
-     * 获取查询条件
+     * 设置 keyId 为 null
      *
-     * @param entity entity
-     * @return 查询条件
+     * @param keyId keyId
+     * @return effect
      */
-    default LambdaQueryWrapper<HostIdentityDO> queryCondition(HostIdentityDO entity) {
-        return this.wrapper()
-                .eq(HostIdentityDO::getId, entity.getId())
-                .eq(HostIdentityDO::getName, entity.getName())
-                .eq(HostIdentityDO::getUsername, entity.getUsername())
-                .eq(HostIdentityDO::getPassword, entity.getPassword())
-                .eq(HostIdentityDO::getKeyId, entity.getKeyId());
-    }
+    int setKeyWithNull(@Param("keyId") Long keyId);
 
 }

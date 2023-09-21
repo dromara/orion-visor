@@ -1,10 +1,11 @@
 package com.orion.ops.module.asset.convert;
 
-import com.orion.ops.module.asset.entity.domain.*;
-import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.entity.request.host.*;
-import com.orion.ops.module.asset.entity.export.*;
-import com.orion.ops.module.asset.convert.*;
+import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
+import com.orion.ops.module.asset.entity.dto.HostIdentityCacheDTO;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -30,7 +31,9 @@ public interface HostIdentityConvert {
 
     HostIdentityVO to(HostIdentityDO domain);
 
-    HostIdentityExport toExport(HostIdentityDO domain);
+    HostIdentityVO to(HostIdentityCacheDTO cache);
+
+    HostIdentityCacheDTO toCache(HostIdentityDO domain);
 
     List<HostIdentityVO> to(List<HostIdentityDO> list);
 

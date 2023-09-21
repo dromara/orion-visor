@@ -9,7 +9,6 @@ export interface HostKeyCreateRequest {
   publicKey?: string;
   privateKey?: string;
   password?: string;
-  useNewPassword?: boolean;
 }
 
 /**
@@ -17,6 +16,7 @@ export interface HostKeyCreateRequest {
  */
 export interface HostKeyUpdateRequest extends HostKeyCreateRequest {
   id: number;
+  useNewPassword?: boolean;
 }
 
 /**
@@ -66,8 +66,8 @@ export function getHostKey(id: number) {
 /**
  * 查询主机秘钥
  */
-export function getHostKeyListAll() {
-  return axios.post<Array<HostKeyQueryResponse>>('/asset/host-key/list-all');
+export function getHostKeyList() {
+  return axios.post<Array<HostKeyQueryResponse>>('/asset/host-key/list');
 }
 
 /**

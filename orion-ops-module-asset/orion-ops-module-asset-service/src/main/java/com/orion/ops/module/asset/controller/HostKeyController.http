@@ -30,7 +30,7 @@ GET {{baseUrl}}/asset/host-key/get?id=1
 Authorization: {{token}}
 
 ### 查询主机秘钥
-POST {{baseUrl}}/asset/host-key/list-all
+POST {{baseUrl}}/asset/host-key/list
 Content-Type: application/json
 Authorization: {{token}}
 

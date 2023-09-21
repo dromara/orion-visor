@@ -72,7 +72,7 @@
              :bordered="false">
       <!-- 用户名 -->
       <template #username="{ record }">
-        <span class="username-text">{{ record.username }}</span>
+        <span class="span-blue">{{ record.username }}</span>
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
@@ -248,7 +248,5 @@
 </script>
 
 <style lang="less" scoped>
-  .username-text {
-    color: rgb(var(--arcoblue-6));
-  }
+
 </style>

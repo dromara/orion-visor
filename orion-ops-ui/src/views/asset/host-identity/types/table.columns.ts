@@ -13,28 +13,14 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     slotName: 'name',
-    align: 'center',
-    ellipsis: true,
-    tooltip: true,
   }, {
     title: '用户名',
     dataIndex: 'username',
     slotName: 'username',
-    align: 'center',
-    ellipsis: true,
-    tooltip: true,
   }, {
-    title: '用户密码',
-    dataIndex: 'password',
-    slotName: 'password',
-    align: 'center',
-    ellipsis: true,
-    tooltip: true,
-  }, {
-    title: '秘钥id',
+    title: '主机秘钥',
     dataIndex: 'keyId',
     slotName: 'keyId',
-    align: 'center',
   }, {
     title: '创建时间',
     dataIndex: 'createTime',
@@ -53,14 +39,6 @@ const columns = [
     render: ({ record }) => {
       return dateFormat(new Date(record.updateTime));
     },
-  }, {
-    title: '创建人',
-    dataIndex: 'creator',
-    slotName: 'creator',
-  }, {
-    title: '修改人',
-    dataIndex: 'updater',
-    slotName: 'updater',
   }, {
     title: '操作',
     slotName: 'handle',

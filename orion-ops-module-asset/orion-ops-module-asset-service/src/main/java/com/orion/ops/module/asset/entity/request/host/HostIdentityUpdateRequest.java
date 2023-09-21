@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.entity.request.host;
 
+import com.orion.ops.framework.common.security.UpdatePasswordAction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 /**
  * 主机身份 更新请求对象
@@ -23,7 +23,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "HostIdentityUpdateRequest", description = "主机身份 更新请求对象")
-public class HostIdentityUpdateRequest implements Serializable {
+public class HostIdentityUpdateRequest implements UpdatePasswordAction {
 
     @NotNull
     @Schema(description = "id")
@@ -47,5 +47,8 @@ public class HostIdentityUpdateRequest implements Serializable {
     @NotNull
     @Schema(description = "秘钥id")
     private Long keyId;
+
+    @Schema(description = "是否使用新密码")
+    private Boolean useNewPassword;
 
 }

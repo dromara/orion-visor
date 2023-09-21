@@ -14,7 +14,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-key'
+    name: 'assetHostKey'
   };
 </script>
 

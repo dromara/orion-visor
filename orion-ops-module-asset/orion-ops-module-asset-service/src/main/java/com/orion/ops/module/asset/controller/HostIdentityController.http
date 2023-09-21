@@ -31,22 +31,8 @@ Authorization: {{token}}
 
 
 ### 通过 id 批量查询主机身份
-GET {{baseUrl}}/asset/host-identity/list?idList=1,2,3
+GET {{baseUrl}}/asset/host-identity/list
 Authorization: {{token}}
-
-
-### 查询主机身份
-POST {{baseUrl}}/asset/host-identity/list-all
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "name": "",
-  "username": "",
-  "password": "",
-  "keyId": ""
-}
 
 
 ### 分页查询主机身份
@@ -69,24 +55,3 @@ Authorization: {{token}}
 DELETE {{baseUrl}}/asset/host-identity/delete?id=1
 Authorization: {{token}}
 
-
-### 通过 id 批量删除主机身份
-DELETE {{baseUrl}}/asset/host-identity/delete-batch?idList=1,2,3
-Authorization: {{token}}
-
-
-### 导出主机身份
-POST {{baseUrl}}/asset/host-identity/export
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "name": "",
-  "username": "",
-  "password": "",
-  "keyId": ""
-}
-
-
-###

@@ -3,14 +3,15 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.module.asset.convert.HostKeyConvert;
+import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
 import com.orion.ops.module.asset.define.HostCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
@@ -22,6 +23,7 @@ import com.orion.ops.module.asset.entity.vo.HostKeyVO;
 import com.orion.ops.module.asset.service.HostKeyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,6 +42,9 @@ public class HostKeyServiceImpl implements HostKeyService {
 
     @Resource
     private HostKeyDAO hostKeyDAO;
+
+    @Resource
+    private HostIdentityDAO hostIdentityDAO;
 
     @Override
     public Long createHostKey(HostKeyCreateRequest request) {
@@ -73,25 +78,17 @@ public class HostKeyServiceImpl implements HostKeyService {
         HostKeyDO updateRecord = HostKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostKeyPresent(updateRecord);
-        if (Booleans.isTrue(request.getUseNewPassword())) {
-            // 使用新密码
-            String password = updateRecord.getPassword();
-            if (Strings.isBlank(password)) {
-                updateRecord.setPassword(Const.EMPTY);
-            } else {
-                updateRecord.setPassword(CryptoUtils.encryptAsString(password));
-            }
-        } else {
-            updateRecord.setPassword(null);
-        }
+        // 设置密码
+        String newPassword = PasswordModifier.getEncryptNewPassword(request);
+        updateRecord.setPassword(newPassword);
         // 更新
         int effect = hostKeyDAO.updateById(updateRecord);
-        log.info("HostKeyService-updateHostKeyById effect: {}", effect);
         // 设置缓存
         if (!record.getName().equals(updateRecord.getName())) {
             RedisLists.removeJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(record));
             RedisLists.pushJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(updateRecord));
         }
+        log.info("HostKeyService-updateHostKeyById effect: {}", effect);
         return effect;
     }
 
@@ -130,6 +127,7 @@ public class HostKeyServiceImpl implements HostKeyService {
             }
             // 设置缓存
             RedisLists.pushAllJson(HostCacheKeyDefine.HOST_KEY.getKey(), list);
+            RedisLists.setExpire(HostCacheKeyDefine.HOST_KEY);
         }
         // 删除默认值
         return list.stream()
@@ -151,15 +149,26 @@ public class HostKeyServiceImpl implements HostKeyService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteHostKeyById(Long id) {
         log.info("HostKeyService-deleteHostKeyById id: {}", id);
+        // 检查数据是否存在
+        HostKeyDO record = hostKeyDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 删除数据库
         int effect = hostKeyDAO.deleteById(id);
+        // 删除关联
+        hostIdentityDAO.setKeyWithNull(id);
+        // TODO config
+
+        // 删除缓存
+        RedisLists.removeJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(record));
         log.info("HostKeyService-deleteHostKeyById effect: {}", effect);
         return effect;
     }
 
     /**
-     * 检测对象是否存在
+     * 检查对象是否存在
      *
      * @param domain domain
      */

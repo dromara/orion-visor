@@ -1,10 +1,13 @@
 package com.orion.ops.module.asset.entity.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
 
 /**
  * 主机身份 视图响应对象
@@ -31,22 +34,16 @@ public class HostIdentityVO implements Serializable {
     @Schema(description = "用户名")
     private String username;
 
-    @Schema(description = "用户密码")
-    private String password;
-
     @Schema(description = "秘钥id")
     private Long keyId;
+
+    @Schema(description = "秘钥名称")
+    private String keyName;
 
     @Schema(description = "创建时间")
     private Date createTime;
 
     @Schema(description = "修改时间")
     private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
 
 }

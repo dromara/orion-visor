@@ -20,7 +20,7 @@
     <template #title>
       <!-- 左侧标题 -->
       <div class="table-title">
-        主机秘钥列表
+        秘钥列表
       </div>
       <!-- 右侧按钮 -->
       <div class="table-bar-handle">
@@ -49,6 +49,10 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
+      <!-- 名称 -->
+      <template #name="{ record }">
+        <span class="span-blue">{{ record.name }}</span>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">

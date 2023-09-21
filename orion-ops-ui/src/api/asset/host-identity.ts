@@ -17,6 +17,7 @@ export interface HostIdentityCreateRequest {
  */
 export interface HostIdentityUpdateRequest extends HostIdentityCreateRequest {
   id: number;
+  useNewPassword?: boolean;
 }
 
 /**
@@ -67,22 +68,10 @@ export function getHostIdentity(id: number) {
 }
 
 /**
- * 通过 id 批量查询主机身份
- */
-export function getHostIdentityList(idList: Array<number>) {
-  return axios.get<HostIdentityQueryResponse[]>('/asset/host-identity/list', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
-}
-
-/**
  * 查询主机身份
  */
-export function getHostIdentityListAll(request: HostIdentityQueryRequest) {
-  return axios.post<Array<HostIdentityQueryResponse>>('/asset/host-identity/list-all', request);
+export function getHostIdentityList() {
+  return axios.post<Array<HostIdentityQueryResponse>>('/asset/host-identity/list');
 }
 
 /**
@@ -99,14 +88,3 @@ export function deleteHostIdentity(id: number) {
   return axios.delete('/asset/host-identity/delete', { params: { id } });
 }
 
-/**
- * 通过 id 批量删除主机身份
- */
-export function batchDeleteHostIdentity(idList: Array<number>) {
-  return axios.delete('/asset/host-identity/delete-batch', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
-}

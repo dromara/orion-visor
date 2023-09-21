@@ -64,10 +64,10 @@ public class HostKeyController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list-all")
+    @PostMapping("/list")
     @Operation(summary = "查询主机秘钥")
     @PreAuthorize("@ss.hasPermission('asset:host-key:query')")
-    public List<HostKeyVO> getHostKeyListAll() {
+    public List<HostKeyVO> getHostKeyList() {
         return hostKeyService.getHostKeyList();
     }
 

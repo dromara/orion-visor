@@ -25,7 +25,6 @@ const columns = [
     title: '手机号',
     dataIndex: 'mobile',
     slotName: 'mobile',
-    align: 'center',
     ellipsis: true,
     tooltip: true,
   }, {

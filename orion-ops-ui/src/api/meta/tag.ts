@@ -13,7 +13,7 @@ export interface TagCreateRequest {
 /**
  * tag 响应对象
  */
-export interface TagResponse {
+export interface TagQueryResponse {
   id: number;
   name: string;
 }
@@ -29,5 +29,5 @@ export function createTag(request: TagCreateRequest) {
  * 查询标签
  */
 export function getTagList(type: TagType) {
-  return axios.get<TagResponse>('/infra/tag/list', { params: { type } });
+  return axios.get<TagQueryResponse>('/infra/tag/list', { params: { type } });
 }
