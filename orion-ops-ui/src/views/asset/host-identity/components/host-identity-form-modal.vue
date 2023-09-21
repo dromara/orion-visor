@@ -64,7 +64,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createHostIdentity, updateHostIdentity } from '@/api/asset/host-identity';
+  import { createHostIdentity, updateHostIdentity, HostIdentityUpdateRequest } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
 
@@ -74,7 +74,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = () => {
+  const defaultForm = (): HostIdentityUpdateRequest & Record<string, any> => {
     return {
       id: undefined,
       name: undefined,
@@ -86,7 +86,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = reactive<HostIdentityUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -130,12 +130,12 @@
           return false;
         }
         // 新增
-        await createHostIdentity(formModel as any);
+        await createHostIdentity(formModel);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostIdentity(formModel as any);
+        await updateHostIdentity(formModel);
         Message.success('修改成功');
         emits('updated');
       }

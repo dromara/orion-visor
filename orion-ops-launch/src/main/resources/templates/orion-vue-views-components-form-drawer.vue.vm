@@ -61,7 +61,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = () => {
+  const defaultForm = (): ${vue.featureEntity}UpdateRequest & Record<string, any> => {
     return {
     #foreach($field in ${table.fields})
       ${field.propertyName}: undefined,
@@ -70,7 +70,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = reactive<${vue.featureEntity}UpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -110,12 +110,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await create${vue.featureEntity}(formModel as any);
+        await create${vue.featureEntity}(formModel);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await update${vue.featureEntity}(formModel as any);
+        await update${vue.featureEntity}(formModel);
         Message.success('修改成功');
         emits('updated');
       }

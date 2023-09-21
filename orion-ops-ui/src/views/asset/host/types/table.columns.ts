@@ -12,6 +12,8 @@ const columns = [
     title: '主机名称',
     dataIndex: 'name',
     slotName: 'name',
+    ellipsis: true,
+    tooltip: true
   }, {
     title: '主机编码',
     dataIndex: 'code',
@@ -20,6 +22,7 @@ const columns = [
     title: '主机地址',
     dataIndex: 'address',
     slotName: 'address',
+    width: 260
   }, {
     title: '标签',
     dataIndex: 'tag',

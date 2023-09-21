@@ -14,7 +14,7 @@ export interface RoleCreateRequest {
  * 角色更新请求
  */
 export interface RoleUpdateRequest extends RoleCreateRequest {
-  id: number;
+  id: number | undefined;
 }
 
 /**

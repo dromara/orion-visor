@@ -126,7 +126,7 @@
   import { toOptions } from '@/utils/enum';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
   import MenuTreeSelector from './menu-tree-selector.vue';
-  import { createMenu, updateMenu } from '@/api/system/menu';
+  import { createMenu, updateMenu, MenuUpdateRequest } from '@/api/system/menu';
   import { Message } from '@arco-design/web-vue';
 
   const { visible, setVisible } = useVisible();
@@ -135,7 +135,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = () => {
+  const defaultForm = (): MenuUpdateRequest & Record<string, any> => {
     return {
       id: undefined,
       parentId: 0,
@@ -152,7 +152,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = reactive<MenuUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -208,12 +208,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createMenu(formModel as any);
+        await createMenu(formModel);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateMenu(formModel as any);
+        await updateMenu(formModel);
         Message.success('修改成功');
         emits('updated');
       }

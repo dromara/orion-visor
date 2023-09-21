@@ -17,21 +17,12 @@ export const username = [{
 }] as FieldRule[];
 
 export const password = [{
-  required: true,
-  message: '请输入用户密码'
-}, {
   maxLength: 512,
   message: '用户密码长度不能大于512位'
-}] as FieldRule[];
-
-export const keyId = [{
-  required: true,
-  message: '请输入秘钥id'
 }] as FieldRule[];
 
 export default {
   name,
   username,
   password,
-  keyId,
 } as Record<string, FieldRule | FieldRule[]>;

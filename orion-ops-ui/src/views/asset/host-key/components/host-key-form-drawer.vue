@@ -92,7 +92,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createHostKey, updateHostKey, getHostKey } from '@/api/asset/host-key';
+  import { createHostKey, updateHostKey, getHostKey, HostKeyUpdateRequest } from '@/api/asset/host-key';
   import { FileItem, Message } from '@arco-design/web-vue';
   import {} from '../types/enum.types';
   import {} from '../types/const';
@@ -105,7 +105,7 @@
   const isAddHandle = ref<boolean>(true);
   const isViewHandler = ref<boolean>(false);
 
-  const defaultForm = () => {
+  const defaultForm = (): HostKeyUpdateRequest & Record<string, any> => {
     return {
       id: undefined,
       name: undefined,
@@ -117,7 +117,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = reactive<HostKeyUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -192,12 +192,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createHostKey(formModel as any);
+        await createHostKey(formModel);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostKey(formModel as any);
+        await updateHostKey(formModel);
         Message.success('修改成功');
         emits('updated');
       }

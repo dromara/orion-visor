@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.dao;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,6 +23,11 @@ public interface HostIdentityDAO extends IMapper<HostIdentityDO> {
      * @param keyId keyId
      * @return effect
      */
-    int setKeyWithNull(@Param("keyId") Long keyId);
+    default int setKeyWithNull(@Param("keyId") Long keyId) {
+        LambdaUpdateWrapper<HostIdentityDO> updateWrapper = Wrappers.<HostIdentityDO>lambdaUpdate()
+                .set(HostIdentityDO::getKeyId, null)
+                .eq(HostIdentityDO::getKeyId, keyId);
+        return this.update(null, updateWrapper);
+    }
 
 }
