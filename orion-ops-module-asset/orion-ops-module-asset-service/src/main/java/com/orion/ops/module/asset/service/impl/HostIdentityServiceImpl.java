@@ -2,6 +2,8 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
@@ -82,7 +84,10 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         String newPassword = PasswordModifier.getEncryptNewPassword(request);
         updateRecord.setPassword(newPassword);
         // 更新
-        int effect = hostIdentityDAO.updateById(updateRecord);
+        LambdaUpdateWrapper<HostIdentityDO> wrapper = Wrappers.<HostIdentityDO>lambdaUpdate()
+                .set(HostIdentityDO::getKeyId, request.getKeyId())
+                .eq(HostIdentityDO::getId, id);
+        int effect = hostIdentityDAO.update(updateRecord, wrapper);
         // 设置缓存
         if (!record.getName().equals(updateRecord.getName())) {
             RedisLists.removeJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));

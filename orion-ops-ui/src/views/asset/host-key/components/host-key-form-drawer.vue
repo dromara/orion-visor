@@ -64,20 +64,17 @@
                      label="密码"
                      style="justify-content: space-between;">
           <a-input-password v-model="formModel.password"
-                            :disabled="!formModel.useNewPassword"
+                            :disabled="!isAddHandle && !formModel.useNewPassword"
+                            :class="[isAddHandle ? 'password-input-full' : 'password-input']"
                             class="password-input"
                             placeholder="请输入私钥密码" />
           <a-switch v-model="formModel.useNewPassword"
+                    v-if="!isAddHandle"
                     class="password-switch"
                     type="round"
-                    size="large">
-            <template #checked>
-              使用新密码
-            </template>
-            <template #unchecked>
-              使用原密码
-            </template>
-          </a-switch>
+                    size="large"
+                    checked-text="使用新密码"
+                    unchecked-text="使用原密码" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -239,6 +236,10 @@
 
   .password-input {
     width: 240px;
+  }
+
+  .password-input-full {
+    width: 100%;
   }
 
   .password-switch {

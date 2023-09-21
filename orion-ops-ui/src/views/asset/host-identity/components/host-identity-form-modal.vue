@@ -33,10 +33,11 @@
                      label="用户密码"
                      style="justify-content: space-between;">
           <a-input-password v-model="formModel.password"
-                            :disabled="!formModel.useNewPassword"
-                            class="password-input"
+                            :disabled="!isAddHandle && !formModel.useNewPassword"
+                            :class="[isAddHandle ? 'password-input-full' : 'password-input']"
                             placeholder="请输入用户密码" />
           <a-switch v-model="formModel.useNewPassword"
+                    v-if="!isAddHandle"
                     class="password-switch"
                     type="round"
                     size="large"
@@ -124,6 +125,10 @@
         return false;
       }
       if (isAddHandle.value) {
+        if (!formModel.password && !formModel.keyId) {
+          Message.error('创建时密码和秘钥不能同时为空');
+          return false;
+        }
         // 新增
         await createHostIdentity(formModel as any);
         Message.success('创建成功');
@@ -159,6 +164,10 @@
 <style lang="less" scoped>
   .password-input {
     width: 240px;
+  }
+
+  .password-input-full {
+    width: 100%;
   }
 
   .password-switch {

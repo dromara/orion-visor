@@ -52,11 +52,11 @@ export const MenuVisibleEnum = {
  * 菜单缓存状态
  */
 export const MenuCacheEnum = {
-  HIDE: {
+  DISABLED: {
     value: 0,
     label: '不缓存',
   },
-  SHOW: {
+  ENABLED: {
     value: 1,
     label: '缓存',
   }

@@ -84,18 +84,26 @@
                      field="type"
                      label="是否可见"
                      tooltip="选择隐藏后不会在菜单以及 tab 中显示 但是可以访问">
-          <a-radio-group type="button"
-                         v-model="formModel.visible"
-                         :options="toOptions(MenuVisibleEnum)" />
+          <a-switch type="round"
+                    size="large"
+                    v-model="formModel.visible"
+                    :checked-text="MenuVisibleEnum.SHOW.label"
+                    :checked-value="MenuVisibleEnum.SHOW.value"
+                    :unchecked-text="MenuVisibleEnum.HIDE.label"
+                    :unchecked-value="MenuVisibleEnum.HIDE.value" />
         </a-form-item>
         <!-- 是否缓存 -->
         <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
                      field="type"
                      label="是否缓存"
                      tooltip="选择缓存后则会使用 keep-alive 缓存组件">
-          <a-radio-group type="button"
-                         v-model="formModel.cache"
-                         :options="toOptions(MenuCacheEnum)" />
+          <a-switch type="round"
+                    size="large"
+                    v-model="formModel.cache"
+                    :checked-text="MenuCacheEnum.ENABLED.label"
+                    :checked-value="MenuCacheEnum.ENABLED.value"
+                    :unchecked-text="MenuCacheEnum.DISABLED.label"
+                    :unchecked-value="MenuCacheEnum.DISABLED.value" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -136,7 +144,7 @@
       permission: undefined,
       sort: undefined,
       visible: MenuVisibleEnum.SHOW.value,
-      cache: MenuCacheEnum.SHOW.value,
+      cache: MenuCacheEnum.ENABLED.value,
       icon: undefined,
       path: undefined,
       component: undefined,

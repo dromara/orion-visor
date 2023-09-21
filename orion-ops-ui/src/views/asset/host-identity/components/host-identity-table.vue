@@ -57,9 +57,31 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
-      <!-- 操作 -->
+      <!-- 用户名 -->
+      <template #username="{ record }">
+        <a-tooltip content="点击复制">
+          <span class="pointer span-blue" @click="copy(record.username)">
+            <icon-copy class="mr4" />{{ record.username }}
+          </span>
+        </a-tooltip>
+      </template>
+      <!-- 秘钥名称 -->
       <template #keyId="{ record }">
-        {{ record.keyName }}
+        <template v-if="record.keyId">
+          <!-- 可查看详情 -->
+          <a-tooltip v-if="hasAnyPermission(['asset:host-key:detail', 'asset:host-key:update'])"
+                     content="点击查看详情">
+            <a-tag :checked="true"
+                   checkable
+                   @click="emits('openKeyView',{id: record.keyId})">
+              {{ record.keyName }}
+            </a-tag>
+          </a-tooltip>
+          <!-- 不可查看详情 -->
+          <a-tag v-else>
+            {{ record.keyName }}
+          </a-tag>
+        </template>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
@@ -105,10 +127,15 @@
   import { getHostKeyList } from '@/api/asset/host-key';
   import { useCacheStore } from '@/store';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import useCopy from '@/hooks/copy';
+  import usePermission from '@/hooks/permission';
+
+  const { copy } = useCopy();
+  const { hasAnyPermission } = usePermission();
 
   const tableRenderData = ref<HostIdentityQueryResponse[]>();
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openViewKey']);
 
   const cacheStore = useCacheStore();
   const pagination = reactive(defaultPagination());
