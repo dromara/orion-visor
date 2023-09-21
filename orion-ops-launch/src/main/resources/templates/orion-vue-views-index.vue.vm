@@ -19,13 +19,12 @@
                    @added="() => table.addedCallback()"
                    @updated="() => table.updatedCallback()" />
     #end
-
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: '${vue.module}-${vue.feature}'
+    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}'
   };
 </script>
 

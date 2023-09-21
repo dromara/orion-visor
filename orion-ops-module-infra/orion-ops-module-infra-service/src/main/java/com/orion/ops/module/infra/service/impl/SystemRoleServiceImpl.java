@@ -172,7 +172,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     /**
-     * 检测名称是否存在
+     * 检查名称是否存在
      *
      * @param domain domain
      */
@@ -188,7 +188,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     }
 
     /**
-     * 检测编码是否存在
+     * 检查编码是否存在
      *
      * @param domain domain
      */

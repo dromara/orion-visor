@@ -24,7 +24,7 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
     protected String doUpload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) {
         // 获取返回文件路径
         String returnPath = this.getReturnPath(path);
-        // 检测文件是否存在
+        // 检查文件是否存在
         if (!overrideIfExist && this.isExists(returnPath)) {
             return returnPath;
         }

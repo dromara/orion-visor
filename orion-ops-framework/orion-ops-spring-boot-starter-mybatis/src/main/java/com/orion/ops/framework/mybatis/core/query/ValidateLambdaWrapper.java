@@ -34,7 +34,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
      */
     private boolean isIllegal(Object... objects) {
         for (Object object : objects) {
-            // 非 null 检测
+            // 非 null 检查
             if (object == null) {
                 return true;
             }

@@ -201,7 +201,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     /**
-     * 检测用户名否存在
+     * 检查用户名否存在
      *
      * @param domain domain
      */
@@ -217,7 +217,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     /**
-     * 检测花名是否存在
+     * 检查花名是否存在
      *
      * @param domain domain
      */

@@ -87,7 +87,7 @@ public class FileClientUtils {
     // TODO getOutputStream
 
     /**
-     * 检测文件是否存在
+     * 检查文件是否存在
      *
      * @param path path
      * @return 是否存在

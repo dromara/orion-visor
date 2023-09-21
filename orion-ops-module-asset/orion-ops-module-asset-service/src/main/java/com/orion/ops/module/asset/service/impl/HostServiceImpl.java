@@ -173,7 +173,7 @@ public class HostServiceImpl implements HostService {
     }
 
     /**
-     * 检测 name 是否存在
+     * 检查 name 是否存在
      *
      * @param domain domain
      */
@@ -189,7 +189,7 @@ public class HostServiceImpl implements HostService {
     }
 
     /**
-     * 检测 code 是否存在
+     * 检查 code 是否存在
      *
      * @param domain domain
      */
