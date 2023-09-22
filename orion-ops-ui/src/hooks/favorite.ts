@@ -17,6 +17,7 @@ export default function useFavorite(type: FavoriteType) {
         record[cancelField] = true;
         Message.success('已收藏');
       }
+    } catch (e) {
     } finally {
       loading.close();
     }

@@ -67,7 +67,7 @@ export function getHostKey(id: number) {
  * 查询主机秘钥
  */
 export function getHostKeyList() {
-  return axios.post<Array<HostKeyQueryResponse>>('/asset/host-key/list');
+  return axios.get<Array<HostKeyQueryResponse>>('/asset/host-key/list');
 }
 
 /**

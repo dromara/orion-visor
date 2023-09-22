@@ -103,7 +103,9 @@
   // 渲染表单
   const renderForm = (record: any) => {
     Object.keys(formModel).forEach(k => {
-      formModel[k] = record[k];
+      if (record.hasOwnProperty(k)) {
+        formModel[k] = record[k];
+      }
     });
   };
 

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import qs from 'query-string';
 import { DataGrid, Pagination } from '@/types/global';
 
 /**
@@ -71,7 +70,7 @@ export function getHostIdentity(id: number) {
  * 查询主机身份
  */
 export function getHostIdentityList() {
-  return axios.post<Array<HostIdentityQueryResponse>>('/asset/host-identity/list');
+  return axios.get<Array<HostIdentityQueryResponse>>('/asset/host-identity/list');
 }
 
 /**

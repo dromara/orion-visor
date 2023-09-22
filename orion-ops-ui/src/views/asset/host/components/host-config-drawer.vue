@@ -35,9 +35,13 @@
   import { Message } from '@arco-design/web-vue';
   import { getHostConfigAll } from '@/api/asset/host';
   import HostConfigSshForm from './host-config-ssh-form.vue';
+  import { useCacheStore } from '@/store';
+  import { getHostKeyList } from '@/api/asset/host-key';
+  import { getHostIdentityList } from '@/api/asset/host-identity';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+  const cacheStore = useCacheStore();
 
   const record = ref();
   const config = ref<Record<string, any>>({});
@@ -61,22 +65,33 @@
     }
   };
 
-  const handleOk = () => {
-    console.log('ok');
-    setLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setLoading(false);
-    }, 1000);
-  };
-
+  // 关闭
   const handleCancel = () => {
-    console.log('cancel');
     setLoading(false);
     setVisible(false);
   };
 
   defineExpose({ open });
+
+  // 加载主机秘钥
+  const fetchHostKeys = async () => {
+    try {
+      const { data } = await getHostKeyList();
+      cacheStore.set('hostKeys', data);
+    } catch (e) {
+    }
+  };
+  fetchHostKeys();
+
+  // 加载主机身份
+  const fetchHostIdentities = async () => {
+    try {
+      const { data } = await getHostIdentityList();
+      cacheStore.set('hostIdentities', data);
+    } catch (e) {
+    }
+  };
+  fetchHostIdentities();
 
 </script>
 

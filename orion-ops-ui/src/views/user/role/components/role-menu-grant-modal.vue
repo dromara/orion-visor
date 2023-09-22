@@ -79,6 +79,7 @@
       // 获取角色菜单
       const { data: roleMenuIdList } = await getRoleMenuId(record.id);
       tree.value.init(roleMenuIdList);
+    } catch (e) {
     } finally {
       setLoading(false);
     }

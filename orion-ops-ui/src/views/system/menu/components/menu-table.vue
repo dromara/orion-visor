@@ -235,6 +235,7 @@
         }
       }
       Message.success('删除成功');
+    } catch (e) {
     } finally {
       setFetchLoading(false);
     }
@@ -261,6 +262,7 @@
       const { data } = await getMenuList(formModel);
       tableRenderData.value = data as MenuQueryResponse[];
       cacheStore.set('menus', tableRenderData.value);
+    } catch (e) {
     } finally {
       setFetchLoading(false);
     }
@@ -284,6 +286,7 @@
       setFetchLoading(true);
       await initCache();
       Message.success('刷新成功');
+    } catch (e) {
     } finally {
       setFetchLoading(false);
     }

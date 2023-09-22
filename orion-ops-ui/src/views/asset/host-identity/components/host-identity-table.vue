@@ -156,6 +156,7 @@
       Message.success('删除成功');
       // 重新加载数据
       await fetchTableData();
+    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -184,6 +185,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -197,8 +199,11 @@
 
   // 获取主机秘钥列表
   const fetchHostKeyList = async () => {
-    const { data } = await getHostKeyList();
-    cacheStore.set('hostKeys', data);
+    try {
+      const { data } = await getHostKeyList();
+      cacheStore.set('hostKeys', data);
+    } catch (e) {
+    }
   };
   fetchHostKeyList();
 

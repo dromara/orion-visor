@@ -81,7 +81,9 @@
   // 渲染表单
   const renderForm = (record: any) => {
     Object.keys(formModel).forEach(k => {
-      formModel[k] = record[k];
+      if (record.hasOwnProperty(k)) {
+        formModel[k] = record[k];
+      }
     });
   };
 
@@ -97,6 +99,7 @@
       // 加载用户角色
       const { data: roleIdList } = await getUserRoleIdList(formModel.id);
       formModel.roleIdList = roleIdList;
+    } catch (e) {
     } finally {
       setRoleLoading(false);
     }

@@ -70,6 +70,7 @@ const useUserStore = defineStore('user', {
     async logout() {
       try {
         await userLogout();
+      } catch (e) {
       } finally {
         // 登出回调
         this.logoutCallBack();

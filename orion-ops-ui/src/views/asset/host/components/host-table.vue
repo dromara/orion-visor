@@ -197,6 +197,7 @@
       Message.success('删除成功');
       // 重新加载数据
       await fetchTableData();
+    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -225,6 +226,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+    } catch (e) {
     } finally {
       setLoading(false);
     }

@@ -35,6 +35,8 @@
   onUnmounted(() => {
     const cacheStore = useCacheStore();
     cacheStore.set('tags', []);
+    cacheStore.set('hostKeys', []);
+    cacheStore.set('hostIdentities', []);
   });
 
 </script>

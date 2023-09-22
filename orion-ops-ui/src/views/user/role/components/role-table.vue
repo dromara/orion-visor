@@ -159,6 +159,7 @@
       Message.success(`${toggleStatus.label}成功`);
       // 修改行状态
       record.status = toggleStatus.value;
+    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -173,6 +174,7 @@
       Message.success('删除成功');
       // 重新加载数据
       await fetchTableData();
+    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -201,6 +203,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+    } catch (e) {
     } finally {
       setLoading(false);
     }

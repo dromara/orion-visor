@@ -20,26 +20,72 @@
               label-align="right"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
-              :rules="{}">
+              :rules="sshRules">
         <!-- 用户名 -->
-        <a-form-item field="username" label="用户名" label-col-flex="60px">
-          <a-input v-model="formModel.username" placeholder="请输入用户名" />
+        <a-form-item field="username"
+                     label="用户名"
+                     :rules="usernameRules"
+                     label-col-flex="60px"
+                     :help="AuthTypeEnum.IDENTITY.value === formModel.authType ? '将使用主机身份的用户名' : null">
+          <a-input v-model="formModel.username"
+                   :disabled="AuthTypeEnum.IDENTITY.value === formModel.authType"
+                   placeholder="请输入用户名" />
         </a-form-item>
         <!-- SSH 端口 -->
-        <a-form-item field="port" label="SSH端口" label-col-flex="60px">
+        <a-form-item field="port"
+                     label="SSH端口"
+                     :hide-asterisk="true"
+                     label-col-flex="60px">
           <a-input-number v-model="formModel.port" placeholder="请输入SSH端口" />
         </a-form-item>
-        <!-- 主机密码 -->
-        <a-form-item field="password" label="主机密码" label-col-flex="60px">
-          <a-input-password v-model="formModel.password" placeholder="主机密码 / 身份二选一" />
-          <a-button type="text" class="password-choose-text">选择</a-button>
+        <!-- 验证方式 -->
+        <a-form-item field="authType"
+                     label="验证方式"
+                     :hide-asterisk="true"
+                     label-col-flex="60px">
+          <a-radio-group type="button"
+                         class="auth-type-group"
+                         v-model="formModel.authType"
+                         :options="toOptions(AuthTypeEnum)" />
         </a-form-item>
-        <!-- 身份验证 -->
-        <a-form-item field="identityId" label="身份验证" label-col-flex="60px">
-          <a-input v-model="formModel.identityId" placeholder="" />
+        <!-- 主机密码 -->
+        <a-form-item v-if="AuthTypeEnum.PASSWORD.value === formModel.authType"
+                     field="password"
+                     label="主机密码"
+                     :rules="passwordRules"
+                     label-col-flex="60px">
+          <a-input-password v-model="formModel.password"
+                            :disabled="!formModel.useNewPassword && formModel.hasPassword"
+                            placeholder="主机密码" />
+          <a-switch v-if="formModel.hasPassword"
+                    v-model="formModel.useNewPassword"
+                    class="password-switch"
+                    type="round"
+                    size="large"
+                    checked-text="使用新密码"
+                    unchecked-text="使用原密码" />
+        </a-form-item>
+        <!-- 主机秘钥 -->
+        <a-form-item v-if="AuthTypeEnum.KEY.value === formModel.authType"
+                     field="keyId"
+                     label="主机秘钥"
+                     :hide-asterisk="true"
+                     label-col-flex="60px">
+          <host-key-selector v-model="formModel.keyId" />
+        </a-form-item>
+        <!-- 主机身份 -->
+        <a-form-item v-if="AuthTypeEnum.IDENTITY.value === formModel.authType"
+                     field="identityId"
+                     label="主机身份"
+                     :hide-asterisk="true"
+                     label-col-flex="60px">
+          <host-identity-selector v-model="formModel.identityId" />
         </a-form-item>
         <!-- 用户名 -->
-        <a-form-item field="connectTimeout" label="连接超时时间" label-col-flex="86px">
+        <a-form-item field="connectTimeout"
+                     label="连接超时时间"
+                     :hide-asterisk="true"
+                     label-col-flex="86px">
           <a-input-number v-model="formModel.connectTimeout" placeholder="请输入连接超时时间">
             <template #suffix>
               ms
@@ -47,15 +93,26 @@
           </a-input-number>
         </a-form-item>
         <!-- 用户名 -->
-        <a-form-item field="charset" label="SSH输出编码" label-col-flex="86px">
+        <a-form-item field="charset"
+                     label="SSH输出编码"
+                     :hide-asterisk="true"
+                     label-col-flex="86px">
           <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
         </a-form-item>
         <!-- 文件名称编码 -->
-        <a-form-item field="fileNameCharset" label="文件名称编码" label-col-flex="86px">
+        <a-form-item field="fileNameCharset"
+                     label="文件名称编码"
+                     :hide-asterisk="true"
+
+                     label-col-flex="86px">
           <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
         </a-form-item>
         <!-- 文件内容编码 -->
-        <a-form-item field="fileContentCharset" label="文件内容编码" label-col-flex="86px">
+        <a-form-item field="fileContentCharset"
+                     label="文件内容编码"
+                     :hide-asterisk="true"
+
+                     label-col-flex="86px">
           <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
         </a-form-item>
       </a-form>
@@ -80,6 +137,12 @@
   import { reactive, ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host';
+  import { HostSshConfig, AuthTypeEnum } from '@/views/asset/host/types/host-config.types';
+  import { sshRules } from '@/views/asset/host/types/host-config.rules';
+  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
+  import { toOptions } from '@/utils/enum';
+  import { FieldRule, Message } from '@arco-design/web-vue';
 
   const { loading, setLoading } = useLoading();
 
@@ -95,15 +158,19 @@
   });
 
   const formRef = ref<any>();
-  const formModel = reactive<Record<string, any>>({
+  const formModel = reactive<HostSshConfig & Record<string, any>>({
     username: undefined,
     port: undefined,
     password: undefined,
+    authType: AuthTypeEnum.PASSWORD.value,
+    keyId: undefined,
     identityId: undefined,
     connectTimeout: undefined,
     charset: undefined,
     fileNameCharset: undefined,
     fileContentCharset: undefined,
+    useNewPassword: false,
+    hasPassword: false,
   });
 
   // 监听数据变化
@@ -112,6 +179,34 @@
     config.value.version = v?.version;
     resetConfig();
   });
+
+  // 用户名验证
+  const usernameRules = [{
+    validator: (value, cb) => {
+      if (value && value.length > 128) {
+        cb('用户名长度不能大于128位');
+        return;
+      }
+      if (formModel.authType !== AuthTypeEnum.IDENTITY.value && !value) {
+        cb('请输入用户名');
+        return;
+      }
+    }
+  }] as FieldRule[];
+
+  // 密码验证
+  const passwordRules = [{
+    validator: (value, cb) => {
+      if (value && value.length > 256) {
+        cb('密码长度不能大于256位');
+        return;
+      }
+      if (formModel.useNewPassword && !value) {
+        cb('请输入密码');
+        return;
+      }
+    }
+  }] as FieldRule[];
 
   // 修改状态
   const updateStatus = (e: number) => {
@@ -133,8 +228,12 @@
   // 重置配置
   const resetConfig = () => {
     Object.keys(formModel).forEach(k => {
-      formModel[k] = props.content?.config[k];
+      if (props.content?.config?.hasOwnProperty(k)) {
+        formModel[k] = props.content?.config[k];
+      }
     });
+    // 使用新密码默认为不包含密码
+    formModel.useNewPassword = !formModel.hasPassword;
   };
 
   // 保存配置
@@ -153,8 +252,10 @@
       });
       config.value.version = data;
       setLoading(false);
+      Message.success('修改成功');
       // 回调 props
       emits('submitted', { ...formModel });
+    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -173,14 +274,20 @@
     width: 100%;
   }
 
-  .password-choose-text {
-    margin-left: 6px;
-    padding: 0 4px 0 4px;
-  }
-
   .config-button-group {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  .auth-type-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .password-switch {
+    width: 148px;
+    margin-left: 8px;
   }
 </style>
