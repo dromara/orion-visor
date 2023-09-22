@@ -29,6 +29,20 @@ public interface HostConfigStrategy<Config extends HostConfigModel> {
     void updateFill(Config before, Config after);
 
     /**
+     * 预校验参数
+     *
+     * @param config config
+     */
+    void preValidConfig(Config config);
+
+    /**
+     * 校验参数
+     *
+     * @param config config
+     */
+    void validConfig(Config config);
+
+    /**
      * 转为视图配置
      *
      * @param config config

@@ -13,6 +13,7 @@ import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateStatusRequ
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
+import com.orion.ops.module.asset.handler.host.config.strategy.HostConfigStrategy;
 import com.orion.ops.module.asset.service.HostConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -91,11 +92,14 @@ public class HostConfigServiceImpl implements HostConfigService {
         HostConfigModel config = JSON.parseObject(request.getConfig(), type.getType());
         // 检查版本
         Valid.eq(record.getVersion(), request.getVersion(), ErrorMessage.DATA_MODIFIED);
-        // 填充
+        HostConfigStrategy<HostConfigModel> strategy = type.getStrategy();
+        // 预校验参数
+        strategy.preValidConfig(config);
+        // 更新填充
         HostConfigModel beforeConfig = JSON.parseObject(record.getConfig(), type.getType());
-        type.getStrategy().updateFill(beforeConfig, config);
+        strategy.updateFill(beforeConfig, config);
         // 检查参数
-        Valid.valid(config);
+        strategy.validConfig(config);
         // 修改配置
         HostConfigDO update = new HostConfigDO();
         update.setId(id);

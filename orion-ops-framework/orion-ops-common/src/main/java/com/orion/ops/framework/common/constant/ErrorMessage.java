@@ -21,7 +21,9 @@ public interface ErrorMessage {
 
     String DATA_ABSENT = "数据不存在";
 
-    String KEY_ABSENT = "秘钥不存在";
+    String KEY_ABSENT = "主机秘钥不存在";
+
+    String IDENTITY_ABSENT = "主机身份不存在";
 
     String CONFIG_ABSENT = "配置不存在";
 
@@ -50,5 +52,9 @@ public interface ErrorMessage {
     String USER_ABSENT = "用户不存在";
 
     String UNABLE_OPERATE_ADMIN_ROLE = "无法操作管理员账号";
+
+    String UNSUPPORTED_CHARSET = "不支持的编码 [{}]";
+
+    String PASSWORD_MISSING = "请输入密码";
 
 }

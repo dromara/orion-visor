@@ -5,6 +5,7 @@ import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.config.strategy.HostConfigStrategy;
 import com.orion.ops.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
+import com.orion.spring.SpringHolder;
 import lombok.AllArgsConstructor;
 
 /**
@@ -20,13 +21,13 @@ public enum HostConfigTypeEnum {
     /**
      * SSH 配置
      */
-    SSH(HostSshConfigModel.class, new HostSshConfigStrategy(), BooleanBit.TRUE.getValue()),
+    SSH(HostSshConfigModel.class, HostSshConfigStrategy.class, BooleanBit.TRUE.getValue()),
 
     ;
 
     private final Class<? extends HostConfigModel> type;
 
-    private final HostConfigStrategy<?> strategy;
+    private final Class<? extends HostConfigStrategy<? extends HostConfigModel>> strategy;
 
     private final Integer defaultStatus;
 
@@ -48,7 +49,7 @@ public enum HostConfigTypeEnum {
 
     @SuppressWarnings("unchecked")
     public <Config extends HostConfigModel, T extends HostConfigStrategy<Config>> T getStrategy() {
-        return (T) strategy;
+        return (T) SpringHolder.getBean(strategy);
     }
 
     public Integer getDefaultStatus() {
