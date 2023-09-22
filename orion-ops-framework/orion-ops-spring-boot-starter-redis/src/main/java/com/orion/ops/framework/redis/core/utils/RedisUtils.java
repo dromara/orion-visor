@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -52,6 +53,33 @@ public class RedisUtils {
             Streams.close(cursor);
             return keys;
         });
+    }
+
+    /**
+     * 删除 key
+     *
+     * @param define define
+     */
+    public static void delete(CacheKeyDefine define) {
+        delete(define.getKey());
+    }
+
+    /**
+     * 删除 key
+     *
+     * @param key key
+     */
+    public static void delete(String key) {
+        redisTemplate.delete(key);
+    }
+
+    /**
+     * 删除 key
+     *
+     * @param keys keys
+     */
+    public static void delete(List<String> keys) {
+        redisTemplate.delete(keys);
     }
 
     /**

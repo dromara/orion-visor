@@ -9,7 +9,7 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.framework.redis.core.utils.RedisLists;
+import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.module.asset.convert.HostKeyConvert;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
@@ -63,9 +63,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         int effect = hostKeyDAO.insert(record);
         log.info("HostKeyService-createHostKey effect: {}", effect);
         Long id = record.getId();
-        // 设置缓存
-        RedisLists.pushJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(record));
-        RedisLists.setExpire(HostCacheKeyDefine.HOST_KEY);
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_KEY);
         return id;
     }
 
@@ -87,10 +86,9 @@ public class HostKeyServiceImpl implements HostKeyService {
         updateRecord.setPassword(newPassword);
         // 更新
         int effect = hostKeyDAO.updateById(updateRecord);
-        // 设置缓存
+        // 删除缓存
         if (!record.getName().equals(updateRecord.getName())) {
-            RedisLists.removeJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(record));
-            RedisLists.pushJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(updateRecord));
+            RedisMaps.delete(HostCacheKeyDefine.HOST_KEY);
         }
         log.info("HostKeyService-updateHostKeyById effect: {}", effect);
         return effect;
@@ -124,7 +122,7 @@ public class HostKeyServiceImpl implements HostKeyService {
     @Override
     public List<HostKeyVO> getHostKeyList() {
         // 查询缓存
-        List<HostKeyCacheDTO> list = RedisLists.rangeJson(HostCacheKeyDefine.HOST_KEY);
+        List<HostKeyCacheDTO> list = RedisMaps.valuesJson(HostCacheKeyDefine.HOST_KEY);
         if (list.isEmpty()) {
             // 查询数据库
             list = hostKeyDAO.of().list(HostKeyConvert.MAPPER::toCache);
@@ -135,8 +133,8 @@ public class HostKeyServiceImpl implements HostKeyService {
                         .build());
             }
             // 设置缓存
-            RedisLists.pushAllJson(HostCacheKeyDefine.HOST_KEY.getKey(), list);
-            RedisLists.setExpire(HostCacheKeyDefine.HOST_KEY);
+            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_KEY.getKey(), s -> s.getId().toString(), list);
+            RedisMaps.setExpire(HostCacheKeyDefine.HOST_KEY);
         }
         // 删除默认值
         return list.stream()
@@ -171,7 +169,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         // TODO config
 
         // 删除缓存
-        RedisLists.removeJson(HostCacheKeyDefine.HOST_KEY.getKey(), HostKeyConvert.MAPPER.toCache(record));
+        RedisMaps.delete(HostCacheKeyDefine.HOST_KEY.getKey(), record.getId());
         log.info("HostKeyService-deleteHostKeyById effect: {}", effect);
         return effect;
     }

@@ -9,7 +9,7 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.framework.redis.core.utils.RedisLists;
+import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.module.asset.convert.HostIdentityConvert;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
@@ -60,11 +60,9 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 插入
         int effect = hostIdentityDAO.insert(record);
         log.info("HostIdentityService-createHostIdentity effect: {}", effect);
-        Long id = record.getId();
-        // 设置缓存
-        RedisLists.pushJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));
-        RedisLists.setExpire(HostCacheKeyDefine.HOST_IDENTITY);
-        return id;
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY);
+        return record.getId();
     }
 
     @Override
@@ -88,12 +86,12 @@ public class HostIdentityServiceImpl implements HostIdentityService {
                 .set(HostIdentityDO::getKeyId, request.getKeyId())
                 .eq(HostIdentityDO::getId, id);
         int effect = hostIdentityDAO.update(updateRecord, wrapper);
-        // 设置缓存
-        if (!record.getName().equals(updateRecord.getName())) {
-            RedisLists.removeJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));
-            RedisLists.pushJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(updateRecord));
-        }
         log.info("HostIdentityService-updateHostIdentityById effect: {}", effect);
+        // 删除缓存
+        if (!record.getName().equals(updateRecord.getName()) ||
+                !record.getUsername().equals(updateRecord.getUsername())) {
+            RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY);
+        }
         return effect;
     }
 
@@ -109,7 +107,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     @Override
     public List<HostIdentityVO> getHostIdentityList() {
         // 查询缓存
-        List<HostIdentityCacheDTO> list = RedisLists.rangeJson(HostCacheKeyDefine.HOST_IDENTITY);
+        List<HostIdentityCacheDTO> list = RedisMaps.valuesJson(HostCacheKeyDefine.HOST_IDENTITY);
         if (list.isEmpty()) {
             // 查询数据库
             list = hostIdentityDAO.of().list(HostIdentityConvert.MAPPER::toCache);
@@ -120,8 +118,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
                         .build());
             }
             // 设置缓存
-            RedisLists.pushAllJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), list);
-            RedisLists.setExpire(HostCacheKeyDefine.HOST_IDENTITY);
+            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), s -> s.getId().toString(), list);
+            RedisMaps.setExpire(HostCacheKeyDefine.HOST_IDENTITY);
         }
         // 删除默认值
         return list.stream()
@@ -173,7 +171,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // TODO config
 
         // 删除缓存
-        RedisLists.removeJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), HostIdentityConvert.MAPPER.toCache(record));
+        RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY.getKey(), record.getId());
         log.info("HostIdentityService-deleteHostIdentityById effect: {}", effect);
         return effect;
     }

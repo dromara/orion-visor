@@ -48,13 +48,14 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         this.check${type}Present(record);
         // 插入
         int effect = ${typeLower}DAO.insert(record);
-        log.info("${type}Service-create${type} effect: {}", effect);
-        return record.getId();
+        Long id = record.getId();
+        log.info("${type}Service-create${type} id: {}, effect: {}", id, effect);
+        return id;
     }
 
     @Override
     public Integer update${type}ById(${type}UpdateRequest request) {
-        log.info("${type}Service-update${type}ById request: {}", JSON.toJSONString(request));
+        log.info("${type}Service-update${type}ById id: {}, request: {}", request.getId(), JSON.toJSONString(request));
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         ${type}DO record = ${typeLower}DAO.selectById(id);

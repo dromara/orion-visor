@@ -19,14 +19,14 @@ public interface TagCacheKeyDefine {
             .key("tag:name:{}")
             .desc("tag 名称 ${type}")
             .type(TagCacheDTO.class)
-            .timeout(3, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine TAG_REL = new CacheKeyBuilder()
             .key("tag:rel:{}:{}")
             .desc("tag 引用 ${type} ${relId}")
             .type(TagCacheDTO.class)
-            .timeout(3, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

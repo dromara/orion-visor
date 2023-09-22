@@ -20,14 +20,14 @@ public interface HostCacheKeyDefine {
             .key("host:key:list")
             .desc("主机秘钥列表")
             .type(HostKeyCacheDTO.class)
-            .timeout(3, TimeUnit.DAYS)
+            .timeout(1, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine HOST_IDENTITY = new CacheKeyBuilder()
             .key("host:identity:list")
             .desc("主机身份列表")
             .type(HostIdentityCacheDTO.class)
-            .timeout(3, TimeUnit.DAYS)
+            .timeout(1, TimeUnit.HOURS)
             .build();
 
 }

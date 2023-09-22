@@ -28,4 +28,7 @@ public class HostIdentityCacheDTO implements Serializable {
     @Schema(description = "名称")
     private String name;
 
+    @Schema(description = "用户名")
+    private String username;
+
 }
