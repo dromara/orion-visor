@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.HostConfigDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -88,5 +89,21 @@ public interface HostConfigDAO extends IMapper<HostConfigDO> {
         // 删除
         return this.delete(wrapper);
     }
+
+    /**
+     * 设置 keyId 为 NULL
+     *
+     * @param keyId keyId
+     * @return effect
+     */
+    int setKeyIdWithNull(@Param("keyId") Long keyId);
+
+    /**
+     * 设置 identityId 为 NULL
+     *
+     * @param identityId identityId
+     * @return effect
+     */
+    int setIdentityIdWithNull(@Param("identityId") Long identityId);
 
 }

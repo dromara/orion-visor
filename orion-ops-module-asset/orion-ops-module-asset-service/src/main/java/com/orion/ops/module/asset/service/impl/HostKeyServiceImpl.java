@@ -11,6 +11,7 @@ import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.module.asset.convert.HostKeyConvert;
+import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
 import com.orion.ops.module.asset.define.HostCacheKeyDefine;
@@ -45,6 +46,9 @@ public class HostKeyServiceImpl implements HostKeyService {
 
     @Resource
     private HostIdentityDAO hostIdentityDAO;
+
+    @Resource
+    private HostConfigDAO hostConfigDAO;
 
     @Override
     public Long createHostKey(HostKeyCreateRequest request) {
@@ -166,8 +170,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         int effect = hostKeyDAO.deleteById(id);
         // 删除关联
         hostIdentityDAO.setKeyWithNull(id);
-        // TODO config
-
+        // 删除主机配置
+        hostConfigDAO.setKeyIdWithNull(id);
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_KEY.getKey(), record.getId());
         log.info("HostKeyService-deleteHostKeyById effect: {}", effect);

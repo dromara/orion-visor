@@ -22,4 +22,20 @@
         id, host_id, type, status, config, version, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <update id="setKeyIdWithNull">
+        UPDATE host_config
+        SET version = version + 1,
+            config  = JSON_REMOVE(config, '$.keyId')
+        WHERE deleted = 0
+          AND JSON_CONTAINS(config, JSON_OBJECT('keyId', #{keyId}))
+    </update>
+
+    <update id="setIdentityIdWithNull">
+        UPDATE host_config
+        SET version = version + 1,
+            config  = JSON_REMOVE(config, '$.identityId')
+        WHERE deleted = 0
+          AND JSON_CONTAINS(config, JSON_OBJECT('identityId', #{identityId}))
+    </update>
+
 </mapper>

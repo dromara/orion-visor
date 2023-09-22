@@ -11,6 +11,7 @@ import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.module.asset.convert.HostIdentityConvert;
+import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
 import com.orion.ops.module.asset.define.HostCacheKeyDefine;
@@ -47,6 +48,9 @@ public class HostIdentityServiceImpl implements HostIdentityService {
 
     @Resource
     private HostKeyDAO hostKeyDAO;
+
+    @Resource
+    private HostConfigDAO hostConfigDAO;
 
     @Override
     public Long createHostIdentity(HostIdentityCreateRequest request) {
@@ -168,8 +172,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除数据库
         int effect = hostIdentityDAO.deleteById(id);
-        // TODO config
-
+        // 删除主机配置
+        hostConfigDAO.setIdentityIdWithNull(id);
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY.getKey(), record.getId());
         log.info("HostIdentityService-deleteHostIdentityById effect: {}", effect);

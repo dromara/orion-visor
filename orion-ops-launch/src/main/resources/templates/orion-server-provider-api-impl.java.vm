@@ -123,6 +123,9 @@ public class ${type}ApiImpl implements ${type}Api {
     public Integer delete${type}ById(Long id) {
         log.info("${type}Api.delete${type}ById id: {}", id);
         Valid.notNull(id, ErrorMessage.ID_MISSING);
+        // 检查数据是否存在
+        ${type}DO record = ${typeLower}DAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = ${typeLower}DAO.deleteById(id);
         log.info("${type}Api.delete${type}ById effect: {}", effect);
