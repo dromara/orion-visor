@@ -62,6 +62,8 @@
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
+        <!-- FIXME -->
+        <span class="circle"></span>
         <a-tag :color="getEnumValue(record.status, RoleStatusEnum,'color')">
           {{ getEnumValue(record.status, RoleStatusEnum) }}
         </a-tag>

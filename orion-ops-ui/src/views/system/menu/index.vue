@@ -24,8 +24,8 @@
   import { onUnmounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
 
-  const table = ref<any>();
-  const modal = ref<any>();
+  const table = ref();
+  const modal = ref();
 
   // 卸载时清除 menu cache
   onUnmounted(() => {

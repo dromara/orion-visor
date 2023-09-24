@@ -76,7 +76,7 @@
     };
   };
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<HostUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);

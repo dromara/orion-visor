@@ -158,7 +158,7 @@
     version: undefined,
   });
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<HostSshConfig & Record<string, any>>({
     username: undefined,
     port: undefined,

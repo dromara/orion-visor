@@ -60,7 +60,6 @@
         config.value[s.type] = s;
       });
     } catch ({ message }) {
-      // FIXME
       Message.error(`配置加载失败 ${message}`);
       setVisible(false);
     } finally {

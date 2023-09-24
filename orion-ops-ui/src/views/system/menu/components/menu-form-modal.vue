@@ -151,7 +151,7 @@
     };
   };
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<MenuUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);

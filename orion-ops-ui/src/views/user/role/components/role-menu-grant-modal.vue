@@ -56,7 +56,7 @@
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const tree = ref<any>();
+  const tree = ref();
   const roleRecord = reactive<Record<string, any>>({
     id: undefined,
     name: undefined,

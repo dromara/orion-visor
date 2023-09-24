@@ -72,6 +72,7 @@
              :bordered="false">
       <!-- 状态 -->
       <template #status="{ record }">
+        <!-- FIXME -->
         <a-tag :color="getEnumValue(record.status, UserStatusEnum,'color')">
           {{ getEnumValue(record.status, UserStatusEnum) }}
         </a-tag>

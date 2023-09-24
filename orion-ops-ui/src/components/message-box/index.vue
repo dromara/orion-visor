@@ -101,8 +101,7 @@
   };
   const formatUnreadLength = (type: string) => {
     const list = getUnreadList(type);
-    // FIXME
-    return list.length ? `(${list.length})` : ``;
+    return list.length ? `(${list.length})` : '';
   };
   const handleItemClick = (items: MessageListType) => {
     if (renderList.value.length) readMessage([...items]);
