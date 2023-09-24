@@ -66,7 +66,7 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination"
+             :pagination="pagination as PaginationProps"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
@@ -146,7 +146,7 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteUser, getUserPage, updateUserStatus, UserQueryRequest, UserQueryResponse } from '@/api/user/user';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, PaginationProps } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { UserStatusEnum } from '../types/enum.types';

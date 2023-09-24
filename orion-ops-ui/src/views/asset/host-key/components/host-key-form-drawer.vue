@@ -173,12 +173,14 @@
 
   // 选择公钥文件
   const selectPublicFile = async (fileList: FileItem[]) => {
+    // FIXME
     formModel.publicKey = await readFileText(fileList[0].file as File);
     formRef.value.clearValidate('publicKey');
   };
 
   // 选择私钥文件
   const selectPrivateFile = async (fileList: FileItem[]) => {
+    // FIXME
     formModel.privateKey = await readFileText(fileList[0].file as File);
     formRef.value.clearValidate('privateKey');
   };

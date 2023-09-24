@@ -74,7 +74,7 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination"
+             :pagination="pagination as PaginationProps"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">

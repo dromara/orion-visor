@@ -5,14 +5,14 @@
     @select="actionSelect">
     <span
       class="arco-tag arco-tag-size-medium arco-tag-checked"
-      :class="{ 'link-activated': itemData.fullPath === $route.fullPath }"
-      @click="goto(itemData)">
+      :class="{ 'link-activated': itemData?.fullPath === $route.fullPath }"
+      @click="goto(itemData as TagProps)">
       <span class="tag-link">
         {{ itemData.title }}
       </span>
       <span
         class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
-        @click.stop="tagClose(itemData, index)">
+        @click.stop="tagClose(itemData as TagProps, index)">
         <icon-close />
       </span>
     </span>

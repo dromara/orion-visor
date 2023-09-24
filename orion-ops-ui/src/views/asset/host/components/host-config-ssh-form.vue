@@ -54,6 +54,7 @@
                      label="主机密码"
                      :rules="passwordRules"
                      label-col-flex="60px">
+          <!-- FIXME -->
           <a-input-password v-model="formModel.password"
                             :disabled="!formModel.useNewPassword && formModel.hasPassword"
                             placeholder="主机密码" />

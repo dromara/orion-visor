@@ -2,7 +2,7 @@
   <a-select v-model:model-value="value"
             :placeholder="placeholder"
             :options="optionData"
-            :limit=limit
+            :limit="limit as number"
             @exceed-limit="onLimited"
             multiple
             :allow-create="allowCreate"
@@ -17,13 +17,13 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, PropType } from 'vue';
   import { useCacheStore } from '@/store';
   import { Message, SelectOptionData } from '@arco-design/web-vue';
-  import { createTag, TagCreateRequest, TagType } from '@/api/meta/tag';
+  import { createTag, TagCreateRequest } from '@/api/meta/tag';
 
   const props = defineProps({
-    modelValue: Array,
+    modelValue: Array as PropType<Array<number>>,
     placeholder: String,
     limit: Number,
     type: String,
@@ -32,9 +32,9 @@
 
   const emits = defineEmits(['update:modelValue']);
 
-  const value = computed({
+  const value = computed<Array<number>>({
     get() {
-      return props.modelValue;
+      return props.modelValue as Array<number>;
     },
     async set(e) {
       await checkCreateTag(e as Array<any>);
@@ -103,7 +103,7 @@
 
   // 超出限制
   const onLimited = () => {
-    Message.warning(`最多选择${props.limit}个tag`);
+    Message.warning(`最多选择${ props.limit }个tag`);
   };
 
 </script>

@@ -52,7 +52,7 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination"
+             :pagination="pagination as PaginationProps"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
@@ -125,7 +125,7 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteRole, getRolePage, updateRoleStatus, RoleQueryRequest, RoleQueryResponse } from '@/api/user/role';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, PaginationProps } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { RoleStatusEnum } from '../types/enum.types';

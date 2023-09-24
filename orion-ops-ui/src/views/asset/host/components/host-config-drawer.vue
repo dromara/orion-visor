@@ -44,7 +44,9 @@
   const cacheStore = useCacheStore();
 
   const record = ref();
-  const config = ref<Record<string, any>>({});
+  const config = ref<Record<string, any>>({
+    SSH: undefined
+  });
 
   // 打开
   const open = async (e: any) => {
@@ -58,6 +60,7 @@
         config.value[s.type] = s;
       });
     } catch ({ message }) {
+      // FIXME
       Message.error(`配置加载失败 ${message}`);
       setVisible(false);
     } finally {
