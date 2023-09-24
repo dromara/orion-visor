@@ -49,10 +49,6 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
-      <!-- 名称 -->
-      <template #name="{ record }">
-        <span class="span-blue">{{ record.name }}</span>
-      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -102,7 +98,7 @@
   import columns from '../types/table.columns';
   import { defaultPagination } from '@/types/table';
 
-  const tableRenderData = ref<HostKeyQueryResponse[]>();
+  const tableRenderData = ref<HostKeyQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 

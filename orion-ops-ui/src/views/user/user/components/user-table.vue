@@ -158,7 +158,7 @@
   import { toOptions, getEnumValue } from '@/utils/enum';
   import { useUserStore } from '@/store';
 
-  const tableRenderData = ref<UserQueryResponse[]>();
+  const tableRenderData = ref<UserQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 

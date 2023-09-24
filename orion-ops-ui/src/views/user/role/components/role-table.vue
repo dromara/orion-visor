@@ -136,7 +136,7 @@
   import { toOptions, getEnumValue, toggleEnumValue, toggleEnum } from '@/utils/enum';
   import { defaultPagination } from '@/types/table';
 
-  const tableRenderData = ref<RoleQueryResponse[]>();
+  const tableRenderData = ref<RoleQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 

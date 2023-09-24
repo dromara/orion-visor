@@ -157,7 +157,7 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, PaginationProps } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { tagColor } from '../types/const';
@@ -170,11 +170,11 @@
   import { useCacheStore } from '@/store';
 
   const tagSelector = ref();
-  const tableRenderData = ref<HostQueryResponse[]>();
+  const tableRenderData = ref<HostQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
 
-  const pagination = reactive(defaultPagination());
+  const pagination = reactive<PaginationProps>(defaultPagination());
   const { copy } = useCopy();
   const { toggle: toggleFavorite } = useFavorite('HOST');
 

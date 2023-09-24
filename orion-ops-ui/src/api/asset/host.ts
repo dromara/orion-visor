@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { DataGrid, Pagination } from '@/types/global';
+import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 主机创建请求
@@ -35,7 +36,7 @@ export interface HostQueryRequest extends Pagination {
 /**
  * 主机查询响应
  */
-export interface HostQueryResponse {
+export interface HostQueryResponse extends TableData {
   id?: number;
   name?: string;
   code?: string;

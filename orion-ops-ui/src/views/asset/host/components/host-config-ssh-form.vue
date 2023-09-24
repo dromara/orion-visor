@@ -26,7 +26,7 @@
                      label="用户名"
                      :rules="usernameRules"
                      label-col-flex="60px"
-                     :help="AuthTypeEnum.IDENTITY.value === formModel.authType ? '将使用主机身份的用户名' : null">
+                     :help="AuthTypeEnum.IDENTITY.value === formModel.authType ? '将使用主机身份的用户名' : undefined">
           <a-input v-model="formModel.username"
                    :disabled="AuthTypeEnum.IDENTITY.value === formModel.authType"
                    placeholder="请输入用户名" />

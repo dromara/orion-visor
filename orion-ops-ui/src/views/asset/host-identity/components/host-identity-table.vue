@@ -133,7 +133,7 @@
   const { copy } = useCopy();
   const { hasAnyPermission } = usePermission();
 
-  const tableRenderData = ref<HostIdentityQueryResponse[]>();
+  const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openViewKey']);
 
