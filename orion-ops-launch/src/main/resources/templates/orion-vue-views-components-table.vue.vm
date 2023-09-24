@@ -119,7 +119,7 @@
   import {} from '../types/const';
   import { toOptions } from '@/utils/enum';
 
-  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>();
+  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
 

@@ -56,10 +56,6 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
-      <!-- 名称 -->
-      <template #name="{ record }">
-        <span class="span-blue">{{ record.name }}</span>
-      </template>
       <!-- 编码 -->
       <template #code="{ record }">
         <a-tag>{{ record.code }}</a-tag>
