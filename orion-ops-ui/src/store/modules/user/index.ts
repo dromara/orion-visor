@@ -52,7 +52,7 @@ const useUserStore = defineStore('user', {
       try {
         const loginRequest: LoginRequest = {
           username: loginForm.username,
-          password: md5(loginForm.password),
+          password: md5(loginForm.password as string),
         };
         // 执行登陆
         const res = await userLogin(loginRequest);

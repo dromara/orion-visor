@@ -16,6 +16,7 @@
       checked-strategy="child"
       :checkable="true"
       :animation="false"
+      :only-check-leaf="true"
       v-model:checked-keys="checkedKeys"
       v-model:expanded-keys="expandedKeys"
       :data="treeData" />
