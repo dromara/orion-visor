@@ -15,8 +15,8 @@ import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
-import com.orion.ops.launch.generator.core.GenTable;
-import com.orion.ops.launch.generator.core.VelocityTemplateEngine;
+import com.orion.ops.launch.generator.template.Table;
+import com.orion.ops.launch.generator.engine.VelocityTemplateEngine;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -40,20 +40,14 @@ public class CodeGenerator {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "asset";
+        String module = "infra";
         // 生成的表
-        GenTable[] tables = {
+        Table[] tables = {
                 // new GenTable("system_user", "用户", "user")
                 //         .vue("user", "user")
                 //         .enums(UserStatusEnum.class),
-                new GenTable("host_key", "主机秘钥", "host")
-                        .vue("asset", "host-key")
-                        .useDrawerForm()
-                        .ignoreTest(),
-                new GenTable("host_identity", "主机身份", "host")
-                        .vue("asset", "host-identity")
-                        .useDrawerForm()
-                        .ignoreTest(),
+                new Table("preference", "用户偏好", "preference")
+                        .vue("user", "preference")
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -76,7 +70,7 @@ public class CodeGenerator {
                                      String url,
                                      String username,
                                      String password,
-                                     GenTable[] tables,
+                                     Table[] tables,
                                      String module) {
         // 创建引擎
         VelocityTemplateEngine engine = getEngine(tables);
@@ -125,7 +119,7 @@ public class CodeGenerator {
      * @param tables 表
      * @return 渲染引擎
      */
-    private static VelocityTemplateEngine getEngine(GenTable[] tables) {
+    private static VelocityTemplateEngine getEngine(Table[] tables) {
         return new VelocityTemplateEngine(tables);
     }
 
@@ -184,9 +178,9 @@ public class CodeGenerator {
      * @param tables 生成的表名
      * @return 策略配置
      */
-    private static StrategyConfig getStrategyConfig(GenTable[] tables) {
+    private static StrategyConfig getStrategyConfig(Table[] tables) {
         String[] tableNames = Arrays.stream(tables)
-                .map(GenTable::getTableName)
+                .map(Table::getTableName)
                 .toArray(String[]::new);
         // 策略配置
         return new StrategyConfig.Builder()

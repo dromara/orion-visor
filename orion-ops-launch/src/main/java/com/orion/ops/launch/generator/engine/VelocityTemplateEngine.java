@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.orion.ops.launch.generator.core;
+package com.orion.ops.launch.generator.engine;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.config.ConstVal;
@@ -31,6 +31,7 @@ import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
+import com.orion.ops.launch.generator.template.Table;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -56,13 +57,13 @@ import java.util.stream.Collectors;
  */
 public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
-    private final Map<String, GenTable> tables;
+    private final Map<String, Table> tables;
 
     private VelocityEngine velocityEngine;
 
-    public VelocityTemplateEngine(GenTable[] tables) {
+    public VelocityTemplateEngine(Table[] tables) {
         this.tables = Arrays.stream(tables)
-                .collect(Collectors.toMap(GenTable::getTableName, Function.identity()));
+                .collect(Collectors.toMap(Table::getTableName, Function.identity()));
     }
 
     {
@@ -136,30 +137,30 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                                                      @NotNull TableInfo tableInfo) {
         // 生成文件副本
         List<CustomFile> files = originCustomerFile.stream().map(s ->
-                new CustomFile.Builder()
-                        .enableFileOverride()
-                        .templatePath(s.getTemplatePath())
-                        .filePath(s.getFilePath())
-                        .fileName(s.getFileName())
-                        .packageName(s.getPackageName())
-                        .build())
+                        new CustomFile.Builder()
+                                .enableFileOverride()
+                                .templatePath(s.getTemplatePath())
+                                .filePath(s.getFilePath())
+                                .fileName(s.getFileName())
+                                .packageName(s.getPackageName())
+                                .build())
                 .collect(Collectors.toList());
         // 获取 table
-        GenTable table = tables.get(tableInfo.getName());
+        Table table = tables.get(tableInfo.getName());
         // 不生成对外 api 文件
-        if (!table.isGenProviderApi()) {
+        if (!table.isEnableProviderApi()) {
             files.removeIf(file -> this.isServerProviderFile(file.getTemplatePath()));
             // 不生成对外 api 单元测试文件
-            if (table.isGenUnitTest()) {
+            if (table.isEnableUnitTest()) {
                 files.removeIf(file -> this.isServerProviderTestFile(file.getTemplatePath()));
             }
         }
         // 不生成单元测试文件
-        if (!table.isGenUnitTest()) {
+        if (!table.isEnableUnitTest()) {
             files.removeIf(file -> this.isServerUnitTestFile(file.getTemplatePath()));
         }
         // 不生成 vue 文件
-        if (!table.isGenVue()) {
+        if (!table.isEnableVue()) {
             files.removeIf(file -> this.isVueFile(file.getTemplatePath()));
         }
         return files;
@@ -298,7 +299,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      */
     private void generatorVueFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
         // 不生成 vue 文件
-        if (!tables.get(tableInfo.getName()).isGenVue()) {
+        if (!tables.get(tableInfo.getName()).isEnableVue()) {
             return;
         }
         // 过滤文件
@@ -308,7 +309,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
 
         // 元数据
         String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
-        GenTable table = tables.get(tableInfo.getName());
+        Table table = tables.get(tableInfo.getName());
         BeanMap beanMap = BeanMap.create(table, "enums");
         // 模块名称实体
         beanMap.put("moduleEntity", VariableStyles.SPINE.toBigHump(table.getModule()));
@@ -394,7 +395,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      * @param table table
      * @return enums
      */
-    private Object getEnumMap(GenTable table) {
+    private Object getEnumMap(Table table) {
         List<Class<? extends Enum<?>>> enums = table.getEnums();
         Map<String, MultiLinkedHashMap<String, String, Object>> enumMap = new LinkedHashMap<>();
         for (Class<? extends Enum<?>> e : enums) {

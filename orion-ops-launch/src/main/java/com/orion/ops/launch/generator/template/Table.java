@@ -1,10 +1,12 @@
-package com.orion.ops.launch.generator.core;
+package com.orion.ops.launch.generator.template;
 
 import com.orion.lang.utils.collect.Lists;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Jiahang Li
@@ -12,70 +14,105 @@ import java.util.List;
  * @since 2023/7/17 10:44
  */
 @Data
-public class GenTable {
+@Getter
+public class Table {
 
     // -------------------- 后端 --------------------
 
     /**
      * 表名称
      */
-    private String tableName;
+    protected String tableName;
 
     /**
      * 业务注释
      */
-    private String comment;
+    protected String comment;
 
     /**
      * 业务实体包名
      * <p>
      * request dto 包
      */
-    private String bizPackage;
+    protected String bizPackage;
 
     /**
      * 是否生成对外 api
      */
-    private boolean genProviderApi;
+    protected boolean enableProviderApi;
 
     /**
      * 是否生成单元测试
      */
-    private boolean genUnitTest;
+    protected boolean enableUnitTest;
+
+    /**
+     * 是否可缓存
+     */
+    protected boolean enableCache;
+
+    /**
+     * 缓存的 key
+     */
+    protected String cacheKey;
+
+    /**
+     * 缓存是否会过期
+     */
+    protected boolean cacheExpired;
+
+    /**
+     * 缓存过期时间
+     */
+    protected Integer cacheExpireTime;
+
+    /**
+     * 缓存过期时间单位
+     */
+    protected TimeUnit cacheExpireUnit;
 
     // -------------------- 前端 --------------------
 
     /**
      * 是否生成 vue 代码
      */
-    private boolean genVue;
+    protected boolean enableVue;
 
     /**
      * 模块 用于文件名称生成
      */
-    private String module;
+    protected String module;
 
     /**
      * 功能 用于文件名称生成
      */
-    private String feature;
+    protected String feature;
 
     /**
      * 使用抽屉表单
      */
-    private boolean drawerForm;
+    protected boolean enableDrawerForm;
+
+    /**
+     * 列表可多选
+     */
+    protected boolean enableRowSelection;
 
     /**
      * 生成的枚举文件
+     * field name [k,v,k,v,k,v] label value color other
      */
-    private List<Class<? extends Enum<?>>> enums;
+    protected List<Class<? extends Enum<?>>> enums;
 
-    public GenTable(String tableName, String comment, String bizPackage) {
+    public Table() {
+    }
+
+    public Table(String tableName, String comment, String bizPackage) {
         this.tableName = tableName;
         this.comment = comment;
         this.bizPackage = bizPackage;
-        this.genProviderApi = true;
-        this.genUnitTest = true;
+        this.enableProviderApi = true;
+        this.enableUnitTest = true;
         this.enums = new ArrayList<>();
     }
 
@@ -84,8 +121,8 @@ public class GenTable {
      *
      * @return this
      */
-    public GenTable ignoreApi() {
-        this.genProviderApi = false;
+    public Table ignoreApi() {
+        this.enableProviderApi = false;
         return this;
     }
 
@@ -94,8 +131,8 @@ public class GenTable {
      *
      * @return this
      */
-    public GenTable ignoreTest() {
-        this.genUnitTest = false;
+    public Table ignoreTest() {
+        this.enableUnitTest = false;
         return this;
     }
 
@@ -106,8 +143,8 @@ public class GenTable {
      * @param feature feature
      * @return this
      */
-    public GenTable vue(String module, String feature) {
-        this.genVue = true;
+    public Table vue(String module, String feature) {
+        this.enableVue = true;
         this.module = module;
         this.feature = feature;
         return this;
@@ -118,8 +155,7 @@ public class GenTable {
      *
      * @return this
      */
-    public GenTable useDrawerForm() {
-        this.drawerForm = true;
+    public Table useDrawerForm() {
         return this;
     }
 
@@ -130,7 +166,7 @@ public class GenTable {
      * @return enums
      */
     @SafeVarargs
-    public final GenTable enums(Class<? extends Enum<?>>... enums) {
+    public final Table enums(Class<? extends Enum<?>>... enums) {
         this.enums.addAll(Lists.of(enums));
         return this;
     }
