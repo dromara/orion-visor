@@ -164,7 +164,7 @@
 
   const pagination = reactive(defaultPagination()) as PaginationProps;
 
-  const formModel = ref<UserQueryRequest>({
+  const formModel = reactive<UserQueryRequest>({
     id: undefined,
     username: undefined,
     password: undefined,

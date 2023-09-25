@@ -1,9 +1,10 @@
 <template>
-  <a-select v-model:model-value="value"
+  <a-select v-model:model-value="value as any"
             :options="optionData()"
             :allow-search="true"
             :multiple="multiple"
             :loading="loading"
+            :disabled="loading"
             :filter-option="filterOption"
             placeholder="请选择角色" />
 </template>

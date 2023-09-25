@@ -44,11 +44,10 @@ export interface RoleQueryResponse extends TableData {
   name?: string;
   code?: string;
   status?: number;
-// FIXME 恢复
-  createTime?: number;
-  updateTime?: number;
-  creator?: string;
-  updater?: string;
+  createTime: number;
+  updateTime: number;
+  creator: string;
+  updater: string;
 }
 
 /**

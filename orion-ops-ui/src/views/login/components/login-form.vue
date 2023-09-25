@@ -65,7 +65,7 @@
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
 
-  const userInfo = reactive({
+  const userInfo = reactive<LoginRequest>({
     username: undefined,
     password: undefined,
   });
@@ -75,14 +75,14 @@
                                 values,
                               }: {
     errors: Record<string, ValidatedError> | undefined;
-    values: Record<string, any>;
+    values: LoginRequest;
   }) => {
     if (loading.value) return;
     if (!errors) {
       setLoading(true);
       try {
         // 执行登陆
-        await userStore.login(values as LoginRequest);
+        await userStore.login(values);
         // 跳转路由
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({

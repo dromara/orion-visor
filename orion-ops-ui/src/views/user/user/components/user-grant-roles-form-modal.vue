@@ -21,11 +21,11 @@
               :wrapper-col-props="{ span: 18 }">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" :disabled="true" />
+          <a-input v-model="updateUser.username" :disabled="true" />
         </a-form-item>
         <!-- 花名 -->
         <a-form-item field="nickname" label="花名">
-          <a-input v-model="formModel.nickname" :disabled="true" />
+          <a-input v-model="updateUser.nickname" :disabled="true" />
         </a-form-item>
         <!-- 角色 -->
         <a-form-item field="roles" label="角色">
@@ -45,48 +45,38 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
   import UserRoleSelector from '@/components/user/role/user-role-selector.vue';
   import { getRoleList } from '@/api/user/role';
   import { useCacheStore } from '@/store';
-  import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
+  import { getUserRoleIdList, grantUserRole, UserQueryResponse, UserUpdateRequest } from '@/api/user/user';
 
   const { visible, setVisible } = useVisible();
   const { loading: saveLoading, setLoading: setSaveLoading } = useLoading();
   const { loading: roleLoading, setLoading: setRoleLoading } = useLoading();
 
-  const defaultForm = () => {
-    return {
-      id: undefined,
-      username: undefined,
-      nickname: undefined,
-      roleIdList: undefined,
-    };
-  };
-
   const formRef = ref();
-  // fixme
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = ref<UserUpdateRequest>({});
+  const updateUser = ref<UserQueryResponse>({} as UserQueryResponse);
   const cacheStore = useCacheStore();
 
   // 打开
   const open = (record: any) => {
-    renderForm({ ...defaultForm(), ...record });
+    renderForm(record);
     setVisible(true);
     loadRoles();
   };
 
   // 渲染表单
   const renderForm = (record: any) => {
-    // fixme
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    updateUser.value = Object.assign({}, record);
+    formModel.value = {
+      id: record.id,
+      roleIdList: []
+    };
   };
 
   // 加载角色
@@ -99,8 +89,8 @@
         cacheStore.set('roles', data);
       }
       // 加载用户角色
-      const { data: roleIdList } = await getUserRoleIdList(formModel.id);
-      formModel.roleIdList = roleIdList;
+      const { data: roleIdList } = await getUserRoleIdList(formModel.value.id as number);
+      formModel.value.roleIdList = roleIdList;
     } catch (e) {
     } finally {
       setRoleLoading(false);
@@ -113,10 +103,7 @@
   const handlerOk = async () => {
     setSaveLoading(true);
     try {
-      await grantUserRole({
-        id: formModel.id,
-        roleIdList: formModel.roleIdList
-      });
+      await grantUserRole(formModel.value);
       Message.success('修改成功');
       // 清空
       handlerClear();

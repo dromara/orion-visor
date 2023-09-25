@@ -139,7 +139,7 @@
 
   const pagination = reactive(defaultPagination()) as PaginationProps;
 
-  const formModel = ref<RoleQueryRequest>({
+  const formModel = reactive<RoleQueryRequest>({
     id: undefined,
     name: undefined,
     code: undefined,

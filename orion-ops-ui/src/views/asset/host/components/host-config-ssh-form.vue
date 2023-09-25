@@ -128,10 +128,6 @@
         </a-space>
       </div>
     </a-spin>
-    <!-- FIXME -->
-    {{ formModel }}
-    <br><br>
-    {{ content }}
   </a-card>
 </template>
 
@@ -151,6 +147,7 @@
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
   import { toOptions } from '@/utils/enum';
   import { FieldRule, Message } from '@arco-design/web-vue';
+  import { RoleUpdateRequest } from '@/api/user/role';
 
   const { loading, setLoading } = useLoading();
 
@@ -166,7 +163,7 @@
   });
 
   const formRef = ref();
-  const formModel = reactive<HostSshConfig>({
+  const formModel = ref<HostSshConfig>({
     username: undefined,
     port: undefined,
     password: undefined,
@@ -185,8 +182,7 @@
   watch(() => props.content, (v: any) => {
     config.value.status = v?.status;
     config.value.version = v?.version;
-    // FIXME
-    resetConfig(v.config);
+    resetConfig();
   });
 
   // 用户名验证
@@ -196,7 +192,7 @@
         cb('用户名长度不能大于128位');
         return;
       }
-      if (formModel.authType !== AuthTypeEnum.IDENTITY.value && !value) {
+      if (formModel.value.authType !== AuthTypeEnum.IDENTITY.value && !value) {
         cb('请输入用户名');
         return;
       }
@@ -210,7 +206,7 @@
         cb('密码长度不能大于256位');
         return;
       }
-      if (formModel.useNewPassword && !value) {
+      if (formModel.value.useNewPassword && !value) {
         cb('请输入密码');
         return;
       }
@@ -236,15 +232,9 @@
 
   // 重置配置
   const resetConfig = () => {
-    // FIXME
-    Object.keys(formModel).forEach(k => {
-      console.log(k, props.content?.config?.hasOwnProperty(k));
-      if (props.content?.config?.hasOwnProperty(k)) {
-        formModel[k] = props.content?.config[k];
-      }
-    });
+    formModel.value = Object.assign({}, props.content?.config);
     // 使用新密码默认为不包含密码
-    formModel.useNewPassword = !formModel.hasPassword;
+    formModel.value.useNewPassword = !formModel.value.hasPassword;
   };
 
   // 保存配置

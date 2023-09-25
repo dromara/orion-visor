@@ -57,11 +57,10 @@
   const { loading, setLoading } = useLoading();
 
   const tree = ref();
-  const roleRecord = ref<RoleQueryResponse>({});
+  const roleRecord = ref<RoleQueryResponse>({} as RoleQueryResponse);
 
   // 打开新增
   const open = async (record: any) => {
-    // fixme 改成 props
     renderRecord(record);
     setVisible(true);
     try {

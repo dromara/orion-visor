@@ -38,13 +38,14 @@
   import { useCacheStore } from '@/store';
   import { getHostKeyList } from '@/api/asset/host-key';
   import { getHostIdentityList } from '@/api/asset/host-identity';
+  import { HostConfigWrapper } from '@/views/asset/host/types/host-config.types';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const record = ref();
-  const config = ref<Record<string, any>>({
+  const config = ref<HostConfigWrapper>({
     SSH: undefined
   });
 

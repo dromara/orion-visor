@@ -21,11 +21,11 @@
               :wrapper-col-props="{ span: 18 }">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" :disabled="true" />
+          <a-input v-model="updateUser.username" :disabled="true" />
         </a-form-item>
         <!-- 花名 -->
         <a-form-item field="nickname" label="花名">
-          <a-input v-model="formModel.nickname" :disabled="true" />
+          <a-input v-model="updateUser.nickname" :disabled="true" />
         </a-form-item>
         <!-- 密码 -->
         <a-form-item field="password" label="新密码" :rules="password">
@@ -43,42 +43,33 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { password } from '../types/form.rules';
-  import { resetUserPassword } from '@/api/user/user';
+  import { resetUserPassword, UserQueryResponse, UserUpdateRequest } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import { md5 } from '@/utils';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const defaultForm = () => {
-    return {
-      id: undefined,
-      username: undefined,
-      nickname: undefined,
-      password: undefined,
-    };
-  };
-
   const formRef = ref();
-  const formModel = reactive<Record<string, any>>(defaultForm());
+  const formModel = ref<UserUpdateRequest>({});
+  const updateUser = ref<UserQueryResponse>({} as UserQueryResponse);
 
   // 打开
   const open = (record: any) => {
-    renderForm({ ...defaultForm(), ...record });
+    renderForm(record);
     setVisible(true);
   };
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    updateUser.value = Object.assign({}, record);
+    formModel.value = {
+      password: undefined
+    };
   };
 
   defineExpose({ open });
@@ -94,8 +85,8 @@
       }
       // 修改
       await resetUserPassword({
-        id: formModel.id,
-        password: md5(formModel.password)
+        id: updateUser.value.id,
+        password: md5(formModel.value.password as string)
       });
       Message.success('修改成功');
       // 清空

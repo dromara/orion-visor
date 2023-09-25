@@ -19,9 +19,10 @@ export const AuthTypeEnum = {
 /**
  * 主机所有配置
  */
-// fixme
 export interface HostConfigWrapper {
   SSH: HostSshConfig | unknown;
+
+  [key: string]: unknown;
 }
 
 /**
