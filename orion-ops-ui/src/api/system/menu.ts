@@ -21,7 +21,7 @@ export interface MenuCreateRequest {
  * 菜单更新请求
  */
 export interface MenuUpdateRequest extends MenuCreateRequest {
-  id: number | undefined;
+  id?: number;
   status?: number;
 }
 

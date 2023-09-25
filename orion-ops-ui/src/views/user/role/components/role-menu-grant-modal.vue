@@ -43,28 +43,25 @@
 </script>
 
 <script lang="ts" setup>
-  import MenuSelectorTree from '@/components/menu/selector/menu-selector-tree.vue';
-
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { getRoleMenuId, grantRoleMenu, RoleGrantMenuRequest } from '@/api/user/role';
+  import { getRoleMenuId, grantRoleMenu, RoleGrantMenuRequest, RoleQueryResponse } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { getMenuList } from '@/api/system/menu';
+
+  import MenuSelectorTree from '@/components/menu/selector/menu-selector-tree.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
   const tree = ref();
-  const roleRecord = reactive<Record<string, any>>({
-    id: undefined,
-    name: undefined,
-    code: undefined,
-  });
+  const roleRecord = ref<RoleQueryResponse>({});
 
   // 打开新增
   const open = async (record: any) => {
+    // fixme 改成 props
     renderRecord(record);
     setVisible(true);
     try {
@@ -87,11 +84,7 @@
 
   // 渲染对象
   const renderRecord = (record: any) => {
-    Object.keys(roleRecord).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        roleRecord[k] = record[k];
-      }
-    });
+    roleRecord.value = Object.assign({}, record);
   };
 
   defineExpose({ open });
@@ -102,7 +95,7 @@
     try {
       // 修改
       await grantRoleMenu({
-        roleId: roleRecord.id,
+        roleId: roleRecord.value.id,
         menuIdList: [...tree.value.getValue()]
       } as RoleGrantMenuRequest);
       Message.success('分配成功');

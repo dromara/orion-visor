@@ -15,7 +15,7 @@ export interface RoleCreateRequest {
  * 角色更新请求
  */
 export interface RoleUpdateRequest extends RoleCreateRequest {
-  id: number | undefined;
+  id?: number;
 }
 
 /**
@@ -44,10 +44,11 @@ export interface RoleQueryResponse extends TableData {
   name?: string;
   code?: string;
   status?: number;
-  createTime: number;
-  updateTime: number;
-  creator: string;
-  updater: string;
+// FIXME 恢复
+  createTime?: number;
+  updateTime?: number;
+  creator?: string;
+  updater?: string;
 }
 
 /**

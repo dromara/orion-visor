@@ -7,7 +7,10 @@
                     @reset="fetchTableData">
       <!-- id -->
       <a-form-item field="id" label="主机id" label-col-flex="50px">
-        <a-input-number v-model="formModel.id" placeholder="请输入主机id" allow-clear />
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入主机id"
+                        allow-clear
+                        hide-button />
       </a-form-item>
       <!-- 主机名称 -->
       <a-form-item field="name" label="主机名称" label-col-flex="50px">
@@ -74,7 +77,7 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination as PaginationProps"
+             :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
@@ -174,9 +177,10 @@
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
 
-  const pagination = reactive<PaginationProps>(defaultPagination());
   const { copy } = useCopy();
   const { toggle: toggleFavorite } = useFavorite('HOST');
+
+  const pagination = reactive(defaultPagination()) as PaginationProps;
 
   const formModel = reactive<HostQueryRequest>({
     id: undefined,
@@ -189,7 +193,9 @@
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: { id: number }) => {
+  const deleteRow = async ({ id }: {
+    id: number
+  }) => {
     try {
       setLoading(true);
       // 调用删除接口

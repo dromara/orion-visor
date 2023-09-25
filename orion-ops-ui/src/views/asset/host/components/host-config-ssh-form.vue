@@ -36,7 +36,9 @@
                      label="SSH端口"
                      :hide-asterisk="true"
                      label-col-flex="60px">
-          <a-input-number v-model="formModel.port" placeholder="请输入SSH端口" />
+          <a-input-number v-model="formModel.port"
+                          placeholder="请输入SSH端口"
+                          hide-button />
         </a-form-item>
         <!-- 验证方式 -->
         <a-form-item field="authType"
@@ -54,7 +56,6 @@
                      label="主机密码"
                      :rules="passwordRules"
                      label-col-flex="60px">
-          <!-- FIXME -->
           <a-input-password v-model="formModel.password"
                             :disabled="!formModel.useNewPassword && formModel.hasPassword"
                             placeholder="主机密码" />
@@ -87,7 +88,9 @@
                      label="连接超时时间"
                      :hide-asterisk="true"
                      label-col-flex="86px">
-          <a-input-number v-model="formModel.connectTimeout" placeholder="请输入连接超时时间">
+          <a-input-number v-model="formModel.connectTimeout"
+                          placeholder="请输入连接超时时间"
+                          hide-button>
             <template #suffix>
               ms
             </template>
@@ -125,6 +128,10 @@
         </a-space>
       </div>
     </a-spin>
+    <!-- FIXME -->
+    {{ formModel }}
+    <br><br>
+    {{ content }}
   </a-card>
 </template>
 
@@ -159,7 +166,7 @@
   });
 
   const formRef = ref();
-  const formModel = reactive<HostSshConfig & Record<string, any>>({
+  const formModel = reactive<HostSshConfig>({
     username: undefined,
     port: undefined,
     password: undefined,
@@ -178,7 +185,8 @@
   watch(() => props.content, (v: any) => {
     config.value.status = v?.status;
     config.value.version = v?.version;
-    resetConfig();
+    // FIXME
+    resetConfig(v.config);
   });
 
   // 用户名验证
@@ -228,7 +236,9 @@
 
   // 重置配置
   const resetConfig = () => {
+    // FIXME
     Object.keys(formModel).forEach(k => {
+      console.log(k, props.content?.config?.hasOwnProperty(k));
       if (props.content?.config?.hasOwnProperty(k)) {
         formModel[k] = props.content?.config[k];
       }

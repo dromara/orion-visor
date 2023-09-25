@@ -20,7 +20,7 @@ export interface UserCreateRequest {
  * 用户更新请求
  */
 export interface UserUpdateRequest extends UserCreateRequest {
-  id: number | undefined;
+  id?: number;
   roleIdList?: Array<number>;
   password?: string;
 }

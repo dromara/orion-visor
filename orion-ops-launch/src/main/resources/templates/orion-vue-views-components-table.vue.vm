@@ -9,13 +9,16 @@
       <!-- $field.comment -->
       <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
       #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
-        <a-input-number v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear/>
+        <a-input-number v-model="formModel.${field.propertyName}"
+                        placeholder="请输入${field.comment}"
+                        allow-clear
+                        hide-button />
       #elseif("$field.propertyType" == "Date")
         <a-date-picker v-model="formModel.${field.propertyName}"
                        style="width: 100%"
                        placeholder="请选择${field.comment}"
                        show-time
-                       allow-clear/>
+                       allow-clear />
       #else
         <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear/>
       #end
@@ -67,10 +70,10 @@
              label-align="left"
              :loading="loading"
              :columns="columns"
-             v-model:selectedKeys="selectedKeys"
+             :selected-keys="selectedKeys"
              :row-selection="rowSelection"
              :data="tableRenderData"
-             :pagination="pagination as PaginationProps"
+             :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
@@ -123,11 +126,11 @@
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
-  const pagination = reactive(defaultPagination());
+  const pagination = reactive(defaultPagination()) as PaginationProps;
   const selectedKeys = ref<number[]>([]);
   const rowSelection = reactive(defaultRowSelection());
 
-  const formModel = reactive<${vue.featureEntity}QueryRequest>({
+  const formModel = ref<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})
     ${field.propertyName}: undefined,
     #end
@@ -150,7 +153,9 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: { id: number }) => {
+  const deleteRow = async ({ id }: {
+    id: number
+  }) => {
     try {
       setLoading(true);
       // 调用删除接口

@@ -68,6 +68,7 @@
   };
 
   const formRef = ref();
+  // fixme
   const formModel = reactive<Record<string, any>>(defaultForm());
   const cacheStore = useCacheStore();
 
@@ -80,6 +81,7 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
+    // fixme
     Object.keys(formModel).forEach(k => {
       if (record.hasOwnProperty(k)) {
         formModel[k] = record[k];

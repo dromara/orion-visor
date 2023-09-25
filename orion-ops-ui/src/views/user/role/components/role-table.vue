@@ -52,7 +52,7 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination as PaginationProps"
+             :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
@@ -62,11 +62,10 @@
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
-        <!-- FIXME -->
-        <span class="circle"></span>
-        <a-tag :color="getEnumValue(record.status, RoleStatusEnum,'color')">
-          {{ getEnumValue(record.status, RoleStatusEnum) }}
-        </a-tag>
+        <span class="circle" :style="{
+          background: getEnumValue(record.status, RoleStatusEnum,'color')
+        }" />
+        {{ getEnumValue(record.status, RoleStatusEnum) }}
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
@@ -138,9 +137,9 @@
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
-  const pagination = reactive(defaultPagination());
+  const pagination = reactive(defaultPagination()) as PaginationProps;
 
-  const formModel = reactive<RoleQueryRequest>({
+  const formModel = ref<RoleQueryRequest>({
     id: undefined,
     name: undefined,
     code: undefined,
@@ -164,7 +163,9 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: { id: number }) => {
+  const deleteRow = async ({ id }: {
+    id: number
+  }) => {
     try {
       setLoading(true);
       // 调用删除接口

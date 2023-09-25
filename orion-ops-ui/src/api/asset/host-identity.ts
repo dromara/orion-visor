@@ -16,7 +16,7 @@ export interface HostIdentityCreateRequest {
  * 主机身份更新请求
  */
 export interface HostIdentityUpdateRequest extends HostIdentityCreateRequest {
-  id: number | undefined;
+  id?: number;
   useNewPassword?: boolean;
 }
 

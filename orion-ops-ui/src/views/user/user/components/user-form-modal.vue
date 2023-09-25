@@ -54,7 +54,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
@@ -68,7 +68,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): UserUpdateRequest & Record<string, any> => {
+  const defaultForm = (): UserUpdateRequest => {
     return {
       id: undefined,
       username: undefined,
@@ -80,7 +80,7 @@
   };
 
   const formRef = ref();
-  const formModel = reactive<UserUpdateRequest & Record<string, any>>(defaultForm());
+  const formModel = ref<UserUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -102,11 +102,7 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -122,12 +118,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createUser({ ...formModel, password: md5(formModel.password) });
+        await createUser({ ...formModel, password: md5(formModel.value.password as string) });
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateUser(formModel);
+        await updateUser(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }

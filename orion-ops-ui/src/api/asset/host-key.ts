@@ -16,7 +16,7 @@ export interface HostKeyCreateRequest {
  * 主机秘钥更新请求
  */
 export interface HostKeyUpdateRequest extends HostKeyCreateRequest {
-  id: number | undefined;
+  id?: number;
   useNewPassword?: boolean;
 }
 

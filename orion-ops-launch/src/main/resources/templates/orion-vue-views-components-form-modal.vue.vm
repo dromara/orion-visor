@@ -25,7 +25,9 @@
         <!-- $field.comment -->
         <a-form-item field="${field.propertyName}" label="${field.comment}">
         #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
-          <a-input-number v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" />
+          <a-input-number v-model="formModel.${field.propertyName}"
+                          placeholder="请输入${field.comment}"
+                          hide-button />
         #elseif("$field.propertyType" == "Date")
           <a-date-picker v-model="formModel.${field.propertyName}"
                          style="width: 100%"
@@ -49,7 +51,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
@@ -65,7 +67,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): ${vue.featureEntity}UpdateRequest & Record<string, any> => {
+  const defaultForm = (): ${vue.featureEntity}UpdateRequest => {
     return {
     #foreach($field in ${table.fields})
       ${field.propertyName}: undefined,
@@ -74,7 +76,7 @@
   };
 
   const formRef = ref<any>();
-  const formModel = reactive<${vue.featureEntity}UpdateRequest & Record<string, any>>(defaultForm());
+  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -96,11 +98,7 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -116,12 +114,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await create${vue.featureEntity}(formModel);
+        await create${vue.featureEntity}(formModel.value);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await update${vue.featureEntity}(formModel);
+        await update${vue.featureEntity}(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }

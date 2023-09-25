@@ -7,7 +7,10 @@
                     @reset="fetchTableData">
       <!-- id -->
       <a-form-item field="id" label="id" label-col-flex="50px">
-        <a-input-number v-model="formModel.id" placeholder="请输入id" allow-clear />
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
+                        allow-clear
+                        hide-button />
       </a-form-item>
       <!-- 名称 -->
       <a-form-item field="name" label="名称" label-col-flex="50px">
@@ -53,7 +56,7 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination as PaginationProps"
+             :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
@@ -138,7 +141,7 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const cacheStore = useCacheStore();
-  const pagination = reactive(defaultPagination());
+  const pagination = reactive(defaultPagination()) as PaginationProps;
 
   const formModel = reactive<HostIdentityQueryRequest>({
     id: undefined,
@@ -148,7 +151,9 @@
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: { id: number }) => {
+  const deleteRow = async ({ id }: {
+    id: number
+  }) => {
     try {
       setLoading(true);
       // 调用删除接口

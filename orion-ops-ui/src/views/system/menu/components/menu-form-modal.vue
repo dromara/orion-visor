@@ -77,7 +77,8 @@
           <a-input-number v-model="formModel.sort"
                           placeholder="排序"
                           :style="{ width: '120px' }"
-                          allow-clear />
+                          allow-clear
+                          hide-button />
         </a-form-item>
         <!-- 是否可见 -->
         <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
@@ -135,7 +136,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): MenuUpdateRequest & Record<string, any> => {
+  const defaultForm = (): MenuUpdateRequest => {
     return {
       id: undefined,
       parentId: 0,
@@ -152,14 +153,14 @@
   };
 
   const formRef = ref();
-  const formModel = reactive<MenuUpdateRequest & Record<string, any>>(defaultForm());
+  const formModel = ref<MenuUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
   // 选择根目录 parentId就是 0
-  watch(() => formModel.type, () => {
-    if (formModel.type === MenuTypeEnum.PARENT_MENU.value) {
-      formModel.parentId = 0;
+  watch(() => formModel.value.type, () => {
+    if (formModel.value.type === MenuTypeEnum.PARENT_MENU.value) {
+      formModel.value.parentId = 0;
     }
   });
 
@@ -170,7 +171,7 @@
     renderForm({ ...defaultForm(), parentId: record.parentId, sort: (record.sort || 0) + sortStep });
     // 如果是父菜单默认选中子菜单 如果是子菜单默认选中功能
     if (record.type === 1 || record.type === 2) {
-      formModel.type = record.type + 1;
+      formModel.value.type = record.type + 1;
     }
     setVisible(true);
   };
@@ -185,11 +186,7 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -203,19 +200,19 @@
       if (error) {
         return false;
       }
-      if (formModel.parentId === 0
-        && (formModel.type === MenuTypeEnum.SUB_MENU.value || formModel.type === MenuTypeEnum.FUNCTION.value)) {
+      if (formModel.value.parentId === 0
+        && (formModel.value.type === MenuTypeEnum.SUB_MENU.value || formModel.value.type === MenuTypeEnum.FUNCTION.value)) {
         Message.error('创建子目录或功能时 父菜单不能为根目录');
         return false;
       }
       if (isAddHandle.value) {
         // 新增
-        await createMenu(formModel);
+        await createMenu(formModel.value);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateMenu(formModel);
+        await updateMenu(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }

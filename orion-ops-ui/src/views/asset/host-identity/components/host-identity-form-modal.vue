@@ -60,7 +60,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
@@ -74,7 +74,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): HostIdentityUpdateRequest & Record<string, any> => {
+  const defaultForm = (): HostIdentityUpdateRequest => {
     return {
       id: undefined,
       name: undefined,
@@ -86,7 +86,7 @@
   };
 
   const formRef = ref();
-  const formModel = reactive<HostIdentityUpdateRequest & Record<string, any>>(defaultForm());
+  const formModel = ref<HostIdentityUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -108,11 +108,7 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -127,17 +123,17 @@
         return false;
       }
       if (isAddHandle.value) {
-        if (!formModel.password && !formModel.keyId) {
+        if (!formModel.value.password && !formModel.value.keyId) {
           Message.error('创建时密码和秘钥不能同时为空');
           return false;
         }
         // 新增
-        await createHostIdentity(formModel);
+        await createHostIdentity(formModel.value);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostIdentity(formModel);
+        await updateHostIdentity(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }

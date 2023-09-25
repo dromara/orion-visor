@@ -26,7 +26,7 @@ export interface ${vue.featureEntity}CreateRequest {
  * ${table.comment}更新请求
  */
 export interface ${vue.featureEntity}UpdateRequest extends ${vue.featureEntity}CreateRequest {
-  id: number | undefined;
+  id?: number;
 }
 
 /**

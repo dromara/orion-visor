@@ -88,14 +88,12 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
   import { createHostKey, updateHostKey, getHostKey, HostKeyUpdateRequest } from '@/api/asset/host-key';
   import { FileItem, Message } from '@arco-design/web-vue';
-  import {} from '../types/enum.types';
-  import {} from '../types/const';
   import { readFileText } from '@/utils/file';
 
   const { visible, setVisible } = useVisible();
@@ -105,7 +103,7 @@
   const isAddHandle = ref<boolean>(true);
   const isViewHandler = ref<boolean>(false);
 
-  const defaultForm = (): HostKeyUpdateRequest & Record<string, any> => {
+  const defaultForm = (): HostKeyUpdateRequest => {
     return {
       id: undefined,
       name: undefined,
@@ -117,7 +115,7 @@
   };
 
   const formRef = ref();
-  const formModel = reactive<HostKeyUpdateRequest & Record<string, any>>(defaultForm());
+  const formModel = ref<HostKeyUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -162,26 +160,20 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate, openView });
 
   // 选择公钥文件
   const selectPublicFile = async (fileList: FileItem[]) => {
-    // FIXME
-    formModel.publicKey = await readFileText(fileList[0].file as File);
+    formModel.value.publicKey = await readFileText(fileList[0].file as File);
     formRef.value.clearValidate('publicKey');
   };
 
   // 选择私钥文件
   const selectPrivateFile = async (fileList: FileItem[]) => {
-    // FIXME
-    formModel.privateKey = await readFileText(fileList[0].file as File);
+    formModel.value.privateKey = await readFileText(fileList[0].file as File);
     formRef.value.clearValidate('privateKey');
   };
 
@@ -196,12 +188,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createHostKey(formModel);
+        await createHostKey(formModel.value);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostKey(formModel);
+        await updateHostKey(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }

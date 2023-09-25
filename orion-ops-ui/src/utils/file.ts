@@ -10,12 +10,12 @@ export function getBase64Data(e: string) {
 /**
  * 读取文件内容 返回 promise
  */
-export function readFileText(e: File, encoding = 'UTF-8') {
+export function readFileText(e: File, encoding = 'UTF-8'): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsText(e, encoding);
     reader.onload = res => {
-      resolve(res.target?.result);
+      resolve(res.target?.result as string);
     };
     reader.onerror = err => {
       reject(err);

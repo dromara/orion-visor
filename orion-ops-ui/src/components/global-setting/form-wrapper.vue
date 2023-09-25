@@ -5,6 +5,7 @@
     size="small"
     :default-value="defaultValue as number"
     @change="handleChange"
+    hide-button
   />
   <a-switch
     v-else

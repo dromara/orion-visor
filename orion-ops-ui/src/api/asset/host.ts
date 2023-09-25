@@ -16,7 +16,7 @@ export interface HostCreateRequest {
  * 主机更新请求
  */
 export interface HostUpdateRequest extends HostCreateRequest {
-  id: number | undefined;
+  id?: number;
 }
 
 /**

@@ -40,7 +40,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
@@ -53,7 +53,7 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): RoleUpdateRequest & Record<string, any> => {
+  const defaultForm = (): RoleUpdateRequest => {
     return {
       id: undefined,
       name: undefined,
@@ -62,7 +62,7 @@
   };
 
   const formRef = ref();
-  const formModel = reactive<RoleUpdateRequest & Record<string, any>>(defaultForm());
+  const formModel = ref<RoleUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -84,11 +84,7 @@
 
   // 渲染表单
   const renderForm = (record: any) => {
-    Object.keys(formModel).forEach(k => {
-      if (record.hasOwnProperty(k)) {
-        formModel[k] = record[k];
-      }
-    });
+    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -104,12 +100,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createRole(formModel);
+        await createRole(formModel.value);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateRole(formModel);
+        await updateRole(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }
