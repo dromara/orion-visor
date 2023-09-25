@@ -3,7 +3,7 @@ import { DEFAULT_ROUTE_NAME, DEFAULT_TAB } from '@/router/constants';
 import { isString } from '@/utils/is';
 import { TabBarState, TagProps } from './types';
 
-const useTabBarStore = defineStore('tabBar', {
+export default defineStore('tabBar', {
   state: (): TabBarState => ({
     cacheTabList: new Set([DEFAULT_ROUTE_NAME]),
     tagList: [DEFAULT_TAB],
@@ -19,9 +19,7 @@ const useTabBarStore = defineStore('tabBar', {
   },
 
   actions: {
-    /**
-     * 添加 tab
-     */
+    // 添加 tab
     addTab(tag: TagProps, ignoreCache: boolean) {
       this.tagList.push(tag);
       if (!ignoreCache) {
@@ -29,31 +27,23 @@ const useTabBarStore = defineStore('tabBar', {
       }
     },
 
-    /**
-     * 移除 tab
-     */
+    // 移除 tab
     deleteTab(idx: number, tag: TagProps) {
       this.tagList.splice(idx, 1);
       this.cacheTabList.delete(tag.name);
     },
 
-    /**
-     * 添加缓存
-     */
+    // 添加缓存
     addCache(name: string) {
       if (isString(name) && name !== '') this.cacheTabList.add(name);
     },
 
-    /**
-     * 删除缓存
-     */
+    // 删除缓存
     deleteCache(tag: TagProps) {
       this.cacheTabList.delete(tag.name);
     },
 
-    /**
-     * 重设缓存
-     */
+    // 重设缓存
     freshTabList(tags: TagProps[]) {
       this.tagList = tags;
       this.cacheTabList.clear();
@@ -63,9 +53,7 @@ const useTabBarStore = defineStore('tabBar', {
       .forEach((x) => this.cacheTabList.add(x));
     },
 
-    /**
-     * 重设 tab
-     */
+    // 重设 tab
     resetTabList() {
       this.tagList = [DEFAULT_TAB];
       this.cacheTabList.clear();
@@ -73,5 +61,3 @@ const useTabBarStore = defineStore('tabBar', {
     },
   },
 });
-
-export default useTabBarStore;

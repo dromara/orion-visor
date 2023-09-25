@@ -6,35 +6,27 @@
       </template>
     </a-button>
   </div>
-  <a-drawer
-    :width="300"
-    unmount-on-close
-    :visible="visible"
-    :cancel-text="$t('settings.close')"
-    :ok-text="$t('settings.copySettings')"
-    @ok="copySettings"
-    @cancel="cancel"
-  >
-    <template #title> {{ $t('settings.title') }}</template>
-    <Block :options="contentOpts" :title="$t('settings.content')" />
-    <Block :options="othersOpts" :title="$t('settings.otherSettings')" />
-    <a-alert>{{ $t('settings.alertContent') }}</a-alert>
+  <a-drawer title="偏好设置"
+            :width="300"
+            unmount-on-close
+            :visible="visible"
+            ok-text="保存"
+            cancel-text="关闭"
+            @ok="saveConfig"
+            @cancel="cancel">
+    <Block :options="contentOpts" title="内容区域" />
+    <Block :options="othersOpts" title="其他设置" />
   </a-drawer>
 </template>
 
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import { Message } from '@arco-design/web-vue';
-  import { useI18n } from 'vue-i18n';
-  import { useClipboard } from '@vueuse/core';
   import { useAppStore } from '@/store';
   import Block from './block.vue';
 
   const emit = defineEmits(['cancel']);
 
   const appStore = useAppStore();
-  const { t } = useI18n();
-  const { copy } = useClipboard();
   const visible = computed(() => appStore.globalSettings);
 
   /**
@@ -42,33 +34,32 @@
    */
   const contentOpts = computed(() => [
     {
-      name: 'settings.navbar',
+      name: '导航栏',
       key: 'navbar',
       defaultVal: appStore.navbar
     },
     {
-      name: 'settings.menu',
+      name: '菜单栏',
       key: 'menu',
       defaultVal: appStore.menu,
     },
     {
-      name: 'settings.topMenu',
+      name: '顶部菜单栏',
       key: 'topMenu',
       defaultVal: appStore.topMenu,
     },
     {
-      name: 'settings.footer',
+      name: '底部',
       key: 'footer',
-      defaultVal:
-      appStore.footer
+      defaultVal: appStore.footer
     },
     {
-      name: 'settings.tabBar',
+      name: '多页签',
       key: 'tabBar',
       defaultVal: appStore.tabBar
     },
     {
-      name: 'settings.menuWidth',
+      name: '菜单宽度 (px)',
       key: 'menuWidth',
       defaultVal: appStore.menuWidth,
       type: 'number',
@@ -80,7 +71,7 @@
    */
   const othersOpts = computed(() => [
     {
-      name: 'settings.colorWeak',
+      name: '色弱模式',
       key: 'colorWeak',
       defaultVal: appStore.colorWeak,
     },
@@ -97,10 +88,7 @@
   /**
    * 复制配置
    */
-  const copySettings = async () => {
-    const text = JSON.stringify(appStore.$state, null, 2);
-    await copy(text);
-    Message.success(t('settings.copySettings.message'));
+  const saveConfig = async () => {
   };
 
   /**

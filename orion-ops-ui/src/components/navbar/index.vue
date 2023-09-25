@@ -31,7 +31,7 @@
     <ul class="right-side">
       <!-- 搜索 -->
       <li v-if="false">
-        <a-tooltip :content="$t('settings.search')">
+        <a-tooltip content="搜索">
           <a-button class="nav-btn" type="outline" shape="circle">
             <template #icon>
               <icon-search />
@@ -41,7 +41,7 @@
       </li>
       <!-- 切换语言 -->
       <li v-if="false">
-        <a-tooltip :content="$t('settings.language')">
+        <a-tooltip content="语言">
           <a-button
             class="nav-btn"
             type="outline"
@@ -69,8 +69,8 @@
       <!-- 暗色模式 -->
       <li>
         <a-tooltip :content="theme === 'light'
-              ? $t('settings.navbar.theme.toDark')
-              : $t('settings.navbar.theme.toLight')">
+              ? '点击切换为暗黑模式'
+              : '点击切换为亮色模式'">
           <a-button
             class="nav-btn"
             type="outline"
@@ -85,7 +85,7 @@
       </li>
       <!-- 消息列表 -->
       <li v-if="false">
-        <a-tooltip :content="$t('settings.navbar.alerts')">
+        <a-tooltip content="消息通知">
           <div class="message-box-trigger">
             <a-badge :count="9" dot>
               <a-button
@@ -112,8 +112,8 @@
       <!-- 全屏模式 -->
       <li>
         <a-tooltip :content="isFullscreen
-              ? $t('settings.navbar.screen.toExit')
-              : $t('settings.navbar.screen.toFull')">
+              ? '点击退出全屏模式'
+              : '点击切换全屏模式'">
           <a-button
             class="nav-btn"
             type="outline"
@@ -126,9 +126,9 @@
           </a-button>
         </a-tooltip>
       </li>
-      <!-- 页面配置 -->
-      <li v-if="false">
-        <a-tooltip :content="$t('settings.title')">
+      <!-- 偏好设置 -->
+      <li>
+        <a-tooltip content="偏好设置">
           <a-button
             class="nav-btn"
             type="outline"
@@ -154,27 +154,21 @@
             <a-doption>
               <a-space @click="$router.push({ name: 'Info' })">
                 <icon-user />
-                <span>
-                  {{ $t('messageBox.userCenter') }}
-                </span>
+                <span>用户中心</span>
               </a-space>
             </a-doption>
             <!-- 用户设置 -->
             <a-doption>
               <a-space @click="$router.push({ name: 'Setting' })">
                 <icon-settings />
-                <span>
-                  {{ $t('messageBox.userSettings') }}
-                </span>
+                <span>用户设置</span>
               </a-space>
             </a-doption>
             <!-- 退出登录 -->
             <a-doption>
               <a-space @click="handleLogout">
                 <icon-export />
-                <span>
-                  {{ $t('messageBox.logout') }}
-                </span>
+                <span>退出登录</span>
               </a-space>
             </a-doption>
           </template>

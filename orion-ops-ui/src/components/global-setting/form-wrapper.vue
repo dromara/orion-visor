@@ -1,18 +1,15 @@
 <template>
-  <a-input-number
-    v-if="type === 'number'"
-    :style="{ width: '80px' }"
-    size="small"
-    :default-value="defaultValue as number"
-    @change="handleChange"
-    hide-button
+  <a-input-number v-if="type === 'number'"
+                  :style="{ width: '80px' }"
+                  size="small"
+                  :default-value="defaultValue as number"
+                  @change="handleChange"
+                  hide-button
   />
-  <a-switch
-    v-else
-    :default-checked="defaultValue"
-    size="small"
-    @change="handleChange"
-  />
+  <a-switch v-else
+            :default-checked="defaultValue"
+            size="small"
+            @change="handleChange" />
 </template>
 
 <script lang="ts" setup>

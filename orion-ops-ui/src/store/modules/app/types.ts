@@ -1,5 +1,3 @@
-import type { RouteRecordNormalized } from 'vue-router';
-
 export interface AppState {
   theme: string;
   colorWeak: boolean;
@@ -9,13 +7,10 @@ export interface AppState {
   hideMenu: boolean;
   menuCollapse: boolean;
   footer: boolean;
-  themeColor: string;
   menuWidth: number;
   globalSettings: boolean;
   device: string;
   tabBar: boolean;
-  serverMenu: RouteRecordNormalized[];
-  menuFetched: boolean;
 
   [key: string]: unknown;
 }

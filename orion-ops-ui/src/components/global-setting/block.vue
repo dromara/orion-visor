@@ -2,7 +2,7 @@
   <div class="block">
     <h5 class="title">{{ title }}</h5>
     <div v-for="option in options" :key="option.name" class="switch-wrapper">
-      <span>{{ $t(option.name) }}</span>
+      <span>{{ option.name }}</span>
       <form-wrapper
         :type="option.type || 'switch'"
         :name="option.key"

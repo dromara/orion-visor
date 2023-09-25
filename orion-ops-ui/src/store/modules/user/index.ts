@@ -4,9 +4,9 @@ import { clearToken, setToken } from '@/utils/auth';
 import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import useAppStore from '../app';
+import { useMenuStore, useTabBarStore } from '@/store';
 
-const useUserStore = defineStore('user', {
+export default defineStore('user', {
   state: (): UserState => ({
     id: undefined,
     username: undefined,
@@ -23,16 +23,12 @@ const useUserStore = defineStore('user', {
   },
 
   actions: {
-    /**
-     * 设置用户信息
-     */
+    // 设置用户信息
     setInfo(partial: Partial<UserState>) {
       this.$patch(partial);
     },
 
-    /**
-     * 获取用户信息
-     */
+    // 获取用户信息
     async info() {
       const { data } = await getUserPermission();
       this.setInfo({
@@ -45,9 +41,7 @@ const useUserStore = defineStore('user', {
       });
     },
 
-    /**
-     * 登录
-     */
+    // 登录
     async login(loginForm: LoginRequest) {
       try {
         const loginRequest: LoginRequest = {
@@ -64,9 +58,7 @@ const useUserStore = defineStore('user', {
       }
     },
 
-    /**
-     * 登出
-     */
+    // 登出
     async logout() {
       try {
         await userLogout();
@@ -77,19 +69,18 @@ const useUserStore = defineStore('user', {
       }
     },
 
-    /**
-     * 登出回调
-     */
+    // 登出回调
     logoutCallBack() {
       this.$reset();
       clearToken();
       // 移除路由监听器
       removeRouteListener();
       // 清空菜单
-      const appStore = useAppStore();
-      appStore.clearMenu();
+      const menuStore = useMenuStore();
+      menuStore.clearMenu();
+      // 清除 tabs
+      const tabBarStore = useTabBarStore();
+      tabBarStore.resetTabList();
     },
   },
 });
-
-export default useUserStore;

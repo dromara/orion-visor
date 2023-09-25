@@ -6,17 +6,15 @@
           <span> {{ item.title }}{{ formatUnreadLength(item.key) }} </span>
         </template>
         <a-result v-if="!renderList.length" status="404">
-          <template #subtitle> {{ $t('messageBox.noContent') }}</template>
+          <template #subtitle>暂无内容</template>
         </a-result>
-        <List
-          :render-list="renderList"
-          :unread-count="unreadCount"
-          @item-click="handleItemClick"
-        />
+        <List :render-list="renderList"
+              :unread-count="unreadCount"
+              @item-click="handleItemClick" />
       </a-tab-pane>
       <template #extra>
         <a-button type="text" @click="emptyList">
-          {{ $t('messageBox.tab.button') }}
+          清空
         </a-button>
       </template>
     </a-tabs>
@@ -25,7 +23,6 @@
 
 <script lang="ts" setup>
   import { ref, reactive, toRefs, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
   import {
     queryMessageList,
     setMessageStatus,
@@ -43,7 +40,6 @@
 
   const { loading, setLoading } = useLoading(true);
   const messageType = ref('message');
-  const { t } = useI18n();
   const messageData = reactive<{
     renderList: MessageRecord[];
     messageList: MessageRecord[];
@@ -55,15 +51,15 @@
   const tabList: TabItem[] = [
     {
       key: 'message',
-      title: t('messageBox.tab.title.message'),
+      title: '消息',
     },
     {
       key: 'notice',
-      title: t('messageBox.tab.title.notice'),
+      title: '通知',
     },
     {
       key: 'todo',
-      title: t('messageBox.tab.title.todo'),
+      title: '待办',
     },
   ];
 

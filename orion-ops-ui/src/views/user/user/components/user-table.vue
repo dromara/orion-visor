@@ -21,7 +21,7 @@
         <a-input v-model="formModel.nickname" placeholder="请输入花名" allow-clear />
       </a-form-item>
       <!-- 用户状态 -->
-      <a-form-item field="status" label="用户状态 " label-col-flex="50px">
+      <a-form-item field="status" label="用户状态" label-col-flex="50px">
         <a-select
           v-model="formModel.status"
           :options="toOptions(UserStatusEnum)"

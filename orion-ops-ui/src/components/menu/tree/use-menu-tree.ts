@@ -1,12 +1,12 @@
 import { computed } from 'vue';
 import { RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
-import { useAppStore } from '@/store';
+import { useMenuStore } from '@/store';
 import { cloneDeep } from 'lodash';
 
 export default function useMenuTree() {
-  const appStore = useAppStore();
+  const menuStore = useMenuStore();
   const appRoute = computed(() => {
-    return appStore.appAsyncMenus;
+    return menuStore.appMenus;
   });
   const menuTree = computed(() => {
     const copyRouter = cloneDeep(appRoute.value) as RouteRecordNormalized[];
