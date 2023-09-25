@@ -5,22 +5,16 @@
       <a-space>
         <!-- FIXME -->
         <!-- LOGO -->
-        <img
-          alt="logo"
-          src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-        />
+        <img alt="logo"
+             src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
         <!-- 标头 -->
-        <a-typography-title
-          :style="{ margin: 0, fontSize: '18px' }"
-          :heading="5">
+        <a-typography-title :heading="5" :style="{ margin: 0, fontSize: '18px' }">
           Orion Ops Pro
         </a-typography-title>
         <!-- 收缩菜单 -->
-        <icon-menu-fold
-          v-if="!topMenu && appStore.device === 'mobile'"
-          style="font-size: 22px; cursor: pointer"
-          @click="toggleDrawerMenu"
-        />
+        <icon-menu-fold v-if="!topMenu && appStore.device === 'mobile'"
+                        style="font-size: 22px; cursor: pointer"
+                        @click="toggleDrawerMenu" />
       </a-space>
     </div>
     <!-- 顶部菜单 -->
@@ -42,18 +36,17 @@
       <!-- 切换语言 -->
       <li v-if="false">
         <a-tooltip content="语言">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="setUserInfoVisible">
+          <a-button class="nav-btn"
+                    type="outline"
+                    :shape="'circle'"
+                    @click="setUserInfoVisible">
             <template #icon>
               <icon-language />
             </template>
           </a-button>
         </a-tooltip>
         <a-dropdown trigger="click" @select="changeLocale">
-          <div ref="refUserInfoTrigger" class="trigger-btn"></div>
+          <div ref="refUserInfoTrigger" class="trigger-btn" />
           <template #content>
             <a-doption v-for="item in locales"
                        :key="item.value"
@@ -71,11 +64,10 @@
         <a-tooltip :content="theme === 'light'
               ? '点击切换为暗黑模式'
               : '点击切换为亮色模式'">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="handleToggleTheme">
+          <a-button class="nav-btn"
+                    type="outline"
+                    :shape="'circle'"
+                    @click="handleToggleTheme">
             <template #icon>
               <icon-moon-fill v-if="theme === 'dark'" />
               <icon-sun-fill v-else />
@@ -88,22 +80,20 @@
         <a-tooltip content="消息通知">
           <div class="message-box-trigger">
             <a-badge :count="9" dot>
-              <a-button
-                class="nav-btn"
-                type="outline"
-                :shape="'circle'"
-                @click="setMessageBoxVisible">
+              <a-button class="nav-btn"
+                        type="outline"
+                        :shape="'circle'"
+                        @click="setMessageBoxVisible">
                 <icon-notification />
               </a-button>
             </a-badge>
           </div>
         </a-tooltip>
-        <a-popover
-          trigger="click"
-          :arrow-style="{ display: 'none' }"
-          :content-style="{ padding: 0, minWidth: '400px' }"
-          content-class="message-popover">
-          <div ref="refMessageBoxTrigger" class="ref-btn"></div>
+        <a-popover trigger="click"
+                   :arrow-style="{ display: 'none' }"
+                   :content-style="{ padding: 0, minWidth: '400px' }"
+                   content-class="message-popover">
+          <div ref="refMessageBoxTrigger" class="ref-btn" />
           <template #content>
             <message-box />
           </template>
@@ -114,11 +104,10 @@
         <a-tooltip :content="isFullscreen
               ? '点击退出全屏模式'
               : '点击切换全屏模式'">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            shape="circle"
-            @click="toggleFullScreen">
+          <a-button class="nav-btn"
+                    type="outline"
+                    shape="circle"
+                    @click="toggleFullScreen">
             <template #icon>
               <icon-fullscreen-exit v-if="isFullscreen" />
               <icon-fullscreen v-else />
@@ -129,11 +118,10 @@
       <!-- 偏好设置 -->
       <li>
         <a-tooltip content="偏好设置">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            shape="circle"
-            @click="setSettingVisible">
+          <a-button class="nav-btn"
+                    type="outline"
+                    shape="circle"
+                    @click="openGlobalSetting">
             <template #icon>
               <icon-settings />
             </template>
@@ -144,9 +132,8 @@
       <li>
         <a-dropdown trigger="click">
           <!-- 头像 -->
-          <a-avatar
-            :size="32"
-            :style="{ cursor: 'pointer', backgroundColor: '#3370ff' }">
+          <a-avatar :size="32"
+                    :style="{ cursor: 'pointer', backgroundColor: '#3370ff' }">
             {{ nickname }}
           </a-avatar>
           <template #content>
@@ -188,6 +175,7 @@
   import { triggerMouseEvent } from '@/utils';
   import Menu from '@/components/menu/tree/index.vue';
   import MessageBox from '../message-box/index.vue';
+  import { openGlobalSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
 
   const appStore = useAppStore();
   const userStore = useUserStore();
@@ -223,9 +211,7 @@
   };
 
   // 打开系统设置
-  const setSettingVisible = () => {
-    appStore.updateSettings({ globalSettings: true });
-  };
+  const openGlobalSetting = inject(openGlobalSettingKey) as () => void;
 
   // 消息触发器 ref
   const refMessageBoxTrigger = ref();
@@ -245,7 +231,7 @@
   };
 
   // 注入收缩菜单
-  const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
+  const toggleDrawerMenu = inject(toggleDrawerMenuKey) as () => void;
 </script>
 
 <style scoped lang="less">

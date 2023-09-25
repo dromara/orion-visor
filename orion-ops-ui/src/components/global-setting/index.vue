@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!appStore.navbar" class="fixed-settings" @click="setVisible">
+  <div v-if="!appStore.navbar" class="fixed-settings" @click="open">
     <a-button type="primary">
       <template #icon>
         <icon-settings />
@@ -8,14 +8,12 @@
   </div>
   <a-drawer title="偏好设置"
             :width="300"
-            unmount-on-close
             :visible="visible"
-            ok-text="保存"
-            cancel-text="关闭"
-            @ok="saveConfig"
-            @cancel="cancel">
-    <Block :options="contentOpts" title="内容区域" />
-    <Block :options="othersOpts" title="其他设置" />
+            :footer="false"
+            :unmount-on-close="true"
+            @cancel="() => setVisible(false)">
+    <Block :options="layoutOpts" title="布局设置" />
+    <Block :options="viewsOpts" title="页面视图" />
   </a-drawer>
 </template>
 
@@ -23,16 +21,19 @@
   import { computed } from 'vue';
   import { useAppStore } from '@/store';
   import Block from './block.vue';
-
-  const emit = defineEmits(['cancel']);
+  import useVisible from '@/hooks/visible';
 
   const appStore = useAppStore();
-  const visible = computed(() => appStore.globalSettings);
+  const { visible, setVisible } = useVisible();
 
-  /**
-   * 内容配置
-   */
-  const contentOpts = computed(() => [
+  // 打开
+  const open = () => {
+    setVisible(true);
+  };
+  defineExpose({ open });
+
+  // 布局设置
+  const layoutOpts = computed(() => [
     {
       name: '导航栏',
       key: 'navbar',
@@ -59,44 +60,43 @@
       defaultVal: appStore.tabBar
     },
     {
-      name: '菜单宽度 (px)',
-      key: 'menuWidth',
-      defaultVal: appStore.menuWidth,
-      type: 'number',
-    },
-  ]);
-
-  /**
-   * 其他配置
-   */
-  const othersOpts = computed(() => [
-    {
       name: '色弱模式',
       key: 'colorWeak',
       defaultVal: appStore.colorWeak,
     },
+    {
+      name: '菜单宽度 (px)',
+      key: 'menuWidth',
+      type: 'number',
+      defaultVal: appStore.menuWidth,
+    },
   ]);
 
-  /**
-   * 取消配置
-   */
-  const cancel = () => {
-    appStore.updateSettings({ globalSettings: false });
-    emit('cancel');
-  };
+  // 页面视图配置
+  const viewsOpts = computed(() => [
+    {
+      name: '主机列表',
+      key: 'host',
+      type: 'radio-group',
+      defaultVal: appStore.host,
+      options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
+    },
+    {
+      name: '主机秘钥',
+      key: 'hostKeys',
+      type: 'radio-group',
+      defaultVal: appStore.hostKeys,
+      options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
+    },
+    {
+      name: '主机身份',
+      key: 'hostIdentity',
+      type: 'radio-group',
+      defaultVal: appStore.hostIdentity,
+      options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
+    },
+  ]);
 
-  /**
-   * 复制配置
-   */
-  const saveConfig = async () => {
-  };
-
-  /**
-   * 显示菜单
-   */
-  const setVisible = () => {
-    appStore.updateSettings({ globalSettings: true });
-  };
 </script>
 
 <style scoped lang="less">

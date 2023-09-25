@@ -5,43 +5,39 @@
       <NavBar />
     </div>
     <a-layout>
-      <a-layout>
-        <!-- 左侧菜单栏 -->
-        <a-layout-sider
-          v-if="renderMenu"
-          v-show="!hideMenu"
-          class="layout-sider"
-          breakpoint="xl"
-          :collapsed="collapsed"
-          :collapsible="true"
-          :width="menuWidth"
-          :style="{ paddingTop: navbar ? '60px' : '' }"
-          :hide-trigger="true"
-          @collapse="setCollapsed">
-          <div class="menu-wrapper">
-            <Menu />
-          </div>
-        </a-layout-sider>
-        <!-- 顶部菜单栏 -->
-        <a-drawer
-          v-if="hideMenu"
-          :visible="drawerVisible"
-          placement="left"
-          :header="false"
-          :footer="false"
-          mask-closable
-          :closable="false"
-          @cancel="drawerCancel">
+      <!-- 左侧菜单栏 -->
+      <a-layout-sider v-if="renderMenu"
+                      v-show="!hideMenu"
+                      class="layout-sider"
+                      breakpoint="xl"
+                      :collapsed="collapsed"
+                      :collapsible="true"
+                      :width="menuWidth"
+                      :style="{ paddingTop: navbar ? '60px' : '' }"
+                      :hide-trigger="true"
+                      @collapse="setCollapsed">
+        <div class="menu-wrapper">
           <Menu />
-        </a-drawer>
-        <!-- body -->
-        <a-layout class="layout-content" :style="paddingStyle">
-          <TabBar v-if="appStore.tabBar" />
-          <a-layout-content>
-            <PageLayout />
-          </a-layout-content>
-          <Footer v-if="footer" />
-        </a-layout>
+        </div>
+      </a-layout-sider>
+      <!-- 顶部菜单栏 -->
+      <a-drawer v-if="hideMenu"
+                :visible="drawerVisible"
+                placement="left"
+                :header="false"
+                :footer="false"
+                mask-closable
+                :closable="false"
+                @cancel="drawerCancel">
+        <Menu />
+      </a-drawer>
+      <!-- body -->
+      <a-layout class="layout-content" :style="paddingStyle">
+        <TabBar v-if="appStore.tabBar" />
+        <a-layout-content>
+          <PageLayout />
+        </a-layout-content>
+        <Footer v-if="footer" />
       </a-layout>
     </a-layout>
   </a-layout>
@@ -57,6 +53,7 @@
   import TabBar from '@/components/tab-bar/index.vue';
   import useResponsive from '@/hooks/responsive';
   import PageLayout from './page-layout.vue';
+  import { toggleDrawerMenuKey } from '@/types/symbol';
 
   const isInit = ref(false);
   const appStore = useAppStore();
@@ -98,7 +95,7 @@
   };
 
   // 对外暴露触发收缩菜单
-  provide('toggleDrawerMenu', () => {
+  provide(toggleDrawerMenuKey, () => {
     drawerVisible.value = !drawerVisible.value;
   });
 

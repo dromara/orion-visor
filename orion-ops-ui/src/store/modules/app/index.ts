@@ -1,10 +1,29 @@
 import { defineStore } from 'pinia';
-import defaultSettings from '@/config/settings.json';
 import { AppState } from './types';
+
+const defaultConfig: AppState = {
+  // 应用设置
+  device: 'desktop',
+  menuCollapse: false,
+  hideMenu: false,
+  // 用户偏好-布局
+  theme: 'light',
+  menu: true,
+  topMenu: false,
+  navbar: true,
+  footer: true,
+  tabBar: true,
+  menuWidth: 220,
+  colorWeak: false,
+  // 用户偏好-页面视图
+  host: 'table',
+  hostKeys: 'table',
+  hostIdentity: 'table',
+};
 
 export default defineStore('app', {
   state: (): AppState => ({
-    ...defaultSettings,
+    ...defaultConfig
   }),
 
   getters: {
@@ -17,31 +36,17 @@ export default defineStore('app', {
   },
 
   actions: {
+    // 修改颜色主题
+    toggleTheme(dark: boolean) {
+      this.updateSettings({
+        theme: dark ? 'dark' : 'light'
+      });
+      document.body.setAttribute('arco-theme', dark ? 'dark' : 'light');
+    },
+
     // 更新配置
     updateSettings(partial: Partial<AppState>) {
       this.$patch(partial as object);
-      console.log(partial);
-    },
-
-    // 修改颜色主题
-    toggleTheme(dark: boolean) {
-      if (dark) {
-        this.theme = 'dark';
-        document.body.setAttribute('arco-theme', 'dark');
-      } else {
-        this.theme = 'light';
-        document.body.removeAttribute('arco-theme');
-      }
-    },
-
-    // 切换设备
-    toggleDevice(device: string) {
-      this.device = device;
-    },
-
-    // 切换菜单状态
-    toggleMenu(value: boolean) {
-      this.hideMenu = value;
     },
   },
 });

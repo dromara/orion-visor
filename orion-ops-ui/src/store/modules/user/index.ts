@@ -30,7 +30,9 @@ export default defineStore('user', {
 
     // 获取用户信息
     async info() {
+      // TODO 查询偏好
       const { data } = await getUserPermission();
+      // 设置用户信息
       this.setInfo({
         id: data.user.id,
         username: data.user.username,
@@ -39,6 +41,8 @@ export default defineStore('user', {
         roles: data.roles,
         permission: data.permissions,
       });
+      // TODO 设置用户偏好
+
     },
 
     // 登录

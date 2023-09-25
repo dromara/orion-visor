@@ -1,14 +1,15 @@
 <template>
   <div class="block">
     <h5 class="title">{{ title }}</h5>
-    <div v-for="option in options" :key="option.name" class="switch-wrapper">
+    <div v-for="option in options" :key="option.name" class="option-wrapper">
+      <!-- 偏好项 -->
       <span>{{ option.name }}</span>
-      <form-wrapper
-        :type="option.type || 'switch'"
-        :name="option.key"
-        :default-value="option.defaultVal"
-        @input-change="handleChange"
-      />
+      <!-- input -->
+      <form-wrapper :name="option.key"
+                    :type="option.type"
+                    :default-value="option.defaultVal"
+                    :options="option.options"
+                    @input-change="handleChange" />
     </div>
   </div>
 </template>
@@ -17,19 +18,18 @@
   import { PropType } from 'vue';
   import { useAppStore } from '@/store';
   import FormWrapper from './form-wrapper.vue';
+  import { RadioOption } from '@arco-design/web-vue/es/radio/interface';
 
   interface OptionsProps {
     name: string;
     key: string;
     type?: string;
     defaultVal?: boolean | string | number;
+    options?: Array<RadioOption>;
   }
 
   defineProps({
-    title: {
-      type: String,
-      default: '',
-    },
+    title: String,
     options: {
       type: Array as PropType<OptionsProps[]>,
       default() {
@@ -56,13 +56,17 @@
         menuCollapse: false,
       });
     }
+    // 修改配置
     appStore.updateSettings({ [key]: value });
+    // TODO 同步偏好
+
   };
 </script>
 
 <style scoped lang="less">
   .block {
     margin-bottom: 24px;
+    user-select: none;
   }
 
   .title {
@@ -71,7 +75,7 @@
     font-size: 14px;
   }
 
-  .switch-wrapper {
+  .option-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
