@@ -63,7 +63,7 @@
     };
   };
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<Record<string, any>>(defaultForm());
 
   // 打开

@@ -30,4 +30,6 @@ export interface HostSshConfig {
   charset?: string;
   fileNameCharset?: string;
   fileContentCharset?: string;
+  useNewPassword?: boolean;
+  hasPassword?: boolean;
 }

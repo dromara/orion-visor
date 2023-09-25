@@ -61,7 +61,7 @@
     };
   };
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<RoleUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);

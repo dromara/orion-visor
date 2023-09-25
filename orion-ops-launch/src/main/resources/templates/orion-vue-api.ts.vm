@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'query-string';
 import { DataGrid, Pagination } from '@/types/global';
+import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * ${table.comment}创建请求
@@ -48,7 +49,7 @@ export interface ${vue.featureEntity}QueryRequest extends Pagination {
 /**
  * ${table.comment}查询响应
  */
-export interface ${vue.featureEntity}QueryResponse {
+export interface ${vue.featureEntity}QueryResponse extends TableData {
   #foreach($field in ${table.fields})
   #if("$field.propertyType" == "String")
   ${field.propertyName}?: string;

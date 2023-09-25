@@ -52,20 +52,18 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination"
+             :pagination="pagination as PaginationProps"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
-      <!-- 名称 -->
-      <template #name="{ record }">
-        <span class="span-blue">{{ record.name }}</span>
-      </template>
       <!-- 编码 -->
       <template #code="{ record }">
         <a-tag>{{ record.code }}</a-tag>
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
+        <!-- FIXME -->
+        <span class="circle"></span>
         <a-tag :color="getEnumValue(record.status, RoleStatusEnum,'color')">
           {{ getEnumValue(record.status, RoleStatusEnum) }}
         </a-tag>
@@ -129,14 +127,14 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteRole, getRolePage, updateRoleStatus, RoleQueryRequest, RoleQueryResponse } from '@/api/user/role';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, PaginationProps } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { RoleStatusEnum } from '../types/enum.types';
   import { toOptions, getEnumValue, toggleEnumValue, toggleEnum } from '@/utils/enum';
   import { defaultPagination } from '@/types/table';
 
-  const tableRenderData = ref<RoleQueryResponse[]>();
+  const tableRenderData = ref<RoleQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 

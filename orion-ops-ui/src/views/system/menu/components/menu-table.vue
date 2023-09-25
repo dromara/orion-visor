@@ -181,13 +181,13 @@
 
   const cacheStore = useCacheStore();
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<MenuQueryRequest>({
     name: undefined,
     status: undefined
   });
 
-  const tableRef = ref<any>();
+  const tableRef = ref();
   const expandStatus = ref<boolean>(false);
 
   const tableRenderData = ref<MenuQueryResponse[]>([]);

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 菜单创建请求
@@ -35,7 +36,7 @@ export interface MenuQueryRequest {
 /**
  * 菜单查询响应
  */
-export interface MenuQueryResponse {
+export interface MenuQueryResponse extends TableData {
   id?: number;
   parentId?: number;
   name?: string;

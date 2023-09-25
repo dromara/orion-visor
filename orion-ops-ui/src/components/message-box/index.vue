@@ -82,7 +82,7 @@
   async function readMessage(data: MessageListType) {
     const ids = data.map((item) => item.id);
     await setMessageStatus({ ids });
-    fetchSourceData();
+    await fetchSourceData();
   }
 
   const renderList = computed(() => {
@@ -101,7 +101,7 @@
   };
   const formatUnreadLength = (type: string) => {
     const list = getUnreadList(type);
-    return list.length ? `(${list.length})` : ``;
+    return list.length ? `(${list.length})` : '';
   };
   const handleItemClick = (items: MessageListType) => {
     if (renderList.value.length) readMessage([...items]);

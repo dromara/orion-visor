@@ -41,7 +41,7 @@
         <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
                      field="icon"
                      label="菜单图标">
-          <icon-picker v-model:icon="formModel.icon">
+          <icon-picker v-model:icon="formModel.icon as string">
             <template #iconSelect>
               <a-input v-model="formModel.icon" placeholder="请选择菜单图标" />
             </template>
@@ -151,7 +151,7 @@
     };
   };
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<MenuUpdateRequest & Record<string, any>>(defaultForm());
 
   const emits = defineEmits(['added', 'updated']);

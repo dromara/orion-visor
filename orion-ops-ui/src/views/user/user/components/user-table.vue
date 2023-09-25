@@ -66,16 +66,13 @@
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
-             :pagination="pagination"
+             :pagination="pagination as PaginationProps"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
-      <!-- 用户名 -->
-      <template #username="{ record }">
-        <span class="span-blue">{{ record.username }}</span>
-      </template>
       <!-- 状态 -->
       <template #status="{ record }">
+        <!-- FIXME -->
         <a-tag :color="getEnumValue(record.status, UserStatusEnum,'color')">
           {{ getEnumValue(record.status, UserStatusEnum) }}
         </a-tag>
@@ -150,7 +147,7 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteUser, getUserPage, updateUserStatus, UserQueryRequest, UserQueryResponse } from '@/api/user/user';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, PaginationProps } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { UserStatusEnum } from '../types/enum.types';
@@ -158,7 +155,7 @@
   import { toOptions, getEnumValue } from '@/utils/enum';
   import { useUserStore } from '@/store';
 
-  const tableRenderData = ref<UserQueryResponse[]>();
+  const tableRenderData = ref<UserQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 

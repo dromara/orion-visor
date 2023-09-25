@@ -56,7 +56,7 @@
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const tree = ref<any>();
+  const tree = ref();
   const roleRecord = reactive<Record<string, any>>({
     id: undefined,
     name: undefined,
@@ -88,7 +88,9 @@
   // 渲染对象
   const renderRecord = (record: any) => {
     Object.keys(roleRecord).forEach(k => {
-      roleRecord[k] = record[k];
+      if (record.hasOwnProperty(k)) {
+        roleRecord[k] = record[k];
+      }
     });
   };
 

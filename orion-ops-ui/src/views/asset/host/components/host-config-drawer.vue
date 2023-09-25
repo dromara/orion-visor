@@ -44,7 +44,9 @@
   const cacheStore = useCacheStore();
 
   const record = ref();
-  const config = ref<Record<string, any>>({});
+  const config = ref<Record<string, any>>({
+    SSH: undefined
+  });
 
   // 打开
   const open = async (e: any) => {

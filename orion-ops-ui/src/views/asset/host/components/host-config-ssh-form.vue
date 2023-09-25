@@ -26,7 +26,7 @@
                      label="用户名"
                      :rules="usernameRules"
                      label-col-flex="60px"
-                     :help="AuthTypeEnum.IDENTITY.value === formModel.authType ? '将使用主机身份的用户名' : null">
+                     :help="AuthTypeEnum.IDENTITY.value === formModel.authType ? '将使用主机身份的用户名' : undefined">
           <a-input v-model="formModel.username"
                    :disabled="AuthTypeEnum.IDENTITY.value === formModel.authType"
                    placeholder="请输入用户名" />
@@ -54,6 +54,7 @@
                      label="主机密码"
                      :rules="passwordRules"
                      label-col-flex="60px">
+          <!-- FIXME -->
           <a-input-password v-model="formModel.password"
                             :disabled="!formModel.useNewPassword && formModel.hasPassword"
                             placeholder="主机密码" />
@@ -157,7 +158,7 @@
     version: undefined,
   });
 
-  const formRef = ref<any>();
+  const formRef = ref();
   const formModel = reactive<HostSshConfig & Record<string, any>>({
     username: undefined,
     port: undefined,

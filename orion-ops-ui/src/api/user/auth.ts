@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { UserState } from '@/store/modules/user/types';
 
 /**
  * 登陆请求
