@@ -20,10 +20,10 @@ import com.baomidou.mybatisplus.generator.config.ConstVal;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.define.collect.MultiLinkedHashMap;
-import com.orion.lang.utils.Enums;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.VariableStyles;
 import com.orion.lang.utils.io.Files1;
@@ -31,6 +31,7 @@ import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
+import com.orion.ops.launch.generator.template.EnumMeta;
 import com.orion.ops.launch.generator.template.Table;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -137,13 +138,13 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                                                      @NotNull TableInfo tableInfo) {
         // 生成文件副本
         List<CustomFile> files = originCustomerFile.stream().map(s ->
-                        new CustomFile.Builder()
-                                .enableFileOverride()
-                                .templatePath(s.getTemplatePath())
-                                .filePath(s.getFilePath())
-                                .fileName(s.getFileName())
-                                .packageName(s.getPackageName())
-                                .build())
+                new CustomFile.Builder()
+                        .enableFileOverride()
+                        .templatePath(s.getTemplatePath())
+                        .filePath(s.getFilePath())
+                        .fileName(s.getFileName())
+                        .packageName(s.getPackageName())
+                        .build())
                 .collect(Collectors.toList());
         // 获取 table
         Table table = tables.get(tableInfo.getName());
@@ -324,7 +325,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // 功能名称常量
         beanMap.put("featureConst", VariableStyles.SPINE.toSerpentine(table.getFeature()).toUpperCase());
         // 枚举
-        beanMap.put("enums", this.getEnumMap(table));
+        this.setEnumMap(beanMap, tableInfo, table);
         objectMap.put("vue", beanMap);
 
         // 生成文件
@@ -390,19 +391,72 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
-     * 获取枚举 map
+     * 设置枚举
      *
-     * @param table table
-     * @return enums
+     * @param beanMap   beanMap
+     * @param tableInfo tableInfo
+     * @param table     table
      */
-    private Object getEnumMap(Table table) {
-        List<Class<? extends Enum<?>>> enums = table.getEnums();
+    private void setEnumMap(BeanMap beanMap, TableInfo tableInfo, Table table) {
+        // 枚举注解
+        Map<String, String> enumComment = new HashMap<>();
+        // 枚举值
         Map<String, MultiLinkedHashMap<String, String, Object>> enumMap = new LinkedHashMap<>();
-        for (Class<? extends Enum<?>> e : enums) {
-            MultiLinkedHashMap<String, String, Object> fieldValueMap = Enums.getFieldValueMap(e);
-            enumMap.put(e.getSimpleName(), fieldValueMap);
+        for (EnumMeta meta : table.getEnums()) {
+            meta = meta.clone();
+            // 检查字段是否存在
+            String originVariable = meta.getVariable();
+            TableField tableField = tableInfo.getFields()
+                    .stream()
+                    .filter(s -> originVariable.equals(s.getName()) || originVariable.equals(s.getPropertyName()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("未查询到枚举映射字段 " + originVariable));
+            // 转为大驼峰
+            String enumName = Strings.firstUpper(tableField.getPropertyName()) + "Enum";
+            // 设置枚举注释
+            if (meta.getComment() == null) {
+                enumComment.put(enumName, Strings.def(tableField.getComment(), enumName));
+            } else {
+                enumComment.put(enumName, meta.getComment());
+
+            }
+            // 设置枚举
+            MultiLinkedHashMap<String, String, Object> enumInfo = new MultiLinkedHashMap<>();
+            for (int i = 0; i < meta.getNames().size(); i++) {
+                // 枚举名称
+                String name = meta.getNames().get(i);
+                // 设置枚举值
+                for (int j = 0; j < meta.getFields().size(); j++) {
+                    String field = meta.getFields().get(j);
+                    Object value = safeGet(safeGet(meta.getValues(), j), i);
+                    enumInfo.put(name, field, value);
+                }
+            }
+            enumMap.put(enumName, enumInfo);
         }
-        return enumMap;
+        // 设置到上下文
+        beanMap.put("enums", enumMap);
+        beanMap.put("enumComment", enumComment);
+    }
+
+    /**
+     * 获取值
+     *
+     * @param list  list
+     * @param index index
+     * @param <T>   T
+     * @return value
+     */
+    private <T> T safeGet(List<T> list, int index) {
+        if (list == null) {
+            return null;
+        }
+        if (list.size() > index) {
+            return list.get(index);
+        } else {
+            return null;
+        }
+
     }
 
 }

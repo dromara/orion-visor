@@ -15,8 +15,9 @@ import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
-import com.orion.ops.launch.generator.template.Table;
 import com.orion.ops.launch.generator.engine.VelocityTemplateEngine;
+import com.orion.ops.launch.generator.template.Table;
+import com.orion.ops.launch.generator.template.Template;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -43,11 +44,17 @@ public class CodeGenerator {
         String module = "infra";
         // 生成的表
         Table[] tables = {
-                // new GenTable("system_user", "用户", "user")
-                //         .vue("user", "user")
-                //         .enums(UserStatusEnum.class),
-                new Table("preference", "用户偏好", "preference")
+                Template.create("preference", "用户偏好", "preference")
+                        .enableProviderApi()
+                        .cache("user:preference:{}:{}", "用户偏好 ${type} ${userId}")
+                        .formatKeys("type", "userId")
                         .vue("user", "preference")
+                        .enums("type")
+                        .names("APP", "HOST")
+                        .values("label", "应用", "主机")
+                        .values("value", 1)
+                        .color(null, "green")
+                        .build(),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -388,6 +395,7 @@ public class CodeGenerator {
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 模块父工程\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先执行单元测试检测是否正常\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 枚举需要自行更改数据类型\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在菜单页面刷新缓存\n")
                 .toString();
         System.out.print(line);

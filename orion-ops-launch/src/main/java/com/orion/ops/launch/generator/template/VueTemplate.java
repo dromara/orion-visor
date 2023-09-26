@@ -63,4 +63,25 @@ public class VueTemplate extends Template {
         return this;
     }
 
+    /**
+     * 设置枚举
+     *
+     * @param variable 枚举字段 数据库/小驼峰
+     * @return enums
+     */
+    public EnumsTemplate enums(String variable) {
+        return new EnumsTemplate(table, variable);
+    }
+
+    /**
+     * 设置枚举
+     *
+     * @param variable  枚举字段 数据库/小驼峰
+     * @param enumClass 枚举类
+     * @return enums
+     */
+    public EnumsTemplate enums(String variable, Class<? extends Enum<?>> enumClass) {
+        return new EnumsTemplate(table, variable, enumClass);
+    }
+
 }

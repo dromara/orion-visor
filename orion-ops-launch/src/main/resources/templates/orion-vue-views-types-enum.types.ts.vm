@@ -1,15 +1,12 @@
 #foreach($enumEntity in ${vue.enums.entrySet()})
 /**
- *
+ * $!{vue.enumComment.get($enumEntity.key)}
  */
 export const $enumEntity.key = {
 #foreach($enumEntityItem in $enumEntity.value.entrySet())
   $enumEntityItem.key: {
-    value: null,
-    label: '',
-    color: '',
     #foreach($enumEntityItemFields in $enumEntityItem.value.entrySet())
-    $enumEntityItemFields.key: '$enumEntityItemFields.value',
+    $enumEntityItemFields.key: '$!enumEntityItemFields.value',
     #end
   },
 #end

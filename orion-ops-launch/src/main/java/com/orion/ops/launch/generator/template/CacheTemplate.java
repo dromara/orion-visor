@@ -1,5 +1,7 @@
 package com.orion.ops.launch.generator.template;
 
+import com.orion.lang.utils.collect.Lists;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -12,10 +14,20 @@ import java.util.concurrent.TimeUnit;
 public class CacheTemplate extends ServerTemplate {
 
     public CacheTemplate(Table table) {
+        this(table, table.cacheKey, table.cacheDesc);
+    }
+
+    public CacheTemplate(Table table, String key) {
+        this(table, key, table.cacheDesc);
+    }
+
+    public CacheTemplate(Table table, String key, String desc) {
         super(table);
         table.enableCache = true;
         table.cacheExpireTime = 1;
         table.cacheExpireUnit = TimeUnit.HOURS;
+        table.cacheKey = key;
+        table.cacheDesc = desc;
     }
 
     /**
@@ -26,6 +38,40 @@ public class CacheTemplate extends ServerTemplate {
      */
     public CacheTemplate key(String key) {
         table.cacheKey = key;
+        return this;
+    }
+
+    /**
+     * 设置缓存 key
+     *
+     * @param key key
+     * @return this
+     */
+    public CacheTemplate key(String key, String desc) {
+        table.cacheKey = key;
+        table.cacheDesc = desc;
+        return this;
+    }
+
+    /**
+     * 设置缓存描述
+     *
+     * @param desc desc
+     * @return this
+     */
+    public CacheTemplate desc(String desc) {
+        table.cacheDesc = desc;
+        return this;
+    }
+
+    /**
+     * 设置缓存格式化字段
+     *
+     * @param keys keys
+     * @return this
+     */
+    public CacheTemplate formatKeys(String... keys) {
+        table.cacheFormatKeys.addAll(Lists.of(keys));
         return this;
     }
 

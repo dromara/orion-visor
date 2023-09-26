@@ -90,4 +90,25 @@ public class ServerTemplate extends Template {
         return new CacheTemplate(table);
     }
 
+    /**
+     * 设置 cache
+     *
+     * @param key key
+     * @return cache
+     */
+    public CacheTemplate cache(String key) {
+        return new CacheTemplate(table, key);
+    }
+
+    /**
+     * 设置 cache
+     *
+     * @param key  key
+     * @param desc desc
+     * @return cache
+     */
+    public CacheTemplate cache(String key, String desc) {
+        return new CacheTemplate(table, key, desc);
+    }
+
 }
