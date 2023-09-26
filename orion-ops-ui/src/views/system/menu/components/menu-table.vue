@@ -18,12 +18,10 @@
             <!-- 菜单状态 -->
             <a-col :span="12">
               <a-form-item field="status" label="菜单状态" label-col-flex="60px">
-                <a-select
-                  v-model="formModel.status"
-                  :options="toOptions(MenuStatusEnum)"
-                  placeholder="请选择菜单状态"
-                  allow-clear
-                />
+                <a-select v-model="formModel.status"
+                          :options="toOptions(MenuStatusEnum)"
+                          placeholder="请选择菜单状态"
+                          allow-clear />
               </a-form-item>
             </a-col>
           </a-row>

@@ -1,9 +1,9 @@
 #foreach($enumEntity in ${vue.enums.entrySet()})
 /**
- * $!{vue.enumComment.get($enumEntity.key)}
+ * $!{enumEntity.value.comment}
  */
-export const $enumEntity.key = {
-#foreach($enumEntityItem in $enumEntity.value.entrySet())
+export const $enumEntity.value.className = {
+#foreach($enumEntityItem in $enumEntity.value.info.entrySet())
   $enumEntityItem.key: {
     #foreach($enumEntityItemFields in $enumEntityItem.value.entrySet())
     $enumEntityItemFields.key: '$!enumEntityItemFields.value',

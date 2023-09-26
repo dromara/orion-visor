@@ -8,20 +8,27 @@
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
       <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
-      #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+        #if(${vue.enums.containsKey(${field.propertyName})})
+        <a-select v-model="formModel.${field.propertyName}"
+                  :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
+                  placeholder="请选择${field.comment}"
+                  allow-clear />
+        #else
+        #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
         <a-input-number v-model="formModel.${field.propertyName}"
                         placeholder="请输入${field.comment}"
                         allow-clear
                         hide-button />
-      #elseif("$field.propertyType" == "Date")
+        #elseif("$field.propertyType" == "Date")
         <a-date-picker v-model="formModel.${field.propertyName}"
                        style="width: 100%"
                        placeholder="请选择${field.comment}"
                        show-time
                        allow-clear />
-      #else
-        <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear/>
-      #end
+        #else
+        <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear />
+        #end
+        #end
       </a-form-item>
       #end
     </a-query-header>
@@ -45,6 +52,7 @@
               <icon-plus />
             </template>
           </a-button>
+          #if($vue.enableRowSelection)
           <!-- 删除 -->
           <a-popconfirm position="br"
                         type="warning"
@@ -60,6 +68,7 @@
               </template>
             </a-button>
           </a-popconfirm>
+          #end
         </a-space>
       </div>
     </template>
@@ -70,13 +79,23 @@
              label-align="left"
              :loading="loading"
              :columns="columns"
+             #if($vue.enableRowSelection)
              :selected-keys="selectedKeys"
              :row-selection="rowSelection"
+             #end
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(pagination.current, size)"
              :bordered="false">
+      #foreach($field in ${table.fields})
+      #if(${vue.enums.containsKey(${field.propertyName})})
+      <!-- $field.comment -->
+      <template #${field.propertyName}="{ record }">
+        {{ getEnumValue(record.${field.propertyName}, ${vue.enums.get(${field.propertyName}).className}) }}
+      </template>
+      #end
+      #end
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -117,18 +136,28 @@
   import { Message, PaginationProps } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
+  #if($vue.enableRowSelection)
   import { defaultPagination, defaultRowSelection } from '@/types/table';
-  import {} from '../types/enum.types';
+  #else
+  import { defaultPagination } from '@/types/table';
+  #end
   import {} from '../types/const';
-  import { toOptions } from '@/utils/enum';
+  #if($vue.enums.isEmpty())
+  import {} from '../types/enum.types';
+  #else
+  import { #foreach($entry in ${vue.enums.entrySet()})${entry.value.className}#if($foreach.hasNext), #end#end } from '../types/enum.types';
+  #end
+  import { toOptions, getEnumValue } from '@/utils/enum';
 
   const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
   const pagination = reactive(defaultPagination()) as PaginationProps;
+  #if($vue.enableRowSelection)
   const selectedKeys = ref<number[]>([]);
   const rowSelection = reactive(defaultRowSelection());
+  #end
 
   const formModel = ref<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})
@@ -136,6 +165,7 @@
     #end
   });
 
+  #if($vue.enableRowSelection)
   // 删除选中行
   const deleteSelectRows = async () => {
     try {
@@ -152,6 +182,7 @@
     }
   };
 
+  #end
   // 删除当前行
   const deleteRow = async ({ id }: {
     id: number
@@ -192,6 +223,9 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+      #if($vue.enableRowSelection)
+      selectedKeys.value = [];
+      #end
     } catch (e) {
     } finally {
       setLoading(false);

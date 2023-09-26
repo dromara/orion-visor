@@ -31,8 +31,8 @@ import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
-import com.orion.ops.launch.generator.template.EnumMeta;
 import com.orion.ops.launch.generator.template.Table;
+import com.orion.ops.launch.generator.template.VueEnum;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -325,7 +325,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // 功能名称常量
         beanMap.put("featureConst", VariableStyles.SPINE.toSerpentine(table.getFeature()).toUpperCase());
         // 枚举
-        this.setEnumMap(beanMap, tableInfo, table);
+        beanMap.put("enums", this.getEnumMap(beanMap, tableInfo, table));
         objectMap.put("vue", beanMap);
 
         // 生成文件
@@ -391,34 +391,31 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
-     * 设置枚举
+     * 获取枚举
      *
      * @param beanMap   beanMap
      * @param tableInfo tableInfo
      * @param table     table
+     * @return enumMap
      */
-    private void setEnumMap(BeanMap beanMap, TableInfo tableInfo, Table table) {
-        // 枚举注解
-        Map<String, String> enumComment = new HashMap<>();
+    private Map<String, EnumMeta> getEnumMap(BeanMap beanMap, TableInfo tableInfo, Table table) {
         // 枚举值
-        Map<String, MultiLinkedHashMap<String, String, Object>> enumMap = new LinkedHashMap<>();
-        for (EnumMeta meta : table.getEnums()) {
-            meta = meta.clone();
+        Map<String, EnumMeta> enumMap = new LinkedHashMap<>();
+        for (VueEnum meta : table.getEnums()) {
             // 检查字段是否存在
-            String originVariable = meta.getVariable();
+            String variable = meta.getVariable();
             TableField tableField = tableInfo.getFields()
                     .stream()
-                    .filter(s -> originVariable.equals(s.getName()) || originVariable.equals(s.getPropertyName()))
+                    .filter(s -> variable.equals(s.getName()) || variable.equals(s.getPropertyName()))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("未查询到枚举映射字段 " + originVariable));
-            // 转为大驼峰
-            String enumName = Strings.firstUpper(tableField.getPropertyName()) + "Enum";
+                    .orElseThrow(() -> new RuntimeException("未查询到枚举映射字段 " + variable));
+            // 设置枚举名称
+            if (meta.getClassName() == null) {
+                meta.setClassName(Strings.firstUpper(tableField.getPropertyName()) + "Enum");
+            }
             // 设置枚举注释
             if (meta.getComment() == null) {
-                enumComment.put(enumName, Strings.def(tableField.getComment(), enumName));
-            } else {
-                enumComment.put(enumName, meta.getComment());
-
+                meta.setComment(Strings.def(tableField.getComment(), meta.getClassName()));
             }
             // 设置枚举
             MultiLinkedHashMap<String, String, Object> enumInfo = new MultiLinkedHashMap<>();
@@ -432,11 +429,9 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                     enumInfo.put(name, field, value);
                 }
             }
-            enumMap.put(enumName, enumInfo);
+            enumMap.put(tableField.getPropertyName(), new EnumMeta(meta.getClassName(), meta.getComment(), enumInfo));
         }
-        // 设置到上下文
-        beanMap.put("enums", enumMap);
-        beanMap.put("enumComment", enumComment);
+        return enumMap;
     }
 
     /**

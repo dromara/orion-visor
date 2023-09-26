@@ -1,19 +1,15 @@
 <template>
   <div class="layout-container">
-    #if($vue.drawerForm)
     <!-- 表格 -->
     <${vue.feature}-table ref="table"
-                  @openAdd="() => drawer.openAdd()"
+                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
                   @openUpdate="(e) => drawer.openUpdate(e)" />
+    #if($vue.enableDrawerForm)
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-drawer ref="drawer"
                    @added="() => table.addedCallback()"
                    @updated="() => table.updatedCallback()" />
     #else
-    <!-- 表格 -->
-    <${vue.feature}-table ref="table"
-                  @openAdd="() => modal.openAdd()"
-                  @openUpdate="(e) => modal.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-modal ref="modal"
                    @added="() => table.addedCallback()"

@@ -22,12 +22,10 @@
       </a-form-item>
       <!-- 用户状态 -->
       <a-form-item field="status" label="用户状态" label-col-flex="50px">
-        <a-select
-          v-model="formModel.status"
-          :options="toOptions(UserStatusEnum)"
-          placeholder="请选择用户状态"
-          allow-clear
-        />
+        <a-select v-model="formModel.status"
+                  :options="toOptions(UserStatusEnum)"
+                  placeholder="请选择用户状态"
+                  allow-clear />
       </a-form-item>
       <!-- 手机号 -->
       <a-form-item field="mobile" label="手机号" label-col-flex="50px">

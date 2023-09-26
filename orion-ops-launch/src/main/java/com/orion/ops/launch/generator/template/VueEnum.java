@@ -13,7 +13,7 @@ import java.util.List;
  * @since 2023/9/26 13:53
  */
 @Data
-public class EnumMeta {
+public class VueEnum {
 
     /**
      * 替换的枚举字段 数据库/小驼峰
@@ -21,7 +21,12 @@ public class EnumMeta {
     protected String variable;
 
     /**
-     * 枚举注释 没有的话使用 variable.comment || variable
+     * 枚举类名 如果为空使用 field.propertyName + Enum
+     */
+    protected String className;
+
+    /**
+     * 枚举注释 如果为空使用 field.comment || className
      */
     protected String comment;
 
@@ -40,24 +45,25 @@ public class EnumMeta {
      */
     protected List<List<Object>> values;
 
-    public EnumMeta(String variable) {
+    public VueEnum(String variable) {
+        this(variable, null);
+    }
+
+    public VueEnum(String variable, String className) {
+        this.className = className;
         this.variable = variable;
         this.names = new ArrayList<>();
         this.fields = new ArrayList<>();
         this.values = new ArrayList<>();
     }
 
-    public EnumMeta(String variable, String comment, List<String> names, List<String> fields, List<List<Object>> values) {
+    public VueEnum(String variable, String className, String comment, List<String> names, List<String> fields, List<List<Object>> values) {
         this.variable = variable;
+        this.className = className;
         this.comment = comment;
         this.names = names;
         this.fields = fields;
         this.values = values;
-    }
-
-    @Override
-    public EnumMeta clone() {
-        return new EnumMeta(variable, comment, names, fields, values);
     }
 
 }

@@ -108,7 +108,7 @@ public class Table {
     /**
      * 生成的枚举文件
      */
-    protected List<EnumMeta> enums;
+    protected List<VueEnum> enums;
 
     protected Table() {
         this.cacheFormatKeys = new ArrayList<>();

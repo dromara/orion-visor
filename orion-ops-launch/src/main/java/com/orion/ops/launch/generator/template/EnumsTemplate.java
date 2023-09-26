@@ -16,18 +16,22 @@ import java.util.stream.Collectors;
  */
 public class EnumsTemplate extends VueTemplate {
 
-    private final EnumMeta meta;
+    private final VueEnum vueEnum;
 
     public EnumsTemplate(Table table, String variable) {
+        this(table, variable, (String) null);
+    }
+
+    public EnumsTemplate(Table table, String variable, String className) {
         super(table);
-        this.meta = new EnumMeta(variable);
-        table.enums.add(meta);
+        this.vueEnum = new VueEnum(variable, className);
+        table.enums.add(vueEnum);
     }
 
     public EnumsTemplate(Table table, String variable, Class<? extends Enum<?>> enumClass) {
         super(table);
-        this.meta = new EnumMeta(variable);
-        table.enums.add(meta);
+        this.vueEnum = new VueEnum(variable);
+        table.enums.add(vueEnum);
         this.parseEnumMeta(enumClass);
     }
 
@@ -51,9 +55,21 @@ public class EnumsTemplate extends VueTemplate {
                         .map(enumItem -> Fields.getFieldValue(enumItem, field))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
-        meta.names.addAll(names);
-        meta.fields.addAll(fields);
-        meta.values.addAll(values);
+        vueEnum.className = enumClass.getSimpleName();
+        vueEnum.names.addAll(names);
+        vueEnum.fields.addAll(fields);
+        vueEnum.values.addAll(values);
+    }
+
+    /**
+     * 设置类名
+     *
+     * @param className className
+     * @return this
+     */
+    public EnumsTemplate className(String className) {
+        vueEnum.className = className;
+        return this;
     }
 
     /**
@@ -63,7 +79,7 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate comment(String comment) {
-        meta.comment = comment;
+        vueEnum.comment = comment;
         return this;
     }
 
@@ -74,7 +90,7 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate names(String... names) {
-        meta.names.addAll(Lists.of(names));
+        vueEnum.names.addAll(Lists.of(names));
         return this;
     }
 
@@ -85,8 +101,8 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate values(String field, Object... values) {
-        meta.fields.add(field);
-        meta.values.add(Lists.of(values));
+        vueEnum.fields.add(field);
+        vueEnum.values.add(Lists.of(values));
         return this;
     }
 

@@ -49,11 +49,13 @@ public class CodeGenerator {
                         .cache("user:preference:{}:{}", "用户偏好 ${type} ${userId}")
                         .formatKeys("type", "userId")
                         .vue("user", "preference")
+                        .enableDrawerForm()
+                        .enableRowSelection()
                         .enums("type")
                         .names("APP", "HOST")
                         .values("label", "应用", "主机")
-                        .values("value", 1)
-                        .color(null, "green")
+                        .values("value", 1, 2)
+                        .color("blue", "green")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件
