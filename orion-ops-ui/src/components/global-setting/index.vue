@@ -76,23 +76,23 @@
   const viewsOpts = computed(() => [
     {
       name: '主机列表',
-      key: 'host',
+      key: 'hostView',
       type: 'radio-group',
-      defaultVal: appStore.host,
+      defaultVal: appStore.hostView,
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
     {
       name: '主机秘钥',
-      key: 'hostKeys',
+      key: 'hostKeyView',
       type: 'radio-group',
-      defaultVal: appStore.hostKeys,
+      defaultVal: appStore.hostKeyView,
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
     {
       name: '主机身份',
-      key: 'hostIdentity',
+      key: 'hostIdentityView',
       type: 'radio-group',
-      defaultVal: appStore.hostIdentity,
+      defaultVal: appStore.hostIdentityView,
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
   ]);

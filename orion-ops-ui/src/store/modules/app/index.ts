@@ -16,9 +16,9 @@ const defaultConfig: AppState = {
   menuWidth: 220,
   colorWeak: false,
   // 用户偏好-页面视图
-  host: 'table',
-  hostKeys: 'table',
-  hostIdentity: 'table',
+  hostView: 'table',
+  hostKeyView: 'table',
+  hostIdentityView: 'table',
 };
 
 export default defineStore('app', {

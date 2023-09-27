@@ -1,6 +1,6 @@
 export type Theme = 'light' | 'dark'
 export type Device = 'desktop' | 'mobile'
-export type ViewType = 'table' | 'card'
+export type ViewType = 'table' | 'card' | undefined
 
 /**
  * 应用状态
@@ -36,7 +36,7 @@ export interface UserPreferenceLayout {
  * 用户偏好 - 页面视图
  */
 export interface UserPreferenceViews {
-  host: ViewType | string;
-  hostKeys: ViewType | string;
-  hostIdentity: ViewType | string;
+  hostView: ViewType;
+  hostKeyView: ViewType;
+  hostIdentityView: ViewType;
 }
