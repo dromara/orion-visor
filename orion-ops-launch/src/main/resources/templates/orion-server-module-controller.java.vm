@@ -72,19 +72,19 @@ public class ${table.controllerName} {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/list")
-    @Operation(summary = "${apiComment.listByIdList}")
+    @GetMapping("/batch-get")
+    @Operation(summary = "${apiComment.getByIdList}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-    public List<${type}VO> get${type}List(@RequestParam("idList") List<Long> idList) {
+    public List<${type}VO> get${type}Batch(@RequestParam("idList") List<Long> idList) {
         return ${typeLower}Service.get${type}ByIdList(idList);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list-all")
-    @Operation(summary = "${apiComment.listAll}")
+    @PostMapping("/list")
+    @Operation(summary = "${apiComment.queryList}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
-    public List<${type}VO> get${type}ListAll(@Validated @RequestBody ${type}QueryRequest request) {
+    public List<${type}VO> get${type}List(@Validated @RequestBody ${type}QueryRequest request) {
         return ${typeLower}Service.get${type}List(request);
     }
 
@@ -104,8 +104,8 @@ public class ${table.controllerName} {
         return ${typeLower}Service.delete${type}ById(id);
     }
 
-    @DeleteMapping("/delete-batch")
-    @Operation(summary = "${apiComment.batchDeleteByIdList}")
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "${apiComment.batchDelete}")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {

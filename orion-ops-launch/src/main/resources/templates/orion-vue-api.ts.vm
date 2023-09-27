@@ -89,10 +89,10 @@ export function get${vue.featureEntity}(id: number) {
 }
 
 /**
- * $apiComment.listByIdList
+ * $apiComment.getByIdList
  */
 export function get${vue.featureEntity}List(idList: Array<number>) {
-  return axios.get<${vue.featureEntity}QueryResponse[]>('/${package.ModuleName}/${typeHyphen}/list', {
+  return axios.get<${vue.featureEntity}QueryResponse[]>('/${package.ModuleName}/${typeHyphen}/batch-get', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
@@ -101,10 +101,10 @@ export function get${vue.featureEntity}List(idList: Array<number>) {
 }
 
 /**
- * $apiComment.listAll
+ * $apiComment.queryList
  */
-export function get${vue.featureEntity}ListAll(request: ${vue.featureEntity}QueryRequest) {
-  return axios.post<Array<${vue.featureEntity}QueryResponse>>('/${package.ModuleName}/${typeHyphen}/list-all', request);
+export function get${vue.featureEntity}List(request: ${vue.featureEntity}QueryRequest) {
+  return axios.post<Array<${vue.featureEntity}QueryResponse>>('/${package.ModuleName}/${typeHyphen}/list', request);
 }
 
 /**
@@ -122,10 +122,10 @@ export function delete${vue.featureEntity}(id: number) {
 }
 
 /**
- * $apiComment.batchDeleteByIdList
+ * $apiComment.batchDelete
  */
 export function batchDelete${vue.featureEntity}(idList: Array<number>) {
-  return axios.delete('/${package.ModuleName}/${typeHyphen}/delete-batch', {
+  return axios.delete('/${package.ModuleName}/${typeHyphen}/batch-delete', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });

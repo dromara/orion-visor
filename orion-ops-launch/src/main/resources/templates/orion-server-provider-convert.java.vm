@@ -24,6 +24,8 @@ public interface ${type}ProviderConvert {
 
     ${type}ProviderConvert MAPPER = Mappers.getMapper(${type}ProviderConvert.class);
 
+    ${type}DTO to(${type}VO dto);
+
     ${type}DO to(${type}DTO dto);
 
     ${type}DTO to(${type}DO domain);
@@ -32,12 +34,12 @@ public interface ${type}ProviderConvert {
 
     ${type}DO to(${type}UpdateDTO update);
 
+    ${type}QueryRequest toRequest(${type}QueryDTO request);
+
     ${type}CreateRequest toRequest(${type}CreateDTO request);
 
     ${type}UpdateRequest toRequest(${type}UpdateDTO request);
 
     List<${type}DTO> toList(List<${type}DO> list);
-
-    List<${type}DO> toList1(List<${type}DTO> list);
 
 }

@@ -56,16 +56,31 @@ npm run dev
 com.orion.ops.launch.generator.CodeGenerator
 
 // 生成的表为 system_role, 业务注释为 '角色', 业务包为 role
-new GenTable("system_role", "角色", "role")
-        // 忽略生成对外 api
-        .ignoreApi()
-        // 忽略生成单元测试
-        .ignoreTest()
+Template.create("system_role", "角色", "role")
+        // 生成 api
+        .enableProviderApi()
+        // 不生成单元测试
+        .disableUnitTest()
+        // 生成缓存
+        .cache("user:role", "角色缓存")
+        // 缓存过期时间 1 DAY
+        .expire(1, TimeUnit.DAYS)
         // 生成 vue 文件, 一级业务包为 user, 二级业务包为 role (前端命名只能使用脊柱命名法)
         .vue("user", "role")
-        // 前端使用抽屉表单
-        .useDrawerForm()
-        // 前端代码生成的枚举对象 可变参数
-        .enums(RoleStatusEnum.class);
+        // 前端使用抽屉表单 (多字段使用)
+        .enableDrawerForm()
+        // 前端支持多选
+        .enableRowSelection()
+        // 枚举下拉框 替换的字段为 'type'
+        .enums("type")
+        // 枚举值为 APP HOST
+        .names("APP", "HOST")
+        // 设置参数为 label APP.label = '应用' HOST.label = '主机'
+        .values("label", "应用", "主机")
+        // 设置参数为 value APP.value = '1' HOST.value = '2'
+        .values("value", 1, 2)
+        // 设置参数为 color APP.color = 'blue' HOST.color = 'green'
+        .color("blue", "green")
+        .build(),
 ```
 

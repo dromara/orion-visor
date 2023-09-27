@@ -5,6 +5,7 @@ import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @version 1.0.0
  * @since 2023/6/28 14:44
  */
+@Lazy(value = false)
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_REDIS)
 public class OrionRedisAutoConfiguration {

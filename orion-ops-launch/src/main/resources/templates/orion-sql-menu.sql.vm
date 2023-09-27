@@ -4,7 +4,7 @@
 INSERT INTO system_menu
   (parent_id, name, type, sort, visible, status, cache)
 VALUES
-  (0, '${vue.comment}管理', 1, 10, 1, 1, 1);
+  (0, '${table.comment}管理', 1, 10, 1, 1, 1);
 
 -- 设置临时父菜单id
 SELECT @TMP_PARENT_ID:=LAST_INSERT_ID();
@@ -13,7 +13,7 @@ SELECT @TMP_PARENT_ID:=LAST_INSERT_ID();
 INSERT INTO system_menu
   (parent_id, name, type, sort, visible, status, cache, component)
 VALUES
-  (@TMP_PARENT_ID, '$vue.comment', 2, 10, 1, 1, 1, '$vue.moduleEntityFirstLower$vue.featureEntity');
+  (@TMP_PARENT_ID, '$table.comment', 2, 10, 1, 1, 1, '$vue.moduleEntityFirstLower$vue.featureEntity');
 
 -- 设置临时子菜单id
 SELECT @TMP_SUB_ID:=LAST_INSERT_ID();
@@ -22,8 +22,8 @@ SELECT @TMP_SUB_ID:=LAST_INSERT_ID();
 INSERT INTO system_menu
   (parent_id, name, permission, type, sort)
 VALUES
-  (@TMP_SUB_ID, '查询$vue.comment', '${package.ModuleName}:${typeHyphen}:query', 3, 10),
-  (@TMP_SUB_ID, '创建$vue.comment', '${package.ModuleName}:${typeHyphen}:create', 3, 20),
-  (@TMP_SUB_ID, '修改$vue.comment', '${package.ModuleName}:${typeHyphen}:update', 3, 30),
-  (@TMP_SUB_ID, '删除$vue.comment', '${package.ModuleName}:${typeHyphen}:delete', 3, 40),
-  (@TMP_SUB_ID, '导出$vue.comment', '${package.ModuleName}:${typeHyphen}:export', 3, 50);
+  (@TMP_SUB_ID, '查询$table.comment', '${package.ModuleName}:${typeHyphen}:query', 3, 10),
+  (@TMP_SUB_ID, '创建$table.comment', '${package.ModuleName}:${typeHyphen}:create', 3, 20),
+  (@TMP_SUB_ID, '修改$table.comment', '${package.ModuleName}:${typeHyphen}:update', 3, 30),
+  (@TMP_SUB_ID, '删除$table.comment', '${package.ModuleName}:${typeHyphen}:delete', 3, 40),
+  (@TMP_SUB_ID, '导出$table.comment', '${package.ModuleName}:${typeHyphen}:export', 3, 50);

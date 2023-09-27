@@ -52,7 +52,7 @@ public interface ${table.serviceName} {
     ${type}VO get${type}ById(Long id);
 
     /**
-     * ${apiComment.listByIdList}
+     * ${apiComment.getByIdList}
      *
      * @param idList idList
      * @return rows
@@ -60,13 +60,22 @@ public interface ${table.serviceName} {
     List<${type}VO> get${type}ByIdList(List<Long> idList);
 
     /**
-     * ${apiComment.listAll}
+     * ${apiComment.queryList}
      *
      * @param request request
      * @return rows
      */
     List<${type}VO> get${type}List(${type}QueryRequest request);
 
+    #if($cacheMeta.enableCache)
+    /**
+     * ${apiComment.queryListByCache}
+     *
+     * @return rows
+     */
+    List<${type}VO> get${type}ListByCache();
+
+    #end
     /**
      * ${apiComment.queryCount}
      *
@@ -92,7 +101,7 @@ public interface ${table.serviceName} {
     Integer delete${type}ById(Long id);
 
     /**
-     * ${apiComment.batchDeleteByIdList}
+     * ${apiComment.batchDelete}
      *
      * @param idList idList
      * @return effect

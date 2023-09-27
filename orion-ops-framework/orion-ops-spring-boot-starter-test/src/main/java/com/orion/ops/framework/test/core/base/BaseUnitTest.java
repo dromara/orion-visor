@@ -40,6 +40,7 @@ public class BaseUnitTest {
             OrionCommonAutoConfiguration.class,
             // mock
             OrionMockBeanTestConfiguration.class,
+            OrionMockRedisTestConfiguration.class,
             // datasource
             OrionDataSourceAutoConfiguration.class,
             DruidDataSourceAutoConfigure.class,
@@ -50,7 +51,6 @@ public class BaseUnitTest {
             OrionMybatisAutoConfiguration.class,
             MybatisPlusAutoConfiguration.class,
             // redis
-            OrionMockRedisTestConfiguration.class,
             OrionRedisAutoConfiguration.class,
             RedisAutoConfiguration.class,
             RedissonAutoConfiguration.class,

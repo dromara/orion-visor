@@ -121,5 +121,17 @@ public class ${type}ServiceImplTests extends BaseUnitTest {
         Integer effect = ${typeLower}Service.delete${type}(query);
         assertEquals(effect, 0);
     }
+    #if($cacheMeta.enableCache)
+        
+    // -------------------- cache --------------------
+
+    @Test
+    @Order(12)
+    public void get${type}ListByCacheTest() {
+        this.create${type}Test();
+        List<${type}VO> list = ${typeLower}Service.get${type}ListByCache();
+        assertEquals(list.size(), 1);
+    }
+    #end
 
 }

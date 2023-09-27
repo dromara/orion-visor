@@ -29,13 +29,13 @@ GET {{baseUrl}}/${package.ModuleName}/${typeHyphen}/get?id=1
 Authorization: {{token}}
 
 
-${httpComment} ${apiComment.listByIdList}
-GET {{baseUrl}}/${package.ModuleName}/${typeHyphen}/list?idList=1,2,3
+${httpComment} ${apiComment.getByIdList}
+GET {{baseUrl}}/${package.ModuleName}/${typeHyphen}/batch-get?idList=1,2,3
 Authorization: {{token}}
 
 
-${httpComment} ${apiComment.listAll}
-POST {{baseUrl}}/${package.ModuleName}/${typeHyphen}/list-all
+${httpComment} ${apiComment.queryList}
+POST {{baseUrl}}/${package.ModuleName}/${typeHyphen}/list
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -65,8 +65,8 @@ DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/delete?id=1
 Authorization: {{token}}
 
 
-${httpComment} ${apiComment.batchDeleteByIdList}
-DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/delete-batch?idList=1,2,3
+${httpComment} ${apiComment.batchDelete}
+DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/batch-delete?idList=1,2,3
 Authorization: {{token}}
 
 

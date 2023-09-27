@@ -17,7 +17,6 @@ import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.launch.generator.engine.VelocityTemplateEngine;
 import com.orion.ops.launch.generator.template.Table;
-import com.orion.ops.launch.generator.template.Template;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -44,19 +43,17 @@ public class CodeGenerator {
         String module = "infra";
         // 生成的表
         Table[] tables = {
-                Template.create("preference", "用户偏好", "preference")
-                        .enableProviderApi()
-                        .cache("user:preference:{}:{}", "用户偏好 ${type} ${userId}")
-                        .formatKeys("type", "userId")
-                        .vue("user", "preference")
-                        .enableDrawerForm()
-                        .enableRowSelection()
-                        .enums("type")
-                        .names("APP", "HOST")
-                        .values("label", "应用", "主机")
-                        .values("value", 1, 2)
-                        .color("blue", "green")
-                        .build(),
+                // Template.create("preference", "用户偏好", "preference")
+                //         .enableProviderApi()
+                //         .cache("user:preference:{}:{}", "用户偏好 ${type} ${userId}")
+                //         .expire(1, TimeUnit.HOURS)
+                //         .vue("user", "preference")
+                //         .enums("type")
+                //         .names("APP", "HOST")
+                //         .values("label", "应用", "主机")
+                //         .values("value", 1, 2)
+                //         .color("blue", "green")
+                //         .build(),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
@@ -319,6 +316,10 @@ public class CodeGenerator {
                 new String[]{"/templates/orion-server-module-entity-export.java.vm", "${type}Export.java", "entity.export"},
                 // convert 文件
                 new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
+                // cache dto 文件
+                new String[]{"/templates/orion-server-module-cache-dto.java.vm", "${type}CacheDTO.java", "entity.dto.${bizPackage}"},
+                // cache key define 文件
+                new String[]{"/templates/orion-server-module-cache-key-define.java.vm", "${type}CacheKeyDefine.java", "define"},
                 // -------------------- 后端 - provider --------------------
                 // api 文件
                 new String[]{"/templates/orion-server-provider-api.java.vm", "${type}Api.java", "api"},
@@ -395,10 +396,12 @@ public class CodeGenerator {
         String line = AnsiAppender.create()
                 .append(AnsiForeground.BRIGHT_GREEN.and(AnsiFont.BOLD), "\n:: 代码生成完毕 ^_^ ::\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 模块父工程\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先执行单元测试检测是否正常\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码需要自行修改缓存逻辑\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码修改完成后请先执行单元测试检测是否正常\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 枚举需要自行更改数据类型\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在菜单页面刷新缓存\n")
+                .append(AnsiForeground.BRIGHT_RED.and(AnsiFont.BOLD), "- 数据库实体字段长度限制为最大 65535\n")
                 .toString();
         System.out.print(line);
     }

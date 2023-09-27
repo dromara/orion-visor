@@ -1,7 +1,5 @@
 package com.orion.ops.launch.generator.template;
 
-import com.orion.lang.utils.collect.Lists;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -61,17 +59,6 @@ public class CacheTemplate extends ServerTemplate {
      */
     public CacheTemplate desc(String desc) {
         table.cacheDesc = desc;
-        return this;
-    }
-
-    /**
-     * 设置缓存格式化字段
-     *
-     * @param keys keys
-     * @return this
-     */
-    public CacheTemplate formatKeys(String... keys) {
-        table.cacheFormatKeys.addAll(Lists.of(keys));
         return this;
     }
 

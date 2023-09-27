@@ -87,7 +87,24 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             p.setProperty("file.resource.loader.unicode", StringPool.TRUE);
             this.velocityEngine = new VelocityEngine(p);
         }
+        // 处理表结构
+        this.getConfigBuilder().getTableInfoList().forEach(this::processTasble);
         return this;
+    }
+
+    /**
+     * 处理表结构
+     *
+     * @param tableInfo tableInfo
+     */
+    private void processTasble(TableInfo tableInfo) {
+        for (TableField field : tableInfo.getFields()) {
+            TableField.MetaInfo metaInfo = field.getMetaInfo();
+            // 限制字段长度最大为 65535
+            if (metaInfo.getLength() > 65535) {
+                Fields.setFieldValue(metaInfo, "length", 65535);
+            }
+        }
     }
 
     @Override
@@ -160,6 +177,10 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         if (!table.isEnableUnitTest()) {
             files.removeIf(file -> this.isServerUnitTestFile(file.getTemplatePath()));
         }
+        // 不生成缓存文件
+        if (!table.isEnableCache()) {
+            files.removeIf(file -> this.isServerCacheFile(file.getTemplatePath()));
+        }
         // 不生成 vue 文件
         if (!table.isEnableVue()) {
             files.removeIf(file -> this.isVueFile(file.getTemplatePath()));
@@ -180,13 +201,24 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         objectMap.put("since", OrionOpsProConst.VERSION);
         // 替换业务注释
         tableInfo.setComment(tables.get(tableInfo.getName()).getComment());
+        Table table = tables.get(tableInfo.getName());
+        // 缓存元数据
+        Map<String, Object> cacheMeta = this.pickTableMeta(table,
+                "enableCache", "cacheKey", "cacheDesc",
+                "cacheExpired", "cacheExpireTime", "cacheExpireUnit");
+        objectMap.put("cacheMeta", cacheMeta);
         // 实体名称
         String domainName = tableInfo.getEntityName();
         String mappingHyphen = objectMap.get("controllerMappingHyphen").toString();
         String entityName = domainName.substring(0, domainName.length() - 2);
+        // 类型
         objectMap.put("type", entityName);
+        // 类型首字母小写
         objectMap.put("typeLower", Strings.firstLower(entityName));
+        // 类型脊柱名称
         objectMap.put("typeHyphen", mappingHyphen.substring(0, mappingHyphen.length() - 3));
+        // 类型常量
+        objectMap.put("typeConst", VariableStyles.BIG_HUMP.toSpine(entityName).toUpperCase());
     }
 
     /**
@@ -244,16 +276,17 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         objectMap.put("apiComment", map);
         String comment = tableInfo.getComment();
         map.put("create", "创建" + comment);
-        map.put("updateAll", "更新" + comment);
-        map.put("updateById", "通过 id 更新" + comment);
-        map.put("getById", "通过 id 查询" + comment);
-        map.put("listByIdList", "通过 id 批量查询" + comment);
-        map.put("listAll", "查询" + comment);
-        map.put("queryCount", "查询" + comment + "数量");
+        map.put("updateAll", "根据条件更新" + comment);
+        map.put("updateById", "更新" + comment);
+        map.put("getById", "查询" + comment);
+        map.put("getByIdList", "批量查询" + comment);
+        map.put("queryList", "查询全部" + comment);
+        map.put("queryListByCache", "通过缓存查询" + comment);
         map.put("queryPage", "分页查询" + comment);
-        map.put("deleteById", "通过 id 删除" + comment);
-        map.put("deleteAll", "删除" + comment);
-        map.put("batchDeleteByIdList", "通过 id 批量删除" + comment);
+        map.put("queryCount", "查询" + comment + "数量");
+        map.put("deleteById", "删除" + comment);
+        map.put("deleteAll", "根据条件删除" + comment);
+        map.put("batchDelete", "批量删除" + comment);
         map.put("export", "导出" + comment);
     }
 
@@ -270,7 +303,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                 .filter(s -> this.isServerFile(s.getTemplatePath()))
                 .collect(Collectors.toList());
 
-        String parentPath = getPathInfo(OutputFile.parent);
         // 生成文件
         customFiles.forEach(file -> {
             // 获取 parent package
@@ -279,13 +311,13 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             objectMap.put("currentPackage", currentPackage);
 
             // 文件路径
-            String filePath = parentPath + File.separator + file.getPackageName()
+            String filePath = this.getPathInfo(OutputFile.parent) + File.separator + file.getPackageName()
                     .replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
             // 文件名称
-            Map<String, Object> meta = new HashMap<>(4);
-            meta.put("type", objectMap.get("type"));
-            meta.put("tableName", tableInfo.getName());
-            String fileName = filePath + File.separator + Strings.format(file.getFileName(), meta);
+            Map<String, Object> fileNameMeta = new HashMap<>(4);
+            fileNameMeta.put("type", objectMap.get("type"));
+            fileNameMeta.put("tableName", tableInfo.getName());
+            String fileName = filePath + File.separator + Strings.format(file.getFileName(), fileNameMeta);
             // 渲染文件
             this.outputFile(Files1.newFile(fileName), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
@@ -307,33 +339,31 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         customFiles = customFiles.stream()
                 .filter(s -> this.isVueFile(s.getTemplatePath()))
                 .collect(Collectors.toList());
-
-        // 元数据
-        String outPath = getConfigBuilder().getGlobalConfig().getOutputDir();
+        // 设置前端元数据
         Table table = tables.get(tableInfo.getName());
-        BeanMap beanMap = BeanMap.create(table, "enums");
+        Map<String, Object> vueMeta = this.pickTableMeta(table, "enableDrawerForm", "enableRowSelection", "module", "feature");
         // 模块名称实体
-        beanMap.put("moduleEntity", VariableStyles.SPINE.toBigHump(table.getModule()));
+        vueMeta.put("moduleEntity", VariableStyles.SPINE.toBigHump(table.getModule()));
         // 模块名称实体
-        beanMap.put("moduleEntityFirstLower", Strings.firstLower(beanMap.get("moduleEntity")));
+        vueMeta.put("moduleEntityFirstLower", Strings.firstLower(vueMeta.get("moduleEntity")));
         // 模块名称常量
-        beanMap.put("moduleConst", VariableStyles.SPINE.toSerpentine(table.getModule()).toUpperCase());
+        vueMeta.put("moduleConst", VariableStyles.SPINE.toSerpentine(table.getModule()).toUpperCase());
         // 功能名称实体
-        beanMap.put("featureEntity", VariableStyles.SPINE.toBigHump(table.getFeature()));
+        vueMeta.put("featureEntity", VariableStyles.SPINE.toBigHump(table.getFeature()));
         // 功能名称实体
-        beanMap.put("featureEntityFirstLower", Strings.firstLower(beanMap.get("featureEntity")));
+        vueMeta.put("featureEntityFirstLower", Strings.firstLower(vueMeta.get("featureEntity")));
         // 功能名称常量
-        beanMap.put("featureConst", VariableStyles.SPINE.toSerpentine(table.getFeature()).toUpperCase());
+        vueMeta.put("featureConst", VariableStyles.SPINE.toSerpentine(table.getFeature()).toUpperCase());
         // 枚举
-        beanMap.put("enums", this.getEnumMap(beanMap, tableInfo, table));
-        objectMap.put("vue", beanMap);
+        vueMeta.put("enums", this.getEnumMap(tableInfo, table));
+        objectMap.put("vue", vueMeta);
 
         // 生成文件
         customFiles.forEach(file -> {
             // 文件路径
-            String filePath = outPath
-                    + "/" + Strings.format(file.getPackageName(), beanMap)
-                    + "/" + Strings.format(file.getFileName(), beanMap);
+            String filePath = getConfigBuilder().getGlobalConfig().getOutputDir()
+                    + "/" + Strings.format(file.getPackageName(), vueMeta)
+                    + "/" + Strings.format(file.getFileName(), vueMeta);
             // 渲染文件
             this.outputFile(Files1.newFile(filePath), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
@@ -380,6 +410,16 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
+     * 是否为后端缓存文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为后端缓存文件
+     */
+    private boolean isServerCacheFile(String templatePath) {
+        return templatePath.contains("orion-server-cache");
+    }
+
+    /**
      * 是否为 vue 文件
      *
      * @param templatePath templatePath
@@ -391,14 +431,29 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
+     * 获取表元数据
+     *
+     * @param table table
+     * @param keys  keys
+     * @return meta
+     */
+    private Map<String, Object> pickTableMeta(Table table, String... keys) {
+        BeanMap beanMap = BeanMap.create(table);
+        Map<String, Object> tableMeta = new HashMap<>();
+        for (String key : keys) {
+            tableMeta.put(key, beanMap.get(key));
+        }
+        return tableMeta;
+    }
+
+    /**
      * 获取枚举
      *
-     * @param beanMap   beanMap
      * @param tableInfo tableInfo
      * @param table     table
      * @return enumMap
      */
-    private Map<String, EnumMeta> getEnumMap(BeanMap beanMap, TableInfo tableInfo, Table table) {
+    private Map<String, EnumMeta> getEnumMap(TableInfo tableInfo, Table table) {
         // 枚举值
         Map<String, EnumMeta> enumMap = new LinkedHashMap<>();
         for (VueEnum meta : table.getEnums()) {

@@ -33,4 +33,10 @@ public interface ${type}Convert {
 
     List<${type}VO> to(List<${type}DO> list);
 
+    #if($cacheMeta.enableCache)
+    ${type}VO to(${type}CacheDTO cache);
+
+    ${type}CacheDTO toCache(${type}DO domain);
+
+    #end
 }

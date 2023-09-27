@@ -2,7 +2,7 @@ package ${currentPackage};
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.utils.collect.Collections;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 #foreach($pkg in ${customModuleFilePackages})
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -64,12 +63,9 @@ public class ${type}ApiImpl implements ${type}Api {
         log.info("${type}Api.update${type} query: {}, update: {}", JSON.toJSONString(query), JSON.toJSONString(update));
         Valid.valid(query);
         Valid.valid(update);
-        // 条件
-        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(query);
-        // 转换
-        ${type}DO updateRecord = ${type}ProviderConvert.MAPPER.to(update);
         // 更新
-        int effect = ${typeLower}DAO.update(updateRecord, wrapper);
+        int effect = ${typeLower}Service.update${type}(${type}ProviderConvert.MAPPER.toRequest(query),
+                ${type}ProviderConvert.MAPPER.toRequest(update));
         log.info("${type}Api.update${type} effect: {}", effect);
         return effect;
     }
@@ -88,9 +84,9 @@ public class ${type}ApiImpl implements ${type}Api {
     }
 
     @Override
-    public List<${type}DTO> get${type}ByIdList(Collection<Long> idList) {
+    public List<${type}DTO> get${type}ByIdList(List<Long> idList) {
         log.info("${type}Api.get${type}ByIdList idList: {}", idList);
-        if (Collections.isEmpty(idList)) {
+        if (Lists.isEmpty(idList)) {
             return new ArrayList<>();
         }
         // 查询
@@ -110,6 +106,14 @@ public class ${type}ApiImpl implements ${type}Api {
     }
 
     @Override
+    public List<${type}DTO> get${type}ListByCache() {
+        return ${typeLower}Service.get${type}ListByCache()
+                .stream()
+                .map(${type}ProviderConvert.MAPPER::to)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Long get${type}Count(${type}QueryDTO dto) {
         log.info("${type}Api.get${type}Count dto: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
@@ -123,21 +127,18 @@ public class ${type}ApiImpl implements ${type}Api {
     public Integer delete${type}ById(Long id) {
         log.info("${type}Api.delete${type}ById id: {}", id);
         Valid.notNull(id, ErrorMessage.ID_MISSING);
-        // 检查数据是否存在
-        ${type}DO record = ${typeLower}DAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
-        int effect = ${typeLower}DAO.deleteById(id);
-        log.info("${type}Api.delete${type}ById effect: {}", effect);
+        Integer effect = ${typeLower}Service.delete${type}ById(id);
+        log.info("${type}Api.delete${type}ById id: {}, effect: {}", id, effect);
         return effect;
     }
 
     @Override
-    public Integer batchDelete${type}ByIdList(Collection<Long> idList) {
+    public Integer batchDelete${type}ByIdList(List<Long> idList) {
         log.info("${type}Api.batchDelete${type}ByIdList idList: {}", idList);
         Valid.notEmpty(idList, ErrorMessage.ID_MISSING);
         // 删除
-        int effect = ${typeLower}DAO.deleteBatchIds(idList);
+        Integer effect = ${typeLower}Service.batchDelete${type}ByIdList(idList);
         log.info("${type}Api.batchDelete${type}ByIdList effect: {}", effect);
         return effect;
     }
@@ -146,10 +147,8 @@ public class ${type}ApiImpl implements ${type}Api {
     public Integer delete${type}(${type}QueryDTO dto) {
         log.info("${type}Api.delete${type} dto: {}", JSON.toJSONString(dto));
         Valid.valid(dto);
-        // 条件
-        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
         // 删除
-        int effect = ${typeLower}DAO.delete(wrapper);
+        Integer effect = ${typeLower}Service.delete${type}(${type}ProviderConvert.MAPPER.toRequest(dto));
         log.info("${type}Api.delete${type} effect: {}", effect);
         return effect;
     }

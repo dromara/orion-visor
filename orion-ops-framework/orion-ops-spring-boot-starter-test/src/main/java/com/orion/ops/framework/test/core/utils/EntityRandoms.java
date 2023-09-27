@@ -47,6 +47,8 @@ public class EntityRandoms {
             }
             return Randoms.randomBoolean();
         });
+        // Collection
+        FACTORY.getStrategy().setDefaultNumberOfCollectionElements(RANDOM_COLLECTION_LENGTH);
     }
 
     @SafeVarargs

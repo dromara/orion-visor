@@ -1,0 +1,29 @@
+package ${currentPackage};
+
+import com.orion.lang.define.cache.CacheKeyBuilder;
+import com.orion.lang.define.cache.CacheKeyDefine;
+#foreach($pkg in ${customModuleFilePackages})
+import ${pkg}.*;
+#end
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * $!{table.comment}缓存 key
+ *
+ * @author ${author}
+ * @version ${since}
+ * @since ${date}
+ */
+public interface ${type}CacheKeyDefine {
+
+    CacheKeyDefine $typeConst = new CacheKeyBuilder()
+            .key("$cacheMeta.cacheKey")
+            .desc("$cacheMeta.cacheDesc")
+            .type(${type}CacheDTO.class)
+             #if($cacheMeta.cacheExpired)
+            .timeout($cacheMeta.cacheExpireTime, TimeUnit.$cacheMeta.cacheExpireUnit.name())
+             #end
+            .build();
+
+}

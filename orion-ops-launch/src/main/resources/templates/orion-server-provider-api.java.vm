@@ -4,7 +4,6 @@ package ${currentPackage};
 import ${pkg}.*;
 #end
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -50,20 +49,27 @@ public interface ${type}Api {
     ${type}DTO get${type}ById(Long id);
 
     /**
-     * ${apiComment.listByIdList}
+     * ${apiComment.getByIdList}
      *
      * @param idList idList
      * @return rows
      */
-    List<${type}DTO> get${type}ByIdList(Collection<Long> idList);
+    List<${type}DTO> get${type}ByIdList(List<Long> idList);
 
     /**
-     * ${apiComment.listAll}
+     * ${apiComment.queryList}
      *
      * @param dto dto
      * @return rows
      */
     List<${type}DTO> get${type}List(${type}QueryDTO dto);
+
+    /**
+     * ${apiComment.queryListByCache}
+     *
+     * @return rows
+     */
+    List<${type}DTO> get${type}ListByCache();
 
     /**
      * ${apiComment.queryCount}
@@ -82,12 +88,12 @@ public interface ${type}Api {
     Integer delete${type}ById(Long id);
 
     /**
-     * ${apiComment.batchDeleteByIdList}
+     * ${apiComment.batchDelete}
      *
      * @param idList idList
      * @return effect
      */
-    Integer batchDelete${type}ByIdList(Collection<Long> idList);
+    Integer batchDelete${type}ByIdList(List<Long> idList);
 
     /**
      * ${apiComment.deleteAll}

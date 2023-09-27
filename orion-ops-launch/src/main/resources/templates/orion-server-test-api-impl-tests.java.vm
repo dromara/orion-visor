@@ -110,5 +110,17 @@ public class ${type}ApiImplTests extends BaseUnitTest {
         Integer effect = ${typeLower}Api.delete${type}(dto);
         assertEquals(effect, 0);
     }
+    #if($cacheMeta.enableCache)
+    
+    // -------------------- cache --------------------
+
+    @Test
+    @Order(11)
+    public void get${type}ListByCacheTest() {
+        this.create${type}Test();
+        List<${type}DTO> list = ${typeLower}Api.get${type}ListByCache();
+        assertEquals(list.size(), 1);
+    }
+    #end
 
 }

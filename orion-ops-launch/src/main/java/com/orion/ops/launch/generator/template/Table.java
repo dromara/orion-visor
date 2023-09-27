@@ -59,11 +59,6 @@ public class Table {
     protected String cacheDesc;
 
     /**
-     * 缓存格式化字段
-     */
-    protected List<String> cacheFormatKeys;
-
-    /**
      * 缓存是否会过期
      */
     protected boolean cacheExpired;
@@ -111,7 +106,6 @@ public class Table {
     protected List<VueEnum> enums;
 
     protected Table() {
-        this.cacheFormatKeys = new ArrayList<>();
         this.enums = new ArrayList<>();
     }
 
