@@ -317,7 +317,7 @@ public class CodeGenerator {
                 // convert 文件
                 new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
                 // cache dto 文件
-                new String[]{"/templates/orion-server-module-cache-dto.java.vm", "${type}CacheDTO.java", "entity.dto.${bizPackage}"},
+                new String[]{"/templates/orion-server-module-cache-dto.java.vm", "${type}CacheDTO.java", "entity.dto"},
                 // cache key define 文件
                 new String[]{"/templates/orion-server-module-cache-key-define.java.vm", "${type}CacheKeyDefine.java", "define"},
                 // -------------------- 后端 - provider --------------------
@@ -401,7 +401,6 @@ public class CodeGenerator {
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 枚举需要自行更改数据类型\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在菜单页面刷新缓存\n")
-                .append(AnsiForeground.BRIGHT_RED.and(AnsiFont.BOLD), "- 数据库实体字段长度限制为最大 65535\n")
                 .toString();
         System.out.print(line);
     }

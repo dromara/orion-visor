@@ -34,12 +34,10 @@ public class HostKeyUpdateRequest implements UpdatePasswordAction {
     @Schema(description = "名称")
     private String name;
 
-    @Size(max = 65535)
     @Schema(description = "公钥文本")
     private String publicKey;
 
     @NotBlank
-    @Size(max = 65535)
     @Schema(description = "私钥文本")
     private String privateKey;
 

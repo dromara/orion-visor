@@ -87,24 +87,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
             p.setProperty("file.resource.loader.unicode", StringPool.TRUE);
             this.velocityEngine = new VelocityEngine(p);
         }
-        // 处理表结构
-        this.getConfigBuilder().getTableInfoList().forEach(this::processTasble);
         return this;
-    }
-
-    /**
-     * 处理表结构
-     *
-     * @param tableInfo tableInfo
-     */
-    private void processTasble(TableInfo tableInfo) {
-        for (TableField field : tableInfo.getFields()) {
-            TableField.MetaInfo metaInfo = field.getMetaInfo();
-            // 限制字段长度最大为 65535
-            if (metaInfo.getLength() > 65535) {
-                Fields.setFieldValue(metaInfo, "length", 65535);
-            }
-        }
     }
 
     @Override

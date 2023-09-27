@@ -32,7 +32,9 @@ public class ${type}CreateRequest implements Serializable {
     #if("$!field.propertyName" != "id")
     #if("$field.propertyType" == "String")
     @NotBlank
+    #if("$field.metaInfo.jdbcType" != "LONGVARCHAR")
     @Size(max = $field.metaInfo.length)
+    #end
     #else
     @NotNull
     #end

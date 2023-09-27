@@ -1,7 +1,7 @@
 import { FieldRule } from '@arco-design/web-vue';
 #foreach($field in ${table.fields})
 #if("$!field.propertyName" != "id")
-#if(${field.propertyType} == 'String')
+#if(${field.propertyType} == 'String' && "$field.metaInfo.jdbcType" != "LONGVARCHAR")
 export const ${field.propertyName} = [{
   required: true,
   message: '请输入${field.comment}'

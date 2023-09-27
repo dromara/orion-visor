@@ -5,7 +5,11 @@ CREATE TABLE `${table.name}`
     `id`          BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id',
     #foreach($field in ${table.fields})
     #if("$!field.propertyName" != "id")
+    #if("$field.metaInfo.jdbcType" == "TINYINT" || "$field.metaInfo.jdbcType" == "SMALLINT" || "$field.metaInfo.jdbcType" == "INTEGER" || "$field.metaInfo.jdbcType" == "BIGINT" || "$field.metaInfo.jdbcType" == "FLOAT" || "$field.metaInfo.jdbcType" == "DOUBLE" || "$field.metaInfo.jdbcType" == "NUMERIC" || "$field.metaInfo.jdbcType" == "LONGVARCHAR" || "$field.metaInfo.jdbcType" == "DATE" || "$field.metaInfo.jdbcType" == "TIME" || "$field.metaInfo.jdbcType" == "TIMESTAMP")
+    `${field.columnName}` ${field.metaInfo.jdbcType}#if(!$field.metaInfo.nullable) NOT NULL#end#if($null.isNull($field.metaInfo.defaultValue) || "$!{field.metaInfo.defaultValue}" == "") DEFAULT NULL#else DEFAULT#if(${field.propertyType} == 'String') '${field.metaInfo.defaultValue}'#else ${field.metaInfo.defaultValue}#end#end COMMENT '$!{field.metaInfo.remarks}',
+    #else
     `${field.columnName}` ${field.metaInfo.jdbcType}(${field.metaInfo.length})#if(!$field.metaInfo.nullable) NOT NULL#end#if($null.isNull($field.metaInfo.defaultValue) || "$!{field.metaInfo.defaultValue}" == "") DEFAULT NULL#else DEFAULT#if(${field.propertyType} == 'String') '${field.metaInfo.defaultValue}'#else ${field.metaInfo.defaultValue}#end#end COMMENT '$!{field.metaInfo.remarks}',
+    #end
     #end
     #end
     `create_time` DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

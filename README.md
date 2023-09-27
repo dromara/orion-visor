@@ -81,6 +81,6 @@ Template.create("system_role", "角色", "role")
         .values("value", 1, 2)
         // 设置参数为 color APP.color = 'blue' HOST.color = 'green'
         .color("blue", "green")
-        .build(),
+        .build();
 ```
 

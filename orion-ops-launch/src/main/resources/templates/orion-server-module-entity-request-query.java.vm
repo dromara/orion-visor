@@ -25,7 +25,7 @@ import java.math.*;
 public class ${type}QueryRequest extends PageRequest {
     #foreach($field in ${table.fields})
 
-    #if("$field.propertyType" == "String")
+    #if("$field.propertyType" == "String" && "$field.metaInfo.jdbcType" != "LONGVARCHAR")
     @Size(max = $field.metaInfo.length)
     #end
     #if("$!field.comment" != "")
