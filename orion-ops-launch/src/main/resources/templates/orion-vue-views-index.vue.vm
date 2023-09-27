@@ -3,7 +3,7 @@
     <!-- 表格 -->
     <${vue.feature}-table ref="table"
                   @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) => drawer.openUpdate(e)" />
+                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #if($vue.enableDrawerForm)
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-drawer ref="drawer"
@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
   import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
-  #if($vue.drawerForm)
+  #if($vue.enableDrawerForm)
   import ${vue.featureEntity}FormDrawer from './components/${vue.feature}-form-drawer.vue';
   #else
   import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
@@ -35,7 +35,7 @@
   import { ref } from 'vue';
 
   const table = ref();
-  #if($vue.drawerForm)
+  #if($vue.enableDrawerForm)
   const drawer = ref();
   #else
   const modal = ref();

@@ -80,7 +80,7 @@
              :loading="loading"
              :columns="columns"
              #if($vue.enableRowSelection)
-             :selected-keys="selectedKeys"
+             v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
              #end
              :data="tableRenderData"
@@ -159,7 +159,7 @@
   const rowSelection = reactive(defaultRowSelection());
   #end
 
-  const formModel = ref<${vue.featureEntity}QueryRequest>({
+  const formModel = reactive<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})
     ${field.propertyName}: undefined,
     #end

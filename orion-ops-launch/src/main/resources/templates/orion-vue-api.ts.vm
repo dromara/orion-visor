@@ -91,7 +91,7 @@ export function get${vue.featureEntity}(id: number) {
 /**
  * $apiComment.getByIdList
  */
-export function get${vue.featureEntity}List(idList: Array<number>) {
+export function batchGet${vue.featureEntity}List(idList: Array<number>) {
   return axios.get<${vue.featureEntity}QueryResponse[]>('/${package.ModuleName}/${typeHyphen}/batch-get', {
     params: { idList },
     paramsSerializer: params => {

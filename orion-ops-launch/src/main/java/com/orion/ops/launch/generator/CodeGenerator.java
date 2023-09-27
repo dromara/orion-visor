@@ -13,6 +13,7 @@ import com.orion.lang.utils.ansi.AnsiAppender;
 import com.orion.lang.utils.ansi.style.AnsiFont;
 import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.ext.yml.YmlExt;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.launch.generator.engine.VelocityTemplateEngine;
@@ -78,6 +79,8 @@ public class CodeGenerator {
                                      String password,
                                      Table[] tables,
                                      String module) {
+        Valid.notEmpty(tables, "请先配置需要生成的表");
+
         // 创建引擎
         VelocityTemplateEngine engine = getEngine(tables);
 
