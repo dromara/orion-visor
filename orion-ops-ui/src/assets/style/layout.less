@@ -1,7 +1,6 @@
 .layout-container {
   background-color: var(--color-fill-2);
-  // fixme
-  // padding: 16px 16px 0 16px;
+  padding: 16px 16px 0 16px;
   display: flex;
   flex-direction: column;
 }
@@ -65,6 +64,15 @@
       margin-bottom: 0 !important;
     }
   }
+}
+
+.card-list-item {
+  transition-property: all;
+}
+
+.card-list-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, .15);
 }
 
 .usn {

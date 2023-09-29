@@ -1,53 +1,73 @@
 <template>
   <div class="card-list-layout">
-    <!-- 头部固定 -->
-    <div class="card-list-layout-top" :style="{width: `calc(100% - ${menuWidth}px)`}">
-      <!-- 路由面包屑 -->
-      <Breadcrumb />
-      <!-- header -->
-      <div class="card-list-header">
-        <!-- 左侧固定 -->
-        <div class="card-list-header-left">
-          <a-space>
-            <!-- 创建 -->
-            <div class="header-icon-wrapper">
-              <icon-plus />
-            </div>
-            <!-- 条件显示 -->
-
-          </a-space>
+    <!-- 头部部分-固定 -->
+    <div class="card-list-layout-header" :style="{width: headerWidth}">
+      <div class="card-list-layout-header-wrapper">
+        <!-- 信息部分 -->
+        <div class="card-list-info">
+          <!-- 路由面包屑 -->
+          <Breadcrumb />
+          <!-- 分页部分 -->
+          <div class="pagination-wrapper">
+            <a-pagination size="mini"
+                          v-model:current="pagination.current"
+                          v-model:page-size="pagination.pageSize"
+                          v-bind="pagination" />
+          </div>
         </div>
-        <!-- 右侧固定 -->
-        <div class="card-list-header-right">
-          <a-space>
-            <!-- 搜索框 -->
-            <a-input size="small" placeholder="输入名称/地址">
-              <template #suffix>
+        <!-- 操作部分 -->
+        <div class="card-list-handler">
+          <!-- 左侧固定 -->
+          <div class="card-list-handler-left">
+            <a-space>
+              <!-- 创建 -->
+              <div class="header-icon-wrapper" title="创建">
+                <icon-plus />
+              </div>
+              <!-- 条件显示 -->
+
+            </a-space>
+          </div>
+          <!-- 右侧固定 -->
+          <div class="card-list-handler-right">
+            <a-space>
+              <!-- 搜索框 -->
+              <a-input size="small"
+                       placeholder="输入名称/地址"
+                       allow-clear />
+              <!-- 过滤 -->
+              <div class="header-icon-wrapper" title="选择过滤条件">
+                <icon-filter />
+              </div>
+              <!-- 搜索 -->
+              <div class="header-icon-wrapper" title="搜索">
                 <icon-search />
-              </template>
-            </a-input>
-            <!-- 条件 -->
-            <div class="header-icon-wrapper">
-              <icon-filter />
-            </div>
-            <!-- 刷新 -->
-            <div class="header-icon-wrapper">
-              <icon-refresh />
-            </div>
-          </a-space>
+              </div>
+              <!-- 重置 -->
+              <div class="header-icon-wrapper" title="重置">
+                <icon-refresh />
+              </div>
+            </a-space>
+          </div>
         </div>
       </div>
     </div>
-    <!-- 固定身体 -->
+    <!-- 身体部分 -->
     <div class="card-list-layout-body">
       <!-- 卡片列表 -->
-      <a-row v-if="list.length === 0"
+      <a-row v-if="list.length !== 0"
              :gutter="cardLayoutGutter">
+        <!-- 添加卡片 -->
+        <a-col v-if="createCardPosition === 'head'" v-bind="cardLayoutCols">
+          <CreateCard :card-height="cardHeight" :create-card-description="createCardDescription" />
+        </a-col>
         <!-- 数据卡片 -->
         <a-col v-for="item in list"
                :key="item.id"
                v-bind="cardLayoutCols">
           <a-card class="general-card card-list-item"
+                  :style="{ height: `${cardHeight}px` }"
+                  :body-style="{ height: 'calc(100% - 58px)' }"
                   :bordered="false"
                   :hoverable="true">
             <template #title>
@@ -59,29 +79,19 @@
           </a-card>
         </a-col>
         <!-- 添加卡片 -->
-        <a-col v-bind="cardLayoutCols">
-          <a-card class="general-card card-list-item"
-                  :body-style="{ height: '100%' }"
-                  :bordered="false"
-                  :hoverable="true">
-            <div class="create-card-body">
-              <icon-plus class="create-card-body-icon" />
-              <span class="create-card-body-text">点击进行创建</span>
-            </div>
-          </a-card>
+        <a-col v-if="createCardPosition === 'tail'" v-bind="cardLayoutCols">
+          <CreateCard :card-height="cardHeight" :create-card-description="createCardDescription" />
         </a-col>
       </a-row>
       <!-- 空列表 -->
       <template v-else>
         <a-card class="general-card empty-list-card"
+                :style="{ height: `${cardHeight * 2 + 16}px` }"
                 :body-style="{ height: '100%' }">
-          <a-empty description="暂无数据 点击进行创建" />
+          <a-empty :class="{'empty-list-card-body': true, 'empty-list-card-body-creatable': emptyToCreate }"
+                   :description="emptyDescription" />
         </a-card>
       </template>
-      <!-- 翻页区域 -->
-      <div>
-        page 区域
-      </div>
     </div>
   </div>
 </template>
@@ -93,21 +103,30 @@
 </script>
 
 <script setup lang="ts">
-  import { computed, ref } from 'vue';
+  import { compile, computed, h, ref } from 'vue';
   import { useAppStore } from '@/store';
+  import { useCardPagination } from '@/types/table';
 
   const appStore = useAppStore();
-  const menuWidth = computed(() => {
-    return appStore.menu && !appStore.topMenu && !appStore.hideMenu
+  const headerWidth = computed(() => {
+    const menuWidth = appStore.menu && !appStore.topMenu && !appStore.hideMenu
       ? appStore.menuCollapse ? 48 : appStore.menuWidth
       : 0;
+    return `calc(100% - ${menuWidth}px)`;
   });
 
+  // props
+  const pagination = useCardPagination();
+  const cardHeight = 120;
+  const createCardDescription = '点击此处进行创建';
+  const emptyToCreate = true;
+  const emptyDescription = '暂无数据 点击此处进行创建';
+  // head tail false
+  const createCardPosition = 'head';
   const cardLayoutGutter = [
     { xs: 16, sm: 16, md: 16 },
     { xs: 16, sm: 16, md: 16 }
   ];
-
   const cardLayoutCols = {
     xs: 24,
     sm: 12,
@@ -116,56 +135,80 @@
     xl: 6,
     xxl: 4,
   };
-
   const list = ref<Array<any>>([]);
 
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 270; i++) {
     list.value.push({
       id: i + 1,
       name: `名称 ${i + 1}`,
       host: `192.168.1.${i}`
     });
   }
+  pagination.total = 270;
 
+  // 创建卡片
+  const CreateCard = {
+    props: ['cardHeight', 'createCardDescription'],
+    setup(props: { cardHeight: any; createCardDescription: any; }) {
+      return () => {
+        return h(compile(`
+          <a-card class="general-card card-list-item create-card"
+                  :style="{ height: '${props.cardHeight}px' }"
+                  :body-style="{ height: '100%' }"
+                  :bordered="false"
+                  :hoverable="true">
+            <div class="create-card-body">
+              <icon-plus class="create-card-body-icon" />
+              <span class="create-card-body-text">${props.createCardDescription}</span>
+            </div>
+          </a-card>
+        `));
+      };
+    }
+  };
 </script>
 
 <style scoped lang="less">
-  @header-height: 48;
-  @top-width: 16 + 24 + 16 + 48 + 16;
-  @header-height-px: @{header-height}px;
-  @top-width-px: @{top-width}px;
-  @card-height: 120;
-  @card-height-px: @{card-height}px;
-  @empty-list-card-height: 120 * 2 + 16;
-  @empty-list-card-height-px: @{empty-list-card-height}px;
-
-  .card-list-layout-body {
-    margin-top: @top-width-px;
-  }
+  @header-info-height: 48px;
+  @header-handler-height: 48px;
+  @top-height: 16 + @header-info-height + @header-handler-height + 12px;
 
   .card-list-layout {
 
-    &-top {
-      padding: 16px;
+    &-header {
+      margin: -16px -16px 0 -16px;
+      padding: 16px 16px 12px 16px;
       position: fixed;
       background: var(--color-fill-2);
       z-index: 999;
-      height: @top-width-px;
+      height: @top-height;
       transition: none;
+
+      &-wrapper {
+        background: var(--color-bg-4);
+        padding: 0 12px;
+        border-radius: 4px;
+      }
     }
 
     &-body {
-      padding: 0 16px 16px 16px;
+      margin-top: @top-height - 16px;
+      padding-top: 4px;
     }
 
-    .card-list-header {
+    .card-list-info {
+      height: @header-info-height;
+      border-bottom: 1px solid var(--color-border-2);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--color-bg-4);
-      height: @header-height-px;
-      padding: 12px;
-      margin-top: 16px;
+    }
+
+    .card-list-handler {
+      height: @header-handler-height;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
       &-left {
         display: flex;
@@ -184,8 +227,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 27px;
     height: 27px;
+    padding: 6px;
     color: var(--color-text-2);
     background: var(--color-fill-2);
     border-radius: 2px;
@@ -198,45 +241,39 @@
     background: var(--color-fill-3);
   }
 
-  .card-list-item {
-    height: @card-height-px;
-    transition-property: all;
-  }
+  :deep(.create-card) {
 
-  .card-list-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 2px 2px 12px rgba(0, 0, 0, .15);
-  }
+    &-body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
 
-  .create-card-body {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    cursor: pointer;
+      &-icon {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
 
-    &-icon {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-
-    &-text {
-      color: rgb(var(--arcoblue-6)) !important;
     }
   }
 
   .empty-list-card {
-    height: @empty-list-card-height-px;
-  }
 
-  .empty-list {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
+    &-body {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    &-body-creatable {
+      cursor: pointer;
+    }
   }
 
 </style>
