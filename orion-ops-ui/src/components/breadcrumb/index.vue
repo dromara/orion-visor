@@ -4,19 +4,22 @@
       <icon-apps />
     </a-breadcrumb-item>
     <a-breadcrumb-item v-for="item in items" :key="item">
-      {{ $t(item) }}
+      {{ item }}
     </a-breadcrumb-item>
   </a-breadcrumb>
 </template>
 
 <script lang="ts" setup>
   import { PropType } from 'vue';
+  import { useRoute } from 'vue-router';
 
   defineProps({
     items: {
       type: Array as PropType<string[]>,
       default() {
-        return [];
+        return useRoute().matched
+        .map(s => s.meta?.locale)
+        .filter(Boolean) || [];
       },
     },
   });
@@ -24,7 +27,6 @@
 
 <style scoped lang="less">
   .container-breadcrumb {
-    margin: 16px 0;
 
     :deep(.arco-breadcrumb-item) {
       color: rgb(var(--gray-6));
