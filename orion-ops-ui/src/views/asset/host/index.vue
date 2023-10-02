@@ -8,25 +8,10 @@
                 @openUpdateConfig="(e) => config.open(e)" />
     <!-- 列表-卡片 -->
     <host-card-list v-else
-                    :create-card-position="'head'"
-                    :card-height="180"
-                    :list="list"
-                    :pagination="pagination"
-                    ref="card"
-                    @openAdd="() => modal.openAdd()"
-                    @openUpdate="(e) => modal.openUpdate(e)"
-                    @openUpdateConfig="(e) => config.open(e)">
-
-      <template #title="{ record }">
-        {{ record.name }}
-      </template>
-      <template #extra="{ index }">
-        {{ index }}
-      </template>
-      <template #card="{ record }">
-        {{ record }}
-      </template>
-    </host-card-list>
+                    ref="card" />
+    <!--                    @openAdd="() => modal.openAdd()"-->
+    <!--                    @openUpdate="(e) => modal.openUpdate(e)"-->
+    <!--                    @openUpdateConfig="(e) => config.open(e)" />-->
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
                      @added="() => table.addedCallback()"
@@ -49,20 +34,6 @@
   import HostCardList from '@/views/asset/host/components/host-card-list.vue';
   import HostFormModal from './components/host-form-modal.vue';
   import HostConfigDrawer from '@/views/asset/host/components/host-config-drawer.vue';
-  import { useCardPagination } from '@/types/table';
-
-  const pagination = useCardPagination();
-  const list = ref<Array<any>>([]);
-
-  for (let i = 0; i < 270; i++) {
-    list.value.push({
-      id: i + 1,
-      name: `名称 ${i + 1}`,
-      host: `192.168.1.${i}`,
-      disabled: i === 0
-    });
-  }
-  pagination.total = 270;
 
   const table = ref();
   const card = ref();

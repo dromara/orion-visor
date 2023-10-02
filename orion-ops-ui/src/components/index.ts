@@ -12,6 +12,7 @@ import {
 } from 'echarts/components';
 import Chart from './chart/index.vue';
 import Breadcrumb from './breadcrumb/index.vue';
+import CardList from './card-list/index.vue';
 
 use([
   CanvasRenderer,
@@ -31,5 +32,6 @@ export default {
     Vue.component('Chart', Chart);
     Vue.component('Breadcrumb', Breadcrumb);
     Vue.component('a-query-header', AQueryHeader);
+    Vue.component('card-list', CardList);
   },
 };
