@@ -9,7 +9,8 @@
           <Breadcrumb />
           <!-- 分页部分 -->
           <div class="pagination-wrapper">
-            <a-pagination size="mini"
+            <a-pagination v-if="pagination"
+                          size="mini"
                           v-model:current="pagination.current"
                           v-model:page-size="pagination.pageSize"
                           v-bind="pagination" />
@@ -59,28 +60,39 @@
              :gutter="cardLayoutGutter">
         <!-- 添加卡片 -->
         <a-col v-if="createCardPosition === 'head'" v-bind="cardLayoutCols">
-          <CreateCard :card-height="cardHeight" :create-card-description="createCardDescription" />
+          <create-card :card-height="cardHeight" :create-card-description="createCardDescription" />
         </a-col>
         <!-- 数据卡片 -->
-        <a-col v-for="item in list"
-               :key="item.id"
-               v-bind="cardLayoutCols">
-          <a-card class="general-card card-list-item"
+        <a-col v-for="(item, index) in list"
+               :key="item[key]"
+               v-bind="cardLayoutCols"
+               :class="{
+                 'disabled-col': item.disabled === true
+               }">
+          <a-card :class="{
+                    'general-card': true,
+                    'card-list-item': true,
+                    'card-list-item-disabled': item.disabled === true
+                  }"
                   :style="{ height: `${cardHeight}px` }"
                   :body-style="{ height: 'calc(100% - 58px)' }"
                   :bordered="false"
                   :hoverable="true">
+            <!-- 标题 -->
             <template #title>
-              {{ item.name }}
+              <slot name="title" :record="item" :index="index" :key="item[key]" />
             </template>
+            <!-- 拓展部分 -->
             <template #extra>
-              <icon-more />
+              <slot name="extra" :record="item" :index="index" :key="item[key]" />
             </template>
+            <!-- 内容 -->
+            <slot name="card" :record="item" :index="index" :key="item[key]" />
           </a-card>
         </a-col>
         <!-- 添加卡片 -->
         <a-col v-if="createCardPosition === 'tail'" v-bind="cardLayoutCols">
-          <CreateCard :card-height="cardHeight" :create-card-description="createCardDescription" />
+          <create-card :card-height="cardHeight" :create-card-description="createCardDescription" />
         </a-col>
       </a-row>
       <!-- 空列表 -->
@@ -103,9 +115,9 @@
 </script>
 
 <script setup lang="ts">
-  import { compile, computed, h, ref } from 'vue';
+  import { compile, computed, h, PropType } from 'vue';
   import { useAppStore } from '@/store';
-  import { useCardPagination } from '@/types/table';
+  import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
 
   const appStore = useAppStore();
   const headerWidth = computed(() => {
@@ -115,36 +127,93 @@
     return `calc(100% - ${menuWidth}px)`;
   });
 
-  // props
-  const pagination = useCardPagination();
-  const cardHeight = 120;
-  const createCardDescription = '点击此处进行创建';
-  const emptyToCreate = true;
-  const emptyDescription = '暂无数据 点击此处进行创建';
-  // head tail false
-  const createCardPosition = 'head';
-  const cardLayoutGutter = [
-    { xs: 16, sm: 16, md: 16 },
-    { xs: 16, sm: 16, md: 16 }
-  ];
-  const cardLayoutCols = {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 8,
-    xl: 6,
-    xxl: 4,
-  };
-  const list = ref<Array<any>>([]);
+  export type Position = 'head' | 'tail' | false
 
-  for (let i = 0; i < 270; i++) {
-    list.value.push({
-      id: i + 1,
-      name: `名称 ${i + 1}`,
-      host: `192.168.1.${i}`
-    });
+  export interface CardList {
+    disabled?: boolean;
+
+    [name: string]: any;
   }
-  pagination.total = 270;
+
+  defineProps({
+    key: {
+      type: String,
+      default: () => 'id'
+    },
+    pagination: {
+      type: Object as PropType<PaginationProps> | PropType<boolean>,
+      default: () => false
+    },
+    cardHeight: Number,
+    createCardDescription: {
+      type: String,
+      default: () => '点击此处进行创建'
+    },
+    emptyToCreate: {
+      type: Boolean,
+      default: () => true
+    },
+    emptyDescription: {
+      type: String,
+      default: () => '暂无数据 点击此处进行创建'
+    },
+    createCardPosition: {
+      type: String as PropType<Position>,
+      default: () => '暂无数据 点击此处进行创建'
+    },
+    cardLayoutGutter: {
+      type: [Number, Array] as PropType<Number> |
+        PropType<ResponsiveValue> |
+        PropType<Array<Number>> |
+        PropType<Array<ResponsiveValue>>,
+      default: () => [16, 16]
+    },
+    cardLayoutCols: {
+      type: Object as PropType<ResponsiveValue & { span?: number, offset?: number, order?: number }>,
+      default: () => {
+        return {
+          span: 6
+        };
+      }
+    },
+    list: {
+      type: Array as PropType<Array<CardList>>,
+      default: () => []
+    },
+  });
+
+  // props
+  // const pagination = useCardPagination();
+  // const cardHeight = 120;
+  // const createCardDescription = '点击此处进行创建';
+  // const emptyToCreate = true;
+  // const emptyDescription = '暂无数据 点击此处进行创建';
+  // // head tail false
+  // const createCardPosition = 'head';
+  // const cardLayoutGutter = [
+  //   { xs: 16, sm: 16, md: 16, lg: 16, xl: 16, xxl: 16 },
+  //   { xs: 16, sm: 16, md: 16, lg: 16, xl: 16, xxl: 16 }
+  // ];
+  // const cardLayoutCols = {
+  //   xs: 24,
+  //   sm: 12,
+  //   md: 8,
+  //   lg: 8,
+  //   xl: 6,
+  //   xxl: 4,
+  // };
+  // // const cardHeight = 120;
+  // // const pagination = useCardPagination();
+  // const list = ref<Array<any>>([]);
+  //
+  // for (let i = 0; i < 270; i++) {
+  //   list.value.push({
+  //     id: i + 1,
+  //     name: `名称 ${i + 1}`,
+  //     host: `192.168.1.${i}`
+  //   });
+  // }
+  // pagination.total = 270;
 
   // 创建卡片
   const CreateCard = {
@@ -194,6 +263,16 @@
     &-body {
       margin-top: @top-height - 16px;
       padding-top: 4px;
+    }
+
+    .disabled-col {
+      cursor: not-allowed;
+
+      .card-list-item-disabled {
+        pointer-events: none;
+        opacity: .5;
+        background: var(--color-bg-1);
+      }
     }
 
     .card-list-info {
@@ -255,6 +334,10 @@
       &-icon {
         font-size: 18px;
         margin-bottom: 4px;
+      }
+
+      &-text {
+        user-select: none;
       }
 
     }
