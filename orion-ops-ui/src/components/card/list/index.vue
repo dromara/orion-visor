@@ -25,7 +25,8 @@
           <div class="card-list-handler-left">
             <a-space>
               <!-- 创建 -->
-              <div v-if="!handleVisible.disableAdd"
+              <div v-permission="addPermission"
+                   v-if="!handleVisible.disableAdd"
                    class="header-icon-wrapper"
                    title="创建"
                    @click="emits('add')">
@@ -83,7 +84,9 @@
       <a-row v-if="list.length !== 0"
              :gutter="cardLayoutGutter">
         <!-- 添加卡片 -->
-        <a-col v-if="createCardPosition === 'head'" v-bind="cardLayoutCols">
+        <a-col v-permission="addPermission"
+               v-if="createCardPosition === 'head'"
+               v-bind="cardLayoutCols">
           <create-card :card-height="cardHeight"
                        :create-card-description="createCardDescription"
                        @click="emits('add')" />
@@ -112,12 +115,58 @@
             <template #extra>
               <slot name="extra" :record="item" :index="index" :key="item[key]" />
             </template>
-            <!-- 内容 -->
-            <slot name="card" :record="item" :index="index" :key="item[key]" />
+            <!-- 内容-字段 -->
+            <template v-if="fieldConfig && fieldConfig.fields">
+              <div :class="['fields-container', fieldConfig.bodyClass]">
+                <template v-for="(field, index) in fieldConfig.fields">
+                  <a-row align="center"
+                         :style="{
+                           'margin-bottom': fieldConfig.rowGap || '10px'
+                         }">
+                    <!-- label -->
+                    <a-col :span="fieldConfig.labelSpan || 8" :offset="fieldConfig.labelOffset || 0"
+                           :style="{
+                             'text-align': fieldConfig.labelAlign || 'left'
+                           }"
+                           :class="[fieldConfig.labelClass,
+                             field.labelClass,
+                             'field-label'
+                           ]">
+                      <span>{{ field.label + (fieldConfig.showColon ? ' :' : '') }}</span>
+                    </a-col>
+                    <!-- value -->
+                    <a-col :span="24 - (fieldConfig.labelSpan || 8) + (fieldConfig.labelOffset || 0)"
+                           :style="{
+                             'text-align': fieldConfig.valueAlign || 'left'
+                           }"
+                           :class="[fieldConfig.valueClass,
+                             field.valueClass,
+                             'field-value',
+                             field.ellipsis ? 'field-value-ellipsis' : ''
+                           ]">
+                      <slot :name="field.slotName" :record="item" :index="index" :key="item[key]">
+                        <a-tooltip v-if="field.tooltip" :content="item[field.dataIndex]">
+                          <span>{{ item[field.dataIndex] }}</span>
+                        </a-tooltip>
+                        <template v-else>
+                          <span>{{ item[field.dataIndex] }}</span>
+                        </template>
+                      </slot>
+                    </a-col>
+                  </a-row>
+                </template>
+              </div>
+            </template>
+            <!-- 内容-自定义槽 -->
+            <template v-else>
+              <slot name="card" :record="item" :index="index" :key="item[key]" />
+            </template>
           </a-card>
         </a-col>
         <!-- 添加卡片 -->
-        <a-col v-if="createCardPosition === 'tail'" v-bind="cardLayoutCols">
+        <a-col v-permission="addPermission"
+               v-if="createCardPosition === 'tail'"
+               v-bind="cardLayoutCols">
           <create-card :card-height="cardHeight"
                        :create-card-description="createCardDescription"
                        @click="emits('add')" />
@@ -128,12 +177,7 @@
         <a-card class="general-card empty-list-card"
                 :style="{ height: `${cardHeight * 2 + 16}px` }"
                 :body-style="{ height: '100%' }">
-          <a-empty :class="{
-                     'empty-list-card-body': true,
-                     'empty-list-card-body-creatable': emptyToCreate
-                   }"
-                   :description="emptyDescription"
-                   @click="emits('add')" />
+          <a-empty class="empty-list-card-body" description="暂无数据" />
         </a-card>
       </template>
     </a-spin>
@@ -150,7 +194,7 @@
   import { compile, computed, h, PropType } from 'vue';
   import { useAppStore } from '@/store';
   import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
-  import { Position, CardRecord, ColResponsiveValue, HandleVisible } from '@/types/card';
+  import { Position, CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig } from '@/types/card';
 
   const appStore = useAppStore();
   const headerWidth = computed(() => {
@@ -189,6 +233,10 @@
       type: Boolean as PropType<Boolean>,
       default: () => false
     },
+    fieldConfig: {
+      type: Object as PropType<CardFieldConfig>,
+      default: () => []
+    },
     cardHeight: Number,
     searchInputWidth: {
       type: String,
@@ -206,20 +254,16 @@
       type: String as PropType<Position>,
       default: () => '暂无数据 点击此处进行创建'
     },
-    emptyToCreate: {
-      type: Boolean,
-      default: () => true
-    },
-    emptyDescription: {
-      type: String,
-      default: () => '暂无数据 点击此处进行创建'
-    },
     cardLayoutGutter: {
       type: [Number, Array] as PropType<Number> |
         PropType<ResponsiveValue> |
         PropType<Array<Number>> |
         PropType<Array<ResponsiveValue>>,
       default: () => [16, 16]
+    },
+    addPermission: {
+      type: Array as PropType<String[]>,
+      default: () => []
     },
     cardLayoutCols: {
       type: Object as PropType<ColResponsiveValue>,
@@ -382,8 +426,34 @@
       padding: 0;
     }
 
-    &-body-creatable {
-      cursor: pointer;
+  }
+
+  .fields-container {
+    height: 100%;
+    overflow-y: auto;
+
+    .field-label {
+      color: var(--color-text-3);
+      word-break: break-all;
+      white-space: pre-wrap;
+      padding-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .field-value {
+      color: var(--color-text-1);
+      word-break: break-all;
+      white-space: pre-wrap;
+      padding-right: 8px;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .field-value.field-value-ellipsis {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: keep-all;
     }
   }
 

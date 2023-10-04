@@ -8,10 +8,10 @@
                 @openUpdateConfig="(e) => config.open(e)" />
     <!-- 列表-卡片 -->
     <host-card-list v-else
-                    ref="card" />
-    <!--                    @openAdd="() => modal.openAdd()"-->
-    <!--                    @openUpdate="(e) => modal.openUpdate(e)"-->
-    <!--                    @openUpdateConfig="(e) => config.open(e)" />-->
+                    ref="card"
+                    @openAdd="() => modal.openAdd()"
+                    @openUpdate="(e) => modal.openUpdate(e)"
+                    @openUpdateConfig="(e) => config.open(e)" />
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
                      @added="() => table.addedCallback()"

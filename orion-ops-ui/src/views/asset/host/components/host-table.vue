@@ -25,7 +25,7 @@
         <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
       <!-- 主机标签 -->
-      <a-form-item field="tags" label="主机地址" label-col-flex="50px">
+      <a-form-item field="tags" label="主机标签" label-col-flex="50px">
         <tag-multi-selector v-model="formModel.tags"
                             ref="tagSelector"
                             :allowCreate="false"
@@ -94,7 +94,7 @@
         </a-tooltip>
       </template>
       <!-- 标签 -->
-      <template #tag="{ record }">
+      <template #tags="{ record }">
         <a-space v-if="record.tags">
           <a-tag v-for="tag in record.tags"
                  :key="tag.id"
@@ -278,7 +278,6 @@
       font-size: 19px;
       margin: 0 4px;
     }
-
 
     .host-favorite-choice {
       color: rgb(var(--yellow-6));

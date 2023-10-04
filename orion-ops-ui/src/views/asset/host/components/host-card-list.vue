@@ -1,40 +1,72 @@
 <template>
-  <card-list ref="cardList"
-             v-model:searchValue="formModel.name"
+  <card-list v-model:searchValue="formModel.name"
              create-card-position="head"
              :card-height="180"
              :loading="loading"
+             :fieldConfig="fieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
-             @add="add"
+             :add-permission="['asset:host:create']"
+             @add="emits('openAdd')"
              @reset="reset"
              @search="fetchTableData"
              @page-change="fetchTableData">
     <!-- 标题 -->
     <template #title="{ record }">
-      {{ record.id }}
+      {{ record.name }}
     </template>
-    <!-- 标题拓展 -->
-    <template #extra="{ index }">
-      {{ index }}
+    <!-- 编码 -->
+    <template #code="{ record }">
+      <a-tag>{{ record.code }}</a-tag>
     </template>
-    <!-- 卡片 -->
-    <template #card="{ record }">
-      <a-descriptions class="card-descriptions"
-                      :data="convert(record)"
-                      :column="1">
-        <template #value="{ data }">
-          {{ data.field }}
-          <template v-if="data.field === 'id'">
-            <a-tag>{{ data.value }}</a-tag>
+    <!-- 地址 -->
+    <template #address="{ record }">
+      <a-tooltip content="点击复制">
+          <span class="host-address" @click="copy(record.address)">
+            <icon-copy class="mr4" />{{ record.address }}
+          </span>
+      </a-tooltip>
+    </template>
+    <!-- 标签 -->
+    <template #tags="{ record }">
+      <a-space v-if="record.tags" wrap>
+        <a-tag v-for="tag in record.tags"
+               :key="tag.id"
+               :color="dataColor(tag.name, tagColor)">
+          {{ tag.name }}
+        </a-tag>
+      </a-space>
+    </template>
+    <!-- 拓展操作 -->
+    <template #extra="{ record }">
+      <a-space>
+        <!-- 更多操作 -->
+        <a-dropdown trigger="hover">
+          <icon-more class="card-extra-icon" />
+          <template #content>
+            <!-- 修改 -->
+            <a-doption v-permission="['asset:host:update']"
+                       @click="emits('openUpdate', record)">
+              <icon-edit />
+              修改
+            </a-doption>
+            <!-- 配置 -->
+            <a-doption v-permission="['asset:host:update-config']"
+                       @click="emits('openUpdateConfig', record)">
+              <icon-settings />
+              配置
+            </a-doption>
+            <!-- 删除 -->
+            <a-doption class="span-red" @click="deleteRow(record.id)">
+              <icon-delete />
+              删除
+            </a-doption>
           </template>
-          <template v-else>
-            {{ data.value }}
-          </template>
-        </template>
-      </a-descriptions>
+        </a-dropdown>
+      </a-space>
     </template>
+    <!-- 左侧条件 -->
     <template #leftHandle>
       <span>1</span>
     </template>
@@ -51,58 +83,86 @@
   import { usePagination, useColLayout } from '@/types/card';
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { resetObject } from '@/utils';
-  import { convert } from '../types/card.fields';
+  import { dataColor, resetObject } from '@/utils';
+  import fieldConfig from '../types/card.fields';
+  import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import { Message } from '@arco-design/web-vue';
+  import { tagColor } from '@/views/asset/host/types/const';
+  import useCopy from '@/hooks/copy';
 
-  const formModel = reactive({
-    name: undefined
-  });
-
+  const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const list = ref<Array<any>>([]);
+  const list = ref<HostQueryResponse[]>([]);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
 
-  // 切换页码
-  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
-    console.log(page, limit, form);
-    setLoading(true);
-    setTimeout(() => {
-      try {
-        const t = 90;
-        for (let i = 0; i < t; i++) {
-          list.value.push({
-            id: i + 1,
-            name: `名称 ${i + 1}`,
-            address: `192.168.1.${i}`,
-            disabled: i === 0
-          });
-        }
-        pagination.total = t;
-        pagination.current = page;
-        pagination.pageSize = limit;
-        setLoading(false);
-      } catch (e) {
-      } finally {
-        setLoading(false);
-      }
-    }, 300);
-  };
-  fetchTableData();
+  const formModel = reactive<HostQueryRequest>({
+    name: undefined,
+    extra: true
+  });
 
-  const add = () => {
-    console.log('add');
+  // 删除当前行
+  const deleteRow = async (id: number) => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await deleteHost(id);
+      Message.success('删除成功');
+      // 重新加载数据
+      await fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // 添加后回调
+  const addedCallback = () => {
+    fetchTableData();
+  };
+
+  // 更新后回调
+  const updatedCallback = () => {
+    fetchTableData();
+  };
+
+  defineExpose({
+    addedCallback, updatedCallback
+  });
+
+  // 重置条件
   const reset = () => {
-    console.log('reset');
     resetObject(formModel);
     fetchTableData();
   };
 
+  // 加载数据
+  const doFetchTableData = async (request: HostQueryRequest) => {
+    try {
+      setLoading(true);
+      const { data } = await getHostPage(request);
+      list.value = data.rows;
+      pagination.total = data.total;
+      pagination.current = request.page;
+      pagination.pageSize = request.limit;
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 切换页码
+  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    doFetchTableData({ page, limit, ...form });
+  };
+  fetchTableData();
 
 </script>
 
 <style scoped lang="less">
-
+  .host-address {
+    cursor: pointer;
+    color: rgb(var(--arcoblue-6))
+  }
 </style>

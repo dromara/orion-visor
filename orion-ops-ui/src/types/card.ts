@@ -1,20 +1,45 @@
-import { DescData, PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
+import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
 import { reactive } from 'vue';
 
 /**
- * 卡片字段
+ * 对齐方式
  */
-export interface CardField {
-  field: string;
-  label: string;
-  render: (record: CardRecord) => string;
-  span?: number;
-}
+export type Align = 'left' | 'center' | 'right';
 
 /**
  * 创建卡片位置
  */
 export type Position = 'head' | 'tail' | false;
+
+/**
+ * 卡片字段配置
+ */
+export interface CardFieldConfig {
+  rowGap?: string;
+  bodyClass?: string;
+  showColon?: boolean;
+  labelSpan?: number;
+  labelOffset?: number;
+  labelAlign?: Align;
+  valueAlign?: Align;
+  labelClass?: string;
+  valueClass?: string;
+
+  fields: CardField[];
+}
+
+/**
+ * 卡片字段
+ */
+export interface CardField {
+  label: string;
+  dataIndex: string;
+  slotName?: string;
+  labelClass?: string;
+  valueClass?: string;
+  ellipsis?: boolean;
+  tooltip?: boolean;
+}
 
 /**
  * 卡片实体
@@ -70,19 +95,5 @@ export const usePagination = (): PaginationProps => {
     showTotal: true,
     showPageSize: true,
     pageSizeOptions: [12, 18, 36, 48, 96]
-  });
-};
-
-/**
- * 转为卡片描述对象
- */
-export const toCardDesc = (fields: CardField[], record: CardRecord): DescData[] => {
-  return fields.map(s => {
-    return {
-      field: s.field,
-      label: s.label,
-      value: s.render(record),
-      span: s.span || 3
-    };
   });
 };
