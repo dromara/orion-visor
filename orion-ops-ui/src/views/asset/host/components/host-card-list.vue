@@ -3,15 +3,17 @@
              v-model:searchValue="formModel.name"
              create-card-position="head"
              :card-height="180"
+             :loading="loading"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              @add="add"
-             @search="search"
-             @reset="reset">
+             @reset="reset"
+             @search="fetchTableData"
+             @page-change="fetchTableData">
     <!-- 标题 -->
     <template #title="{ record }">
-      {{ record.name }}
+      {{ record.id }}
     </template>
     <!-- 标题拓展 -->
     <template #extra="{ index }">
@@ -19,10 +21,24 @@
     </template>
     <!-- 卡片 -->
     <template #card="{ record }">
-      {{ record }}
+      <a-descriptions class="card-descriptions"
+                      :data="convert(record)"
+                      :column="1">
+        <template #value="{ data }">
+          {{ data.field }}
+          <template v-if="data.field === 'id'">
+            <a-tag>{{ data.value }}</a-tag>
+          </template>
+          <template v-else>
+            {{ data.value }}
+          </template>
+        </template>
+      </a-descriptions>
+    </template>
+    <template #leftHandle>
+      <span>1</span>
     </template>
   </card-list>
-  {{ formModel }}
 </template>
 
 <script lang="ts">
@@ -32,35 +48,58 @@
 </script>
 
 <script setup lang="ts">
-  import { useCardPagination, useCardColLayout } from '@/types/table';
+  import { usePagination, useColLayout } from '@/types/card';
   import { reactive, ref } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import { resetObject } from '@/utils';
+  import { convert } from '../types/card.fields';
 
   const formModel = reactive({
     name: undefined
   });
 
-  const cardColLayout = useCardColLayout();
-  const pagination = useCardPagination();
+  const { loading, setLoading } = useLoading();
+  const cardColLayout = useColLayout();
+  const pagination = usePagination();
   const list = ref<Array<any>>([]);
 
-  for (let i = 0; i < 5; i++) {
-    list.value.push({
-      id: i + 1,
-      name: `名称 ${i + 1}`,
-      host: `192.168.1.${i}`,
-      disabled: i === 0
-    });
-  }
-  pagination.total = 270;
+  // 切换页码
+  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    console.log(page, limit, form);
+    setLoading(true);
+    setTimeout(() => {
+      try {
+        const t = 90;
+        for (let i = 0; i < t; i++) {
+          list.value.push({
+            id: i + 1,
+            name: `名称 ${i + 1}`,
+            address: `192.168.1.${i}`,
+            disabled: i === 0
+          });
+        }
+        pagination.total = t;
+        pagination.current = page;
+        pagination.pageSize = limit;
+        setLoading(false);
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+  };
+  fetchTableData();
+
   const add = () => {
     console.log('add');
   };
-  const search = () => {
-    console.log('search');
-  };
+
   const reset = () => {
     console.log('reset');
+    resetObject(formModel);
+    fetchTableData();
   };
+
 
 </script>
 

@@ -13,7 +13,10 @@
                           size="mini"
                           v-model:current="pagination.current"
                           v-model:page-size="pagination.pageSize"
-                          v-bind="pagination" />
+                          v-bind="pagination"
+                          :auto-adjust="false"
+                          @change="page => emits('pageChange', page, pagination.pageSize)"
+                          @page-size-change="limit => emits('pageChange', 1, limit)" />
           </div>
         </div>
         <!-- 操作部分 -->
@@ -28,20 +31,20 @@
                    @click="emits('add')">
                 <icon-plus />
               </div>
+              <!-- 左侧侧操作槽位 -->
+              <slot name="leftHandle" />
             </a-space>
-            <!-- 左侧侧操作槽位 -->
-            <slot name="leftHandle" />
           </div>
           <!-- 右侧固定 -->
           <div class="card-list-handler-right">
-            <!-- 右侧操作槽位 -->
-            <slot name="rightHandle" />
             <a-space>
+              <!-- 右侧操作槽位 -->
+              <slot name="rightHandle" />
               <!-- 搜索框 -->
               <div v-if="!handleVisible.disableSearchInput"
                    class="header-input-wrapper"
                    :style="{width: searchInputWidth}">
-                <a-input :default-value="searchValue"
+                <a-input v-model="searchValueRef"
                          size="small"
                          placeholder="输入名称/地址"
                          allow-clear
@@ -75,7 +78,7 @@
       </div>
     </div>
     <!-- 身体部分 -->
-    <div class="card-list-layout-body">
+    <a-spin class="card-list-layout-body" :loading="loading">
       <!-- 卡片列表 -->
       <a-row v-if="list.length !== 0"
              :gutter="cardLayoutGutter">
@@ -133,7 +136,7 @@
                    @click="emits('add')" />
         </a-card>
       </template>
-    </div>
+    </a-spin>
   </div>
 </template>
 
@@ -147,7 +150,7 @@
   import { compile, computed, h, PropType } from 'vue';
   import { useAppStore } from '@/store';
   import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
-  import { Position, CardRecord, ColResponsiveValue, HandleVisible } from './types';
+  import { Position, CardRecord, ColResponsiveValue, HandleVisible } from '@/types/card';
 
   const appStore = useAppStore();
   const headerWidth = computed(() => {
@@ -157,15 +160,33 @@
     return `calc(100% - ${menuWidth}px)`;
   });
 
-  const emits = defineEmits(['add', 'update:searchValue', 'search', 'reset']);
+  const searchValueRef = computed<string>({
+    get() {
+      return props.searchValue as string;
+    },
+    set(e) {
+      if (e) {
+        emits('update:searchValue', e);
+      } else {
+        emits('update:searchValue', null);
+      }
+    }
+  });
 
-  defineProps({
+  const emits = defineEmits(['add', 'update:searchValue', 'search',
+    'reset', 'pageChange']);
+
+  const props = defineProps({
     key: {
       type: String,
       default: () => 'id'
     },
     pagination: {
       type: Object as PropType<PaginationProps> | PropType<boolean>,
+      default: () => false
+    },
+    loading: {
+      type: Boolean as PropType<Boolean>,
       default: () => false
     },
     cardHeight: Number,
@@ -267,6 +288,7 @@
     }
 
     &-body {
+      display: block;
       margin-top: @top-height - 16px;
       padding-top: 4px;
     }

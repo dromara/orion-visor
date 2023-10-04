@@ -54,7 +54,7 @@
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(pagination.current, size)"
+             @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
       <!-- 编码 -->
       <template #code="{ record }">

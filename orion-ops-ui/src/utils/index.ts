@@ -157,6 +157,15 @@ export function replaceNumber(value: string) {
 }
 
 /**
+ * 重设对象
+ */
+export const resetObject = (obj: any) => {
+  Object.keys(obj).forEach(k => {
+    obj[k] = undefined;
+  });
+};
+
+/**
  * 获取当前页面的缩放值
  */
 export function detectZoom() {
