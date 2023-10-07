@@ -126,18 +126,18 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteRole, getRolePage, updateRoleStatus, RoleQueryRequest, RoleQueryResponse } from '@/api/user/role';
-  import { Message, PaginationProps } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { RoleStatusEnum } from '../types/enum.types';
   import { toOptions, getEnumValue, toggleEnumValue, toggleEnum } from '@/utils/enum';
-  import { defaultPagination } from '@/types/table';
+  import { usePagination } from '@/types/table';
 
   const tableRenderData = ref<RoleQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
-  const pagination = reactive(defaultPagination()) as PaginationProps;
+  const pagination = usePagination();
 
   const formModel = reactive<RoleQueryRequest>({
     id: undefined,

@@ -96,16 +96,16 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteHostKey, getHostKeyPage, HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { Message, PaginationProps } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { defaultPagination } from '@/types/table';
+  import { usePagination } from '@/types/table';
 
   const tableRenderData = ref<HostKeyQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
-  const pagination = reactive(defaultPagination()) as PaginationProps;
+  const pagination = usePagination();
 
   const formModel = reactive<HostKeyQueryRequest>({
     id: undefined,

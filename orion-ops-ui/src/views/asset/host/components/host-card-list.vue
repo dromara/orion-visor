@@ -1,12 +1,13 @@
 <template>
-  <card-list v-model:searchValue="formModel.name"
+  <card-list v-model:searchValue="formModel.searchValue"
              create-card-position="head"
-             :card-height="180"
+             :card-height="172"
              :loading="loading"
              :fieldConfig="fieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
+             :filter-count="filterCount"
              :add-permission="['asset:host:create']"
              @add="emits('openAdd')"
              @reset="reset"
@@ -66,9 +67,44 @@
         </a-dropdown>
       </a-space>
     </template>
-    <!-- 左侧条件 -->
-    <template #leftHandle>
-      <span>1</span>
+    <!-- 过滤条件 -->
+    <template #filterContent>
+      <a-form :model="formModel"
+              class="modal-form"
+              size="small"
+              ref="formRef"
+              label-align="right"
+              :style="{ width: '300px' }"
+              :label-col-props="{ span: 6 }"
+              :wrapper-col-props="{ span: 18 }">
+        <!-- id -->
+        <a-form-item field="id" label="主机id">
+          <a-input-number v-model="formModel.id"
+                          placeholder="请输入主机id"
+                          allow-clear
+                          hide-button />
+        </a-form-item>
+        <!-- 主机名称 -->
+        <a-form-item field="name" label="主机名称">
+          <a-input v-model="formModel.name" placeholder="请输入主机名称" allow-clear />
+        </a-form-item>
+        <!-- 主机编码 -->
+        <a-form-item field="code" label="主机编码">
+          <a-input v-model="formModel.code" placeholder="请输入主机编码" allow-clear />
+        </a-form-item>
+        <!-- 主机地址 -->
+        <a-form-item field="address" label="主机地址">
+          <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
+        </a-form-item>
+        <!-- 主机标签 -->
+        <a-form-item field="tags" label="主机标签">
+          <tag-multi-selector v-model="formModel.tags"
+                              :allowCreate="false"
+                              :limit="0"
+                              type="HOST"
+                              placeholder="请选择主机标签" />
+        </a-form-item>
+      </a-form>
     </template>
   </card-list>
 </template>
@@ -81,13 +117,14 @@
 
 <script setup lang="ts">
   import { usePagination, useColLayout } from '@/types/card';
-  import { reactive, ref } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { dataColor, resetObject } from '@/utils';
+  import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
   import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import { tagColor } from '@/views/asset/host/types/const';
+  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
 
   const { copy } = useCopy();
@@ -98,8 +135,19 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
 
   const formModel = reactive<HostQueryRequest>({
+    searchValue: undefined,
+    id: undefined,
     name: undefined,
+    code: undefined,
+    address: undefined,
+    favorite: undefined,
+    tags: undefined,
     extra: true
+  });
+
+  // 条件数量
+  const filterCount = computed(() => {
+    return objectTruthKeyCount(formModel, ['searchValue', 'extra']);
   });
 
   // 删除当前行
@@ -133,7 +181,7 @@
 
   // 重置条件
   const reset = () => {
-    resetObject(formModel);
+    resetObject(formModel, ['extra']);
     fetchTableData();
   };
 

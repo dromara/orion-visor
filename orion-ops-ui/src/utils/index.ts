@@ -159,10 +159,24 @@ export function replaceNumber(value: string) {
 /**
  * 重设对象
  */
-export const resetObject = (obj: any) => {
-  Object.keys(obj).forEach(k => {
+export const resetObject = (obj: any, ignore: string[] = []) => {
+  Object.keys(obj)
+  .filter(s => !ignore.includes(s))
+  .forEach(k => {
     obj[k] = undefined;
   });
+};
+
+/**
+ * 重设对象
+ */
+export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
+  return Object.keys(obj)
+  .filter(s => !ignore.includes(s))
+  .reduce(function(acc, curr) {
+    const currVal = obj[curr];
+    return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
+  }, 0);
 };
 
 /**

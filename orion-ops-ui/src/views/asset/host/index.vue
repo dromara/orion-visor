@@ -14,8 +14,8 @@
                     @openUpdateConfig="(e) => config.open(e)" />
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
-                     @added="() => table.addedCallback()"
-                     @updated="() => table.updatedCallback()" />
+                     @added="modalAddCallback"
+                     @updated="modalUpdateCallback" />
     <!-- 配置面板 -->
     <host-config-drawer ref="config" />
   </div>
@@ -34,19 +34,52 @@
   import HostCardList from '@/views/asset/host/components/host-card-list.vue';
   import HostFormModal from './components/host-form-modal.vue';
   import HostConfigDrawer from '@/views/asset/host/components/host-config-drawer.vue';
+  import { getTagList } from '@/api/meta/tag';
+  import { Message } from '@arco-design/web-vue';
 
   const table = ref();
   const card = ref();
   const modal = ref();
   const config = ref();
   const appStore = useAppStore();
+  const cacheStore = useCacheStore();
 
   // FIXME 临时
   const renderTable = computed(() => appStore.hostView === 'card');
 
+  // 添加回调
+  const modalAddCallback = () => {
+    if (renderTable.value) {
+      table.value.addedCallback();
+    } else {
+      card.value.addedCallback();
+    }
+  };
+
+  // 修改回调
+  const modalUpdateCallback = () => {
+    console.log(renderTable.value);
+    if (renderTable.value) {
+      table.value.updatedCallback();
+    } else {
+      card.value.updatedCallback();
+    }
+  };
+
+  // 加载 tags
+  const loadTags = async () => {
+    try {
+      const { data } = await getTagList('HOST');
+      // 设置到缓存
+      cacheStore.set('tags', data);
+    } catch {
+      Message.error('tag加载失败');
+    }
+  };
+  loadTags();
+
   // 卸载时清除 tags cache
   onUnmounted(() => {
-    const cacheStore = useCacheStore();
     cacheStore.set('tags', []);
     cacheStore.set('hostKeys', []);
     cacheStore.set('hostIdentities', []);

@@ -12,11 +12,13 @@ export const fieldConfig = {
       label: '主机地址',
       dataIndex: 'address',
       slotName: 'address',
+      height: '24px',
       tooltip: true,
     }, {
       label: '主机标签',
       dataIndex: 'tags',
       slotName: 'tags',
+      rowAlign: 'start'
     },
   ] as CardField[]
 } as CardFieldConfig;

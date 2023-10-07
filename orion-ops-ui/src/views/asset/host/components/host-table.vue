@@ -160,17 +160,15 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
-  import { Message, PaginationProps } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { tagColor } from '../types/const';
-  import { defaultPagination } from '@/types/table';
+  import { usePagination } from '@/types/table';
   import useCopy from '@/hooks/copy';
   import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
   import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
-  import { getTagList } from '@/api/meta/tag';
-  import { useCacheStore } from '@/store';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);
@@ -180,7 +178,7 @@
   const { copy } = useCopy();
   const { toggle: toggleFavorite } = useFavorite('HOST');
 
-  const pagination = reactive(defaultPagination()) as PaginationProps;
+  const pagination = usePagination();
 
   const formModel = reactive<HostQueryRequest>({
     id: undefined,
@@ -243,21 +241,6 @@
     doFetchTableData({ page, limit, ...form });
   };
   fetchTableData();
-
-  // 加载 tags
-  const loadTags = async () => {
-    try {
-      const { data } = await getTagList('HOST');
-      // 设置到缓存
-      const cacheStore = useCacheStore();
-      cacheStore.set('tags', data);
-      // 重新初始化
-      tagSelector.value.initOptionData();
-    } catch {
-      Message.error('tag加载失败');
-    }
-  };
-  loadTags();
 
 </script>
 

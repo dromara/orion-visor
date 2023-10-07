@@ -23,6 +23,7 @@ export interface HostUpdateRequest extends HostCreateRequest {
  * 主机查询请求
  */
 export interface HostQueryRequest extends Pagination {
+  searchValue?: string;
   id?: number;
   name?: string;
   code?: string;

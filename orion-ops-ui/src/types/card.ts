@@ -2,14 +2,19 @@ import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
 import { reactive } from 'vue';
 
 /**
- * 对齐方式
+ * 字段对齐方式
  */
 export type Align = 'left' | 'center' | 'right';
 
 /**
+ * 行对齐方式
+ */
+export type RowAlign = 'stretch' | 'center' | 'end' | 'start';
+
+/**
  * 创建卡片位置
  */
-export type Position = 'head' | 'tail' | false;
+export type CardPosition = 'head' | 'tail' | false;
 
 /**
  * 卡片字段配置
@@ -22,6 +27,8 @@ export interface CardFieldConfig {
   labelOffset?: number;
   labelAlign?: Align;
   valueAlign?: Align;
+  rowAlign?: RowAlign;
+  height?: string;
   labelClass?: string;
   valueClass?: string;
 
@@ -35,6 +42,8 @@ export interface CardField {
   label: string;
   dataIndex: string;
   slotName?: string;
+  rowAlign?: RowAlign;
+  height?: string;
   labelClass?: string;
   valueClass?: string;
   ellipsis?: boolean;

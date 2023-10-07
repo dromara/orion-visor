@@ -26,7 +26,7 @@
             <a-space>
               <!-- 创建 -->
               <div v-permission="addPermission"
-                   v-if="!handleVisible.disableAdd"
+                   v-show="!handleVisible.disableAdd"
                    class="header-icon-wrapper"
                    title="创建"
                    @click="emits('add')">
@@ -53,12 +53,28 @@
                          @change="e => emits('update:searchValue', e)"
                          @keydown.enter="emits('search')" />
               </div>
-              <!-- 过滤 -->
-              <div v-if="!handleVisible.disableFilter"
-                   class="header-icon-wrapper"
-                   title="选择过滤条件">
-                <icon-filter />
-              </div>
+              <!-- 过滤条件 -->
+              <a-popover position="br" trigger="click" content-class="card-filter-wrapper">
+                <div v-if="!handleVisible.disableFilter"
+                     ref="filterRef"
+                     class="header-icon-wrapper"
+                     title="选择过滤条件">
+                  <a-badge :count="filterCount" :dot-style="{zoom: '.75'}" :offset="[9, -6]">
+                    <icon-filter />
+                  </a-badge>
+                </div>
+                <template #content>
+                  <!-- 过滤表单 -->
+                  <slot name="filterContent" />
+                  <!-- 操作按钮 -->
+                  <div class="filter-bottom-container">
+                    <a-space>
+                      <a-button size="mini" @click="filterReset">重置</a-button>
+                      <a-button size="mini" type="primary" @click="filterSearch">过滤</a-button>
+                    </a-space>
+                  </div>
+                </template>
+              </a-popover>
               <!-- 搜索 -->
               <div v-if="!handleVisible.disableSearch"
                    class="header-icon-wrapper"
@@ -119,9 +135,10 @@
             <template v-if="fieldConfig && fieldConfig.fields">
               <div :class="['fields-container', fieldConfig.bodyClass]">
                 <template v-for="(field, index) in fieldConfig.fields">
-                  <a-row align="center"
+                  <a-row :align="fieldConfig.rowAlign || field.rowAlign || 'center'"
                          :style="{
-                           'margin-bottom': fieldConfig.rowGap || '10px'
+                           'margin-bottom': index !== fieldConfig.fields.length - 1 ? (fieldConfig.rowGap || '10px') : false,
+                           'height': fieldConfig.height || field.height || 'unset'
                          }">
                     <!-- label -->
                     <a-col :span="fieldConfig.labelSpan || 8" :offset="fieldConfig.labelOffset || 0"
@@ -165,7 +182,7 @@
         </a-col>
         <!-- 添加卡片 -->
         <a-col v-permission="addPermission"
-               v-if="createCardPosition === 'tail'"
+               v-show="createCardPosition === 'tail'"
                v-bind="cardLayoutCols">
           <create-card :card-height="cardHeight"
                        :create-card-description="createCardDescription"
@@ -191,10 +208,12 @@
 </script>
 
 <script setup lang="ts">
-  import { compile, computed, h, PropType } from 'vue';
+  import { compile, computed, h, PropType, ref } from 'vue';
   import { useAppStore } from '@/store';
   import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
-  import { Position, CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig } from '@/types/card';
+  import { CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig, CardPosition } from '@/types/card';
+  import fieldConfig from '@/views/asset/host/types/card.fields';
+  import { triggerMouseEvent } from '@/utils';
 
   const appStore = useAppStore();
   const headerWidth = computed(() => {
@@ -203,6 +222,8 @@
       : 0;
     return `calc(100% - ${menuWidth}px)`;
   });
+
+  const filterRef = ref();
 
   const searchValueRef = computed<string>({
     get() {
@@ -238,6 +259,10 @@
       default: () => []
     },
     cardHeight: Number,
+    filterCount: {
+      type: Number,
+      default: () => 0
+    },
     searchInputWidth: {
       type: String,
       default: () => '200px'
@@ -251,7 +276,7 @@
       default: () => '点击此处进行创建'
     },
     createCardPosition: {
-      type: String as PropType<Position>,
+      type: String as PropType<CardPosition>,
       default: () => '暂无数据 点击此处进行创建'
     },
     cardLayoutGutter: {
@@ -304,6 +329,18 @@
         `));
       };
     }
+  };
+
+  // 重置过滤
+  const filterReset = () => {
+    emits('reset');
+    triggerMouseEvent(filterRef);
+  };
+
+  // 搜索
+  const filterSearch = () => {
+    emits('search');
+    triggerMouseEvent(filterRef);
   };
 
 </script>
@@ -371,7 +408,6 @@
         align-items: center;
       }
     }
-
   }
 
   .header-icon-wrapper {
@@ -390,6 +426,12 @@
 
   .header-icon-wrapper:hover {
     background: var(--color-fill-3);
+  }
+
+  .filter-bottom-container {
+    padding-top: 14px;
+    display: flex;
+    justify-content: flex-end;
   }
 
   :deep(.create-card) {
@@ -439,6 +481,7 @@
       padding-right: 8px;
       font-size: 14px;
       font-weight: 500;
+      user-select: none;
     }
 
     .field-value {

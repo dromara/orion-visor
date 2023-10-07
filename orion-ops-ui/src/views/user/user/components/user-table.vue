@@ -148,11 +148,11 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteUser, getUserPage, updateUserStatus, UserQueryRequest, UserQueryResponse } from '@/api/user/user';
-  import { Message, PaginationProps } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { UserStatusEnum } from '../types/enum.types';
-  import { defaultPagination } from '@/types/table';
+  import { usePagination } from '@/types/table';
   import { toOptions, getEnumValue } from '@/utils/enum';
   import { useUserStore } from '@/store';
 
@@ -160,7 +160,7 @@
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 
-  const pagination = reactive(defaultPagination()) as PaginationProps;
+  const pagination = usePagination();
 
   const formModel = reactive<UserQueryRequest>({
     id: undefined,

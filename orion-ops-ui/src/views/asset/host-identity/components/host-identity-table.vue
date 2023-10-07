@@ -123,10 +123,10 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { deleteHostIdentity, getHostIdentityPage, HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
-  import { Message, PaginationProps } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { defaultPagination } from '@/types/table';
+  import { usePagination } from '@/types/table';
   import { getHostKeyList } from '@/api/asset/host-key';
   import { useCacheStore } from '@/store';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
@@ -141,7 +141,7 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const cacheStore = useCacheStore();
-  const pagination = reactive(defaultPagination()) as PaginationProps;
+  const pagination = usePagination();
 
   const formModel = reactive<HostIdentityQueryRequest>({
     id: undefined,
