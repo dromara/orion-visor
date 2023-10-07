@@ -29,6 +29,7 @@ export interface CardFieldConfig {
   valueAlign?: Align;
   rowAlign?: RowAlign;
   height?: string;
+  minHeight?: string;
   labelClass?: string;
   valueClass?: string;
 
@@ -44,6 +45,7 @@ export interface CardField {
   slotName?: string;
   rowAlign?: RowAlign;
   height?: string;
+  minHeight?: string;
   labelClass?: string;
   valueClass?: string;
   ellipsis?: boolean;

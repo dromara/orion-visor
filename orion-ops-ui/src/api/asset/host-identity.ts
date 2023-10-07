@@ -24,10 +24,10 @@ export interface HostIdentityUpdateRequest extends HostIdentityCreateRequest {
  * 主机身份查询请求
  */
 export interface HostIdentityQueryRequest extends Pagination {
+  searchValue?: string;
   id?: number;
   name?: string;
   username?: string;
-  password?: string;
   keyId?: number;
 }
 

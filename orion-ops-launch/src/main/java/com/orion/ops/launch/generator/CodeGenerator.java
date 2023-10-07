@@ -56,10 +56,9 @@ public class CodeGenerator {
                 //         .values("value", 1, 2)
                 //         .color("blue", "green")
                 //         .build(),
-                Template.create("host_key", "主机秘钥", "host")
-                        .vue("asset", "host-key")
+                Template.create("host_identity", "主机身份", "host")
+                        .vue("asset", "host-identity")
                         .enableCardView()
-                        .enableDrawerForm()
                         .build()
         };
         // jdbc 配置 - 使用配置文件

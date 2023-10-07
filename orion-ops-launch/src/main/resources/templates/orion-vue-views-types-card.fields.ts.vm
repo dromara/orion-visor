@@ -2,7 +2,7 @@ import { CardField, CardFieldConfig } from '@/types/card';
 import { dateFormat } from '@/utils';
 
 const fieldConfig = {
-  rowGap: '10px',
+  rowGap: '12px',
   labelSpan: 8,
   fields: [
     {
@@ -21,28 +21,28 @@ const fieldConfig = {
       },
       #end
     }, #end#end{
-     label: '创建时间',
-     dataIndex: 'createTime',
-     slotName: 'createTime',
-     render: ({ record }) => {
-       return dateFormat(new Date(record.createTime));
-     },
-   }, {
-     label: '修改时间',
-     dataIndex: 'updateTime',
-     slotName: 'updateTime',
-     render: ({ record }) => {
-       return dateFormat(new Date(record.updateTime));
-     },
-   }, {
-     label: '创建人',
-     dataIndex: 'creator',
-     slotName: 'creator',
-   }, {
-     label: '修改人',
-     dataIndex: 'updater',
-     slotName: 'updater',
-   }
+      label: '创建时间',
+      dataIndex: 'createTime',
+      slotName: 'createTime',
+      render: ({ record }) => {
+        return dateFormat(new Date(record.createTime));
+      },
+    }, {
+      label: '修改时间',
+      dataIndex: 'updateTime',
+      slotName: 'updateTime',
+      render: ({ record }) => {
+        return dateFormat(new Date(record.updateTime));
+      },
+    }, {
+      label: '创建人',
+      dataIndex: 'creator',
+      slotName: 'creator',
+    }, {
+      label: '修改人',
+      dataIndex: 'updater',
+      slotName: 'updater',
+    }
   ] as CardField[]
 } as CardFieldConfig;
 

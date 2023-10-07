@@ -144,8 +144,9 @@
                   <template v-for="(field, index) in fieldConfig.fields">
                     <a-row :align="fieldConfig.rowAlign || field.rowAlign || 'center'"
                            :style="{
-                           'margin-bottom': index !== fieldConfig.fields.length - 1 ? (fieldConfig.rowGap || '10px') : false,
-                           'height': fieldConfig.height || field.height || 'unset'
+                           'margin-bottom': index !== fieldConfig.fields.length - 1 ? (fieldConfig.rowGap || '12px') : false,
+                           'height': fieldConfig.height || field.height || 'unset',
+                           'min-height': fieldConfig.minHeight || field.minHeight || 'unset'
                          }">
                       <!-- label -->
                       <a-col :span="fieldConfig.labelSpan || 8" :offset="fieldConfig.labelOffset || 0"

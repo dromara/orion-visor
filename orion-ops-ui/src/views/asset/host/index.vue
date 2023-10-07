@@ -28,14 +28,15 @@
 </script>
 
 <script lang="ts" setup>
-  import { computed, onUnmounted, ref } from 'vue';
-  import { useAppStore, useCacheStore } from '@/store';
   import HostTable from './components/host-table.vue';
   import HostCardList from '@/views/asset/host/components/host-card-list.vue';
   import HostFormModal from './components/host-form-modal.vue';
   import HostConfigDrawer from '@/views/asset/host/components/host-config-drawer.vue';
   import { getTagList } from '@/api/meta/tag';
   import { Message } from '@arco-design/web-vue';
+
+  import { computed, onUnmounted, ref } from 'vue';
+  import { useAppStore, useCacheStore } from '@/store';
 
   const table = ref();
   const card = ref();

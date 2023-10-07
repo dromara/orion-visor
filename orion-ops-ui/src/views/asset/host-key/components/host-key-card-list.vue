@@ -1,6 +1,6 @@
 <template>
   <card-list v-model:searchValue="formModel.searchValue"
-             search-input-placeholder="输入名称/id"
+             search-input-placeholder="输入id/名称"
              create-card-position="head"
              :card-height="148"
              :loading="loading"
@@ -101,7 +101,7 @@
   // 删除当前行
   const deleteRow = (id: number) => {
     Modal.confirm({
-      title: '删除前确认?',
+      title: '删除前确认!',
       titleAlign: 'start',
       content: '确定要删除这条记录吗?',
       okText: '删除',

@@ -71,28 +71,28 @@
         #foreach($field in ${table.fields})
         <!-- $field.comment -->
         <a-form-item field="${field.propertyName}" label="${field.comment}">
-        #if(${vue.enums.containsKey(${field.propertyName})})
-        <a-select v-model="formModel.${field.propertyName}"
-                  :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
-                  placeholder="请选择${field.comment}"
-                  allow-clear />
-        #else
-        #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
-        <a-input-number v-model="formModel.${field.propertyName}"
-                        placeholder="请输入${field.comment}"
-                        allow-clear
-                        hide-button />
-        #elseif("$field.propertyType" == "Date")
-        <a-date-picker v-model="formModel.${field.propertyName}"
-                       style="width: 100%"
-                       placeholder="请选择${field.comment}"
-                       show-time
-                       allow-clear />
-        #else
-        <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear />
-        #end
-        #end
-      </a-form-item>
+          #if(${vue.enums.containsKey(${field.propertyName})})
+          <a-select v-model="formModel.${field.propertyName}"
+                    :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
+                    placeholder="请选择${field.comment}"
+                    allow-clear />
+          #else
+          #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+          <a-input-number v-model="formModel.${field.propertyName}"
+                          placeholder="请输入${field.comment}"
+                          allow-clear
+                          hide-button />
+          #elseif("$field.propertyType" == "Date")
+          <a-date-picker v-model="formModel.${field.propertyName}"
+                         style="width: 100%"
+                         placeholder="请选择${field.comment}"
+                         show-time
+                         allow-clear />
+          #else
+          <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear />
+          #end
+          #end
+        </a-form-item>
       #end
       </a-form>
     </template>
@@ -120,6 +120,7 @@
   const list = ref<${vue.featureEntity}QueryResponse[]>([]);
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
+  const formRef = ref();
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     searchValue: undefined,
     #foreach($field in ${table.fields})
@@ -135,7 +136,7 @@
   // 删除当前行
   const deleteRow = (id: number) => {
     Modal.confirm({
-      title: '删除前确认?',
+      title: '删除前确认!',
       titleAlign: 'start',
       content: '确定要删除这条记录吗?',
       okText: '删除',

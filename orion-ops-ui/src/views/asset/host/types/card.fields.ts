@@ -1,10 +1,15 @@
 import { CardField, CardFieldConfig } from '@/types/card';
 
 const fieldConfig = {
-  rowGap: '10px',
+  rowGap: '12px',
   labelSpan: 8,
+  minHeight: '24px',
   fields: [
     {
+      label: 'id',
+      dataIndex: 'id',
+      slotName: 'id',
+    }, {
       label: '主机编码',
       dataIndex: 'code',
       slotName: 'code',
@@ -12,7 +17,6 @@ const fieldConfig = {
       label: '主机地址',
       dataIndex: 'address',
       slotName: 'address',
-      height: '24px',
       tooltip: true,
     }, {
       label: '主机标签',

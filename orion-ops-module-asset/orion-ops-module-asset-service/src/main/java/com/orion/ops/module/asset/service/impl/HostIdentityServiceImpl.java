@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
@@ -216,11 +217,17 @@ public class HostIdentityServiceImpl implements HostIdentityService {
      * @return wrapper
      */
     private LambdaQueryWrapper<HostIdentityDO> buildQueryWrapper(HostIdentityQueryRequest request) {
+        String searchValue = request.getSearchValue();
         return hostIdentityDAO.wrapper()
                 .eq(HostIdentityDO::getId, request.getId())
                 .like(HostIdentityDO::getName, request.getName())
                 .like(HostIdentityDO::getUsername, request.getUsername())
-                .eq(HostIdentityDO::getKeyId, request.getKeyId());
+                .eq(HostIdentityDO::getKeyId, request.getKeyId())
+                .and(Strings.isNotEmpty(searchValue), c -> c
+                        .eq(HostIdentityDO::getId, searchValue).or()
+                        .like(HostIdentityDO::getName, searchValue).or()
+                        .like(HostIdentityDO::getUsername, searchValue)
+                );
     }
 
 }

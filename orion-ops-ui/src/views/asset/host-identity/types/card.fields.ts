@@ -10,12 +10,15 @@ const fieldConfig = {
       dataIndex: 'id',
       slotName: 'id',
     }, {
-      label: '创建时间',
-      dataIndex: 'createTime',
-      slotName: 'createTime',
-      render: ({ record }) => {
-        return dateFormat(new Date(record.createTime));
-      },
+      label: '用户名',
+      dataIndex: 'username',
+      slotName: 'username',
+      ellipsis: true,
+    }, {
+      label: '主机秘钥',
+      dataIndex: 'keyId',
+      slotName: 'keyId',
+      height: '24px',
     }, {
       label: '修改时间',
       dataIndex: 'updateTime',

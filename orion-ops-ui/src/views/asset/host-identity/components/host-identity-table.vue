@@ -127,8 +127,6 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
-  import { getHostKeyList } from '@/api/asset/host-key';
-  import { useCacheStore } from '@/store';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
   import useCopy from '@/hooks/copy';
   import usePermission from '@/hooks/permission';
@@ -140,7 +138,6 @@
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
-  const cacheStore = useCacheStore();
   const pagination = usePagination();
 
   const formModel = reactive<HostIdentityQueryRequest>({
@@ -201,16 +198,6 @@
     doFetchTableData({ page, limit, ...form });
   };
   fetchTableData();
-
-  // 获取主机秘钥列表
-  const fetchHostKeyList = async () => {
-    try {
-      const { data } = await getHostKeyList();
-      cacheStore.set('hostKeys', data);
-    } catch (e) {
-    }
-  };
-  fetchHostKeyList();
 
 </script>
 

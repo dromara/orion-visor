@@ -21,6 +21,9 @@ import javax.validation.constraints.Size;
 @Schema(name = "HostIdentityQueryRequest", description = "主机身份 查询请求对象")
 public class HostIdentityQueryRequest extends PageRequest {
 
+    @Schema(description = "搜索")
+    private String searchValue;
+
     @Schema(description = "id")
     private Long id;
 
