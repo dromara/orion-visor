@@ -12,7 +12,7 @@
                   @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
                   @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #else
-    <!-- 表格-表格 -->
+    <!-- 列表-表格 -->
     <${vue.feature}-table ref="table"
                   @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
                   @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
@@ -21,12 +21,12 @@
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-drawer ref="drawer"
                    @added="modalAddCallback"
-                   @updated="modalAddCallback" />
+                   @updated="modalUpdateCallback" />
     #else
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-modal ref="modal"
                    @added="modalAddCallback"
-                   @updated="modalAddCallback" />
+                   @updated="modalUpdateCallback" />
     #end
   </div>
 </template>
@@ -39,6 +39,12 @@
 
 <script lang="ts" setup>
   #if($vue.enableCardView)
+  import { computed, ref } from 'vue';
+  import { useAppStore } from '@/store';
+  #else
+  import { ref } from 'vue';
+  #end
+  #if($vue.enableCardView)
   import ${vue.featureEntity}CardList from './components/${vue.feature}-card-list.vue';
   #end
   import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
@@ -47,11 +53,6 @@
   #else
   import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
   #end
-  #if($vue.enableCardView)
-  import { useAppStore } from '@/store';
-  #end
-
-  import { ref } from 'vue';
 
   const table = ref();
   #if($vue.enableCardView)

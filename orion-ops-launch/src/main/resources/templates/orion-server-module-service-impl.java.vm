@@ -270,7 +270,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
                 #end
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         #foreach($field in ${table.fields})
-                        .eq(${type}DO::get${field.capitalName}, searchValue)
+                        .eq(${type}DO::get${field.capitalName}, searchValue)#if($foreach.hasNext).or()#end
                         #end
                 );
     }

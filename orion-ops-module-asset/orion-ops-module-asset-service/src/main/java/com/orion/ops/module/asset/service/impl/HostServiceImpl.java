@@ -257,8 +257,8 @@ public class HostServiceImpl implements HostService {
                 .like(HostDO::getCode, request.getCode())
                 .like(HostDO::getAddress, request.getAddress())
                 .and(Strings.isNotEmpty(searchValue), c -> c
-                        .like(HostDO::getName, searchValue)
-                        .like(HostDO::getCode, searchValue)
+                        .like(HostDO::getName, searchValue).or()
+                        .like(HostDO::getCode, searchValue).or()
                         .like(HostDO::getAddress, searchValue)
                 );
         if (setIdList) {

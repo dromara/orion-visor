@@ -138,13 +138,13 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                                                      @NotNull TableInfo tableInfo) {
         // 生成文件副本
         List<CustomFile> files = originCustomerFile.stream().map(s ->
-                new CustomFile.Builder()
-                        .enableFileOverride()
-                        .templatePath(s.getTemplatePath())
-                        .filePath(s.getFilePath())
-                        .fileName(s.getFileName())
-                        .packageName(s.getPackageName())
-                        .build())
+                        new CustomFile.Builder()
+                                .enableFileOverride()
+                                .templatePath(s.getTemplatePath())
+                                .filePath(s.getFilePath())
+                                .fileName(s.getFileName())
+                                .packageName(s.getPackageName())
+                                .build())
                 .collect(Collectors.toList());
         // 获取 table
         Table table = tables.get(tableInfo.getName());
@@ -324,7 +324,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                 .collect(Collectors.toList());
         // 设置前端元数据
         Table table = tables.get(tableInfo.getName());
-        Map<String, Object> vueMeta = this.pickTableMeta(table, "enableDrawerForm", "enableRowSelection", "module", "feature");
+        Map<String, Object> vueMeta = this.pickTableMeta(table, "module", "feature", "enableDrawerForm", "enableRowSelection", "enableCardView");
         // 模块名称实体
         vueMeta.put("moduleEntity", VariableStyles.SPINE.toBigHump(table.getModule()));
         // 模块名称实体

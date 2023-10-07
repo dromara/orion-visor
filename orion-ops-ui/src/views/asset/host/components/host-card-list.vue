@@ -1,7 +1,8 @@
 <template>
   <card-list v-model:searchValue="formModel.searchValue"
+             search-input-placeholder="输入名称/地址"
              create-card-position="head"
-             :card-height="176"
+             :card-height="174"
              :loading="loading"
              :fieldConfig="fieldConfig"
              :list="list"
@@ -76,7 +77,7 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :style="{ width: '300px' }"
+              :style="{ width: '320px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }">
         <!-- id -->

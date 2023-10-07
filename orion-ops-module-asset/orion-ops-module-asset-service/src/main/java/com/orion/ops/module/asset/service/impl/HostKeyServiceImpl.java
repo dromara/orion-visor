@@ -202,9 +202,14 @@ public class HostKeyServiceImpl implements HostKeyService {
      * @return wrapper
      */
     private LambdaQueryWrapper<HostKeyDO> buildQueryWrapper(HostKeyQueryRequest request) {
+        String searchValue = request.getSearchValue();
         return hostKeyDAO.wrapper()
                 .eq(HostKeyDO::getId, request.getId())
-                .like(HostKeyDO::getName, request.getName());
+                .like(HostKeyDO::getName, request.getName())
+                .and(Strings.isNotEmpty(searchValue), c -> c
+                        .eq(HostKeyDO::getId, searchValue).or()
+                        .like(HostKeyDO::getName, searchValue)
+                );
     }
 
     /**

@@ -1,11 +1,15 @@
 import { CardField, CardFieldConfig } from '@/types/card';
 import { dateFormat } from '@/utils';
 
-export const fieldConfig = {
+const fieldConfig = {
   rowGap: '10px',
   labelSpan: 8,
   fields: [
-    #foreach($field in ${table.fields}){
+    {
+      label: 'id',
+      dataIndex: 'id',
+      slotName: 'id',
+    }, #foreach($field in ${table.fields})#if("$!field.propertyName" != "id"){
       label: '${field.comment}',
       dataIndex: '${field.propertyName}',
       slotName: '${field.propertyName}',
@@ -16,7 +20,30 @@ export const fieldConfig = {
         return record.${field.propertyName} && dateFormat(new Date(record.${field.propertyName}));
       },
       #end
-    }, #end
+    }, #end#end{
+     label: '创建时间',
+     dataIndex: 'createTime',
+     slotName: 'createTime',
+     render: ({ record }) => {
+       return dateFormat(new Date(record.createTime));
+     },
+   }, {
+     label: '修改时间',
+     dataIndex: 'updateTime',
+     slotName: 'updateTime',
+     render: ({ record }) => {
+       return dateFormat(new Date(record.updateTime));
+     },
+   }, {
+     label: '创建人',
+     dataIndex: 'creator',
+     slotName: 'creator',
+   }, {
+     label: '修改人',
+     dataIndex: 'updater',
+     slotName: 'updater',
+   }
   ] as CardField[]
 } as CardFieldConfig;
+
 export default fieldConfig;

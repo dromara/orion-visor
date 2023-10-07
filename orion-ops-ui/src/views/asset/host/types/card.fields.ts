@@ -1,6 +1,6 @@
 import { CardField, CardFieldConfig } from '@/types/card';
 
-export const fieldConfig = {
+const fieldConfig = {
   rowGap: '10px',
   labelSpan: 8,
   fields: [

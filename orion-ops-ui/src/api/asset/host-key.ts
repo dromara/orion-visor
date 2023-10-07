@@ -24,6 +24,7 @@ export interface HostKeyUpdateRequest extends HostKeyCreateRequest {
  * 主机秘钥查询请求
  */
 export interface HostKeyQueryRequest extends Pagination {
+  searchValue?: string;
   id?: number;
   name?: string;
   publicKey?: string;

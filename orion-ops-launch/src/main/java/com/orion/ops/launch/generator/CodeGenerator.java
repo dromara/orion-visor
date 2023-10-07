@@ -18,6 +18,7 @@ import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.launch.generator.engine.VelocityTemplateEngine;
 import com.orion.ops.launch.generator.template.Table;
+import com.orion.ops.launch.generator.template.Template;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class CodeGenerator {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "infra";
+        String module = "asset";
         // 生成的表
         Table[] tables = {
                 // Template.create("preference", "用户偏好", "preference")
@@ -55,6 +56,11 @@ public class CodeGenerator {
                 //         .values("value", 1, 2)
                 //         .color("blue", "green")
                 //         .build(),
+                Template.create("host_key", "主机秘钥", "host")
+                        .vue("asset", "host-key")
+                        .enableCardView()
+                        .enableDrawerForm()
+                        .build()
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");

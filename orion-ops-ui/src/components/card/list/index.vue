@@ -46,8 +46,8 @@
                    class="header-input-wrapper"
                    :style="{width: searchInputWidth}">
                 <a-input v-model="searchValueRef"
+                         :placeholder="searchInputPlaceholder"
                          size="small"
-                         placeholder="输入名称/地址"
                          allow-clear
                          @input="e => emits('update:searchValue', e)"
                          @change="e => emits('update:searchValue', e)"
@@ -214,7 +214,6 @@
   import { useAppStore } from '@/store';
   import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
   import { CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig, CardPosition } from '@/types/card';
-  import fieldConfig from '@/views/asset/host/types/card.fields';
   import { triggerMouseEvent } from '@/utils';
 
   const appStore = useAppStore();
@@ -265,6 +264,7 @@
       type: Number,
       default: () => 0
     },
+    searchInputPlaceholder: String,
     searchInputWidth: {
       type: String,
       default: () => '200px'
