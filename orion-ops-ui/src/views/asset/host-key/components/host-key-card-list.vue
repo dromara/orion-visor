@@ -25,6 +25,12 @@
         <a-dropdown trigger="hover">
           <icon-more class="card-extra-icon" />
           <template #content>
+            <!-- 详情 -->
+            <a-doption v-permission="['asset:host-key:detail', 'asset:host-key:update']"
+                       @click="emits('openView', record)">
+              <icon-list />
+              详情
+            </a-doption>
             <!-- 修改 -->
             <a-doption v-permission="['asset:host-key:update']"
                        @click="emits('openUpdate', record)">
@@ -42,6 +48,28 @@
         </a-dropdown>
       </a-space>
     </template>
+    <!-- 右键菜单 -->
+    <template #contextMenu="{ record }">
+      <!-- 详情 -->
+      <a-doption v-permission="['asset:host-key:detail', 'asset:host-key:update']"
+                 @click="emits('openView', record)">
+        <icon-list />
+        详情
+      </a-doption>
+      <!-- 修改 -->
+      <a-doption v-permission="['asset:host-key:update']"
+                 @click="emits('openUpdate', record)">
+        <icon-edit />
+        修改
+      </a-doption>
+      <!-- 删除 -->
+      <a-doption v-permission="['asset:host-key:delete']"
+                 class="span-red"
+                 @click="deleteRow(record.id)">
+        <icon-delete />
+        删除
+      </a-doption>
+    </template>
   </card-list>
 </template>
 
@@ -58,31 +86,39 @@
   import { resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
   import { deleteHostKey, getHostKeyPage, HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, Modal } from '@arco-design/web-vue';
 
   const { loading, setLoading } = useLoading();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
   const list = ref<HostKeyQueryResponse[]>([]);
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const formModel = reactive<HostKeyQueryRequest>({
     searchValue: undefined,
   });
 
   // 删除当前行
-  const deleteRow = async (id: number) => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await deleteHostKey(id);
-      Message.success('删除成功');
-      // 重新加载数据
-      await fetchCardData();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
+  const deleteRow = (id: number) => {
+    Modal.confirm({
+      title: '删除前确认?',
+      titleAlign: 'start',
+      content: '确定要删除这条记录吗?',
+      okText: '删除',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          // 调用删除接口
+          await deleteHostKey(id);
+          Message.success('删除成功');
+          // 重新加载数据
+          await fetchCardData();
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
   };
 
   // 添加后回调
@@ -129,4 +165,5 @@
 </script>
 
 <style scoped lang="less">
+
 </style>

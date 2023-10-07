@@ -55,12 +55,12 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 查看 -->
+          <!-- 详情 -->
           <a-button type="text"
                     size="mini"
                     v-permission="['asset:host-key:detail', 'asset:host-key:update']"
                     @click="emits('openView', record)">
-            查看
+            详情
           </a-button>
           <!-- 修改 -->
           <a-button type="text"

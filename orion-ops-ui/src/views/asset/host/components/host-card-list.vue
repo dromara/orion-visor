@@ -12,8 +12,8 @@
              :add-permission="['asset:host:create']"
              @add="emits('openAdd')"
              @reset="reset"
-             @search="fetchListData"
-             @page-change="fetchListData">
+             @search="fetchCardData"
+             @page-change="fetchCardData">
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
@@ -69,6 +69,28 @@
           </template>
         </a-dropdown>
       </a-space>
+    </template>
+    <!-- 右键菜单 -->
+    <template #contextMenu="{ record }">
+      <!-- 修改 -->
+      <a-doption v-permission="['asset:host:update']"
+                 @click="emits('openUpdate', record)">
+        <icon-edit />
+        修改
+      </a-doption>
+      <!-- 配置 -->
+      <a-doption v-permission="['asset:host:update-config']"
+                 @click="emits('openUpdateConfig', record)">
+        <icon-settings />
+        配置
+      </a-doption>
+      <!-- 删除 -->
+      <a-doption v-permission="['asset:host:delete']"
+                 class="span-red"
+                 @click="deleteRow(record.id)">
+        <icon-delete />
+        删除
+      </a-doption>
     </template>
     <!-- 过滤条件 -->
     <template #filterContent>
@@ -126,7 +148,7 @@
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
   import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
-  import { Message } from '@arco-design/web-vue';
+  import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '@/views/asset/host/types/const';
   import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
@@ -155,28 +177,36 @@
   });
 
   // 删除当前行
-  const deleteRow = async (id: number) => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await deleteHost(id);
-      Message.success('删除成功');
-      // 重新加载数据
-      await fetchListData();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
+  const deleteRow = (id: number) => {
+    Modal.confirm({
+      title: '删除前确认?',
+      titleAlign: 'start',
+      content: '确定要删除这条记录吗?',
+      okText: '删除',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          // 调用删除接口
+          await deleteHost(id);
+          Message.success('删除成功');
+          // 重新加载数据
+          await fetchCardData();
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
   };
 
   // 添加后回调
   const addedCallback = () => {
-    fetchListData();
+    fetchCardData();
   };
 
   // 更新后回调
   const updatedCallback = () => {
-    fetchListData();
+    fetchCardData();
   };
 
   defineExpose({
@@ -186,11 +216,11 @@
   // 重置条件
   const reset = () => {
     resetObject(formModel, ['extra']);
-    fetchListData();
+    fetchCardData();
   };
 
   // 加载数据
-  const doFetchListData = async (request: HostQueryRequest) => {
+  const doFetchCardData = async (request: HostQueryRequest) => {
     try {
       setLoading(true);
       const { data } = await getHostPage(request);
@@ -205,10 +235,10 @@
   };
 
   // 切换页码
-  const fetchListData = (page = 1, limit = pagination.pageSize, form = formModel) => {
-    doFetchListData({ page, limit, ...form });
+  const fetchCardData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    doFetchCardData({ page, limit, ...form });
   };
-  fetchListData();
+  fetchCardData();
 
 </script>
 

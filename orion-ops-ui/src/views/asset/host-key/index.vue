@@ -3,11 +3,13 @@
     <!-- 列表-表格 -->
     <host-key-table v-if="renderTable"
                     ref="table"
+                    @openView="(e) => drawer.openView(e)"
                     @openAdd="() => drawer.openAdd()"
                     @openUpdate="(e) => drawer.openUpdate(e)" />
     <!-- 列表-卡片 -->
     <host-key-card-list v-else
                         ref="card"
+                        @openView="(e) => drawer.openView(e)"
                         @openAdd="() => drawer.openAdd()"
                         @openUpdate="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->

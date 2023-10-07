@@ -114,73 +114,85 @@
                :class="{
                  'disabled-col': item.disabled === true
                }">
-          <a-card :class="{
-                    'general-card': true,
-                    'card-list-item': true,
-                    'card-list-item-disabled': item.disabled === true
-                  }"
-                  :style="{ height: `${cardHeight}px` }"
-                  :body-style="{ height: 'calc(100% - 58px)' }"
-                  :bordered="false"
-                  :hoverable="true">
-            <!-- 标题 -->
-            <template #title>
-              <slot name="title" :record="item" :index="index" :key="item[key]" />
-            </template>
-            <!-- 拓展部分 -->
-            <template #extra>
-              <slot name="extra" :record="item" :index="index" :key="item[key]" />
-            </template>
-            <!-- 内容-字段 -->
-            <template v-if="fieldConfig && fieldConfig.fields">
-              <div :class="['fields-container', fieldConfig.bodyClass]">
-                <template v-for="(field, index) in fieldConfig.fields">
-                  <a-row :align="fieldConfig.rowAlign || field.rowAlign || 'center'"
-                         :style="{
+          <!-- 右键菜单 -->
+          <a-dropdown trigger="contextMenu" alignPoint>
+            <!-- 卡片 -->
+            <a-card :class="[
+                    'general-card',
+                    'card-list-item',
+                    item.disabled === true ? 'card-list-item-disabled' : undefined,
+                    !!cardClass ? cardClass : undefined
+                  ]"
+                    :style="{ height: `${cardHeight}px` }"
+                    :body-style="{ height: 'calc(100% - 58px)' }"
+                    :bordered="false"
+                    :hoverable="true"
+                    @contextmenu.prevent="() => false"
+                    @click="emits('click',item, index)"
+                    @dblclick="emits('dblclick',item, index)">
+              <!-- 标题 -->
+              <template #title>
+                <slot name="title" :record="item" :index="index" :key="item[key]" />
+              </template>
+              <!-- 拓展部分 -->
+              <template #extra>
+                <slot name="extra" :record="item" :index="index" :key="item[key]" />
+              </template>
+              <!-- 内容-字段 -->
+              <template v-if="fieldConfig && fieldConfig.fields">
+                <div :class="['fields-container', fieldConfig.bodyClass]">
+                  <template v-for="(field, index) in fieldConfig.fields">
+                    <a-row :align="fieldConfig.rowAlign || field.rowAlign || 'center'"
+                           :style="{
                            'margin-bottom': index !== fieldConfig.fields.length - 1 ? (fieldConfig.rowGap || '10px') : false,
                            'height': fieldConfig.height || field.height || 'unset'
                          }">
-                    <!-- label -->
-                    <a-col :span="fieldConfig.labelSpan || 8" :offset="fieldConfig.labelOffset || 0"
-                           :style="{
+                      <!-- label -->
+                      <a-col :span="fieldConfig.labelSpan || 8" :offset="fieldConfig.labelOffset || 0"
+                             :style="{
                              'text-align': fieldConfig.labelAlign || 'left'
                            }"
-                           :class="[fieldConfig.labelClass,
+                             :class="[fieldConfig.labelClass,
                              field.labelClass,
                              'field-label'
                            ]">
-                      <span>{{ field.label + (fieldConfig.showColon ? ' :' : '') }}</span>
-                    </a-col>
-                    <!-- value -->
-                    <a-col :span="24 - (fieldConfig.labelSpan || 8) + (fieldConfig.labelOffset || 0)"
-                           :style="{
+                        <span>{{ field.label + (fieldConfig.showColon ? ' :' : '') }}</span>
+                      </a-col>
+                      <!-- value -->
+                      <a-col :span="24 - (fieldConfig.labelSpan || 8) + (fieldConfig.labelOffset || 0)"
+                             :style="{
                              'text-align': fieldConfig.valueAlign || 'left'
                            }"
-                           :class="[fieldConfig.valueClass,
+                             :class="[fieldConfig.valueClass,
                              field.valueClass,
                              'field-value',
                              field.ellipsis ? 'field-value-ellipsis' : ''
                            ]">
-                      <slot :name="field.slotName" :record="item" :index="index" :key="item[key]">
-                        <a-tooltip v-if="field.tooltip" :content="item[field.dataIndex]">
-                          <span v-if="field.render" v-html="field.render({ record: item, index })" />
-                          <span v-else>{{ item[field.dataIndex] }}</span>
-                        </a-tooltip>
-                        <template v-else>
-                          <span v-if="field.render" v-html="field.render({ record: item, index })" />
-                          <span v-else>{{ item[field.dataIndex] }}</span>
-                        </template>
-                      </slot>
-                    </a-col>
-                  </a-row>
-                </template>
-              </div>
+                        <slot :name="field.slotName" :record="item" :index="index" :key="item[key]">
+                          <a-tooltip v-if="field.tooltip" :content="item[field.dataIndex]">
+                            <span v-if="field.render" v-html="field.render({ record: item, index })" />
+                            <span v-else>{{ item[field.dataIndex] }}</span>
+                          </a-tooltip>
+                          <template v-else>
+                            <span v-if="field.render" v-html="field.render({ record: item, index })" />
+                            <span v-else>{{ item[field.dataIndex] }}</span>
+                          </template>
+                        </slot>
+                      </a-col>
+                    </a-row>
+                  </template>
+                </div>
+              </template>
+              <!-- 内容-自定义槽 -->
+              <template v-else>
+                <slot name="card" :record="item" :index="index" :key="item[key]" />
+              </template>
+            </a-card>
+            <!-- 右键菜单 -->
+            <template v-if="contextMenu" #content>
+              <slot name="contextMenu" :record="item" :index="index" :key="item[key]" />
             </template>
-            <!-- 内容-自定义槽 -->
-            <template v-else>
-              <slot name="card" :record="item" :index="index" :key="item[key]" />
-            </template>
-          </a-card>
+          </a-dropdown>
         </a-col>
         <!-- 添加卡片 -->
         <a-col v-permission="addPermission"
@@ -240,7 +252,7 @@
   });
 
   const emits = defineEmits(['add', 'update:searchValue', 'search',
-    'reset', 'pageChange']);
+    'reset', 'pageChange', 'click', 'dblclick']);
 
   const props = defineProps({
     key: {
@@ -260,6 +272,11 @@
       default: () => []
     },
     cardHeight: Number,
+    cardClass: String,
+    contextMenu: {
+      type: Boolean,
+      default: () => true
+    },
     filterCount: {
       type: Number,
       default: () => 0
