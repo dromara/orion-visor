@@ -3,6 +3,7 @@ package ${package.ServiceImpl};
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Strings;
 #if($cacheMeta.enableCache)
 import com.orion.ops.framework.common.constant.Const;
 #end
@@ -262,10 +263,16 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
      * @return wrapper
      */
     private LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request) {
+        String searchValue = request.getSearchValue();
         return ${typeLower}DAO.wrapper()
-        #foreach($field in ${table.fields})
-                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())#if(!$foreach.hasNext);#end
-        #end
+                #foreach($field in ${table.fields})
+                .eq(${type}DO::get${field.capitalName}, request.get${field.capitalName}())
+                #end
+                .and(Strings.isNotEmpty(searchValue), c -> c
+                        #foreach($field in ${table.fields})
+                        .eq(${type}DO::get${field.capitalName}, searchValue)
+                        #end
+                );
     }
 
 }

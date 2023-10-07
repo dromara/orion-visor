@@ -133,13 +133,13 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { batchDelete${vue.featureEntity}, delete${vue.featureEntity}, get${vue.featureEntity}Page, ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
-  import { Message, PaginationProps } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   #if($vue.enableRowSelection)
-  import { defaultPagination, defaultRowSelection } from '@/types/table';
+  import { usePagination, useRowSelection } from '@/types/table';
   #else
-  import { defaultPagination } from '@/types/table';
+  import { usePagination } from '@/types/table';
   #end
   import {} from '../types/const';
   #if($vue.enums.isEmpty())
@@ -153,10 +153,10 @@
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
-  const pagination = reactive(defaultPagination()) as PaginationProps;
+  const pagination = usePagination();
   #if($vue.enableRowSelection)
   const selectedKeys = ref<number[]>([]);
-  const rowSelection = reactive(defaultRowSelection());
+  const rowSelection = useRowSelection();
   #end
 
   const formModel = reactive<${vue.featureEntity}QueryRequest>({

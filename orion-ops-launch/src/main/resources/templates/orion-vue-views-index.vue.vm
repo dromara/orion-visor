@@ -1,19 +1,32 @@
 <template>
   <div class="layout-container">
-    <!-- 表格 -->
+    #if($vue.enableCardView)
+    <!-- 列表-表格 -->
+    <${vue.feature}-table v-if="renderTable"
+                  ref="table"
+                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+    <!-- 列表-卡片 -->
+    <${vue.feature}-card-list v-else
+                  ref="card"
+                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+    #else
+    <!-- 表格-表格 -->
     <${vue.feature}-table ref="table"
                   @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
                   @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+    #end
     #if($vue.enableDrawerForm)
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-drawer ref="drawer"
-                   @added="() => table.addedCallback()"
-                   @updated="() => table.updatedCallback()" />
+                   @added="modalAddCallback"
+                   @updated="modalAddCallback" />
     #else
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-modal ref="modal"
-                   @added="() => table.addedCallback()"
-                   @updated="() => table.updatedCallback()" />
+                   @added="modalAddCallback"
+                   @updated="modalAddCallback" />
     #end
   </div>
 </template>
@@ -35,11 +48,45 @@
   import { ref } from 'vue';
 
   const table = ref();
+  #if($vue.enableCardView)
+  const card = ref();
+  #end
   #if($vue.enableDrawerForm)
   const drawer = ref();
   #else
   const modal = ref();
   #end
+  #if($vue.enableCardView)
+  const appStore = useAppStore();
+
+  const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
+  #end
+
+  // 添加回调
+  const modalAddCallback = () => {
+    #if($vue.enableCardView)
+    if (renderTable.value) {
+      table.value.addedCallback();
+    } else {
+      card.value.addedCallback();
+    }
+    #else
+    table.value.addedCallback();
+    #end
+  };
+
+  // 修改回调
+  const modalUpdateCallback = () => {
+    #if($vue.enableCardView)
+    if (renderTable.value) {
+      table.value.updatedCallback();
+    } else {
+      card.value.updatedCallback();
+    }
+    #else
+    table.value.updatedCallback();
+    #end
+  };
 
 </script>
 

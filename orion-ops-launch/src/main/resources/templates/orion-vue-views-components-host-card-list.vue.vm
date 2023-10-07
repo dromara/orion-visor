@@ -8,37 +8,11 @@
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
-             :add-permission="['asset:host:create']"
+             :add-permission="['${package.ModuleName}:${typeHyphen}:create']"
              @add="emits('openAdd')"
              @reset="reset"
              @search="fetchTableData"
              @page-change="fetchTableData">
-    <!-- 标题 -->
-    <template #title="{ record }">
-      {{ record.name }}
-    </template>
-    <!-- 编码 -->
-    <template #code="{ record }">
-      <a-tag>{{ record.code }}</a-tag>
-    </template>
-    <!-- 地址 -->
-    <template #address="{ record }">
-      <a-tooltip content="点击复制">
-          <span class="host-address" @click="copy(record.address)">
-            <icon-copy class="mr4" />{{ record.address }}
-          </span>
-      </a-tooltip>
-    </template>
-    <!-- 标签 -->
-    <template #tags="{ record }">
-      <a-space v-if="record.tags" wrap>
-        <a-tag v-for="tag in record.tags"
-               :key="tag.id"
-               :color="dataColor(tag.name, tagColor)">
-          {{ tag.name }}
-        </a-tag>
-      </a-space>
-    </template>
     <!-- 拓展操作 -->
     <template #extra="{ record }">
       <a-space>
@@ -47,19 +21,13 @@
           <icon-more class="card-extra-icon" />
           <template #content>
             <!-- 修改 -->
-            <a-doption v-permission="['asset:host:update']"
+            <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
                        @click="emits('openUpdate', record)">
               <icon-edit />
               修改
             </a-doption>
-            <!-- 配置 -->
-            <a-doption v-permission="['asset:host:update-config']"
-                       @click="emits('openUpdateConfig', record)">
-              <icon-settings />
-              配置
-            </a-doption>
             <!-- 删除 -->
-            <a-doption v-permission="['asset:host:delete']"
+            <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
               <icon-delete />
@@ -79,33 +47,32 @@
               :style="{ width: '300px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }">
-        <!-- id -->
-        <a-form-item field="id" label="主机id">
-          <a-input-number v-model="formModel.id"
-                          placeholder="请输入主机id"
-                          allow-clear
-                          hide-button />
-        </a-form-item>
-        <!-- 主机名称 -->
-        <a-form-item field="name" label="主机名称">
-          <a-input v-model="formModel.name" placeholder="请输入主机名称" allow-clear />
-        </a-form-item>
-        <!-- 主机编码 -->
-        <a-form-item field="code" label="主机编码">
-          <a-input v-model="formModel.code" placeholder="请输入主机编码" allow-clear />
-        </a-form-item>
-        <!-- 主机地址 -->
-        <a-form-item field="address" label="主机地址">
-          <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
-        </a-form-item>
-        <!-- 主机标签 -->
-        <a-form-item field="tags" label="主机标签">
-          <tag-multi-selector v-model="formModel.tags"
-                              :allowCreate="false"
-                              :limit="0"
-                              type="HOST"
-                              placeholder="请选择主机标签" />
-        </a-form-item>
+        #foreach($field in ${table.fields})
+        <!-- $field.comment -->
+        <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
+        #if(${vue.enums.containsKey(${field.propertyName})})
+        <a-select v-model="formModel.${field.propertyName}"
+                  :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
+                  placeholder="请选择${field.comment}"
+                  allow-clear />
+        #else
+        #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+        <a-input-number v-model="formModel.${field.propertyName}"
+                        placeholder="请输入${field.comment}"
+                        allow-clear
+                        hide-button />
+        #elseif("$field.propertyType" == "Date")
+        <a-date-picker v-model="formModel.${field.propertyName}"
+                       style="width: 100%"
+                       placeholder="请选择${field.comment}"
+                       show-time
+                       allow-clear />
+        #else
+        <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear />
+        #end
+        #end
+      </a-form-item>
+      #end
       </a-form>
     </template>
   </card-list>
@@ -113,7 +80,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-card-list'
+    name: '${vue.module}-${vue.feature}-card-list'
   };
 </script>
 
@@ -211,8 +178,4 @@
 </script>
 
 <style scoped lang="less">
-  .host-address {
-    cursor: pointer;
-    color: rgb(var(--arcoblue-6))
-  }
 </style>

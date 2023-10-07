@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Booleans;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
@@ -249,11 +250,17 @@ public class HostServiceImpl implements HostService {
             }
         }
         // 基础条件
+        String searchValue = request.getSearchValue();
         LambdaQueryWrapper<HostDO> wrapper = hostDAO.wrapper()
                 .eq(HostDO::getId, request.getId())
                 .like(HostDO::getName, request.getName())
                 .like(HostDO::getCode, request.getCode())
-                .like(HostDO::getAddress, request.getAddress());
+                .like(HostDO::getAddress, request.getAddress())
+                .and(Strings.isNotEmpty(searchValue), c -> c
+                        .like(HostDO::getName, searchValue)
+                        .like(HostDO::getCode, searchValue)
+                        .like(HostDO::getAddress, searchValue)
+                );
         if (setIdList) {
             wrapper.in(HostDO::getId, idList);
         }

@@ -163,10 +163,12 @@
                            ]">
                       <slot :name="field.slotName" :record="item" :index="index" :key="item[key]">
                         <a-tooltip v-if="field.tooltip" :content="item[field.dataIndex]">
-                          <span>{{ item[field.dataIndex] }}</span>
+                          <span v-if="field.render" v-html="field.render({ record: item, index })" />
+                          <span v-else>{{ item[field.dataIndex] }}</span>
                         </a-tooltip>
                         <template v-else>
-                          <span>{{ item[field.dataIndex] }}</span>
+                          <span v-if="field.render" v-html="field.render({ record: item, index })" />
+                          <span v-else>{{ item[field.dataIndex] }}</span>
                         </template>
                       </slot>
                     </a-col>

@@ -33,6 +33,7 @@ export interface ${vue.featureEntity}UpdateRequest extends ${vue.featureEntity}C
  * ${table.comment}查询请求
  */
 export interface ${vue.featureEntity}QueryRequest extends Pagination {
+  searchValue?: string;
   #foreach($field in ${table.fields})
   #if("$field.propertyType" == "String" || "$field.propertyType" == "Date")
   ${field.propertyName}?: string;

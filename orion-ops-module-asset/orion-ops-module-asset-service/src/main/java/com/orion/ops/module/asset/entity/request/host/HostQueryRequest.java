@@ -22,6 +22,9 @@ import java.util.List;
 @Schema(name = "HostQueryRequest", description = "主机 查询请求对象")
 public class HostQueryRequest extends PageRequest {
 
+    @Schema(description = "搜索")
+    private String searchValue;
+
     @Schema(description = "id")
     private Long id;
 

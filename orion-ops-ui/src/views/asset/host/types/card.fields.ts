@@ -18,7 +18,7 @@ export const fieldConfig = {
       label: '主机标签',
       dataIndex: 'tags',
       slotName: 'tags',
-      rowAlign: 'start'
+      rowAlign: 'start',
     },
   ] as CardField[]
 } as CardFieldConfig;

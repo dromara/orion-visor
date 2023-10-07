@@ -1,5 +1,5 @@
 import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
-import { reactive } from 'vue';
+import { reactive, VNodeChild } from 'vue';
 
 /**
  * 字段对齐方式
@@ -48,6 +48,10 @@ export interface CardField {
   valueClass?: string;
   ellipsis?: boolean;
   tooltip?: boolean;
+  render?: (data: {
+    record: CardRecord;
+    index: number;
+  }) => VNodeChild;
 }
 
 /**

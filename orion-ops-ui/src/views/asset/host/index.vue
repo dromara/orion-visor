@@ -44,8 +44,7 @@
   const appStore = useAppStore();
   const cacheStore = useCacheStore();
 
-  // FIXME 临时
-  const renderTable = computed(() => appStore.hostView === 'card');
+  const renderTable = computed(() => appStore.hostView === 'table');
 
   // 添加回调
   const modalAddCallback = () => {
@@ -58,7 +57,6 @@
 
   // 修改回调
   const modalUpdateCallback = () => {
-    console.log(renderTable.value);
     if (renderTable.value) {
       table.value.updatedCallback();
     } else {

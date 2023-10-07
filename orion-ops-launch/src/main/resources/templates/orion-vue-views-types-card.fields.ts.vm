@@ -1,0 +1,22 @@
+import { CardField, CardFieldConfig } from '@/types/card';
+import { dateFormat } from '@/utils';
+
+export const fieldConfig = {
+  rowGap: '10px',
+  labelSpan: 8,
+  fields: [
+    #foreach($field in ${table.fields}){
+      label: '${field.comment}',
+      dataIndex: '${field.propertyName}',
+      slotName: '${field.propertyName}',
+      #if(${field.propertyType} == 'String')
+      ellipsis: true,
+      #elseif(${field.propertyType} == 'Date')
+      render: ({ record }) => {
+        return record.${field.propertyName} && dateFormat(new Date(record.${field.propertyName}));
+      },
+      #end
+    }, #end
+  ] as CardField[]
+} as CardFieldConfig;
+export default fieldConfig;

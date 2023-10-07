@@ -23,6 +23,9 @@ import java.math.*;
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "${type}QueryRequest", description = "$!{table.comment} 查询请求对象")
 public class ${type}QueryRequest extends PageRequest {
+
+    @Schema(description = "搜索")
+    private String searchValue;
     #foreach($field in ${table.fields})
 
     #if("$field.propertyType" == "String" && "$field.metaInfo.jdbcType" != "LONGVARCHAR")

@@ -64,6 +64,16 @@ public class VueTemplate extends Template {
     }
 
     /**
+     * 启用卡片列表
+     *
+     * @return this
+     */
+    public VueTemplate enableCardView() {
+        table.enableCardView = true;
+        return this;
+    }
+
+    /**
      * 设置枚举
      *
      * @param variable 枚举字段 数据库/小驼峰

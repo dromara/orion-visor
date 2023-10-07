@@ -101,6 +101,11 @@ public class Table {
     protected boolean enableRowSelection;
 
     /**
+     * 使用卡片视图
+     */
+    protected boolean enableCardView;
+
+    /**
      * 生成的枚举文件
      */
     protected List<VueEnum> enums;
