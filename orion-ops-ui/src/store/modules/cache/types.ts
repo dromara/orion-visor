@@ -7,7 +7,7 @@ import { HostIdentityQueryResponse } from '@/api/asset/host-identity';
 export interface CacheState {
   menus: MenuQueryResponse[];
   roles: RoleQueryResponse[];
-  tags: TagQueryResponse[];
+  hostTags: TagQueryResponse[];
   hostKeys: HostKeyQueryResponse[];
   hostIdentities: HostIdentityQueryResponse[];
 

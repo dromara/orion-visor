@@ -38,11 +38,17 @@
 </script>
 
 <script lang="ts" setup>
+  #if($vue.enableCardView)
+  import ${vue.featureEntity}CardList from './components/${vue.feature}-card-list.vue';
+  #end
   import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
   #if($vue.enableDrawerForm)
   import ${vue.featureEntity}FormDrawer from './components/${vue.feature}-form-drawer.vue';
   #else
   import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
+  #end
+  #if($vue.enableCardView)
+  import { useAppStore } from '@/store';
   #end
 
   import { ref } from 'vue';
@@ -59,6 +65,7 @@
   #if($vue.enableCardView)
   const appStore = useAppStore();
 
+  // FIXME 这里需要修改一下字段名称
   const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
   #end
 

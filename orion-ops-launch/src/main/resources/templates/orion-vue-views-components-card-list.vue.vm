@@ -11,8 +11,8 @@
              :add-permission="['${package.ModuleName}:${typeHyphen}:create']"
              @add="emits('openAdd')"
              @reset="reset"
-             @search="fetchTableData"
-             @page-change="fetchTableData">
+             @search="fetchCardData"
+             @page-change="fetchCardData">
     <!-- 拓展操作 -->
     <template #extra="{ record }">
       <a-space>
@@ -90,33 +90,25 @@
   import useLoading from '@/hooks/loading';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
-  import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import { delete${vue.featureEntity}, get${vue.featureEntity}Page, ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
-  import { tagColor } from '@/views/asset/host/types/const';
-  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
-  import useCopy from '@/hooks/copy';
 
-  const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const list = ref<HostQueryResponse[]>([]);
+  const list = ref<${vue.featureEntity}QueryResponse[]>([]);
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
 
-  const formModel = reactive<HostQueryRequest>({
+  const formModel = reactive<${vue.featureEntity}QueryRequest>({
     searchValue: undefined,
-    id: undefined,
-    name: undefined,
-    code: undefined,
-    address: undefined,
-    favorite: undefined,
-    tags: undefined,
-    extra: true
+    #foreach($field in ${table.fields})
+    ${field.propertyName}: undefined,
+    #end
   });
 
   // 条件数量
   const filterCount = computed(() => {
-    return objectTruthKeyCount(formModel, ['searchValue', 'extra']);
+    return objectTruthKeyCount(formModel, ['searchValue']);
   });
 
   // 删除当前行
@@ -124,10 +116,10 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHost(id);
+      await delete${vue.featureEntity}(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      await fetchCardData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -136,12 +128,12 @@
 
   // 添加后回调
   const addedCallback = () => {
-    fetchTableData();
+    fetchCardData();
   };
 
   // 更新后回调
   const updatedCallback = () => {
-    fetchTableData();
+    fetchCardData();
   };
 
   defineExpose({
@@ -150,15 +142,15 @@
 
   // 重置条件
   const reset = () => {
-    resetObject(formModel, ['extra']);
-    fetchTableData();
+    resetObject(formModel']);
+    fetchCardData();
   };
 
   // 加载数据
-  const doFetchTableData = async (request: HostQueryRequest) => {
+  const doFetchCardData = async (request: ${vue.featureEntity}QueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostPage(request);
+      const { data } = await get${vue.featureEntity}Page(request);
       list.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
@@ -170,10 +162,10 @@
   };
 
   // 切换页码
-  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
-    doFetchTableData({ page, limit, ...form });
+  const fetchCardData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    doFetchCardData({ page, limit, ...form });
   };
-  fetchTableData();
+  fetchCardData();
 
 </script>
 

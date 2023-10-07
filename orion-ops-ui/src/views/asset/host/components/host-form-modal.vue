@@ -38,6 +38,7 @@
                               :allowCreate="true"
                               :limit="5"
                               type="HOST"
+                              tag-type="hostTags"
                               placeholder="请选择主机标签" />
         </a-form-item>
       </a-form>
@@ -93,7 +94,7 @@
   const openUpdate = (record: any) => {
     title.value = '修改主机';
     isAddHandle.value = false;
-    const tags = record?.tags?.map((s: { id: any; }) => s.id);
+    const tags = record?.hostTags?.map((s: { id: any; }) => s.id);
     renderForm({ ...defaultForm(), ...record, tags });
     setVisible(true);
   };

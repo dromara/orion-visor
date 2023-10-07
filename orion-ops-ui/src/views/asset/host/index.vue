@@ -69,7 +69,7 @@
     try {
       const { data } = await getTagList('HOST');
       // 设置到缓存
-      cacheStore.set('tags', data);
+      cacheStore.set('hostTags', data);
     } catch {
       Message.error('tag加载失败');
     }
@@ -78,7 +78,7 @@
 
   // 卸载时清除 tags cache
   onUnmounted(() => {
-    cacheStore.set('tags', []);
+    cacheStore.set('hostTags', []);
     cacheStore.set('hostKeys', []);
     cacheStore.set('hostIdentities', []);
   });

@@ -3,9 +3,9 @@
             :placeholder="placeholder"
             :options="optionData"
             :limit="limit as number"
+            :allow-create="allowCreate"
             @exceed-limit="onLimited"
             multiple
-            :allow-create="allowCreate"
             allow-clear>
   </a-select>
 </template>
@@ -27,7 +27,8 @@
     placeholder: String,
     limit: Number,
     type: String,
-    allowCreate: Boolean
+    allowCreate: Boolean,
+    tagType: String,
   });
 
   const emits = defineEmits(['update:modelValue']);
@@ -46,7 +47,8 @@
   const cacheStore = useCacheStore();
   const optionData = ref<SelectOptionData[]>([]);
   const initOptionData = () => {
-    optionData.value = cacheStore.tags.map(s => {
+    const tagCache = cacheStore[props.tagType as string] as Array<any>;
+    optionData.value = tagCache.map(s => {
       return {
         label: s.name,
         value: s.id,
@@ -92,7 +94,8 @@
       type: props.type
     } as unknown as TagCreateRequest);
     // 插入缓存
-    cacheStore.tags.push({ id, name });
+    const tagCache = cacheStore[props.tagType as string] as Array<any>;
+    tagCache.push({ id, name });
     // 插入 options
     optionData.value.push({
       label: name,
@@ -103,7 +106,7 @@
 
   // 超出限制
   const onLimited = () => {
-    Message.warning(`最多选择${ props.limit }个tag`);
+    Message.warning(`最多选择${props.limit}个tag`);
   };
 
 </script>

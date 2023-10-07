@@ -1,7 +1,7 @@
 <template>
   <card-list v-model:searchValue="formModel.searchValue"
              create-card-position="head"
-             :card-height="172"
+             :card-height="176"
              :loading="loading"
              :fieldConfig="fieldConfig"
              :list="list"
@@ -11,8 +11,8 @@
              :add-permission="['asset:host:create']"
              @add="emits('openAdd')"
              @reset="reset"
-             @search="fetchTableData"
-             @page-change="fetchTableData">
+             @search="fetchListData"
+             @page-change="fetchListData">
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
@@ -104,6 +104,7 @@
                               :allowCreate="false"
                               :limit="0"
                               type="HOST"
+                              tag-type="hostTags"
                               placeholder="请选择主机标签" />
         </a-form-item>
       </a-form>
@@ -160,7 +161,7 @@
       await deleteHost(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      await fetchListData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -169,12 +170,12 @@
 
   // 添加后回调
   const addedCallback = () => {
-    fetchTableData();
+    fetchListData();
   };
 
   // 更新后回调
   const updatedCallback = () => {
-    fetchTableData();
+    fetchListData();
   };
 
   defineExpose({
@@ -184,11 +185,11 @@
   // 重置条件
   const reset = () => {
     resetObject(formModel, ['extra']);
-    fetchTableData();
+    fetchListData();
   };
 
   // 加载数据
-  const doFetchTableData = async (request: HostQueryRequest) => {
+  const doFetchListData = async (request: HostQueryRequest) => {
     try {
       setLoading(true);
       const { data } = await getHostPage(request);
@@ -203,10 +204,10 @@
   };
 
   // 切换页码
-  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
-    doFetchTableData({ page, limit, ...form });
+  const fetchListData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    doFetchListData({ page, limit, ...form });
   };
-  fetchTableData();
+  fetchListData();
 
 </script>
 

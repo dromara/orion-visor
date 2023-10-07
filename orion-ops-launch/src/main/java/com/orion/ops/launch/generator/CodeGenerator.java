@@ -358,14 +358,18 @@ public class CodeGenerator {
                 new String[]{"/templates/orion-vue-views-components-form-drawer.vue.vm", "${feature}-form-drawer.vue", "vue/views/${module}/${feature}/components"},
                 // table.vue 文件
                 new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
+                // card-list.vue 文件
+                new String[]{"/templates/orion-vue-views-components-card-list.vue.vm", "${feature}-card-list.vue", "vue/views/${module}/${feature}/components"},
                 // enum.types.ts 文件
                 new String[]{"/templates/orion-vue-views-types-enum.types.ts.vm", "enum.types.ts", "vue/views/${module}/${feature}/types"},
                 // const.ts 文件
                 new String[]{"/templates/orion-vue-views-types-const.ts.vm", "const.ts", "vue/views/${module}/${feature}/types"},
                 // form.rules.ts 文件
                 new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${module}/${feature}/types"},
-                // table.vue 文件
+                // table.columns.ts 文件
                 new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${module}/${feature}/types"},
+                // card.fields.ts 文件
+                new String[]{"/templates/orion-vue-views-types-card.fields.ts.vm", "card.fields.ts", "vue/views/${module}/${feature}/types"},
                 // menu.sql 文件
                 new String[]{"/templates/orion-sql-menu.sql.vm", "${feature}-menu.sql", "sql"},
         };
