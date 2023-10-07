@@ -34,7 +34,7 @@ public interface IMapper<T> extends BaseMapper<T> {
      * @return 获取 wrapper
      */
     default LambdaQueryWrapper<T> lambda() {
-        return new LambdaQueryWrapper<>();
+        return Conditions.lambda();
     }
 
     /**

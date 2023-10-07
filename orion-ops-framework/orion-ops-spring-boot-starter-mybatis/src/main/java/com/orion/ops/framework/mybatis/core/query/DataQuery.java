@@ -1,12 +1,15 @@
 package com.orion.ops.framework.mybatis.core.query;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.interfaces.Join;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.IPageRequest;
+import com.orion.lang.define.wrapper.PageRequest;
 import com.orion.lang.define.wrapper.Pager;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
@@ -35,13 +38,13 @@ public class DataQuery<T> {
 
     private IPageRequest page;
 
-    private LambdaQueryWrapper<T> wrapper;
+    private Wrapper<T> wrapper;
 
     private DataQuery(BaseMapper<T> dao) {
         this.dao = dao;
     }
 
-    private DataQuery(BaseMapper<T> dao, LambdaQueryWrapper<T> wrapper) {
+    private DataQuery(BaseMapper<T> dao, Wrapper<T> wrapper) {
         this.dao = dao;
         this.wrapper = wrapper;
     }
@@ -65,7 +68,7 @@ public class DataQuery<T> {
         return new DataQuery<>(dao);
     }
 
-    public static <T> DataQuery<T> of(BaseMapper<T> dao, LambdaQueryWrapper<T> wrapper) {
+    public static <T> DataQuery<T> of(BaseMapper<T> dao, Wrapper<T> wrapper) {
         Valid.notNull(dao, "dao is null");
         return new DataQuery<>(dao, wrapper);
     }
@@ -75,14 +78,45 @@ public class DataQuery<T> {
         return this;
     }
 
-    public DataQuery<T> wrapper(LambdaQueryWrapper<T> wrapper) {
+    public DataQuery<T> page(int page, int limit) {
+        this.page = new PageRequest(page, limit);
+        return this;
+    }
+
+    public DataQuery<T> wrapper(Wrapper<T> wrapper) {
         this.wrapper = Valid.notNull(wrapper, "wrapper is null");
         return this;
     }
 
+    // -------------------- condition --------------------
+
+    public ThenLambdaWrapper<T> createWrapper() {
+        return this.createWrapper(false);
+    }
+
+    public ThenLambdaWrapper<T> createValidateWrapper() {
+        return this.createWrapper(true);
+    }
+
+    public ThenLambdaWrapper<T> createWrapper(boolean validate) {
+        ThenLambdaWrapper<T> then = validate
+                ? new ThenValidateLambdaWrapper<>(this)
+                : new ThenLambdaWrapper<>(this);
+        this.wrapper = then;
+        return then;
+    }
+
     public DataQuery<T> only() {
-        wrapper.last(Const.LIMIT_1);
-        return this;
+        return this.last(Const.LIMIT_1);
+    }
+
+    public DataQuery<T> last(String lastSql) {
+        if (wrapper instanceof Join) {
+            ((Join<?>) wrapper).last(lastSql);
+            return this;
+        } else {
+            throw Exceptions.argument("wrapper not implements Join");
+        }
     }
 
     // -------------------- id --------------------
@@ -176,8 +210,9 @@ public class DataQuery<T> {
         pager.setTotal(count.intValue());
         boolean next = pager.hasMoreData();
         if (next) {
-            wrapper.last(pager.getSql());
-            List<R> rows = dao.selectList(wrapper).stream()
+            this.last(pager.getSql());
+            List<R> rows = dao.selectList(wrapper)
+                    .stream()
                     .map(mapper)
                     .collect(Collectors.toList());
             pager.setRows(rows);

@@ -1,6 +1,5 @@
 package com.orion.ops.framework.mybatis.core.query;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 
 import java.util.Collection;
@@ -8,27 +7,21 @@ import java.util.Collection;
 import static com.orion.ops.framework.mybatis.core.query.Conditions.isIllegal;
 
 /**
- * 有效性验证 wrapper
+ * 复制 ValidateLambdaWrapper
+ * 继承 ThenLambdaWrapper
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/6/25 11:43
+ * @since 2023/10/7 15:26
  */
-public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
+public class ThenValidateLambdaWrapper<T> extends ThenLambdaWrapper<T> {
 
-    public ValidateLambdaWrapper() {
-    }
-
-    public ValidateLambdaWrapper(T entity) {
-        super(entity);
-    }
-
-    public ValidateLambdaWrapper(Class<T> entityClass) {
-        super(entityClass);
+    public ThenValidateLambdaWrapper(DataQuery<T> dataQuery) {
+        super(dataQuery);
     }
 
     @Override
-    public LambdaQueryWrapper<T> eq(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> eq(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -36,7 +29,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> ne(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> ne(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -44,7 +37,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> gt(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> gt(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -52,7 +45,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> ge(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> ge(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -60,7 +53,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> lt(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> lt(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -68,7 +61,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> le(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> le(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -76,7 +69,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> between(SFunction<T, ?> column, Object val1, Object val2) {
+    public ThenLambdaWrapper<T> between(SFunction<T, ?> column, Object val1, Object val2) {
         if (isIllegal(val1, val2)) {
             return this;
         }
@@ -84,7 +77,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> notBetween(SFunction<T, ?> column, Object val1, Object val2) {
+    public ThenLambdaWrapper<T> notBetween(SFunction<T, ?> column, Object val1, Object val2) {
         if (isIllegal(val1, val2)) {
             return this;
         }
@@ -92,7 +85,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> like(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> like(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -100,7 +93,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> notLike(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> notLike(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -108,7 +101,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> notLikeLeft(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> notLikeLeft(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -116,7 +109,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> notLikeRight(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> notLikeRight(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -124,7 +117,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> likeLeft(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> likeLeft(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -132,7 +125,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> likeRight(SFunction<T, ?> column, Object val) {
+    public ThenLambdaWrapper<T> likeRight(SFunction<T, ?> column, Object val) {
         if (isIllegal(val)) {
             return this;
         }
@@ -140,7 +133,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> in(SFunction<T, ?> column, Collection<?> coll) {
+    public ThenLambdaWrapper<T> in(SFunction<T, ?> column, Collection<?> coll) {
         if (isIllegal(coll)) {
             return this;
         }
@@ -148,7 +141,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> in(SFunction<T, ?> column, Object... values) {
+    public ThenLambdaWrapper<T> in(SFunction<T, ?> column, Object... values) {
         if (isIllegal(values)) {
             return this;
         }
@@ -156,7 +149,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> notIn(SFunction<T, ?> column, Collection<?> coll) {
+    public ThenLambdaWrapper<T> notIn(SFunction<T, ?> column, Collection<?> coll) {
         if (isIllegal(coll)) {
             return this;
         }
@@ -164,7 +157,7 @@ public class ValidateLambdaWrapper<T> extends LambdaQueryWrapper<T> {
     }
 
     @Override
-    public LambdaQueryWrapper<T> notIn(SFunction<T, ?> column, Object... value) {
+    public ThenLambdaWrapper<T> notIn(SFunction<T, ?> column, Object... value) {
         if (isIllegal(value)) {
             return this;
         }

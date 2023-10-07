@@ -20,6 +20,16 @@ public class Conditions {
     }
 
     /**
+     * 获取 LambdaQueryWrapper
+     *
+     * @param <T> T
+     * @return wrapper
+     */
+    public static <T> LambdaQueryWrapper<T> lambda() {
+        return new LambdaQueryWrapper<>();
+    }
+
+    /**
      * 条件有效性验证 wrapper
      *
      * @param <T> T
@@ -65,6 +75,30 @@ public class Conditions {
     public static <T, E> LambdaQueryWrapper<T> in(SFunction<T, E> mapping, Collection<E> es) {
         Valid.notEmpty(es, ErrorMessage.INVALID_PARAM);
         return new LambdaQueryWrapper<T>().in(mapping, es);
+    }
+
+    /**
+     * 有效性验证
+     *
+     * @param objects objects
+     * @return isValidate
+     */
+    public static boolean isIllegal(Object... objects) {
+        for (Object object : objects) {
+            // 非 null 检查
+            if (object == null) {
+                return true;
+            }
+            // 字符串 非空校验
+            if (object instanceof String) {
+                return ((String) object).isEmpty();
+            }
+            // 集合 非空校验
+            if (object instanceof Collection<?>) {
+                return ((Collection<?>) object).isEmpty();
+            }
+        }
+        return false;
     }
 
 }
