@@ -1,16 +1,18 @@
 <template>
   <div class="block">
     <h5 class="title">{{ title }}</h5>
-    <div v-for="option in options" :key="option.name" class="option-wrapper">
-      <!-- 偏好项 -->
-      <span>{{ option.name }}</span>
-      <!-- 偏好值 -->
-      <form-wrapper :name="option.key"
-                    :type="option.type as string"
-                    :default-value="option.defaultVal"
-                    :options="option.options"
-                    @input-change="handleChange" />
-    </div>
+    <template v-for="option in options" :key="option.name">
+      <div class="option-wrapper" v-permission="option.permission || []">
+        <!-- 偏好项 -->
+        <span>{{ option.name }}</span>
+        <!-- 偏好值 -->
+        <form-wrapper :name="option.key"
+                      :type="option.type as string"
+                      :default-value="option.defaultVal"
+                      :options="option.options"
+                      @input-change="handleChange" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -26,6 +28,7 @@
     name: string;
     key: string;
     type?: string;
+    permission?: string[];
     defaultVal?: boolean | string | number;
     options?: Array<RadioOption>;
   }

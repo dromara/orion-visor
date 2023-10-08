@@ -12,7 +12,7 @@ export {
   useMenuStore,
   useUserStore,
   useTabBarStore,
-  useCacheStore
+  useCacheStore,
 };
 
 export default pinia;

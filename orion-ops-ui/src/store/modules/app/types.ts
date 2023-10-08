@@ -1,6 +1,6 @@
-export type Theme = 'light' | 'dark'
-export type Device = 'desktop' | 'mobile'
-export type ViewType = 'table' | 'card' | undefined
+type Theme = 'light' | 'dark';
+type Device = 'desktop' | 'mobile';
+type ViewType = 'table' | 'card' | undefined;
 
 /**
  * 应用状态

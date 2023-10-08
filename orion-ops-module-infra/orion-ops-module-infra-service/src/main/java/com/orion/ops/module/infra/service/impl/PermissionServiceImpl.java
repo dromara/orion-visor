@@ -201,8 +201,6 @@ public class PermissionServiceImpl implements PermissionService {
         Long id = user.getId();
         // 获取用户系统偏好
         Future<Map<String, Object>> systemPreference = preferenceService.getPreference(id, PreferenceTypeEnum.SYSTEM);
-        // 获取用户提示偏好
-        Future<Map<String, Object>> tipsPreference = preferenceService.getPreference(id, PreferenceTypeEnum.TIPS);
         // 获取用户角色
         List<String> roles = this.getUserEnabledRoles();
         // 获取用户权限
@@ -228,7 +226,6 @@ public class PermissionServiceImpl implements PermissionService {
         }
         // 获取异步结果
         user.setSystemPreference(systemPreference.get());
-        user.setTipsPreference(tipsPreference.get());
         // 组装数据
         return UserPermissionVO.builder()
                 .user(user)

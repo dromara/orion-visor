@@ -20,11 +20,6 @@ public enum PreferenceTypeEnum {
      */
     SYSTEM("systemPreferenceStrategy"),
 
-    /**
-     * 提示偏好
-     */
-    TIPS("tipsPreferenceStrategy"),
-
     ;
 
     PreferenceTypeEnum(String beanName) {

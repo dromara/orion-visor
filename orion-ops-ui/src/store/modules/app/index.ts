@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { AppState } from './types';
-import TimeScale from 'echarts/types/src/scale/Time';
 
 const defaultConfig: AppState = {
   // 应用设置

@@ -4,6 +4,7 @@ import { FavoriteType, addFavorite, cancelFavorite } from '@/api/meta/favorite';
 export default function useFavorite(type: FavoriteType) {
   const toggle = async (record: any, id: number, cancelField = 'favorite') => {
     const request = { relId: id, type };
+    Message.clear();
     const loading = Message.loading(record[cancelField] ? '取消中' : '收藏中');
     try {
       if (record[cancelField]) {

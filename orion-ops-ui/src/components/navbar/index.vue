@@ -117,16 +117,31 @@
       </li>
       <!-- 偏好设置 -->
       <li>
-        <a-tooltip content="偏好设置">
-          <a-button class="nav-btn"
-                    type="outline"
-                    shape="circle"
-                    @click="openGlobalSetting">
-            <template #icon>
-              <icon-settings />
-            </template>
-          </a-button>
-        </a-tooltip>
+        <a-popover :popup-visible="tippedPreference" position="br">
+          <template #title>
+            💡 点击这里可以修改系统偏好~
+          </template>
+          <template #content>
+           <span style="line-height: 1.8">
+             ◾ 可以修改页面布局<br>
+             ◾ 可以切换显示视图
+           </span>
+            <div class="tips-buttons">
+              <a-button size="mini" class="mr8" @click="closePreferenceTip(false)">关闭</a-button>
+              <a-button size="mini" type="primary" @click="closePreferenceTip(true)">不在提醒</a-button>
+            </div>
+          </template>
+          <a-tooltip content="偏好设置">
+            <a-button class="nav-btn"
+                      type="outline"
+                      shape="circle"
+                      @click="openGlobalSetting">
+              <template #icon>
+                <icon-settings />
+              </template>
+            </a-button>
+          </a-tooltip>
+        </a-popover>
       </li>
       <!-- 用户信息 -->
       <li>
@@ -177,6 +192,8 @@
   import MessageBox from '../message-box/index.vue';
   import { openGlobalSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
 
+  // TODO 默认值
+  const tippedPreference = ref(true);
   const appStore = useAppStore();
   const userStore = useUserStore();
   const { logout } = useUser();
@@ -201,7 +218,9 @@
     valueLight: 'light',
     storageKey: 'arco-theme',
     onChanged(dark: boolean) {
-      appStore.toggleTheme(dark);
+      appStore.updateSettings({
+        theme: dark ? 'dark' : 'light'
+      });
     },
   });
 
@@ -232,6 +251,15 @@
 
   // 注入收缩菜单
   const toggleDrawerMenu = inject(toggleDrawerMenuKey) as () => void;
+
+  // 关闭偏好提示
+  const closePreferenceTip = (ack: boolean) => {
+    tippedPreference.value = false;
+    if (ack) {
+      // TODO 修改
+    }
+  };
+
 </script>
 
 <style scoped lang="less">
@@ -296,4 +324,11 @@
       margin-top: 0;
     }
   }
+
+  .tips-buttons {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
 </style>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-type Preference = 'SYSTEM' | 'TIPS'
+type Preference = 'SYSTEM'
 
 /**
  * 用户偏好更新请求

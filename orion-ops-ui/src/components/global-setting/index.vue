@@ -78,6 +78,7 @@
       name: '主机列表',
       key: 'hostView',
       type: 'radio-group',
+      permission: ['asset:host:query'],
       defaultVal: appStore.hostView,
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
@@ -85,6 +86,7 @@
       name: '主机秘钥',
       key: 'hostKeyView',
       type: 'radio-group',
+      permission: ['asset:host-key:query'],
       defaultVal: appStore.hostKeyView,
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
@@ -92,6 +94,7 @@
       name: '主机身份',
       key: 'hostIdentityView',
       type: 'radio-group',
+      permission: ['asset:host-identity:query'],
       defaultVal: appStore.hostIdentityView,
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },

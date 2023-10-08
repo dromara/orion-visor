@@ -37,7 +37,4 @@ public class UserCollectInfoVO {
     @Schema(description = "系统偏好")
     private Map<String, Object> systemPreference;
 
-    @Schema(description = "提示偏好")
-    private Map<String, Object> tipsPreference;
-
 }
