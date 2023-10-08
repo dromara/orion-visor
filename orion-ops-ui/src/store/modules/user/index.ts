@@ -4,7 +4,7 @@ import { clearToken, setToken } from '@/utils/auth';
 import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import { useAppStore, useMenuStore, useTabBarStore } from '@/store';
+import { useAppStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
 
 export default defineStore('user', {
   state: (): UserState => ({
@@ -43,6 +43,9 @@ export default defineStore('user', {
       // 设置用户偏好
       const appStore = useAppStore();
       appStore.updateSettings(data.user.systemPreference);
+      // 设置已经提示的key
+      const tipsStore = useTipsStore();
+      tipsStore.set(data.user.tippedKeys);
     },
 
     // 登录

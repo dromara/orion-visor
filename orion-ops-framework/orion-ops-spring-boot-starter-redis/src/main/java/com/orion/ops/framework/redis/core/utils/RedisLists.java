@@ -3,6 +3,7 @@ package com.orion.ops.framework.redis.core.utils;
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.constant.Const;
 
 import java.util.List;
 import java.util.function.Function;
@@ -110,6 +111,17 @@ public class RedisLists extends RedisUtils {
     /**
      * list 添加元素
      *
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     */
+    public static <T> void push(String key, String value) {
+        redisTemplate.opsForList().rightPush(key, value);
+    }
+
+    /**
+     * list 添加元素
+     *
      * @param key    key
      * @param value  value
      * @param mapper mapper
@@ -128,6 +140,18 @@ public class RedisLists extends RedisUtils {
      */
     public static <T> void pushJson(String key, T value) {
         redisTemplate.opsForList().rightPush(key, JSON.toJSONString(value));
+    }
+
+    /**
+     * 是否包含某个值
+     *
+     * @param key   key
+     * @param value value
+     * @return 是否包含
+     */
+    public static boolean contains(String key, String value) {
+        Long index = redisTemplate.opsForList().indexOf(key, value);
+        return index != null && !Const.L_N_1.equals(index);
     }
 
     /**

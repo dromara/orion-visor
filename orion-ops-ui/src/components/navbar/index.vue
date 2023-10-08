@@ -183,7 +183,7 @@
 <script lang="ts" setup>
   import { computed, inject, ref } from 'vue';
   import { useDark, useFullscreen, useToggle } from '@vueuse/core';
-  import { useAppStore, useUserStore } from '@/store';
+  import { useAppStore, useTipsStore, useUserStore } from '@/store';
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
@@ -191,9 +191,10 @@
   import Menu from '@/components/menu/tree/index.vue';
   import MessageBox from '../message-box/index.vue';
   import { openGlobalSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
+  import { preferenceTipsKey } from './const';
 
-  // TODO 默认值
-  const tippedPreference = ref(true);
+  const tipsStore = useTipsStore();
+  const tippedPreference = ref(tipsStore.isNotTipped(preferenceTipsKey));
   const appStore = useAppStore();
   const userStore = useUserStore();
   const { logout } = useUser();
@@ -256,7 +257,7 @@
   const closePreferenceTip = (ack: boolean) => {
     tippedPreference.value = false;
     if (ack) {
-      // TODO 修改
+      tipsStore.setTipped(preferenceTipsKey);
     }
   };
 

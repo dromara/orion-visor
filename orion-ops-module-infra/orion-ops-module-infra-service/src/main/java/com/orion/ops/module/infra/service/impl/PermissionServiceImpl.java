@@ -25,6 +25,7 @@ import com.orion.ops.module.infra.enums.RoleStatusEnum;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.PreferenceService;
 import com.orion.ops.module.infra.service.SystemMenuService;
+import com.orion.ops.module.infra.service.TipsService;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +73,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Resource
     private PreferenceService preferenceService;
+
+    @Resource
+    private TipsService tipsService;
 
     @PostConstruct
     @Override
@@ -224,6 +228,8 @@ public class PermissionServiceImpl implements PermissionService {
                         .collect(Collectors.toList());
             }
         }
+        // 设置已提示的 key
+        user.setTippedKeys(tipsService.getTippedKeys());
         // 获取异步结果
         user.setSystemPreference(systemPreference.get());
         // 组装数据

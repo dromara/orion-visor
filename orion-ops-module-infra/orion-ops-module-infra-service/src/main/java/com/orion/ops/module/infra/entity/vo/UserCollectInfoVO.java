@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,5 +37,8 @@ public class UserCollectInfoVO {
 
     @Schema(description = "系统偏好")
     private Map<String, Object> systemPreference;
+
+    @Schema(description = "已经提示的key")
+    private List<String> tippedKeys;
 
 }
