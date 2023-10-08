@@ -22,8 +22,8 @@ import java.util.List;
 @Schema(name = "UserPermissionVO", description = "用户权限 视图响应对象")
 public class UserPermissionVO {
 
-    @Schema(description = "用户基本信息")
-    private UserBaseInfoVO user;
+    @Schema(description = "用户聚合信息")
+    private UserCollectInfoVO user;
 
     @Schema(description = "该用户已启用的角色")
     private List<String> roles;

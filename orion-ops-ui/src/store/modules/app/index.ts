@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { AppState } from './types';
+import TimeScale from 'echarts/types/src/scale/Time';
 
 const defaultConfig: AppState = {
   // 应用设置
@@ -36,16 +37,17 @@ export default defineStore('app', {
   },
 
   actions: {
-    // 修改颜色主题
-    toggleTheme(dark: boolean) {
-      this.updateSettings({
-        theme: dark ? 'dark' : 'light'
-      });
-      document.body.setAttribute('arco-theme', dark ? 'dark' : 'light');
-    },
-
     // 更新配置
     updateSettings(partial: Partial<AppState>) {
+      // 主题颜色
+      if (partial.theme !== undefined) {
+        document.body.setAttribute('arco-theme', partial.theme);
+      }
+      // 色弱模式
+      if (partial.colorWeak !== undefined) {
+        document.body.style.filter = partial.colorWeak ? 'invert(80%)' : 'none';
+      }
+      // 修改配置
       this.$patch(partial as object);
     },
   },

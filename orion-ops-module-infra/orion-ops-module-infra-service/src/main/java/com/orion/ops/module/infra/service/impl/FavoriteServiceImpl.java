@@ -17,6 +17,7 @@ import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 import com.orion.ops.module.infra.service.FavoriteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -111,6 +112,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    @Async("asyncExecutor")
     public void deleteFavoriteByUserId(Long userId) {
         if (userId == null) {
             return;
@@ -127,6 +129,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    @Async("asyncExecutor")
     public void deleteFavoriteByUserIdList(List<Long> userIdList) {
         if (Lists.isEmpty(userIdList)) {
             return;

@@ -16,20 +16,24 @@ import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemRoleMenuDO;
 import com.orion.ops.module.infra.entity.dto.SystemMenuCacheDTO;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
-import com.orion.ops.module.infra.entity.vo.UserBaseInfoVO;
+import com.orion.ops.module.infra.entity.vo.UserCollectInfoVO;
 import com.orion.ops.module.infra.entity.vo.UserPermissionVO;
 import com.orion.ops.module.infra.enums.MenuStatusEnum;
 import com.orion.ops.module.infra.enums.MenuTypeEnum;
+import com.orion.ops.module.infra.enums.PreferenceTypeEnum;
 import com.orion.ops.module.infra.enums.RoleStatusEnum;
 import com.orion.ops.module.infra.service.PermissionService;
+import com.orion.ops.module.infra.service.PreferenceService;
 import com.orion.ops.module.infra.service.SystemMenuService;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,11 +70,14 @@ public class PermissionServiceImpl implements PermissionService {
     @Resource
     private SystemMenuService systemMenuService;
 
+    @Resource
+    private PreferenceService preferenceService;
+
     @PostConstruct
     @Override
     public void initPermissionCache() {
         long start = System.currentTimeMillis();
-        log.info("initRoleMenuCache-start");
+        log.info("initPermissionCache-start");
         roleCache.clear();
         menuCache.clear();
         roleMenuCache.clear();
@@ -104,7 +111,7 @@ public class PermissionServiceImpl implements PermissionService {
                             .map(SystemRoleDO::getCode)
                             .ifPresent(code -> roleMenuCache.put(code, roleMenus));
                 });
-        log.info("initRoleMenuCache-end used: {}ms", System.currentTimeMillis() - start);
+        log.info("initPermissionCache-end used: {}ms", System.currentTimeMillis() - start);
     }
 
     @Override
@@ -186,10 +193,16 @@ public class PermissionServiceImpl implements PermissionService {
         return systemMenuService.buildSystemMenuTree(menus);
     }
 
+    @SneakyThrows
     @Override
     public UserPermissionVO getUserPermission() {
         // 获取用户信息
-        UserBaseInfoVO user = SystemUserConvert.MAPPER.toBaseInfo(SecurityUtils.getLoginUser());
+        UserCollectInfoVO user = SystemUserConvert.MAPPER.toCollectInfo(SecurityUtils.getLoginUser());
+        Long id = user.getId();
+        // 获取用户系统偏好
+        Future<Map<String, Object>> systemPreference = preferenceService.getPreference(id, PreferenceTypeEnum.SYSTEM);
+        // 获取用户提示偏好
+        Future<Map<String, Object>> tipsPreference = preferenceService.getPreference(id, PreferenceTypeEnum.TIPS);
         // 获取用户角色
         List<String> roles = this.getUserEnabledRoles();
         // 获取用户权限
@@ -213,6 +226,9 @@ public class PermissionServiceImpl implements PermissionService {
                         .collect(Collectors.toList());
             }
         }
+        // 获取异步结果
+        user.setSystemPreference(systemPreference.get());
+        user.setTipsPreference(tipsPreference.get());
         // 组装数据
         return UserPermissionVO.builder()
                 .user(user)

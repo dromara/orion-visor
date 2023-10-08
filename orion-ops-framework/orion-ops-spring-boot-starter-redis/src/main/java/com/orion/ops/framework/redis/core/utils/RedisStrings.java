@@ -1,6 +1,8 @@
 package com.orion.ops.framework.redis.core.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 
@@ -23,12 +25,26 @@ public class RedisStrings extends RedisUtils {
     /**
      * 获取 json
      *
+     * @param key key
+     * @return JSONObject
+     */
+    public static JSONObject getJson(String key) {
+        String value = redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return null;
+        }
+        return JSON.parseObject(value);
+    }
+
+    /**
+     * 获取 json
+     *
      * @param define define
      * @param <T>    T
      * @return T
      */
     public static <T> T getJson(CacheKeyDefine define) {
-        return getJson(define.getKey(), define);
+        return (T) getJson(define.getKey(), define.getType());
     }
 
     /**
@@ -40,11 +56,37 @@ public class RedisStrings extends RedisUtils {
      * @return T
      */
     public static <T> T getJson(String key, CacheKeyDefine define) {
+        return (T) getJson(key, define.getType());
+    }
+
+    /**
+     * 获取 json
+     *
+     * @param key  key
+     * @param type type
+     * @param <T>  T
+     * @return T
+     */
+    public static <T> T getJson(String key, Class<T> type) {
         String value = redisTemplate.opsForValue().get(key);
         if (value == null) {
             return null;
         }
-        return (T) JSON.parseObject(value, define.getType());
+        return (T) JSON.parseObject(value, type);
+    }
+
+    /**
+     * 获取 json
+     *
+     * @param key key
+     * @return JSONArray
+     */
+    public static JSONArray getJsonArray(String key) {
+        String value = redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return null;
+        }
+        return JSON.parseArray(value);
     }
 
     /**
@@ -55,7 +97,7 @@ public class RedisStrings extends RedisUtils {
      * @return T
      */
     public static <T> List<T> getJsonArray(CacheKeyDefine define) {
-        return getJsonArray(define.getKey(), define);
+        return (List<T>) getJsonArray(define.getKey(), define.getType());
     }
 
     /**
@@ -67,11 +109,23 @@ public class RedisStrings extends RedisUtils {
      * @return T
      */
     public static <T> List<T> getJsonArray(String key, CacheKeyDefine define) {
+        return (List<T>) getJsonArray(key, define.getType());
+    }
+
+    /**
+     * 获取 json
+     *
+     * @param key  key
+     * @param type type
+     * @param <T>  T
+     * @return T
+     */
+    public static <T> List<T> getJsonArray(String key, Class<T> type) {
         String value = redisTemplate.opsForValue().get(key);
         if (value == null) {
             return null;
         }
-        return (List<T>) JSON.parseArray(value, define.getType());
+        return JSON.parseArray(value, type);
     }
 
     /**

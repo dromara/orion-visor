@@ -4,7 +4,7 @@ import { clearToken, setToken } from '@/utils/auth';
 import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import { useMenuStore, useTabBarStore } from '@/store';
+import { useAppStore, useMenuStore, useTabBarStore } from '@/store';
 
 export default defineStore('user', {
   state: (): UserState => ({
@@ -30,7 +30,6 @@ export default defineStore('user', {
 
     // 获取用户信息
     async info() {
-      // TODO 查询偏好
       const { data } = await getUserPermission();
       // 设置用户信息
       this.setInfo({
@@ -41,8 +40,9 @@ export default defineStore('user', {
         roles: data.roles,
         permission: data.permissions,
       });
-      // TODO 设置用户偏好
-
+      // 设置用户偏好
+      const appStore = useAppStore();
+      appStore.updateSettings(data.user.systemPreference);
     },
 
     // 登录

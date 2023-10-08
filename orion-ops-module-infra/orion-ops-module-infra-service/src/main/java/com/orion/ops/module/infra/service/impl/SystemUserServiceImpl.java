@@ -22,6 +22,7 @@ import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.FavoriteService;
+import com.orion.ops.module.infra.service.PreferenceService;
 import com.orion.ops.module.infra.service.SystemUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -51,6 +52,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Resource
     private FavoriteService favoriteService;
+
+    @Resource
+    private PreferenceService preferenceService;
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -169,6 +173,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         redisTemplate.delete(UserCacheKeyDefine.USER_INFO.format(id));
         // 删除用户收藏
         favoriteService.deleteFavoriteByUserId(id);
+        // 删除用户偏好
+        preferenceService.deletePreferenceByUserId(id);
         return effect;
     }
 

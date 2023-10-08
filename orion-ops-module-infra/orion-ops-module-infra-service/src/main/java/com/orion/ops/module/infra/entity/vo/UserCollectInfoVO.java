@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 /**
  * 用户基本信息 视图响应对象
  *
@@ -17,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "UserBaseInfoVO", description = "用户基本信息 视图响应对象")
-public class UserBaseInfoVO {
+@Schema(name = "UserCollectInfoVO", description = "用户聚合信息 视图响应对象")
+public class UserCollectInfoVO {
 
     @Schema(description = "id")
     private Long id;
@@ -31,5 +33,11 @@ public class UserBaseInfoVO {
 
     @Schema(description = "头像地址")
     private String avatar;
+
+    @Schema(description = "系统偏好")
+    private Map<String, Object> systemPreference;
+
+    @Schema(description = "提示偏好")
+    private Map<String, Object> tipsPreference;
 
 }
