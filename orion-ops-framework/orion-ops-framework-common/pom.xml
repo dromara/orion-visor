@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>orion-ops-common</artifactId>
+    <artifactId>orion-ops-framework-common</artifactId>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 

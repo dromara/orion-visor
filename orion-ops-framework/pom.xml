@@ -16,7 +16,7 @@
     <url>https://github.com/lijiahangmax/orion-ops-pro</url>
 
     <modules>
-        <module>orion-ops-common</module>
+        <module>orion-ops-framework-common</module>
         <module>orion-ops-spring-boot-starter-web</module>
         <module>orion-ops-spring-boot-starter-banner</module>
         <module>orion-ops-spring-boot-starter-swagger</module>
@@ -31,6 +31,7 @@
         <module>orion-ops-spring-boot-starter-security</module>
         <module>orion-ops-spring-boot-starter-monitor</module>
         <module>orion-ops-spring-boot-starter-test</module>
+<!--        <module>orion-ops-spring-boot-starter-operator-log</module>-->
     </modules>
 
 </project>

@@ -61,7 +61,7 @@
             <!-- orion-ops-starter -->
             <dependency>
                 <groupId>com.orion.ops</groupId>
-                <artifactId>orion-ops-common</artifactId>
+                <artifactId>orion-ops-framework-common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

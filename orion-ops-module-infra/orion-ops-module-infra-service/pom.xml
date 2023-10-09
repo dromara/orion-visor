@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.orion.ops</groupId>
-            <artifactId>orion-ops-common</artifactId>
+            <artifactId>orion-ops-framework-common</artifactId>
         </dependency>
 
         <!-- infra provider -->
@@ -26,6 +26,30 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-module-infra-provider</artifactId>
             <version>${revision}</version>
+        </dependency>
+
+        <!-- web -->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- log -->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-log</artifactId>
+        </dependency>
+
+        <!-- operator-log -->
+<!--        <dependency>-->
+<!--            <groupId>com.orion.ops</groupId>-->
+<!--            <artifactId>orion-ops-spring-boot-starter-operator-log</artifactId>-->
+<!--        </dependency>-->
+
+        <!-- desensitize -->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-desensitize</artifactId>
         </dependency>
 
         <!-- security -->

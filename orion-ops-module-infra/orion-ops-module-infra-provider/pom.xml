@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.orion.ops</groupId>
-            <artifactId>orion-ops-common</artifactId>
+            <artifactId>orion-ops-framework-common</artifactId>
         </dependency>
     </dependencies>
 
