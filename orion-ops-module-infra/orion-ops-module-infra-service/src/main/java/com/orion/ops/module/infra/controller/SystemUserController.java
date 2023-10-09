@@ -3,7 +3,7 @@ package com.orion.ops.module.infra.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.collect.Lists;
-import com.orion.ops.framework.common.valid.group.Page;
+import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;

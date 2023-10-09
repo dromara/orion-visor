@@ -134,6 +134,11 @@
                 <artifactId>orion-ops-spring-boot-starter-test</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.orion.ops</groupId>
+                <artifactId>orion-ops-spring-boot-starter-biz-operator-log</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <!-- websocket -->
             <dependency>

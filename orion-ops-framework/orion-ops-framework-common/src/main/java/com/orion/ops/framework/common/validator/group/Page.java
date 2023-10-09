@@ -1,4 +1,4 @@
-package com.orion.ops.framework.common.valid.group;
+package com.orion.ops.framework.common.validator.group;
 
 /**
  * 分页验证分组

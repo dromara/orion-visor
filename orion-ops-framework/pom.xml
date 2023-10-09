@@ -31,7 +31,7 @@
         <module>orion-ops-spring-boot-starter-security</module>
         <module>orion-ops-spring-boot-starter-monitor</module>
         <module>orion-ops-spring-boot-starter-test</module>
-<!--        <module>orion-ops-spring-boot-starter-operator-log</module>-->
+        <module>orion-ops-spring-boot-starter-biz-operator-log</module>
     </modules>
 
 </project>

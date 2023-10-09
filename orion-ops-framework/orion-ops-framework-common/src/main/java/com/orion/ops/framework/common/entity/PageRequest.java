@@ -1,7 +1,7 @@
 package com.orion.ops.framework.common.entity;
 
 import com.orion.lang.define.wrapper.IPageRequest;
-import com.orion.ops.framework.common.valid.group.Page;
+import com.orion.ops.framework.common.validator.group.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;

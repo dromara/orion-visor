@@ -41,10 +41,10 @@
         </dependency>
 
         <!-- operator-log -->
-<!--        <dependency>-->
-<!--            <groupId>com.orion.ops</groupId>-->
-<!--            <artifactId>orion-ops-spring-boot-starter-operator-log</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-biz-operator-log</artifactId>
+        </dependency>
 
         <!-- desensitize -->
         <dependency>

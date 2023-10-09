@@ -81,6 +81,10 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-monitor</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-biz-operator-log</artifactId>
+        </dependency>
 
         <!-- orion-ops modules -->
         <dependency>
