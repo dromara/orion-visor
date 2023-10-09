@@ -146,9 +146,9 @@ orion:
       infra:
         group: "infra - 基建模块"
         path: "infra"
-      machine:
-        group: "machine - 机器资源模块"
-        path: "machine"
+      asset:
+        group: "asset - 资产模块"
+        path: "asset"
 
   logging:
     # 全局日志打印
@@ -189,10 +189,10 @@ orion:
       secret-key: I66AndrKWrwXjtBL
       use-generator-key: true
       generator-key-length: 128
-  thread:
+  async:
     # 线程池配置
-    pool:
+    executor:
       core-pool-size: 2
       max-pool-size: 4
-      keep-alive-seconds: 180
       queue-capacity: 30
+      keep-alive-seconds: 180

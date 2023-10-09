@@ -21,7 +21,7 @@ public interface WsCloseReason {
 
     String REMOTE_SERVER_AUTHENTICATION_FAILURE = "remote server authentication failure...";
 
-    String MACHINE_DISABLED = "machine disabled...";
+    String HOST_DISABLED = "host disabled...";
 
     String UNABLE_TO_CONNECT_REMOTE_SERVER = "unable to connect remote server...";
 

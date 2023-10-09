@@ -101,7 +101,7 @@ public class WebSockets {
         } else if (Exceptions.isCausedBy(e, AuthenticationException.class)) {
             close(session, WsCloseCode.CONNECTION_AUTH_FAILURE);
         } else if (Exceptions.isCausedBy(e, DisabledException.class)) {
-            close(session, WsCloseCode.MACHINE_DISABLED);
+            close(session, WsCloseCode.HOST_DISABLED);
         } else {
             close(session, WsCloseCode.CONNECTION_EXCEPTION);
         }

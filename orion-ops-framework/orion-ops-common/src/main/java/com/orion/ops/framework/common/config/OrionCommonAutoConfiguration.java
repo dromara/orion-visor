@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_COMMON)
-@EnableConfigurationProperties(ThreadPoolConfig.class)
+@EnableConfigurationProperties(AsyncExecutorConfig.class)
 public class OrionCommonAutoConfiguration {
 
     /**
@@ -43,7 +43,7 @@ public class OrionCommonAutoConfiguration {
      */
     @Primary
     @Bean(name = "asyncExecutor")
-    public TaskExecutor asyncExecutor(ThreadPoolConfig config) {
+    public TaskExecutor asyncExecutor(AsyncExecutorConfig config) {
         ThreadPoolMdcTaskExecutor executor = new ThreadPoolMdcTaskExecutor();
         executor.setCorePoolSize(config.getCorePoolSize());
         executor.setMaxPoolSize(config.getMaxPoolSize());

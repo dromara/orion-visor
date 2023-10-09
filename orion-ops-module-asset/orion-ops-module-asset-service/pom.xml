@@ -28,7 +28,7 @@
             <version>${revision}</version>
         </dependency>
 
-        <!-- machine provider -->
+        <!-- asset provider -->
         <dependency>
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-module-asset-provider</artifactId>

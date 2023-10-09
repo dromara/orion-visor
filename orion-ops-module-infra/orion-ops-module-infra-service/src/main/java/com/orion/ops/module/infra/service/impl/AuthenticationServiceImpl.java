@@ -2,7 +2,6 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.constant.StandardHttpHeader;
 import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
@@ -12,10 +11,10 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.IpUtils;
-import com.orion.ops.framework.common.utils.Kits;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
@@ -97,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void logout(HttpServletRequest request) {
         // 获取登陆 token
-        String loginToken = Kits.getAuthorization(request.getHeader(StandardHttpHeader.AUTHORIZATION));
+        String loginToken = SecurityUtils.obtainAuthorization(request);
         if (loginToken == null) {
             return;
         }

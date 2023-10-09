@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @since 2023/7/10 15:49
  */
 @Data
-@ConfigurationProperties(prefix = "orion.thread.pool")
-public class ThreadPoolConfig {
+@ConfigurationProperties(prefix = "orion.async.executor")
+public class AsyncExecutorConfig {
 
     /**
      * 核心线程数量
@@ -34,7 +34,7 @@ public class ThreadPoolConfig {
      */
     private int keepAliveSeconds;
 
-    public ThreadPoolConfig() {
+    public AsyncExecutorConfig() {
         this.corePoolSize = 8;
         this.maxPoolSize = 16;
         this.queueCapacity = 200;

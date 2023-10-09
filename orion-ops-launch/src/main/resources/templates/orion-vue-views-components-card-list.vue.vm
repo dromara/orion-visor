@@ -105,7 +105,7 @@
   };
 </script>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { usePagination, useColLayout } from '@/types/card';
   import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';

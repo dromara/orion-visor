@@ -41,8 +41,8 @@ orion:
     aes:
       # 加密秘钥
       secret-key: uQeacXV8b3isvKLK
-  thread:
-    pool:
+  async:
+    executor:
       core-pool-size: 8
       max-pool-size: 16
       queue-capacity: 200

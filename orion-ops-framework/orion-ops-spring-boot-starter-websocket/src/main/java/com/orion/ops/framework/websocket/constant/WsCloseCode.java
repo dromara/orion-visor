@@ -45,9 +45,9 @@ public enum WsCloseCode {
     VALID(4150, WsCloseReason.AUTHENTICATION_FAILURE),
 
     /**
-     * 机器不合法
+     * 主机不合法
      */
-    INVALID_MACHINE(4200, WsCloseReason.CLOSED_CONNECTION),
+    INVALID_HOST(4200, WsCloseReason.CLOSED_CONNECTION),
 
     /**
      * 连接远程服务器连接超时
@@ -70,9 +70,9 @@ public enum WsCloseCode {
     CONNECTION_EXCEPTION(4210, WsCloseReason.UNABLE_TO_CONNECT_REMOTE_SERVER),
 
     /**
-     * 机器未启用
+     * 主机未启用
      */
-    MACHINE_DISABLED(4215, WsCloseReason.MACHINE_DISABLED),
+    HOST_DISABLED(4215, WsCloseReason.HOST_DISABLED),
 
     /**
      * 打开shell出现异常
