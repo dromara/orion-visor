@@ -1,4 +1,4 @@
-package com.orion.ops.framework.common.constant;
+package com.orion.ops.framework.log.core.enums;
 
 /**
  * 日志忽略模式

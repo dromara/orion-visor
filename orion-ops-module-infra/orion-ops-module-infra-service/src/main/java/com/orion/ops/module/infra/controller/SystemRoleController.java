@@ -1,10 +1,10 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.framework.common.annotation.IgnoreLog;
-import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.valid.group.Page;
+import com.orion.ops.framework.log.core.annotation.IgnoreLog;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;

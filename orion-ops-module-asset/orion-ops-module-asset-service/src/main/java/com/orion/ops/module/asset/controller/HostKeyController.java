@@ -1,10 +1,10 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.framework.common.annotation.IgnoreLog;
-import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.valid.group.Page;
+import com.orion.ops.framework.log.core.annotation.IgnoreLog;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.entity.request.host.HostKeyCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostKeyQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostKeyUpdateRequest;

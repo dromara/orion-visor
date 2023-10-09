@@ -1,6 +1,6 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteOperatorRequest;
 import com.orion.ops.module.infra.service.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;

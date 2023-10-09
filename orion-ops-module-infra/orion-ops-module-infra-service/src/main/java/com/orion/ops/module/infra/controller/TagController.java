@@ -1,8 +1,8 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.ops.framework.common.annotation.IgnoreLog;
-import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.framework.log.core.annotation.IgnoreLog;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.tag.TagCreateRequest;
 import com.orion.ops.module.infra.entity.vo.TagVO;
 import com.orion.ops.module.infra.service.TagService;

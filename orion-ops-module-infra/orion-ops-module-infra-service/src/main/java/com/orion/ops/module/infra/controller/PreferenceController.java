@@ -1,6 +1,6 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.ops.framework.common.annotation.RestWrapper;
+import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.PreferenceVO;
 import com.orion.ops.module.infra.service.PreferenceService;

@@ -1,10 +1,10 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.HttpWrapper;
-import com.orion.ops.framework.common.annotation.IgnoreLog;
-import com.orion.ops.framework.common.annotation.RestWrapper;
-import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.framework.log.core.annotation.IgnoreLog;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
 import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;

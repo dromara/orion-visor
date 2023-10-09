@@ -1,4 +1,4 @@
-package com.orion.ops.framework.common.annotation;
+package com.orion.ops.framework.web.core.annotation;
 
 import java.lang.annotation.*;
 

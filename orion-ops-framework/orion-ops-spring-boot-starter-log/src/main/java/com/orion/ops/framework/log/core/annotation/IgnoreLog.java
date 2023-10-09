@@ -1,6 +1,6 @@
-package com.orion.ops.framework.common.annotation;
+package com.orion.ops.framework.log.core.annotation;
 
-import com.orion.ops.framework.common.constant.IgnoreLogMode;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 
 import java.lang.annotation.*;
 

@@ -10,11 +10,11 @@ import com.orion.lang.utils.Desensitizes;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Classes;
-import com.orion.ops.framework.common.annotation.IgnoreLog;
-import com.orion.ops.framework.common.constant.IgnoreLogMode;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.SecurityHolder;
+import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import org.aopalliance.intercept.MethodInvocation;
 
 import javax.annotation.Resource;
