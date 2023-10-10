@@ -196,3 +196,5 @@ orion:
       max-pool-size: 4
       queue-capacity: 30
       keep-alive-seconds: 180
+  operator-log:
+    error-message-length: 255

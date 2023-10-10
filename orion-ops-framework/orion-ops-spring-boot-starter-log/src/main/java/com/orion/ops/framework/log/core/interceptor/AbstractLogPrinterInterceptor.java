@@ -16,6 +16,8 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.config.LogPrinterConfig;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
@@ -253,7 +255,10 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
             }
             Object arg = args[i];
             // 是否为 request / response
-            if (arg instanceof ServletRequest || arg instanceof ServletResponse) {
+            if (arg instanceof ServletRequest ||
+                    arg instanceof ServletResponse ||
+                    arg instanceof MultipartFile ||
+                    arg instanceof BindingResult) {
                 ignored[i] = true;
                 continue;
             }

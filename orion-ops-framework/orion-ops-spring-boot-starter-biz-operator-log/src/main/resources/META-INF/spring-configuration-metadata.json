@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "orion.operator-log",
+      "type": "com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig",
+      "sourceType": "com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.operator-log.error-message-length",
+      "type": "java.lang.Integer",
+      "description": "日志打印模型.",
+      "defaultValue": "255"
+    }
+  ]
+}

@@ -41,6 +41,8 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2200;
 
-    int FRAMEWORK_BANNER = Integer.MIN_VALUE + 2300;
+    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 3000;
+
+    int FRAMEWORK_BANNER = Integer.MIN_VALUE + 10000;
 
 }
