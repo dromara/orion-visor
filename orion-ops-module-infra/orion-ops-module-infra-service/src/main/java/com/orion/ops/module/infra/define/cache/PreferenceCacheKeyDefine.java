@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.define;
+package com.orion.ops.module.infra.define.cache;
 
 import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.cache.CacheKeyBuilder;

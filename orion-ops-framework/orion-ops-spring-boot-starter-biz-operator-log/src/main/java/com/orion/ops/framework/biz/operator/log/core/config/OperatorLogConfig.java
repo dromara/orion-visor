@@ -19,7 +19,13 @@ public class OperatorLogConfig {
      */
     private Integer errorMessageLength;
 
+    /**
+     * userAgent 长度
+     */
+    private Integer userAgentLength;
+
     public OperatorLogConfig() {
         this.errorMessageLength = 255;
+        this.userAgentLength = 128;
     }
 }

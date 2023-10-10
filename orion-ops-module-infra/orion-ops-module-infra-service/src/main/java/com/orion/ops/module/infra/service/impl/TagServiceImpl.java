@@ -7,7 +7,7 @@ import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.module.infra.convert.TagConvert;
 import com.orion.ops.module.infra.dao.TagDAO;
-import com.orion.ops.module.infra.define.TagCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.TagCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.TagDO;
 import com.orion.ops.module.infra.entity.dto.TagCacheDTO;
 import com.orion.ops.module.infra.entity.request.tag.TagCreateRequest;

@@ -8,7 +8,7 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.convert.TagRelConvert;
 import com.orion.ops.module.infra.dao.TagDAO;
 import com.orion.ops.module.infra.dao.TagRelDAO;
-import com.orion.ops.module.infra.define.TagCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.TagCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.TagDO;
 import com.orion.ops.module.infra.entity.domain.TagRelDO;
 import com.orion.ops.module.infra.entity.dto.TagCacheDTO;

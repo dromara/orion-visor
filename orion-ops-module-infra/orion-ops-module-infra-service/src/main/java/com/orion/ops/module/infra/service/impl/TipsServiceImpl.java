@@ -3,7 +3,7 @@ package com.orion.ops.module.infra.service.impl;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.infra.define.TipsCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.service.TipsService;
 import org.springframework.stereotype.Service;
 

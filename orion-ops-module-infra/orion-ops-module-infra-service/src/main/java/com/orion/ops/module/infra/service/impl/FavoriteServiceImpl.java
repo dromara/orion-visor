@@ -8,7 +8,7 @@ import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.FavoriteConvert;
 import com.orion.ops.module.infra.dao.FavoriteDAO;
-import com.orion.ops.module.infra.define.FavoriteCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.FavoriteCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.FavoriteDO;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteOperatorRequest;
 import com.orion.ops.module.infra.entity.request.favorite.FavoriteQueryRequest;

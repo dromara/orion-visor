@@ -93,26 +93,30 @@ public class OperatorLogAspect {
      * @param exception exception
      */
     private void saveLog(long start, OperatorLog o, Object ret, Throwable exception) {
-        // 请求信息
-        Map<String, Object> extra = OperatorLogs.get();
-        if (!OperatorLogs.isSave(extra)) {
-            return;
+        try {
+            // 请求信息
+            Map<String, Object> extra = OperatorLogs.get();
+            if (!OperatorLogs.isSave(extra)) {
+                return;
+            }
+            OperatorLogModel model = new OperatorLogModel();
+            // 填充使用时间
+            this.fillUseTime(model, start);
+            // 填充用户信息
+            this.fillUserInfo(model);
+            // 填充请求信息
+            this.fillRequest(model);
+            // 填充结果信息
+            this.fillResult(model, o, ret, exception);
+            // 填充拓展信息
+            this.fillExtra(model, extra);
+            // 填充日志
+            this.fillLogInfo(model, extra, o);
+            // 插入日志
+            this.asyncSaveLog(model);
+        } catch (Exception e) {
+            log.error("操作日志保存失败", e);
         }
-        OperatorLogModel model = new OperatorLogModel();
-        // 填充使用时间
-        this.fillUseTime(model, start);
-        // 填充用户信息
-        this.fillUserInfo(model);
-        // 填充请求信息
-        this.fillRequest(model);
-        // 填充结果信息
-        this.fillResult(model, o, ret, exception);
-        // 填充拓展信息
-        this.fillExtra(model, extra);
-        // 填充日志
-        this.fillLogInfo(model, extra, o);
-        // 插入日志
-        this.asyncSaveLog(model);
     }
 
     /**
@@ -151,7 +155,7 @@ public class OperatorLogAspect {
                     String address = Servlets.getRemoteAddr(request);
                     model.setAddress(address);
                     model.setLocation(IpUtils.getLocation(address));
-                    model.setUserAgent(Servlets.getUserAgent(request));
+                    model.setUserAgent(Strings.retain(Servlets.getUserAgent(request), operatorLogConfig.getUserAgentLength()));
                 });
     }
 
@@ -189,7 +193,9 @@ public class OperatorLogAspect {
      */
     private void fillExtra(OperatorLogModel model, Map<String, Object> extra) {
         // 脱敏
-        model.setExtra(JSON.toJSONString(extra, desensitizeValueFilter));
+        if (extra != null) {
+            model.setExtra(JSON.toJSONString(extra, desensitizeValueFilter));
+        }
     }
 
     /**

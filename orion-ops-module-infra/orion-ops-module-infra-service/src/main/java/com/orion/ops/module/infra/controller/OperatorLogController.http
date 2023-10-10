@@ -1,0 +1,17 @@
+### 分页查询操作日志
+POST {{baseUrl}}/infra/operator-log/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "userId": "",
+  "module": "",
+  "type": "",
+  "result": "",
+  "startTime": "",
+  "endTime": ""
+}
+
+###

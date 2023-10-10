@@ -198,3 +198,4 @@ orion:
       keep-alive-seconds: 180
   operator-log:
     error-message-length: 255
+    user-agent-length: 128

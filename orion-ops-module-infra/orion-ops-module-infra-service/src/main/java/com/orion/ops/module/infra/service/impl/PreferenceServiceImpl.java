@@ -8,7 +8,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.dao.PreferenceDAO;
-import com.orion.ops.module.infra.define.PreferenceCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.PreferenceCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.PreferenceDO;
 import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.PreferenceVO;

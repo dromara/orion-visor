@@ -18,7 +18,7 @@ import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
-import com.orion.ops.module.infra.define.UserCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;

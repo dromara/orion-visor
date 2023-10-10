@@ -8,7 +8,7 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
-import com.orion.ops.module.infra.define.UserCacheKeyDefine;
+import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserRoleDO;

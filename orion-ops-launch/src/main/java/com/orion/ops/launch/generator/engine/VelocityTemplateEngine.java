@@ -399,7 +399,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
      * @return 是否为后端缓存文件
      */
     private boolean isServerCacheFile(String templatePath) {
-        return templatePath.contains("orion-server-cache");
+        return templatePath.contains("orion-server-module-cache");
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.define;
+package com.orion.ops.module.infra.define.cache;
 
 import com.orion.lang.define.cache.CacheKeyBuilder;
 import com.orion.lang.define.cache.CacheKeyDefine;

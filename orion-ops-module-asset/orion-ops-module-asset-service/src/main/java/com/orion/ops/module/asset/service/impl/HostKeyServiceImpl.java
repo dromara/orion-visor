@@ -14,7 +14,7 @@ import com.orion.ops.module.asset.convert.HostKeyConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
-import com.orion.ops.module.asset.define.HostCacheKeyDefine;
+import com.orion.ops.module.asset.define.cache.HostCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
 import com.orion.ops.module.asset.entity.dto.HostKeyCacheDTO;
 import com.orion.ops.module.asset.entity.request.host.HostKeyCreateRequest;

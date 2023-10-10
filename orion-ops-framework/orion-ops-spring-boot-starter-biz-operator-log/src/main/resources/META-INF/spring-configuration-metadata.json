@@ -10,8 +10,14 @@
     {
       "name": "orion.operator-log.error-message-length",
       "type": "java.lang.Integer",
-      "description": "日志打印模型.",
+      "description": "错误信息长度.",
       "defaultValue": "255"
+    },
+    {
+      "name": "orion.operator-log.user-agent-length",
+      "type": "java.lang.Integer",
+      "description": "userAgent 长度.",
+      "defaultValue": "128"
     }
   ]
 }

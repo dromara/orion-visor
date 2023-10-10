@@ -20,28 +20,28 @@ import java.util.Date;
 @Data
 public class BaseDO implements Serializable {
 
-    @TableField(fill = FieldFill.INSERT)
     @Schema(description = "创建时间")
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description = "修改时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
-    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
     @Schema(description = "创建人")
+    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
     private String creator;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
     @Schema(description = "修改人")
+    @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
     private String updater;
 
     /**
      * @see com.orion.ops.framework.common.constant.Const#NOT_DELETE
      * @see com.orion.ops.framework.common.constant.Const#IS_DELETED
      */
-    @TableLogic
     @Schema(description = "是否删除 0未删除 1已删除")
+    @TableLogic
     @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.TINYINT)
     private Boolean deleted;
 

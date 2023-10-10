@@ -32,11 +32,10 @@ public class OperatorTypeHolder {
     /**
      * 设置类型
      *
-     * @param key  key
      * @param type type
      */
-    public static void set(String key, OperatorType type) {
-        TYPES.put(key, type);
+    public static void set(OperatorType type) {
+        TYPES.put(type.getType(), type);
     }
 
 }
