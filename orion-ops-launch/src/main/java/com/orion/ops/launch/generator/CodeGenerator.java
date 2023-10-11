@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.orion.lang.constant.Const;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.ansi.AnsiAppender;
 import com.orion.lang.utils.ansi.style.AnsiFont;
 import com.orion.lang.utils.ansi.style.color.AnsiForeground;
@@ -42,7 +43,7 @@ public class CodeGenerator {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "asset";
+        String module = "infra";
         // 生成的表
         Table[] tables = {
                 // Template.create("preference", "用户偏好", "preference")
@@ -56,9 +57,8 @@ public class CodeGenerator {
                 //         .values("value", 1, 2)
                 //         .color("blue", "green")
                 //         .build(),
-                Template.create("host_identity", "主机身份", "host")
-                        .vue("asset", "host-identity")
-                        .enableCardView()
+                Template.create("operator_log", "操作日志", "operator.log")
+                        .disableUnitTest()
                         .build()
         };
         // jdbc 配置 - 使用配置文件
@@ -124,7 +124,7 @@ public class CodeGenerator {
         ag.execute(engine);
 
         // 打印提示信息
-        printTips();
+        printTips(module);
     }
 
     /**
@@ -327,7 +327,9 @@ public class CodeGenerator {
                 // cache dto 文件
                 new String[]{"/templates/orion-server-module-cache-dto.java.vm", "${type}CacheDTO.java", "entity.dto"},
                 // cache key define 文件
-                new String[]{"/templates/orion-server-module-cache-key-define.java.vm", "${type}CacheKeyDefine.java", "define"},
+                new String[]{"/templates/orion-server-module-cache-key-define.java.vm", "${type}CacheKeyDefine.java", "define.cache"},
+                // operator log define 文件
+                new String[]{"/templates/orion-server-module-operator-key-define.java.vm", "${type}OperatorType.java", "define.operator"},
                 // -------------------- 后端 - provider --------------------
                 // api 文件
                 new String[]{"/templates/orion-server-provider-api.java.vm", "${type}Api.java", "api"},
@@ -404,12 +406,13 @@ public class CodeGenerator {
     /**
      * 打印提示信息
      */
-    private static void printTips() {
+    private static void printTips(String module) {
         String line = AnsiAppender.create()
                 .append(AnsiForeground.BRIGHT_GREEN.and(AnsiFont.BOLD), "\n:: 代码生成完毕 ^_^ ::\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 模块父工程\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码需要自行修改缓存逻辑\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码修改完成后请先执行单元测试检测是否正常\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 需要在 " + Strings.firstUpper(module) + "OperatorTypeRunner 添加 xxxOperatorType.init() 来初始化操作日志类型 \n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 枚举需要自行更改数据类型\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在菜单页面刷新缓存\n")

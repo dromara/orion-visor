@@ -1,6 +1,8 @@
 package com.orion.ops.framework.biz.operator.log.core.uitls;
 
-import com.orion.lang.utils.reflect.BeanMap;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.ValueFilter;
+import com.orion.ops.framework.biz.operator.log.core.constant.OperatorLogKeys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +14,11 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2023/10/10 11:32
  */
-public class OperatorLogs {
+public class OperatorLogs implements OperatorLogKeys {
 
     private static final String UN_SAVE_FLAG = "__un__save__";
+
+    private static ValueFilter desensitizeValueFilter;
 
     private static final ThreadLocal<Map<String, Object>> EXTRA_HOLDER = new ThreadLocal<>();
 
@@ -54,7 +58,7 @@ public class OperatorLogs {
             add((Map<String, ?>) obj);
             return;
         }
-        initMap().putAll(BeanMap.create(obj));
+        initMap().putAll(JSON.parseObject(JSON.toJSONString(obj, desensitizeValueFilter)));
     }
 
     /**
@@ -113,6 +117,10 @@ public class OperatorLogs {
             EXTRA_HOLDER.set(map);
         }
         return map;
+    }
+
+    public static void setDesensitizeValueFilter(ValueFilter desensitizeValueFilter) {
+        OperatorLogs.desensitizeValueFilter = desensitizeValueFilter;
     }
 
 }

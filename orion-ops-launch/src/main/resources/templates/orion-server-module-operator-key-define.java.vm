@@ -1,0 +1,33 @@
+package ${currentPackage};
+
+import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
+
+import static com.orion.ops.framework.biz.operator.log.core.holder.OperatorTypeHolder.set;
+
+/**
+ * $!{table.comment} 操作日志类型
+ *
+ * @author ${author}
+ * @version ${since}
+ * @since ${date}
+ */
+public class ${type}OperatorType {
+
+    private static final String MODULE = "${package.ModuleName}:${typeHyphen}";
+
+    public static final String CREATE = "${typeHyphen}:create";
+
+    public static final String UPDATE = "${typeHyphen}:update";
+
+    public static final String DELETE = "${typeHyphen}:delete";
+
+    public static final String EXPORT = "${typeHyphen}:export";
+
+    public static void init() {
+        set(new OperatorType(MODULE, CREATE, "创建$!{table.comment}"));
+        set(new OperatorType(MODULE, UPDATE, "更新$!{table.comment}"));
+        set(new OperatorType(MODULE, DELETE, "删除$!{table.comment}"));
+        set(new OperatorType(MODULE, EXPORT, "导出$!{table.comment}"));
+    }
+
+}

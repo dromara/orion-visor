@@ -34,7 +34,6 @@ public class DesensitizeJsonSerializer extends JsonSerializer<Object> implements
             return this;
         }
         return prov.findValueSerializer(property.getType(), property);
-
     }
 
     @Override

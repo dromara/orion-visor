@@ -1,6 +1,7 @@
 package ${package.Controller};
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -48,6 +49,7 @@ public class ${table.controllerName} {
     @Resource
     private ${type}Service ${typeLower}Service;
 
+    @OperatorLog(${type}OperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "${apiComment.create}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:create')")
@@ -55,6 +57,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.create${type}(request);
     }
 
+    @OperatorLog(${type}OperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "${apiComment.updateById}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
@@ -96,6 +99,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.get${type}Page(request);
     }
 
+    @OperatorLog(${type}OperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "${apiComment.deleteById}")
     @Parameter(name = "id", description = "id", required = true)
@@ -104,6 +108,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.delete${type}ById(id);
     }
 
+    @OperatorLog(${type}OperatorType.DELETE)
     @DeleteMapping("/batch-delete")
     @Operation(summary = "${apiComment.batchDelete}")
     @Parameter(name = "idList", description = "idList", required = true)
@@ -112,6 +117,7 @@ public class ${table.controllerName} {
         return ${typeLower}Service.batchDelete${type}ByIdList(idList);
     }
 
+    @OperatorLog(${type}OperatorType.EXPORT)
     @PostMapping("/export")
     @Operation(summary = "${apiComment.export}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:export')")

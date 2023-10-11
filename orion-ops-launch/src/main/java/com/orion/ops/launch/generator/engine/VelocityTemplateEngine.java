@@ -118,7 +118,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         this.replacePackageName(customFiles, tableInfo, objectMap);
         // 添加注释元数据
         this.addApiCommentMeta(tableInfo, objectMap);
-
         // 生成后端文件
         this.generatorServerFile(customFiles, tableInfo, objectMap);
         // 生成前端文件
@@ -138,13 +137,13 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                                                      @NotNull TableInfo tableInfo) {
         // 生成文件副本
         List<CustomFile> files = originCustomerFile.stream().map(s ->
-                        new CustomFile.Builder()
-                                .enableFileOverride()
-                                .templatePath(s.getTemplatePath())
-                                .filePath(s.getFilePath())
-                                .fileName(s.getFileName())
-                                .packageName(s.getPackageName())
-                                .build())
+                new CustomFile.Builder()
+                        .enableFileOverride()
+                        .templatePath(s.getTemplatePath())
+                        .filePath(s.getFilePath())
+                        .fileName(s.getFileName())
+                        .packageName(s.getPackageName())
+                        .build())
                 .collect(Collectors.toList());
         // 获取 table
         Table table = tables.get(tableInfo.getName());

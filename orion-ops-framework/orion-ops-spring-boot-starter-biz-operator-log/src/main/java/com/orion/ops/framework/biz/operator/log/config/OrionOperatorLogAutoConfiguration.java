@@ -1,9 +1,11 @@
 package com.orion.ops.framework.biz.operator.log.config;
 
+import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.ops.framework.biz.operator.log.core.aspect.OperatorLogAspect;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkServiceDelegate;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -11,6 +13,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+
+import javax.annotation.Resource;
 
 /**
  * 操作日志配置类
@@ -23,6 +27,9 @@ import org.springframework.context.annotation.Primary;
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_BIZ_OPERATOR_LOG)
 @EnableConfigurationProperties(OperatorLogConfig.class)
 public class OrionOperatorLogAutoConfiguration {
+
+    @Resource
+    private ValueFilter desensitizeValueFilter;
 
     /**
      * 操作日志委托类
@@ -48,6 +55,8 @@ public class OrionOperatorLogAutoConfiguration {
     @ConditionalOnBean(OperatorLogFrameworkServiceDelegate.class)
     public OperatorLogAspect operatorLogAspect(OperatorLogConfig operatorLogConfig,
                                                OperatorLogFrameworkService service) {
+        // 设置脱敏过滤器
+        OperatorLogs.setDesensitizeValueFilter(desensitizeValueFilter);
         return new OperatorLogAspect(operatorLogConfig, service);
     }
 

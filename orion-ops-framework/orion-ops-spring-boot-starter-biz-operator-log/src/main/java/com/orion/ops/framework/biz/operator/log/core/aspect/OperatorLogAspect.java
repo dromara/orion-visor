@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.lang.define.thread.ExecutorBuilder;
 import com.orion.lang.define.wrapper.Ref;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
@@ -70,6 +71,8 @@ public class OperatorLogAspect {
     @Around("@annotation(o)")
     public Object around(ProceedingJoinPoint joinPoint, OperatorLog o) throws Throwable {
         long start = System.currentTimeMillis();
+        // 先清空上下文
+        OperatorLogs.clear();
         try {
             // 执行
             Object result = joinPoint.proceed();
@@ -192,9 +195,8 @@ public class OperatorLogAspect {
      * @param extra extra
      */
     private void fillExtra(OperatorLogModel model, Map<String, Object> extra) {
-        // 脱敏
         if (extra != null) {
-            model.setExtra(JSON.toJSONString(extra, desensitizeValueFilter));
+            model.setExtra(JSON.toJSONString(extra));
         }
     }
 
@@ -209,7 +211,7 @@ public class OperatorLogAspect {
         OperatorType type = OperatorTypeHolder.get(o.value());
         model.setModule(type.getModule());
         model.setType(type.getType());
-        model.setLogInfo(Strings.format(type.getTemplate(), extra));
+        model.setLogInfo(ReplacementFormatters.format(type.getTemplate(), extra));
     }
 
     /**
