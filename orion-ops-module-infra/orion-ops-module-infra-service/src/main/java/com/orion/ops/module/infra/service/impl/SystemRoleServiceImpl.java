@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.convert.SystemRoleConvert;
@@ -76,6 +77,8 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.ROLE_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.CODE, record.getCode());
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
         // 查询名称是否存在
@@ -100,7 +103,11 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
         Integer status = updateRecord.getStatus();
-        Valid.valid(RoleStatusEnum::of, status);
+        RoleStatusEnum statusEnum = Valid.valid(RoleStatusEnum::of, status);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.CODE, record.getCode());
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        OperatorLogs.add(OperatorLogs.STATUS_NAME, statusEnum.name());
         // 更新
         int effect = systemRoleDAO.updateById(updateRecord);
         log.info("SystemRoleService-updateRoleStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
@@ -151,6 +158,9 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         String code = record.getCode();
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.CODE, code);
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 检查是否为管理员账号
         Valid.isTrue(!RoleDefine.isAdmin(code), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 删除角色

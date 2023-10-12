@@ -30,6 +30,10 @@ public class OperatorLogQueryRequest extends PageRequest {
     @Schema(description = "模块")
     private String module;
 
+    @Size(max = 1)
+    @Schema(description = "风险等级")
+    private String riskLevel;
+
     @Size(max = 64)
     @Schema(description = "操作类型")
     private String type;

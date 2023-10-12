@@ -3,10 +3,12 @@ package com.orion.ops.module.infra.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.infra.define.operator.SystemUserOperatorType;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
@@ -44,6 +46,7 @@ public class SystemUserController {
     @Resource
     private SystemUserRoleService systemUserRoleService;
 
+    @OperatorLog(SystemUserOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:create')")
@@ -51,6 +54,7 @@ public class SystemUserController {
         return systemUserService.createSystemUser(request);
     }
 
+    @OperatorLog(SystemUserOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:update')")
@@ -60,6 +64,7 @@ public class SystemUserController {
 
     // TODO 修改头像 最后再说 可有可无的功能 要是有 http 文件需求就写
 
+    @OperatorLog(SystemUserOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "修改用户状态")
     @PreAuthorize("@ss.hasPermission('infra:system-user:update-status')")
@@ -67,6 +72,7 @@ public class SystemUserController {
         return systemUserService.updateUserStatus(request);
     }
 
+    @OperatorLog(SystemUserOperatorType.GRANT_ROLE)
     @PutMapping("/grant-role")
     @Operation(summary = "分配用户角色")
     @PreAuthorize("@ss.hasPermission('infra:system-user:grant-role')")
@@ -80,6 +86,7 @@ public class SystemUserController {
         }
     }
 
+    @OperatorLog(SystemUserOperatorType.RESET_PASSWORD)
     @PutMapping("/reset-password")
     @Operation(summary = "重置用户密码")
     @PreAuthorize("@ss.hasPermission('infra:system-user:reset-password')")
@@ -121,6 +128,7 @@ public class SystemUserController {
         return systemUserService.getSystemUserPage(request);
     }
 
+    @OperatorLog(SystemUserOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除用户")
     @Parameter(name = "id", description = "id", required = true)

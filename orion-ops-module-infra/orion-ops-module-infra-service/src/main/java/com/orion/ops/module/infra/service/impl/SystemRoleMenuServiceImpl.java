@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
@@ -57,6 +58,9 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
         List<Long> menuIdList = request.getMenuIdList();
         // 检查角色是否存在
         SystemRoleDO role = Valid.notNull(systemRoleDAO.selectById(roleId), ErrorMessage.ROLE_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, role.getName());
+        OperatorLogs.add(OperatorLogs.CODE, role.getCode());
         // 查询菜单列表
         List<SystemMenuDO> menuList;
         if (menuIdList.isEmpty()) {

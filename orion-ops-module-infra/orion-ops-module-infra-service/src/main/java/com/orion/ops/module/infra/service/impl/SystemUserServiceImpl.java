@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -79,6 +80,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemUserDO record = systemUserDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
         // 转换
         SystemUserDO updateRecord = SystemUserConvert.MAPPER.to(request);
         // 查询花名是否存在
@@ -107,6 +110,9 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
+        OperatorLogs.add(OperatorLogs.STATUS_NAME, status.name());
         // 转换
         SystemUserDO updateRecord = SystemUserConvert.MAPPER.to(request);
         // 更新用户
@@ -165,6 +171,12 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (id.equals(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
         }
+        // 查询用户
+        SystemUserDO record = systemUserDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
+        // 删除用户
         int effect = systemUserDAO.deleteById(id);
         log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
         // 删除角色关联
@@ -181,7 +193,11 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public void resetPassword(UserResetPasswordRequest request) {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        SystemUserDO record = Valid.notNull(systemUserDAO.selectById(id), ErrorMessage.USER_ABSENT);
+        // 查询用户
+        SystemUserDO record = systemUserDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
         // 修改密码
         SystemUserDO update = new SystemUserDO();
         update.setId(id);

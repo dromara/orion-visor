@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
@@ -181,14 +182,20 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         Integer status = request.getStatus();
         Integer visible = request.getVisible();
         if (status != null) {
-            Valid.valid(MenuStatusEnum::of, status);
+            MenuStatusEnum statusEnum = Valid.valid(MenuStatusEnum::of, status);
+            // 添加日志参数
+            OperatorLogs.add(OperatorLogs.LABEL, statusEnum.name());
         }
         if (visible != null) {
-            Valid.valid(MenuVisibleEnum::of, visible);
+            MenuVisibleEnum visibleEnum = Valid.valid(MenuVisibleEnum::of, visible);
+            // 添加日志参数
+            OperatorLogs.add(OperatorLogs.LABEL, visibleEnum.name());
         }
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 从缓存中查询
         List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
         // 获取要更新的id
@@ -219,6 +226,8 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 从缓存中查询
         List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
         // 获取要删除的id

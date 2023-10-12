@@ -308,6 +308,7 @@ public class OperatorLogAspect {
      * @param type  type
      */
     private void fillLogInfo(OperatorLogModel model, Map<String, Object> extra, OperatorType type) {
+        model.setRiskLevel(type.getRiskLevel().name());
         model.setModule(type.getModule());
         model.setType(type.getType());
         model.setLogInfo(ReplacementFormatters.format(type.getTemplate(), extra));

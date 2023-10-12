@@ -1,6 +1,9 @@
 package com.orion.ops.module.infra.runner;
 
 import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
+import com.orion.ops.module.infra.define.operator.SystemMenuOperatorType;
+import com.orion.ops.module.infra.define.operator.SystemRoleOperatorType;
+import com.orion.ops.module.infra.define.operator.SystemUserOperatorType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +20,9 @@ public class InfraOperatorTypeRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         AuthenticationOperatorType.init();
+        SystemMenuOperatorType.init();
+        SystemRoleOperatorType.init();
+        SystemUserOperatorType.init();
     }
 
 }

@@ -1,10 +1,12 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.infra.define.operator.SystemRoleOperatorType;
 import com.orion.ops.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleCreateRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleQueryRequest;
@@ -46,6 +48,7 @@ public class SystemRoleController {
     @Resource
     private SystemRoleMenuService systemRoleMenuService;
 
+    @OperatorLog(SystemRoleOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:create')")
@@ -53,6 +56,7 @@ public class SystemRoleController {
         return systemRoleService.createSystemRole(request);
     }
 
+    @OperatorLog(SystemRoleOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新角色")
     @PreAuthorize("@ss.hasPermission('infra:system-role:update')")
@@ -60,6 +64,7 @@ public class SystemRoleController {
         return systemRoleService.updateSystemRoleById(request);
     }
 
+    @OperatorLog(SystemRoleOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 更新角色状态")
     @PreAuthorize("@ss.hasPermission('infra:system-role:update-status')")
@@ -99,6 +104,7 @@ public class SystemRoleController {
         return systemRoleMenuService.getRoleMenuIdList(roleId);
     }
 
+    @OperatorLog(SystemRoleOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除角色")
     @Parameter(name = "id", description = "id", required = true)
@@ -107,8 +113,9 @@ public class SystemRoleController {
         return systemRoleService.deleteSystemRoleById(id);
     }
 
+    @OperatorLog(SystemRoleOperatorType.GRANT_MENU)
     @PutMapping("/grant-menu")
-    @Operation(summary = "绑定角色菜单")
+    @Operation(summary = "分配角色菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-role:grant-menu')")
     public Integer grantRoleMenu(@RequestBody SystemRoleGrantMenuRequest request) {
         return systemRoleMenuService.grantRoleMenu(request);

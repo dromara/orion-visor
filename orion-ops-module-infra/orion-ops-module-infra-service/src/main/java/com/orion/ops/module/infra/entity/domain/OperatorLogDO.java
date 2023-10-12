@@ -56,6 +56,10 @@ public class OperatorLogDO extends BaseDO {
     @TableField("user_agent")
     private String userAgent;
 
+    @Schema(description = "风险等级")
+    @TableField("risk_level")
+    private String riskLevel;
+
     @Schema(description = "模块")
     @TableField("module")
     private String module;

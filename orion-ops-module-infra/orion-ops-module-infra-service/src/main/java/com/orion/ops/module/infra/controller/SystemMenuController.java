@@ -1,9 +1,14 @@
 package com.orion.ops.module.infra.controller;
 
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.infra.entity.request.menu.*;
+import com.orion.ops.module.infra.define.operator.SystemMenuOperatorType;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuCreateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuQueryRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateRequest;
+import com.orion.ops.module.infra.entity.request.menu.SystemMenuUpdateStatusRequest;
 import com.orion.ops.module.infra.entity.vo.SystemMenuVO;
 import com.orion.ops.module.infra.service.SystemMenuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +41,7 @@ public class SystemMenuController {
     @Resource
     private SystemMenuService systemMenuService;
 
+    @OperatorLog(SystemMenuOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:create')")
@@ -43,6 +49,7 @@ public class SystemMenuController {
         return systemMenuService.createSystemMenu(request);
     }
 
+    @OperatorLog(SystemMenuOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新菜单")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:update')")
@@ -50,6 +57,7 @@ public class SystemMenuController {
         return systemMenuService.updateSystemMenuById(request);
     }
 
+    @OperatorLog(SystemMenuOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 级联更新菜单状态")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:update-status')")
@@ -74,6 +82,7 @@ public class SystemMenuController {
         return systemMenuService.getSystemMenuByIdList(request);
     }
 
+    @OperatorLog(SystemMenuOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 级联删除菜单")
     @Parameter(name = "id", description = "id", required = true)

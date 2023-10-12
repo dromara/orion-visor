@@ -50,6 +50,11 @@ public class OperatorLogModel {
     private String logInfo;
 
     /**
+     * 风险等级
+     */
+    private String riskLevel;
+
+    /**
      * 模块
      */
     private String module;

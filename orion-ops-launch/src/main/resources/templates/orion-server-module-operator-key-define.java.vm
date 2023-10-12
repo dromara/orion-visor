@@ -2,6 +2,7 @@ package ${currentPackage};
 
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 
+import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 import static com.orion.ops.framework.biz.operator.log.core.holder.OperatorTypeHolder.set;
 
 /**
@@ -24,10 +25,10 @@ public class ${type}OperatorType {
     public static final String EXPORT = "${typeHyphen}:export";
 
     public static void init() {
-        set(new OperatorType(MODULE, CREATE, "创建$!{table.comment}"));
-        set(new OperatorType(MODULE, UPDATE, "更新$!{table.comment}"));
-        set(new OperatorType(MODULE, DELETE, "删除$!{table.comment}"));
-        set(new OperatorType(MODULE, EXPORT, "导出$!{table.comment}"));
+        set(new OperatorType(L, MODULE, CREATE, "创建$!{table.comment}"));
+        set(new OperatorType(M, MODULE, UPDATE, "更新$!{table.comment}"));
+        set(new OperatorType(H, MODULE, DELETE, "删除$!{table.comment}"));
+        set(new OperatorType(L, MODULE, EXPORT, "导出$!{table.comment}"));
     }
 
 }

@@ -35,7 +35,7 @@ public class OperatorLogs implements OperatorLogKeys {
     }
 
     /**
-     * 添加参数
+     * 添加日志参数
      *
      * @param key   key
      * @param value value
@@ -45,7 +45,7 @@ public class OperatorLogs implements OperatorLogKeys {
     }
 
     /**
-     * 添加参数 json
+     * 添加日志参数 json
      *
      * @param key   key
      * @param value value
@@ -55,7 +55,7 @@ public class OperatorLogs implements OperatorLogKeys {
     }
 
     /**
-     * 添加参数
+     * 添加日志参数
      *
      * @param map map
      */
@@ -64,7 +64,7 @@ public class OperatorLogs implements OperatorLogKeys {
     }
 
     /**
-     * 添加参数
+     * 添加日志参数
      *
      * @param obj obj
      */

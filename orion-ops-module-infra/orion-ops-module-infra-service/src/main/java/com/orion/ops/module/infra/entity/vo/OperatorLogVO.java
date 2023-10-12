@@ -46,6 +46,9 @@ public class OperatorLogVO implements Serializable {
     @Schema(description = "userAgent")
     private String userAgent;
 
+    @Schema(description = "风险等级")
+    private String riskLevel;
+
     @Schema(description = "模块")
     private String module;
 

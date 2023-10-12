@@ -55,6 +55,7 @@ public class OperatorLogServiceImpl implements OperatorLogService {
     private LambdaQueryWrapper<OperatorLogDO> buildQueryWrapper(OperatorLogQueryRequest request) {
         return operatorLogDAO.wrapper()
                 .eq(OperatorLogDO::getUserId, request.getUserId())
+                .eq(OperatorLogDO::getRiskLevel, request.getRiskLevel())
                 .eq(OperatorLogDO::getModule, request.getModule())
                 .eq(OperatorLogDO::getType, request.getType())
                 .eq(OperatorLogDO::getResult, request.getResult())

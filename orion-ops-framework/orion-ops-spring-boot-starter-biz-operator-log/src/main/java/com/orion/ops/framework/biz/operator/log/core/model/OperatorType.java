@@ -1,5 +1,6 @@
 package com.orion.ops.framework.biz.operator.log.core.model;
 
+import com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,6 +16,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class OperatorType {
+
+    /**
+     * 风险等级
+     */
+    private final OperatorRiskLevel riskLevel;
 
     /**
      * 模块

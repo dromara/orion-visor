@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
@@ -51,6 +52,11 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     @Override
     public Integer deleteUserRoles(SystemUserUpdateRoleRequest request) {
         Long userId = request.getId();
+        // 查询用户
+        SystemUserDO user = systemUserDAO.selectById(userId);
+        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
         // 删除用户关联
         int effect = systemUserRoleDAO.deleteByUserId(userId);
         // 更新缓存中的角色
@@ -66,8 +72,10 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         Long userId = request.getId();
         List<Long> roleIdList = request.getRoleIdList();
         // 查询用户
-        SystemUserDO record = systemUserDAO.selectById(userId);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        SystemUserDO user = systemUserDAO.selectById(userId);
+        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
         // 查询角色
         List<SystemRoleDO> userRoles = systemRoleDAO.selectBatchIds(roleIdList);
         // 检查角色是否存在
