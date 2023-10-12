@@ -1,7 +1,7 @@
 package com.orion.ops.framework.biz.operator.log.core.aspect;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.ValueFilter;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.orion.lang.define.thread.ExecutorBuilder;
 import com.orion.lang.define.wrapper.Ref;
 import com.orion.lang.utils.Arrays1;
@@ -64,16 +64,17 @@ public class OperatorLogAspect {
 
     private final OperatorLogFrameworkService operatorLogFrameworkService;
 
-    @Resource
-    private ValueFilter desensitizeValueFilter;
+    private final SerializeFilter[] serializeFilters;
 
     @Resource
     private SecurityHolder securityHolder;
 
     public OperatorLogAspect(OperatorLogConfig operatorLogConfig,
-                             OperatorLogFrameworkService operatorLogFrameworkService) {
+                             OperatorLogFrameworkService operatorLogFrameworkService,
+                             SerializeFilter[] serializeFilters) {
         this.operatorLogConfig = operatorLogConfig;
         this.operatorLogFrameworkService = operatorLogFrameworkService;
+        this.serializeFilters = serializeFilters;
     }
 
     @Around("@annotation(o)")
@@ -274,7 +275,7 @@ public class OperatorLogAspect {
             if (ret != null) {
                 if (ReturnType.JSON.equals(retType)) {
                     // 脱敏
-                    model.setReturnValue(JSON.toJSONString(ret, desensitizeValueFilter));
+                    model.setReturnValue(JSON.toJSONString(ret, serializeFilters));
                 } else if (ReturnType.TO_STRING.equals(retType)) {
                     model.setReturnValue(JSON.toJSONString(Ref.of(Objects.toString(ret))));
                 }

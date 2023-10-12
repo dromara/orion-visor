@@ -18,6 +18,16 @@
       "type": "java.lang.Integer",
       "description": "userAgent 长度.",
       "defaultValue": "128"
+    },
+    {
+      "name": "orion.operator-log.ignore",
+      "type": "java.util.List",
+      "description": "忽略记录的字段."
+    },
+    {
+      "name": "orion.operator-log.desensitize",
+      "type": "java.util.List",
+      "description": "需要脱敏的字段."
     }
   ]
 }

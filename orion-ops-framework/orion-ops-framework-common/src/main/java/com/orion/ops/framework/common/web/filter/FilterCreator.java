@@ -1,4 +1,4 @@
-package com.orion.ops.framework.common.filter;
+package com.orion.ops.framework.common.web.filter;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 

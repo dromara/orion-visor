@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
@@ -29,6 +30,7 @@ public class OrionDesensitizeAutoConfiguration {
      *
      * @return fastjson 序列化脱敏过滤器
      */
+    @Primary
     @Bean
     public DesensitizeValueFilter desensitizeValueFilter() {
         return new DesensitizeValueFilter();

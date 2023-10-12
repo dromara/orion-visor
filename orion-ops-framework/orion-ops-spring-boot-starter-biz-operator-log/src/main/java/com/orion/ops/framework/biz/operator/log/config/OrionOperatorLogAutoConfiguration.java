@@ -1,5 +1,6 @@
 package com.orion.ops.framework.biz.operator.log.config;
 
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.ops.framework.biz.operator.log.core.aspect.OperatorLogAspect;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
@@ -7,6 +8,8 @@ import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFramewor
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkServiceDelegate;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
+import com.orion.ops.framework.common.json.filter.FieldDesensitizeFilter;
+import com.orion.ops.framework.common.json.filter.FieldIgnoreFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -55,9 +58,18 @@ public class OrionOperatorLogAutoConfiguration {
     @ConditionalOnBean(OperatorLogFrameworkServiceDelegate.class)
     public OperatorLogAspect operatorLogAspect(OperatorLogConfig operatorLogConfig,
                                                OperatorLogFrameworkService service) {
-        // 设置脱敏过滤器
-        OperatorLogs.setDesensitizeValueFilter(desensitizeValueFilter);
-        return new OperatorLogAspect(operatorLogConfig, service);
+        // 参数过滤器
+        SerializeFilter[] serializeFilters = new SerializeFilter[]{
+                // 忽略字段过滤器
+                new FieldIgnoreFilter(operatorLogConfig.getIgnore()),
+                // 脱敏字段过滤器
+                new FieldDesensitizeFilter(operatorLogConfig.getDesensitize()),
+                // 脱敏字段注解过滤器
+                desensitizeValueFilter
+        };
+        // 设置过滤器到工具类中
+        OperatorLogs.setSerializeFilters(serializeFilters);
+        return new OperatorLogAspect(operatorLogConfig, service, serializeFilters);
     }
 
 }

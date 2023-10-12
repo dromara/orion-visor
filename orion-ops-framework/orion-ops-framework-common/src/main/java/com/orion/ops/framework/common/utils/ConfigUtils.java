@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 工具类
+ * 配置工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

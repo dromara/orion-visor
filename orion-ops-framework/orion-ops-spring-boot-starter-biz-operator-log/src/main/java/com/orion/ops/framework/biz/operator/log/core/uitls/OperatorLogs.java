@@ -1,7 +1,7 @@
 package com.orion.ops.framework.biz.operator.log.core.uitls;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.ValueFilter;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.orion.ops.framework.biz.operator.log.core.constant.OperatorLogKeys;
 import com.orion.ops.framework.common.security.LoginUser;
 
@@ -19,7 +19,7 @@ public class OperatorLogs implements OperatorLogKeys {
 
     private static final String UN_SAVE_FLAG = "__un__save__";
 
-    private static ValueFilter desensitizeValueFilter;
+    private static SerializeFilter[] serializeFilters;
 
     /**
      * 拓展信息
@@ -45,6 +45,16 @@ public class OperatorLogs implements OperatorLogKeys {
     }
 
     /**
+     * 添加参数 json
+     *
+     * @param key   key
+     * @param value value
+     */
+    public static void addJson(String key, Object value) {
+        initMap().put(key, JSON.parseObject(JSON.toJSONString(value, serializeFilters)));
+    }
+
+    /**
      * 添加参数
      *
      * @param map map
@@ -67,7 +77,7 @@ public class OperatorLogs implements OperatorLogKeys {
             add((Map<String, ?>) obj);
             return;
         }
-        initMap().putAll(JSON.parseObject(JSON.toJSONString(obj, desensitizeValueFilter)));
+        initMap().putAll(JSON.parseObject(JSON.toJSONString(obj, serializeFilters)));
     }
 
     /**
@@ -147,8 +157,8 @@ public class OperatorLogs implements OperatorLogKeys {
         return map;
     }
 
-    public static void setDesensitizeValueFilter(ValueFilter desensitizeValueFilter) {
-        OperatorLogs.desensitizeValueFilter = desensitizeValueFilter;
+    public static void setSerializeFilters(SerializeFilter[] serializeFilters) {
+        OperatorLogs.serializeFilters = serializeFilters;
     }
 
 }

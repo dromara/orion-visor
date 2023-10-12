@@ -2,14 +2,12 @@ package com.orion.ops.framework.log.core.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
-import com.orion.lang.utils.Arrays1;
-import com.orion.lang.utils.Desensitizes;
-import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Classes;
+import com.orion.ops.framework.common.json.filter.FieldDesensitizeFilter;
+import com.orion.ops.framework.common.json.filter.FieldIgnoreFilter;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
@@ -48,7 +46,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
     /**
      * 字段过滤器
      */
-    protected SerializeFilter[] fieldFilters;
+    protected SerializeFilter[] serializeFilters;
 
     /**
      * 脱敏配置
@@ -75,17 +73,15 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
     public void init() {
         // 请求头过滤器
         this.headerFilter = header -> config.getHeaders().contains(header);
-        // 忽略字段过滤器
-        PropertyFilter ignoreFilter = (Object object, String name, Object value) -> !config.getField().getIgnore().contains(name);
-        // 脱敏字段过滤器
-        ValueFilter desensitizeFilter = (Object object, String name, Object value) -> {
-            if (config.getField().getDesensitize().contains(name)) {
-                return Desensitizes.mix(Objects1.toString(value), 1, 1);
-            } else {
-                return value;
-            }
+        // 参数过滤器
+        this.serializeFilters = new SerializeFilter[]{
+                // 忽略字段过滤器
+                new FieldIgnoreFilter(config.getField().getIgnore()),
+                // 脱敏字段过滤器
+                new FieldDesensitizeFilter(config.getField().getDesensitize()),
+                // 脱敏字段注解过滤器
+                desensitizeValueFilter
         };
-        this.fieldFilters = Arrays1.of(ignoreFilter, desensitizeFilter, desensitizeValueFilter);
     }
 
     @Override
@@ -179,7 +175,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
                 return EMPTY_TAG;
             } else if (printCount == 1) {
                 // 单个打印参数
-                return JSON.toJSONString(args[lastPrintIndex], fieldFilters);
+                return JSON.toJSONString(args[lastPrintIndex], serializeFilters);
             } else {
                 // 多个打印参数
                 JSONArray arr = new JSONArray();
@@ -188,7 +184,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
                         arr.add(args[i]);
                     }
                 }
-                return JSON.toJSONString(arr, fieldFilters);
+                return JSON.toJSONString(arr, serializeFilters);
             }
         } catch (Exception e) {
             return ERROR_TAG;
@@ -211,7 +207,7 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
             return IGNORED_TAG;
         }
         try {
-            return JSON.toJSONString(o, fieldFilters);
+            return JSON.toJSONString(o, serializeFilters);
         } catch (Exception e) {
             return ERROR_TAG;
         }

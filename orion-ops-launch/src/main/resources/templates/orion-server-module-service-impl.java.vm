@@ -6,7 +6,6 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.office.excel.writer.exporting.ExcelExport;
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 #if($cacheMeta.enableCache)
 import com.orion.ops.framework.common.constant.Const;
 #end
@@ -50,7 +49,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public Long create${type}(${type}CreateRequest request) {
         log.info("${type}Service-create${type} request: {}", JSON.toJSONString(request));
-        OperatorLogs.add(request);
         // 转换
         ${type}DO record = ${type}Convert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -69,7 +67,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public Integer update${type}ById(${type}UpdateRequest request) {
         log.info("${type}Service-update${type}ById id: {}, request: {}", request.getId(), JSON.toJSONString(request));
-        OperatorLogs.add(request);
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         ${type}DO record = ${typeLower}DAO.selectById(id);
@@ -180,7 +177,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public Integer delete${type}ById(Long id) {
         log.info("${type}Service-delete${type}ById id: {}", id);
-        OperatorLogs.add(OperatorLogs.ID, id);
         // 检查数据是否存在
         ${type}DO record = ${typeLower}DAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
@@ -197,7 +193,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public Integer batchDelete${type}ByIdList(List<Long> idList) {
         log.info("${type}Service-batchDelete${type}ByIdList idList: {}", idList);
-        OperatorLogs.add(OperatorLogs.ID_LIST, idList);
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
         log.info("${type}Service-batchDelete${type}ByIdList effect: {}", effect);
         #if($cacheMeta.enableCache)
@@ -225,7 +220,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public void export${type}(${type}QueryRequest request, HttpServletResponse response) throws IOException {
         log.info("${type}Service.export${type} request: {}", JSON.toJSONString(request));
-        OperatorLogs.add(request);
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询

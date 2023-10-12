@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.constant.FilterOrderConst;
-import com.orion.ops.framework.common.filter.FilterCreator;
+import com.orion.ops.framework.common.web.filter.FilterCreator;
 import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.mybatis.core.cache.CacheClearFilter;
 import com.orion.ops.framework.mybatis.core.handler.FieldFillHandler;

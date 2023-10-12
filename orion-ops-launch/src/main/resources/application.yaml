@@ -158,13 +158,12 @@ orion:
       headers:
         - user-agent,accept
         - content-type
+      # 下面引用了 需要注意
       field:
         ignore:
           - password,newPassword
           - metrics
         desensitize:
-          - phone,phoneNumber
-          - email,sendEmail
   storage:
     # 本地文件存储
     local:
@@ -199,3 +198,7 @@ orion:
   operator-log:
     error-message-length: 255
     user-agent-length: 128
+    ignore:
+      - ${orion.logging.printer.field.ignore[0]}
+      - ${orion.logging.printer.field.ignore[1]}
+    desensitize:
