@@ -25,8 +25,12 @@ public interface OperatorLogKeys {
 
     String LABEL = "label";
 
+    String TYPE = "type";
+
     String STATUS = "status";
 
     String STATUS_NAME = "statusName";
+
+    String REL_ID = "relId";
 
 }

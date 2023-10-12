@@ -1,10 +1,12 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.asset.define.operator.HostOperatorType;
 import com.orion.ops.module.asset.entity.request.host.*;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
@@ -43,6 +45,7 @@ public class HostController {
     @Resource
     private HostConfigService hostConfigService;
 
+    @OperatorLog(HostOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机")
     @PreAuthorize("@ss.hasPermission('asset:host:create')")
@@ -50,6 +53,7 @@ public class HostController {
         return hostService.createHost(request);
     }
 
+    @OperatorLog(HostOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新主机")
     @PreAuthorize("@ss.hasPermission('asset:host:update')")
@@ -90,6 +94,7 @@ public class HostController {
         return hostService.getHostPage(request);
     }
 
+    @OperatorLog(HostOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除主机")
     @Parameter(name = "id", description = "id", required = true)
@@ -118,6 +123,7 @@ public class HostController {
         return hostConfigService.getHostConfig(hostId);
     }
 
+    @OperatorLog(HostOperatorType.UPDATE_CONFIG)
     @PutMapping("/update-config")
     @Operation(summary = "更新主机配置")
     @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
@@ -125,6 +131,7 @@ public class HostController {
         return hostConfigService.updateHostConfig(request);
     }
 
+    @OperatorLog(HostOperatorType.UPDATE_CONFIG_STATUS)
     @PutMapping("/update-config-status")
     @Operation(summary = "更新主机配置状态")
     @PreAuthorize("@ss.hasPermission('asset:host:update-config')")

@@ -1,10 +1,12 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.asset.define.operator.HostKeyOperatorType;
 import com.orion.ops.module.asset.entity.request.host.HostKeyCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostKeyQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostKeyUpdateRequest;
@@ -40,6 +42,7 @@ public class HostKeyController {
     @Resource
     private HostKeyService hostKeyService;
 
+    @OperatorLog(HostKeyOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机秘钥")
     @PreAuthorize("@ss.hasPermission('asset:host-key:create')")
@@ -47,6 +50,7 @@ public class HostKeyController {
         return hostKeyService.createHostKey(request);
     }
 
+    @OperatorLog(HostKeyOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新主机秘钥")
     @PreAuthorize("@ss.hasPermission('asset:host-key:update')")
@@ -79,6 +83,7 @@ public class HostKeyController {
         return hostKeyService.getHostKeyPage(request);
     }
 
+    @OperatorLog(HostKeyOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除主机秘钥")
     @Parameter(name = "id", description = "id", required = true)

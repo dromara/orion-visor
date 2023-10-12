@@ -6,6 +6,7 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -95,7 +96,7 @@ public class HostServiceImpl implements HostService {
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         HostDO record = hostDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostDO updateRecord = HostConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -113,7 +114,7 @@ public class HostServiceImpl implements HostService {
     public HostVO getHostById(HostQueryRequest request) {
         // 查询
         HostDO record = hostDAO.selectById(request.getId());
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostVO vo = HostConvert.MAPPER.to(record);
         // 查询拓展信息
@@ -162,6 +163,12 @@ public class HostServiceImpl implements HostService {
     @Override
     public Integer deleteHostById(Long id) {
         log.info("HostService-deleteHostById id: {}", id);
+        // 查询
+        HostDO record = hostDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        // 删除
         int effect = hostDAO.deleteById(id);
         log.info("HostService-deleteHostById effect: {}", effect);
         // 删除配置

@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 /**
- * 操作类型 初始化
+ * 基建模块 操作类型初始化
  *
  * @author Jiahang Li
  * @version 1.0.0

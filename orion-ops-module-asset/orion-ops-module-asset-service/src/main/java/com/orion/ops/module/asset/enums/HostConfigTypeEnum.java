@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.enums;
 
-import com.orion.ops.framework.common.enums.BooleanBit;
+import com.orion.ops.framework.common.enums.EnableStatus;
 import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.config.strategy.HostConfigStrategy;
@@ -21,7 +21,7 @@ public enum HostConfigTypeEnum {
     /**
      * SSH 配置
      */
-    SSH(HostSshConfigModel.class, HostSshConfigStrategy.class, BooleanBit.TRUE.getValue()),
+    SSH(HostSshConfigModel.class, HostSshConfigStrategy.class, EnableStatus.ENABLED.getValue()),
 
     ;
 

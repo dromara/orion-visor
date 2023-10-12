@@ -1,10 +1,12 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.asset.define.operator.HostIdentityOperatorType;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
@@ -40,6 +42,7 @@ public class HostIdentityController {
     @Resource
     private HostIdentityService hostIdentityService;
 
+    @OperatorLog(HostIdentityOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机身份")
     @PreAuthorize("@ss.hasPermission('asset:host-identity:create')")
@@ -47,6 +50,7 @@ public class HostIdentityController {
         return hostIdentityService.createHostIdentity(request);
     }
 
+    @OperatorLog(HostIdentityOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新主机身份")
     @PreAuthorize("@ss.hasPermission('asset:host-identity:update')")
@@ -80,6 +84,7 @@ public class HostIdentityController {
         return hostIdentityService.getHostIdentityPage(request);
     }
 
+    @OperatorLog(HostIdentityOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除主机身份")
     @Parameter(name = "id", description = "id", required = true)

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
@@ -171,6 +172,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 检查数据是否存在
         HostIdentityDO record = hostIdentityDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 删除数据库
         int effect = hostIdentityDAO.deleteById(id);
         // 删除主机配置

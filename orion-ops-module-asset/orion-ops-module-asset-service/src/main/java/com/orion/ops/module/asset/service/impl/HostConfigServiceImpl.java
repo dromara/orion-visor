@@ -1,13 +1,16 @@
 package com.orion.ops.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.framework.common.enums.BooleanBit;
+import com.orion.ops.framework.common.enums.EnableStatus;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.HostConfigConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
+import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.HostConfigDO;
+import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateStatusRequest;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
@@ -34,6 +37,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class HostConfigServiceImpl implements HostConfigService {
+
+    @Resource
+    private HostDAO hostDAO;
 
     @Resource
     private HostConfigDAO hostConfigDAO;
@@ -90,6 +96,13 @@ public class HostConfigServiceImpl implements HostConfigService {
         Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
         HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, record.getType());
         HostConfigModel config = JSON.parseObject(request.getConfig(), type.getType());
+        // 查询主机
+        HostDO host = hostDAO.selectById(record.getHostId());
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.REL_ID, host.getId());
+        OperatorLogs.add(OperatorLogs.NAME, host.getName());
+        OperatorLogs.add(OperatorLogs.TYPE, type.name());
         // 检查版本
         Valid.eq(record.getVersion(), request.getVersion(), ErrorMessage.DATA_MODIFIED);
         HostConfigStrategy<HostConfigModel> strategy = type.getStrategy();
@@ -114,10 +127,18 @@ public class HostConfigServiceImpl implements HostConfigService {
     public Integer updateHostConfigStatus(HostConfigUpdateStatusRequest request) {
         Long id = request.getId();
         Integer status = request.getStatus();
-        Valid.valid(BooleanBit::of, status);
+        EnableStatus statusEnum = Valid.valid(EnableStatus::of, status);
         // 查询配置
         HostConfigDO record = hostConfigDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        // 查询主机
+        HostDO host = hostDAO.selectById(record.getHostId());
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.REL_ID, host.getId());
+        OperatorLogs.add(OperatorLogs.NAME, host.getName());
+        OperatorLogs.add(OperatorLogs.TYPE, HostConfigTypeEnum.of(record.getType()).name());
+        OperatorLogs.add(OperatorLogs.STATUS_NAME, statusEnum.name());
         // 修改状态
         HostConfigDO update = new HostConfigDO();
         update.setId(id);

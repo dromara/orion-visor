@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
@@ -166,6 +167,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 检查数据是否存在
         HostKeyDO record = hostKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 删除数据库
         int effect = hostKeyDAO.deleteById(id);
         // 删除关联

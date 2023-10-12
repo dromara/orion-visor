@@ -51,6 +51,8 @@ public interface ErrorMessage {
 
     String USER_ABSENT = "用户不存在";
 
+    String HOST_ABSENT = "主机不存在";
+
     String UNABLE_OPERATE_ADMIN_ROLE = "无法操作管理员账号";
 
     String UNSUPPORTED_CHARSET = "不支持的编码 [{}]";
