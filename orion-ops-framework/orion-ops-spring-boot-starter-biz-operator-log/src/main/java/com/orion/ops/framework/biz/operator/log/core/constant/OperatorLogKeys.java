@@ -17,6 +17,10 @@ public interface OperatorLogKeys {
 
     String NAME = "name";
 
+    String STATUS = "status";
+
+    String STATUS_NAME = "statusName";
+
     String USERNAME = "username";
 
     String TITLE = "title";

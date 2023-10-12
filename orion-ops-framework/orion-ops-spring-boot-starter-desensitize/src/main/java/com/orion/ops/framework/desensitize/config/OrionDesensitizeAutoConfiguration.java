@@ -23,6 +23,10 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 public class OrionDesensitizeAutoConfiguration {
 
     /**
+     * 用于参数打印
+     * - 全局日志打印
+     * - 操作日志参数
+     *
      * @return fastjson 序列化脱敏过滤器
      */
     @Bean
@@ -31,13 +35,14 @@ public class OrionDesensitizeAutoConfiguration {
     }
 
     /**
-     * @return jackson 序列化脱敏过滤器
+     * 用于 HTTP 响应序列化
+     *
+     * @return jackson 序列化脱敏序列化
      */
     @Bean
     @ConditionalOnBean(MappingJackson2HttpMessageConverter.class)
-    public DesensitizeJsonSerializer desensitizeJsonSerializer(MappingJackson2HttpMessageConverter converter) {
-        DesensitizeJsonSerializer serializer = new DesensitizeJsonSerializer();
-        return serializer;
+    public DesensitizeJsonSerializer desensitizeJsonSerializer() {
+        return new DesensitizeJsonSerializer();
     }
 
 }

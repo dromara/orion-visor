@@ -22,6 +22,19 @@ public @interface OperatorLog {
     String value();
 
     /**
+     * 是否记录参数
+     * <p>
+     * - {@link org.springframework.web.bind.annotation.RequestBody}
+     * - {@link org.springframework.web.bind.annotation.RequestParam}
+     * - {@link org.springframework.web.bind.annotation.RequestHeader}
+     * - {@link org.springframework.web.bind.annotation.PathVariable}
+     * <p>
+     * 使用 @IgnoreParameter 可以忽略参数记录 {@link IgnoreParameter}
+     * 如果只需要忽略某个字段可以使用 @Desensitize(toEmpty = true) 标注
+     */
+    boolean parameter() default true;
+
+    /**
      * 返回值处理
      */
     ReturnType ret() default ReturnType.JSON;

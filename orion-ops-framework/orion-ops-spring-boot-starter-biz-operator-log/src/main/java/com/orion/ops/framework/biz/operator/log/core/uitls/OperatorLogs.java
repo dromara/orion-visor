@@ -3,6 +3,7 @@ package com.orion.ops.framework.biz.operator.log.core.uitls;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.ops.framework.biz.operator.log.core.constant.OperatorLogKeys;
+import com.orion.ops.framework.common.security.LoginUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,15 @@ public class OperatorLogs implements OperatorLogKeys {
 
     private static ValueFilter desensitizeValueFilter;
 
+    /**
+     * 拓展信息
+     */
     private static final ThreadLocal<Map<String, Object>> EXTRA_HOLDER = new ThreadLocal<>();
+
+    /**
+     * 当前用户 优先于登录用户
+     */
+    private static final ThreadLocal<LoginUser> USER_HOLDER = new ThreadLocal<>();
 
     private OperatorLogs() {
     }
@@ -93,16 +102,35 @@ public class OperatorLogs implements OperatorLogKeys {
      */
     public static void clear() {
         EXTRA_HOLDER.remove();
+        USER_HOLDER.remove();
     }
 
     /**
-     * 是否保存
+     * 设置是否保存
      *
      * @param map map
      * @return save
      */
     public static boolean isSave(Map<String, Object> map) {
         return map == null || !map.containsKey(UN_SAVE_FLAG);
+    }
+
+    /**
+     * 设置用户信息
+     *
+     * @param user user
+     */
+    public static void setUser(LoginUser user) {
+        USER_HOLDER.set(user);
+    }
+
+    /**
+     * 获取用户
+     *
+     * @return user
+     */
+    public static LoginUser getUser() {
+        return USER_HOLDER.get();
     }
 
     /**

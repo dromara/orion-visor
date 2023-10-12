@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.orion.ops.module.infra.entity.domain.OperatorLogDO">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
         <result column="trace_id" property="traceId"/>
         <result column="address" property="address"/>
         <result column="location" property="location"/>
@@ -25,7 +26,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, trace_id, address, location, user_agent, module, type, log_info, extra, result, error_message, return_value, duration, start_time, end_time, create_time
+        id, user_id, username, trace_id, address, location, user_agent, module, type, log_info, extra, result, error_message, return_value, duration, start_time, end_time, create_time
     </sql>
 
 </mapper>

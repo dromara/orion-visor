@@ -63,7 +63,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     public Long createSystemUser(SystemUserCreateRequest request) {
         // 转换
         SystemUserDO record = SystemUserConvert.MAPPER.to(request);
-        // 查询用户名称是否存在
+        // 查询用户名是否存在
         this.checkUsernamePresent(record);
         // 查询花名是否存在
         this.checkNicknamePresent(record);

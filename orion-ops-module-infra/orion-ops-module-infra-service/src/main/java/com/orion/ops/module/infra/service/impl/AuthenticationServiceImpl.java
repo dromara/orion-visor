@@ -6,6 +6,7 @@ import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -23,6 +24,7 @@ import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
+import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
@@ -62,13 +64,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public String login(UserLoginRequest request, HttpServletRequest servletRequest) {
+    public UserLoginVO login(UserLoginRequest request, HttpServletRequest servletRequest) {
         // 登陆前检查
         this.preCheckLogin(request);
         // 获取登陆用户
         LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
                 .eq(SystemUserDO::getUsername, request.getUsername());
         SystemUserDO user = systemUserDAO.of(wrapper).getOne();
+        // 设置日志上下文
+        OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(user));
         // 检查密码
         boolean passwordCorrect = this.checkPassword(request, user);
         Valid.isTrue(passwordCorrect, ErrorMessage.USERNAME_PASSWORD_ERROR);
@@ -90,7 +94,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             this.invalidOtherDeviceToken(user.getId(), current, remoteAddr, location);
         }
         // 生成 loginToken
-        return this.generatorLoginToken(user, current, remoteAddr, location);
+        String token = this.generatorLoginToken(user, current, remoteAddr, location);
+        return UserLoginVO.builder()
+                .token(token)
+                .build();
     }
 
     @Override

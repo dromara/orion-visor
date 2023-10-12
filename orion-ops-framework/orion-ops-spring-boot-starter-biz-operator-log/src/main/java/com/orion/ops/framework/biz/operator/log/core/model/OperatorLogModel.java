@@ -20,6 +20,11 @@ public class OperatorLogModel {
     private Long userId;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * traceId
      */
     private String traceId;

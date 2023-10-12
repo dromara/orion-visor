@@ -36,6 +36,10 @@ public class OperatorLogDO extends BaseDO {
     @TableField("user_id")
     private Long userId;
 
+    @Schema(description = "用户名")
+    @TableField("username")
+    private String username;
+
     @Schema(description = "traceId")
     @TableField("trace_id")
     private String traceId;

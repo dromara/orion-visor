@@ -31,6 +31,9 @@ public class OperatorLogVO implements Serializable {
     @Schema(description = "用户id")
     private Long userId;
 
+    @Schema(description = "用户名")
+    private String username;
+
     @Schema(description = "traceId")
     private String traceId;
 

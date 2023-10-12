@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Desensitizes;
 import com.orion.lang.utils.Objects1;
 import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
@@ -24,6 +25,10 @@ import java.util.Objects;
  */
 public class DesensitizeJsonSerializer extends JsonSerializer<Object> implements ContextualSerializer {
 
+    /**
+     * 这里是线程安全的
+     * 同一个字段使用同一个 serializer 所以不需要使用 TheadLocal
+     */
     private Desensitize desensitize;
 
     @Override
@@ -43,9 +48,14 @@ public class DesensitizeJsonSerializer extends JsonSerializer<Object> implements
             gen.writeNull();
             return;
         }
-        // 脱敏
-        String mix = Desensitizes.mix(Objects1.toString(value), desensitize.keepStart(), desensitize.keepEnd(), desensitize.replacer());
-        gen.writeString(mix);
+        if (desensitize.toEmpty()) {
+            // 设置为空
+            gen.writeString(Const.EMPTY);
+        } else {
+            // 脱敏
+            String mix = Desensitizes.mix(Objects1.toString(value), desensitize.keepStart(), desensitize.keepEnd(), desensitize.replacer());
+            gen.writeString(mix);
+        }
     }
 
 }

@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.service;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
+import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,9 +31,9 @@ public interface AuthenticationService {
      *
      * @param request        request
      * @param servletRequest servletRequest
-     * @return token
+     * @return login
      */
-    String login(UserLoginRequest request, HttpServletRequest servletRequest);
+    UserLoginVO login(UserLoginRequest request, HttpServletRequest servletRequest);
 
     /**
      * 登出

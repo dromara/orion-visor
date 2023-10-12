@@ -1,10 +1,12 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.HttpWrapper;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
 import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
@@ -42,15 +44,16 @@ public class AuthenticationController {
     @Resource
     private SystemUserService systemUserService;
 
+    @OperatorLog(AuthenticationOperatorType.LOGIN)
     @PermitAll
     @Operation(summary = "登陆")
     @PostMapping("/login")
     public UserLoginVO login(@Validated @RequestBody UserLoginRequest request,
                              HttpServletRequest servletRequest) {
-        String token = authenticationService.login(request, servletRequest);
-        return UserLoginVO.builder().token(token).build();
+        return authenticationService.login(request, servletRequest);
     }
 
+    @OperatorLog(AuthenticationOperatorType.LOGOUT)
     @PermitAll
     @IgnoreLog(IgnoreLogMode.RET)
     @Operation(summary = "登出")
@@ -60,6 +63,7 @@ public class AuthenticationController {
         return HttpWrapper.ok();
     }
 
+    @OperatorLog(AuthenticationOperatorType.UPDATE_PASSWORD)
     @Operation(summary = "修改密码")
     @PutMapping("/update-password")
     public HttpWrapper<?> updatePassword(@Validated @RequestBody UserResetPasswordRequest request) {

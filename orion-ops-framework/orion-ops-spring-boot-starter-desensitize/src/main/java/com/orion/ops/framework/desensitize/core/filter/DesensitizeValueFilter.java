@@ -8,6 +8,7 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Annotations;
 import com.orion.lang.utils.reflect.Fields;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
 import com.orion.ops.framework.desensitize.core.annotation.DesensitizeObject;
 
@@ -39,8 +40,13 @@ public class DesensitizeValueFilter implements ValueFilter {
         if (config == null) {
             return value;
         }
-        // 脱敏
-        return Desensitizes.mix(Objects1.toString(value), config.keepStart(), config.keepEnd(), config.replacer());
+        if (config.toEmpty()) {
+            // 设置为空
+            return Const.EMPTY;
+        } else {
+            // 脱敏
+            return Desensitizes.mix(Objects1.toString(value), config.keepStart(), config.keepEnd(), config.replacer());
+        }
     }
 
     /**
