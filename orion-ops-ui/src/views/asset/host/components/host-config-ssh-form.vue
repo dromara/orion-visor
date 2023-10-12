@@ -248,7 +248,7 @@
       const { data } = await updateHostConfig({
         id: props?.content?.id,
         version: config.value.version,
-        config: JSON.stringify(formModel)
+        config: JSON.stringify(formModel.value)
       });
       config.value.version = data;
       setLoading(false);

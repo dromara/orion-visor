@@ -13,13 +13,7 @@ export const privateKey = [{
   message: '请输入私钥文本'
 }] as FieldRule[];
 
-export const password = [{
-  maxLength: 512,
-  message: '密码长度不能大于512位'
-}] as FieldRule[];
-
 export default {
   name,
   privateKey,
-  password,
 } as Record<string, FieldRule | FieldRule[]>;

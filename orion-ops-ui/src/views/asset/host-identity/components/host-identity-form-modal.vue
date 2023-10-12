@@ -31,7 +31,8 @@
         <!-- 用户密码 -->
         <a-form-item field="password"
                      label="用户密码"
-                     style="justify-content: space-between;">
+                     style="justify-content: space-between;"
+                     :rules="passwordRules">
           <a-input-password v-model="formModel.password"
                             :disabled="!isAddHandle && !formModel.useNewPassword"
                             :class="[isAddHandle ? 'password-input-full' : 'password-input']"
@@ -65,7 +66,7 @@
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
   import { createHostIdentity, updateHostIdentity, HostIdentityUpdateRequest } from '@/api/asset/host-identity';
-  import { Message } from '@arco-design/web-vue';
+  import { FieldRule, Message } from '@arco-design/web-vue';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
 
   const { visible, setVisible } = useVisible();
@@ -112,6 +113,20 @@
   };
 
   defineExpose({ openAdd, openUpdate });
+
+  // 密码验证
+  const passwordRules = [{
+    validator: (value, cb) => {
+      if (value && value.length > 512) {
+        cb('密码长度不能大于512位');
+        return;
+      }
+      if (formModel.value.useNewPassword && !value) {
+        cb('请输入密码');
+        return;
+      }
+    }
+  }] as FieldRule[];
 
   // 确定
   const handlerOk = async () => {

@@ -105,25 +105,38 @@
       <template #status="{ record }">
         <a-space>
           <!-- 菜单状态 -->
-          <a-popconfirm position="top"
+          <a-popconfirm v-if="hasPermission('infra:system-menu:update-status')"
+                        position="top"
                         type="warning"
                         :content="`确定要将当前节点以及所有子节点改为${toggleEnumValue(record.status, MenuStatusEnum, 'label')}?`"
                         @ok="updateStatus(record.id, toggleEnumValue(record.status, MenuStatusEnum))">
-            <a-tag :color="getEnumValue(record.status, MenuStatusEnum,'color')" class="pointer">
-              {{ getEnumValue(record.status, MenuStatusEnum) }}
-            </a-tag>
+            <a-tooltip content="点击切换状态">
+              <a-tag :color="getEnumValue(record.status, MenuStatusEnum,'color')" class="pointer">
+                {{ getEnumValue(record.status, MenuStatusEnum) }}
+              </a-tag>
+            </a-tooltip>
           </a-popconfirm>
+          <a-tag v-else :color="getEnumValue(record.status, MenuStatusEnum,'color')">
+            {{ getEnumValue(record.status, MenuStatusEnum) }}
+          </a-tag>
           <!-- 显示状态 -->
-          <a-popconfirm position="top"
+          <a-popconfirm v-if="hasPermission('infra:system-menu:update-status')"
+                        position="top"
                         type="warning"
                         :content="`确定要将当前节点以及所有子节点改为${toggleEnumValue(record.visible, MenuVisibleEnum, 'label')}?`"
                         @ok="updateVisible(record.id, toggleEnumValue(record.visible, MenuVisibleEnum))">
-            <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
-                   :color="getEnumValue(record.visible, MenuVisibleEnum,'color')"
-                   class="pointer">
-              {{ getEnumValue(record.visible, MenuVisibleEnum) }}
-            </a-tag>
+            <a-tooltip content="点击切换状态">
+              <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
+                     :color="getEnumValue(record.visible, MenuVisibleEnum,'color')"
+                     class="pointer">
+                {{ getEnumValue(record.visible, MenuVisibleEnum) }}
+              </a-tag>
+            </a-tooltip>
           </a-popconfirm>
+          <a-tag v-else-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
+                 :color="getEnumValue(record.visible, MenuVisibleEnum,'color')">
+            {{ getEnumValue(record.visible, MenuVisibleEnum) }}
+          </a-tag>
         </a-space>
       </template>
       <!-- 操作 -->
@@ -176,8 +189,10 @@
   import columns from '../types/table.columns';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
+  import usePermission from '@/hooks/permission';
 
   const cacheStore = useCacheStore();
+  const { hasPermission } = usePermission();
 
   const formRef = ref();
   const formModel = reactive<MenuQueryRequest>({

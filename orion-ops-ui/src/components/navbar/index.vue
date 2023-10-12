@@ -152,18 +152,18 @@
             {{ nickname }}
           </a-avatar>
           <template #content>
-            <!-- 用户信息 -->
+            <!-- 个人中心 -->
             <a-doption>
-              <a-space @click="$router.push({ name: 'Info' })">
+              <a-space @click="$router.push({ name: 'userMine' })">
                 <icon-user />
-                <span>用户中心</span>
+                <span>个人中心</span>
               </a-space>
             </a-doption>
-            <!-- 用户设置 -->
+            <!-- 修改密码 -->
             <a-doption>
-              <a-space @click="$router.push({ name: 'Setting' })">
-                <icon-settings />
-                <span>用户设置</span>
+              <a-space @click="$router.push({ name: 'userMine' })">
+                <icon-lock />
+                <span>修改密码</span>
               </a-space>
             </a-doption>
             <!-- 退出登录 -->

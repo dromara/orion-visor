@@ -118,7 +118,7 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createUser({ ...formModel, password: md5(formModel.value.password as string) });
+        await createUser({ ...formModel.value, password: md5(formModel.value.password as string) });
         Message.success('创建成功');
         emits('added');
       } else {

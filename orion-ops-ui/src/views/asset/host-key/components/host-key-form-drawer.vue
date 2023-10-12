@@ -62,7 +62,8 @@
         <a-form-item v-if="!isViewHandler"
                      field="password"
                      label="密码"
-                     style="justify-content: space-between;">
+                     style="justify-content: space-between;"
+                     :rules="passwordRules">
           <a-input-password v-model="formModel.password"
                             :disabled="!isAddHandle && !formModel.useNewPassword"
                             :class="[isAddHandle ? 'password-input-full' : 'password-input']"
@@ -93,7 +94,7 @@
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
   import { createHostKey, updateHostKey, getHostKey, HostKeyUpdateRequest } from '@/api/asset/host-key';
-  import { FileItem, Message } from '@arco-design/web-vue';
+  import { FieldRule, FileItem, Message } from '@arco-design/web-vue';
   import { readFileText } from '@/utils/file';
 
   const { visible, setVisible } = useVisible();
@@ -164,6 +165,20 @@
   };
 
   defineExpose({ openAdd, openUpdate, openView });
+
+  // 密码验证
+  const passwordRules = [{
+    validator: (value, cb) => {
+      if (value && value.length > 512) {
+        cb('密码长度不能大于512位');
+        return;
+      }
+      if (formModel.value.useNewPassword && !value) {
+        cb('请输入密码');
+        return;
+      }
+    }
+  }] as FieldRule[];
 
   // 选择公钥文件
   const selectPublicFile = async (fileList: FileItem[]) => {
