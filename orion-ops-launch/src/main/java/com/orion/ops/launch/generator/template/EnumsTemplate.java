@@ -118,6 +118,7 @@ public class EnumsTemplate extends VueTemplate {
 
     /**
      * 添加 value
+     * 如果 value 和 name 相同可以省略 (无 value 自动使用 name)
      *
      * @param values values
      * @return this

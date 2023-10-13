@@ -1,4 +1,4 @@
-package com.orion.ops.framework.biz.operator.log.core.holder;
+package com.orion.ops.framework.biz.operator.log.core.factory;
 
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 

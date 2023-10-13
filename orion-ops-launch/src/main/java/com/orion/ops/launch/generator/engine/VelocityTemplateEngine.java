@@ -465,6 +465,11 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
                     Object value = safeGet(safeGet(meta.getValues(), j), i);
                     enumInfo.put(name, field, value);
                 }
+                // 检查是否有 value
+                if (!meta.getFields().contains("value")) {
+                    // 没有 value 用 name
+                    enumInfo.put(name, "value", name);
+                }
             }
             enumMap.put(tableField.getPropertyName(), new EnumMeta(meta.getClassName(), meta.getComment(), enumInfo));
         }

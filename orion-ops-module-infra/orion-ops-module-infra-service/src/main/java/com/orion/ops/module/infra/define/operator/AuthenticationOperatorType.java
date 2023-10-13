@@ -1,9 +1,10 @@
 package com.orion.ops.module.infra.define.operator;
 
+import com.orion.ops.framework.biz.operator.log.core.annotation.Module;
+import com.orion.ops.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.L;
-import static com.orion.ops.framework.biz.operator.log.core.holder.OperatorTypeHolder.set;
 
 /**
  * 认证服务 操作日志类型
@@ -12,9 +13,8 @@ import static com.orion.ops.framework.biz.operator.log.core.holder.OperatorTypeH
  * @version 1.0.0
  * @since 2023-10-10 19:06
  */
-public class AuthenticationOperatorType {
-
-    private static final String MODULE = "infra:authentication";
+@Module("infra:authentication")
+public class AuthenticationOperatorType extends InitializingOperatorTypes {
 
     public static final String LOGIN = "authentication:login";
 
@@ -22,10 +22,13 @@ public class AuthenticationOperatorType {
 
     public static final String UPDATE_PASSWORD = "authentication:update-password";
 
-    public static void init() {
-        set(new OperatorType(L, MODULE, LOGIN, "登陆系统"));
-        set(new OperatorType(L, MODULE, LOGOUT, "登出系统"));
-        set(new OperatorType(L, MODULE, UPDATE_PASSWORD, "修改密码"));
+    @Override
+    public OperatorType[] types() {
+        return new OperatorType[]{
+                new OperatorType(L, LOGIN, "登陆系统"),
+                new OperatorType(L, LOGOUT, "登出系统"),
+                new OperatorType(L, UPDATE_PASSWORD, "修改密码"),
+        };
     }
 
 }

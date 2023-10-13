@@ -11,7 +11,7 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.IgnoreParameter;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
-import com.orion.ops.framework.biz.operator.log.core.holder.OperatorTypeHolder;
+import com.orion.ops.framework.biz.operator.log.core.factory.OperatorTypeHolder;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;

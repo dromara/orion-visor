@@ -112,8 +112,4 @@ public class OperatorLogDO extends BaseDO {
     @TableField(exist = false)
     private String updater;
 
-    @Schema(description = "是否删除 0未删除 1已删除")
-    @TableField(exist = false)
-    private Boolean deleted;
-
 }

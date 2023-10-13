@@ -23,11 +23,12 @@
         <result column="start_time" property="startTime"/>
         <result column="end_time" property="endTime"/>
         <result column="create_time" property="createTime"/>
+        <result column="deleted" property="deleted"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, username, trace_id, address, location, user_agent, risk_level, module, type, log_info, extra, result, error_message, return_value, duration, start_time, end_time, create_time
+        id, user_id, username, trace_id, address, location, user_agent, risk_level, module, type, log_info, extra, result, error_message, return_value, duration, start_time, end_time, create_time, deleted
     </sql>
 
 </mapper>

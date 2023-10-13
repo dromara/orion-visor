@@ -1,7 +1,6 @@
 package com.orion.ops.framework.biz.operator.log.core.model;
 
 import com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -14,7 +13,6 @@ import lombok.Getter;
  * @since 2023/10/10 10:29
  */
 @Getter
-@AllArgsConstructor
 public class OperatorType {
 
     /**
@@ -25,7 +23,7 @@ public class OperatorType {
     /**
      * 模块
      */
-    private final String module;
+    private String module;
 
     /**
      * 类型
@@ -36,5 +34,20 @@ public class OperatorType {
      * 模板
      */
     private final String template;
+
+    public OperatorType(OperatorRiskLevel riskLevel, String type, String template) {
+        this(riskLevel, null, type, template);
+    }
+
+    public OperatorType(OperatorRiskLevel riskLevel, String module, String type, String template) {
+        this.riskLevel = riskLevel;
+        this.module = module;
+        this.type = type;
+        this.template = template;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
 
 }
