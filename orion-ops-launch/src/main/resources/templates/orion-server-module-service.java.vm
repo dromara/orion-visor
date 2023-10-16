@@ -106,7 +106,7 @@ public interface ${table.serviceName} {
      * @param idList idList
      * @return effect
      */
-    Integer batchDelete${type}ByIdList(List<Long> idList);
+    Integer delete${type}ByIdList(List<Long> idList);
 
     /**
      * ${apiComment.deleteAll}

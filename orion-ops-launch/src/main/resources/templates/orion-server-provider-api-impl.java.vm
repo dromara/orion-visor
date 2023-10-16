@@ -137,12 +137,12 @@ public class ${type}ApiImpl implements ${type}Api {
     }
 
     @Override
-    public Integer batchDelete${type}ByIdList(List<Long> idList) {
-        log.info("${type}Api.batchDelete${type}ByIdList idList: {}", idList);
+    public Integer delete${type}ByIdList(List<Long> idList) {
+        log.info("${type}Api.delete${type}ByIdList idList: {}", idList);
         Valid.notEmpty(idList, ErrorMessage.ID_MISSING);
         // 删除
-        Integer effect = ${typeLower}Service.batchDelete${type}ByIdList(idList);
-        log.info("${type}Api.batchDelete${type}ByIdList effect: {}", effect);
+        Integer effect = ${typeLower}Service.delete${type}ByIdList(idList);
+        log.info("${type}Api.delete${type}ByIdList effect: {}", effect);
         return effect;
     }
 

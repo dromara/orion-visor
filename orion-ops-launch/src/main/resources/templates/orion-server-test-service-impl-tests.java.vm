@@ -109,8 +109,8 @@ public class ${type}ServiceImplTests extends BaseUnitTest {
 
     @Test
     @Order(10)
-    public void batchDelete${type}ByIdListTest() {
-        Integer effect = ${typeLower}Service.batchDelete${type}ByIdList(Lists.of(lastId));
+    public void delete${type}ByIdListTest() {
+        Integer effect = ${typeLower}Service.delete${type}ByIdList(Lists.of(lastId));
         assertEquals(effect, 0);
     }
 

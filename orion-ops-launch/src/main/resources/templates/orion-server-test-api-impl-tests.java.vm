@@ -98,8 +98,8 @@ public class ${type}ApiImplTests extends BaseUnitTest {
 
     @Test
     @Order(9)
-    public void batchDelete${type}ByIdListTest() {
-        Integer effect = ${typeLower}Api.batchDelete${type}ByIdList(Lists.of(lastId));
+    public void delete${type}ByIdListTest() {
+        Integer effect = ${typeLower}Api.delete${type}ByIdList(Lists.of(lastId));
         assertEquals(effect, 0);
     }
 

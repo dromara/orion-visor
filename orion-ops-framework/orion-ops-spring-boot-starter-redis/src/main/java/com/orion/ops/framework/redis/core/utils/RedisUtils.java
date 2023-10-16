@@ -1,12 +1,14 @@
 package com.orion.ops.framework.redis.core.utils;
 
 import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.io.Streams;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,6 +73,18 @@ public class RedisUtils {
      */
     public static void delete(String key) {
         redisTemplate.delete(key);
+    }
+
+    /**
+     * 删除 key
+     *
+     * @param keys keys
+     */
+    public static void delete(String... keys) {
+        if (Arrays1.isEmpty(keys)) {
+            return;
+        }
+        redisTemplate.delete(Arrays.asList(keys));
     }
 
     /**

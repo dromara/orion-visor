@@ -52,6 +52,6 @@ public interface DictKeyService {
      * @param idList idList
      * @return effect
      */
-    Integer batchDeleteDictKeyByIdList(List<Long> idList);
+    Integer deleteDictKeyByIdList(List<Long> idList);
 
 }

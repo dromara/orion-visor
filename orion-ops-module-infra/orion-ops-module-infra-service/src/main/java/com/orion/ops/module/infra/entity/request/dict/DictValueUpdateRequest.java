@@ -35,11 +35,6 @@ public class DictValueUpdateRequest implements Serializable {
 
     @NotBlank
     @Size(max = 32)
-    @Schema(description = "配置项")
-    private String key;
-
-    @NotBlank
-    @Size(max = 32)
     @Schema(description = "配置名称")
     private String label;
 

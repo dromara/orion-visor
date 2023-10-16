@@ -66,9 +66,9 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 
     @Override
     public Integer update${type}ById(${type}UpdateRequest request) {
-        log.info("${type}Service-update${type}ById id: {}, request: {}", request.getId(), JSON.toJSONString(request));
-        // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        log.info("${type}Service-update${type}ById id: {}, request: {}", id, JSON.toJSONString(request));
+        // 查询
         ${type}DO record = ${typeLower}DAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
@@ -191,10 +191,10 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
-    public Integer batchDelete${type}ByIdList(List<Long> idList) {
-        log.info("${type}Service-batchDelete${type}ByIdList idList: {}", idList);
+    public Integer delete${type}ByIdList(List<Long> idList) {
+        log.info("${type}Service-delete${type}ByIdList idList: {}", idList);
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
-        log.info("${type}Service-batchDelete${type}ByIdList effect: {}", effect);
+        log.info("${type}Service-delete${type}ByIdList effect: {}", effect);
         #if($cacheMeta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst}, idList);

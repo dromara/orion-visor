@@ -59,20 +59,10 @@ public class DictValueController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/get")
+    @GetMapping("/list")
     @Operation(summary = "查询字典配置值")
-    @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:dict-value:query')")
-    public DictValueVO getDictValue(@RequestParam("id") Long id) {
-        return dictValueService.getDictValueById(id);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list")
-    @Operation(summary = "查询全部字典配置值")
-    @PreAuthorize("@ss.hasPermission('infra:dict-value:query')")
-    public List<DictValueVO> getDictValueList(@Validated @RequestBody DictValueQueryRequest request) {
-        return dictValueService.getDictValueList(request);
+    public List<DictValueVO> getDictValueList(@RequestParam("key") String key) {
+        return dictValueService.getDictValueList(key);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -98,7 +88,7 @@ public class DictValueController {
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('infra:dict-value:delete')")
     public Integer batchDeleteDictValue(@RequestParam("idList") List<Long> idList) {
-        return dictValueService.batchDeleteDictValueByIdList(idList);
+        return dictValueService.deleteDictValueByIdList(idList);
     }
 
 }

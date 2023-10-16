@@ -77,7 +77,7 @@ public class DictKeyController {
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('infra:dict-key:delete')")
     public Integer batchDeleteDictKey(@RequestParam("idList") List<Long> idList) {
-        return dictKeyService.batchDeleteDictKeyByIdList(idList);
+        return dictKeyService.deleteDictKeyByIdList(idList);
     }
 
 }

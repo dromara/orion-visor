@@ -20,11 +20,15 @@ public class DictValueOperatorType extends InitializingOperatorTypes {
 
     public static final String UPDATE = "dict-value:update";
 
+    // todo 实现
+    public static final String ROLLBACK = "dict-value:rollback";
+
     public static final String DELETE = "dict-value:delete";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
+                // todo 添加参数
                 new OperatorType(L, CREATE, "创建字典配置值"),
                 new OperatorType(M, UPDATE, "更新字典配置值"),
                 new OperatorType(H, DELETE, "删除字典配置值"),

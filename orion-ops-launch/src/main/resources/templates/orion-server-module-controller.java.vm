@@ -114,7 +114,7 @@ public class ${table.controllerName} {
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:delete')")
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {
-        return ${typeLower}Service.batchDelete${type}ByIdList(idList);
+        return ${typeLower}Service.delete${type}ByIdList(idList);
     }
 
     @OperatorLog(${type}OperatorType.EXPORT)

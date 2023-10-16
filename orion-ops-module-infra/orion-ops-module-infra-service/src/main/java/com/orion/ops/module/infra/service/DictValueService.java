@@ -34,27 +34,12 @@ public interface DictValueService {
     Integer updateDictValueById(DictValueUpdateRequest request);
 
     /**
-     * 查询字典配置值
-     *
-     * @param id id
-     * @return row
-     */
-    DictValueVO getDictValueById(Long id);
-
-    /**
      * 查询全部字典配置值
      *
-     * @param request request
+     * @param key key
      * @return rows
      */
-    List<DictValueVO> getDictValueList(DictValueQueryRequest request);
-
-    /**
-     * 通过缓存查询字典配置值
-     *
-     * @return rows
-     */
-    List<DictValueVO> getDictValueListByCache();
+    List<DictValueVO> getDictValueList(String key);
 
     /**
      * 分页查询字典配置值
@@ -65,7 +50,17 @@ public interface DictValueService {
     DataGrid<DictValueVO> getDictValuePage(DictValueQueryRequest request);
 
     /**
-     * 删除字典配置值
+     * 通过 keyId 更新 keyName
+     *
+     * @param keyId     keyId
+     * @param beforeKey beforeKey
+     * @param newKey    newKey
+     * @return effect
+     */
+    Integer updateKeyNameByKeyId(Long keyId, String beforeKey, String newKey);
+
+    /**
+     * 通过 id 删除字典配置值
      *
      * @param id id
      * @return effect
@@ -73,11 +68,27 @@ public interface DictValueService {
     Integer deleteDictValueById(Long id);
 
     /**
-     * 批量删除字典配置值
+     * 通过 id 批量删除字典配置值
      *
      * @param idList idList
      * @return effect
      */
-    Integer batchDeleteDictValueByIdList(List<Long> idList);
+    Integer deleteDictValueByIdList(List<Long> idList);
+
+    /**
+     * 通过 keyId 删除字典配置值
+     *
+     * @param keyId keyId
+     * @return effect
+     */
+    Integer deleteDictValueByKeyId(Long keyId);
+
+    /**
+     * 通过 keyId 批量删除字典配置值
+     *
+     * @param keyIdList keyIdList
+     * @return effect
+     */
+    Integer deleteDictValueByKeyIdList(List<Long> keyIdList);
 
 }

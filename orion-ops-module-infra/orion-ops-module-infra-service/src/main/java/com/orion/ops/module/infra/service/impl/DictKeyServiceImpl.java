@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.utils.Objects1;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
@@ -15,8 +16,10 @@ import com.orion.ops.module.infra.entity.request.dict.DictKeyCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictKeyVO;
 import com.orion.ops.module.infra.service.DictKeyService;
+import com.orion.ops.module.infra.service.DictValueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -37,9 +40,12 @@ public class DictKeyServiceImpl implements DictKeyService {
     @Resource
     private DictKeyDAO dictKeyDAO;
 
+    @Resource
+    private DictValueService dictValueService;
+
     @Override
     public Long createDictKey(DictKeyCreateRequest request) {
-        log.info("DictKeyService-createDictKey request: {}", JSON.toJSONString(request));
+        log.info("DictKeyService-createDictKey request: {}" , JSON.toJSONString(request));
         // 转换
         DictKeyDO record = DictKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -47,17 +53,18 @@ public class DictKeyServiceImpl implements DictKeyService {
         // 插入
         int effect = dictKeyDAO.insert(record);
         Long id = record.getId();
-        log.info("DictKeyService-createDictKey id: {}, effect: {}", id, effect);
+        log.info("DictKeyService-createDictKey id: {}, effect: {}" , id, effect);
         // 删除缓存
         RedisMaps.delete(DictCacheKeyDefine.DICT_KEY);
         return id;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateDictKeyById(DictKeyUpdateRequest request) {
-        log.info("DictKeyService-updateDictKeyById id: {}, request: {}", request.getId(), JSON.toJSONString(request));
-        // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        log.info("DictKeyService-updateDictKeyById id: {}, request: {}" , id, JSON.toJSONString(request));
+        // 查询
         DictKeyDO record = dictKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
@@ -66,12 +73,13 @@ public class DictKeyServiceImpl implements DictKeyService {
         this.checkDictKeyPresent(updateRecord);
         // 更新
         int effect = dictKeyDAO.updateById(updateRecord);
-        log.info("DictKeyService-updateDictKeyById effect: {}", effect);
+        // 如果修改了 key 则需要修改 dictValue.key
+        if (!Objects1.eq(record.getKey(), request.getKey())) {
+            dictValueService.updateKeyNameByKeyId(id, record.getKey(), request.getKey());
+        }
         // 删除缓存
         RedisMaps.delete(DictCacheKeyDefine.DICT_KEY);
-
-        // 修改 value 的 key
-
+        log.info("DictKeyService-updateDictKeyById effect: {}" , effect);
         return effect;
     }
 
@@ -96,29 +104,33 @@ public class DictKeyServiceImpl implements DictKeyService {
         return list.stream()
                 .filter(s -> !s.getId().equals(Const.NONE_ID))
                 .map(DictKeyConvert.MAPPER::to)
-                .sorted(Comparator.comparing(DictKeyVO::getId).reversed())
+                .sorted(Comparator.comparing(DictKeyVO::getKey))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Integer deleteDictKeyById(Long id) {
-        log.info("DictKeyService-deleteDictKeyById id: {}", id);
+        log.info("DictKeyService-deleteDictKeyById id: {}" , id);
         // 检查数据是否存在
         DictKeyDO record = dictKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 删除
+        // 删除配置项
         int effect = dictKeyDAO.deleteById(id);
-        log.info("DictKeyService-deleteDictKeyById id: {}, effect: {}", id, effect);
+        // 删除配置值
+        dictValueService.deleteDictValueByKeyId(id);
         // 删除缓存
         RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, id);
+        log.info("DictKeyService-deleteDictKeyById id: {}, effect: {}" , id, effect);
         return effect;
     }
 
     @Override
-    public Integer batchDeleteDictKeyByIdList(List<Long> idList) {
-        log.info("DictKeyService-batchDeleteDictKeyByIdList idList: {}", idList);
+    public Integer deleteDictKeyByIdList(List<Long> idList) {
+        log.info("DictKeyService-deleteDictKeyByIdList idList: {}" , idList);
         int effect = dictKeyDAO.deleteBatchIds(idList);
-        log.info("DictKeyService-batchDeleteDictKeyByIdList effect: {}", effect);
+        // 删除配置值
+        dictValueService.deleteDictValueByKeyIdList(idList);
+        log.info("DictKeyService-deleteDictKeyByIdList effect: {}" , effect);
         // 删除缓存
         RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, idList);
         return effect;
