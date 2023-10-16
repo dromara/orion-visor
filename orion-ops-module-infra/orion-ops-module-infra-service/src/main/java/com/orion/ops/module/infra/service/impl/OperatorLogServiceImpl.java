@@ -6,7 +6,7 @@ import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.module.infra.convert.OperatorLogConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
 import com.orion.ops.module.infra.entity.domain.OperatorLogDO;
-import com.orion.ops.module.infra.entity.request.operator.log.OperatorLogQueryRequest;
+import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.service.OperatorLogService;
 import lombok.extern.slf4j.Slf4j;

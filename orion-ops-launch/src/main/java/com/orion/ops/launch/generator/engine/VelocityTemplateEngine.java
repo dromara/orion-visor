@@ -200,7 +200,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // 类型脊柱名称
         objectMap.put("typeHyphen", mappingHyphen.substring(0, mappingHyphen.length() - 3));
         // 类型常量
-        objectMap.put("typeConst", VariableStyles.BIG_HUMP.toSpine(entityName).toUpperCase());
+        objectMap.put("typeConst", VariableStyles.BIG_HUMP.toSerpentine(entityName).toUpperCase());
     }
 
     /**

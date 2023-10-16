@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request.operator.log;
+package com.orion.ops.module.infra.entity.request.operator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.orion.ops.framework.common.entity.PageRequest;

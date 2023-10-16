@@ -14,7 +14,7 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
  * @since ${date}
  */
 @Module("${package.ModuleName}:${typeHyphen}")
-public class ${type}OperatorType {
+public class ${type}OperatorType extends InitializingOperatorTypes {
 
     public static final String CREATE = "${typeHyphen}:create";
 

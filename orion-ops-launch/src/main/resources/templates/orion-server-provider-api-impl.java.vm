@@ -106,6 +106,7 @@ public class ${type}ApiImpl implements ${type}Api {
         return ${typeLower}DAO.of(wrapper).list(${type}ProviderConvert.MAPPER::to);
     }
 
+    #if($cacheMeta.enableCache)
     @Override
     public List<${type}DTO> get${type}ListByCache() {
         return ${typeLower}Service.get${type}ListByCache()
@@ -114,6 +115,7 @@ public class ${type}ApiImpl implements ${type}Api {
                 .collect(Collectors.toList());
     }
 
+    #end
     @Override
     public Long get${type}Count(${type}QueryDTO dto) {
         log.info("${type}Api.get${type}Count dto: {}", JSON.toJSONString(dto));

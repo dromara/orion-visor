@@ -27,6 +27,8 @@ public interface ErrorMessage {
 
     String CONFIG_ABSENT = "配置不存在";
 
+    String CONFIG_PRESENT = "配置已存在";
+
     String DATA_PRESENT = "数据已存在";
 
     String NAME_PRESENT = "名称已存在";

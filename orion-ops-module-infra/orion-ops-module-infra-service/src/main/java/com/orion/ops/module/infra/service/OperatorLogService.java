@@ -2,7 +2,7 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
-import com.orion.ops.module.infra.entity.request.operator.log.OperatorLogQueryRequest;
+import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 
 /**

@@ -5,9 +5,9 @@ import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
-import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
-import com.orion.ops.module.infra.service.OperatorLogService;
+import com.orion.ops.module.infra.entity.request.history.HistoryValueQueryRequest;
+import com.orion.ops.module.infra.entity.vo.HistoryValueVO;
+import com.orion.ops.module.infra.service.HistoryValueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -21,30 +21,30 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 /**
- * 操作日志 api
+ * 历史归档 api
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-10-10 17:08
+ * @since 2023-10-16 16:33
  */
-@Tag(name = "infra - 操作日志服务")
+@Tag(name = "infra - 历史归档服务")
 @Slf4j
 @Validated
 @RestWrapper
 @RestController
-@RequestMapping("/infra/operator-log")
+@RequestMapping("/infra/history-value")
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
-public class OperatorLogController {
+public class HistoryValueController {
 
     @Resource
-    private OperatorLogService operatorLogService;
+    private HistoryValueService historyValueService;
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
-    @Operation(summary = "分页查询操作日志")
-    @PreAuthorize("@ss.hasPermission('infra:operator-log:query')")
-    public DataGrid<OperatorLogVO> getOperatorLogPage(@Validated(Page.class) @RequestBody OperatorLogQueryRequest request) {
-        return operatorLogService.getOperatorLogPage(request);
+    @Operation(summary = "分页查询历史归档")
+    @PreAuthorize("@ss.hasPermission('infra:history-value:query')")
+    public DataGrid<HistoryValueVO> getHistoryValuePage(@Validated(Page.class) @RequestBody HistoryValueQueryRequest request) {
+        return historyValueService.getHistoryValuePage(request);
     }
 
 }

@@ -1,0 +1,107 @@
+### 创建字典配置值
+POST {{baseUrl}}/infra/dict-value/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "keyId": "",
+  "key": "",
+  "label": "",
+  "value": "",
+  "desc": "",
+  "extra": "",
+  "sort": ""
+}
+
+
+### 更新字典配置值
+PUT {{baseUrl}}/infra/dict-value/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "keyId": "",
+  "key": "",
+  "label": "",
+  "value": "",
+  "desc": "",
+  "extra": "",
+  "sort": ""
+}
+
+
+### 查询字典配置值
+GET {{baseUrl}}/infra/dict-value/get?id=1
+Authorization: {{token}}
+
+
+### 批量查询字典配置值
+GET {{baseUrl}}/infra/dict-value/batch-get?idList=1,2,3
+Authorization: {{token}}
+
+
+### 查询全部字典配置值
+POST {{baseUrl}}/infra/dict-value/list
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "keyId": "",
+  "key": "",
+  "label": "",
+  "value": "",
+  "desc": "",
+  "extra": "",
+  "sort": ""
+}
+
+
+### 分页查询字典配置值
+POST {{baseUrl}}/infra/dict-value/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "keyId": "",
+  "key": "",
+  "label": "",
+  "value": "",
+  "desc": "",
+  "extra": "",
+  "sort": ""
+}
+
+
+### 删除字典配置值
+DELETE {{baseUrl}}/infra/dict-value/delete?id=1
+Authorization: {{token}}
+
+
+### 批量删除字典配置值
+DELETE {{baseUrl}}/infra/dict-value/batch-delete?idList=1,2,3
+Authorization: {{token}}
+
+
+### 导出字典配置值
+POST {{baseUrl}}/infra/dict-value/export
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "keyId": "",
+  "key": "",
+  "label": "",
+  "value": "",
+  "desc": "",
+  "extra": "",
+  "sort": ""
+}
+
+
+###
