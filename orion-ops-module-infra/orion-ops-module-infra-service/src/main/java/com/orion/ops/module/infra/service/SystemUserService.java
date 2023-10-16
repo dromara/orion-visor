@@ -71,6 +71,13 @@ public interface SystemUserService {
     Integer deleteSystemUserById(Long id);
 
     /**
+     * 删除 id 删除用户拓展信息
+     *
+     * @param id
+     */
+    void deleteSystemUserRel(Long id);
+
+    /**
      * 重置密码
      *
      * @param request request

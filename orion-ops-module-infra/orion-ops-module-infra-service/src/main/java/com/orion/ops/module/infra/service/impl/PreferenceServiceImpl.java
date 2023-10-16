@@ -96,7 +96,6 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
-    @Async("asyncExecutor")
     public void deletePreferenceByUserId(Long userId) {
         // 删除
         int effect = preferenceDAO.deleteByUserId(userId);

@@ -21,9 +21,6 @@ import java.util.List;
 @Schema(name = "FavoriteQueryRequest", description = "收藏 查询请求对象")
 public class FavoriteQueryRequest extends PageRequest {
 
-    @Schema(description = "id")
-    private Long id;
-
     @Schema(description = "用户id")
     private Long userId;
 
@@ -32,8 +29,5 @@ public class FavoriteQueryRequest extends PageRequest {
 
     @Schema(description = "收藏类型")
     private String type;
-
-    @Schema(description = "用户id")
-    private List<Long> userIdList;
 
 }

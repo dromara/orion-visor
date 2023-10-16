@@ -61,4 +61,29 @@ public interface FavoriteDAO extends IMapper<FavoriteDO> {
         return this.delete(wrapper);
     }
 
+    /**
+     * 通过 userId 删除收藏
+     *
+     * @param userId userId
+     * @return effect
+     */
+    default int deleteFavoriteByUserId(Long userId) {
+        LambdaQueryWrapper<FavoriteDO> wrapper = this.lambda()
+                .eq(FavoriteDO::getUserId, userId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 userId 删除收藏
+     *
+     * @param type       type
+     * @param userIdList userIdList
+     * @return effect
+     */
+    default int deleteFavoriteByUserIdList(List<Long> userIdList) {
+        LambdaQueryWrapper<FavoriteDO> wrapper = this.lambda()
+                .in(FavoriteDO::getUserId, userIdList);
+        return this.delete(wrapper);
+    }
+
 }

@@ -14,8 +14,10 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
+import com.orion.ops.module.infra.dao.OperatorLogDAO;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
+import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.request.user.*;
@@ -25,10 +27,11 @@ import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.FavoriteService;
 import com.orion.ops.module.infra.service.PreferenceService;
 import com.orion.ops.module.infra.service.SystemUserService;
+import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,6 +53,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Resource
     private SystemUserRoleDAO systemUserRoleDAO;
+
+    @Resource
+    private OperatorLogDAO operatorLogDAO;
 
     @Resource
     private FavoriteService favoriteService;
@@ -166,7 +172,6 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Integer deleteSystemUserById(Long id) {
         if (id.equals(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
@@ -179,15 +184,30 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 删除用户
         int effect = systemUserDAO.deleteById(id);
         log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
+        // 异步删除额外信息
+        SpringHolder.getBean(SystemUserService.class).deleteSystemUserRel(id);
+        return effect;
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public void deleteSystemUserRel(Long id) {
+        log.info("SystemUserService-deleteSystemUserRel id: {}", id);
+        // 删除用户缓存 需要扫描的 key 让其自动过期
+        redisTemplate.delete(Lists.of(
+                // 用户缓存
+                UserCacheKeyDefine.USER_INFO.format(id),
+                // 用户提示
+                TipsCacheKeyDefine.TIPS.format(id)
+        ));
         // 删除角色关联
-        effect += systemUserRoleDAO.deleteByUserId(id);
-        // 删除用户缓存 其他的会自动过期
-        redisTemplate.delete(UserCacheKeyDefine.USER_INFO.format(id));
+        systemUserRoleDAO.deleteByUserId(id);
+        // 删除操作日志
+        operatorLogDAO.deleteByUserId(id);
         // 删除用户收藏
         favoriteService.deleteFavoriteByUserId(id);
         // 删除用户偏好
         preferenceService.deletePreferenceByUserId(id);
-        return effect;
     }
 
     @Override

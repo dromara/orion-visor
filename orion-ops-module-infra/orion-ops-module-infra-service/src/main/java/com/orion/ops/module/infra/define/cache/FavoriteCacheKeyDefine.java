@@ -18,7 +18,7 @@ public interface FavoriteCacheKeyDefine {
             .key("favorite:{}:{}")
             .desc("收藏信息 ${type} ${userId}")
             .type(Long.class)
-            .timeout(8, TimeUnit.HOURS)
+            .timeout(3, TimeUnit.DAYS)
             .build();
 
 }

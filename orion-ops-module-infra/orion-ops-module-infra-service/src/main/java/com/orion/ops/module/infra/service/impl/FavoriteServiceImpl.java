@@ -112,20 +112,17 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    @Async("asyncExecutor")
     public void deleteFavoriteByUserId(Long userId) {
         if (userId == null) {
             return;
         }
+        // 删除库
+        favoriteDAO.deleteFavoriteByUserId(userId);
         // 删除缓存
         List<String> favoriteKeyList = Arrays.stream(FavoriteTypeEnum.values())
                 .map(s -> FavoriteCacheKeyDefine.FAVORITE.format(s, userId))
                 .collect(Collectors.toList());
         redisTemplate.delete(favoriteKeyList);
-        // 删除库
-        FavoriteQueryRequest request = new FavoriteQueryRequest();
-        request.setUserId(userId);
-        favoriteDAO.delete(this.buildQueryWrapper(request));
     }
 
     @Override
@@ -134,6 +131,8 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (Lists.isEmpty(userIdList)) {
             return;
         }
+        // 删除库
+        favoriteDAO.deleteFavoriteByUserIdList(userIdList);
         // 删除缓存
         List<String> favoriteKeyList = new ArrayList<>();
         for (Long userId : userIdList) {
@@ -142,10 +141,6 @@ public class FavoriteServiceImpl implements FavoriteService {
                     .forEach(favoriteKeyList::add);
         }
         redisTemplate.delete(favoriteKeyList);
-        // 删除库
-        FavoriteQueryRequest request = new FavoriteQueryRequest();
-        request.setUserIdList(userIdList);
-        favoriteDAO.delete(this.buildQueryWrapper(request));
     }
 
     /**
@@ -156,11 +151,9 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     private LambdaQueryWrapper<FavoriteDO> buildQueryWrapper(FavoriteQueryRequest request) {
         return favoriteDAO.wrapper()
-                .eq(FavoriteDO::getId, request.getId())
                 .eq(FavoriteDO::getUserId, request.getUserId())
                 .eq(FavoriteDO::getRelId, request.getRelId())
-                .eq(FavoriteDO::getType, request.getType())
-                .in(FavoriteDO::getUserId, request.getUserIdList());
+                .eq(FavoriteDO::getType, request.getType());
     }
 
 }
