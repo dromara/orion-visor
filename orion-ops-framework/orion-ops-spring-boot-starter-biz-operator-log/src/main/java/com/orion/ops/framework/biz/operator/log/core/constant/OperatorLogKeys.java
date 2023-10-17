@@ -13,6 +13,8 @@ public interface OperatorLogKeys {
 
     String ID_LIST = "idList";
 
+    String KEY = "key";
+
     String CODE = "code";
 
     String NAME = "name";

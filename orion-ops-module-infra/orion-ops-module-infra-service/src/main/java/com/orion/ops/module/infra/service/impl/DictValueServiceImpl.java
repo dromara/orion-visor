@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
@@ -15,9 +16,11 @@ import com.orion.ops.module.infra.dao.DictValueDAO;
 import com.orion.ops.module.infra.define.cache.DictCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DictKeyDO;
 import com.orion.ops.module.infra.entity.domain.DictValueDO;
+import com.orion.ops.module.infra.entity.domain.HistoryValueDO;
 import com.orion.ops.module.infra.entity.dto.DictValueCacheDTO;
 import com.orion.ops.module.infra.entity.request.dict.DictValueCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueQueryRequest;
+import com.orion.ops.module.infra.entity.request.dict.DictValueRollbackRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueUpdateRequest;
 import com.orion.ops.module.infra.entity.request.history.HistoryValueCreateRequest;
 import com.orion.ops.module.infra.entity.vo.DictValueVO;
@@ -54,7 +57,7 @@ public class DictValueServiceImpl implements DictValueService {
 
     @Override
     public Long createDictValue(DictValueCreateRequest request) {
-        log.info("DictValueService-createDictValue request: {}" , JSON.toJSONString(request));
+        log.info("DictValueService-createDictValue request: {}", JSON.toJSONString(request));
         // 转换
         DictValueDO record = DictValueConvert.MAPPER.to(request);
         // 查询 dictKey 是否存在
@@ -63,10 +66,11 @@ public class DictValueServiceImpl implements DictValueService {
         // 查询数据是否冲突
         this.checkDictValuePresent(record);
         // 插入
+        OperatorLogs.add(OperatorLogs.KEY, dictKey);
         record.setKey(key);
         int effect = dictValueDAO.insert(record);
         Long id = record.getId();
-        log.info("DictValueService-createDictValue id: {}, effect: {}" , id, effect);
+        log.info("DictValueService-createDictValue id: {}, effect: {}", id, effect);
         // 删除缓存
         RedisMaps.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
         return id;
@@ -74,11 +78,11 @@ public class DictValueServiceImpl implements DictValueService {
 
     @Override
     public Integer updateDictValueById(DictValueUpdateRequest request) {
-        log.info("DictValueService-updateDictValueById id: {}, request: {}" , request.getId(), JSON.toJSONString(request));
+        log.info("DictValueService-updateDictValueById id: {}, request: {}", request.getId(), JSON.toJSONString(request));
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         DictValueDO record = dictValueDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
         // 查询 dictKey 是否存在
         DictKeyDO dictKey = dictKeyDAO.selectById(request.getKeyId());
         String key = Valid.notNull(dictKey, ErrorMessage.CONFIG_ABSENT).getKey();
@@ -87,23 +91,41 @@ public class DictValueServiceImpl implements DictValueService {
         // 查询数据是否冲突
         this.checkDictValuePresent(updateRecord);
         // 更新
+        OperatorLogs.add(OperatorLogs.KEY, dictKey);
         updateRecord.setKey(key);
         int effect = dictValueDAO.updateById(updateRecord);
-        log.info("DictValueService-updateDictValueById effect: {}" , effect);
+        log.info("DictValueService-updateDictValueById effect: {}", effect);
         // 删除缓存
         RedisMaps.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
-        // 检查值是否发生改变
-        String beforeValue = record.getValue();
-        String afterValue = request.getValue();
-        if (!beforeValue.equals(afterValue)) {
-            // 记录历史值
-            HistoryValueCreateRequest historyRequest = new HistoryValueCreateRequest();
-            historyRequest.setRelId(id);
-            historyRequest.setType(HistoryValueTypeEnum.DICT.name());
-            historyRequest.setBeforeValue(beforeValue);
-            historyRequest.setAfterValue(afterValue);
-            historyValueService.createHistoryValue(historyRequest);
-        }
+        // 记录历史归档
+        this.checkRecordHistory(updateRecord, record);
+        return effect;
+    }
+
+    @Override
+    public Integer rollbackDictValueById(DictValueRollbackRequest request) {
+        Long id = request.getId();
+        log.info("DictValueService-updateDictValueById id: {}, request: {}", id, JSON.toJSONString(request));
+        // 查询
+        DictValueDO record = dictValueDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        // 查询历史值
+        HistoryValueDO history = historyValueService.getHistoryByRelId(request.getValueId(), id, HistoryValueTypeEnum.DICT.name());
+        Valid.notNull(history, ErrorMessage.HISTORY_ABSENT);
+        // 记录日志参数
+        OperatorLogs.add(OperatorLogs.KEY, record.getKey());
+        OperatorLogs.add(OperatorLogs.LABEL, record.getLabel());
+        OperatorLogs.add(OperatorLogs.VALUE, history.getBeforeValue());
+        // 更新
+        DictValueDO updateRecord = new DictValueDO();
+        updateRecord.setId(id);
+        updateRecord.setValue(history.getBeforeValue());
+        int effect = dictValueDAO.updateById(updateRecord);
+        log.info("DictValueService-rollbackDictValueById effect: {}", effect);
+        // 删除缓存
+        RedisMaps.delete(DictCacheKeyDefine.DICT_VALUE.format(record.getKey()));
+        // 记录历史归档
+        this.checkRecordHistory(updateRecord, record);
         return effect;
     }
 
@@ -165,26 +187,33 @@ public class DictValueServiceImpl implements DictValueService {
 
     @Override
     public Integer deleteDictValueById(Long id) {
-        log.info("DictValueService-deleteDictValueById id: {}" , id);
+        log.info("DictValueService-deleteDictValueById id: {}", id);
         // 检查数据是否存在
         DictValueDO record = dictValueDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.VALUE, record.getKey() + "-" + record.getLabel());
         // 删除
         return this.deleteDictValue(Lists.singleton(id), Lists.singleton(record));
     }
 
     @Override
     public Integer deleteDictValueByIdList(List<Long> idList) {
-        log.info("DictValueService-deleteDictValueByIdList idList: {}" , idList);
+        log.info("DictValueService-deleteDictValueByIdList idList: {}", idList);
         // 查询数据
         List<DictValueDO> records = dictValueDAO.selectBatchIds(idList);
+        // 添加日志参数
+        String value = records.stream()
+                .map(s -> s.getKey() + "-" + s.getLabel())
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.VALUE, value);
         // 删除
         return this.deleteDictValue(idList, records);
     }
 
     @Override
     public Integer deleteDictValueByKeyId(Long keyId) {
-        log.info("DictValueService-deleteDictValueByKeyId keyId: {}" , keyId);
+        log.info("DictValueService-deleteDictValueByKeyId keyId: {}", keyId);
         // 查询数据
         List<DictValueDO> records = dictValueDAO.selectList(Conditions.eq(DictValueDO::getKeyId, keyId));
         // 删除
@@ -196,7 +225,7 @@ public class DictValueServiceImpl implements DictValueService {
 
     @Override
     public Integer deleteDictValueByKeyIdList(List<Long> keyIdList) {
-        log.info("DictValueService-deleteDictValueByKeyIdList keyIdList: {}" , keyIdList);
+        log.info("DictValueService-deleteDictValueByKeyIdList keyIdList: {}", keyIdList);
         // 查询数据
         List<DictValueDO> records = dictValueDAO.selectList(Conditions.in(DictValueDO::getKeyId, keyIdList));
         // 删除
@@ -219,7 +248,7 @@ public class DictValueServiceImpl implements DictValueService {
         }
         // 删除
         int effect = dictValueDAO.deleteBatchIds(idList);
-        log.info("DictValueService-deleteDictValue effect: {}" , effect);
+        log.info("DictValueService-deleteDictValue effect: {}", effect);
         // 删除缓存
         List<String> keyList = records.stream()
                 .map(DictValueDO::getKey)
@@ -228,6 +257,27 @@ public class DictValueServiceImpl implements DictValueService {
                 .collect(Collectors.toList());
         RedisMaps.delete(keyList);
         return effect;
+    }
+
+    /**
+     * 检查是否保存默认值
+     *
+     * @param updateRecord 修改后
+     * @param record       修改前
+     */
+    private void checkRecordHistory(DictValueDO updateRecord, DictValueDO record) {
+        // 检查值是否发生改变
+        String beforeValue = record.getValue();
+        String afterValue = updateRecord.getValue();
+        if (!beforeValue.equals(afterValue)) {
+            // 记录历史值
+            HistoryValueCreateRequest historyRequest = new HistoryValueCreateRequest();
+            historyRequest.setRelId(record.getId());
+            historyRequest.setType(HistoryValueTypeEnum.DICT.name());
+            historyRequest.setBeforeValue(beforeValue);
+            historyRequest.setAfterValue(afterValue);
+            historyValueService.createHistoryValue(historyRequest);
+        }
     }
 
     /**

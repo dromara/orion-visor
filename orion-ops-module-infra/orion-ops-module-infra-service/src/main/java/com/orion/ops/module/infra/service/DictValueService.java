@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.service;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.infra.entity.request.dict.DictValueCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueQueryRequest;
+import com.orion.ops.module.infra.entity.request.dict.DictValueRollbackRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictValueVO;
 
@@ -32,6 +33,14 @@ public interface DictValueService {
      * @return effect
      */
     Integer updateDictValueById(DictValueUpdateRequest request);
+
+    /**
+     * 更新字典配置值
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer rollbackDictValueById(DictValueRollbackRequest request);
 
     /**
      * 查询全部字典配置值

@@ -51,6 +51,8 @@ public interface ErrorMessage {
 
     String MAX_LOGIN_FAILED = "登陆失败次数已上限";
 
+    String HISTORY_ABSENT = "历史值不存在";
+
     String USER_ABSENT = "用户不存在";
 
     String HOST_ABSENT = "主机不存在";

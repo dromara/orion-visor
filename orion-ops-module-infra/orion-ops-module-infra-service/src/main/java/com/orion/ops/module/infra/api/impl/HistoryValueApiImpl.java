@@ -57,6 +57,19 @@ public class HistoryValueApiImpl implements HistoryValueApi {
     }
 
     @Override
+    public HistoryValueDTO getHistoryValueByRelId(Long id, Long relId, HistoryValueTypeEnum type) {
+        log.info("HistoryValueApi.getHistoryValueByRelId id: {}, relId: {}, type: {}", id, relId, type);
+        Valid.allNotNull(id, relId, type);
+        // 修改
+        HistoryValueDO record = historyValueService.getHistoryByRelId(id, relId, type.name());
+        if (record == null) {
+            return null;
+        }
+        // 转换
+        return HistoryValueProviderConvert.MAPPER.to(record);
+    }
+
+    @Override
     public Integer deleteByRelId(HistoryValueTypeEnum type, Long relId) {
         return historyValueService.deleteByRelId(type.name(), relId);
     }

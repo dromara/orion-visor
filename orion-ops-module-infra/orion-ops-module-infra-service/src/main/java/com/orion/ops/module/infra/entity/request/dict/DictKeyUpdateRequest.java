@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -31,6 +32,7 @@ public class DictKeyUpdateRequest implements Serializable {
 
     @NotBlank
     @Size(max = 32)
+    @Pattern(regexp = "^[a-zA-Z0-9]{4,32}$")
     @Schema(description = "配置项")
     private String key;
 

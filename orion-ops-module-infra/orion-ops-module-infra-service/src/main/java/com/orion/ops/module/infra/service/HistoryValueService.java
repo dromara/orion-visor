@@ -42,6 +42,16 @@ public interface HistoryValueService {
     HistoryValueDO getHistoryById(Long id);
 
     /**
+     * 通过 id 查询
+     *
+     * @param id    id
+     * @param relId relId
+     * @param type  type
+     * @return value
+     */
+    HistoryValueDO getHistoryByRelId(Long id, Long relId, String type);
+
+    /**
      * 删除历史归档
      *
      * @param type  type

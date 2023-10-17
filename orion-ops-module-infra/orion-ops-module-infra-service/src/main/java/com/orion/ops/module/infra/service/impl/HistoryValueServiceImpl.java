@@ -59,6 +59,17 @@ public class HistoryValueServiceImpl implements HistoryValueService {
     }
 
     @Override
+    public HistoryValueDO getHistoryByRelId(Long id, Long relId, String type) {
+        return historyValueDAO.of()
+                .createWrapper()
+                .eq(HistoryValueDO::getId, id)
+                .eq(HistoryValueDO::getRelId, relId)
+                .eq(HistoryValueDO::getType, type)
+                .then()
+                .getOne();
+    }
+
+    @Override
     public Integer deleteByRelId(String type, Long relId) {
         log.info("HistoryValueService-deleteByRelId type: {}, relId: {}", type, relId);
         int effect = historyValueDAO.deleteByRelId(type, relId);

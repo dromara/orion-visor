@@ -33,6 +33,16 @@ public interface HistoryValueApi {
     HistoryValueDTO getHistoryValueById(Long id);
 
     /**
+     * 查询历史归档
+     *
+     * @param id    id
+     * @param relId relId
+     * @param type  type
+     * @return row
+     */
+    HistoryValueDTO getHistoryValueByRelId(Long id, Long relId, HistoryValueTypeEnum type);
+
+    /**
      * 删除历史归档
      *
      * @param type  type

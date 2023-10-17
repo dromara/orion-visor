@@ -9,6 +9,7 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.DictValueOperatorType;
 import com.orion.ops.module.infra.entity.request.dict.DictValueCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueQueryRequest;
+import com.orion.ops.module.infra.entity.request.dict.DictValueRollbackRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictValueVO;
 import com.orion.ops.module.infra.service.DictValueService;
@@ -56,6 +57,14 @@ public class DictValueController {
     @PreAuthorize("@ss.hasPermission('infra:dict-value:update')")
     public Integer updateDictValue(@Validated @RequestBody DictValueUpdateRequest request) {
         return dictValueService.updateDictValueById(request);
+    }
+
+    @OperatorLog(DictValueOperatorType.UPDATE)
+    @PutMapping("/rollback")
+    @Operation(summary = "回滚字典配置值")
+    @PreAuthorize("@ss.hasPermission('infra:dict-value:update')")
+    public Integer rollbackDictValue(@Validated @RequestBody DictValueRollbackRequest request) {
+        return dictValueService.rollbackDictValueById(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

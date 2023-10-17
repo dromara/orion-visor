@@ -25,10 +25,9 @@ public class DictKeyOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                // todo 添加参数
-                new OperatorType(L, CREATE, "创建字典配置项"),
-                new OperatorType(M, UPDATE, "更新字典配置项"),
-                new OperatorType(H, DELETE, "删除字典配置项"),
+                new OperatorType(L, CREATE, "创建字典配置项 <sb>${key}</sb>"),
+                new OperatorType(M, UPDATE, "更新字典配置项 <sb>${key}</sb>"),
+                new OperatorType(H, DELETE, "删除字典配置项 <sb>${key}</sb>"),
         };
     }
 
