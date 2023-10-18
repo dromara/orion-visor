@@ -28,7 +28,7 @@
         </a-form>
       </a-col>
       <!-- 操作 -->
-      <a-col :span="12" class="table-bar-handle">
+      <a-col :span="12" class="table-right-bar-handle">
         <a-space>
           <!-- 新增 -->
           <a-button type="primary"

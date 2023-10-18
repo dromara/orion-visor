@@ -21,12 +21,15 @@
   <!-- 表格 -->
   <a-card class="general-card table-card">
     <template #title>
-      <!-- 左侧标题 -->
-      <div class="table-title">
-        秘钥列表
+      <!-- 左侧操作 -->
+      <div class="table-left-bar-handle">
+        <!-- 标题 -->
+        <div class="table-title">
+          秘钥列表
+        </div>
       </div>
-      <!-- 右侧按钮 -->
-      <div class="table-bar-handle">
+      <!-- 右侧操作 -->
+      <div class="table-right-bar-handle">
         <a-space>
           <!-- 新增 -->
           <a-button type="primary"

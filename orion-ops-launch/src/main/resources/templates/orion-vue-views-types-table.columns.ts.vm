@@ -13,7 +13,7 @@ const columns = [
     title: '${field.comment}',
     dataIndex: '${field.propertyName}',
     slotName: '${field.propertyName}',
-    align: 'center',
+    align: 'left',
     #if(${field.propertyType} == 'String')
     ellipsis: true,
     tooltip: true,

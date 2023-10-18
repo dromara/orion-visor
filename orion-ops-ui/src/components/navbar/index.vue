@@ -21,7 +21,7 @@
     <div class="center-side">
       <Menu v-if="topMenu" />
     </div>
-    <!-- 右侧按钮 -->
+    <!-- 右侧操作 -->
     <ul class="right-side">
       <!-- 搜索 -->
       <li v-if="false">
