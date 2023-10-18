@@ -47,10 +47,10 @@
   import { computed, onMounted, provide, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useAppStore } from '@/store';
-  import NavBar from '@/components/navbar/index.vue';
-  import Menu from '@/components/menu/tree/index.vue';
-  import Footer from '@/components/footer/index.vue';
-  import TabBar from '@/components/tab-bar/index.vue';
+  import Menu from '@/components/system/menu/tree/index.vue';
+  import NavBar from '@/components/app/navbar/index.vue';
+  import Footer from '@/components/app/footer/index.vue';
+  import TabBar from '@/components/app/tab-bar/index.vue';
   import useResponsive from '@/hooks/responsive';
   import PageLayout from './page-layout.vue';
   import { toggleDrawerMenuKey } from '@/types/symbol';

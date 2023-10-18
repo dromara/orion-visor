@@ -10,9 +10,9 @@ import {
   DataZoomComponent,
   GraphicComponent,
 } from 'echarts/components';
-import Chart from './chart/index.vue';
-import Breadcrumb from './breadcrumb/index.vue';
-import CardList from './card/list/index.vue';
+import Breadcrumb from './app/breadcrumb/index.vue';
+import Chart from './view/chart/index.vue';
+import CardList from './view/card-list/index.vue';
 
 use([
   CanvasRenderer,

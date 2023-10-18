@@ -51,7 +51,7 @@
   import { useCacheStore } from '@/store';
   import { getMenuList } from '@/api/system/menu';
 
-  import MenuSelectorTree from '@/components/menu/selector/menu-selector-tree.vue';
+  import MenuSelectorTree from '@/components/system/menu/selector/menu-selector-tree.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -149,7 +149,7 @@
   import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '@/views/asset/host/types/const';
-  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
+  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
 
   const { copy } = useCopy();

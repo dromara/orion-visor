@@ -135,7 +135,7 @@
             <a-button class="nav-btn"
                       type="outline"
                       shape="circle"
-                      @click="openGlobalSetting">
+                      @click="openAppSetting">
               <template #icon>
                 <icon-settings />
               </template>
@@ -188,9 +188,9 @@
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import { triggerMouseEvent } from '@/utils';
-  import Menu from '@/components/menu/tree/index.vue';
-  import MessageBox from '../message-box/index.vue';
-  import { openGlobalSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
+  import Menu from '@/components/system/menu/tree/index.vue';
+  import MessageBox from '@/components/system/message-box/index.vue';
+  import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
 
   const tipsStore = useTipsStore();
@@ -230,8 +230,8 @@
     useToggle(darkTheme)();
   };
 
-  // 打开系统设置
-  const openGlobalSetting = inject(openGlobalSettingKey) as () => void;
+  // 打开应用设置
+  const openAppSetting = inject(openAppSettingKey) as () => void;
 
   // 消息触发器 ref
   const refMessageBoxTrigger = ref();

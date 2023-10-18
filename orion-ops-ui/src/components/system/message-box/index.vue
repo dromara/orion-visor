@@ -28,7 +28,7 @@
     setMessageStatus,
     MessageRecord,
     MessageListType,
-  } from '@/api/message/message';
+  } from '@/api/system/message';
   import useLoading from '@/hooks/loading';
   import List from './list.vue';
 

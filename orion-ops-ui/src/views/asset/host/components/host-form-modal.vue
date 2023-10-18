@@ -59,7 +59,7 @@
   import formRules from '../types/form.rules';
   import { createHost, updateHost, HostUpdateRequest } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
-  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
+  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

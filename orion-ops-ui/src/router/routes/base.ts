@@ -23,7 +23,7 @@ export const ROOT_ROUTER: RouteRecordRaw = {
 export const LOGIN_ROUTER: RouteRecordRaw = {
   path: '/login',
   name: LOGIN_ROUTE_NAME,
-  component: () => import('@/views/login/index.vue'),
+  component: () => import('@/views/authentication/login/index.vue'),
 };
 
 /**
@@ -40,7 +40,7 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
     {
       path: '/redirect/:path',
       name: REDIRECT_ROUTE_NAME,
-      component: () => import('@/views/redirect/index.vue'),
+      component: () => import('@/views/base/redirect/index.vue'),
       meta: {
         hideInMenu: true,
         noAffix: true
@@ -55,7 +55,7 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
 export const FORBIDDEN_ROUTE: RouteRecordRaw = {
   path: '/403',
   name: FORBIDDEN_ROUTER_NAME,
-  component: () => import('@/views/exception/forbidden/index.vue'),
+  component: () => import('@/views/base/status/forbidden/index.vue'),
 };
 
 /**
@@ -65,7 +65,7 @@ export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   // path: '/:pathMatch(.*)*',
   path: '/404',
   name: NOT_FOUND_ROUTER_NAME,
-  component: () => import('@/views/exception/not-found/index.vue'),
+  component: () => import('@/views/base/status/not-found/index.vue'),
 };
 
 export default [

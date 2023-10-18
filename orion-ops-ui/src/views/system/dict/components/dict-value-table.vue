@@ -32,6 +32,17 @@
         <div class="table-title">
           数据字典
         </div>
+        <!-- 操作 -->
+        <a-space>
+          <a-button type="primary"
+                    v-permission="['infra:dict-key:create']"
+                    @click="emits('openAddKey')">
+            新增配置项
+            <template #icon>
+              <icon-book />
+            </template>
+          </a-button>
+        </a-space>
       </div>
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
@@ -39,7 +50,7 @@
           <!-- 新增 -->
           <a-button type="primary"
                     v-permission="['infra:dict-value:create']"
-                    @click="emits('openAdd')">
+                    @click="emits('openAddValue')">
             新增字典值
             <template #icon>
               <icon-plus />
@@ -84,14 +95,14 @@
           <a-button type="text"
                     size="mini"
                     v-permission="['infra:dict-value:update']"
-                    @click="emits('openUpdate', record)">
+                    @click="emits('openValueUpdate', record)">
             修改
           </a-button>
           <!-- 历史 -->
           <a-button type="text"
                     size="mini"
                     v-permission="['infra:dict-value:update']"
-                    @click="emits('openUpdate', record)">
+                    @click="emits('openValueHistory', record)">
             历史
           </a-button>
           <!-- 删除 -->
@@ -131,7 +142,7 @@
 
   const tableRenderData = ref<DictValueQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAddKey', 'openAddValue', 'openValueUpdate', 'openValueHistory']);
 
   const pagination = usePagination();
   const selectedKeys = ref<number[]>([]);

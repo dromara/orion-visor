@@ -172,7 +172,7 @@
   import useCopy from '@/hooks/copy';
   import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
-  import TagMultiSelector from '@/components/tag/tag-multi-selector.vue';
+  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);

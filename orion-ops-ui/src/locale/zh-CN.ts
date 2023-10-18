@@ -1,4 +1,4 @@
-import localeLogin from '@/views/login/locale/zh-CN';
+import localeLogin from '@/views/authentication/login/locale/zh-CN';
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 
 export default {
