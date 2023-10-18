@@ -1,7 +1,7 @@
 <template>
-  <a-drawer class="drawer-body-padding-0"
+  <a-drawer v-model:visible="visible"
+            class="drawer-body-padding-0"
             :width="420"
-            :visible="visible"
             :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"

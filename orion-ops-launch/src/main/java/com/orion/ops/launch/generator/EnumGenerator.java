@@ -9,6 +9,7 @@ import com.orion.lang.utils.ansi.style.AnsiFont;
 import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.awt.Clipboards;
 import com.orion.lang.utils.reflect.Fields;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 
 import java.util.List;
@@ -47,8 +48,8 @@ public class EnumGenerator {
         MultiLinkedHashMap<String, String, Object> result = MultiLinkedHashMap.create();
         for (Enum<?> e : constants) {
             String name = e.name();
-            result.put(name, "value", valueFunction.apply((E) e));
-            result.put(name, "label", labelFunction.apply((E) e));
+            result.put(name, Const.VALUE, valueFunction.apply((E) e));
+            result.put(name, Const.LABEL, labelFunction.apply((E) e));
             for (String field : fields) {
                 result.put(name, field, Fields.getFieldValue(e, field));
             }

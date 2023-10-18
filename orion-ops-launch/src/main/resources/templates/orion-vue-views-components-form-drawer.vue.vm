@@ -1,5 +1,5 @@
 <template>
-  <a-drawer :visible="visible"
+  <a-drawer v-model:visible="visible"
             :title="title"
             :width="430"
             :mask-closable="false"

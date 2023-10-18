@@ -1,6 +1,6 @@
 <template>
-  <a-drawer class="drawer-body-padding-0"
-            :visible="visible"
+  <a-drawer v-model:visible="visible"
+            class="drawer-body-padding-0"
             :title="title"
             :width="470"
             :mask-closable="false"

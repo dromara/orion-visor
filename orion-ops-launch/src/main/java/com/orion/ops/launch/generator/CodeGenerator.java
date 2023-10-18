@@ -65,16 +65,17 @@ public class CodeGenerator {
                         .build(),
                 Template.create("dict_key", "字典配置项", "dict")
                         .cache("dict:keys", "字典配置项")
-                        .expire(1, TimeUnit.HOURS)
+                        .expire(1, TimeUnit.DAYS)
                         .vue("system", "dict-key")
                         .enums("value_type")
-                        .names("STRING", "NUMBER", "BOOLEAN", "COLOR")
-                        .label("字符串", "数值", "布尔值", "颜色")
+                        .names("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
+                        .label("字符串", "整数", "小数", "布尔值", "颜色")
                         .build(),
                 Template.create("dict_value", "字典配置值", "dict")
                         .cache("dict:value:{}", "字典配置值 ${key}")
-                        .expire(1, TimeUnit.HOURS)
+                        .expire(1, TimeUnit.DAYS)
                         .vue("system", "dict-value")
+                        .enableRowSelection()
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

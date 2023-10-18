@@ -1,9 +1,9 @@
 import { CardField, CardFieldConfig } from '@/types/card';
 
 const fieldConfig = {
-  rowGap: '12px',
+  rowGap: '10px',
   labelSpan: 8,
-  minHeight: '24px',
+  minHeight: '22px',
   fields: [
     {
       label: 'id',

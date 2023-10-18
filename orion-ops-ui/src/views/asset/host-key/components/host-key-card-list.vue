@@ -1,8 +1,7 @@
 <template>
   <card-list v-model:searchValue="formModel.searchValue"
-             search-input-placeholder="输入id/名称"
+             search-input-placeholder="输入 id / 名称"
              create-card-position="head"
-             :card-height="148"
              :loading="loading"
              :fieldConfig="fieldConfig"
              :list="list"

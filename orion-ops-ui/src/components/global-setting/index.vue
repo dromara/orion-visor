@@ -6,9 +6,9 @@
       </template>
     </a-button>
   </div>
-  <a-drawer title="偏好设置"
+  <a-drawer v-model:visible="visible"
+            title="偏好设置"
             :width="300"
-            :visible="visible"
             :footer="false"
             :unmount-on-close="true"
             @cancel="() => setVisible(false)">

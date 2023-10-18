@@ -98,7 +98,8 @@
     <a-spin class="card-list-layout-body" :loading="loading">
       <!-- 卡片列表 -->
       <a-row v-if="list.length !== 0"
-             :gutter="cardLayoutGutter">
+             :gutter="cardLayoutGutter"
+             align="stretch">
         <!-- 添加卡片 -->
         <a-col v-permission="addPermission"
                v-if="createCardPosition === 'head'"
@@ -118,18 +119,17 @@
           <a-dropdown trigger="contextMenu" alignPoint>
             <!-- 卡片 -->
             <a-card :class="[
-                    'general-card',
-                    'card-list-item',
-                    item.disabled === true ? 'card-list-item-disabled' : undefined,
-                    !!cardClass ? cardClass : undefined
-                  ]"
-                    :style="{ height: `${cardHeight}px` }"
-                    :body-style="{ height: 'calc(100% - 58px)' }"
+                      'card-list-item',
+                      item.disabled === true ? 'card-list-item-disabled' : undefined,
+                      !!cardClass ? cardClass : undefined
+                    ]"
+                    :style="{ height: cardHeight }"
                     :bordered="false"
                     :hoverable="true"
+                    :body-style="cardBodyStyle"
                     @contextmenu.prevent="() => false"
-                    @click="emits('click',item, index)"
-                    @dblclick="emits('dblclick',item, index)">
+                    @click="emits('click', item, index)"
+                    @dblclick="emits('dblclick', item, index)">
               <!-- 标题 -->
               <template #title>
                 <slot name="title" :record="item" :index="index" :key="item[key]" />
@@ -188,6 +188,8 @@
               <template v-else>
                 <slot name="card" :record="item" :index="index" :key="item[key]" />
               </template>
+              <!-- 卡片底部 -->
+              <slot name="cardFooter" :record="item" :index="index" :key="item[key]" />
             </a-card>
             <!-- 右键菜单 -->
             <template v-if="contextMenu" #content>
@@ -206,9 +208,7 @@
       </a-row>
       <!-- 空列表 -->
       <template v-else>
-        <a-card class="general-card empty-list-card"
-                :style="{ height: `${cardHeight * 2 + 16}px` }"
-                :body-style="{ height: '100%' }">
+        <a-card class="general-card empty-list-card">
           <a-empty class="empty-list-card-body" description="暂无数据" />
         </a-card>
       </template>
@@ -272,8 +272,12 @@
       type: Object as PropType<CardFieldConfig>,
       default: () => []
     },
-    cardHeight: Number,
+    cardHeight: {
+      type: String,
+      default: () => '100%'
+    },
     cardClass: String,
+    cardBodyStyle: Object,
     contextMenu: {
       type: Boolean,
       default: () => true
@@ -297,7 +301,11 @@
     },
     createCardPosition: {
       type: String as PropType<CardPosition>,
-      default: () => '暂无数据 点击此处进行创建'
+      default: () => false
+    },
+    addPermission: {
+      type: Array as PropType<String[]>,
+      default: () => []
     },
     cardLayoutGutter: {
       type: [Number, Array] as PropType<Number> |
@@ -305,10 +313,6 @@
         PropType<Array<Number>> |
         PropType<Array<ResponsiveValue>>,
       default: () => [16, 16]
-    },
-    addPermission: {
-      type: Array as PropType<String[]>,
-      default: () => []
     },
     cardLayoutCols: {
       type: Object as PropType<ColResponsiveValue>,
@@ -336,8 +340,8 @@
     setup(props: { cardHeight: any; createCardDescription: any; }) {
       return () => {
         return h(compile(`
-          <a-card class="general-card card-list-item create-card"
-                  :style="{ height: '${props.cardHeight}px' }"
+          <a-card class="card-list-item create-card"
+                  :style="{ height: '${props.cardHeight}' }"
                   :body-style="{ height: '100%' }"
                   :bordered="false"
                   :hoverable="true">
@@ -480,32 +484,29 @@
   .empty-list-card {
 
     &-body {
-      height: 100%;
+      height: calc(100vh - @top-height - 140px);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       padding: 0;
     }
-
   }
 
   .fields-container {
-    height: 100%;
-    overflow-y: auto;
 
     .field-label {
       color: var(--color-text-3);
       word-break: break-all;
       white-space: pre-wrap;
       padding-right: 8px;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
       user-select: none;
     }
 
     .field-value {
-      color: var(--color-text-1);
+      color: var(--gray-8);
       word-break: break-all;
       white-space: pre-wrap;
       padding-right: 8px;

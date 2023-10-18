@@ -1,8 +1,7 @@
 <template>
   <card-list v-model:searchValue="formModel.searchValue"
-             search-input-placeholder="输入id/名称/标签/地址"
+             search-input-placeholder="输入 id / 名称 / 编码 / 地址"
              create-card-position="head"
-             :card-height="214"
              :loading="loading"
              :fieldConfig="fieldConfig"
              :list="list"
@@ -32,7 +31,7 @@
     </template>
     <!-- 标签 -->
     <template #tags="{ record }">
-      <a-space v-if="record.tags" wrap>
+      <a-space v-if="record.tags" wrap style="margin-bottom: -8px;">
         <a-tag v-for="tag in record.tags"
                :key="tag.id"
                :color="dataColor(tag.name, tagColor)">

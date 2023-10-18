@@ -7,29 +7,26 @@ package com.orion.ops.framework.common.constant;
  * @version 1.0.0
  * @since 2023/6/23 18:49
  */
-public class Const implements com.orion.lang.constant.Const {
+public interface Const extends com.orion.lang.constant.Const, ConstField {
 
-    private Const() {
-    }
+    Integer NOT_DELETE = 0;
 
-    public static final Integer NOT_DELETE = 0;
+    Integer IS_DELETED = 1;
 
-    public static final Integer IS_DELETED = 1;
+    int BEARER_PREFIX_LEN = 7;
 
-    public static final int BEARER_PREFIX_LEN = 7;
+    int MD5_LEN = 32;
 
-    public static final int MD5_LEN = 32;
+    String UNKNOWN = "未知";
 
-    public static final String UNKNOWN = "未知";
+    String INTRANET_IP = "内网IP";
 
-    public static final String INTRANET_IP = "内网IP";
+    Long ROOT_MENU_ID = 0L;
 
-    public static final Long ROOT_MENU_ID = 0L;
+    Integer DEFAULT_SORT = 10;
 
-    public static final Integer DEFAULT_SORT = 10;
+    Long NONE_ID = -1L;
 
-    public static final Long NONE_ID = -1L;
-
-    public static final Integer DEFAULT_VERSION = 1;
+    Integer DEFAULT_VERSION = 1;
 
 }

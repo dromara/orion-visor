@@ -1,5 +1,7 @@
 package com.orion.ops.framework.biz.operator.log.core.constant;
 
+import com.orion.ops.framework.common.constant.ConstField;
+
 /**
  * 操作日志常量
  *
@@ -7,32 +9,12 @@ package com.orion.ops.framework.biz.operator.log.core.constant;
  * @version 1.0.0
  * @since 2023/10/10 19:00
  */
-public interface OperatorLogKeys {
-
-    String ID = "id";
+public interface OperatorLogKeys extends ConstField {
 
     String ID_LIST = "idList";
 
-    String KEY = "key";
-
-    String CODE = "code";
-
-    String NAME = "name";
-
     String USERNAME = "username";
 
-    String TITLE = "title";
-
-    String VALUE = "value";
-
-    String LABEL = "label";
-
-    String TYPE = "type";
-
-    String STATUS = "status";
-
     String STATUS_NAME = "statusName";
-
-    String REL_ID = "relId";
 
 }

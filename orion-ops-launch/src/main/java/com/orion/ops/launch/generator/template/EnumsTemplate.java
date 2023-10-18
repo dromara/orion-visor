@@ -3,6 +3,7 @@ package com.orion.ops.launch.generator.template;
 import com.orion.lang.utils.Enums;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.reflect.Fields;
+import com.orion.ops.framework.common.constant.Const;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,7 +114,7 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate label(Object... labels) {
-        return this.values("label", labels);
+        return this.values(Const.LABEL, labels);
     }
 
     /**
@@ -124,7 +125,7 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate value(Object... values) {
-        return this.values("value", values);
+        return this.values(Const.VALUE, values);
     }
 
     /**
@@ -134,7 +135,7 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate color(Object... colors) {
-        return this.values("color", colors);
+        return this.values(Const.COLOR, colors);
     }
 
     /**
@@ -144,7 +145,7 @@ public class EnumsTemplate extends VueTemplate {
      * @return this
      */
     public EnumsTemplate status(Object... status) {
-        return this.values("status", status);
+        return this.values(Const.STATUS, status);
     }
 
 }

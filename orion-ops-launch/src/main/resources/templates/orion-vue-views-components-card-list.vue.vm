@@ -2,7 +2,6 @@
   <card-list v-model:searchValue="formModel.searchValue"
              search-input-placeholder="输入xxx"
              create-card-position="head"
-             :card-height="172"
              :loading="loading"
              :fieldConfig="fieldConfig"
              :list="list"
