@@ -20,26 +20,23 @@
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
-        <!-- 主机名称 -->
-        <a-form-item field="name" label="主机名称">
-          <a-input v-model="formModel.name" placeholder="请输入主机名称" />
+        <!-- 配置项 -->
+        <a-form-item field="keyName" label="配置项">
+          <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
         </a-form-item>
-        <!-- 主机编码 -->
-        <a-form-item field="code" label="主机编码">
-          <a-input v-model="formModel.code" placeholder="请输入主机编码" />
+        <!-- 配置值定义 -->
+        <a-form-item field="valueType" label="配置值定义">
+          <a-select v-model="formModel.valueType"
+                    :options="toOptions(ValueTypeEnum)"
+                    placeholder="请选择配置值定义" />
         </a-form-item>
-        <!-- 主机地址 -->
-        <a-form-item field="address" label="主机地址">
-          <a-input v-model="formModel.address" placeholder="请输入主机地址" />
+        <!-- 额外配置定义 -->
+        <a-form-item field="extraSchema" label="额外配置定义">
+          <a-input v-model="formModel.extraSchema" placeholder="请输入额外配置定义" allow-clear />
         </a-form-item>
-        <!-- 主机标签 -->
-        <a-form-item field="tags" label="主机标签">
-          <tag-multi-selector v-model="formModel.tags"
-                              :allowCreate="true"
-                              :limit="5"
-                              type="HOST"
-                              tag-type="hostTags"
-                              placeholder="请选择主机标签" />
+        <!-- 配置描述 -->
+        <a-form-item field="description" label="配置描述">
+          <a-input v-model="formModel.description" placeholder="请输入配置描述" allow-clear />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -48,7 +45,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-form-modal'
+    name: 'system-dict-key-form-modal'
   };
 </script>
 
@@ -56,10 +53,12 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/host.form.rules';
-  import { createHost, updateHost, HostUpdateRequest } from '@/api/asset/host';
+  import formRules from '../types/dict-key.form.rules';
+  import { createDictKey, updateDictKey, DictKeyUpdateRequest } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
+  import {} from '../types/const';
+  import { ValueTypeEnum } from '../types/enum.types';
+  import { toOptions } from '@/utils/enum';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -67,24 +66,24 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): HostUpdateRequest => {
+  const defaultForm = (): DictKeyUpdateRequest => {
     return {
       id: undefined,
-      name: undefined,
-      code: undefined,
-      address: undefined,
-      tags: undefined,
+      keyName: undefined,
+      valueType: undefined,
+      extraSchema: undefined,
+      description: undefined,
     };
   };
 
-  const formRef = ref();
-  const formModel = ref<HostUpdateRequest>({});
+  const formRef = ref<any>();
+  const formModel = ref<DictKeyUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
   const openAdd = () => {
-    title.value = '添加主机';
+    title.value = '添加字典配置项';
     isAddHandle.value = true;
     renderForm({ ...defaultForm() });
     setVisible(true);
@@ -92,10 +91,9 @@
 
   // 打开修改
   const openUpdate = (record: any) => {
-    title.value = '修改主机';
+    title.value = '修改字典配置项';
     isAddHandle.value = false;
-    const tags = record?.hostTags?.map((s: { id: any; }) => s.id);
-    renderForm({ ...defaultForm(), ...record, tags });
+    renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
 
@@ -117,12 +115,12 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createHost(formModel.value);
+        await createDictKey(formModel.value);
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHost(formModel.value);
+        await updateDictKey(formModel.value);
         Message.success('修改成功');
         emits('updated');
       }

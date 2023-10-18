@@ -67,7 +67,7 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/form.rules';
+  import formRules from '../types/dict-value.form.rules';
   import { createDictValue, updateDictValue, DictValueUpdateRequest } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import {} from '../types/const';

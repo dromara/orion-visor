@@ -22,7 +22,6 @@ const columns = [
     title: '主机地址',
     dataIndex: 'address',
     slotName: 'address',
-    width: 260
   }, {
     title: '主机标签',
     dataIndex: 'tags',

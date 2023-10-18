@@ -166,7 +166,7 @@
   import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import columns from '../types/table.columns';
+  import columns from '../types/host.table.columns';
   import { tagColor } from '../types/const';
   import { usePagination } from '@/types/table';
   import useCopy from '@/hooks/copy';

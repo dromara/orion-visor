@@ -95,7 +95,7 @@
           <a-button type="text"
                     size="mini"
                     v-permission="['infra:dict-value:update']"
-                    @click="emits('openValueUpdate', record)">
+                    @click="emits('openUpdateValue', record)">
             修改
           </a-button>
           <!-- 历史 -->
@@ -134,7 +134,7 @@
   import { batchDeleteDictValue, deleteDictValue, getDictValuePage, DictValueQueryRequest, DictValueQueryResponse } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import columns from '../types/table.columns';
+  import columns from '../types/dict-value.table.columns';
   import { usePagination, useRowSelection } from '@/types/table';
   import {} from '../types/const';
   import {} from '../types/enum.types';
@@ -142,7 +142,7 @@
 
   const tableRenderData = ref<DictValueQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAddKey', 'openAddValue', 'openValueUpdate', 'openValueHistory']);
+  const emits = defineEmits(['openAddKey', 'openAddValue', 'openUpdateValue', 'openValueHistory']);
 
   const pagination = usePagination();
   const selectedKeys = ref<number[]>([]);

@@ -141,7 +141,7 @@
   import { ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host';
   import { HostSshConfig, AuthTypeEnum } from '@/views/asset/host/types/host-config.types';
-  import { sshRules } from '@/views/asset/host/types/host-config.rules';
+  import { sshRules } from '@/views/asset/host/types/host-config.form.rules';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
   import { toOptions } from '@/utils/enum';
