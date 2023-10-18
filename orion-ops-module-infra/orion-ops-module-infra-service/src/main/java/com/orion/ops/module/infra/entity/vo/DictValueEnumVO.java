@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.entity.request.dict;
+package com.orion.ops.module.infra.entity.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -6,14 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * 字典配置值 创建请求对象
+ * 字典配置值 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -23,35 +20,45 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "DictValueCreateRequest", description = "字典配置值 创建请求对象")
-public class DictValueCreateRequest implements Serializable {
+@Schema(name = "DictValueEnumVO", description = "字典配置值 枚举视图响应对象")
+public class DictValueEnumVO implements Serializable {
 
-    @NotNull
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "id")
+    private Long id;
+
     @Schema(description = "配置项id")
     private Long keyId;
 
-    @NotBlank
-    @Size(max = 32)
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,32}$")
+    @Schema(description = "配置项")
+    private String keyName;
+
     @Schema(description = "配置名称")
     private String name;
 
-    @NotBlank
-    @Size(max = 512)
     @Schema(description = "配置值")
     private String value;
 
-    @NotBlank
-    @Size(max = 64)
     @Schema(description = "配置描述")
     private String label;
 
-    @NotBlank
     @Schema(description = "额外参数")
     private String extra;
 
-    @NotNull
     @Schema(description = "排序")
     private Integer sort;
+
+    @Schema(description = "创建时间")
+    private Date createTime;
+
+    @Schema(description = "修改时间")
+    private Date updateTime;
+
+    @Schema(description = "创建人")
+    private String creator;
+
+    @Schema(description = "修改人")
+    private String updater;
 
 }

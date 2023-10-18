@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典配置值 api
@@ -72,6 +73,13 @@ public class DictValueController {
     @Operation(summary = "查询字典配置值")
     public List<DictValueVO> getDictValueList(@RequestParam("key") String key) {
         return dictValueService.getDictValueList(key);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/enum")
+    @Operation(summary = "查询字典配置值枚举")
+    public Map<String, Map<String, Object>> getDictValueEnum(@RequestParam("key") String key) {
+        return dictValueService.getDictValueEnum(key);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

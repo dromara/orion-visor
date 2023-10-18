@@ -34,7 +34,7 @@ public class DictKeyUpdateRequest implements Serializable {
     @Size(max = 32)
     @Pattern(regexp = "^[a-zA-Z0-9]{4,32}$")
     @Schema(description = "配置项")
-    private String key;
+    private String keyName;
 
     @NotBlank
     @Size(max = 12)
@@ -48,6 +48,6 @@ public class DictKeyUpdateRequest implements Serializable {
     @NotBlank
     @Size(max = 64)
     @Schema(description = "配置描述")
-    private String desc;
+    private String description;
 
 }

@@ -1,5 +1,7 @@
 package com.orion.ops.module.infra.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.DictKeyDO;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,5 +15,18 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface DictKeyDAO extends IMapper<DictKeyDO> {
+
+    /**
+     * 通过 key 查询
+     *
+     * @param key key
+     * @return dictKey
+     */
+    default DictKeyDO selectByKey(String key) {
+        LambdaQueryWrapper<DictKeyDO> wrapper = this.lambda()
+                .eq(DictKeyDO::getKeyName, key)
+                .last(Const.LIMIT_1);
+        return this.selectOne(wrapper);
+    }
 
 }

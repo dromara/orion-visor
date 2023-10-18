@@ -29,7 +29,7 @@ public class DictKeyVO implements Serializable {
     private Long id;
 
     @Schema(description = "配置项")
-    private String key;
+    private String keyName;
 
     @Schema(description = "配置值定义")
     private String valueType;
@@ -38,18 +38,6 @@ public class DictKeyVO implements Serializable {
     private String extraSchema;
 
     @Schema(description = "配置描述")
-    private String desc;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
+    private String description;
 
 }

@@ -17,4 +17,6 @@ public interface OperatorLogKeys extends ConstField {
 
     String STATUS_NAME = "statusName";
 
+    String KEY_NAME = "keyName";
+
 }

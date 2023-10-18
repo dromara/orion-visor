@@ -32,16 +32,16 @@ public class DictValueVO implements Serializable {
     private Long keyId;
 
     @Schema(description = "配置项")
-    private String key;
+    private String keyName;
 
     @Schema(description = "配置名称")
-    private String label;
+    private String name;
 
     @Schema(description = "配置值")
     private String value;
 
     @Schema(description = "配置描述")
-    private String desc;
+    private String label;
 
     @Schema(description = "额外参数")
     private String extra;

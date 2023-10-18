@@ -11,6 +11,11 @@ const SYSTEM: AppRouteRecordRaw = {
       path: '/system/menu',
       component: () => import('@/views/system/menu/index.vue'),
     },
+    {
+      name: 'systemDict',
+      path: '/system/dict',
+      component: () => import('@/views/system/dict/index.vue'),
+    },
   ],
 };
 

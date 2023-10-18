@@ -31,8 +31,8 @@ public class DictKeyDO extends BaseDO {
     private Long id;
 
     @Schema(description = "配置项")
-    @TableField("key")
-    private String key;
+    @TableField("key_name")
+    private String keyName;
 
     @Schema(description = "配置值定义")
     @TableField("value_type")
@@ -43,7 +43,7 @@ public class DictKeyDO extends BaseDO {
     private String extraSchema;
 
     @Schema(description = "配置描述")
-    @TableField("desc")
-    private String desc;
+    @TableField("description")
+    private String description;
 
 }

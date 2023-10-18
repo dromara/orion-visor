@@ -5,6 +5,7 @@ import com.orion.ops.module.infra.entity.request.dict.DictKeyUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictKeyVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典配置项 服务类
@@ -37,6 +38,14 @@ public interface DictKeyService {
      * @return rows
      */
     List<DictKeyVO> getDictKeyList();
+
+    /**
+     * 查询字典配置项 schema
+     *
+     * @param key key
+     * @return schema
+     */
+    Map<String, String> getDictSchema(String key);
 
     /**
      * 删除字典配置项

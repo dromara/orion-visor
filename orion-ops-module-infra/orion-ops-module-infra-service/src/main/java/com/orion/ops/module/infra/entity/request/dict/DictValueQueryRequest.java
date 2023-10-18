@@ -26,7 +26,7 @@ public class DictValueQueryRequest extends PageRequest {
 
     @Size(max = 32)
     @Schema(description = "配置名称")
-    private String label;
+    private String name;
 
     @Size(max = 512)
     @Schema(description = "配置值")
@@ -34,6 +34,6 @@ public class DictValueQueryRequest extends PageRequest {
 
     @Size(max = 64)
     @Schema(description = "配置描述")
-    private String desc;
+    private String label;
 
 }

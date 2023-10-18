@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.define.cache;
 
+import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.cache.CacheKeyBuilder;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.ops.module.infra.entity.dto.DictKeyCacheDTO;
@@ -23,8 +24,15 @@ public interface DictCacheKeyDefine {
             .timeout(1, TimeUnit.DAYS)
             .build();
 
+    CacheKeyDefine DICT_SCHEMA = new CacheKeyBuilder()
+            .key("dict:schema:{}")
+            .desc("字典配置项 schema ${key}")
+            .type(JSONObject.class)
+            .timeout(1, TimeUnit.DAYS)
+            .build();
+
     CacheKeyDefine DICT_VALUE = new CacheKeyBuilder()
-            .key("dict:value:{}")
+            .key("dict:values:{}")
             .desc("字典配置值 ${key}")
             .type(DictValueCacheDTO.class)
             .timeout(1, TimeUnit.DAYS)

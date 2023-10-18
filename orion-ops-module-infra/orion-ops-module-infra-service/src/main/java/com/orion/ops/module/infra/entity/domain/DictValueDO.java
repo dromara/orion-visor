@@ -35,20 +35,20 @@ public class DictValueDO extends BaseDO {
     private Long keyId;
 
     @Schema(description = "配置项")
-    @TableField("key")
-    private String key;
+    @TableField("key_name")
+    private String keyName;
 
     @Schema(description = "配置名称")
-    @TableField("label")
-    private String label;
+    @TableField("name")
+    private String name;
 
     @Schema(description = "配置值")
     @TableField("value")
     private String value;
 
     @Schema(description = "配置描述")
-    @TableField("desc")
-    private String desc;
+    @TableField("label")
+    private String label;
 
     @Schema(description = "额外参数")
     @TableField("extra")

@@ -38,7 +38,7 @@ public class DictValueUpdateRequest implements Serializable {
     @Size(max = 32)
     @Pattern(regexp = "^[a-zA-Z0-9]{4,32}$")
     @Schema(description = "配置名称")
-    private String label;
+    private String name;
 
     @NotBlank
     @Size(max = 512)
@@ -48,7 +48,7 @@ public class DictValueUpdateRequest implements Serializable {
     @NotBlank
     @Size(max = 64)
     @Schema(description = "配置描述")
-    private String desc;
+    private String label;
 
     @NotBlank
     @Schema(description = "额外参数")

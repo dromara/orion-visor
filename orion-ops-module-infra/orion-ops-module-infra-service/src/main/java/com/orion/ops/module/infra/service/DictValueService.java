@@ -8,6 +8,7 @@ import com.orion.ops.module.infra.entity.request.dict.DictValueUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictValueVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典配置值 服务类
@@ -49,6 +50,14 @@ public interface DictValueService {
      * @return rows
      */
     List<DictValueVO> getDictValueList(String key);
+
+    /**
+     * 查询全部字典配置值枚举
+     *
+     * @param key key
+     * @return enum
+     */
+    Map<String, Map<String, Object>> getDictValueEnum(String key);
 
     /**
      * 分页查询字典配置值
