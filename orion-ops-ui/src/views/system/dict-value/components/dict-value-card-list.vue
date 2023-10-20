@@ -8,7 +8,7 @@
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
-             :add-permission="['${package.ModuleName}:${typeHyphen}:create']"
+             :add-permission="['infra:dict-value:create']"
              @add="emits('openAdd')"
              @reset="reset"
              @search="fetchCardData"
@@ -25,13 +25,13 @@
           <icon-more class="card-extra-icon" />
           <template #content>
             <!-- 修改 -->
-            <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
+            <a-doption v-permission="['infra:dict-value:update']"
                        @click="emits('openUpdate', record)">
               <icon-edit />
               修改
             </a-doption>
             <!-- 删除 -->
-            <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+            <a-doption v-permission="['infra:dict-value:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
               <icon-delete />
@@ -44,13 +44,13 @@
     <!-- 右键菜单 -->
     <template #contextMenu="{ record }">
       <!-- 修改 -->
-      <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
+      <a-doption v-permission="['infra:dict-value:update']"
                  @click="emits('openUpdate', record)">
         <icon-edit />
         修改
       </a-doption>
       <!-- 删除 -->
-      <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+      <a-doption v-permission="['infra:dict-value:delete']"
                  class="span-red"
                  @click="deleteRow(record.id)">
         <icon-delete />
@@ -67,32 +67,47 @@
               :style="{ width: '320px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }">
-        #foreach($field in ${table.fields})
-        <!-- $field.comment -->
-        <a-form-item field="${field.propertyName}" label="${field.comment}">
-          #if(${vue.enums.containsKey(${field.propertyName})})
-          <a-select v-model="formModel.${field.propertyName}"
-                    :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
-                    placeholder="请选择${field.comment}"
-                    allow-clear />
-          #else
-          #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
-          <a-input-number v-model="formModel.${field.propertyName}"
-                          placeholder="请输入${field.comment}"
+        <!-- id -->
+        <a-form-item field="id" label="id">
+          <a-input-number v-model="formModel.id"
+                          placeholder="请输入id"
                           allow-clear
                           hide-button />
-          #elseif("$field.propertyType" == "Date")
-          <a-date-picker v-model="formModel.${field.propertyName}"
-                         style="width: 100%"
-                         placeholder="请选择${field.comment}"
-                         show-time
-                         allow-clear />
-          #else
-          <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear />
-          #end
-          #end
         </a-form-item>
-      #end
+        <!-- 配置项id -->
+        <a-form-item field="keyId" label="配置项id">
+          <a-input-number v-model="formModel.keyId"
+                          placeholder="请输入配置项id"
+                          allow-clear
+                          hide-button />
+        </a-form-item>
+        <!-- 配置项 -->
+        <a-form-item field="keyName" label="配置项">
+          <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
+        </a-form-item>
+        <!-- 配置名称 -->
+        <a-form-item field="name" label="配置名称">
+          <a-input v-model="formModel.name" placeholder="请输入配置名称" allow-clear />
+        </a-form-item>
+        <!-- 配置值 -->
+        <a-form-item field="value" label="配置值">
+          <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
+        </a-form-item>
+        <!-- 配置描述 -->
+        <a-form-item field="label" label="配置描述">
+          <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
+        </a-form-item>
+        <!-- 额外参数 -->
+        <a-form-item field="extra" label="额外参数">
+          <a-input v-model="formModel.extra" placeholder="请输入额外参数" allow-clear />
+        </a-form-item>
+        <!-- 排序 -->
+        <a-form-item field="sort" label="排序">
+          <a-input-number v-model="formModel.sort"
+                          placeholder="请输入排序"
+                          allow-clear
+                          hide-button />
+        </a-form-item>
       </a-form>
     </template>
   </card-list>
@@ -100,7 +115,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}-${vue.feature}-card-list'
+    name: 'system-dict-value-card-list'
   };
 </script>
 
@@ -110,28 +125,26 @@
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
-  import { delete${vue.featureEntity}, get${vue.featureEntity}Page, ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
+  import { deleteDictValue, getDictValuePage, DictValueQueryRequest, DictValueQueryResponse } from '@/api/system/dict-value';
   import { Message, Modal } from '@arco-design/web-vue';
-  import {} from '../types/const';
-  #if($vue.enums.isEmpty())
-  import {} from '../types/enum.types';
-  #else
-  import { #foreach($entry in ${vue.enums.entrySet()})${entry.value.className}#if($foreach.hasNext), #end#end } from '../types/enum.types';
-  #end
-  import { toOptions, getEnumValue } from '@/utils/enum';
 
   const { loading, setLoading } = useLoading();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const list = ref<${vue.featureEntity}QueryResponse[]>([]);
+  const list = ref<DictValueQueryResponse[]>([]);
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
   const formRef = ref();
-  const formModel = reactive<${vue.featureEntity}QueryRequest>({
+  const formModel = reactive<DictValueQueryRequest>({
     searchValue: undefined,
-    #foreach($field in ${table.fields})
-    ${field.propertyName}: undefined,
-    #end
+    id: undefined,
+    keyId: undefined,
+    keyName: undefined,
+    name: undefined,
+    value: undefined,
+    label: undefined,
+    extra: undefined,
+    sort: undefined,
   });
 
   // 条件数量
@@ -150,7 +163,7 @@
         try {
           setLoading(true);
           // 调用删除接口
-          await delete${vue.featureEntity}(id);
+          await deleteDictValue(id);
           Message.success('删除成功');
           // 重新加载数据
           await fetchCardData();
@@ -183,10 +196,10 @@
   };
 
   // 加载数据
-  const doFetchCardData = async (request: ${vue.featureEntity}QueryRequest) => {
+  const doFetchCardData = async (request: DictValueQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await get${vue.featureEntity}Page(request);
+      const { data } = await getDictValuePage(request);
       list.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

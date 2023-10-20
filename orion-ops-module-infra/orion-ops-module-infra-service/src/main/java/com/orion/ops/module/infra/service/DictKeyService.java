@@ -1,6 +1,8 @@
 package com.orion.ops.module.infra.service;
 
+import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyCreateRequest;
+import com.orion.ops.module.infra.entity.request.dict.DictKeyQueryRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictKeyVO;
 
@@ -38,6 +40,14 @@ public interface DictKeyService {
      * @return rows
      */
     List<DictKeyVO> getDictKeyList();
+
+    /**
+     * 分页 查询字典配置项
+     *
+     * @param request request
+     * @return rows
+     */
+    DataGrid<DictKeyVO> getDictKeyPage(DictKeyQueryRequest request);
 
     /**
      * 查询字典配置项 schema

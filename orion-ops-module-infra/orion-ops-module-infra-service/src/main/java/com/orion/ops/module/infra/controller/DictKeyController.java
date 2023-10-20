@@ -1,11 +1,13 @@
 package com.orion.ops.module.infra.controller;
 
+import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.DictKeyOperatorType;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyCreateRequest;
+import com.orion.ops.module.infra.entity.request.dict.DictKeyQueryRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictKeyVO;
 import com.orion.ops.module.infra.service.DictKeyService;
@@ -60,6 +62,14 @@ public class DictKeyController {
     @Operation(summary = "查询全部字典配置项")
     public List<DictKeyVO> getDictKeyList() {
         return dictKeyService.getDictKeyList();
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @PostMapping("/query")
+    @Operation(summary = "分页查询全部字典配置项")
+    @PreAuthorize("@ss.hasPermission('infra:dict-key:query')")
+    public DataGrid<DictKeyVO> getDictKeyPage(@Validated @RequestBody DictKeyQueryRequest request) {
+        return dictKeyService.getDictKeyPage(request);
     }
 
     @OperatorLog(DictKeyOperatorType.DELETE)

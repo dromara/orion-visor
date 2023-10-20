@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.entity.request.user;
 
+import com.orion.ops.framework.common.constant.ValidConst;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,7 @@ public class SystemUserCreateRequest implements Serializable {
 
     @NotBlank
     @Size(max = 32)
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,32}$")
+    @Pattern(regexp = ValidConst.CHAR_NUMBER_4_32_PATTERN, message = ValidConst.CHAR_NUMBER_4_32_MESSAGE)
     @Schema(description = "用户名")
     private String username;
 

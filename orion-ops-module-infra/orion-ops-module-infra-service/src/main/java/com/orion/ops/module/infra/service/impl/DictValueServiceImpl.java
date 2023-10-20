@@ -182,6 +182,7 @@ public class DictValueServiceImpl implements DictValueService {
         Map<String, Map<String, Object>> result = Maps.newLinkedMap();
         for (DictValueVO value : values) {
             Map<String, Object> item = Maps.newMap();
+            item.put(Const.NAME, value.getName());
             item.put(Const.LABEL, value.getLabel());
             item.put(Const.VALUE, DictValueTypeEnum.of(schema.get(Const.VALUE)).parse(value.getValue()));
             // 额外值
@@ -213,7 +214,7 @@ public class DictValueServiceImpl implements DictValueService {
         DictValueDO updateRecord = new DictValueDO();
         updateRecord.setKeyName(newKey);
         LambdaQueryWrapper<DictValueDO> wrapper = dictValueDAO.lambda()
-                .eq(DictValueDO::getKeyId, beforeKey);
+                .eq(DictValueDO::getKeyId, keyId);
         int effect = dictValueDAO.update(updateRecord, wrapper);
         // 删除缓存
         String beforeCacheKey = DictCacheKeyDefine.DICT_VALUE.format(beforeKey);

@@ -5,21 +5,13 @@
                     label-align="left"
                     @submit="fetchTableData"
                     @reset="fetchTableData">
-      <!-- 配置项 fixme 修改为下拉框 -->
+      <!-- 配置项 -->
       <a-form-item field="keyName" label="配置项" label-col-flex="50px">
         <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
       </a-form-item>
-      <!-- 配置名称 -->
-      <a-form-item field="name" label="配置名称" label-col-flex="50px">
-        <a-input v-model="formModel.name" placeholder="请输入配置名称" allow-clear />
-      </a-form-item>
-      <!-- 配置值 -->
-      <a-form-item field="value" label="配置值" label-col-flex="50px">
-        <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
-      </a-form-item>
       <!-- 配置描述 -->
-      <a-form-item field="label" label="配置描述" label-col-flex="50px">
-        <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
+      <a-form-item field="description" label="配置描述" label-col-flex="50px">
+        <a-input v-model="formModel.description" placeholder="请输入配置描述" allow-clear />
       </a-form-item>
     </a-query-header>
   </a-card>
@@ -30,47 +22,21 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          数据字典
+          字典配置项
         </div>
-        <!-- 操作 -->
-        <a-space>
-          <a-button type="primary"
-                    v-permission="['infra:dict-key:create']"
-                    @click="emits('openAddKey')">
-            新增配置项
-            <template #icon>
-              <icon-book />
-            </template>
-          </a-button>
-        </a-space>
       </div>
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 新增 -->
           <a-button type="primary"
-                    v-permission="['infra:dict-value:create']"
-                    @click="emits('openAddValue')">
-            新增字典值
+                    v-permission="['infra:dict-key:create']"
+                    @click="emits('openAdd')">
+            新增
             <template #icon>
               <icon-plus />
             </template>
           </a-button>
-          <!-- 删除 -->
-          <a-popconfirm position="br"
-                        type="warning"
-                        :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
-                        @ok="deleteSelectRows">
-            <a-button v-permission="['infra:dict-value:delete']"
-                      type="secondary"
-                      status="danger"
-                      :disabled="selectedKeys.length === 0">
-              删除
-              <template #icon>
-                <icon-delete />
-              </template>
-            </a-button>
-          </a-popconfirm>
         </a-space>
       </div>
     </template>
@@ -81,36 +47,46 @@
              label-align="left"
              :loading="loading"
              :columns="columns"
-             v-model:selected-keys="selectedKeys"
-             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 配置值类型 -->
+      <template #valueType="{ record }">
+        <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum,'color')" class="pointer">
+          {{ getEnumValue(record.valueType, ValueTypeEnum) }}
+        </a-tag>
+      </template>
+      <!-- 额外参数 -->
+      <template #extraSchema="{ record }">
+        <template v-if="record.extraSchema">
+          <a-space>
+            <template v-for="item in JSON.parse(record.extraSchema)" :key="item.name">
+              <a-tag :color="getEnumValue(item.type, ValueTypeEnum,'color')">{{ item.name }}</a-tag>
+            </template>
+          </a-space>
+        </template>
+        <template v-else>
+          -
+        </template>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 修改 -->
           <a-button type="text"
                     size="mini"
-                    v-permission="['infra:dict-value:update']"
-                    @click="emits('openUpdateValue', record)">
+                    v-permission="['infra:dict-key:update']"
+                    @click="emits('openUpdate', record)">
             修改
-          </a-button>
-          <!-- 历史 -->
-          <a-button type="text"
-                    size="mini"
-                    v-permission="['infra:dict-value:update']"
-                    @click="emits('openValueHistory', record)">
-            历史
           </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['infra:dict-value:delete']"
+            <a-button v-permission="['infra:dict-key:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -125,55 +101,35 @@
 
 <script lang="ts">
   export default {
-    name: 'system-dict-value-table'
+    name: 'system-dict-key-table'
   };
 </script>
 
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { batchDeleteDictValue, deleteDictValue, getDictValuePage, DictValueQueryRequest, DictValueQueryResponse } from '@/api/system/dict-value';
+  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage, DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import columns from '../types/dict-value.table.columns';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import columns from '../types/table.columns';
+  import { usePagination } from '@/types/table';
   import {} from '../types/const';
-  import {} from '../types/enum.types';
+  import { ValueTypeEnum } from '../types/enum.types';
   import { toOptions, getEnumValue } from '@/utils/enum';
+  import { MenuStatusEnum } from '@/views/system/menu/types/enum.types';
 
-  const tableRenderData = ref<DictValueQueryResponse[]>([]);
+  const tableRenderData = ref<DictKeyQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAddKey', 'openAddValue', 'openUpdateValue', 'openValueHistory']);
+  const emits = defineEmits(['openAdd', 'openUpdate']);
 
   const pagination = usePagination();
-  const selectedKeys = ref<number[]>([]);
-  const rowSelection = useRowSelection();
 
-  const formModel = reactive<DictValueQueryRequest>({
+  const formModel = reactive<DictKeyQueryRequest>({
     id: undefined,
-    keyId: undefined,
     keyName: undefined,
-    name: undefined,
-    value: undefined,
-    label: undefined,
-    extra: undefined,
-    sort: undefined,
+    valueType: undefined,
+    extraSchema: undefined,
+    description: undefined,
   });
-
-  // 删除选中行
-  const deleteSelectRows = async () => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await batchDeleteDictValue(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
-      selectedKeys.value = [];
-      // 重新加载数据
-      await fetchTableData();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 删除当前行
   const deleteRow = async ({ id }: {
@@ -182,7 +138,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteDictValue(id);
+      await deleteDictKey(id);
       Message.success('删除成功');
       // 重新加载数据
       await fetchTableData();
@@ -207,15 +163,14 @@
   });
 
   // 加载数据
-  const doFetchTableData = async (request: DictValueQueryRequest) => {
+  const doFetchTableData = async (request: DictKeyQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getDictValuePage(request);
+      const { data } = await getDictKeyPage(request);
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
-      selectedKeys.value = [];
     } catch (e) {
     } finally {
       setLoading(false);

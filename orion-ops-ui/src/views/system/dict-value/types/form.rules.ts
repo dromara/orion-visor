@@ -11,9 +11,6 @@ export const keyName = [{
 }, {
   maxLength: 32,
   message: '配置项长度不能大于32位'
-}, {
-  match: /^[a-zA-Z0-9]{4,32}$/,
-  message: '配置项需要为 4-32 位的数字以及字母'
 }] as FieldRule[];
 
 export const name = [{
@@ -22,9 +19,6 @@ export const name = [{
 }, {
   maxLength: 32,
   message: '配置名称长度不能大于32位'
-}, {
-  match: /^[a-zA-Z0-9]{4,32}$/,
-  message: '配置名称需要为 4-32 位的数字以及字母'
 }] as FieldRule[];
 
 export const value = [{

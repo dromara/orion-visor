@@ -3,7 +3,9 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Objects1;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
@@ -17,6 +19,7 @@ import com.orion.ops.module.infra.define.cache.DictCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DictKeyDO;
 import com.orion.ops.module.infra.entity.dto.DictKeyCacheDTO;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyCreateRequest;
+import com.orion.ops.module.infra.entity.request.dict.DictKeyQueryRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.DictKeyVO;
 import com.orion.ops.module.infra.enums.DictValueTypeEnum;
@@ -119,6 +122,16 @@ public class DictKeyServiceImpl implements DictKeyService {
     }
 
     @Override
+    public DataGrid<DictKeyVO> getDictKeyPage(DictKeyQueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<DictKeyDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return dictKeyDAO.of(wrapper)
+                .page(request)
+                .dataGrid(DictKeyConvert.MAPPER::to);
+    }
+
+    @Override
     public Map<String, String> getDictSchema(String key) {
         // 查询缓存
         String cacheKey = DictCacheKeyDefine.DICT_SCHEMA.format(key);
@@ -208,6 +221,24 @@ public class DictKeyServiceImpl implements DictKeyService {
         // 检查是否存在
         boolean present = dictKeyDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+    }
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    private LambdaQueryWrapper<DictKeyDO> buildQueryWrapper(DictKeyQueryRequest request) {
+        String searchValue = request.getSearchValue();
+        return dictKeyDAO.wrapper()
+                .eq(DictKeyDO::getId, request.getId())
+                .like(DictKeyDO::getKeyName, request.getKeyName())
+                .like(DictKeyDO::getDescription, request.getDescription())
+                .and(Strings.isNotEmpty(searchValue), c -> c
+                        .like(DictKeyDO::getKeyName, searchValue).or()
+                        .like(DictKeyDO::getDescription, searchValue)
+                );
     }
 
 }

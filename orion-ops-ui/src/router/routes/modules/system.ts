@@ -12,9 +12,14 @@ const SYSTEM: AppRouteRecordRaw = {
       component: () => import('@/views/system/menu/index.vue'),
     },
     {
-      name: 'systemDict',
-      path: '/system/dict',
-      component: () => import('@/views/system/dict/index.vue'),
+      name: 'systemDictKey',
+      path: '/system/dict-key',
+      component: () => import('@/views/system/dict-key/index.vue'),
+    },
+    {
+      name: 'systemDictValue',
+      path: '/system/dict-value',
+      component: () => import('@/views/system/dict-value/index.vue'),
     },
   ],
 };

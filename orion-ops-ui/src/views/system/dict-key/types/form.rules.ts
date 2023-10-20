@@ -4,27 +4,19 @@ export const keyName = [{
   required: true,
   message: '请输入配置项'
 }, {
-  maxLength: 32,
-  message: '配置项长度不能大于32位'
+  match: /^[a-zA-Z0-9]{2,32}$/,
+  message: '配置项需要为 2-32 位的数字以及字母'
 }] as FieldRule[];
 
 export const valueType = [{
   required: true,
-  message: '请输入配置值定义'
+  message: '请输入配置值类型'
 }, {
   maxLength: 12,
-  message: '配置值定义长度不能大于12位'
-}] as FieldRule[];
-
-export const extraSchema = [{
-  required: true,
-  message: '请输入额外配置定义'
+  message: '配置值类型长度不能大于12位'
 }] as FieldRule[];
 
 export const description = [{
-  required: true,
-  message: '请输入配置描述'
-}, {
   maxLength: 64,
   message: '配置描述长度不能大于64位'
 }] as FieldRule[];
@@ -32,6 +24,5 @@ export const description = [{
 export default {
   keyName,
   valueType,
-  extraSchema,
   description,
 } as Record<string, FieldRule | FieldRule[]>;

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
+import { DataGrid, Pagination } from '@/types/global';
 import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
@@ -17,6 +18,16 @@ export interface DictKeyCreateRequest {
  */
 export interface DictKeyUpdateRequest extends DictKeyCreateRequest {
   id?: number;
+}
+
+/**
+ * 字典配置项查询请求
+ */
+export interface DictKeyQueryRequest extends Pagination {
+  searchValue?: string;
+  id?: number;
+  keyName?: string;
+  description?: string;
 }
 
 /**
@@ -49,6 +60,13 @@ export function updateDictKey(request: DictKeyUpdateRequest) {
  */
 export function getDictKeyList() {
   return axios.post<Array<DictKeyQueryResponse>>('/infra/dict-key/list');
+}
+
+/**
+ * 分页查询字典配置项
+ */
+export function getDictKeyPage(request: DictKeyQueryRequest) {
+  return axios.post<DataGrid<DictKeyQueryResponse>>('/infra/dict-key/query', request);
 }
 
 /**
