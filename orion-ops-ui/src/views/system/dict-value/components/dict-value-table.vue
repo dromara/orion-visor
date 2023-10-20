@@ -4,11 +4,13 @@
     <a-query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
-                    @reset="fetchTableData"
+                    @reset="resetForm"
                     @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
-      <a-form-item field="keyName" label="配置项" label-col-flex="50px">
-        <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
+      <a-form-item field="keyId" label="配置项" label-col-flex="50px">
+        <dict-key-selector v-model="formModel.keyId"
+                           @change="changeKey"
+                           allow-create />
       </a-form-item>
       <!-- 配置名称 -->
       <a-form-item field="name" label="配置名称" label-col-flex="50px">
@@ -100,12 +102,12 @@
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
-          <!-- 回滚 -->
+          <!-- 历史 -->
           <a-button type="text"
                     size="mini"
                     v-permission="['infra:dict-value:update']"
-                    @click="emits('openUpdate', record)">
-            回滚
+                    @click="emits('openHistory', record)">
+            历史
           </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
@@ -142,11 +144,12 @@
   import {} from '../types/enum.types';
   import { toOptions, getEnumValue } from '@/utils/enum';
   import useCopy from '@/hooks/copy';
+  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
 
   const { copy } = useCopy();
   const tableRenderData = ref<DictValueQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openHistory']);
 
   const pagination = usePagination();
   const selectedKeys = ref<number[]>([]);
@@ -209,6 +212,21 @@
   defineExpose({
     addedCallback, updatedCallback
   });
+
+  // 修改 key
+  const changeKey = ({ id, keyName }: { id: number, keyName: string }) => {
+    if (id) {
+      formModel.keyId = id;
+    } else {
+      formModel.keyName = keyName;
+    }
+  };
+
+  // 清空表单
+  const resetForm = () => {
+    formModel.keyName = undefined;
+    fetchTableData();
+  };
 
   // 加载数据
   const doFetchTableData = async (request: DictValueQueryRequest) => {

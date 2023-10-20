@@ -77,6 +77,12 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <!-- 查看 -->
+          <a-button type="text"
+                    size="mini"
+                    @click="viewDictKey(record.keyName)">
+            查看
+          </a-button>
           <!-- 修改 -->
           <a-button type="text"
                     size="mini"
@@ -117,13 +123,15 @@
   import { usePagination } from '@/types/table';
   import {} from '../types/const';
   import { ValueTypeEnum } from '../types/enum.types';
-  import { toOptions, getEnumValue } from '@/utils/enum';
-  import { MenuStatusEnum } from '@/views/system/menu/types/enum.types';
+  import { getEnumValue } from '@/utils/enum';
+  import { getDictValueEnum } from '@/api/system/dict-value';
+  import useCopy from '@/hooks/copy';
 
   const tableRenderData = ref<DictKeyQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
+  const { copy } = useCopy();
   const pagination = usePagination();
 
   const formModel = reactive<DictKeyQueryRequest>({
@@ -162,6 +170,13 @@
   defineExpose({
     addedCallback, updatedCallback
   });
+
+  // 查看
+  const viewDictKey = async (keyName: string) => {
+    const { data } = await getDictValueEnum(keyName);
+    // fixme 后续改为 jsonView
+    await copy(JSON.stringify(data), '复制成功');
+  };
 
   // 加载数据
   const doFetchTableData = async (request: DictKeyQueryRequest) => {

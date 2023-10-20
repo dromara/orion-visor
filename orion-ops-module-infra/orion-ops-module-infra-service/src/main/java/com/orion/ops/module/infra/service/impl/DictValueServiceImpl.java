@@ -140,15 +140,15 @@ public class DictValueServiceImpl implements DictValueService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DictValueVO> getDictValueList(String key) {
+    public List<DictValueVO> getDictValueList(String keyName) {
         // 查询缓存
-        String cacheKey = DictCacheKeyDefine.DICT_VALUE.format(key);
+        String cacheKey = DictCacheKeyDefine.DICT_VALUE.format(keyName);
         List<DictValueCacheDTO> list = RedisMaps.valuesJson(cacheKey, (Class<DictValueCacheDTO>) DictCacheKeyDefine.DICT_VALUE.getType());
         if (list.isEmpty()) {
             // 查询数据库
             list = dictValueDAO.of()
                     .createWrapper()
-                    .eq(DictValueDO::getKeyName, key)
+                    .eq(DictValueDO::getKeyName, keyName)
                     .then()
                     .list(DictValueConvert.MAPPER::toCache);
             // 添加默认值 防止穿透
@@ -170,14 +170,14 @@ public class DictValueServiceImpl implements DictValueService {
     }
 
     @Override
-    public Map<String, Map<String, Object>> getDictValueEnum(String key) {
+    public Map<String, Map<String, Object>> getDictValueEnum(String keyName) {
         // 查询配置值
-        List<DictValueVO> values = this.getDictValueList(key);
+        List<DictValueVO> values = this.getDictValueList(keyName);
         if (values.isEmpty()) {
             return Maps.empty();
         }
         // 查询配置项
-        Map<String, String> schema = dictKeyService.getDictSchema(key);
+        Map<String, String> schema = dictKeyService.getDictSchema(keyName);
         // 返回
         Map<String, Map<String, Object>> result = Maps.newLinkedMap();
         for (DictValueVO value : values) {

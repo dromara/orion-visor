@@ -46,18 +46,18 @@ public interface DictValueService {
     /**
      * 查询全部字典配置值
      *
-     * @param key key
+     * @param keyName keyName
      * @return rows
      */
-    List<DictValueVO> getDictValueList(String key);
+    List<DictValueVO> getDictValueList(String keyName);
 
     /**
      * 查询全部字典配置值枚举
      *
-     * @param key key
+     * @param keyName keyName
      * @return enum
      */
-    Map<String, Map<String, Object>> getDictValueEnum(String key);
+    Map<String, Map<String, Object>> getDictValueEnum(String keyName);
 
     /**
      * 分页查询字典配置值

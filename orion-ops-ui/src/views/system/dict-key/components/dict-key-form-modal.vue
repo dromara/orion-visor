@@ -101,7 +101,6 @@
   import { definedExtraKeys, innerKeys, ExtraParamType } from '../types/const';
   import { ValueTypeEnum } from '../types/enum.types';
   import { toOptions } from '@/utils/enum';
-  import { FieldData } from '@arco-design/web-vue/es/form/interface';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -113,7 +112,7 @@
     return {
       id: undefined,
       keyName: undefined,
-      valueType: undefined,
+      valueType: ValueTypeEnum.STRING.value,
       extraSchema: undefined,
       description: undefined,
     };

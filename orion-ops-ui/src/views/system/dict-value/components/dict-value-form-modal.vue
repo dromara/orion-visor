@@ -22,7 +22,7 @@
               :rules="formRules">
         <!-- 配置项 -->
         <a-form-item field="keyId" label="配置项">
-          <dict-key-selector v-model="formModel.keyId" />
+          <dict-key-selector v-model="formModel.keyId" @change="changeKey" />
         </a-form-item>
         <!-- 配置名称 -->
         <a-form-item field="name" label="配置名称">
@@ -42,6 +42,40 @@
                           placeholder="请输入排序"
                           hide-button />
         </a-form-item>
+        <!-- 额外配置 -->
+        <a-form-item v-for="{ name, type } in keyExtraSchemas"
+                     :key="name"
+                     :field="name as string"
+                     :label="name">
+          <!-- 字符串 -->
+          <a-input v-if="ValueTypeEnum.STRING.value === type"
+                   v-model="extraValue[name]"
+                   :placeholder="`请输入 ${name}`"
+                   allow-clear />
+          <!-- 数字 -->
+          <a-input-number v-else-if="ValueTypeEnum.INTEGER.value === type || ValueTypeEnum.DECIMAL.value === type"
+                          v-model="extraValue[name]"
+                          :placeholder="`请输入 ${name}`"
+                          allow-clear
+                          hide-button />
+          <!-- 布尔值 -->
+          <a-switch v-else-if="ValueTypeEnum.BOOLEAN.value === type"
+                    type="round"
+                    v-model="extraValue[name]"
+                    checked-text="TRUE"
+                    unchecked-text="FALSE" />
+          <!-- 颜色 -->
+          <template v-else-if="ValueTypeEnum.COLOR.value === type">
+            <a-input v-model="extraValue[name]"
+                     :placeholder="`请输入 ${name}`"
+                     default-value="#"
+                     allow-clear
+                     hide-button />
+            <span class="color-block" :style="{
+              background: extraValue[name] === '#' ? undefined : (extraValue[name] || undefined)
+            }" />
+          </template>
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -60,13 +94,16 @@
   import formRules from '../types/form.rules';
   import { createDictValue, updateDictValue, DictValueUpdateRequest } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
-  import {} from '../types/const';
-  import {} from '../types/enum.types';
-  import { toOptions } from '@/utils/enum';
+  import { ExtraParamType, innerKeys } from '../../dict-key/types/const';
+  import { ValueTypeEnum } from '../../dict-key/types/enum.types';
+  import {} from '@/utils/enum';
   import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
+  import { DictKeyQueryResponse } from '@/api/system/dict-key';
+  import { useCacheStore } from '@/store';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+  const cacheStore = useCacheStore();
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
@@ -83,6 +120,8 @@
     };
   };
 
+  const keyExtraSchemas = ref<Array<ExtraParamType>>([]);
+  const extraValue = ref<Record<string, any>>({});
   const formRef = ref<any>();
   const formModel = ref<DictValueUpdateRequest>({});
 
@@ -107,9 +146,19 @@
   // 渲染表单
   const renderForm = (record: any) => {
     formModel.value = Object.assign({}, record);
+    // schema
+    const find = record.keyId && cacheStore.dictKeys.find((item) => item.id === record.keyId);
+    keyExtraSchemas.value = (find && find.extraSchema && JSON.parse(find.extraSchema)) || [];
+    // 额外参数
+    extraValue.value = (formModel.value.extra && JSON.parse(formModel.value.extra)) || {};
   };
 
   defineExpose({ openAdd, openUpdate });
+
+  // 切换 key
+  const changeKey = ({ extraSchema }: DictKeyQueryResponse) => {
+    keyExtraSchemas.value = (extraSchema && JSON.parse(extraSchema)) || [];
+  };
 
   // 确定
   const handlerOk = async () => {
@@ -120,14 +169,34 @@
       if (error) {
         return false;
       }
+      // 验证额外参数
+      if (keyExtraSchemas.value.length) {
+        for (let { name, type } of keyExtraSchemas.value) {
+          const nameKey = name as string;
+          const value = extraValue.value[nameKey];
+          if (value === undefined) {
+            if (type === ValueTypeEnum.BOOLEAN.value) {
+              extraValue.value[nameKey] = false;
+              continue;
+            }
+            formRef.value.setFields({
+              [nameKey]: {
+                status: 'error',
+                message: `${name} 不能为空`
+              }
+            });
+            return false;
+          }
+        }
+      }
       if (isAddHandle.value) {
         // 新增
-        await createDictValue(formModel.value);
+        await createDictValue({ ...formModel.value, extra: JSON.stringify(extraValue.value) });
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateDictValue(formModel.value);
+        await updateDictValue({ ...formModel.value, extra: JSON.stringify(extraValue.value) });
         Message.success('修改成功');
         emits('updated');
       }
@@ -154,5 +223,11 @@
 </script>
 
 <style lang="less" scoped>
-
+  .color-block {
+    width: 36px;
+    height: 30px;
+    margin-left: 8px;
+    border-radius: 4px;
+    background: var(--color-fill-2);
+  }
 </style>

@@ -71,15 +71,15 @@ public class DictValueController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询字典配置值")
-    public List<DictValueVO> getDictValueList(@RequestParam("key") String key) {
-        return dictValueService.getDictValueList(key);
+    public List<DictValueVO> getDictValueList(@RequestParam("keyName") String keyName) {
+        return dictValueService.getDictValueList(keyName);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/enum")
     @Operation(summary = "查询字典配置值枚举")
-    public Map<String, Map<String, Object>> getDictValueEnum(@RequestParam("key") String key) {
-        return dictValueService.getDictValueEnum(key);
+    public Map<String, Map<String, Object>> getDictValueEnum(@RequestParam("keyName") String keyName) {
+        return dictValueService.getDictValueEnum(keyName);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

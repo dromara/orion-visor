@@ -16,14 +16,13 @@
 </script>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, PropType } from 'vue';
   import { useCacheStore } from '@/store';
   import { SelectOptionData } from '@arco-design/web-vue';
   import { RoleStatusEnum } from '@/views/user/role/types/enum.types';
 
   const props = defineProps({
-    // FIXME 拆出来单选多选
-    modelValue: Array,
+    modelValue: Object as PropType<Array<number>> | PropType<number>,
     loading: Boolean,
     multiple: Boolean,
   });

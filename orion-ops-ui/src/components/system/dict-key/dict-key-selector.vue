@@ -5,6 +5,7 @@
             :loading="loading"
             :disabled="loading"
             :filter-option="filterOption"
+            :allow-create="allowCreate"
             placeholder="请选择配置项" />
 </template>
 
@@ -23,6 +24,10 @@
   const props = defineProps({
     modelValue: Number,
     loading: Boolean,
+    allowCreate: {
+      type: Boolean,
+      default: false
+    }
   });
 
   const emits = defineEmits(['update:modelValue', 'change']);
@@ -32,8 +37,21 @@
       return props.modelValue;
     },
     set(e) {
-      emits('update:modelValue', e);
-      emits('change', e);
+      if (typeof e === 'string') {
+        // 创建的值
+        emits('update:modelValue', undefined);
+        emits('change', {
+          id: undefined,
+          keyName: e
+        });
+      } else {
+        // 已有的值
+        emits('update:modelValue', e);
+        const find = cacheStore.dictKeys.find(s => s.id === e);
+        if (find) {
+          emits('change', find);
+        }
+      }
     }
   });
 
@@ -44,7 +62,6 @@
       return {
         label: `${s.keyName} - ${s.description || ''}`,
         value: s.id,
-        origin: s,
       };
     });
   };

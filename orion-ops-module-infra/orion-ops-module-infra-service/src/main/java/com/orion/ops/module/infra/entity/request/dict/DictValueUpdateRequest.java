@@ -37,7 +37,7 @@ public class DictValueUpdateRequest implements Serializable {
 
     @NotBlank
     @Size(max = 32)
-    @Pattern(regexp = ValidConst.CHAR_NUMBER_2_32_PATTERN, message = ValidConst.CHAR_NUMBER_2_32_MESSAGE)
+    @Pattern(regexp = ValidConst.CHAR_NUMBER_1_32_PATTERN, message = ValidConst.CHAR_NUMBER_1_32_MESSAGE)
     @Schema(description = "配置名称")
     private String name;
 
