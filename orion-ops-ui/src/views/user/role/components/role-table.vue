@@ -4,7 +4,8 @@
     <a-query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
-                    @reset="fetchTableData">
+                    @reset="fetchTableData"
+                    @keyup.enter="() => fetchTableData()">
       <!-- 角色名称 -->
       <a-form-item field="name" label="角色名称" label-col-flex="50px">
         <a-input v-model="formModel.name" placeholder="请输入角色名称" allow-clear />

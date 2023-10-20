@@ -27,7 +27,7 @@
               <!-- 创建 -->
               <div v-permission="addPermission"
                    v-show="!handleVisible.disableAdd"
-                   class="header-icon-wrapper"
+                   class="click-icon-wrapper header-icon-wrapper"
                    title="创建"
                    @click="emits('add')">
                 <icon-plus />
@@ -51,13 +51,13 @@
                          allow-clear
                          @input="e => emits('update:searchValue', e)"
                          @change="e => emits('update:searchValue', e)"
-                         @keydown.enter="emits('search')" />
+                         @keyup.enter="emits('search')" />
               </div>
               <!-- 过滤条件 -->
               <a-popover position="br" trigger="click" content-class="card-filter-wrapper">
                 <div v-if="!handleVisible.disableFilter"
                      ref="filterRef"
-                     class="header-icon-wrapper"
+                     class="click-icon-wrapper header-icon-wrapper"
                      title="选择过滤条件">
                   <a-badge :count="filterCount" :dot-style="{zoom: '.75'}" :offset="[9, -6]">
                     <icon-filter />
@@ -77,14 +77,14 @@
               </a-popover>
               <!-- 搜索 -->
               <div v-if="!handleVisible.disableSearch"
-                   class="header-icon-wrapper"
+                   class="click-icon-wrapper header-icon-wrapper"
                    title="搜索"
                    @click="emits('search')">
                 <icon-search />
               </div>
               <!-- 重置 -->
               <div v-if="!handleVisible.disableReset"
-                   class="header-icon-wrapper"
+                   class="click-icon-wrapper header-icon-wrapper"
                    title="重置"
                    @click="emits('reset')">
                 <icon-refresh />
@@ -358,7 +358,6 @@
   // 重置过滤
   const filterReset = () => {
     emits('reset');
-    triggerMouseEvent(filterRef);
   };
 
   // 搜索
@@ -435,21 +434,8 @@
   }
 
   .header-icon-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 27px;
     padding: 6px;
-    color: var(--color-text-2);
-    background: var(--color-fill-2);
-    border-radius: 2px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: background-color 0.1s cubic-bezier(0, 0, 1, 1);
-  }
-
-  .header-icon-wrapper:hover {
-    background: var(--color-fill-3);
   }
 
   .filter-bottom-container {

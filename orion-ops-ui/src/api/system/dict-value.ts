@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { AnyObject, DataGrid, Options, Pagination } from '@/types/global';
+import { DataGrid, Options, Pagination } from '@/types/global';
 import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**

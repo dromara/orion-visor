@@ -17,6 +17,9 @@ export const valueType = [{
 }] as FieldRule[];
 
 export const description = [{
+  required: true,
+  message: '请输入配置描述'
+}, {
   maxLength: 64,
   message: '配置描述长度不能大于64位'
 }] as FieldRule[];

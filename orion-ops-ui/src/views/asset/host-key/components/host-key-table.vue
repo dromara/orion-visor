@@ -4,7 +4,8 @@
     <a-query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
-                    @reset="fetchTableData">
+                    @reset="fetchTableData"
+                    @keyup.enter="() => fetchTableData()">
       <!-- id -->
       <a-form-item field="id" label="id" label-col-flex="30px">
         <a-input-number v-model="formModel.id"

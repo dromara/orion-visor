@@ -34,7 +34,7 @@
         <a-form-item field="description" label="配置描述">
           <a-input v-model="formModel.description" placeholder="请输入配置描述" allow-clear />
         </a-form-item>
-        <a-divider orientation="center" style="margin: 6px 0 26px 0;">额外参数定义</a-divider>
+        <a-divider orientation="center" style="margin: 12px 0 26px 0;">额外参数定义</a-divider>
         <!-- 额外参数 -->
         <a-form-item v-for="(schema, index) in extraSchemaArr"
                      :key="index"

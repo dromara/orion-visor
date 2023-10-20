@@ -2,16 +2,15 @@
   <a-select v-model:model-value="value as any"
             :options="optionData()"
             :allow-search="true"
-            :multiple="multiple"
             :loading="loading"
             :disabled="loading"
             :filter-option="filterOption"
-            placeholder="请选择角色" />
+            placeholder="请选择配置项" />
 </template>
 
 <script lang="ts">
   export default {
-    name: 'user-role-selector'
+    name: 'dict-key-selector'
   };
 </script>
 
@@ -19,16 +18,14 @@
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
   import { SelectOptionData } from '@arco-design/web-vue';
-  import { RoleStatusEnum } from '@/views/user/role/types/enum.types';
+  import { DictKeyQueryResponse } from '@/api/system/dict-key';
 
   const props = defineProps({
-    // FIXME 拆出来单选多选
-    modelValue: Array,
+    modelValue: Number,
     loading: Boolean,
-    multiple: Boolean,
   });
 
-  const emits = defineEmits(['update:modelValue']);
+  const emits = defineEmits(['update:modelValue', 'change']);
 
   const value = computed({
     get() {
@@ -36,17 +33,18 @@
     },
     set(e) {
       emits('update:modelValue', e);
+      emits('change', e);
     }
   });
 
   // 选项数据
   const cacheStore = useCacheStore();
   const optionData = (): SelectOptionData[] => {
-    return cacheStore.roles.map(s => {
+    return cacheStore.dictKeys.map(s => {
       return {
-        label: `${s.name} (${s.code})`,
-        disabled: s.status === RoleStatusEnum.DISABLED.value,
+        label: `${s.keyName} - ${s.description || ''}`,
         value: s.id,
+        origin: s,
       };
     });
   };

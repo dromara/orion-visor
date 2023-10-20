@@ -4,7 +4,8 @@
     <a-query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
-                    @reset="fetchTableData">
+                    @reset="fetchTableData"
+                    @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
       <a-form-item field="keyName" label="配置项" label-col-flex="50px">
         <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
@@ -54,7 +55,7 @@
              :bordered="false">
       <!-- 配置值类型 -->
       <template #valueType="{ record }">
-        <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum,'color')" class="pointer">
+        <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum,'color')">
           {{ getEnumValue(record.valueType, ValueTypeEnum) }}
         </a-tag>
       </template>
@@ -63,7 +64,9 @@
         <template v-if="record.extraSchema">
           <a-space>
             <template v-for="item in JSON.parse(record.extraSchema)" :key="item.name">
-              <a-tag :color="getEnumValue(item.type, ValueTypeEnum,'color')">{{ item.name }}</a-tag>
+              <a-tag :color="getEnumValue(item.type, ValueTypeEnum,'color')">
+                {{ item.name }}
+              </a-tag>
             </template>
           </a-space>
         </template>
@@ -126,8 +129,6 @@
   const formModel = reactive<DictKeyQueryRequest>({
     id: undefined,
     keyName: undefined,
-    valueType: undefined,
-    extraSchema: undefined,
     description: undefined,
   });
 

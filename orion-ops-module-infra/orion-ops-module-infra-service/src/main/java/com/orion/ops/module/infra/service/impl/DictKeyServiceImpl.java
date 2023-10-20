@@ -13,11 +13,13 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
+import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.module.infra.convert.DictKeyConvert;
 import com.orion.ops.module.infra.dao.DictKeyDAO;
 import com.orion.ops.module.infra.define.cache.DictCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DictKeyDO;
 import com.orion.ops.module.infra.entity.dto.DictKeyCacheDTO;
+import com.orion.ops.module.infra.entity.dto.DictKeyExtraSchemaDTO;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyQueryRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictKeyUpdateRequest;
@@ -90,7 +92,7 @@ public class DictKeyServiceImpl implements DictKeyService {
             dictValueService.updateKeyNameByKeyId(id, record.getKeyName(), request.getKeyName());
         }
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY,
+        RedisUtils.delete(DictCacheKeyDefine.DICT_KEY.getKey(),
                 DictCacheKeyDefine.DICT_SCHEMA.format(record.getKeyName()));
         log.info("DictKeyService-updateDictKeyById effect: {}", effect);
         return effect;
@@ -147,7 +149,10 @@ public class DictKeyServiceImpl implements DictKeyService {
             cacheResult.put(Const.VALUE, dictKey.getValueType());
             String extraSchema = dictKey.getExtraSchema();
             if (extraSchema != null) {
-                cacheResult.putAll(JSON.parseObject(extraSchema));
+                List<DictKeyExtraSchemaDTO> schemas = JSON.parseArray(extraSchema, DictKeyExtraSchemaDTO.class);
+                for (DictKeyExtraSchemaDTO schema : schemas) {
+                    cacheResult.put(schema.getName(), schema.getType());
+                }
             }
             // 设置缓存
             RedisStrings.setJson(cacheKey, DictCacheKeyDefine.DICT_SCHEMA, cacheResult);
@@ -173,8 +178,8 @@ public class DictKeyServiceImpl implements DictKeyService {
         // 删除配置值
         dictValueService.deleteDictValueByKeyId(id);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, id);
-        RedisMaps.delete(DictCacheKeyDefine.DICT_SCHEMA.format(record.getKeyName()));
+        RedisUtils.delete(DictCacheKeyDefine.DICT_KEY.getKey(),
+                DictCacheKeyDefine.DICT_SCHEMA.format(record.getKeyName()));
         log.info("DictKeyService-deleteDictKeyById id: {}, effect: {}", id, effect);
         return effect;
     }
@@ -197,7 +202,7 @@ public class DictKeyServiceImpl implements DictKeyService {
         dictValueService.deleteDictValueByKeyIdList(idList);
         log.info("DictKeyService-deleteDictKeyByIdList effect: {}", effect);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, idList);
+        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY);
         List<String> schemaKeys = dictKeys.stream()
                 .map(DictKeyDO::getKeyName)
                 .map(DictCacheKeyDefine.DICT_SCHEMA::format)

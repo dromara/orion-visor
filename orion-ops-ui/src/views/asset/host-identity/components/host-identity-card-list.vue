@@ -92,7 +92,8 @@
               label-align="right"
               :style="{ width: '320px' }"
               :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }">
+              :wrapper-col-props="{ span: 18 }"
+              @keyup.enter="() => fetchCardData()">
         <!-- id -->
         <a-form-item field="id" label="id">
           <a-input-number v-model="formModel.id"

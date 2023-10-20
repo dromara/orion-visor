@@ -20,15 +20,9 @@
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
-        <!-- 配置项id -->
-        <a-form-item field="keyId" label="配置项id">
-          <a-input-number v-model="formModel.keyId"
-                          placeholder="请输入配置项id"
-                          hide-button />
-        </a-form-item>
         <!-- 配置项 -->
-        <a-form-item field="keyName" label="配置项">
-          <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
+        <a-form-item field="keyId" label="配置项">
+          <dict-key-selector v-model="formModel.keyId" />
         </a-form-item>
         <!-- 配置名称 -->
         <a-form-item field="name" label="配置名称">
@@ -41,10 +35,6 @@
         <!-- 配置描述 -->
         <a-form-item field="label" label="配置描述">
           <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
-        </a-form-item>
-        <!-- 额外参数 -->
-        <a-form-item field="extra" label="额外参数">
-          <a-input v-model="formModel.extra" placeholder="请输入额外参数" allow-clear />
         </a-form-item>
         <!-- 排序 -->
         <a-form-item field="sort" label="排序">
@@ -73,6 +63,7 @@
   import {} from '../types/const';
   import {} from '../types/enum.types';
   import { toOptions } from '@/utils/enum';
+  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -84,12 +75,11 @@
     return {
       id: undefined,
       keyId: undefined,
-      keyName: undefined,
       name: undefined,
       value: undefined,
       label: undefined,
       extra: undefined,
-      sort: undefined,
+      sort: 10,
     };
   };
 

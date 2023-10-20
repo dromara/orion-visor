@@ -40,6 +40,7 @@ public class DictKeyCreateRequest implements Serializable {
     @Schema(description = "额外配置定义")
     private String extraSchema;
 
+    @NotBlank
     @Size(max = 64)
     @Schema(description = "配置描述")
     private String description;

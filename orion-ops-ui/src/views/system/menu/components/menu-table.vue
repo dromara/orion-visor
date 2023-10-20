@@ -7,7 +7,7 @@
         <a-form :model="formModel"
                 ref="formRef"
                 label-align="left"
-                @keydown.enter="loadMenuData">
+                @keyup.enter="loadMenuData">
           <a-row :gutter="32">
             <!-- 菜单名称 -->
             <a-col :span="12">

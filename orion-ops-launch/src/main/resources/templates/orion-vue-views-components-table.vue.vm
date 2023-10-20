@@ -4,7 +4,8 @@
     <a-query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
-                    @reset="fetchTableData">
+                    @reset="fetchTableData"
+                    @keyup.enter="() => fetchTableData()">
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
       <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">

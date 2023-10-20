@@ -4,21 +4,8 @@
     <a-query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
-                    @reset="fetchTableData">
-      <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="50px">
-        <a-input-number v-model="formModel.id"
-                        placeholder="请输入id"
-                        allow-clear
-                        hide-button />
-      </a-form-item>
-      <!-- 配置项id -->
-      <a-form-item field="keyId" label="配置项id" label-col-flex="50px">
-        <a-input-number v-model="formModel.keyId"
-                        placeholder="请输入配置项id"
-                        allow-clear
-                        hide-button />
-      </a-form-item>
+                    @reset="fetchTableData"
+                    @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
       <a-form-item field="keyName" label="配置项" label-col-flex="50px">
         <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
@@ -34,17 +21,6 @@
       <!-- 配置描述 -->
       <a-form-item field="label" label="配置描述" label-col-flex="50px">
         <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
-      </a-form-item>
-      <!-- 额外参数 -->
-      <a-form-item field="extra" label="额外参数" label-col-flex="50px">
-        <a-input v-model="formModel.extra" placeholder="请输入额外参数" allow-clear />
-      </a-form-item>
-      <!-- 排序 -->
-      <a-form-item field="sort" label="排序" label-col-flex="50px">
-        <a-input-number v-model="formModel.sort"
-                        placeholder="请输入排序"
-                        allow-clear
-                        hide-button />
       </a-form-item>
     </a-query-header>
   </a-card>
@@ -102,6 +78,18 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 名称 -->
+      <template #name="{ record }">
+        <span class="pointer" @click="copy(record.name)">
+          <icon-copy class="span-blue" /> {{ record.name }}
+        </span>
+      </template>
+      <!-- 值 -->
+      <template #value="{ record }">
+        <span class="pointer" @click="copy(record.value)">
+          <icon-copy class="span-blue" /> {{ record.value }}
+        </span>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -111,6 +99,13 @@
                     v-permission="['infra:dict-value:update']"
                     @click="emits('openUpdate', record)">
             修改
+          </a-button>
+          <!-- 回滚 -->
+          <a-button type="text"
+                    size="mini"
+                    v-permission="['infra:dict-value:update']"
+                    @click="emits('openUpdate', record)">
+            回滚
           </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
@@ -146,7 +141,9 @@
   import {} from '../types/const';
   import {} from '../types/enum.types';
   import { toOptions, getEnumValue } from '@/utils/enum';
+  import useCopy from '@/hooks/copy';
 
+  const { copy } = useCopy();
   const tableRenderData = ref<DictValueQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);

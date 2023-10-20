@@ -345,6 +345,7 @@ public class DictValueServiceImpl implements DictValueService {
     private LambdaQueryWrapper<DictValueDO> buildQueryWrapper(DictValueQueryRequest request) {
         return dictValueDAO.wrapper()
                 .eq(DictValueDO::getKeyId, request.getKeyId())
+                .like(DictValueDO::getKeyName, request.getKeyName())
                 .like(DictValueDO::getName, request.getName())
                 .eq(DictValueDO::getValue, request.getValue())
                 .like(DictValueDO::getLabel, request.getLabel())

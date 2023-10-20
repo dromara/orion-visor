@@ -10,11 +10,6 @@ const columns = [
     align: 'left',
     fixed: 'left',
   }, {
-    title: '配置项id',
-    dataIndex: 'keyId',
-    slotName: 'keyId',
-    align: 'left',
-  }, {
     title: '配置项',
     dataIndex: 'keyName',
     slotName: 'keyName',
@@ -54,15 +49,7 @@ const columns = [
     dataIndex: 'sort',
     slotName: 'sort',
     align: 'left',
-  }, {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    slotName: 'createTime',
-    align: 'center',
-    width: 180,
-    render: ({ record }) => {
-      return dateFormat(new Date(record.createTime));
-    },
+    width: 70,
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',
@@ -73,17 +60,9 @@ const columns = [
       return dateFormat(new Date(record.updateTime));
     },
   }, {
-    title: '创建人',
-    dataIndex: 'creator',
-    slotName: 'creator',
-  }, {
-    title: '修改人',
-    dataIndex: 'updater',
-    slotName: 'updater',
-  }, {
     title: '操作',
     slotName: 'handle',
-    width: 130,
+    width: 170,
     align: 'center',
     fixed: 'right',
   },
