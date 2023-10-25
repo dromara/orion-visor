@@ -1,7 +1,7 @@
+import type { DataGrid, Options, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 import qs from 'query-string';
-import { DataGrid, Options, Pagination } from '@/types/global';
-import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 字典配置值创建请求

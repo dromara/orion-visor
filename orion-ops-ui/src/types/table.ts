@@ -1,4 +1,4 @@
-import { PaginationProps, TableRowSelection } from '@arco-design/web-vue';
+import type { PaginationProps, TableRowSelection } from '@arco-design/web-vue';
 import { reactive } from 'vue';
 
 /**

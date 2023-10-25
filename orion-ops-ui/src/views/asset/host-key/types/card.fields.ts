@@ -1,4 +1,4 @@
-import { CardField, CardFieldConfig } from '@/types/card';
+import type { CardField, CardFieldConfig } from '@/types/card';
 import { dateFormat } from '@/utils';
 
 const fieldConfig = {

@@ -222,11 +222,12 @@
   };
 </script>
 
-<script setup lang="ts">
-  import { compile, computed, h, PropType, ref } from 'vue';
+<script lang="ts" setup>
+  import type { PropType } from 'vue';
+  import type { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
+  import type { CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig, CardPosition } from '@/types/card';
+  import { compile, computed, h, ref } from 'vue';
   import { useAppStore } from '@/store';
-  import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
-  import { CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig, CardPosition } from '@/types/card';
   import { triggerMouseEvent } from '@/utils';
 
   const appStore = useAppStore();
@@ -258,61 +259,58 @@
   const props = defineProps({
     key: {
       type: String,
-      default: () => 'id'
+      default: 'id'
     },
     pagination: {
-      type: Object as PropType<PaginationProps> | PropType<boolean>,
-      default: () => false
+      type: [Object, Boolean] as PropType<PaginationProps | boolean>,
+      default: false
     },
     loading: {
       type: Boolean as PropType<Boolean>,
-      default: () => false
+      default: false
     },
     fieldConfig: {
       type: Object as PropType<CardFieldConfig>,
-      default: () => []
+      default: []
     },
     cardHeight: {
       type: String,
-      default: () => '100%'
+      default: '100%'
     },
     cardClass: String,
     cardBodyStyle: Object,
     contextMenu: {
       type: Boolean,
-      default: () => true
+      default: true
     },
     filterCount: {
       type: Number,
-      default: () => 0
+      default: 0
     },
     searchInputPlaceholder: String,
     searchInputWidth: {
       type: String,
-      default: () => '200px'
+      default: '200px'
     },
     searchValue: {
       type: String,
-      default: () => ''
+      default: ''
     },
     createCardDescription: {
       type: String,
-      default: () => '点击此处进行创建'
+      default: '点击此处进行创建'
     },
     createCardPosition: {
       type: String as PropType<CardPosition>,
-      default: () => false
+      default: false
     },
     addPermission: {
       type: Array as PropType<String[]>,
-      default: () => []
+      default: []
     },
     cardLayoutGutter: {
-      type: [Number, Array] as PropType<Number> |
-        PropType<ResponsiveValue> |
-        PropType<Array<Number>> |
-        PropType<Array<ResponsiveValue>>,
-      default: () => [16, 16]
+      type: [Number, Object, Array] as PropType<Number | ResponsiveValue | Array<Number> | Array<ResponsiveValue>>,
+      default: [16, 16]
     },
     cardLayoutCols: {
       type: Object as PropType<ColResponsiveValue>,
@@ -330,7 +328,7 @@
     },
     list: {
       type: Array as PropType<Array<CardRecord>>,
-      default: () => []
+      default: []
     },
   });
 
@@ -368,7 +366,7 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   @header-info-height: 48px;
   @header-handler-height: 48px;
   @top-height: 16 + @header-info-height + @header-handler-height + 12px;

@@ -1,5 +1,5 @@
+import type { Ref } from 'vue';
 import { Md5 } from 'ts-md5';
-import { Ref } from 'vue';
 
 type TargetContext = '_self' | '_parent' | '_blank' | '_top';
 

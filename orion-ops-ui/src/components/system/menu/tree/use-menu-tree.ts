@@ -1,5 +1,5 @@
+import type { RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
 import { computed } from 'vue';
-import { RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
 import { useMenuStore } from '@/store';
 import { cloneDeep } from 'lodash';
 

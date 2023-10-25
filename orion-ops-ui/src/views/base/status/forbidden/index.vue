@@ -31,7 +31,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .content {
     // padding-top: 100px;
     position: absolute;

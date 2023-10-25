@@ -67,7 +67,7 @@
       <!-- 状态 -->
       <template #status="{ record }">
         <span class="circle" :style="{
-          background: getEnumValue(record.status, RoleStatusEnum,'color')
+          background: getEnumValue(record.status, RoleStatusEnum, 'color')
         }" />
         {{ getEnumValue(record.status, RoleStatusEnum) }}
       </template>
@@ -128,8 +128,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RoleQueryRequest, RoleQueryResponse } from '@/api/user/role';
   import { reactive, ref } from 'vue';
-  import { deleteRole, getRolePage, updateRoleStatus, RoleQueryRequest, RoleQueryResponse } from '@/api/user/role';
+  import { deleteRole, getRolePage, updateRoleStatus } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';

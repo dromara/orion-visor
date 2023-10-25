@@ -1,5 +1,6 @@
-import { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
-import { reactive, VNodeChild } from 'vue';
+import type { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
+import type { VNodeChild } from 'vue';
+import { reactive } from 'vue';
 
 /**
  * 字段对齐方式

@@ -124,13 +124,14 @@
   };
 </script>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+  import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import { usePagination, useColLayout } from '@/types/card';
   import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
-  import { deleteHostIdentity, getHostIdentityPage, HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
+  import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message, Modal } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
   import useCopy from '@/hooks/copy';
@@ -225,6 +226,6 @@
 
 </script>
 
-<style scoped lang="less">
+<style  lang="less" scoped>
 
 </style>

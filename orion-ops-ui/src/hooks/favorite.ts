@@ -1,5 +1,6 @@
+import type { FavoriteType } from '@/api/meta/favorite';
 import { Message } from '@arco-design/web-vue';
-import { FavoriteType, addFavorite, cancelFavorite } from '@/api/meta/favorite';
+import { addFavorite, cancelFavorite } from '@/api/meta/favorite';
 
 export default function useFavorite(type: FavoriteType) {
   const toggle = async (record: any, id: number, cancelField = 'favorite') => {

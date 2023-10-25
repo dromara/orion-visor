@@ -78,7 +78,7 @@
       <!-- 状态 -->
       <template #status="{ record }">
         <span class="circle" :style="{
-          background: getEnumValue(record.status, UserStatusEnum,'color')
+          background: getEnumValue(record.status, UserStatusEnum, 'color')
         }" />
         {{ getEnumValue(record.status, UserStatusEnum) }}
       </template>
@@ -150,8 +150,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { UserQueryRequest, UserQueryResponse } from '@/api/user/user';
   import { reactive, ref } from 'vue';
-  import { deleteUser, getUserPage, updateUserStatus, UserQueryRequest, UserQueryResponse } from '@/api/user/user';
+  import { deleteUser, getUserPage, updateUserStatus } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';

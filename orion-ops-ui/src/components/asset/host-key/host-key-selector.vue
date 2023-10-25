@@ -12,9 +12,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
-  import { SelectOptionData } from '@arco-design/web-vue';
 
   const props = defineProps({
     modelValue: Number,

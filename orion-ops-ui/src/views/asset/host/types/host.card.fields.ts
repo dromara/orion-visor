@@ -1,4 +1,4 @@
-import { CardField, CardFieldConfig } from '@/types/card';
+import type { CardField, CardFieldConfig } from '@/types/card';
 
 const fieldConfig = {
   rowGap: '10px',

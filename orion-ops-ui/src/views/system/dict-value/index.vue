@@ -24,7 +24,6 @@
   import { onUnmounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import { getDictKeyList } from '@/api/system/dict-key';
-  import { getTagList } from '@/api/meta/tag';
   import { Message } from '@arco-design/web-vue';
 
   const table = ref();

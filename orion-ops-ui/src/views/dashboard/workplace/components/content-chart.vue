@@ -17,13 +17,14 @@
 </template>
 
 <script lang="ts" setup>
+  import type { ToolTipFormatterParams } from '@/types/echarts';
+  import type { AnyObject } from '@/types/global';
+  import type { ContentDataRecord } from '@/api/dashboard';
   import { ref } from 'vue';
   import { graphic } from 'echarts';
   import useLoading from '@/hooks/loading';
-  import { queryContentData, ContentDataRecord } from '@/api/dashboard';
+  import { queryContentData } from '@/api/dashboard';
   import useChartOption from '@/hooks/chart-option';
-  import { ToolTipFormatterParams } from '@/types/echarts';
-  import { AnyObject } from '@/types/global';
 
   function graphicFactory(side: AnyObject) {
     return {
@@ -38,6 +39,7 @@
       },
     };
   }
+
   const { loading, setLoading } = useLoading(true);
   const xAxis = ref<string[]>([]);
   const chartsData = ref<number[]>([]);
@@ -117,8 +119,8 @@
           return `<div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
             <div class="content-panel"><span>总内容量</span><span class="tooltip-value">${(
-              Number(firstElement.value) * 10000
-            ).toLocaleString()}</span></div>
+            Number(firstElement.value) * 10000
+          ).toLocaleString()}</span></div>
           </div>`;
         },
         className: 'echarts-tooltip-diy',
@@ -197,4 +199,5 @@
   fetchData();
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped>
+</style>

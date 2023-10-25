@@ -53,11 +53,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ${vue.featureEntity}UpdateRequest } from '@/api/${vue.module}/${vue.feature}';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { create${vue.featureEntity}, update${vue.featureEntity}, ${vue.featureEntity}UpdateRequest } from '@/api/${vue.module}/${vue.feature}';
+  import { create${vue.featureEntity}, update${vue.featureEntity} } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
   import {} from '../types/const';
   #if($vue.enums.isEmpty())

@@ -135,8 +135,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
   import { reactive, ref } from 'vue';
-  import { batchDelete${vue.featureEntity}, delete${vue.featureEntity}, get${vue.featureEntity}Page, ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
+  import { batchDelete${vue.featureEntity}, delete${vue.featureEntity}, get${vue.featureEntity}Page } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';

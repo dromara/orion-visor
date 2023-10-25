@@ -17,10 +17,13 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, computed, PropType } from 'vue';
+  import type { PropType } from 'vue';
+  import type { SelectOptionData } from '@arco-design/web-vue';
+  import type { TagCreateRequest } from '@/api/meta/tag';
+  import { ref, computed } from 'vue';
   import { useCacheStore } from '@/store';
-  import { Message, SelectOptionData } from '@arco-design/web-vue';
-  import { createTag, TagCreateRequest } from '@/api/meta/tag';
+  import { Message } from '@arco-design/web-vue';
+  import { createTag } from '@/api/meta/tag';
 
   const props = defineProps({
     modelValue: Array as PropType<Array<number>>,

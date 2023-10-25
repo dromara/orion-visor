@@ -40,11 +40,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RoleUpdateRequest } from '@/api/user/role';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createRole, updateRole, RoleUpdateRequest, } from '@/api/user/role';
+  import { createRole, updateRole } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
 
   const { visible, setVisible } = useVisible();

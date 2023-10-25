@@ -98,8 +98,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
   import { reactive, ref } from 'vue';
-  import { deleteHostKey, getHostKeyPage, HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
+  import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';

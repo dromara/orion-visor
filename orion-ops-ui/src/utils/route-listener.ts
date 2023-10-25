@@ -1,5 +1,6 @@
-import mitt, { Handler } from 'mitt';
 import type { RouteLocationNormalized } from 'vue-router';
+import type { Handler } from 'mitt';
+import mitt from 'mitt';
 
 const emitter = mitt();
 

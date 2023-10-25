@@ -1,5 +1,5 @@
+import type { CacheState } from './types';
 import { defineStore } from 'pinia';
-import { CacheState } from './types';
 
 export type CacheType = 'menus' | 'roles' | 'hostTags' | 'hostKeys' | 'hostIdentities' | 'dictKeys' | string
 

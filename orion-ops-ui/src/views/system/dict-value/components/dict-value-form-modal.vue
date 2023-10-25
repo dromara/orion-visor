@@ -88,11 +88,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { DictValueUpdateRequest } from '@/api/system/dict-value';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createDictValue, updateDictValue, DictValueUpdateRequest } from '@/api/system/dict-value';
+  import { createDictValue, updateDictValue } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import { ExtraParamType, innerKeys } from '../../dict-key/types/const';
   import { ValueTypeEnum } from '../../dict-key/types/enum.types';

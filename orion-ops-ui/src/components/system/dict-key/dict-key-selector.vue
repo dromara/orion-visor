@@ -16,10 +16,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
-  import { SelectOptionData } from '@arco-design/web-vue';
-  import { DictKeyQueryResponse } from '@/api/system/dict-key';
 
   const props = defineProps({
     modelValue: Number,

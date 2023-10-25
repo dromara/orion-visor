@@ -134,15 +134,13 @@
 </script>
 
 <script lang="ts" setup>
+  import type { DictValueQueryRequest, DictValueQueryResponse } from '@/api/system/dict-value';
   import { reactive, ref } from 'vue';
-  import { batchDeleteDictValue, deleteDictValue, getDictValuePage, DictValueQueryRequest, DictValueQueryResponse } from '@/api/system/dict-value';
+  import { batchDeleteDictValue, deleteDictValue, getDictValuePage } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination, useRowSelection } from '@/types/table';
-  import {} from '../types/const';
-  import {} from '../types/enum.types';
-  import { toOptions, getEnumValue } from '@/utils/enum';
   import useCopy from '@/hooks/copy';
   import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
 

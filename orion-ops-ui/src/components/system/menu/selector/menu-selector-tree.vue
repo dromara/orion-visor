@@ -30,8 +30,8 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TreeNodeData } from '@arco-design/web-vue';
   import { ref } from 'vue';
-  import { TreeNodeData } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
 
   const treeData = ref<Array<TreeNodeData>>([]);

@@ -1,6 +1,7 @@
-import { ref, UnwrapRef } from 'vue';
-import { AxiosResponse } from 'axios';
-import { HttpResponse } from '@/api/interceptor';
+import type { AxiosResponse } from 'axios';
+import type { HttpResponse } from '@/api/interceptor';
+import type { UnwrapRef } from 'vue';
+import { ref } from 'vue';
 import useLoading from './loading';
 
 export default function useRequest<T>(

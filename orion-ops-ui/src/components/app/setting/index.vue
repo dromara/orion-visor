@@ -102,7 +102,7 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .fixed-settings {
     position: fixed;
     top: 280px;

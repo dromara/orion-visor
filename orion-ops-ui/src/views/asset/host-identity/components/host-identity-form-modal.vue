@@ -61,12 +61,14 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostIdentityUpdateRequest } from '@/api/asset/host-identity';
+  import type { FieldRule } from '@arco-design/web-vue';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createHostIdentity, updateHostIdentity, HostIdentityUpdateRequest } from '@/api/asset/host-identity';
-  import { FieldRule, Message } from '@arco-design/web-vue';
+  import { createHostIdentity, updateHostIdentity } from '@/api/asset/host-identity';
+  import { Message } from '@arco-design/web-vue';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
 
   const { visible, setVisible } = useVisible();

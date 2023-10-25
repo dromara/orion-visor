@@ -1,5 +1,5 @@
-import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Message, Notification } from '@arco-design/web-vue';
 import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';

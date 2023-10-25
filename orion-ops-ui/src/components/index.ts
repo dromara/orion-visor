@@ -1,4 +1,4 @@
-import { App } from 'vue';
+import type { App } from 'vue';
 import { use } from 'echarts/core';
 import AQueryHeader from '@dangojs/a-query-header';
 import { CanvasRenderer } from 'echarts/renderers';

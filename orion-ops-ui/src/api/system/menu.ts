@@ -1,5 +1,5 @@
+import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
-import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 菜单创建请求

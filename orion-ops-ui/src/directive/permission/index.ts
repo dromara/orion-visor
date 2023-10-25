@@ -1,4 +1,4 @@
-import { DirectiveBinding } from 'vue';
+import type { DirectiveBinding } from 'vue';
 import usePermission from '@/hooks/permission';
 
 function checkPermission(el: HTMLElement, binding: DirectiveBinding) {

@@ -125,8 +125,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import { reactive, ref } from 'vue';
-  import { deleteHostIdentity, getHostIdentityPage, HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
+  import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';

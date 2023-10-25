@@ -141,13 +141,14 @@
   };
 </script>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+  import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { usePagination, useColLayout } from '@/types/card';
   import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/host.card.fields';
-  import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '@/views/asset/host/types/const';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
@@ -243,7 +244,7 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .host-address {
     cursor: pointer;
     color: rgb(var(--arcoblue-6))

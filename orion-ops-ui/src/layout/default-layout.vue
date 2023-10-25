@@ -104,7 +104,7 @@
   });
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   @nav-size-height: 60px;
   @layout-max-width: 1100px;
 

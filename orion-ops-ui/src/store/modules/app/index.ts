@@ -1,5 +1,5 @@
+import type { AppState } from './types';
 import { defineStore } from 'pinia';
-import { AppState } from './types';
 
 const defaultConfig: AppState = {
   // 应用设置

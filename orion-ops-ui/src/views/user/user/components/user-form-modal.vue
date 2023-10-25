@@ -54,11 +54,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { UserUpdateRequest } from '@/api/user/user';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createUser, updateUser, UserUpdateRequest } from '@/api/user/user';
+  import { createUser, updateUser } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import { md5 } from '@/utils';
 

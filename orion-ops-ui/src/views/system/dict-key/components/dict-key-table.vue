@@ -55,7 +55,7 @@
              :bordered="false">
       <!-- 配置值类型 -->
       <template #valueType="{ record }">
-        <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum,'color')">
+        <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum, 'color')">
           {{ getEnumValue(record.valueType, ValueTypeEnum) }}
         </a-tag>
       </template>
@@ -64,7 +64,7 @@
         <template v-if="record.extraSchema">
           <a-space>
             <template v-for="item in JSON.parse(record.extraSchema)" :key="item.name">
-              <a-tag :color="getEnumValue(item.type, ValueTypeEnum,'color')">
+              <a-tag :color="getEnumValue(item.type, ValueTypeEnum, 'color')">
                 {{ item.name }}
               </a-tag>
             </template>
@@ -115,8 +115,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
   import { reactive, ref } from 'vue';
-  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage, DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
+  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';

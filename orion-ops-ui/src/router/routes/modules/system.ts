@@ -1,5 +1,5 @@
+import type { AppRouteRecordRaw } from '../types';
 import { DEFAULT_LAYOUT } from '../base';
-import { AppRouteRecordRaw } from '../types';
 
 const SYSTEM: AppRouteRecordRaw = {
   name: 'system',

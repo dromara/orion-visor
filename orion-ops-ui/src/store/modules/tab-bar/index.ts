@@ -1,7 +1,7 @@
+import type { TabBarState, TagProps } from './types';
 import { defineStore } from 'pinia';
 import { DEFAULT_ROUTE_NAME, DEFAULT_TAB } from '@/router/constants';
 import { isString } from '@/utils/is';
-import { TabBarState, TagProps } from './types';
 
 export default defineStore('tabBar', {
   state: (): TabBarState => ({

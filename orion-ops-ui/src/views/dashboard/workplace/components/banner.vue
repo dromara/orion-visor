@@ -21,7 +21,7 @@
   });
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .banner {
     width: 100%;
     padding: 20px 20px 0 20px;

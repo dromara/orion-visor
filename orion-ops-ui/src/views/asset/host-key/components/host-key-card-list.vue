@@ -78,13 +78,14 @@
   };
 </script>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+  import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
   import { usePagination, useColLayout } from '@/types/card';
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
-  import { deleteHostKey, getHostKeyPage, HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
+  import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message, Modal } from '@arco-design/web-vue';
 
   const { loading, setLoading } = useLoading();
@@ -163,6 +164,6 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 
 </style>

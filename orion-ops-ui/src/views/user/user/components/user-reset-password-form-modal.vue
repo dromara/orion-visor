@@ -43,11 +43,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { UserQueryResponse, UserUpdateRequest } from '@/api/user/user';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { password } from '../types/form.rules';
-  import { resetUserPassword, UserQueryResponse, UserUpdateRequest } from '@/api/user/user';
+  import { resetUserPassword } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import { md5 } from '@/utils';
 

@@ -1,5 +1,5 @@
+import type { TipsState } from './types';
 import { defineStore } from 'pinia';
-import { TipsState } from './types';
 import { setTipsTipped } from '@/api/user/tips';
 
 export default defineStore('tips', {

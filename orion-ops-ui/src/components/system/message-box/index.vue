@@ -22,13 +22,9 @@
 </template>
 
 <script lang="ts" setup>
+  import type { MessageRecord, MessageListType } from '@/api/system/message';
   import { ref, reactive, toRefs, computed } from 'vue';
-  import {
-    queryMessageList,
-    setMessageStatus,
-    MessageRecord,
-    MessageListType,
-  } from '@/api/system/message';
+  import { queryMessageList, setMessageStatus } from '@/api/system/message';
   import useLoading from '@/hooks/loading';
   import List from './list.vue';
 
@@ -108,7 +104,7 @@
   fetchSourceData();
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   :deep(.arco-popover-popup-content) {
     padding: 0;
   }

@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { PropType } from 'vue';
+  import type { PropType } from 'vue';
+  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import { useAppStore } from '@/store';
   import FormWrapper from './form-wrapper.vue';
-  import { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import { updatePreferencePartial } from '@/api/user/preference';
   import { Message } from '@arco-design/web-vue';
 
@@ -37,9 +37,7 @@
     title: String,
     options: {
       type: Array as PropType<OptionsProps[]>,
-      default() {
-        return [];
-      },
+      default: []
     },
   });
 
@@ -77,7 +75,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .block {
     margin-bottom: 24px;
     user-select: none;

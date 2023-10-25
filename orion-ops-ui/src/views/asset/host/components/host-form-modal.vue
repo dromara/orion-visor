@@ -53,11 +53,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostUpdateRequest } from '@/api/asset/host';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/host.form.rules';
-  import { createHost, updateHost, HostUpdateRequest } from '@/api/asset/host';
+  import { createHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
 

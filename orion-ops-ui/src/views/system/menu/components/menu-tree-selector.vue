@@ -14,9 +14,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TreeNodeData } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { computed } from 'vue';
-  import { TreeNodeData } from '@arco-design/web-vue';
 
   const props = defineProps({
     modelValue: Number,

@@ -43,10 +43,11 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RoleGrantMenuRequest, RoleQueryResponse } from '@/api/user/role';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { getRoleMenuId, grantRoleMenu, RoleGrantMenuRequest, RoleQueryResponse } from '@/api/user/role';
+  import { getRoleMenuId, grantRoleMenu } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { getMenuList } from '@/api/system/menu';

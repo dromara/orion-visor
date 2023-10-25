@@ -52,10 +52,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { PropType, computed } from 'vue';
+  import type { TagProps } from '@/store/modules/tab-bar/types';
+  import type { PropType } from 'vue';
+  import { computed } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { useTabBarStore } from '@/store';
-  import type { TagProps } from '@/store/modules/tab-bar/types';
   import { DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from '@/router/constants';
 
   enum Option {
@@ -70,9 +71,7 @@
   const props = defineProps({
     itemData: {
       type: Object as PropType<TagProps>,
-      default() {
-        return [];
-      },
+      default: [],
     },
     index: {
       type: Number,
@@ -169,7 +168,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .tag-link {
     color: var(--color-text-2);
     text-decoration: none;

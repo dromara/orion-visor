@@ -1,5 +1,5 @@
-import { defineComponent } from 'vue';
 import type { RouteMeta, NavigationGuard } from 'vue-router';
+import { defineComponent } from 'vue';
 
 export type Component<T = any> =
   | ReturnType<typeof defineComponent>

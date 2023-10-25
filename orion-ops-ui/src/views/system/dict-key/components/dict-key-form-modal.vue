@@ -92,13 +92,15 @@
 </script>
 
 <script lang="ts" setup>
+  import type { DictKeyUpdateRequest } from '@/api/system/dict-key';
+  import type { ExtraParamType } from '../types/const';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createDictKey, updateDictKey, DictKeyUpdateRequest } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
-  import { definedExtraKeys, innerKeys, ExtraParamType } from '../types/const';
+  import { createDictKey, updateDictKey } from '@/api/system/dict-key';
+  import { definedExtraKeys, innerKeys } from '../types/const';
   import { ValueTypeEnum } from '../types/enum.types';
   import { toOptions } from '@/utils/enum';
 

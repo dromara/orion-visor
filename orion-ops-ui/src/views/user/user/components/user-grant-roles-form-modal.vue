@@ -45,6 +45,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { UserQueryResponse, UserUpdateRequest } from '@/api/user/user';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
@@ -52,7 +53,7 @@
   import UserRoleSelector from '@/components/user/role/user-role-selector.vue';
   import { getRoleList } from '@/api/user/role';
   import { useCacheStore } from '@/store';
-  import { getUserRoleIdList, grantUserRole, UserQueryResponse, UserUpdateRequest } from '@/api/user/user';
+  import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
 
   const { visible, setVisible } = useVisible();
   const { loading: saveLoading, setLoading: setSaveLoading } = useLoading();

@@ -1,4 +1,4 @@
-import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
 import { dateFormat } from '@/utils';
 
 const columns = [

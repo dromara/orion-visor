@@ -263,7 +263,7 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .navbar {
     display: flex;
     justify-content: space-between;

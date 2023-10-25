@@ -106,12 +106,13 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
   import { usePagination, useColLayout } from '@/types/card';
   import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
-  import { delete${vue.featureEntity}, get${vue.featureEntity}Page, ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
+  import { delete${vue.featureEntity}, get${vue.featureEntity}Page } from '@/api/${vue.module}/${vue.feature}';
   import { Message, Modal } from '@arco-design/web-vue';
   import {} from '../types/const';
   #if($vue.enums.isEmpty())
@@ -206,6 +207,6 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 
 </style>

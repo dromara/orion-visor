@@ -163,8 +163,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { reactive, ref } from 'vue';
-  import { deleteHost, getHostPage, HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/host.table.columns';

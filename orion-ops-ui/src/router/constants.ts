@@ -1,5 +1,5 @@
-import { RouteLocationNormalized } from 'vue-router';
-import { TagProps } from '@/store/modules/tab-bar/types';
+import type { RouteLocationNormalized } from 'vue-router';
+import type { TagProps } from '@/store/modules/tab-bar/types';
 
 export const REDIRECT_ROUTE_NAME = 'redirect';
 

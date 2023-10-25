@@ -118,7 +118,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { reactive, ref, watch } from 'vue';
+  import type { MenuUpdateRequest } from '@/api/system/menu';
+  import { ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
@@ -127,7 +128,7 @@
   import { toOptions } from '@/utils/enum';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
   import MenuTreeSelector from './menu-tree-selector.vue';
-  import { createMenu, updateMenu, MenuUpdateRequest } from '@/api/system/menu';
+  import { createMenu, updateMenu } from '@/api/system/menu';
   import { Message } from '@arco-design/web-vue';
 
   const { visible, setVisible } = useVisible();

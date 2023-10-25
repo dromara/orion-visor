@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { PropType } from 'vue';
-  import { RadioOption } from '@arco-design/web-vue/es/radio/interface';
+  import type { PropType } from 'vue';
+  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
 
   const props = defineProps({
     type: {

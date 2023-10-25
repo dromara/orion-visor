@@ -1,6 +1,6 @@
+import type { DataGrid, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
-import { DataGrid, Pagination } from '@/types/global';
-import { TableData } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 主机创建请求

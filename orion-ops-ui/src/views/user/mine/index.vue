@@ -36,9 +36,9 @@
 </template>
 
 <script lang="ts" setup>
+  import type { UserUpdateRequest } from '@/api/user/user';
   import useLoading from '@/hooks/loading';
   import { ref } from 'vue';
-  import { UserUpdateRequest } from '@/api/user/user';
   import formRules from '../user/types/form.rules';
 
   const { loading, setLoading } = useLoading();

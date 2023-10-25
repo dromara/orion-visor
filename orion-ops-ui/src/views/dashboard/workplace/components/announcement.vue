@@ -49,13 +49,14 @@
   ];
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .item {
     display: flex;
     align-items: center;
     width: 100%;
     height: 24px;
     margin-bottom: 4px;
+
     .item-content {
       flex: 1;
       overflow: hidden;

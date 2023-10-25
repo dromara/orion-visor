@@ -73,10 +73,10 @@
 </template>
 
 <script lang="ts" setup>
+  import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { queryPopularList } from '@/api/dashboard';
-  import type { TableData } from '@arco-design/web-vue/es/table/interface';
 
   const type = ref('text');
   const { loading, setLoading } = useLoading();
@@ -98,19 +98,23 @@
   fetchData('text');
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .general-card {
     min-height: 395px;
   }
+
   :deep(.arco-table-tr) {
     height: 44px;
+
     .arco-typography {
       margin-bottom: 0;
     }
   }
+
   .increases-cell {
     display: flex;
     align-items: center;
+
     span {
       margin-right: 4px;
     }

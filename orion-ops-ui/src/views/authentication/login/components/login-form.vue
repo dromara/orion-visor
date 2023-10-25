@@ -50,14 +50,14 @@
 </template>
 
 <script lang="ts" setup>
+  import type { ValidatedError } from '@arco-design/web-vue/es/form/interface';
+  import type { LoginRequest } from '@/api/user/auth';
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
-  import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
   import { useI18n } from 'vue-i18n';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import type { LoginRequest } from '@/api/user/auth';
 
   const router = useRouter();
   const { t } = useI18n();

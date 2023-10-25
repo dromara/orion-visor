@@ -72,8 +72,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { PropType } from 'vue';
-  import { MessageRecord, MessageListType } from '@/api/system/message';
+  import type { PropType } from 'vue';
+  import type { MessageRecord, MessageListType } from '@/api/system/message';
 
   const props = defineProps({
     renderList: {
@@ -98,7 +98,7 @@
   const showMax = 3;
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   :deep(.arco-list) {
     .arco-list-item {
       min-height: 86px;

@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { PropType } from 'vue';
+  import type { PropType } from 'vue';
   import { useRoute } from 'vue-router';
 
   defineProps({
@@ -18,14 +18,14 @@
       type: Array as PropType<string[]>,
       default() {
         return useRoute().matched
-        .map(s => s.meta?.locale)
-        .filter(Boolean) || [];
+          .map(s => s.meta?.locale)
+          .filter(Boolean) || [];
       },
     },
   });
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .container-breadcrumb {
 
     :deep(.arco-breadcrumb-item) {

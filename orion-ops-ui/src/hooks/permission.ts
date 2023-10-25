@@ -1,4 +1,4 @@
-import { RouteLocationNormalized, RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
+import type { RouteLocationNormalized, RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
 import { useMenuStore, useUserStore } from '@/store';
 import { STATUS_ROUTER_LIST, WHITE_ROUTER_LIST } from '@/router/constants';
 

@@ -1,4 +1,4 @@
-import { FieldRule } from '@arco-design/web-vue';
+import type { FieldRule } from '@arco-design/web-vue';
 
 export const keyId = [{
   required: true,

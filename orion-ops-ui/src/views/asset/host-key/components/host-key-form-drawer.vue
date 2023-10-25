@@ -89,12 +89,14 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostKeyUpdateRequest } from '@/api/asset/host-key';
+  import type { FieldRule, FileItem } from '@arco-design/web-vue';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createHostKey, updateHostKey, getHostKey, HostKeyUpdateRequest } from '@/api/asset/host-key';
-  import { FieldRule, FileItem, Message } from '@arco-design/web-vue';
+  import { createHostKey, updateHostKey, getHostKey } from '@/api/asset/host-key';
+  import { Message } from '@arco-design/web-vue';
   import { readFileText } from '@/utils/file';
 
   const { visible, setVisible } = useVisible();
