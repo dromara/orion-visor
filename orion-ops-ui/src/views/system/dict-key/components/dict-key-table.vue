@@ -55,7 +55,9 @@
              :bordered="false">
       <!-- 配置项 -->
       <template #keyName="{ record }">
-        <icon-copy class="copy-left" title="复制" @click="copy(record.keyName)" />
+        <span class="copy-left" title="复制" @click="copy(record.keyName)">
+          <icon-copy />
+        </span>
         <span>{{ record.keyName }}</span>
       </template>
       <!-- 配置值类型 -->

@@ -17,6 +17,7 @@
   import type { TreeNodeData } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { computed } from 'vue';
+  import { MenuType } from '../types/const';
 
   const props = defineProps({
     modelValue: Number,
@@ -39,8 +40,8 @@
   const treeData = (): TreeNodeData[] => {
     let render = (arr: any[]): TreeNodeData[] => {
       return arr.map((s) => {
-        // 非 function
-        if (s.type === 3) {
+        // 为 function 返回空
+        if (s.type === MenuType.FUNCTION) {
           return null as unknown as TreeNodeData;
         }
         // 当前节点

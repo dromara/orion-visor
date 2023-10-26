@@ -50,6 +50,7 @@
       // 查看
       const { data } = await getDictValueList([keyName]);
       value.value = JSON.stringify(data[keyName], undefined, 4);
+    } catch (e) {
     } finally {
       setLoading(false);
     }

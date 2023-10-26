@@ -22,8 +22,8 @@
               :rules="formRules">
         <!-- 上级菜单 -->
         <a-form-item field="parentId" label="上级菜单">
-          <menu-tree-selector v-model:model-value="formModel.parentId"
-                              :disabled="formModel.type === MenuTypeEnum.PARENT_MENU.value" />
+          <menu-tree-selector v-model:model-value="formModel.parentId as number"
+                              :disabled="formModel.type === MenuType.PARENT_MENU" />
         </a-form-item>
         <!-- 菜单名称 -->
         <a-form-item field="name" label="菜单名称">
@@ -35,10 +35,10 @@
                      label="菜单类型">
           <a-radio-group type="button"
                          v-model="formModel.type"
-                         :options="toOptions(MenuTypeEnum)" />
+                         :options="toOptions(menuTypeKey)" />
         </a-form-item>
         <!-- 菜单图标 -->
-        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
                      field="icon"
                      label="菜单图标">
           <icon-picker v-model:icon="formModel.icon as string">
@@ -48,7 +48,7 @@
           </icon-picker>
         </a-form-item>
         <!-- 菜单权限 -->
-        <a-form-item v-if="formModel.type === MenuTypeEnum.FUNCTION.value"
+        <a-form-item v-if="formModel.type === MenuType.FUNCTION"
                      field="permission"
                      label="菜单权限">
           <a-input v-model="formModel.permission"
@@ -56,7 +56,7 @@
                    allow-clear />
         </a-form-item>
         <!-- 外链地址 -->
-        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
                      field="path"
                      label="外链地址"
                      tooltip="输入组件名称后则不会生效">
@@ -65,7 +65,7 @@
                    allow-clear />
         </a-form-item>
         <!-- 组件名称 -->
-        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
                      field="component"
                      label="组件名称">
           <a-input v-model="formModel.component"
@@ -81,30 +81,30 @@
                           hide-button />
         </a-form-item>
         <!-- 是否可见 -->
-        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
                      field="type"
                      label="是否可见"
                      tooltip="选择隐藏后不会在菜单以及 tab 中显示 但是可以访问">
           <a-switch type="round"
                     size="large"
                     v-model="formModel.visible"
-                    :checked-text="MenuVisibleEnum.SHOW.label"
-                    :checked-value="MenuVisibleEnum.SHOW.value"
-                    :unchecked-text="MenuVisibleEnum.HIDE.label"
-                    :unchecked-value="MenuVisibleEnum.HIDE.value" />
+                    :checked-text="getDictValue(menuVisibleKey, MenuVisible.SHOW)"
+                    :unchecked-text="getDictValue(menuVisibleKey, MenuVisible.HIDE)"
+                    :checked-value="MenuVisible.SHOW"
+                    :unchecked-value="MenuVisible.HIDE" />
         </a-form-item>
         <!-- 是否缓存 -->
-        <a-form-item v-if="formModel.type !== MenuTypeEnum.FUNCTION.value"
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
                      field="type"
                      label="是否缓存"
                      tooltip="选择缓存后则会使用 keep-alive 缓存组件">
           <a-switch type="round"
                     size="large"
                     v-model="formModel.cache"
-                    :checked-text="MenuCacheEnum.ENABLED.label"
-                    :checked-value="MenuCacheEnum.ENABLED.value"
-                    :unchecked-text="MenuCacheEnum.DISABLED.label"
-                    :unchecked-value="MenuCacheEnum.DISABLED.value" />
+                    :checked-text="getDictValue(menuCacheKey, MenuCache.ENABLED)"
+                    :unchecked-text="getDictValue(menuCacheKey, MenuCache.DISABLED)"
+                    :checked-value="MenuCache.ENABLED"
+                    :unchecked-value="MenuCache.DISABLED" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -123,16 +123,18 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { sortStep } from '../types/const';
-  import { MenuTypeEnum, MenuVisibleEnum, MenuCacheEnum } from '../types/enum.types';
-  import { toOptions } from '@/utils/enum';
+  import { menuCacheKey, sortStep } from '../types/const';
+  import { menuVisibleKey, menuTypeKey, MenuType, MenuVisible, MenuCache } from '../types/const';
+
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
   import MenuTreeSelector from './menu-tree-selector.vue';
   import { createMenu, updateMenu } from '@/api/system/menu';
   import { Message } from '@arco-design/web-vue';
+  import { useDictStore } from '@/store';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+  const { toOptions, getDictValue } = useDictStore();
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
@@ -142,11 +144,11 @@
       id: undefined,
       parentId: 0,
       name: undefined,
-      type: MenuTypeEnum.PARENT_MENU.value,
+      type: MenuType.PARENT_MENU,
       permission: undefined,
       sort: undefined,
-      visible: MenuVisibleEnum.SHOW.value,
-      cache: MenuCacheEnum.ENABLED.value,
+      visible: MenuVisible.SHOW,
+      cache: MenuCache.ENABLED,
       icon: undefined,
       path: undefined,
       component: undefined,
@@ -158,9 +160,9 @@
 
   const emits = defineEmits(['added', 'updated']);
 
-  // 选择根目录 parentId就是 0
+  // 选择根目录 parentId 设置为 0
   watch(() => formModel.value.type, () => {
-    if (formModel.value.type === MenuTypeEnum.PARENT_MENU.value) {
+    if (formModel.value.type === MenuType.PARENT_MENU) {
       formModel.value.parentId = 0;
     }
   });
@@ -171,7 +173,7 @@
     isAddHandle.value = true;
     renderForm({ ...defaultForm(), parentId: record.parentId, sort: (record.sort || 0) + sortStep });
     // 如果是父菜单默认选中子菜单 如果是子菜单默认选中功能
-    if (record.type === 1 || record.type === 2) {
+    if (record.type === MenuType.PARENT_MENU || record.type === MenuType.SUB_MENU) {
       formModel.value.type = record.type + 1;
     }
     setVisible(true);
@@ -202,8 +204,13 @@
         return false;
       }
       if (formModel.value.parentId === 0
-        && (formModel.value.type === MenuTypeEnum.SUB_MENU.value || formModel.value.type === MenuTypeEnum.FUNCTION.value)) {
-        Message.error('创建子目录或功能时 父菜单不能为根目录');
+        && (formModel.value.type === MenuType.SUB_MENU || formModel.value.type === MenuType.FUNCTION)) {
+        formRef.value.setFields({
+          parentId: {
+            status: 'error',
+            message: '创建子目录或功能时 父菜单不能为根目录'
+          }
+        });
         return false;
       }
       if (isAddHandle.value) {

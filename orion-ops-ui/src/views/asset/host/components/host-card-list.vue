@@ -24,7 +24,7 @@
     <!-- 地址 -->
     <template #address="{ record }">
       <a-tooltip content="点击复制">
-        <span class="host-address" @click="copy(record.address)">
+        <span class="pointer span-blue" @click="copy(record.address)">
           <icon-copy /> {{ record.address }}
         </span>
       </a-tooltip>
@@ -245,8 +245,4 @@
 </script>
 
 <style lang="less" scoped>
-  .host-address {
-    cursor: pointer;
-    color: rgb(var(--arcoblue-6))
-  }
 </style>

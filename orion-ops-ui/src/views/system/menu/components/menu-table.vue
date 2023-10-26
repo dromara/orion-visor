@@ -19,7 +19,7 @@
             <a-col :span="12">
               <a-form-item field="status" label="菜单状态" label-col-flex="60px">
                 <a-select v-model="formModel.status"
-                          :options="toOptions(MenuStatusEnum)"
+                          :options="toOptions(menuStatusKey)"
                           placeholder="请选择菜单状态"
                           allow-clear />
               </a-form-item>
@@ -99,7 +99,7 @@
       </template>
       <!-- 类型 -->
       <template #type="{ record }">
-        <a-tag>{{ getEnumValue(record.type, MenuTypeEnum) }}</a-tag>
+        <a-tag>{{ getDictValue(menuTypeKey, record.type) }}</a-tag>
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
@@ -108,34 +108,34 @@
           <a-popconfirm v-if="hasPermission('infra:system-menu:update-status')"
                         position="top"
                         type="warning"
-                        :content="`确定要将当前节点以及所有子节点改为${toggleEnumValue(record.status, MenuStatusEnum, 'label')}?`"
-                        @ok="updateStatus(record.id, toggleEnumValue(record.status, MenuStatusEnum))">
+                        :content="`确定要将当前节点以及所有子节点改为${toggleDictValue(menuStatusKey, record.status, 'label')}?`"
+                        @ok="updateStatus(record.id, toggleDictValue(menuStatusKey, record.status))">
             <a-tooltip content="点击切换状态">
-              <a-tag :color="getEnumValue(record.status, MenuStatusEnum, 'color')" class="pointer">
-                {{ getEnumValue(record.status, MenuStatusEnum) }}
+              <a-tag :color="getDictValue(menuStatusKey, record.status, 'color')" class="pointer">
+                {{ getDictValue(menuStatusKey, record.status) }}
               </a-tag>
             </a-tooltip>
           </a-popconfirm>
-          <a-tag v-else :color="getEnumValue(record.status, MenuStatusEnum, 'color')">
-            {{ getEnumValue(record.status, MenuStatusEnum) }}
+          <a-tag v-else :color="getDictValue(menuStatusKey, record.status, 'color')">
+            {{ getDictValue(menuStatusKey, record.status) }}
           </a-tag>
           <!-- 显示状态 -->
           <a-popconfirm v-if="hasPermission('infra:system-menu:update-status')"
                         position="top"
                         type="warning"
-                        :content="`确定要将当前节点以及所有子节点改为${toggleEnumValue(record.visible, MenuVisibleEnum, 'label')}?`"
-                        @ok="updateVisible(record.id, toggleEnumValue(record.visible, MenuVisibleEnum))">
+                        :content="`确定要将当前节点以及所有子节点改为${toggleDictValue(menuVisibleKey, record.visible, 'label')}?`"
+                        @ok="updateVisible(record.id, toggleDictValue(menuVisibleKey, record.visible))">
             <a-tooltip content="点击切换状态">
-              <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
-                     :color="getEnumValue(record.visible, MenuVisibleEnum, 'color')"
+              <a-tag v-if="(record.visible || record.visible === 0) && record.type !== MenuType.FUNCTION"
+                     :color="getDictValue(menuVisibleKey, record.visible, 'color')"
                      class="pointer">
-                {{ getEnumValue(record.visible, MenuVisibleEnum) }}
+                {{ getDictValue(menuVisibleKey, record.visible) }}
               </a-tag>
             </a-tooltip>
           </a-popconfirm>
-          <a-tag v-else-if="(record.visible || record.visible === 0) && record.type !== MenuTypeEnum.FUNCTION.value"
-                 :color="getEnumValue(record.visible, MenuVisibleEnum, 'color')">
-            {{ getEnumValue(record.visible, MenuVisibleEnum) }}
+          <a-tag v-else-if="(record.visible || record.visible === 0) && record.type !== MenuType.FUNCTION"
+                 :color="getDictValue(menuVisibleKey, record.visible, 'color')">
+            {{ getDictValue(menuVisibleKey, record.visible) }}
           </a-tag>
         </a-space>
       </template>
@@ -145,7 +145,7 @@
           <!-- 新增 -->
           <a-button type="text"
                     size="mini"
-                    v-if="record.type !== MenuTypeEnum.FUNCTION.value"
+                    v-if="record.type !== MenuType.FUNCTION"
                     v-permission="['infra:system-menu:create']"
                     @click="emits('openAdd', { parentId: record.id, type: record.type, sort: getMaxSort(record.children) })">
             新增
@@ -185,13 +185,13 @@
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getMenuList, deleteMenu, updateMenuStatus, initCache } from '@/api/system/menu';
-  import { toOptions, getEnumValue, toggleEnumValue } from '@/utils/enum';
-  import { MenuStatusEnum, MenuVisibleEnum, MenuTypeEnum } from '../types/enum.types';
+  import { menuStatusKey, menuVisibleKey, menuTypeKey, MenuType } from '../types/const';
   import columns from '../types/table.columns';
   import { Message } from '@arco-design/web-vue';
-  import { useCacheStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import usePermission from '@/hooks/permission';
 
+  const { toOptions, getDictValue, toggleDictValue } = useDictStore();
   const cacheStore = useCacheStore();
   const { hasPermission } = usePermission();
 

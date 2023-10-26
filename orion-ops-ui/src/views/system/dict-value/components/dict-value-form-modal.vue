@@ -111,7 +111,7 @@
       value: undefined,
       label: undefined,
       extra: undefined,
-      sort: 10,
+      sort: undefined,
     };
   };
 
@@ -126,7 +126,7 @@
   const openAdd = () => {
     title.value = '添加字典配置值';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm(), keyId: formModel.value.keyId });
+    renderForm({ ...defaultForm(), keyId: formModel.value.keyId, sort: (formModel.value.sort || 0) + 10 });
     setVisible(true);
   };
 
@@ -207,6 +207,13 @@
   // 关闭
   const handleClose = () => {
     handlerClear();
+    if (isAddHandle.value) {
+      // 关闭后设置排序 -10 下次进入的排序字段会保持不变
+      formModel.value.sort = (formModel.value.sort || 0) - 10;
+    } else {
+      // 关闭后设置排序为 0 下次进入的排序字段为 10
+      formModel.value.sort = 0;
+    }
   };
 
   // 清空

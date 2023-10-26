@@ -92,8 +92,8 @@
       </template>
       <!-- 地址 -->
       <template #address="{ record }">
-        <span title="复制">
-          <icon-copy class="copy-left" @click="copy(record.address)" />
+        <span class="copy-left" @click="copy(record.address)" title="复制">
+          <icon-copy />
         </span>
         <span class="span-blue">{{ record.address }}</span>
       </template>

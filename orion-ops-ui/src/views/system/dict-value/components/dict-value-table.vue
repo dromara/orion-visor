@@ -78,7 +78,9 @@
              :bordered="false">
       <!-- 值 -->
       <template #value="{ record }">
-        <icon-copy class="copy-left" title="复制" @click="copy(record.value)" />
+        <span class="copy-left" title="复制" @click="copy(record.value)">
+          <icon-copy />
+        </span>
         <a-tooltip :content="record.value">
           <span>{{ record.value }}</span>
         </a-tooltip>

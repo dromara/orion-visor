@@ -4,6 +4,9 @@ import { ValueTypeEnum } from './enum.types';
  * 快捷定义字段
  */
 export const definedExtraKeys = [{
+  name: 'disabled',
+  type: ValueTypeEnum.BOOLEAN.value
+}, {
   name: 'status',
   type: ValueTypeEnum.STRING.value
 }, {

@@ -22,10 +22,14 @@
   import MenuFormModal from '@/views/system/menu/components/menu-form-modal.vue';
 
   import { onUnmounted, ref } from 'vue';
-  import { useCacheStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
 
   const table = ref();
   const modal = ref();
+
+  // 加载字典项
+  useDictStore().loadKeys(dictKeys);
 
   // 卸载时清除 menu cache
   onUnmounted(() => {
