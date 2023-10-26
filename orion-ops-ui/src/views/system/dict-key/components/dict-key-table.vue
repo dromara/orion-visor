@@ -56,7 +56,7 @@
       <!-- 配置项 -->
       <template #keyName="{ record }">
         <span class="pointer" @click="copy(record.keyName)">
-          <icon-copy class="span-blue" /> {{ record.keyName }}
+          <icon-copy /> {{ record.keyName }}
         </span>
       </template>
       <!-- 配置值类型 -->

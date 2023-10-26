@@ -27,6 +27,11 @@
         <!-- 配置名称 -->
         <a-form-item field="name" label="配置名称">
           <a-input v-model="formModel.name" placeholder="请输入配置名称" allow-clear />
+          <span class="item-extra-block pointer"
+                title="同步到值"
+                @click="() => formModel.value = formModel.name">
+            <icon-caret-down style="font-size: 16px" />
+          </span>
         </a-form-item>
         <!-- 配置值 -->
         <a-form-item field="value" label="配置值">
@@ -68,10 +73,9 @@
           <template v-else-if="ValueTypeEnum.COLOR.value === type">
             <a-input v-model="extraValue[name]"
                      :placeholder="`请输入 ${name}`"
-                     default-value="#"
                      allow-clear
                      hide-button />
-            <span class="color-block" :style="{
+            <span class="item-extra-block" :style="{
               background: extraValue[name] === '#' ? undefined : (extraValue[name] || undefined)
             }" />
           </template>
@@ -132,7 +136,7 @@
   const openAdd = () => {
     title.value = '添加字典配置值';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm() });
+    renderForm({ ...defaultForm(), keyId: formModel.value.keyId });
     setVisible(true);
   };
 
@@ -224,11 +228,14 @@
 </script>
 
 <style lang="less" scoped>
-  .color-block {
-    width: 36px;
-    height: 30px;
+  .item-extra-block {
+    width: 38px;
+    height: 32px;
     margin-left: 8px;
     border-radius: 4px;
     background: var(--color-fill-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

@@ -1,7 +1,18 @@
+import { ValueTypeEnum } from './enum.types';
+
 /**
  * 快捷定义字段
  */
-export const definedExtraKeys = ['status', 'type', 'color'];
+export const definedExtraKeys = [{
+  name: 'status',
+  type: ValueTypeEnum.STRING.value
+}, {
+  name: 'type',
+  type: ValueTypeEnum.STRING.value
+}, {
+  name: 'color',
+  type: ValueTypeEnum.COLOR.value
+}];
 
 /**
  * 内置字段

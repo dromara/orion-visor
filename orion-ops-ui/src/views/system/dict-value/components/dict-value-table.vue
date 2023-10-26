@@ -83,13 +83,19 @@
       <!-- 名称 -->
       <template #name="{ record }">
         <span class="pointer" @click="copy(record.name)">
-          <icon-copy class="span-blue" /> {{ record.name }}
+          <icon-copy class="copy-left" />
+          <a-tooltip :content="record.name">
+            <span>{{ record.name }}</span>
+          </a-tooltip>
         </span>
       </template>
       <!-- 值 -->
       <template #value="{ record }">
         <span class="pointer" @click="copy(record.value)">
-          <icon-copy class="span-blue" /> {{ record.value }}
+          <icon-copy class="copy-left" />
+          <a-tooltip :content="record.value">
+            <span>{{ record.value }}</span>
+          </a-tooltip>
         </span>
       </template>
       <!-- 操作 -->

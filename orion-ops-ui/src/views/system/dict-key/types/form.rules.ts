@@ -4,8 +4,8 @@ export const keyName = [{
   required: true,
   message: '请输入配置项'
 }, {
-  match: /^[a-zA-Z0-9]{2,32}$/,
-  message: '配置项需要为 2-32 位的数字以及字母'
+  match: /^[a-zA-Z0-9_]{2,32}$/,
+  message: '配置项需要为 2-32 位的数字,字母或下滑线'
 }] as FieldRule[];
 
 export const valueType = [{

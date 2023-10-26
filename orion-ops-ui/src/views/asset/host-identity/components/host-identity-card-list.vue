@@ -20,9 +20,9 @@
     <!-- 用户名 -->
     <template #username="{ record }">
       <a-tooltip content="点击复制">
-          <span class="pointer span-blue" @click="copy(record.username)">
-            <icon-copy /> {{ record.username }}
-          </span>
+        <span class="pointer span-blue" @click="copy(record.username)">
+          <icon-copy /> {{ record.username }}
+        </span>
       </a-tooltip>
     </template>
     <!-- 秘钥名称 -->

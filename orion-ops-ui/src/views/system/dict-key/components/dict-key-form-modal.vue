@@ -67,15 +67,15 @@
           <a-tag v-for="definedExtraKey in definedExtraKeys"
                  color="arcoblue"
                  :title="`添加参数 ${definedExtraKey}`"
-                 @click="addExtraParam(definedExtraKey)"
+                 @click="addExtraParam(definedExtraKey.name, definedExtraKey.type)"
                  checkable
                  checked>
-            {{ definedExtraKey }}
+            {{ definedExtraKey.name }}
           </a-tag>
           <!-- 添加参数 -->
           <a-button title="添加参数"
                     style="width: 180px;"
-                    @click="addExtraParam(undefined)"
+                    @click="addExtraParam(undefined,undefined)"
                     long>
             <icon-plus />
           </a-button>
@@ -114,7 +114,7 @@
     return {
       id: undefined,
       keyName: undefined,
-      valueType: ValueTypeEnum.STRING.value,
+      valueType: ValueTypeEnum.INTEGER.value,
       extraSchema: undefined,
       description: undefined,
     };
@@ -155,13 +155,13 @@
   defineExpose({ openAdd, openUpdate });
 
   // 添加额外参数
-  const addExtraParam = (name: string | undefined) => {
+  const addExtraParam = (name: string | undefined, type: any) => {
     if (name && extraSchemaArr.value.findIndex(v => v.name === name) != -1) {
       return;
     }
     extraSchemaArr.value.push({
       name: name,
-      type: ValueTypeEnum.STRING.value
+      type: type || ValueTypeEnum.STRING.value
     });
   };
 
@@ -194,11 +194,11 @@
             return false;
           }
           // 不合法
-          if (!new RegExp(/^[a-zA-Z0-9]{2,32}$/).test(extraSchema.name as string)) {
+          if (!new RegExp(/^[a-zA-Z0-9_]{2,32}$/).test(extraSchema.name as string)) {
             formRef.value.setFields({
               [`extra${i + 1}`]: {
                 status: 'error',
-                message: '配置项需要为 2-32 位的数字以及字母'
+                message: '配置项需要为 2-32 位的数字,字母或下滑线'
               }
             });
             return false;

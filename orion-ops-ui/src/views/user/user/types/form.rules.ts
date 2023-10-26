@@ -7,8 +7,8 @@ export const username = [{
   maxLength: 32,
   message: '用户名长度不能大于32位'
 }, {
-  match: /^[a-zA-Z0-9]{4,32}$/,
-  message: '用户名需要为 4-32 位的数字以及字母'
+  match: /^[a-zA-Z0-9_]{4,32}$/,
+  message: '用户名需要为 4-32 位的数字,字母或下滑线'
 }] as FieldRule[];
 
 export const password = [{

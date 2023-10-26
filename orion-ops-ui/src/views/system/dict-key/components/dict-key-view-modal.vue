@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            title-align="start"
            width="60%"
-           :body-style="{padding: '16px 4px'}"
+           :body-style="{padding: '16px 8px'}"
            :top="80"
            :title="title"
            :align-center="false"

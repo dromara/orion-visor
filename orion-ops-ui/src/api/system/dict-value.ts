@@ -8,7 +8,6 @@ import qs from 'query-string';
  */
 export interface DictValueCreateRequest {
   keyId?: number;
-  keyName?: string;
   name?: string;
   value?: string;
   label?: string;
@@ -53,6 +52,7 @@ export interface DictValueQueryResponse extends TableData {
   id?: number;
   keyId?: number;
   keyName?: string;
+  keyDescription?: string;
   name?: string;
   value?: string;
   label?: string;
