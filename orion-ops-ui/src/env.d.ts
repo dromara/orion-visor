@@ -6,6 +6,13 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
 }
+
+// editor
+declare module 'monaco-editor';
+declare module 'monaco-editor/esm/vs/editor/editor.worker?worker'
+declare module 'monaco-editor/esm/vs/language/json/json.worker?worker'
+declare module 'monaco-editor/esm/vs/basic-languages/yaml/yaml.js';

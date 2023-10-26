@@ -37,6 +37,9 @@ dependencies:
   mitt:
     specifier: ^3.0.0
     version: 3.0.1
+  monaco-editor:
+    specifier: ^0.44.0
+    version: 0.44.0
   nprogress:
     specifier: ^0.2.0
     version: 0.2.0
@@ -150,6 +153,9 @@ devDependencies:
   rollup-plugin-visualizer:
     specifier: ^5.8.2
     version: 5.9.2(rollup@2.79.1)
+  sass:
+    specifier: ^1.69.4
+    version: 1.69.4
   stylelint:
     specifier: ^14.13.0
     version: 14.16.1
@@ -176,7 +182,7 @@ devDependencies:
     version: 0.24.1(rollup@2.79.1)(vue@3.3.4)
   vite:
     specifier: ^3.2.5
-    version: 3.2.7(@types/node@20.4.7)(less@4.2.0)
+    version: 3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4)
   vite-plugin-compression:
     specifier: ^0.5.1
     version: 0.5.1(vite@3.2.7)
@@ -1269,7 +1275,7 @@ packages:
       '@babel/core': 7.22.19
       '@babel/plugin-transform-typescript': 7.22.15(@babel/core@7.22.19)
       '@vue/babel-plugin-jsx': 1.1.5(@babel/core@7.22.19)
-      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)
+      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4)
       vue: 3.3.4
     transitivePeerDependencies:
       - supports-color
@@ -1282,7 +1288,7 @@ packages:
       vite: ^3.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)
+      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4)
       vue: 3.3.4
     dev: true
 
@@ -4697,6 +4703,10 @@ packages:
       replace-ext: 1.0.1
     dev: true
 
+  /immutable@4.3.4:
+    resolution: {integrity: sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==}
+    dev: true
+
   /import-fresh@2.0.0:
     resolution: {integrity: sha512-eZ5H8rcgYazHbKC3PG4ClHNykCSxtAhxSSEM+2mb+7evD2CKF5V7c0dNum7AdpDh0ZdICwZY9sRSn8f+KH96sg==}
     engines: {node: '>=4'}
@@ -5901,6 +5911,10 @@ packages:
     dependencies:
       commander: 11.0.0
     dev: true
+
+  /monaco-editor@0.44.0:
+    resolution: {integrity: sha512-5SmjNStN6bSuSE5WPT2ZV+iYn1/yI9sd4Igtk23ChvqB7kDk9lZbB9F5frsuvpB+2njdIeGGFf2G4gbE6rCC9Q==}
+    dev: false
 
   /mozjpeg@7.1.1:
     resolution: {integrity: sha512-iIDxWvzhWvLC9mcRJ1uSkiKaj4drF58oCqK2bITm5c2Jt6cJ8qQjSSru2PCaysG+hLIinryj8mgz5ZJzOYTv1A==}
@@ -7186,6 +7200,16 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /sass@1.69.4:
+    resolution: {integrity: sha512-+qEreVhqAy8o++aQfCJwp0sklr2xyEzkm9Pp/Igu9wNPoe7EZEQ8X/MBvvXggI2ql607cxKg/RKOwDj6pp2XDA==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.3.4
+      source-map-js: 1.0.2
+    dev: true
 
   /sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
@@ -8484,7 +8508,7 @@ packages:
       chalk: 4.1.2
       debug: 4.3.4
       fs-extra: 10.1.0
-      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)
+      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8499,7 +8523,7 @@ packages:
       '@types/eslint': 8.44.2
       eslint: 8.49.0
       rollup: 2.79.1
-      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)
+      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4)
     dev: true
 
   /vite-plugin-imagemin@0.6.1(vite@3.2.7):
@@ -8530,7 +8554,7 @@ packages:
       imagemin-webp: 6.1.0
       jpegtran-bin: 6.0.1
       pathe: 0.2.0
-      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)
+      vite: 3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8542,7 +8566,7 @@ packages:
       svgo: 2.8.0
     dev: true
 
-  /vite@3.2.7(@types/node@20.4.7)(less@4.2.0):
+  /vite@3.2.7(@types/node@20.4.7)(less@4.2.0)(sass@1.69.4):
     resolution: {integrity: sha512-29pdXjk49xAP0QBr0xXqu2s5jiQIXNvE/xwd0vUizYT2Hzqe4BksNNoWllFVXJf4eLZ+UlVQmXfB4lWrc+t18g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -8573,6 +8597,7 @@ packages:
       postcss: 8.4.29
       resolve: 1.22.5
       rollup: 2.79.1
+      sass: 1.69.4
     optionalDependencies:
       fsevents: 2.3.3
     dev: true

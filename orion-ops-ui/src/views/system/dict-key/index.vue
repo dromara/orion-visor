@@ -2,12 +2,12 @@
   <div class="layout-container">
     <!-- 列表-表格 -->
     <dict-key-table ref="table"
-                  @openAdd="() => modal.openAdd()"
-                  @openUpdate="(e) => modal.openUpdate(e)" />
+                    @openAdd="() => modal.openAdd()"
+                    @openUpdate="(e) => modal.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <dict-key-form-modal ref="modal"
-                   @added="modalAddCallback"
-                   @updated="modalUpdateCallback" />
+                         @added="modalAddCallback"
+                         @updated="modalUpdateCallback" />
   </div>
 </template>
 
@@ -18,10 +18,9 @@
 </script>
 
 <script lang="ts" setup>
+  import { ref } from 'vue';
   import DictKeyTable from './components/dict-key-table.vue';
   import DictKeyFormModal from './components/dict-key-form-modal.vue';
-
-  import { ref } from 'vue';
 
   const table = ref();
   const modal = ref();
