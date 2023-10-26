@@ -17,7 +17,7 @@ export const definedExtraKeys = [{
 /**
  * 内置字段
  */
-export const innerKeys = ['name', 'value', 'label'];
+export const innerKeys = ['value', 'label'];
 
 /**
  * 额外参数类型

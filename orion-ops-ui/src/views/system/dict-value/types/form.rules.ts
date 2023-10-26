@@ -13,14 +13,6 @@ export const keyName = [{
   message: '配置项长度不能大于32位'
 }] as FieldRule[];
 
-export const name = [{
-  required: true,
-  message: '请输入配置名称'
-}, {
-  maxLength: 32,
-  message: '配置名称长度不能大于32位'
-}] as FieldRule[];
-
 export const value = [{
   required: true,
   message: '请输入配置值'
@@ -50,7 +42,6 @@ export const sort = [{
 export default {
   keyId,
   keyName,
-  name,
   value,
   label,
   extra,

@@ -38,7 +38,6 @@ export interface DictValueQueryRequest extends Pagination {
   id?: number;
   keyId?: number;
   keyName?: string;
-  name?: string;
   value?: string;
   label?: string;
   extra?: string;
@@ -53,7 +52,6 @@ export interface DictValueQueryResponse extends TableData {
   keyId?: number;
   keyName?: string;
   keyDescription?: string;
-  name?: string;
   value?: string;
   label?: string;
   extra?: string;
@@ -65,9 +63,9 @@ export interface DictValueQueryResponse extends TableData {
 }
 
 /**
- * 字典配置值枚举查询响应
+ * 字典配置值选项查询响应
  */
-export interface DictValueEnumQueryResponse extends Options {
+export interface DictValueOptionsQueryResponse extends Options {
 
   [key: string]: unknown;
 }
@@ -96,15 +94,13 @@ export function rollbackDictValue(request: DictValueRollbackRequest) {
 /**
  * 查询字典配置值
  */
-export function getDictValue(keyName: string) {
-  return axios.get<Array<DictValueQueryResponse>>('/infra/dict-value/list', { params: { keyName } });
-}
-
-/**
- * 查询字典配置值枚举
- */
-export function getDictValueEnum(keyName: string) {
-  return axios.get<Record<string, DictValueEnumQueryResponse>>('/infra/dict-value/enum', { params: { keyName } });
+export function getDictValueList(keys: string[]) {
+  return axios.get<Record<string, Array<DictValueOptionsQueryResponse>>>('/infra/dict-value/list', {
+    params: { keys },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
 
 /**

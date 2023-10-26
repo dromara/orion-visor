@@ -12,10 +12,6 @@
                            @change="changeKey"
                            allow-create />
       </a-form-item>
-      <!-- 配置名称 -->
-      <a-form-item field="name" label="配置名称" label-col-flex="50px">
-        <a-input v-model="formModel.name" placeholder="请输入配置名称" allow-clear />
-      </a-form-item>
       <!-- 配置值 -->
       <a-form-item field="value" label="配置值" label-col-flex="50px">
         <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
@@ -80,23 +76,12 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
-      <!-- 名称 -->
-      <template #name="{ record }">
-        <span class="pointer" @click="copy(record.name)">
-          <icon-copy class="copy-left" />
-          <a-tooltip :content="record.name">
-            <span>{{ record.name }}</span>
-          </a-tooltip>
-        </span>
-      </template>
       <!-- 值 -->
       <template #value="{ record }">
-        <span class="pointer" @click="copy(record.value)">
-          <icon-copy class="copy-left" />
-          <a-tooltip :content="record.value">
-            <span>{{ record.value }}</span>
-          </a-tooltip>
-        </span>
+        <icon-copy class="copy-left" title="复制" @click="copy(record.value)" />
+        <a-tooltip :content="record.value">
+          <span>{{ record.value }}</span>
+        </a-tooltip>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
@@ -163,7 +148,6 @@
     id: undefined,
     keyId: undefined,
     keyName: undefined,
-    name: undefined,
     value: undefined,
     label: undefined,
     extra: undefined,

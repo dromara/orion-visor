@@ -27,7 +27,7 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { getDictValueEnum } from '@/api/system/dict-value';
+  import { getDictValueList } from '@/api/system/dict-value';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -48,8 +48,8 @@
     try {
       setLoading(true);
       // 查看
-      const { data } = await getDictValueEnum(keyName);
-      value.value = JSON.stringify(data, undefined, 4);
+      const { data } = await getDictValueList([keyName]);
+      value.value = JSON.stringify(data[keyName], undefined, 4);
     } finally {
       setLoading(false);
     }

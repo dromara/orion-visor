@@ -92,11 +92,10 @@
       </template>
       <!-- 地址 -->
       <template #address="{ record }">
-        <a-tooltip content="点击复制">
-          <span class="host-address" @click="copy(record.address)">
-            <icon-copy /> {{ record.address }}
-          </span>
-        </a-tooltip>
+        <span title="复制">
+          <icon-copy class="copy-left" @click="copy(record.address)" />
+        </span>
+        <span class="span-blue">{{ record.address }}</span>
       </template>
       <!-- 标签 -->
       <template #tags="{ record }">
@@ -251,11 +250,6 @@
 </script>
 
 <style lang="less" scoped>
-
-  .host-address {
-    cursor: pointer;
-    color: rgb(var(--arcoblue-6))
-  }
 
   .row-handle-wrapper {
     display: flex;

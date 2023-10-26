@@ -24,15 +24,6 @@
         <a-form-item field="keyId" label="配置项">
           <dict-key-selector v-model="formModel.keyId" @change="changeKey" />
         </a-form-item>
-        <!-- 配置名称 -->
-        <a-form-item field="name" label="配置名称">
-          <a-input v-model="formModel.name" placeholder="请输入配置名称" allow-clear />
-          <span class="item-extra-block pointer"
-                title="同步到值"
-                @click="() => formModel.value = formModel.name">
-            <icon-caret-down style="font-size: 16px" />
-          </span>
-        </a-form-item>
         <!-- 配置值 -->
         <a-form-item field="value" label="配置值">
           <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
@@ -117,7 +108,6 @@
     return {
       id: undefined,
       keyId: undefined,
-      name: undefined,
       value: undefined,
       label: undefined,
       extra: undefined,

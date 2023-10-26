@@ -20,24 +20,18 @@ const columns = [
       return `${record.keyName} - ${record.keyDescription}`;
     },
   }, {
-    title: '配置名称',
-    dataIndex: 'name',
-    slotName: 'name',
-    align: 'left',
-    ellipsis: true,
-  }, {
-    title: '配置值',
-    dataIndex: 'value',
-    slotName: 'value',
-    align: 'left',
-    ellipsis: true,
-  }, {
     title: '配置描述',
     dataIndex: 'label',
     slotName: 'label',
     align: 'left',
     ellipsis: true,
     tooltip: true,
+  }, {
+    title: '配置值',
+    dataIndex: 'value',
+    slotName: 'value',
+    align: 'left',
+    ellipsis: true,
   }, {
     title: '额外参数',
     dataIndex: 'extra',

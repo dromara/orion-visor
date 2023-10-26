@@ -84,7 +84,7 @@ export const createDefaultOptions = (): Options => {
     minimap: {
       enabled: false,
     },
-    fontSize: 16,
+    fontSize: 14,
     scrollBeyondLastLine: false,
     overviewRulerBorder: false,
     colorDecorators: true,
