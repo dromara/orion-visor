@@ -38,10 +38,6 @@ public class DictValueDO extends BaseDO {
     @TableField("key_name")
     private String keyName;
 
-    @Schema(description = "配置名称")
-    @TableField("name")
-    private String name;
-
     @Schema(description = "配置值")
     @TableField("value")
     private String value;

@@ -119,7 +119,7 @@ public class DictKeyServiceImpl implements DictKeyService {
         return list.stream()
                 .filter(s -> !s.getId().equals(Const.NONE_ID))
                 .map(DictKeyConvert.MAPPER::to)
-                .sorted(Comparator.comparing(DictKeyVO::getKeyName))
+                .sorted(Comparator.comparing(DictKeyVO::getId).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -207,7 +207,7 @@ public class DictKeyServiceImpl implements DictKeyService {
                 .map(DictKeyDO::getKeyName)
                 .map(DictCacheKeyDefine.DICT_SCHEMA::format)
                 .collect(Collectors.toList());
-        RedisMaps.delete(schemaKeys);
+        RedisUtils.delete(schemaKeys);
         return effect;
     }
 
@@ -243,7 +243,7 @@ public class DictKeyServiceImpl implements DictKeyService {
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .like(DictKeyDO::getKeyName, searchValue).or()
                         .like(DictKeyDO::getDescription, searchValue)
-                );
+                ).orderByDesc(DictKeyDO::getId);
     }
 
 }

@@ -7,7 +7,6 @@
         <id column="id" property="id"/>
         <result column="key_id" property="keyId"/>
         <result column="key_name" property="keyName"/>
-        <result column="name" property="name"/>
         <result column="value" property="value"/>
         <result column="label" property="label"/>
         <result column="extra" property="extra"/>
@@ -21,7 +20,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, key_id, key_name, name, value, label, extra, sort, create_time, update_time, creator, updater, deleted
+        id, key_id, key_name, value, label, extra, sort, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.cache.CacheKeyBuilder;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.ops.module.infra.entity.dto.DictKeyCacheDTO;
-import com.orion.ops.module.infra.entity.dto.DictValueCacheDTO;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +33,7 @@ public interface DictCacheKeyDefine {
     CacheKeyDefine DICT_VALUE = new CacheKeyBuilder()
             .key("dict:values:{}")
             .desc("字典配置值 ${key}")
-            .type(DictValueCacheDTO.class)
+            .type(JSONObject.class)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

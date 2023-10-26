@@ -6,8 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * redis string 工具类
@@ -76,6 +78,52 @@ public class RedisStrings extends RedisUtils {
     }
 
     /**
+     * 获取 json 列表
+     *
+     * @param keys keys
+     * @return cache
+     */
+    public static List<JSONObject> getJsonList(List<String> keys) {
+        List<String> values = redisTemplate.opsForValue().multiGet(keys);
+        if (values == null) {
+            return new ArrayList<>();
+        }
+        return values.stream()
+                .map(JSON::parseObject)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys   keys
+     * @param define define
+     * @param <T>    T
+     * @return cache
+     */
+    public static <T> List<T> getJsonList(List<String> keys, CacheKeyDefine define) {
+        return getJsonList(keys, (Class<T>) define.getType());
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys keys
+     * @param type type
+     * @param <T>  T
+     * @return cache
+     */
+    public static <T> List<T> getJsonList(List<String> keys, Class<T> type) {
+        List<String> values = redisTemplate.opsForValue().multiGet(keys);
+        if (values == null) {
+            return new ArrayList<>();
+        }
+        return values.stream()
+                .map(s -> JSON.parseObject(s, type))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 获取 json
      *
      * @param key key
@@ -126,6 +174,52 @@ public class RedisStrings extends RedisUtils {
             return null;
         }
         return JSON.parseArray(value, type);
+    }
+
+    /**
+     * 获取 jsonArray 列表
+     *
+     * @param keys keys
+     * @return cache
+     */
+    public static List<JSONArray> getJsonArrayList(List<String> keys) {
+        List<String> values = redisTemplate.opsForValue().multiGet(keys);
+        if (values == null) {
+            return new ArrayList<>();
+        }
+        return values.stream()
+                .map(JSON::parseArray)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取 jsonArray 列表
+     *
+     * @param keys   keys
+     * @param define define
+     * @param <T>    T
+     * @return cache
+     */
+    public static <T> List<List<T>> getJsonArrayList(List<String> keys, CacheKeyDefine define) {
+        return getJsonArrayList(keys, (Class<T>) define.getType());
+    }
+
+    /**
+     * 获取 jsonArray 列表
+     *
+     * @param keys keys
+     * @param type type
+     * @param <T>  T
+     * @return cache
+     */
+    public static <T> List<List<T>> getJsonArrayList(List<String> keys, Class<T> type) {
+        List<String> values = redisTemplate.opsForValue().multiGet(keys);
+        if (values == null) {
+            return new ArrayList<>();
+        }
+        return values.stream()
+                .map(s -> JSON.parseArray(s, type))
+                .collect(Collectors.toList());
     }
 
     /**

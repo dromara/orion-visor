@@ -34,9 +34,6 @@ public class DictValueEnumVO implements Serializable {
     @Schema(description = "配置项")
     private String keyName;
 
-    @Schema(description = "配置名称")
-    private String name;
-
     @Schema(description = "配置值")
     private String value;
 

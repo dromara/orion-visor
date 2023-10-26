@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
-import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.convert.DictValueConvert;
 import com.orion.ops.module.infra.dao.DictKeyDAO;
 import com.orion.ops.module.infra.dao.DictValueDAO;
@@ -20,7 +20,6 @@ import com.orion.ops.module.infra.define.cache.DictCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DictKeyDO;
 import com.orion.ops.module.infra.entity.domain.DictValueDO;
 import com.orion.ops.module.infra.entity.domain.HistoryValueDO;
-import com.orion.ops.module.infra.entity.dto.DictValueCacheDTO;
 import com.orion.ops.module.infra.entity.request.dict.DictValueCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueQueryRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueRollbackRequest;
@@ -36,10 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 字典配置值 服务实现类
@@ -123,7 +121,7 @@ public class DictValueServiceImpl implements DictValueService {
         Valid.notNull(history, ErrorMessage.HISTORY_ABSENT);
         // 记录日志参数
         OperatorLogs.add(OperatorLogs.KEY_NAME, record.getKeyName());
-        OperatorLogs.add(OperatorLogs.LABEL, record.getName());
+        OperatorLogs.add(OperatorLogs.LABEL, record.getLabel());
         OperatorLogs.add(OperatorLogs.VALUE, history.getBeforeValue());
         // 更新
         DictValueDO updateRecord = new DictValueDO();
@@ -139,61 +137,51 @@ public class DictValueServiceImpl implements DictValueService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<DictValueVO> getDictValueList(String keyName) {
+    public Map<String, List<JSONObject>> getDictValueList(List<String> keys) {
+        Map<String, List<JSONObject>> result = new HashMap<>();
         // 查询缓存
-        String cacheKey = DictCacheKeyDefine.DICT_VALUE.format(keyName);
-        List<DictValueCacheDTO> list = RedisMaps.valuesJson(cacheKey, (Class<DictValueCacheDTO>) DictCacheKeyDefine.DICT_VALUE.getType());
-        if (list.isEmpty()) {
-            // 查询数据库
-            list = dictValueDAO.of()
-                    .createWrapper()
-                    .eq(DictValueDO::getKeyName, keyName)
-                    .then()
-                    .list(DictValueConvert.MAPPER::toCache);
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(DictValueCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
+        List<String> cacheKeyList = keys.stream()
+                .map(DictCacheKeyDefine.DICT_VALUE::format)
+                .collect(Collectors.toList());
+        List<List<JSONObject>> jsonArrayList = RedisStrings.getJsonArrayList(cacheKeyList, JSONObject.class);
+        // 检查数据
+        List<String> emptyKeyList = new ArrayList<>();
+        IntStream.range(0, jsonArrayList.size()).forEach(i -> {
+            String key = keys.get(i);
+            List<JSONObject> value = jsonArrayList.get(i);
+            result.put(key, value);
+            // 需要查询的数据
+            if (value == null) {
+                emptyKeyList.add(key);
             }
+        });
+        if (!emptyKeyList.isEmpty()) {
+            // 查询数据库
+            Map<String, List<DictValueDO>> valueGrouping = dictValueDAO.of()
+                    .createWrapper()
+                    .in(DictValueDO::getKeyName, emptyKeyList)
+                    .then()
+                    .stream()
+                    .collect(Collectors.groupingBy(DictValueDO::getKeyName));
             // 设置缓存
-            RedisMaps.putAllJson(cacheKey, s -> s.getId().toString(), list);
-            RedisMaps.setExpire(cacheKey, DictCacheKeyDefine.DICT_VALUE);
+            emptyKeyList.parallelStream().forEach(s -> {
+                // 转为配置
+                List<JSONObject> options = this.toCacheOptions(s, valueGrouping.get(s));
+                // 设置缓存
+                RedisStrings.setJson(DictCacheKeyDefine.DICT_VALUE.format(s),
+                        DictCacheKeyDefine.DICT_VALUE,
+                        options);
+                // 设置值
+                result.put(s, options);
+            });
         }
         // 删除默认值
-        return list.stream()
-                .filter(s -> !s.getId().equals(Const.NONE_ID))
-                .map(DictValueConvert.MAPPER::to)
-                .sorted(Comparator.comparing(DictValueVO::getSort))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Map<String, Map<String, Object>> getDictValueEnum(String keyName) {
-        // 查询配置值
-        List<DictValueVO> values = this.getDictValueList(keyName);
-        if (values.isEmpty()) {
-            return Maps.empty();
-        }
-        // 查询配置项
-        Map<String, String> schema = dictKeyService.getDictSchema(keyName);
-        // 返回
-        Map<String, Map<String, Object>> result = Maps.newLinkedMap();
-        for (DictValueVO value : values) {
-            Map<String, Object> item = Maps.newMap();
-            item.put(Const.NAME, value.getName());
-            item.put(Const.LABEL, value.getLabel());
-            item.put(Const.VALUE, DictValueTypeEnum.of(schema.get(Const.VALUE)).parse(value.getValue()));
-            // 额外值
-            String extra = value.getExtra();
-            if (!Strings.isBlank(extra)) {
-                JSONObject extraObject = JSON.parseObject(extra);
-                for (String extraKey : extraObject.keySet()) {
-                    item.put(extraKey, DictValueTypeEnum.of(schema.get(extraKey)).parse(extraObject.getString(extraKey)));
-                }
+        for (List<JSONObject> options : result.values()) {
+            if (options.size() == 1 && options.get(0).remove(Const.DOLLAR) != null) {
+                Iterator<JSONObject> iterator = options.iterator();
+                iterator.next();
+                iterator.remove();
             }
-            result.put(value.getName(), item);
         }
         return result;
     }
@@ -203,9 +191,24 @@ public class DictValueServiceImpl implements DictValueService {
         // 条件
         LambdaQueryWrapper<DictValueDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return dictValueDAO.of(wrapper)
+        DataGrid<DictValueVO> dataGrid = dictValueDAO.of(wrapper)
                 .page(request)
                 .dataGrid(DictValueConvert.MAPPER::to);
+        if (!dataGrid.isEmpty()) {
+            List<Long> keyIdList = dataGrid.stream()
+                    .map(DictValueVO::getKeyId)
+                    .distinct()
+                    .collect(Collectors.toList());
+            // 查询 key 信息
+            List<DictKeyDO> keys = dictKeyDAO.selectBatchIds(keyIdList);
+            Map<Long, String> keyDescMapping = keys.stream()
+                    .collect(Collectors.toMap(DictKeyDO::getId, DictKeyDO::getDescription));
+            // 设置 key 描述
+            dataGrid.forEach(s -> {
+                s.setKeyDescription(keyDescMapping.get(s.getKeyId()));
+            });
+        }
+        return dataGrid;
     }
 
     @Override
@@ -230,7 +233,7 @@ public class DictValueServiceImpl implements DictValueService {
         DictValueDO record = dictValueDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
         // 添加日志参数
-        OperatorLogs.add(OperatorLogs.VALUE, record.getKeyName() + "-" + record.getName());
+        OperatorLogs.add(OperatorLogs.VALUE, record.getKeyName() + "-" + record.getLabel());
         // 删除
         return this.deleteDictValue(Lists.singleton(id), Lists.singleton(record));
     }
@@ -242,7 +245,7 @@ public class DictValueServiceImpl implements DictValueService {
         List<DictValueDO> records = dictValueDAO.selectBatchIds(idList);
         // 添加日志参数
         String value = records.stream()
-                .map(s -> s.getKeyName() + "-" + s.getName())
+                .map(s -> s.getKeyName() + "-" + s.getLabel())
                 .collect(Collectors.joining(Const.COMMA));
         OperatorLogs.add(OperatorLogs.VALUE, value);
         // 删除
@@ -330,7 +333,7 @@ public class DictValueServiceImpl implements DictValueService {
                 .ne(DictValueDO::getId, domain.getId())
                 // 用其他字段做重复校验
                 .eq(DictValueDO::getKeyId, domain.getKeyId())
-                .eq(DictValueDO::getName, domain.getName());
+                .eq(DictValueDO::getValue, domain.getValue());
         // 检查是否存在
         boolean present = dictValueDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.CONFIG_PRESENT);
@@ -346,10 +349,44 @@ public class DictValueServiceImpl implements DictValueService {
         return dictValueDAO.wrapper()
                 .eq(DictValueDO::getKeyId, request.getKeyId())
                 .like(DictValueDO::getKeyName, request.getKeyName())
-                .like(DictValueDO::getName, request.getName())
                 .eq(DictValueDO::getValue, request.getValue())
                 .like(DictValueDO::getLabel, request.getLabel())
                 .orderByDesc(DictValueDO::getId);
+    }
+
+    /**
+     * 转为配置
+     *
+     * @param key    key
+     * @param values values
+     * @return options
+     */
+    private List<JSONObject> toCacheOptions(String key, List<DictValueDO> values) {
+        // 添加默认值
+        if (Lists.isEmpty(values)) {
+            JSONObject item = new JSONObject();
+            item.put(Const.DOLLAR, Const.DOLLAR);
+            return Lists.of(item);
+        }
+        // 查询 schema
+        Map<String, String> schema = dictKeyService.getDictSchema(key);
+        // 转换
+        return values.stream()
+                .map(s -> {
+                    // 设置值
+                    JSONObject item = new JSONObject();
+                    item.put(Const.LABEL, s.getLabel());
+                    item.put(Const.VALUE, DictValueTypeEnum.of(schema.get(Const.VALUE)).parse(s.getValue()));
+                    // 额外值
+                    String extra = s.getExtra();
+                    if (!Strings.isBlank(extra)) {
+                        JSONObject extraObject = JSON.parseObject(extra);
+                        for (String extraKey : extraObject.keySet()) {
+                            item.put(extraKey, DictValueTypeEnum.of(schema.get(extraKey)).parse(extraObject.getString(extraKey)));
+                        }
+                    }
+                    return item;
+                }).collect(Collectors.toList());
     }
 
 }

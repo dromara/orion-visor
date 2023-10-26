@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.infra.entity.request.dict.DictValueCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueQueryRequest;
@@ -44,20 +45,12 @@ public interface DictValueService {
     Integer rollbackDictValueById(DictValueRollbackRequest request);
 
     /**
-     * 查询全部字典配置值
+     * 查询字典配置值
      *
-     * @param keyName keyName
+     * @param keys keys
      * @return rows
      */
-    List<DictValueVO> getDictValueList(String keyName);
-
-    /**
-     * 查询全部字典配置值枚举
-     *
-     * @param keyName keyName
-     * @return enum
-     */
-    Map<String, Map<String, Object>> getDictValueEnum(String keyName);
+    Map<String, List<JSONObject>> getDictValueList(List<String> keys);
 
     /**
      * 分页查询字典配置值

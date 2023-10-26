@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
@@ -70,16 +71,9 @@ public class DictValueController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
-    @Operation(summary = "查询字典配置值")
-    public List<DictValueVO> getDictValueList(@RequestParam("keyName") String keyName) {
-        return dictValueService.getDictValueList(keyName);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/enum")
-    @Operation(summary = "查询字典配置值枚举")
-    public Map<String, Map<String, Object>> getDictValueEnum(@RequestParam("keyName") String keyName) {
-        return dictValueService.getDictValueEnum(keyName);
+    @Operation(summary = "查询字典配置值选项")
+    public Map<String, List<JSONObject>> getDictValueList(@RequestParam("keys") List<String> keys) {
+        return dictValueService.getDictValueList(keys);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

@@ -28,7 +28,7 @@ public class SystemUserCreateRequest implements Serializable {
 
     @NotBlank
     @Size(max = 32)
-    @Pattern(regexp = ValidConst.CHAR_NUMBER_4_32_PATTERN, message = ValidConst.CHAR_NUMBER_4_32_MESSAGE)
+    @Pattern(regexp = ValidConst.USERNAME_4_32_PATTERN, message = ValidConst.USERNAME_4_32_MESSAGE)
     @Schema(description = "用户名")
     private String username;
 

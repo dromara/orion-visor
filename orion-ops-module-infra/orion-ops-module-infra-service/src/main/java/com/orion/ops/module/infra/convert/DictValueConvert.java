@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.convert;
 
 import com.orion.ops.module.infra.entity.domain.DictValueDO;
-import com.orion.ops.module.infra.entity.dto.DictValueCacheDTO;
 import com.orion.ops.module.infra.entity.request.dict.DictValueCreateRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueQueryRequest;
 import com.orion.ops.module.infra.entity.request.dict.DictValueUpdateRequest;
@@ -32,9 +31,5 @@ public interface DictValueConvert {
     DictValueVO to(DictValueDO domain);
 
     List<DictValueVO> to(List<DictValueDO> list);
-
-    DictValueVO to(DictValueCacheDTO cache);
-
-    DictValueCacheDTO toCache(DictValueDO domain);
 
 }

@@ -426,7 +426,7 @@ public class CodeGenerator {
     private static void printTips() {
         String line = AnsiAppender.create()
                 .append(AnsiForeground.BRIGHT_GREEN.and(AnsiFont.BOLD), "\n:: 代码生成完毕 ^_^ ::\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 模块父工程\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 父工程\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码需要自行修改缓存逻辑\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码修改完成后请先执行单元测试检测是否正常\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")

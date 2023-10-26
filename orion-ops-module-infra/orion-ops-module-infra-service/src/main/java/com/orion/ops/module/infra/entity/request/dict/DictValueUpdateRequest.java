@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.entity.request.dict;
 
-import com.orion.ops.framework.common.constant.ValidConst;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -34,12 +32,6 @@ public class DictValueUpdateRequest implements Serializable {
     @NotNull
     @Schema(description = "配置项id")
     private Long keyId;
-
-    @NotBlank
-    @Size(max = 32)
-    @Pattern(regexp = ValidConst.CHAR_NUMBER_1_32_PATTERN, message = ValidConst.CHAR_NUMBER_1_32_MESSAGE)
-    @Schema(description = "配置名称")
-    private String name;
 
     @NotBlank
     @Size(max = 512)
