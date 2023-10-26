@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 表格 -->
     <menu-table ref="table"
                 @openAdd="(e) => modal.openAdd(e)"
@@ -20,16 +20,22 @@
 <script lang="ts" setup>
   import MenuTable from '@/views/system/menu/components/menu-table.vue';
   import MenuFormModal from '@/views/system/menu/components/menu-form-modal.vue';
-
-  import { onUnmounted, ref } from 'vue';
+  import { onBeforeMount, onUnmounted, ref } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
 
   const table = ref();
   const modal = ref();
+  // FIXME
+  const render = ref(false);
 
+  // FIXME
   // 加载字典项
-  useDictStore().loadKeys(dictKeys);
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    render.value = true;
+  });
 
   // 卸载时清除 menu cache
   onUnmounted(() => {

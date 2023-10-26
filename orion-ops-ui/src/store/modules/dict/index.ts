@@ -8,6 +8,7 @@ export default defineStore('dict', {
   actions: {
     // 加载字典值
     async loadKeys(keys: string[]) {
+      console.log('loadKeys', keys);
       // 检查是否存在
       const unloadKeys = keys.filter(key => !this.$state.hasOwnProperty(key));
       if (!unloadKeys.length) {
@@ -18,6 +19,8 @@ export default defineStore('dict', {
         const { data } = await getDictValueList(unloadKeys);
         this.$patch(data as object);
       } catch (e) {
+      } finally {
+        console.log('final');
       }
     },
 
@@ -33,9 +36,11 @@ export default defineStore('dict', {
                  defaultValue = value) {
       for (let dictValue of this.$state[dict] || []) {
         if (dictValue.value === value) {
+          console.log(dictValue[key]);
           return dictValue[key];
         }
       }
+      console.log('default', dict);
       return defaultValue;
     },
 

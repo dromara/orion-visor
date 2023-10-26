@@ -36,4 +36,5 @@ export const menuVisibleKey = 'systemMenuVisible';
 // 是否缓存 字典项
 export const menuCacheKey = 'systemMenuCache';
 
+// 加载的字典值
 export const dictKeys = [menuTypeKey, menuStatusKey, menuVisibleKey, menuCacheKey];

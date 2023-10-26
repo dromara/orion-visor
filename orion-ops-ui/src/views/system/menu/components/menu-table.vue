@@ -182,7 +182,7 @@
 
 <script lang="ts" setup>
   import type { MenuQueryRequest, MenuQueryResponse } from '@/api/system/menu';
-  import { reactive, ref } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getMenuList, deleteMenu, updateMenuStatus, initCache } from '@/api/system/menu';
   import { menuStatusKey, menuVisibleKey, menuTypeKey, MenuType } from '../types/const';
@@ -281,7 +281,10 @@
       setFetchLoading(false);
     }
   };
-  loadMenuData();
+
+  onMounted(() => {
+    loadMenuData();
+  });
 
   // 重置菜单
   const resetForm = () => {

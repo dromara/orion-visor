@@ -204,16 +204,13 @@
     }
   };
 
-  // 关闭
+  // 关闭回调
   const handleClose = () => {
-    handlerClear();
-    if (isAddHandle.value) {
-      // 关闭后设置排序 -10 下次进入的排序字段会保持不变
-      formModel.value.sort = (formModel.value.sort || 0) - 10;
-    } else {
-      // 关闭后设置排序为 0 下次进入的排序字段为 10
+    if (!isAddHandle.value) {
+      // 修改关闭后设置排序为 0 下次进入的排序字段为 10
       formModel.value.sort = 0;
     }
+    handlerClear();
   };
 
   // 清空

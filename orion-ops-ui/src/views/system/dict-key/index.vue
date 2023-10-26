@@ -25,10 +25,14 @@
   import DictKeyTable from './components/dict-key-table.vue';
   import DictKeyFormModal from './components/dict-key-form-modal.vue';
   import DictKeyViewModal from './components/dict-key-view-modal.vue';
+  import { useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
 
   const table = ref();
   const modal = ref();
   const view = ref();
+
+  useDictStore().loadKeys(dictKeys);
 
   // 添加回调
   const modalAddCallback = () => {
