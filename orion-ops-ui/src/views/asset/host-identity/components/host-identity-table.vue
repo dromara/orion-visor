@@ -68,7 +68,7 @@
       <template #username="{ record }">
         <a-tooltip content="点击复制">
           <span class="pointer span-blue" @click="copy(record.username)">
-            <icon-copy class="mr4" />{{ record.username }}
+            <icon-copy /> {{ record.username }}
           </span>
         </a-tooltip>
       </template>

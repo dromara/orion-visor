@@ -53,6 +53,12 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 配置项 -->
+      <template #keyName="{ record }">
+        <span class="pointer" @click="copy(record.keyName)">
+          <icon-copy class="span-blue" /> {{ record.keyName }}
+        </span>
+      </template>
       <!-- 配置值类型 -->
       <template #valueType="{ record }">
         <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum, 'color')">
@@ -80,7 +86,7 @@
           <!-- 查看 -->
           <a-button type="text"
                     size="mini"
-                    @click="viewDictKey(record.keyName)">
+                    @click="emits('openView', record)">
             查看
           </a-button>
           <!-- 修改 -->
@@ -125,12 +131,11 @@
   import {} from '../types/const';
   import { ValueTypeEnum } from '../types/enum.types';
   import { getEnumValue } from '@/utils/enum';
-  import { getDictValueEnum } from '@/api/system/dict-value';
   import useCopy from '@/hooks/copy';
 
   const tableRenderData = ref<DictKeyQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const { copy } = useCopy();
   const pagination = usePagination();
@@ -171,13 +176,6 @@
   defineExpose({
     addedCallback, updatedCallback
   });
-
-  // 查看
-  const viewDictKey = async (keyName: string) => {
-    const { data } = await getDictValueEnum(keyName);
-    // fixme 后续改为 jsonView
-    await copy(JSON.stringify(data), '复制成功');
-  };
 
   // 加载数据
   const doFetchTableData = async (request: DictKeyQueryRequest) => {

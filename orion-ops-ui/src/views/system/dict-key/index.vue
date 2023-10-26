@@ -3,11 +3,14 @@
     <!-- 列表-表格 -->
     <dict-key-table ref="table"
                     @openAdd="() => modal.openAdd()"
-                    @openUpdate="(e) => modal.openUpdate(e)" />
+                    @openUpdate="(e) => modal.openUpdate(e)"
+                    @openView="(e) => view.open(e)" />
     <!-- 添加修改模态框 -->
     <dict-key-form-modal ref="modal"
                          @added="modalAddCallback"
                          @updated="modalUpdateCallback" />
+    <!-- json 查看器模态框 -->
+    <dict-key-view-modal ref="view" />
   </div>
 </template>
 
@@ -21,9 +24,11 @@
   import { ref } from 'vue';
   import DictKeyTable from './components/dict-key-table.vue';
   import DictKeyFormModal from './components/dict-key-form-modal.vue';
+  import DictKeyViewModal from './components/dict-key-view-modal.vue';
 
   const table = ref();
   const modal = ref();
+  const view = ref();
 
   // 添加回调
   const modalAddCallback = () => {

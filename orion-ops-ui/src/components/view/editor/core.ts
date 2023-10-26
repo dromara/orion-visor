@@ -27,6 +27,12 @@ export type RenderLineHighlight = 'all' | 'line' | 'none' | 'gutter'
 export interface Options {
   // 自适应布局
   automaticLayout?: boolean;
+  // 只读提示
+  readOnlyMessage?: {
+    value?: string,
+
+    [key: string]: unknown;
+  };
   // 是否折叠
   folding?: boolean;
   // 折叠方式
@@ -44,7 +50,9 @@ export interface Options {
   placeholder?: string;
   minimap?: {
     // 关闭小地图
-    enabled?: boolean
+    enabled?: boolean;
+
+    [key: string]: unknown;
   };
   fontSize?: number;
   // 取消代码后面一大段空白
@@ -63,6 +71,9 @@ export interface Options {
 export const createDefaultOptions = (): Options => {
   return {
     automaticLayout: true,
+    readOnlyMessage: {
+      value: '当前为只读状态'
+    },
     folding: true,
     foldingHighlight: true,
     foldingStrategy: 'indentation',

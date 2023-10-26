@@ -13,6 +13,7 @@ import {
 import Breadcrumb from './app/breadcrumb/index.vue';
 import Chart from './view/chart/index.vue';
 import CardList from './view/card-list/index.vue';
+import Editor from './view/editor/index.vue';
 
 use([
   CanvasRenderer,
@@ -33,5 +34,6 @@ export default {
     Vue.component('Breadcrumb', Breadcrumb);
     Vue.component('a-query-header', AQueryHeader);
     Vue.component('card-list', CardList);
+    Vue.component('Editor', Editor);
   },
 };

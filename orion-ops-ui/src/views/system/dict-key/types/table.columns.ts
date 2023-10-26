@@ -16,7 +16,7 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
-    title: '配置值类型',
+    title: '类型',
     dataIndex: 'valueType',
     slotName: 'valueType',
     align: 'left',
@@ -29,7 +29,7 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
-    title: '额外配置类型',
+    title: '额外配置',
     dataIndex: 'extraSchema',
     slotName: 'extraSchema',
     align: 'left',

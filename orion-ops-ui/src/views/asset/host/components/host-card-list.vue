@@ -25,7 +25,7 @@
     <template #address="{ record }">
       <a-tooltip content="点击复制">
           <span class="host-address" @click="copy(record.address)">
-            <icon-copy class="mr4" />{{ record.address }}
+            <icon-copy /> {{ record.address }}
           </span>
       </a-tooltip>
     </template>

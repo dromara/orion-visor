@@ -71,7 +71,8 @@
       language: props.language,
       readOnly: props.readonly,
       theme: props.theme === true ? (appStore.theme === 'dark' ? 'vs-dark' : 'vs') : props.theme,
-      options: { ...createDefaultOptions(), ...props.options },
+      ...createDefaultOptions(),
+      ...props.options,
     };
     // 创建编辑器
     editor = monaco.editor.create(editorContainer.value, options);
@@ -101,7 +102,7 @@
     }
   });
 
-  // 监听配置
+  // 监听配置变更
   watch(() => props.options, (v) => {
     if (editor) {
       editor.updateOptions(v);
