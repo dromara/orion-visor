@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.orion.ops.launch.generator.engine;
+package com.orion.ops.framework.mybatis.core.generator.engine;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.config.ConstVal;
@@ -31,8 +31,8 @@ import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
-import com.orion.ops.launch.generator.template.Table;
-import com.orion.ops.launch.generator.template.VueEnum;
+import com.orion.ops.framework.mybatis.core.generator.template.Table;
+import com.orion.ops.framework.mybatis.core.generator.template.VueEnum;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;

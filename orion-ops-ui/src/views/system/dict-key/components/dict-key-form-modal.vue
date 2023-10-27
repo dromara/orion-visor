@@ -1,6 +1,7 @@
 <template>
   <a-modal v-model:visible="visible"
            body-class="modal-form"
+           :body-style="{'padding-bottom': '24px'}"
            title-align="start"
            :title="title"
            :top="80"

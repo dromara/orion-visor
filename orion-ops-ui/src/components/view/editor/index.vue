@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
   import type { Theme, Options } from './core';
-  import type { PropType } from 'vue';
+  import type { CSSProperties, PropType } from 'vue';
   import * as monaco from 'monaco-editor';
   import { createDefaultOptions } from './core';
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
@@ -48,7 +48,7 @@
       default: 'json',
     },
     containerClass: String,
-    containerStyle: Object,
+    containerStyle: Object as PropType<CSSProperties>,
     theme: {
       type: [String, Boolean] as PropType<Theme | boolean>,
       default: true,

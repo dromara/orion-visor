@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator.template;
+package com.orion.ops.framework.mybatis.core.generator.template;
 
 import java.util.concurrent.TimeUnit;
 

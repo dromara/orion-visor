@@ -1,4 +1,4 @@
-// 排序步长
+// 自增排序步长
 export const sortStep = 10;
 
 // 菜单类型 值

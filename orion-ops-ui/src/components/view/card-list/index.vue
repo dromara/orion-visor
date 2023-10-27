@@ -223,7 +223,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
+  import type { CSSProperties, PropType } from 'vue';
   import type { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
   import type { CardRecord, ColResponsiveValue, HandleVisible, CardFieldConfig, CardPosition } from '@/types/card';
   import { compile, computed, h, ref } from 'vue';
@@ -278,7 +278,7 @@
       default: '100%'
     },
     cardClass: String,
-    cardBodyStyle: Object,
+    cardBodyStyle: Object as PropType<CSSProperties>,
     contextMenu: {
       type: Boolean,
       default: true

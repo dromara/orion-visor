@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator.template;
+package com.orion.ops.framework.mybatis.core.generator.template;
 
 import lombok.Data;
 
@@ -44,9 +44,19 @@ public class Table {
     protected boolean enableUnitTest;
 
     /**
+     * 是否生成导出
+     */
+    protected boolean enableExport;
+
+    /**
      * 是否可缓存
      */
     protected boolean enableCache;
+
+    /**
+     * 是否生成操作日志
+     */
+    protected boolean enableOperatorLog;
 
     /**
      * 缓存的 key

@@ -53,7 +53,7 @@ npm run dev
 生成通用 controller entity service dao api convert http vue ts sql junit 
 
 代码位置 
-com.orion.ops.launch.generator.CodeGenerator
+com.orion.ops.framework.mybatis.core.generator.CodeGenerator
 
 // 生成的表为 system_role, 业务注释为 '角色', 业务包为 role
 Template.create("system_role", "角色", "role")

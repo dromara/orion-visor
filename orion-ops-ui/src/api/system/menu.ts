@@ -88,8 +88,8 @@ export function deleteMenu(id: number) {
 }
 
 /**
- * 初始化缓存
+ * 刷新缓存
  */
-export function initCache() {
-  return axios.put('/infra/permission/init-cache');
+export function refreshCache() {
+  return axios.put('/infra/permission/refresh-cache');
 }

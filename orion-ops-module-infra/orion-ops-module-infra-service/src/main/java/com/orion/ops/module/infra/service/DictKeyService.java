@@ -58,6 +58,11 @@ public interface DictKeyService {
     Map<String, String> getDictSchema(String key);
 
     /**
+     * 刷新字典缓存
+     */
+    void refreshCache();
+
+    /**
      * 删除字典配置项
      *
      * @param id id

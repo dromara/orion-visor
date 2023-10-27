@@ -11,7 +11,6 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
-import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.convert.DictValueConvert;
 import com.orion.ops.module.infra.dao.DictKeyDAO;
@@ -79,7 +78,7 @@ public class DictValueServiceImpl implements DictValueService {
         Long id = record.getId();
         log.info("DictValueService-createDictValue id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
+        RedisStrings.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
         return id;
     }
 
@@ -103,7 +102,7 @@ public class DictValueServiceImpl implements DictValueService {
         int effect = dictValueDAO.updateById(updateRecord);
         log.info("DictValueService-updateDictValueById effect: {}", effect);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
+        RedisStrings.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
         // 记录历史归档
         this.checkRecordHistory(updateRecord, record);
         return effect;
@@ -130,7 +129,7 @@ public class DictValueServiceImpl implements DictValueService {
         int effect = dictValueDAO.updateById(updateRecord);
         log.info("DictValueService-rollbackDictValueById effect: {}", effect);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_VALUE.format(record.getKeyName()));
+        RedisStrings.delete(DictCacheKeyDefine.DICT_VALUE.format(record.getKeyName()));
         // 记录历史归档
         this.checkRecordHistory(updateRecord, record);
         return effect;
@@ -222,7 +221,7 @@ public class DictValueServiceImpl implements DictValueService {
         // 删除缓存
         String beforeCacheKey = DictCacheKeyDefine.DICT_VALUE.format(beforeKey);
         String newCacheKey = DictCacheKeyDefine.DICT_VALUE.format(newKey);
-        RedisMaps.delete(beforeCacheKey, newCacheKey);
+        RedisStrings.delete(beforeCacheKey, newCacheKey);
         return effect;
     }
 
@@ -296,7 +295,7 @@ public class DictValueServiceImpl implements DictValueService {
                 .distinct()
                 .map(DictCacheKeyDefine.DICT_VALUE::format)
                 .collect(Collectors.toList());
-        RedisMaps.delete(keyList);
+        RedisStrings.delete(keyList);
         return effect;
     }
 

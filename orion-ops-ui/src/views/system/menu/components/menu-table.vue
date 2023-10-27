@@ -65,9 +65,9 @@
           <a-popconfirm content="确定要刷新全局菜单缓存吗?"
                         position="left"
                         type="warning"
-                        @ok="doInitCache">
+                        @ok="doRefreshCache">
             <a-button type="primary" status="warning"
-                      v-permission="['infra:system-menu:init-cache']">
+                      v-permission="['infra:system-menu:refresh-cache']">
               刷新缓存
               <template #icon>
                 <icon-sync />
@@ -184,7 +184,7 @@
   import type { MenuQueryRequest, MenuQueryResponse } from '@/api/system/menu';
   import { reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getMenuList, deleteMenu, updateMenuStatus, initCache } from '@/api/system/menu';
+  import { getMenuList, deleteMenu, updateMenuStatus, refreshCache } from '@/api/system/menu';
   import { menuStatusKey, menuVisibleKey, menuTypeKey, MenuType } from '../types/const';
   import columns from '../types/table.columns';
   import { Message } from '@arco-design/web-vue';
@@ -298,11 +298,11 @@
   };
 
   // 刷新缓存
-  const doInitCache = async () => {
+  const doRefreshCache = async () => {
     try {
       setFetchLoading(true);
-      await initCache();
-      Message.success('刷新成功');
+      await refreshCache();
+      Message.success('刷新成功 页面缓存刷新后生效');
     } catch (e) {
     } finally {
       setFetchLoading(false);

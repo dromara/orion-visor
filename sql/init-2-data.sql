@@ -32,7 +32,7 @@ INSERT INTO `system_menu` VALUES (49, 48, '创建用户', 'infra:system-user:cre
 INSERT INTO `system_menu` VALUES (50, 48, '修改用户', 'infra:system-user:update', 3, 20, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:19:24', '2023-08-16 10:19:24', NULL, NULL, 0);
 INSERT INTO `system_menu` VALUES (51, 48, '查询用户', 'infra:system-user:query', 3, 30, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:19:24', '2023-08-16 10:19:24', NULL, NULL, 0);
 INSERT INTO `system_menu` VALUES (52, 48, '删除用户', 'infra:system-user:delete', 3, 40, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:19:24', '2023-08-16 10:19:24', NULL, NULL, 0);
-INSERT INTO `system_menu` VALUES (53, 13, '初始化缓存', 'infra:system-menu:init-cache', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:29:10', '2023-08-16 10:29:10', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (53, 13, '初始化缓存', 'infra:system-menu:refresh-cache', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 10:29:10', '2023-08-16 10:29:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (60, 48, '修改用户状态', 'infra:system-user:update-status', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:04', '2023-08-16 11:49:04', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (61, 48, '分配用户角色', 'infra:system-user:grant-role', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:23', '2023-08-16 11:49:23', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (62, 48, '重置用户密码', 'infra:system-user:reset-password', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-08-16 11:49:50', '2023-08-16 11:49:50', '1', '1', 0);

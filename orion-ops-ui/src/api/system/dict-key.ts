@@ -70,6 +70,13 @@ export function getDictKeyPage(request: DictKeyQueryRequest) {
 }
 
 /**
+ * 刷新字典缓存
+ */
+export function refreshCache() {
+  return axios.put('/infra/dict-key/refresh-cache');
+}
+
+/**
  * 删除字典配置项
  */
 export function deleteDictKey(id: number) {

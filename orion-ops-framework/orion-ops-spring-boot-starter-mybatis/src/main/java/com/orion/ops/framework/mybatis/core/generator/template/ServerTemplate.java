@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator.template;
+package com.orion.ops.framework.mybatis.core.generator.template;
 
 /**
  * 后端代码模板
@@ -26,6 +26,7 @@ public class ServerTemplate extends Template {
         table.comment = comment;
         table.bizPackage = bizPackage;
         table.enableUnitTest = true;
+        table.enableOperatorLog = true;
     }
 
     /**
@@ -71,12 +72,34 @@ public class ServerTemplate extends Template {
         return this;
     }
 
+    // fixme
+    /**
+     * 生成导出
+     *
+     * @return this
+     */
+    public ServerTemplate enableExport() {
+        table.enableExport = false;
+        return this;
+    }
+
     /**
      * 不生成单元测试
      *
      * @return this
      */
     public ServerTemplate disableUnitTest() {
+        table.enableUnitTest = false;
+        return this;
+    }
+
+    // fixme
+    /**
+     * 不生成操作日志
+     *
+     * @return this
+     */
+    public ServerTemplate disableOperatorLog() {
         table.enableUnitTest = false;
         return this;
     }

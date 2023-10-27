@@ -39,10 +39,10 @@ public class PermissionController {
     @Resource
     private PermissionService permissionService;
 
-    @PutMapping("/init-cache")
-    @Operation(summary = "初始化角色权限缓存")
-    @PreAuthorize("@ss.hasPermission('infra:system-menu:init-cache')")
-    public HttpWrapper<?> initCache() {
+    @PutMapping("/refresh-cache")
+    @Operation(summary = "刷新角色权限缓存")
+    @PreAuthorize("@ss.hasPermission('infra:system-menu:refresh-cache')")
+    public HttpWrapper<?> refreshCache() {
         permissionService.initPermissionCache();
         return HttpWrapper.ok();
     }

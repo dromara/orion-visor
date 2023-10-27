@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -70,6 +71,14 @@ public class DictKeyController {
     @PreAuthorize("@ss.hasPermission('infra:dict-key:query')")
     public DataGrid<DictKeyVO> getDictKeyPage(@Validated @RequestBody DictKeyQueryRequest request) {
         return dictKeyService.getDictKeyPage(request);
+    }
+
+    @PutMapping("/refresh-cache")
+    @Operation(summary = "刷新字典缓存")
+    @PreAuthorize("@ss.hasPermission('infra:dict-key:refresh-cache')")
+    public HttpWrapper<?> refreshCache() {
+        dictKeyService.refreshCache();
+        return HttpWrapper.ok();
     }
 
     @OperatorLog(DictKeyOperatorType.DELETE)

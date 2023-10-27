@@ -116,6 +116,10 @@
         message
       }
     });
+    // 因为输入框已经限制数量 这里只做提示
+    setTimeout(() => {
+      formRef.value.clearValidate('tags');
+    }, 3000);
   };
 
   // 确定

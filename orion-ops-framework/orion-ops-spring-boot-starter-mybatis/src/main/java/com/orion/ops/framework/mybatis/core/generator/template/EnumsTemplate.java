@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator.template;
+package com.orion.ops.framework.mybatis.core.generator.template;
 
 import com.orion.lang.utils.Enums;
 import com.orion.lang.utils.collect.Lists;

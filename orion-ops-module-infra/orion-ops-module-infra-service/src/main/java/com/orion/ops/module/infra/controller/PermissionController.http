@@ -1,5 +1,5 @@
 ### 初始化角色权限缓存
-GET {{baseUrl}}/infra/permission/init-cache
+GET {{baseUrl}}/infra/permission/refresh-cache
 Authorization: {{token}}
 
 

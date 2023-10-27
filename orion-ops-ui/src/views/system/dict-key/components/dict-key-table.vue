@@ -38,6 +38,19 @@
               <icon-plus />
             </template>
           </a-button>
+          <!-- 刷新缓存 -->
+          <a-popconfirm content="确定要刷新全局字典缓存吗?"
+                        position="left"
+                        type="warning"
+                        @ok="doRefreshCache">
+            <a-button type="primary" status="warning"
+                      v-permission="['infra:dict-key:refresh-cache']">
+              刷新缓存
+              <template #icon>
+                <icon-sync />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </div>
     </template>
@@ -124,7 +137,7 @@
 <script lang="ts" setup>
   import type { DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
   import { reactive, ref, onMounted } from 'vue';
-  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage } from '@/api/system/dict-key';
+  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
@@ -177,6 +190,18 @@
   defineExpose({
     addedCallback, updatedCallback
   });
+
+  // 刷新缓存
+  const doRefreshCache = async () => {
+    try {
+      setLoading(true);
+      await refreshCache();
+      Message.success('刷新成功 页面缓存刷新后生效');
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 加载数据
   const doFetchTableData = async (request: DictKeyQueryRequest) => {

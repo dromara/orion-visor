@@ -92,7 +92,7 @@
   import formRules from '../types/form.rules';
   import { createDictValue, updateDictValue } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
-  import { ValueType } from '../../dict-key/types/const';
+  import { ValueType, sortStep } from '../../dict-key/types/const';
   import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
   import { DictKeyQueryResponse } from '@/api/system/dict-key';
   import { useCacheStore } from '@/store';
@@ -126,7 +126,7 @@
   const openAdd = () => {
     title.value = '添加字典配置值';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm(), keyId: formModel.value.keyId, sort: (formModel.value.sort || 0) + 10 });
+    renderForm({ ...defaultForm(), keyId: formModel.value.keyId, sort: (formModel.value.sort || 0) + sortStep });
     setVisible(true);
   };
 

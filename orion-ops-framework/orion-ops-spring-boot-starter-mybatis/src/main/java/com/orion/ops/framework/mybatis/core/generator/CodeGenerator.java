@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator;
+package com.orion.ops.framework.mybatis.core.generator;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -15,10 +15,10 @@ import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.ext.yml.YmlExt;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
+import com.orion.ops.framework.mybatis.core.generator.engine.VelocityTemplateEngine;
+import com.orion.ops.framework.mybatis.core.generator.template.Table;
+import com.orion.ops.framework.mybatis.core.generator.template.Template;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
-import com.orion.ops.launch.generator.engine.VelocityTemplateEngine;
-import com.orion.ops.launch.generator.template.Table;
-import com.orion.ops.launch.generator.template.Template;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.io.File;
@@ -431,7 +431,8 @@ public class CodeGenerator {
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码修改完成后请先执行单元测试检测是否正常\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 枚举需要自行更改数据类型\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在菜单页面刷新缓存\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在系统菜单页面刷新缓存\n")
+                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 字典 sql 执行完成后 需要在字典配置项页面刷新缓存\n")
                 .toString();
         System.out.print(line);
     }

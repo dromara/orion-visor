@@ -29,6 +29,9 @@ export const definedExtraKeys = [
   }
 ];
 
+// 自增排序步长
+export const sortStep = 10;
+
 // 内置字段
 export const innerKeys = ['value', 'label'];
 

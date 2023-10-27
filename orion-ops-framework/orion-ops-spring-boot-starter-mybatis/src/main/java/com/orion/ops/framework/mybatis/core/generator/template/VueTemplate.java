@@ -1,4 +1,4 @@
-package com.orion.ops.launch.generator.template;
+package com.orion.ops.framework.mybatis.core.generator.template;
 
 /**
  * 前端代码模板
