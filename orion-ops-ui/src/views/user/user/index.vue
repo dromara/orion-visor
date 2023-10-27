@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 表格 -->
     <user-table ref="table"
                 @openAdd="() => modal.openAdd()"
@@ -28,18 +28,26 @@
   import UserFormModal from './components/user-form-modal.vue';
   import UserResetPasswordFormModal from './components/user-reset-password-form-modal.vue';
   import UserGrantRolesFormModal from './components/user-grant-roles-form-modal.vue';
-  import { ref, onUnmounted } from 'vue';
-  import { useCacheStore } from '@/store';
+  import { ref, onBeforeMount, onUnmounted } from 'vue';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
 
+  const render = ref(false);
   const table = ref();
   const modal = ref();
   const resetModal = ref();
   const grantRoleModal = ref();
 
-  // 卸载时清除 role cache
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    render.value = true;
+  });
+
+  // 卸载时清除 cache
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.set('roles', []);
+    cacheStore.reset('roles');
   });
 
 </script>

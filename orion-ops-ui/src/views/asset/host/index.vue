@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <host-table v-if="renderTable"
                 ref="table"
@@ -33,11 +33,13 @@
   import HostFormModal from './components/host-form-modal.vue';
   import HostConfigDrawer from '@/views/asset/host/components/host-config-drawer.vue';
   import { getTagList } from '@/api/meta/tag';
+  import { dictKeys } from './types/const';
   import { Message } from '@arco-design/web-vue';
 
-  import { computed, onUnmounted, ref } from 'vue';
-  import { useAppStore, useCacheStore } from '@/store';
+  import { computed, ref, onBeforeMount, onUnmounted } from 'vue';
+  import { useAppStore, useCacheStore, useDictStore } from '@/store';
 
+  const render = ref(false);
   const table = ref();
   const card = ref();
   const modal = ref();
@@ -75,13 +77,19 @@
       Message.error('tag加载失败');
     }
   };
-  loadTags();
 
-  // 卸载时清除 tags cache
+  onBeforeMount(async () => {
+    // 加载 tags
+    await loadTags();
+    // 加载字典值
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    render.value = true;
+  });
+
+  // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.set('hostTags', []);
-    cacheStore.set('hostKeys', []);
-    cacheStore.set('hostIdentities', []);
+    cacheStore.reset('hostTags', 'hostKeys', 'hostIdentities');
   });
 
 </script>

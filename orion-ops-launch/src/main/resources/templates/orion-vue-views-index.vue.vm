@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     #if($vue.enableCardView)
     <!-- 列表-表格 -->
     <${vue.feature}-table v-if="renderTable"
@@ -49,12 +49,13 @@
   #end
 
   #if($vue.enableCardView)
-  import { computed, ref } from 'vue';
+  import { computed, ref, onBeforeMount } from 'vue';
   import { useAppStore } from '@/store';
   #else
   import { ref } from 'vue';
   #end
 
+  const render = ref(false);
   const table = ref();
   #if($vue.enableCardView)
   const card = ref();
@@ -96,6 +97,10 @@
     table.value.updatedCallback();
     #end
   };
+
+  onBeforeMount(async () => {
+    render.value = true;
+  });
 
 </script>
 

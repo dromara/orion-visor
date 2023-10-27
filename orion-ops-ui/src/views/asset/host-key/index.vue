@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <host-key-table v-if="renderTable"
                     ref="table"
@@ -30,9 +30,10 @@
   import HostKeyTable from './components/host-key-table.vue';
   import HostKeyFormDrawer from './components/host-key-form-drawer.vue';
 
-  import { computed, ref } from 'vue';
+  import { computed, ref, onBeforeMount } from 'vue';
   import { useAppStore } from '@/store';
 
+  const render = ref(false);
   const table = ref();
   const card = ref();
   const drawer = ref();
@@ -57,6 +58,10 @@
       card.value.updatedCallback();
     }
   };
+
+  onBeforeMount(async () => {
+    render.value = true;
+  });
 
 </script>
 

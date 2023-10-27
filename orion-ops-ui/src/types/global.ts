@@ -3,8 +3,10 @@ export interface AnyObject {
 }
 
 export interface Options {
-  value: unknown;
   label: string;
+  value: string | number | boolean;
+
+  [key: string]: unknown;
 }
 
 export interface NodeOptions extends Options {

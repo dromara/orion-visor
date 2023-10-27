@@ -126,7 +126,7 @@
 
 <script lang="ts" setup>
   import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -136,14 +136,14 @@
   import useCopy from '@/hooks/copy';
   import usePermission from '@/hooks/permission';
 
-  const { copy } = useCopy();
-  const { hasAnyPermission } = usePermission();
-
-  const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
+  const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
+
+  const { copy } = useCopy();
   const pagination = usePagination();
+  const { loading, setLoading } = useLoading();
+  const { hasAnyPermission } = usePermission();
 
   const formModel = reactive<HostIdentityQueryRequest>({
     id: undefined,
@@ -162,7 +162,7 @@
       await deleteHostIdentity(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -202,7 +202,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

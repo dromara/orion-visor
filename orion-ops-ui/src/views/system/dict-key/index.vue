@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <dict-key-table ref="table"
                     @openAdd="() => modal.openAdd()"
@@ -21,18 +21,17 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, onBeforeMount } from 'vue';
   import DictKeyTable from './components/dict-key-table.vue';
   import DictKeyFormModal from './components/dict-key-form-modal.vue';
   import DictKeyViewModal from './components/dict-key-view-modal.vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
 
+  const render = ref(false);
   const table = ref();
   const modal = ref();
   const view = ref();
-
-  useDictStore().loadKeys(dictKeys);
 
   // 添加回调
   const modalAddCallback = () => {
@@ -43,6 +42,12 @@
   const modalUpdateCallback = () => {
     table.value.updatedCallback();
   };
+
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    render.value = true;
+  });
 
 </script>
 

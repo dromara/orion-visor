@@ -182,7 +182,7 @@
 
 <script lang="ts" setup>
   import type { MenuQueryRequest, MenuQueryResponse } from '@/api/system/menu';
-  import { onMounted, reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getMenuList, deleteMenu, updateMenuStatus, initCache } from '@/api/system/menu';
   import { menuStatusKey, menuVisibleKey, menuTypeKey, MenuType } from '../types/const';

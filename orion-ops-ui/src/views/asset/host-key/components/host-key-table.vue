@@ -99,18 +99,19 @@
 
 <script lang="ts" setup>
   import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
 
-  const tableRenderData = ref<HostKeyQueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
+  const tableRenderData = ref<HostKeyQueryResponse[]>([]);
+
   const pagination = usePagination();
+  const { loading, setLoading } = useLoading();
 
   const formModel = reactive<HostKeyQueryRequest>({
     id: undefined,
@@ -129,7 +130,7 @@
       await deleteHostKey(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -169,7 +170,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

@@ -20,16 +20,14 @@
 <script lang="ts" setup>
   import MenuTable from '@/views/system/menu/components/menu-table.vue';
   import MenuFormModal from '@/views/system/menu/components/menu-form-modal.vue';
-  import { onBeforeMount, onUnmounted, ref } from 'vue';
+  import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
 
   const table = ref();
   const modal = ref();
-  // FIXME
   const render = ref(false);
 
-  // FIXME
   // 加载字典项
   onBeforeMount(async () => {
     const dictStore = useDictStore();
@@ -37,10 +35,10 @@
     render.value = true;
   });
 
-  // 卸载时清除 menu cache
+  // 卸载时清除 cache
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.set('menus', []);
+    cacheStore.reset('menus');
   });
 
 </script>

@@ -20,7 +20,7 @@
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
-  import { RoleStatusEnum } from '@/views/user/role/types/enum.types';
+  import { RoleStatus } from '@/views/user/role/types/const';
 
   const props = defineProps({
     modelValue: [Number, Array] as PropType<number | Array<number>>,
@@ -45,7 +45,7 @@
     return cacheStore.roles.map(s => {
       return {
         label: `${s.name} (${s.code})`,
-        disabled: s.status === RoleStatusEnum.DISABLED.value,
+        disabled: s.status === RoleStatus.DISABLED,
         value: s.id,
       };
     });

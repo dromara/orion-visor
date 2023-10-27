@@ -26,9 +26,9 @@
                      label="用户名"
                      :rules="usernameRules"
                      label-col-flex="60px"
-                     :help="AuthTypeEnum.IDENTITY.value === formModel.authType ? '将使用主机身份的用户名' : undefined">
+                     :help="AuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
           <a-input v-model="formModel.username"
-                   :disabled="AuthTypeEnum.IDENTITY.value === formModel.authType"
+                   :disabled="AuthType.IDENTITY === formModel.authType"
                    placeholder="请输入用户名" />
         </a-form-item>
         <!-- SSH 端口 -->
@@ -48,10 +48,10 @@
           <a-radio-group type="button"
                          class="auth-type-group"
                          v-model="formModel.authType"
-                         :options="toOptions(AuthTypeEnum)" />
+                         :options="toOptions(authTypeKey)" />
         </a-form-item>
         <!-- 主机密码 -->
-        <a-form-item v-if="AuthTypeEnum.PASSWORD.value === formModel.authType"
+        <a-form-item v-if="AuthType.PASSWORD === formModel.authType"
                      field="password"
                      label="主机密码"
                      :rules="passwordRules"
@@ -68,7 +68,7 @@
                     unchecked-text="使用原密码" />
         </a-form-item>
         <!-- 主机秘钥 -->
-        <a-form-item v-if="AuthTypeEnum.KEY.value === formModel.authType"
+        <a-form-item v-if="AuthType.KEY === formModel.authType"
                      field="keyId"
                      label="主机秘钥"
                      :hide-asterisk="true"
@@ -76,7 +76,7 @@
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
         <!-- 主机身份 -->
-        <a-form-item v-if="AuthTypeEnum.IDENTITY.value === formModel.authType"
+        <a-form-item v-if="AuthType.IDENTITY === formModel.authType"
                      field="identityId"
                      label="主机身份"
                      :hide-asterisk="true"
@@ -139,18 +139,19 @@
 
 <script lang="ts" setup>
   import type { FieldRule } from '@arco-design/web-vue';
-  import type { HostSshConfig } from '@/views/asset/host/types/host-config.types';
+  import type { HostSshConfig } from '../types/host-config.types';
   import { ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host';
-  import { AuthTypeEnum } from '@/views/asset/host/types/host-config.types';
-  import { sshRules } from '@/views/asset/host/types/host-config.form.rules';
+  import { authTypeKey, AuthType } from '../types/const';
+  import { sshRules } from '../types/host-config.form.rules';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
-  import { toOptions } from '@/utils/enum';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
+  import { useDictStore } from '@/store';
 
   const { loading, setLoading } = useLoading();
+  const { toOptions } = useDictStore();
 
   const props = defineProps({
     content: Object
@@ -168,7 +169,7 @@
     username: undefined,
     port: undefined,
     password: undefined,
-    authType: AuthTypeEnum.PASSWORD.value,
+    authType: AuthType.PASSWORD,
     keyId: undefined,
     identityId: undefined,
     connectTimeout: undefined,
@@ -193,7 +194,7 @@
         cb('用户名长度不能大于128位');
         return;
       }
-      if (formModel.value.authType !== AuthTypeEnum.IDENTITY.value && !value) {
+      if (formModel.value.authType !== AuthType.IDENTITY && !value) {
         cb('请输入用户名');
         return;
       }

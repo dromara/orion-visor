@@ -128,7 +128,7 @@
 
 <script lang="ts" setup>
   import type { DictValueQueryRequest, DictValueQueryResponse } from '@/api/system/dict-value';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { batchDeleteDictValue, deleteDictValue, getDictValuePage } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -137,14 +137,15 @@
   import useCopy from '@/hooks/copy';
   import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
 
-  const { copy } = useCopy();
-  const tableRenderData = ref<DictValueQueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openHistory']);
 
-  const pagination = usePagination();
   const selectedKeys = ref<number[]>([]);
+  const tableRenderData = ref<DictValueQueryResponse[]>([]);
+
+  const { copy } = useCopy();
+  const pagination = usePagination();
   const rowSelection = useRowSelection();
+  const { loading, setLoading } = useLoading();
 
   const formModel = reactive<DictValueQueryRequest>({
     id: undefined,
@@ -165,7 +166,7 @@
       Message.success(`成功删除${selectedKeys.value.length}条数据`);
       selectedKeys.value = [];
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -182,7 +183,7 @@
       await deleteDictValue(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -238,7 +239,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

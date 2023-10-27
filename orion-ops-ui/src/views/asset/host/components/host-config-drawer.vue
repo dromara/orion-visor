@@ -29,7 +29,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, onBeforeMount } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
@@ -84,7 +84,6 @@
     } catch (e) {
     }
   };
-  fetchHostKeys();
 
   // 加载主机身份
   const fetchHostIdentities = async () => {
@@ -94,7 +93,13 @@
     } catch (e) {
     }
   };
-  fetchHostIdentities();
+
+  onBeforeMount(async () => {
+    // 加载主机秘钥
+    await fetchHostKeys();
+    // 加载主机身份
+    await fetchHostIdentities();
+  });
 
 </script>
 

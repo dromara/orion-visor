@@ -4,7 +4,7 @@
             :options="optionData"
             :limit="limit as number"
             :allow-create="allowCreate"
-            @exceed-limit="onLimited"
+            @exceed-limit="() => { emits('onLimited', limit, `最多选择${limit}个tag`) }"
             multiple
             allow-clear>
   </a-select>
@@ -20,7 +20,7 @@
   import type { PropType } from 'vue';
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { TagCreateRequest } from '@/api/meta/tag';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import { useCacheStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import { createTag } from '@/api/meta/tag';
@@ -34,7 +34,7 @@
     tagType: String,
   });
 
-  const emits = defineEmits(['update:modelValue']);
+  const emits = defineEmits(['update:modelValue', 'onLimited']);
 
   const value = computed<Array<number>>({
     get() {
@@ -58,9 +58,13 @@
       };
     }) as SelectOptionData[];
   };
-  initOptionData();
+
 
   defineExpose({ initOptionData });
+
+  onMounted(() => {
+    initOptionData();
+  });
 
   // 检查是否可以创建tag
   const checkCreateTag = async (tags: Array<any>) => {
@@ -105,11 +109,6 @@
       value: id
     });
     return id;
-  };
-
-  // 超出限制
-  const onLimited = () => {
-    Message.warning(`最多选择${props.limit}个tag`);
   };
 
 </script>

@@ -66,10 +66,6 @@ export interface DictValueQueryResponse extends TableData {
  * 字典配置值选项查询响应
  */
 export interface DictValueOptionsQueryResponse extends Options {
-  label: string;
-  value: string | number | boolean;
-
-  [key: string]: unknown;
 }
 
 /**

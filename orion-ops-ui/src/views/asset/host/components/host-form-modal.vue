@@ -39,7 +39,8 @@
                               :limit="5"
                               type="HOST"
                               tag-type="hostTags"
-                              placeholder="请选择主机标签" />
+                              placeholder="请选择主机标签"
+                              @onLimited="onLimitedTag" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -106,6 +107,16 @@
   };
 
   defineExpose({ openAdd, openUpdate });
+
+  // tag 超出所选限制
+  const onLimitedTag = (count: number, message: string) => {
+    formRef.value.setFields({
+      tags: {
+        status: 'error',
+        message
+      }
+    });
+  };
 
   // 确定
   const handlerOk = async () => {

@@ -1,4 +1,5 @@
 import type { DictState } from './types';
+import type { Options } from '@/types/global';
 import { defineStore } from 'pinia';
 import { getDictValueList } from '@/api/system/dict-value';
 
@@ -8,7 +9,6 @@ export default defineStore('dict', {
   actions: {
     // 加载字典值
     async loadKeys(keys: string[]) {
-      console.log('loadKeys', keys);
       // 检查是否存在
       const unloadKeys = keys.filter(key => !this.$state.hasOwnProperty(key));
       if (!unloadKeys.length) {
@@ -20,7 +20,6 @@ export default defineStore('dict', {
         this.$patch(data as object);
       } catch (e) {
       } finally {
-        console.log('final');
       }
     },
 
@@ -29,22 +28,32 @@ export default defineStore('dict', {
       return this.$state[key];
     },
 
-    // 获取选择值
+    // 获取字典值
     getDictValue(dict: string,
                  value: any,
                  key = 'label',
                  defaultValue = value) {
       for (let dictValue of this.$state[dict] || []) {
         if (dictValue.value === value) {
-          console.log(dictValue[key]);
           return dictValue[key];
         }
       }
-      console.log('default', dict);
       return defaultValue;
     },
 
-    // 切换字典值对象
+    // 获取字典值对象
+    getDict(dict: string, value: any): Options {
+      for (let dictValue of this.$state[dict] || []) {
+        if (dictValue.value === value) {
+          return dictValue;
+        }
+      }
+      return {
+        value
+      } as Options;
+    },
+
+    // 切换字典值
     toggleDictValue(dict: string,
                     value: any,
                     key = 'value',
@@ -58,13 +67,13 @@ export default defineStore('dict', {
     },
 
     // 切换字典值对象
-    toggleDict(dict: string, value: any) {
+    toggleDict(dict: string, value: any): Options {
       for (let dictValue of this.$state[dict] || []) {
         if (dictValue.value !== value) {
           return dictValue;
         }
       }
-      return {};
+      return {} as Options;
     }
 
   },

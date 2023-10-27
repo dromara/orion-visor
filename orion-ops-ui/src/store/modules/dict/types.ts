@@ -1,5 +1,5 @@
-import { DictValueOptionsQueryResponse } from '@/api/system/dict-value';
+import type { Options } from '@/types/global';
 
 export interface DictState {
-  [key: string]: Array<DictValueOptionsQueryResponse>;
+  [key: string]: Array<Options>;
 }

@@ -19,6 +19,13 @@ export default defineStore('cache', {
     // 设置
     set(name: CacheType, value: any) {
       this[name] = value;
+    },
+
+    // 清空
+    reset(...names: CacheType[]) {
+      for (let name of names) {
+        this[name] = [];
+      }
     }
   },
 });

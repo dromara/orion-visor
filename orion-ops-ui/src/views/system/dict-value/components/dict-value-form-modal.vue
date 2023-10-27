@@ -44,24 +44,25 @@
                      :field="name as string"
                      :label="name">
           <!-- 字符串 -->
-          <a-input v-if="ValueTypeEnum.STRING.value === type"
+          <a-input v-if="ValueType.STRING === type"
                    v-model="extraValue[name]"
                    :placeholder="`请输入 ${name}`"
                    allow-clear />
           <!-- 数字 -->
-          <a-input-number v-else-if="ValueTypeEnum.INTEGER.value === type || ValueTypeEnum.DECIMAL.value === type"
+          <a-input-number v-else-if="ValueType.INTEGER === type || ValueType.DECIMAL === type"
                           v-model="extraValue[name]"
                           :placeholder="`请输入 ${name}`"
+                          :precision="ValueType.INTEGER === type ? 0 : 4"
                           allow-clear
                           hide-button />
           <!-- 布尔值 -->
-          <a-switch v-else-if="ValueTypeEnum.BOOLEAN.value === type"
+          <a-switch v-else-if="ValueType.BOOLEAN === type"
                     type="round"
                     v-model="extraValue[name]"
                     checked-text="TRUE"
                     unchecked-text="FALSE" />
           <!-- 颜色 -->
-          <template v-else-if="ValueTypeEnum.COLOR.value === type">
+          <template v-else-if="ValueType.COLOR === type">
             <a-input v-model="extraValue[name]"
                      :placeholder="`请输入 ${name}`"
                      allow-clear
@@ -84,15 +85,14 @@
 
 <script lang="ts" setup>
   import type { DictValueUpdateRequest } from '@/api/system/dict-value';
+  import type { ExtraParamType } from '../../dict-key/types/const';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
   import { createDictValue, updateDictValue } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
-  import { ExtraParamType, innerKeys } from '../../dict-key/types/const';
-  import { ValueTypeEnum } from '../../dict-key/types/enum.types';
-  import {} from '@/utils/enum';
+  import { ValueType } from '../../dict-key/types/const';
   import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
   import { DictKeyQueryResponse } from '@/api/system/dict-key';
   import { useCacheStore } from '@/store';
@@ -170,7 +170,7 @@
           const nameKey = name as string;
           const value = extraValue.value[nameKey];
           if (value === undefined) {
-            if (type === ValueTypeEnum.BOOLEAN.value) {
+            if (type === ValueType.BOOLEAN) {
               extraValue.value[nameKey] = false;
               continue;
             }

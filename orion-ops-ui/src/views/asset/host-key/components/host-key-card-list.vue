@@ -81,18 +81,20 @@
 <script lang="ts" setup>
   import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
   import { usePagination, useColLayout } from '@/types/card';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
   import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message, Modal } from '@arco-design/web-vue';
 
-  const { loading, setLoading } = useLoading();
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
+
+  const list = ref<HostKeyQueryResponse[]>([]);
+
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const list = ref<HostKeyQueryResponse[]>([]);
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
+  const { loading, setLoading } = useLoading();
 
   const formModel = reactive<HostKeyQueryRequest>({
     searchValue: undefined,
@@ -112,7 +114,7 @@
           await deleteHostKey(id);
           Message.success('删除成功');
           // 重新加载数据
-          await fetchCardData();
+          fetchCardData();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -160,7 +162,10 @@
   const fetchCardData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchCardData({ page, limit, ...form });
   };
-  fetchCardData();
+
+  onMounted(() => {
+    fetchCardData();
+  });
 
 </script>
 

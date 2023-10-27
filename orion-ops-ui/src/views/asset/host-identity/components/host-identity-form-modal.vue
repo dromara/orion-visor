@@ -141,7 +141,12 @@
       }
       if (isAddHandle.value) {
         if (!formModel.value.password && !formModel.value.keyId) {
-          Message.error('创建时密码和秘钥不能同时为空');
+          formRef.value.setFields({
+            password: {
+              status: 'error',
+              message: '创建时密码和秘钥不能同时为空'
+            }
+          });
           return false;
         }
         // 新增

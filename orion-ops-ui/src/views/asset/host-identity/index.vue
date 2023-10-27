@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <host-identity-table v-if="renderTable"
                          ref="table"
@@ -15,7 +15,7 @@
     <!-- 添加修改模态框 -->
     <host-identity-form-modal ref="modal"
                               @added="modalAddCallback"
-                              @updated="modalAddCallback" />
+                              @updated="modalUpdateCallback" />
     <!-- 添加修改模态框 -->
     <host-key-form-drawer ref="keyDrawer" />
   </div>
@@ -34,9 +34,11 @@
   import HostKeyFormDrawer from '../host-key/components/host-key-form-drawer.vue';
   import { getHostKeyList } from '@/api/asset/host-key';
 
-  import { onUnmounted, ref, computed } from 'vue';
+  import { ref, computed, onBeforeMount, onUnmounted } from 'vue';
   import { useAppStore, useCacheStore } from '@/store';
+  import { Message } from '@arco-design/web-vue';
 
+  const render = ref(false);
   const table = ref();
   const card = ref();
   const modal = ref();
@@ -70,14 +72,20 @@
       const { data } = await getHostKeyList();
       cacheStore.set('hostKeys', data);
     } catch (e) {
+      Message.error('主机秘钥加载失败');
     }
   };
-  fetchHostKeyList();
 
-  // 卸载时清除 tags cache
+  onBeforeMount(async () => {
+    // 加载主机秘钥
+    await fetchHostKeyList();
+    render.value = true;
+  });
+
+  // 卸载时清除 cache
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.set('hostKeys', []);
+    cacheStore.reset('hostKeys');
   });
 
 </script>

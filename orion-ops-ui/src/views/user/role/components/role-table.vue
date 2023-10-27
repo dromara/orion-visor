@@ -18,7 +18,7 @@
       <a-form-item field="status" label="角色状态" label-col-flex="50px">
         <a-select v-model="formModel.status"
                   placeholder="请选择角色状态"
-                  :options="toOptions(RoleStatusEnum)"
+                  :options="toOptions(roleStatusKey)"
                   allow-clear />
       </a-form-item>
     </a-query-header>
@@ -67,24 +67,24 @@
       <!-- 状态 -->
       <template #status="{ record }">
         <span class="circle" :style="{
-          background: getEnumValue(record.status, RoleStatusEnum, 'color')
+          background: getDictValue(roleStatusKey, record.status, 'color')
         }" />
-        {{ getEnumValue(record.status, RoleStatusEnum) }}
+        {{ getDictValue(roleStatusKey, record.status) }}
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 修改状态 -->
-          <a-popconfirm :content="`确定要${toggleEnumValue(record.status, RoleStatusEnum, 'label')}当前角色吗?`"
+          <a-popconfirm :content="`确定要${toggleDictValue(roleStatusKey, record.status, 'label')}当前角色吗?`"
                         position="left"
                         type="warning"
                         @ok="toggleRoleStatus(record)">
             <a-button v-permission="['infra:system-role:delete']"
                       :disabled="record.code === 'admin'"
-                      :status="toggleEnumValue(record.status, RoleStatusEnum, 'status')"
+                      :status="toggleDictValue(roleStatusKey, record.status, 'status')"
                       type="text"
                       size="mini">
-              {{ toggleEnumValue(record.status, RoleStatusEnum, 'label') }}
+              {{ toggleDictValue(roleStatusKey, record.status, 'label') }}
             </a-button>
           </a-popconfirm>
           <!-- 分配菜单 -->
@@ -129,20 +129,22 @@
 
 <script lang="ts" setup>
   import type { RoleQueryRequest, RoleQueryResponse } from '@/api/user/role';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { deleteRole, getRolePage, updateRoleStatus } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { RoleStatusEnum } from '../types/enum.types';
-  import { toOptions, getEnumValue, toggleEnumValue, toggleEnum } from '@/utils/enum';
+  import { roleStatusKey } from '../types/const';
   import { usePagination } from '@/types/table';
+  import { useDictStore } from '@/store';
 
-  const tableRenderData = ref<RoleQueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
+  const tableRenderData = ref<RoleQueryResponse[]>([]);
+
   const pagination = usePagination();
+  const { loading, setLoading } = useLoading();
+  const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
   const formModel = reactive<RoleQueryRequest>({
     id: undefined,
@@ -155,9 +157,12 @@
   const toggleRoleStatus = async (record: any) => {
     try {
       setLoading(true);
-      const toggleStatus = toggleEnum(record.status, RoleStatusEnum);
+      const toggleStatus = toggleDict(roleStatusKey, record.status);
       // 调用修改接口
-      await updateRoleStatus({ id: record.id, status: toggleStatus.value });
+      await updateRoleStatus({
+        id: record.id,
+        status: toggleStatus.value as number
+      });
       Message.success(`${toggleStatus.label}成功`);
       // 修改行状态
       record.status = toggleStatus.value;
@@ -177,7 +182,7 @@
       await deleteRole(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -217,7 +222,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

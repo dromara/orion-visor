@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 表格 -->
     <role-table ref="table"
                 @openAdd="() => modal.openAdd()"
@@ -24,17 +24,25 @@
   import RoleTable from './components/role-table.vue';
   import RoleFormModal from './components/role-form-modal.vue';
   import RoleMenuGrantModal from '@/views/user/role/components/role-menu-grant-modal.vue';
-  import { onUnmounted, ref } from 'vue';
-  import { useCacheStore } from '@/store';
+  import { ref, onBeforeMount, onUnmounted } from 'vue';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
 
+  const render = ref();
   const table = ref();
   const modal = ref();
   const grantModal = ref();
 
-  // 卸载时清除 menu cache
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    render.value = true;
+  });
+
+  // 卸载时清除 cache
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.set('menus', []);
+    cacheStore.reset('menus');
   });
 
 </script>

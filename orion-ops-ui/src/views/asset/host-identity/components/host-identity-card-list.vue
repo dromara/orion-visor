@@ -127,7 +127,7 @@
 <script lang="ts" setup>
   import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import { usePagination, useColLayout } from '@/types/card';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
@@ -137,14 +137,15 @@
   import useCopy from '@/hooks/copy';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
 
-  const { copy } = useCopy();
-  const { hasAnyPermission } = usePermission();
-  const { loading, setLoading } = useLoading();
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
+  const list = ref<HostIdentityQueryResponse[]>([]);
+
+  const { copy } = useCopy();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const list = ref<HostIdentityQueryResponse[]>([]);
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
+  const { loading, setLoading } = useLoading();
+  const { hasAnyPermission } = usePermission();
 
   const formRef = ref();
   const formModel = reactive<HostIdentityQueryRequest>({
@@ -174,7 +175,7 @@
           await deleteHostIdentity(id);
           Message.success('删除成功');
           // 重新加载数据
-          await fetchCardData();
+          fetchCardData();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -222,7 +223,10 @@
   const fetchCardData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchCardData({ page, limit, ...form });
   };
-  fetchCardData();
+
+  onMounted(() => {
+    fetchCardData();
+  });
 
 </script>
 

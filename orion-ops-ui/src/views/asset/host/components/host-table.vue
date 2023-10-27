@@ -163,7 +163,7 @@
 
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -205,7 +205,7 @@
       await deleteHost(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -245,7 +245,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

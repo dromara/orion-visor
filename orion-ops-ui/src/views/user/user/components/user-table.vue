@@ -24,7 +24,7 @@
       <!-- 用户状态 -->
       <a-form-item field="status" label="用户状态" label-col-flex="50px">
         <a-select v-model="formModel.status"
-                  :options="toOptions(UserStatusEnum)"
+                  :options="toOptions(userStatusKey)"
                   placeholder="请选择用户状态"
                   allow-clear />
       </a-form-item>
@@ -78,17 +78,17 @@
       <!-- 状态 -->
       <template #status="{ record }">
         <span class="circle" :style="{
-          background: getEnumValue(record.status, UserStatusEnum, 'color')
+          background: getDictValue(userStatusKey, record.status, 'color')
         }" />
-        {{ getEnumValue(record.status, UserStatusEnum) }}
+        {{ getDictValue(userStatusKey, record.status) }}
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 启用/停用 -->
-          <a-popconfirm :content="`确定要${UserStatusEnum.ENABLED.value === record.status
-                        ? UserStatusEnum.DISABLED.label
-                        : UserStatusEnum.ENABLED.label}当前用户?`"
+          <a-popconfirm :content="`确定要${UserStatus.ENABLED === record.status
+                        ? getDictValue(userStatusKey, UserStatus.DISABLED)
+                        : getDictValue(userStatusKey, UserStatus.ENABLED)}当前用户?`"
                         position="left"
                         type="warning"
                         @ok="updateStatus(record)">
@@ -97,9 +97,9 @@
                       :disabled="record.id === userStore.id"
                       v-permission="['infra:system-user:update-status']">
               {{
-                UserStatusEnum.ENABLED.value === record.status
-                  ? UserStatusEnum.DISABLED.label
-                  : UserStatusEnum.ENABLED.label
+                UserStatus.ENABLED === record.status
+                  ? getDictValue(userStatusKey, UserStatus.DISABLED)
+                  : getDictValue(userStatusKey, UserStatus.ENABLED)
               }}
             </a-button>
           </a-popconfirm>
@@ -151,21 +151,22 @@
 
 <script lang="ts" setup>
   import type { UserQueryRequest, UserQueryResponse } from '@/api/user/user';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { deleteUser, getUserPage, updateUserStatus } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { UserStatusEnum } from '../types/enum.types';
+  import { userStatusKey, UserStatus } from '../types/const';
   import { usePagination } from '@/types/table';
-  import { toOptions, getEnumValue } from '@/utils/enum';
-  import { useUserStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
 
-  const tableRenderData = ref<UserQueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 
+  const tableRenderData = ref<UserQueryResponse[]>([]);
+
   const pagination = usePagination();
+  const { loading, setLoading } = useLoading();
+  const { toOptions, getDictValue, getDict } = useDictStore();
 
   const formModel = reactive<UserQueryRequest>({
     id: undefined,
@@ -191,7 +192,7 @@
       await deleteUser(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -203,12 +204,12 @@
     try {
       setLoading(true);
       // 更新状态
-      const newStatus = UserStatusEnum.ENABLED.value === record.status
-        ? UserStatusEnum.DISABLED
-        : UserStatusEnum.ENABLED;
+      const newStatus = UserStatus.ENABLED === record.status
+        ? getDict(userStatusKey, UserStatus.DISABLED)
+        : getDict(userStatusKey, UserStatus.ENABLED);
       await updateUserStatus({
         id: record.id,
-        status: newStatus.value
+        status: newStatus.value as number
       });
       Message.success(`${newStatus.label}成功`);
       record.status = newStatus.value;
@@ -251,7 +252,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

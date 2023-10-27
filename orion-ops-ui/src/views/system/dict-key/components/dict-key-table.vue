@@ -62,8 +62,8 @@
       </template>
       <!-- 配置值类型 -->
       <template #valueType="{ record }">
-        <a-tag :color="getEnumValue(record.valueType, ValueTypeEnum, 'color')">
-          {{ getEnumValue(record.valueType, ValueTypeEnum) }}
+        <a-tag :color="getDictValue(dictValueTypeKey, record.valueType, 'color')">
+          {{ getDictValue(dictValueTypeKey, record.valueType) }}
         </a-tag>
       </template>
       <!-- 额外参数 -->
@@ -71,7 +71,7 @@
         <template v-if="record.extraSchema">
           <a-space>
             <template v-for="item in JSON.parse(record.extraSchema)" :key="item.name">
-              <a-tag :color="getEnumValue(item.type, ValueTypeEnum, 'color')">
+              <a-tag :color="getDictValue(dictValueTypeKey, item.type, 'color')">
                 {{ item.name }}
               </a-tag>
             </template>
@@ -123,23 +123,23 @@
 
 <script lang="ts" setup>
   import type { DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { batchDeleteDictKey, deleteDictKey, getDictKeyPage } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
-  import {} from '../types/const';
-  import { ValueTypeEnum } from '../types/enum.types';
-  import { getEnumValue } from '@/utils/enum';
+  import { dictValueTypeKey } from '../types/const';
   import useCopy from '@/hooks/copy';
+  import { useDictStore } from '@/store';
 
   const tableRenderData = ref<DictKeyQueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
-  const { copy } = useCopy();
   const pagination = usePagination();
+  const { copy } = useCopy();
+  const { loading, setLoading } = useLoading();
+  const { toOptions, getDictValue } = useDictStore();
 
   const formModel = reactive<DictKeyQueryRequest>({
     id: undefined,
@@ -157,7 +157,7 @@
       await deleteDictKey(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -197,7 +197,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 

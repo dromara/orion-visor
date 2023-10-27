@@ -144,7 +144,7 @@
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { usePagination, useColLayout } from '@/types/card';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/host.card.fields';
@@ -154,12 +154,14 @@
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
 
-  const { copy } = useCopy();
-  const { loading, setLoading } = useLoading();
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
+
+  const list = ref<HostQueryResponse[]>([]);
+
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const list = ref<HostQueryResponse[]>([]);
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
+  const { copy } = useCopy();
+  const { loading, setLoading } = useLoading();
 
   const formRef = ref();
   const formModel = reactive<HostQueryRequest>({
@@ -192,7 +194,7 @@
           await deleteHost(id);
           Message.success('删除成功');
           // 重新加载数据
-          await fetchCardData();
+          fetchCardData();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -240,7 +242,10 @@
   const fetchCardData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchCardData({ page, limit, ...form });
   };
-  fetchCardData();
+
+  onMounted(() => {
+    fetchCardData();
+  });
 
 </script>
 

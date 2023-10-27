@@ -27,7 +27,7 @@
         <!-- 配置值类型 -->
         <a-form-item field="valueType" label="配置值类型">
           <a-select v-model="formModel.valueType"
-                    :options="toOptions(ValueTypeEnum)"
+                    :options="toOptions(dictValueTypeKey)"
                     placeholder="请选择配置值类型" />
         </a-form-item>
         <!-- 配置描述 -->
@@ -43,7 +43,7 @@
           <a-input-group>
             <!-- 参数类型 -->
             <a-select v-model="schema.type"
-                      :options="toOptions(ValueTypeEnum)"
+                      :options="toOptions(dictValueTypeKey)"
                       placeholder="类型"
                       :style="{ width: '110px' }" />
             <!-- 参数值 -->
@@ -100,12 +100,12 @@
   import formRules from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import { createDictKey, updateDictKey } from '@/api/system/dict-key';
-  import { definedExtraKeys, innerKeys } from '../types/const';
-  import { ValueTypeEnum } from '../types/enum.types';
-  import { toOptions } from '@/utils/enum';
+  import { definedExtraKeys, innerKeys, dictValueTypeKey, ValueType } from '../types/const';
+  import { useDictStore } from '@/store';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+  const { toOptions } = useDictStore();
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
@@ -114,7 +114,7 @@
     return {
       id: undefined,
       keyName: undefined,
-      valueType: ValueTypeEnum.INTEGER.value,
+      valueType: ValueType.INTEGER,
       extraSchema: undefined,
       description: undefined,
     };
@@ -161,7 +161,7 @@
     }
     extraSchemaArr.value.push({
       name: name,
-      type: type || ValueTypeEnum.STRING.value
+      type: type || ValueType.STRING
     });
   };
 

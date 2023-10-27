@@ -136,7 +136,7 @@
 
 <script lang="ts" setup>
   import type { ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { batchDelete${vue.featureEntity}, delete${vue.featureEntity}, get${vue.featureEntity}Page } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -154,15 +154,18 @@
   #end
   import { toOptions, getEnumValue } from '@/utils/enum';
 
-  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
-  const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate']);
+
+  #if($vue.enableRowSelection)
+  const selectedKeys = ref<number[]>([]);
+  #end
+  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
 
   const pagination = usePagination();
   #if($vue.enableRowSelection)
-  const selectedKeys = ref<number[]>([]);
   const rowSelection = useRowSelection();
   #end
+  const { loading, setLoading } = useLoading();
 
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})
@@ -180,7 +183,7 @@
       Message.success(`成功删除${selectedKeys.value.length}条数据`);
       selectedKeys.value = [];
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -198,7 +201,7 @@
       await delete${vue.featureEntity}(id);
       Message.success('删除成功');
       // 重新加载数据
-      await fetchTableData();
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -241,7 +244,10 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-  fetchTableData();
+
+  onMounted(() => {
+    fetchTableData();
+  });
 
 </script>
 
