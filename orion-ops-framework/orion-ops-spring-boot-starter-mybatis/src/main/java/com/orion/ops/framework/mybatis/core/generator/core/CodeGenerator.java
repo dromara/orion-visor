@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.core.generator;
+package com.orion.ops.framework.mybatis.core.generator.core;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -8,24 +8,20 @@ import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.orion.lang.constant.Const;
-import com.orion.lang.utils.ansi.AnsiAppender;
-import com.orion.lang.utils.ansi.style.AnsiFont;
-import com.orion.lang.utils.ansi.style.color.AnsiForeground;
-import com.orion.lang.utils.ext.yml.YmlExt;
+import com.orion.lang.able.Executable;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
-import com.orion.ops.framework.mybatis.core.generator.engine.VelocityTemplateEngine;
 import com.orion.ops.framework.mybatis.core.generator.template.Table;
-import com.orion.ops.framework.mybatis.core.generator.template.Template;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.io.File;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -35,94 +31,74 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @since 2022/4/20 10:33
  */
-public class CodeGenerator {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CodeGenerator implements Executable {
 
-    public static void main(String[] args) {
-        // 输出路径
-        String outputDir = "D:/MP/";
-        // 作者
-        String author = Const.ORION_AUTHOR;
-        // 模块
-        String module = "infra";
-        // 生成的表
-        Table[] tables = {
-                // Template.create("preference", "用户偏好", "preference")
-                //         .enableProviderApi()
-                //         .cache("user:preference:{}:{}", "用户偏好 ${type} ${userId}")
-                //         .expire(1, TimeUnit.HOURS)
-                //         .vue("user", "preference")
-                //         .enums("type")
-                //         .names("APP", "HOST")
-                //         // 同 .value(1, 2)
-                //         .values("value", 1, 2)
-                //         // 同 .label("应用", "主机")
-                //         .values("label", "应用", "主机")
-                //         .color("blue", "green")
-                //         .build(),
-                Template.create("history_value", "历史归档", "history")
-                        .enableProviderApi()
-                        .vue("meta", "history-value")
-                        .build(),
-                Template.create("dict_key", "字典配置项", "dict")
-                        .cache("dict:keys", "字典配置项")
-                        .expire(1, TimeUnit.DAYS)
-                        .vue("system", "dict-key")
-                        .enums("value_type")
-                        .names("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
-                        .label("字符串", "整数", "小数", "布尔值", "颜色")
-                        .build(),
-                Template.create("dict_value", "字典配置值", "dict")
-                        .cache("dict:value:{}", "字典配置值 ${key}")
-                        .expire(1, TimeUnit.DAYS)
-                        .vue("system", "dict-value")
-                        .enableRowSelection()
-                        .build(),
-        };
-        // jdbc 配置 - 使用配置文件
-        File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");
-        YmlExt yaml = YmlExt.load(yamlFile);
-        String url = yaml.getValue("spring.datasource.druid.url");
-        String username = yaml.getValue("spring.datasource.druid.username");
-        String password = yaml.getValue("spring.datasource.druid.password");
+    /**
+     * 输出路径
+     */
+    private String outputDir;
 
-        // 执行
-        runGenerator(outputDir, author,
-                url, username, password,
-                tables, module);
-    }
+    /**
+     * 作者
+     */
+    private String author;
+
+    /**
+     * 模块名称
+     */
+    private String module;
+
+    /**
+     * 表
+     */
+    private Table[] tables;
+
+    /**
+     * 数据库 url
+     */
+    private String url;
+
+    /**
+     * 数据库用户名
+     */
+    private String username;
+
+    /**
+     * 数据库密码
+     */
+    private String password;
 
     /**
      * 代码生成
      */
-    private static void runGenerator(String outputDir,
-                                     String author,
-                                     String url,
-                                     String username,
-                                     String password,
-                                     Table[] tables,
-                                     String module) {
+    @Override
+    public void exec() {
         Valid.notEmpty(tables, "请先配置需要生成的表");
 
         // 创建引擎
-        VelocityTemplateEngine engine = getEngine(tables);
+        VelocityTemplateEngine engine = this.getEngine(tables);
 
         // 获取全局配置
-        GlobalConfig globalConfig = getGlobalConfig(outputDir, author);
+        GlobalConfig globalConfig = this.getGlobalConfig(outputDir, author);
 
         // 数据源配置
-        DataSourceConfig dataSourceConfig = getDataSourceConfig(url, username, password);
+        DataSourceConfig dataSourceConfig = this.getDataSourceConfig(url, username, password);
 
         // 策略配置
-        StrategyConfig strategyConfig = getStrategyConfig(tables);
+        StrategyConfig strategyConfig = this.getStrategyConfig(tables);
 
         // 包名配置
-        PackageConfig packageConfig = getPackageConfig(module);
+        PackageConfig packageConfig = this.getPackageConfig(module);
 
         // 模板配置
-        TemplateConfig templateConfig = getTemplateConfig();
+        TemplateConfig templateConfig = this.getTemplateConfig();
 
         // 注入配置
-        InjectionConfig injectionConfig = getInjectionConfig();
+        InjectionConfig injectionConfig = this.getInjectionConfig();
 
         // 整合配置
         AutoGenerator ag = new AutoGenerator(dataSourceConfig)
@@ -139,9 +115,6 @@ public class CodeGenerator {
 
         // 执行
         ag.execute(engine);
-
-        // 打印提示信息
-        printTips();
     }
 
     /**
@@ -150,8 +123,8 @@ public class CodeGenerator {
      * @param tables 表
      * @return 渲染引擎
      */
-    private static VelocityTemplateEngine getEngine(Table[] tables) {
-        return new VelocityTemplateEngine(tables);
+    private CodeGeneratorEngine getEngine(Table[] tables) {
+        return new CodeGeneratorEngine(tables);
     }
 
     /**
@@ -161,7 +134,7 @@ public class CodeGenerator {
      * @param author    作者
      * @return config
      */
-    private static GlobalConfig getGlobalConfig(String outputDir, String author) {
+    private GlobalConfig getGlobalConfig(String outputDir, String author) {
         return new GlobalConfig.Builder()
                 // 设置作者
                 .author(author)
@@ -185,7 +158,7 @@ public class CodeGenerator {
      * @param password password
      * @return 数据源配置
      */
-    private static DataSourceConfig getDataSourceConfig(String url, String username, String password) {
+    private DataSourceConfig getDataSourceConfig(String url, String username, String password) {
         return new DataSourceConfig.Builder(url, username, password)
                 // 转换器
                 .typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
@@ -209,7 +182,7 @@ public class CodeGenerator {
      * @param tables 生成的表名
      * @return 策略配置
      */
-    private static StrategyConfig getStrategyConfig(Table[] tables) {
+    private StrategyConfig getStrategyConfig(Table[] tables) {
         String[] tableNames = Arrays.stream(tables)
                 .map(Table::getTableName)
                 .toArray(String[]::new);
@@ -281,7 +254,7 @@ public class CodeGenerator {
      * @param module 模块
      * @return 包名配置
      */
-    private static PackageConfig getPackageConfig(String module) {
+    private PackageConfig getPackageConfig(String module) {
         return new PackageConfig.Builder()
                 // 声明父包
                 .parent("com.orion.ops.module")
@@ -308,7 +281,7 @@ public class CodeGenerator {
      *
      * @return 模板配置
      */
-    private static TemplateConfig getTemplateConfig() {
+    private TemplateConfig getTemplateConfig() {
         return new TemplateConfig.Builder()
                 .controller("/templates/orion-server-module-controller.java.vm")
                 .entity("/templates/orion-server-module-entity-do.java.vm")
@@ -324,7 +297,7 @@ public class CodeGenerator {
      *
      * @return 注入配置
      */
-    private static InjectionConfig getInjectionConfig() {
+    private InjectionConfig getInjectionConfig() {
         String[][] customFileDefineArr = new String[][]{
                 // -------------------- 后端 - module --------------------
                 // http 文件
@@ -395,7 +368,9 @@ public class CodeGenerator {
                 // card.fields.ts 文件
                 new String[]{"/templates/orion-vue-views-types-card.fields.ts.vm", "card.fields.ts", "vue/views/${module}/${feature}/types"},
                 // menu.sql 文件
-                new String[]{"/templates/orion-sql-menu.sql.vm", "${feature}-menu.sql", "sql"},
+                new String[]{"/templates/orion-sql-menu.sql.vm", "${tableName}-menu.sql", "sql"},
+                // dict.sql 文件
+                new String[]{"/templates/orion-sql-dict.sql.vm", "${tableName}-dict.sql", "sql"},
         };
 
         // 构建文件
@@ -418,23 +393,6 @@ public class CodeGenerator {
                 .customFile(customerFiles)
                 // 构建
                 .build();
-    }
-
-    /**
-     * 打印提示信息
-     */
-    private static void printTips() {
-        String line = AnsiAppender.create()
-                .append(AnsiForeground.BRIGHT_GREEN.and(AnsiFont.BOLD), "\n:: 代码生成完毕 ^_^ ::\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码复制后请先 clean 父工程\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码需要自行修改缓存逻辑\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 后端代码修改完成后请先执行单元测试检测是否正常\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 代码需要注意同一模块的 router 需要自行合并\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- vue 枚举需要自行更改数据类型\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 菜单 sql 执行完成后 需要在系统菜单页面刷新缓存\n")
-                .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 字典 sql 执行完成后 需要在字典配置项页面刷新缓存\n")
-                .toString();
-        System.out.print(line);
     }
 
 }

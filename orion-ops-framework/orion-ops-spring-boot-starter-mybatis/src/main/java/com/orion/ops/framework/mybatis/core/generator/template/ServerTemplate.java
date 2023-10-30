@@ -72,7 +72,6 @@ public class ServerTemplate extends Template {
         return this;
     }
 
-    // fixme
     /**
      * 生成导出
      *
@@ -93,14 +92,13 @@ public class ServerTemplate extends Template {
         return this;
     }
 
-    // fixme
     /**
      * 不生成操作日志
      *
      * @return this
      */
     public ServerTemplate disableOperatorLog() {
-        table.enableUnitTest = false;
+        table.enableOperatorLog = false;
         return this;
     }
 

@@ -121,7 +121,7 @@ public class ${type}ServiceImplTests extends BaseUnitTest {
         Integer effect = ${typeLower}Service.delete${type}(query);
         assertEquals(effect, 0);
     }
-    #if($cacheMeta.enableCache)
+    #if($meta.enableCache)
         
     // -------------------- cache --------------------
 

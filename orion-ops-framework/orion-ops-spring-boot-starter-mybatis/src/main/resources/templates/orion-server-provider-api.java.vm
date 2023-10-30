@@ -64,7 +64,7 @@ public interface ${type}Api {
      */
     List<${type}DTO> get${type}List(${type}QueryDTO dto);
 
-    #if($cacheMeta.enableCache)
+    #if($meta.enableCache)
     /**
      * ${apiComment.queryListByCache}
      *

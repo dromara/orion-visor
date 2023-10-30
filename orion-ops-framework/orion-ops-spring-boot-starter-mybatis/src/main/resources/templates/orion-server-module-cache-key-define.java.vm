@@ -18,11 +18,11 @@ import java.util.concurrent.TimeUnit;
 public interface ${type}CacheKeyDefine {
 
     CacheKeyDefine $typeConst = new CacheKeyBuilder()
-            .key("$cacheMeta.cacheKey")
-            .desc("$cacheMeta.cacheDesc")
+            .key("$meta.cacheKey")
+            .desc("$meta.cacheDesc")
             .type(${type}CacheDTO.class)
-             #if($cacheMeta.cacheExpired)
-            .timeout($cacheMeta.cacheExpireTime, TimeUnit.$cacheMeta.cacheExpireUnit.name())
+             #if($meta.cacheExpired)
+            .timeout($meta.cacheExpireTime, TimeUnit.$meta.cacheExpireUnit.name())
              #end
             .build();
 

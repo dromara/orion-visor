@@ -1,7 +1,9 @@
 package ${package.Controller};
 
 import com.orion.lang.define.wrapper.DataGrid;
+#if($meta.enableOperatorLog)
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+#end
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -49,7 +51,9 @@ public class ${table.controllerName} {
     @Resource
     private ${type}Service ${typeLower}Service;
 
+    #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.CREATE)
+    #end
     @PostMapping("/create")
     @Operation(summary = "${apiComment.create}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:create')")
@@ -57,7 +61,9 @@ public class ${table.controllerName} {
         return ${typeLower}Service.create${type}(request);
     }
 
+    #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.UPDATE)
+    #end
     @PutMapping("/update")
     @Operation(summary = "${apiComment.updateById}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:update')")
@@ -99,7 +105,9 @@ public class ${table.controllerName} {
         return ${typeLower}Service.get${type}Page(request);
     }
 
+    #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.DELETE)
+    #end
     @DeleteMapping("/delete")
     @Operation(summary = "${apiComment.deleteById}")
     @Parameter(name = "id", description = "id", required = true)
@@ -108,7 +116,9 @@ public class ${table.controllerName} {
         return ${typeLower}Service.delete${type}ById(id);
     }
 
+    #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.DELETE)
+    #end
     @DeleteMapping("/batch-delete")
     @Operation(summary = "${apiComment.batchDelete}")
     @Parameter(name = "idList", description = "idList", required = true)
@@ -116,8 +126,11 @@ public class ${table.controllerName} {
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {
         return ${typeLower}Service.delete${type}ByIdList(idList);
     }
+    #if($meta.enableExport)
 
+    #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.EXPORT)
+    #end
     @PostMapping("/export")
     @Operation(summary = "${apiComment.export}")
     @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:export')")
@@ -125,6 +138,7 @@ public class ${table.controllerName} {
                               HttpServletResponse response) throws IOException {
         ${typeLower}Service.export${type}(request, response);
     }
+    #end
 
 }
 

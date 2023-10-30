@@ -106,7 +106,7 @@ public class ${type}ApiImpl implements ${type}Api {
         return ${typeLower}DAO.of(wrapper).list(${type}ProviderConvert.MAPPER::to);
     }
 
-    #if($cacheMeta.enableCache)
+    #if($meta.enableCache)
     @Override
     public List<${type}DTO> get${type}ListByCache() {
         return ${typeLower}Service.get${type}ListByCache()

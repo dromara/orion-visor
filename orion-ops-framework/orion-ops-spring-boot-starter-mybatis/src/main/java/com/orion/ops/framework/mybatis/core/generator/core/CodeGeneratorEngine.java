@@ -1,28 +1,10 @@
-/*
- * Copyright (c) 2011-2022, baomidou (jobob@qq.com).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.orion.ops.framework.mybatis.core.generator.engine;
+package com.orion.ops.framework.mybatis.core.generator.core;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.generator.config.ConstVal;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.orion.lang.define.collect.MultiLinkedHashMap;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.VariableStyles;
@@ -33,16 +15,9 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
 import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import com.orion.ops.framework.mybatis.core.generator.template.VueEnum;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -50,68 +25,25 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * 代码生成器 Velocity 引擎
+ * 代码生成器引擎
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2022/4/20 10:33
+ * @since 2023/10/30 11:20
  */
-public class VelocityTemplateEngine extends AbstractTemplateEngine {
+public class CodeGeneratorEngine extends VelocityTemplateEngine {
 
     private final Map<String, Table> tables;
 
-    private VelocityEngine velocityEngine;
-
-    public VelocityTemplateEngine(Table[] tables) {
+    public CodeGeneratorEngine(Table[] tables) {
         this.tables = Arrays.stream(tables)
                 .collect(Collectors.toMap(Table::getTableName, Function.identity()));
     }
 
-    {
-        try {
-            Class.forName("org.apache.velocity.util.DuckType");
-        } catch (ClassNotFoundException e) {
-            LOGGER.warn("Velocity 1.x is outdated, please upgrade to 2.x or later.");
-        }
-    }
-
-    @Override
-    @NotNull
-    public VelocityTemplateEngine init(@NotNull ConfigBuilder configBuilder) {
-        if (velocityEngine == null) {
-            Properties p = new Properties();
-            p.setProperty(ConstVal.VM_LOAD_PATH_KEY, ConstVal.VM_LOAD_PATH_VALUE);
-            p.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, StringPool.EMPTY);
-            p.setProperty(Velocity.ENCODING_DEFAULT, ConstVal.UTF8);
-            p.setProperty(Velocity.INPUT_ENCODING, ConstVal.UTF8);
-            p.setProperty("file.resource.loader.unicode", StringPool.TRUE);
-            this.velocityEngine = new VelocityEngine(p);
-        }
-        return this;
-    }
-
-    @Override
-    public void writer(@NotNull Map<String, Object> objectMap, @NotNull String templatePath, @NotNull File outputFile) throws Exception {
-        Template template = velocityEngine.getTemplate(templatePath, ConstVal.UTF8);
-        try (FileOutputStream fos = new FileOutputStream(outputFile);
-             OutputStreamWriter ow = new OutputStreamWriter(fos, ConstVal.UTF8);
-             BufferedWriter writer = new BufferedWriter(ow)) {
-            template.merge(new VelocityContext(objectMap), writer);
-        }
-        LOGGER.debug("模板: " + templatePath + "; 文件: " + outputFile);
-    }
-
-    @Override
-    @NotNull
-    public String templateFilePath(@NotNull String filePath) {
-        final String dotVm = ".vm";
-        return filePath.endsWith(dotVm) ? filePath : filePath + dotVm;
-    }
-
     @Override
     protected void outputCustomFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-        // 创建自定义文件副本文件
-        customFiles = this.createCustomFilesBackup(customFiles, tableInfo);
+        // 过滤文件
+        customFiles = new CustomFileFilter(tables.get(tableInfo.getName()), customFiles).doFilter();
         // 添加表元数据
         this.addTableMeta(tableInfo, objectMap);
         // 替换自定义包名
@@ -122,52 +54,8 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         this.generatorServerFile(customFiles, tableInfo, objectMap);
         // 生成前端文件
         this.generatorVueFile(customFiles, tableInfo, objectMap);
-    }
-
-    /**
-     * 创建自定义文件副本对象
-     * <p>
-     * - 根据类型进行移除不需要生成的模板
-     *
-     * @param originCustomerFile originCustomerFile
-     * @param tableInfo          tableInfo
-     * @return backup
-     */
-    private List<CustomFile> createCustomFilesBackup(@NotNull List<CustomFile> originCustomerFile,
-                                                     @NotNull TableInfo tableInfo) {
-        // 生成文件副本
-        List<CustomFile> files = originCustomerFile.stream().map(s ->
-                new CustomFile.Builder()
-                        .enableFileOverride()
-                        .templatePath(s.getTemplatePath())
-                        .filePath(s.getFilePath())
-                        .fileName(s.getFileName())
-                        .packageName(s.getPackageName())
-                        .build())
-                .collect(Collectors.toList());
-        // 获取 table
-        Table table = tables.get(tableInfo.getName());
-        // 不生成对外 api 文件
-        if (!table.isEnableProviderApi()) {
-            files.removeIf(file -> this.isServerProviderFile(file.getTemplatePath()));
-            // 不生成对外 api 单元测试文件
-            if (table.isEnableUnitTest()) {
-                files.removeIf(file -> this.isServerProviderTestFile(file.getTemplatePath()));
-            }
-        }
-        // 不生成单元测试文件
-        if (!table.isEnableUnitTest()) {
-            files.removeIf(file -> this.isServerUnitTestFile(file.getTemplatePath()));
-        }
-        // 不生成缓存文件
-        if (!table.isEnableCache()) {
-            files.removeIf(file -> this.isServerCacheFile(file.getTemplatePath()));
-        }
-        // 不生成 vue 文件
-        if (!table.isEnableVue()) {
-            files.removeIf(file -> this.isVueFile(file.getTemplatePath()));
-        }
-        return files;
+        // 生成 sql 文件
+        this.generatorSqlFile(customFiles, tableInfo, objectMap);
     }
 
     /**
@@ -184,11 +72,9 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         // 替换业务注释
         tableInfo.setComment(tables.get(tableInfo.getName()).getComment());
         Table table = tables.get(tableInfo.getName());
-        // 缓存元数据
-        Map<String, Object> cacheMeta = this.pickTableMeta(table,
-                "enableCache", "cacheKey", "cacheDesc",
-                "cacheExpired", "cacheExpireTime", "cacheExpireUnit");
-        objectMap.put("cacheMeta", cacheMeta);
+        // 元数据
+        Map<String, Object> meta = BeanMap.create(table);
+        objectMap.put("meta", meta);
         // 实体名称
         String domainName = tableInfo.getEntityName();
         String mappingHyphen = objectMap.get("controllerMappingHyphen").toString();
@@ -282,7 +168,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     private void generatorServerFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
         // 过滤文件
         customFiles = customFiles.stream()
-                .filter(s -> this.isServerFile(s.getTemplatePath()))
+                .filter(s -> CustomFileFilter.isServerFile(s.getTemplatePath()))
                 .collect(Collectors.toList());
 
         // 生成文件
@@ -319,11 +205,11 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         }
         // 过滤文件
         customFiles = customFiles.stream()
-                .filter(s -> this.isVueFile(s.getTemplatePath()))
+                .filter(s -> CustomFileFilter.isVueFile(s.getTemplatePath()))
                 .collect(Collectors.toList());
         // 设置前端元数据
         Table table = tables.get(tableInfo.getName());
-        Map<String, Object> vueMeta = this.pickTableMeta(table, "module", "feature", "enableDrawerForm", "enableRowSelection", "enableCardView");
+        Map<String, Object> vueMeta = BeanMap.create(table);
         // 模块名称实体
         vueMeta.put("moduleEntity", VariableStyles.SPINE.toBigHump(table.getModule()));
         // 模块名称实体
@@ -352,80 +238,29 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
     }
 
     /**
-     * 是否为后端文件
+     * 生成 sql 文件
      *
-     * @param templatePath templatePath
-     * @return 是否为后端文件
+     * @param customFiles customFiles
+     * @param tableInfo   tableInfo
+     * @param objectMap   objectMap
      */
-    private boolean isServerFile(String templatePath) {
-        return templatePath.contains("orion-server");
-    }
-
-    /**
-     * 是否为后端 provider 文件
-     *
-     * @param templatePath templatePath
-     * @return 是否为后端 provider 文件
-     */
-    private boolean isServerProviderFile(String templatePath) {
-        return templatePath.contains("orion-server-provider");
-    }
-
-    /**
-     * 是否为后端 provider 单元测试文件
-     *
-     * @param templatePath templatePath
-     * @return 是否为后端 provider 单元测试文件
-     */
-    private boolean isServerProviderTestFile(String templatePath) {
-        return templatePath.contains("orion-server-test-api");
-    }
-
-    /**
-     * 是否为后端单元测试文件
-     *
-     * @param templatePath templatePath
-     * @return 是否为后端单元测试文件
-     */
-    private boolean isServerUnitTestFile(String templatePath) {
-        return templatePath.contains("orion-server-test");
-    }
-
-    /**
-     * 是否为后端缓存文件
-     *
-     * @param templatePath templatePath
-     * @return 是否为后端缓存文件
-     */
-    private boolean isServerCacheFile(String templatePath) {
-        return templatePath.contains("orion-server-module-cache");
-    }
-
-    /**
-     * 是否为 vue 文件
-     *
-     * @param templatePath templatePath
-     * @return 是否为 vue 文件
-     */
-    private boolean isVueFile(String templatePath) {
-        return templatePath.contains("orion-vue-") ||
-                templatePath.contains("orion-sql-menu.sql");
-    }
-
-    /**
-     * 获取表元数据
-     *
-     * @param table table
-     * @param keys  keys
-     * @return meta
-     */
-    private Map<String, Object> pickTableMeta(Table table, String... keys) {
-        BeanMap beanMap = BeanMap.create(table);
-        Map<String, Object> tableMeta = new HashMap<>();
-        for (String key : keys) {
-            tableMeta.put(key, beanMap.get(key));
-        }
-        return tableMeta;
+    private void generatorSqlFile(@NotNull List<CustomFile> customFiles, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        // 过滤文件
+        customFiles = customFiles.stream()
+                .filter(s -> CustomFileFilter.isDataSqlFile(s.getTemplatePath()))
+                .collect(Collectors.toList());
+        // 设置元数据
+        Table table = tables.get(tableInfo.getName());
+        Map<String, Object> meta = BeanMap.create(table);
+        // 生成文件
+        customFiles.forEach(file -> {
+            // 文件路径
+            String filePath = getConfigBuilder().getGlobalConfig().getOutputDir()
+                    + "/" + Strings.format(file.getPackageName(), meta)
+                    + "/" + Strings.format(file.getFileName(), meta);
+            // 渲染文件
+            this.outputFile(Files1.newFile(filePath), objectMap, file.getTemplatePath(), file.isFileOverride());
+        });
     }
 
     /**
@@ -493,7 +328,6 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine {
         } else {
             return null;
         }
-
     }
 
 }

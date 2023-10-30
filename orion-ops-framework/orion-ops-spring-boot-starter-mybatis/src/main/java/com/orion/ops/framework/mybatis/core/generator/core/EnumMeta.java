@@ -1,4 +1,4 @@
-package com.orion.ops.framework.mybatis.core.generator.engine;
+package com.orion.ops.framework.mybatis.core.generator.core;
 
 import com.orion.lang.define.collect.MultiLinkedHashMap;
 import lombok.AllArgsConstructor;

@@ -5,14 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+#if($meta.enableExport)
 import com.orion.office.excel.writer.exporting.ExcelExport;
-#if($cacheMeta.enableCache)
+#end
+#if($meta.enableCache)
 import com.orion.ops.framework.common.constant.Const;
 #end
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.FileNames;
 import com.orion.ops.framework.common.utils.Valid;
-#if($cacheMeta.enableCache)
+#if($meta.enableCache)
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 #end
 #foreach($pkg in ${customModuleFilePackages})
@@ -57,7 +59,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         int effect = ${typeLower}DAO.insert(record);
         Long id = record.getId();
         log.info("${type}Service-create${type} id: {}, effect: {}", id, effect);
-        #if($cacheMeta.enableCache)
+        #if($meta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst});
         #end
@@ -78,7 +80,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 更新
         int effect = ${typeLower}DAO.updateById(updateRecord);
         log.info("${type}Service-update${type}ById effect: {}", effect);
-        #if($cacheMeta.enableCache)
+        #if($meta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst});
         #end
@@ -95,7 +97,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 更新
         int effect = ${typeLower}DAO.update(updateRecord, wrapper);
         log.info("${type}Service.update${type} effect: {}", effect);
-        #if($cacheMeta.enableCache)
+        #if($meta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst});
         #end
@@ -130,7 +132,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         return ${typeLower}DAO.of(wrapper).list(${type}Convert.MAPPER::to);
     }
 
-    #if($cacheMeta.enableCache)
+    #if($meta.enableCache)
     @Override
     public List<${type}VO> get${type}ListByCache() {
         // 查询缓存
@@ -183,7 +185,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 删除
         int effect = ${typeLower}DAO.deleteById(id);
         log.info("${type}Service-delete${type}ById id: {}, effect: {}", id, effect);
-        #if($cacheMeta.enableCache)
+        #if($meta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst}, id);
         #end
@@ -195,7 +197,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         log.info("${type}Service-delete${type}ByIdList idList: {}", idList);
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
         log.info("${type}Service-delete${type}ByIdList effect: {}", effect);
-        #if($cacheMeta.enableCache)
+        #if($meta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst}, idList);
         #end
@@ -210,12 +212,13 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 删除
         int effect = ${typeLower}DAO.delete(wrapper);
         log.info("${type}Service.delete${type} effect: {}", effect);
-        #if($cacheMeta.enableCache)
+        #if($meta.enableCache)
         // 删除缓存
         RedisMaps.delete(${type}CacheKeyDefine.${typeConst});
         #end
         return effect;
     }
+    #if($meta.enableExport)
 
     @Override
     public void export${type}(${type}QueryRequest request, HttpServletResponse response) throws IOException {
@@ -234,6 +237,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 传输
         Servlets.transfer(response, out.toByteArray(), FileNames.exportName(${type}Export.TITLE));
     }
+    #end
 
     /**
      * 检查对象是否存在

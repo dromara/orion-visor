@@ -21,8 +21,10 @@ public class ${type}OperatorType extends InitializingOperatorTypes {
     public static final String UPDATE = "${typeHyphen}:update";
 
     public static final String DELETE = "${typeHyphen}:delete";
+    #if($meta.enableExport)
 
     public static final String EXPORT = "${typeHyphen}:export";
+    #end
 
     @Override
     public OperatorType[] types() {
@@ -30,7 +32,9 @@ public class ${type}OperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, CREATE, "创建$!{table.comment}"),
                 new OperatorType(M, UPDATE, "更新$!{table.comment}"),
                 new OperatorType(H, DELETE, "删除$!{table.comment}"),
+                #if($meta.enableExport)
                 new OperatorType(M, EXPORT, "导出$!{table.comment}"),
+                #end
         };
     }
 

@@ -67,7 +67,7 @@ public interface ${table.serviceName} {
      */
     List<${type}VO> get${type}List(${type}QueryRequest request);
 
-    #if($cacheMeta.enableCache)
+    #if($meta.enableCache)
     /**
      * ${apiComment.queryListByCache}
      *
@@ -115,6 +115,7 @@ public interface ${table.serviceName} {
      * @return effect
      */
     Integer delete${type}(${type}QueryRequest request);
+    #if($meta.enableExport)
 
     /**
      * ${apiComment.export}
@@ -124,5 +125,6 @@ public interface ${table.serviceName} {
      * @throws IOException IOException
      */
     void export${type}(${type}QueryRequest request, HttpServletResponse response) throws IOException;
+    #end
 
 }

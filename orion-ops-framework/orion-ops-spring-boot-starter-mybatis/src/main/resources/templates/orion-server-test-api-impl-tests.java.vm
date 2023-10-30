@@ -110,7 +110,7 @@ public class ${type}ApiImplTests extends BaseUnitTest {
         Integer effect = ${typeLower}Api.delete${type}(dto);
         assertEquals(effect, 0);
     }
-    #if($cacheMeta.enableCache)
+    #if($meta.enableCache)
     
     // -------------------- cache --------------------
 

@@ -68,6 +68,7 @@ Authorization: {{token}}
 ${httpComment} ${apiComment.batchDelete}
 DELETE {{baseUrl}}/${package.ModuleName}/${typeHyphen}/batch-delete?idList=1,2,3
 Authorization: {{token}}
+#if($meta.enableExport)
 
 
 ${httpComment} ${apiComment.export}
@@ -80,6 +81,6 @@ Authorization: {{token}}
   "${field.propertyName}": ""#if($foreach.hasNext),#end
   #end
 }
-
+#end
 
 ${httpComment}
