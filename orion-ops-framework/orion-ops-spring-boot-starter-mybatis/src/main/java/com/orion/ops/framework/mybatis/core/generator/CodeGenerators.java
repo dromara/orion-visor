@@ -30,38 +30,21 @@ public class CodeGenerators {
         String module = "infra";
         // 生成的表
         Table[] tables = {
-                // Template.create("preference", "用户偏好", "preference")
-                //         .enableProviderApi()
-                //         .cache("user:preference:{}:{}", "用户偏好 ${type} ${userId}")
-                //         .expire(1, TimeUnit.HOURS)
-                //         .vue("user", "preference")
-                //         .enums("type")
-                //         .names("APP", "HOST")
-                //         // 同 .value(1, 2)
-                //         .values("value", 1, 2)
-                //         // 同 .label("应用", "主机")
-                //         .values("label", "应用", "主机")
-                //         .color("blue", "green")
-                //         .build(),
-                // Template.create("history_value", "历史归档", "history")
-                //         .enableProviderApi()
-                //         .vue("meta", "history-value")
-                //         .build(),
                 Template.create("dict_key", "字典配置项", "dict")
-                        .disableOperatorLog()
+                        .enableProviderApi()
+                        .disableUnitTest()
                         .cache("dict:keys", "字典配置项")
                         .expire(1, TimeUnit.DAYS)
                         .vue("system", "dict-key")
-                        .enums("value_type")
-                        .names("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
-                        .label("字符串", "整数", "小数", "布尔值", "颜色")
+                        .enableRowSelection()
+                        .enableCardView()
+                        .enableDrawerForm()
+                        .dict("dictValueType", "value_type")
+                        .fields("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
+                        .labels("字符串", "整数", "小数", "布尔值", "颜色")
+                        .color("blue", "gray", "red", "green", "white")
+                        .valueUseFields()
                         .build(),
-                // Template.create("dict_value", "字典配置值", "dict")
-                //         .cache("dict:value:{}", "字典配置值 ${key}")
-                //         .expire(1, TimeUnit.DAYS)
-                //         .vue("system", "dict-value")
-                //         .enableRowSelection()
-                //         .build(),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");

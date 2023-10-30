@@ -1,6 +1,6 @@
 package com.orion.ops.framework.biz.operator.log.core.constant;
 
-import com.orion.ops.framework.common.constant.ConstField;
+import com.orion.ops.framework.common.constant.FieldConst;
 
 /**
  * 操作日志常量
@@ -9,7 +9,7 @@ import com.orion.ops.framework.common.constant.ConstField;
  * @version 1.0.0
  * @since 2023/10/10 19:00
  */
-public interface OperatorLogKeys extends ConstField {
+public interface OperatorLogKeys extends FieldConst {
 
     String ID_LIST = "idList";
 

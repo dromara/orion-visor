@@ -13,6 +13,47 @@
              @reset="reset"
              @search="fetchCardData"
              @page-change="fetchCardData">
+    <!-- 过滤条件 -->
+    <template #filterContent>
+      <a-form :model="formModel"
+              class="modal-form"
+              size="small"
+              ref="formRef"
+              label-align="right"
+              :style="{ width: '320px' }"
+              :label-col-props="{ span: 6 }"
+              :wrapper-col-props="{ span: 18 }"
+              @keyup.enter="() => fetchCardData()">
+        <!-- id -->
+        <a-form-item field="id" label="主机id">
+          <a-input-number v-model="formModel.id"
+                          placeholder="请输入主机id"
+                          allow-clear
+                          hide-button />
+        </a-form-item>
+        <!-- 主机名称 -->
+        <a-form-item field="name" label="主机名称">
+          <a-input v-model="formModel.name" placeholder="请输入主机名称" allow-clear />
+        </a-form-item>
+        <!-- 主机编码 -->
+        <a-form-item field="code" label="主机编码">
+          <a-input v-model="formModel.code" placeholder="请输入主机编码" allow-clear />
+        </a-form-item>
+        <!-- 主机地址 -->
+        <a-form-item field="address" label="主机地址">
+          <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
+        </a-form-item>
+        <!-- 主机标签 -->
+        <a-form-item field="tags" label="主机标签">
+          <tag-multi-selector v-model="formModel.tags"
+                              :allowCreate="false"
+                              :limit="0"
+                              type="HOST"
+                              tag-type="hostTags"
+                              placeholder="请选择主机标签" />
+        </a-form-item>
+      </a-form>
+    </template>
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
@@ -90,47 +131,6 @@
         <icon-delete />
         删除
       </a-doption>
-    </template>
-    <!-- 过滤条件 -->
-    <template #filterContent>
-      <a-form :model="formModel"
-              class="modal-form"
-              size="small"
-              ref="formRef"
-              label-align="right"
-              :style="{ width: '320px' }"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
-              @keyup.enter="() => fetchCardData()">
-        <!-- id -->
-        <a-form-item field="id" label="主机id">
-          <a-input-number v-model="formModel.id"
-                          placeholder="请输入主机id"
-                          allow-clear
-                          hide-button />
-        </a-form-item>
-        <!-- 主机名称 -->
-        <a-form-item field="name" label="主机名称">
-          <a-input v-model="formModel.name" placeholder="请输入主机名称" allow-clear />
-        </a-form-item>
-        <!-- 主机编码 -->
-        <a-form-item field="code" label="主机编码">
-          <a-input v-model="formModel.code" placeholder="请输入主机编码" allow-clear />
-        </a-form-item>
-        <!-- 主机地址 -->
-        <a-form-item field="address" label="主机地址">
-          <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
-        </a-form-item>
-        <!-- 主机标签 -->
-        <a-form-item field="tags" label="主机标签">
-          <tag-multi-selector v-model="formModel.tags"
-                              :allowCreate="false"
-                              :limit="0"
-                              type="HOST"
-                              tag-type="hostTags"
-                              placeholder="请选择主机标签" />
-        </a-form-item>
-      </a-form>
     </template>
   </card-list>
 </template>

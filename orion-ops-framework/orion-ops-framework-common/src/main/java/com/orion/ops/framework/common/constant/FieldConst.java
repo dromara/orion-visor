@@ -7,7 +7,7 @@ package com.orion.ops.framework.common.constant;
  * @version 1.0.0
  * @since 2023/10/17 12:44
  */
-public interface ConstField {
+public interface FieldConst {
 
     String ID = "id";
 

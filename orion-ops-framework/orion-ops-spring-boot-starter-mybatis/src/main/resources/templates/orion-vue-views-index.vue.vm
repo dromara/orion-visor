@@ -47,12 +47,20 @@
   #else
   import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
   #end
-
   #if($vue.enableCardView)
   import { computed, ref, onBeforeMount } from 'vue';
+  #if($dictMap.entrySet().size() > 0)
+  import { useAppStore, useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
+  #else
   import { useAppStore } from '@/store';
+  #end
   #else
   import { ref } from 'vue';
+  #if($dictMap.entrySet().size() > 0)
+  import { useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
+  #end
   #end
 
   const render = ref(false);
@@ -68,7 +76,7 @@
   #if($vue.enableCardView)
   const appStore = useAppStore();
 
-  // FIXME 这里需要修改一下字段名称
+  // FIXME 这里需要修改一下字段名称 同时 appStore 的类型和 AppPreferenceModel 都需要定义该字段类型
   const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
   #end
 
@@ -99,6 +107,10 @@
   };
 
   onBeforeMount(async () => {
+    #if($dictMap.entrySet().size() > 0)
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    #end
     render.value = true;
   });
 

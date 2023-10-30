@@ -116,12 +116,12 @@ public class Table {
     protected boolean enableCardView;
 
     /**
-     * 生成的枚举文件
+     * 生成的字典数据
      */
-    protected List<VueEnum> enums;
+    protected List<DictMeta> dictList;
 
     protected Table() {
-        this.enums = new ArrayList<>();
+        this.dictList = new ArrayList<>();
     }
 
 }

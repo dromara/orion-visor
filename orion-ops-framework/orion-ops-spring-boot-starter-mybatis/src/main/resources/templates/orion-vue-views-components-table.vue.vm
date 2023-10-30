@@ -9,9 +9,9 @@
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
       <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
-        #if(${vue.enums.containsKey(${field.propertyName})})
+        #if(${dictMap.containsKey(${field.propertyName})})
         <a-select v-model="formModel.${field.propertyName}"
-                  :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
+                  :options="toOptions($dictMap.get(${field.propertyName}).keyField)"
                   placeholder="请选择${field.comment}"
                   allow-clear />
         #else
@@ -93,10 +93,10 @@
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
       #foreach($field in ${table.fields})
-      #if(${vue.enums.containsKey(${field.propertyName})})
+      #if(${dictMap.containsKey(${field.propertyName})})
       <!-- $field.comment -->
       <template #${field.propertyName}="{ record }">
-        {{ getEnumValue(record.${field.propertyName}, ${vue.enums.get(${field.propertyName}).className}) }}
+        {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}}) }}
       </template>
       #end
       #end
@@ -141,18 +141,19 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
+  #if($dictMap.entrySet().size() > 0)
+  import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
+  #else
+  import {} from '../types/const';
+  #end
   #if($vue.enableRowSelection)
   import { usePagination, useRowSelection } from '@/types/table';
   #else
   import { usePagination } from '@/types/table';
   #end
-  import {} from '../types/const';
-  #if($vue.enums.isEmpty())
-  import {} from '../types/enum.types';
-  #else
-  import { #foreach($entry in ${vue.enums.entrySet()})${entry.value.className}#if($foreach.hasNext), #end#end } from '../types/enum.types';
+  #if($dictMap.entrySet().size() > 0)
+  import { useDictStore } from '@/store';
   #end
-  import { toOptions, getEnumValue } from '@/utils/enum';
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
@@ -166,6 +167,9 @@
   const rowSelection = useRowSelection();
   #end
   const { loading, setLoading } = useLoading();
+  #if($dictMap.entrySet().size() > 0)
+  const { toOptions, getDictValue } = useDictStore();
+  #end
 
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})

@@ -69,18 +69,20 @@ Template.create("system_role", "角色", "role")
         .vue("user", "role")
         // 前端使用抽屉表单 (多字段使用)
         .enableDrawerForm()
+        // 前端支持卡片或 (多字段使用)
+        .enableCardView()
         // 前端支持多选
         .enableRowSelection()
-        // 枚举下拉框 替换的字段为 'type'
-        .enums("type")
-        // 枚举值为 APP HOST
-        .names("APP", "HOST")
-        // 设置参数为 label APP.label = '应用' HOST.label = '主机'
-        .values("label", "应用", "主机")
-        // 设置参数为 value APP.value = '1' HOST.value = '2'
-        .values("value", 1, 2)
-        // 设置参数为 color APP.color = 'blue' HOST.color = 'green'
-        .color("blue", "green")
+        // 生成字典配置 配置项为 'dictValueType', 替换的字段为 'value_type'
+        .dict("dictValueType", "value_type")
+        // 设置字段名称
+        .fields("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
+        // 设置字典值
+        .value(1, 2, 3, 4, 5)
+        // 设置字典值描述
+        .labels("字符串", "整数", "小数", "布尔值", "颜色")
+        // 设置额外值 color
+        .color("blue", "gray", "red", "green", "white")
         .build();
 ```
 

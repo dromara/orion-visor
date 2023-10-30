@@ -13,6 +13,38 @@
              @reset="reset"
              @search="fetchCardData"
              @page-change="fetchCardData">
+    <!-- 过滤条件 -->
+    <template #filterContent>
+      <a-form :model="formModel"
+              class="modal-form"
+              size="small"
+              ref="formRef"
+              label-align="right"
+              :style="{ width: '320px' }"
+              :label-col-props="{ span: 6 }"
+              :wrapper-col-props="{ span: 18 }"
+              @keyup.enter="() => fetchCardData()">
+        <!-- id -->
+        <a-form-item field="id" label="id">
+          <a-input-number v-model="formModel.id"
+                          placeholder="请输入id"
+                          allow-clear
+                          hide-button />
+        </a-form-item>
+        <!-- 名称 -->
+        <a-form-item field="name" label="名称">
+          <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
+        </a-form-item>
+        <!-- 用户名 -->
+        <a-form-item field="username" label="用户名">
+          <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
+        </a-form-item>
+        <!-- 主机秘钥 -->
+        <a-form-item field="keyId" label="主机秘钥">
+          <host-key-selector v-model="formModel.keyId" allow-clear />
+        </a-form-item>
+      </a-form>
+    </template>
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
@@ -82,38 +114,6 @@
         <icon-delete />
         删除
       </a-doption>
-    </template>
-    <!-- 过滤条件 -->
-    <template #filterContent>
-      <a-form :model="formModel"
-              class="modal-form"
-              size="small"
-              ref="formRef"
-              label-align="right"
-              :style="{ width: '320px' }"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
-              @keyup.enter="() => fetchCardData()">
-        <!-- id -->
-        <a-form-item field="id" label="id">
-          <a-input-number v-model="formModel.id"
-                          placeholder="请输入id"
-                          allow-clear
-                          hide-button />
-        </a-form-item>
-        <!-- 名称 -->
-        <a-form-item field="name" label="名称">
-          <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
-        </a-form-item>
-        <!-- 用户名 -->
-        <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
-        </a-form-item>
-        <!-- 主机秘钥 -->
-        <a-form-item field="keyId" label="主机秘钥">
-          <host-key-selector v-model="formModel.keyId" allow-clear />
-        </a-form-item>
-      </a-form>
     </template>
   </card-list>
 </template>

@@ -70,6 +70,29 @@ public class Template {
     }
 
     /**
+     * 设置字典
+     *
+     * @param keyName  字典配置名称
+     * @param variable 替换字段 数据库/小驼峰
+     * @return dict
+     */
+    public DictTemplate dict(String keyName, String variable) {
+        return new DictTemplate(table, keyName, variable);
+    }
+
+    /**
+     * 设置字典
+     *
+     * @param keyName   字典配置名称
+     * @param variable  替换字段 数据库/小驼峰
+     * @param className 字段名称
+     * @return dict
+     */
+    public DictTemplate dict(String keyName, String variable, String className) {
+        return new DictTemplate(table, keyName, variable, className);
+    }
+
+    /**
      * 构建
      *
      * @return table

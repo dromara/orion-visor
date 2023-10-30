@@ -357,8 +357,6 @@ public class CodeGenerator implements Executable {
                 new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
                 // card-list.vue 文件
                 new String[]{"/templates/orion-vue-views-components-card-list.vue.vm", "${feature}-card-list.vue", "vue/views/${module}/${feature}/components"},
-                // enum.types.ts 文件
-                new String[]{"/templates/orion-vue-views-types-enum.types.ts.vm", "enum.types.ts", "vue/views/${module}/${feature}/types"},
                 // const.ts 文件
                 new String[]{"/templates/orion-vue-views-types-const.ts.vm", "const.ts", "vue/views/${module}/${feature}/types"},
                 // form.rules.ts 文件

@@ -1,0 +1,23 @@
+#if($dictMap.entrySet().size() > 0)
+#foreach($enumEntity in $dictMap.entrySet())
+/**
+ * $enumEntity.value.comment
+ */
+// FIXME 检查这里的类型
+export const $enumEntity.value.field = {
+#set($count = $enumEntity.value.fields.size() - 1)
+#foreach($index in [0..$count])
+  // $enumEntity.value.labels.get($index)
+  $enumEntity.value.fields.get($index): '$enumEntity.value.values.get($index)',
+#end
+}
+
+#end
+#foreach($enumEntity in $dictMap.entrySet())
+// $enumEntity.value.comment 字典项
+export const $enumEntity.value.keyField = '$enumEntity.value.keyName';
+
+#end
+// 加载的字典值
+export const dictKeys = [#foreach($enumEntity in $dictMap.entrySet())${enumEntity.value.field}Key#if($foreach.hasNext), #end#end];
+#end

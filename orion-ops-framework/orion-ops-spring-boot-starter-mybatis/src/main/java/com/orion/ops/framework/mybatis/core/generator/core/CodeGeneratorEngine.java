@@ -3,9 +3,7 @@ package com.orion.ops.framework.mybatis.core.generator.core;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
-import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.orion.lang.define.collect.MultiLinkedHashMap;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.VariableStyles;
 import com.orion.lang.utils.io.Files1;
@@ -14,11 +12,13 @@ import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.OrionOpsProConst;
 import com.orion.ops.framework.mybatis.core.generator.template.Table;
-import com.orion.ops.framework.mybatis.core.generator.template.VueEnum;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -46,10 +46,10 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         customFiles = new CustomFileFilter(tables.get(tableInfo.getName()), customFiles).doFilter();
         // 添加表元数据
         this.addTableMeta(tableInfo, objectMap);
-        // 替换自定义包名
-        this.replacePackageName(customFiles, tableInfo, objectMap);
         // 添加注释元数据
         this.addApiCommentMeta(tableInfo, objectMap);
+        // 替换自定义包名
+        this.replacePackageName(customFiles, tableInfo, objectMap);
         // 生成后端文件
         this.generatorServerFile(customFiles, tableInfo, objectMap);
         // 生成前端文件
@@ -65,10 +65,6 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
      * @param objectMap objectMap
      */
     private void addTableMeta(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-        // http 注释标识
-        objectMap.put("httpComment", "###");
-        // 版本
-        objectMap.put("since", OrionOpsProConst.VERSION);
         // 替换业务注释
         tableInfo.setComment(tables.get(tableInfo.getName()).getComment());
         Table table = tables.get(tableInfo.getName());
@@ -87,6 +83,38 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         objectMap.put("typeHyphen", mappingHyphen.substring(0, mappingHyphen.length() - 3));
         // 类型常量
         objectMap.put("typeConst", VariableStyles.BIG_HUMP.toSerpentine(entityName).toUpperCase());
+        // 字典配置
+        objectMap.put("dictMap", new DictParser(tableInfo, table).parse());
+    }
+
+    /**
+     * 插入 api 注释
+     *
+     * @param tableInfo tableInfo
+     * @param objectMap objectMap
+     */
+    private void addApiCommentMeta(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
+        // http 注释标识
+        objectMap.put("httpComment", "###");
+        // 版本
+        objectMap.put("since", OrionOpsProConst.VERSION);
+        // api 注释
+        Map<String, String> apiComment = new HashMap<>(12);
+        String comment = tableInfo.getComment();
+        apiComment.put("create", "创建" + comment);
+        apiComment.put("updateAll", "根据条件更新" + comment);
+        apiComment.put("updateById", "更新" + comment);
+        apiComment.put("getById", "查询" + comment);
+        apiComment.put("getByIdList", "批量查询" + comment);
+        apiComment.put("queryList", "查询全部" + comment);
+        apiComment.put("queryListByCache", "通过缓存查询" + comment);
+        apiComment.put("queryPage", "分页查询" + comment);
+        apiComment.put("queryCount", "查询" + comment + "数量");
+        apiComment.put("deleteById", "删除" + comment);
+        apiComment.put("deleteAll", "根据条件删除" + comment);
+        apiComment.put("batchDelete", "批量删除" + comment);
+        apiComment.put("export", "导出" + comment);
+        objectMap.put("apiComment", apiComment);
     }
 
     /**
@@ -131,31 +159,6 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         // 自定义 provider interface 文件的包 (导入用)
         List<String> customProviderFilePackages = packageConverter.apply(s -> s.contains(".java.vm") && s.contains("orion-server-provider"));
         objectMap.put("customProviderFilePackages", customProviderFilePackages);
-    }
-
-    /**
-     * 插入 api 注释
-     *
-     * @param tableInfo tableInfo
-     * @param objectMap objectMap
-     */
-    private void addApiCommentMeta(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-        Map<String, String> map = new HashMap<>(12);
-        objectMap.put("apiComment", map);
-        String comment = tableInfo.getComment();
-        map.put("create", "创建" + comment);
-        map.put("updateAll", "根据条件更新" + comment);
-        map.put("updateById", "更新" + comment);
-        map.put("getById", "查询" + comment);
-        map.put("getByIdList", "批量查询" + comment);
-        map.put("queryList", "查询全部" + comment);
-        map.put("queryListByCache", "通过缓存查询" + comment);
-        map.put("queryPage", "分页查询" + comment);
-        map.put("queryCount", "查询" + comment + "数量");
-        map.put("deleteById", "删除" + comment);
-        map.put("deleteAll", "根据条件删除" + comment);
-        map.put("batchDelete", "批量删除" + comment);
-        map.put("export", "导出" + comment);
     }
 
     /**
@@ -222,8 +225,6 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         vueMeta.put("featureEntityFirstLower", Strings.firstLower(vueMeta.get("featureEntity")));
         // 功能名称常量
         vueMeta.put("featureConst", VariableStyles.SPINE.toSerpentine(table.getFeature()).toUpperCase());
-        // 枚举
-        vueMeta.put("enums", this.getEnumMap(tableInfo, table));
         objectMap.put("vue", vueMeta);
 
         // 生成文件
@@ -261,73 +262,6 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
             // 渲染文件
             this.outputFile(Files1.newFile(filePath), objectMap, file.getTemplatePath(), file.isFileOverride());
         });
-    }
-
-    /**
-     * 获取枚举
-     *
-     * @param tableInfo tableInfo
-     * @param table     table
-     * @return enumMap
-     */
-    private Map<String, EnumMeta> getEnumMap(TableInfo tableInfo, Table table) {
-        // 枚举值
-        Map<String, EnumMeta> enumMap = new LinkedHashMap<>();
-        for (VueEnum meta : table.getEnums()) {
-            // 检查字段是否存在
-            String variable = meta.getVariable();
-            TableField tableField = tableInfo.getFields()
-                    .stream()
-                    .filter(s -> variable.equals(s.getName()) || variable.equals(s.getPropertyName()))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("未查询到枚举映射字段 " + variable));
-            // 设置枚举名称
-            if (meta.getClassName() == null) {
-                meta.setClassName(Strings.firstUpper(tableField.getPropertyName()) + "Enum");
-            }
-            // 设置枚举注释
-            if (meta.getComment() == null) {
-                meta.setComment(Strings.def(tableField.getComment(), meta.getClassName()));
-            }
-            // 设置枚举
-            MultiLinkedHashMap<String, String, Object> enumInfo = new MultiLinkedHashMap<>();
-            for (int i = 0; i < meta.getNames().size(); i++) {
-                // 枚举名称
-                String name = meta.getNames().get(i);
-                // 设置枚举值
-                for (int j = 0; j < meta.getFields().size(); j++) {
-                    String field = meta.getFields().get(j);
-                    Object value = safeGet(safeGet(meta.getValues(), j), i);
-                    enumInfo.put(name, field, value);
-                }
-                // 检查是否有 value
-                if (!meta.getFields().contains(Const.VALUE)) {
-                    // 没有 value 用 name
-                    enumInfo.put(name, Const.VALUE, name);
-                }
-            }
-            enumMap.put(tableField.getPropertyName(), new EnumMeta(meta.getClassName(), meta.getComment(), enumInfo));
-        }
-        return enumMap;
-    }
-
-    /**
-     * 获取值
-     *
-     * @param list  list
-     * @param index index
-     * @param <T>   T
-     * @return value
-     */
-    private <T> T safeGet(List<T> list, int index) {
-        if (list == null) {
-            return null;
-        }
-        if (list.size() > index) {
-            return list.get(index);
-        } else {
-            return null;
-        }
     }
 
 }

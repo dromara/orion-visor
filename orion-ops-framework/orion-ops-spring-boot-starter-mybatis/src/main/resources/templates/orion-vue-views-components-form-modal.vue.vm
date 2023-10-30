@@ -24,9 +24,9 @@
         #if("$field.propertyName" != "id")
         <!-- $field.comment -->
         <a-form-item field="${field.propertyName}" label="${field.comment}">
-          #if(${vue.enums.containsKey(${field.propertyName})})
+        #if(${dictMap.containsKey(${field.propertyName})})
           <a-select v-model="formModel.${field.propertyName}"
-                    :options="toOptions(${vue.enums.get(${field.propertyName}).className})"
+                    :options="toOptions($dictMap.get(${field.propertyName}).keyField)"
                     placeholder="请选择${field.comment}" />
           #else
           #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
@@ -62,18 +62,22 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
+  #if($dictMap.entrySet().size() > 0)
+  import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
+  #else
+  import {} from '../types/const';
+  #end
   import { create${vue.featureEntity}, update${vue.featureEntity} } from '@/api/${vue.module}/${vue.feature}';
   import { Message } from '@arco-design/web-vue';
-  import {} from '../types/const';
-  #if($vue.enums.isEmpty())
-  import {} from '../types/enum.types';
-  #else
-  import { #foreach($entry in ${vue.enums.entrySet()})${entry.value.className}#if($foreach.hasNext), #end#end } from '../types/enum.types';
+  #if($dictMap.entrySet().size() > 0)
+  import { useDictStore } from '@/store';
   #end
-  import { toOptions } from '@/utils/enum';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+  #if($dictMap.entrySet().size() > 0)
+  const { toOptions } = useDictStore();
+  #end
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);

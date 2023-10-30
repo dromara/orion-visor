@@ -75,6 +75,19 @@ public class CustomFileFilter {
             files.removeIf(file -> isVueFile(file.getTemplatePath()));
             // 不生成菜单 sql 文件
             files.removeIf(file -> isMenuDataFile(file.getTemplatePath()));
+        } else {
+            // form
+            if (!table.isEnableDrawerForm()) {
+                // 不生成抽屉表单
+                files.removeIf(file -> isVueFormDrawerFile(file.getTemplatePath()));
+            } else {
+                // 不生成模态框表单
+                files.removeIf(file -> isVueFormModalFile(file.getTemplatePath()));
+            }
+            // 不生成卡片文件
+            if (!table.isEnableCardView()) {
+                files.removeIf(file -> isVueCardViewFile(file.getTemplatePath()));
+            }
         }
         return files;
     }
@@ -178,6 +191,37 @@ public class CustomFileFilter {
      */
     public static boolean isVueFile(String templatePath) {
         return templatePath.contains("orion-vue-");
+    }
+
+    /**
+     * 是否为抽屉表单文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为抽屉表单文件
+     */
+    public static boolean isVueFormDrawerFile(String templatePath) {
+        return templatePath.contains("orion-vue-views-components-form-drawer");
+    }
+
+    /**
+     * 是否为模态框表单文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为模态框表单文件
+     */
+    public static boolean isVueFormModalFile(String templatePath) {
+        return templatePath.contains("orion-vue-views-components-form-modal");
+    }
+
+    /**
+     * 是否为卡片视图文件
+     *
+     * @param templatePath templatePath
+     * @return 是否为卡片视图文件
+     */
+    public static boolean isVueCardViewFile(String templatePath) {
+        return templatePath.contains("orion-vue-views-components-card-list") ||
+                templatePath.contains("orion-vue-views-types-card.fields");
     }
 
 }
