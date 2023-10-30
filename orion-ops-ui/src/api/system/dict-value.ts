@@ -27,7 +27,7 @@ export interface DictValueUpdateRequest extends DictValueCreateRequest {
  */
 export interface DictValueRollbackRequest {
   id?: number;
-  relId?: number;
+  valueId?: number;
 }
 
 /**

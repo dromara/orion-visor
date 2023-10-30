@@ -97,8 +97,8 @@ public class HistoryValueServiceImpl implements HistoryValueService {
                 .eq(HistoryValueDO::getRelId, request.getRelId())
                 .eq(HistoryValueDO::getType, request.getType())
                 .and(Strings.isNotEmpty(searchValue), c -> c
-                        .eq(HistoryValueDO::getBeforeValue, searchValue).or()
-                        .eq(HistoryValueDO::getAfterValue, searchValue)
+                        .like(HistoryValueDO::getBeforeValue, searchValue).or()
+                        .like(HistoryValueDO::getAfterValue, searchValue)
                 )
                 .orderByDesc(HistoryValueDO::getId);
     }

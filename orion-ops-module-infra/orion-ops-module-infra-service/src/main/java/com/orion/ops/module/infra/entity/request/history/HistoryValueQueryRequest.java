@@ -4,6 +4,7 @@ import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,7 +28,7 @@ public class HistoryValueQueryRequest extends PageRequest {
     private Long relId;
 
     @Size(max = 16)
-    @NotNull
+    @NotBlank
     @Schema(description = "类型")
     private String type;
 

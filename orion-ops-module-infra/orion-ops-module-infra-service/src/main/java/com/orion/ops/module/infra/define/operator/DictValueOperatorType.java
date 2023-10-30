@@ -25,8 +25,8 @@ public class DictValueOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CREATE, "创建字典配置值 <sb>${keyName}</sb> <sb>${label}=${value}</sb>"),
-                new OperatorType(M, UPDATE, "更新字典配置值 <sb>${keyName}</sb> <sb>${label}=${value}</sb>"),
+                new OperatorType(L, CREATE, "创建字典配置值 <sb>${keyName}</sb>: <sb>${label}</sb> | <sb>${value}</sb>"),
+                new OperatorType(M, UPDATE, "更新字典配置值 <sb>${keyName}</sb>: <sb>${label}</sb> | <sb>${value}</sb>"),
                 new OperatorType(H, DELETE, "删除字典配置值 <sb>${value}</sb>"),
         };
     }

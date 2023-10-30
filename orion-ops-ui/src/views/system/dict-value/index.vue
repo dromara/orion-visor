@@ -3,11 +3,17 @@
     <!-- 列表-表格 -->
     <dict-value-table ref="table"
                       @openAdd="() => modal.openAdd()"
-                      @openUpdate="(e) => modal.openUpdate(e)" />
+                      @openUpdate="(e) => modal.openUpdate(e)"
+                      @openHistory="(e) => history.open(e.id, e.label)" />
     <!-- 添加修改模态框 -->
     <dict-value-form-modal ref="modal"
                            @added="modalAddCallback"
                            @updated="modalUpdateCallback" />
+    <!-- 历史值模态框 -->
+    <history-value-modal ref="history"
+                         :type="historyType"
+                         :rollback="rollback"
+                         @updated="modalUpdateCallback" />
   </div>
 </template>
 
@@ -20,15 +26,18 @@
 <script lang="ts" setup>
   import DictValueTable from './components/dict-value-table.vue';
   import DictValueFormModal from './components/dict-value-form-modal.vue';
-
+  import HistoryValueModal from '@/components/meta/history/history-value-modal.vue';
   import { ref, onBeforeMount, onUnmounted } from 'vue';
+  import { historyType } from './types/const';
   import { useCacheStore } from '@/store';
   import { getDictKeyList } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
+  import { rollbackDictValue } from '@/api/system/dict-value';
 
   const render = ref(false);
   const table = ref();
   const modal = ref();
+  const history = ref();
   const cacheStore = useCacheStore();
 
   // 添加回调
@@ -39,6 +48,11 @@
   // 修改回调
   const modalUpdateCallback = () => {
     table.value.updatedCallback();
+  };
+
+  // 回滚
+  const rollback = async (id: number, valueId: number) => {
+    await rollbackDictValue({ id, valueId });
   };
 
   // 加载字典配置项

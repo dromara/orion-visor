@@ -9,6 +9,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.constant.FieldConst;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
@@ -98,6 +99,7 @@ public class DictValueServiceImpl implements DictValueService {
         this.checkDictValuePresent(updateRecord);
         // 更新
         OperatorLogs.add(OperatorLogs.KEY_NAME, dictKey);
+        OperatorLogs.add(OperatorLogs.VALUE, this.getDictValueJson(updateRecord));
         updateRecord.setKeyName(key);
         int effect = dictValueDAO.updateById(updateRecord);
         log.info("DictValueService-updateDictValueById effect: {}", effect);
@@ -118,6 +120,9 @@ public class DictValueServiceImpl implements DictValueService {
         // 查询历史值
         HistoryValueDO history = historyValueService.getHistoryByRelId(request.getValueId(), id, HistoryValueTypeEnum.DICT.name());
         Valid.notNull(history, ErrorMessage.HISTORY_ABSENT);
+        JSONObject historyValue = JSON.parseObject(history.getBeforeValue());
+        String label = (String) historyValue.remove(OperatorLogs.LABEL);
+        String value = (String) historyValue.remove(OperatorLogs.VALUE);
         // 记录日志参数
         OperatorLogs.add(OperatorLogs.KEY_NAME, record.getKeyName());
         OperatorLogs.add(OperatorLogs.LABEL, record.getLabel());
@@ -125,7 +130,9 @@ public class DictValueServiceImpl implements DictValueService {
         // 更新
         DictValueDO updateRecord = new DictValueDO();
         updateRecord.setId(id);
-        updateRecord.setValue(history.getBeforeValue());
+        updateRecord.setLabel(label);
+        updateRecord.setValue(value);
+        updateRecord.setExtra(historyValue.toString());
         int effect = dictValueDAO.updateById(updateRecord);
         log.info("DictValueService-rollbackDictValueById effect: {}", effect);
         // 删除缓存
@@ -306,9 +313,11 @@ public class DictValueServiceImpl implements DictValueService {
      * @param record       修改前
      */
     private void checkRecordHistory(DictValueDO updateRecord, DictValueDO record) {
+        // 原始值
+        String beforeValue = this.getDictValueJson(record);
+        // 新值
+        String afterValue = this.getDictValueJson(updateRecord);
         // 检查值是否发生改变
-        String beforeValue = record.getValue();
-        String afterValue = updateRecord.getValue();
         if (!beforeValue.equals(afterValue)) {
             // 记录历史值
             HistoryValueCreateRequest historyRequest = new HistoryValueCreateRequest();
@@ -318,6 +327,21 @@ public class DictValueServiceImpl implements DictValueService {
             historyRequest.setAfterValue(afterValue);
             historyValueService.createHistoryValue(historyRequest);
         }
+    }
+
+    /**
+     * 获取字典值 json
+     *
+     * @param record record
+     * @return value
+     */
+    private String getDictValueJson(DictValueDO record) {
+        JSONObject beforeValue = Optional.ofNullable(record.getExtra())
+                .map(JSON::parseObject)
+                .orElseGet(JSONObject::new);
+        beforeValue.put(FieldConst.VALUE, record.getValue());
+        beforeValue.put(FieldConst.LABEL, record.getLabel());
+        return beforeValue.toString();
     }
 
     /**

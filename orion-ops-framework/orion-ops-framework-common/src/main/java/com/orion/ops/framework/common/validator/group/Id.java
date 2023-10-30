@@ -1,5 +1,7 @@
 package com.orion.ops.framework.common.validator.group;
 
+import javax.validation.groups.Default;
+
 /**
  * 分页验证分组
  *
@@ -7,5 +9,5 @@ package com.orion.ops.framework.common.validator.group;
  * @version 1.0.0
  * @since 2023/9/1 19:13
  */
-public interface Id {
+public interface Id extends Default {
 }
