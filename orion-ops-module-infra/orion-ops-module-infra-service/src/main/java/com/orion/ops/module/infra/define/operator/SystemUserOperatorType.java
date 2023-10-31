@@ -34,7 +34,7 @@ public class SystemUserOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, CREATE, "创建用户 <sb>${username}</sb>"),
                 new OperatorType(M, UPDATE, "修改用户 <sb>${username}</sb>"),
                 new OperatorType(M, UPDATE_STATUS, "修改用户状态 <sb>${username}</sb> - <sb>${statusName}</sb>"),
-                new OperatorType(M, GRANT_ROLE, "用户分配角色 <sb>${username}</sb>"),
+                new OperatorType(M, GRANT_ROLE, "分配用户角色 <sb>${username}</sb>"),
                 new OperatorType(H, RESET_PASSWORD, "重置用户密码 <sb>${username}</sb>"),
                 new OperatorType(H, DELETE, "删除用户 <sb>${username}</sb>"),
         };
