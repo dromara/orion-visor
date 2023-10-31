@@ -63,4 +63,6 @@ public interface ErrorMessage {
 
     String PASSWORD_MISSING = "请输入密码";
 
+    String BEFORE_PASSWORD_ERROR = "原密码错误";
+
 }

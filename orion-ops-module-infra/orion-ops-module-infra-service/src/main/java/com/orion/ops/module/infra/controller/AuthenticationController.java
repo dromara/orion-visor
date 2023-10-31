@@ -4,11 +4,10 @@ import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
-import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
-import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
+import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.SystemUserService;
@@ -66,10 +65,8 @@ public class AuthenticationController {
     @OperatorLog(AuthenticationOperatorType.UPDATE_PASSWORD)
     @Operation(summary = "修改密码")
     @PutMapping("/update-password")
-    public HttpWrapper<?> updatePassword(@Validated @RequestBody UserResetPasswordRequest request) {
-        // 当前用户id
-        request.setId(SecurityUtils.getLoginUserId());
-        systemUserService.resetPassword(request);
+    public HttpWrapper<?> updatePassword(@Validated @RequestBody UserUpdatePasswordRequest request) {
+        authenticationService.updatePassword(request);
         return HttpWrapper.ok();
     }
 

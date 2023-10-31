@@ -73,7 +73,7 @@ public interface SystemUserService {
     /**
      * 删除 id 删除用户拓展信息
      *
-     * @param id
+     * @param id id
      */
     void deleteSystemUserRel(Long id);
 

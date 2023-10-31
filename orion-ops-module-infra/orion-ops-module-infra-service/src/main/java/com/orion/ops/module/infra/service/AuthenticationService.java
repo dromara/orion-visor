@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.service;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
+import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,13 @@ public interface AuthenticationService {
      * @param servletRequest servletRequest
      */
     void logout(HttpServletRequest servletRequest);
+
+    /**
+     * 修改密码
+     *
+     * @param request request
+     */
+    void updatePassword(UserUpdatePasswordRequest request);
 
     /**
      * 获取登陆用户信息

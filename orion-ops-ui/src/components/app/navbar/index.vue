@@ -38,15 +38,15 @@
         <a-tooltip content="语言">
           <a-button class="nav-btn"
                     type="outline"
-                    :shape="'circle'"
-                    @click="setUserInfoVisible">
+                    shape="circle"
+                    @click="setLocalesVisible">
             <template #icon>
               <icon-language />
             </template>
           </a-button>
         </a-tooltip>
         <a-dropdown trigger="click" @select="changeLocale">
-          <div ref="refUserInfoTrigger" class="trigger-btn" />
+          <div ref="localeRef" class="trigger-btn" />
           <template #content>
             <a-doption v-for="item in locales"
                        :key="item.value"
@@ -66,7 +66,7 @@
               : '点击切换为亮色模式'">
           <a-button class="nav-btn"
                     type="outline"
-                    :shape="'circle'"
+                    shape="circle"
                     @click="handleToggleTheme">
             <template #icon>
               <icon-moon-fill v-if="theme === 'dark'" />
@@ -82,7 +82,7 @@
             <a-badge :count="9" dot>
               <a-button class="nav-btn"
                         type="outline"
-                        :shape="'circle'"
+                        shape="circle"
                         @click="setMessageBoxVisible">
                 <icon-notification />
               </a-button>
@@ -93,7 +93,7 @@
                    :arrow-style="{ display: 'none' }"
                    :content-style="{ padding: 0, minWidth: '400px' }"
                    content-class="message-popover">
-          <div ref="refMessageBoxTrigger" class="ref-btn" />
+          <div ref="messageRef" class="ref-btn" />
           <template #content>
             <message-box />
           </template>
@@ -161,7 +161,7 @@
             </a-doption>
             <!-- 修改密码 -->
             <a-doption>
-              <a-space @click="$router.push({ name: 'userMine' })">
+              <a-space @click="() => updatePasswordRef.open()">
                 <icon-lock />
                 <span>修改密码</span>
               </a-space>
@@ -177,6 +177,8 @@
         </a-dropdown>
       </li>
     </ul>
+    <!-- 修改密码模态框-->
+    <update-password-modal ref="updatePasswordRef" @updated="handleLogout" />
   </div>
 </template>
 
@@ -192,25 +194,14 @@
   import MessageBox from '@/components/system/message-box/index.vue';
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
+  import UpdatePasswordModal from '@/components/user/role/update-password-modal.vue';
 
   const tipsStore = useTipsStore();
-  const tippedPreference = ref(tipsStore.isNotTipped(preferenceTipsKey));
   const appStore = useAppStore();
   const userStore = useUserStore();
   const { logout } = useUser();
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const locales = [...LOCALE_OPTIONS];
-  const nickname = computed(() => {
-    return userStore.nickname?.substring(0, 1);
-  });
-  const topMenu = computed(() => appStore.topMenu && appStore.menu);
-
-  // 当前主题
-  const theme = computed(() => {
-    return appStore.theme;
-  });
-
   // 主题
   const darkTheme = useDark({
     selector: 'body',
@@ -225,33 +216,48 @@
     },
   });
 
+  // 用户名
+  const nickname = computed(() => userStore.nickname?.substring(0, 1));
+  // 是否展示顶部菜单
+  const topMenu = computed(() => appStore.topMenu && appStore.menu);
+  // 当前主题
+  const theme = computed(() => appStore.theme);
+
+  const locales = [...LOCALE_OPTIONS];
+  // 偏好提示
+  const tippedPreference = ref(tipsStore.isNotTipped(preferenceTipsKey));
+  // 修改密码
+  const updatePasswordRef = ref();
+  // 消息
+  const messageRef = ref();
+  // 语言
+  const localeRef = ref();
+
+  // 打开应用设置
+  const openAppSetting = inject(openAppSettingKey) as () => void;
+
+  // 注入收缩菜单
+  const toggleDrawerMenu = inject(toggleDrawerMenuKey) as () => void;
+
   // 切换主题
   const handleToggleTheme = () => {
     useToggle(darkTheme)();
   };
 
-  // 打开应用设置
-  const openAppSetting = inject(openAppSettingKey) as () => void;
-
-  // 消息触发器 ref
-  const refMessageBoxTrigger = ref();
+  // 打开消息
   const setMessageBoxVisible = () => {
-    triggerMouseEvent(refMessageBoxTrigger);
+    triggerMouseEvent(messageRef);
   };
 
-  // 个人信息触发器 ref
-  const refUserInfoTrigger = ref();
-  const setUserInfoVisible = () => {
-    triggerMouseEvent(refUserInfoTrigger);
+  // 打开语言切换
+  const setLocalesVisible = () => {
+    triggerMouseEvent(localeRef);
   };
 
   // 退出登录
   const handleLogout = () => {
     logout();
   };
-
-  // 注入收缩菜单
-  const toggleDrawerMenu = inject(toggleDrawerMenuKey) as () => void;
 
   // 关闭偏好提示
   const closePreferenceTip = (ack: boolean) => {

@@ -80,10 +80,11 @@
 
 <script lang="ts" setup>
   import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+  import type { HistoryValueQueryRequest, HistoryValueQueryResponse } from '@/api/meta/history-value';
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { getHistoryValuePage, HistoryValueQueryRequest, HistoryValueQueryResponse } from '@/api/meta/history-value';
+  import { getHistoryValuePage } from '@/api/meta/history-value';
   import { usePagination } from '@/types/table';
   import useCopy from '@/hooks/copy';
   import { dateFormat } from '@/utils';
