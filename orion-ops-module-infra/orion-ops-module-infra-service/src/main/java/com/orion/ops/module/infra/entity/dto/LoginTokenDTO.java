@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 登陆 token 缓存
+ * 登录 token 缓存
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -28,7 +28,7 @@ public class LoginTokenDTO {
      *
      * @see com.orion.ops.module.infra.enums.LoginTokenStatusEnum
      */
-    private Integer tokenStatus;
+    private Integer status;
 
     /**
      * 已续签次数
@@ -36,18 +36,43 @@ public class LoginTokenDTO {
     private Integer refreshCount;
 
     /**
-     * 登陆时间/其他设备登陆时间
+     * 原始登录身份
      */
-    private Long loginTime;
+    private Identity origin;
 
     /**
-     * 登陆 ip/其他设备登陆 ip
+     * 覆盖登录身份
      */
-    private String ip;
+    private Identity override;
 
     /**
-     * 登陆地址/其他设备登陆地址
+     * 身份信息
      */
-    private String location;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Identity {
+
+        /**
+         * 原始登录时间
+         */
+        private Long loginTime;
+
+        /**
+         * 当前设备登录地址
+         */
+        private String address;
+
+        /**
+         * 当前设备登录地址
+         */
+        private String location;
+
+        /**
+         * 当前设备 userAgent
+         */
+        private String userAgent;
+
+    }
 
 }

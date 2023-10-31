@@ -15,10 +15,7 @@ const columns = [
     slotName: 'keyName',
     align: 'left',
     ellipsis: true,
-    tooltip: true,
-    render: ({ record }) => {
-      return `${record.keyName} - ${record.keyDescription}`;
-    },
+    tooltip: true
   }, {
     title: '配置描述',
     dataIndex: 'label',

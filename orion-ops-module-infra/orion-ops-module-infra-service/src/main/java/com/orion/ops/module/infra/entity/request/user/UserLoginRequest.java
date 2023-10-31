@@ -6,14 +6,14 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 /**
- * 登陆请求
+ * 登录请求
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/7/13 22:16
  */
 @Data
-@Schema(name = "UserLoginRequest", description = "登陆请求")
+@Schema(name = "UserLoginRequest", description = "登录请求")
 public class UserLoginRequest {
 
     @NotEmpty

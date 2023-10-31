@@ -3,16 +3,20 @@ package com.orion.ops.module.infra.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.infra.convert.OperatorLogConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
+import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.ops.module.infra.entity.domain.OperatorLogDO;
 import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
+import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.service.OperatorLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 操作日志 服务实现类
@@ -46,6 +50,19 @@ public class OperatorLogServiceImpl implements OperatorLogService {
                 .dataGrid(OperatorLogConvert.MAPPER::to);
     }
 
+    @Override
+    public List<LoginHistoryVO> getLoginHistory(String username) {
+        // 条件
+        OperatorLogQueryRequest request = new OperatorLogQueryRequest();
+        request.setUsername(username);
+        request.setType(AuthenticationOperatorType.LOGIN);
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return operatorLogDAO.of(wrapper)
+                .limit(Const.LOGIN_HISTORY_COUNT)
+                .list(OperatorLogConvert.MAPPER::toLoginHistory);
+    }
+
     /**
      * 构建查询 wrapper
      *
@@ -55,12 +72,14 @@ public class OperatorLogServiceImpl implements OperatorLogService {
     private LambdaQueryWrapper<OperatorLogDO> buildQueryWrapper(OperatorLogQueryRequest request) {
         return operatorLogDAO.wrapper()
                 .eq(OperatorLogDO::getUserId, request.getUserId())
+                .eq(OperatorLogDO::getUsername, request.getUsername())
                 .eq(OperatorLogDO::getRiskLevel, request.getRiskLevel())
                 .eq(OperatorLogDO::getModule, request.getModule())
                 .eq(OperatorLogDO::getType, request.getType())
                 .eq(OperatorLogDO::getResult, request.getResult())
                 .ge(OperatorLogDO::getStartTime, request.getStartTimeStart())
-                .le(OperatorLogDO::getStartTime, request.getStartTimeEnd());
+                .le(OperatorLogDO::getStartTime, request.getStartTimeEnd())
+                .orderByDesc(OperatorLogDO::getId);
     }
 
 }

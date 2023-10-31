@@ -71,9 +71,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserLoginVO login(UserLoginRequest request, HttpServletRequest servletRequest) {
-        // 登陆前检查
+        // 登录前检查
         this.preCheckLogin(request);
-        // 获取登陆用户
+        // 获取登录用户
         LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
                 .eq(SystemUserDO::getUsername, request.getUsername());
         SystemUserDO user = systemUserDAO.of(wrapper).getOne();
@@ -90,17 +90,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.deleteUserCache(user);
         // 重设用户缓存
         this.setUserCache(user);
-        // 获取登陆 ip
+        // 获取登录信息
         String remoteAddr = Servlets.getRemoteAddr(servletRequest);
         String location = IpUtils.getLocation(remoteAddr);
+        String userAgent = Servlets.getUserAgent(servletRequest);
         long current = System.currentTimeMillis();
-        // 不允许多端登陆
+        // 不允许多端登录
         if (!allowMultiDevice) {
             // 无效化其他缓存
-            this.invalidOtherDeviceToken(user.getId(), current, remoteAddr, location);
+            this.invalidOtherDeviceToken(user.getId(), current, remoteAddr, location, userAgent);
         }
         // 生成 loginToken
-        String token = this.generatorLoginToken(user, current, remoteAddr, location);
+        String token = this.generatorLoginToken(user, current, remoteAddr, location, userAgent);
         return UserLoginVO.builder()
                 .token(token)
                 .build();
@@ -108,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void logout(HttpServletRequest request) {
-        // 获取登陆 token
+        // 获取登录 token
         String loginToken = SecurityUtils.obtainAuthorization(request);
         if (loginToken == null) {
             return;
@@ -156,12 +157,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginTokenDTO getLoginTokenInfo(String loginToken, boolean checkRefresh) {
-        // 获取登陆 key pair
+        // 获取登录 key pair
         Pair<Long, Long> pair = this.getLoginTokenPair(loginToken);
         if (pair == null) {
             return null;
         }
-        // 获取登陆 key value
+        // 获取登录 key value
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(pair.getKey(), pair.getValue());
         String loginCache = redisTemplate.opsForValue().get(loginKey);
         if (loginCache != null) {
@@ -181,7 +182,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         LoginTokenDTO refresh = JSON.parseObject(refreshCache, LoginTokenDTO.class);
         int refreshCount = refresh.getRefreshCount() + 1;
         refresh.setRefreshCount(refreshCount);
-        // 设置登陆缓存
+        // 设置登录缓存
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, refresh);
         if (refreshCount < maxRefreshCount) {
             // 小于续签最大次数 则再次设置 refreshToken
@@ -213,7 +214,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * 登陆预检查
+     * 登录预检查
      *
      * @param request request
      */
@@ -222,7 +223,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (request.getPassword().length() != Const.MD5_LEN) {
             throw Exceptions.argument(ErrorMessage.USERNAME_PASSWORD_ERROR);
         }
-        // 检查登陆失败次数
+        // 检查登录失败次数
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         String failedCount = redisTemplate.opsForValue().get(failedCountKey);
         if (failedCount != null && Integer.parseInt(failedCount) >= maxFailedLoginCount) {
@@ -243,7 +244,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (user != null && user.getPassword().equals(Signatures.md5(request.getPassword()))) {
             return true;
         }
-        // 刷新登陆失败缓存
+        // 刷新登录失败缓存
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         Long failedLoginCount = redisTemplate.opsForValue().increment(failedCountKey);
         RedisUtils.setExpire(failedCountKey, UserCacheKeyDefine.LOGIN_FAILED_COUNT);
@@ -293,7 +294,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void deleteUserCache(SystemUserDO user) {
         // 用户信息缓存
         String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
-        // 登陆失败次数缓存
+        // 登录失败次数缓存
         String loginFailedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
         // 删除缓存
         redisTemplate.delete(Lists.of(userInfoKey, loginFailedCountKey));
@@ -324,34 +325,34 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
-     * 无效化其他登陆信息
+     * 无效化其他登录信息
      *
      * @param id         id
      * @param loginTime  loginTime
      * @param remoteAddr remoteAddr
      * @param location   location
+     * @param userAgent  userAgent
      */
     @SuppressWarnings("ALL")
-    private void invalidOtherDeviceToken(Long id, long loginTime, String remoteAddr, String location) {
+    private void invalidOtherDeviceToken(Long id, long loginTime,
+                                         String remoteAddr, String location, String userAgent) {
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
-        // 获取登陆信息
+        // 获取登录信息
         Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
         if (!loginKeyList.isEmpty()) {
-            // 获取有效登陆信息
+            // 获取有效登录信息
             List<LoginTokenDTO> loginTokenInfoList = redisTemplate.opsForValue()
                     .multiGet(loginKeyList)
                     .stream()
                     .filter(Objects::nonNull)
                     .map(s -> JSON.parseObject(s, LoginTokenDTO.class))
-                    .filter(s -> LoginTokenStatusEnum.OK.getStatus().equals(s.getTokenStatus()))
+                    .filter(s -> LoginTokenStatusEnum.OK.getStatus().equals(s.getStatus()))
                     .collect(Collectors.toList());
-            // 修改登陆信息
+            // 修改登录信息
             for (LoginTokenDTO loginTokenInfo : loginTokenInfoList) {
-                String deviceLoginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, loginTokenInfo.getLoginTime());
-                loginTokenInfo.setTokenStatus(LoginTokenStatusEnum.OTHER_DEVICE.getStatus());
-                loginTokenInfo.setLoginTime(loginTime);
-                loginTokenInfo.setIp(remoteAddr);
-                loginTokenInfo.setLocation(location);
+                String deviceLoginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, loginTokenInfo.getOrigin().getLoginTime());
+                loginTokenInfo.setStatus(LoginTokenStatusEnum.OTHER_DEVICE.getStatus());
+                loginTokenInfo.setOverride(new LoginTokenDTO.Identity(loginTime, remoteAddr, location, userAgent));
                 RedisStrings.setJson(deviceLoginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginTokenInfo);
             }
         }
@@ -372,20 +373,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param loginTime  loginTime
      * @param remoteAddr remoteAddr
      * @param location   location
+     * @param userAgent  userAgent
      * @return loginToken
      */
     private String generatorLoginToken(SystemUserDO user, long loginTime,
-                                       String remoteAddr, String location) {
+                                       String remoteAddr, String location, String userAgent) {
         Long id = user.getId();
         // 生成 loginToken
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, loginTime);
         LoginTokenDTO loginValue = LoginTokenDTO.builder()
                 .id(id)
-                .tokenStatus(LoginTokenStatusEnum.OK.getStatus())
+                .status(LoginTokenStatusEnum.OK.getStatus())
                 .refreshCount(0)
-                .ip(remoteAddr)
-                .loginTime(loginTime)
-                .location(location)
+                .origin(new LoginTokenDTO.Identity(loginTime, remoteAddr, location, userAgent))
                 .build();
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginValue);
         // 生成 refreshToken

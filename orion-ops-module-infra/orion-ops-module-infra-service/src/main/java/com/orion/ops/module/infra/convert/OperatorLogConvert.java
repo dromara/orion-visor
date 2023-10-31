@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.convert;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.module.infra.entity.domain.OperatorLogDO;
 import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
+import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -24,5 +25,7 @@ public interface OperatorLogConvert {
     OperatorLogDO to(OperatorLogQueryRequest request);
 
     OperatorLogVO to(OperatorLogDO domain);
+
+    LoginHistoryVO toLoginHistory(OperatorLogDO domain);
 
 }

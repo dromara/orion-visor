@@ -46,7 +46,7 @@ public enum ErrorCode implements CodeInfo {
 
     // -------------------- 自定义 - 业务 --------------------
 
-    OTHER_DEVICE_LOGIN(700, "该账号于 {} 已在其他设备登陆 {}({})"),
+    OTHER_DEVICE_LOGIN(700, "该账号于 {} 已在其他设备登录 {}({})"),
 
     USER_DISABLED(701, "当前用户已禁用"),
 

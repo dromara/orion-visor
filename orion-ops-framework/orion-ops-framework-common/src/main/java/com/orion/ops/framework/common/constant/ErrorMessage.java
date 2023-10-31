@@ -49,7 +49,7 @@ public interface ErrorMessage {
 
     String USERNAME_PASSWORD_ERROR = "用户名或密码错误";
 
-    String MAX_LOGIN_FAILED = "登陆失败次数已上限";
+    String MAX_LOGIN_FAILED = "登录失败次数已上限";
 
     String HISTORY_ABSENT = "历史值不存在";
 

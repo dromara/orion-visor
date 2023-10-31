@@ -52,7 +52,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         if (!Strings.isEmpty(summary)) {
             requestLog.append("\tsummary: ").append(summary).append('\n');
         }
-        // 登陆用户
+        // 登录用户
         Long loginUserId = securityHolder.getLoginUserId();
         if (loginUserId != null) {
             requestLog.append("\tuser: ").append(loginUserId).append('\n');

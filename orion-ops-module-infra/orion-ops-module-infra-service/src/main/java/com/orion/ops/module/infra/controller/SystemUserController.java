@@ -7,6 +7,7 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.SystemUserOperatorType;
 import com.orion.ops.module.infra.entity.request.user.*;
@@ -93,6 +94,20 @@ public class SystemUserController {
     public HttpWrapper<?> resetUserPassword(@Validated @RequestBody UserResetPasswordRequest request) {
         systemUserService.resetPassword(request);
         return HttpWrapper.ok();
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-current")
+    @Operation(summary = "查询当前用户信息")
+    public SystemUserVO getCurrentUserInfo() {
+        return systemUserService.getSystemUserById(SecurityUtils.getLoginUserId());
+    }
+
+    @PutMapping("/update-current")
+    @Operation(summary = "更新当前用户信息")
+    public Integer updateCurrentUser(@Validated @RequestBody SystemUserUpdateRequest request) {
+        request.setId(SecurityUtils.getLoginUserId());
+        return systemUserService.updateSystemUserById(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

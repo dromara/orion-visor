@@ -1,4 +1,4 @@
-### 登陆 - admin 用户
+### 登录 - admin 用户
 POST {{baseUrl}}/infra/auth/login
 Content-Type: application/json
 
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 
-### 登陆
+### 登录
 POST {{baseUrl}}/infra/auth/login
 Content-Type: application/json
 

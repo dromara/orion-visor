@@ -81,7 +81,7 @@
     if (!errors) {
       setLoading(true);
       try {
-        // 执行登陆
+        // 执行登录
         await userStore.login(values);
         // 跳转路由
         const { redirect, ...othersQuery } = router.currentRoute.value.query;

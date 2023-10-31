@@ -106,6 +106,14 @@ public class DataQuery<T> {
         return then;
     }
 
+    public DataQuery<T> limit(int limit) {
+        return this.last(Const.LIMIT + Const.SPACE + limit);
+    }
+
+    public DataQuery<T> limit(int offset, int limit) {
+        return this.last(Const.LIMIT + Const.SPACE + offset + Const.COMMA + limit);
+    }
+
     public DataQuery<T> only() {
         return this.last(Const.LIMIT_1);
     }

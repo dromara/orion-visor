@@ -124,7 +124,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 更新用户
         int effect = systemUserDAO.updateById(updateRecord);
         log.info("SystemUserService-updateUserStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
-        // 如果之前是锁定则删除登陆失败次数缓存
+        // 如果之前是锁定则删除登录失败次数缓存
         if (UserStatusEnum.LOCKED.getStatus().equals(record.getStatus())) {
             redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         }
@@ -224,9 +224,9 @@ public class SystemUserServiceImpl implements SystemUserService {
         update.setPassword(Signatures.md5(request.getPassword()));
         int effect = systemUserDAO.updateById(update);
         log.info("SystemUserService-resetPassword record: {}, effect: {}", JSON.toJSONString(update), effect);
-        // 删除登陆失败次数缓存
+        // 删除登录失败次数缓存
         redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
-        // 删除登陆缓存
+        // 删除登录缓存
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
         Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
         if (!loginKeyList.isEmpty()) {

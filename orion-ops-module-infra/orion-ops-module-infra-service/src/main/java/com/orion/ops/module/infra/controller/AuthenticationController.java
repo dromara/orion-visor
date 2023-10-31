@@ -10,7 +10,6 @@ import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.service.AuthenticationService;
-import com.orion.ops.module.infra.service.SystemUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +39,9 @@ public class AuthenticationController {
     @Resource
     private AuthenticationService authenticationService;
 
-    @Resource
-    private SystemUserService systemUserService;
-
     @OperatorLog(AuthenticationOperatorType.LOGIN)
     @PermitAll
-    @Operation(summary = "登陆")
+    @Operation(summary = "登录")
     @PostMapping("/login")
     public UserLoginVO login(@Validated @RequestBody UserLoginRequest request,
                              HttpServletRequest servletRequest) {

@@ -4,8 +4,10 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
+import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.service.OperatorLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,12 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 操作日志 api
@@ -45,6 +45,23 @@ public class OperatorLogController {
     @PreAuthorize("@ss.hasPermission('infra:operator-log:query')")
     public DataGrid<OperatorLogVO> getOperatorLogPage(@Validated(Page.class) @RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.getOperatorLogPage(request);
+    }
+
+    // fixme 权限配置
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/login-history")
+    @Operation(summary = "查询用户登录日志")
+    public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username) {
+        return operatorLogService.getLoginHistory(username);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/current-login-history")
+    @Operation(summary = "查询当前用户登录日志")
+    public List<LoginHistoryVO> getCurrentLoginHistory() {
+        String username = SecurityUtils.getLoginUsername();
+        return operatorLogService.getLoginHistory(username);
     }
 
 }

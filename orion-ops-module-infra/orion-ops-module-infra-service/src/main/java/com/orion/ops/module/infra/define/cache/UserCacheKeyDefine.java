@@ -24,13 +24,13 @@ public interface UserCacheKeyDefine {
 
     CacheKeyDefine LOGIN_FAILED_COUNT = new CacheKeyBuilder()
             .key("user:failed:{}")
-            .desc("用户登陆失败次数 ${username}")
+            .desc("用户登录失败次数 ${username}")
             .timeout(3, TimeUnit.DAYS)
             .build();
 
     CacheKeyDefine LOGIN_TOKEN = new CacheKeyBuilder()
             .key("user:token:{}:{}")
-            .desc("用户登陆 token ${id} ${time}")
+            .desc("用户登录 token ${id} ${time}")
             .type(LoginTokenDTO.class)
             .timeout(24, TimeUnit.HOURS)
             .build();

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface AuthenticationService {
 
     // TODO 配置化
-    // 允许多端登陆
+    // 允许多端登录
     boolean allowMultiDevice = true;
     // 允许凭证续签
     boolean allowRefresh = true;
@@ -28,7 +28,7 @@ public interface AuthenticationService {
     int maxFailedLoginCount = 5;
 
     /**
-     * 登陆
+     * 登录
      *
      * @param request        request
      * @param servletRequest servletRequest
@@ -51,7 +51,7 @@ public interface AuthenticationService {
     void updatePassword(UserUpdatePasswordRequest request);
 
     /**
-     * 获取登陆用户信息
+     * 获取登录用户信息
      *
      * @param userId userId
      * @return loginUser

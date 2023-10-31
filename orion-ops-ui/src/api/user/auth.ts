@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 /**
- * 登陆请求
+ * 登录请求
  */
 export interface LoginRequest {
   username?: string;
@@ -9,7 +9,7 @@ export interface LoginRequest {
 }
 
 /**
- * 登陆响应
+ * 登录响应
  */
 export interface LoginResponse {
   token: string;
@@ -24,7 +24,7 @@ export interface UserUpdatePasswordRequest {
 }
 
 /**
- * 登陆
+ * 登录
  */
 export function login(data: LoginRequest) {
   return axios.post<LoginResponse>('/infra/auth/login', data);

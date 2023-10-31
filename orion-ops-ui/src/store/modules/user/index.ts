@@ -56,9 +56,9 @@ export default defineStore('user', {
           username: loginForm.username,
           password: md5(loginForm.password as string),
         };
-        // 执行登陆
+        // 执行登录
         const res = await userLogin(loginRequest);
-        // 设置登陆 token
+        // 设置登录 token
         setToken(res.data.token);
       } catch (err) {
         clearToken();

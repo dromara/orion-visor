@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户登陆响应
+ * 用户登录响应
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Schema(name = "SystemUserVO", description = "用户 视图响应对象")
 public class UserLoginVO {
 
-    @Schema(description = "登陆 token")
+    @Schema(description = "登录 token")
     private String token;
 
 }

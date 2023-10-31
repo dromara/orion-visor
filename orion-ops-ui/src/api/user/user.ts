@@ -12,8 +12,6 @@ export interface UserCreateRequest {
   avatar?: string;
   mobile?: string;
   email?: string;
-  status?: number;
-  lastLoginTime?: string;
 }
 
 /**
@@ -91,6 +89,20 @@ export function grantUserRole(request: UserUpdateRequest) {
  */
 export function resetUserPassword(request: UserUpdateRequest) {
   return axios.put('/infra/system-user/reset-password', request);
+}
+
+/**
+ * 查询当前用户
+ */
+export function getCurrentUser() {
+  return axios.get<UserQueryResponse>('/infra/system-user/get-current');
+}
+
+/**
+ * 更新当前用户
+ */
+export function updateCurrentUser(request: UserUpdateRequest) {
+  return axios.put('/infra/system-user/update-current', request);
 }
 
 /**

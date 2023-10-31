@@ -3,7 +3,10 @@ package com.orion.ops.module.infra.service;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
+import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
+
+import java.util.List;
 
 /**
  * 操作日志 服务类
@@ -28,5 +31,13 @@ public interface OperatorLogService {
      * @return rows
      */
     DataGrid<OperatorLogVO> getOperatorLogPage(OperatorLogQueryRequest request);
+
+    /**
+     * 查询用户登录日志
+     *
+     * @param username username
+     * @return rows
+     */
+    List<LoginHistoryVO> getLoginHistory(String username);
 
 }

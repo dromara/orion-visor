@@ -76,6 +76,10 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 配置项 -->
+      <template #keyName="{record}">
+        {{ record.keyName }}<span style="margin: 0 4px;">-</span>{{ record.keyDescription }}
+      </template>
       <!-- 值 -->
       <template #value="{ record }">
         <span class="copy-left" title="复制" @click="copy(record.value)">

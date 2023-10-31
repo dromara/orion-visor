@@ -114,7 +114,7 @@ INSERT INTO `dict_value` VALUES (60, 1, 'operatorLogModule', 'infra:dict-value',
 INSERT INTO `dict_value` VALUES (61, 1, 'operatorLogModule', 'asset:host', '主机操作', '{}', 2000, '2023-10-31 10:48:16', '2023-10-31 10:53:54', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (62, 1, 'operatorLogModule', 'asset:host-key', '主机秘钥', '{}', 2020, '2023-10-31 10:48:17', '2023-10-31 10:54:34', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (63, 1, 'operatorLogModule', 'asset:host-identity', '主机身份', '{}', 2030, '2023-10-31 10:48:19', '2023-10-31 10:54:26', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (64, 2, 'operatorLogType', 'authentication:login', '登陆系统', '{}', 10, '2023-10-31 10:55:26', '2023-10-31 11:05:41', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (64, 2, 'operatorLogType', 'authentication:login', '登录系统', '{}', 10, '2023-10-31 10:55:26', '2023-10-31 11:05:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (65, 2, 'operatorLogType', 'authentication:logout', '登出系统', '{}', 20, '2023-10-31 10:55:27', '2023-10-31 11:05:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (66, 2, 'operatorLogType', 'authentication:update-password', '修改密码', '{}', 30, '2023-10-31 10:55:30', '2023-10-31 11:05:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (67, 2, 'operatorLogType', 'system-user:create', '创建用户', '{}', 10, '2023-10-31 10:55:42', '2023-10-31 11:05:41', '1', '1', 0);

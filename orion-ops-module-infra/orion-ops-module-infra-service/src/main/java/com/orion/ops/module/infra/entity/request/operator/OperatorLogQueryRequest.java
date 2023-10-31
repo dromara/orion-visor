@@ -26,6 +26,9 @@ public class OperatorLogQueryRequest extends PageRequest {
     @Schema(description = "用户id")
     private Long userId;
 
+    @Schema(description = "用户名")
+    private String username;
+
     @Size(max = 32)
     @Schema(description = "模块")
     private String module;

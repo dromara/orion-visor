@@ -57,7 +57,7 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
         }
         // 检查 token 状态
         this.checkTokenStatus(tokenInfo);
-        // 获取登陆信息
+        // 获取登录信息
         LoginUser user = authenticationService.getLoginUser(tokenInfo.getId());
         // 检查用户状态
         UserStatusEnum.checkUserStatus(user.getStatus());
@@ -70,17 +70,18 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
      * @param loginToken loginToken
      */
     private void checkTokenStatus(LoginTokenDTO loginToken) {
-        Integer tokenStatus = loginToken.getTokenStatus();
+        Integer tokenStatus = loginToken.getStatus();
         // 正常状态
         if (LoginTokenStatusEnum.OK.getStatus().equals(tokenStatus)) {
             return;
         }
-        // 其他设备登陆
+        // 其他设备登录
         if (LoginTokenStatusEnum.OTHER_DEVICE.getStatus().equals(tokenStatus)) {
+            LoginTokenDTO.Identity override = loginToken.getOverride();
             throw ErrorCode.OTHER_DEVICE_LOGIN.exception(
-                    Dates.format(new Date(loginToken.getLoginTime()), Dates.MD_HM),
-                    loginToken.getIp(),
-                    loginToken.getLocation());
+                    Dates.format(new Date(override.getLoginTime()), Dates.MD_HM),
+                    override.getAddress(),
+                    override.getLocation());
         }
     }
 

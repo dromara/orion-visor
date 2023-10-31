@@ -154,7 +154,7 @@
           <template #content>
             <!-- 个人中心 -->
             <a-doption>
-              <a-space @click="$router.push({ name: 'userMine' })">
+              <a-space @click="$router.push({ name: 'userInfo' })">
                 <icon-user />
                 <span>个人中心</span>
               </a-space>

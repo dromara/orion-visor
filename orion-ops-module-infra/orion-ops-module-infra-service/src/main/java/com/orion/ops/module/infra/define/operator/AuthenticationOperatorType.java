@@ -25,7 +25,7 @@ public class AuthenticationOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, LOGIN, "登陆系统"),
+                new OperatorType(L, LOGIN, "登录系统"),
                 new OperatorType(L, LOGOUT, "登出系统"),
                 new OperatorType(L, UPDATE_PASSWORD, "修改密码"),
         };

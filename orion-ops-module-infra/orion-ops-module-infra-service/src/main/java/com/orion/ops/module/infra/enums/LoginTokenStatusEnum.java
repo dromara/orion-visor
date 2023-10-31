@@ -3,7 +3,7 @@ package com.orion.ops.module.infra.enums;
 import lombok.Getter;
 
 /**
- * 登陆 token 状态
+ * 登录 token 状态
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -18,9 +18,9 @@ public enum LoginTokenStatusEnum {
     OK(0),
 
     /**
-     * 已在其他设备登陆
+     * 已在其他设备登录
      */
-    OTHER_DEVICE(1, "已在其他设备登陆"),
+    OTHER_DEVICE(1, "已在其他设备登录"),
 
     ;
 

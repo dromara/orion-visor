@@ -69,13 +69,23 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取当前用户id
+     * 获取当前 userId
      *
      * @return id
      */
     public static Long getLoginUserId() {
         LoginUser loginUser = getLoginUser();
         return loginUser != null ? loginUser.getId() : null;
+    }
+
+    /**
+     * 获取当前 username
+     *
+     * @return username
+     */
+    public static String getLoginUsername() {
+        LoginUser loginUser = getLoginUser();
+        return loginUser != null ? loginUser.getUsername() : null;
     }
 
     /**
