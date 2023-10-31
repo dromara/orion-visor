@@ -89,6 +89,16 @@ public class SecurityUtils {
     }
 
     /**
+     * 获取当前 timestamp
+     *
+     * @return timestamp
+     */
+    public static Long getLoginTimestamp() {
+        LoginUser loginUser = getLoginUser();
+        return loginUser != null ? loginUser.getTimestamp() : null;
+    }
+
+    /**
      * 设置当前用户
      *
      * @param loginUser 登录用户

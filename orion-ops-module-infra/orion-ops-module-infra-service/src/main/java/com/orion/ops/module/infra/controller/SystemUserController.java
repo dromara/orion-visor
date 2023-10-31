@@ -11,6 +11,7 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.SystemUserOperatorType;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
+import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
 import com.orion.ops.module.infra.service.SystemUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -135,6 +136,23 @@ public class SystemUserController {
     @PreAuthorize("@ss.hasPermission('infra:system-user:delete')")
     public Integer deleteSystemUser(@RequestParam("id") Long id) {
         return systemUserService.deleteSystemUserById(id);
+    }
+
+    // fixme 权限配置
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/user-session")
+    @Operation(summary = "获取用户会话列表")
+    public List<UserSessionVO> getUserSessionList(@RequestParam("id") Long id) {
+        return systemUserService.getUserSessionList(id);
+    }
+
+    // fixme 权限配置
+    @IgnoreLog(IgnoreLogMode.RET)
+    @PutMapping("/offline-session")
+    @Operation(summary = "下线用户会话")
+    public HttpWrapper<?> offlineUserSession(@Validated @RequestBody OfflineUserSessionRequest request) {
+        systemUserService.offlineUserSession(request);
+        return HttpWrapper.ok();
     }
 
 }

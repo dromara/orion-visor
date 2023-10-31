@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -25,7 +24,6 @@ import java.io.Serializable;
 @Schema(name = "SystemUserUpdateRequest", description = "用户 更新请求对象")
 public class SystemUserUpdateRequest implements Serializable {
 
-    @NotNull
     @Schema(description = "id")
     private Long id;
 

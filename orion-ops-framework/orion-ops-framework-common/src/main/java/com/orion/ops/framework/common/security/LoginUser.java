@@ -31,6 +31,9 @@ public class LoginUser {
     @Schema(description = "头像地址")
     private String avatar;
 
+    @Schema(description = "登录时间戳")
+    private Long timestamp;
+
     @Schema(description = "角色")
     private List<String> roles;
 

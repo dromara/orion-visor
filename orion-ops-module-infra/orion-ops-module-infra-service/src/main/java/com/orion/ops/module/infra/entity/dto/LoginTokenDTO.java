@@ -38,41 +38,11 @@ public class LoginTokenDTO {
     /**
      * 原始登录身份
      */
-    private Identity origin;
+    private LoginTokenIdentityDTO origin;
 
     /**
      * 覆盖登录身份
      */
-    private Identity override;
-
-    /**
-     * 身份信息
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Identity {
-
-        /**
-         * 原始登录时间
-         */
-        private Long loginTime;
-
-        /**
-         * 当前设备登录地址
-         */
-        private String address;
-
-        /**
-         * 当前设备登录地址
-         */
-        private String location;
-
-        /**
-         * 当前设备 userAgent
-         */
-        private String userAgent;
-
-    }
+    private LoginTokenIdentityDTO override;
 
 }

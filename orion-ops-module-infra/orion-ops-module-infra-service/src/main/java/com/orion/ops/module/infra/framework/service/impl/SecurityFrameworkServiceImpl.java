@@ -3,8 +3,11 @@ package com.orion.ops.module.infra.framework.service.impl;
 import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.service.SecurityFrameworkService;
+import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
+import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
@@ -55,12 +58,21 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
         if (tokenInfo == null) {
             return null;
         }
-        // 检查 token 状态
-        this.checkTokenStatus(tokenInfo);
+        try {
+            // 检查 token 状态
+            this.checkTokenStatus(tokenInfo);
+        } catch (Exception e) {
+            // token 失效则删除
+            // fixme test
+            RedisUtils.delete(UserCacheKeyDefine.LOGIN_TOKEN.format(tokenInfo.getId(), tokenInfo.getOrigin().getLoginTime()));
+            throw e;
+        }
         // 获取登录信息
         LoginUser user = authenticationService.getLoginUser(tokenInfo.getId());
         // 检查用户状态
         UserStatusEnum.checkUserStatus(user.getStatus());
+        // 设置登录时间戳
+        user.setTimestamp(tokenInfo.getOrigin().getLoginTime());
         return user;
     }
 
@@ -77,7 +89,7 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
         }
         // 其他设备登录
         if (LoginTokenStatusEnum.OTHER_DEVICE.getStatus().equals(tokenStatus)) {
-            LoginTokenDTO.Identity override = loginToken.getOverride();
+            LoginTokenIdentityDTO override = loginToken.getOverride();
             throw ErrorCode.OTHER_DEVICE_LOGIN.exception(
                     Dates.format(new Date(override.getLoginTime()), Dates.MD_HM),
                     override.getAddress(),

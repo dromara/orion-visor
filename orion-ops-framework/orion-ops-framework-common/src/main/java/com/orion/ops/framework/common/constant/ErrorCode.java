@@ -46,11 +46,11 @@ public enum ErrorCode implements CodeInfo {
 
     // -------------------- 自定义 - 业务 --------------------
 
-    OTHER_DEVICE_LOGIN(700, "该账号于 {} 已在其他设备登录 {}({})"),
+    USER_DISABLED(700, "当前用户已禁用"),
 
-    USER_DISABLED(701, "当前用户已禁用"),
+    USER_LOCKED(701, "当前用户已被锁定"),
 
-    USER_LOCKED(702, "当前用户已被锁定"),
+    OTHER_DEVICE_LOGIN(702, "该账号于 {} 已在其他设备登录 {}({})"),
 
     // -------------------- 自定义 - 通用 --------------------
 

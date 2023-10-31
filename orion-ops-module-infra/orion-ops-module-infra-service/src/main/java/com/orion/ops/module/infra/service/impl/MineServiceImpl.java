@@ -6,11 +6,13 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
+import com.orion.ops.module.infra.entity.request.user.OfflineUserSessionRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
+import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 import com.orion.ops.module.infra.service.MineService;
 import com.orion.ops.module.infra.service.OperatorLogService;
 import com.orion.ops.module.infra.service.SystemUserService;
@@ -71,6 +73,17 @@ public class MineServiceImpl implements MineService {
     public List<LoginHistoryVO> getCurrentLoginHistory() {
         String username = SecurityUtils.getLoginUsername();
         return operatorLogService.getLoginHistory(username);
+    }
+
+    @Override
+    public List<UserSessionVO> getCurrentUserSessionList() {
+        return systemUserService.getUserSessionList(SecurityUtils.getLoginUserId());
+    }
+
+    @Override
+    public void offlineCurrentUserSession(OfflineUserSessionRequest request) {
+        request.setUserId(SecurityUtils.getLoginUserId());
+        systemUserService.offlineUserSession(request);
     }
 
 }

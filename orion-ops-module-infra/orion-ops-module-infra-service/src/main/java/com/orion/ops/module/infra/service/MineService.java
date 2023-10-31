@@ -1,9 +1,11 @@
 package com.orion.ops.module.infra.service;
 
+import com.orion.ops.module.infra.entity.request.user.OfflineUserSessionRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
+import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 
 import java.util.List;
 
@@ -44,5 +46,19 @@ public interface MineService {
      * @return 登录日志
      */
     List<LoginHistoryVO> getCurrentLoginHistory();
+
+    /**
+     * 获取当前用户会话列表
+     *
+     * @return 回话列表
+     */
+    List<UserSessionVO> getCurrentUserSessionList();
+
+    /**
+     * 下线当前用户会话
+     *
+     * @param request request
+     */
+    void offlineCurrentUserSession(OfflineUserSessionRequest request);
 
 }

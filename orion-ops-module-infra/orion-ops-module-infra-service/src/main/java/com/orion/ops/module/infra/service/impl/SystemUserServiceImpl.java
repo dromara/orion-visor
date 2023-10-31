@@ -20,8 +20,10 @@ import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
+import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
+import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.FavoriteService;
@@ -34,8 +36,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户 服务实现类
@@ -240,6 +245,42 @@ public class SystemUserServiceImpl implements SystemUserService {
                 redisTemplate.delete(refreshKeyList);
             }
         }
+    }
+
+    @Override
+    public List<UserSessionVO> getUserSessionList(Long userId) {
+        // 扫描缓存
+        Set<String> keys = RedisStrings.scanKeys(UserCacheKeyDefine.LOGIN_TOKEN.format(userId, "*"));
+        if (Lists.isEmpty(keys)) {
+            return Lists.empty();
+        }
+        // 查询缓存
+        List<LoginTokenDTO> tokens = RedisStrings.getJsonList(keys, UserCacheKeyDefine.LOGIN_TOKEN);
+        if (Lists.isEmpty(tokens)) {
+            return Lists.empty();
+        }
+        // 返回
+        return tokens.stream()
+                .map(LoginTokenDTO::getOrigin)
+                .map(s -> UserSessionVO.builder()
+                        .current(s.getLoginTime().equals(SecurityUtils.getLoginTimestamp()))
+                        .address(s.getAddress())
+                        .location(s.getLocation())
+                        .userAgent(s.getUserAgent())
+                        .loginTime(new Date(s.getLoginTime()))
+                        .build())
+                .sorted(Comparator.comparing(UserSessionVO::getLoginTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void offlineUserSession(OfflineUserSessionRequest request) {
+        Long userId = Valid.notNull(request.getUserId());
+        Long timestamp = request.getTimestamp();
+        RedisStrings.delete(
+                UserCacheKeyDefine.LOGIN_TOKEN.format(userId, timestamp),
+                UserCacheKeyDefine.LOGIN_REFRESH.format(userId, request.getTimestamp())
+        );
     }
 
     /**

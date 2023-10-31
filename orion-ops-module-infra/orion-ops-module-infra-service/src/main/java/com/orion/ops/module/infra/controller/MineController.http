@@ -30,4 +30,19 @@ Authorization: {{token}}
 GET {{baseUrl}}/infra/mine/login-history
 Authorization: {{token}}
 
+
+### 获取当前用户会话列表
+GET {{baseUrl}}/infra/mine/user-session
+Authorization: {{token}}
+
+
+### 下线当前用户会话
+PUT {{baseUrl}}/infra/mine/offline-session
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "timestamp": 1698774195296
+}
+
 ###

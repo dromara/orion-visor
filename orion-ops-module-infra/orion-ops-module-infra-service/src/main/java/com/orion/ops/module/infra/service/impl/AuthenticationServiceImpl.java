@@ -23,13 +23,13 @@ import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
+import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.PermissionService;
-import com.orion.ops.module.infra.service.SystemUserService;
 import com.orion.web.servlet.web.Servlets;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -331,7 +331,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             for (LoginTokenDTO loginTokenInfo : loginTokenInfoList) {
                 String deviceLoginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, loginTokenInfo.getOrigin().getLoginTime());
                 loginTokenInfo.setStatus(LoginTokenStatusEnum.OTHER_DEVICE.getStatus());
-                loginTokenInfo.setOverride(new LoginTokenDTO.Identity(loginTime, remoteAddr, location, userAgent));
+                loginTokenInfo.setOverride(new LoginTokenIdentityDTO(loginTime, remoteAddr, location, userAgent));
                 RedisStrings.setJson(deviceLoginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginTokenInfo);
             }
         }
@@ -364,7 +364,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .id(id)
                 .status(LoginTokenStatusEnum.OK.getStatus())
                 .refreshCount(0)
-                .origin(new LoginTokenDTO.Identity(loginTime, remoteAddr, location, userAgent))
+                .origin(new LoginTokenIdentityDTO(loginTime, remoteAddr, location, userAgent))
                 .build();
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginValue);
         // 生成 refreshToken

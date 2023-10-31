@@ -7,6 +7,7 @@ import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -83,7 +84,7 @@ public class RedisStrings extends RedisUtils {
      * @param keys keys
      * @return cache
      */
-    public static List<JSONObject> getJsonList(List<String> keys) {
+    public static List<JSONObject> getJsonList(Collection<String> keys) {
         List<String> values = redisTemplate.opsForValue().multiGet(keys);
         if (values == null) {
             return new ArrayList<>();
@@ -101,7 +102,7 @@ public class RedisStrings extends RedisUtils {
      * @param <T>    T
      * @return cache
      */
-    public static <T> List<T> getJsonList(List<String> keys, CacheKeyDefine define) {
+    public static <T> List<T> getJsonList(Collection<String> keys, CacheKeyDefine define) {
         return getJsonList(keys, (Class<T>) define.getType());
     }
 
@@ -113,7 +114,7 @@ public class RedisStrings extends RedisUtils {
      * @param <T>  T
      * @return cache
      */
-    public static <T> List<T> getJsonList(List<String> keys, Class<T> type) {
+    public static <T> List<T> getJsonList(Collection<String> keys, Class<T> type) {
         List<String> values = redisTemplate.opsForValue().multiGet(keys);
         if (values == null) {
             return new ArrayList<>();
@@ -182,7 +183,7 @@ public class RedisStrings extends RedisUtils {
      * @param keys keys
      * @return cache
      */
-    public static List<JSONArray> getJsonArrayList(List<String> keys) {
+    public static List<JSONArray> getJsonArrayList(Collection<String> keys) {
         List<String> values = redisTemplate.opsForValue().multiGet(keys);
         if (values == null) {
             return new ArrayList<>();
@@ -200,7 +201,7 @@ public class RedisStrings extends RedisUtils {
      * @param <T>    T
      * @return cache
      */
-    public static <T> List<List<T>> getJsonArrayList(List<String> keys, CacheKeyDefine define) {
+    public static <T> List<List<T>> getJsonArrayList(Collection<String> keys, CacheKeyDefine define) {
         return getJsonArrayList(keys, (Class<T>) define.getType());
     }
 
@@ -212,7 +213,7 @@ public class RedisStrings extends RedisUtils {
      * @param <T>  T
      * @return cache
      */
-    public static <T> List<List<T>> getJsonArrayList(List<String> keys, Class<T> type) {
+    public static <T> List<List<T>> getJsonArrayList(Collection<String> keys, Class<T> type) {
         List<String> values = redisTemplate.opsForValue().multiGet(keys);
         if (values == null) {
             return new ArrayList<>();
