@@ -53,19 +53,19 @@ axios.interceptors.response.use(
       });
     }
     // 业务判断
-    if (
-      [401, 700, 701, 702].includes(code) &&
-      response.config.url !== '/infra/auth/login'
-    ) {
+    if ([401, 700, 701, 702].includes(code)) {
       Notification.error({
         closable: true,
         content: res.msg,
       });
-      setTimeout(async () => {
-        // 登出
-        await useUserStore().logout();
-        window.location.reload();
-      });
+      // 非登录页面跳转登录页面
+      if (response.config.url !== '/infra/auth/login') {
+        setTimeout(async () => {
+          // 登出
+          await useUserStore().logout();
+          window.location.reload();
+        });
+      }
     }
     return Promise.reject(new Error(res.msg || 'Error'));
   },

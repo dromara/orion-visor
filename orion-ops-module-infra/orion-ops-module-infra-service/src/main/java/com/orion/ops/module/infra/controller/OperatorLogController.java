@@ -48,19 +48,10 @@ public class OperatorLogController {
     }
 
     // fixme 权限配置
-
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/login-history")
     @Operation(summary = "查询用户登录日志")
     public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username) {
-        return operatorLogService.getLoginHistory(username);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/current-login-history")
-    @Operation(summary = "查询当前用户登录日志")
-    public List<LoginHistoryVO> getCurrentLoginHistory() {
-        String username = SecurityUtils.getLoginUsername();
         return operatorLogService.getLoginHistory(username);
     }
 

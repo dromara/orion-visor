@@ -16,14 +16,6 @@ export interface LoginResponse {
 }
 
 /**
- * 修改密码请求
- */
-export interface UserUpdatePasswordRequest {
-  beforePassword?: string;
-  password?: string;
-}
-
-/**
  * 登录
  */
 export function login(data: LoginRequest) {
@@ -35,13 +27,6 @@ export function login(data: LoginRequest) {
  */
 export function logout() {
   return axios.get('/infra/auth/logout');
-}
-
-/**
- * 修改密码
- */
-export function updatePassword(request: UserUpdatePasswordRequest) {
-  return axios.put('/infra/auth/update-password', request);
 }
 
 /**

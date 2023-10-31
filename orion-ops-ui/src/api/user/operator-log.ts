@@ -66,10 +66,3 @@ export function getOperatorLogPage(request: OperatorLogQueryRequest) {
 export function getLoginHistory(username: string) {
   return axios.get<LoginHistoryQueryResponse[]>('/infra/operator-log/login-history', { params: { username } });
 }
-
-/**
- * 查询当前用户登录日志
- */
-export function getCurrentLoginHistory() {
-  return axios.get<LoginHistoryQueryResponse[]>('/infra/operator-log/current-login-history');
-}

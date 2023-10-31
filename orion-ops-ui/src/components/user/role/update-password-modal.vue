@@ -40,13 +40,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { UserUpdatePasswordRequest } from '@/api/user/auth';
+  import type { UserUpdatePasswordRequest } from '@/api/user/mine';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
   import { md5 } from '@/utils';
-  import { updatePassword } from '@/api/user/auth';
+  import { updateCurrentUserPassword } from '@/api/user/mine';
 
   const emits = defineEmits(['updated']);
 
@@ -102,7 +102,7 @@
         return false;
       }
       // 修改
-      await updatePassword({
+      await updateCurrentUserPassword({
         beforePassword: md5(formModel.value.beforePassword as string),
         password: md5(formModel.value.password as string)
       });

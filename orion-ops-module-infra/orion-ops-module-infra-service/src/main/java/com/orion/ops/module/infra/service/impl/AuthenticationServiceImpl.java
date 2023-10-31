@@ -24,8 +24,6 @@ import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
-import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
-import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
@@ -59,9 +57,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Resource
     private SystemUserRoleDAO systemUserRoleDAO;
-
-    @Resource
-    private SystemUserService systemUserService;
 
     @Resource
     private PermissionService permissionService;
@@ -125,22 +120,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, current);
         String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, current);
         redisTemplate.delete(Lists.of(loginKey, refreshKey));
-    }
-
-    @Override
-    public void updatePassword(UserUpdatePasswordRequest request) {
-        Long userId = SecurityUtils.getLoginUserId();
-        // 查询用户信息
-        SystemUserDO record = systemUserDAO.selectById(userId);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
-        // 对比原始密码
-        String beforePassword = Signatures.md5(request.getBeforePassword());
-        Valid.eq(beforePassword, record.getPassword(), ErrorMessage.BEFORE_PASSWORD_ERROR);
-        // 重置密码
-        UserResetPasswordRequest reset = new UserResetPasswordRequest();
-        reset.setId(userId);
-        reset.setPassword(request.getPassword());
-        systemUserService.resetPassword(reset);
     }
 
     @Override

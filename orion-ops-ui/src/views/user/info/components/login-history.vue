@@ -47,7 +47,7 @@
   import { ref, onMounted } from 'vue';
   import { useUserStore } from '@/store';
   import { ResultStatus } from '../types/const';
-  import { getCurrentLoginHistory } from '@/api/user/operator-log';
+  import { getCurrentLoginHistory } from '@/api/user/mine';
   import { dateFormat } from '@/utils';
 
   const list = ref<LoginHistoryQueryResponse[]>([]);

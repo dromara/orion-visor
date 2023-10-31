@@ -53,8 +53,9 @@
   import { computed, ref, onMounted } from 'vue';
   import formRules from '../../user/types/form.rules';
   import { useUserStore } from '@/store';
-  import { getCurrentUser, updateCurrentUser } from '@/api/user/user';
+  import { getCurrentUser, updateCurrentUser } from '@/api/user/mine';
   import { pick } from 'lodash';
+  import { Message } from '@arco-design/web-vue';
 
   const userStore = useUserStore();
   const { loading, setLoading } = useLoading();
@@ -71,6 +72,7 @@
     try {
       await updateCurrentUser(formModel.value);
       userStore.nickname = formModel.value.nickname;
+      Message.success('保存成功');
     } catch (e) {
     } finally {
       setLoading(false);
@@ -82,7 +84,7 @@
     setLoading(true);
     try {
       const { data } = await getCurrentUser();
-      formModel.value = pick(data, 'id', 'username', 'nickname', 'mobile', 'email');
+      formModel.value = pick(data, 'username', 'nickname', 'mobile', 'email');
     } catch (e) {
     } finally {
       setLoading(false);

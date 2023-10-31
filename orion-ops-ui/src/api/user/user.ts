@@ -92,20 +92,6 @@ export function resetUserPassword(request: UserUpdateRequest) {
 }
 
 /**
- * 查询当前用户
- */
-export function getCurrentUser() {
-  return axios.get<UserQueryResponse>('/infra/system-user/get-current');
-}
-
-/**
- * 更新当前用户
- */
-export function updateCurrentUser(request: UserUpdateRequest) {
-  return axios.put('/infra/system-user/update-current', request);
-}
-
-/**
  * 通过 id 查询用户
  */
 export function getUser(id: number) {

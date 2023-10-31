@@ -7,7 +7,6 @@ import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.ops.module.infra.entity.request.user.UserLoginRequest;
-import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.UserLoginVO;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,14 +54,6 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public HttpWrapper<?> logout(HttpServletRequest servletRequest) {
         authenticationService.logout(servletRequest);
-        return HttpWrapper.ok();
-    }
-
-    @OperatorLog(AuthenticationOperatorType.UPDATE_PASSWORD)
-    @Operation(summary = "修改密码")
-    @PutMapping("/update-password")
-    public HttpWrapper<?> updatePassword(@Validated @RequestBody UserUpdatePasswordRequest request) {
-        authenticationService.updatePassword(request);
         return HttpWrapper.ok();
     }
 
