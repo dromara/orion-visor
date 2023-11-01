@@ -21,6 +21,11 @@ const USER: AppRouteRecordRaw = {
       path: '/user/info',
       component: () => import('@/views/user/info/index.vue'),
     },
+    {
+      name: 'userOperatorLog',
+      path: '/user/operator-log',
+      component: () => import('@/views/user/operator-log/index.vue'),
+    },
   ],
 };
 

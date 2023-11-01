@@ -35,11 +35,11 @@ export interface HostKeyQueryRequest extends Pagination {
  * 主机秘钥查询响应
  */
 export interface HostKeyQueryResponse extends TableData {
-  id?: number;
-  name?: string;
-  publicKey?: string;
-  privateKey?: string;
-  password?: string;
+  id: number;
+  name: string;
+  publicKey: string;
+  privateKey: string;
+  password: string;
   createTime: number;
   updateTime: number;
 }

@@ -38,10 +38,10 @@ export interface HostQueryRequest extends Pagination {
  * 主机查询响应
  */
 export interface HostQueryResponse extends TableData {
-  id?: number;
-  name?: string;
-  code?: string;
-  address?: string;
+  id: number;
+  name: string;
+  code: string;
+  address: string;
   createTime: number;
   updateTime: number;
   creator: string;

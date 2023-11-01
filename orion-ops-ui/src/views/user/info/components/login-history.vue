@@ -7,16 +7,17 @@
         <!-- 图标 -->
         <template #dot>
           <div class="icon-container">
-            <icon-desktop />
+            <icon-mobile v-if="isMobile(item.userAgent)" />
+            <icon-desktop v-else />
           </div>
         </template>
         <!-- 日志行 -->
         <div class="log-line">
           <!-- 地址行 -->
-          <span class="address-line">
+          <a-space class="address-line">
             <span class="mr8">{{ item.address }}</span>
             <span>{{ item.location }}</span>
-          </span>
+          </a-space>
           <!-- 错误信息行 -->
           <span class="error-line" v-if="item.result === ResultStatus.FAILED">
             登录失败: {{ item.errorMessage }}
@@ -45,14 +46,13 @@
   import type { LoginHistoryQueryResponse } from '@/api/user/operator-log';
   import useLoading from '@/hooks/loading';
   import { ref, onMounted } from 'vue';
-  import { useUserStore } from '@/store';
   import { ResultStatus } from '../types/const';
   import { getCurrentLoginHistory } from '@/api/user/mine';
   import { dateFormat } from '@/utils';
+  import { isMobile } from '@/utils/is';
 
   const list = ref<LoginHistoryQueryResponse[]>([]);
 
-  const userStore = useUserStore();
   const { loading, setLoading } = useLoading();
 
   // 查询操作日志
@@ -78,7 +78,7 @@
 
   .extra-message {
     margin-bottom: 38px;
-    margin-left: -20px;
+    margin-left: -24px;
     display: block;
     color: var(--color-text-3);
     user-select: none;
@@ -112,8 +112,9 @@
 
     .address-line {
       color: var(--color-text-1);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
+      margin-bottom: 2px;
     }
 
     .time-line, .ua-line, .error-line {

@@ -110,7 +110,7 @@ public class SystemUserController {
     @Operation(summary = "查询所有用户")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
     public List<SystemUserVO> getSystemUserList() {
-        return systemUserService.getSystemUserByIdList();
+        return systemUserService.getSystemUserList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -150,7 +150,7 @@ public class SystemUserController {
     @IgnoreLog(IgnoreLogMode.RET)
     @PutMapping("/offline-session")
     @Operation(summary = "下线用户会话")
-    public HttpWrapper<?> offlineUserSession(@Validated @RequestBody OfflineUserSessionRequest request) {
+    public HttpWrapper<?> offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
         systemUserService.offlineUserSession(request);
         return HttpWrapper.ok();
     }

@@ -15,11 +15,11 @@ export const openWindow = (
     url,
     target,
     Object.entries(others)
-    .reduce((preValue: string[], curValue) => {
-      const [key, value] = curValue;
-      return [...preValue, `${key}=${value}`];
-    }, [])
-    .join(',')
+      .reduce((preValue: string[], curValue) => {
+        const [key, value] = curValue;
+        return [...preValue, `${key}=${value}`];
+      }, [])
+      .join(',')
   );
 };
 
@@ -161,10 +161,10 @@ export function replaceNumber(value: string) {
  */
 export const resetObject = (obj: any, ignore: string[] = []) => {
   Object.keys(obj)
-  .filter(s => !ignore.includes(s))
-  .forEach(k => {
-    obj[k] = undefined;
-  });
+    .filter(s => !ignore.includes(s))
+    .forEach(k => {
+      obj[k] = undefined;
+    });
 };
 
 /**
@@ -172,11 +172,11 @@ export const resetObject = (obj: any, ignore: string[] = []) => {
  */
 export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
   return Object.keys(obj)
-  .filter(s => !ignore.includes(s))
-  .reduce(function(acc, curr) {
-    const currVal = obj[curr];
-    return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
-  }, 0);
+    .filter(s => !ignore.includes(s))
+    .reduce(function(acc, curr) {
+      const currVal = obj[curr];
+      return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
+    }, 0);
 };
 
 /**
@@ -211,6 +211,54 @@ export function getUUID() {
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
+}
+
+/**
+ * 清除 xss
+ */
+export function cleanXss(s: string) {
+  return s.replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('\'', '&apos;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('\n', '<br/>')
+    .replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;');
+}
+
+/**
+ * 替换 html 标签
+ */
+export function replaceHtmlTag(message: string) {
+  return cleanXss(message)
+    .replaceAll('&lt;sb 0&gt;', '<span class="span-blue mx0">')
+    .replaceAll('&lt;sb 2&gt;', '<span class="span-blue mx2">')
+    .replaceAll('&lt;sb&gt;', '<span class="span-blue mx4">')
+    .replaceAll('&lt;/sb&gt;', '</span>')
+    .replaceAll('&lt;sr 0&gt;', '<span class="span-red mx0">')
+    .replaceAll('&lt;sr 2&gt;', '<span class="span-red mx2">')
+    .replaceAll('&lt;sr&gt;', '<span class="span-red mx4">')
+    .replaceAll('&lt;/sr&gt;', '</span>')
+    .replaceAll('&lt;b&gt;', '<b>')
+    .replaceAll('&lt;/b&gt;', '</b>');
+}
+
+/**
+ * 清除 html 标签
+ */
+export function clearHtmlTag(message: string) {
+  return cleanXss(message)
+    .replaceAll('&lt;sb 0&gt;', '')
+    .replaceAll('&lt;sb 2&gt;', '')
+    .replaceAll('&lt;sb&gt;', '')
+    .replaceAll('&lt;/sb&gt;', '')
+    .replaceAll('&lt;sr 0&gt;', '')
+    .replaceAll('&lt;sr 2&gt;', '')
+    .replaceAll('&lt;sr&gt;', '')
+    .replaceAll('&lt;/sr&gt;', '')
+    .replaceAll('&lt;b&gt;', '')
+    .replaceAll('&lt;/b&gt;', '')
+    .replaceAll('<br/>', '\n');
 }
 
 export default null;

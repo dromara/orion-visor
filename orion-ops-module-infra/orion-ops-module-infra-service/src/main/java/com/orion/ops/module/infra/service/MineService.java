@@ -1,6 +1,6 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.ops.module.infra.entity.request.user.OfflineUserSessionRequest;
+import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
@@ -59,6 +59,6 @@ public interface MineService {
      *
      * @param request request
      */
-    void offlineCurrentUserSession(OfflineUserSessionRequest request);
+    void offlineCurrentUserSession(UserSessionOfflineRequest request);
 
 }

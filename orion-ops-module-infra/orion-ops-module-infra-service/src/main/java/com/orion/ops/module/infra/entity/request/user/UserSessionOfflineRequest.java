@@ -6,15 +6,15 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 /**
- * 用户下线请求
+ * 用户会话下线请求
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/7/17 12:19
  */
 @Data
-@Schema(name = "OfflineUserSessionRequest", description = "用户下线请求")
-public class OfflineUserSessionRequest {
+@Schema(name = "UserSessionOfflineRequest", description = "用户会话下线请求")
+public class UserSessionOfflineRequest {
 
     @Schema(description = "userId")
     private Long userId;

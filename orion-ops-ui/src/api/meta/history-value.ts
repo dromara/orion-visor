@@ -15,9 +15,9 @@ export interface HistoryValueQueryRequest extends Pagination {
  * 历史归档查询响应
  */
 export interface HistoryValueQueryResponse extends TableData {
-  id?: number;
-  beforeValue?: string;
-  afterValue?: string;
+  id: number;
+  beforeValue: string;
+  afterValue: string;
   createTime: number;
   creator: string;
 }

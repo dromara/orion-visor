@@ -30,6 +30,7 @@ export interface OperatorLogQueryResponse {
   module: string;
   type: string;
   logInfo: string;
+  originLogInfo: string;
   extra: string;
   result: number;
   errorMessage: string;

@@ -100,7 +100,7 @@
           <!-- 查看 -->
           <a-button type="text"
                     size="mini"
-                    @click="emits('openView', record)">
+                    @click="openView(record)">
             查看
           </a-button>
           <!-- 修改 -->
@@ -145,6 +145,7 @@
   import { dictValueTypeKey } from '../types/const';
   import useCopy from '@/hooks/copy';
   import { useDictStore } from '@/store';
+  import { getDictValueList } from '@/api/system/dict-value';
 
   const tableRenderData = ref<DictKeyQueryResponse[]>([]);
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
@@ -190,6 +191,19 @@
   defineExpose({
     addedCallback, updatedCallback
   });
+
+  // 打开查看视图
+  const openView = async (record: DictKeyQueryResponse) => {
+    try {
+      setLoading(true);
+      // 查看
+      const { data } = await getDictValueList([record.keyName]);
+      emits('openView', data[record.keyName], `${record.keyName} - ${record.description}`);
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 刷新缓存
   const doRefreshCache = async () => {

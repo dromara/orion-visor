@@ -99,6 +99,7 @@ public class SystemRoleController {
 
     @GetMapping("/get-menu-id")
     @Operation(summary = "获取角色菜单id")
+    @Parameter(name = "roleId", description = "roleId", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-role:query')")
     public List<Long> getRoleMenuIdList(@RequestParam("roleId") Long roleId) {
         return systemRoleMenuService.getRoleMenuIdList(roleId);

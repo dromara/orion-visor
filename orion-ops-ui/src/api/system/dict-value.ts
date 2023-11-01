@@ -48,14 +48,14 @@ export interface DictValueQueryRequest extends Pagination {
  * 字典配置值查询响应
  */
 export interface DictValueQueryResponse extends TableData {
-  id?: number;
-  keyId?: number;
-  keyName?: string;
-  keyDescription?: string;
-  value?: string;
-  label?: string;
-  extra?: string;
-  sort?: number;
+  id: number;
+  keyId: number;
+  keyName: string;
+  keyDescription: string;
+  value: string;
+  label: string;
+  extra: string;
+  sort: number;
   createTime: number;
   updateTime: number;
   creator: string;

@@ -4,6 +4,7 @@ import com.orion.lang.define.cache.CacheKeyBuilder;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
+import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,9 +23,17 @@ public interface UserCacheKeyDefine {
             .type(LoginUser.class)
             .build();
 
+    CacheKeyDefine USER_LIST = new CacheKeyBuilder()
+            .key("user:list:{}")
+            .desc("用户列表")
+            .type(UserInfoDTO.class)
+            .timeout(1, TimeUnit.DAYS)
+            .build();
+
     CacheKeyDefine LOGIN_FAILED_COUNT = new CacheKeyBuilder()
             .key("user:failed:{}")
             .desc("用户登录失败次数 ${username}")
+            .type(Integer.class)
             .timeout(3, TimeUnit.DAYS)
             .build();
 

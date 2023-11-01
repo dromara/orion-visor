@@ -37,25 +37,25 @@ export interface MenuQueryRequest {
  * 菜单查询响应
  */
 export interface MenuQueryResponse extends TableData {
-  id?: number;
-  parentId?: number;
-  name?: string;
-  permission?: string;
-  type?: number;
-  sort?: number;
-  visible?: number;
-  status?: number;
-  cache?: number;
-  icon?: string;
-  path?: string;
-  component?: string;
-  children?: Array<MenuQueryResponse>;
+  id: number;
+  parentId: number;
+  name: string;
+  permission: string;
+  type: number;
+  sort: number;
+  visible: number;
+  status: number;
+  cache: number;
+  icon: string;
+  path: string;
+  component: string;
+  children: Array<MenuQueryResponse>;
 }
 
 /**
  * 查询菜单列表
  */
-export function getMenuList(request?: MenuQueryRequest) {
+export function getMenuList(request: MenuQueryRequest) {
   return axios.post<MenuQueryResponse[]>('/infra/system-menu/list', request);
 }
 

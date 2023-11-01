@@ -51,3 +51,10 @@ export function isExist(obj: any): boolean {
 export function isWindow(el: any): el is Window {
   return el === window;
 }
+
+/**
+ * 是否为移动端 ua
+ */
+export function isMobile(userAgent: string) {
+  return /Mobi|Android|iPhone/i.test(userAgent);
+}

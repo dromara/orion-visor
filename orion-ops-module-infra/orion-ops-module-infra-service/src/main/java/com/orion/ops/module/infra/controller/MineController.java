@@ -6,7 +6,7 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
-import com.orion.ops.module.infra.entity.request.user.OfflineUserSessionRequest;
+import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
@@ -79,12 +79,11 @@ public class MineController {
     @IgnoreLog(IgnoreLogMode.RET)
     @PutMapping("/offline-session")
     @Operation(summary = "下线当前用户会话")
-    public HttpWrapper<?> offlineCurrentUserSession(@Validated @RequestBody OfflineUserSessionRequest request) {
+    public HttpWrapper<?> offlineCurrentUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
         mineService.offlineCurrentUserSession(request);
         return HttpWrapper.ok();
     }
 
-    // fixme 全部用户接口进行 设置缓存
     // fixme 操作日志
 
 }

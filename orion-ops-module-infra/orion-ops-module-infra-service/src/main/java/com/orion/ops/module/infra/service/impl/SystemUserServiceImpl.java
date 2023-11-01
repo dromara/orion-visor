@@ -6,10 +6,12 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -21,9 +23,11 @@ import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
+import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
+import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
 import com.orion.ops.module.infra.service.FavoriteService;
@@ -31,7 +35,6 @@ import com.orion.ops.module.infra.service.PreferenceService;
 import com.orion.ops.module.infra.service.SystemUserService;
 import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +71,6 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Resource
     private PreferenceService preferenceService;
 
-    @Resource
-    private RedisTemplate<String, String> redisTemplate;
-
     @Override
     public Long createSystemUser(SystemUserCreateRequest request) {
         // 转换
@@ -82,6 +82,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 插入
         int effect = systemUserDAO.insert(record);
         log.info("SystemUserService-createSystemUser effect: {}, record: {}", effect, JSON.toJSONString(record));
+        // 删除用户列表缓存
+        RedisUtils.delete(UserCacheKeyDefine.USER_LIST);
         return record.getId();
     }
 
@@ -104,6 +106,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setNickname(request.getNickname());
         }, id);
+        // 删除用户列表缓存
+        RedisUtils.delete(UserCacheKeyDefine.USER_LIST);
         return effect;
     }
 
@@ -131,12 +135,14 @@ public class SystemUserServiceImpl implements SystemUserService {
         log.info("SystemUserService-updateUserStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 如果之前是锁定则删除登录失败次数缓存
         if (UserStatusEnum.LOCKED.getStatus().equals(record.getStatus())) {
-            redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
+            RedisUtils.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         }
-        // 更新缓存中的status
+        // 更新用户缓存中的 status
         RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setStatus(request.getStatus());
         }, id);
+        // 删除用户列表缓存
+        RedisUtils.delete(UserCacheKeyDefine.USER_LIST);
         return effect;
     }
 
@@ -150,14 +156,28 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    public List<SystemUserVO> getSystemUserByIdList() {
-        // 查询
-        List<SystemUserDO> records = systemUserDAO.selectList(null);
-        if (records.isEmpty()) {
-            return Lists.empty();
+    public List<SystemUserVO> getSystemUserList() {
+        // fixme test
+        // 查询用户列表
+        List<UserInfoDTO> list = RedisMaps.valuesJson(UserCacheKeyDefine.USER_LIST);
+        if (list.isEmpty()) {
+            // 查询数据库
+            list = systemUserDAO.of().list(SystemUserConvert.MAPPER::toUserInfo);
+            // 添加默认值 防止穿透
+            if (list.isEmpty()) {
+                list.add(UserInfoDTO.builder()
+                        .id(Const.NONE_ID)
+                        .build());
+            }
+            // 设置缓存
+            RedisMaps.putAllJson(UserCacheKeyDefine.USER_LIST.getKey(), s -> s.getId().toString(), list);
+            RedisMaps.setExpire(UserCacheKeyDefine.USER_LIST);
         }
-        // 转换
-        return SystemUserConvert.MAPPER.to(records);
+        // 删除默认值
+        return list.stream()
+                .filter(s -> !s.getId().equals(Const.NONE_ID))
+                .map(SystemUserConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -190,21 +210,26 @@ public class SystemUserServiceImpl implements SystemUserService {
         int effect = systemUserDAO.deleteById(id);
         log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
         // 异步删除额外信息
-        SpringHolder.getBean(SystemUserService.class).deleteSystemUserRel(id);
+        SpringHolder.getBean(SystemUserService.class).deleteSystemUserRel(id, record.getUsername());
         return effect;
     }
 
     @Override
     @Async("asyncExecutor")
-    public void deleteSystemUserRel(Long id) {
+    public void deleteSystemUserRel(Long id, String username) {
         log.info("SystemUserService-deleteSystemUserRel id: {}", id);
+        // 删除用户列表缓存
+        // FIXME test
+        RedisMaps.delete(UserCacheKeyDefine.USER_LIST, id);
         // 删除用户缓存 需要扫描的 key 让其自动过期
-        redisTemplate.delete(Lists.of(
+        RedisUtils.delete(
                 // 用户缓存
                 UserCacheKeyDefine.USER_INFO.format(id),
+                // 登录失败次数
+                UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(username),
                 // 用户提示
                 TipsCacheKeyDefine.TIPS.format(id)
-        ));
+        );
         // 删除角色关联
         systemUserRoleDAO.deleteByUserId(id);
         // 删除操作日志
@@ -230,19 +255,19 @@ public class SystemUserServiceImpl implements SystemUserService {
         int effect = systemUserDAO.updateById(update);
         log.info("SystemUserService-resetPassword record: {}, effect: {}", JSON.toJSONString(update), effect);
         // 删除登录失败次数缓存
-        redisTemplate.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
+        RedisUtils.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         // 删除登录缓存
         String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
         Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
         if (!loginKeyList.isEmpty()) {
-            redisTemplate.delete(loginKeyList);
+            RedisUtils.delete(loginKeyList);
         }
         // 删除续签信息
         if (AuthenticationService.allowRefresh) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*");
             Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey);
             if (!refreshKeyList.isEmpty()) {
-                redisTemplate.delete(refreshKeyList);
+                RedisUtils.delete(refreshKeyList);
             }
         }
     }
@@ -259,22 +284,25 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (Lists.isEmpty(tokens)) {
             return Lists.empty();
         }
+        final boolean isCurrentUser = userId.equals(SecurityUtils.getLoginUserId());
         // 返回
         return tokens.stream()
+                .filter(s -> LoginTokenStatusEnum.OK.getStatus().equals(s.getStatus()))
                 .map(LoginTokenDTO::getOrigin)
                 .map(s -> UserSessionVO.builder()
-                        .current(s.getLoginTime().equals(SecurityUtils.getLoginTimestamp()))
+                        .current(isCurrentUser && s.getLoginTime().equals(SecurityUtils.getLoginTimestamp()))
                         .address(s.getAddress())
                         .location(s.getLocation())
                         .userAgent(s.getUserAgent())
                         .loginTime(new Date(s.getLoginTime()))
                         .build())
-                .sorted(Comparator.comparing(UserSessionVO::getLoginTime).reversed())
+                .sorted(Comparator.comparing(UserSessionVO::getCurrent).reversed()
+                        .thenComparing(Comparator.comparing(UserSessionVO::getLoginTime).reversed()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void offlineUserSession(OfflineUserSessionRequest request) {
+    public void offlineUserSession(UserSessionOfflineRequest request) {
         Long userId = Valid.notNull(request.getUserId());
         Long timestamp = request.getTimestamp();
         RedisStrings.delete(

@@ -1,10 +1,11 @@
 import type { CacheState } from './types';
 import { defineStore } from 'pinia';
 
-export type CacheType = 'menus' | 'roles' | 'hostTags' | 'hostKeys' | 'hostIdentities' | 'dictKeys' | string
+export type CacheType = 'users' | 'menus' | 'roles' | 'hostTags' | 'hostKeys' | 'hostIdentities' | 'dictKeys' | string
 
 export default defineStore('cache', {
   state: (): CacheState => ({
+    users: [],
     menus: [],
     roles: [],
     hostTags: [],

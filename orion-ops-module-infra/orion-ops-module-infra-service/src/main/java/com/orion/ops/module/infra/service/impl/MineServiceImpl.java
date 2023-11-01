@@ -6,7 +6,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
-import com.orion.ops.module.infra.entity.request.user.OfflineUserSessionRequest;
+import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
@@ -81,7 +81,7 @@ public class MineServiceImpl implements MineService {
     }
 
     @Override
-    public void offlineCurrentUserSession(OfflineUserSessionRequest request) {
+    public void offlineCurrentUserSession(UserSessionOfflineRequest request) {
         request.setUserId(SecurityUtils.getLoginUserId());
         systemUserService.offlineUserSession(request);
     }

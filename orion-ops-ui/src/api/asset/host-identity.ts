@@ -35,11 +35,11 @@ export interface HostIdentityQueryRequest extends Pagination {
  * 主机身份查询响应
  */
 export interface HostIdentityQueryResponse extends TableData {
-  id?: number;
-  name?: string;
-  username?: string;
-  password?: string;
-  keyId?: number;
+  id: number;
+  name: string;
+  username: string;
+  password: string;
+  keyId: number;
   createTime: number;
   updateTime: number;
   creator: string;

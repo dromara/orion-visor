@@ -9,8 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -92,7 +92,7 @@ public class RedisUtils {
      *
      * @param keys keys
      */
-    public static void delete(List<String> keys) {
+    public static void delete(Collection<String> keys) {
         redisTemplate.delete(keys);
     }
 

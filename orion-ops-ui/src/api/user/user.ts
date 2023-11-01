@@ -42,18 +42,38 @@ export interface UserQueryRequest extends Pagination {
  * 用户查询响应
  */
 export interface UserQueryResponse extends TableData {
-  id?: number;
-  username?: string;
-  nickname?: string;
-  avatar?: string;
-  mobile?: string;
-  email?: string;
-  status?: number;
+  id: number;
+  username: string;
+  nickname: string;
+  avatar: string;
+  mobile: string;
+  email: string;
+  status: number;
   lastLoginTime?: number;
   createTime: number;
   updateTime: number;
   creator: string;
   updater: string;
+}
+
+/**
+ * 用户会话查询响应
+ */
+export interface UserSessionQueryResponse {
+  visible: boolean;
+  current: boolean;
+  address: string;
+  location: string;
+  userAgent: string;
+  loginTime: number;
+}
+
+/**
+ * 用户会话下线请求
+ */
+export interface UserSessionOfflineRequest {
+  userId?: number;
+  timestamp: number;
 }
 
 /**

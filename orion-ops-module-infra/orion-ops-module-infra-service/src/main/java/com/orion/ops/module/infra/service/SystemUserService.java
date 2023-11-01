@@ -53,7 +53,7 @@ public interface SystemUserService {
      *
      * @return rows
      */
-    List<SystemUserVO> getSystemUserByIdList();
+    List<SystemUserVO> getSystemUserList();
 
     /**
      * 分页查询用户
@@ -74,9 +74,10 @@ public interface SystemUserService {
     /**
      * 删除 id 删除用户拓展信息
      *
-     * @param id id
+     * @param id       id
+     * @param username username
      */
-    void deleteSystemUserRel(Long id);
+    void deleteSystemUserRel(Long id, String username);
 
     /**
      * 重置密码
@@ -98,6 +99,6 @@ public interface SystemUserService {
      *
      * @param request request
      */
-    void offlineUserSession(OfflineUserSessionRequest request);
+    void offlineUserSession(UserSessionOfflineRequest request);
 
 }

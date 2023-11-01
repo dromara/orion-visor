@@ -40,10 +40,10 @@ export interface RoleQueryRequest extends Pagination {
  * 角色查询响应
  */
 export interface RoleQueryResponse extends TableData {
-  id?: number;
-  name?: string;
-  code?: string;
-  status?: number;
+  id: number;
+  name: string;
+  code: string;
+  status: number;
   createTime: number;
   updateTime: number;
   creator: string;

@@ -1,5 +1,5 @@
 import type { LoginHistoryQueryResponse } from './operator-log';
-import type { UserQueryResponse, UserUpdateRequest } from './user';
+import type { UserQueryResponse, UserSessionQueryResponse, UserSessionOfflineRequest, UserUpdateRequest } from './user';
 import axios from 'axios';
 
 /**
@@ -38,3 +38,16 @@ export function getCurrentLoginHistory() {
   return axios.get<LoginHistoryQueryResponse[]>('/infra/mine/login-history');
 }
 
+/**
+ * 获取当前用户会话列表
+ */
+export function getCurrentUserSessionList() {
+  return axios.get<UserSessionQueryResponse[]>('/infra/mine/user-session');
+}
+
+/**
+ * 下线当前用户会话
+ */
+export function offlineCurrentUserSession(request: UserSessionOfflineRequest) {
+  return axios.put('/infra/mine/offline-session', request);
+}

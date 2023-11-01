@@ -34,11 +34,11 @@ export interface DictKeyQueryRequest extends Pagination {
  * 字典配置项查询响应
  */
 export interface DictKeyQueryResponse extends TableData {
-  id?: number;
-  keyName?: string;
-  valueType?: string;
-  extraSchema?: string;
-  description?: string;
+  id: number;
+  keyName: string;
+  valueType: string;
+  extraSchema: string;
+  description: string;
 }
 
 /**

@@ -15,10 +15,11 @@
       </a-tab-pane>
       <!-- 登录设备 -->
       <a-tab-pane key="3" title="登录设备">
-        <login-history />
+        <user-session />
       </a-tab-pane>
       <!-- 操作日志 -->
       <a-tab-pane key="4" title="操作日志">
+        <operator-log-list />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -33,6 +34,8 @@
 <script lang="ts" setup>
   import UserInfo from './components/user-info.vue';
   import LoginHistory from './components/login-history.vue';
+  import UserSession from './components/user-session.vue';
+  import OperatorLogList from './components/operator-log-list.vue';
 </script>
 
 <style lang="less" scoped>

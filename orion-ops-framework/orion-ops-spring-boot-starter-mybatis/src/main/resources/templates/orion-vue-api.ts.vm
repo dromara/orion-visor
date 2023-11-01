@@ -53,13 +53,13 @@ export interface ${vue.featureEntity}QueryRequest extends Pagination {
 export interface ${vue.featureEntity}QueryResponse extends TableData {
   #foreach($field in ${table.fields})
   #if("$field.propertyType" == "String")
-  ${field.propertyName}?: string;
+  ${field.propertyName}: string;
   #elseif("$field.propertyType" == "Integer" || "$field.propertyType" == "Long" || "$field.propertyType" == "Date")
-  ${field.propertyName}?: number;
+  ${field.propertyName}: number;
   #elseif("$field.propertyType" == "Boolean")
-  ${field.propertyName}?: boolean;
+  ${field.propertyName}: boolean;
   #else
-  ${field.propertyName}?: any;
+  ${field.propertyName}: any;
   #end
   #end
   createTime: number;

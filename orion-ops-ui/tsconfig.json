@@ -12,7 +12,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["es2020", "dom"],
+    "lib": ["es2021", "dom"],
     "skipLibCheck": true
   },
   "include": ["src/**/*", "src/**/*.vue"],
