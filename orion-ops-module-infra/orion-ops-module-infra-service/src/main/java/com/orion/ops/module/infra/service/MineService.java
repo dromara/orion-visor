@@ -1,9 +1,12 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
+import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
+import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 
@@ -60,5 +63,13 @@ public interface MineService {
      * @param request request
      */
     void offlineCurrentUserSession(UserSessionOfflineRequest request);
+
+    /**
+     * 查询当前用户操作日志
+     *
+     * @param request request
+     * @return rows
+     */
+    DataGrid<OperatorLogVO> getCurrentUserOperatorLog(OperatorLogQueryRequest request);
 
 }

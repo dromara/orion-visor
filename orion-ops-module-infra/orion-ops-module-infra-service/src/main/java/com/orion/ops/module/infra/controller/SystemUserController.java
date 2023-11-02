@@ -138,18 +138,18 @@ public class SystemUserController {
         return systemUserService.deleteSystemUserById(id);
     }
 
-    // fixme 权限配置
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/user-session")
     @Operation(summary = "获取用户会话列表")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:query-session')")
     public List<UserSessionVO> getUserSessionList(@RequestParam("id") Long id) {
         return systemUserService.getUserSessionList(id);
     }
 
-    // fixme 权限配置
-    @IgnoreLog(IgnoreLogMode.RET)
+    @OperatorLog(SystemUserOperatorType.OFFLINE)
     @PutMapping("/offline-session")
     @Operation(summary = "下线用户会话")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:offline-session')")
     public HttpWrapper<?> offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
         systemUserService.offlineUserSession(request);
         return HttpWrapper.ok();

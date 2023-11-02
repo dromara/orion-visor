@@ -52,6 +52,8 @@ public enum ErrorCode implements CodeInfo {
 
     OTHER_DEVICE_LOGIN(702, "该账号于 {} 已在其他设备登录 {}({})"),
 
+    SESSION_OFFLINE(703, "该账号于 {} 已被强制下线 {}({})"),
+
     // -------------------- 自定义 - 通用 --------------------
 
     NETWORK_FLUCTUATION(900, "当前环境网路波动"),

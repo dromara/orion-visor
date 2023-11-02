@@ -1,13 +1,10 @@
 package com.orion.ops.module.infra.framework.service.impl;
 
-import com.orion.lang.utils.time.Dates;
-import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.service.SecurityFrameworkService;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
-import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
 import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
 import com.orion.ops.module.infra.service.AuthenticationService;
@@ -15,7 +12,6 @@ import com.orion.ops.module.infra.service.PermissionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * 安全包 实现类
@@ -63,7 +59,6 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
             this.checkTokenStatus(tokenInfo);
         } catch (Exception e) {
             // token 失效则删除
-            // fixme test
             RedisUtils.delete(UserCacheKeyDefine.LOGIN_TOKEN.format(tokenInfo.getId(), tokenInfo.getOrigin().getLoginTime()));
             throw e;
         }
@@ -82,18 +77,15 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
      * @param loginToken loginToken
      */
     private void checkTokenStatus(LoginTokenDTO loginToken) {
-        Integer tokenStatus = loginToken.getStatus();
+        LoginTokenStatusEnum status = LoginTokenStatusEnum.of(loginToken.getStatus());
         // 正常状态
-        if (LoginTokenStatusEnum.OK.getStatus().equals(tokenStatus)) {
+        if (LoginTokenStatusEnum.OK.equals(status)) {
             return;
         }
         // 其他设备登录
-        if (LoginTokenStatusEnum.OTHER_DEVICE.getStatus().equals(tokenStatus)) {
-            LoginTokenIdentityDTO override = loginToken.getOverride();
-            throw ErrorCode.OTHER_DEVICE_LOGIN.exception(
-                    Dates.format(new Date(override.getLoginTime()), Dates.MD_HM),
-                    override.getAddress(),
-                    override.getLocation());
+        RuntimeException ex = status.toException(loginToken);
+        if (ex != null) {
+            throw ex;
         }
     }
 

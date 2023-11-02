@@ -1,5 +1,6 @@
 package com.orion.ops.framework.biz.operator.log.core.model;
 
+import com.orion.ops.framework.common.entity.RequestIdentity;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
  * @since 2023/10/9 18:44
  */
 @Data
-public class OperatorLogModel {
+public class OperatorLogModel implements RequestIdentity {
 
     /**
      * userId

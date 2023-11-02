@@ -28,6 +28,8 @@ public class SystemUserOperatorType extends InitializingOperatorTypes {
 
     public static final String DELETE = "system-user:delete";
 
+    public static final String OFFLINE = "system-user:offline";
+
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
@@ -37,6 +39,7 @@ public class SystemUserOperatorType extends InitializingOperatorTypes {
                 new OperatorType(M, GRANT_ROLE, "分配用户角色 <sb>${username}</sb>"),
                 new OperatorType(H, RESET_PASSWORD, "重置用户密码 <sb>${username}</sb>"),
                 new OperatorType(H, DELETE, "删除用户 <sb>${username}</sb>"),
+                new OperatorType(M, OFFLINE, "下线用户会话 <sb>${username}</sb>"),
         };
     }
 

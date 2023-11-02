@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.entity.dto;
 
+import com.orion.ops.framework.common.entity.RequestIdentity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginTokenIdentityDTO {
+public class LoginTokenIdentityDTO implements RequestIdentity {
 
     /**
      * 原始登录时间

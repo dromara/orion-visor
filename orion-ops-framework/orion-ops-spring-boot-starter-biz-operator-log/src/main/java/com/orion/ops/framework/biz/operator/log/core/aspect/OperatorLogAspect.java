@@ -20,8 +20,7 @@ import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.security.SecurityHolder;
-import com.orion.ops.framework.common.utils.IpUtils;
-import com.orion.web.servlet.web.Servlets;
+import com.orion.ops.framework.common.utils.Requests;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -31,8 +30,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -251,15 +248,11 @@ public class OperatorLogAspect {
      */
     private void fillRequest(OperatorLogModel model) {
         model.setTraceId(TraceIdHolder.get());
-        Optional.ofNullable(RequestContextHolder.getRequestAttributes())
-                .map(s -> (ServletRequestAttributes) s)
-                .map(ServletRequestAttributes::getRequest)
-                .ifPresent(request -> {
-                    String address = Servlets.getRemoteAddr(request);
-                    model.setAddress(address);
-                    model.setLocation(IpUtils.getLocation(address));
-                    model.setUserAgent(Strings.retain(Servlets.getUserAgent(request), operatorLogConfig.getUserAgentLength()));
-                });
+        // 填充请求信息
+        Requests.fillIdentity(model);
+        Optional.ofNullable(model.getUserAgent())
+                .map(s -> Strings.retain(s, operatorLogConfig.getUserAgentLength()))
+                .ifPresent(model::setUserAgent);
     }
 
     /**

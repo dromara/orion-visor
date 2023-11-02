@@ -1,16 +1,19 @@
 package com.orion.ops.module.infra.service.impl;
 
+import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
-import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
+import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
 import com.orion.ops.module.infra.entity.request.user.UserResetPasswordRequest;
+import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
+import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 import com.orion.ops.module.infra.service.MineService;
@@ -84,6 +87,12 @@ public class MineServiceImpl implements MineService {
     public void offlineCurrentUserSession(UserSessionOfflineRequest request) {
         request.setUserId(SecurityUtils.getLoginUserId());
         systemUserService.offlineUserSession(request);
+    }
+
+    @Override
+    public DataGrid<OperatorLogVO> getCurrentUserOperatorLog(OperatorLogQueryRequest request) {
+        request.setUserId(SecurityUtils.getLoginUserId());
+        return operatorLogService.getOperatorLogPage(request);
     }
 
 }

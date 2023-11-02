@@ -372,7 +372,7 @@ public class DictValueServiceImpl implements DictValueService {
         return dictValueDAO.wrapper()
                 .eq(DictValueDO::getKeyId, request.getKeyId())
                 .like(DictValueDO::getKeyName, request.getKeyName())
-                .eq(DictValueDO::getValue, request.getValue())
+                .like(DictValueDO::getValue, request.getValue())
                 .like(DictValueDO::getLabel, request.getLabel())
                 .orderByDesc(DictValueDO::getId);
     }

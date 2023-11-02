@@ -10,6 +10,7 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.utils.Requests;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
@@ -23,6 +24,7 @@ import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
+import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
@@ -157,7 +159,6 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public List<SystemUserVO> getSystemUserList() {
-        // fixme test
         // 查询用户列表
         List<UserInfoDTO> list = RedisMaps.valuesJson(UserCacheKeyDefine.USER_LIST);
         if (list.isEmpty()) {
@@ -219,7 +220,6 @@ public class SystemUserServiceImpl implements SystemUserService {
     public void deleteSystemUserRel(Long id, String username) {
         log.info("SystemUserService-deleteSystemUserRel id: {}", id);
         // 删除用户列表缓存
-        // FIXME test
         RedisMaps.delete(UserCacheKeyDefine.USER_LIST, id);
         // 删除用户缓存 需要扫描的 key 让其自动过期
         RedisUtils.delete(
@@ -305,10 +305,26 @@ public class SystemUserServiceImpl implements SystemUserService {
     public void offlineUserSession(UserSessionOfflineRequest request) {
         Long userId = Valid.notNull(request.getUserId());
         Long timestamp = request.getTimestamp();
-        RedisStrings.delete(
-                UserCacheKeyDefine.LOGIN_TOKEN.format(userId, timestamp),
-                UserCacheKeyDefine.LOGIN_REFRESH.format(userId, request.getTimestamp())
-        );
+        // 查询用户
+        SystemUserDO user = systemUserDAO.selectById(userId);
+        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
+        // 删除刷新缓存
+        RedisStrings.delete(UserCacheKeyDefine.LOGIN_REFRESH.format(userId, request.getTimestamp()));
+        // 查询并且覆盖 token
+        String tokenKey = UserCacheKeyDefine.LOGIN_TOKEN.format(userId, timestamp);
+        LoginTokenDTO tokenInfo = RedisStrings.getJson(tokenKey, UserCacheKeyDefine.LOGIN_TOKEN);
+        if (tokenInfo != null) {
+            tokenInfo.setStatus(LoginTokenStatusEnum.SESSION_OFFLINE.getStatus());
+            LoginTokenIdentityDTO override = new LoginTokenIdentityDTO();
+            override.setLoginTime(System.currentTimeMillis());
+            // 设置请求信息
+            Requests.fillIdentity(override);
+            tokenInfo.setOverride(override);
+            // 更新 token
+            RedisStrings.setJson(tokenKey, UserCacheKeyDefine.LOGIN_TOKEN, tokenInfo);
+        }
     }
 
     /**

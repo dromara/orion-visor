@@ -47,10 +47,10 @@ public class OperatorLogController {
         return operatorLogService.getOperatorLogPage(request);
     }
 
-    // fixme 权限配置
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/login-history")
     @Operation(summary = "查询用户登录日志")
+    @PreAuthorize("@ss.hasPermission('infra:operator-log:query')")
     public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username) {
         return operatorLogService.getLoginHistory(username);
     }

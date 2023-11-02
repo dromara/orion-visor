@@ -1,15 +1,19 @@
 package com.orion.ops.module.infra.controller;
 
+import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.AuthenticationOperatorType;
-import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
+import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
+import com.orion.ops.module.infra.entity.request.user.UserSessionOfflineRequest;
 import com.orion.ops.module.infra.entity.request.user.UserUpdatePasswordRequest;
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
+import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 import com.orion.ops.module.infra.service.MineService;
@@ -76,7 +80,6 @@ public class MineController {
         return mineService.getCurrentUserSessionList();
     }
 
-    @IgnoreLog(IgnoreLogMode.RET)
     @PutMapping("/offline-session")
     @Operation(summary = "下线当前用户会话")
     public HttpWrapper<?> offlineCurrentUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
@@ -84,6 +87,11 @@ public class MineController {
         return HttpWrapper.ok();
     }
 
-    // fixme 操作日志
+    @IgnoreLog(IgnoreLogMode.RET)
+    @PostMapping("/query-operator-log")
+    @Operation(summary = "查询当前用户操作日志")
+    public DataGrid<OperatorLogVO> getCurrentUserOperatorLog(@Validated(Page.class) @RequestBody OperatorLogQueryRequest request) {
+        return mineService.getCurrentUserOperatorLog(request);
+    }
 
 }
