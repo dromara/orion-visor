@@ -43,35 +43,46 @@
 
 <script lang="ts">
   export default {
-    name: 'user-info'
+    name: 'user-base-info'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { UserUpdateRequest } from '@/api/user/user';
+  import type { UserUpdateRequest, UserQueryResponse } from '@/api/user/user';
+  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { computed, ref, onMounted } from 'vue';
+  import { ref, onMounted } from 'vue';
   import formRules from '../../user/types/form.rules';
   import { useUserStore } from '@/store';
   import { getCurrentUser, updateCurrentUser } from '@/api/user/mine';
   import { pick } from 'lodash';
   import { Message } from '@arco-design/web-vue';
+  import { updateUser } from '@/api/user/user';
+
+  const props = defineProps({
+    user: Object as PropType<UserQueryResponse>,
+  });
 
   const userStore = useUserStore();
   const { loading, setLoading } = useLoading();
 
+  const nickname = ref('');
   const formRef = ref();
   const formModel = ref<UserUpdateRequest>({});
 
-  // 用户名
-  const nickname = computed(() => userStore.nickname?.substring(0, 1));
-
-  // 保存
+  // 修改用户信息
   const save = async () => {
     setLoading(true);
     try {
-      await updateCurrentUser(formModel.value);
-      userStore.nickname = formModel.value.nickname;
+      if (props.user) {
+        // 更新用户
+        await updateUser(formModel.value);
+      } else {
+        // 更新自己
+        await updateCurrentUser(formModel.value);
+        userStore.nickname = formModel.value.nickname;
+        nickname.value = formModel.value.nickname?.substring(0, 1) as string;
+      }
       Message.success('保存成功');
     } catch (e) {
     } finally {
@@ -83,8 +94,17 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      const { data } = await getCurrentUser();
-      formModel.value = pick(data, 'username', 'nickname', 'mobile', 'email');
+      let u: UserQueryResponse;
+      if (props.user) {
+        // 从参数中获取
+        u = props.user;
+      } else {
+        // 查询个人信息
+        const { data } = await getCurrentUser();
+        u = data;
+      }
+      formModel.value = pick(u, 'id', 'username', 'nickname', 'mobile', 'email');
+      nickname.value = u.nickname?.substring(0, 1);
     } catch (e) {
     } finally {
       setLoading(false);

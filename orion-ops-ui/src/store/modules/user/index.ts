@@ -5,7 +5,7 @@ import { getUserPermission, login as userLogin, logout as userLogout } from '@/a
 import { clearToken, setToken } from '@/utils/auth';
 import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
-import { useAppStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
+import { useAppStore, useCacheStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
 
 export default defineStore('user', {
   state: (): UserState => ({
@@ -89,6 +89,9 @@ export default defineStore('user', {
       // 清除 tabs
       const tabBarStore = useTabBarStore();
       tabBarStore.resetTabList();
+      // 清除缓存
+      const cacheStore = useCacheStore();
+      cacheStore.clear();
     },
   },
 });

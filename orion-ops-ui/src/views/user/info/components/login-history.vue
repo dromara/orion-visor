@@ -1,7 +1,15 @@
 <template>
   <a-spin :loading="loading" class="main-container">
-    <span class="extra-message">只展示最近登录的 30 条历史记录</span>
-    <a-timeline>
+    <span class="extra-message">
+      <template v-if="user">
+        只展示用户 <span class="user-info">{{ user.nickname }}({{ user.username }})</span> 最近登录的 30 条历史记录
+      </template>
+      <template v-else>
+        只展示最近登录的 30 条历史记录
+      </template>
+    </span>
+    <!-- 登录历史时间线 -->
+    <a-timeline v-if="list.length">
       <a-timeline-item v-for="item in list"
                        :key="item.id">
         <!-- 图标 -->
@@ -33,6 +41,15 @@
         </div>
       </a-timeline-item>
     </a-timeline>
+    <!-- 加载中 -->
+    <a-space direction="vertical"
+             v-else-if="loading"
+             :style="{width: '70%'}"
+             size="large">
+      <a-skeleton-line :rows="4" />
+    </a-space>
+    <!-- 空 -->
+    <a-empty v-else />
   </a-spin>
 </template>
 
@@ -43,13 +60,20 @@
 </script>
 
 <script lang="ts" setup>
+  import type { UserQueryResponse } from '@/api/user/user';
   import type { LoginHistoryQueryResponse } from '@/api/user/operator-log';
+  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { ref, onMounted } from 'vue';
   import { ResultStatus } from '../types/const';
   import { getCurrentLoginHistory } from '@/api/user/mine';
+  import { getLoginHistory } from '@/api/user/operator-log';
   import { dateFormat } from '@/utils';
   import { isMobile } from '@/utils/is';
+
+  const props = defineProps({
+    user: Object as PropType<UserQueryResponse>,
+  });
 
   const list = ref<LoginHistoryQueryResponse[]>([]);
 
@@ -59,8 +83,15 @@
   onMounted(async () => {
     try {
       setLoading(true);
-      const { data } = await getCurrentLoginHistory();
-      list.value = data;
+      if (props.user) {
+        // 查询其他用户
+        const { data } = await getLoginHistory(props.user.username);
+        list.value = data;
+      } else {
+        // 查询当前用户
+        const { data } = await getCurrentLoginHistory();
+        list.value = data;
+      }
     } catch (e) {
     } finally {
       setLoading(false);
@@ -77,11 +108,16 @@
   }
 
   .extra-message {
-    margin-bottom: 38px;
+    margin-bottom: 42px;
     margin-left: -24px;
     display: block;
     color: var(--color-text-3);
     user-select: none;
+
+    .user-info {
+      color: rgb(var(--primary-6));
+      font-weight: 600;
+    }
   }
 
   .icon-container {

@@ -64,7 +64,6 @@
   onUnmounted(() => {
     cacheStore.reset('users');
   });
-
 </script>
 
 <style lang="less" scoped>

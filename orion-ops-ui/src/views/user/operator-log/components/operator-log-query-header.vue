@@ -17,6 +17,8 @@
     <a-form-item field="module" label="操作模块" label-col-flex="50px">
       <a-select v-model="formModel.module"
                 :options="toOptions(operatorLogModuleKey)"
+                :allow-search="true"
+                :filter-option="labelFilter"
                 placeholder="请选择操作模块"
                 @change="selectedModule"
                 allow-clear />
@@ -25,6 +27,8 @@
     <a-form-item field="type" label="操作类型" label-col-flex="50px">
       <a-select v-model="formModel.type"
                 :options="typeOptions"
+                :allow-search="true"
+                :filter-option="labelFilter"
                 placeholder="请选择操作类型"
                 allow-clear />
     </a-form-item>
@@ -67,6 +71,7 @@
   import { useDictStore } from '@/store';
   import UserSelector from '@/components/user/role/user-selector.vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
+  import { labelFilter } from '@/types/form';
 
   const emits = defineEmits(['submit']);
   const props = defineProps({
@@ -82,7 +87,6 @@
   const timeRange = ref<string[]>([]);
   const typeOptions = ref<SelectOptionData[]>(toOptions(operatorLogTypeKey));
   const formModel = reactive<OperatorLogQueryRequest>({
-    userId: undefined,
     module: undefined,
     type: undefined,
     riskLevel: undefined,

@@ -5,7 +5,7 @@
             :multiple="multiple"
             :loading="loading"
             :disabled="loading"
-            :filter-option="filterOption"
+            :filter-option="labelFilter"
             placeholder="请选择角色" />
 </template>
 
@@ -21,6 +21,7 @@
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
   import { RoleStatus } from '@/views/user/role/types/const';
+  import { labelFilter } from '@/types/form';
 
   const props = defineProps({
     modelValue: [Number, Array] as PropType<number | Array<number>>,
@@ -51,12 +52,8 @@
     });
   };
 
-  // 搜索
-  const filterOption = (searchValue: string, option: { label: string; }) => {
-    return option.label.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
-  };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>

@@ -63,13 +63,23 @@
   import { getOperatorLogPage } from '@/api/user/operator-log';
   import { replaceHtmlTag, clearHtmlTag, dateFormat } from '@/utils';
   import { pick } from 'lodash';
-
+  import { getCurrentUserOperatorLog } from '@/api/user/mine';
 
   const emits = defineEmits(['viewDetail']);
   const props = defineProps({
     visibleUser: {
       type: Boolean,
       default: true
+    },
+    current: {
+      type: Boolean,
+      default: false
+    },
+    baseParams: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   });
 
@@ -101,11 +111,20 @@
   const doFetchTableData = async (request: OperatorLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getOperatorLogPage(request);
-      tableRenderData.value = data.rows.map(s => {
+      let rows;
+      if (props.current) {
+        // 查询当前用户
+        const { data } = await getCurrentUserOperatorLog(request);
+        rows = data;
+      } else {
+        // 查询所有
+        const { data } = await getOperatorLogPage({ ...request, ...props.baseParams });
+        rows = data;
+      }
+      tableRenderData.value = rows.rows.map(s => {
         return { ...s, originLogInfo: clearHtmlTag(s.logInfo) };
       });
-      pagination.total = data.total;
+      pagination.total = rows.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
     } catch (e) {

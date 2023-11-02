@@ -19,6 +19,7 @@ export interface UserCreateRequest {
  */
 export interface UserUpdateRequest extends UserCreateRequest {
   id?: number;
+  status?: number;
   roleIdList?: Array<number>;
   password?: string;
 }
@@ -146,3 +147,16 @@ export function deleteUser(id: number) {
   return axios.delete('/infra/system-user/delete', { params: { id } });
 }
 
+/**
+ * 获取用户会话列表
+ */
+export function getUserSessionList(id: number) {
+  return axios.get<Array<UserSessionQueryResponse>>('/infra/system-user/user-session', { params: { id } });
+}
+
+/**
+ * 下线用户会话
+ */
+export function offlineUserSession(request: UserSessionOfflineRequest) {
+  return axios.put('/infra/system-user/offline-session', request);
+}

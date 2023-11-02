@@ -27,6 +27,11 @@ export default defineStore('cache', {
       for (let name of names) {
         this[name] = [];
       }
+    },
+
+    // 清除全部
+    clear() {
+      this.$reset();
     }
   },
 });

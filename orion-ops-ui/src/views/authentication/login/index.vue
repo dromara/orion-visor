@@ -1,14 +1,14 @@
 <template>
   <div class="container">
+    <!-- 顶部 logo -->
     <div class="logo">
-      <img
-        alt="logo"
-        src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-      />
+      <img alt="logo"
+           src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
       <div class="logo-text">Orion Ops Pro</div>
     </div>
     <!-- 左侧 banner -->
     <LoginBanner />
+    <!-- 主体部分 -->
     <div class="content">
       <div class="content-inner">
         <!-- 登录表单 -->
@@ -26,6 +26,19 @@
   import Footer from '@/components/app/footer/index.vue';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
+  import { Notification } from '@arco-design/web-vue';
+  import { reLoginTipsKey } from '@/types/symbol';
+
+  // 登录提示
+  const tips = window.sessionStorage.getItem(reLoginTipsKey);
+  window.sessionStorage.removeItem(reLoginTipsKey);
+  if (tips) {
+    Notification.error({
+      closable: true,
+      content: tips,
+      duration: 5 * 1000,
+    });
+  }
 </script>
 
 <style lang="less" scoped>

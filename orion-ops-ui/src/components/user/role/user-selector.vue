@@ -5,7 +5,7 @@
             :multiple="multiple"
             :loading="loading"
             :disabled="loading"
-            :filter-option="filterOption"
+            :filter-option="labelFilter"
             placeholder="请选择用户" />
 </template>
 
@@ -20,7 +20,7 @@
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
-  import { RoleStatus } from '@/views/user/role/types/const';
+  import { labelFilter } from '@/types/form';
 
   const props = defineProps({
     modelValue: [Number, Array] as PropType<number | Array<number>>,
@@ -38,7 +38,6 @@
       emits('update:modelValue', e);
     }
   });
-
   // 选项数据
   const cacheStore = useCacheStore();
   const optionData = (): SelectOptionData[] => {
@@ -49,13 +48,8 @@
       };
     });
   };
-
-  // 搜索
-  const filterOption = (searchValue: string, option: { label: string; }) => {
-    return option.label.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
-  };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>

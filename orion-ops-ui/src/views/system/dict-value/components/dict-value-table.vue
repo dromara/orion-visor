@@ -10,7 +10,7 @@
       <a-form-item field="keyId" label="配置项" label-col-flex="50px">
         <dict-key-selector v-model="formModel.keyId"
                            @change="changeKey"
-                           allow-create />
+                           allow-clear />
       </a-form-item>
       <!-- 配置值 -->
       <a-form-item field="value" label="配置值" label-col-flex="50px">

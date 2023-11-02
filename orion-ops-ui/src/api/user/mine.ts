@@ -1,5 +1,6 @@
-import type { LoginHistoryQueryResponse } from './operator-log';
-import type { UserQueryResponse, UserSessionQueryResponse, UserSessionOfflineRequest, UserUpdateRequest } from './user';
+import type { DataGrid } from '@/types/global';
+import type { LoginHistoryQueryResponse, OperatorLogQueryRequest, OperatorLogQueryResponse } from './operator-log';
+import type { UserQueryResponse, UserSessionOfflineRequest, UserSessionQueryResponse, UserUpdateRequest } from './user';
 import axios from 'axios';
 
 /**
@@ -50,4 +51,11 @@ export function getCurrentUserSessionList() {
  */
 export function offlineCurrentUserSession(request: UserSessionOfflineRequest) {
   return axios.put('/infra/mine/offline-session', request);
+}
+
+/**
+ * 查询当前用户操作日志
+ */
+export function getCurrentUserOperatorLog(request: OperatorLogQueryRequest) {
+  return axios.post<DataGrid<OperatorLogQueryResponse>>('/infra/mine/query-operator-log', request);
 }

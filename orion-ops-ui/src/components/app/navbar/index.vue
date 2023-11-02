@@ -255,8 +255,8 @@
   };
 
   // 退出登录
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
   };
 
   // 关闭偏好提示

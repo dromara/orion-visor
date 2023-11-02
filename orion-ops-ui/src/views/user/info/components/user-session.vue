@@ -1,7 +1,15 @@
 <template>
   <a-spin :loading="loading" class="main-container">
-    <span class="extra-message">所有登录设备的会话列表</span>
-    <a-timeline>
+    <span class="extra-message">
+      <template v-if="user">
+        用户 <span class="user-info">{{ user.nickname }}({{ user.username }})</span> 所有登录设备的会话列表
+      </template>
+      <template v-else>
+        所有登录设备的会话列表
+      </template>
+    </span>
+    <!-- 登录会话时间线 -->
+    <a-timeline v-if="list.length">
       <template v-for="item in list"
                 :key="item.loginTime">
         <a-timeline-item v-if="item.visible">
@@ -19,7 +27,7 @@
               <span>{{ item.address }}</span>
               <span>{{ item.location }}</span>
               <a-tag v-if="item.current" color="arcoblue">当前会话</a-tag>
-              <a-button v-else
+              <a-button v-else-if="hasPermission('infra:system-user:offline-session')"
                         style="font-weight: 600;"
                         type="text"
                         size="mini"
@@ -40,6 +48,15 @@
         </a-timeline-item>
       </template>
     </a-timeline>
+    <!-- 加载中 -->
+    <a-space direction="vertical"
+             v-else-if="loading"
+             :style="{width: '70%'}"
+             size="large">
+      <a-skeleton-line :rows="4" />
+    </a-space>
+    <!-- 空 -->
+    <a-empty v-else />
   </a-spin>
 </template>
 
@@ -50,17 +67,26 @@
 </script>
 
 <script lang="ts" setup>
+  import type { UserQueryResponse } from '@/api/user/user';
   import type { UserSessionQueryResponse } from '@/api/user/user';
+  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { ref, onMounted } from 'vue';
   import { getCurrentUserSessionList, offlineCurrentUserSession } from '@/api/user/mine';
   import { dateFormat } from '@/utils';
   import { isMobile } from '@/utils/is';
   import { Message } from '@arco-design/web-vue';
+  import usePermission from '@/hooks/permission';
+  import { getUserSessionList } from '@/api/user/user';
+
+  const props = defineProps({
+    user: Object as PropType<UserQueryResponse>,
+  });
 
   const list = ref<UserSessionQueryResponse[]>([]);
 
   const { loading, setLoading } = useLoading();
+  const { hasPermission } = usePermission();
 
   // 下线
   const offline = async (item: UserSessionQueryResponse) => {
@@ -81,9 +107,18 @@
   onMounted(async () => {
     try {
       setLoading(true);
-      const { data } = await getCurrentUserSessionList();
-      data.forEach(s => s.visible = true);
-      list.value = data;
+      let sessions: UserSessionQueryResponse[];
+      if (props.user) {
+        // 查询其他用户
+        const { data } = await getUserSessionList(props.user.id);
+        sessions = data;
+      } else {
+        // 查询当前用户
+        const { data } = await getCurrentUserSessionList();
+        sessions = data;
+      }
+      sessions.forEach(s => s.visible = true);
+      list.value = sessions;
     } catch (e) {
     } finally {
       setLoading(false);
@@ -100,11 +135,16 @@
   }
 
   .extra-message {
-    margin-bottom: 38px;
+    margin-bottom: 42px;
     margin-left: -24px;
     display: block;
     color: var(--color-text-3);
     user-select: none;
+
+    .user-info {
+      color: rgb(var(--primary-6));
+      font-weight: 600;
+    }
   }
 
   .icon-container {

@@ -110,6 +110,12 @@
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
+          <!-- 详情 -->
+          <a-button type="text"
+                    size="mini"
+                    @click="openUserDetail(record.id)">
+            详情
+          </a-button>
           <!-- 重置密码 -->
           <a-button type="text"
                     size="mini"
@@ -159,6 +165,7 @@
   import { userStatusKey, UserStatus } from '../types/const';
   import { usePagination } from '@/types/table';
   import { useDictStore, useUserStore } from '@/store';
+  import { useRouter } from 'vue-router';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 
@@ -180,6 +187,7 @@
     lastLoginTime: undefined,
   });
 
+  const router = useRouter();
   const userStore = useUserStore();
 
   // 删除当前行
@@ -217,6 +225,14 @@
     } finally {
       setLoading(false);
     }
+  };
+
+  // 打开详情
+  const openUserDetail = (id: number) => {
+    router.push({
+      name: 'userInfo',
+      query: { id }
+    });
   };
 
   // 添加后回调

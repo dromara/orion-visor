@@ -4,7 +4,7 @@
             :allow-search="true"
             :loading="loading"
             :disabled="loading"
-            :filter-option="filterOption"
+            :filter-option="labelFilter"
             :allow-create="allowCreate"
             placeholder="请选择配置项" />
 </template>
@@ -19,6 +19,7 @@
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed } from 'vue';
   import { useCacheStore } from '@/store';
+  import { labelFilter } from '@/types/form';
 
   const props = defineProps({
     modelValue: Number,
@@ -65,12 +66,8 @@
     });
   };
 
-  // 搜索
-  const filterOption = (searchValue: string, option: { label: string; }) => {
-    return option.label.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
-  };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>
