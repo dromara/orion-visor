@@ -30,20 +30,34 @@ public class CodeGenerators {
         String module = "infra";
         // 生成的表
         Table[] tables = {
-                Template.create("dict_key", "字典配置项", "dict")
+                // Template.create("dict_key", "字典配置项", "dict")
+                //         .enableProviderApi()
+                //         .disableUnitTest()
+                //         .cache("dict:keys", "字典配置项")
+                //         .expire(1, TimeUnit.DAYS)
+                //         .vue("system", "dict-key")
+                //         .enableRowSelection()
+                //         .enableCardView()
+                //         .enableDrawerForm()
+                //         .dict("dictValueType", "value_type")
+                //         .fields("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
+                //         .labels("字符串", "整数", "小数", "布尔值", "颜色")
+                //         .color("blue", "gray", "red", "green", "white")
+                //         .valueUseFields()
+                //         .build(),
+                Template.create("data_group", "数据分组", "data")
                         .enableProviderApi()
                         .disableUnitTest()
-                        .cache("dict:keys", "字典配置项")
+                        .cache("data:group:{}", "数据分组 ${type}")
                         .expire(1, TimeUnit.DAYS)
-                        .vue("system", "dict-key")
-                        .enableRowSelection()
-                        .enableCardView()
-                        .enableDrawerForm()
-                        .dict("dictValueType", "value_type")
-                        .fields("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
-                        .labels("字符串", "整数", "小数", "布尔值", "颜色")
-                        .color("blue", "gray", "red", "green", "white")
-                        .valueUseFields()
+                        .vue("system", "data-group")
+                        .build(),
+                Template.create("data_group_rel", "数据分组关联", "data")
+                        .enableProviderApi()
+                        .disableUnitTest()
+                        .cache("data:group-rel:{}", "数据分组关联 ${groupId}")
+                        .expire(1, TimeUnit.DAYS)
+                        .vue("system", "data-group-rel")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

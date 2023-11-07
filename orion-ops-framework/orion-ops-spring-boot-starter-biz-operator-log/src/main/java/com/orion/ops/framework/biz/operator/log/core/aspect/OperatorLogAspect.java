@@ -139,19 +139,19 @@ public class OperatorLogAspect {
                         break;
                     }
                     OperatorLogs.add(
-                            orElse(((RequestParam) annotation).value(),
+                            Strings.ifBlank(((RequestParam) annotation).value(),
                                     ((RequestParam) annotation).name()),
                             args[i]);
                     break;
                 } else if (annotation instanceof RequestHeader) {
                     OperatorLogs.add(
-                            orElse(((RequestHeader) annotation).value(),
+                            Strings.ifBlank(((RequestHeader) annotation).value(),
                                     ((RequestHeader) annotation).name()),
                             args[i]);
                     break;
                 } else if (annotation instanceof PathVariable) {
                     OperatorLogs.add(
-                            orElse(((PathVariable) annotation).value(),
+                            Strings.ifBlank(((PathVariable) annotation).value(),
                                     ((PathVariable) annotation).name()),
                             args[i]);
                     break;
@@ -314,17 +314,6 @@ public class OperatorLogAspect {
      */
     private void asyncSaveLog(OperatorLogModel model) {
         LOG_SAVER.submit(() -> operatorLogFrameworkService.insert(model));
-    }
-
-    /**
-     * 获取可用值
-     *
-     * @param value value
-     * @param name  name
-     * @return available
-     */
-    private String orElse(String value, String name) {
-        return Strings.isBlank(value) ? name : value;
     }
 
 }

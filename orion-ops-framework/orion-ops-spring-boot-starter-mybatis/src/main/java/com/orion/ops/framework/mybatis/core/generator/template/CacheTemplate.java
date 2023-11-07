@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 2023/9/26 1:14
  */
-public class CacheTemplate extends ServerTemplate {
+public class CacheTemplate extends Template {
 
     public CacheTemplate(Table table) {
         this(table, table.cacheKey, table.cacheDesc);
