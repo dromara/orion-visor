@@ -1,18 +1,13 @@
 package com.orion.ops.module.infra.entity.request.data;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
-import java.math.*;
 
 /**
  * 数据分组关联 创建请求对象
@@ -36,12 +31,6 @@ public class DataGroupRelCreateRequest implements Serializable {
     @Schema(description = "引用id")
     private Long relId;
 
-    @NotBlank
-    @Size(max = 16)
-    @Schema(description = "组类型")
-    private String type;
-
-    @NotNull
     @Schema(description = "排序")
     private Integer sort;
 

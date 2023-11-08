@@ -5,6 +5,8 @@ import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.DataGroupRelDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 数据分组关联 Mapper 接口
  *
@@ -16,18 +18,15 @@ import org.apache.ibatis.annotations.Mapper;
 public interface DataGroupRelDAO extends IMapper<DataGroupRelDO> {
 
     /**
-     * 获取查询条件
+     * 通过 groupId 删除
      *
-     * @param entity entity
-     * @return 查询条件
+     * @param idList idList
+     * @return effect
      */
-    default LambdaQueryWrapper<DataGroupRelDO> queryCondition(DataGroupRelDO entity) {
-        return this.wrapper()
-                .eq(DataGroupRelDO::getId, entity.getId())
-                .eq(DataGroupRelDO::getGroupId, entity.getGroupId())
-                .eq(DataGroupRelDO::getRelId, entity.getRelId())
-                .eq(DataGroupRelDO::getType, entity.getType())
-                .eq(DataGroupRelDO::getSort, entity.getSort());
+    default int deleteByGroupId(List<Long> idList) {
+        LambdaQueryWrapper<DataGroupRelDO> wrapper = this.lambda()
+                .in(DataGroupRelDO::getGroupId, idList);
+        return this.delete(wrapper);
     }
 
 }

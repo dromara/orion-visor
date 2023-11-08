@@ -5,6 +5,8 @@ import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.DataGroupDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 数据分组 Mapper 接口
  *
@@ -16,18 +18,15 @@ import org.apache.ibatis.annotations.Mapper;
 public interface DataGroupDAO extends IMapper<DataGroupDO> {
 
     /**
-     * 获取查询条件
+     * 通过 parentId 查询
      *
-     * @param entity entity
-     * @return 查询条件
+     * @param parentIdList parentIdList
+     * @return rows
      */
-    default LambdaQueryWrapper<DataGroupDO> queryCondition(DataGroupDO entity) {
-        return this.wrapper()
-                .eq(DataGroupDO::getId, entity.getId())
-                .eq(DataGroupDO::getParentId, entity.getParentId())
-                .eq(DataGroupDO::getName, entity.getName())
-                .eq(DataGroupDO::getType, entity.getType())
-                .eq(DataGroupDO::getSort, entity.getSort());
+    default List<DataGroupDO> selectByParentId(List<Long> parentIdList) {
+        LambdaQueryWrapper<DataGroupDO> wrapper = this.lambda()
+                .in(DataGroupDO::getParentId, parentIdList);
+        return this.selectList(wrapper);
     }
 
 }

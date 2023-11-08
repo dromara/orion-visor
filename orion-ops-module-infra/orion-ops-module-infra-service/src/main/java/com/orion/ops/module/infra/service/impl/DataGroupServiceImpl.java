@@ -2,32 +2,25 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.framework.common.utils.FileNames;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.request.data.*;
-import com.orion.ops.module.infra.convert.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.define.cache.*;
-import com.orion.ops.module.infra.define.operator.*;
-import com.orion.ops.module.infra.entity.domain.DataGroupDO;
+import com.orion.ops.module.infra.convert.DataGroupConvert;
 import com.orion.ops.module.infra.dao.DataGroupDAO;
+import com.orion.ops.module.infra.define.cache.DataGroupCacheKeyDefine;
+import com.orion.ops.module.infra.entity.domain.DataGroupDO;
+import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
+import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
+import com.orion.ops.module.infra.service.DataGroupRelService;
 import com.orion.ops.module.infra.service.DataGroupService;
-import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +38,9 @@ public class DataGroupServiceImpl implements DataGroupService {
     @Resource
     private DataGroupDAO dataGroupDAO;
 
+    @Resource
+    private DataGroupRelService dataGroupRelService;
+
     @Override
     public Long createDataGroup(DataGroupCreateRequest request) {
         log.info("DataGroupService-createDataGroup request: {}", JSON.toJSONString(request));
@@ -57,79 +53,44 @@ public class DataGroupServiceImpl implements DataGroupService {
         Long id = record.getId();
         log.info("DataGroupService-createDataGroup id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisMaps.delete(DataGroupCacheKeyDefine.DATA_GROUP);
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP.format(request.getType()));
         return id;
     }
 
     @Override
-    public Integer updateDataGroupById(DataGroupUpdateRequest request) {
+    public Integer renameDataGroup(DataGroupUpdateRequest request) {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        log.info("DataGroupService-updateDataGroupById id: {}, request: {}", id, JSON.toJSONString(request));
+        String name = Valid.notBlank(request.getName());
         // 查询
         DataGroupDO record = dataGroupDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Valid.notNull(record, ErrorMessage.GROUP_ABSENT);
         // 转换
-        DataGroupDO updateRecord = DataGroupConvert.MAPPER.to(request);
+        DataGroupDO updateRecord = DataGroupDO.builder()
+                .id(id)
+                .name(name)
+                .parentId(record.getParentId())
+                .build();
         // 查询数据是否冲突
         this.checkDataGroupPresent(updateRecord);
         // 更新
         int effect = dataGroupDAO.updateById(updateRecord);
-        log.info("DataGroupService-updateDataGroupById effect: {}", effect);
         // 删除缓存
-        RedisMaps.delete(DataGroupCacheKeyDefine.DATA_GROUP);
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP.format(record.getType()));
         return effect;
     }
 
     @Override
-    public Integer updateDataGroup(DataGroupQueryRequest query, DataGroupUpdateRequest update) {
-        log.info("DataGroupService.updateDataGroup query: {}, update: {}", JSON.toJSONString(query), JSON.toJSONString(update));
-        // 条件
-        LambdaQueryWrapper<DataGroupDO> wrapper = this.buildQueryWrapper(query);
-        // 转换
-        DataGroupDO updateRecord = DataGroupConvert.MAPPER.to(update);
-        // 更新
-        int effect = dataGroupDAO.update(updateRecord, wrapper);
-        log.info("DataGroupService.updateDataGroup effect: {}", effect);
-        // 删除缓存
-        RedisMaps.delete(DataGroupCacheKeyDefine.DATA_GROUP);
-        return effect;
-    }
-
-    @Override
-    public DataGroupVO getDataGroupById(Long id) {
-        // 查询
-        DataGroupDO record = dataGroupDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 转换
-        return DataGroupConvert.MAPPER.to(record);
-    }
-
-    @Override
-    public List<DataGroupVO> getDataGroupByIdList(List<Long> idList) {
-        // 查询
-        List<DataGroupDO> records = dataGroupDAO.selectBatchIds(idList);
-        if (records.isEmpty()) {
-            return Lists.empty();
-        }
-        // 转换
-        return DataGroupConvert.MAPPER.to(records);
-    }
-
-    @Override
-    public List<DataGroupVO> getDataGroupList(DataGroupQueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<DataGroupDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return dataGroupDAO.of(wrapper).list(DataGroupConvert.MAPPER::to);
-    }
-
-    @Override
-    public List<DataGroupVO> getDataGroupListByCache() {
+    public List<DataGroupCacheDTO> getDataGroupListByCache(String type) {
         // 查询缓存
-        List<DataGroupCacheDTO> list = RedisMaps.valuesJson(DataGroupCacheKeyDefine.DATA_GROUP);
+        String key = DataGroupCacheKeyDefine.DATA_GROUP.format(type);
+        List<DataGroupCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP);
         if (list.isEmpty()) {
             // 查询数据库
-            list = dataGroupDAO.of().list(DataGroupConvert.MAPPER::toCache);
+            list = dataGroupDAO.of()
+                    .createWrapper()
+                    .eq(DataGroupDO::getType, type)
+                    .then()
+                    .list(DataGroupConvert.MAPPER::toCache);
             // 添加默认值 防止穿透
             if (list.isEmpty()) {
                 list.add(DataGroupCacheDTO.builder()
@@ -137,69 +98,53 @@ public class DataGroupServiceImpl implements DataGroupService {
                         .build());
             }
             // 设置缓存
-            RedisMaps.putAllJson(DataGroupCacheKeyDefine.DATA_GROUP.getKey(), s -> s.getId().toString(), list);
-            RedisMaps.setExpire(DataGroupCacheKeyDefine.DATA_GROUP);
+            RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP, list);
         }
         // 删除默认值
-        return list.stream()
-                .filter(s -> !s.getId().equals(Const.NONE_ID))
-                .map(DataGroupConvert.MAPPER::to)
-                .collect(Collectors.toList());
+        list.removeIf(s -> s.getId().equals(Const.NONE_ID));
+        return list;
     }
 
     @Override
-    public Long getDataGroupCount(DataGroupQueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<DataGroupDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return dataGroupDAO.selectCount(wrapper);
-    }
-
-    @Override
-    public DataGrid<DataGroupVO> getDataGroupPage(DataGroupQueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<DataGroupDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return dataGroupDAO.of(wrapper)
-                .page(request)
-                .dataGrid(DataGroupConvert.MAPPER::to);
-    }
-
-    @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteDataGroupById(Long id) {
         log.info("DataGroupService-deleteDataGroupById id: {}", id);
         // 检查数据是否存在
         DataGroupDO record = dataGroupDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 删除
-        int effect = dataGroupDAO.deleteById(id);
+        Valid.notNull(record, ErrorMessage.GROUP_ABSENT);
+        String type = record.getType();
+        // 查询子级
+        List<Long> deleteIdList = Lists.of(id);
+        this.flatChildrenId(Lists.singleton(id), deleteIdList);
+        // 删除分组
+        int effect = dataGroupDAO.deleteBatchIds(deleteIdList);
+        // 删除组内数据
+        dataGroupRelService.deleteByGroupIdList(type, deleteIdList);
         log.info("DataGroupService-deleteDataGroupById id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisMaps.delete(DataGroupCacheKeyDefine.DATA_GROUP, id);
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP.format(type));
         return effect;
     }
 
-    @Override
-    public Integer deleteDataGroupByIdList(List<Long> idList) {
-        log.info("DataGroupService-deleteDataGroupByIdList idList: {}", idList);
-        int effect = dataGroupDAO.deleteBatchIds(idList);
-        log.info("DataGroupService-deleteDataGroupByIdList effect: {}", effect);
-        // 删除缓存
-        RedisMaps.delete(DataGroupCacheKeyDefine.DATA_GROUP, idList);
-        return effect;
-    }
-
-    @Override
-    public Integer deleteDataGroup(DataGroupQueryRequest request) {
-        log.info("DataGroupService.deleteDataGroup request: {}", JSON.toJSONString(request));
-        // 条件
-        LambdaQueryWrapper<DataGroupDO> wrapper = this.buildQueryWrapper(request);
-        // 删除
-        int effect = dataGroupDAO.delete(wrapper);
-        log.info("DataGroupService.deleteDataGroup effect: {}", effect);
-        // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP);
-        return effect;
+    /**
+     * 获取所有子节点 id
+     *
+     * @param parentIdList parentIdList
+     * @param result       result
+     */
+    private void flatChildrenId(List<Long> parentIdList, List<Long> result) {
+        // 查询数据
+        List<DataGroupDO> rows = dataGroupDAO.selectByParentId(parentIdList);
+        if (rows.isEmpty()) {
+            return;
+        }
+        List<Long> idList = rows.stream()
+                .map(DataGroupDO::getId)
+                .distinct()
+                .collect(Collectors.toList());
+        result.addAll(idList);
+        // 递归
+        this.flatChildrenId(idList, result);
     }
 
     /**
@@ -219,29 +164,6 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 检查是否存在
         boolean present = dataGroupDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
-    }
-
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<DataGroupDO> buildQueryWrapper(DataGroupQueryRequest request) {
-        String searchValue = request.getSearchValue();
-        return dataGroupDAO.wrapper()
-                .eq(DataGroupDO::getId, request.getId())
-                .eq(DataGroupDO::getParentId, request.getParentId())
-                .eq(DataGroupDO::getName, request.getName())
-                .eq(DataGroupDO::getType, request.getType())
-                .eq(DataGroupDO::getSort, request.getSort())
-                .and(Strings.isNotEmpty(searchValue), c -> c
-                        .eq(DataGroupDO::getId, searchValue).or()
-                        .eq(DataGroupDO::getParentId, searchValue).or()
-                        .eq(DataGroupDO::getName, searchValue).or()
-                        .eq(DataGroupDO::getType, searchValue).or()
-                        .eq(DataGroupDO::getSort, searchValue)
-                );
     }
 
 }

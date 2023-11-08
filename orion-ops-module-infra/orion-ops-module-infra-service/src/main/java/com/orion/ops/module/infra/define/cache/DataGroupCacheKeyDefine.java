@@ -2,12 +2,8 @@ package com.orion.ops.module.infra.define.cache;
 
 import com.orion.lang.define.cache.CacheKeyBuilder;
 import com.orion.lang.define.cache.CacheKeyDefine;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.request.data.*;
-import com.orion.ops.module.infra.convert.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.define.cache.*;
-import com.orion.ops.module.infra.define.operator.*;
+import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
+import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +20,20 @@ public interface DataGroupCacheKeyDefine {
             .key("data:group:{}")
             .desc("数据分组 ${type}")
             .type(DataGroupCacheDTO.class)
+            .timeout(1, TimeUnit.DAYS)
+            .build();
+
+    CacheKeyDefine DATA_GROUP_REL_GROUP = new CacheKeyBuilder()
+            .key("data:group-rel:group:{}")
+            .desc("数据分组数据关联-分组 ${groupId}")
+            .type(DataGroupRelCacheDTO.class)
+            .timeout(1, TimeUnit.DAYS)
+            .build();
+
+    CacheKeyDefine DATA_GROUP_REL_TYPE = new CacheKeyBuilder()
+            .key("data:group-rel:type:{}")
+            .desc("数据分组数据关联-类型 ${type}")
+            .type(DataGroupRelCacheDTO.class)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

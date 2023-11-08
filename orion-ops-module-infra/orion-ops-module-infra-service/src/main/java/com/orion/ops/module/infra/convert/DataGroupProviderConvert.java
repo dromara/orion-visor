@@ -25,8 +25,6 @@ public interface DataGroupProviderConvert {
 
     DataGroupProviderConvert MAPPER = Mappers.getMapper(DataGroupProviderConvert.class);
 
-    DataGroupDTO to(DataGroupVO dto);
-
     DataGroupDO to(DataGroupDTO dto);
 
     DataGroupDTO to(DataGroupDO domain);
@@ -34,8 +32,6 @@ public interface DataGroupProviderConvert {
     DataGroupDO to(DataGroupQueryDTO domain);
 
     DataGroupDO to(DataGroupUpdateDTO update);
-
-    DataGroupQueryRequest toRequest(DataGroupQueryDTO request);
 
     DataGroupCreateRequest toRequest(DataGroupCreateDTO request);
 

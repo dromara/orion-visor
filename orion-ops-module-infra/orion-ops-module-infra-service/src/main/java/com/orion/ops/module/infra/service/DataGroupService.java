@@ -1,15 +1,9 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.request.data.*;
-import com.orion.ops.module.infra.convert.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.define.cache.*;
-import com.orion.ops.module.infra.define.operator.*;
+import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
+import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -30,68 +24,22 @@ public interface DataGroupService {
     Long createDataGroup(DataGroupCreateRequest request);
 
     /**
-     * 更新数据分组
+     * 重命名分组
      *
      * @param request request
-     * @return effect
+     * @return id
      */
-    Integer updateDataGroupById(DataGroupUpdateRequest request);
+    Integer renameDataGroup(DataGroupUpdateRequest request);
 
-    /**
-     * 根据条件更新数据分组
-     *
-     * @param query  query
-     * @param update update
-     * @return effect
-     */
-    Integer updateDataGroup(DataGroupQueryRequest query, DataGroupUpdateRequest update);
-
-    /**
-     * 查询数据分组
-     *
-     * @param id id
-     * @return row
-     */
-    DataGroupVO getDataGroupById(Long id);
-
-    /**
-     * 批量查询数据分组
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<DataGroupVO> getDataGroupByIdList(List<Long> idList);
-
-    /**
-     * 查询全部数据分组
-     *
-     * @param request request
-     * @return rows
-     */
-    List<DataGroupVO> getDataGroupList(DataGroupQueryRequest request);
+    // FIXME drag
 
     /**
      * 通过缓存查询数据分组
      *
+     * @param type type
      * @return rows
      */
-    List<DataGroupVO> getDataGroupListByCache();
-
-    /**
-     * 查询数据分组数量
-     *
-     * @param request request
-     * @return count
-     */
-    Long getDataGroupCount(DataGroupQueryRequest request);
-
-    /**
-     * 分页查询数据分组
-     *
-     * @param request request
-     * @return rows
-     */
-    DataGrid<DataGroupVO> getDataGroupPage(DataGroupQueryRequest request);
+    List<DataGroupCacheDTO> getDataGroupListByCache(String type);
 
     /**
      * 删除数据分组
@@ -100,21 +48,5 @@ public interface DataGroupService {
      * @return effect
      */
     Integer deleteDataGroupById(Long id);
-
-    /**
-     * 批量删除数据分组
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteDataGroupByIdList(List<Long> idList);
-
-    /**
-     * 根据条件删除数据分组
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer deleteDataGroup(DataGroupQueryRequest request);
 
 }

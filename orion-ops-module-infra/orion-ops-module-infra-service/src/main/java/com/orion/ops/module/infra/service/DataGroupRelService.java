@@ -1,15 +1,8 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.request.data.*;
-import com.orion.ops.module.infra.convert.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.define.cache.*;
-import com.orion.ops.module.infra.define.operator.*;
+import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRelCreateRequest;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -22,99 +15,61 @@ import java.util.List;
 public interface DataGroupRelService {
 
     /**
-     * 创建数据分组关联
+     * 添加关联
      *
      * @param request request
-     * @return id
      */
-    Long createDataGroupRel(DataGroupRelCreateRequest request);
+    void addGroupRel(DataGroupRelCreateRequest request);
 
     /**
-     * 更新数据分组关联
+     * 添加关联
      *
-     * @param request request
-     * @return effect
+     * @param list list
      */
-    Integer updateDataGroupRelById(DataGroupRelUpdateRequest request);
-
-    /**
-     * 根据条件更新数据分组关联
-     *
-     * @param query  query
-     * @param update update
-     * @return effect
-     */
-    Integer updateDataGroupRel(DataGroupRelQueryRequest query, DataGroupRelUpdateRequest update);
-
-    /**
-     * 查询数据分组关联
-     *
-     * @param id id
-     * @return row
-     */
-    DataGroupRelVO getDataGroupRelById(Long id);
-
-    /**
-     * 批量查询数据分组关联
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<DataGroupRelVO> getDataGroupRelByIdList(List<Long> idList);
-
-    /**
-     * 查询全部数据分组关联
-     *
-     * @param request request
-     * @return rows
-     */
-    List<DataGroupRelVO> getDataGroupRelList(DataGroupRelQueryRequest request);
+    void addGroupRel(List<DataGroupRelCreateRequest> list);
 
     /**
      * 通过缓存查询数据分组关联
      *
+     * @param type type
      * @return rows
      */
-    List<DataGroupRelVO> getDataGroupRelListByCache();
+    List<DataGroupRelCacheDTO> getGroupRelListByCache(String type);
 
     /**
-     * 查询数据分组关联数量
+     * 通过缓存查询数据分组关联
      *
-     * @param request request
-     * @return count
-     */
-    Long getDataGroupRelCount(DataGroupRelQueryRequest request);
-
-    /**
-     * 分页查询数据分组关联
-     *
-     * @param request request
+     * @param type    type
+     * @param groupId groupId
      * @return rows
      */
-    DataGrid<DataGroupRelVO> getDataGroupRelPage(DataGroupRelQueryRequest request);
+    List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long groupId);
 
     /**
      * 删除数据分组关联
      *
-     * @param id id
+     * @param type  type
+     * @param relId relId
      * @return effect
      */
-    Integer deleteDataGroupRelById(Long id);
+    Integer deleteByRelId(String type, Long relId);
 
     /**
      * 批量删除数据分组关联
      *
-     * @param idList idList
+     * @param type      type
+     * @param relIdList relIdList
      * @return effect
      */
-    Integer deleteDataGroupRelByIdList(List<Long> idList);
+    Integer deleteByRelIdList(String type, List<Long> relIdList);
 
     /**
-     * 根据条件删除数据分组关联
+     * 批量删除数据分组关联
      *
-     * @param request request
+     * @param type        type
+     * @param groupIdList groupIdList
      * @return effect
      */
-    Integer deleteDataGroupRel(DataGroupRelQueryRequest request);
+    Integer deleteByGroupIdList(String type, List<Long> groupIdList);
 
 }
