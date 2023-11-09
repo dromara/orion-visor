@@ -27,6 +27,8 @@ import java.math.*;
 @AllArgsConstructor
 @Schema(name = "${type}UpdateRequest", description = "$!{table.comment} 更新请求对象")
 public class ${type}UpdateRequest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     #foreach($field in ${table.fields})
 
     #if("$field.propertyType" == "String")

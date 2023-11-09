@@ -1,14 +1,13 @@
 package com.orion.ops.module.asset.convert;
 
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.HostCacheDTO;
 import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 /**
  * 主机 内部对象转换器
@@ -30,6 +29,8 @@ public interface HostConvert {
 
     HostVO to(HostDO domain);
 
-    List<HostVO> to(List<HostDO> list);
+    HostVO to(HostCacheDTO cache);
+
+    HostCacheDTO toCache(HostDO domain);
 
 }

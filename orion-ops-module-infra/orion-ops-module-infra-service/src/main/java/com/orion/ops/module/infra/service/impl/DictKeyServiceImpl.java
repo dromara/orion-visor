@@ -69,7 +69,7 @@ public class DictKeyServiceImpl implements DictKeyService {
         Long id = record.getId();
         log.info("DictKeyService-createDictKey id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY);
+        RedisUtils.delete(DictCacheKeyDefine.DICT_KEY);
         return id;
     }
 
@@ -191,8 +191,8 @@ public class DictKeyServiceImpl implements DictKeyService {
         // 删除配置值
         dictValueService.deleteDictValueByKeyId(id);
         // 删除缓存
-        RedisUtils.delete(DictCacheKeyDefine.DICT_KEY.getKey(),
-                DictCacheKeyDefine.DICT_SCHEMA.format(record.getKeyName()));
+        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, id);
+        RedisUtils.delete(DictCacheKeyDefine.DICT_SCHEMA.format(record.getKeyName()));
         log.info("DictKeyService-deleteDictKeyById id: {}, effect: {}", id, effect);
         return effect;
     }
@@ -215,7 +215,7 @@ public class DictKeyServiceImpl implements DictKeyService {
         dictValueService.deleteDictValueByKeyIdList(idList);
         log.info("DictKeyService-deleteDictKeyByIdList effect: {}", effect);
         // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY);
+        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, idList);
         List<String> schemaKeys = dictKeys.stream()
                 .map(DictKeyDO::getKeyName)
                 .map(DictCacheKeyDefine.DICT_SCHEMA::format)

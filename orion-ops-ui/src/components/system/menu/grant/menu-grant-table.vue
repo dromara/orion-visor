@@ -57,13 +57,13 @@
 
   const cacheStore = useCacheStore();
 
-  const isFirst = ref(false);
+  const unTriggerChange = ref(false);
   const menuData = ref<Array<MenuQueryResponse>>([]);
   const checkedKeys = ref<Array<number>>([]);
 
   // 初始化
   const init = (keys: Array<number>) => {
-    isFirst.value = true;
+    unTriggerChange.value = true;
     checkedKeys.value = keys;
     if (!menuData.value.length) {
       menuData.value = [...cacheStore.menus];
@@ -75,12 +75,44 @@
     return checkedKeys.value;
   };
 
-  defineExpose({ init, getValue });
+  // 选择
+  const checked = (rule: undefined | ((s: string) => boolean)) => {
+    unTriggerChange.value = true;
+    const nodes: Array<MenuQueryResponse> = [];
+    flatNodes(menuData.value, nodes);
+    if (rule) {
+      const checkedNodes = nodes.filter(s => s.permission)
+        .filter(s => rule(s?.permission))
+        .map(s => s.id)
+        .filter(Boolean);
+      checkedKeys.value = [...new Set([...checkedKeys.value, ...checkedNodes])];
+    } else {
+      checkedKeys.value = nodes.map(s => s.id).filter(Boolean);
+    }
+  };
+
+  // 取消选择
+  const unchecked = (rule: undefined | ((s: string) => boolean)) => {
+    unTriggerChange.value = true;
+    const nodes: Array<MenuQueryResponse> = [];
+    flatNodes(menuData.value, nodes);
+    if (rule) {
+      const uncheckedNodes = nodes.filter(s => s.permission)
+        .filter(s => rule(s?.permission))
+        .map(s => s.id)
+        .filter(Boolean);
+      checkedKeys.value = [...checkedKeys.value].filter(s => !uncheckedNodes.includes(s));
+    } else {
+      checkedKeys.value = [];
+    }
+  };
+
+  defineExpose({ init, getValue, checked, unchecked });
 
   // 监听级联变化
   watch(checkedKeys, (after: Array<number>, before: Array<number>) => {
-    if (isFirst.value) {
-      isFirst.value = false;
+    if (unTriggerChange.value) {
+      unTriggerChange.value = false;
       return;
     }
     const afterLength = after.length;
@@ -136,18 +168,31 @@
     }
   };
 
+  // 展开节点
+  const flatNodes = (nodes: Array<MenuQueryResponse>, result: Array<MenuQueryResponse>) => {
+    if (!nodes || !nodes.length) {
+      return;
+    }
+    nodes.forEach(s => {
+      result.push(s);
+      flatNodes(s.children, result);
+    });
+  };
+
   // 级联选择菜单
   const checkMenu = (id: number) => {
+    unTriggerChange.value = true;
     // 查询当前节点
     const node = findNode(id, menuData.value);
     const childrenId: number[] = [];
     // 获取所在子节点id
     flatChildrenId(node?.children, childrenId);
-    checkedKeys.value.push(...childrenId);
+    checkedKeys.value = [...new Set([...checkedKeys.value, ...childrenId])];
   };
 
   // 级联取消选择菜单
   const uncheckMenu = (id: number) => {
+    unTriggerChange.value = true;
     // 查询当前节点
     const node = findNode(id, menuData.value);
     const childrenId: number[] = [];

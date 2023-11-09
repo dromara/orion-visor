@@ -95,10 +95,10 @@ export function getHost(params: HostQueryRequest) {
 }
 
 /**
- * 查询主机
+ * 查询全部主机
  */
-export function getHostListAll(request: HostQueryRequest) {
-  return axios.post<Array<HostQueryResponse>>('/asset/host/list-all', request);
+export function getHostList() {
+  return axios.get<Array<HostQueryResponse>>('/asset/host/list');
 }
 
 /**

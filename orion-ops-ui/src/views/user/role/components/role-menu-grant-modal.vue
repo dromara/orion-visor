@@ -4,7 +4,7 @@
            title-align="start"
            title="分配菜单"
            width="80%"
-           :top="80"
+           :top="40"
            :body-style="{padding: '16px 16px 0 16px', 'margin-bottom': '16px'}"
            :align-center="false"
            :draggable="true"
@@ -15,11 +15,29 @@
            :on-before-ok="handlerOk"
            @close="handleClose">
     <div class="role-menu-wrapper">
-      <a-alert class="mb8 usn">
+      <a-alert class="usn mb8">
         <span>{{ roleRecord.name }} {{ roleRecord.code }}</span>
         <span class="mx8">-</span>
         <span>菜单分配后需要用户手动刷新页面才会生效</span>
       </a-alert>
+      <div class="usn mb8">
+        <a-space>
+          <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
+            <a-button size="mini" type="text" @click="() => { table.checked(opt.rule) }">
+              {{ '全选' + opt.name }}
+            </a-button>
+          </template>
+        </a-space>
+      </div>
+      <div class="usn mb8">
+        <a-space>
+          <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
+            <a-button size="mini" type="text" @click="() => { table.unchecked(opt.rule) }">
+              {{ '反选' + opt.name }}
+            </a-button>
+          </template>
+        </a-space>
+      </div>
       <!-- 菜单 -->
       <menu-grant-table ref="table" />
     </div>
@@ -42,6 +60,7 @@
   import { useCacheStore } from '@/store';
   import { getMenuList } from '@/api/system/menu';
   import MenuGrantTable from '@/components/system/menu/grant/menu-grant-table.vue';
+  import { quickGrantMenuOperator } from '../types/const';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -113,7 +132,7 @@
 <style lang="less" scoped>
   .role-menu-wrapper {
     width: 100%;
-    max-height: calc(100vh - 285px);
+    max-height: calc(100vh - 230px);
   }
 
 </style>

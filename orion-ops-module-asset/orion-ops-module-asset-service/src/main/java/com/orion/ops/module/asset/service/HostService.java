@@ -44,10 +44,9 @@ public interface HostService {
     /**
      * 查询主机
      *
-     * @param request request
      * @return rows
      */
-    List<HostVO> getHostList(HostQueryRequest request);
+    List<HostVO> getHostListByCache();
 
     /**
      * 分页查询主机

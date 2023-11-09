@@ -45,6 +45,8 @@ public class HostController {
     @Resource
     private HostConfigService hostConfigService;
 
+    // fixme host_config 设置为缓存
+
     @OperatorLog(HostOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机")
@@ -79,11 +81,11 @@ public class HostController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list-all")
+    @GetMapping("/list")
     @Operation(summary = "查询主机")
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
-    public List<HostVO> getHostListAll(@Validated @RequestBody HostQueryRequest request) {
-        return hostService.getHostList(request);
+    public List<HostVO> getHostList() {
+        return hostService.getHostListByCache();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

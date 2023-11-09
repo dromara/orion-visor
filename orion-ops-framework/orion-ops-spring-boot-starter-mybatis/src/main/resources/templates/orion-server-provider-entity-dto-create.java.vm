@@ -27,6 +27,8 @@ import java.math.*;
 @Schema(name = "${type}CreateDTO", description = "$!{table.comment} 创建请求业务对象")
 public class ${type}CreateDTO implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     #foreach($field in ${table.fields})
     #if("$!field.propertyName" != "id")
     #if("$field.propertyType" == "String")

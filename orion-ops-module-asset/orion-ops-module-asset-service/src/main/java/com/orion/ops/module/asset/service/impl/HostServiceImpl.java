@@ -7,15 +7,19 @@ import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.HostConfigConvert;
 import com.orion.ops.module.asset.convert.HostConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostDAO;
+import com.orion.ops.module.asset.define.cache.HostCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.HostConfigDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.HostCacheDTO;
 import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
@@ -50,6 +54,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class HostServiceImpl implements HostService {
+
+    // FIXME 这里的收藏删除
 
     private static final ThreadLocal<List<Long>> FAVORITE_HOLDER = new ThreadLocal<>();
 
@@ -87,6 +93,8 @@ public class HostServiceImpl implements HostService {
         }
         // 创建配置
         hostConfigService.initHostConfig(id);
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO);
         return id;
     }
 
@@ -105,6 +113,8 @@ public class HostServiceImpl implements HostService {
         // 更新
         int effect = hostDAO.updateById(updateRecord);
         log.info("HostService-updateHostById effect: {}", effect);
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO);
         // 更新 tag
         tagRelApi.setTagRel(TagTypeEnum.HOST, id, request.getTags());
         return effect;
@@ -123,21 +133,27 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public List<HostVO> getHostList(HostQueryRequest request) {
-        try {
-            // 条件
-            LambdaQueryWrapper<HostDO> wrapper = this.buildQueryWrapper(request);
-            if (wrapper == null) {
-                return Lists.empty();
+    public List<HostVO> getHostListByCache() {
+        // 查询缓存
+        List<HostCacheDTO> list = RedisMaps.valuesJson(HostCacheKeyDefine.HOST_INFO);
+        if (list.isEmpty()) {
+            // 查询数据库
+            list = hostDAO.of().list(HostConvert.MAPPER::toCache);
+            // 添加默认值 防止穿透
+            if (list.isEmpty()) {
+                list.add(HostCacheDTO.builder()
+                        .id(Const.NONE_ID)
+                        .build());
             }
-            // 查询
-            List<HostVO> hosts = hostDAO.of(wrapper).list(HostConvert.MAPPER::to);
-            // 查询拓展信息
-            this.setExtraInfo(request, hosts);
-            return hosts;
-        } finally {
-            FAVORITE_HOLDER.remove();
+            // 设置缓存
+            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_INFO.getKey(), s -> s.getId().toString(), list);
+            RedisMaps.setExpire(HostCacheKeyDefine.HOST_INFO);
         }
+        // 删除默认值
+        return list.stream()
+                .filter(s -> !s.getId().equals(Const.NONE_ID))
+                .map(HostConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -171,6 +187,8 @@ public class HostServiceImpl implements HostService {
         // 删除
         int effect = hostDAO.deleteById(id);
         log.info("HostService-deleteHostById effect: {}", effect);
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO, id);
         // 删除配置
         hostConfigDAO.deleteByHostId(id);
         // 删除 tag 引用

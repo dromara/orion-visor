@@ -29,16 +29,8 @@ Authorization: {{token}}
 
 
 ### 查询主机
-POST {{baseUrl}}/asset/host/list-all
-Content-Type: application/json
+GET {{baseUrl}}/asset/host/list
 Authorization: {{token}}
-
-{
-  "id": "",
-  "name": "",
-  "code": "",
-  "address": ""
-}
 
 
 ### 分页查询主机

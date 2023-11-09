@@ -27,6 +27,8 @@ import java.math.*;
 @Schema(name = "${type}Export", description = "$!{table.comment}导出对象")
 public class ${type}Export implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public static final String TITLE = "$!{table.comment}导出";
     #foreach($field in ${table.fields})
 

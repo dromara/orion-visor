@@ -62,7 +62,7 @@ public class HostKeyController {
     @GetMapping("/get")
     @Operation(summary = "查询主机秘钥详情")
     @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasAnyPermission('asset:host-key:detail', 'asset:host-key:update')")
+    @PreAuthorize("@ss.hasAnyPermission('asset:host-key:query-detail', 'asset:host-key:update')")
     public HostKeyVO getHostKey(@RequestParam("id") Long id) {
         return hostKeyService.getHostKeyById(id);
     }

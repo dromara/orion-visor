@@ -26,6 +26,8 @@ import java.math.*;
 @AllArgsConstructor
 @Schema(name = "${type}UpdateDTO", description = "$!{table.comment} 更新请求业务对象")
 public class ${type}UpdateDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     #foreach($field in ${table.fields})
 
     #if("$field.propertyType" == "String")

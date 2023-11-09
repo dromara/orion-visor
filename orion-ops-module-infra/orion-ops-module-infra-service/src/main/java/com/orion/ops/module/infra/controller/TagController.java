@@ -45,7 +45,7 @@ public class TagController {
     @GetMapping("/list")
     @Operation(summary = "查询标签")
     @Parameter(name = "type", description = "type", required = true)
-    public List<TagVO> getTagListAll(@RequestParam("type") String type) {
+    public List<TagVO> getTagList(@RequestParam("type") String type) {
         return tagService.getTagList(type);
     }
 
