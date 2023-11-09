@@ -8,7 +8,6 @@
         <result column="group_id" property="groupId"/>
         <result column="rel_id" property="relId"/>
         <result column="type" property="type"/>
-        <result column="sort" property="sort"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="creator" property="creator"/>
@@ -18,7 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, group_id, rel_id, type, sort, create_time, update_time, creator, updater, deleted
+        id, group_id, rel_id, type, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

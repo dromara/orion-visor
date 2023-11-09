@@ -39,8 +39,4 @@ public class DataGroupCreateRequest implements Serializable {
     @Schema(description = "组类型")
     private String type;
 
-    @NotNull
-    @Schema(description = "排序")
-    private Integer sort;
-
 }

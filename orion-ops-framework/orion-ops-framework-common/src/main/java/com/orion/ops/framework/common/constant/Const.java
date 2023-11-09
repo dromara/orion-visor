@@ -21,7 +21,7 @@ public interface Const extends com.orion.lang.constant.Const, FieldConst {
 
     String INTRANET_IP = "内网IP";
 
-    Long ROOT_MENU_ID = 0L;
+    Long ROOT_PARENT_ID = 0L;
 
     Integer DEFAULT_SORT = 10;
 

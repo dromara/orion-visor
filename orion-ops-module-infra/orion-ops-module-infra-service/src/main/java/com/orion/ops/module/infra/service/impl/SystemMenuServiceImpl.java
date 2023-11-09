@@ -295,7 +295,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 验证父菜单参数
         if (MenuTypeEnum.PARENT_MENU.equals(type)) {
             // 父菜单创建的 parentId 为 0
-            domain.setParentId(Const.ROOT_MENU_ID);
+            domain.setParentId(Const.ROOT_PARENT_ID);
             // 验证必填参数
             Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
             return;

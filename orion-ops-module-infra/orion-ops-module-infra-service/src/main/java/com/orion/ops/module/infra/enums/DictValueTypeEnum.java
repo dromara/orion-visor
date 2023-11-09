@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.enums;
 
 import com.orion.lang.utils.convert.Converts;
-import lombok.Getter;
 
 import java.math.BigDecimal;
 
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
  * @version 1.0.0
  * @since 2023/10/17 11:18
  */
-@Getter
 public enum DictValueTypeEnum {
 
     /**

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.DataGroupDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,15 @@ import java.util.List;
  */
 @Mapper
 public interface DataGroupDAO extends IMapper<DataGroupDO> {
+
+    /**
+     * 查询最大排序
+     *
+     * @param parentId parentId
+     * @param type     type
+     * @return max(sort)
+     */
+    Integer selectMaxSort(@Param("parentId") Long parentId, @Param("type") String type);
 
     /**
      * 通过 parentId 查询

@@ -16,9 +16,16 @@ import java.util.concurrent.TimeUnit;
  */
 public interface DataGroupCacheKeyDefine {
 
-    CacheKeyDefine DATA_GROUP = new CacheKeyBuilder()
-            .key("data:group:{}")
-            .desc("数据分组 ${type}")
+    CacheKeyDefine DATA_GROUP_LIST = new CacheKeyBuilder()
+            .key("data:group-list:{}")
+            .desc("数据分组列表结构 ${type}")
+            .type(DataGroupCacheDTO.class)
+            .timeout(1, TimeUnit.DAYS)
+            .build();
+
+    CacheKeyDefine DATA_GROUP_TREE = new CacheKeyBuilder()
+            .key("data:group-tree:{}")
+            .desc("数据分组树结构 ${type}")
             .type(DataGroupCacheDTO.class)
             .timeout(1, TimeUnit.DAYS)
             .build();

@@ -1,11 +1,13 @@
 package com.orion.ops.module.infra.entity.dto.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.*;
-import java.math.*;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 数据分组 业务对象
@@ -32,22 +34,10 @@ public class DataGroupDTO implements Serializable {
     @Schema(description = "组名称")
     private String name;
 
-    @Schema(description = "组类型")
-    private String type;
-
     @Schema(description = "排序")
     private Integer sort;
 
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
+    @Schema(description = "子节点")
+    private List<DataGroupDTO> children;
 
 }

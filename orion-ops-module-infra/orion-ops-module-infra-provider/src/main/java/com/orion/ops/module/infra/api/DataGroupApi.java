@@ -1,6 +1,9 @@
 package com.orion.ops.module.infra.api;
 
-import com.orion.ops.module.infra.entity.dto.data.*;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupUpdateDTO;
+import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 
 import java.util.List;
 
@@ -16,66 +19,37 @@ public interface DataGroupApi {
     /**
      * 创建数据分组
      *
-     * @param dto dto
+     * @param type type
+     * @param dto  dto
      * @return id
      */
-    Long createDataGroup(DataGroupCreateDTO dto);
+    Long createDataGroup(DataGroupTypeEnum type, DataGroupCreateDTO dto);
 
     /**
-     * 更新数据分组
+     * 重命名分组
      *
      * @param dto dto
      * @return effect
      */
-    Integer updateDataGroupById(DataGroupUpdateDTO dto);
+    Integer renameDataGroup(DataGroupUpdateDTO dto);
 
-    /**
-     * 根据条件更新数据分组
-     *
-     * @param query  query
-     * @param update update
-     * @return effect
-     */
-    Integer updateDataGroup(DataGroupQueryDTO query, DataGroupUpdateDTO update);
-
-    /**
-     * 查询数据分组
-     *
-     * @param id id
-     * @return row
-     */
-    DataGroupDTO getDataGroupById(Long id);
-
-    /**
-     * 批量查询数据分组
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<DataGroupDTO> getDataGroupByIdList(List<Long> idList);
-
-    /**
-     * 查询全部数据分组
-     *
-     * @param dto dto
-     * @return rows
-     */
-    List<DataGroupDTO> getDataGroupList(DataGroupQueryDTO dto);
+    // FIXME drag
 
     /**
      * 通过缓存查询数据分组
      *
+     * @param type type
      * @return rows
      */
-    List<DataGroupDTO> getDataGroupListByCache();
+    List<DataGroupDTO> getDataGroupList(DataGroupTypeEnum type);
 
     /**
-     * 查询数据分组数量
+     * 通过缓存查询数据分组
      *
-     * @param dto dto
-     * @return count
+     * @param type type
+     * @return rows
      */
-    Long getDataGroupCount(DataGroupQueryDTO dto);
+    List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type);
 
     /**
      * 删除数据分组
@@ -84,21 +58,5 @@ public interface DataGroupApi {
      * @return effect
      */
     Integer deleteDataGroupById(Long id);
-
-    /**
-     * 批量删除数据分组
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteDataGroupByIdList(List<Long> idList);
-
-    /**
-     * 根据条件删除数据分组
-     *
-     * @param dto dto
-     * @return effect
-     */
-    Integer deleteDataGroup(DataGroupQueryDTO dto);
 
 }

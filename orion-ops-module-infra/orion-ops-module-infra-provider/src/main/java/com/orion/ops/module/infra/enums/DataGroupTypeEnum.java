@@ -1,13 +1,13 @@
 package com.orion.ops.module.infra.enums;
 
 /**
- * 收藏类型 枚举
+ * 数据分组类型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/8/25 10:53
+ * @since 2023/11/8 18:57
  */
-public enum TagTypeEnum {
+public enum DataGroupTypeEnum {
 
     /**
      * 主机
@@ -16,11 +16,11 @@ public enum TagTypeEnum {
 
     ;
 
-    public static TagTypeEnum of(String type) {
+    public static DataGroupTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (TagTypeEnum value : values()) {
+        for (DataGroupTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }

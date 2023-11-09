@@ -33,7 +33,4 @@ public class DataGroupRelCacheDTO implements Serializable {
     @Schema(description = "引用id")
     private Long relId;
 
-    @Schema(description = "排序")
-    private Integer sort;
-
 }

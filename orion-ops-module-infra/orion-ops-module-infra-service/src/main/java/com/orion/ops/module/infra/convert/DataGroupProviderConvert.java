@@ -1,13 +1,12 @@
 package com.orion.ops.module.infra.convert;
 
-import com.orion.ops.module.infra.entity.domain.*;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.request.data.*;
-import com.orion.ops.module.infra.convert.*;
-import com.orion.ops.module.infra.entity.dto.*;
-import com.orion.ops.module.infra.define.cache.*;
-import com.orion.ops.module.infra.define.operator.*;
-import com.orion.ops.module.infra.entity.dto.data.*;
+import com.orion.ops.module.infra.entity.domain.DataGroupDO;
+import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupUpdateDTO;
+import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -29,14 +28,12 @@ public interface DataGroupProviderConvert {
 
     DataGroupDTO to(DataGroupDO domain);
 
-    DataGroupDO to(DataGroupQueryDTO domain);
-
     DataGroupDO to(DataGroupUpdateDTO update);
 
     DataGroupCreateRequest toRequest(DataGroupCreateDTO request);
 
     DataGroupUpdateRequest toRequest(DataGroupUpdateDTO request);
 
-    List<DataGroupDTO> toList(List<DataGroupDO> list);
+    List<DataGroupDTO> toList(List<DataGroupCacheDTO> list);
 
 }

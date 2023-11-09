@@ -1,8 +1,11 @@
 package com.orion.ops.module.infra.api;
 
-import com.orion.ops.module.infra.entity.dto.data.*;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
+import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 数据分组关联 对外服务类
@@ -14,91 +17,63 @@ import java.util.List;
 public interface DataGroupRelApi {
 
     /**
-     * 创建数据分组关联
+     * 添加关联
      *
      * @param dto dto
-     * @return id
      */
-    Long createDataGroupRel(DataGroupRelCreateDTO dto);
+    void addGroupRel(DataGroupRelCreateDTO dto);
 
     /**
-     * 更新数据分组关联
+     * 添加关联
      *
-     * @param dto dto
-     * @return effect
+     * @param list list
      */
-    Integer updateDataGroupRelById(DataGroupRelUpdateDTO dto);
+    void addGroupRel(List<DataGroupRelCreateDTO> list);
 
     /**
-     * 根据条件更新数据分组关联
+     * 通过缓存查询数据分组关联
+     * <p>
+     * groupId - relId
      *
-     * @param query  query
-     * @param update update
-     * @return effect
-     */
-    Integer updateDataGroupRel(DataGroupRelQueryDTO query, DataGroupRelUpdateDTO update);
-
-    /**
-     * 查询数据分组关联
-     *
-     * @param id id
-     * @return row
-     */
-    DataGroupRelDTO getDataGroupRelById(Long id);
-
-    /**
-     * 批量查询数据分组关联
-     *
-     * @param idList idList
+     * @param type type
      * @return rows
      */
-    List<DataGroupRelDTO> getDataGroupRelByIdList(List<Long> idList);
-
-    /**
-     * 查询全部数据分组关联
-     *
-     * @param dto dto
-     * @return rows
-     */
-    List<DataGroupRelDTO> getDataGroupRelList(DataGroupRelQueryDTO dto);
+    Map<Long, Set<Long>> getGroupRelList(DataGroupTypeEnum type);
 
     /**
      * 通过缓存查询数据分组关联
      *
+     * @param type    type
+     * @param groupId groupId
      * @return rows
      */
-    List<DataGroupRelDTO> getDataGroupRelListByCache();
-
-    /**
-     * 查询数据分组关联数量
-     *
-     * @param dto dto
-     * @return count
-     */
-    Long getDataGroupRelCount(DataGroupRelQueryDTO dto);
+    Set<Long> getGroupRelList(DataGroupTypeEnum type, Long groupId);
 
     /**
      * 删除数据分组关联
      *
-     * @param id id
+     * @param type  type
+     * @param relId relId
      * @return effect
      */
-    Integer deleteDataGroupRelById(Long id);
+    Integer deleteByRelId(DataGroupTypeEnum type, Long relId);
 
     /**
      * 批量删除数据分组关联
      *
-     * @param idList idList
+     * @param type      type
+     * @param relIdList relIdList
      * @return effect
      */
-    Integer deleteDataGroupRelByIdList(List<Long> idList);
+    Integer deleteByRelIdList(DataGroupTypeEnum type, List<Long> relIdList);
 
     /**
-     * 根据条件删除数据分组关联
+     * 批量删除数据分组关联
      *
-     * @param dto dto
+     * @param type        type
+     * @param groupIdList groupIdList
      * @return effect
      */
-    Integer deleteDataGroupRel(DataGroupRelQueryDTO dto);
+    Integer deleteByGroupIdList(DataGroupTypeEnum type, List<Long> groupIdList);
 
 }

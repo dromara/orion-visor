@@ -21,4 +21,12 @@
         id, parent_id, name, type, sort, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <select id="selectMaxSort" resultType="java.lang.Integer">
+        SELECT IFNULL(MAX(sort), 0)
+        FROM data_group
+        WHERE deleted = 0
+        AND type = #{type}
+        AND parent_id = #{parentId}
+    </select>
+
 </mapper>

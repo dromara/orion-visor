@@ -42,8 +42,4 @@ public class DataGroupRelDO extends BaseDO {
     @TableField("type")
     private String type;
 
-    @Schema(description = "排序")
-    @TableField("sort")
-    private Integer sort;
-
 }

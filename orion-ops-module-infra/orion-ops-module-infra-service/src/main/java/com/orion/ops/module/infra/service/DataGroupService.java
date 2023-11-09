@@ -27,19 +27,27 @@ public interface DataGroupService {
      * 重命名分组
      *
      * @param request request
-     * @return id
+     * @return effect
      */
     Integer renameDataGroup(DataGroupUpdateRequest request);
 
     // FIXME drag
 
     /**
-     * 通过缓存查询数据分组
+     * 通过缓存查询数据分组 - 列表
      *
      * @param type type
      * @return rows
      */
     List<DataGroupCacheDTO> getDataGroupListByCache(String type);
+
+    /**
+     * 通过缓存查询数据分组 - 树结构
+     *
+     * @param type type
+     * @return rows
+     */
+    List<DataGroupCacheDTO> getDataGroupTreeByCache(String type);
 
     /**
      * 删除数据分组

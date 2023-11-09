@@ -6,12 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
-import java.math.*;
 
 /**
  * 数据分组关联 创建请求业务对象
@@ -34,14 +30,5 @@ public class DataGroupRelCreateDTO implements Serializable {
     @NotNull
     @Schema(description = "引用id")
     private Long relId;
-
-    @NotBlank
-    @Size(max = 16)
-    @Schema(description = "组类型")
-    private String type;
-
-    @NotNull
-    @Schema(description = "排序")
-    private Integer sort;
 
 }

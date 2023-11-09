@@ -1,9 +1,6 @@
 package com.orion.ops.module.infra.convert;
 
-import com.orion.ops.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupRelDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupRelUpdateDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupRelCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -22,14 +19,8 @@ public interface DataGroupRelProviderConvert {
 
     DataGroupRelProviderConvert MAPPER = Mappers.getMapper(DataGroupRelProviderConvert.class);
 
-    DataGroupRelDO to(DataGroupRelDTO dto);
-
-    DataGroupRelDTO to(DataGroupRelDO domain);
-
-    DataGroupRelDO to(DataGroupRelUpdateDTO update);
-
     DataGroupRelCreateRequest toRequest(DataGroupRelCreateDTO request);
 
-    List<DataGroupRelDTO> toList(List<DataGroupRelDO> list);
+    List<DataGroupRelCreateRequest> toList(List<DataGroupRelCreateDTO> list);
 
 }

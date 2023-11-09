@@ -10,8 +10,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
-import java.math.*;
 
 /**
  * 数据分组 创建请求业务对象
@@ -35,14 +33,5 @@ public class DataGroupCreateDTO implements Serializable {
     @Size(max = 32)
     @Schema(description = "组名称")
     private String name;
-
-    @NotBlank
-    @Size(max = 16)
-    @Schema(description = "组类型")
-    private String type;
-
-    @NotNull
-    @Schema(description = "排序")
-    private Integer sort;
 
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 数据分组 缓存对象
@@ -33,10 +34,10 @@ public class DataGroupCacheDTO implements Serializable {
     @Schema(description = "组名称")
     private String name;
 
-    @Schema(description = "组类型")
-    private String type;
-
     @Schema(description = "排序")
     private Integer sort;
+
+    @Schema(description = "子节点")
+    private List<DataGroupCacheDTO> children;
 
 }

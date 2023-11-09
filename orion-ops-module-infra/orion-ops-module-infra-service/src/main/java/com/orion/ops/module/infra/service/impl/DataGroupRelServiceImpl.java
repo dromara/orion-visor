@@ -51,7 +51,6 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         DataGroupRelCreateRequest record = DataGroupRelCreateRequest.builder()
                 .groupId(Valid.notNull(request.getGroupId()))
                 .relId(Valid.notNull(request.getRelId()))
-                .sort(request.getSort())
                 .build();
         // 插入
         SpringHolder.getBean(DataGroupRelService.class)
@@ -64,12 +63,6 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         if (Lists.isEmpty(list)) {
             return;
         }
-        // 设置默认排序
-        list.forEach(s -> {
-            if (s.getSort() == null) {
-                s.setSort(Const.DEFAULT_SORT);
-            }
-        });
         // 通过 groupId 分组
         Map<Long, List<DataGroupRelCreateRequest>> groupMapping = list.stream()
                 .collect(Collectors.groupingBy(DataGroupRelCreateRequest::getGroupId));
@@ -105,7 +98,6 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                     .groupId(k)
                     .type(groupTypeMapping.get(k))
                     .relId(s.getRelId())
-                    .sort(s.getSort())
                     .build()));
         });
         // 插入

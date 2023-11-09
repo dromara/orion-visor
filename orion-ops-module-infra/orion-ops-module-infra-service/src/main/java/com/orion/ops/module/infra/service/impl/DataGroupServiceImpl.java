@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,12 +49,16 @@ public class DataGroupServiceImpl implements DataGroupService {
         DataGroupDO record = DataGroupConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkDataGroupPresent(record);
+        // 查询最大排序
+        Integer sort = dataGroupDAO.selectMaxSort(request.getParentId(), request.getType());
+        record.setSort(sort + Const.DEFAULT_SORT);
         // 插入
         int effect = dataGroupDAO.insert(record);
         Long id = record.getId();
         log.info("DataGroupService-createDataGroup id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP.format(request.getType()));
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(request.getType()),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(request.getType()));
         return id;
     }
 
@@ -75,15 +80,16 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 更新
         int effect = dataGroupDAO.updateById(updateRecord);
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP.format(record.getType()));
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(record.getType()),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(record.getType()));
         return effect;
     }
 
     @Override
     public List<DataGroupCacheDTO> getDataGroupListByCache(String type) {
         // 查询缓存
-        String key = DataGroupCacheKeyDefine.DATA_GROUP.format(type);
-        List<DataGroupCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP);
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type);
+        List<DataGroupCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST);
         if (list.isEmpty()) {
             // 查询数据库
             list = dataGroupDAO.of()
@@ -98,11 +104,64 @@ public class DataGroupServiceImpl implements DataGroupService {
                         .build());
             }
             // 设置缓存
-            RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP, list);
+            RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST, list);
         }
         // 删除默认值
         list.removeIf(s -> s.getId().equals(Const.NONE_ID));
         return list;
+    }
+
+    @Override
+    public List<DataGroupCacheDTO> getDataGroupTreeByCache(String type) {
+        // 查询缓存
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type);
+        List<DataGroupCacheDTO> treeData = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_TREE);
+        if (treeData.isEmpty()) {
+            // 查询列表缓存
+            List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type);
+            // 添加默认值 防止穿透
+            if (Lists.isEmpty(rows)) {
+                treeData = Lists.of(DataGroupCacheDTO.builder()
+                        .id(Const.NONE_ID)
+                        .build());
+            } else {
+                // 构建树
+                DataGroupCacheDTO rootNode = DataGroupCacheDTO.builder()
+                        .parentId(Const.ROOT_PARENT_ID)
+                        .sort(Const.DEFAULT_SORT)
+                        .build();
+                this.buildGroupTree(rootNode, rows);
+                treeData = rootNode.getChildren();
+            }
+            // 设置缓存
+            RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST, treeData);
+        }
+        // 删除默认值
+        treeData.removeIf(s -> s.getId().equals(Const.NONE_ID));
+        return treeData;
+    }
+
+    /**
+     * 构建树
+     *
+     * @param parentNode parentNode
+     * @param nodes      nodes
+     */
+    private void buildGroupTree(DataGroupCacheDTO parentNode,
+                                List<DataGroupCacheDTO> nodes) {
+        // 获取子节点
+        List<DataGroupCacheDTO> childrenNodes = nodes.stream()
+                .filter(s -> parentNode.getParentId().equals(s.getParentId()))
+                .sorted(Comparator.comparing(DataGroupCacheDTO::getSort))
+                .collect(Collectors.toList());
+        if (childrenNodes.isEmpty()) {
+            return;
+        }
+        parentNode.setChildren(childrenNodes);
+        // 遍历子节点
+        for (DataGroupCacheDTO childrenNode : childrenNodes) {
+            this.buildGroupTree(childrenNode, nodes);
+        }
     }
 
     @Override
@@ -122,7 +181,8 @@ public class DataGroupServiceImpl implements DataGroupService {
         dataGroupRelService.deleteByGroupIdList(type, deleteIdList);
         log.info("DataGroupService-deleteDataGroupById id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP.format(type));
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
         return effect;
     }
 
