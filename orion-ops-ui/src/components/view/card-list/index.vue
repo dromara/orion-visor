@@ -6,16 +6,16 @@
         <!-- 信息部分 -->
         <div class="card-list-info">
           <!-- 路由面包屑 -->
-          <Breadcrumb />
+          <breadcrumb />
           <!-- 分页部分 -->
           <div class="pagination-wrapper">
             <a-pagination v-if="pagination"
                           size="mini"
-                          v-model:current="pagination.current"
-                          v-model:page-size="pagination.pageSize"
+                          v-model:current="(pagination as PaginationProps).current"
+                          v-model:page-size="(pagination as PaginationProps).pageSize"
                           v-bind="pagination"
                           :auto-adjust="false"
-                          @change="page => emits('pageChange', page, pagination.pageSize)"
+                          @change="page => emits('pageChange', page, (pagination as PaginationProps).pageSize)"
                           @page-size-change="limit => emits('pageChange', 1, limit)" />
           </div>
         </div>

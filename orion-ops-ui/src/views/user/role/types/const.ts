@@ -6,30 +6,48 @@ export const RoleStatus = {
   ENABLED: 1,
 };
 
+// 查询操作
+const queryType = ['query', 'view'];
+const addType = ['add', 'create'];
+const updateType = ['update', 'modify'];
+const deleteType = ['delete', 'remove'];
+const standardRead = [...queryType];
+const standardWrite = [...addType, ...updateType, ...deleteType];
+
 // 快速分配菜单操作
 export const quickGrantMenuOperator = [
   {
     name: '',
     rule: undefined
   }, {
+    name: '常规读操作',
+    rule: (perm: string) => {
+      return !!standardRead.find(s => perm.includes(s));
+    }
+  }, {
+    name: '常规写操作',
+    rule: (perm: string) => {
+      return !!standardWrite.find(s => perm.includes(s));
+    }
+  }, {
     name: '查询',
     rule: (perm: string) => {
-      return perm.includes('query') || perm.includes('view');
+      return !!queryType.find(s => perm.includes(s));
     }
   }, {
     name: '新增',
     rule: (perm: string) => {
-      return perm.includes('add') || perm.includes('create');
+      return !!addType.find(s => perm.includes(s));
     }
   }, {
     name: '修改',
     rule: (perm: string) => {
-      return perm.includes('update') || perm.includes('modify');
+      return !!updateType.find(s => perm.includes(s));
     }
   }, {
     name: '删除',
     rule: (perm: string) => {
-      return perm.includes('delete') || perm.includes('remove');
+      return !!deleteType.find(s => perm.includes(s));
     }
   }, {
     name: '导入',

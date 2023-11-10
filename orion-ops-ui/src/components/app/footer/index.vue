@@ -1,10 +1,17 @@
 <template>
   <a-layout-footer class="footer">
-    <div class="footer-text">
-      项目地址 <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">github</a> - <a
-      target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a>
-      <a class="license" target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE">License - Apache 2.0</a>
-    </div>
+    <a-space direction="vertical" size="medium">
+      <a-space size="large">
+        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">官网</a>
+        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">文档</a>
+        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">教程</a>
+        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">github</a>
+        <a target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a>
+      </a-space>
+      <span class="copyright">
+          Copyright<icon-copyright /> 2023 By OrionOpsPro
+        </span>
+    </a-space>
   </a-layout-footer>
 </template>
 
@@ -16,21 +23,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
-    color: var(--color-text-2);
+    height: 80px;
     text-align: center;
 
-    &-text {
-      text-wrap: none;
-
-      a {
-        text-decoration: none;
-      }
-
-      .license {
-        display: inline-block;
-        margin-left: 16px;
-      }
+    a {
+      text-decoration: none;
+      color: rgb(var(--primary-6));
     }
+
+    .copyright {
+      color: var(--color-text-3)
+    }
+
   }
 </style>

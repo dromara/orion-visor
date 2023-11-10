@@ -4,7 +4,7 @@
     <div v-if="navbar" class="layout-navbar">
       <NavBar />
     </div>
-    <a-layout>
+    <a-layout style="flex-direction: row;">
       <!-- 左侧菜单栏 -->
       <a-layout-sider v-if="renderMenu"
                       v-show="!hideMenu"
@@ -33,10 +33,13 @@
       </a-drawer>
       <!-- body -->
       <a-layout class="layout-content" :style="paddingStyle">
+        <!-- 页签 -->
         <TabBar v-if="appStore.tabBar" />
+        <!-- 页面 -->
         <a-layout-content>
           <PageLayout />
         </a-layout-content>
+        <!-- 页脚 -->
         <Footer v-if="footer" />
       </a-layout>
     </a-layout>
@@ -81,9 +84,7 @@
     return { ...paddingLeft, ...paddingTop };
   });
 
-  /**
-   * 设置菜单展开状态
-   */
+  // 设置菜单展开状态
   const setCollapsed = (val: boolean) => {
     if (!isInit.value) return;
     appStore.updateSettings({ menuCollapse: val });
@@ -117,7 +118,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 120;
     width: 100%;
     height: @nav-size-height;
   }

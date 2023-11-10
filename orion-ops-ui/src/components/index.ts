@@ -30,10 +30,10 @@ use([
 
 export default {
   install(Vue: App) {
-    Vue.component('Chart', Chart);
-    Vue.component('Breadcrumb', Breadcrumb);
+    Vue.component('chart', Chart);
+    Vue.component('breadcrumb', Breadcrumb);
     Vue.component('a-query-header', AQueryHeader);
     Vue.component('card-list', CardList);
-    Vue.component('Editor', Editor);
+    Vue.component('editor', Editor);
   },
 };

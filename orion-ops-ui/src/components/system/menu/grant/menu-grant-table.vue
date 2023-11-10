@@ -136,6 +136,7 @@
     }
   });
 
+  // fixme 提成公共方法
   // 寻找当前节点
   const findNode = (id: number, arr: Array<MenuQueryResponse>): MenuQueryResponse | undefined => {
     for (let node of arr) {

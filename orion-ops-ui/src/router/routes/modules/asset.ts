@@ -7,6 +7,10 @@ const ASSET: AppRouteRecordRaw = {
   component: DEFAULT_LAYOUT,
   children: [
     {
+      name: 'assetHostGroup',
+      path: '/asset/host-group',
+      component: () => import('@/views/asset/host-group/index.vue'),
+    }, {
       name: 'assetHost',
       path: '/asset/host',
       component: () => import('@/views/asset/host/index.vue'),

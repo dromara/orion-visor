@@ -50,8 +50,8 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
-          <!-- 仅看收藏 -->
-          <a-checkbox v-model="formModel.favorite" @change="fetchTableData()">
+          <!-- 仅看收藏 fixme 去掉  -->
+          <a-checkbox v-if="false" v-model="formModel.favorite" @change="fetchTableData()">
             <template #checkbox="{ checked }">
               <a-tag :checked="checked"
                      class="only-favorite"

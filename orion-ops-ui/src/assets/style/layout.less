@@ -1,10 +1,13 @@
+// -- container
 .layout-container {
   background-color: var(--color-fill-2);
   padding: 16px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
+// -- table-view
 .table-search-card {
   width: 100%;
   padding-top: 16px;
@@ -64,10 +67,12 @@
   }
 }
 
+// -- modal
 .modal-form {
   padding: 24px 20px 4px 20px;
 }
 
+// -- card-view
 .card-list-item {
   height: 100%;
   display: flex;
@@ -105,109 +110,8 @@
   padding: 18px 24px 14px 24px;
 }
 
-.arco-table-td-content {
-  color: rgba(var(--gray-9), .95);
-  font-size: 13px;
-}
-
-.usn {
-  user-select: none;
-}
-
-.hide {
-  display: none;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.mx0 {
-  margin: 0 0;
-}
-
-.mx2 {
-  margin: 0 2px;
-}
-
-.mx4 {
-  margin: 0 4px;
-}
-
-.ml4 {
-  margin-left: 4px;
-}
-
-.mr4 {
-  margin-right: 4px;
-}
-
-.mt4 {
-  margin-top: 4px;
-}
-
-.mb4 {
-  margin-bottom: 4px;
-}
-
-.mx4 {
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-.my4 {
-  margin-top: 4px;
-  margin-bottom: 4px;
-}
-
-.ml8 {
-  margin-left: 8px;
-}
-
-.mr8 {
-  margin-right: 8px;
-}
-
-.mt8 {
-  margin-top: 8px;
-}
-
-.mb8 {
-  margin-bottom: 8px;
-}
-
-.mx8 {
-  margin-left: 8px;
-  margin-right: 8px;
-}
-
-.my8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-
-.ml16 {
-  margin-left: 16px;
-}
-
-.mr16 {
-  margin-right: 16px;
-}
-
-.mt16 {
-  margin-top: 16px;
-}
-
-.mb16 {
-  margin-bottom: 16px;
-}
-
-.mx16 {
-  margin-left: 16px;
-  margin-right: 16px;
-}
-
-.my16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
+// -- card
+.simple-card {
+  background: var(--color-bg-2);
+  border-radius: 4px;
 }
