@@ -30,6 +30,10 @@ export interface Pagination {
   limit?: number;
 }
 
+export interface NodeData  {
+  [key: string]: any;
+}
+
 export interface DataGrid<T> {
   page: number;
   limit: number;

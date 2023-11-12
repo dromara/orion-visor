@@ -1,50 +1,50 @@
 <template>
-  <div class="tree-container">
-    <a-tree
-      :blockNode="true"
-      :draggable="props.editMode"
-      :data="treeData">
+  <a-tree
+    class="tree-container"
+    :blockNode="true"
+    :draggable="true"
+    :data="treeData">
+    <template #title="node">
+      <template v-if="node.editable">
+        <a-input size="mini"
+                 ref="renameInput"
+                 v-model="currName"
+                 :max-length="32"
+                 :disabled="node.loading"
+                 @blur="() => saveNode(node.key)"
+                 @pressEnter="() => saveNode(node.key)"
+                 @change="() => saveNode(node.key)">
+          <template #suffix>
+            <!-- 加载中 -->
+            <icon-loading v-if="node.loading" />
+            <!-- 保存 -->
+            <icon-check v-else
+                        class="pointer"
+                        title="保存"
+                        @click="saveNode(node.key)" />
+          </template>
+        </a-input>
+      </template>
 
-      <template #title="node">
-        <template v-if="node.editable">
-          <a-input size="mini"
-                   v-model="currName"
-                   :max-length="32"
-                   :disabled="node.loading"
-                   autofocus
-                   @change="() => saveNode(node.key)">
-            <template #suffix>
-              <!-- 加载中 -->
-              <icon-loading v-if="node.loading" />
-              <!-- 保存 -->
-              <icon-check v-else
-                          class="pointer"
-                          title="保存"
-                          @click="saveNode(node.key)" />
-            </template>
-          </a-input>
-        </template>
-
-        <span class="node-title" v-else>
+      <span class="node-title" v-else>
           {{ node.title }}
         </span>
-      </template>
-      <!-- 操作图标 -->
-      <template #drag-icon="{ node }">
-        <a-space v-if="!node.editable">
-          <icon-edit class="tree-icon"
-                     title="重命名"
+    </template>
+    <!-- 操作图标 -->
+    <template #drag-icon="{ node }">
+      <a-space v-if="!node.editable">
+        <icon-edit class="tree-icon"
+                   title="重命名"
+                   @click="rename(node.title, node.key)" />
+        <icon-delete class="tree-icon"
+                     title="删除"
                      @click="rename(node.title, node.key)" />
-          <icon-delete class="tree-icon"
-                       title="删除"
-                       @click="rename(node.title, node.key)" />
-          <icon-plus class="tree-icon"
-                     title="新增"
-                     @click="rename(node.title, node.key)" />
-        </a-space>
-      </template>
-    </a-tree>
-  </div>
+        <icon-plus class="tree-icon"
+                   title="新增"
+                   @click="rename(node.title, node.key)" />
+      </a-space>
+    </template>
+  </a-tree>
 </template>
 
 <script lang="ts">
@@ -54,25 +54,25 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TreeNodeData } from '@arco-design/web-vue';
+  import type { NodeData } from '@/types/global';
   import { nextTick, ref } from 'vue';
-  import { TagProps } from '@/store/modules/tab-bar/types';
-  import { TreeNodeData } from '@arco-design/web-vue';
 
-  const props = defineProps({
-    editMode: Boolean
-  });
-
+  const renameInput = ref();
   const currName = ref();
 
-
-  function sleep(ms) {
+  // 提为工具 utils tree.js
+  function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   // 保存节点
   const saveNode = async (key: string) => {
     // 寻找节点
-    const node = findNode(key, treeData.value);
+    const node = findNode<TreeNodeData>(key, treeData.value);
+    if (!node) {
+      return;
+    }
     if (currName.value) {
       node.loading = true;
       try {
@@ -100,13 +100,19 @@
 
   // 重命名
   const rename = (title: string, key: string) => {
-    const node = findNode(key, treeData.value);
+    const node = findNode<TreeNodeData>(key, treeData.value);
+    if (!node) {
+      return;
+    }
     currName.value = title;
     node.editable = true;
+    nextTick(() => {
+      renameInput.value?.focus();
+    });
   };
 
   // 寻找当前节点
-  const findNode = (id: string, arr: Array<TreeNodeData>): TreeNodeData | undefined => {
+  const findNode = <T extends NodeData>(id: string, arr: Array<T>): T | undefined => {
     for (let node of arr) {
       if (node.key === id) {
         return node;
@@ -117,7 +123,7 @@
       if (node?.children?.length) {
         const inChildNode = findNode(id, node.children);
         if (inChildNode) {
-          return inChildNode;
+          return inChildNode as T;
         }
       }
     }
@@ -238,6 +244,14 @@
     min-width: 100%;
     width: max-content;
     user-select: none;
+  }
+
+  :deep(.arco-tree-node-selected) {
+    .arco-tree-node-title {
+      &:hover {
+        background-color: var(--color-fill-2);
+      }
+    }
   }
 
   :deep(.arco-tree-node-title) {

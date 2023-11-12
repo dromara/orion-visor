@@ -14,6 +14,7 @@ import Breadcrumb from './app/breadcrumb/index.vue';
 import Chart from './view/chart/index.vue';
 import CardList from './view/card-list/index.vue';
 import Editor from './view/editor/index.vue';
+import TabRouter from './view/tab-router/index.vue';
 
 use([
   CanvasRenderer,
@@ -35,5 +36,6 @@ export default {
     Vue.component('a-query-header', AQueryHeader);
     Vue.component('card-list', CardList);
     Vue.component('editor', Editor);
+    Vue.component('tab-router', TabRouter);
   },
 };
