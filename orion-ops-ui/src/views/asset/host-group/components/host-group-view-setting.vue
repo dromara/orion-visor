@@ -71,6 +71,26 @@
     console.log(key);
   };
 
+  const { loading: treeLoading, setLoading: setTreeLoading } = useLoading();
+  const { loading: dataLoading, setLoading: setDataLoading } = useLoading();
+
+  const tree = ref();
+
+  // 添加根节点
+  const addRootNode = () => {
+    tree.value.addRootNode();
+  };
+
+  // 刷新树
+  const refreshTree = () => {
+    tree.value.fetchTreeData();
+  };
+
+  // 选中分组
+  const selectGroup = (key: number) => {
+    console.log(key);
+  };
+
 </script>
 
 <style lang="less" scoped>
