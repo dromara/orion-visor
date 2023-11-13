@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.service.impl;
 import com.orion.lang.define.cache.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
@@ -15,6 +16,7 @@ import com.orion.ops.module.infra.entity.domain.DataGroupDO;
 import com.orion.ops.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupRelCreateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRelUpdateRequest;
 import com.orion.ops.module.infra.service.DataGroupRelService;
 import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,52 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
 
     @Resource
     private DataGroupRelDAO dataGroupRelDAO;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateGroupRel(DataGroupRelUpdateRequest request) {
+        Long groupId = request.getGroupId();
+        // 查询分组
+        DataGroupDO group = dataGroupDAO.selectById(groupId);
+        Valid.notNull(group, ErrorMessage.GROUP_ABSENT);
+        List<Long> relIdList = request.getRelIdList();
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.NAME, group.getName());
+        if (Lists.isEmpty(relIdList)) {
+            // 为空删除
+            dataGroupRelDAO.deleteByGroupId(groupId);
+        } else {
+            // 差异变更
+            List<DataGroupRelDO> records = dataGroupRelDAO.of()
+                    .createWrapper()
+                    .eq(DataGroupRelDO::getGroupId, group)
+                    .then()
+                    .list();
+            // 查询删除的部分
+            List<Long> deleteIdList = records.stream()
+                    .filter(s -> !relIdList.contains(s.getRelId()))
+                    .map(DataGroupRelDO::getId)
+                    .collect(Collectors.toList());
+            if (!deleteIdList.isEmpty()) {
+                dataGroupRelDAO.deleteBatchIds(deleteIdList);
+            }
+            // 查询新增的部分
+            List<Long> persetRelIdList = records.stream()
+                    .map(DataGroupRelDO::getRelId)
+                    .collect(Collectors.toList());
+            relIdList.removeIf(persetRelIdList::contains);
+            if (!relIdList.isEmpty()) {
+                List<DataGroupRelDO> insertRecords = relIdList.stream()
+                        .map(s -> DataGroupRelDO.builder()
+                                .groupId(groupId)
+                                .type(group.getType())
+                                .relId(s)
+                                .build())
+                        .collect(Collectors.toList());
+                dataGroupRelDAO.insertBatch(insertRecords);
+            }
+        }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

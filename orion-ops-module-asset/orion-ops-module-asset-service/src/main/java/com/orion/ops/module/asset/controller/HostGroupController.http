@@ -1,0 +1,43 @@
+### 创建主机分组
+POST {{baseUrl}}/asset/host-group/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "parentId": -1,
+  "name": ""
+}
+
+
+### 查询主机分组
+GET {{baseUrl}}/asset/host-group/tree
+Authorization: {{token}}
+
+
+### 修改名称
+PUT {{baseUrl}}/asset/host-group/rename
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": ""
+}
+
+
+### 移动位置
+PUT {{baseUrl}}/asset/host-group/move
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "targetId": "",
+  "position": ""
+}
+
+
+### 删除主机分组
+DELETE {{baseUrl}}/asset/host-group/delete?id=1
+Authorization: {{token}}
+

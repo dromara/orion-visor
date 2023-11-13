@@ -190,6 +190,7 @@
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore, useDictStore } from '@/store';
   import usePermission from '@/hooks/permission';
+  import { findParentNode } from '@/utils/tree';
 
   const { toOptions, getDictValue, toggleDictValue } = useDictStore();
   const cacheStore = useCacheStore();
@@ -215,36 +216,23 @@
       setFetchLoading(true);
       // 调用删除接口
       await deleteMenu(id);
-
-      // 获取父菜单
-      const findParentMenu = (arr: any, id: number): any => {
-        if (!arr || !arr.length) {
-          return null;
-        }
-        // 当前级
-        for (let e of arr) {
-          if (e.id === id) {
-            return arr;
-          }
-        }
-        // 子级
-        for (let e of arr) {
-          if (e.children && e.children.length) {
-            if (findParentMenu(e.children, id)) {
-              return e.children;
-            }
-          }
-        }
-        return null;
-      };
-
       // 获取父级容器
-      const parent = findParentMenu(tableRenderData.value, id) as unknown as MenuQueryResponse[];
+      const parent = findParentNode(id, tableRenderData.value, 'id');
       if (parent) {
-        // 删除
-        for (let i = 0; i < parent.length; i++) {
-          if (parent[i].id === id) {
-            parent.splice(i, 1);
+        // 页面删除 不重新调用接口
+        let children;
+        if (parent.root) {
+          children = tableRenderData.value;
+        } else {
+          children = parent.children;
+        }
+        if (children) {
+          // 删除
+          for (let i = 0; i < children.length; i++) {
+            if (children[i].id === id) {
+              children.splice(i, 1);
+              break;
+            }
           }
         }
       }

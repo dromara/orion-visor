@@ -20,6 +20,18 @@ public interface DataGroupRelDAO extends IMapper<DataGroupRelDO> {
     /**
      * 通过 groupId 删除
      *
+     * @param groupId groupId
+     * @return effect
+     */
+    default int deleteByGroupId(Long groupId) {
+        LambdaQueryWrapper<DataGroupRelDO> wrapper = this.lambda()
+                .eq(DataGroupRelDO::getGroupId, groupId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 groupId 删除
+     *
      * @param idList idList
      * @return effect
      */

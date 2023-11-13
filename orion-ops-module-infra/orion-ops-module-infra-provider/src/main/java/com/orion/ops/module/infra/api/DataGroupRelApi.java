@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.api;
 
 import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRelUpdateDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 
 import java.util.List;
@@ -15,6 +16,13 @@ import java.util.Set;
  * @since 2023-11-7 18:44
  */
 public interface DataGroupRelApi {
+
+    /**
+     * 设置关联
+     *
+     * @param dto dto
+     */
+    void updateGroupRel(DataGroupRelUpdateDTO dto);
 
     /**
      * 添加关联

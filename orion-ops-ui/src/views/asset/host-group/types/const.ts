@@ -10,7 +10,7 @@ export const tabItems = [{
   key: tabItemKeys.SETTING,
   text: '分组配置',
   icon: 'icon-unordered-list',
-  permission: []
+  permission: ['asset:host-group:query']
 }, {
   key: tabItemKeys.ROLE_GRANT,
   text: '角色授权',
@@ -22,3 +22,9 @@ export const tabItems = [{
   icon: 'icon-user',
   permission: []
 }];
+
+// 创建前缀
+export const createGroupGroupPrefix = 'create-';
+
+// 根id
+export const rootId = 0;

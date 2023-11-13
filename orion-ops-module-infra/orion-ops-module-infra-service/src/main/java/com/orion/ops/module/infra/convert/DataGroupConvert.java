@@ -3,7 +3,7 @@ package com.orion.ops.module.infra.convert;
 import com.orion.ops.module.infra.entity.domain.DataGroupDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
-import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRenameRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -21,7 +21,7 @@ public interface DataGroupConvert {
 
     DataGroupDO to(DataGroupCreateRequest request);
 
-    DataGroupDO to(DataGroupUpdateRequest request);
+    DataGroupDO to(DataGroupRenameRequest request);
 
     DataGroupCacheDTO toCache(DataGroupDO domain);
 

@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupRelCreateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRelUpdateRequest;
 
 import java.util.List;
 
@@ -13,6 +14,13 @@ import java.util.List;
  * @since 2023-11-7 18:44
  */
 public interface DataGroupRelService {
+
+    /**
+     * 设置关联
+     *
+     * @param request request
+     */
+    void updateGroupRel(DataGroupRelUpdateRequest request);
 
     /**
      * 添加关联

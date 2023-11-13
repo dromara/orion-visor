@@ -9,47 +9,58 @@ export interface HostGroupCreateRequest {
 }
 
 /**
- * 主机分组更新请求
+ * 主机分组重命名请求
  */
-export interface HostGroupUpdateRequest extends HostGroupCreateRequest {
+export interface HostGroupRenameRequest {
   id?: number;
+  name?: string;
 }
 
 /**
- * 主机分组查询请求
+ * 主机分组移动请求
  */
-export interface HostGroupQueryRequest {
-  searchValue?: string;
+export interface HostGroupMoveRequest {
   id?: number;
-  parentId?: number;
-  name?: string;
-  type?: string;
-  sort?: number;
+  targetId?: number;
+  position?: number;
 }
 
 /**
  * 主机分组查询响应
  */
 export interface HostGroupQueryResponse {
-  id: number;
-  parentId: number;
-  name: string;
-  sort: number;
+  key: number;
+  title: string;
   children: Array<HostGroupQueryResponse>;
+}
+
+/**
+ * 分组内主机修改请求
+ */
+export interface HostGroupRelUpdateRequest {
+  groupId?: number;
+  relIdList?: Array<number>;
 }
 
 /**
  * 创建主机分组
  */
 export function createHostGroup(request: HostGroupCreateRequest) {
-  return axios.post('/asset/host-group/create', request);
+  return axios.post<number>('/asset/host-group/create', request);
 }
 
 /**
- * 更新主机分组
+ * 更新主机分组名称
  */
-export function updateHostGroup(request: HostGroupUpdateRequest) {
-  return axios.put('/asset/host-group/update', request);
+export function updateHostGroupName(request: HostGroupRenameRequest) {
+  return axios.put('/asset/host-group/rename', request);
+}
+
+/**
+ * 移动主机分组
+ */
+export function moveHostGroup(request: HostGroupMoveRequest) {
+  return axios.put('/asset/host-group/move', request);
 }
 
 /**
@@ -64,4 +75,18 @@ export function getHostGroupTree() {
  */
 export function deleteHostGroup(id: number) {
   return axios.delete('/asset/host-group/delete', { params: { id } });
+}
+
+/**
+ * 查询分组内主机
+ */
+export function getHostGroupRelList() {
+  return axios.get<Array<number>>('/asset/host-group/rel-list');
+}
+
+/**
+ * 修改分组内主机
+ */
+export function updateHostGroupRel(request: HostGroupRelUpdateRequest) {
+  return axios.post('/asset/host-group/update-rel', request);
 }

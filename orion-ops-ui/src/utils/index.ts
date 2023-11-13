@@ -180,6 +180,13 @@ export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
 };
 
 /**
+ * 休眠
+ */
+export const sleep = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+/**
  * 获取当前页面的缩放值
  */
 export function detectZoom() {

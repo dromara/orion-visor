@@ -12,7 +12,7 @@ const addType = ['add', 'create'];
 const updateType = ['update', 'modify'];
 const deleteType = ['delete', 'remove'];
 const standardRead = [...queryType];
-const standardWrite = [...addType, ...updateType, ...deleteType];
+const standardWrite = [...addType, ...updateType];
 
 // 快速分配菜单操作
 export const quickGrantMenuOperator = [

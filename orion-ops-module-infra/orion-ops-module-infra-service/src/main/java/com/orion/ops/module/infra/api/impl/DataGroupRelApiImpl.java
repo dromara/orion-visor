@@ -5,7 +5,9 @@ import com.orion.ops.module.infra.api.DataGroupRelApi;
 import com.orion.ops.module.infra.convert.DataGroupRelProviderConvert;
 import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRelUpdateDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupRelCreateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRelUpdateRequest;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import com.orion.ops.module.infra.service.DataGroupRelService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,13 @@ public class DataGroupRelApiImpl implements DataGroupRelApi {
 
     @Resource
     private DataGroupRelService dataGroupRelService;
+
+    @Override
+    public void updateGroupRel(DataGroupRelUpdateDTO dto) {
+        Valid.valid(dto);
+        DataGroupRelUpdateRequest request = DataGroupRelProviderConvert.MAPPER.toRequest(dto);
+        dataGroupRelService.updateGroupRel(request);
+    }
 
     @Override
     public void addGroupRel(DataGroupRelCreateDTO dto) {
