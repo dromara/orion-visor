@@ -44,9 +44,7 @@
     }
   );
 
-  /**
-   * 监听路由变化
-   */
+  // 监听路由变化
   listenerRouteChange((route: RouteLocationNormalized) => {
     if (
       !route.meta.noAffix &&

@@ -115,6 +115,19 @@
           </a-button>
         </a-tooltip>
       </li>
+      <!-- 刷新页面 -->
+      <li>
+        <a-tooltip content="刷新页面">
+          <a-button class="nav-btn"
+                    type="outline"
+                    shape="circle"
+                    @click="reloadCurrent">
+            <template #icon>
+              <icon-refresh />
+            </template>
+          </a-button>
+        </a-tooltip>
+      </li>
       <!-- 偏好设置 -->
       <li>
         <a-popover :popup-visible="tippedPreference" position="br">
@@ -184,24 +197,30 @@
 
 <script lang="ts" setup>
   import { computed, inject, ref } from 'vue';
-  import { useDark, useFullscreen, useToggle } from '@vueuse/core';
-  import { useAppStore, useTipsStore, useUserStore } from '@/store';
-  import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
+  import { useRoute, useRouter } from 'vue-router';
+  import { useDark, useFullscreen, useToggle } from '@vueuse/core';
+  import { useAppStore, useTabBarStore, useTipsStore, useUserStore } from '@/store';
+  import { LOCALE_OPTIONS } from '@/locale';
   import { triggerMouseEvent } from '@/utils';
-  import Menu from '@/components/system/menu/tree/index.vue';
-  import MessageBox from '@/components/system/message-box/index.vue';
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
+  import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
+  import Menu from '@/components/system/menu/tree/index.vue';
   import UpdatePasswordModal from '@/components/user/role/update-password-modal.vue';
+  import MessageBox from '@/components/system/message-box/index.vue';
 
   const tipsStore = useTipsStore();
   const appStore = useAppStore();
   const userStore = useUserStore();
+  const tabBarStore = useTabBarStore();
+  const route = useRoute();
+  const router = useRouter();
   const { logout } = useUser();
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
+
   // 主题
   const darkTheme = useDark({
     selector: 'body',
@@ -252,6 +271,23 @@
   // 打开语言切换
   const setLocalesVisible = () => {
     triggerMouseEvent(localeRef);
+  };
+
+  // 刷新页面
+  const reloadCurrent = async () => {
+    if (appStore.tabBar) {
+      // 重新加载 tab
+      const itemData = routerToTag(route);
+      tabBarStore.deleteCache(itemData);
+      await router.push({
+        name: REDIRECT_ROUTE_NAME,
+        params: { path: route.fullPath },
+      });
+      tabBarStore.addCache(itemData.name);
+    } else {
+      // 刷新页面
+      router.go(0);
+    }
   };
 
   // 退出登录

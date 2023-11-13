@@ -23,7 +23,7 @@
       <div class="usn mb8">
         <a-space>
           <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
-            <a-button size="mini" type="text" @click="() => { table.checked(opt.rule) }">
+            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByRule(opt.rule, true) }">
               {{ '全选' + opt.name }}
             </a-button>
           </template>
@@ -32,7 +32,7 @@
       <div class="usn mb8">
         <a-space>
           <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
-            <a-button size="mini" type="text" @click="() => { table.unchecked(opt.rule) }">
+            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByRule(opt.rule, false) }">
               {{ '反选' + opt.name }}
             </a-button>
           </template>
