@@ -4,12 +4,15 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.define.operator.HostOperatorType;
+import com.orion.ops.module.asset.convert.HostGroupConvert;
+import com.orion.ops.module.asset.define.operator.HostGroupOperatorType;
+import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
 import com.orion.ops.module.asset.service.HostService;
 import com.orion.ops.module.infra.api.DataGroupApi;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupMoveDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,13 +46,7 @@ public class HostGroupController {
     @Resource
     private DataGroupApi dataGroupApi;
 
-    // TODO 配置权限
-    // TODO 配置操作日志类型
-    // TODO 拖拽
-    // TODO http
-    // TODO 聚合查询关联
-
-    @OperatorLog(HostOperatorType.CREATE)
+    @OperatorLog(HostGroupOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:create')")
@@ -59,27 +56,42 @@ public class HostGroupController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/tree")
-    @Operation(summary = "创建主机分组")
+    @Operation(summary = "查询主机分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
-    public List<DataGroupDTO> queryHostGroup() {
-        return dataGroupApi.getDataGroupTree(DataGroupTypeEnum.HOST);
+    public List<HostGroupTreeVO> queryHostGroup() {
+        List<DataGroupDTO> rows = dataGroupApi.getDataGroupTree(DataGroupTypeEnum.HOST);
+        return HostGroupConvert.MAPPER.toList(rows);
     }
 
-    @OperatorLog(HostOperatorType.UPDATE)
+    @OperatorLog(HostGroupOperatorType.RENAME)
     @PutMapping("/rename")
     @Operation(summary = "修改名称")
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
-    public Integer updateHostGroupName(@Validated @RequestBody DataGroupUpdateDTO request) {
+    public Integer updateHostGroupName(@Validated @RequestBody DataGroupRenameDTO request) {
         return dataGroupApi.renameDataGroup(request);
     }
 
-    @OperatorLog(HostOperatorType.DELETE)
+    @OperatorLog(HostGroupOperatorType.MOVE)
+    @PutMapping("/move")
+    @Operation(summary = "移动位置")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
+    public Integer moveHostGroup(@Validated @RequestBody DataGroupMoveDTO request) {
+        return dataGroupApi.moveDataGroup(request);
+    }
+
+    @OperatorLog(HostGroupOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除主机分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:delete')")
     public Integer deleteHostGroup(@RequestParam("id") Long id) {
         return dataGroupApi.deleteDataGroupById(id);
     }
+
+
+    // TODO 关联操作配置权限
+    // TODO 关联操作配置操作日志类型
+    // TODO 关联 增 删 查
+    // TODO 聚合查询关联
 
 }
 

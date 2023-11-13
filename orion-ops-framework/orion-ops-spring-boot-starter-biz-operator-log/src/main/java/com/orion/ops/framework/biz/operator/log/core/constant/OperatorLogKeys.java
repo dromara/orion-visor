@@ -19,4 +19,6 @@ public interface OperatorLogKeys extends FieldConst {
 
     String KEY_NAME = "keyName";
 
+    String POSITION_NAME = "positionName";
+
 }

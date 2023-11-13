@@ -231,6 +231,7 @@
           for (let i = 0; i < children.length; i++) {
             if (children[i].id === id) {
               children.splice(i, 1);
+              break;
             }
           }
         }

@@ -1,14 +1,22 @@
 <template>
+  <!-- 分组树 -->
   <a-tree
+    v-if="treeData.length"
+    ref="tree"
     class="tree-container"
     :blockNode="true"
     :draggable="true"
-    :data="treeData">
+    :data="treeData"
+    @drop="moveGroup">
+    <!-- 标题 -->
     <template #title="node">
+      <!-- 修改名称输入框 -->
       <template v-if="node.editable">
         <a-input size="mini"
                  ref="renameInput"
                  v-model="currName"
+                 placeholder="名称"
+                 autofocus
                  :max-length="32"
                  :disabled="node.loading"
                  @blur="() => saveNode(node.key)"
@@ -21,30 +29,52 @@
             <icon-check v-else
                         class="pointer"
                         title="保存"
-                        @click="saveNode(node.key)" />
+                        @click="() => saveNode(node.key)" />
           </template>
         </a-input>
       </template>
-
-      <span class="node-title" v-else>
-          {{ node.title }}
-        </span>
+      <!-- 名称 -->
+      <span v-else
+            class="node-title-wrapper"
+            @click="() => emits('selectKey', node.key)">
+        {{ node.title }}
+      </span>
     </template>
     <!-- 操作图标 -->
     <template #drag-icon="{ node }">
       <a-space v-if="!node.editable">
-        <icon-edit class="tree-icon"
-                   title="重命名"
-                   @click="rename(node.title, node.key)" />
-        <icon-delete class="tree-icon"
-                     title="删除"
-                     @click="rename(node.title, node.key)" />
-        <icon-plus class="tree-icon"
-                   title="新增"
-                   @click="rename(node.title, node.key)" />
+        <!-- 重命名 -->
+        <span v-permission="['asset:host-group:update']"
+              class="tree-icon"
+              title="重命名"
+              @click="rename(node.title, node.key)">
+          <icon-edit />
+        </span>
+        <!-- 删除 -->
+        <a-popconfirm content="确认删除这条记录吗?"
+                      position="left"
+                      type="warning"
+                      @ok="deleteNode(node.key)">
+          <span v-permission="['asset:host-group:delete']"
+                class="tree-icon" title="删除">
+            <icon-delete />
+          </span>
+        </a-popconfirm>
+        <!-- 新增 -->
+        <span v-permission="['asset:host-group:create']"
+              class="tree-icon"
+              title="新增"
+              @click="addChildren(node)">
+          <icon-plus />
+        </span>
       </a-space>
     </template>
   </a-tree>
+  <!-- 无数据 -->
+  <div v-else-if="!loading" class="empty-container">
+    <span>暂无数据</span>
+    <span>点击上方 '<icon-plus />' 添加一个分组吧~</span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,51 +85,25 @@
 
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import type { NodeData } from '@/types/global';
-  import { nextTick, ref } from 'vue';
+  import { nextTick, onMounted, ref } from 'vue';
+  import { createGroupGroupPrefix, rootId } from '../types/const';
+  import { findNode, findParentNode, moveNode } from '@/utils/tree';
+  import { createHostGroup, deleteHostGroup, getHostGroupTree, updateHostGroupName, moveHostGroup } from '@/api/asset/host-group';
+  import { isString } from '@/utils/is';
 
+  const props = defineProps({
+    loading: Boolean
+  });
+  const emits = defineEmits(['loading', 'selectKey']);
+
+  const tree = ref();
+  const modCount = ref(0);
   const renameInput = ref();
   const currName = ref();
-
-  // 提为工具 utils tree.js
-  function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  // 保存节点
-  const saveNode = async (key: string) => {
-    // 寻找节点
-    const node = findNode<TreeNodeData>(key, treeData.value);
-    if (!node) {
-      return;
-    }
-    if (currName.value) {
-      node.loading = true;
-      try {
-        if (key.startsWith('create')) {
-          // 调用创建 api
-          await sleep(340);
-          node.key = 'await id';
-        } else {
-          // 调用重命名 api
-          await sleep(340);
-        }
-        node.title = currName.value;
-      } catch (e) {
-      } finally {
-        node.loading = false;
-      }
-    } else {
-      if (key.startsWith('create')) {
-        // 寻找父节点
-        // 移除子节点
-      }
-    }
-    node.editable = false;
-  };
+  const treeData = ref<Array<TreeNodeData>>([]);
 
   // 重命名
-  const rename = (title: string, key: string) => {
+  const rename = (title: number, key: number) => {
     const node = findNode<TreeNodeData>(key, treeData.value);
     if (!node) {
       return;
@@ -111,132 +115,181 @@
     });
   };
 
-  // 寻找当前节点
-  const findNode = <T extends NodeData>(id: string, arr: Array<T>): T | undefined => {
-    for (let node of arr) {
-      if (node.key === id) {
-        return node;
+  // 删除节点
+  const deleteNode = async (key: number) => {
+    try {
+      emits('loading', true);
+      // 删除
+      await deleteHostGroup(key);
+      // 页面删除
+      const parentNode = findParentNode<TreeNodeData>(key, treeData.value);
+      if (!parentNode) {
+        return;
       }
-    }
-    // 寻找子级
-    for (let node of arr) {
-      if (node?.children?.length) {
-        const inChildNode = findNode(id, node.children);
-        if (inChildNode) {
-          return inChildNode as T;
+      const children = parentNode.root ? treeData.value : parentNode.children;
+      if (children) {
+        // 删除
+        for (let i = 0; i < children.length; i++) {
+          if (children[i].key === key) {
+            children.splice(i, 1);
+            break;
+          }
         }
       }
+    } catch (e) {
+    } finally {
+      emits('loading', false);
     }
-    return undefined;
   };
 
-  function onIconClick(node: any) {
-    const children = node.children || [];
-    children.push({
-      title: 'new tree node',
-      key: node.key + '-' + (children.length + 1)
+  // 新增根节点
+  const addRootNode = () => {
+    const newKey = `${createGroupGroupPrefix}${Date.now()}`;
+    treeData.value.push({
+      title: 'new',
+      key: newKey
     });
-    node.children = children;
+    // 编辑子节点
+    const newNode = findNode<TreeNodeData>(newKey, treeData.value);
+    if (newNode) {
+      newNode.editable = true;
+      currName.value = '';
+      nextTick(() => {
+        renameInput.value?.focus();
+      });
+    }
+  };
 
+  // 新增子节点
+  const addChildren = (parentNode: TreeNodeData) => {
+    const newKey = `${createGroupGroupPrefix}${Date.now()}`;
+    const children = parentNode.children || [];
+    children.push({
+      title: 'new',
+      key: newKey
+    });
+    parentNode.children = children;
     treeData.value = [...treeData.value];
-  }
+    nextTick(() => {
+      // 展开
+      tree.value.expandNode(parentNode.key);
+      // 编辑子节点
+      const newNode = findNode<TreeNodeData>(newKey, treeData.value);
+      if (newNode) {
+        newNode.editable = true;
+        currName.value = '';
+        nextTick(() => {
+          renameInput.value?.focus();
+        });
+      }
+    });
+  };
 
-  const treeData = ref(
-    [
-      {
-        title: 'Trunk',
-        key: '0-0',
-        children: [
-          {
-            title: 'Leaf',
-            key: '0-0-1',
-          },
-          {
-            title: 'Branch',
-            key: '0-0-2',
-            children: [
-              {
-                title: 'Leaf',
-                key: '0-0-2-1'
-              }
-            ]
-          },
-        ],
-      },
-      {
-        title: 'Trunk',
-        key: '0-1',
-        children: [
-          {
-            title: 'Branch',
-            key: '0-1-1',
-            children: [
-              {
-                title: 'Leaf',
-                key: '0-1-1-11',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-1-12',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-1-13',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-1-41',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-1-51',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-1-61',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-17-1',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-81-1',
-              },
-              {
-                title: 'Leaf',
-                key: '0-19-1-1',
-              },
-              {
-                title: 'Leaf',
-                key: '0-10-1-1',
-              },
-              {
-                title: 'Leaf',
-                key: '0-1-111-1',
-              },
-              {
-                title: 'Leaf',
-                key: '0-21-1-1',
-              },
-              {
-                title: 'Leaf',
-                key: '0-31-1-1',
-              },
-              {
-                title: 'Leaf',
-                key: '40-1-1-2',
-              },
-            ]
-          },
-          {
-            title: 'Leaf',
-            key: '0-1-2',
-          },
-        ],
-      },
-    ]
-  );
+  // 保存节点
+  const saveNode = async (key: string | number) => {
+    modCount.value++;
+    if (modCount.value !== 1) {
+      return;
+    }
+    // 寻找节点
+    const node = findNode<TreeNodeData>(key, treeData.value);
+    if (!node) {
+      return;
+    }
+    if (currName.value) {
+      node.loading = true;
+      try {
+        // 创建节点
+        if (isString(key) && key.startsWith(createGroupGroupPrefix)) {
+          const parent = findParentNode<TreeNodeData>(key, treeData.value);
+          if (parent.root) {
+            parent.key = rootId;
+          }
+          // 创建
+          const { data } = await createHostGroup({
+            parentId: parent.key as number,
+            name: currName.value
+          });
+          node.key = data;
+        } else {
+          // 重命名节点
+          await updateHostGroupName({
+            id: key as unknown as number,
+            name: currName.value
+          });
+        }
+        node.title = currName.value;
+        node.editable = false;
+      } catch (e) {
+        // 重复 重新聚焦
+        setTimeout(() => {
+          renameInput.value?.focus();
+        }, 100);
+      } finally {
+        node.loading = false;
+      }
+    } else {
+      // 未输入数据 并且为创建则移除节点
+      if (isString(key) && key.startsWith(createGroupGroupPrefix)) {
+        // 寻找父节点
+        const parent = findParentNode(key, treeData.value);
+        if (parent && parent.children) {
+          // 移除子节点
+          for (let i = 0; i < parent.children.length; i++) {
+            if (parent.children[i].key === key) {
+              parent.children.splice(i, 1);
+            }
+          }
+        }
+      }
+      node.editable = false;
+    }
+    modCount.value = 0;
+  };
+
+  // 移动分组
+  const moveGroup = async (
+    {
+      dragNode, dropNode, dropPosition
+    }: {
+      dragNode: TreeNodeData,
+      dropNode: TreeNodeData,
+      dropPosition: number
+    }) => {
+    try {
+      emits('loading', true);
+      // 移动
+      await moveHostGroup({
+        id: dragNode.key as number,
+        targetId: dropNode.key as number,
+        position: dropPosition
+      });
+      // 移动分组
+      moveNode(treeData.value, dragNode, dropNode, dropPosition);
+    } catch (e) {
+    } finally {
+      emits('loading', false);
+    }
+  };
+
+  // 加载数据
+  const fetchTreeData = async () => {
+    try {
+      emits('loading', true);
+      const { data } = await getHostGroupTree();
+      treeData.value = data;
+    } catch {
+    } finally {
+      emits('loading', false);
+    }
+  };
+
+  defineExpose({ addRootNode, fetchTreeData });
+
+  onMounted(() => {
+    fetchTreeData();
+  });
+
 </script>
 
 <style lang="less" scoped>
@@ -244,6 +297,15 @@
     min-width: 100%;
     width: max-content;
     user-select: none;
+  }
+
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding-top: 25px;
+    color: var(--color-text-3);
   }
 
   :deep(.arco-tree-node-selected) {
@@ -268,25 +330,17 @@
     }
   }
 
-  .node-title {
-
-  }
-
-  .node-handler {
-
-  }
-
   :deep(.arco-tree-node-selected) {
     background-color: var(--color-fill-2);
+  }
+
+  .node-title-wrapper {
+    width: 100%;
   }
 
   .tree-icon {
     font-size: 12px;
     color: rgb(var(--primary-6));
-  }
-
-  .drag-icon {
-    padding-left: -8px;
   }
 
 </style>

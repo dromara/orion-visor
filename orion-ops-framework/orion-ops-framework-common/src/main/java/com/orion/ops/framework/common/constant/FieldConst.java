@@ -31,4 +31,12 @@ public interface FieldConst {
 
     String REL_ID = "relId";
 
+    String BEFORE = "before";
+
+    String AFTER = "after";
+
+    String SOURCE = "source";
+
+    String TARGET = "target";
+
 }

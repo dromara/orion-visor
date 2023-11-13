@@ -7,11 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 数据分组 更新请求业务对象
+ * 数据分组 移动请求业务对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -21,21 +20,19 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "DataGroupUpdateDTO", description = "数据分组 更新请求业务对象")
-public class DataGroupUpdateDTO implements Serializable {
+@Schema(name = "DataGroupMoveDTO", description = "数据分组 移动请求业务对象")
+public class DataGroupMoveDTO implements Serializable {
 
     @NotNull
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "父id")
-    private Long parentId;
+    @NotNull
+    @Schema(description = "目标id")
+    private Long targetId;
 
-    @Size(max = 32)
-    @Schema(description = "组名称")
-    private String name;
-
-    @Schema(description = "排序")
-    private Integer sort;
+    @NotNull
+    @Schema(description = "移动位置")
+    private Integer position;
 
 }

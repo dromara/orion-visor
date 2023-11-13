@@ -2,7 +2,8 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
-import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupMoveRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRenameRequest;
 
 import java.util.List;
 
@@ -29,9 +30,15 @@ public interface DataGroupService {
      * @param request request
      * @return effect
      */
-    Integer renameDataGroup(DataGroupUpdateRequest request);
+    Integer renameDataGroup(DataGroupRenameRequest request);
 
-    // FIXME drag
+    /**
+     * 移动分组
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer moveDataGroup(DataGroupMoveRequest request);
 
     /**
      * 通过缓存查询数据分组 - 列表

@@ -3,8 +3,10 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.enums.MovePosition;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.convert.DataGroupConvert;
@@ -13,7 +15,8 @@ import com.orion.ops.module.infra.define.cache.DataGroupCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DataGroupDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
-import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupMoveRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRenameRequest;
 import com.orion.ops.module.infra.service.DataGroupRelService;
 import com.orion.ops.module.infra.service.DataGroupService;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +66,7 @@ public class DataGroupServiceImpl implements DataGroupService {
     }
 
     @Override
-    public Integer renameDataGroup(DataGroupUpdateRequest request) {
+    public Integer renameDataGroup(DataGroupRenameRequest request) {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         String name = Valid.notBlank(request.getName());
         // 查询
@@ -77,6 +80,8 @@ public class DataGroupServiceImpl implements DataGroupService {
                 .build();
         // 查询数据是否冲突
         this.checkDataGroupPresent(updateRecord);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.BEFORE, record.getName());
         // 更新
         int effect = dataGroupDAO.updateById(updateRecord);
         // 删除缓存
@@ -86,11 +91,70 @@ public class DataGroupServiceImpl implements DataGroupService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer moveDataGroup(DataGroupMoveRequest request) {
+        Long id = request.getId();
+        Long targetId = request.getTargetId();
+        MovePosition position = Valid.valid(MovePosition::of, request.getPosition());
+        // 查询节点是否存在
+        DataGroupDO moveRecord = dataGroupDAO.selectById(id);
+        DataGroupDO targetRecord = dataGroupDAO.selectById(targetId);
+        Valid.notNull(moveRecord, ErrorMessage.GROUP_ABSENT);
+        Valid.notNull(targetRecord, ErrorMessage.GROUP_ABSENT);
+        // 更新
+        String type = moveRecord.getType();
+        Long targetParentId = targetRecord.getParentId();
+        int effect = 0;
+        // 修改排序
+        if (MovePosition.TOP.equals(position)) {
+            // 移动到元素上 将大于等于 targetRecord 的排序都加 10
+            dataGroupDAO.updateSort(targetParentId, ">=",
+                    targetRecord.getSort(), Const.DEFAULT_SORT);
+            // 修改 parentId sort
+            DataGroupDO update = DataGroupDO.builder()
+                    .id(id)
+                    .parentId(targetParentId)
+                    .sort(targetRecord.getSort())
+                    .build();
+            effect = dataGroupDAO.updateById(update);
+        } else if (MovePosition.IN.equals(position)) {
+            // 移动到元素中 获取最大排序
+            Integer newSort = dataGroupDAO.selectMaxSort(targetId, type) + Const.DEFAULT_SORT;
+            // 修改 parentId sort
+            DataGroupDO update = DataGroupDO.builder()
+                    .id(id)
+                    .parentId(targetId)
+                    .sort(newSort)
+                    .build();
+            effect = dataGroupDAO.updateById(update);
+        } else if (MovePosition.BOTTOM.equals(position)) {
+            // 移动到元素下 将大于 targetRecord 的排序都加 10
+            dataGroupDAO.updateSort(targetParentId, ">",
+                    targetRecord.getSort(), Const.DEFAULT_SORT);
+            // 修改 parentId sort
+            DataGroupDO update = DataGroupDO.builder()
+                    .id(id)
+                    .parentId(targetParentId)
+                    .sort(targetRecord.getSort() + 1)
+                    .build();
+            effect = dataGroupDAO.updateById(update);
+        }
+        // 删除缓存
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.SOURCE, moveRecord.getName());
+        OperatorLogs.add(OperatorLogs.TARGET, targetRecord.getName());
+        OperatorLogs.add(OperatorLogs.POSITION_NAME, position.name());
+        return effect;
+    }
+
+    @Override
     public List<DataGroupCacheDTO> getDataGroupListByCache(String type) {
         // 查询缓存
         String key = DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type);
         List<DataGroupCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST);
-        if (list.isEmpty()) {
+        if (Lists.isEmpty(list)) {
             // 查询数据库
             list = dataGroupDAO.of()
                     .createWrapper()
@@ -116,7 +180,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 查询缓存
         String key = DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type);
         List<DataGroupCacheDTO> treeData = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_TREE);
-        if (treeData.isEmpty()) {
+        if (Lists.isEmpty(treeData)) {
             // 查询列表缓存
             List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type);
             // 添加默认值 防止穿透
@@ -127,7 +191,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             } else {
                 // 构建树
                 DataGroupCacheDTO rootNode = DataGroupCacheDTO.builder()
-                        .parentId(Const.ROOT_PARENT_ID)
+                        .id(Const.ROOT_PARENT_ID)
                         .sort(Const.DEFAULT_SORT)
                         .build();
                 this.buildGroupTree(rootNode, rows);
@@ -151,7 +215,7 @@ public class DataGroupServiceImpl implements DataGroupService {
                                 List<DataGroupCacheDTO> nodes) {
         // 获取子节点
         List<DataGroupCacheDTO> childrenNodes = nodes.stream()
-                .filter(s -> parentNode.getParentId().equals(s.getParentId()))
+                .filter(s -> parentNode.getId().equals(s.getParentId()))
                 .sorted(Comparator.comparing(DataGroupCacheDTO::getSort))
                 .collect(Collectors.toList());
         if (childrenNodes.isEmpty()) {
@@ -183,6 +247,8 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 删除缓存
         RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
                 DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         return effect;
     }
 

@@ -6,9 +6,11 @@ import com.orion.ops.module.infra.convert.DataGroupProviderConvert;
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupMoveDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
-import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupMoveRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRenameRequest;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import com.orion.ops.module.infra.service.DataGroupService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +42,17 @@ public class DataGroupApiImpl implements DataGroupApi {
     }
 
     @Override
-    public Integer renameDataGroup(DataGroupUpdateDTO dto) {
+    public Integer renameDataGroup(DataGroupRenameDTO dto) {
         Valid.valid(dto);
-        DataGroupUpdateRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
+        DataGroupRenameRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         return dataGroupService.renameDataGroup(request);
+    }
+
+    @Override
+    public Integer moveDataGroup(DataGroupMoveDTO dto) {
+        Valid.valid(dto);
+        DataGroupMoveRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
+        return dataGroupService.moveDataGroup(request);
     }
 
     @Override

@@ -2,7 +2,8 @@ package com.orion.ops.module.infra.api;
 
 import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupMoveDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 
 import java.util.List;
@@ -31,9 +32,15 @@ public interface DataGroupApi {
      * @param dto dto
      * @return effect
      */
-    Integer renameDataGroup(DataGroupUpdateDTO dto);
+    Integer renameDataGroup(DataGroupRenameDTO dto);
 
-    // FIXME drag
+    /**
+     * 移动分组
+     *
+     * @param dto dto
+     * @return effect
+     */
+    Integer moveDataGroup(DataGroupMoveDTO dto);
 
     /**
      * 通过缓存查询数据分组

@@ -4,9 +4,11 @@ import com.orion.ops.module.infra.entity.domain.DataGroupDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupMoveDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
-import com.orion.ops.module.infra.entity.request.data.DataGroupUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupMoveRequest;
+import com.orion.ops.module.infra.entity.request.data.DataGroupRenameRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -28,11 +30,13 @@ public interface DataGroupProviderConvert {
 
     DataGroupDTO to(DataGroupDO domain);
 
-    DataGroupDO to(DataGroupUpdateDTO update);
+    DataGroupDO to(DataGroupRenameDTO update);
 
     DataGroupCreateRequest toRequest(DataGroupCreateDTO request);
 
-    DataGroupUpdateRequest toRequest(DataGroupUpdateDTO request);
+    DataGroupRenameRequest toRequest(DataGroupRenameDTO request);
+
+    DataGroupMoveRequest toRequest(DataGroupMoveDTO request);
 
     List<DataGroupDTO> toList(List<DataGroupCacheDTO> list);
 

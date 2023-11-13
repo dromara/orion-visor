@@ -114,3 +114,40 @@ export const flatNodes = <T extends NodeData>(nodes: Array<T>,
     flatNodes(s.children, result);
   });
 };
+
+// 移动节点
+export const moveNode = (nodes: Array<NodeData>,
+                         dragNode: NodeData,
+                         dropNode: NodeData,
+                         dropPosition: number) => {
+  // dropPosition === -1 将 dragNode 拖拽到 dropNode 上
+  // dropPosition === 0  将 dragNode 拖拽到 dropNode 中
+  // dropPosition === 1  将 dragNode 拖拽到 dropNode 下
+  const loop = (data: NodeData, key: number, callback: any) => {
+    data.some((item: NodeData, index: any, arr: NodeData[]) => {
+      if (item.key === key) {
+        callback(item, index, arr);
+        return true;
+      }
+      if (item.children) {
+        return loop(item.children, key, callback);
+      }
+      return false;
+    });
+  };
+
+  loop(nodes, dragNode.key as number, (_: NodeData, index: number, arr: NodeData[]) => {
+    arr.splice(index, 1);
+  });
+
+  if (dropPosition === 0) {
+    loop(nodes, dropNode.key as number, (item: NodeData) => {
+      item.children = item.children || [];
+      item.children?.push(dragNode);
+    });
+  } else {
+    loop(nodes, dropNode.key as number, (_: NodeData, index: number, arr: NodeData[]) => {
+      arr.splice(dropPosition < 0 ? index : index + 1, 0, dragNode);
+    });
+  }
+};
