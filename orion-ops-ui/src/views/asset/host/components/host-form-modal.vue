@@ -32,6 +32,11 @@
         <a-form-item field="address" label="主机地址">
           <a-input v-model="formModel.address" placeholder="请输入主机地址" />
         </a-form-item>
+        <!-- 主机分组 -->
+        <a-form-item field="groupIdList" label="主机分组">
+          <host-group-tree-selector v-model="formModel.groupIdList"
+                                    placeholder="请选择主机分组" />
+        </a-form-item>
         <!-- 主机标签 -->
         <a-form-item field="tags" label="主机标签">
           <tag-multi-selector v-model="formModel.tags"
@@ -61,8 +66,9 @@
   import formRules from '../types/host.form.rules';
   import { createHost, getHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import { pick } from 'lodash';
+  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
+  import HostGroupTreeSelector from '@/components/asset/host-group/host-group-tree-selector.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

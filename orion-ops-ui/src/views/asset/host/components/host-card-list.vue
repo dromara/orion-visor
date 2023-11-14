@@ -172,7 +172,7 @@
     address: undefined,
     favorite: undefined,
     tags: undefined,
-    extra: true
+    queryTag: true
   });
 
   // 条件数量

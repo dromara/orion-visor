@@ -256,18 +256,27 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         if (Strings.isBlank(type) || Lists.isEmpty(relIdList)) {
             return 0;
         }
-        // 查询 group
-        List<Long> groupIdList = dataGroupRelDAO.of()
+        // 查询需要删除的数据
+        List<DataGroupRelDO> rows = dataGroupRelDAO.of()
                 .createWrapper()
                 .eq(DataGroupRelDO::getType, type)
                 .in(DataGroupRelDO::getRelId, relIdList)
                 .then()
-                .stream()
+                .list();
+        if (rows.isEmpty()) {
+            return 0;
+        }
+        // 需要删除的 id
+        List<Long> idList = rows.stream()
+                .map(DataGroupRelDO::getId)
+                .collect(Collectors.toList());
+        // 需要删除的 groupId
+        List<Long> groupIdList = rows.stream()
                 .map(DataGroupRelDO::getGroupId)
                 .distinct()
                 .collect(Collectors.toList());
         // 删除数据库
-        int effect = dataGroupRelDAO.deleteBatchIds(relIdList);
+        int effect = dataGroupRelDAO.deleteBatchIds(idList);
         // 删除缓存
         this.deleteCache(type, groupIdList);
         return effect;

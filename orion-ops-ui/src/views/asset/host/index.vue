@@ -4,13 +4,13 @@
     <host-table v-if="renderTable"
                 ref="table"
                 @openAdd="() => modal.openAdd()"
-                @openUpdate="(e) => modal.openUpdate(e)"
+                @openUpdate="(e) => modal.openUpdate(e.id)"
                 @openUpdateConfig="(e) => config.open(e)" />
     <!-- 列表-卡片 -->
     <host-card-list v-else
                     ref="card"
                     @openAdd="() => modal.openAdd()"
-                    @openUpdate="(e) => modal.openUpdate(e)"
+                    @openUpdate="(e) => modal.openUpdate(e.id)"
                     @openUpdateConfig="(e) => config.open(e)" />
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
@@ -89,7 +89,7 @@
 
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('hostTags', 'hostKeys', 'hostIdentities');
+    cacheStore.reset('hostTags', 'hostKeys', 'hostIdentities', 'hostGroups');
   });
 
 </script>

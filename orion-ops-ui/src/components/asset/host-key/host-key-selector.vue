@@ -1,6 +1,6 @@
 <template>
   <a-select v-model:model-value="value"
-            :options="optionData()"
+            :options="optionData"
             placeholder="请选择主机秘钥"
             allow-clear />
 </template>
@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import { computed } from 'vue';
+  import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
 
   const props = defineProps({
@@ -21,6 +21,8 @@
   });
 
   const emits = defineEmits(['update:modelValue']);
+
+  const cacheStore = useCacheStore();
 
   const value = computed<number>({
     get() {
@@ -34,17 +36,17 @@
       }
     }
   });
+  const optionData = ref<Array<SelectOptionData>>([]);
 
-  // 选项数据
-  const cacheStore = useCacheStore();
-  const optionData = (): SelectOptionData[] => {
-    return cacheStore.hostKeys.map(s => {
+  // 初始化选项
+  onBeforeMount(() => {
+    optionData.value = cacheStore.hostKeys.map(s => {
       return {
         label: s.name,
         value: s.id,
       };
     });
-  };
+  });
 </script>
 
 <style lang="less" scoped>

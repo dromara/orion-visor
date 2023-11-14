@@ -2,10 +2,11 @@ import type { UserQueryResponse } from '@/api/user/user';
 import type { MenuQueryResponse } from '@/api/system/menu';
 import type { RoleQueryResponse } from '@/api/user/role';
 import type { TagQueryResponse } from '@/api/meta/tag';
+import type { HostQueryResponse } from '@/api/asset/host';
+import type { HostGroupQueryResponse } from '@/api/asset/host-group';
 import type { HostKeyQueryResponse } from '@/api/asset/host-key';
 import type { HostIdentityQueryResponse } from '@/api/asset/host-identity';
 import type { DictKeyQueryResponse } from '@/api/system/dict-key';
-import type { HostQueryResponse } from '@/api/asset/host';
 
 export interface CacheState {
   users: UserQueryResponse[];
@@ -13,6 +14,7 @@ export interface CacheState {
   roles: RoleQueryResponse[];
   hostTags: TagQueryResponse[];
   hosts: HostQueryResponse[];
+  hostGroups: HostGroupQueryResponse[];
   hostKeys: HostKeyQueryResponse[];
   hostIdentities: HostIdentityQueryResponse[];
   dictKeys: DictKeyQueryResponse[];

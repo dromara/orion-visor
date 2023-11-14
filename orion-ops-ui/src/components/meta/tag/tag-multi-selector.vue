@@ -20,7 +20,7 @@
   import type { PropType } from 'vue';
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { TagCreateRequest } from '@/api/meta/tag';
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onBeforeMount } from 'vue';
   import { useCacheStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import { createTag } from '@/api/meta/tag';
@@ -36,6 +36,8 @@
 
   const emits = defineEmits(['update:modelValue', 'onLimited']);
 
+  const cacheStore = useCacheStore();
+
   const value = computed<Array<number>>({
     get() {
       return props.modelValue as Array<number>;
@@ -45,25 +47,17 @@
       emits('update:modelValue', e);
     }
   });
-
-  // 选项数据
-  const cacheStore = useCacheStore();
   const optionData = ref<SelectOptionData[]>([]);
-  const initOptionData = () => {
+
+  // 初始化选项
+  onBeforeMount(() => {
     const tagCache = cacheStore[props.tagType as string] as Array<any>;
     optionData.value = tagCache.map(s => {
       return {
         label: s.name,
         value: s.id,
       };
-    }) as SelectOptionData[];
-  };
-
-
-  defineExpose({ initOptionData });
-
-  onMounted(() => {
-    initOptionData();
+    });
   });
 
   // 检查是否可以创建tag

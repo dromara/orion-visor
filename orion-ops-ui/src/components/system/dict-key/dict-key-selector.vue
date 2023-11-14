@@ -1,6 +1,6 @@
 <template>
   <a-select v-model:model-value="value as any"
-            :options="optionData()"
+            :options="optionData"
             :allow-search="true"
             :loading="loading"
             :disabled="loading"
@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import { computed } from 'vue';
+  import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import { labelFilter } from '@/types/form';
 
@@ -31,6 +31,9 @@
   });
 
   const emits = defineEmits(['update:modelValue', 'change']);
+
+  // 选项数据
+  const cacheStore = useCacheStore();
 
   const value = computed({
     get() {
@@ -54,17 +57,17 @@
       }
     }
   });
+  const optionData = ref<Array<SelectOptionData>>([]);
 
-  // 选项数据
-  const cacheStore = useCacheStore();
-  const optionData = (): SelectOptionData[] => {
-    return cacheStore.dictKeys.map(s => {
+  // 初始化选项
+  onBeforeMount(() => {
+    optionData.value = cacheStore.dictKeys.map(s => {
       return {
         label: `${s.keyName} - ${s.description || ''}`,
         value: s.id,
       };
     });
-  };
+  });
 
 </script>
 

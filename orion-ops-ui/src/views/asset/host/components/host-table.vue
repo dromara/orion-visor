@@ -192,7 +192,7 @@
     address: undefined,
     favorite: undefined,
     tags: undefined,
-    extra: true
+    queryTag: true
   });
 
   // 删除当前行
