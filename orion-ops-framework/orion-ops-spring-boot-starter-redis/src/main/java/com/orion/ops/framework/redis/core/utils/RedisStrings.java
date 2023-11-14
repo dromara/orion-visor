@@ -3,7 +3,7 @@ package com.orion.ops.framework.redis.core.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 
 import java.util.ArrayList;

@@ -31,8 +31,7 @@ public class TagRelApiImpl implements TagRelApi {
     private TagRelService tagRelService;
 
     @Override
-    @Async("asyncExecutor")
-    public void addTagRelAsync(TagTypeEnum type, Long relId, List<Long> tagIdList) {
+    public void addTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList) {
         Valid.notNull(relId);
         if (Lists.isEmpty(tagIdList)) {
             return;
@@ -41,8 +40,7 @@ public class TagRelApiImpl implements TagRelApi {
     }
 
     @Override
-    @Async("asyncExecutor")
-    public void setTagRelAsync(TagTypeEnum type, Long relId, List<Long> tagIdList) {
+    public void setTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList) {
         Valid.notNull(relId);
         tagRelService.setTagRel(type.name(), relId, tagIdList);
     }
@@ -73,14 +71,12 @@ public class TagRelApiImpl implements TagRelApi {
     }
 
     @Override
-    @Async("asyncExecutor")
-    public void deleteRelIdAsync(TagTypeEnum type, Long relId) {
+    public void deleteRelId(TagTypeEnum type, Long relId) {
         tagRelService.deleteRelId(type.name(), relId);
     }
 
     @Override
-    @Async("asyncExecutor")
-    public void deleteRelIdListAsync(TagTypeEnum type, List<Long> relIdList) {
+    public void deleteRelIdList(TagTypeEnum type, List<Long> relIdList) {
         tagRelService.deleteRelIdList(type.name(), relIdList);
     }
 

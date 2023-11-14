@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.define.cache;
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
@@ -21,12 +22,14 @@ public interface UserCacheKeyDefine {
             .key("user:info:{}")
             .desc("用户信息 ${id}")
             .type(LoginUser.class)
+            .struct(RedisCacheStruct.STRING)
             .build();
 
     CacheKeyDefine USER_LIST = new CacheKeyBuilder()
             .key("user:base:list")
             .desc("用户列表")
             .type(UserInfoDTO.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -34,6 +37,7 @@ public interface UserCacheKeyDefine {
             .key("user:login-failed:{}")
             .desc("用户登录失败次数 ${username}")
             .type(Integer.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(3, TimeUnit.DAYS)
             .build();
 
@@ -41,6 +45,7 @@ public interface UserCacheKeyDefine {
             .key("user:token:{}:{}")
             .desc("用户登录 token ${id} ${time}")
             .type(LoginTokenDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(24, TimeUnit.HOURS)
             .build();
 
@@ -48,6 +53,7 @@ public interface UserCacheKeyDefine {
             .key("user:refresh:{}:{}")
             .desc("用户刷新 token ${id} ${time}")
             .type(LoginTokenDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(28, TimeUnit.HOURS)
             .build();
 

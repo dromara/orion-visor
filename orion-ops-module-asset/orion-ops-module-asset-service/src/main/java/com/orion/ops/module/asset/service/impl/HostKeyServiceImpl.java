@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.CryptoUtils;
@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 主机秘钥 服务实现类
@@ -131,21 +130,16 @@ public class HostKeyServiceImpl implements HostKeyService {
         if (list.isEmpty()) {
             // 查询数据库
             list = hostKeyDAO.of().list(HostKeyConvert.MAPPER::toCache);
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(HostKeyCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            }
+            // 设置屏障 防止穿透
+            RedisMaps.checkBarrier(list, HostKeyCacheDTO::new);
             // 设置缓存
             RedisMaps.putAllJson(HostCacheKeyDefine.HOST_KEY.getKey(), s -> s.getId().toString(), list);
             RedisMaps.setExpire(HostCacheKeyDefine.HOST_KEY);
         }
-        // 删除默认值
-        return list.stream()
-                .filter(s -> !s.getId().equals(Const.NONE_ID))
-                .map(HostKeyConvert.MAPPER::to)
-                .collect(Collectors.toList());
+        // 删除屏障
+        RedisMaps.removeBarrier(list);
+        // 转换
+        return Lists.map(list, HostKeyConvert.MAPPER::to);
     }
 
     @Override

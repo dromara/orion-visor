@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.define.cache;
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.ops.module.infra.entity.dto.TagCacheDTO;
 
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,7 @@ public interface TagCacheKeyDefine {
             .key("tag:name:{}")
             .desc("tag 名称 ${type}")
             .type(TagCacheDTO.class)
+            .struct(RedisCacheStruct.LIST)
             .timeout(8, TimeUnit.HOURS)
             .build();
 
@@ -26,6 +28,7 @@ public interface TagCacheKeyDefine {
             .key("tag:rel:{}:{}")
             .desc("tag 引用 ${type} ${relId}")
             .type(TagCacheDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(8, TimeUnit.HOURS)
             .build();
 

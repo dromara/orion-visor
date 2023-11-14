@@ -39,15 +39,13 @@ public class FavoriteApiImpl implements FavoriteApi {
     }
 
     @Override
-    @Async("asyncExecutor")
-    public void deleteByRelIdAsync(FavoriteTypeEnum type, Long relId) {
+    public void deleteByRelId(FavoriteTypeEnum type, Long relId) {
         Valid.allNotNull(type, relId);
         favoriteDAO.deleteFavoriteByRelId(type.name(), relId);
     }
 
     @Override
-    @Async("asyncExecutor")
-    public void deleteByRelIdListAsync(FavoriteTypeEnum type, List<Long> relIdList) {
+    public void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList) {
         Valid.notNull(type);
         Valid.notEmpty(relIdList);
         favoriteDAO.deleteFavoriteByRelIdList(type.name(), relIdList);

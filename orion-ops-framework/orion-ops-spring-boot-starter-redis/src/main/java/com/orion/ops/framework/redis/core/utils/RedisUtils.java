@@ -1,6 +1,6 @@
 package com.orion.ops.framework.redis.core.utils;
 
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.io.Streams;
 import org.springframework.data.redis.core.Cursor;
@@ -20,7 +20,7 @@ import java.util.Set;
  * @version 1.0.0
  * @since 2021/11/6 11:09
  */
-public class RedisUtils {
+public class RedisUtils extends CacheUtils {
 
     protected static RedisTemplate<String, String> redisTemplate;
 

@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.entity.dto;
 
+import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "DictKeyCacheDTO", description = "字典配置项 缓存对象")
-public class DictKeyCacheDTO implements Serializable {
+public class DictKeyCacheDTO implements LongCacheIdModel, Serializable {
 
     private static final long serialVersionUID = 1L;
 

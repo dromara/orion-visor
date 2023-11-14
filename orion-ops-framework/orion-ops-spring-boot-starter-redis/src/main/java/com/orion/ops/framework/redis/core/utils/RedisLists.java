@@ -1,7 +1,7 @@
 package com.orion.ops.framework.redis.core.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 

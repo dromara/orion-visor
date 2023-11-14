@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.entity.dto;
 
+import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "DataGroupCacheDTO", description = "数据分组 缓存对象")
-public class DataGroupCacheDTO implements Serializable {
+public class DataGroupCacheDTO implements LongCacheIdModel, Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -22,7 +22,7 @@ public interface TagRelApi {
      * @param relId     relId
      * @param tagIdList tagIdList
      */
-    void addTagRelAsync(TagTypeEnum type, Long relId, List<Long> tagIdList);
+    void addTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList);
 
     /**
      * 设置标签引用 先删除后新增
@@ -31,7 +31,7 @@ public interface TagRelApi {
      * @param relId     relId
      * @param tagIdList tagIdList
      */
-    void setTagRelAsync(TagTypeEnum type, Long relId, List<Long> tagIdList);
+    void setTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList);
 
     /**
      * 获取引用 tag
@@ -73,7 +73,7 @@ public interface TagRelApi {
      * @param type  type
      * @param relId relId
      */
-    void deleteRelIdAsync(TagTypeEnum type, Long relId);
+    void deleteRelId(TagTypeEnum type, Long relId);
 
     /**
      * 通过 relIdList 删除
@@ -81,6 +81,6 @@ public interface TagRelApi {
      * @param type      type
      * @param relIdList relIdList
      */
-    void deleteRelIdListAsync(TagTypeEnum type, List<Long> relIdList);
+    void deleteRelIdList(TagTypeEnum type, List<Long> relIdList);
 
 }

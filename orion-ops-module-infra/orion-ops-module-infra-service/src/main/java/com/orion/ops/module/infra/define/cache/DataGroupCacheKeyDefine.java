@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.define.cache;
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
 
@@ -20,6 +21,7 @@ public interface DataGroupCacheKeyDefine {
             .key("data:group-list:{}")
             .desc("数据分组列表结构 ${type}")
             .type(DataGroupCacheDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -27,6 +29,7 @@ public interface DataGroupCacheKeyDefine {
             .key("data:group-tree:{}")
             .desc("数据分组树结构 ${type}")
             .type(DataGroupCacheDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -34,6 +37,7 @@ public interface DataGroupCacheKeyDefine {
             .key("data:group-rel:group:{}")
             .desc("数据分组数据关联-分组 ${groupId}")
             .type(DataGroupRelCacheDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -41,6 +45,7 @@ public interface DataGroupCacheKeyDefine {
             .key("data:group-rel:type:{}")
             .desc("数据分组数据关联-类型 ${type}")
             .type(DataGroupRelCacheDTO.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

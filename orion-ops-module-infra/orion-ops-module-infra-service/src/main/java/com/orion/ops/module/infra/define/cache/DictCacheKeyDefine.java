@@ -1,8 +1,9 @@
 package com.orion.ops.module.infra.define.cache;
 
 import com.alibaba.fastjson.JSONObject;
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.ops.module.infra.entity.dto.DictKeyCacheDTO;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,7 @@ public interface DictCacheKeyDefine {
             .key("dict:keys")
             .desc("字典配置项")
             .type(DictKeyCacheDTO.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -27,6 +29,7 @@ public interface DictCacheKeyDefine {
             .key("dict:schema:{}")
             .desc("字典配置项 schema ${key}")
             .type(JSONObject.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -34,6 +37,7 @@ public interface DictCacheKeyDefine {
             .key("dict:values:{}")
             .desc("字典配置值 ${key}")
             .type(JSONObject.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

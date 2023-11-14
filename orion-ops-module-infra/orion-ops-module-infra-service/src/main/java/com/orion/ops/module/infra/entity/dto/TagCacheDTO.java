@@ -1,7 +1,10 @@
 package com.orion.ops.module.infra.entity.dto;
 
+import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import java.io.Serializable;
 
 /**
  * @author Jiahang Li
@@ -14,7 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Schema(name = "TagCacheDTO", description = "菜单 缓存业务对象")
-public class TagCacheDTO {
+public class TagCacheDTO implements LongCacheIdModel, Serializable {
 
     @EqualsAndHashCode.Include
     @Schema(description = "id")

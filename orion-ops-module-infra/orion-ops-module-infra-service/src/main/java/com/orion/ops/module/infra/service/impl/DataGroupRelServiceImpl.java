@@ -1,10 +1,9 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
@@ -229,17 +228,13 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         if (Lists.isEmpty(list)) {
             // 查询数据库
             list = valueSupplier.get();
-            // 添加默认值 防止穿透
-            if (Lists.isEmpty(list)) {
-                list.add(DataGroupRelCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            }
+            // 设置屏障 防止穿透
+            RedisStrings.checkBarrier(list, DataGroupRelCacheDTO::new);
             // 设置缓存
             RedisStrings.setJson(key, define, list);
         }
-        // 删除默认值
-        list.removeIf(s -> s.getId().equals(Const.NONE_ID));
+        // 删除屏障
+        RedisStrings.removeBarrier(list);
         return list;
     }
 

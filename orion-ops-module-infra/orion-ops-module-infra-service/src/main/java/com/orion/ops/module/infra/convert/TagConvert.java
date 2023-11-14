@@ -28,10 +28,10 @@ public interface TagConvert {
 
     TagVO to(TagDO domain);
 
+    TagVO to(TagCacheDTO cache);
+
     TagCacheDTO toCache(TagDO domain);
 
     List<TagVO> to(List<TagDO> list);
-
-    List<TagVO> toList(List<TagCacheDTO> cache);
 
 }

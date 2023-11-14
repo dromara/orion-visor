@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.define.cache;
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,7 @@ public interface TipsCacheKeyDefine {
             .key("user:tips:{}")
             .desc("user:tips ${userId} 90天不会重复提示")
             .type(String.class)
+            .struct(RedisCacheStruct.LIST)
             .timeout(90, TimeUnit.DAYS)
             .build();
 

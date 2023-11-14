@@ -106,19 +106,16 @@ public class DictKeyServiceImpl implements DictKeyService {
         if (list.isEmpty()) {
             // 查询数据库
             list = dictKeyDAO.of().list(DictKeyConvert.MAPPER::toCache);
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(DictKeyCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            }
+            // 设置屏障 防止穿透
+            RedisMaps.checkBarrier(list, DictKeyCacheDTO::new);
             // 设置缓存
             RedisMaps.putAllJson(DictCacheKeyDefine.DICT_KEY.getKey(), s -> s.getId().toString(), list);
             RedisMaps.setExpire(DictCacheKeyDefine.DICT_KEY);
         }
-        // 删除默认值
+        // 删除屏障
+        RedisMaps.removeBarrier(list);
+        // 转换
         return list.stream()
-                .filter(s -> !s.getId().equals(Const.NONE_ID))
                 .map(DictKeyConvert.MAPPER::to)
                 .sorted(Comparator.comparing(DictKeyVO::getId).reversed())
                 .collect(Collectors.toList());

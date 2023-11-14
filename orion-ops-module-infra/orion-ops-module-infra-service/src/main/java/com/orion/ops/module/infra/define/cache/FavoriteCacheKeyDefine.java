@@ -1,7 +1,8 @@
 package com.orion.ops.module.infra.define.cache;
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,7 @@ public interface FavoriteCacheKeyDefine {
             .key("favorite:{}:{}")
             .desc("收藏信息 ${type} ${userId}")
             .type(Long.class)
+            .struct(RedisCacheStruct.LIST)
             .timeout(3, TimeUnit.DAYS)
             .build();
 

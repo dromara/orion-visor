@@ -1,7 +1,8 @@
 package ${currentPackage};
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
@@ -21,6 +22,7 @@ public interface ${type}CacheKeyDefine {
             .key("$meta.cacheKey")
             .desc("$meta.cacheDesc")
             .type(${type}CacheDTO.class)
+            .struct(RedisCacheStruct.HASH)
              #if($meta.cacheExpired)
             .timeout($meta.cacheExpireTime, TimeUnit.$meta.cacheExpireUnit.name())
              #end

@@ -6,7 +6,6 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -164,21 +163,16 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (list.isEmpty()) {
             // 查询数据库
             list = systemUserDAO.of().list(SystemUserConvert.MAPPER::toUserInfo);
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(UserInfoDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            }
+            // 设置屏障 防止穿透
+            RedisMaps.checkBarrier(list, UserInfoDTO::new);
             // 设置缓存
             RedisMaps.putAllJson(UserCacheKeyDefine.USER_LIST.getKey(), s -> s.getId().toString(), list);
             RedisMaps.setExpire(UserCacheKeyDefine.USER_LIST);
         }
-        // 删除默认值
-        return list.stream()
-                .filter(s -> !s.getId().equals(Const.NONE_ID))
-                .map(SystemUserConvert.MAPPER::to)
-                .collect(Collectors.toList());
+        // 删除屏障
+        RedisMaps.removeBarrier(list);
+        // 转换
+        return Lists.map(list, SystemUserConvert.MAPPER::to);
     }
 
     @Override

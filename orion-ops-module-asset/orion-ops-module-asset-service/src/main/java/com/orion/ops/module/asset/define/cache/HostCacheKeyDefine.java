@@ -1,7 +1,8 @@
 package com.orion.ops.module.asset.define.cache;
 
-import com.orion.lang.define.cache.CacheKeyBuilder;
-import com.orion.lang.define.cache.CacheKeyDefine;
+import com.orion.lang.define.cache.key.CacheKeyBuilder;
+import com.orion.lang.define.cache.key.CacheKeyDefine;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.ops.module.asset.entity.dto.HostCacheDTO;
 import com.orion.ops.module.asset.entity.dto.HostIdentityCacheDTO;
 import com.orion.ops.module.asset.entity.dto.HostKeyCacheDTO;
@@ -21,6 +22,7 @@ public interface HostCacheKeyDefine {
             .key("host:info:list")
             .desc("主机列表")
             .type(HostCacheDTO.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -28,6 +30,7 @@ public interface HostCacheKeyDefine {
             .key("host:key:list")
             .desc("主机秘钥列表")
             .type(HostKeyCacheDTO.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
@@ -35,6 +38,7 @@ public interface HostCacheKeyDefine {
             .key("host:identity:list")
             .desc("主机身份列表")
             .type(HostIdentityCacheDTO.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

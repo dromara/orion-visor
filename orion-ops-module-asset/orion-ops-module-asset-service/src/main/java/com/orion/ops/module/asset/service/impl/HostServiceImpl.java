@@ -7,7 +7,6 @@ import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
@@ -31,6 +30,7 @@ import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 import com.orion.ops.module.infra.enums.TagTypeEnum;
+import com.orion.spring.SpringHolder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -83,7 +83,7 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-createHost effect: {}", effect);
         Long id = record.getId();
         // 插入 tag
-        tagRelApi.addTagRelAsync(TagTypeEnum.HOST, id, request.getTags());
+        tagRelApi.addTagRel(TagTypeEnum.HOST, id, request.getTags());
         // 引用分组
         List<Long> groupIdList = request.getGroupIdList();
         if (!Lists.isEmpty(groupIdList)) {
@@ -119,10 +119,10 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-updateHostById effect: {}", effect);
         // 引用分组
         dataGroupRelApi.updateGroupRel(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
+        // 更新 tag
+        tagRelApi.setTagRel(TagTypeEnum.HOST, id, request.getTags());
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_INFO);
-        // 更新 tag
-        tagRelApi.setTagRelAsync(TagTypeEnum.HOST, id, request.getTags());
         return effect;
     }
 
@@ -154,21 +154,16 @@ public class HostServiceImpl implements HostService {
         if (list.isEmpty()) {
             // 查询数据库
             list = hostDAO.of().list(HostConvert.MAPPER::toCache);
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(HostCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            }
+            // 设置屏障 防止穿透
+            RedisMaps.checkBarrier(list, HostCacheDTO::new);
             // 设置缓存
             RedisMaps.putAllJson(HostCacheKeyDefine.HOST_INFO.getKey(), s -> s.getId().toString(), list);
             RedisMaps.setExpire(HostCacheKeyDefine.HOST_INFO);
         }
-        // 删除默认值
-        return list.stream()
-                .filter(s -> !s.getId().equals(Const.NONE_ID))
-                .map(HostConvert.MAPPER::to)
-                .collect(Collectors.toList());
+        // 删除屏障
+        RedisMaps.removeBarrier(list);
+        // 转换
+        return Lists.map(list, HostConvert.MAPPER::to);
     }
 
     @Override
@@ -198,17 +193,24 @@ public class HostServiceImpl implements HostService {
         // 删除
         int effect = hostDAO.deleteById(id);
         log.info("HostService-deleteHostById effect: {}", effect);
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO, id);
+        // 删除主机引用
+        SpringHolder.getBean(HostService.class)
+                .deleteHostRelByIdAsync(id);
+        return effect;
+    }
+
+    @Override
+    public void deleteHostRelByIdAsync(Long id) {
         // 删除配置
         hostConfigDAO.deleteByHostId(id);
         // 删除分组
         dataGroupRelApi.deleteByRelId(DataGroupTypeEnum.HOST, id);
-        // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO, id);
         // 删除 tag 引用
-        tagRelApi.deleteRelIdAsync(TagTypeEnum.HOST, id);
+        tagRelApi.deleteRelId(TagTypeEnum.HOST, id);
         // 删除收藏引用
-        favoriteApi.deleteByRelIdAsync(FavoriteTypeEnum.HOST, id);
-        return effect;
+        favoriteApi.deleteByRelId(FavoriteTypeEnum.HOST, id);
     }
 
     /**

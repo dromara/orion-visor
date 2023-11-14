@@ -161,17 +161,13 @@ public class DataGroupServiceImpl implements DataGroupService {
                     .eq(DataGroupDO::getType, type)
                     .then()
                     .list(DataGroupConvert.MAPPER::toCache);
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(DataGroupCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            }
+            // 设置屏障 防止穿透
+            RedisStrings.checkBarrier(list, DataGroupCacheDTO::new);
             // 设置缓存
             RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST, list);
         }
-        // 删除默认值
-        list.removeIf(s -> s.getId().equals(Const.NONE_ID));
+        // 删除屏障
+        RedisStrings.removeBarrier(list);
         return list;
     }
 
@@ -183,12 +179,9 @@ public class DataGroupServiceImpl implements DataGroupService {
         if (Lists.isEmpty(treeData)) {
             // 查询列表缓存
             List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type);
-            // 添加默认值 防止穿透
-            if (Lists.isEmpty(rows)) {
-                treeData = Lists.of(DataGroupCacheDTO.builder()
-                        .id(Const.NONE_ID)
-                        .build());
-            } else {
+            // 设置屏障 防止穿透
+            RedisStrings.checkBarrier(rows, DataGroupCacheDTO::new);
+            if (!Lists.isEmpty(rows)) {
                 // 构建树
                 DataGroupCacheDTO rootNode = DataGroupCacheDTO.builder()
                         .id(Const.ROOT_PARENT_ID)
@@ -200,8 +193,8 @@ public class DataGroupServiceImpl implements DataGroupService {
             // 设置缓存
             RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST, treeData);
         }
-        // 删除默认值
-        treeData.removeIf(s -> s.getId().equals(Const.NONE_ID));
+        // 删除屏障
+        RedisStrings.removeBarrier(treeData);
         return treeData;
     }
 

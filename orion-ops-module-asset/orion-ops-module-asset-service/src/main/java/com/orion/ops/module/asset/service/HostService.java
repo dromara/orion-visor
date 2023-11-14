@@ -64,4 +64,11 @@ public interface HostService {
      */
     Integer deleteHostById(Long id);
 
+    /**
+     * 通过 id 删除主机引用
+     *
+     * @param id id
+     */
+    void deleteHostRelByIdAsync(Long id);
+
 }

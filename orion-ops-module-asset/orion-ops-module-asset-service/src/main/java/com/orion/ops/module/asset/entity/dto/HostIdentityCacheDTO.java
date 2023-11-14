@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.entity.dto;
 
+import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "HostIdentityCacheDTO", description = "主机身份缓存")
-public class HostIdentityCacheDTO implements Serializable {
+public class HostIdentityCacheDTO implements LongCacheIdModel, Serializable {
 
     @Schema(description = "id")
     private Long id;

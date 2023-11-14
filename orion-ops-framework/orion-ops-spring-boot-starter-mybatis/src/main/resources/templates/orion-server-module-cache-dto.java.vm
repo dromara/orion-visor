@@ -1,5 +1,6 @@
 package ${currentPackage};
 
+import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.*;
@@ -19,7 +20,7 @@ import java.math.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "${type}CacheDTO", description = "$!{table.comment} 缓存对象")
-public class ${type}CacheDTO implements Serializable {
+public class ${type}CacheDTO implements LongCacheIdModel, Serializable {
 
     private static final long serialVersionUID = 1L;
     #foreach($field in ${table.fields})

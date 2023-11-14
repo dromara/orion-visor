@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
@@ -61,23 +62,21 @@ public class TagServiceImpl implements TagService {
     public List<TagVO> getTagList(String type) {
         // 查询缓存
         String cacheKey = TagCacheKeyDefine.TAG_NAME.format(type);
-        List<TagCacheDTO> cacheValues = RedisLists.rangeJson(cacheKey, TagCacheKeyDefine.TAG_NAME);
-        if (cacheValues.isEmpty()) {
+        List<TagCacheDTO> list = RedisLists.rangeJson(cacheKey, TagCacheKeyDefine.TAG_NAME);
+        if (list.isEmpty()) {
             // 为空则需要查询缓存
             LambdaQueryWrapper<TagDO> wrapper = Conditions.eq(TagDO::getType, type);
-            cacheValues = tagDAO.of(wrapper).list(TagConvert.MAPPER::toCache);
-            // 添加默认值 防止穿透
-            if (cacheValues.isEmpty()) {
-                cacheValues.add(TagCacheDTO.builder().id(Const.NONE_ID).build());
-            }
+            list = tagDAO.of(wrapper).list(TagConvert.MAPPER::toCache);
+            // 设置屏障 防止穿透
+            RedisLists.checkBarrier(list, TagCacheDTO::new);
             // 设置到缓存
-            RedisLists.pushAllJson(cacheKey, cacheValues);
+            RedisLists.pushAllJson(cacheKey, list);
             RedisLists.setExpire(cacheKey, TagCacheKeyDefine.TAG_NAME);
         }
-        // 删除防止穿透的 key
-        cacheValues.removeIf(s -> Const.NONE_ID.equals(s.getId()));
+        // 删除屏障
+        RedisLists.removeBarrier(list);
         // 转换
-        return TagConvert.MAPPER.toList(cacheValues);
+        return Lists.map(list, TagConvert.MAPPER::to);
     }
 
     @Override

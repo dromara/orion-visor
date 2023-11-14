@@ -28,7 +28,7 @@ public interface FavoriteApi {
      * @param type  type
      * @param relId relId
      */
-    void deleteByRelIdAsync(FavoriteTypeEnum type, Long relId);
+    void deleteByRelId(FavoriteTypeEnum type, Long relId);
 
     /**
      * 通过 relId 删除收藏
@@ -36,6 +36,6 @@ public interface FavoriteApi {
      * @param type      type
      * @param relIdList relIdList
      */
-    void deleteByRelIdListAsync(FavoriteTypeEnum type, List<Long> relIdList);
+    void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList);
 
 }
