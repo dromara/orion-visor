@@ -1,8 +1,8 @@
 package com.orion.ops.module.infra.service;
 
+import com.orion.ops.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupRelCreateRequest;
-import com.orion.ops.module.infra.entity.request.data.DataGroupRelUpdateRequest;
 
 import java.util.List;
 
@@ -18,16 +18,27 @@ public interface DataGroupRelService {
     /**
      * 设置关联
      *
-     * @param request request
+     * @param groupId   groupId
+     * @param relIdList relIdList
      */
-    void updateGroupRel(DataGroupRelUpdateRequest request);
+    void updateGroupRel(Long groupId, List<Long> relIdList);
+
+    /**
+     * 设置关联
+     *
+     * @param type        type
+     * @param groupIdList groupIdList
+     * @param relId       relId
+     */
+    void updateGroupRel(String type, List<Long> groupIdList, Long relId);
 
     /**
      * 添加关联
      *
-     * @param request request
+     * @param groupId groupId
+     * @param relId   relId
      */
-    void addGroupRel(DataGroupRelCreateRequest request);
+    void addGroupRel(Long groupId, Long relId);
 
     /**
      * 添加关联
@@ -37,7 +48,7 @@ public interface DataGroupRelService {
     void addGroupRel(List<DataGroupRelCreateRequest> list);
 
     /**
-     * 通过缓存查询数据分组关联
+     * 通过 type 查询 relId 缓存
      *
      * @param type type
      * @return rows
@@ -45,13 +56,22 @@ public interface DataGroupRelService {
     List<DataGroupRelCacheDTO> getGroupRelListByCache(String type);
 
     /**
-     * 通过缓存查询数据分组关联
+     * 通过 groupId 查询 relId 缓存
      *
      * @param type    type
      * @param groupId groupId
      * @return rows
      */
     List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long groupId);
+
+    /**
+     * 通过 relId 查询 groupRel
+     *
+     * @param type  type
+     * @param relId relId
+     * @return rows
+     */
+    List<DataGroupRelDO> getGroupRelByRelId(String type, Long relId);
 
     /**
      * 删除数据分组关联

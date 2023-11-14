@@ -111,7 +111,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
 
     @Override
     @Async("asyncExecutor")
-    public void asyncDeleteUserCacheRole(String roleCode, List<Long> userIdList) {
+    public void deleteUserCacheRoleAsync(String roleCode, List<Long> userIdList) {
         for (Long userId : userIdList) {
             RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
                 List<String> roles = s.getRoles();

@@ -40,7 +40,7 @@ public interface PreferenceService {
      * @param type   type
      * @return 偏好
      */
-    Future<Map<String, Object>> getPreference(Long userId, PreferenceTypeEnum type);
+    Future<Map<String, Object>> getPreferenceAsync(Long userId, PreferenceTypeEnum type);
 
     /**
      * 删除用户偏好

@@ -1,12 +1,12 @@
 package com.orion.ops.module.infra.api;
 
 import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupRelUpdateDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * 数据分组关联 对外服务类
@@ -20,26 +20,37 @@ public interface DataGroupRelApi {
     /**
      * 设置关联
      *
-     * @param dto dto
+     * @param groupId   groupId
+     * @param relIdList relIdList
      */
-    void updateGroupRel(DataGroupRelUpdateDTO dto);
+    void updateGroupRel(Long groupId, List<Long> relIdList);
+
+    /**
+     * 设置关联
+     *
+     * @param type        type
+     * @param groupIdList groupIdList
+     * @param relId       relId
+     */
+    void updateGroupRel(DataGroupTypeEnum type, List<Long> groupIdList, Long relId);
 
     /**
      * 添加关联
      *
-     * @param dto dto
+     * @param groupId groupId
+     * @param relId   relId
      */
-    void addGroupRel(DataGroupRelCreateDTO dto);
+    void addGroupRel(Long groupId, Long relId);
 
     /**
-     * 添加关联
+     * 批量添加关联
      *
      * @param list list
      */
     void addGroupRel(List<DataGroupRelCreateDTO> list);
 
     /**
-     * 通过缓存查询数据分组关联
+     * 通过 type 查询 relId 缓存
      * <p>
      * groupId - relId
      *
@@ -49,13 +60,22 @@ public interface DataGroupRelApi {
     Map<Long, Set<Long>> getGroupRelList(DataGroupTypeEnum type);
 
     /**
-     * 通过缓存查询数据分组关联
+     * 通过 groupId 查询 relId 缓存
      *
      * @param type    type
      * @param groupId groupId
-     * @return rows
+     * @return relId
      */
-    Set<Long> getGroupRelList(DataGroupTypeEnum type, Long groupId);
+    Set<Long> getGroupRelIdByGroupId(DataGroupTypeEnum type, Long groupId);
+
+    /**
+     * 通过 relId 查询 groupId
+     *
+     * @param type  type
+     * @param relId relId
+     * @return groupId
+     */
+    Future<Set<Long>> getGroupIdByRelIdAsync(DataGroupTypeEnum type, Long relId);
 
     /**
      * 删除数据分组关联

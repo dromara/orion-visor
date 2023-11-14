@@ -45,6 +45,9 @@ public class HostUpdateRequest implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
+    @Schema(description = "主机分组")
+    private List<Long> groupIdList;
+
     @Size(max = 5)
     @Schema(description = "tags")
     private List<Long> tags;

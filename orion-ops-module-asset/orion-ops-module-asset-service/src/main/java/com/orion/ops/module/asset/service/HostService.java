@@ -36,10 +36,10 @@ public interface HostService {
     /**
      * 通过 id 查询主机
      *
-     * @param request request
+     * @param id id
      * @return row
      */
-    HostVO getHostById(HostQueryRequest request);
+    HostVO getHostById(Long id);
 
     /**
      * 查询主机

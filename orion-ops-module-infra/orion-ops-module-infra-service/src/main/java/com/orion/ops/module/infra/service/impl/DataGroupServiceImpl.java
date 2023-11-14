@@ -248,7 +248,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
                 DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
         // 添加日志参数
-        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        OperatorLogs.add(OperatorLogs.GROUP_NAME, record.getName());
         return effect;
     }
 

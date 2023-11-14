@@ -11,25 +11,24 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
-import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.asset.convert.HostConfigConvert;
 import com.orion.ops.module.asset.convert.HostConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.define.cache.HostCacheKeyDefine;
-import com.orion.ops.module.asset.entity.domain.HostConfigDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.dto.HostCacheDTO;
 import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
-import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
+import com.orion.ops.module.infra.api.DataGroupRelApi;
 import com.orion.ops.module.infra.api.FavoriteApi;
 import com.orion.ops.module.infra.api.TagRelApi;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
+import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 import com.orion.ops.module.infra.enums.TagTypeEnum;
 import lombok.SneakyThrows;
@@ -37,10 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -54,10 +51,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class HostServiceImpl implements HostService {
-
-    // FIXME 这里的收藏删除
-
-    private static final ThreadLocal<List<Long>> FAVORITE_HOLDER = new ThreadLocal<>();
 
     @Resource
     private HostDAO hostDAO;
@@ -74,6 +67,9 @@ public class HostServiceImpl implements HostService {
     @Resource
     private FavoriteApi favoriteApi;
 
+    @Resource
+    private DataGroupRelApi dataGroupRelApi;
+
     @Override
     public Long createHost(HostCreateRequest request) {
         log.info("HostService-createHost request: {}", JSON.toJSONString(request));
@@ -87,9 +83,17 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-createHost effect: {}", effect);
         Long id = record.getId();
         // 插入 tag
-        List<Long> tags = request.getTags();
-        if (!Lists.isEmpty(tags)) {
-            tagRelApi.addTagRel(TagTypeEnum.HOST, id, tags);
+        tagRelApi.addTagRelAsync(TagTypeEnum.HOST, id, request.getTags());
+        // 引用分组
+        List<Long> groupIdList = request.getGroupIdList();
+        if (!Lists.isEmpty(groupIdList)) {
+            List<DataGroupRelCreateDTO> groupRelList = groupIdList.stream()
+                    .map(s -> DataGroupRelCreateDTO.builder()
+                            .groupId(s)
+                            .relId(id)
+                            .build())
+                    .collect(Collectors.toList());
+            dataGroupRelApi.addGroupRel(groupRelList);
         }
         // 创建配置
         hostConfigService.initHostConfig(id);
@@ -113,22 +117,33 @@ public class HostServiceImpl implements HostService {
         // 更新
         int effect = hostDAO.updateById(updateRecord);
         log.info("HostService-updateHostById effect: {}", effect);
+        // 引用分组
+        dataGroupRelApi.updateGroupRel(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_INFO);
         // 更新 tag
-        tagRelApi.setTagRel(TagTypeEnum.HOST, id, request.getTags());
+        tagRelApi.setTagRelAsync(TagTypeEnum.HOST, id, request.getTags());
         return effect;
     }
 
     @Override
-    public HostVO getHostById(HostQueryRequest request) {
-        // 查询
-        HostDO record = hostDAO.selectById(request.getId());
+    @SneakyThrows
+    public HostVO getHostById(Long id) {
+        // 查询 tag 信息
+        Future<List<TagDTO>> tagFuture = tagRelApi.getRelTagsAsync(TagTypeEnum.HOST, id);
+        // 查询分组信息
+        Future<Set<Long>> groupIdFuture = dataGroupRelApi.getGroupIdByRelIdAsync(DataGroupTypeEnum.HOST, id);
+        // 查询主机
+        HostDO record = hostDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostVO vo = HostConvert.MAPPER.to(record);
-        // 查询拓展信息
-        this.setExtraInfo(request, Lists.singleton(vo));
+        // 设置 tag 信息
+        List<TagDTO> tags = tagFuture.get();
+        // 设置分组信息
+        vo.setTags(tags);
+        Set<Long> groupIdList = groupIdFuture.get();
+        vo.setGroupIdList(groupIdList);
         return vo;
     }
 
@@ -158,22 +173,18 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public DataGrid<HostVO> getHostPage(HostQueryRequest request) {
-        try {
-            // 条件
-            LambdaQueryWrapper<HostDO> wrapper = this.buildQueryWrapper(request);
-            if (wrapper == null) {
-                return DataGrid.of(Lists.empty());
-            }
-            // 查询
-            DataGrid<HostVO> hosts = hostDAO.of(wrapper)
-                    .page(request)
-                    .dataGrid(HostConvert.MAPPER::to);
-            // 查询拓展信息
-            this.setExtraInfo(request, hosts.getRows());
-            return hosts;
-        } finally {
-            FAVORITE_HOLDER.remove();
+        // 条件
+        LambdaQueryWrapper<HostDO> wrapper = this.buildQueryWrapper(request);
+        if (wrapper == null) {
+            return DataGrid.of(Lists.empty());
         }
+        // 查询
+        DataGrid<HostVO> hosts = hostDAO.of(wrapper)
+                .page(request)
+                .dataGrid(HostConvert.MAPPER::to);
+        // 查询拓展信息
+        this.setExtraInfo(request, hosts.getRows());
+        return hosts;
     }
 
     @Override
@@ -187,14 +198,16 @@ public class HostServiceImpl implements HostService {
         // 删除
         int effect = hostDAO.deleteById(id);
         log.info("HostService-deleteHostById effect: {}", effect);
-        // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO, id);
         // 删除配置
         hostConfigDAO.deleteByHostId(id);
+        // 删除分组
+        dataGroupRelApi.deleteByRelId(DataGroupTypeEnum.HOST, id);
+        // 删除缓存
+        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO, id);
         // 删除 tag 引用
-        tagRelApi.deleteRelId(TagTypeEnum.HOST, id);
+        tagRelApi.deleteRelIdAsync(TagTypeEnum.HOST, id);
         // 删除收藏引用
-        favoriteApi.deleteByRelId(FavoriteTypeEnum.HOST, id);
+        favoriteApi.deleteByRelIdAsync(FavoriteTypeEnum.HOST, id);
         return effect;
     }
 
@@ -236,48 +249,19 @@ public class HostServiceImpl implements HostService {
      * @param request request
      * @return wrapper
      */
-    @SneakyThrows
     private LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request) {
-        boolean setIdList = Booleans.isTrue(request.getFavorite()) || Lists.isNotEmpty(request.getTags());
-        List<List<Long>> idListGrouping = new ArrayList<>();
-        // 查询收藏
-        Future<List<Long>> favoriteFuture = null;
-        if (Booleans.isTrue(request.getFavorite())) {
-            favoriteFuture = favoriteApi.getFavoriteRelIdList(FavoriteTypeEnum.HOST, SecurityUtils.getLoginUserId());
-        }
+        String searchValue = request.getSearchValue();
+        LambdaQueryWrapper<HostDO> wrapper = hostDAO.wrapper();
         // tag 条件
         if (Lists.isNotEmpty(request.getTags())) {
             List<Long> tagRelIdList = tagRelApi.getRelIdByTagId(request.getTags());
             if (tagRelIdList.isEmpty()) {
                 return null;
             }
-            idListGrouping.add(tagRelIdList);
-        }
-        // 获取收藏结果
-        if (favoriteFuture != null) {
-            List<Long> favorites = favoriteFuture.get();
-            // 无收藏
-            if (Lists.isEmpty(favorites)) {
-                return null;
-            }
-            idListGrouping.add(favorites);
-        }
-        // flat
-        List<Long> idList = null;
-        if (setIdList && !idListGrouping.isEmpty()) {
-            idList = idListGrouping.get(0);
-            // 交集
-            for (int i = 1; i < idListGrouping.size(); i++) {
-                idList.retainAll(idListGrouping.get(i));
-            }
-            if (idList.isEmpty()) {
-                return null;
-            }
+            wrapper.in(HostDO::getId, tagRelIdList);
         }
         // 基础条件
-        String searchValue = request.getSearchValue();
-        LambdaQueryWrapper<HostDO> wrapper = hostDAO.wrapper()
-                .eq(HostDO::getId, request.getId())
+        wrapper.eq(HostDO::getId, request.getId())
                 .like(HostDO::getName, request.getName())
                 .like(HostDO::getCode, request.getCode())
                 .like(HostDO::getAddress, request.getAddress())
@@ -287,9 +271,6 @@ public class HostServiceImpl implements HostService {
                         .like(HostDO::getCode, searchValue).or()
                         .like(HostDO::getAddress, searchValue)
                 );
-        if (setIdList) {
-            wrapper.in(HostDO::getId, idList);
-        }
         return wrapper;
     }
 
@@ -299,59 +280,17 @@ public class HostServiceImpl implements HostService {
      * @param request request
      * @param hosts   hosts
      */
-    @SneakyThrows
     private void setExtraInfo(HostQueryRequest request, List<HostVO> hosts) {
         if (hosts.isEmpty()) {
             return;
         }
         List<Long> idList = hosts.stream().map(HostVO::getId).collect(Collectors.toList());
-        // 查询额外信息
-        Future<List<List<TagDTO>>> tagsFuture = null;
-        Future<List<Long>> favoriteFuture = null;
-        if (Booleans.isTrue(request.getExtra())) {
-            // tag
-            tagsFuture = tagRelApi.getRelTags(TagTypeEnum.HOST, idList);
-            // 从缓存中读取 收藏
-            List<Long> favorites = FAVORITE_HOLDER.get();
-            if (favorites != null) {
-                favoriteFuture = CompletableFuture.completedFuture(favorites);
-            } else {
-                favoriteFuture = favoriteApi.getFavoriteRelIdList(FavoriteTypeEnum.HOST, SecurityUtils.getLoginUserId());
-            }
-        }
-        // 查询配置
-        if (Booleans.isTrue(request.getConfig())) {
-            // 配置分组
-            Map<Long, List<HostConfigDO>> hostConfigGrouping = hostConfigDAO.getHostConfigByHostIdList(idList)
-                    .stream()
-                    .collect(Collectors.groupingBy(HostConfigDO::getHostId));
-            // 设置配置
-            hosts.forEach(s -> {
-                List<HostConfigDO> configs = hostConfigGrouping.get(s.getId());
-                if (Lists.isEmpty(configs)) {
-                    return;
-                }
-                Map<String, HostConfigVO> configMap = configs.stream()
-                        .collect(Collectors.toMap(
-                                HostConfigDO::getType,
-                                HostConfigConvert.MAPPER::to,
-                                (v1, v2) -> v2
-                        ));
-                s.setConfigs(configMap);
-            });
-        }
-        // 设置 tag 信息
-        List<List<TagDTO>> tagList = null;
-        if (tagsFuture != null && (tagList = tagsFuture.get()) != null) {
+        // 查询 tag 信息
+        if (Booleans.isTrue(request.getQueryTag())) {
+            // 设置 tag 信息
+            List<List<TagDTO>> tagList = tagRelApi.getRelTags(TagTypeEnum.HOST, idList);
             for (int i = 0; i < hosts.size(); i++) {
                 hosts.get(i).setTags(tagList.get(i));
-            }
-        }
-        // 设置收藏信息
-        List<Long> favoriteIdList = null;
-        if (favoriteFuture != null && (favoriteIdList = favoriteFuture.get()) != null) {
-            for (HostVO host : hosts) {
-                host.setFavorite(favoriteIdList.contains(host.getId()));
             }
         }
     }

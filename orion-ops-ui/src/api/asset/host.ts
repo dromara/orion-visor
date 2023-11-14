@@ -10,6 +10,7 @@ export interface HostCreateRequest {
   code?: string;
   address?: string;
   tags?: Array<number>;
+  groupIdList?: Array<number>;
 }
 
 /**
@@ -30,8 +31,7 @@ export interface HostQueryRequest extends Pagination {
   address?: string;
   favorite?: boolean;
   tags?: Array<number>;
-  extra?: boolean;
-  config?: boolean;
+  queryTag?: boolean;
 }
 
 /**
@@ -46,9 +46,10 @@ export interface HostQueryResponse extends TableData {
   updateTime: number;
   creator: string;
   updater: string;
+  // FIXME 删除
   favorite: boolean;
-  tags: Record<number, string>;
-  configs: Record<string, HostConfigQueryResponse>;
+  tags: Array<{ id: number, name: string }>;
+  groupIdList: Array<number>;
 }
 
 /**
@@ -90,8 +91,8 @@ export function updateHost(request: HostUpdateRequest) {
 /**
  * 通过 id 查询主机
  */
-export function getHost(params: HostQueryRequest) {
-  return axios.get<HostQueryResponse>('/asset/host/get', { params });
+export function getHost(id: number) {
+  return axios.get<HostQueryResponse>('/asset/host/get', { params: { id } });
 }
 
 /**

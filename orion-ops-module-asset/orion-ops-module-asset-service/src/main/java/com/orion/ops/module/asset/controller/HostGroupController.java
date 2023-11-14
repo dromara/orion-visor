@@ -7,10 +7,14 @@ import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.convert.HostGroupConvert;
 import com.orion.ops.module.asset.define.operator.HostGroupOperatorType;
+import com.orion.ops.module.asset.entity.request.host.HostGroupRelUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
 import com.orion.ops.module.infra.api.DataGroupApi;
 import com.orion.ops.module.infra.api.DataGroupRelApi;
-import com.orion.ops.module.infra.entity.dto.data.*;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupMoveDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -91,17 +95,17 @@ public class HostGroupController {
     @GetMapping("/rel-list")
     @Operation(summary = "查询分组主机")
     @Parameter(name = "groupId", description = "groupId", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-group:query-rel')")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
     public Set<Long> queryHostGroupRel(@RequestParam("groupId") Long groupId) {
-        return dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST, groupId);
+        return dataGroupRelApi.getGroupRelIdByGroupId(DataGroupTypeEnum.HOST, groupId);
     }
 
     @OperatorLog(HostGroupOperatorType.UPDATE_REL)
     @PostMapping("/update-rel")
     @Operation(summary = "修改分组主机")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:update-rel')")
-    public HttpWrapper<?> updateGroupHost(@Validated @RequestBody DataGroupRelUpdateDTO request) {
-        dataGroupRelApi.updateGroupRel(request);
+    @PreAuthorize("@ss.hasPermission('asset:host:update')")
+    public HttpWrapper<?> updateGroupHost(@Validated @RequestBody HostGroupRelUpdateRequest request) {
+        dataGroupRelApi.updateGroupRel(request.getGroupId(), request.getHostIdList());
         return HttpWrapper.ok();
     }
 

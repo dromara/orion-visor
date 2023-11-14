@@ -43,6 +43,6 @@ public interface SystemUserRoleService {
      * @param roleCode   roleCode
      * @param userIdList userIdList
      */
-    void asyncDeleteUserCacheRole(String roleCode, List<Long> userIdList);
+    void deleteUserCacheRoleAsync(String roleCode, List<Long> userIdList);
 
 }

@@ -14,7 +14,7 @@
         </template>
       </a-alert>
       <!-- 保存按钮 -->
-      <a-button v-permission="['asset:host-group:update-rel']"
+      <a-button v-permission="['asset:host:update']"
                 class="save-button"
                 type="primary"
                 :disabled="!group.key"

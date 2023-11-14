@@ -77,7 +77,7 @@ public interface SystemUserService {
      * @param id       id
      * @param username username
      */
-    void deleteSystemUserRel(Long id, String username);
+    void deleteSystemUserRelAsync(Long id, String username);
 
     /**
      * 重置密码

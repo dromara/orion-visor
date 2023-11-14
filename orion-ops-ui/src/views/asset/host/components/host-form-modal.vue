@@ -59,9 +59,10 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/host.form.rules';
-  import { createHost, updateHost } from '@/api/asset/host';
+  import { createHost, getHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
+  import { pick } from 'lodash';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -76,6 +77,7 @@
       code: undefined,
       address: undefined,
       tags: undefined,
+      groupIdList: undefined,
     };
   };
 
@@ -93,12 +95,29 @@
   };
 
   // 打开修改
-  const openUpdate = (record: any) => {
+  const openUpdate = async (id: number) => {
     title.value = '修改主机';
     isAddHandle.value = false;
-    const tags = record?.hostTags?.map((s: { id: any; }) => s.id);
-    renderForm({ ...defaultForm(), ...record, tags });
+    renderForm({ ...defaultForm() });
     setVisible(true);
+    await fetchHostRender(id);
+  };
+
+  // 渲染主机
+  const fetchHostRender = async (id: number) => {
+    try {
+      setLoading(true);
+      const { data } = await getHost(id);
+      const detail = Object.assign({} as Record<string, any>,
+        pick(data, 'id', 'name', 'code', 'address', 'groupIdList'));
+      // tag
+      const tags = (data.tags || []).map(s => s.id);
+      // 渲染
+      renderForm({ ...detail, tags });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 渲染表单

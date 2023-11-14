@@ -3,7 +3,6 @@ package com.orion.ops.module.infra.api;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * 收藏 对外服务类
@@ -21,7 +20,7 @@ public interface FavoriteApi {
      * @param userId userId
      * @return relIdList
      */
-    Future<List<Long>> getFavoriteRelIdList(FavoriteTypeEnum type, Long userId);
+    List<Long> getFavoriteRelIdList(FavoriteTypeEnum type, Long userId);
 
     /**
      * 通过 relId 删除收藏
@@ -29,7 +28,7 @@ public interface FavoriteApi {
      * @param type  type
      * @param relId relId
      */
-    void deleteByRelId(FavoriteTypeEnum type, Long relId);
+    void deleteByRelIdAsync(FavoriteTypeEnum type, Long relId);
 
     /**
      * 通过 relId 删除收藏
@@ -37,6 +36,6 @@ public interface FavoriteApi {
      * @param type      type
      * @param relIdList relIdList
      */
-    void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList);
+    void deleteByRelIdListAsync(FavoriteTypeEnum type, List<Long> relIdList);
 
 }

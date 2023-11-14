@@ -11,6 +11,8 @@ import com.orion.ops.framework.common.constant.FieldConst;
  */
 public interface OperatorLogKeys extends FieldConst {
 
+    String GROUP_NAME = "groupName";
+
     String ID_LIST = "idList";
 
     String USERNAME = "username";

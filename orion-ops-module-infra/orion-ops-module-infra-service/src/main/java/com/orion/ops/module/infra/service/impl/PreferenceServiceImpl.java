@@ -90,7 +90,7 @@ public class PreferenceServiceImpl implements PreferenceService {
 
     @Override
     @Async("asyncExecutor")
-    public Future<Map<String, Object>> getPreference(Long userId, PreferenceTypeEnum type) {
+    public Future<Map<String, Object>> getPreferenceAsync(Long userId, PreferenceTypeEnum type) {
         Map<String, Object> config = this.getPreferenceByCache(userId, type);
         return CompletableFuture.completedFuture(config);
     }

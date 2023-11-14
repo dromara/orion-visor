@@ -177,7 +177,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 删除菜单缓存
         permissionService.getRoleMenuCache().remove(code);
         // 删除用户缓存中的角色
-        systemUserRoleService.asyncDeleteUserCacheRole(code, userIdList);
+        systemUserRoleService.deleteUserCacheRoleAsync(code, userIdList);
         return effect;
     }
 

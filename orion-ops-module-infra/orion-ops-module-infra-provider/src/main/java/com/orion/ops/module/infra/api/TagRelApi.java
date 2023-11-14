@@ -22,7 +22,7 @@ public interface TagRelApi {
      * @param relId     relId
      * @param tagIdList tagIdList
      */
-    void addTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList);
+    void addTagRelAsync(TagTypeEnum type, Long relId, List<Long> tagIdList);
 
     /**
      * 设置标签引用 先删除后新增
@@ -31,7 +31,7 @@ public interface TagRelApi {
      * @param relId     relId
      * @param tagIdList tagIdList
      */
-    void setTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList);
+    void setTagRelAsync(TagTypeEnum type, Long relId, List<Long> tagIdList);
 
     /**
      * 获取引用 tag
@@ -40,7 +40,7 @@ public interface TagRelApi {
      * @param relId relId
      * @return tag
      */
-    Future<List<TagDTO>> getRelTags(TagTypeEnum type, Long relId);
+    Future<List<TagDTO>> getRelTagsAsync(TagTypeEnum type, Long relId);
 
     /**
      * 获取引用 tag
@@ -49,7 +49,7 @@ public interface TagRelApi {
      * @param relIdList relIdList
      * @return tag
      */
-    Future<List<List<TagDTO>>> getRelTags(TagTypeEnum type, List<Long> relIdList);
+    List<List<TagDTO>> getRelTags(TagTypeEnum type, List<Long> relIdList);
 
     /**
      * 查询 tag 关联的所有 id
@@ -73,7 +73,7 @@ public interface TagRelApi {
      * @param type  type
      * @param relId relId
      */
-    void deleteRelId(TagTypeEnum type, Long relId);
+    void deleteRelIdAsync(TagTypeEnum type, Long relId);
 
     /**
      * 通过 relIdList 删除
@@ -81,6 +81,6 @@ public interface TagRelApi {
      * @param type      type
      * @param relIdList relIdList
      */
-    void deleteRelIdList(TagTypeEnum type, List<Long> relIdList);
+    void deleteRelIdListAsync(TagTypeEnum type, List<Long> relIdList);
 
 }

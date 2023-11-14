@@ -204,7 +204,7 @@ public class PermissionServiceImpl implements PermissionService {
         UserCollectInfoVO user = SystemUserConvert.MAPPER.toCollectInfo(SecurityUtils.getLoginUser());
         Long id = user.getId();
         // 获取用户系统偏好
-        Future<Map<String, Object>> systemPreference = preferenceService.getPreference(id, PreferenceTypeEnum.SYSTEM);
+        Future<Map<String, Object>> systemPreference = preferenceService.getPreferenceAsync(id, PreferenceTypeEnum.SYSTEM);
         // 获取用户角色
         List<String> roles = this.getUserEnabledRoles();
         // 获取用户权限

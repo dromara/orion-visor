@@ -211,13 +211,13 @@ public class SystemUserServiceImpl implements SystemUserService {
         int effect = systemUserDAO.deleteById(id);
         log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
         // 异步删除额外信息
-        SpringHolder.getBean(SystemUserService.class).deleteSystemUserRel(id, record.getUsername());
+        SpringHolder.getBean(SystemUserService.class).deleteSystemUserRelAsync(id, record.getUsername());
         return effect;
     }
 
     @Override
     @Async("asyncExecutor")
-    public void deleteSystemUserRel(Long id, String username) {
+    public void deleteSystemUserRelAsync(Long id, String username) {
         log.info("SystemUserService-deleteSystemUserRel id: {}", id);
         // 删除用户列表缓存
         RedisMaps.delete(UserCacheKeyDefine.USER_LIST, id);

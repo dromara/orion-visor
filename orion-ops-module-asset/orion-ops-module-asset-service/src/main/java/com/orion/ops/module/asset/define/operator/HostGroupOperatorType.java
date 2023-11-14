@@ -32,8 +32,8 @@ public class HostGroupOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, CREATE, "创建主机分组 <sb>${name}</sb>"),
                 new OperatorType(L, RENAME, "重命名主机分组 <sb>${before}</sb> -> <sb>${name}</sb>"),
                 new OperatorType(L, MOVE, "移动主机分组 <sb>${source}</sb> 到 <sb>${target}(${position})</sb>"),
-                new OperatorType(H, DELETE, "删除主机分组 <sb>${name}</sb>"),
-                new OperatorType(M, UPDATE_REL, "修改分组内主机 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除主机分组 <sb>${groupName}</sb>"),
+                new OperatorType(M, UPDATE_REL, "修改分组内主机 <sb>${groupName}</sb>"),
         };
     }
 

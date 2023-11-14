@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * 主机 视图响应对象
@@ -52,13 +52,10 @@ public class HostVO implements Serializable {
     @Schema(description = "修改人")
     private String updater;
 
-    @Schema(description = "是否收藏")
-    private Boolean favorite;
-
     @Schema(description = "tags")
     private List<TagDTO> tags;
 
-    @Schema(description = "configs")
-    private Map<String, HostConfigVO> configs;
+    @Schema(description = "分组 id")
+    private Set<Long> groupIdList;
 
 }
