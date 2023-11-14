@@ -28,13 +28,15 @@
       <host-group-tree ref="tree"
                        :loading="treeLoading"
                        @loading="setTreeLoading"
-                       @select-key="selectGroup" />
+                       @select-node="selectGroup" />
     </div>
   </a-spin>
   <!-- 身体部分 -->
   <a-spin class="simple-card view-body"
           :loading="dataLoading">
-    <host-transfer ref="transfer" />
+    <host-transfer ref="transfer"
+                   :group="currentGroup"
+                   @loading="setDataLoading" />
   </a-spin>
 </template>
 
@@ -45,6 +47,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TreeNodeData } from '@arco-design/web-vue';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import HostGroupTree from './host-group-tree.vue';
@@ -55,6 +58,7 @@
 
   const tree = ref();
   const transfer = ref();
+  const currentGroup = ref();
 
   // 添加根节点
   const addRootNode = () => {
@@ -67,28 +71,8 @@
   };
 
   // 选中分组
-  const selectGroup = (key: number) => {
-    console.log(key);
-  };
-
-  const { loading: treeLoading, setLoading: setTreeLoading } = useLoading();
-  const { loading: dataLoading, setLoading: setDataLoading } = useLoading();
-
-  const tree = ref();
-
-  // 添加根节点
-  const addRootNode = () => {
-    tree.value.addRootNode();
-  };
-
-  // 刷新树
-  const refreshTree = () => {
-    tree.value.fetchTreeData();
-  };
-
-  // 选中分组
-  const selectGroup = (key: number) => {
-    console.log(key);
+  const selectGroup = (group: TreeNodeData) => {
+    currentGroup.value = group;
   };
 
 </script>
@@ -127,10 +111,14 @@
       display: flex;
 
       .handler-icon-wrapper {
-        margin-left: 8px;
-        color: rgb(var(--primary-6));
+        margin-left: 2px;
         padding: 4px;
         font-size: 16px;
+        background: unset;
+
+        &:hover {
+          background: var(--color-fill-3);
+        }
       }
     }
 

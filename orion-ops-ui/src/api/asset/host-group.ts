@@ -39,7 +39,7 @@ export interface HostGroupQueryResponse {
  */
 export interface HostGroupRelUpdateRequest {
   groupId?: number;
-  relIdList?: Array<number>;
+  relIdList?: Array<string>;
 }
 
 /**
@@ -80,8 +80,8 @@ export function deleteHostGroup(id: number) {
 /**
  * 查询分组内主机
  */
-export function getHostGroupRelList() {
-  return axios.get<Array<number>>('/asset/host-group/rel-list');
+export function getHostGroupRelList(groupId: number) {
+  return axios.get<Array<number>>('/asset/host-group/rel-list', { params: { groupId } });
 }
 
 /**

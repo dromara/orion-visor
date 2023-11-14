@@ -73,7 +73,7 @@
       const { data } = await getTagList('HOST');
       // 设置到缓存
       cacheStore.set('hostTags', data);
-    } catch {
+    } catch (e) {
       Message.error('tag加载失败');
     }
   };

@@ -16,41 +16,25 @@
   import { computed, ref, onBeforeMount, onUnmounted } from 'vue';
   import { useAppStore, useCacheStore, useDictStore } from '@/store';
   import HostGroupView from './components/host-group-view.vue';
+  import { getHostList } from '@/api/asset/host';
 
   const render = ref(false);
-  const table = ref();
-  const card = ref();
-  const modal = ref();
-  const config = ref();
-  const appStore = useAppStore();
   const cacheStore = useCacheStore();
 
-  // 添加回调
-  const modalAddCallback = () => {
-    table.value.addedCallback();
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    table.value.updatedCallback();
-  };
-
-  // 加载 tags
-  const loadTags = async () => {
+  // 加载主机列表
+  const loadHostList = async () => {
     try {
+      const { data } = await getHostList();
       // 设置到缓存
-      // cacheStore.set('hostTags', data);
-    } catch {
+      cacheStore.set('hosts', data);
+    } catch (e) {
       Message.error('tag加载失败');
     }
   };
 
   onBeforeMount(async () => {
-    // 加载角色列表
-
-    // 加载用户列表
-
     // 加载主机列表
+    await loadHostList();
     render.value = true;
   });
 

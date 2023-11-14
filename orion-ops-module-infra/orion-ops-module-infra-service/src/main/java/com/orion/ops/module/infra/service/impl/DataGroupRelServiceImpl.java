@@ -179,7 +179,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
     @Override
     public List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long groupId) {
         return this.getGroupRelListByCache(
-                DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP.format(type),
+                DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP.format(groupId),
                 DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP,
                 () -> dataGroupRelDAO.of()
                         .createWrapper()
@@ -203,11 +203,11 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                                                              Supplier<List<DataGroupRelCacheDTO>> valueSupplier) {
         // 查询缓存
         List<DataGroupRelCacheDTO> list = RedisStrings.getJsonArray(key, define);
-        if (list.isEmpty()) {
+        if (Lists.isEmpty(list)) {
             // 查询数据库
             list = valueSupplier.get();
             // 添加默认值 防止穿透
-            if (list.isEmpty()) {
+            if (Lists.isEmpty(list)) {
                 list.add(DataGroupRelCacheDTO.builder()
                         .id(Const.NONE_ID)
                         .build());

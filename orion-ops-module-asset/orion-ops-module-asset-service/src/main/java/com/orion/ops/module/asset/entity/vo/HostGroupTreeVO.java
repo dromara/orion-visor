@@ -36,9 +36,6 @@ public class HostGroupTreeVO implements Serializable {
     @Schema(description = "组名称")
     private String name;
 
-    @Schema(description = "排序")
-    private Integer sort;
-
     @Schema(description = "子节点")
     private List<HostGroupTreeVO> children;
 

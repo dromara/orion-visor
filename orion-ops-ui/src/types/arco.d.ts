@@ -4,6 +4,5 @@ import type { NodeData } from './global';
 
 declare module '@arco-design/web-vue' {
   interface TreeNodeData extends NodeData {
-    [key: string]: any;
   }
 }

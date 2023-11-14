@@ -61,7 +61,7 @@
       const { data } = await getDictKeyList();
       // 设置到缓存
       cacheStore.set('dictKeys', data);
-    } catch {
+    } catch (e) {
       Message.error('配置项加载失败');
     }
   };

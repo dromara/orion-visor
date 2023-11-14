@@ -5,12 +5,14 @@ import type { TagQueryResponse } from '@/api/meta/tag';
 import type { HostKeyQueryResponse } from '@/api/asset/host-key';
 import type { HostIdentityQueryResponse } from '@/api/asset/host-identity';
 import type { DictKeyQueryResponse } from '@/api/system/dict-key';
+import type { HostQueryResponse } from '@/api/asset/host';
 
 export interface CacheState {
   users: UserQueryResponse[];
   menus: MenuQueryResponse[];
   roles: RoleQueryResponse[];
   hostTags: TagQueryResponse[];
+  hosts: HostQueryResponse[];
   hostKeys: HostKeyQueryResponse[];
   hostIdentities: HostIdentityQueryResponse[];
   dictKeys: DictKeyQueryResponse[];

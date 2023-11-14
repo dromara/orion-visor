@@ -3,10 +3,21 @@
     <!-- 头部 -->
     <div class="transfer-header">
       <!-- 提示 -->
-      <a-alert class="alert-wrapper">123123</a-alert>
+      <a-alert class="alert-wrapper">
+        <!-- 已选中分组 -->
+        <template v-if="group.key">
+          <span>当前编辑的分组为 <span class="span-blue">{{ group.title }}</span></span>
+        </template>
+        <!-- 未选中分组 -->
+        <template v-else>
+          <span>点击左侧分组即可加载组内数据</span>
+        </template>
+      </a-alert>
       <!-- 保存按钮 -->
-      <a-button class="save-button"
+      <a-button v-permission="['asset:host-group:update-rel']"
+                class="save-button"
                 type="primary"
+                :disabled="!group.key"
                 @click="save">
         保存
         <template #icon>
@@ -19,10 +30,11 @@
                 :data="data"
                 :source-input-search-props="{ placeholder:'请输入主机名称/编码/IP' }"
                 :target-input-search-props="{ placeholder:'请输入主机名称/编码/IP' }"
+                :disabled="!group.key"
                 show-search
                 one-way>
       <!-- 主机列表 -->
-      <template #source-title="{ countTotal, countSelected, checked, indeterminate, onSelectAllChange}">
+      <template #source-title="{ countTotal, countSelected, checked, indeterminate, onSelectAllChange }">
         <!-- 左侧标题 -->
         <div class="source-title-container">
           <a-checkbox style="margin-right: 8px;"
@@ -45,6 +57,10 @@
           </span>
         </div>
       </template>
+      <!-- 内容 -->
+      <template #item="{ label }">
+        <span v-html="renderLabel(label)" />
+      </template>
     </a-transfer>
   </div>
 </template>
@@ -57,25 +73,79 @@
 
 <script lang="ts" setup>
   import type { TransferItem } from '@arco-design/web-vue/es/transfer/interface';
-  import { onMounted, ref } from 'vue';
+  import type { TreeNodeData } from '@arco-design/web-vue';
+  import type { PropType } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import { useCacheStore } from '@/store';
+  import { getHostGroupRelList, updateHostGroupRel } from '@/api/asset/host-group';
+  import { Message } from '@arco-design/web-vue';
+
+  const props = defineProps({
+    group: {
+      type: Object as PropType<TreeNodeData>,
+      default: () => {
+        return {};
+      }
+    }
+  });
+
+  const emits = defineEmits(['loading']);
+
+  const cacheStore = useCacheStore();
 
   const data = ref<Array<TransferItem>>([]);
-  const value = ref([]);
+  const value = ref<Array<string>>([]);
+
+  // 渲染 label
+  const renderLabel = (label: string) => {
+    const last = label.lastIndexOf('-');
+    const prefix = label.substring(0, last);
+    const ip = label.substring(last + 1, label.length);
+    return `${prefix} - <span class="span-blue">${ip}</span>`;
+  };
 
   // 保存
-  const save = () => {
-    console.log(value.value);
+  const save = async () => {
+    try {
+      emits('loading', true);
+      await updateHostGroupRel({
+        groupId: props.group?.key as number,
+        relIdList: value.value
+      });
+      Message.success('保存成功');
+    } catch (e) {
+    } finally {
+      emits('loading', false);
+    }
   };
+
+  // 查询组内数据
+  watch(() => props.group?.key, async (groupId) => {
+    if (groupId) {
+      // 加载组内数据
+      try {
+        emits('loading', true);
+        const { data } = await getHostGroupRelList(groupId as number);
+        value.value = data.map(String);
+      } catch (e) {
+      } finally {
+        emits('loading', false);
+      }
+    } else {
+      // 重置
+      value.value = [];
+    }
+  });
 
   // 加载主机
   onMounted(() => {
-    const cacheStore = useCacheStore();
-    data.value = Array(200).fill(undefined).map((_, index) => ({
-      value: `option${index + 1}`,
-      label: `Option ${index + 1}`,
-      disabled: false
-    }));
+    data.value = cacheStore.hosts.map(s => {
+      return {
+        value: String(s.id),
+        label: `${s.name}(${s.code})-${s.address}`,
+        disabled: false
+      };
+    });
   });
 
 </script>

@@ -36,7 +36,7 @@
       <!-- 名称 -->
       <span v-else
             class="node-title-wrapper"
-            @click="() => emits('selectKey', node.key)">
+            @click="() => emits('selectNode', node)">
         {{ node.title }}
       </span>
     </template>
@@ -94,7 +94,7 @@
   const props = defineProps({
     loading: Boolean
   });
-  const emits = defineEmits(['loading', 'selectKey']);
+  const emits = defineEmits(['loading', 'selectNode']);
 
   const tree = ref();
   const modCount = ref(0);
@@ -278,7 +278,14 @@
       emits('loading', true);
       const { data } = await getHostGroupTree();
       treeData.value = data;
-    } catch {
+      // 未选择则选择首个
+      if (!tree.value?.getSelectedNodes()?.length && data.length) {
+        await nextTick(() => {
+          tree.value?.selectNode(data[0].key);
+          emits('selectNode', data[0]);
+        });
+      }
+    } catch (e) {
     } finally {
       emits('loading', false);
     }
@@ -308,7 +315,17 @@
     color: var(--color-text-3);
   }
 
+  :deep(.arco-tree-node) {
+    cursor: unset;
+
+    .arco-tree-node-switcher {
+      margin-left: 8px;
+    }
+  }
+
   :deep(.arco-tree-node-selected) {
+    background-color: var(--color-fill-2);
+
     .arco-tree-node-title {
       &:hover {
         background-color: var(--color-fill-2);
@@ -317,7 +334,8 @@
   }
 
   :deep(.arco-tree-node-title) {
-    padding-right: 48px;
+    padding: 0 68px 0 0;
+    height: 32px;
 
     &:hover {
       background-color: var(--color-fill-1);
@@ -325,17 +343,19 @@
 
     .arco-tree-node-title-text {
       width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
-  }
-
-  :deep(.arco-tree-node-selected) {
-    background-color: var(--color-fill-2);
   }
 
   .node-title-wrapper {
     width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
   }
 
   .tree-icon {
