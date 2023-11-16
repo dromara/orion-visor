@@ -163,7 +163,9 @@ public class HostServiceImpl implements HostService {
         // 删除屏障
         RedisMaps.removeBarrier(list);
         // 转换
-        return Lists.map(list, HostConvert.MAPPER::to);
+        return list.stream()
+                .map(HostConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override

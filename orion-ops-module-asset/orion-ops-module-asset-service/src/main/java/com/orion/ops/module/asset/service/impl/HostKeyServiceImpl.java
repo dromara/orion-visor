@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 主机秘钥 服务实现类
@@ -139,7 +140,9 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 删除屏障
         RedisMaps.removeBarrier(list);
         // 转换
-        return Lists.map(list, HostKeyConvert.MAPPER::to);
+        return list.stream()
+                .map(HostKeyConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override

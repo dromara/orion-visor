@@ -172,7 +172,9 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 删除屏障
         RedisMaps.removeBarrier(list);
         // 转换
-        return Lists.map(list, SystemUserConvert.MAPPER::to);
+        return list.stream()
+                .map(SystemUserConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override

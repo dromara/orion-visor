@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 标签枚举 服务实现类
@@ -76,7 +77,9 @@ public class TagServiceImpl implements TagService {
         // 删除屏障
         RedisLists.removeBarrier(list);
         // 转换
-        return Lists.map(list, TagConvert.MAPPER::to);
+        return list.stream()
+                .map(TagConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override

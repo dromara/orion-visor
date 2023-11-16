@@ -126,7 +126,9 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 删除屏障
         RedisMaps.removeBarrier(list);
         // 转换
-        return Lists.map(list, HostIdentityConvert.MAPPER::to);
+        return list.stream()
+                .map(HostIdentityConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override
