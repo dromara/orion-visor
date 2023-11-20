@@ -58,7 +58,7 @@ export default function usePermission() {
      * 是否有角色
      */
     hasAnyRole(role: string[]) {
-      return userStore.roles?.includes('*') ||
+      return userStore.roles?.includes('admin') ||
         role.map(s => userStore.roles?.includes(s))
         .filter(Boolean).length > 0;
     }

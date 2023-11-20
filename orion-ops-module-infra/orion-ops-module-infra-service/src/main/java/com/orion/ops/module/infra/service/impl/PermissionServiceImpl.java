@@ -4,6 +4,7 @@ import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.security.UserRole;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemMenuConvert;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
@@ -51,13 +52,13 @@ import java.util.stream.Stream;
 public class PermissionServiceImpl implements PermissionService {
 
     @Getter
-    private final Map<String, SystemRoleDO> roleCache = new HashMap<>();
+    private final Map<Long, SystemRoleDO> roleCache = new HashMap<>();
 
     @Getter
     private final List<SystemMenuCacheDTO> menuCache = new ArrayList<>();
 
     @Getter
-    private final Map<String, List<SystemMenuCacheDTO>> roleMenuCache = new HashMap<>();
+    private final Map<Long, List<SystemMenuCacheDTO>> roleMenuCache = new HashMap<>();
 
     @Resource
     private SystemRoleDAO systemRoleDAO;
@@ -87,10 +88,8 @@ public class PermissionServiceImpl implements PermissionService {
         roleMenuCache.clear();
         // 加载所有角色
         List<SystemRoleDO> roles = systemRoleDAO.selectList(null);
-        Map<Long, SystemRoleDO> roleRel = roles.stream()
-                .collect(Collectors.toMap(SystemRoleDO::getId, Function.identity()));
         for (SystemRoleDO role : roles) {
-            roleCache.put(role.getCode(), role);
+            roleCache.put(role.getId(), role);
         }
         // 加载所有菜单信息
         List<SystemMenuDO> menuList = systemMenuDAO.selectList(null);
@@ -103,17 +102,14 @@ public class PermissionServiceImpl implements PermissionService {
                 .stream()
                 .collect(Collectors.groupingBy(SystemRoleMenuDO::getRoleId,
                         Collectors.mapping(SystemRoleMenuDO::getMenuId, Collectors.toList())))
-                .forEach((rid, mids) -> {
+                .forEach((roleId, menuIdList) -> {
                     // 获取菜单引用
-                    List<SystemMenuCacheDTO> roleMenus = mids.stream()
+                    List<SystemMenuCacheDTO> roleMenus = menuIdList.stream()
                             .map(menuMapping::get)
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList());
                     // 获取角色引用
-                    Optional.ofNullable(rid)
-                            .map(roleRel::get)
-                            .map(SystemRoleDO::getCode)
-                            .ifPresent(code -> roleMenuCache.put(code, roleMenus));
+                    roleMenuCache.put(roleId, roleMenus);
                 });
         log.info("initPermissionCache-end used: {}ms", System.currentTimeMillis() - start);
     }
@@ -121,7 +117,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean hasRole(String role) {
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoles();
+        List<String> roles = this.getUserEnabledRoleCode();
         if (roles.isEmpty()) {
             return false;
         }
@@ -132,7 +128,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean hasPermission(String permission) {
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoles();
+        List<String> roles = this.getUserEnabledRoleCode();
         if (roles.isEmpty()) {
             return false;
         }
@@ -150,7 +146,7 @@ public class PermissionServiceImpl implements PermissionService {
             return true;
         }
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoles();
+        List<String> roles = this.getUserEnabledRoleCode();
         if (roles.isEmpty()) {
             return false;
         }
@@ -170,7 +166,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public List<SystemMenuVO> getUserMenuList() {
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoles();
+        List<String> roles = this.getUserEnabledRoleCode();
         if (roles.isEmpty()) {
             return Lists.empty();
         }
@@ -206,7 +202,7 @@ public class PermissionServiceImpl implements PermissionService {
         // 获取用户系统偏好
         Future<Map<String, Object>> systemPreference = preferenceService.getPreferenceAsync(id, PreferenceTypeEnum.SYSTEM);
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoles();
+        List<String> roles = this.getUserEnabledRoleCode();
         // 获取用户权限
         List<String> permissions;
         if (roles.isEmpty()) {
@@ -266,32 +262,27 @@ public class PermissionServiceImpl implements PermissionService {
      *
      * @return roles
      */
-    private List<String> getUserEnabledRoles() {
+    private List<String> getUserEnabledRoleCode() {
         // 获取当前用户角色
-        List<String> roles = Optional.ofNullable(SecurityUtils.getLoginUser())
+        List<UserRole> userRoles = Optional.ofNullable(SecurityUtils.getLoginUser())
                 .map(LoginUser::getRoles)
-                .orElse(Lists.empty());
-        if (Lists.isEmpty(roles)) {
+                .orElse(null);
+        if (Lists.isEmpty(userRoles)) {
             return Lists.empty();
         }
-        // 过滤未启用的角色
-        return roles.stream()
-                .filter(this::checkRoleEnabled)
+        // 获取角色编码
+        List<String> roleCodes = userRoles.stream()
+                .map(UserRole::getId)
+                .map(roleCache::get)
+                .filter(Objects::nonNull)
+                // 过滤未启用的角色
+                .filter(r -> RoleStatusEnum.ENABLED.getStatus().equals(r.getStatus()))
+                .map(SystemRoleDO::getCode)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * 检查角色是否启用
-     *
-     * @param role role
-     * @return 是否启用
-     */
-    private boolean checkRoleEnabled(String role) {
-        SystemRoleDO systemRole = roleCache.get(role);
-        if (systemRole == null) {
-            return false;
+        if (Lists.isEmpty(roleCodes)) {
+            return Lists.empty();
         }
-        return RoleStatusEnum.ENABLED.getStatus().equals(systemRole.getStatus());
+        return roleCodes;
     }
 
 }

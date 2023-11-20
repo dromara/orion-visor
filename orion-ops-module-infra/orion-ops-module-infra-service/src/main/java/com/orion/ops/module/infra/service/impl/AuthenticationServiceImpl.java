@@ -10,6 +10,7 @@ import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.security.UserRole;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.IpUtils;
 import com.orion.ops.framework.common.utils.Valid;
@@ -20,7 +21,6 @@ import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
-import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
@@ -289,16 +289,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Long id = user.getId();
         // 查询用户角色
         List<Long> roleIds = systemUserRoleDAO.selectRoleIdByUserId(id);
-        List<String> roleCodeList = permissionService.getRoleCache()
+        List<UserRole> roleList = permissionService.getRoleCache()
                 .values()
                 .stream()
                 .filter(s -> roleIds.contains(s.getId()))
-                .map(SystemRoleDO::getCode)
+                .map(r -> new UserRole(r.getId(), r.getCode()))
                 .collect(Collectors.toList());
         // 设置用户缓存
         String userInfoKey = UserCacheKeyDefine.USER_INFO.format(id);
         LoginUser loginUser = SystemUserConvert.MAPPER.toLoginUser(user);
-        loginUser.setRoles(roleCodeList);
+        loginUser.setRoles(roleList);
         RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
         return loginUser;
     }

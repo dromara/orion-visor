@@ -104,12 +104,8 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
             effect += insertMenuIdList.size();
         }
         // 更新缓存
-        Map<String, List<SystemMenuCacheDTO>> cache = permissionService.getRoleMenuCache();
-        List<SystemMenuCacheDTO> roleCache = cache.get(role.getCode());
-        if (Lists.isEmpty(roleCache)) {
-            roleCache = new ArrayList<>();
-            cache.put(role.getCode(), roleCache);
-        }
+        Map<Long, List<SystemMenuCacheDTO>> cache = permissionService.getRoleMenuCache();
+        List<SystemMenuCacheDTO> roleCache = cache.computeIfAbsent(roleId, s -> new ArrayList<>());
         roleCache.clear();
         roleCache.addAll(SystemMenuConvert.MAPPER.toCache(menuList));
         return effect;

@@ -40,9 +40,9 @@ public interface SystemUserRoleService {
     /**
      * 删除用户缓存中的角色
      *
-     * @param roleCode   roleCode
+     * @param roleId     roleId
      * @param userIdList userIdList
      */
-    void deleteUserCacheRoleAsync(String roleCode, List<Long> userIdList);
+    void deleteUserCacheRoleAsync(Long roleId, List<Long> userIdList);
 
 }

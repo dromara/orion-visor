@@ -22,7 +22,7 @@ public interface PermissionService {
      *
      * @return cache
      */
-    Map<String, SystemRoleDO> getRoleCache();
+    Map<Long, SystemRoleDO> getRoleCache();
 
     /**
      * 获取 菜单缓存 以作角色权限直接引用
@@ -36,7 +36,7 @@ public interface PermissionService {
      *
      * @return cache
      */
-    Map<String, List<SystemMenuCacheDTO>> getRoleMenuCache();
+    Map<Long, List<SystemMenuCacheDTO>> getRoleMenuCache();
 
     /**
      * 初始化权限缓存

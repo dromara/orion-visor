@@ -28,8 +28,8 @@
     <!-- 传输框 -->
     <a-transfer v-model="value"
                 :data="data"
-                :source-input-search-props="{ placeholder:'请输入主机名称/编码/IP' }"
-                :target-input-search-props="{ placeholder:'请输入主机名称/编码/IP' }"
+                :source-input-search-props="{ placeholder: '请输入主机名称/编码/IP' }"
+                :target-input-search-props="{ placeholder: '请输入主机名称/编码/IP' }"
                 :disabled="!group.key"
                 show-search
                 one-way>

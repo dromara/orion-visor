@@ -4,6 +4,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
+import com.orion.ops.framework.common.security.UserRole;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
@@ -101,25 +102,25 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         effect += addUserRoles.size();
         // 更新缓存中的角色
         RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
-            List<String> roleCodeList = userRoles.stream()
-                    .map(SystemRoleDO::getCode)
+            List<UserRole> roles = userRoles.stream()
+                    .map(role -> new UserRole(role.getId(), role.getCode()))
                     .collect(Collectors.toList());
-            s.setRoles(roleCodeList);
+            s.setRoles(roles);
         }, userId);
         return effect;
     }
 
     @Override
     @Async("asyncExecutor")
-    public void deleteUserCacheRoleAsync(String roleCode, List<Long> userIdList) {
+    public void deleteUserCacheRoleAsync(Long roleId, List<Long> userIdList) {
         for (Long userId : userIdList) {
             RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
-                List<String> roles = s.getRoles();
+                List<UserRole> roles = s.getRoles();
                 if (Lists.isEmpty(roles)) {
                     return;
                 }
                 // 移除角色
-                roles.remove(roleCode);
+                roles.removeIf(role -> roleId.equals(role.getId()));
             }, userId);
         }
     }

@@ -1,3 +1,6 @@
+// 管理员角色编码
+export const AdminCode = 'admin';
+
 // 角色状态
 export const RoleStatus = {
   // 停用

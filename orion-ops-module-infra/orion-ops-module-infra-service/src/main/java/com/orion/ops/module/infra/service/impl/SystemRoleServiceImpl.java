@@ -67,7 +67,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         int effect = systemRoleDAO.insert(record);
         log.info("SystemRoleService-createSystemRole effect: {}, domain: {}", effect, JSON.toJSONString(record));
         // 设置到缓存
-        permissionService.getRoleCache().put(record.getCode(), record);
+        permissionService.getRoleCache().put(record.getId(), record);
         return record.getId();
     }
 
@@ -87,7 +87,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         int effect = systemRoleDAO.updateById(updateRecord);
         log.info("SystemRoleService-updateSystemRoleById effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 设置到缓存
-        SystemRoleDO roleCache = permissionService.getRoleCache().get(record.getCode());
+        SystemRoleDO roleCache = permissionService.getRoleCache().get(id);
         roleCache.setName(updateRecord.getName());
         return effect;
     }
@@ -112,7 +112,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         int effect = systemRoleDAO.updateById(updateRecord);
         log.info("SystemRoleService-updateRoleStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
         // 修改缓存状态
-        SystemRoleDO roleCache = permissionService.getRoleCache().get(record.getCode());
+        SystemRoleDO roleCache = permissionService.getRoleCache().get(id);
         roleCache.setStatus(status);
         return effect;
     }
@@ -173,11 +173,11 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 删除角色菜单关联
         effect += systemRoleMenuDAO.deleteByRoleId(id);
         // 删除角色缓存
-        permissionService.getRoleCache().remove(code);
+        permissionService.getRoleCache().remove(id);
         // 删除菜单缓存
-        permissionService.getRoleMenuCache().remove(code);
+        permissionService.getRoleMenuCache().remove(id);
         // 删除用户缓存中的角色
-        systemUserRoleService.deleteUserCacheRoleAsync(code, userIdList);
+        systemUserRoleService.deleteUserCacheRoleAsync(id, userIdList);
         return effect;
     }
 

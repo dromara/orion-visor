@@ -35,6 +35,6 @@ public class LoginUser {
     private Long timestamp;
 
     @Schema(description = "角色")
-    private List<String> roles;
+    private List<UserRole> roles;
 
 }
