@@ -60,8 +60,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         Long id = record.getId();
         log.info("DataGroupService-createDataGroup id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(request.getType()),
-                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(request.getType()));
+        this.deleteCache(request.getType());
         return id;
     }
 
@@ -85,8 +84,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 更新
         int effect = dataGroupDAO.updateById(updateRecord);
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(record.getType()),
-                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(record.getType()));
+        this.deleteCache(record.getType());
         return effect;
     }
 
@@ -140,8 +138,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             effect = dataGroupDAO.updateById(update);
         }
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
-                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
+        this.deleteCache(type);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.SOURCE, moveRecord.getName());
         OperatorLogs.add(OperatorLogs.TARGET, targetRecord.getName());
@@ -238,8 +235,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         dataGroupRelService.deleteByGroupIdList(type, deleteIdList);
         log.info("DataGroupService-deleteDataGroupById id: {}, effect: {}", id, effect);
         // 删除缓存
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
-                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
+        this.deleteCache(type);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.GROUP_NAME, record.getName());
         return effect;
@@ -283,6 +279,16 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 检查是否存在
         boolean present = dataGroupDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param type type
+     */
+    private void deleteCache(String type) {
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
     }
 
 }

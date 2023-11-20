@@ -1,12 +1,14 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
+import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.module.infra.convert.DataGroupRelConvert;
 import com.orion.ops.module.infra.dao.DataGroupDAO;
 import com.orion.ops.module.infra.dao.DataGroupRelDAO;
@@ -26,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -177,29 +178,51 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
 
     @Override
     public List<DataGroupRelCacheDTO> getGroupRelListByCache(String type) {
-        return this.getGroupRelListByCache(
-                DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type),
-                DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE,
-                () -> dataGroupRelDAO.of()
-                        .createWrapper()
-                        .eq(DataGroupRelDO::getType, type)
-                        .then()
-                        .list(DataGroupRelConvert.MAPPER::toCache)
-        );
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type);
+        // 查询缓存
+        List<DataGroupRelCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE);
+        if (Lists.isEmpty(list)) {
+            // 查询数据库
+            list = dataGroupRelDAO.of()
+                    .createWrapper()
+                    .eq(DataGroupRelDO::getType, type)
+                    .then()
+                    .list(DataGroupRelConvert.MAPPER::toCache);
+            // 设置屏障 防止穿透
+            RedisStrings.checkBarrier(list, DataGroupRelCacheDTO::new);
+            // 设置缓存
+            RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE, list);
+        }
+        // 删除屏障
+        RedisStrings.removeBarrier(list);
+        return list;
     }
 
     @Override
-    public List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long groupId) {
-        return this.getGroupRelListByCache(
-                DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP.format(groupId),
-                DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP,
-                () -> dataGroupRelDAO.of()
-                        .createWrapper()
-                        .eq(DataGroupRelDO::getType, type)
-                        .eq(DataGroupRelDO::getGroupId, groupId)
-                        .then()
-                        .list(DataGroupRelConvert.MAPPER::toCache)
-        );
+    public List<Long> getGroupRelIdListByCache(String type, Long groupId) {
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP.format(groupId);
+        // 查询缓存
+        List<Long> list = RedisLists.range(key, Long::valueOf);
+        if (Lists.isEmpty(list)) {
+            // 查询数据库
+            list = dataGroupRelDAO.of()
+                    .createWrapper()
+                    .eq(DataGroupRelDO::getType, type)
+                    .eq(DataGroupRelDO::getGroupId, groupId)
+                    .then()
+                    .stream()
+                    .map(DataGroupRelDO::getRelId)
+                    .collect(Collectors.toList());
+            // 添加默认值 防止穿透
+            if (list.isEmpty()) {
+                list.add(Const.NONE_ID);
+            }
+            // 设置缓存
+            RedisLists.pushAll(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP, list, Object::toString);
+        }
+        // 删除默认值
+        list.remove(Const.NONE_ID);
+        return list;
     }
 
     @Override
@@ -210,32 +233,6 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                 .eq(DataGroupRelDO::getRelId, relId)
                 .then()
                 .list();
-    }
-
-    /**
-     * 查询分组引用缓存
-     *
-     * @param key           key
-     * @param define        define
-     * @param valueSupplier valueSupplier
-     * @return values
-     */
-    public List<DataGroupRelCacheDTO> getGroupRelListByCache(String key,
-                                                             CacheKeyDefine define,
-                                                             Supplier<List<DataGroupRelCacheDTO>> valueSupplier) {
-        // 查询缓存
-        List<DataGroupRelCacheDTO> list = RedisStrings.getJsonArray(key, define);
-        if (Lists.isEmpty(list)) {
-            // 查询数据库
-            list = valueSupplier.get();
-            // 设置屏障 防止穿透
-            RedisStrings.checkBarrier(list, DataGroupRelCacheDTO::new);
-            // 设置缓存
-            RedisStrings.setJson(key, define, list);
-        }
-        // 删除屏障
-        RedisStrings.removeBarrier(list);
-        return list;
     }
 
     @Override
@@ -303,7 +300,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                     .forEach(keyList::add);
         }
         // 删除
-        RedisStrings.delete(keyList);
+        RedisUtils.delete(keyList);
     }
 
 }

@@ -85,13 +85,41 @@ public class RedisLists extends RedisUtils {
     /**
      * list 添加元素
      *
+     * @param define define
+     * @param list   list
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void pushAll(CacheKeyDefine define, List<T> list, Function<T, String> mapper) {
+        pushAll(define.getKey(), define, list, mapper);
+    }
+
+    /**
+     * list 添加元素
+     *
      * @param key    key
      * @param list   list
      * @param mapper mapper
      * @param <T>    T
      */
     public static <T> void pushAll(String key, List<T> list, Function<T, String> mapper) {
+        pushAll(key, null, list, mapper);
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param define define
+     * @param list   list
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void pushAll(String key, CacheKeyDefine define, List<T> list, Function<T, String> mapper) {
         redisTemplate.opsForList().rightPushAll(key, Lists.map(list, mapper));
+        if (define != null) {
+            setExpire(key, define);
+        }
     }
 
     /**

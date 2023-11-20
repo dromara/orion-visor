@@ -62,7 +62,7 @@ public interface DataGroupRelService {
      * @param groupId groupId
      * @return rows
      */
-    List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long groupId);
+    List<Long> getGroupRelIdListByCache(String type, Long groupId);
 
     /**
      * 通过 relId 查询 groupRel

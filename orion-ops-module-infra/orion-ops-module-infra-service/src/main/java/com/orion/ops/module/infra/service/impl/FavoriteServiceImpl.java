@@ -101,11 +101,9 @@ public class FavoriteServiceImpl implements FavoriteService {
                 cacheRelIdList.add(Const.NONE_ID);
             }
             // 设置缓存
-            RedisLists.pushAll(cacheKey, cacheRelIdList, String::valueOf);
-            // 设置过期时间
-            RedisLists.setExpire(cacheKey, FavoriteCacheKeyDefine.FAVORITE);
+            RedisLists.pushAll(cacheKey, FavoriteCacheKeyDefine.FAVORITE, cacheRelIdList, String::valueOf);
         }
-        // 删除防止穿透的 key
+        // 删除默认值
         cacheRelIdList.remove(Const.NONE_ID);
         return cacheRelIdList;
     }

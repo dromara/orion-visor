@@ -39,7 +39,7 @@ export interface HostGroupQueryResponse {
  */
 export interface HostGroupRelUpdateRequest {
   groupId?: number;
-  relIdList?: Array<string>;
+  hostIdList?: Array<string>;
 }
 
 /**

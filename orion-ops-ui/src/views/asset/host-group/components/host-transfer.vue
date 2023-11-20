@@ -110,7 +110,7 @@
       emits('loading', true);
       await updateHostGroupRel({
         groupId: props.group?.key as number,
-        relIdList: value.value
+        hostIdList: value.value
       });
       Message.success('保存成功');
     } catch (e) {

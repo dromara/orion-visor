@@ -36,8 +36,8 @@ public interface DataGroupCacheKeyDefine {
     CacheKeyDefine DATA_GROUP_REL_GROUP = new CacheKeyBuilder()
             .key("data:group-rel:group:{}")
             .desc("数据分组数据关联-分组 ${groupId}")
-            .type(DataGroupRelCacheDTO.class)
-            .struct(RedisCacheStruct.STRING)
+            .type(Long.class)
+            .struct(RedisCacheStruct.LIST)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

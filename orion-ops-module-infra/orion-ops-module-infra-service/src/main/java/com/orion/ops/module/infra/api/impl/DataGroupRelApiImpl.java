@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,10 +74,8 @@ public class DataGroupRelApiImpl implements DataGroupRelApi {
 
     @Override
     public Set<Long> getGroupRelIdByGroupId(DataGroupTypeEnum type, Long groupId) {
-        List<DataGroupRelCacheDTO> rows = dataGroupRelService.getGroupRelListByCache(type.name(), groupId);
-        return rows.stream()
-                .map(DataGroupRelCacheDTO::getRelId)
-                .collect(Collectors.toSet());
+        List<Long> rows = dataGroupRelService.getGroupRelIdListByCache(type.name(), groupId);
+        return new HashSet<>(rows);
     }
 
     @Override
