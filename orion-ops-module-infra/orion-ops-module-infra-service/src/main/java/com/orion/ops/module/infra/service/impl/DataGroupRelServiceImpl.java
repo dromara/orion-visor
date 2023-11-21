@@ -3,12 +3,12 @@ package com.orion.ops.module.infra.service.impl;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.infra.convert.DataGroupRelConvert;
 import com.orion.ops.module.infra.dao.DataGroupDAO;
 import com.orion.ops.module.infra.dao.DataGroupRelDAO;
@@ -189,12 +189,12 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                     .then()
                     .list(DataGroupRelConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisStrings.checkBarrier(list, DataGroupRelCacheDTO::new);
+            CacheBarriers.checkBarrier(list, DataGroupRelCacheDTO::new);
             // 设置缓存
             RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE, list);
         }
         // 删除屏障
-        RedisStrings.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         return list;
     }
 
@@ -213,15 +213,13 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                     .stream()
                     .map(DataGroupRelDO::getRelId)
                     .collect(Collectors.toList());
-            // 添加默认值 防止穿透
-            if (list.isEmpty()) {
-                list.add(Const.NONE_ID);
-            }
+            // 设置屏障 防止穿透
+            CacheBarriers.LONG.check(list);
             // 设置缓存
             RedisLists.pushAll(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP, list, Object::toString);
         }
-        // 删除默认值
-        list.remove(Const.NONE_ID);
+        // 删除屏障
+        CacheBarriers.LONG.remove(list);
         return list;
     }
 

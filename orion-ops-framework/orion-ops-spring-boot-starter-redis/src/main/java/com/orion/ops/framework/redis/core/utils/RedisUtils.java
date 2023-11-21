@@ -20,7 +20,7 @@ import java.util.Set;
  * @version 1.0.0
  * @since 2021/11/6 11:09
  */
-public class RedisUtils extends CacheUtils {
+public class RedisUtils {
 
     protected static RedisTemplate<String, String> redisTemplate;
 
@@ -112,7 +112,7 @@ public class RedisUtils extends CacheUtils {
      * @param define define
      */
     public static void setExpire(String key, CacheKeyDefine define) {
-        if (define.getTimeout() != 0) {
+        if (define != null && define.getTimeout() != 0) {
             // 设置过期时间
             redisTemplate.expire(key, define.getTimeout(), define.getUnit());
         }

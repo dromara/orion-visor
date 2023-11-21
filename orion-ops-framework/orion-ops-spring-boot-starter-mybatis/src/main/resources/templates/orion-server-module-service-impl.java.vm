@@ -13,6 +13,7 @@ import com.orion.ops.framework.common.utils.FileNames;
 import com.orion.ops.framework.common.utils.Valid;
 #if($meta.enableCache)
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 #end
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
@@ -138,13 +139,12 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
             // 查询数据库
             list = ${typeLower}DAO.of().list(${type}Convert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisMaps.checkBarrier(list, ${type}CacheDTO::new);
+            CacheBarriers.checkBarrier(list, ${type}CacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(${type}CacheKeyDefine.${typeConst}.getKey(), s -> s.getId().toString(), list);
-            RedisMaps.setExpire(${type}CacheKeyDefine.${typeConst});
+            RedisMaps.putAllJson(${type}CacheKeyDefine.${typeConst}, s -> s.getId().toString(), list);
         }
         // 删除屏障
-        RedisMaps.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         // 转换
         return list.stream()
                 .map(${type}Convert.MAPPER::to)

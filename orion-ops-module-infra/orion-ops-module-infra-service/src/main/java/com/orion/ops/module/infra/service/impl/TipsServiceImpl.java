@@ -23,8 +23,7 @@ public class TipsServiceImpl implements TipsService {
     public void tipped(String tippedKey) {
         Long userId = SecurityUtils.getLoginUserId();
         String key = TipsCacheKeyDefine.TIPS.format(userId);
-        RedisLists.push(key, tippedKey);
-        RedisLists.setExpire(key, TipsCacheKeyDefine.TIPS);
+        RedisLists.push(key, TipsCacheKeyDefine.TIPS, tippedKey);
     }
 
     @Override

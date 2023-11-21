@@ -9,6 +9,7 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.enums.MovePosition;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.infra.convert.DataGroupConvert;
 import com.orion.ops.module.infra.dao.DataGroupDAO;
 import com.orion.ops.module.infra.define.cache.DataGroupCacheKeyDefine;
@@ -159,12 +160,12 @@ public class DataGroupServiceImpl implements DataGroupService {
                     .then()
                     .list(DataGroupConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisStrings.checkBarrier(list, DataGroupCacheDTO::new);
+            CacheBarriers.checkBarrier(list, DataGroupCacheDTO::new);
             // 设置缓存
             RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST, list);
         }
         // 删除屏障
-        RedisStrings.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         return list;
     }
 
@@ -177,7 +178,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             // 查询列表缓存
             List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type);
             // 设置屏障 防止穿透
-            RedisStrings.checkBarrier(rows, DataGroupCacheDTO::new);
+            CacheBarriers.checkBarrier(rows, DataGroupCacheDTO::new);
             if (!Lists.isEmpty(rows)) {
                 // 构建树
                 DataGroupCacheDTO rootNode = DataGroupCacheDTO.builder()
@@ -191,7 +192,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             RedisStrings.setJson(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST, treeData);
         }
         // 删除屏障
-        RedisStrings.removeBarrier(treeData);
+        CacheBarriers.removeBarrier(treeData);
         return treeData;
     }
 

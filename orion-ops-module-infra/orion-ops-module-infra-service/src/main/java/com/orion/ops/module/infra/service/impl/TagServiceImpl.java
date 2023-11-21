@@ -2,10 +2,10 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.infra.convert.TagConvert;
 import com.orion.ops.module.infra.dao.TagDAO;
 import com.orion.ops.module.infra.define.cache.TagCacheKeyDefine;
@@ -69,13 +69,12 @@ public class TagServiceImpl implements TagService {
             LambdaQueryWrapper<TagDO> wrapper = Conditions.eq(TagDO::getType, type);
             list = tagDAO.of(wrapper).list(TagConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisLists.checkBarrier(list, TagCacheDTO::new);
+            CacheBarriers.checkBarrier(list, TagCacheDTO::new);
             // 设置到缓存
-            RedisLists.pushAllJson(cacheKey, list);
-            RedisLists.setExpire(cacheKey, TagCacheKeyDefine.TAG_NAME);
+            RedisLists.pushAllJson(cacheKey, TagCacheKeyDefine.TAG_NAME, list);
         }
         // 删除屏障
-        RedisLists.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         // 转换
         return list.stream()
                 .map(TagConvert.MAPPER::to)

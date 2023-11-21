@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * redis string 工具类
+ * <p>
+ * 写操作会自动设置过期时间 如果有
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -224,7 +226,17 @@ public class RedisStrings extends RedisUtils {
     }
 
     /**
-     * 设置 json
+     * 设置值
+     *
+     * @param define define
+     * @param value  value
+     */
+    public static void set(CacheKeyDefine define, Object value) {
+        set(define.getKey(), define, value);
+    }
+
+    /**
+     * 设置值
      *
      * @param key    key
      * @param define define
@@ -234,7 +246,7 @@ public class RedisStrings extends RedisUtils {
         if (value == null) {
             value = Strings.EMPTY;
         }
-        if (define.getTimeout() == 0) {
+        if (define == null || define.getTimeout() == 0) {
             // 不过期
             redisTemplate.opsForValue().set(key, value.toString());
         } else {
@@ -248,12 +260,22 @@ public class RedisStrings extends RedisUtils {
     /**
      * 设置 json
      *
+     * @param define define
+     * @param value  value
+     */
+    public static void setJson(CacheKeyDefine define, Object value) {
+        setJson(define.getKey(), define, value);
+    }
+
+    /**
+     * 设置 json
+     *
      * @param key    key
      * @param define define
      * @param value  value
      */
     public static void setJson(String key, CacheKeyDefine define, Object value) {
-        if (define.getTimeout() == 0) {
+        if (define == null || define.getTimeout() == 0) {
             // 不过期
             redisTemplate.opsForValue().set(key, JSON.toJSONString(value));
         } else {

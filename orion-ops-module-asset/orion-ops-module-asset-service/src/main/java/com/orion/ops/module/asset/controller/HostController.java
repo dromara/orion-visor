@@ -45,8 +45,6 @@ public class HostController {
     @Resource
     private HostConfigService hostConfigService;
 
-    // fixme host_config 设置为缓存
-
     @OperatorLog(HostOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机")

@@ -40,13 +40,4 @@ public class AppPreferenceModel implements PreferenceModel {
     @Schema(description = "菜单宽度")
     private Number menuWidth;
 
-    @Schema(description = "主机视图")
-    private String hostView;
-
-    @Schema(description = "主机秘钥视图")
-    private String hostKeyView;
-
-    @Schema(description = "主机身份视图")
-    private String hostIdentityView;
-
 }

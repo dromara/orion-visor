@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 /**
  * redis hash 工具类
+ * <p>
+ * 写操作会自动设置过期时间 如果有
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -34,7 +36,7 @@ public class RedisMaps extends RedisUtils {
      * @param value   value
      */
     public static void put(CacheKeyDefine key, Object hashKey, Object value) {
-        put(key.getKey(), hashKey, value);
+        put(key.getKey(), key, hashKey, value);
     }
 
     /**
@@ -45,7 +47,22 @@ public class RedisMaps extends RedisUtils {
      * @param value   value
      */
     public static void put(String key, Object hashKey, Object value) {
+        put(key, null, hashKey, value);
+    }
+
+    /**
+     * 插入数据
+     *
+     * @param key     key
+     * @param define  define
+     * @param hashKey hashKey
+     * @param value   value
+     */
+    public static void put(String key, CacheKeyDefine define, Object hashKey, Object value) {
         redisTemplate.opsForHash().put(key, Objects1.toString(hashKey), Objects1.toString(value));
+        if (define != null) {
+            setExpire(key, define);
+        }
     }
 
     /**
@@ -56,7 +73,7 @@ public class RedisMaps extends RedisUtils {
      * @param value   value
      */
     public static void putJson(CacheKeyDefine key, Object hashKey, Object value) {
-        put(key.getKey(), hashKey, JSON.toJSONString(value));
+        put(key.getKey(), key, hashKey, JSON.toJSONString(value));
     }
 
     /**
@@ -67,7 +84,19 @@ public class RedisMaps extends RedisUtils {
      * @param value   value
      */
     public static void putJson(String key, Object hashKey, Object value) {
-        put(key, hashKey, JSON.toJSONString(value));
+        put(key, null, hashKey, JSON.toJSONString(value));
+    }
+
+    /**
+     * 插入数据 json
+     *
+     * @param key     key
+     * @param define  define
+     * @param hashKey hashKey
+     * @param value   value
+     */
+    public static void putJson(String key, CacheKeyDefine define, Object hashKey, Object value) {
+        put(key, define, hashKey, JSON.toJSONString(value));
     }
 
     /**
@@ -79,7 +108,7 @@ public class RedisMaps extends RedisUtils {
      * @param <V>       V
      */
     public static <V> void putJson(CacheKeyDefine key, Function<V, String> keyMapper, V value) {
-        put(key.getKey(), keyMapper.apply(value), JSON.toJSONString(value));
+        put(key.getKey(), key, keyMapper.apply(value), JSON.toJSONString(value));
     }
 
     /**
@@ -91,7 +120,20 @@ public class RedisMaps extends RedisUtils {
      * @param <V>       V
      */
     public static <V> void putJson(String key, Function<V, String> keyMapper, V value) {
-        put(key, keyMapper.apply(value), JSON.toJSONString(value));
+        put(key, null, keyMapper.apply(value), JSON.toJSONString(value));
+    }
+
+    /**
+     * 插入数据 json
+     *
+     * @param key       key
+     * @param define    define
+     * @param keyMapper keyMapper
+     * @param value     value
+     * @param <V>       V
+     */
+    public static <V> void putJson(String key, CacheKeyDefine define, Function<V, String> keyMapper, V value) {
+        put(key, define, keyMapper.apply(value), JSON.toJSONString(value));
     }
 
     /**
@@ -101,7 +143,7 @@ public class RedisMaps extends RedisUtils {
      * @param values values
      */
     public static void putAll(CacheKeyDefine key, Map<?, ?> values) {
-        putAll(key.getKey(), values);
+        putAll(key.getKey(), key, values);
     }
 
     /**
@@ -111,19 +153,22 @@ public class RedisMaps extends RedisUtils {
      * @param values values
      */
     public static void putAll(String key, Map<?, ?> values) {
-        Map<String, String> map = Maps.map(values, Objects1::toString, Objects1::toString);
-        redisTemplate.opsForHash().putAll(key, map);
+        putAll(key, null, values);
     }
 
     /**
-     * 插入数据 json
+     * 插入数据
      *
      * @param key    key
+     * @param define define
      * @param values values
-     * @param <V>    V
      */
-    public static <V> void putAllJson(CacheKeyDefine key, Map<?, V> values) {
-        putAllJson(key.getKey(), values);
+    public static void putAll(String key, CacheKeyDefine define, Map<?, ?> values) {
+        Map<String, String> map = Maps.map(values, Objects1::toString, Objects1::toString);
+        redisTemplate.opsForHash().putAll(key, map);
+        if (define != null) {
+            setExpire(key, define);
+        }
     }
 
     /**
@@ -134,20 +179,34 @@ public class RedisMaps extends RedisUtils {
      * @param <V>    V
      */
     public static <V> void putAllJson(String key, Map<?, V> values) {
-        Map<String, String> map = Maps.map(values, Objects1::toString, JSON::toJSONString);
-        redisTemplate.opsForHash().putAll(key, map);
+        putAllJson(key, null, values);
     }
 
     /**
      * 插入数据 json
      *
-     * @param key       key
-     * @param keyMapper keyMapper
-     * @param values    values
-     * @param <V>       V
+     * @param key    key
+     * @param values values
+     * @param <V>    V
      */
-    public static <V> void putAllJson(CacheKeyDefine key, Function<V, String> keyMapper, List<V> values) {
-        putAllJson(key.getKey(), keyMapper, values);
+    public static <V> void putAllJson(CacheKeyDefine key, Map<?, V> values) {
+        putAllJson(key.getKey(), key, values);
+    }
+
+    /**
+     * 插入数据 json
+     *
+     * @param key    key
+     * @param define define
+     * @param values values
+     * @param <V>    V
+     */
+    public static <V> void putAllJson(String key, CacheKeyDefine define, Map<?, V> values) {
+        Map<String, String> map = Maps.map(values, Objects1::toString, JSON::toJSONString);
+        redisTemplate.opsForHash().putAll(key, map);
+        if (define != null) {
+            setExpire(key, define);
+        }
     }
 
     /**
@@ -159,9 +218,38 @@ public class RedisMaps extends RedisUtils {
      * @param <V>       V
      */
     public static <V> void putAllJson(String key, Function<V, String> keyMapper, List<V> values) {
+        putAllJson(key, null, keyMapper, values);
+    }
+
+    /**
+     * 插入数据 json
+     *
+     * @param key       key
+     * @param keyMapper keyMapper
+     * @param values    values
+     * @param <V>       V
+     */
+    public static <V> void putAllJson(CacheKeyDefine key, Function<V, String> keyMapper, List<V> values) {
+        putAllJson(key.getKey(), key, keyMapper, values);
+    }
+
+    /**
+     * 插入数据 json
+     *
+     * @param key       key
+     * @param define    define
+     * @param keyMapper keyMapper
+     * @param values    values
+     * @param <V>       V
+     */
+    public static <V> void putAllJson(String key, CacheKeyDefine define,
+                                      Function<V, String> keyMapper, List<V> values) {
         Map<String, String> map = values.stream()
                 .collect(Collectors.toMap(keyMapper, JSON::toJSONString, Functions.right()));
         redisTemplate.opsForHash().putAll(key, map);
+        if (define != null) {
+            setExpire(key, define);
+        }
     }
 
     /**

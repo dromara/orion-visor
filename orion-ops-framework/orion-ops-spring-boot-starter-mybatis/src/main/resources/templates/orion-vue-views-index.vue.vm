@@ -76,7 +76,7 @@
   #if($vue.enableCardView)
   const appStore = useAppStore();
 
-  // FIXME 这里需要修改一下字段名称 同时 appStore 的类型和 AppPreferenceModel 都需要定义该字段类型
+  // FIXME 这里需要修改一下字段名称 并且在 appStore 定义该字段
   const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
   #end
 

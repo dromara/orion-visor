@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 /**
  * redis list 工具类
+ * <p>
+ * 写操作会自动设置过期时间 如果有
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -85,6 +87,92 @@ public class RedisLists extends RedisUtils {
     /**
      * list 添加元素
      *
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     */
+    public static <T> void push(CacheKeyDefine key, String value) {
+        push(key.getKey(), key, value, Function.identity());
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     */
+    public static <T> void push(String key, String value) {
+        push(key, null, value, Function.identity());
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param define define
+     * @param value  value
+     * @param <T>    T
+     */
+    public static <T> void push(String key, CacheKeyDefine define, String value) {
+        push(key, define, value, Function.identity());
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param value  value
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void push(CacheKeyDefine key, T value, Function<T, String> mapper) {
+        push(key.getKey(), key, value, mapper);
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param value  value
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void push(String key, T value, Function<T, String> mapper) {
+        push(key, null, value, mapper);
+        redisTemplate.opsForList().rightPush(key, mapper.apply(value));
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key    key
+     * @param define define
+     * @param value  value
+     * @param mapper mapper
+     * @param <T>    T
+     */
+    public static <T> void push(String key, CacheKeyDefine define, T value, Function<T, String> mapper) {
+        redisTemplate.opsForList().rightPush(key, mapper.apply(value));
+        if (define != null) {
+            setExpire(key, define);
+        }
+    }
+
+    /**
+     * list 添加元素
+     *
+     * @param key   key
+     * @param value value
+     * @param <T>   T
+     */
+    public static <T> void pushJson(String key, T value) {
+        redisTemplate.opsForList().rightPush(key, JSON.toJSONString(value));
+    }
+
+    /**
+     * list 添加元素
+     *
      * @param define define
      * @param list   list
      * @param mapper mapper
@@ -129,45 +217,37 @@ public class RedisLists extends RedisUtils {
      * @param list list
      * @param <T>  T
      */
-    public static <T> void pushAllJson(String key, List<T> list) {
-        List<String> values = list.stream()
-                .map(JSON::toJSONString)
-                .collect(Collectors.toList());
-        redisTemplate.opsForList().rightPushAll(key, values);
+    public static <T> void pushAllJson(CacheKeyDefine key, List<T> list) {
+        pushAllJson(key.getKey(), key, list);
     }
 
     /**
      * list 添加元素
      *
-     * @param key   key
-     * @param value value
-     * @param <T>   T
+     * @param key  key
+     * @param list list
+     * @param <T>  T
      */
-    public static <T> void push(String key, String value) {
-        redisTemplate.opsForList().rightPush(key, value);
+    public static <T> void pushAllJson(String key, List<T> list) {
+        pushAllJson(key, null, list);
     }
 
     /**
      * list 添加元素
      *
      * @param key    key
-     * @param value  value
-     * @param mapper mapper
+     * @param define define
+     * @param list   list
      * @param <T>    T
      */
-    public static <T> void push(String key, T value, Function<T, String> mapper) {
-        redisTemplate.opsForList().rightPush(key, mapper.apply(value));
-    }
-
-    /**
-     * list 添加元素
-     *
-     * @param key   key
-     * @param value value
-     * @param <T>   T
-     */
-    public static <T> void pushJson(String key, T value) {
-        redisTemplate.opsForList().rightPush(key, JSON.toJSONString(value));
+    public static <T> void pushAllJson(String key, CacheKeyDefine define, List<T> list) {
+        List<String> values = list.stream()
+                .map(JSON::toJSONString)
+                .collect(Collectors.toList());
+        redisTemplate.opsForList().rightPushAll(key, values);
+        if (define != null) {
+            setExpire(key, define);
+        }
     }
 
     /**

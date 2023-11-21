@@ -2,9 +2,9 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.FavoriteConvert;
 import com.orion.ops.module.infra.dao.FavoriteDAO;
@@ -86,26 +86,24 @@ public class FavoriteServiceImpl implements FavoriteService {
         Long userId = request.getUserId();
         String cacheKey = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
         // 获取缓存
-        List<Long> cacheRelIdList = RedisLists.range(cacheKey, Long::valueOf);
-        if (cacheRelIdList.isEmpty()) {
+        List<Long> list = RedisLists.range(cacheKey, Long::valueOf);
+        if (list.isEmpty()) {
             // 条件
             LambdaQueryWrapper<FavoriteDO> wrapper = this.buildQueryWrapper(request);
             // 查询数据库
-            cacheRelIdList = favoriteDAO.of(wrapper)
+            list = favoriteDAO.of(wrapper)
                     .stream()
                     .map(FavoriteDO::getRelId)
                     .distinct()
                     .collect(Collectors.toList());
-            // 添加默认值 防止穿透
-            if (cacheRelIdList.isEmpty()) {
-                cacheRelIdList.add(Const.NONE_ID);
-            }
+            // 设置屏障 防止穿透
+            CacheBarriers.LONG.check(list);
             // 设置缓存
-            RedisLists.pushAll(cacheKey, FavoriteCacheKeyDefine.FAVORITE, cacheRelIdList, String::valueOf);
+            RedisLists.pushAll(cacheKey, FavoriteCacheKeyDefine.FAVORITE, list, String::valueOf);
         }
-        // 删除默认值
-        cacheRelIdList.remove(Const.NONE_ID);
-        return cacheRelIdList;
+        // 删除屏障
+        CacheBarriers.LONG.remove(list);
+        return list;
     }
 
     @Override

@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.asset.convert.HostIdentityConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
@@ -118,13 +118,12 @@ public class HostIdentityServiceImpl implements HostIdentityService {
             // 查询数据库
             list = hostIdentityDAO.of().list(HostIdentityConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisMaps.checkBarrier(list, HostIdentityCacheDTO::new);
+            CacheBarriers.checkBarrier(list, HostIdentityCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_IDENTITY.getKey(), s -> s.getId().toString(), list);
-            RedisMaps.setExpire(HostCacheKeyDefine.HOST_IDENTITY);
+            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_IDENTITY, s -> s.getId().toString(), list);
         }
         // 删除屏障
-        RedisMaps.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         // 转换
         return list.stream()
                 .map(HostIdentityConvert.MAPPER::to)

@@ -13,10 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemPreferenceStrategy implements IPreferenceStrategy<AppPreferenceModel> {
 
-    private static final String TABLE = "table";
-
-    private static final String CARD = "card";
-
     @Override
     public AppPreferenceModel getDefault() {
         return AppPreferenceModel.builder()
@@ -27,9 +23,6 @@ public class SystemPreferenceStrategy implements IPreferenceStrategy<AppPreferen
                 .tabBar(true)
                 .menuWidth(220)
                 .colorWeak(false)
-                .hostView(TABLE)
-                .hostKeyView(CARD)
-                .hostIdentityView(CARD)
                 .build();
     }
 

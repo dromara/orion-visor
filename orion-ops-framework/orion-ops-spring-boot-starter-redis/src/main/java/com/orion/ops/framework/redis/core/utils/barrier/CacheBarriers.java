@@ -1,24 +1,25 @@
-package com.orion.ops.framework.redis.core.utils;
+package com.orion.ops.framework.redis.core.utils.barrier;
 
 import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * 缓存工具类
+ * 缓存屏障工具类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/11/15 1:22
  */
-public class CacheUtils {
+public class CacheBarriers {
 
-    protected CacheUtils() {
+    private CacheBarriers() {
     }
+
+    public static final GenericsListBarrier<Long> LONG = GenericsListBarrier.create(Const.NONE_ID);
 
     /**
      * 创建屏障对象 防止穿透
@@ -33,15 +34,14 @@ public class CacheUtils {
         return val;
     }
 
-
     /**
-     * 检测是否需要 创建屏障对象 防止穿透
+     * 检测是否需要添加屏障对象 防止穿透
      *
      * @param list     list
      * @param supplier supplier
      * @param <T>      T
      */
-    public static <T extends LongCacheIdModel> void checkBarrier(List<T> list, Supplier<T> supplier) {
+    public static <T extends LongCacheIdModel> void checkBarrier(Collection<T> list, Supplier<T> supplier) {
         if (list != null && list.isEmpty()) {
             // 添加屏障对象
             list.add(createBarrier(supplier));

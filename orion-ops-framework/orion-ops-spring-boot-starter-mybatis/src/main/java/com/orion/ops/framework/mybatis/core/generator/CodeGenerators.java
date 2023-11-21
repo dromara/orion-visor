@@ -45,19 +45,9 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("data_group", "数据分组", "data")
+                Template.create("data_permission", "数据权限", "data")
                         .enableProviderApi()
                         .disableUnitTest()
-                        .cache("data:group:{}", "数据分组 ${type}")
-                        .expire(1, TimeUnit.DAYS)
-                        .vue("system", "data-group")
-                        .build(),
-                Template.create("data_group_rel", "数据分组关联", "data")
-                        .enableProviderApi()
-                        .disableUnitTest()
-                        .cache("data:group-rel:{}", "数据分组关联 ${groupId}")
-                        .expire(1, TimeUnit.DAYS)
-                        .vue("system", "data-group-rel")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

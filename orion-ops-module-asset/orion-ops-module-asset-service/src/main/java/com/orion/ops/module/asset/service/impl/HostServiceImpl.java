@@ -10,6 +10,7 @@ import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.asset.convert.HostConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
 import com.orion.ops.module.asset.dao.HostDAO;
@@ -155,13 +156,12 @@ public class HostServiceImpl implements HostService {
             // 查询数据库
             list = hostDAO.of().list(HostConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisMaps.checkBarrier(list, HostCacheDTO::new);
+            CacheBarriers.checkBarrier(list, HostCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_INFO.getKey(), s -> s.getId().toString(), list);
-            RedisMaps.setExpire(HostCacheKeyDefine.HOST_INFO);
+            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_INFO, s -> s.getId().toString(), list);
         }
         // 删除屏障
-        RedisMaps.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         // 转换
         return list.stream()
                 .map(HostConvert.MAPPER::to)

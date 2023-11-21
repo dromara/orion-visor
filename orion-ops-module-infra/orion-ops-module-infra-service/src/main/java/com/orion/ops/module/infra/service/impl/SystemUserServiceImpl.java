@@ -14,6 +14,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
@@ -164,13 +165,12 @@ public class SystemUserServiceImpl implements SystemUserService {
             // 查询数据库
             list = systemUserDAO.of().list(SystemUserConvert.MAPPER::toUserInfo);
             // 设置屏障 防止穿透
-            RedisMaps.checkBarrier(list, UserInfoDTO::new);
+            CacheBarriers.checkBarrier(list, UserInfoDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(UserCacheKeyDefine.USER_LIST.getKey(), s -> s.getId().toString(), list);
-            RedisMaps.setExpire(UserCacheKeyDefine.USER_LIST);
+            RedisMaps.putAllJson(UserCacheKeyDefine.USER_LIST, s -> s.getId().toString(), list);
         }
         // 删除屏障
-        RedisMaps.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         // 转换
         return list.stream()
                 .map(SystemUserConvert.MAPPER::to)

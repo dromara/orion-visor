@@ -15,6 +15,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.infra.convert.DictKeyConvert;
 import com.orion.ops.module.infra.dao.DictKeyDAO;
 import com.orion.ops.module.infra.define.cache.DictCacheKeyDefine;
@@ -107,13 +108,12 @@ public class DictKeyServiceImpl implements DictKeyService {
             // 查询数据库
             list = dictKeyDAO.of().list(DictKeyConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
-            RedisMaps.checkBarrier(list, DictKeyCacheDTO::new);
+            CacheBarriers.checkBarrier(list, DictKeyCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(DictCacheKeyDefine.DICT_KEY.getKey(), s -> s.getId().toString(), list);
-            RedisMaps.setExpire(DictCacheKeyDefine.DICT_KEY);
+            RedisMaps.putAllJson(DictCacheKeyDefine.DICT_KEY, s -> s.getId().toString(), list);
         }
         // 删除屏障
-        RedisMaps.removeBarrier(list);
+        CacheBarriers.removeBarrier(list);
         // 转换
         return list.stream()
                 .map(DictKeyConvert.MAPPER::to)
