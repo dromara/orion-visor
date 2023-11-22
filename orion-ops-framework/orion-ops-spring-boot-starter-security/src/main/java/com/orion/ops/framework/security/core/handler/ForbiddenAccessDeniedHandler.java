@@ -13,6 +13,8 @@ import java.io.IOException;
 
 /**
  * 权限不足处理器
+ * <p>
+ * {@code @PreAuthorize("@ss.has('xxx')") } 返回 false 会进入此处理器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -23,7 +25,7 @@ public class ForbiddenAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException {
-        log.warn("AccessDeniedHandlerImpl-handle-无权限 {} {}", SecurityUtils.getLoginUserId(), request.getRequestURI());
+        log.warn("AccessDeniedHandlerImpl-handle-forbidden {} {}", SecurityUtils.getLoginUserId(), request.getRequestURI());
         Servlets.writeHttpWrapper(response, ErrorCode.FORBIDDEN.getWrapper());
     }
 

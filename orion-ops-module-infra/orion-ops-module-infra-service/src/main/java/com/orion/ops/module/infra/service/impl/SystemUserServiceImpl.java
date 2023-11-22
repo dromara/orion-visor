@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -260,18 +259,10 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 删除登录失败次数缓存
         RedisUtils.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         // 删除登录缓存
-        String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
-        Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
-        if (!loginKeyList.isEmpty()) {
-            RedisUtils.delete(loginKeyList);
-        }
+        RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*"));
         // 删除续签信息
         if (AuthenticationService.allowRefresh) {
-            String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*");
-            Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey);
-            if (!refreshKeyList.isEmpty()) {
-                RedisUtils.delete(refreshKeyList);
-            }
+            RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
         }
     }
 

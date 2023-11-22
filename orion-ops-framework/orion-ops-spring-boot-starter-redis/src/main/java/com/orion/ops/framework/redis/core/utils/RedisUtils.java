@@ -8,10 +8,8 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * redis 工具类
@@ -55,6 +53,54 @@ public class RedisUtils {
             Streams.close(cursor);
             return keys;
         });
+    }
+
+    /**
+     * 扫描并删除 key
+     *
+     * @param match match
+     */
+    public static void scanKeysDelete(String match) {
+        Set<String> keys = scanKeys(match);
+        if (keys.isEmpty()) {
+            return;
+        }
+        redisTemplate.delete(keys);
+    }
+
+    /**
+     * 扫描并删除 key
+     *
+     * @param match match
+     */
+    public static void scanKeysDelete(String... match) {
+        if (Arrays1.isEmpty(match)) {
+            return;
+        }
+        List<String> keys = Arrays.stream(match)
+                .map(RedisUtils::scanKeys)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        if (keys.isEmpty()) {
+            return;
+        }
+        redisTemplate.delete(keys);
+    }
+
+    /**
+     * 扫描并删除 key
+     *
+     * @param match match
+     */
+    public static void scanKeysDelete(List<String> match) {
+        List<String> keys = match.stream()
+                .map(RedisUtils::scanKeys)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        if (keys.isEmpty()) {
+            return;
+        }
+        redisTemplate.delete(keys);
     }
 
     /**

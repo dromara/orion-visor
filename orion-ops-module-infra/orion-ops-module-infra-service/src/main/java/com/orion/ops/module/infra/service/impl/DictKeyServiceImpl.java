@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
@@ -166,14 +165,14 @@ public class DictKeyServiceImpl implements DictKeyService {
 
     @Override
     public void refreshCache() {
-        Set<String> schemaKeys = RedisUtils.scanKeys(DictCacheKeyDefine.DICT_SCHEMA.format("*"));
-        Set<String> valueKeys = RedisUtils.scanKeys(DictCacheKeyDefine.DICT_VALUE.format("*"));
-        // 需要删除的缓存 key
-        List<String> list = Lists.of(DictCacheKeyDefine.DICT_KEY.getKey());
-        list.addAll(schemaKeys);
-        list.addAll(valueKeys);
-        // 删除缓存
-        RedisUtils.delete(list);
+        RedisUtils.scanKeysDelete(
+                // 删除字典配置项 schema
+                DictCacheKeyDefine.DICT_SCHEMA.format("*"),
+                // 删除字典配置值
+                DictCacheKeyDefine.DICT_VALUE.format("*")
+        );
+        // 删除字典配置项列表
+        RedisUtils.delete(DictCacheKeyDefine.DICT_KEY);
     }
 
     @Override

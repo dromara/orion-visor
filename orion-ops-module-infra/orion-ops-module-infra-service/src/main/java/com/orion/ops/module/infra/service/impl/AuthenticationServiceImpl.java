@@ -8,7 +8,6 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
-import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.security.UserRole;
@@ -134,14 +133,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 查询用户信息
         SystemUserDO user = systemUserDAO.selectById(id);
         if (user == null) {
-            throw Exceptions.httpWrapper(ErrorCode.UNAUTHORIZED);
+            return null;
         }
         // 设置用户缓存
         return this.setUserCache(user);
     }
 
     @Override
-    public LoginTokenDTO getLoginTokenInfo(String loginToken, boolean checkRefresh) {
+    public LoginTokenDTO getLoginTokenInfo(String loginToken) {
         // 获取登录 key pair
         Pair<Long, Long> pair = this.getLoginTokenPair(loginToken);
         if (pair == null) {
@@ -154,7 +153,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return JSON.parseObject(loginCache, LoginTokenDTO.class);
         }
         // loginToken 不存在 需要查询 refreshToken
-        if (!checkRefresh || !allowRefresh) {
+        if (!allowRefresh) {
             return null;
         }
         String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(pair.getKey(), pair.getValue());
@@ -321,9 +320,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @SuppressWarnings("ALL")
     private void invalidOtherDeviceToken(Long id, long loginTime,
                                          String remoteAddr, String location, String userAgent) {
-        String loginKey = UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*");
         // 获取登录信息
-        Set<String> loginKeyList = RedisUtils.scanKeys(loginKey);
+        Set<String> loginKeyList = RedisUtils.scanKeys(UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*"));
         if (!loginKeyList.isEmpty()) {
             // 获取有效登录信息
             List<LoginTokenDTO> loginTokenInfoList = redisTemplate.opsForValue()
@@ -343,11 +341,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         // 删除续签信息
         if (allowRefresh) {
-            String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*");
-            Set<String> refreshKeyList = RedisUtils.scanKeys(refreshKey);
-            if (!refreshKeyList.isEmpty()) {
-                redisTemplate.delete(refreshKeyList);
-            }
+            RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
         }
     }
 

@@ -56,7 +56,7 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
     @Override
     public LoginUser getUserByToken(String token) {
         // 获取 token 信息
-        LoginTokenDTO tokenInfo = authenticationService.getLoginTokenInfo(token, true);
+        LoginTokenDTO tokenInfo = authenticationService.getLoginTokenInfo(token);
         if (tokenInfo == null) {
             return null;
         }
@@ -70,6 +70,9 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
         }
         // 获取登录信息
         LoginUser user = authenticationService.getLoginUser(tokenInfo.getId());
+        if (user == null) {
+            return null;
+        }
         // 检查用户状态
         UserStatusEnum.checkUserStatus(user.getStatus());
         // 设置登录时间戳

@@ -41,7 +41,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (!Strings.isBlank(token)) {
                 // 通过 token 获取用户信息
                 LoginUser loginUser = securityFrameworkService.getUserByToken(token);
-                // 设置上下文
+                // 设置用户上下文
                 if (loginUser != null) {
                     SecurityUtils.setLoginUser(loginUser, request);
                 }

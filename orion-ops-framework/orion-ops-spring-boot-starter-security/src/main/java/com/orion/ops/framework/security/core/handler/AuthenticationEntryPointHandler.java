@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 认证失败处理器
+ * 未认证处理器
+ * <p>
+ * 过滤器执行完还未设置用户上下文则会进入此处理器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,7 +24,7 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
-        log.debug("AuthenticationEntryPoint-commence-未登录 {}", request.getRequestURI(), e);
+        log.debug("AuthenticationEntryPoint-commence-unauthorized {}", request.getRequestURI(), e);
         Servlets.writeHttpWrapper(response, ErrorCode.UNAUTHORIZED.getWrapper());
     }
 

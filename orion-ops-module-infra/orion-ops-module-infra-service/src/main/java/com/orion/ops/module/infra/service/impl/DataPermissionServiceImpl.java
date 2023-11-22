@@ -236,20 +236,13 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     public void clearUserCache(List<Long> userIdList) {
-        // 构建 key 匹配
-        List<String> keyPatterns = userIdList.stream()
+        // 扫描的 key
+        List<String> keyMatchs = userIdList.stream()
                 .distinct()
                 .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format("*", s))
                 .collect(Collectors.toList());
-        // 扫描所有 key
-        List<String> deleteKeys = keyPatterns.stream()
-                .map(RedisUtils::scanKeys)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        // 删除 key
-        if (!deleteKeys.isEmpty()) {
-            RedisUtils.delete(deleteKeys);
-        }
+        // 扫描并删除
+        RedisUtils.scanKeysDelete(keyMatchs);
     }
 
     /**

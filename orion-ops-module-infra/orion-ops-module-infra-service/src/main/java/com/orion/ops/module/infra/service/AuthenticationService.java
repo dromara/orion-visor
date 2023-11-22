@@ -53,10 +53,9 @@ public interface AuthenticationService {
     /**
      * 获取 token 信息
      *
-     * @param loginToken   loginToken
-     * @param checkRefresh 是否检查 refreshToken
+     * @param loginToken loginToken
      * @return tokenInfo
      */
-    LoginTokenDTO getLoginTokenInfo(String loginToken, boolean checkRefresh);
+    LoginTokenDTO getLoginTokenInfo(String loginToken);
 
 }

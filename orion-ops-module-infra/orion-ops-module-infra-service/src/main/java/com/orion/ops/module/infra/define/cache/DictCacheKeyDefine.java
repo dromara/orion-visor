@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public interface DictCacheKeyDefine {
 
     CacheKeyDefine DICT_KEY = new CacheKeyBuilder()
-            .key("dict:keys")
+            .key("dict:keys:list")
             .desc("字典配置项")
             .type(DictKeyCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
@@ -26,7 +26,7 @@ public interface DictCacheKeyDefine {
             .build();
 
     CacheKeyDefine DICT_SCHEMA = new CacheKeyBuilder()
-            .key("dict:schema:{}")
+            .key("dict:key-schema:{}")
             .desc("字典配置项 schema ${key}")
             .type(JSONObject.class)
             .struct(RedisCacheStruct.STRING)
