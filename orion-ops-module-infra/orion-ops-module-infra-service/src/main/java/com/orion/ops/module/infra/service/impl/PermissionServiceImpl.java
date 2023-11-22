@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.security.UserRole;
@@ -117,27 +118,44 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean hasRole(String role) {
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoleCode();
+        Map<Long, String> roles = this.getUserEnabledRoles();
         if (roles.isEmpty()) {
             return false;
         }
         // 检查是否为超级管理员或包含此角色
-        return RoleDefine.containsAdmin(roles) || roles.contains(role);
+        return RoleDefine.containsAdmin(roles.values()) || roles.containsValue(role);
+    }
+
+    @Override
+    public boolean hasAnyRole(String... roles) {
+        if (Arrays1.isEmpty(roles)) {
+            return true;
+        }
+        // 获取用户角色
+        Map<Long, String> enableRoles = this.getUserEnabledRoles();
+        if (enableRoles.isEmpty()) {
+            return false;
+        }
+        // 检查是否为超级管理员 || 有此角色
+        return RoleDefine.containsAdmin(enableRoles.values())
+                || Arrays.stream(roles).anyMatch(enableRoles::containsValue);
     }
 
     @Override
     public boolean hasPermission(String permission) {
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoleCode();
+        Map<Long, String> roles = this.getUserEnabledRoles();
         if (roles.isEmpty()) {
             return false;
         }
         // 检查是否为超级管理员
-        if (RoleDefine.containsAdmin(roles)) {
+        if (RoleDefine.containsAdmin(roles.values())) {
             return true;
         }
         // 检查普通角色是否有此权限
-        return roles.stream().anyMatch(s -> this.checkRoleHasPermission(s, permission));
+        return roles.keySet()
+                .stream()
+                .anyMatch(s -> this.checkRoleHasPermission(s, permission));
     }
 
     @Override
@@ -146,38 +164,37 @@ public class PermissionServiceImpl implements PermissionService {
             return true;
         }
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoleCode();
+        Map<Long, String> roles = this.getUserEnabledRoles();
         if (roles.isEmpty()) {
             return false;
         }
         // 检查是否为超级管理员
-        if (RoleDefine.containsAdmin(roles)) {
+        if (RoleDefine.containsAdmin(roles.values())) {
             return true;
         }
-        for (String permission : permissions) {
-            final boolean has = roles.stream().anyMatch(s -> this.checkRoleHasPermission(s, permission));
-            if (has) {
-                return true;
-            }
-        }
-        return false;
+        // 检查用户角色是否包含权限
+        return Arrays.stream(permissions)
+                .anyMatch(perm -> roles.keySet()
+                        .stream()
+                        .anyMatch(s -> this.checkRoleHasPermission(s, perm)));
     }
 
     @Override
     public List<SystemMenuVO> getUserMenuList() {
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoleCode();
+        Map<Long, String> roles = this.getUserEnabledRoles();
         if (roles.isEmpty()) {
             return Lists.empty();
         }
         // 查询角色菜单
         Stream<SystemMenuCacheDTO> mergeStream;
-        if (RoleDefine.containsAdmin(roles)) {
+        if (RoleDefine.containsAdmin(roles.values())) {
             // 管理员拥有全部菜单
             mergeStream = menuCache.stream();
         } else {
             // 当前用户所适配的角色菜单
-            mergeStream = roles.stream()
+            mergeStream = roles.keySet()
+                    .stream()
                     .map(roleMenuCache::get)
                     .filter(Objects::nonNull)
                     .flatMap(Collection::stream)
@@ -202,18 +219,19 @@ public class PermissionServiceImpl implements PermissionService {
         // 获取用户系统偏好
         Future<Map<String, Object>> systemPreference = preferenceService.getPreferenceAsync(id, PreferenceTypeEnum.SYSTEM);
         // 获取用户角色
-        List<String> roles = this.getUserEnabledRoleCode();
+        Map<Long, String> roles = this.getUserEnabledRoles();
         // 获取用户权限
         List<String> permissions;
         if (roles.isEmpty()) {
             permissions = Lists.empty();
         } else {
-            if (RoleDefine.containsAdmin(roles)) {
+            if (RoleDefine.containsAdmin(roles.values())) {
                 // 管理员拥有全部权限
                 permissions = Lists.of(Const.ASTERISK);
             } else {
                 // 当前用户所适配的角色的权限
-                permissions = roles.stream()
+                permissions = roles.keySet()
+                        .stream()
                         .map(roleMenuCache::get)
                         .filter(Objects::nonNull)
                         .flatMap(Collection::stream)
@@ -231,7 +249,7 @@ public class PermissionServiceImpl implements PermissionService {
         // 组装数据
         return UserPermissionVO.builder()
                 .user(user)
-                .roles(roles)
+                .roles(roles.values())
                 .permissions(permissions)
                 .build();
     }
@@ -239,13 +257,13 @@ public class PermissionServiceImpl implements PermissionService {
     /**
      * 检查角色是否有权限
      *
-     * @param role       role
+     * @param roleId     roleId
      * @param permission permission
      * @return 是否有权限
      */
-    private boolean checkRoleHasPermission(String role, String permission) {
+    private boolean checkRoleHasPermission(Long roleId, String permission) {
         // 获取角色权限列表
-        List<SystemMenuCacheDTO> menus = roleMenuCache.get(role);
+        List<SystemMenuCacheDTO> menus = roleMenuCache.get(roleId);
         if (Lists.isEmpty(menus)) {
             return false;
         }
@@ -262,27 +280,26 @@ public class PermissionServiceImpl implements PermissionService {
      *
      * @return roles
      */
-    private List<String> getUserEnabledRoleCode() {
+    private Map<Long, String> getUserEnabledRoles() {
         // 获取当前用户角色
         List<UserRole> userRoles = Optional.ofNullable(SecurityUtils.getLoginUser())
                 .map(LoginUser::getRoles)
-                .orElse(null);
+                .orElse(Lists.empty());
         if (Lists.isEmpty(userRoles)) {
-            return Lists.empty();
+            return Maps.empty();
         }
         // 获取角色编码
-        List<String> roleCodes = userRoles.stream()
+        Map<Long, String> roles = userRoles.stream()
                 .map(UserRole::getId)
                 .map(roleCache::get)
                 .filter(Objects::nonNull)
                 // 过滤未启用的角色
                 .filter(r -> RoleStatusEnum.ENABLED.getStatus().equals(r.getStatus()))
-                .map(SystemRoleDO::getCode)
-                .collect(Collectors.toList());
-        if (Lists.isEmpty(roleCodes)) {
-            return Lists.empty();
+                .collect(Collectors.toMap(SystemRoleDO::getId, SystemRoleDO::getCode));
+        if (Maps.isEmpty(roles)) {
+            return Maps.empty();
         }
-        return roleCodes;
+        return roles;
     }
 
 }

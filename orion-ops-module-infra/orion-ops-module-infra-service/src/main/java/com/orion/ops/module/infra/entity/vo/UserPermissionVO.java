@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class UserPermissionVO {
     private UserCollectInfoVO user;
 
     @Schema(description = "该用户已启用的角色")
-    private List<String> roles;
+    private Collection<String> roles;
 
     @Schema(description = "该用户已启用的权限")
     private List<String> permissions;

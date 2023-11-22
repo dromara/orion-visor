@@ -48,6 +48,12 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
     }
 
     @Override
+    public boolean hasAnyRole(String... roles) {
+        // 检查是否有角色
+        return permissionService.hasAnyRole(roles);
+    }
+
+    @Override
     public LoginUser getUserByToken(String token) {
         // 获取 token 信息
         LoginTokenDTO tokenInfo = authenticationService.getLoginTokenInfo(token, true);

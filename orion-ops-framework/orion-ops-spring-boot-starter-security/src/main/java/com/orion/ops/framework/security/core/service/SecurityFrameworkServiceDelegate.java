@@ -33,6 +33,11 @@ public class SecurityFrameworkServiceDelegate implements SecurityFrameworkServic
     }
 
     @Override
+    public boolean hasAnyRole(String... roles) {
+        return delegate.hasAnyRole(roles);
+    }
+
+    @Override
     public LoginUser getUserByToken(String token) {
         return delegate.getUserByToken(token);
     }

@@ -40,6 +40,14 @@ public interface SecurityFrameworkService {
     boolean hasRole(String role);
 
     /**
+     * 检查是否有角色
+     *
+     * @param roles 角色
+     * @return has
+     */
+    boolean hasAnyRole(String... roles);
+
+    /**
      * 通过 token 获取用户信息
      *
      * @param token token

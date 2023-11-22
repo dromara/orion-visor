@@ -52,6 +52,14 @@ public interface PermissionService {
     boolean hasRole(String role);
 
     /**
+     * 检查当前用户是否含有任意角色 (有效性判断)
+     *
+     * @param roles roles
+     * @return 是否包含
+     */
+    boolean hasAnyRole(String... roles);
+
+    /**
      * 检查当前用户是否含有此权限 (有效性判断)
      *
      * @param permission permission
