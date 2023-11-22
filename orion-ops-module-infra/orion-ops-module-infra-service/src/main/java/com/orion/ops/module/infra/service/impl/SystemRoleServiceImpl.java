@@ -19,6 +19,7 @@ import com.orion.ops.module.infra.entity.request.role.SystemRoleStatusRequest;
 import com.orion.ops.module.infra.entity.request.role.SystemRoleUpdateRequest;
 import com.orion.ops.module.infra.entity.vo.SystemRoleVO;
 import com.orion.ops.module.infra.enums.RoleStatusEnum;
+import com.orion.ops.module.infra.service.DataPermissionService;
 import com.orion.ops.module.infra.service.PermissionService;
 import com.orion.ops.module.infra.service.SystemRoleService;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
@@ -54,6 +55,9 @@ public class SystemRoleServiceImpl implements SystemRoleService {
 
     @Resource
     private SystemUserRoleService systemUserRoleService;
+
+    @Resource
+    private DataPermissionService dataPermissionService;
 
     @Override
     public Long createSystemRole(SystemRoleCreateRequest request) {
@@ -111,9 +115,11 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 更新
         int effect = systemRoleDAO.updateById(updateRecord);
         log.info("SystemRoleService-updateRoleStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
-        // 修改缓存状态
+        // 修改本地缓存状态
         SystemRoleDO roleCache = permissionService.getRoleCache().get(id);
         roleCache.setStatus(status);
+        // 删除数据权限缓存
+        dataPermissionService.clearRoleCache(id);
         return effect;
     }
 
@@ -178,6 +184,8 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         permissionService.getRoleMenuCache().remove(id);
         // 删除用户缓存中的角色
         systemUserRoleService.deleteUserCacheRoleAsync(id, userIdList);
+        // 删除数据权限缓存
+        dataPermissionService.clearUserCache(userIdList);
         return effect;
     }
 

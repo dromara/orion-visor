@@ -3,13 +3,11 @@ package com.orion.ops.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
-import com.orion.ops.framework.common.utils.Requests;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
@@ -18,31 +16,25 @@ import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
+import com.orion.ops.module.infra.dao.SystemRoleDAO;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
+import com.orion.ops.module.infra.define.RoleDefine;
 import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
+import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
-import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
-import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
-import com.orion.ops.module.infra.entity.vo.UserSessionVO;
-import com.orion.ops.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.ops.module.infra.enums.UserStatusEnum;
-import com.orion.ops.module.infra.service.AuthenticationService;
-import com.orion.ops.module.infra.service.FavoriteService;
-import com.orion.ops.module.infra.service.PreferenceService;
-import com.orion.ops.module.infra.service.SystemUserService;
+import com.orion.ops.module.infra.service.*;
 import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,6 +57,9 @@ public class SystemUserServiceImpl implements SystemUserService {
     private SystemUserRoleDAO systemUserRoleDAO;
 
     @Resource
+    private SystemRoleDAO systemRoleDAO;
+
+    @Resource
     private OperatorLogDAO operatorLogDAO;
 
     @Resource
@@ -72,6 +67,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Resource
     private PreferenceService preferenceService;
+
+    @Resource
+    private DataPermissionService dataPermissionService;
 
     @Override
     public Long createSystemUser(SystemUserCreateRequest request) {
@@ -206,6 +204,15 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 删除用户
         int effect = systemUserDAO.deleteById(id);
         log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
+        // 删除用户信息缓存
+        RedisUtils.delete(UserCacheKeyDefine.USER_INFO.format(id));
+        // 删除 token 缓存
+        RedisUtils.scanKeysDelete(
+                // 登录 token
+                UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*"),
+                // 刷新 token
+                UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*")
+        );
         // 异步删除额外信息
         SpringHolder.getBean(SystemUserService.class).deleteSystemUserRelAsync(id, record.getUsername());
         return effect;
@@ -217,10 +224,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         log.info("SystemUserService-deleteSystemUserRel id: {}", id);
         // 删除用户列表缓存
         RedisMaps.delete(UserCacheKeyDefine.USER_LIST, id);
-        // 删除用户缓存 需要扫描的 key 让其自动过期
+        // 删除用户缓存 其他的 key 让其自动过期
         RedisUtils.delete(
-                // 用户缓存
-                UserCacheKeyDefine.USER_INFO.format(id),
                 // 登录失败次数
                 UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(username),
                 // 用户提示
@@ -234,6 +239,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         favoriteService.deleteFavoriteByUserId(id);
         // 删除用户偏好
         preferenceService.deletePreferenceByUserId(id);
+        // 删除用户数据权限
+        dataPermissionService.deleteByUserId(id);
     }
 
     @Override
@@ -269,58 +276,17 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
-    public List<UserSessionVO> getUserSessionList(Long userId) {
-        // 扫描缓存
-        Set<String> keys = RedisStrings.scanKeys(UserCacheKeyDefine.LOGIN_TOKEN.format(userId, "*"));
-        if (Lists.isEmpty(keys)) {
-            return Lists.empty();
+    public boolean isAdminUser(Long userId) {
+        // 查询用户角色
+        List<Long> roleIdList = systemUserRoleDAO.selectRoleIdByUserId(userId);
+        if (!roleIdList.isEmpty()) {
+            // 查询角色信息
+            return systemRoleDAO.selectBatchIds(roleIdList)
+                    .stream()
+                    .map(SystemRoleDO::getCode)
+                    .anyMatch(RoleDefine::isAdmin);
         }
-        // 查询缓存
-        List<LoginTokenDTO> tokens = RedisStrings.getJsonList(keys, UserCacheKeyDefine.LOGIN_TOKEN);
-        if (Lists.isEmpty(tokens)) {
-            return Lists.empty();
-        }
-        final boolean isCurrentUser = userId.equals(SecurityUtils.getLoginUserId());
-        // 返回
-        return tokens.stream()
-                .filter(s -> LoginTokenStatusEnum.OK.getStatus().equals(s.getStatus()))
-                .map(LoginTokenDTO::getOrigin)
-                .map(s -> UserSessionVO.builder()
-                        .current(isCurrentUser && s.getLoginTime().equals(SecurityUtils.getLoginTimestamp()))
-                        .address(s.getAddress())
-                        .location(s.getLocation())
-                        .userAgent(s.getUserAgent())
-                        .loginTime(new Date(s.getLoginTime()))
-                        .build())
-                .sorted(Comparator.comparing(UserSessionVO::getCurrent).reversed()
-                        .thenComparing(Comparator.comparing(UserSessionVO::getLoginTime).reversed()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void offlineUserSession(UserSessionOfflineRequest request) {
-        Long userId = Valid.notNull(request.getUserId());
-        Long timestamp = request.getTimestamp();
-        // 查询用户
-        SystemUserDO user = systemUserDAO.selectById(userId);
-        Valid.notNull(user, ErrorMessage.USER_ABSENT);
-        // 添加日志参数
-        OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
-        // 删除刷新缓存
-        RedisStrings.delete(UserCacheKeyDefine.LOGIN_REFRESH.format(userId, request.getTimestamp()));
-        // 查询并且覆盖 token
-        String tokenKey = UserCacheKeyDefine.LOGIN_TOKEN.format(userId, timestamp);
-        LoginTokenDTO tokenInfo = RedisStrings.getJson(tokenKey, UserCacheKeyDefine.LOGIN_TOKEN);
-        if (tokenInfo != null) {
-            tokenInfo.setStatus(LoginTokenStatusEnum.SESSION_OFFLINE.getStatus());
-            LoginTokenIdentityDTO override = new LoginTokenIdentityDTO();
-            override.setLoginTime(System.currentTimeMillis());
-            // 设置请求信息
-            Requests.fillIdentity(override);
-            tokenInfo.setOverride(override);
-            // 更新 token
-            RedisStrings.setJson(tokenKey, UserCacheKeyDefine.LOGIN_TOKEN, tokenInfo);
-        }
+        return false;
     }
 
     /**

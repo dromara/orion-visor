@@ -49,6 +49,22 @@ public interface SystemUserRoleDAO extends IMapper<SystemUserRoleDO> {
     }
 
     /**
+     * 查询角色的全部 userId
+     *
+     * @param roleId roleId
+     * @return userId
+     */
+    default List<Long> selectUserIdByRoleId(List<Long> roleId) {
+        LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
+                .select(SystemUserRoleDO::getUserId)
+                .in(SystemUserRoleDO::getRoleId, roleId);
+        return this.selectList(wrapper).stream()
+                .map(SystemUserRoleDO::getUserId)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 通过 userId 删除
      *
      * @param userId userId

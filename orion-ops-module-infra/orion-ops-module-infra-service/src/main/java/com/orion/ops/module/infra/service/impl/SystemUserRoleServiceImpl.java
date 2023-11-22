@@ -15,6 +15,7 @@ import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserRoleDO;
 import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRoleRequest;
+import com.orion.ops.module.infra.service.DataPermissionService;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -45,9 +46,26 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
     @Resource
     private SystemUserRoleDAO systemUserRoleDAO;
 
+    @Resource
+    private DataPermissionService dataPermissionService;
+
     @Override
-    public List<Long> getUserRoleIdList(Long userId) {
+    public List<Long> getRoleIdListByUserId(Long userId) {
         return systemUserRoleDAO.selectRoleIdByUserId(userId);
+    }
+
+    @Override
+    public List<Long> getUserIdListByRoleCode(String roleCode) {
+        Long roleId = systemRoleDAO.of()
+                .createWrapper()
+                .eq(SystemRoleDO::getCode, roleCode)
+                .then()
+                .getOne(SystemRoleDO::getId);
+        if (roleId == null) {
+            return Lists.empty();
+        }
+        // 查询用户列表
+        return systemUserRoleDAO.selectUserIdByRoleId(roleId);
     }
 
     @Override
@@ -60,10 +78,12 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
         // 删除用户关联
         int effect = systemUserRoleDAO.deleteByUserId(userId);
-        // 更新缓存中的角色
+        // 更新用户缓存中的角色
         RedisStrings.<LoginUser>processSetJson(UserCacheKeyDefine.USER_INFO, s -> {
             s.setRoles(Lists.empty());
         }, userId);
+        // 清除数据权限缓存
+        dataPermissionService.clearUserCache(userId);
         return effect;
     }
 
@@ -107,6 +127,8 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
                     .collect(Collectors.toList());
             s.setRoles(roles);
         }, userId);
+        // 清除数据权限缓存
+        dataPermissionService.clearUserCache(userId);
         return effect;
     }
 

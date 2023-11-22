@@ -14,12 +14,20 @@ import java.util.List;
 public interface SystemUserRoleService {
 
     /**
-     * 查询用户 roleId
+     * 通过 userId 查询 roleId
      *
      * @param userId userId
      * @return roleId
      */
-    List<Long> getUserRoleIdList(Long userId);
+    List<Long> getRoleIdListByUserId(Long userId);
+
+    /**
+     * 通过 roleCode 查询 userId
+     *
+     * @param roleCode roleCode
+     * @return userId
+     */
+    List<Long> getUserIdListByRoleCode(String roleCode);
 
     /**
      * 删除用户角色

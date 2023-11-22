@@ -12,6 +12,7 @@ import com.orion.ops.module.infra.define.operator.SystemUserOperatorType;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
+import com.orion.ops.module.infra.service.SystemUserManagementService;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
 import com.orion.ops.module.infra.service.SystemUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +47,9 @@ public class SystemUserController {
 
     @Resource
     private SystemUserRoleService systemUserRoleService;
+
+    @Resource
+    private SystemUserManagementService systemUserManagementService;
 
     @OperatorLog(SystemUserOperatorType.CREATE)
     @PostMapping("/create")
@@ -118,7 +122,7 @@ public class SystemUserController {
     @Operation(summary = "查询用户的角色id")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
     public List<Long> getUserRoleIdList(@RequestParam("userId") Long userId) {
-        return systemUserRoleService.getUserRoleIdList(userId);
+        return systemUserRoleService.getRoleIdListByUserId(userId);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -143,7 +147,7 @@ public class SystemUserController {
     @Operation(summary = "获取用户会话列表")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query-session')")
     public List<UserSessionVO> getUserSessionList(@RequestParam("id") Long id) {
-        return systemUserService.getUserSessionList(id);
+        return systemUserManagementService.getUserSessionList(id);
     }
 
     @OperatorLog(SystemUserOperatorType.OFFLINE)
@@ -151,7 +155,7 @@ public class SystemUserController {
     @Operation(summary = "下线用户会话")
     @PreAuthorize("@ss.hasPermission('infra:system-user:offline-session')")
     public HttpWrapper<?> offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
-        systemUserService.offlineUserSession(request);
+        systemUserManagementService.offlineUserSession(request);
         return HttpWrapper.ok();
     }
 

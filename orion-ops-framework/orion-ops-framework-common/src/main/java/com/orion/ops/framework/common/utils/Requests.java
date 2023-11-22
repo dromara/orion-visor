@@ -20,7 +20,7 @@ public class Requests {
     }
 
     /**
-     * 填充请求信息
+     * 填充请求身份信息
      *
      * @param identity identity
      */

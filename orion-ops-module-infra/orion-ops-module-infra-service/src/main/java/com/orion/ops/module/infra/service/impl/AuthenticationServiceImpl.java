@@ -8,6 +8,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.constant.ErrorCode;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.security.UserRole;
@@ -130,8 +131,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (userInfoCache != null) {
             return JSON.parseObject(userInfoCache, LoginUser.class);
         }
-        // 设置缓存并返回
-        return this.setUserCache(systemUserDAO.selectById(id));
+        // 查询用户信息
+        SystemUserDO user = systemUserDAO.selectById(id);
+        if (user == null) {
+            throw Exceptions.httpWrapper(ErrorCode.UNAUTHORIZED);
+        }
+        // 设置用户缓存
+        return this.setUserCache(user);
     }
 
     @Override

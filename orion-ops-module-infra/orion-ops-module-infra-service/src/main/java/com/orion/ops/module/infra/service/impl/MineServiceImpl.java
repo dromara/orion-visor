@@ -18,6 +18,7 @@ import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 import com.orion.ops.module.infra.service.MineService;
 import com.orion.ops.module.infra.service.OperatorLogService;
+import com.orion.ops.module.infra.service.SystemUserManagementService;
 import com.orion.ops.module.infra.service.SystemUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class MineServiceImpl implements MineService {
 
     @Resource
     private SystemUserService systemUserService;
+
+    @Resource
+    private SystemUserManagementService systemUserManagementService;
 
     @Resource
     private OperatorLogService operatorLogService;
@@ -80,13 +84,13 @@ public class MineServiceImpl implements MineService {
 
     @Override
     public List<UserSessionVO> getCurrentUserSessionList() {
-        return systemUserService.getUserSessionList(SecurityUtils.getLoginUserId());
+        return systemUserManagementService.getUserSessionList(SecurityUtils.getLoginUserId());
     }
 
     @Override
     public void offlineCurrentUserSession(UserSessionOfflineRequest request) {
         request.setUserId(SecurityUtils.getLoginUserId());
-        systemUserService.offlineUserSession(request);
+        systemUserManagementService.offlineUserSession(request);
     }
 
     @Override

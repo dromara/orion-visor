@@ -3,7 +3,6 @@ package com.orion.ops.module.infra.service;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
-import com.orion.ops.module.infra.entity.vo.UserSessionVO;
 
 import java.util.List;
 
@@ -87,18 +86,11 @@ public interface SystemUserService {
     void resetPassword(UserResetPasswordRequest request);
 
     /**
-     * 获取用户会话列表
+     * 检测用户是否是为管理员
      *
      * @param userId userId
-     * @return 回话列表
+     * @return 是否为管理员
      */
-    List<UserSessionVO> getUserSessionList(Long userId);
-
-    /**
-     * 下线用户会话
-     *
-     * @param request request
-     */
-    void offlineUserSession(UserSessionOfflineRequest request);
+    boolean isAdminUser(Long userId);
 
 }
