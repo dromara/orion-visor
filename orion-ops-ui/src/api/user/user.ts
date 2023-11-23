@@ -151,12 +151,12 @@ export function deleteUser(id: number) {
  * 获取用户会话列表
  */
 export function getUserSessionList(id: number) {
-  return axios.get<Array<UserSessionQueryResponse>>('/infra/system-user/user-session', { params: { id } });
+  return axios.get<Array<UserSessionQueryResponse>>('/infra/system-user/session/list', { params: { id } });
 }
 
 /**
  * 下线用户会话
  */
 export function offlineUserSession(request: UserSessionOfflineRequest) {
-  return axios.put('/infra/system-user/offline-session', request);
+  return axios.put('/infra/system-user/session/offline', request);
 }

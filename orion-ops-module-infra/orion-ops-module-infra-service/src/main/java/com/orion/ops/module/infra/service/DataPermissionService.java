@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.ops.module.infra.entity.request.data.DataPermissionCreateRequest;
 import com.orion.ops.module.infra.entity.request.data.DataPermissionUpdateRequest;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public interface DataPermissionService {
      *
      * @param request request
      */
-    void addDataPermission(DataPermissionCreateRequest request);
+    void addDataPermission(DataPermissionUpdateRequest request);
 
     /**
      * 更新数据权限

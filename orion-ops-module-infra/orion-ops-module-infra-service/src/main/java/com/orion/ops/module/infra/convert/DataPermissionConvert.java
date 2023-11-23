@@ -1,14 +1,9 @@
 package com.orion.ops.module.infra.convert;
 
-import com.orion.ops.module.infra.entity.domain.*;
-import com.orion.ops.module.infra.entity.vo.*;
-import com.orion.ops.module.infra.entity.request.data.*;
-import com.orion.ops.module.infra.convert.*;
-import com.orion.ops.module.infra.define.operator.*;
+import com.orion.ops.module.infra.entity.domain.DataPermissionDO;
+import com.orion.ops.module.infra.entity.request.data.DataPermissionUpdateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 /**
  * 数据权限 内部对象转换器
@@ -21,8 +16,6 @@ import java.util.List;
 public interface DataPermissionConvert {
 
     DataPermissionConvert MAPPER = Mappers.getMapper(DataPermissionConvert.class);
-
-    DataPermissionDO to(DataPermissionCreateRequest request);
 
     DataPermissionDO to(DataPermissionUpdateRequest request);
 

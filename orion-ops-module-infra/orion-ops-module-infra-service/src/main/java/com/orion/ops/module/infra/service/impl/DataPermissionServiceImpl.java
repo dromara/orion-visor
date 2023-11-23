@@ -10,7 +10,6 @@ import com.orion.ops.module.infra.dao.DataPermissionDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.cache.DataPermissionCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DataPermissionDO;
-import com.orion.ops.module.infra.entity.request.data.DataPermissionCreateRequest;
 import com.orion.ops.module.infra.entity.request.data.DataPermissionUpdateRequest;
 import com.orion.ops.module.infra.service.DataPermissionService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addDataPermission(DataPermissionCreateRequest request) {
+    public void addDataPermission(DataPermissionUpdateRequest request) {
         Long userId = request.getUserId();
         Long roleId = request.getRoleId();
         String type = request.getType();

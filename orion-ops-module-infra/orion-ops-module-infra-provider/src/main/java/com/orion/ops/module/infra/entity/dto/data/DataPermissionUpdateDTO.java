@@ -6,12 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
-import java.math.*;
+import java.util.List;
 
 /**
  * 数据权限 更新请求业务对象
@@ -29,25 +25,13 @@ public class DataPermissionUpdateDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @Schema(description = "id")
-    private Long id;
-
-    @NotNull
     @Schema(description = "用户id")
     private Long userId;
 
-    @NotNull
     @Schema(description = "角色id")
     private Long roleId;
 
-    @NotNull
     @Schema(description = "引用id")
-    private Long relId;
-
-    @NotBlank
-    @Size(max = 32)
-    @Schema(description = "数据类型")
-    private String type;
+    private List<Long> relIdList;
 
 }

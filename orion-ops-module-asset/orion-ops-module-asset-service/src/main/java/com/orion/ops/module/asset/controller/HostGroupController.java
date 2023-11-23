@@ -5,17 +5,13 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.convert.HostGroupConvert;
 import com.orion.ops.module.asset.define.operator.HostGroupOperatorType;
 import com.orion.ops.module.asset.entity.request.host.HostGroupRelUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
-import com.orion.ops.module.infra.api.DataGroupApi;
-import com.orion.ops.module.infra.api.DataGroupRelApi;
+import com.orion.ops.module.asset.service.HostGroupService;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupMoveDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
-import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,67 +41,63 @@ import java.util.Set;
 public class HostGroupController {
 
     @Resource
-    private DataGroupApi dataGroupApi;
-
-    @Resource
-    private DataGroupRelApi dataGroupRelApi;
+    private HostGroupService hostGroupService;
 
     @OperatorLog(HostGroupOperatorType.CREATE)
     @PostMapping("/create")
-    @Operation(summary = "创建主机分组")
+    @Operation(summary = "创建主机分组 - 管理")
     @PreAuthorize("@ss.hasPermission('asset:host-group:create')")
-    public Long updateGroupHost(@Validated @RequestBody DataGroupCreateDTO request) {
-        return dataGroupApi.createDataGroup(DataGroupTypeEnum.HOST, request);
+    public Long createHostGroup(@Validated @RequestBody DataGroupCreateDTO request) {
+        return hostGroupService.createHostGroup(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/tree")
-    @Operation(summary = "查询主机分组")
+    @Operation(summary = "查询主机分组 - 管理")
     @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
-    public List<HostGroupTreeVO> queryHostGroup() {
-        List<DataGroupDTO> rows = dataGroupApi.getDataGroupTree(DataGroupTypeEnum.HOST);
-        return HostGroupConvert.MAPPER.toList(rows);
+    public List<HostGroupTreeVO> queryHostGroupTree() {
+        return hostGroupService.queryHostGroupTree();
     }
 
     @OperatorLog(HostGroupOperatorType.RENAME)
     @PutMapping("/rename")
-    @Operation(summary = "修改名称")
+    @Operation(summary = "修改名称 - 管理")
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Integer updateHostGroupName(@Validated @RequestBody DataGroupRenameDTO request) {
-        return dataGroupApi.renameDataGroup(request);
+        return hostGroupService.updateHostGroupName(request);
     }
 
     @OperatorLog(HostGroupOperatorType.MOVE)
     @PutMapping("/move")
-    @Operation(summary = "移动位置")
+    @Operation(summary = "移动位置 - 管理")
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Integer moveHostGroup(@Validated @RequestBody DataGroupMoveDTO request) {
-        return dataGroupApi.moveDataGroup(request);
+        return hostGroupService.moveHostGroup(request);
     }
 
     @OperatorLog(HostGroupOperatorType.DELETE)
     @DeleteMapping("/delete")
-    @Operation(summary = "删除主机分组")
+    @Operation(summary = "删除主机分组 - 管理")
     @PreAuthorize("@ss.hasPermission('asset:host-group:delete')")
     public Integer deleteHostGroup(@RequestParam("id") Long id) {
-        return dataGroupApi.deleteDataGroupById(id);
+        return hostGroupService.deleteHostGroup(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/rel-list")
-    @Operation(summary = "查询分组主机")
+    @Operation(summary = "查询分组内主机 - 管理")
     @Parameter(name = "groupId", description = "groupId", required = true)
     @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
     public Set<Long> queryHostGroupRel(@RequestParam("groupId") Long groupId) {
-        return dataGroupRelApi.getGroupRelIdByGroupId(DataGroupTypeEnum.HOST, groupId);
+        return hostGroupService.queryHostGroupRel(groupId);
     }
 
     @OperatorLog(HostGroupOperatorType.UPDATE_REL)
     @PostMapping("/update-rel")
-    @Operation(summary = "修改分组主机")
+    @Operation(summary = "修改分组内主机 - 管理")
     @PreAuthorize("@ss.hasPermission('asset:host:update')")
-    public HttpWrapper<?> updateGroupHost(@Validated @RequestBody HostGroupRelUpdateRequest request) {
-        dataGroupRelApi.updateGroupRel(request.getGroupId(), request.getHostIdList());
+    public HttpWrapper<?> updateHostGroupRel(@Validated @RequestBody HostGroupRelUpdateRequest request) {
+        hostGroupService.updateHostGroupRel(request);
         return HttpWrapper.ok();
     }
 

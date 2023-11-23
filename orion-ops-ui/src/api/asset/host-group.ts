@@ -43,49 +43,49 @@ export interface HostGroupRelUpdateRequest {
 }
 
 /**
- * 创建主机分组
+ * 创建主机分组 - 管理
  */
 export function createHostGroup(request: HostGroupCreateRequest) {
   return axios.post<number>('/asset/host-group/create', request);
 }
 
 /**
- * 更新主机分组名称
+ * 更新主机分组名称 - 管理
  */
 export function updateHostGroupName(request: HostGroupRenameRequest) {
   return axios.put('/asset/host-group/rename', request);
 }
 
 /**
- * 移动主机分组
+ * 移动主机分组 - 管理
  */
 export function moveHostGroup(request: HostGroupMoveRequest) {
   return axios.put('/asset/host-group/move', request);
 }
 
 /**
- * 查询全部主机分组树
+ * 查询主机分组树 - 管理
  */
 export function getHostGroupTree() {
   return axios.get<Array<HostGroupQueryResponse>>('/asset/host-group/tree');
 }
 
 /**
- * 删除主机分组
+ * 删除主机分组 - 管理
  */
 export function deleteHostGroup(id: number) {
   return axios.delete('/asset/host-group/delete', { params: { id } });
 }
 
 /**
- * 查询分组内主机
+ * 查询分组内主机 - 管理
  */
 export function getHostGroupRelList(groupId: number) {
   return axios.get<Array<number>>('/asset/host-group/rel-list', { params: { groupId } });
 }
 
 /**
- * 修改分组内主机
+ * 修改分组内主机 - 管理
  */
 export function updateHostGroupRel(request: HostGroupRelUpdateRequest) {
   return axios.post('/asset/host-group/update-rel', request);

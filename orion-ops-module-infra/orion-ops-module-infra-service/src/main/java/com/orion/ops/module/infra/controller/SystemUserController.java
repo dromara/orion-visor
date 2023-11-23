@@ -143,7 +143,7 @@ public class SystemUserController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/user-session")
+    @GetMapping("/session/list")
     @Operation(summary = "获取用户会话列表")
     @PreAuthorize("@ss.hasPermission('infra:system-user:query-session')")
     public List<UserSessionVO> getUserSessionList(@RequestParam("id") Long id) {
@@ -151,7 +151,7 @@ public class SystemUserController {
     }
 
     @OperatorLog(SystemUserOperatorType.OFFLINE)
-    @PutMapping("/offline-session")
+    @PutMapping("/session/offline")
     @Operation(summary = "下线用户会话")
     @PreAuthorize("@ss.hasPermission('infra:system-user:offline-session')")
     public HttpWrapper<?> offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {

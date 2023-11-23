@@ -78,11 +78,18 @@ public class SystemUserServiceImpl implements SystemUserService {
         this.checkUsernamePresent(record);
         // 查询花名是否存在
         this.checkNicknamePresent(record);
+        // 加密密码
+        record.setPassword(Signatures.md5(request.getPassword()));
         // 插入
         int effect = systemUserDAO.insert(record);
         log.info("SystemUserService-createSystemUser effect: {}, record: {}", effect, JSON.toJSONString(record));
-        // 删除用户列表缓存
-        RedisUtils.delete(UserCacheKeyDefine.USER_LIST);
+        // 删除用户缓存
+        RedisUtils.delete(
+                // 用户列表
+                UserCacheKeyDefine.USER_LIST.getKey(),
+                // 登录失败次数
+                UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername())
+        );
         return record.getId();
     }
 

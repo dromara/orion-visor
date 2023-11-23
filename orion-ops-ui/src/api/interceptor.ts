@@ -55,8 +55,11 @@ axios.interceptors.response.use(
       });
       // 认证异常
       setTimeout(async () => {
-        // 设置错误信息 登录页面重新提示 (重新加载会刷掉提示)
-        window.sessionStorage.setItem(reLoginTipsKey, res.msg);
+        // 先判断是否有提示 防止调用多个接口 把主要信息覆盖
+        if (!window.sessionStorage.getItem(reLoginTipsKey)) {
+          // 设置错误信息 在登录页面重新提示 因为重新页面加载会刷掉提示
+          window.sessionStorage.setItem(reLoginTipsKey, res.msg);
+        }
         // 登出
         await useUserStore().logout();
         // 重新加载自动跳转登录页面
