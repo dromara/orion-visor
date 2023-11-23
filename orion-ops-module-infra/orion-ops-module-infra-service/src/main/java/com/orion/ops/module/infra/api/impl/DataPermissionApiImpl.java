@@ -60,8 +60,8 @@ public class DataPermissionApiImpl implements DataPermissionApi {
     }
 
     @Override
-    public List<Long> getAllowRelIdList(DataPermissionTypeEnum type, Long userId) {
-        return dataPermissionService.getAllowRelIdList(type.name(), userId);
+    public List<Long> getUserAuthorizedRelIdList(DataPermissionTypeEnum type, Long userId) {
+        return dataPermissionService.getUserAuthorizedRelIdList(type.name(), userId);
     }
 
     @Override

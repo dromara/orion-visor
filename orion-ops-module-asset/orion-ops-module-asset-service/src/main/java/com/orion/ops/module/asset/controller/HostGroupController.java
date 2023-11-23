@@ -6,6 +6,8 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.HostGroupOperatorType;
+import com.orion.ops.module.asset.entity.request.host.HostGroupGrantQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostGroupGrantRequest;
 import com.orion.ops.module.asset.entity.request.host.HostGroupRelUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
 import com.orion.ops.module.asset.service.HostGroupService;
@@ -45,7 +47,7 @@ public class HostGroupController {
 
     @OperatorLog(HostGroupOperatorType.CREATE)
     @PostMapping("/create")
-    @Operation(summary = "创建主机分组 - 管理")
+    @Operation(summary = "创建主机分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:create')")
     public Long createHostGroup(@Validated @RequestBody DataGroupCreateDTO request) {
         return hostGroupService.createHostGroup(request);
@@ -53,7 +55,7 @@ public class HostGroupController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/tree")
-    @Operation(summary = "查询主机分组 - 管理")
+    @Operation(summary = "查询主机分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
     public List<HostGroupTreeVO> queryHostGroupTree() {
         return hostGroupService.queryHostGroupTree();
@@ -61,7 +63,7 @@ public class HostGroupController {
 
     @OperatorLog(HostGroupOperatorType.RENAME)
     @PutMapping("/rename")
-    @Operation(summary = "修改名称 - 管理")
+    @Operation(summary = "修改名称")
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Integer updateHostGroupName(@Validated @RequestBody DataGroupRenameDTO request) {
         return hostGroupService.updateHostGroupName(request);
@@ -69,7 +71,7 @@ public class HostGroupController {
 
     @OperatorLog(HostGroupOperatorType.MOVE)
     @PutMapping("/move")
-    @Operation(summary = "移动位置 - 管理")
+    @Operation(summary = "移动位置")
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Integer moveHostGroup(@Validated @RequestBody DataGroupMoveDTO request) {
         return hostGroupService.moveHostGroup(request);
@@ -77,7 +79,7 @@ public class HostGroupController {
 
     @OperatorLog(HostGroupOperatorType.DELETE)
     @DeleteMapping("/delete")
-    @Operation(summary = "删除主机分组 - 管理")
+    @Operation(summary = "删除主机分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:delete')")
     public Integer deleteHostGroup(@RequestParam("id") Long id) {
         return hostGroupService.deleteHostGroup(id);
@@ -85,7 +87,7 @@ public class HostGroupController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/rel-list")
-    @Operation(summary = "查询分组内主机 - 管理")
+    @Operation(summary = "查询分组内主机")
     @Parameter(name = "groupId", description = "groupId", required = true)
     @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
     public Set<Long> queryHostGroupRel(@RequestParam("groupId") Long groupId) {
@@ -93,11 +95,31 @@ public class HostGroupController {
     }
 
     @OperatorLog(HostGroupOperatorType.UPDATE_REL)
-    @PostMapping("/update-rel")
-    @Operation(summary = "修改分组内主机 - 管理")
-    @PreAuthorize("@ss.hasPermission('asset:host:update')")
+    @PutMapping("/update-rel")
+    @Operation(summary = "修改分组内主机")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public HttpWrapper<?> updateHostGroupRel(@Validated @RequestBody HostGroupRelUpdateRequest request) {
         hostGroupService.updateHostGroupRel(request);
+        return HttpWrapper.ok();
+    }
+
+    // TODO 日志 host-group:grant
+    // TODO 菜单 asset:host-group:grant
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-authorized-group")
+    @Operation(summary = "获取已授权的分组")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:grant')")
+    public List<Long> getAuthorizedHostGroup(@RequestParam HostGroupGrantQueryRequest request) {
+        return hostGroupService.getAuthorizedHostGroup(request);
+    }
+
+    @OperatorLog(HostGroupOperatorType.GRANT)
+    @PutMapping("/grant")
+    @Operation(summary = "主机分组授权")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:grant')")
+    public HttpWrapper<?> grantHostGroup(@RequestBody HostGroupGrantRequest request) {
+        hostGroupService.grantHostGroup(request);
         return HttpWrapper.ok();
     }
 

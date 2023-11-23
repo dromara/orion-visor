@@ -7,6 +7,7 @@ import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.enums.MovePosition;
+import com.orion.ops.framework.common.utils.TreeUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -185,7 +185,7 @@ public class DataGroupServiceImpl implements DataGroupService {
                         .id(Const.ROOT_PARENT_ID)
                         .sort(Const.DEFAULT_SORT)
                         .build();
-                this.buildGroupTree(rootNode, rows);
+                TreeUtils.buildGroupTree(rootNode, rows);
                 treeData = rootNode.getChildren();
             }
             // 设置缓存
@@ -194,29 +194,6 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 删除屏障
         CacheBarriers.removeBarrier(treeData);
         return treeData;
-    }
-
-    /**
-     * 构建树
-     *
-     * @param parentNode parentNode
-     * @param nodes      nodes
-     */
-    private void buildGroupTree(DataGroupCacheDTO parentNode,
-                                List<DataGroupCacheDTO> nodes) {
-        // 获取子节点
-        List<DataGroupCacheDTO> childrenNodes = nodes.stream()
-                .filter(s -> parentNode.getId().equals(s.getParentId()))
-                .sorted(Comparator.comparing(DataGroupCacheDTO::getSort))
-                .collect(Collectors.toList());
-        if (childrenNodes.isEmpty()) {
-            return;
-        }
-        parentNode.setChildren(childrenNodes);
-        // 遍历子节点
-        for (DataGroupCacheDTO childrenNode : childrenNodes) {
-            this.buildGroupTree(childrenNode, nodes);
-        }
     }
 
     @Override

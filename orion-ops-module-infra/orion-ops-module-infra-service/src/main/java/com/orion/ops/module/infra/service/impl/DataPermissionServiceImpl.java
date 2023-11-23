@@ -130,7 +130,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
     }
 
     @Override
-    public List<Long> getAllowRelIdList(String type, Long userId) {
+    public List<Long> getUserAuthorizedRelIdList(String type, Long userId) {
         String cacheKey = DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type, userId);
         // 获取缓存
         List<Long> list = RedisLists.range(cacheKey, Long::valueOf);

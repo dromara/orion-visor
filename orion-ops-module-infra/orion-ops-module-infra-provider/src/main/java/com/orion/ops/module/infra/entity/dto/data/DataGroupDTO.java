@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.entity.dto.data;
 
+import com.orion.ops.framework.common.entity.TreeNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "DataGroupDTO", description = "数据分组 业务对象")
-public class DataGroupDTO implements Serializable {
+public class DataGroupDTO implements TreeNode<DataGroupDTO>, Serializable {
 
     private static final long serialVersionUID = 1L;
 

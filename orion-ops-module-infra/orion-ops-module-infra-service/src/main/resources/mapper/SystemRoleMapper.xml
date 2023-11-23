@@ -20,4 +20,12 @@
         id, name, code, status, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <select id="getRoleIdByUserIdAndRoleCode" resultType="java.lang.Long">
+        SELECT role_id
+        FROM system_user_role
+        WHERE user_id = 1
+          AND deleted = 0
+          AND role_id IN (SELECT id FROM system_role WHERE CODE = 'admin' AND deleted = 0) LIMIT 1
+    </select>
+
 </mapper>

@@ -31,7 +31,7 @@ public interface DataPermissionApi {
     void updateDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto);
 
     /**
-     * 通过 userId 查询 (不包含角色 不走缓存)
+     * 通过 userId 查询数据权限 (不包含角色 不走缓存)
      *
      * @param type   type
      * @param userId userId
@@ -40,7 +40,7 @@ public interface DataPermissionApi {
     List<Long> getRelIdListByUserId(DataPermissionTypeEnum type, Long userId);
 
     /**
-     * 通过 roleId 查询 不走缓存
+     * 通过 roleId 查询数据权限 不走缓存
      *
      * @param type   type
      * @param roleId roleId
@@ -49,13 +49,13 @@ public interface DataPermissionApi {
     List<Long> getRelIdListByRoleId(DataPermissionTypeEnum type, Long roleId);
 
     /**
-     * 通过 userId 查询 (包含角色 走缓存)
+     * 查询 userId 已授权的数据权限 (包含角色 走缓存)
      *
      * @param type   type
      * @param userId userId
      * @return relId
      */
-    List<Long> getAllowRelIdList(DataPermissionTypeEnum type, Long userId);
+    List<Long> getUserAuthorizedRelIdList(DataPermissionTypeEnum type, Long userId);
 
     /**
      * 通过 relId 删除

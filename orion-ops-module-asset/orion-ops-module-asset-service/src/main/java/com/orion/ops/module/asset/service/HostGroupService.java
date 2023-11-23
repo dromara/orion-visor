@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.service;
 
+import com.orion.ops.module.asset.entity.request.host.HostGroupGrantQueryRequest;
+import com.orion.ops.module.asset.entity.request.host.HostGroupGrantRequest;
 import com.orion.ops.module.asset.entity.request.host.HostGroupRelUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
@@ -71,5 +73,28 @@ public interface HostGroupService {
      * @param request request
      */
     void updateHostGroupRel(HostGroupRelUpdateRequest request);
+
+    /**
+     * 获取已授权的分组
+     *
+     * @param request request
+     * @return grantGroupId
+     */
+    List<Long> getAuthorizedHostGroup(HostGroupGrantQueryRequest request);
+
+    /**
+     * 授权主机分组
+     *
+     * @param request request
+     */
+    void grantHostGroup(HostGroupGrantRequest request);
+
+    /**
+     * 查询用户已授权的主机分组和主机
+     *
+     * @param userId userId
+     * @return group
+     */
+    List<HostGroupTreeVO> getUserAuthorizedHostGroup(Long userId);
 
 }

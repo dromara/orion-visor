@@ -22,7 +22,6 @@ import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.RoleDefine;
 import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
-import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
@@ -275,16 +274,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public boolean isAdminUser(Long userId) {
-        // 查询用户角色
-        List<Long> roleIdList = systemUserRoleDAO.selectRoleIdByUserId(userId);
-        if (!roleIdList.isEmpty()) {
-            // 查询角色信息
-            return systemRoleDAO.selectBatchIds(roleIdList)
-                    .stream()
-                    .map(SystemRoleDO::getCode)
-                    .anyMatch(RoleDefine::isAdmin);
-        }
-        return false;
+        return systemRoleDAO.getRoleIdByUserIdAndRoleCode(userId, RoleDefine.ADMIN_CODE) != null;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.orion.ops.framework.common.entity.TreeNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,7 +24,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "HostGroupTreeVO", description = "主机秘钥 视图响应对象")
-public class HostGroupTreeVO implements Serializable {
+public class HostGroupTreeVO implements TreeNode<HostGroupTreeVO>, Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("key")
@@ -36,7 +39,13 @@ public class HostGroupTreeVO implements Serializable {
     @Schema(description = "组名称")
     private String name;
 
+    @Schema(description = "排序")
+    private Integer sort;
+
     @Schema(description = "子节点")
     private List<HostGroupTreeVO> children;
+
+    @Schema(description = "分组内主机id")
+    private Collection<Long> hosts;
 
 }
