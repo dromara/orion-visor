@@ -103,14 +103,11 @@ public class HostGroupController {
         return HttpWrapper.ok();
     }
 
-    // TODO 日志 host-group:grant
-    // TODO 菜单 asset:host-group:grant
-
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get-authorized-group")
     @Operation(summary = "获取已授权的分组")
     @PreAuthorize("@ss.hasPermission('asset:host-group:grant')")
-    public List<Long> getAuthorizedHostGroup(@RequestParam HostGroupGrantQueryRequest request) {
+    public List<Long> getAuthorizedHostGroup(HostGroupGrantQueryRequest request) {
         return hostGroupService.getAuthorizedHostGroup(request);
     }
 

@@ -41,3 +41,23 @@ Authorization: {{token}}
 DELETE {{baseUrl}}/asset/host-group/delete?id=1
 Authorization: {{token}}
 
+
+### 获取已授权的分组
+GET {{baseUrl}}/asset/host-group/get-authorized-group?userId=1
+Authorization: {{token}}
+
+
+### 主机分组授权
+PUT {{baseUrl}}/asset/host-group/grant
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "groupIdList": [
+    3,
+    5
+  ]
+}
+
+###

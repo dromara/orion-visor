@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 主机分组服务 实现类
@@ -155,7 +152,7 @@ public class HostGroupServiceImpl implements HostGroupService {
             // 构建已授权的分组
             List<DataGroupDTO> relNodes = new ArrayList<>();
             TreeUtils.getAllNodes(dataGroup, authorizedGroupIdList, relNodes);
-            dataGroup = relNodes;
+            dataGroup = new ArrayList<>(new HashSet<>(relNodes));
         }
         // 查询分组引用
         Map<Long, Set<Long>> groupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);

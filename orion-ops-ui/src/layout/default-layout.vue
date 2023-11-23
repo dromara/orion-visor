@@ -4,7 +4,7 @@
     <div v-if="navbar" class="layout-navbar">
       <NavBar />
     </div>
-    <a-layout style="flex-direction: row;">
+    <a-layout>
       <!-- 左侧菜单栏 -->
       <a-layout-sider v-if="renderMenu"
                       v-show="!hideMenu"

@@ -1,6 +1,7 @@
 <template>
-  <div v-for="i in 300">
-    host-group-view-role-gra <br>
+  <div class="simple-card grant-container">
+    <div style="height: 200px;background: #00308f">
+    </div>
   </div>
 </template>
 
@@ -15,5 +16,7 @@
 </script>
 
 <style lang="less" scoped>
-
+  .grant-container {
+    padding: 16px;
+  }
 </style>

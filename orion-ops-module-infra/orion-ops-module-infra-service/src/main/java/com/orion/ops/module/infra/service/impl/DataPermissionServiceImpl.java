@@ -78,12 +78,12 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         Long roleId = request.getRoleId();
         String type = request.getType();
         // 删除
+        LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.wrapper()
+                .eq(DataPermissionDO::getUserId, userId)
+                .eq(DataPermissionDO::getRoleId, roleId)
+                .eq(DataPermissionDO::getType, type);
+        dataPermissionDAO.delete(wrapper);
         if (Lists.isEmpty(request.getRelIdList())) {
-            LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.wrapper()
-                    .eq(DataPermissionDO::getUserId, userId)
-                    .eq(DataPermissionDO::getRoleId, roleId)
-                    .eq(DataPermissionDO::getType, type);
-            dataPermissionDAO.delete(wrapper);
             return;
         }
         // 新增

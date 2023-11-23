@@ -21,10 +21,10 @@
 <style lang="less" scoped>
   .footer {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    height: 80px;
     text-align: center;
+    height: 64px;
 
     a {
       text-decoration: none;

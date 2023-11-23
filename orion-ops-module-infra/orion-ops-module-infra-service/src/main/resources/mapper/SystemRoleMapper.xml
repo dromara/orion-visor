@@ -23,9 +23,9 @@
     <select id="getRoleIdByUserIdAndRoleCode" resultType="java.lang.Long">
         SELECT role_id
         FROM system_user_role
-        WHERE user_id = 1
+        WHERE user_id = #{userId}
           AND deleted = 0
-          AND role_id IN (SELECT id FROM system_role WHERE CODE = 'admin' AND deleted = 0) LIMIT 1
+          AND role_id IN (SELECT id FROM system_role WHERE CODE = #{code} AND deleted = 0) LIMIT 1
     </select>
 
 </mapper>

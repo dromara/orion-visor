@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 主机分组 查询请求对象
+ * 主机分组授权 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostGroupQueryRequest", description = "主机分组 查询请求对象")
+@Schema(name = "HostGroupQueryRequest", description = "主机分组授权 查询请求对象")
 public class HostGroupGrantQueryRequest implements Serializable {
 
     @Schema(description = "用户id")

@@ -8,7 +8,8 @@
         <img alt="logo"
              src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
         <!-- 标头 -->
-        <a-typography-title :heading="5" :style="{ margin: 0, fontSize: '18px' }">
+        <a-typography-title :heading="5"
+                            :style="{ margin: 0, fontSize: '18px', height: '1.4em', overflow: 'hidden' }">
           Orion Ops Pro
         </a-typography-title>
         <!-- 收缩菜单 -->
