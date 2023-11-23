@@ -32,7 +32,7 @@
     </div>
   </a-spin>
   <!-- 身体部分 -->
-  <a-spin class="simple-card view-body"
+  <a-spin class="simple-card transfer-body"
           :loading="dataLoading">
     <host-transfer ref="transfer"
                    :group="currentGroup"
@@ -67,7 +67,7 @@
 
   // 刷新树
   const refreshTree = () => {
-    tree.value.fetchTreeData();
+    tree.value.fetchTreeData(true);
   };
 
   // 选中分组
@@ -78,10 +78,10 @@
 </script>
 
 <style lang="less" scoped>
-  @tree-width: 26%;
+  @tree-width: 30%;
 
   .tree-card {
-    margin-right: 16px;
+    padding: 0 0 16px 8px;
     width: @tree-width;
     height: 100%;
     position: absolute;
@@ -90,7 +90,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 8px 0 16px;
+      padding-left: 16px;
       position: relative;
       width: 100%;
       height: 44px;
@@ -131,13 +131,13 @@
     }
   }
 
-  .view-body {
+  .transfer-body {
     display: flex;
     height: 100%;
-    padding: 16px;
-    width: calc(100% - @tree-width - 16px);
+    padding: 12px 16px 16px 16px;
+    width: calc(100% - @tree-width);
     position: absolute;
-    left: calc(@tree-width + 16px);
+    left: @tree-width;
   }
 
 </style>

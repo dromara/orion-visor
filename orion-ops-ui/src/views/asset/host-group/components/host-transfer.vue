@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="transfer-header">
       <!-- 提示 -->
-      <a-alert class="alert-wrapper">
+      <a-alert class="alert-wrapper" :show-icon="false">
         <!-- 已选中分组 -->
         <template v-if="group.key">
           <span>当前编辑的分组为 <span class="span-blue">{{ group.title }}</span></span>

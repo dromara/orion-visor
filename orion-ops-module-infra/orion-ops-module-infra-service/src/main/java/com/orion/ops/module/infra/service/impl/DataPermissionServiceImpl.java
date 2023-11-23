@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.redis.core.utils.RedisLists;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
@@ -11,6 +12,7 @@ import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.cache.DataPermissionCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DataPermissionDO;
 import com.orion.ops.module.infra.entity.request.data.DataPermissionUpdateRequest;
+import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 import com.orion.ops.module.infra.service.DataPermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -131,6 +133,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     public List<Long> getUserAuthorizedRelIdList(String type, Long userId) {
+        DataPermissionTypeEnum dataType = Valid.valid(DataPermissionTypeEnum::of, type);
         String cacheKey = DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type, userId);
         // 获取缓存
         List<Long> list = RedisLists.range(cacheKey, Long::valueOf);
@@ -139,9 +142,11 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                     .eq(DataPermissionDO::getType, type)
                     .eq(DataPermissionDO::getUserId, userId);
             // 查询用户角色
-            List<Long> roleIdList = systemUserRoleDAO.selectRoleIdByUserId(userId);
-            if (!roleIdList.isEmpty()) {
-                wrapper.or().in(DataPermissionDO::getRoleId, roleIdList);
+            if (dataType.isToRole()) {
+                List<Long> roleIdList = systemUserRoleDAO.selectRoleIdByUserId(userId);
+                if (!roleIdList.isEmpty()) {
+                    wrapper.or().in(DataPermissionDO::getRoleId, roleIdList);
+                }
             }
             // 查询数据库
             list = dataPermissionDAO.of()

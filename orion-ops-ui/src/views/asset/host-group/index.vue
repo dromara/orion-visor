@@ -2,6 +2,7 @@
   <div v-if="render" class="view-container">
     <a-tabs v-if="render"
             class="tabs-container"
+            size="large"
             :default-active-key="1"
             :destroy-on-hide="true"
             :justify="true"
@@ -48,9 +49,13 @@
   import HostGroupViewSetting from './components/host-group-view-setting.vue';
   import HostGroupViewRoleGrant from './components/host-group-view-role-grant.vue';
   import HostGroupViewUserGrant from './components/host-group-view-user-grant.vue';
+  import { getUserList } from '@/api/user/user';
+  import { getRoleList } from '@/api/user/role';
+  import usePermission from '@/hooks/permission';
 
   const render = ref(false);
   const cacheStore = useCacheStore();
+  const { hasPermission } = usePermission();
 
   // 加载主机列表
   const loadHostList = async () => {
@@ -59,19 +64,50 @@
       // 设置到缓存
       cacheStore.set('hosts', data);
     } catch (e) {
-      Message.error('tag加载失败');
+      Message.error('主机列表加载失败');
+    }
+  };
+
+  // 加载用户列表
+  const loadUserList = async () => {
+    try {
+      const { data } = await getUserList();
+      // 设置到缓存
+      cacheStore.set('users', data);
+    } catch (e) {
+      Message.error('用户列表加载失败');
+    }
+  };
+
+  // 加载角色列表
+  const loadRoleList = async () => {
+    try {
+      const { data } = await getRoleList();
+      // 设置到缓存
+      cacheStore.set('roles', data);
+    } catch (e) {
+      Message.error('角色列表加载失败');
     }
   };
 
   onBeforeMount(async () => {
-    // 加载主机列表
-    await loadHostList();
-    render.value = true;
+    if (hasPermission('asset:host-group:query')) {
+      // 加载主机列表 tab1
+      await loadHostList();
+      render.value = true;
+    }
+    if (hasPermission('asset:host-group:grant')) {
+      // 加载角色列表 tab2
+      await loadRoleList();
+      render.value = true;
+      // 加载用户列表 tab3
+      await loadUserList();
+    }
   });
 
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('user', 'roles', 'hosts');
+    cacheStore.reset('users', 'roles', 'hosts', 'hostGroups');
   });
 
 </script>
@@ -95,5 +131,9 @@
 
   :deep(.arco-tabs-content) {
     padding-top: 0;
+  }
+
+  :deep(.arco-tabs-content) {
+    position: relative;
   }
 </style>

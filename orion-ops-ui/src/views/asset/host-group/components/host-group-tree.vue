@@ -1,13 +1,15 @@
 <template>
   <!-- 分组树 -->
-  <a-tree
-    v-if="treeData.length"
-    ref="tree"
-    class="tree-container"
-    :blockNode="true"
-    :draggable="true"
-    :data="treeData"
-    @drop="moveGroup">
+  <a-tree v-if="treeData.length"
+          ref="tree"
+          class="tree-container"
+          :blockNode="true"
+          :draggable="draggable"
+          :data="treeData"
+          :checkable="checkable"
+          v-model:checked-keys="checkedKeys"
+          :check-strictly="true"
+          @drop="moveGroup">
     <!-- 标题 -->
     <template #title="node">
       <!-- 修改名称输入框 -->
@@ -15,6 +17,7 @@
         <a-input size="mini"
                  ref="renameInput"
                  v-model="currName"
+                 style="width: 138px;"
                  placeholder="名称"
                  autofocus
                  :max-length="32"
@@ -85,22 +88,50 @@
 
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import { nextTick, onMounted, ref } from 'vue';
+  import { computed, nextTick, onMounted, ref } from 'vue';
   import { createGroupGroupPrefix, rootId } from '../types/const';
   import { findNode, findParentNode, moveNode } from '@/utils/tree';
   import { createHostGroup, deleteHostGroup, getHostGroupTree, updateHostGroupName, moveHostGroup } from '@/api/asset/host-group';
   import { isString } from '@/utils/is';
+  import { useCacheStore } from '@/store';
 
   const props = defineProps({
-    loading: Boolean
+    loading: Boolean,
+    draggable: {
+      type: Boolean,
+      default: true
+    },
+    checkable: {
+      type: Boolean,
+      default: false
+    },
+    checkedKeys: {
+      type: Array<Number>,
+      default: []
+    }
   });
-  const emits = defineEmits(['loading', 'selectNode']);
+  const emits = defineEmits(['loading', 'selectNode', 'update:checkedKeys']);
+
+  const cacheStore = useCacheStore();
 
   const tree = ref();
   const modCount = ref(0);
   const renameInput = ref();
   const currName = ref();
   const treeData = ref<Array<TreeNodeData>>([]);
+
+  const checkedKeys = computed<Array<number>>({
+    get() {
+      return props.checkedKeys as Array<number>;
+    },
+    set(e) {
+      if (e) {
+        emits('update:checkedKeys', e);
+      } else {
+        emits('update:checkedKeys', []);
+      }
+    }
+  });
 
   // 重命名
   const rename = (title: number, key: number) => {
@@ -146,7 +177,7 @@
   const addRootNode = () => {
     const newKey = `${createGroupGroupPrefix}${Date.now()}`;
     treeData.value.push({
-      title: 'new',
+      title: '新分组',
       key: newKey
     });
     // 编辑子节点
@@ -165,7 +196,7 @@
     const newKey = `${createGroupGroupPrefix}${Date.now()}`;
     const children = parentNode.children || [];
     children.push({
-      title: 'new',
+      title: '新分组',
       key: newKey
     });
     parentNode.children = children;
@@ -233,11 +264,17 @@
       if (isString(key) && key.startsWith(createGroupGroupPrefix)) {
         // 寻找父节点
         const parent = findParentNode(key, treeData.value);
-        if (parent && parent.children) {
+        if (parent) {
+          // 根节点
+          if (parent.root) {
+            parent.children = treeData.value;
+          }
           // 移除子节点
-          for (let i = 0; i < parent.children.length; i++) {
-            if (parent.children[i].key === key) {
-              parent.children.splice(i, 1);
+          if (parent.children) {
+            for (let i = 0; i < parent.children.length; i++) {
+              if (parent.children[i].key === key) {
+                parent.children.splice(i, 1);
+              }
             }
           }
         }
@@ -273,21 +310,28 @@
   };
 
   // 加载数据
-  const fetchTreeData = async () => {
-    try {
-      emits('loading', true);
-      const { data } = await getHostGroupTree();
-      treeData.value = data;
-      // 未选择则选择首个
-      if (!tree.value?.getSelectedNodes()?.length && data.length) {
-        await nextTick(() => {
-          tree.value?.selectNode(data[0].key);
-          emits('selectNode', data[0]);
-        });
+  const fetchTreeData = async (force = false) => {
+    if (cacheStore.hostGroups.length && !force) {
+      // 缓存有数据并且非强制加载 直接从缓存中加载
+      treeData.value = cacheStore.hostGroups;
+    } else {
+      // 无数据/强制加载
+      try {
+        emits('loading', true);
+        const { data } = await getHostGroupTree();
+        treeData.value = data;
+        cacheStore.hostGroups = data;
+      } catch (e) {
+      } finally {
+        emits('loading', false);
       }
-    } catch (e) {
-    } finally {
-      emits('loading', false);
+    }
+    // 未选择则选择首个
+    if (!tree.value?.getSelectedNodes()?.length && treeData.value.length) {
+      await nextTick(() => {
+        tree.value?.selectNode(treeData.value[0].key);
+        emits('selectNode', treeData.value[0]);
+      });
     }
   };
 
@@ -321,15 +365,17 @@
     .arco-tree-node-switcher {
       margin-left: 8px;
     }
+
+    &:hover {
+      background-color: var(--color-fill-1);
+    }
   }
 
   :deep(.arco-tree-node-selected) {
     background-color: var(--color-fill-2);
 
-    .arco-tree-node-title {
-      &:hover {
-        background-color: var(--color-fill-2);
-      }
+    &:hover {
+      background-color: var(--color-fill-1);
     }
   }
 

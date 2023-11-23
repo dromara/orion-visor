@@ -80,7 +80,7 @@
                         type="warning"
                         @ok="toggleRoleStatus(record)">
             <a-button v-permission="['infra:system-role:delete']"
-                      :disabled="record.code === AdminCode"
+                      :disabled="record.code === AdminRoleCode"
                       :status="toggleDictValue(roleStatusKey, record.status, 'status')"
                       type="text"
                       size="mini">
@@ -89,7 +89,7 @@
           </a-popconfirm>
           <!-- 分配菜单 -->
           <a-button v-permission="['infra:system-role:grant-menu']"
-                    :disabled="record.code === AdminCode"
+                    :disabled="record.code === AdminRoleCode"
                     type="text"
                     size="mini"
                     @click="emits('openGrant', record)">
@@ -108,7 +108,7 @@
                         type="warning"
                         @ok="deleteRow(record)">
             <a-button v-permission="['infra:system-role:delete']"
-                      :disabled="record.code === AdminCode"
+                      :disabled="record.code === AdminRoleCode"
                       type="text"
                       size="mini"
                       status="danger">
@@ -134,9 +134,10 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { roleStatusKey, AdminCode } from '../types/const';
+  import { roleStatusKey } from '../types/const';
   import { usePagination } from '@/types/table';
   import { useDictStore } from '@/store';
+  import { AdminRoleCode } from '@/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 

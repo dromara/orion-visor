@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
 import { useMenuStore, useUserStore } from '@/store';
 import { STATUS_ROUTER_LIST, WHITE_ROUTER_LIST } from '@/router/constants';
+import { AdminRoleCode } from '@/types/const';
 
 export default function usePermission() {
   const menuStore = useMenuStore();
@@ -50,7 +51,7 @@ export default function usePermission() {
      * 是否有角色
      */
     hasRole(role: string) {
-      return userStore.roles?.includes('admin') ||
+      return userStore.roles?.includes(AdminRoleCode) ||
         userStore.roles?.includes(role);
     },
 
@@ -58,7 +59,7 @@ export default function usePermission() {
      * 是否有角色
      */
     hasAnyRole(role: string[]) {
-      return userStore.roles?.includes('admin') ||
+      return userStore.roles?.includes(AdminRoleCode) ||
         role.map(s => userStore.roles?.includes(s))
         .filter(Boolean).length > 0;
     }
