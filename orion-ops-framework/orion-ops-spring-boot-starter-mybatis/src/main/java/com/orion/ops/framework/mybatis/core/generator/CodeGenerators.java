@@ -27,7 +27,7 @@ public class CodeGenerators {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "infra";
+        String module = "asset";
         // 生成的表
         Table[] tables = {
                 // Template.create("dict_key", "字典配置项", "dict")
@@ -45,9 +45,24 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("data_permission", "数据权限", "data")
-                        .enableProviderApi()
+                Template.create("code_snippet", "代码片段", "snippet")
                         .disableUnitTest()
+                        .cache("code:snippet:{}", "代码片段")
+                        .expire(1, TimeUnit.DAYS)
+                        .vue("asset", "snippet")
+                        .enableCardView()
+                        .enableDrawerForm()
+                        .dict("codeSnippetType", "type")
+                        .comment("代码片段类型")
+                        .fields("COMMAND", "TEMPLATE")
+                        .labels("命令", "模板")
+                        .extra("icon", "icon-code-block", "icon-code")
+                        .valueUseFields()
+                        .dict("codeSnippetRender", "prepare_render")
+                        .comment("是否使用脚本渲染")
+                        .fields("UN_RENDER", "RENDER")
+                        .labels("不渲染", "渲染")
+                        .values(0, 1)
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

@@ -41,9 +41,9 @@ public class AppPreferenceModel implements PreferenceModel {
     private Integer menuWidth;
 
     @Schema(description = "表格默认页数")
-    private Integer defaultPageSize;
+    private Integer defaultTablePageSize;
 
     @Schema(description = "卡片默认页数")
-    private Integer defaultCardSize;
+    private Integer defaultCardPageSize;
 
 }

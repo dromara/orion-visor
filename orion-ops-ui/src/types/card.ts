@@ -3,6 +3,7 @@ import type { VNodeChild } from 'vue';
 import { reactive } from 'vue';
 import { useAppStore } from '@/store';
 import { isNumber } from '@/utils/is';
+import { CardPageSizeOptions } from '@/types/const';
 
 /**
  * 字段对齐方式
@@ -110,9 +111,9 @@ export const usePagination = (): PaginationProps => {
   return reactive({
     total: 0,
     current: 1,
-    pageSize: isNumber(appStore.defaultCardSize) ? appStore.defaultCardSize : 12,
+    pageSize: isNumber(appStore.defaultCardPageSize) ? appStore.defaultCardPageSize : CardPageSizeOptions[0],
     showTotal: true,
     showPageSize: true,
-    pageSizeOptions: [12, 18, 36, 48, 96]
+    pageSizeOptions: CardPageSizeOptions
   });
 };

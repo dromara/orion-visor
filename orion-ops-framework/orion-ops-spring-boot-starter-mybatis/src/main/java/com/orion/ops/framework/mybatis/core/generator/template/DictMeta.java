@@ -16,6 +16,17 @@ import java.util.Map;
 @Data
 public class DictMeta {
 
+    //      // $comment
+    //      export const $field = {
+    //        // labels[0]
+    //        fields[0]: 'values[0]',
+    //        // labels[1]
+    //        fields[0]: 'values[1]',
+    //      };
+    //
+    //      // $comment 字典项
+    //      export const $keyField = '$keyName';
+
     /**
      * 字典配置名称
      */

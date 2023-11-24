@@ -36,8 +36,8 @@ export interface UserPreferenceLayout {
  * 用户偏好 - 数据设置
  */
 export interface UserPreferenceData {
-  defaultPageSize: number;
-  defaultCardSize: number;
+  defaultTablePageSize: number;
+  defaultCardPageSize: number;
 }
 
 /**

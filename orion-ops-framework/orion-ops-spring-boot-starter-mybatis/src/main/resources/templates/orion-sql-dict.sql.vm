@@ -42,7 +42,7 @@ VALUES
 #set($count = $enumEntity.value.fields.size() - 1)
 #foreach($index in [0..$count])
 #set($sort = $index * 10 + 10)
-  (@TMP_KEY_ID, '$enumEntity.value.keyName', '$enumEntity.value.values.get($index)', '$enumEntity.value.labels.get($index)', '$enumEntity.value.extraJson.get($index)', $sort, now(), now(), '1', '1', 0)#if($foreach.hasNext),#else;#end
+  (@TMP_KEY_ID, '$enumEntity.value.keyName', '$enumEntity.value.values.get($index)', '$enumEntity.value.labels.get($index)', #if($enumEntity.value.extraJson.size() > $index)'$enumEntity.value.extraJson.get($index)'#else'{}'#end, $sort, now(), now(), '1', '1', 0)#if($foreach.hasNext),#else;#end
 #end
 
 #end

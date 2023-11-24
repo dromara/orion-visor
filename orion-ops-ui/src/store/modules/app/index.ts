@@ -1,5 +1,6 @@
 import type { AppState } from './types';
 import { defineStore } from 'pinia';
+import { CardPageSizeOptions, TablePageSizeOptions } from '@/types/const';
 
 const defaultConfig: AppState = {
   // 应用设置
@@ -16,8 +17,8 @@ const defaultConfig: AppState = {
   menuWidth: 220,
   colorWeak: false,
   // 用户偏好-数据设置
-  defaultPageSize: 10,
-  defaultCardSize: 12,
+  defaultTablePageSize: TablePageSizeOptions[0],
+  defaultCardPageSize: CardPageSizeOptions[0],
   // 用户偏好-页面视图
   hostView: 'table',
   hostKeyView: 'table',

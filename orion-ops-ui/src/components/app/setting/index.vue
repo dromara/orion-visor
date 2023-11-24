@@ -26,8 +26,7 @@
   import { useAppStore } from '@/store';
   import Block from './block.vue';
   import useVisible from '@/hooks/visible';
-  import { usePagination as useTablePagination } from '@/types/table';
-  import { usePagination as useCardPagination } from '@/types/card';
+  import { CardPageSizeOptions, TablePageSizeOptions } from '@/types/const';
 
   const appStore = useAppStore();
   const { visible, setVisible } = useVisible();
@@ -82,11 +81,11 @@
   const dataOpts = computed(() => [
     {
       name: '表格默认页数',
-      key: 'defaultPageSize',
+      key: 'defaultTablePageSize',
       type: 'select',
       margin: '0 0 4px 0',
-      defaultVal: appStore.defaultPageSize,
-      options: (useTablePagination().pageSizeOptions || []).map(s => {
+      defaultVal: appStore.defaultTablePageSize,
+      options: TablePageSizeOptions.map(s => {
         return {
           value: s,
           label: `${s} 条/页`
@@ -95,10 +94,10 @@
     },
     {
       name: '卡片默认页数',
-      key: 'defaultCardSize',
+      key: 'defaultCardPageSize',
       type: 'select',
-      defaultVal: appStore.defaultCardSize,
-      options: (useCardPagination().pageSizeOptions || []).map(s => {
+      defaultVal: appStore.defaultCardPageSize,
+      options: CardPageSizeOptions.map(s => {
         return {
           value: s,
           label: `${s} 条/页`

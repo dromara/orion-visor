@@ -2,6 +2,7 @@ import type { PaginationProps, TableRowSelection } from '@arco-design/web-vue';
 import { reactive } from 'vue';
 import { useAppStore } from '@/store';
 import { isNumber } from '@/utils/is';
+import { TablePageSizeOptions } from '@/types/const';
 
 /**
  * 创建列表分页
@@ -11,10 +12,10 @@ export const usePagination = (): PaginationProps => {
   return reactive({
     total: 0,
     current: 1,
-    pageSize: isNumber(appStore.defaultPageSize) ? appStore.defaultPageSize : 12,
+    pageSize: isNumber(appStore.defaultTablePageSize) ? appStore.defaultTablePageSize : TablePageSizeOptions[0],
     showTotal: true,
     showPageSize: true,
-    pageSizeOptions: [10, 20, 30, 50, 100]
+    pageSizeOptions: TablePageSizeOptions
   });
 };
 
