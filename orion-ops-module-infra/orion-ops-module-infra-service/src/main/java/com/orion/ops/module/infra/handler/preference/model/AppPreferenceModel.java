@@ -38,6 +38,12 @@ public class AppPreferenceModel implements PreferenceModel {
     private Boolean colorWeak;
 
     @Schema(description = "菜单宽度")
-    private Number menuWidth;
+    private Integer menuWidth;
+
+    @Schema(description = "表格默认页数")
+    private Integer defaultPageSize;
+
+    @Schema(description = "卡片默认页数")
+    private Integer defaultCardSize;
 
 }

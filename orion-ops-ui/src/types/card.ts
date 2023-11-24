@@ -1,6 +1,8 @@
 import type { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
 import type { VNodeChild } from 'vue';
 import { reactive } from 'vue';
+import { useAppStore } from '@/store';
+import { isNumber } from '@/utils/is';
 
 /**
  * 字段对齐方式
@@ -104,10 +106,11 @@ export const useColLayout = (): ColResponsiveValue => {
  * 创建创建卡片列表分页
  */
 export const usePagination = (): PaginationProps => {
+  const appStore = useAppStore();
   return reactive({
     total: 0,
     current: 1,
-    pageSize: 18,
+    pageSize: isNumber(appStore.defaultCardSize) ? appStore.defaultCardSize : 12,
     showTotal: true,
     showPageSize: true,
     pageSizeOptions: [12, 18, 36, 48, 96]

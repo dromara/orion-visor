@@ -437,7 +437,6 @@
   }
 
   .filter-bottom-container {
-    padding-top: 14px;
     display: flex;
     justify-content: flex-end;
   }

@@ -16,7 +16,7 @@
     <!-- 过滤条件 -->
     <template #filterContent>
       <a-form :model="formModel"
-              class="modal-form"
+              class="card-filter-form"
               size="small"
               ref="formRef"
               label-align="right"

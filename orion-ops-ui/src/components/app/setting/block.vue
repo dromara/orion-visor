@@ -2,7 +2,9 @@
   <div class="block">
     <h5 class="title">{{ title }}</h5>
     <template v-for="option in options" :key="option.name">
-      <div class="option-wrapper" v-permission="option.permission || []">
+      <div class="option-wrapper"
+           v-permission="option.permission || []"
+           :style="{ 'margin': option.margin || '' }">
         <!-- 偏好项 -->
         <span>{{ option.name }}</span>
         <!-- 偏好值 -->
@@ -19,6 +21,7 @@
 <script lang="ts" setup>
   import type { PropType } from 'vue';
   import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
+  import type { SelectOption } from '@arco-design/web-vue/es/select/interface';
   import { useAppStore } from '@/store';
   import FormWrapper from './form-wrapper.vue';
   import { updatePreferencePartial } from '@/api/user/preference';
@@ -30,7 +33,8 @@
     type?: string;
     permission?: string[];
     defaultVal?: boolean | string | number;
-    options?: Array<RadioOption>;
+    options?: Array<RadioOption | SelectOption>;
+    margin?: string;
   }
 
   defineProps({

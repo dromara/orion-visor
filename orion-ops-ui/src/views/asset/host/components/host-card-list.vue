@@ -16,7 +16,7 @@
     <!-- 过滤条件 -->
     <template #filterContent>
       <a-form :model="formModel"
-              class="modal-form"
+              class="card-filter-form"
               size="small"
               ref="formRef"
               label-align="right"
@@ -177,7 +177,7 @@
 
   // 条件数量
   const filterCount = computed(() => {
-    return objectTruthKeyCount(formModel, ['searchValue', 'extra']);
+    return objectTruthKeyCount(formModel, ['searchValue', 'queryTag']);
   });
 
   // 删除当前行

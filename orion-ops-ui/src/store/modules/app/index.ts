@@ -15,6 +15,9 @@ const defaultConfig: AppState = {
   tabBar: true,
   menuWidth: 220,
   colorWeak: false,
+  // 用户偏好-数据设置
+  defaultPageSize: 10,
+  defaultCardSize: 12,
   // 用户偏好-页面视图
   hostView: 'table',
   hostKeyView: 'table',

@@ -23,6 +23,8 @@ public class SystemPreferenceStrategy implements IPreferenceStrategy<AppPreferen
                 .tabBar(true)
                 .menuWidth(220)
                 .colorWeak(false)
+                .defaultPageSize(10)
+                .defaultCardSize(12)
                 .build();
     }
 

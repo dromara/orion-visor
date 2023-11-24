@@ -30,6 +30,9 @@
                   type="primary"
                   @click="save">
           保存
+          <template #icon>
+            <icon-check />
+          </template>
         </a-button>
       </div>
       <!-- 主题部分 -->

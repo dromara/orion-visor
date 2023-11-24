@@ -5,7 +5,7 @@ type ViewType = 'table' | 'card' | undefined;
 /**
  * 应用状态
  */
-export interface AppState extends AppSetting, UserPreferenceLayout, UserPreferenceViews {
+export interface AppState extends AppSetting, UserPreferenceLayout, UserPreferenceData, UserPreferenceViews {
   [key: string]: unknown;
 }
 
@@ -30,6 +30,14 @@ export interface UserPreferenceLayout {
   tabBar: boolean;
   menuWidth: number;
   colorWeak: boolean;
+}
+
+/**
+ * 用户偏好 - 数据设置
+ */
+export interface UserPreferenceData {
+  defaultPageSize: number;
+  defaultCardSize: number;
 }
 
 /**

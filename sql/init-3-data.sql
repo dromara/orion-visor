@@ -56,8 +56,8 @@ INSERT INTO `system_menu` VALUES (80, 79, '查询主机秘钥', 'asset:host-key:
 INSERT INTO `system_menu` VALUES (81, 79, '创建主机秘钥', 'asset:host-key:create', 3, 20, 1, 1, 1, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (82, 79, '修改主机秘钥', 'asset:host-key:update', 3, 30, 1, 1, 1, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (83, 79, '删除主机秘钥', 'asset:host-key:delete', 3, 40, 1, 1, 1, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', NULL, '1', 0);
-INSERT INTO `system_menu` VALUES (84, 79, '查询主机秘钥详情', 'asset:host-key:detail', 3, 50, 1, 1, 1, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', NULL, '1', 0);
-INSERT INTO `system_menu` VALUES (94, 5, '个人中心', NULL, 2, 20, 0, 1, 1, NULL, NULL, 'userMine', '2023-10-08 18:53:01', '2023-10-27 12:27:10', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (84, 79, '查询主机秘钥详情', 'asset:host-key:query-detail', 3, 50, 1, 1, 1, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-11-09 15:52:57', NULL, '1', 0);
+INSERT INTO `system_menu` VALUES (94, 5, '个人中心', NULL, 2, 20, 0, 1, 0, 'IconUser', NULL, 'userInfo', '2023-10-08 18:53:01', '2023-11-02 11:47:34', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (97, 12, '数据字典项', NULL, 2, 20, 1, 1, 1, 'IconBook', NULL, 'systemDictKey', '2023-10-17 11:38:13', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (99, 97, '创建字典配置项', 'infra:dict-key:create', 3, 110, 1, 1, 1, NULL, NULL, NULL, '2023-10-17 11:38:13', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (100, 97, '修改字典配置项', 'infra:dict-key:update', 3, 120, 1, 1, 1, NULL, NULL, NULL, '2023-10-17 11:38:13', '2023-10-27 01:16:10', NULL, '1', 0);
@@ -69,6 +69,18 @@ INSERT INTO `system_menu` VALUES (108, 105, '修改字典配置值', 'infra:dict
 INSERT INTO `system_menu` VALUES (109, 105, '删除字典配置值', 'infra:dict-value:delete', 3, 240, 1, 1, 1, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (120, 97, '查询字典配置项', 'infra:dict-key:create', 3, 100, 1, 1, 1, NULL, NULL, NULL, '2023-10-20 11:27:12', '2023-10-27 01:16:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (121, 97, '刷新缓存', 'infra:dict-key:refresh-cache', 3, 140, 1, 1, 1, NULL, NULL, NULL, '2023-10-27 15:50:04', '2023-10-27 15:54:36', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (122, 5, '操作日志', NULL, 2, 30, 1, 1, 1, 'IconCalendarClock', NULL, 'userOperatorLog', '2023-11-01 14:09:36', '2023-11-01 14:09:36', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (123, 122, '查询操作日志', 'infra:operator-log:query', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-11-02 11:22:54', '2023-11-02 11:22:54', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (124, 48, '查询用户会话', 'infra:system-user:query-session', 3, 50, 1, 1, 1, NULL, NULL, NULL, '2023-11-02 11:24:14', '2023-11-02 11:24:14', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (125, 48, '下线用户会话', 'infra:system-user:offline-session', 3, 60, 1, 1, 1, NULL, NULL, NULL, '2023-11-02 11:24:37', '2023-11-02 11:24:37', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (126, 63, '主机分组', NULL, 2, 30, 1, 1, 1, 'icon-layers', NULL, 'assetHostGroup', '2023-11-09 17:42:04', '2023-11-09 17:42:04', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (127, 126, '创建主机分组', 'asset:host-group:create', 3, 10, 1, 1, 1, NULL, NULL, NULL, '2023-11-13 18:15:49', '2023-11-13 18:16:18', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (128, 126, '查询主机分组', 'asset:host-group:query', 3, 20, 1, 1, 1, NULL, NULL, NULL, '2023-11-13 18:16:12', '2023-11-13 18:16:12', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (129, 126, '更新主机分组', 'asset:host-group:update', 3, 30, 1, 1, 1, NULL, NULL, NULL, '2023-11-13 18:16:32', '2023-11-13 18:16:32', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (130, 126, '删除主机分组', 'asset:host-group:delete', 3, 40, 1, 1, 1, NULL, NULL, NULL, '2023-11-13 18:16:44', '2023-11-13 18:16:44', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (131, 126, '查询分组主机', 'asset:host-group:query-rel', 3, 50, 1, 1, 1, NULL, NULL, NULL, '2023-11-13 23:49:31', '2023-11-14 15:35:27', '1', '1', 1);
+INSERT INTO `system_menu` VALUES (132, 126, '修改分组主机', 'asset:host-group:update-rel', 3, 60, 1, 1, 1, NULL, NULL, NULL, '2023-11-13 23:49:49', '2023-11-14 15:48:30', '1', '1', 1);
+INSERT INTO `system_menu` VALUES (133, 126, '主机分组授权', 'asset:host-group:grant', 3, 50, 1, 1, 1, NULL, NULL, NULL, '2023-11-23 18:08:57', '2023-11-23 18:08:57', '1', '1', 0);
 
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', '1', '1', 0);
@@ -81,6 +93,8 @@ INSERT INTO `dict_key` VALUES (8, 'dictValueType', 'STRING', '[{\"name\": \"colo
 INSERT INTO `dict_key` VALUES (9, 'systemUserStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '用户状态', '2023-10-27 12:10:41', '2023-10-27 12:10:41', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (10, 'systemRoleStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"status\", \"type\": \"STRING\"}]', '角色状态', '2023-10-27 12:33:04', '2023-10-27 12:33:17', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (11, 'hostAuthTypeType', 'STRING', '[]', '主机身份验证方式', '2023-10-27 14:29:12', '2023-10-27 14:29:12', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (15, 'operatorLogResult', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '操作日志结果', '2023-10-31 17:35:28', '2023-10-31 17:42:50', '2', '2', 0);
+INSERT INTO `dict_key` VALUES (16, 'operatorRiskLevel', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '操作风险等级', '2023-11-01 16:03:00', '2023-11-01 16:03:00', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -114,7 +128,7 @@ INSERT INTO `dict_value` VALUES (60, 1, 'operatorLogModule', 'infra:dict-value',
 INSERT INTO `dict_value` VALUES (61, 1, 'operatorLogModule', 'asset:host', '主机操作', '{}', 2000, '2023-10-31 10:48:16', '2023-10-31 10:53:54', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (62, 1, 'operatorLogModule', 'asset:host-key', '主机秘钥', '{}', 2020, '2023-10-31 10:48:17', '2023-10-31 10:54:34', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (63, 1, 'operatorLogModule', 'asset:host-identity', '主机身份', '{}', 2030, '2023-10-31 10:48:19', '2023-10-31 10:54:26', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (64, 2, 'operatorLogType', 'authentication:login', '登录系统', '{}', 10, '2023-10-31 10:55:26', '2023-10-31 11:05:41', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (64, 2, 'operatorLogType', 'authentication:login', '登录系统', '{}', 10, '2023-10-31 10:55:26', '2023-10-31 18:41:40', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (65, 2, 'operatorLogType', 'authentication:logout', '登出系统', '{}', 20, '2023-10-31 10:55:27', '2023-10-31 11:05:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (66, 2, 'operatorLogType', 'authentication:update-password', '修改密码', '{}', 30, '2023-10-31 10:55:30', '2023-10-31 11:05:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (67, 2, 'operatorLogType', 'system-user:create', '创建用户', '{}', 10, '2023-10-31 10:55:42', '2023-10-31 11:05:41', '1', '1', 0);
@@ -149,3 +163,16 @@ INSERT INTO `dict_value` VALUES (95, 2, 'operatorLogType', 'host-key:delete', '�
 INSERT INTO `dict_value` VALUES (96, 2, 'operatorLogType', 'host-identity:create', '创建主机身份', '{}', 10, '2023-10-31 10:55:43', '2023-10-31 11:05:43', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (97, 2, 'operatorLogType', 'host-identity:update', '修改主机身份', '{}', 20, '2023-10-31 10:55:43', '2023-10-31 11:05:43', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (98, 2, 'operatorLogType', 'host-identity:delete', '删除主机身份', '{}', 30, '2023-10-31 10:55:43', '2023-10-31 11:05:43', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (101, 15, 'operatorLogResult', '0', '失败', '{\"color\": \"red\"}', 10, '2023-10-31 17:42:09', '2023-11-01 16:05:44', '2', '1', 0);
+INSERT INTO `dict_value` VALUES (102, 15, 'operatorLogResult', '1', '成功', '{\"color\": \"arcoblue\"}', 20, '2023-10-31 17:42:15', '2023-11-01 16:06:02', '2', '1', 0);
+INSERT INTO `dict_value` VALUES (103, 16, 'operatorRiskLevel', 'L', '低风险', '{\"color\": \"arcoblue\"}', 10, '2023-11-01 16:04:10', '2023-11-01 16:04:10', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (104, 16, 'operatorRiskLevel', 'M', '中风险', '{\"color\": \"orangered\"}', 20, '2023-11-01 16:04:24', '2023-11-01 16:04:24', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (105, 16, 'operatorRiskLevel', 'H', '高风险', '{\"color\": \"red\"}', 30, '2023-11-01 16:04:41', '2023-11-01 16:04:41', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (106, 2, 'operatorLogType', 'system-user:offline', '下线用户会话', '{}', 10, '2023-11-02 11:32:39', '2023-11-02 11:32:39', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (107, 1, 'operatorLogModule', 'asset:host-group', '主机分组', '{}', 10, '2023-11-13 18:26:13', '2023-11-13 18:26:13', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (108, 2, 'operatorLogType', 'host-group:create', '创建主机分组', '{}', 10, '2023-11-13 18:27:05', '2023-11-13 18:27:28', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (109, 2, 'operatorLogType', 'host-group:rename', '重命名主机分组', '{}', 20, '2023-11-13 18:27:51', '2023-11-13 18:27:51', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (110, 2, 'operatorLogType', 'host-group:move', '移动主机分组', '{}', 30, '2023-11-13 18:28:02', '2023-11-13 18:28:02', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (111, 2, 'operatorLogType', 'host-group:delete', '删除主机分组', '{}', 40, '2023-11-13 18:28:12', '2023-11-13 18:28:12', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (112, 2, 'operatorLogType', 'host-group:update-rel', '修改分组主机', '{}', 10, '2023-11-13 23:48:03', '2023-11-13 23:48:35', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (113, 2, 'operatorLogType', 'host-group:grant', '主机分组授权', '{}', 50, '2023-11-23 18:10:14', '2023-11-23 18:10:14', '1', '1', 0);
