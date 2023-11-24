@@ -21,7 +21,7 @@
         <!-- 提示信息 -->
         <a-alert class="alert-wrapper" :show-icon="false">
           <span v-if="currentRole">
-            当前选择的角色为 <span class="span-blue mr4">{{ currentRole.text }}</span>
+            当前选择的角色为 <span class="span-blue mr4">{{ currentRole?.text }}</span>
             <span class="span-blue ml4" v-if="currentRole.code === AdminRoleCode">管理员拥有全部权限, 无需配置</span>
           </span>
         </a-alert>
@@ -41,23 +41,12 @@
                            :draggable="false"
                            :loading="loading"
                            @loading="setLoading"
-                           @select-node="fetchGroupHost"
+                           @select-node="e => selectedGroup = e"
                            @update:checked-keys="updateCheckedGroups" />
         </div>
         <!-- 主机列表 -->
-        <div class="group-main-hosts">
-          <a-list size="smail" :title="'组内数据'" :split="false">
-            <a-list-item v-for="idx in 4" :key="idx">
-              <a-list-item-meta
-                title="host"
-              >
-                <template #avatar>
-                  <icon-desktop />
-                </template>
-              </a-list-item-meta>
-            </a-list-item>
-          </a-list>
-        </div>
+        <host-list class="group-main-hosts"
+                   :group="selectedGroup" />
       </div>
     </div>
   </a-spin>
@@ -71,13 +60,15 @@
 
 <script lang="ts" setup>
   import type { TabRouterItem } from '@/components/view/tab-router/types';
+  import type { TreeNodeData } from '@arco-design/web-vue';
   import { ref, onMounted, watch } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/host-group';
   import { AdminRoleCode } from '@/types/const';
-  import HostGroupTree from './host-group-tree.vue';
   import { Message } from '@arco-design/web-vue';
+  import HostGroupTree from './host-group-tree.vue';
+  import HostList from './host-list.vue';
 
   const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
@@ -87,6 +78,7 @@
   const rolesRouter = ref<Array<TabRouterItem>>([]);
   const authorizedGroups = ref<Array<number>>([]);
   const checkedGroups = ref<Array<number>>([]);
+  const selectedGroup = ref<TreeNodeData>({});
 
   // 监听角色变更 获取授权列表
   watch(roleId, async (value) => {
@@ -106,10 +98,6 @@
       setLoading(false);
     }
   });
-
-  // 加载组内数据
-  const fetchGroupHost = () => {
-  };
 
   // 选择分组
   const updateCheckedGroups = (e: Array<number>) => {
@@ -141,6 +129,7 @@
       };
     });
   });
+
 </script>
 
 <style lang="less" scoped>
@@ -173,7 +162,7 @@
         align-items: center;
 
         .alert-wrapper {
-          height: 32px;
+          padding: 4px 16px;
         }
 
         .save-button {
@@ -185,28 +174,19 @@
         display: flex;
 
         &-tree {
-          width: calc(100% - 240px - 16px);
+          width: calc(60% - 16px);
           margin-right: 16px;
         }
 
         &-hosts {
-          width: 240px;
+          width: 40%;
         }
       }
     }
-
   }
 
   :deep(.tab-item) {
     margin-left: 0;
   }
 
-  :deep(.arco-avatar-image) {
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFF;
-    background: rgb(var(--blue-6));
-  }
 </style>

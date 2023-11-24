@@ -37,7 +37,14 @@
         <TabBar v-if="appStore.tabBar" />
         <!-- 页面 -->
         <a-layout-content>
-          <PageLayout />
+          <!-- 水印 -->
+          <a-watermark :grayscale="true"
+                       :alpha=".6"
+                       :z-index="9999"
+                       style="width: 100%; height: 100%;"
+                       :content="userStore.username || ''">
+            <PageLayout />
+          </a-watermark>
         </a-layout-content>
         <!-- 页脚 -->
         <Footer v-if="footer" />
@@ -49,7 +56,7 @@
 <script lang="ts" setup>
   import { computed, onMounted, provide, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { useAppStore } from '@/store';
+  import { useAppStore, useUserStore } from '@/store';
   import Menu from '@/components/system/menu/tree/index.vue';
   import NavBar from '@/components/app/navbar/index.vue';
   import Footer from '@/components/app/footer/index.vue';
@@ -60,6 +67,7 @@
 
   const isInit = ref(false);
   const appStore = useAppStore();
+  const userStore = useUserStore();
   const router = useRouter();
   const route = useRoute();
   useResponsive(true);

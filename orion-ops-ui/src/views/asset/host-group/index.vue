@@ -129,6 +129,10 @@
     background: #FFF;
   }
 
+  :deep(.arco-tabs-tab-title){
+    user-select: none;
+  }
+
   :deep(.arco-tabs-content) {
     padding-top: 0;
   }

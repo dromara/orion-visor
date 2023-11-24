@@ -6,6 +6,7 @@
         <!-- FIXME -->
         <!-- LOGO -->
         <img alt="logo"
+             draggable="false"
              src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
         <!-- 标头 -->
         <a-typography-title :heading="5"
@@ -161,8 +162,9 @@
       <li>
         <a-dropdown trigger="click">
           <!-- 头像 -->
-          <a-avatar :size="32"
-                    :style="{ cursor: 'pointer', backgroundColor: '#3370ff' }">
+          <a-avatar draggable="false"
+                    :size="32"
+                    :style="{ cursor: 'pointer', backgroundColor: '#3370ff', userSelect: 'none' }">
             {{ nickname }}
           </a-avatar>
           <template #content>
@@ -316,6 +318,7 @@
   }
 
   .left-side {
+    user-select: none;
     display: flex;
     align-items: center;
     padding-left: 20px;
@@ -374,5 +377,4 @@
     display: flex;
     justify-content: flex-end;
   }
-
 </style>

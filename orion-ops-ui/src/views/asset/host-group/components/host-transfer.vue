@@ -161,7 +161,7 @@
       align-items: center;
 
       .alert-wrapper {
-        height: 32px;
+        padding: 4px 16px;
       }
 
       .save-button {
