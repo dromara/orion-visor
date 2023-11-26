@@ -71,7 +71,7 @@
     display: flex;
     flex-direction: column;
     user-select: none;
-    background: #FFF;
+    background: var(--color-bg-1);
   }
 
   .tab-item {

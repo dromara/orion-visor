@@ -104,7 +104,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #FFF;
+      color: var(--color-white);
       background: rgb(var(--blue-6));
       margin-right: 8px;
       border-radius: 4px;

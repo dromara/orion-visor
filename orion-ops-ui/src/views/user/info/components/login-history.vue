@@ -124,9 +124,9 @@
     border-radius: 50%;
     width: 56px;
     height: 56px;
+    color: var(--color-white);
     background: var(--color-fill-4);
     font-size: 28px;
-    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,6 +140,10 @@
 
   :deep(.arco-timeline-item) {
     padding-bottom: 36px;
+
+    .arco-timeline-item-dot-custom {
+      background: unset;
+    }
   }
 
   .log-line {

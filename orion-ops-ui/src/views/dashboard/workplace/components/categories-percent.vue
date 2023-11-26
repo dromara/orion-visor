@@ -50,7 +50,7 @@
             style: {
               text: '内容量',
               textAlign: 'center',
-              fill: isDark ? '#ffffffb3' : '#4E5969',
+              fill: isDark ? '#FFFFFFB3' : '#4E5969',
               fontSize: 14,
             },
           },
@@ -61,7 +61,7 @@
             style: {
               text: '928,531',
               textAlign: 'center',
-              fill: isDark ? '#ffffffb3' : '#1D2129',
+              fill: isDark ? '#FFFFFFB3' : '#1D2129',
               fontSize: 16,
               fontWeight: 500,
             },
@@ -79,7 +79,7 @@
             color: isDark ? 'rgba(255, 255, 255, 0.7)' : '#4E5969',
           },
           itemStyle: {
-            borderColor: isDark ? '#232324' : '#fff',
+            borderColor: isDark ? '#232324' : '#FFF',
             borderWidth: 1,
           },
           data: [

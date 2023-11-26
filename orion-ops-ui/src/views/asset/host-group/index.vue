@@ -126,7 +126,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background: #FFF;
+    background: var(--color-bg-1);
   }
 
   :deep(.arco-tabs-tab-title){
