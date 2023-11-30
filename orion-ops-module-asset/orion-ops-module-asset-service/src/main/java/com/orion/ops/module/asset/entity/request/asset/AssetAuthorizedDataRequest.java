@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.entity.request.host;
+package com.orion.ops.module.asset.entity.request.asset;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -7,10 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * 主机分组 授权请求对象
+ * 授权资产数据 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,16 +19,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostGroupGrantRequest", description = "主机分组 授权请求对象")
-public class HostGroupGrantRequest implements Serializable {
+@Schema(name = "AssetAuthorizedDataRequest", description = "授权资产数据 查询请求对象")
+public class AssetAuthorizedDataRequest implements Serializable {
 
     @Schema(description = "用户id")
     private Long userId;
 
     @Schema(description = "角色id")
     private Long roleId;
-
-    @Schema(description = "分组id")
-    private List<Long> groupIdList;
 
 }

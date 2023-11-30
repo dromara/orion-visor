@@ -1,4 +1,0 @@
-### 查询已授权的主机分组
-GET {{baseUrl}}/asset/authorized-data/host-group
-Authorization: {{token}}
-

@@ -19,6 +19,16 @@ public enum DataPermissionTypeEnum {
      */
     HOST_GROUP(true),
 
+    /**
+     * 主机秘钥
+     */
+    HOST_KEY(true),
+
+    /**
+     * 主机身份
+     */
+    HOST_IDENTITY(true),
+
     ;
 
     /**

@@ -23,12 +23,15 @@ public class HostKeyOperatorType extends InitializingOperatorTypes {
 
     public static final String DELETE = "host-key:delete";
 
+    public static final String GRANT = "host-key:grant";
+
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(L, CREATE, "创建主机秘钥 <sb>${name}</sb>"),
                 new OperatorType(L, UPDATE, "修改主机秘钥 <sb>${name}</sb>"),
                 new OperatorType(H, DELETE, "删除主机秘钥 <sb>${name}</sb>"),
+                new OperatorType(H, GRANT, "将主机秘钥权限授予 <sb>${type}</sb> <sb>${name}</sb>"),
         };
     }
 

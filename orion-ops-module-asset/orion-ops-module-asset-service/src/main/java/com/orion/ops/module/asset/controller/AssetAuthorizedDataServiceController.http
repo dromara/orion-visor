@@ -1,0 +1,9 @@
+### 查询已授权的主机分组
+GET {{baseUrl}}/asset/authorized-data/host-group
+Authorization: {{token}}
+
+
+### 获取已授权的分组
+GET {{baseUrl}}/asset/authorized-data/get-authorized-group?userId=1
+Authorization: {{token}}
+

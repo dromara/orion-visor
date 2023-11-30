@@ -6,8 +6,6 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.HostGroupOperatorType;
-import com.orion.ops.module.asset.entity.request.host.HostGroupGrantQueryRequest;
-import com.orion.ops.module.asset.entity.request.host.HostGroupGrantRequest;
 import com.orion.ops.module.asset.entity.request.host.HostGroupRelUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
 import com.orion.ops.module.asset.service.HostGroupService;
@@ -100,23 +98,6 @@ public class HostGroupController {
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public HttpWrapper<?> updateHostGroupRel(@Validated @RequestBody HostGroupRelUpdateRequest request) {
         hostGroupService.updateHostGroupRel(request);
-        return HttpWrapper.ok();
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/get-authorized-group")
-    @Operation(summary = "获取已授权的分组")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:grant')")
-    public List<Long> getAuthorizedHostGroup(HostGroupGrantQueryRequest request) {
-        return hostGroupService.getAuthorizedHostGroup(request);
-    }
-
-    @OperatorLog(HostGroupOperatorType.GRANT)
-    @PutMapping("/grant")
-    @Operation(summary = "主机分组授权")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:grant')")
-    public HttpWrapper<?> grantHostGroup(@RequestBody HostGroupGrantRequest request) {
-        hostGroupService.grantHostGroup(request);
         return HttpWrapper.ok();
     }
 

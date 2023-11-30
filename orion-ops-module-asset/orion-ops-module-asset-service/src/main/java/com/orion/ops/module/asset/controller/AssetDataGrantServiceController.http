@@ -1,0 +1,38 @@
+### 主机分组授权
+PUT {{baseUrl}}/asset/data-grant/host-group
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "idList": [
+    3,
+    5
+  ]
+}
+
+### 主机秘钥授权
+PUT {{baseUrl}}/asset/data-grant/host-key
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "idList": [
+    3,
+    5
+  ]
+}
+
+### 主机身份授权
+PUT {{baseUrl}}/asset/data-grant/host-identity
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "idList": [
+    3,
+    5
+  ]
+}

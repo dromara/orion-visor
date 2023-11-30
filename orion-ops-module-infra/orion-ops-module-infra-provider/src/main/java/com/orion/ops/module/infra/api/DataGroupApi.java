@@ -59,6 +59,14 @@ public interface DataGroupApi {
     List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type);
 
     /**
+     * 通过 id 查询
+     *
+     * @param idList idList
+     * @return rows
+     */
+    List<DataGroupDTO> getByIdList(List<Long> idList);
+
+    /**
      * 删除数据分组
      *
      * @param id id
