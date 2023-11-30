@@ -60,7 +60,7 @@
                   <span>{{ record.increases }}%</span>
                   <icon-caret-up
                     v-if="record.increases !== 0"
-                    style="color: #f53f3f; font-size: 8px"
+                    style="color: #F53F3F; font-size: 8px"
                   />
                 </div>
               </template>

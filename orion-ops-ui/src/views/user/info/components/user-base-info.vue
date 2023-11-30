@@ -4,7 +4,7 @@
     <div class="avatar-container">
       <div class="avatar-wrapper">
         <a-avatar :size="88"
-                  :style="{ backgroundColor: '#3370ff' }">
+                  :style="{ backgroundColor: 'rgb(var(--primary-6))' }">
           {{ nickname }}
         </a-avatar>
       </div>

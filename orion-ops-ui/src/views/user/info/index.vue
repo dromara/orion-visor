@@ -102,7 +102,7 @@
 
 <style lang="less" scoped>
   .tabs-container {
-    background: #FFFFFF;
+    background: var(--color-bg-1);
     margin: 16px 16px 0 16px;
     padding: 16px;
     display: flex;

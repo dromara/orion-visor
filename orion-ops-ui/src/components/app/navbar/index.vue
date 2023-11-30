@@ -164,7 +164,7 @@
           <!-- 头像 -->
           <a-avatar draggable="false"
                     :size="32"
-                    :style="{ cursor: 'pointer', backgroundColor: '#3370ff', userSelect: 'none' }">
+                    :style="{ cursor: 'pointer', backgroundColor: 'rgb(var(--primary-6))', userSelect: 'none' }">
             {{ nickname }}
           </a-avatar>
           <template #content>
