@@ -3,21 +3,13 @@
     <a-tabs v-if="render"
             class="tabs-container"
             position="left"
+            type="rounded"
+            size="large"
             :destroy-on-hide="true"
             :justify="true"
             :lazy-load="true">
-      <!-- 左侧导航 -->
-      <a-tab-pane :key="1"
-                  title="分组配置"
-                  v-permission="['asset:host-group:query']">
-        <host-group-view-setting />
-        <template #title>
-          <icon-unordered-list />
-
-        </template>
-      </a-tab-pane>
       <!-- 角色分配 -->
-      <a-tab-pane :key="2" v-permission="['asset:host-group:grant']">
+      <a-tab-pane :key="1" v-permission="['asset:host-group:grant']">
         <host-group-view-role-grant />
         <template #title>
           <icon-safe />
@@ -25,7 +17,7 @@
         </template>
       </a-tab-pane>
       <!-- 用户分配 -->
-      <a-tab-pane :key="3" v-permission="['asset:host-group:grant']">
+      <a-tab-pane :key="2" v-permission="['asset:host-group:grant']">
         <host-group-view-user-grant />
         <template #title>
           <icon-user />
@@ -47,7 +39,6 @@
   import { useCacheStore } from '@/store';
   import { getHostList } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupViewSetting from './components/host-group-view-setting.vue';
   import HostGroupViewRoleGrant from './components/host-group-view-role-grant.vue';
   import HostGroupViewUserGrant from './components/host-group-view-user-grant.vue';
   import { getUserList } from '@/api/user/user';
@@ -124,18 +115,20 @@
 
   .tabs-container {
     display: flex;
-    width: 100%;
-    height: 100%;
-    position: relative;
+    width: calc(100% - 32px);
+    max-height: calc(100% - 32px);
+    position: absolute;
     background: var(--color-bg-2);
+    padding: 16px;
+  }
+
+  :deep(.arco-tabs-nav-tab) {
+    border-right: 1px var(--color-neutral-3) solid;
+    padding-right: 16px;
   }
 
   :deep(.arco-tabs-tab-title) {
     user-select: none;
-  }
-
-  :deep(.arco-tabs-content) {
-    padding-top: 0;
   }
 
   :deep(.arco-tabs-content) {

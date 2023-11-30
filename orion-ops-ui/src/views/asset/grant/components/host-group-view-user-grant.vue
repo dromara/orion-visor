@@ -136,7 +136,6 @@
 <style lang="less" scoped>
   .grant-container {
     width: 100%;
-    padding: 16px;
     display: flex;
 
     .user-container {
