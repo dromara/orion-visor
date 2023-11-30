@@ -17,7 +17,7 @@
     </template>
     <a-spin :loading="loading" class="host-config-container">
       <!-- SSH 配置 -->
-      <host-config-ssh-form :content="config.SSH" @submitted="(e) => config.SSH.config = e" />
+      <ssh-config-form :content="config.SSH" @submitted="(e) => config.SSH.config = e" />
     </a-spin>
   </a-drawer>
 </template>
@@ -29,16 +29,16 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostConfigWrapper } from '../../types/const';
   import { ref, onBeforeMount } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import { getHostConfigAll } from '@/api/asset/host';
-  import HostConfigSshForm from './host-config-ssh-form.vue';
   import { useCacheStore } from '@/store';
   import { getHostKeyList } from '@/api/asset/host-key';
   import { getHostIdentityList } from '@/api/asset/host-identity';
-  import { HostConfigWrapper } from '@/views/asset/host/types/host-config.types';
+  import SshConfigForm from './ssh/ssh-config-form.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

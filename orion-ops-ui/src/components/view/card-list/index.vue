@@ -26,8 +26,8 @@
             <a-space>
               <!-- 创建 -->
               <div v-permission="addPermission"
-                   v-show="!handleVisible.disableAdd"
-                   class="click-icon-wrapper header-icon-wrapper"
+                   v-if="!handleVisible.disableAdd"
+                   class="click-icon-wrapper card-header-icon-wrapper"
                    title="创建"
                    @click="emits('add')">
                 <icon-plus />
@@ -57,7 +57,7 @@
               <a-popover position="br" trigger="click" content-class="card-filter-wrapper">
                 <div v-if="!handleVisible.disableFilter"
                      ref="filterRef"
-                     class="click-icon-wrapper header-icon-wrapper"
+                     class="click-icon-wrapper card-header-icon-wrapper"
                      title="选择过滤条件">
                   <a-badge :count="filterCount" :dot-style="{zoom: '.75'}" :offset="[9, -6]">
                     <icon-filter />
@@ -77,14 +77,14 @@
               </a-popover>
               <!-- 搜索 -->
               <div v-if="!handleVisible.disableSearch"
-                   class="click-icon-wrapper header-icon-wrapper"
+                   class="click-icon-wrapper card-header-icon-wrapper"
                    title="搜索"
                    @click="emits('search')">
                 <icon-search />
               </div>
               <!-- 重置 -->
               <div v-if="!handleVisible.disableReset"
-                   class="click-icon-wrapper header-icon-wrapper"
+                   class="click-icon-wrapper card-header-icon-wrapper"
                    title="重置"
                    @click="emits('reset')">
                 <icon-refresh />
@@ -377,6 +377,8 @@
       margin: -16px -16px 0 -16px;
       padding: 16px 16px 12px 16px;
       position: fixed;
+      // FIXME 颜色不对   文件拆了
+      background: var(--color-fill-2);
       z-index: 999;
       height: @top-height;
       transition: none;
@@ -428,11 +430,6 @@
         align-items: center;
       }
     }
-  }
-
-  .header-icon-wrapper {
-    height: 27px;
-    padding: 6px;
   }
 
   .filter-bottom-container {

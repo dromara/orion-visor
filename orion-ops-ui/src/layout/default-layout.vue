@@ -36,7 +36,7 @@
         <!-- 页签 -->
         <TabBar v-if="appStore.tabBar" />
         <!-- 页面 -->
-        <a-layout-content>
+        <a-layout-content style="height: 100%; width: 100%;">
           <!-- 水印 -->
           <a-watermark :grayscale="true"
                        :alpha=".6"
@@ -47,7 +47,7 @@
           </a-watermark>
         </a-layout-content>
         <!-- 页脚 -->
-        <Footer v-if="footer" />
+        <Footer v-if="visibleFooter" />
       </a-layout>
     </a-layout>
   </a-layout>
@@ -75,7 +75,7 @@
   const navbar = computed(() => appStore.navbar);
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
   const hideMenu = computed(() => appStore.hideMenu);
-  const footer = computed(() => appStore.footer);
+  const visibleFooter = computed(() => appStore.footer);
   const menuWidth = computed(() => {
     return appStore.menuCollapse ? 48 : appStore.menuWidth;
   });

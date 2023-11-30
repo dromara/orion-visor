@@ -3,47 +3,53 @@
     <!-- 列表-表格 -->
     <host-table v-if="renderTable"
                 ref="table"
+                @openHostGroup="() => hostGroup.open()"
                 @openAdd="() => modal.openAdd()"
                 @openUpdate="(e) => modal.openUpdate(e.id)"
-                @openUpdateConfig="(e) => config.open(e)" />
+                @openUpdateConfig="(e) => hostConfig.open(e)" />
     <!-- 列表-卡片 -->
     <host-card-list v-else
                     ref="card"
+                    @openHostGroup="() => hostGroup.open()"
                     @openAdd="() => modal.openAdd()"
                     @openUpdate="(e) => modal.openUpdate(e.id)"
-                    @openUpdateConfig="(e) => config.open(e)" />
+                    @openUpdateConfig="(e) => hostConfig.open(e)" />
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
                      @added="modalAddCallback"
                      @updated="modalUpdateCallback" />
     <!-- 配置面板 -->
-    <host-config-drawer ref="config" />
+    <host-config-drawer ref="hostConfig" />
+    <!-- 分组配置 -->
+    <host-group-drawer ref="hostGroup" />
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'assetHost'
+    name: 'assetHostList'
   };
 </script>
 
 <script lang="ts" setup>
-  import HostTable from './components/host-table.vue';
-  import HostCardList from '@/views/asset/host/components/host-card-list.vue';
-  import HostFormModal from './components/host-form-modal.vue';
-  import HostConfigDrawer from '@/views/asset/host/components/host-config-drawer.vue';
+  import { computed, ref, onBeforeMount, onUnmounted } from 'vue';
+  import { useAppStore, useCacheStore, useDictStore } from '@/store';
   import { getTagList } from '@/api/meta/tag';
   import { dictKeys } from './types/const';
   import { Message } from '@arco-design/web-vue';
-
-  import { computed, ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useAppStore, useCacheStore, useDictStore } from '@/store';
+  import HostTable from './components/host-table.vue';
+  import HostCardList from './components/host-card-list.vue';
+  import HostFormModal from './components/host-form-modal.vue';
+  import HostConfigDrawer from './components/config/host-config-drawer.vue';
+  import HostGroupDrawer from './components/group/host-group-drawer.vue';
 
   const render = ref(false);
   const table = ref();
   const card = ref();
   const modal = ref();
-  const config = ref();
+  const hostConfig = ref();
+  const hostGroup = ref();
+
   const appStore = useAppStore();
   const cacheStore = useCacheStore();
 
@@ -89,7 +95,7 @@
 
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('hostTags', 'hostKeys', 'hostIdentities', 'hostGroups');
+    cacheStore.reset('hosts', 'hostTags', 'hostKeys', 'hostIdentities', 'hostGroups');
   });
 
 </script>

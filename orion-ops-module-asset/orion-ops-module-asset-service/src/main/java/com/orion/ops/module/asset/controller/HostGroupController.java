@@ -46,7 +46,7 @@ public class HostGroupController {
     @OperatorLog(HostGroupOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机分组")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:create')")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Long createHostGroup(@Validated @RequestBody DataGroupCreateDTO request) {
         return hostGroupService.createHostGroup(request);
     }
@@ -54,7 +54,7 @@ public class HostGroupController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/tree")
     @Operation(summary = "查询主机分组")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public List<HostGroupTreeVO> queryHostGroupTree() {
         return hostGroupService.queryHostGroupTree();
     }
@@ -78,7 +78,7 @@ public class HostGroupController {
     @OperatorLog(HostGroupOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除主机分组")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:delete')")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Integer deleteHostGroup(@RequestParam("id") Long id) {
         return hostGroupService.deleteHostGroup(id);
     }
@@ -87,7 +87,7 @@ public class HostGroupController {
     @GetMapping("/rel-list")
     @Operation(summary = "查询分组内主机")
     @Parameter(name = "groupId", description = "groupId", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-group:query')")
+    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
     public Set<Long> queryHostGroupRel(@RequestParam("groupId") Long groupId) {
         return hostGroupService.queryHostGroupRel(groupId);
     }

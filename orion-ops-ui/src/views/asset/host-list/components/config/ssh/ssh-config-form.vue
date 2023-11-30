@@ -1,6 +1,6 @@
 <template>
   <a-card class="general-card"
-          :body-style="{padding: config.status === 1 ? '' : '0'}">
+          :body-style="{ padding: config.status === 1 ? '' : '0' }">
     <!-- 标题 -->
     <template #title>
       <div class="config-title-wrapper">
@@ -20,7 +20,7 @@
               label-align="right"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
-              :rules="sshRules">
+              :rules="rules">
         <!-- 用户名 -->
         <a-form-item field="username"
                      label="用户名"
@@ -133,22 +133,22 @@
 
 <script lang="ts">
   export default {
-    name: 'host-config-ssh-form'
+    name: 'ssh-config-form'
   };
 </script>
 
 <script lang="ts" setup>
   import type { FieldRule } from '@arco-design/web-vue';
-  import type { HostSshConfig } from '../types/host-config.types';
+  import type { HostSshConfig } from './types/const';
   import { ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host';
-  import { authTypeKey, AuthType } from '../types/const';
-  import { sshRules } from '../types/host-config.form.rules';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
-  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
+  import { authTypeKey, AuthType } from './types/const';
+  import rules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
+  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();

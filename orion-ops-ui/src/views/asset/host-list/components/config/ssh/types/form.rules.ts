@@ -59,7 +59,7 @@ export const fileContentCharset = [{
   message: '文件内容编码长度不能超过12位'
 }] as FieldRule[];
 
-export const sshRules = {
+export default {
   port,
   authType,
   keyId,

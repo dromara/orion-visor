@@ -62,6 +62,15 @@
               </a-tag>
             </template>
           </a-checkbox>
+          <!-- 主机分组 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-group:update']"
+                    @click="emits('openHostGroup')">
+            主机分组
+            <template #icon>
+              <icon-layers />
+            </template>
+          </a-button>
           <!-- 新增 -->
           <a-button type="primary"
                     v-permission="['asset:host:create']"
@@ -178,7 +187,7 @@
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
   const { copy } = useCopy();
   const { toggle: toggleFavorite } = useFavorite('HOST');

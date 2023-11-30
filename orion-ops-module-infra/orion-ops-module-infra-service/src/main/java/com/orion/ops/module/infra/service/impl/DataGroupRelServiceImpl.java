@@ -64,7 +64,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
             // 差异变更
             List<DataGroupRelDO> records = dataGroupRelDAO.of()
                     .createWrapper()
-                    .eq(DataGroupRelDO::getGroupId, group)
+                    .eq(DataGroupRelDO::getGroupId, group.getId())
                     .then()
                     .list();
             // 查询删除的部分

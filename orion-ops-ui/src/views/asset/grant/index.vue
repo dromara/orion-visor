@@ -2,17 +2,18 @@
   <div v-if="render" class="view-container">
     <a-tabs v-if="render"
             class="tabs-container"
-            size="large"
-            :default-active-key="1"
+            position="left"
             :destroy-on-hide="true"
             :justify="true"
             :lazy-load="true">
       <!-- 左侧导航 -->
-      <a-tab-pane :key="1" v-permission="['asset:host-group:query']">
+      <a-tab-pane :key="1"
+                  title="分组配置"
+                  v-permission="['asset:host-group:query']">
         <host-group-view-setting />
         <template #title>
           <icon-unordered-list />
-          分组配置
+
         </template>
       </a-tab-pane>
       <!-- 角色分配 -->
@@ -28,7 +29,7 @@
         <host-group-view-user-grant />
         <template #title>
           <icon-user />
-          用户授权
+          用户授权2323
         </template>
       </a-tab-pane>
     </a-tabs>
@@ -37,7 +38,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostGroup'
+    name: 'assetGrant'
   };
 </script>
 
@@ -129,7 +130,7 @@
     background: var(--color-bg-2);
   }
 
-  :deep(.arco-tabs-tab-title){
+  :deep(.arco-tabs-tab-title) {
     user-select: none;
   }
 

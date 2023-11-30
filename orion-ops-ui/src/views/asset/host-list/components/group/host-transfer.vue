@@ -1,30 +1,5 @@
 <template>
   <div class="transfer-container">
-    <!-- 头部 -->
-    <div class="transfer-header">
-      <!-- 提示 -->
-      <a-alert class="alert-wrapper" :show-icon="false">
-        <!-- 已选中分组 -->
-        <template v-if="group.key">
-          <span>当前编辑的分组为 <span class="span-blue">{{ group.title }}</span></span>
-        </template>
-        <!-- 未选中分组 -->
-        <template v-else>
-          <span>点击左侧分组即可加载组内数据</span>
-        </template>
-      </a-alert>
-      <!-- 保存按钮 -->
-      <a-button v-permission="['asset:host:update']"
-                class="save-button"
-                type="primary"
-                :disabled="!group.key"
-                @click="save">
-        保存
-        <template #icon>
-          <icon-check />
-        </template>
-      </a-button>
-    </div>
     <!-- 传输框 -->
     <a-transfer v-model="value"
                 :data="data"
@@ -75,12 +50,17 @@
   import type { TransferItem } from '@arco-design/web-vue/es/transfer/interface';
   import type { TreeNodeData } from '@arco-design/web-vue';
   import type { PropType } from 'vue';
-  import { onMounted, ref, watch } from 'vue';
+  import { onMounted, ref, watch, computed } from 'vue';
   import { useCacheStore } from '@/store';
   import { getHostGroupRelList, updateHostGroupRel } from '@/api/asset/host-group';
   import { Message } from '@arco-design/web-vue';
+  import { getHostList } from '@/api/asset/host';
 
   const props = defineProps({
+    modelValue: {
+      type: Array<string>,
+      default: []
+    },
     group: {
       type: Object as PropType<TreeNodeData>,
       default: () => {
@@ -89,12 +69,24 @@
     }
   });
 
-  const emits = defineEmits(['loading']);
+  const emits = defineEmits(['loading', 'update:modelValue']);
 
   const cacheStore = useCacheStore();
 
   const data = ref<Array<TransferItem>>([]);
-  const value = ref<Array<string>>([]);
+
+  const value = computed<Array<string>>({
+    get() {
+      return props.modelValue as Array<string>;
+    },
+    set(e) {
+      if (e) {
+        emits('update:modelValue', e);
+      } else {
+        emits('update:modelValue', []);
+      }
+    }
+  });
 
   // 渲染 label
   const renderLabel = (label: string) => {
@@ -102,21 +94,6 @@
     const prefix = label.substring(0, last);
     const ip = label.substring(last + 1, label.length);
     return `${prefix} - <span class="span-blue">${ip}</span>`;
-  };
-
-  // 保存
-  const save = async () => {
-    try {
-      emits('loading', true);
-      await updateHostGroupRel({
-        groupId: props.group?.key as number,
-        hostIdList: value.value
-      });
-      Message.success('保存成功');
-    } catch (e) {
-    } finally {
-      emits('loading', false);
-    }
   };
 
   // 查询组内数据
@@ -137,8 +114,25 @@
     }
   });
 
-  // 加载主机
-  onMounted(() => {
+  // 加载主机列表
+  const loadHostList = async () => {
+    emits('loading', true);
+    try {
+      const { data } = await getHostList();
+      // 设置到缓存
+      cacheStore.set('hosts', data);
+    } catch (e) {
+      Message.error('主机列表加载失败');
+    } finally {
+      emits('loading', false);
+    }
+  };
+
+  onMounted(async () => {
+    if (!cacheStore.hosts.length) {
+      // 加载主机列表
+      await loadHostList();
+    }
     data.value = cacheStore.hosts.map(s => {
       return {
         value: String(s.id),
@@ -154,24 +148,10 @@
   .transfer-container {
     width: 100%;
     height: 100%;
-
-    .transfer-header {
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-
-      .alert-wrapper {
-        padding: 4px 16px;
-      }
-
-      .save-button {
-        margin-left: 16px;
-      }
-    }
   }
 
   :deep(.arco-transfer) {
-    height: calc(100% - 44px);
+    height: 100%;
 
     .arco-transfer-view {
       width: 100%;

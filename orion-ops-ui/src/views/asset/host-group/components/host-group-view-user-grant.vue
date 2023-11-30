@@ -67,7 +67,7 @@
   import { ref, onMounted, watch } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/host-group';
+  import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
   import { Message } from '@arco-design/web-vue';
   import HostGroupTree from './host-group-tree.vue';
   import HostList from './host-list.vue';
@@ -112,7 +112,7 @@
     try {
       await grantHostGroup({
         userId: userId.value,
-        groupIdList: checkedGroups.value
+        idList: checkedGroups.value
       });
       Message.success('保存成功');
     } catch (e) {

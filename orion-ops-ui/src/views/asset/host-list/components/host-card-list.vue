@@ -8,11 +8,31 @@
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
-             :add-permission="['asset:host:create']"
-             @add="emits('openAdd')"
+             :handle-visible="{ disableAdd: true }"
              @reset="reset"
              @search="fetchCardData"
              @page-change="fetchCardData">
+    <!-- 左侧操作 -->
+    <template #leftHandle>
+      <!-- 主机分组 -->
+      <a-button v-permission="['asset:host-group:update']"
+                class="click-icon-wrapper card-header-icon-wrapper"
+                type="primary"
+                title="分组配置"
+                @click="emits('openHostGroup')">
+        主机分组
+        <template #icon>
+          <icon-layers />
+        </template>
+      </a-button>
+      <!-- 创建 -->
+      <div v-permission="['asset:host:create']"
+           class="click-icon-wrapper card-header-icon-wrapper"
+           title="创建"
+           @click="emits('openAdd')">
+        <icon-plus />
+      </div>
+    </template>
     <!-- 过滤条件 -->
     <template #filterContent>
       <a-form :model="formModel"
@@ -150,11 +170,11 @@
   import fieldConfig from '../types/host.card.fields';
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor } from '@/views/asset/host/types/const';
+  import { tagColor } from '../types/const';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
   const list = ref<HostQueryResponse[]>([]);
 

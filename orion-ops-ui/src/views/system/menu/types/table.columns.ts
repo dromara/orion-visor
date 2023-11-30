@@ -49,7 +49,7 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 158,
+    width: 162,
     fixed: 'right',
   }
 ] as TableColumnData[];
