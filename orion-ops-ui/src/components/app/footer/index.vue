@@ -7,6 +7,7 @@
         <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">教程</a>
         <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">github</a>
         <a target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a>
+        <span title="当前版本">v{{ version }}</span>
       </a-space>
       <span class="copyright">
           Copyright<icon-copyright /> 2023 By OrionOpsPro
@@ -16,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+  const version = import.meta.env.VITE_APP_VERSION;
 </script>
 
 <style lang="less" scoped>
@@ -26,7 +28,7 @@
     text-align: center;
     height: 64px;
 
-    a {
+    a, span {
       text-decoration: none;
       color: rgb(var(--primary-6));
     }

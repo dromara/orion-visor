@@ -31,7 +31,7 @@ public class HostIdentityOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, CREATE, "创建主机身份 <sb>${name}</sb>"),
                 new OperatorType(L, UPDATE, "修改主机身份 <sb>${name}</sb>"),
                 new OperatorType(H, DELETE, "删除主机身份 <sb>${name}</sb>"),
-                new OperatorType(H, GRANT, "将主机身份权限授予 <sb>${type}</sb> <sb>${name}</sb>"),
+                new OperatorType(H, GRANT, "将主机身份权限授予 <sb>${grantType}</sb> <sb>${grantName}</sb>"),
         };
     }
 

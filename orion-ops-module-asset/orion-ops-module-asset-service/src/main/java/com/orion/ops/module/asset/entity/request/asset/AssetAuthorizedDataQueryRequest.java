@@ -19,8 +19,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AssetAuthorizedDataRequest", description = "授权资产数据 查询请求对象")
-public class AssetAuthorizedDataRequest implements Serializable {
+@Schema(name = "AssetAuthorizedDataQueryRequest", description = "资产授权数据 查询请求对象")
+public class AssetAuthorizedDataQueryRequest implements Serializable {
 
     @Schema(description = "用户id")
     private Long userId;

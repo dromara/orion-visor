@@ -23,4 +23,8 @@ public interface OperatorLogKeys extends FieldConst {
 
     String POSITION_NAME = "positionName";
 
+    String GRANT_TYPE = "grantType";
+
+    String GRANT_NAME = "grantName";
+
 }

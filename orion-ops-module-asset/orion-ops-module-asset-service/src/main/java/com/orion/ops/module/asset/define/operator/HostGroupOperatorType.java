@@ -36,7 +36,7 @@ public class HostGroupOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, MOVE, "移动主机分组 <sb>${source}</sb> 到 <sb>${target}(${position})</sb>"),
                 new OperatorType(H, DELETE, "删除主机分组 <sb>${groupName}</sb>"),
                 new OperatorType(M, UPDATE_REL, "修改分组内主机 <sb>${groupName}</sb>"),
-                new OperatorType(H, GRANT, "将主机分组权限授予 <sb>${type}</sb> <sb>${name}</sb>"),
+                new OperatorType(H, GRANT, "将主机分组权限授予 <sb>${grantType}</sb> <sb>${grantName}</sb>"),
         };
     }
 

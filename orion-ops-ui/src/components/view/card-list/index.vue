@@ -377,7 +377,6 @@
       margin: -16px -16px 0 -16px;
       padding: 16px 16px 12px 16px;
       position: fixed;
-      background: var(--color-fill-2);
       z-index: 999;
       height: @top-height;
       transition: none;

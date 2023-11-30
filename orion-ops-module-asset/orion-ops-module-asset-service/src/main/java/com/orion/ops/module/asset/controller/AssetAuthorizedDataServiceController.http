@@ -1,9 +1,12 @@
-### 查询已授权的主机分组
-GET {{baseUrl}}/asset/authorized-data/host-group
+### 查询当前用户已授权的主机分组及主机
+GET {{baseUrl}}/asset/authorized-data/current-host-group
 Authorization: {{token}}
 
+### 查询当前用户已授权的主机秘钥
+GET {{baseUrl}}/asset/authorized-data/current-host-key
+Authorization: {{token}}
 
-### 获取已授权的分组
-GET {{baseUrl}}/asset/authorized-data/get-authorized-group?userId=1
+### 查询当前用户已授权的主机身份
+GET {{baseUrl}}/asset/authorized-data/current-host-identity
 Authorization: {{token}}
 

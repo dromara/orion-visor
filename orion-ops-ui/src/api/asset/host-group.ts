@@ -1,3 +1,4 @@
+import type { HostQueryResponse } from './host';
 import axios from 'axios';
 
 /**
@@ -33,7 +34,7 @@ export interface HostGroupQueryResponse {
   parentId: number;
   title: string;
   children: Array<HostGroupQueryResponse>;
-  hosts: Array<number>;
+  hostList: Array<HostQueryResponse>;
 }
 
 /**
@@ -42,21 +43,6 @@ export interface HostGroupQueryResponse {
 export interface HostGroupRelUpdateRequest {
   groupId?: number;
   hostIdList?: Array<string>;
-}
-
-/**
- * 主机分组授权 查询请求对象
- */
-export interface HostGroupGrantQueryRequest {
-  userId?: number;
-  roleId?: number;
-}
-
-/**
- * 主机分组 授权请求对象
- */
-export interface HostGroupGrantRequest extends HostGroupGrantQueryRequest {
-  groupIdList?: Array<number>;
 }
 
 /**
@@ -106,18 +92,4 @@ export function getHostGroupRelList(groupId: number) {
  */
 export function updateHostGroupRel(request: HostGroupRelUpdateRequest) {
   return axios.put('/asset/host-group/update-rel', request);
-}
-
-/**
- * 获取已授权的分组
- */
-export function getAuthorizedHostGroup(params: HostGroupGrantQueryRequest) {
-  return axios.get<Array<number>>('/asset/host-group/get-authorized-group', { params });
-}
-
-/**
- * 主机分组授权
- */
-export function grantHostGroup(request: HostGroupGrantRequest) {
-  return axios.put('/asset/host-group/grant', request);
 }

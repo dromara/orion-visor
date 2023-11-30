@@ -1,7 +1,10 @@
 package com.orion.ops.module.asset.service;
 
-import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataRequest;
-import com.orion.ops.module.asset.entity.vo.HostGroupTreeVO;
+import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
+import com.orion.ops.module.asset.entity.vo.AuthorizedHostGroupWrapperVO;
+import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
+import com.orion.ops.module.asset.entity.vo.HostKeyVO;
+import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 
 import java.util.List;
 
@@ -15,12 +18,13 @@ import java.util.List;
 public interface AssetAuthorizedDataService {
 
     /**
-     * 获取已授权的数据
+     * 获取已被授权的数据 id
      *
      * @param request request
+     * @param type    type
      * @return dataId
      */
-    List<Long> getAuthorizedData(AssetAuthorizedDataRequest request);
+    List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request);
 
     /**
      * 查询用户已授权的主机分组和主机
@@ -28,6 +32,22 @@ public interface AssetAuthorizedDataService {
      * @param userId userId
      * @return group
      */
-    List<HostGroupTreeVO> getUserAuthorizedHostGroup(Long userId);
+    AuthorizedHostGroupWrapperVO getUserAuthorizedHostGroup(Long userId);
+
+    /**
+     * 查询用户已授权的主机秘钥
+     *
+     * @param userId userId
+     * @return key
+     */
+    List<HostKeyVO> getUserAuthorizedHostKey(Long userId);
+
+    /**
+     * 查询用户已授权的主机身份
+     *
+     * @param userId userId
+     * @return identity
+     */
+    List<HostIdentityVO> getUserAuthorizedHostIdentity(Long userId);
 
 }

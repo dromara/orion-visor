@@ -238,13 +238,13 @@ export function cleanXss(s: string) {
  */
 export function replaceHtmlTag(message: string) {
   return cleanXss(message)
-    .replaceAll('&lt;sb 0&gt;', '<span class="span-blue mx0">')
+    .replaceAll('&lt;sb&gt;', '<span class="span-blue mx0">')
     .replaceAll('&lt;sb 2&gt;', '<span class="span-blue mx2">')
-    .replaceAll('&lt;sb&gt;', '<span class="span-blue mx4">')
+    .replaceAll('&lt;sb 4&gt;', '<span class="span-blue mx4">')
     .replaceAll('&lt;/sb&gt;', '</span>')
-    .replaceAll('&lt;sr 0&gt;', '<span class="span-red mx0">')
+    .replaceAll('&lt;sr&gt;', '<span class="span-red mx0">')
     .replaceAll('&lt;sr 2&gt;', '<span class="span-red mx2">')
-    .replaceAll('&lt;sr&gt;', '<span class="span-red mx4">')
+    .replaceAll('&lt;sr 4&gt;', '<span class="span-red mx4">')
     .replaceAll('&lt;/sr&gt;', '</span>')
     .replaceAll('&lt;b&gt;', '<b>')
     .replaceAll('&lt;/b&gt;', '</b>');

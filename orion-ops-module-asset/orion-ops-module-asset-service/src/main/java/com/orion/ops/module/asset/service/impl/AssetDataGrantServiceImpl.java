@@ -1,6 +1,8 @@
 package com.orion.ops.module.asset.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
@@ -128,14 +130,15 @@ public class AssetDataGrantServiceImpl implements AssetDataGrantService {
             // 检测用户是否存在
             SystemUserDTO user = systemUserApi.getUserById(userId);
             Valid.notNull(user, ErrorMessage.USER_ABSENT);
-            // TODO 日志查看 type name
+            OperatorLogs.add(OperatorLogs.GRANT_TYPE, Const.CN_USER);
+            OperatorLogs.add(OperatorLogs.GRANT_NAME, user.getNickname() + "(" + user.getUsername() + ")");
         }
         if (roleId != null) {
             // 检测角色是否存在
             SystemRoleDTO role = systemRoleApi.getRoleById(roleId);
             Valid.notNull(role, ErrorMessage.ROLE_ABSENT);
-            // TODO 日志查看 type name
-
+            OperatorLogs.add(OperatorLogs.GRANT_TYPE, Const.CN_ROLE);
+            OperatorLogs.add(OperatorLogs.GRANT_NAME, role.getName() + "(" + role.getCode() + ")");
         }
     }
 
