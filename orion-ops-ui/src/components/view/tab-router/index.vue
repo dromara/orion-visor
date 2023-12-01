@@ -36,12 +36,13 @@
   const emits = defineEmits(['update:modelValue', 'change']);
 
   // 切换 tab
-  const changeTab = ({ key, text }: TabRouterItem) => {
+  const changeTab = (item: TabRouterItem) => {
+    const key = item.key;
     if (key === props.modelValue) {
       return;
     }
     emits('update:modelValue', key);
-    emits('change', key, text);
+    emits('change', key, item);
   };
 
   onMounted(() => {
@@ -54,12 +55,12 @@
     if (items.map(s => s.key).indexOf(props.modelValue as string | number) === -1) {
       const item = items[0];
       emits('update:modelValue', item.key);
-      emits('change', item.key, item.text);
+      emits('change', item.key, item);
     } else {
       // 触发 change 事件
       const matchItem = items.find(s => s.key === props.modelValue);
       if (matchItem) {
-        emits('change', matchItem.key, matchItem.text);
+        emits('change', matchItem.key, matchItem);
       }
     }
   });

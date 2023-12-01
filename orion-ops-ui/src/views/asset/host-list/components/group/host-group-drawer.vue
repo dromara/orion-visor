@@ -39,12 +39,11 @@
             </div>
           </div>
           <!-- 主机分组树 -->
-          <div class="tree-card-main">
-            <host-group-tree ref="tree"
-                             :loading="loading"
-                             @loading="setLoading"
-                             @select-node="selectGroup" />
-          </div>
+          <host-group-tree outer-class="tree-card-main"
+                           ref="tree"
+                           :loading="loading"
+                           @loading="setLoading"
+                           @select-node="selectGroup" />
         </div>
         <!-- 身体部分 -->
         <a-spin class="simple-card transfer-body"
@@ -189,10 +188,10 @@
     }
 
     &-main {
-      padding: 8px 8px 8px 16px;
+      padding: 8px;
       position: relative;
       width: 100%;
-      height: calc(100% - 48px);
+      height: calc(100% - 44px);
       overflow: auto;
     }
   }

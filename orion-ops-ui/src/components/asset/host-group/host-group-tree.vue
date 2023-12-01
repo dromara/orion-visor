@@ -1,83 +1,85 @@
 <template>
-  <!-- 分组树 -->
-  <a-tree v-if="treeData.length"
-          ref="tree"
-          class="tree-container"
-          :blockNode="true"
-          :draggable="draggable"
-          :data="treeData"
-          :checkable="checkable"
-          v-model:checked-keys="checkedKeys"
-          :check-strictly="true"
-          @drop="moveGroup">
-    <!-- 标题 -->
-    <template #title="node">
-      <!-- 修改名称输入框 -->
-      <template v-if="node.editable">
-        <a-input size="mini"
-                 ref="renameInput"
-                 v-model="currName"
-                 style="width: 138px;"
-                 placeholder="名称"
-                 autofocus
-                 :max-length="32"
-                 :disabled="node.loading"
-                 @blur="() => saveNode(node.key)"
-                 @pressEnter="() => saveNode(node.key)"
-                 @change="() => saveNode(node.key)">
-          <template #suffix>
-            <!-- 加载中 -->
-            <icon-loading v-if="node.loading" />
-            <!-- 保存 -->
-            <icon-check v-else
-                        class="pointer"
-                        title="保存"
-                        @click="() => saveNode(node.key)" />
-          </template>
-        </a-input>
-      </template>
-      <!-- 名称 -->
-      <span v-else
-            class="node-title-wrapper"
-            @click="() => emits('selectNode', node)">
+  <a-scrollbar>
+    <!-- 分组树 -->
+    <a-tree v-if="treeData.length"
+            ref="tree"
+            class="tree-container"
+            :blockNode="true"
+            :draggable="draggable"
+            :data="treeData"
+            :checkable="checkable"
+            v-model:checked-keys="checkedKeys"
+            :check-strictly="true"
+            @drop="moveGroup">
+      <!-- 标题 -->
+      <template #title="node">
+        <!-- 修改名称输入框 -->
+        <template v-if="node.editable">
+          <a-input size="mini"
+                   ref="renameInput"
+                   v-model="currName"
+                   style="width: 138px;"
+                   placeholder="名称"
+                   autofocus
+                   :max-length="32"
+                   :disabled="node.loading"
+                   @blur="() => saveNode(node.key)"
+                   @pressEnter="() => saveNode(node.key)"
+                   @change="() => saveNode(node.key)">
+            <template #suffix>
+              <!-- 加载中 -->
+              <icon-loading v-if="node.loading" />
+              <!-- 保存 -->
+              <icon-check v-else
+                          class="pointer"
+                          title="保存"
+                          @click="() => saveNode(node.key)" />
+            </template>
+          </a-input>
+        </template>
+        <!-- 名称 -->
+        <span v-else
+              class="node-title-wrapper"
+              @click="() => emits('selectNode', node)">
         {{ node.title }}
       </span>
-    </template>
-    <!-- 操作图标 -->
-    <template #drag-icon="{ node }">
-      <a-space v-if="!node.editable">
-        <!-- 重命名 -->
-        <span v-permission="['asset:host-group:update']"
-              class="tree-icon"
-              title="重命名"
-              @click="rename(node.title, node.key)">
+      </template>
+      <!-- 操作图标 -->
+      <template #drag-icon="{ node }">
+        <a-space v-if="!node.editable">
+          <!-- 重命名 -->
+          <span v-permission="['asset:host-group:update']"
+                class="tree-icon"
+                title="重命名"
+                @click="rename(node.title, node.key)">
           <icon-edit />
         </span>
-        <!-- 删除 -->
-        <a-popconfirm content="确认删除这条记录吗?"
-                      position="left"
-                      type="warning"
-                      @ok="deleteNode(node.key)">
+          <!-- 删除 -->
+          <a-popconfirm content="确认删除这条记录吗?"
+                        position="left"
+                        type="warning"
+                        @ok="deleteNode(node.key)">
           <span v-permission="['asset:host-group:delete']"
                 class="tree-icon" title="删除">
             <icon-delete />
           </span>
-        </a-popconfirm>
-        <!-- 新增 -->
-        <span v-permission="['asset:host-group:create']"
-              class="tree-icon"
-              title="新增"
-              @click="addChildren(node)">
+          </a-popconfirm>
+          <!-- 新增 -->
+          <span v-permission="['asset:host-group:create']"
+                class="tree-icon"
+                title="新增"
+                @click="addChildren(node)">
           <icon-plus />
         </span>
-      </a-space>
-    </template>
-  </a-tree>
-  <!-- 无数据 -->
-  <div v-else-if="!loading" class="empty-container">
-    <span>暂无数据</span>
-    <span>点击上方 '<icon-plus />' 添加一个分组吧~</span>
-  </div>
+        </a-space>
+      </template>
+    </a-tree>
+    <!-- 无数据 -->
+    <div v-else-if="!loading" class="empty-container">
+      <span>暂无数据</span>
+      <span>点击上方 '<icon-plus />' 添加一个分组吧~</span>
+    </div>
+  </a-scrollbar>
 </template>
 
 <script lang="ts">
@@ -344,10 +346,16 @@
 </script>
 
 <style lang="less" scoped>
+  :deep(.arco-scrollbar-container) {
+    height: 100%;
+    overflow-y: auto;
+  }
+
   .tree-container {
     min-width: 100%;
     width: max-content;
     user-select: none;
+    overflow: hidden;
   }
 
   .empty-container {
@@ -380,7 +388,7 @@
   }
 
   :deep(.arco-tree-node-title) {
-    padding: 0 68px 0 0;
+    padding: 0 80px 0 0;
     height: 32px;
 
     &:hover {

@@ -1,20 +1,8 @@
 <template>
   <a-spin :loading="loading" class="grant-container">
-    <!-- 左侧用户列表 -->
-    <div class="user-container">
-      <!-- 用户列表 -->
-      <tab-router v-if="usersRouter.length"
-                  class="user-router"
-                  v-model="userId"
-                  :items="usersRouter" />
-      <!-- 暂无数据 -->
-      <a-empty v-else class="user-empty">
-        <div slot="description">
-          暂无用户数据
-        </div>
-      </a-empty>
-    </div>
-    <!-- 右侧菜单列表 -->
+    <!-- 用户列表 -->
+    <router-users v-model="userId" @change="fetchAuthorizedGroup" />
+    <!-- 分组列表 -->
     <div class="group-container">
       <!-- 顶部 -->
       <div class="group-header">
@@ -25,28 +13,26 @@
             <span class="ml4">若当前选择的用户角色包含管理员则无需配置 (管理员拥有全部权限)</span>
           </span>
         </a-alert>
-        <!-- 保存 -->
-        <a-button class="save-button"
+        <!-- 授权 -->
+        <a-button class="grant-button"
                   type="primary"
-                  @click="save">
-          保存
+                  @click="doGrant">
+          授权
           <template #icon>
-            <icon-check />
+            <icon-safe />
           </template>
         </a-button>
       </div>
       <!-- 主题部分 -->
       <div class="group-main">
-        <!-- 菜单 -->
-        <div class="group-main-tree">
-          <host-group-tree :checkable="true"
-                           :checked-keys="checkedGroups"
-                           :draggable="false"
-                           :loading="loading"
-                           @loading="setLoading"
-                           @select-node="e => selectedGroup = e"
-                           @update:checked-keys="updateCheckedGroups" />
-        </div>
+        <!-- 分组 -->
+        <host-group-tree outer-class="group-main-tree"
+                         :checked-keys="checkedGroups"
+                         :draggable="false"
+                         :loading="loading"
+                         @loading="setLoading"
+                         @select-node="e => selectedGroup = e"
+                         @update:checked-keys="updateCheckedGroups" />
         <!-- 主机列表 -->
         <host-list class="group-main-hosts"
                    :group="selectedGroup" />
@@ -62,32 +48,27 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TabRouterItem } from '@/components/view/tab-router/types';
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import { ref, onMounted, watch } from 'vue';
-  import { useCacheStore } from '@/store';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupTree from './host-group-tree.vue';
+  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
   import HostList from './host-list.vue';
+  import RouterUsers from './router-users.vue';
 
   const { loading, setLoading } = useLoading();
-  const cacheStore = useCacheStore();
 
   const userId = ref();
   const currentUser = ref();
-  const usersRouter = ref<Array<TabRouterItem>>([]);
   const authorizedGroups = ref<Array<number>>([]);
   const checkedGroups = ref<Array<number>>([]);
   const selectedGroup = ref<TreeNodeData>({});
 
-  // 监听用户变更 获取授权列表
-  watch(userId, async (value) => {
-    if (!value) {
-      return;
-    }
-    currentUser.value = usersRouter.value.find(s => s.key === value);
+  // 获取授权列表
+  const fetchAuthorizedGroup = async (id: number, user: any) => {
+    userId.value = id;
+    currentUser.value = user;
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostGroup({
@@ -99,82 +80,66 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
 
   // 选择分组
   const updateCheckedGroups = (e: Array<number>) => {
     checkedGroups.value = e;
   };
 
-  // 保存
-  const save = async () => {
+  // 授权
+  const doGrant = async () => {
     setLoading(true);
     try {
       await grantHostGroup({
         userId: userId.value,
         idList: checkedGroups.value
       });
-      Message.success('保存成功');
+      Message.success('授权成功');
     } catch (e) {
     } finally {
       setLoading(false);
     }
   };
 
-  // 加载主机
-  onMounted(() => {
-    usersRouter.value = cacheStore.users.map(s => {
-      return {
-        key: s.id,
-        text: `${s.nickname} (${s.username})`
-      };
-    });
-  });
-
 </script>
 
 <style lang="less" scoped>
   .grant-container {
     width: 100%;
+    height: 100%;
     display: flex;
-
-    .user-container {
-      margin-right: 16px;
-
-      .user-router {
-        height: 100%;
-        min-width: max-content;
-        border-right: 1px var(--color-neutral-3) solid;
-      }
-
-      .user-empty {
-        width: 198px;
-      }
-    }
+    padding: 0 12px 12px 0;
 
     .group-container {
+      position: relative;
       width: 100%;
+      height: 100%;
 
       .group-header {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         align-items: center;
 
         .alert-wrapper {
           padding: 4px 16px;
         }
 
-        .save-button {
+        .grant-button {
           margin-left: 16px;
         }
       }
 
       .group-main {
         display: flex;
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 48px);
 
         &-tree {
           width: calc(60% - 16px);
+          height: 100%;
           margin-right: 16px;
         }
 
@@ -183,10 +148,6 @@
         }
       }
     }
-  }
-
-  :deep(.tab-item) {
-    margin-left: 0;
   }
 
 </style>
