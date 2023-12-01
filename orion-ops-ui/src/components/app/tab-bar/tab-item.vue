@@ -1,18 +1,15 @@
 <template>
-  <a-dropdown
-    trigger="contextMenu"
-    :popup-max-height="false"
-    @select="actionSelect">
-    <span
-      class="arco-tag arco-tag-size-medium arco-tag-checked"
-      :class="{ 'link-activated': itemData?.fullPath === $route.fullPath }"
-      @click="goto(itemData as TagProps)">
+  <a-dropdown trigger="contextMenu"
+              :popup-max-height="false"
+              @select="actionSelect">
+    <span class="arco-tag arco-tag-size-medium arco-tag-checked"
+          :class="{ 'link-activated': itemData?.path === $route.path }"
+          @click="goto(itemData as TagProps)">
       <span class="tag-link">
         {{ itemData.title }}
       </span>
-      <span
-        class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
-        @click.stop="tagClose(itemData as TagProps, index)">
+      <span class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
+            @click.stop="tagClose(itemData as TagProps, index)">
         <icon-close />
       </span>
     </span>
@@ -91,7 +88,7 @@
   });
 
   const disabledReload = computed(() => {
-    return props.itemData.fullPath !== route.fullPath;
+    return props.itemData.path !== route.path;
   });
 
   const disabledCurrent = computed(() => {
@@ -106,22 +103,22 @@
     return props.index === tagList.value.length - 1;
   });
 
-  /**
-   * 关闭 tag
-   */
+  // 关闭 tag
   const tagClose = (tag: TagProps, idx: number) => {
     tabBarStore.deleteTab(idx, tag);
-    if (props.itemData.fullPath === route.fullPath) {
+    if (props.itemData.path === route.path) {
       // 获取队列的前一个 tab
       const latest = tagList.value[idx - 1];
       router.push({ name: latest.name });
     }
   };
 
+  // 获取当前路由索引
   const findCurrentRouteIndex = () => {
-    return tagList.value.findIndex((el) => el.fullPath === route.fullPath);
+    return tagList.value.findIndex((el) => el.path === route.path);
   };
 
+  // 选择操作
   const actionSelect = async (value: any) => {
     const { itemData, index } = props;
     const copyTagList = [...tagList.value];

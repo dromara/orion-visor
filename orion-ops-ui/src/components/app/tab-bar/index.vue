@@ -4,12 +4,10 @@
       <div class="tab-bar-box">
         <div class="tab-bar-scroll">
           <div class="tags-wrap">
-            <TabItem
-              v-for="(tag, index) in tagList"
-              :key="tag.fullPath"
-              :index="index"
-              :item-data="tag"
-            />
+            <TabItem v-for="(tag, index) in tagList"
+                     :key="tag.fullPath"
+                     :index="index"
+                     :item-data="tag" />
           </div>
         </div>
         <div class="tag-bar-operation"></div>
@@ -48,7 +46,7 @@
   listenerRouteChange((route: RouteLocationNormalized) => {
     if (
       !route.meta.noAffix &&
-      !tagList.value.some((tag) => tag.fullPath === route.fullPath)
+      !tagList.value.some((tag) => tag.path === route.path)
     ) {
       // 固定并且没有此 tab 则添加
       tabBarStore.addTab(routerToTag(route), route.meta?.ignoreCache as unknown as boolean);

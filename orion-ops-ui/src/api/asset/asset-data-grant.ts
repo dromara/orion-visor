@@ -21,7 +21,7 @@ export interface AssetAuthorizedDataQueryRequest {
  * 主机分组授权
  */
 export function grantHostGroup(request: AssetDataGrantRequest) {
-  return axios.put('/asset/host-group/grant-host-group', request);
+  return axios.put('/asset/data-grant/grant-host-group', request);
 }
 
 /**

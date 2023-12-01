@@ -8,7 +8,8 @@
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
-             :handle-visible="{ disableAdd: true }"
+             :add-permission="['asset:host:create']"
+             @add="emits('openAdd')"
              @reset="reset"
              @search="fetchCardData"
              @page-change="fetchCardData">
@@ -16,22 +17,31 @@
     <template #leftHandle>
       <!-- 主机分组 -->
       <a-button v-permission="['asset:host-group:update']"
-                class="click-icon-wrapper card-header-icon-wrapper"
-                type="primary"
-                title="分组配置"
+                class="card-header-icon-wrapper"
                 @click="emits('openHostGroup')">
         主机分组
         <template #icon>
           <icon-layers />
         </template>
       </a-button>
-      <!-- 创建 -->
-      <div v-permission="['asset:host:create']"
-           class="click-icon-wrapper card-header-icon-wrapper"
-           title="创建"
-           @click="emits('openAdd')">
-        <icon-plus />
-      </div>
+      <!-- 角色授权 -->
+      <a-button v-permission="['asset:host-group:grant']"
+                class="card-header-icon-wrapper"
+                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
+        角色授权
+        <template #icon>
+          <icon-user-group />
+        </template>
+      </a-button>
+      <!-- 用户授权 -->
+      <a-button v-permission="['asset:host-group:grant']"
+                class="card-header-icon-wrapper"
+                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
+        用户授权
+        <template #icon>
+          <icon-user />
+        </template>
+      </a-button>
     </template>
     <!-- 过滤条件 -->
     <template #filterContent>
@@ -173,6 +183,7 @@
   import { tagColor } from '../types/const';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 

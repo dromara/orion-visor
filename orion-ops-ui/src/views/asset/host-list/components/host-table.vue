@@ -71,6 +71,24 @@
               <icon-layers />
             </template>
           </a-button>
+          <!-- 角色授权 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-group:grant']"
+                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
+            角色授权
+            <template #icon>
+              <icon-user-group />
+            </template>
+          </a-button>
+          <!-- 用户授权 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-group:grant']"
+                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
+            用户授权
+            <template #icon>
+              <icon-user />
+            </template>
+          </a-button>
           <!-- 新增 -->
           <a-button type="primary"
                     v-permission="['asset:host:create']"
@@ -183,6 +201,7 @@
   import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);

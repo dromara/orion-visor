@@ -26,3 +26,6 @@ export const AuthType = {
 
 // 主机验证方式 字典项
 export const authTypeKey = 'hostAuthTypeType';
+
+// 加载的字典值
+export const dictKeys = ['hostAuthTypeType'];

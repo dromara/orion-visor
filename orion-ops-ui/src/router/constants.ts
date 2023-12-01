@@ -35,6 +35,7 @@ export const STATUS_ROUTER_LIST = [
 export const DEFAULT_TAB = {
   title: '工作台',
   name: DEFAULT_ROUTE_NAME,
+  path: DEFAULT_ROUTE_FULL_PATH,
   fullPath: DEFAULT_ROUTE_FULL_PATH,
 };
 
@@ -42,10 +43,11 @@ export const DEFAULT_TAB = {
  * router 转 tag
  */
 export const routerToTag = (route: RouteLocationNormalized): TagProps => {
-  const { name, meta, fullPath, query } = route;
+  const { name, meta, path, fullPath, query } = route;
   return {
     title: meta.locale || '',
     name: String(name),
+    path,
     fullPath,
     query,
     ignoreCache: meta.ignoreCache,

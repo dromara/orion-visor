@@ -33,9 +33,8 @@
 
 <script lang="ts" setup>
   import { computed, ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useAppStore, useCacheStore, useDictStore } from '@/store';
+  import { useAppStore, useCacheStore } from '@/store';
   import { getTagList } from '@/api/meta/tag';
-  import { dictKeys } from './types/const';
   import { Message } from '@arco-design/web-vue';
   import HostTable from './components/host-table.vue';
   import HostCardList from './components/host-card-list.vue';
@@ -87,9 +86,6 @@
   onBeforeMount(async () => {
     // 加载 tags
     await loadTags();
-    // 加载字典值
-    const dictStore = useDictStore();
-    await dictStore.loadKeys(dictKeys);
     render.value = true;
   });
 

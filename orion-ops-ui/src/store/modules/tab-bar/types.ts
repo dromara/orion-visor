@@ -1,6 +1,7 @@
 export interface TagProps {
   title: string;
   name: string;
+  path: string;
   fullPath: string;
   query?: any;
   ignoreCache?: boolean;

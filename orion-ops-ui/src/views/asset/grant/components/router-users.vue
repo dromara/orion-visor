@@ -1,18 +1,24 @@
 <template>
-  <div class="user-container">
-    <!-- 用户列表 -->
-    <tab-router v-if="usersRouter.length"
-                class="user-router"
-                v-model="value"
-                :items="usersRouter"
-                @change="(key, item) => emits('change', key, item)" />
-    <!-- 暂无数据 -->
-    <a-empty v-else class="user-empty">
-      <div slot="description">
-        暂无用户数据
-      </div>
-    </a-empty>
-  </div>
+  <a-scrollbar>
+    <div class="user-container">
+      <!-- 用户列表 -->
+      <tab-router v-if="usersRouter.length"
+                  class="user-router"
+                  v-model="value"
+                  :items="usersRouter"
+                  @change="(key, item) => emits('change', key, item)" />
+      <!-- 加载中 -->
+      <a-skeleton v-else-if="loading" class="skeleton-wrapper">
+        <a-skeleton-line :rows="4" />
+      </a-skeleton>
+      <!-- 暂无数据 -->
+      <a-empty v-else class="user-empty">
+        <div slot="description">
+          暂无用户数据
+        </div>
+      </a-empty>
+    </div>
+  </a-scrollbar>
 </template>
 
 <script lang="ts">
@@ -27,6 +33,7 @@
   import { useCacheStore } from '@/store';
   import { getUserList } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: Number
@@ -34,6 +41,7 @@
 
   const emits = defineEmits(['update:modelValue', 'change']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const usersRouter = ref<Array<TabRouterItem>>([]);
@@ -49,12 +57,15 @@
 
   // 加载用户列表
   const loadUserList = async () => {
+    setLoading(true);
     try {
       const { data } = await getUserList();
       // 设置到缓存
       cacheStore.set('users', data);
     } catch (e) {
       Message.error('用户列表加载失败');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,17 +85,27 @@
 </script>
 
 <style lang="less" scoped>
+  @width: 198px;
+  @height: 198px;
+
+  :deep(.arco-scrollbar-container) {
+    height: 100%;
+    overflow-y: auto;
+  }
+
   .user-container {
-    margin-right: 16px;
+    overflow: hidden;
 
     .user-router {
       height: 100%;
-      min-width: max-content;
-      border-right: 1px var(--color-neutral-3) solid;
+      min-width: @width;
+      width: max-content;
     }
 
-    .user-empty {
-      width: 198px;
+    .skeleton-wrapper, .user-empty {
+      width: @width;
+      height: @height;
+      padding: 8px;
     }
   }
 </style>

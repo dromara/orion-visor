@@ -35,9 +35,10 @@
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import { getHostConfigAll } from '@/api/asset/host';
-  import { useCacheStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { getHostKeyList } from '@/api/asset/host-key';
   import { getHostIdentityList } from '@/api/asset/host-identity';
+  import { dictKeys as sshDictKeys } from './ssh/types/const';
   import SshConfigForm from './ssh/ssh-config-form.vue';
 
   const { visible, setVisible } = useVisible();
@@ -95,6 +96,9 @@
   };
 
   onBeforeMount(async () => {
+    // 加载字典值
+    const dictStore = useDictStore();
+    await dictStore.loadKeys([...sshDictKeys]);
     // 加载主机秘钥
     await fetchHostKeys();
     // 加载主机身份

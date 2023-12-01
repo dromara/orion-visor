@@ -1,6 +1,6 @@
 <template>
   <a-card class="general-card"
-          :body-style="{ padding: config.status === 1 ? '' : '0' }">
+          :body-style="{ padding: config.status === EnabledStatus.ENABLED ? '' : '0' }">
     <!-- 标题 -->
     <template #title>
       <div class="config-title-wrapper">
@@ -140,7 +140,7 @@
 <script lang="ts" setup>
   import type { FieldRule } from '@arco-design/web-vue';
   import type { HostSshConfig } from './types/const';
-  import { ref, watch } from 'vue';
+  import { reactive, ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host';
   import { authTypeKey, AuthType } from './types/const';
   import rules from './types/form.rules';
@@ -149,6 +149,7 @@
   import { useDictStore } from '@/store';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
+  import { EnabledStatus } from '@/types/const';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
@@ -159,7 +160,7 @@
 
   const emits = defineEmits(['submitted']);
 
-  const config = ref({
+  const config = reactive({
     status: undefined,
     version: undefined,
   });
@@ -182,8 +183,8 @@
 
   // 监听数据变化
   watch(() => props.content, (v: any) => {
-    config.value.status = v?.status;
-    config.value.version = v?.version;
+    config.status = v?.status;
+    config.version = v?.version;
     resetConfig();
   });
 
@@ -221,9 +222,9 @@
     return updateHostConfigStatus({
       id: props?.content?.id,
       status: e,
-      version: config.value.version
+      version: config.version
     }).then(({ data }) => {
-      config.value.version = data;
+      config.version = data;
       setLoading(false);
       return true;
     }).catch(() => {
@@ -250,10 +251,10 @@
       setLoading(true);
       const { data } = await updateHostConfig({
         id: props?.content?.id,
-        version: config.value.version,
+        version: config.version,
         config: JSON.stringify(formModel.value)
       });
-      config.value.version = data;
+      config.version = data;
       setLoading(false);
       Message.success('修改成功');
       // 回调 props

@@ -15,6 +15,3 @@ export const tagColor = [
   'pinkpurple',
   'magenta'
 ];
-
-// 加载的字典值
-export const dictKeys = ['hostAuthTypeType'];

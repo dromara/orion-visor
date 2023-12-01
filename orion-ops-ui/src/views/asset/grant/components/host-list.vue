@@ -66,13 +66,6 @@
       const { data } = await getHostGroupRelList(groupId as number);
       selectedGroupHosts.value = data.map(s => cacheStore.hosts.find(h => h.id === s) as HostQueryResponse)
         .filter(Boolean);
-      for (let i = 1800; i < 2000; i++) {
-        selectedGroupHosts.value.push({
-          id: i,
-          name: i + '',
-          code: i + '',
-        } as any);
-      }
     } catch (e) {
     } finally {
       setLoading(false);
