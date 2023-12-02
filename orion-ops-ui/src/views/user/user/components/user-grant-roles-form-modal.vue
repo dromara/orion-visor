@@ -29,7 +29,7 @@
         </a-form-item>
         <!-- 角色 -->
         <a-form-item field="roles" label="角色">
-          <user-role-selector v-model="formModel.roleIdList"
+          <role-selector v-model="formModel.roleIdList"
                               :loading="roleLoading"
                               :multiple="true" />
         </a-form-item>
@@ -50,8 +50,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
-  import UserRoleSelector from '@/components/user/role/user-role-selector.vue';
-  import { getRoleList } from '@/api/user/role';
+  import RoleSelector from '@/components/user/role/role-selector.vue';
   import { useCacheStore } from '@/store';
   import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
 
@@ -84,11 +83,6 @@
   const loadRoles = async () => {
     try {
       setRoleLoading(true);
-      // 获取全部角色
-      if (!cacheStore.roles?.length) {
-        const { data } = await getRoleList();
-        cacheStore.set('roles', data);
-      }
       // 加载用户角色
       const { data: roleIdList } = await getUserRoleIdList(formModel.value.id as number);
       formModel.value.roleIdList = roleIdList;

@@ -31,7 +31,6 @@
   import type { TabRouterItem } from '@/components/view/tab-router/types';
   import { computed, onMounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
-  import { getRoleList } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
 
@@ -59,9 +58,14 @@
   const loadRoleList = async () => {
     setLoading(true);
     try {
-      const { data } = await getRoleList();
-      // 设置到缓存
-      cacheStore.set('roles', data);
+      const roles = await cacheStore.loadRoles();
+      rolesRouter.value = roles.map(s => {
+        return {
+          key: s.id,
+          text: `${s.name} (${s.code})`,
+          code: s.code
+        };
+      });
     } catch (e) {
       Message.error('角色列表加载失败');
     } finally {
@@ -69,18 +73,9 @@
     }
   };
 
-  // 加载主机
-  onMounted(async () => {
-    if (!cacheStore.roles.length) {
-      await loadRoleList();
-    }
-    rolesRouter.value = cacheStore.roles.map(s => {
-      return {
-        key: s.id,
-        text: `${s.name} (${s.code})`,
-        code: s.code
-      };
-    });
+  // 加载角色列表
+  onMounted(() => {
+    loadRoleList();
   });
 
 </script>

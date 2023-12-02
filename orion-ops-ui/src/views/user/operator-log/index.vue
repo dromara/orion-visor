@@ -34,7 +34,6 @@
   import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
-  import { getUserList } from '@/api/user/user';
   import OperatorLogQueryHeader from './components/operator-log-query-header.vue';
   import OperatorLogTable from './components/operator-log-table.vue';
   import JsonViewModal from '@/components/view/json/json-view-modal.vue';
@@ -45,18 +44,10 @@
   const table = ref();
   const view = ref();
 
-  // 加载全部用户列表
-  const fetchUserList = async () => {
-    const { data } = await getUserList();
-    cacheStore.set('users', data);
-  };
-
   onBeforeMount(async () => {
     // 加载字典值
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
-    // 加载用户列表
-    await fetchUserList();
     render.value = true;
   });
 

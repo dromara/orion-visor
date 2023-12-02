@@ -31,7 +31,6 @@
   import type { TabRouterItem } from '@/components/view/tab-router/types';
   import { computed, onMounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
-  import { getUserList } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
 
@@ -59,9 +58,13 @@
   const loadUserList = async () => {
     setLoading(true);
     try {
-      const { data } = await getUserList();
-      // 设置到缓存
-      cacheStore.set('users', data);
+      const users = await cacheStore.loadUsers();
+      usersRouter.value = users.map(s => {
+        return {
+          key: s.id,
+          text: `${s.nickname} (${s.username})`
+        };
+      });
     } catch (e) {
       Message.error('用户列表加载失败');
     } finally {
@@ -69,17 +72,9 @@
     }
   };
 
-  // 加载主机
-  onMounted(async () => {
-    if (!cacheStore.users.length) {
-      await loadUserList();
-    }
-    usersRouter.value = cacheStore.users.map(s => {
-      return {
-        key: s.id,
-        text: `${s.nickname} (${s.username})`
-      };
-    });
+  // 加载用户列表
+  onMounted(() => {
+    loadUserList();
   });
 
 </script>

@@ -10,8 +10,8 @@
           :hoverable="true"
           :body-style="cardBodyStyle as Record<string, any>"
           @contextmenu.prevent="() => false"
-          @click="emits('emitter', CardEmitter.CLICK, item, index)"
-          @dblclick="emits('emitter', CardEmitter.DBL_CLICK, item, index)">
+          @click="bubblesEmitter(CardEmitter.CLICK, item, index)"
+          @dblclick="bubblesEmitter(CardEmitter.DBL_CLICK, item, index)">
     <!-- 标题 -->
     <template #title>
       <slot name="title" />
@@ -83,13 +83,15 @@
   import type { CardRecord } from '@/types/card';
   import type { CardProps } from '../types/props';
   import { CardEmitter } from '../types/emits';
+  import useEmitter from '@/hooks/emitter';
 
   const props = defineProps<CardProps & {
     index: number,
     item: CardRecord
   }>();
-
   const emits = defineEmits(['emitter']);
+
+  const { bubblesEmitter } = useEmitter(emits);
 
 </script>
 

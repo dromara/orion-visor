@@ -10,7 +10,7 @@
         <span title="当前版本">v{{ version }}</span>
       </a-space>
       <span class="copyright">
-          Copyright<icon-copyright /> 2023 By OrionOpsPro
+          Copyright<icon-copyright /> 2023 By lijiahang
         </span>
     </a-space>
   </a-layout-footer>

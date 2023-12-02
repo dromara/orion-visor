@@ -14,8 +14,8 @@
                         v-model:page-size="(pagination as PaginationProps).pageSize"
                         v-bind="pagination"
                         :auto-adjust="false"
-                        @change="page => emits('emitter', HeaderEmitter.PAGE_CHANGE, page, (pagination as PaginationProps).pageSize)"
-                        @page-size-change="limit => emits('emitter', HeaderEmitter.PAGE_CHANGE, 1, limit)" />
+                        @change="page => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, page, (pagination as PaginationProps).pageSize)"
+                        @page-size-change="limit => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, 1, limit)" />
         </div>
       </div>
       <!-- 操作部分 -->
@@ -28,7 +28,7 @@
                  v-if="!handleVisible?.disableAdd"
                  class="click-icon-wrapper card-header-icon-wrapper"
                  title="创建"
-                 @click="emits('emitter', HeaderEmitter.ADD)">
+                 @click="bubblesEmitter(HeaderEmitter.ADD)">
               <icon-plus />
             </div>
             <!-- 左侧侧操作槽位 -->
@@ -48,9 +48,9 @@
                        :placeholder="searchInputPlaceholder as string"
                        size="small"
                        allow-clear
-                       @input="e => emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
-                       @change="e => emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
-                       @keyup.enter="emits('emitter', HeaderEmitter.SEARCH)" />
+                       @input="e => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @change="e => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @keyup.enter="bubblesEmitter(HeaderEmitter.SEARCH)" />
             </div>
             <!-- 过滤条件 -->
             <a-popover position="br" trigger="click" content-class="card-filter-wrapper">
@@ -78,14 +78,14 @@
             <div v-if="!handleVisible?.disableSearch"
                  class="click-icon-wrapper card-header-icon-wrapper"
                  title="搜索"
-                 @click="emits('emitter', HeaderEmitter.SEARCH)">
+                 @click="bubblesEmitter(HeaderEmitter.SEARCH)">
               <icon-search />
             </div>
             <!-- 重置 -->
             <div v-if="!handleVisible?.disableReset"
                  class="click-icon-wrapper card-header-icon-wrapper"
                  title="重置"
-                 @click="emits('emitter', HeaderEmitter.RESET)">
+                 @click="bubblesEmitter(HeaderEmitter.RESET)">
               <icon-refresh />
             </div>
           </a-space>
@@ -106,11 +106,14 @@
   import type { CardProps } from '../types/props';
   import { ref, computed } from 'vue';
   import { useAppStore } from '@/store';
-  import { triggerMouseEvent } from '@/utils';
+  import { triggerMouseEvent } from '@/utils/event';
   import { HeaderEmitter } from '../types/emits';
+  import useEmitter from '@/hooks/emitter';
 
   const props = defineProps<CardProps>();
   const emits = defineEmits(['emitter']);
+
+  const { bubblesEmitter } = useEmitter(emits);
 
   const appStore = useAppStore();
 
@@ -130,21 +133,21 @@
     },
     set(e) {
       if (e) {
-        emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, e);
+        bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e);
       } else {
-        emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, null);
+        bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, null);
       }
     }
   });
 
   // 重置过滤
   const filterReset = () => {
-    emits('emitter', HeaderEmitter.RESET);
+    bubblesEmitter(HeaderEmitter.RESET);
   };
 
   // 搜索
   const filterSearch = () => {
-    emits('emitter', HeaderEmitter.SEARCH);
+    bubblesEmitter(HeaderEmitter.SEARCH);
     triggerMouseEvent(filterRef);
   };
 
@@ -156,7 +159,7 @@
   }
 
   .card-list-header {
-    margin: -17px -16px 0 -16px;
+    margin: -17px -16px 0 -15px;
     padding: 16px 16px 12px 16px;
     position: fixed;
     background: var(--color-fill-2);
@@ -165,7 +168,7 @@
     transition: none;
 
     &-wrapper {
-      background: var(--color-bg-4);
+      background: var(--color-bg-2);
       padding: 0 12px;
       border-radius: 4px;
 

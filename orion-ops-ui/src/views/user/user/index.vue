@@ -39,6 +39,7 @@
   const grantRoleModal = ref();
 
   onBeforeMount(async () => {
+    // 加载字典值
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;

@@ -1,8 +1,7 @@
 <template>
   <div class="card-list-layout">
     <!-- 头部部分-固定 -->
-    <card-header v-bind="props"
-                 @emitter="dispatchEmitter">
+    <card-header v-bind="props" @emitter="dispatchEmitter">
       <!-- 左侧侧操作槽位 -->
       <template #leftHandle>
         <slot name="leftHandle" />
@@ -80,8 +79,7 @@
   import CardItem from './components/card-item.vue';
   import { Emitter } from './types/emits';
   import { CardProps } from './types/props';
-
-  const emits = defineEmits(Emitter);
+  import useEmitter from '@/hooks/emitter';
 
   const props = withDefaults(defineProps<CardProps>(), {
     key: 'id',
@@ -107,10 +105,8 @@
     list: () => []
   });
 
-  // 调度事件
-  const dispatchEmitter = (event: string, ...args: any) => {
-    emits(event, ...args);
-  };
+  const emits = defineEmits(Emitter);
+  const { dispatchEmitter } = useEmitter(emits);
 
 </script>
 

@@ -69,7 +69,7 @@
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
-  import UserSelector from '@/components/user/role/user-selector.vue';
+  import UserSelector from '@/components/user/user/user-selector.vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
   import { labelFilter } from '@/types/form';
 

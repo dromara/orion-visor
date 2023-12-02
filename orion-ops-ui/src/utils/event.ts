@@ -1,3 +1,6 @@
+// 添加事件监听器
+import { Ref } from 'vue';
+
 export function addEventListen(
   target: Window | HTMLElement,
   event: string,
@@ -12,6 +15,7 @@ export function addEventListen(
   }
 }
 
+// 移除事件监听器
 export function removeEventListen(
   target: Window | HTMLElement,
   event: string,
@@ -25,3 +29,13 @@ export function removeEventListen(
     target.removeEventListener(event, handler, capture);
   }
 }
+
+// 触发鼠标事件
+export const triggerMouseEvent = (ref: Ref, e = 'click') => {
+  const event = new MouseEvent(e, {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  });
+  ref.value.dispatchEvent(event);
+};

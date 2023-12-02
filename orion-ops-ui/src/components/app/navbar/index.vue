@@ -206,12 +206,12 @@
   import { useDark, useFullscreen, useToggle } from '@vueuse/core';
   import { useAppStore, useTabBarStore, useTipsStore, useUserStore } from '@/store';
   import { LOCALE_OPTIONS } from '@/locale';
-  import { triggerMouseEvent } from '@/utils';
+  import { triggerMouseEvent } from '@/utils/event';
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
   import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
   import Menu from '@/components/system/menu/tree/index.vue';
-  import UpdatePasswordModal from '@/components/user/role/update-password-modal.vue';
+  import UpdatePasswordModal from '@/components/user/user/update-password-modal.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
 
   const tipsStore = useTipsStore();

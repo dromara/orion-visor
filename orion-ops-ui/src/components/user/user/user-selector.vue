@@ -6,21 +6,20 @@
             :loading="loading"
             :disabled="loading"
             :filter-option="labelFilter"
-            placeholder="请选择角色" />
+            placeholder="请选择用户" />
 </template>
 
 <script lang="ts">
   export default {
-    name: 'user-role-selector'
+    name: 'user-selector'
   };
 </script>
 
 <script lang="ts" setup>
   import type { PropType } from 'vue';
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import { computed, onBeforeMount, ref } from 'vue';
+  import { computed, ref, onMounted } from 'vue';
   import { useCacheStore } from '@/store';
-  import { RoleStatus } from '@/views/user/role/types/const';
   import { labelFilter } from '@/types/form';
 
   const props = defineProps({
@@ -44,13 +43,15 @@
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onBeforeMount(() => {
-    optionData.value = cacheStore.roles.map(s => {
-      return {
-        label: `${s.name} (${s.code})`,
-        disabled: s.status === RoleStatus.DISABLED,
-        value: s.id,
-      };
+  onMounted(() => {
+    // 加载用户列表
+    cacheStore.loadUsers().then(users => {
+      optionData.value = users.map(s => {
+        return {
+          label: `${s.nickname} (${s.username})`,
+          value: s.id,
+        };
+      });
     });
   });
 
