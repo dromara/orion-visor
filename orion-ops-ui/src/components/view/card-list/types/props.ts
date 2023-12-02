@@ -8,7 +8,7 @@ export interface CardProps {
   pagination?: PaginationProps | boolean;
   loading?: boolean;
   fieldConfig?: CardFieldConfig;
-  cardHeight: string;
+  cardHeight?: string;
   cardClass?: string;
   cardBodyStyle?: CSSProperties;
   contextMenu?: boolean;
@@ -17,38 +17,10 @@ export interface CardProps {
   searchInputWidth?: string;
   searchValue?: string;
   createCardDescription?: string;
-  createCardPosition?: CardPosition | boolean;
+  createCardPosition?: CardPosition;
   addPermission?: Array<string>;
   cardLayoutGutter?: Number | ResponsiveValue | Array<Number> | Array<ResponsiveValue>;
   cardLayoutCols?: ColResponsiveValue;
   handleVisible?: HandleVisible;
   list?: Array<CardRecord>;
 }
-
-// 定义默认 props
-export const cardDefaultProps = () => {
-  return {
-    key: 'id',
-    pagination: false,
-    loading: false,
-    cardHeight: '100%',
-    contextMenu: true,
-    filterCount: 0,
-    searchInputWidth: '200px',
-    searchValue: '',
-    createCardDescription: '点击此处进行创建',
-    createCardPosition: false,
-    addPermission: () => [],
-    cardLayoutGutter: () => [16, 16],
-    cardLayoutCols: () => {
-      return {
-        span: 6
-      };
-    },
-    handleVisible: () => {
-      return {};
-    },
-    list: () => []
-  };
-};
-

@@ -14,8 +14,8 @@
                         v-model:page-size="(pagination as PaginationProps).pageSize"
                         v-bind="pagination"
                         :auto-adjust="false"
-                        @change="page => emits('pageChange', page, (pagination as PaginationProps).pageSize)"
-                        @page-size-change="limit => emits('pageChange', 1, limit)" />
+                        @change="page => emits('emitter', HeaderEmitter.PAGE_CHANGE, page, (pagination as PaginationProps).pageSize)"
+                        @page-size-change="limit => emits('emitter', HeaderEmitter.PAGE_CHANGE, 1, limit)" />
         </div>
       </div>
       <!-- 操作部分 -->
@@ -25,10 +25,10 @@
           <a-space>
             <!-- 创建 -->
             <div v-permission="addPermission"
-                 v-if="!handleVisible.disableAdd"
+                 v-if="!handleVisible?.disableAdd"
                  class="click-icon-wrapper card-header-icon-wrapper"
                  title="创建"
-                 @click="emits('add')">
+                 @click="emits('emitter', HeaderEmitter.ADD)">
               <icon-plus />
             </div>
             <!-- 左侧侧操作槽位 -->
@@ -41,24 +41,24 @@
             <!-- 右侧操作槽位 -->
             <slot name="rightHandle" />
             <!-- 搜索框 -->
-            <div v-if="!handleVisible.disableSearchInput"
+            <div v-if="!handleVisible?.disableSearchInput"
                  class="header-input-wrapper"
                  :style="{width: searchInputWidth}">
               <a-input v-model="searchValueRef"
-                       :placeholder="searchInputPlaceholder"
+                       :placeholder="searchInputPlaceholder as string"
                        size="small"
                        allow-clear
-                       @input="e => emits('update:searchValue', e)"
-                       @change="e => emits('update:searchValue', e)"
-                       @keyup.enter="emits('search')" />
+                       @input="e => emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @change="e => emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @keyup.enter="emits('emitter', HeaderEmitter.SEARCH)" />
             </div>
             <!-- 过滤条件 -->
             <a-popover position="br" trigger="click" content-class="card-filter-wrapper">
-              <div v-if="!handleVisible.disableFilter"
+              <div v-if="!handleVisible?.disableFilter"
                    ref="filterRef"
                    class="click-icon-wrapper card-header-icon-wrapper"
                    title="选择过滤条件">
-                <a-badge :count="filterCount" :dot-style="{zoom: '.75'}" :offset="[9, -6]">
+                <a-badge :count="filterCount as number" :dot-style="{zoom: '.75'}" :offset="[9, -6]">
                   <icon-filter />
                 </a-badge>
               </div>
@@ -75,17 +75,17 @@
               </template>
             </a-popover>
             <!-- 搜索 -->
-            <div v-if="!handleVisible.disableSearch"
+            <div v-if="!handleVisible?.disableSearch"
                  class="click-icon-wrapper card-header-icon-wrapper"
                  title="搜索"
-                 @click="emits('search')">
+                 @click="emits('emitter', HeaderEmitter.SEARCH)">
               <icon-search />
             </div>
             <!-- 重置 -->
-            <div v-if="!handleVisible.disableReset"
+            <div v-if="!handleVisible?.disableReset"
                  class="click-icon-wrapper card-header-icon-wrapper"
                  title="重置"
-                 @click="emits('reset')">
+                 @click="emits('emitter', HeaderEmitter.RESET)">
               <icon-refresh />
             </div>
           </a-space>
@@ -104,13 +104,19 @@
 <script lang="ts" setup>
   import type { PaginationProps } from '@arco-design/web-vue';
   import type { CardProps } from '../types/props';
-  import { useAppStore } from '@/store';
   import { ref, computed } from 'vue';
+  import { useAppStore } from '@/store';
   import { triggerMouseEvent } from '@/utils';
+  import { HeaderEmitter } from '../types/emits';
 
   const props = defineProps<CardProps>();
+  const emits = defineEmits(['emitter']);
 
   const appStore = useAppStore();
+
+  const filterRef = ref();
+
+  // 头部长度 fixed 脱离了文档流 需要计算
   const headerWidth = computed(() => {
     const menuWidth = appStore.menu && !appStore.topMenu && !appStore.hideMenu
       ? appStore.menuCollapse ? 48 : appStore.menuWidth
@@ -118,50 +124,44 @@
     return `calc(100% - ${menuWidth}px)`;
   });
 
-  const filterRef = ref();
-
   const searchValueRef = computed<string>({
     get() {
       return props.searchValue as string;
     },
     set(e) {
       if (e) {
-        emits('update:searchValue', e);
+        emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, e);
       } else {
-        emits('update:searchValue', null);
+        emits('emitter', HeaderEmitter.UPDATE_SEARCH_VALUE, null);
       }
     }
   });
 
-  const emits = defineEmits(['add', 'update:searchValue', 'search',
-    'reset', 'pageChange', 'click', 'dblclick']);
-
   // 重置过滤
   const filterReset = () => {
-    emits('reset');
+    emits('emitter', HeaderEmitter.RESET);
   };
 
   // 搜索
   const filterSearch = () => {
-    emits('search');
+    emits('emitter', HeaderEmitter.SEARCH);
     triggerMouseEvent(filterRef);
   };
 
 </script>
 
-<style lang="less">
-  @header-info-height: 48px;
-  @header-handler-height: 48px;
-  @top-height: 16 + @header-info-height + @header-handler-height + 12px;
+<style lang="less" scoped>
+  body[arco-theme='dark'] .card-list-header {
+    background: #29292C;
+  }
 
   .card-list-header {
-    margin: -16px -16px 0 -16px;
+    margin: -17px -16px 0 -16px;
     padding: 16px 16px 12px 16px;
     position: fixed;
-    // FIXME 颜色不对   文件拆了
     background: var(--color-fill-2);
     z-index: 999;
-    height: @top-height;
+    height: var(--top-height);
     transition: none;
 
     &-wrapper {
@@ -170,7 +170,7 @@
       border-radius: 4px;
 
       .card-list-info {
-        height: @header-info-height;
+        height: var(--header-info-height);
         border-bottom: 1px solid var(--color-border-2);
         display: flex;
         justify-content: space-between;
@@ -179,25 +179,8 @@
     }
   }
 
-  &-body {
-    display: block;
-    margin-top: @top-height - 16px;
-    padding-top: 4px;
-  }
-
-  .disabled-col {
-    cursor: not-allowed;
-
-    .card-list-item-disabled {
-      pointer-events: none;
-      opacity: .5;
-      background: var(--color-bg-1);
-    }
-  }
-
-
   .card-list-handler {
-    height: @header-handler-height;
+    height: var(--header-handler-height);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -212,4 +195,5 @@
       align-items: center;
     }
   }
+
 </style>

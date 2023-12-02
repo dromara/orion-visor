@@ -21,29 +21,25 @@
   import type { CardProps } from '../types/props';
 
   const props = defineProps<CardProps>();
-  console.log(props);
 </script>
 
-<style lang="less">
-  .create-card {
+<style lang="less" scoped>
+  .create-card-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
 
-    &-body {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-      cursor: pointer;
+    &-icon {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
 
-      &-icon {
-        font-size: 18px;
-        margin-bottom: 4px;
-      }
-
-      &-text {
-        user-select: none;
-      }
+    &-text {
+      user-select: none;
     }
   }
 </style>
