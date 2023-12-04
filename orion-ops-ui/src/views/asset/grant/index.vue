@@ -37,7 +37,7 @@
 
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('users', 'roles', 'hosts', 'hostGroups');
+    cacheStore.reset('users', 'roles', 'hosts', 'hostGroups', 'hostKeys', 'hostIdentities');
   });
 
   // 跳转到指定页

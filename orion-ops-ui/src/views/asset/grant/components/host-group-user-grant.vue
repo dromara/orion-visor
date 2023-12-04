@@ -28,7 +28,7 @@
       <!-- 主题部分 -->
       <div class="group-main">
         <!-- 分组 -->
-        <host-group-tree outer-class="group-main-tree"
+        <host-group-tree outer-class="group-main-tree sticky-list"
                          :checked-keys="checkedGroups"
                          :editable="false"
                          :loading="loading"
@@ -36,8 +36,7 @@
                          @select-node="e => selectedGroup = e"
                          @update:checked-keys="updateCheckedGroups" />
         <!-- 主机列表 -->
-        <host-list class="group-main-hosts"
-                   :group="selectedGroup" />
+        <host-list class="group-main-hosts" :group="selectedGroup" />
       </div>
     </div>
   </a-spin>
@@ -52,12 +51,12 @@
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
   import { ref } from 'vue';
-  import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
+  import useLoading from '@/hooks/loading';
   import HostList from './host-list.vue';
   import RouterUsers from './router-users.vue';
+  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
 
   const { loading, setLoading } = useLoading();
 

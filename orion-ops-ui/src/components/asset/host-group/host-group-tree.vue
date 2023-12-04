@@ -108,7 +108,7 @@
     },
     checkedKeys: {
       type: Array<Number>,
-      default: []
+      default: () => []
     }
   });
   const emits = defineEmits(['loading', 'selectNode', 'update:checkedKeys']);

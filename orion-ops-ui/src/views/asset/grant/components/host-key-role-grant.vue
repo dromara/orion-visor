@@ -27,17 +27,8 @@
       </div>
       <!-- 主体部分 -->
       <div class="host-key-main">
-        <a-table row-key="id"
-                 class="host-key-main-table"
-                 label-align="left"
-                 :loading="loading"
-                 :columns="hostKeyColumns"
-                 v-model:selected-keys="selectedKeys"
-                 :row-selection="rowSelection"
-                 :sticky-header="true"
-                 :data="hostKeys"
-                 :pagination="false"
-                 :bordered="false" />
+        <host-key-grant-table v-model="selectedKeys"
+                              @loading="setLoading" />
       </div>
     </div>
   </a-spin>
@@ -55,13 +46,11 @@
   import { getAuthorizedHostKey, grantHostKey } from '@/api/asset/asset-data-grant';
   import { AdminRoleCode } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
-  import { hostKeyColumns } from '../types/table.columns';
   import useLoading from '@/hooks/loading';
-  import { useRowSelection } from '@/types/table';
   import { useCacheStore } from '@/store';
   import RouterRoles from './router-roles.vue';
+  import HostKeyGrantTable from './host-key-grant-table.vue';
 
-  const rowSelection = useRowSelection();
   const cacheStore = useCacheStore();
   const { loading, setLoading } = useLoading();
 

@@ -41,7 +41,7 @@
     title: String,
     options: {
       type: Array as PropType<OptionsProps[]>,
-      default: []
+      default: () => []
     },
   });
 

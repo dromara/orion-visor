@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 主机 缓存对象
@@ -34,5 +35,11 @@ public class HostCacheDTO implements LongCacheIdModel, Serializable {
 
     @Schema(description = "主机地址")
     private String address;
+
+    @Schema(description = "创建时间")
+    private Date createTime;
+
+    @Schema(description = "修改时间")
+    private Date updateTime;
 
 }

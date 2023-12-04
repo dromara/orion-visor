@@ -3,11 +3,11 @@
     <!-- 角色列表 -->
     <router-roles outer-class="roles-router-wrapper"
                   v-model="roleId"
-                  @change="fetchAuthorizedGroup" />
+                  @change="fetchAuthorizedHostIdentity" />
     <!-- 分组列表 -->
-    <div class="group-container">
+    <div class="host-identity-container">
       <!-- 顶部 -->
-      <div class="group-header">
+      <div class="host-identity-header">
         <!-- 提示信息 -->
         <a-alert class="alert-wrapper" :show-icon="false">
           <span v-if="currentRole" class="alert-message">
@@ -26,19 +26,9 @@
         </a-button>
       </div>
       <!-- 主体部分 -->
-      <div class="group-main">
-        <!-- 分组 -->
-        <host-group-tree outer-class="group-main-tree"
-                         :checkable="true"
-                         :checked-keys="checkedGroups"
-                         :editable="false"
-                         :loading="loading"
-                         @loading="setLoading"
-                         @select-node="e => selectedGroup = e"
-                         @update:checked-keys="updateCheckedGroups" />
-        <!-- 主机列表 -->
-        <host-list class="group-main-hosts"
-                   :group="selectedGroup" />
+      <div class="host-identity-main">
+        <host-identity-grant-table v-model="selectedIdentities"
+                                   @loading="setLoading" />
       </div>
     </div>
   </a-spin>
@@ -51,53 +41,45 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TreeNodeData } from '@arco-design/web-vue';
   import { ref } from 'vue';
-  import useLoading from '@/hooks/loading';
-  import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
+  import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
   import { AdminRoleCode } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
-  import HostList from './host-list.vue';
+  import useLoading from '@/hooks/loading';
+  import { useCacheStore } from '@/store';
   import RouterRoles from './router-roles.vue';
+  import HostIdentityGrantTable from './host-identity-grant-table.vue';
 
+  const cacheStore = useCacheStore();
   const { loading, setLoading } = useLoading();
 
   const roleId = ref();
   const currentRole = ref();
-  const authorizedGroups = ref<Array<number>>([]);
-  const checkedGroups = ref<Array<number>>([]);
-  const selectedGroup = ref<TreeNodeData>({});
+  const selectedIdentities = ref<Array<number>>([]);
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (id: number, role: any) => {
+  const fetchAuthorizedHostIdentity = async (id: number, role: any) => {
     roleId.value = id;
     currentRole.value = role;
     setLoading(true);
     try {
-      const { data } = await getAuthorizedHostGroup({
+      const { data } = await getAuthorizedHostIdentity({
         roleId: roleId.value
       });
-      authorizedGroups.value = data;
-      checkedGroups.value = data;
+      selectedIdentities.value = data;
     } catch (e) {
     } finally {
       setLoading(false);
     }
   };
 
-  // 选择分组
-  const updateCheckedGroups = (e: Array<number>) => {
-    checkedGroups.value = e;
-  };
-
   // 授权
   const doGrant = async () => {
     setLoading(true);
     try {
-      await grantHostGroup({
+      await grantHostIdentity({
         roleId: roleId.value,
-        idList: checkedGroups.value
+        idList: selectedIdentities.value
       });
       Message.success('授权成功');
     } catch (e) {
@@ -121,12 +103,12 @@
       border-right: 1px var(--color-neutral-3) solid;
     }
 
-    .group-container {
+    .host-identity-container {
       position: relative;
       width: 100%;
       height: 100%;
 
-      .group-header {
+      .host-identity-header {
         display: flex;
         justify-content: space-between;
         margin-bottom: 16px;
@@ -146,20 +128,15 @@
         }
       }
 
-      .group-main {
+      .host-identity-main {
         display: flex;
         position: absolute;
         width: 100%;
         height: calc(100% - 48px);
 
-        &-tree {
-          width: calc(60% - 16px);
+        &-table {
+          width: 100%;
           height: 100%;
-          margin-right: 16px;
-        }
-
-        &-hosts {
-          width: 40%;
         }
       }
     }

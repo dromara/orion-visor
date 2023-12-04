@@ -37,8 +37,7 @@
                          @select-node="e => selectedGroup = e"
                          @update:checked-keys="updateCheckedGroups" />
         <!-- 主机列表 -->
-        <host-list class="group-main-hosts"
-                   :group="selectedGroup" />
+        <host-list class="group-main-hosts sticky-list" :group="selectedGroup" />
       </div>
     </div>
   </a-spin>
@@ -57,9 +56,9 @@
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
   import { AdminRoleCode } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
   import HostList from './host-list.vue';
   import RouterRoles from './router-roles.vue';
+  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
 
   const { loading, setLoading } = useLoading();
 

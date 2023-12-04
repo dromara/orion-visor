@@ -49,7 +49,7 @@
     },
     options: {
       type: Array as PropType<Array<RadioOption | SelectOption>>,
-      default: []
+      default: () => []
     }
   });
   const emit = defineEmits(['inputChange']);

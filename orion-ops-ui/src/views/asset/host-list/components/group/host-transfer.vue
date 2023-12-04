@@ -57,7 +57,7 @@
   const props = defineProps({
     modelValue: {
       type: Array<string>,
-      default: []
+      default: () => []
     },
     group: {
       type: Object as PropType<TreeNodeData>,

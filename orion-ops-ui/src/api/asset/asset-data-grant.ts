@@ -35,7 +35,7 @@ export function getAuthorizedHostGroup(params: AssetAuthorizedDataQueryRequest) 
  * 主机秘钥授权
  */
 export function grantHostKey(request: AssetDataGrantRequest) {
-  return axios.put('/asset/host-group/grant-host-key', request);
+  return axios.put('/asset/data-grant/grant-host-key', request);
 }
 
 /**
@@ -49,7 +49,7 @@ export function getAuthorizedHostKey(params: AssetAuthorizedDataQueryRequest) {
  * 主机身份授权
  */
 export function grantHostIdentity(request: AssetDataGrantRequest) {
-  return axios.put('/asset/host-group/grant-host-identity', request);
+  return axios.put('/asset/data-grant/grant-host-identity', request);
 }
 
 /**
