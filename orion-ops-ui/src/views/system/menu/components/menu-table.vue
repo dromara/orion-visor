@@ -236,6 +236,7 @@
           }
         }
       }
+      cacheStore.reset('menus');
       Message.success('删除成功');
     } catch (e) {
     } finally {
@@ -245,12 +246,12 @@
 
   // 添加后回调
   const addedCallback = () => {
-    loadMenuData();
+    loadMenuData(true);
   };
 
   // 更新后回调
   const updatedCallback = () => {
-    loadMenuData();
+    loadMenuData(true);
   };
 
   defineExpose({
@@ -258,11 +259,15 @@
   });
 
   // 加载菜单
-  const loadMenuData = async () => {
+  const loadMenuData = async (all: any = undefined) => {
     try {
       setFetchLoading(true);
-      const { data } = await getMenuList(formModel);
+      const { data } = await getMenuList(all === true ? {} : formModel);
       tableRenderData.value = data as MenuQueryResponse[];
+      // 重设缓存
+      if (all) {
+        cacheStore.set('menus', data);
+      }
     } catch (e) {
     } finally {
       setFetchLoading(false);
@@ -270,13 +275,13 @@
   };
 
   onMounted(() => {
-    loadMenuData();
+    loadMenuData(true);
   });
 
   // 重置菜单
   const resetForm = () => {
     formRef.value.resetFields();
-    loadMenuData();
+    loadMenuData(true);
   };
 
   // 切换展开/折叠

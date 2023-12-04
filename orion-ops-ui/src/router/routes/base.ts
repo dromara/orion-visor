@@ -7,28 +7,23 @@ import {
   NOT_FOUND_ROUTER_NAME,
 } from '@/router/constants';
 
+// 默认布局
 export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue');
 
-/**
- * 根页面
- */
+// 根页面
 export const ROOT_ROUTER: RouteRecordRaw = {
   path: '/',
   redirect: DEFAULT_ROUTE_FULL_PATH,
 };
 
-/**
- * 登录页面
- */
+// 登录页面
 export const LOGIN_ROUTER: RouteRecordRaw = {
   path: '/login',
   name: LOGIN_ROUTE_NAME,
   component: () => import('@/views/authentication/login/index.vue'),
 };
 
-/**
- * 重定向页面
- */
+// 重定向页面
 export const REDIRECT_ROUTER: RouteRecordRaw = {
   path: '/redirect',
   name: 'redirectWrapper',
@@ -49,18 +44,14 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
   ],
 };
 
-/**
- * 403 页面
- */
+// 403 页面
 export const FORBIDDEN_ROUTE: RouteRecordRaw = {
   path: '/403',
   name: FORBIDDEN_ROUTER_NAME,
   component: () => import('@/views/base/status/forbidden/index.vue'),
 };
 
-/**
- * 404 页面
- */
+// 404 页面
 export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   // path: '/:pathMatch(.*)*',
   path: '/404',
