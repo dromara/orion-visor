@@ -5,17 +5,14 @@
             size="large"
             :justify="true"
             :lazy-load="true">
-      <!-- 主机分组授权(角色) -->
-      <a-tab-pane :key="GrantKey.HOST_GROUP_ROLE"
-                  v-permission="['asset:host-group:grant']"
-                  title="主机分组授权(角色)">
-        <host-group-role-grant />
-      </a-tab-pane>
-      <!-- 主机分组授权(用户) -->
-      <a-tab-pane :key="GrantKey.HOST_GROUP_USER"
-                  v-permission="['asset:host-group:grant']"
-                  title="主机分组授权(用户)">
-        <host-group-user-grant />
+      <a-tab-pane v-for="tab in GrantTabs"
+                  v-permission="tab.permission"
+                  :key="tab.key">
+        <template #title>
+          <component :is="tab.icon" />
+          {{ tab.title }}
+        </template>
+        <component :is="tab.component" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -30,9 +27,7 @@
 <script lang="ts" setup>
   import { onBeforeMount, onUnmounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
-  import HostGroupRoleGrant from './components/host-group-role-grant.vue';
-  import HostGroupUserGrant from './components/host-group-user-grant.vue';
-  import { GrantKey } from './types/const';
+  import { GrantTabs } from './types/const';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
@@ -75,8 +70,14 @@
     position: relative;
   }
 
+  :deep(.arco-tabs-nav-type-line .arco-tabs-tab) {
+    margin: 0 12px;
+  }
+
   :deep(.arco-tabs-tab-title) {
     user-select: none;
+    font-size: 15px;
+    padding: 0 4px;
   }
 
   :deep(.arco-tabs-content) {

@@ -12,6 +12,27 @@
              @reset="reset"
              @search="fetchCardData"
              @page-change="fetchCardData">
+    <!-- 左侧操作 -->
+    <template #leftHandle>
+      <!-- 角色授权 -->
+      <a-button v-permission="['asset:host-identity:grant']"
+                class="card-header-icon-wrapper"
+                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
+        角色授权
+        <template #icon>
+          <icon-user-group />
+        </template>
+      </a-button>
+      <!-- 用户授权 -->
+      <a-button v-permission="['asset:host-identity:grant']"
+                class="card-header-icon-wrapper"
+                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
+        用户授权
+        <template #icon>
+          <icon-user />
+        </template>
+      </a-button>
+    </template>
     <!-- 过滤条件 -->
     <template #filterContent>
       <a-form :model="formModel"
@@ -135,6 +156,7 @@
   import usePermission from '@/hooks/permission';
   import useCopy from '@/hooks/copy';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 

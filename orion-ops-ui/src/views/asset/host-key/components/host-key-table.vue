@@ -32,6 +32,24 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
+          <!-- 角色授权 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-key:grant']"
+                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_ROLE }})">
+            角色授权
+            <template #icon>
+              <icon-user-group />
+            </template>
+          </a-button>
+          <!-- 用户授权 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-key:grant']"
+                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_USER }})">
+            用户授权
+            <template #icon>
+              <icon-user />
+            </template>
+          </a-button>
           <!-- 新增 -->
           <a-button type="primary"
                     v-permission="['asset:host-key:create']"
@@ -105,6 +123,7 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 

@@ -46,7 +46,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-role-grant'
+    name: 'host-identity-role-grant'
   };
 </script>
 

@@ -12,6 +12,27 @@
              @reset="reset"
              @search="fetchCardData"
              @page-change="fetchCardData">
+    <!-- 左侧操作 -->
+    <template #leftHandle>
+      <!-- 角色授权 -->
+      <a-button v-permission="['asset:host-key:grant']"
+                class="card-header-icon-wrapper"
+                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_ROLE }})">
+        角色授权
+        <template #icon>
+          <icon-user-group />
+        </template>
+      </a-button>
+      <!-- 用户授权 -->
+      <a-button v-permission="['asset:host-key:grant']"
+                class="card-header-icon-wrapper"
+                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_USER }})">
+        用户授权
+        <template #icon>
+          <icon-user />
+        </template>
+      </a-button>
+    </template>
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
@@ -86,6 +107,7 @@
   import fieldConfig from '../types/card.fields';
   import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message, Modal } from '@arco-design/web-vue';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 

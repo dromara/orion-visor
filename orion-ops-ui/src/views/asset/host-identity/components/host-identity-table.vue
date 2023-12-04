@@ -40,6 +40,24 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
+          <!-- 角色授权 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-identity:grant']"
+                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
+            角色授权
+            <template #icon>
+              <icon-user-group />
+            </template>
+          </a-button>
+          <!-- 用户授权 -->
+          <a-button type="primary"
+                    v-permission="['asset:host-identity:grant']"
+                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
+            用户授权
+            <template #icon>
+              <icon-user />
+            </template>
+          </a-button>
           <!-- 新增 -->
           <a-button type="primary"
                     v-permission="['asset:host-identity:create']"
@@ -135,6 +153,7 @@
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
   import useCopy from '@/hooks/copy';
   import usePermission from '@/hooks/permission';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 

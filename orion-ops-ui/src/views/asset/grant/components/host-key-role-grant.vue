@@ -3,11 +3,11 @@
     <!-- 角色列表 -->
     <router-roles outer-class="roles-router-wrapper"
                   v-model="roleId"
-                  @change="fetchAuthorizedGroup" />
+                  @change="fetchAuthorizedHostKey" />
     <!-- 分组列表 -->
-    <div class="group-container">
+    <div class="host-key-container">
       <!-- 顶部 -->
-      <div class="group-header">
+      <div class="host-key-header">
         <!-- 提示信息 -->
         <a-alert class="alert-wrapper" :show-icon="false">
           <span v-if="currentRole" class="alert-message">
@@ -26,19 +26,18 @@
         </a-button>
       </div>
       <!-- 主体部分 -->
-      <div class="group-main">
-        <!-- 分组 -->
-        <host-group-tree outer-class="group-main-tree"
-                         :checkable="true"
-                         :checked-keys="checkedGroups"
-                         :editable="false"
-                         :loading="loading"
-                         @loading="setLoading"
-                         @select-node="e => selectedGroup = e"
-                         @update:checked-keys="updateCheckedGroups" />
-        <!-- 主机列表 -->
-        <host-list class="group-main-hosts"
-                   :group="selectedGroup" />
+      <div class="host-key-main">
+        <a-table row-key="id"
+                 class="host-key-main-table"
+                 label-align="left"
+                 :loading="loading"
+                 :columns="hostKeyColumns"
+                 v-model:selected-keys="selectedKeys"
+                 :row-selection="rowSelection"
+                 :sticky-header="true"
+                 :data="hostKeys"
+                 :pagination="false"
+                 :bordered="false" />
       </div>
     </div>
   </a-spin>
@@ -46,58 +45,54 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-role-grant'
+    name: 'host-key-role-grant'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { TreeNodeData } from '@arco-design/web-vue';
-  import { ref } from 'vue';
-  import useLoading from '@/hooks/loading';
-  import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
+  import type { HostKeyQueryResponse } from '@/api/asset/host-key';
+  import { onMounted, ref } from 'vue';
+  import { getAuthorizedHostKey, grantHostKey } from '@/api/asset/asset-data-grant';
   import { AdminRoleCode } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
-  import HostList from './host-list.vue';
+  import { hostKeyColumns } from '../types/table.columns';
+  import useLoading from '@/hooks/loading';
+  import { useRowSelection } from '@/types/table';
+  import { useCacheStore } from '@/store';
   import RouterRoles from './router-roles.vue';
 
+  const rowSelection = useRowSelection();
+  const cacheStore = useCacheStore();
   const { loading, setLoading } = useLoading();
 
   const roleId = ref();
   const currentRole = ref();
-  const authorizedGroups = ref<Array<number>>([]);
-  const checkedGroups = ref<Array<number>>([]);
-  const selectedGroup = ref<TreeNodeData>({});
+  const hostKeys = ref<Array<HostKeyQueryResponse>>([]);
+  const selectedKeys = ref<Array<number>>([]);
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (id: number, role: any) => {
+  const fetchAuthorizedHostKey = async (id: number, role: any) => {
     roleId.value = id;
     currentRole.value = role;
     setLoading(true);
     try {
-      const { data } = await getAuthorizedHostGroup({
+      const { data } = await getAuthorizedHostKey({
         roleId: roleId.value
       });
-      authorizedGroups.value = data;
-      checkedGroups.value = data;
+      selectedKeys.value = data;
     } catch (e) {
     } finally {
       setLoading(false);
     }
   };
 
-  // 选择分组
-  const updateCheckedGroups = (e: Array<number>) => {
-    checkedGroups.value = e;
-  };
-
   // 授权
   const doGrant = async () => {
     setLoading(true);
     try {
-      await grantHostGroup({
+      await grantHostKey({
         roleId: roleId.value,
-        idList: checkedGroups.value
+        idList: selectedKeys.value
       });
       Message.success('授权成功');
     } catch (e) {
@@ -105,6 +100,17 @@
       setLoading(false);
     }
   };
+
+  // 初始化数据
+  onMounted(async () => {
+    setLoading(true);
+    try {
+      hostKeys.value = await cacheStore.loadHostKeys();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  });
 
 </script>
 
@@ -121,12 +127,12 @@
       border-right: 1px var(--color-neutral-3) solid;
     }
 
-    .group-container {
+    .host-key-container {
       position: relative;
       width: 100%;
       height: 100%;
 
-      .group-header {
+      .host-key-header {
         display: flex;
         justify-content: space-between;
         margin-bottom: 16px;
@@ -146,20 +152,15 @@
         }
       }
 
-      .group-main {
+      .host-key-main {
         display: flex;
         position: absolute;
         width: 100%;
         height: calc(100% - 48px);
 
-        &-tree {
-          width: calc(60% - 16px);
+        &-table {
+          width: 100%;
           height: 100%;
-          margin-right: 16px;
-        }
-
-        &-hosts {
-          width: 40%;
         }
       }
     }

@@ -1,8 +1,8 @@
 <template>
   <a-spin :loading="loading" class="grant-container">
-    <!-- 角色列表 -->
-    <router-roles outer-class="roles-router-wrapper"
-                  v-model="roleId"
+    <!-- 用户列表 -->
+    <router-users outer-class="users-router-wrapper"
+                  v-model="userId"
                   @change="fetchAuthorizedGroup" />
     <!-- 分组列表 -->
     <div class="group-container">
@@ -10,9 +10,9 @@
       <div class="group-header">
         <!-- 提示信息 -->
         <a-alert class="alert-wrapper" :show-icon="false">
-          <span v-if="currentRole" class="alert-message">
-            当前选择的角色为 <span class="span-blue mr4">{{ currentRole?.text }}</span>
-            <span class="span-blue ml4" v-if="currentRole.code === AdminRoleCode">管理员拥有全部权限, 无需配置</span>
+          <span v-if="currentUser" class="alert-message">
+            当前选择的用户为 <span class="span-blue mr4">{{ currentUser?.text }}</span>
+            <span class="ml4">若当前选择的用户角色包含管理员则无需配置 (管理员拥有全部权限)</span>
           </span>
         </a-alert>
         <!-- 授权 -->
@@ -25,11 +25,10 @@
           </template>
         </a-button>
       </div>
-      <!-- 主体部分 -->
+      <!-- 主题部分 -->
       <div class="group-main">
         <!-- 分组 -->
         <host-group-tree outer-class="group-main-tree"
-                         :checkable="true"
                          :checked-keys="checkedGroups"
                          :editable="false"
                          :loading="loading"
@@ -46,7 +45,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-role-grant'
+    name: 'host-key-user-grant'
   };
 </script>
 
@@ -55,28 +54,27 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
-  import { AdminRoleCode } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
   import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
   import HostList from './host-list.vue';
-  import RouterRoles from './router-roles.vue';
+  import RouterUsers from './router-users.vue';
 
   const { loading, setLoading } = useLoading();
 
-  const roleId = ref();
-  const currentRole = ref();
+  const userId = ref();
+  const currentUser = ref();
   const authorizedGroups = ref<Array<number>>([]);
   const checkedGroups = ref<Array<number>>([]);
   const selectedGroup = ref<TreeNodeData>({});
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (id: number, role: any) => {
-    roleId.value = id;
-    currentRole.value = role;
+  const fetchAuthorizedGroup = async (id: number, user: any) => {
+    userId.value = id;
+    currentUser.value = user;
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostGroup({
-        roleId: roleId.value
+        userId: userId.value
       });
       authorizedGroups.value = data;
       checkedGroups.value = data;
@@ -96,7 +94,7 @@
     setLoading(true);
     try {
       await grantHostGroup({
-        roleId: roleId.value,
+        userId: userId.value,
         idList: checkedGroups.value
       });
       Message.success('授权成功');
@@ -116,7 +114,7 @@
     padding: 0 12px 12px 0;
     position: absolute;
 
-    .roles-router-wrapper {
+    .users-router-wrapper {
       margin-right: 16px;
       border-right: 1px var(--color-neutral-3) solid;
     }

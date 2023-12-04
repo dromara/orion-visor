@@ -45,7 +45,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-view-user-grant'
+    name: 'host-group-user-grant'
   };
 </script>
 
