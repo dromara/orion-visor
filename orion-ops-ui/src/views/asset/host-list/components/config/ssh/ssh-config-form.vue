@@ -46,7 +46,7 @@
                      :hide-asterisk="true"
                      label-col-flex="60px">
           <a-radio-group type="button"
-                         class="auth-type-group"
+                         class="auth-type-group usn"
                          v-model="formModel.authType"
                          :options="toOptions(authTypeKey)" />
         </a-form-item>

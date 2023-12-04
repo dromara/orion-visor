@@ -51,18 +51,6 @@
   });
   const optionData = ref<SelectOptionData[]>([]);
 
-  // 初始化选项
-  onBeforeMount(() => {
-    cacheStore.loadTags(props.type as string).then((tags) => {
-      optionData.value = tags.map(s => {
-        return {
-          label: s.name,
-          value: s.id,
-        };
-      });
-    });
-  });
-
   // 检查是否可以创建tag
   const checkCreateTag = async (tags: Array<any>) => {
     if (!tags.length) {
@@ -111,6 +99,23 @@
     });
     return id;
   };
+
+  // 初始化选项
+  onBeforeMount(async () => {
+    setLoading(true);
+    try {
+      const tags = await cacheStore.loadTags(props.type as string);
+      optionData.value = tags.map(s => {
+        return {
+          label: s.name,
+          value: s.id,
+        };
+      });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  });
 
 </script>
 

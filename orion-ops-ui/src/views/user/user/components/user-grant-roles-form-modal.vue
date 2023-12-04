@@ -8,11 +8,11 @@
            :draggable="true"
            :mask-closable="false"
            :unmount-on-close="true"
-           :ok-button-props="{ disabled: saveLoading }"
-           :cancel-button-props="{ disabled: saveLoading }"
+           :ok-button-props="{ disabled: loading }"
+           :cancel-button-props="{ disabled: loading }"
            :on-before-ok="handlerOk"
            @close="handleClose">
-    <a-spin :loading="saveLoading">
+    <a-spin :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
@@ -30,8 +30,7 @@
         <!-- 角色 -->
         <a-form-item field="roles" label="角色">
           <role-selector v-model="formModel.roleIdList"
-                              :loading="roleLoading"
-                              :multiple="true" />
+                         :multiple="true" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -55,8 +54,7 @@
   import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
 
   const { visible, setVisible } = useVisible();
-  const { loading: saveLoading, setLoading: setSaveLoading } = useLoading();
-  const { loading: roleLoading, setLoading: setRoleLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
 
   const formRef = ref();
   const formModel = ref<UserUpdateRequest>({});
@@ -82,13 +80,10 @@
   // 加载角色
   const loadRoles = async () => {
     try {
-      setRoleLoading(true);
       // 加载用户角色
       const { data: roleIdList } = await getUserRoleIdList(formModel.value.id as number);
       formModel.value.roleIdList = roleIdList;
     } catch (e) {
-    } finally {
-      setRoleLoading(false);
     }
   };
 
@@ -96,7 +91,7 @@
 
   // 确定
   const handlerOk = async () => {
-    setSaveLoading(true);
+    setLoading(true);
     try {
       await grantUserRole(formModel.value);
       Message.success('修改成功');
@@ -105,7 +100,7 @@
     } catch (e) {
       return false;
     } finally {
-      setSaveLoading(false);
+      setLoading(false);
     }
   };
 
@@ -116,8 +111,7 @@
 
   // 清空
   const handlerClear = () => {
-    setSaveLoading(false);
-    setRoleLoading(false);
+    setLoading(false);
     setVisible(false);
   };
 

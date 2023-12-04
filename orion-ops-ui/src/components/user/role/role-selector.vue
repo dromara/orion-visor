@@ -22,15 +22,16 @@
   import { useCacheStore } from '@/store';
   import { RoleStatus } from '@/views/user/role/types/const';
   import { labelFilter } from '@/types/form';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: [Number, Array] as PropType<number | Array<number>>,
-    loading: Boolean,
     multiple: Boolean,
   });
 
   const emits = defineEmits(['update:modelValue']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const value = computed({
@@ -44,8 +45,10 @@
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onBeforeMount(() => {
-    cacheStore.loadRoles().then(roles => {
+  onBeforeMount(async () => {
+    setLoading(true);
+    try {
+      const roles = await cacheStore.loadRoles();
       optionData.value = roles.map(s => {
         return {
           label: `${s.name} (${s.code})`,
@@ -53,7 +56,10 @@
           value: s.id,
         };
       });
-    });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   });
 
 </script>

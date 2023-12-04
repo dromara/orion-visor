@@ -92,7 +92,7 @@
   import { computed, nextTick, onMounted, ref } from 'vue';
   import { createGroupGroupPrefix, rootId } from './types/const';
   import { findNode, findParentNode, moveNode } from '@/utils/tree';
-  import { createHostGroup, deleteHostGroup, getHostGroupTree, updateHostGroupName, moveHostGroup } from '@/api/asset/host-group';
+  import { createHostGroup, deleteHostGroup, updateHostGroupName, moveHostGroup } from '@/api/asset/host-group';
   import { isString } from '@/utils/is';
   import { useCacheStore } from '@/store';
 

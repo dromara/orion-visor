@@ -21,15 +21,16 @@
   import { computed, ref, onMounted } from 'vue';
   import { useCacheStore } from '@/store';
   import { labelFilter } from '@/types/form';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: [Number, Array] as PropType<number | Array<number>>,
-    loading: Boolean,
     multiple: Boolean,
   });
 
   const emits = defineEmits(['update:modelValue']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const value = computed({
@@ -43,16 +44,21 @@
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onMounted(() => {
-    // 加载用户列表
-    cacheStore.loadUsers().then(users => {
+  onMounted(async () => {
+    setLoading(true);
+    try {
+      // 加载用户列表
+      const users = await cacheStore.loadUsers();
       optionData.value = users.map(s => {
         return {
           label: `${s.nickname} (${s.username})`,
           value: s.id,
         };
       });
-    });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   });
 
 </script>

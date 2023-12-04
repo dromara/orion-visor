@@ -14,7 +14,7 @@
            :cancel-button-props="{ disabled: loading }"
            :on-before-ok="handlerOk"
            @close="handleClose">
-    <div class="role-menu-wrapper">
+    <a-spin :loading="loading" class="role-menu-wrapper">
       <a-alert class="usn mb8">
         <span>{{ roleRecord.name }} {{ roleRecord.code }}</span>
         <span class="mx8">-</span>
@@ -40,7 +40,7 @@
       </div>
       <!-- 菜单 -->
       <menu-grant-table ref="table" />
-    </div>
+    </a-spin>
   </a-modal>
 </template>
 

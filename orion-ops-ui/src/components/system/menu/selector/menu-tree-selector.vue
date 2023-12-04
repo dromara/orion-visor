@@ -2,6 +2,7 @@
   <a-tree-select v-model:model-value="value"
                  :data="treeData"
                  :disabled="disabled"
+                 :loading="loading"
                  :allow-search="true"
                  :filter-tree-node="titleFilter"
                  placeholder="请选择菜单" />
@@ -19,6 +20,7 @@
   import { computed, onBeforeMount, ref } from 'vue';
   import { MenuType } from '@/views/system/menu/types/const';
   import { titleFilter } from '@/types/form';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: Number,
@@ -27,6 +29,7 @@
 
   const emits = defineEmits(['update:modelValue']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const treeData = ref<Array<TreeNodeData>>([]);
@@ -40,7 +43,7 @@
     }
   });
 
-  onBeforeMount(() => {
+  onBeforeMount(async () => {
     let render = (arr: any[]): TreeNodeData[] => {
       return arr.map((s) => {
         // 为 function 返回空
@@ -60,13 +63,20 @@
         return node;
       }).filter(Boolean);
     };
-    cacheStore.loadMenus().then(menus => {
+
+    // 加载数据
+    try {
+      setLoading(true);
+      const menus = await cacheStore.loadMenus();
       treeData.value = [{
         key: 0,
         title: '根目录',
         children: render([...menus])
       }];
-    });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   });
 
 </script>

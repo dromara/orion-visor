@@ -1,6 +1,7 @@
 <template>
   <a-select v-model:model-value="value"
             :options="optionData"
+            :loading="loading"
             placeholder="请选择主机秘钥"
             allow-clear />
 </template>
@@ -15,6 +16,7 @@
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: Number,
@@ -22,6 +24,7 @@
 
   const emits = defineEmits(['update:modelValue']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const value = computed<number>({
@@ -39,15 +42,20 @@
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onBeforeMount(() => {
-    cacheStore.loadHostKeys().then(hostKeys => {
+  onBeforeMount(async () => {
+    setLoading(true);
+    try {
+      const hostKeys = await cacheStore.loadHostKeys();
       optionData.value = hostKeys.map(s => {
         return {
           label: s.name,
           value: s.id,
         };
       });
-    });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   });
 </script>
 

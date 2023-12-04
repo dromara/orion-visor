@@ -20,10 +20,10 @@
   import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import { labelFilter } from '@/types/form';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: Number,
-    loading: Boolean,
     allowCreate: {
       type: Boolean,
       default: false
@@ -32,7 +32,7 @@
 
   const emits = defineEmits(['update:modelValue', 'change']);
 
-  // 选项数据
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const value = computed({
@@ -60,8 +60,10 @@
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onBeforeMount(() => {
-    cacheStore.loadDictKeys().then(dictKeys => {
+  onBeforeMount(async () => {
+    setLoading(true);
+    try {
+      const dictKeys = await cacheStore.loadDictKeys();
       optionData.value = dictKeys.map(s => {
         return {
           label: `${s.keyName} - ${s.description || ''}`,
@@ -69,7 +71,10 @@
           origin: s
         };
       });
-    });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   });
 
 </script>

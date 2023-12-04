@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
   import type { HostConfigWrapper } from '../../types/const';
-  import { ref, onBeforeMount } from 'vue';
+  import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
@@ -54,6 +54,9 @@
     try {
       setLoading(true);
       setVisible(true);
+      // 加载字典值
+      const dictStore = useDictStore();
+      await dictStore.loadKeys([...sshDictKeys]);
       // 加载配置
       const { data } = await getHostConfigAll({ hostId: record.value.id });
       data.forEach(s => {
@@ -74,12 +77,6 @@
   };
 
   defineExpose({ open });
-
-  onBeforeMount(async () => {
-    // 加载字典值
-    const dictStore = useDictStore();
-    await dictStore.loadKeys([...sshDictKeys]);
-  });
 
 </script>
 

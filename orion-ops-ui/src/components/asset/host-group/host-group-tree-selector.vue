@@ -2,6 +2,7 @@
   <a-tree-select v-model="value"
                  :multiple="true"
                  :data="treeData"
+                 :loading="loading"
                  placeholder="请选择主机分组"
                  :allow-clear="true"
                  :allow-search="true">
@@ -19,7 +20,7 @@
   import type { PropType } from 'vue';
   import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
-  import { getHostGroupTree } from '@/api/asset/host-group';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: Array as PropType<Array<Number>>,
@@ -27,6 +28,7 @@
 
   const emits = defineEmits(['update:modelValue']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const value = computed<Array<number>>({
@@ -44,10 +46,14 @@
   const treeData = ref<Array<TreeNodeData>>([]);
 
   // 初始化选项
-  onBeforeMount(() => {
-    cacheStore.loadHostGroups().then(s => {
-      treeData.value = s;
-    });
+  onBeforeMount(async () => {
+    setLoading(true);
+    try {
+      treeData.value = await cacheStore.loadHostGroups();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   });
 
 </script>

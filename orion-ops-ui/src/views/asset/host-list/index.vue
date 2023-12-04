@@ -40,7 +40,6 @@
   import HostConfigDrawer from './components/config/host-config-drawer.vue';
   import HostGroupDrawer from './components/group/host-group-drawer.vue';
 
-  const render = ref(false);
   const table = ref();
   const card = ref();
   const modal = ref();
