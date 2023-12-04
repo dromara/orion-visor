@@ -1,4 +1,3 @@
-import type { HostQueryResponse } from './host';
 import axios from 'axios';
 
 /**
@@ -34,7 +33,6 @@ export interface HostGroupQueryResponse {
   parentId: number;
   title: string;
   children: Array<HostGroupQueryResponse>;
-  hostList: Array<HostQueryResponse>;
 }
 
 /**

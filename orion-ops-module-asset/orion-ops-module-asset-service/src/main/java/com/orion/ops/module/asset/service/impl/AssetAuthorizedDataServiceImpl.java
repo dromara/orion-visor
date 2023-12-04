@@ -74,7 +74,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     }
 
     @Override
-    public AuthorizedHostGroupWrapperVO getUserAuthorizedHostGroup(Long userId) {
+    public AuthorizedHostWrapperVO getUserAuthorizedHostGroup(Long userId) {
         if (systemUserApi.isAdminUser(userId)) {
             // 管理员查询所有
             return this.buildUserAuthorizedHostGroup(null);
@@ -83,7 +83,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
             List<Long> authorizedIdList = dataPermissionApi.getUserAuthorizedRelIdList(DataPermissionTypeEnum.HOST_GROUP, userId);
             if (authorizedIdList.isEmpty()) {
                 // 无数据
-                return AuthorizedHostGroupWrapperVO.builder()
+                return AuthorizedHostWrapperVO.builder()
                         .groupTree(Lists.empty())
                         .hostList(Lists.empty())
                         .build();
@@ -142,60 +142,103 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
      * @param authorizedGroupIdList authorizedGroupIdList
      * @return tree
      */
-    private AuthorizedHostGroupWrapperVO buildUserAuthorizedHostGroup(List<Long> authorizedGroupIdList) {
+    private AuthorizedHostWrapperVO buildUserAuthorizedHostGroup(List<Long> authorizedGroupIdList) {
         final boolean allData = Lists.isEmpty(authorizedGroupIdList);
-        AuthorizedHostGroupWrapperVO wrapper = new AuthorizedHostGroupWrapperVO();
-        // 查询主机列表
-        List<HostVO> hosts = hostService.getHostListByCache();
-        Map<Long, HostVO> hostMap = hosts.stream()
-                .collect(Collectors.toMap(HostVO::getId, Function.identity(), Functions.right()));
-        // 查询分组引用
-        Map<Long, Set<Long>> groupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);
+        AuthorizedHostWrapperVO wrapper = new AuthorizedHostWrapperVO();
+        // TODO async get 最近连接
+        // TODO async get 我的收藏
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
-        // 过滤分组
+        // 查询分组引用
+        Map<Long, Set<Long>> dataGroupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);
+        // 过滤已经授权的分组
         if (!allData) {
             // 构建已授权的分组
             List<DataGroupDTO> relNodes = new ArrayList<>();
             TreeUtils.getAllNodes(dataGroup, authorizedGroupIdList, relNodes);
             dataGroup = new ArrayList<>(new HashSet<>(relNodes));
         }
-        // 设置组内数据
+        // 设置主机分组树
+        wrapper.setGroupTree(this.getAuthorizedHostGroupTree(dataGroup));
+        // 设置主机分组下的主机
+        wrapper.setTreeNodes(this.getAuthorizedHostGroupNodes(allData, dataGroup, dataGroupRel, authorizedGroupIdList));
+        // 设置已授权的所有主机
+        wrapper.setHostList(this.getAuthorizedHostList(allData, dataGroup, dataGroupRel, authorizedGroupIdList));
+        // TODO set 最近连接
+        // TODO set 我的收藏
+
+        return wrapper;
+    }
+
+    /**
+     * 构建主机分组树
+     *
+     * @param dataGroup dataGroup
+     * @return tree
+     */
+    private List<HostGroupTreeVO> getAuthorizedHostGroupTree(List<DataGroupDTO> dataGroup) {
         List<HostGroupTreeVO> groupList = HostGroupConvert.MAPPER.toList(dataGroup);
-        groupList.stream()
-                // 因为可能父菜单没有授权 这里需要判断组
-                .filter(s -> allData || authorizedGroupIdList.contains(s.getId()))
-                .forEach(s -> {
-                    List<HostVO> groupHosts = Lists.stream(groupRel.get(s.getId()))
-                            .map(hostMap::get)
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
-                    s.setHostList(groupHosts);
-                });
-        // 构建主机树
         HostGroupTreeVO rootNode = HostGroupTreeVO.builder()
                 .id(Const.ROOT_PARENT_ID)
                 .sort(Const.DEFAULT_SORT)
                 .build();
         TreeUtils.buildGroupTree(rootNode, groupList);
-        wrapper.setGroupTree(rootNode.getChildren());
-        // 设置授权的主机
+        return rootNode.getChildren();
+    }
+
+    /**
+     * 获取主机分组树 主机节点映射
+     *
+     * @param allData               allData
+     * @param dataGroup             dataGroup
+     * @param dataGroupRel          dataGroupRel
+     * @param authorizedGroupIdList authorizedGroupIdList
+     * @return hostGroupId:hostIdList
+     */
+    private Map<String, Set<Long>> getAuthorizedHostGroupNodes(boolean allData,
+                                                               List<DataGroupDTO> dataGroup,
+                                                               Map<Long, Set<Long>> dataGroupRel,
+                                                               List<Long> authorizedGroupIdList) {
+        Map<String, Set<Long>> result = new HashMap<>();
+        dataGroup.stream()
+                .map(DataGroupDTO::getId)
+                // 因为可能父菜单没有授权 这里需要判断分组权限
+                .filter(id -> allData || authorizedGroupIdList.contains(id))
+                .forEach(s -> result.put(String.valueOf(s), dataGroupRel.get(s)));
+        return result;
+    }
+
+    /**
+     * 查询已授权的所有主机
+     *
+     * @param allData               allData
+     * @param dataGroup             dataGroup
+     * @param dataGroupRel          dataGroupRel
+     * @param authorizedGroupIdList authorizedGroupIdList
+     * @return hosts
+     */
+    private List<HostVO> getAuthorizedHostList(boolean allData,
+                                               List<DataGroupDTO> dataGroup,
+                                               Map<Long, Set<Long>> dataGroupRel,
+                                               List<Long> authorizedGroupIdList) {
+        // 查询主机列表
+        List<HostVO> hosts = hostService.getHostListByCache();
+        // 全部数据直接返回
         if (allData) {
-            // 设置全部数据
-            wrapper.setHostList(hosts);
-        } else {
-            // 仅设置已授权的数据
-            List<HostVO> groupHosts = groupList.stream()
-                    .filter(s -> authorizedGroupIdList.contains(s.getId()))
-                    .map(s -> groupRel.get(s.getId()))
-                    .filter(Lists::isNoneEmpty)
-                    .flatMap(Collection::stream)
-                    .map(hostMap::get)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            wrapper.setHostList(groupHosts);
+            return hosts;
         }
-        return wrapper;
+        Map<Long, HostVO> hostMap = hosts.stream()
+                .collect(Collectors.toMap(HostVO::getId, Function.identity(), Functions.right()));
+        // 仅设置已授权的数据
+        return dataGroup.stream()
+                .map(DataGroupDTO::getId)
+                .filter(authorizedGroupIdList::contains)
+                .map(dataGroupRel::get)
+                .filter(Lists::isNoneEmpty)
+                .flatMap(Collection::stream)
+                .map(hostMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
 }

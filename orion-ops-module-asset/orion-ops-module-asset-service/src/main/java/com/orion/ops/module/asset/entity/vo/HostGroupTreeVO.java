@@ -44,7 +44,4 @@ public class HostGroupTreeVO implements TreeNode<HostGroupTreeVO>, Serializable 
     @Schema(description = "子节点")
     private List<HostGroupTreeVO> children;
 
-    @Schema(description = "分组内主机")
-    private List<HostVO> hostList;
-
 }

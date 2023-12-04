@@ -1,5 +1,5 @@
-### 查询当前用户已授权的主机分组及主机
-GET {{baseUrl}}/asset/authorized-data/current-host-group
+### 查询当前用户已授权的主机
+GET {{baseUrl}}/asset/authorized-data/current-host
 Authorization: {{token}}
 
 ### 查询当前用户已授权的主机秘钥

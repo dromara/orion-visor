@@ -78,7 +78,6 @@
                               :allowCreate="false"
                               :limit="0"
                               type="HOST"
-                              tag-type="hostTags"
                               placeholder="请选择主机标签" />
         </a-form-item>
       </a-form>

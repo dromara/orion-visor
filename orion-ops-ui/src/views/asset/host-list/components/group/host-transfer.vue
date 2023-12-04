@@ -52,9 +52,7 @@
   import type { PropType } from 'vue';
   import { onMounted, ref, watch, computed } from 'vue';
   import { useCacheStore } from '@/store';
-  import { getHostGroupRelList, updateHostGroupRel } from '@/api/asset/host-group';
-  import { Message } from '@arco-design/web-vue';
-  import { getHostList } from '@/api/asset/host';
+  import { getHostGroupRelList } from '@/api/asset/host-group';
 
   const props = defineProps({
     modelValue: {
@@ -114,31 +112,15 @@
     }
   });
 
-  // 加载主机列表
-  const loadHostList = async () => {
-    emits('loading', true);
-    try {
-      const { data } = await getHostList();
-      // 设置到缓存
-      cacheStore.set('hosts', data);
-    } catch (e) {
-      Message.error('主机列表加载失败');
-    } finally {
-      emits('loading', false);
-    }
-  };
-
-  onMounted(async () => {
-    if (!cacheStore.hosts.length) {
-      // 加载主机列表
-      await loadHostList();
-    }
-    data.value = cacheStore.hosts.map(s => {
-      return {
-        value: String(s.id),
-        label: `${s.name}(${s.code})-${s.address}`,
-        disabled: false
-      };
+  onMounted(() => {
+    cacheStore.loadHosts().then(hosts => {
+      data.value = hosts.map(s => {
+        return {
+          value: String(s.id),
+          label: `${s.name}(${s.code})-${s.address}`,
+          disabled: false
+        };
+      });
     });
   });
 

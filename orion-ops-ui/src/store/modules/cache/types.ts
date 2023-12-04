@@ -1,7 +1,6 @@
 import type { UserQueryResponse } from '@/api/user/user';
 import type { MenuQueryResponse } from '@/api/system/menu';
 import type { RoleQueryResponse } from '@/api/user/role';
-import type { TagQueryResponse } from '@/api/meta/tag';
 import type { HostQueryResponse } from '@/api/asset/host';
 import type { HostGroupQueryResponse } from '@/api/asset/host-group';
 import type { HostKeyQueryResponse } from '@/api/asset/host-key';
@@ -12,7 +11,6 @@ export interface CacheState {
   users?: UserQueryResponse[];
   menus?: MenuQueryResponse[];
   roles?: RoleQueryResponse[];
-  hostTags?: TagQueryResponse[];
   hosts?: HostQueryResponse[];
   hostGroups?: HostGroupQueryResponse[];
   hostKeys?: HostKeyQueryResponse[];

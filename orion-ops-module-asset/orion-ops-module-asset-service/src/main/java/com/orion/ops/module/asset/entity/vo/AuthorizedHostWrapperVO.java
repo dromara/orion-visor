@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 已授权的主机分组 视图响应对象
@@ -20,12 +22,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "AuthorizedHostGroupWrapperVO", description = "已授权的主机分组 视图响应对象")
-public class AuthorizedHostGroupWrapperVO {
+public class AuthorizedHostWrapperVO {
 
     @Schema(description = "授权的主机分组")
     private List<HostGroupTreeVO> groupTree;
 
     @Schema(description = "授权的主机列表")
     private List<HostVO> hostList;
+
+    @Schema(description = "分组树节点映射 'groupId':hostIdList")
+    private Map<String, Set<Long>> treeNodes;
 
 }

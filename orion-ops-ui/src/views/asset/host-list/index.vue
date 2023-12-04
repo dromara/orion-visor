@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container" v-if="render">
+  <div class="layout-container">
     <!-- 列表-表格 -->
     <host-table v-if="renderTable"
                 ref="table"
@@ -32,10 +32,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { computed, ref, onBeforeMount, onUnmounted } from 'vue';
+  import { computed, ref, onUnmounted } from 'vue';
   import { useAppStore, useCacheStore } from '@/store';
-  import { getTagList } from '@/api/meta/tag';
-  import { Message } from '@arco-design/web-vue';
   import HostTable from './components/host-table.vue';
   import HostCardList from './components/host-card-list.vue';
   import HostFormModal from './components/host-form-modal.vue';
@@ -72,26 +70,9 @@
     }
   };
 
-  // 加载 tags
-  const loadTags = async () => {
-    try {
-      const { data } = await getTagList('HOST');
-      // 设置到缓存
-      cacheStore.set('hostTags', data);
-    } catch (e) {
-      Message.error('tag加载失败');
-    }
-  };
-
-  onBeforeMount(async () => {
-    // 加载 tags
-    await loadTags();
-    render.value = true;
-  });
-
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('hosts', 'hostTags', 'hostKeys', 'hostIdentities', 'hostGroups');
+    cacheStore.reset('hosts', 'hostKeys', 'hostIdentities', 'hostGroups', 'HOST_Tags');
   });
 
 </script>

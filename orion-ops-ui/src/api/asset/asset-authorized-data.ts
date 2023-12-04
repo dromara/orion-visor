@@ -5,18 +5,19 @@ import type { HostIdentityQueryResponse } from './host-identity';
 import axios from 'axios';
 
 /**
- * 已授权的主机分组 查询响应
+ * 已授权的主机 查询响应
  */
-export interface AuthorizedHostGroupQueryResponse {
+export interface AuthorizedHostQueryResponse {
   groupTree: Array<HostGroupQueryResponse>;
   hostList: Array<HostQueryResponse>;
+  treeNodes: Record<string, Array<number>>;
 }
 
 /**
- * 查询当前用户已授权的主机分组
+ * 查询当前用户已授权的主机
  */
-export function getCurrentAuthorizedHostGroup() {
-  return axios.get<AuthorizedHostGroupQueryResponse>('/asset/authorized-data/current-host-group');
+export function getCurrentAuthorizedHost() {
+  return axios.get<AuthorizedHostQueryResponse>('/asset/authorized-data/current-host');
 }
 
 /**

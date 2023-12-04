@@ -40,11 +40,13 @@
 
   // 初始化选项
   onBeforeMount(() => {
-    optionData.value = cacheStore.hostIdentities.map(s => {
-      return {
-        label: `${s.name} (${s.username})`,
-        value: s.id,
-      };
+    cacheStore.loadHostIdentities().then(hostIdentities => {
+      optionData.value = hostIdentities.map(s => {
+        return {
+          label: `${s.name} (${s.username})`,
+          value: s.id,
+        };
+      });
     });
   });
 

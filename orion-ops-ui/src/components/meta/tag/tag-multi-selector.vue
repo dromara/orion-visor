@@ -2,6 +2,7 @@
   <a-select v-model:model-value="value"
             :placeholder="placeholder"
             :options="optionData"
+            :loading="loading"
             :limit="limit as number"
             :allow-create="allowCreate"
             @exceed-limit="() => { emits('onLimited', limit, `最多选择${limit}个tag`) }"
@@ -24,6 +25,7 @@
   import { useCacheStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import { createTag } from '@/api/meta/tag';
+  import useLoading from '@/hooks/loading';
 
   const props = defineProps({
     modelValue: Array as PropType<Array<number>>,
@@ -31,11 +33,11 @@
     limit: Number,
     type: String,
     allowCreate: Boolean,
-    tagType: String,
   });
 
   const emits = defineEmits(['update:modelValue', 'onLimited']);
 
+  const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
   const value = computed<Array<number>>({
@@ -51,12 +53,13 @@
 
   // 初始化选项
   onBeforeMount(() => {
-    const tagCache = cacheStore[props.tagType as string] as Array<any>;
-    optionData.value = tagCache.map(s => {
-      return {
-        label: s.name,
-        value: s.id,
-      };
+    cacheStore.loadTags(props.type as string).then((tags) => {
+      optionData.value = tags.map(s => {
+        return {
+          label: s.name,
+          value: s.id,
+        };
+      });
     });
   });
 
@@ -78,12 +81,16 @@
         tags.splice(i, 1);
         return;
       }
+      // 不存在则创建 tag
+      setLoading(true);
       try {
         // 创建 tag
         tags[i] = await doCreateTag(tag);
       } catch (e) {
         // 失败删除
         tags.splice(i, 1);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -95,8 +102,8 @@
       type: props.type
     } as unknown as TagCreateRequest);
     // 插入缓存
-    const tagCache = cacheStore[props.tagType as string] as Array<any>;
-    tagCache.push({ id, name });
+    const tagCache = await cacheStore.loadTags(props.type as string);
+    tagCache && tagCache.push({ id, name });
     // 插入 options
     optionData.value.push({
       label: name,

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export type TagType = 'HOST'
+export type TagType = 'HOST' | string
 
 /**
  * tag 创建对象
@@ -29,5 +29,5 @@ export function createTag(request: TagCreateRequest) {
  * 查询标签
  */
 export function getTagList(type: TagType) {
-  return axios.get<TagQueryResponse>('/infra/tag/list', { params: { type } });
+  return axios.get<Array<TagQueryResponse>>('/infra/tag/list', { params: { type } });
 }

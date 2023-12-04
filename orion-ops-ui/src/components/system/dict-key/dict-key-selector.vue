@@ -41,18 +41,18 @@
     },
     set(e) {
       if (typeof e === 'string') {
-        // 创建的值
-        emits('update:modelValue', undefined);
+        // 创建的值 这里必须为 null, 否则 table 的重置不生效
+        emits('update:modelValue', null);
         emits('change', {
-          id: undefined,
+          id: null,
           keyName: e
         });
       } else {
         // 已有的值
         emits('update:modelValue', e);
-        const find = cacheStore.dictKeys.find(s => s.id === e);
+        const find = optionData.value.find(s => s.value === e);
         if (find) {
-          emits('change', find);
+          emits('change', find.origin);
         }
       }
     }
@@ -61,11 +61,14 @@
 
   // 初始化选项
   onBeforeMount(() => {
-    optionData.value = cacheStore.dictKeys.map(s => {
-      return {
-        label: `${s.keyName} - ${s.description || ''}`,
-        value: s.id,
-      };
+    cacheStore.loadDictKeys().then(dictKeys => {
+      optionData.value = dictKeys.map(s => {
+        return {
+          label: `${s.keyName} - ${s.description || ''}`,
+          value: s.id,
+          origin: s
+        };
+      });
     });
   });
 

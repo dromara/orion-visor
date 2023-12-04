@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container" v-if="render">
+  <div class="layout-container">
     <!-- 列表-表格 -->
     <dict-value-table ref="table"
                       @openAdd="() => modal.openAdd()"
@@ -27,14 +27,11 @@
   import DictValueTable from './components/dict-value-table.vue';
   import DictValueFormModal from './components/dict-value-form-modal.vue';
   import HistoryValueModal from '@/components/meta/history/history-value-modal.vue';
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
+  import { ref, onUnmounted } from 'vue';
   import { historyType } from './types/const';
   import { useCacheStore } from '@/store';
-  import { getDictKeyList } from '@/api/system/dict-key';
-  import { Message } from '@arco-design/web-vue';
   import { rollbackDictValue } from '@/api/system/dict-value';
 
-  const render = ref(false);
   const table = ref();
   const modal = ref();
   const history = ref();
@@ -54,23 +51,6 @@
   const rollback = async (id: number, valueId: number) => {
     await rollbackDictValue({ id, valueId });
   };
-
-  // 加载字典配置项
-  const loadDictKeys = async () => {
-    try {
-      const { data } = await getDictKeyList();
-      // 设置到缓存
-      cacheStore.set('dictKeys', data);
-    } catch (e) {
-      Message.error('配置项加载失败');
-    }
-  };
-
-  onBeforeMount(async () => {
-    // 加载字典值
-    await loadDictKeys();
-    render.value = true;
-  });
 
   // 卸载时清除 cache
   onUnmounted(() => {

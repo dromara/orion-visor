@@ -125,12 +125,11 @@
   import formRules from '../types/form.rules';
   import { menuCacheKey, sortStep } from '../types/const';
   import { menuVisibleKey, menuTypeKey, MenuType, MenuVisible, MenuCache } from '../types/const';
-
-  import IconPicker from '@sanqi377/arco-vue-icon-picker';
-  import MenuTreeSelector from './menu-tree-selector.vue';
   import { createMenu, updateMenu } from '@/api/system/menu';
   import { Message } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
+  import IconPicker from '@sanqi377/arco-vue-icon-picker';
+  import MenuTreeSelector from '@/components/system/menu/selector/menu-tree-selector.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

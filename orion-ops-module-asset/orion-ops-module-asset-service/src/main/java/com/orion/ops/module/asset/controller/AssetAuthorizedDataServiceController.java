@@ -4,7 +4,7 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.entity.vo.AuthorizedHostGroupWrapperVO;
+import com.orion.ops.module.asset.entity.vo.AuthorizedHostWrapperVO;
 import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
 import com.orion.ops.module.asset.entity.vo.HostKeyVO;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
@@ -38,9 +38,9 @@ public class AssetAuthorizedDataServiceController {
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/current-host-group")
-    @Operation(summary = "查询当前用户已授权的主机分组及主机")
-    public AuthorizedHostGroupWrapperVO getCurrentAuthorizedHostGroup() {
+    @GetMapping("/current-host")
+    @Operation(summary = "查询当前用户已授权的主机")
+    public AuthorizedHostWrapperVO getCurrentAuthorizedHostGroup() {
         return assetAuthorizedDataService.getUserAuthorizedHostGroup(SecurityUtils.getLoginUserId());
     }
 

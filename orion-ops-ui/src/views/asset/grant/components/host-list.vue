@@ -36,10 +36,8 @@
   import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useCacheStore } from '@/store';
-  import { onBeforeMount, ref, watch } from 'vue';
+  import { ref, watch } from 'vue';
   import { getHostGroupRelList } from '@/api/asset/host-group';
-  import { getHostList } from '@/api/asset/host';
-  import { Message } from '@arco-design/web-vue';
 
   const props = defineProps({
     group: {
@@ -64,29 +62,12 @@
     try {
       setLoading(true);
       const { data } = await getHostGroupRelList(groupId as number);
-      selectedGroupHosts.value = data.map(s => cacheStore.hosts.find(h => h.id === s) as HostQueryResponse)
+      const hosts = await cacheStore.loadHosts();
+      selectedGroupHosts.value = data.map(s => hosts.find(h => h.id === s) as HostQueryResponse)
         .filter(Boolean);
     } catch (e) {
     } finally {
       setLoading(false);
-    }
-  });
-
-  // 加载主机列表
-  const loadHostList = async () => {
-    try {
-      const { data } = await getHostList();
-      // 设置到缓存
-      cacheStore.set('hosts', data);
-    } catch (e) {
-      Message.error('主机列表加载失败');
-    }
-  };
-
-  onBeforeMount(async () => {
-    if (!cacheStore.hosts.length) {
-      // 加载用户列表
-      await loadHostList();
     }
   });
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container" v-if="render">
+  <div class="layout-container">
     <!-- 列表-表格 -->
     <host-identity-table v-if="renderTable"
                          ref="table"
@@ -16,7 +16,7 @@
     <host-identity-form-modal ref="modal"
                               @added="modalAddCallback"
                               @updated="modalUpdateCallback" />
-    <!-- 添加修改模态框 -->
+    <!-- 主机秘钥抽屉 -->
     <host-key-form-drawer ref="keyDrawer" />
   </div>
 </template>
@@ -28,17 +28,13 @@
 </script>
 
 <script lang="ts" setup>
+  import { ref, computed, onUnmounted } from 'vue';
+  import { useAppStore, useCacheStore } from '@/store';
   import HostIdentityCardList from './components/host-identity-card-list.vue';
   import HostIdentityTable from './components/host-identity-table.vue';
   import HostIdentityFormModal from './components/host-identity-form-modal.vue';
   import HostKeyFormDrawer from '../host-key/components/host-key-form-drawer.vue';
-  import { getHostKeyList } from '@/api/asset/host-key';
 
-  import { ref, computed, onBeforeMount, onUnmounted } from 'vue';
-  import { useAppStore, useCacheStore } from '@/store';
-  import { Message } from '@arco-design/web-vue';
-
-  const render = ref(false);
   const table = ref();
   const card = ref();
   const modal = ref();
@@ -65,22 +61,6 @@
       card.value.updatedCallback();
     }
   };
-
-  // 获取主机秘钥列表
-  const fetchHostKeyList = async () => {
-    try {
-      const { data } = await getHostKeyList();
-      cacheStore.set('hostKeys', data);
-    } catch (e) {
-      Message.error('主机秘钥加载失败');
-    }
-  };
-
-  onBeforeMount(async () => {
-    // 加载主机秘钥
-    await fetchHostKeyList();
-    render.value = true;
-  });
 
   // 卸载时清除 cache
   onUnmounted(() => {

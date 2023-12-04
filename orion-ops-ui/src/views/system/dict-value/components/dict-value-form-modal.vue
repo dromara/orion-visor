@@ -139,10 +139,11 @@
   };
 
   // 渲染表单
-  const renderForm = (record: any) => {
+  const renderForm = async (record: any) => {
     formModel.value = Object.assign({}, record);
     // schema
-    const find = record.keyId && cacheStore.dictKeys.find((item) => item.id === record.keyId);
+    const dictKeys = await cacheStore.loadDictKeys();
+    const find = record.keyId && dictKeys.find((item) => item.id === record.keyId);
     keyExtraSchemas.value = (find && find.extraSchema && JSON.parse(find.extraSchema)) || [];
     // 额外参数
     extraValue.value = (formModel.value.extra && JSON.parse(formModel.value.extra)) || {};

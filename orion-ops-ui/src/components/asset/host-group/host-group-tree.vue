@@ -5,7 +5,7 @@
             ref="tree"
             class="tree-container"
             :blockNode="true"
-            :draggable="draggable"
+            :draggable="editable"
             :data="treeData"
             :checkable="checkable"
             v-model:checked-keys="checkedKeys"
@@ -20,7 +20,6 @@
                    v-model="currName"
                    style="width: 138px;"
                    placeholder="名称"
-                   autofocus
                    :max-length="32"
                    :disabled="node.loading"
                    @blur="() => saveNode(node.key)"
@@ -77,7 +76,7 @@
     <!-- 无数据 -->
     <div v-else-if="!loading" class="empty-container">
       <span>暂无数据</span>
-      <span>点击上方 '<icon-plus />' 添加一个分组吧~</span>
+      <span v-if="editable">点击上方 '<icon-plus />' 添加一个分组吧~</span>
     </div>
   </a-scrollbar>
 </template>
@@ -99,7 +98,7 @@
 
   const props = defineProps({
     loading: Boolean,
-    draggable: {
+    editable: {
       type: Boolean,
       default: true
     },
@@ -313,20 +312,13 @@
 
   // 加载数据
   const fetchTreeData = async (force = false) => {
-    if (cacheStore.hostGroups.length && !force) {
-      // 缓存有数据并且非强制加载 直接从缓存中加载
-      treeData.value = cacheStore.hostGroups;
-    } else {
-      // 无数据/强制加载
-      try {
-        emits('loading', true);
-        const { data } = await getHostGroupTree();
-        treeData.value = data;
-        cacheStore.hostGroups = data;
-      } catch (e) {
-      } finally {
-        emits('loading', false);
-      }
+    try {
+      const groups = await cacheStore.loadHostGroups(force);
+      emits('loading', true);
+      treeData.value = groups;
+    } catch (e) {
+    } finally {
+      emits('loading', false);
     }
     // 未选择则选择首个
     if (!tree.value?.getSelectedNodes()?.length && treeData.value.length) {

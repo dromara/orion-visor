@@ -40,11 +40,13 @@
 
   // 初始化选项
   onBeforeMount(() => {
-    optionData.value = cacheStore.hostKeys.map(s => {
-      return {
-        label: s.name,
-        value: s.id,
-      };
+    cacheStore.loadHostKeys().then(hostKeys => {
+      optionData.value = hostKeys.map(s => {
+        return {
+          label: s.name,
+          value: s.id,
+        };
+      });
     });
   });
 </script>

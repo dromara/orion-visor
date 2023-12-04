@@ -31,7 +31,7 @@
         <host-group-tree outer-class="group-main-tree"
                          :checkable="true"
                          :checked-keys="checkedGroups"
-                         :draggable="false"
+                         :editable="false"
                          :loading="loading"
                          @loading="setLoading"
                          @select-node="e => selectedGroup = e"

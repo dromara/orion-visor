@@ -67,7 +67,9 @@
     unTriggerChange.value = true;
     checkedKeys.value = keys;
     if (!menuData.value.length) {
-      menuData.value = [...cacheStore.menus];
+      cacheStore.loadMenus().then(menus => {
+        menuData.value = [...menus];
+      });
     }
   };
 

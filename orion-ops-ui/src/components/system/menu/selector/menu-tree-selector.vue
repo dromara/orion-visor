@@ -1,9 +1,9 @@
 <template>
   <a-tree-select v-model:model-value="value"
-                 :data="treeData()"
+                 :data="treeData"
                  :disabled="disabled"
                  :allow-search="true"
-                 :filter-tree-node="filterTreeNode"
+                 :filter-tree-node="titleFilter"
                  placeholder="请选择菜单" />
 </template>
 
@@ -16,8 +16,9 @@
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
-  import { computed } from 'vue';
-  import { MenuType } from '../types/const';
+  import { computed, onBeforeMount, ref } from 'vue';
+  import { MenuType } from '@/views/system/menu/types/const';
+  import { titleFilter } from '@/types/form';
 
   const props = defineProps({
     modelValue: Number,
@@ -25,6 +26,10 @@
   });
 
   const emits = defineEmits(['update:modelValue']);
+
+  const cacheStore = useCacheStore();
+
+  const treeData = ref<Array<TreeNodeData>>([]);
 
   const value = computed({
     get() {
@@ -35,9 +40,7 @@
     }
   });
 
-  // 树数据
-  const cacheStore = useCacheStore();
-  const treeData = (): TreeNodeData[] => {
+  onBeforeMount(() => {
     let render = (arr: any[]): TreeNodeData[] => {
       return arr.map((s) => {
         // 为 function 返回空
@@ -57,17 +60,14 @@
         return node;
       }).filter(Boolean);
     };
-    return [{
-      key: 0,
-      title: '根目录',
-      children: render([...cacheStore.menus])
-    }];
-  };
-
-  // 搜索
-  const filterTreeNode = (searchValue: string, nodeData: { title: string; }) => {
-    return nodeData.title.toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
-  };
+    cacheStore.loadMenus().then(menus => {
+      treeData.value = [{
+        key: 0,
+        title: '根目录',
+        children: render([...menus])
+      }];
+    });
+  });
 
 </script>
 

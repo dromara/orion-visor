@@ -263,7 +263,6 @@
       setFetchLoading(true);
       const { data } = await getMenuList(formModel);
       tableRenderData.value = data as MenuQueryResponse[];
-      cacheStore.set('menus', tableRenderData.value);
     } catch (e) {
     } finally {
       setFetchLoading(false);

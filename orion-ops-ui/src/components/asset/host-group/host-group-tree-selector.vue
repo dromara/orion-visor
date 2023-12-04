@@ -44,15 +44,10 @@
   const treeData = ref<Array<TreeNodeData>>([]);
 
   // 初始化选项
-  onBeforeMount(async () => {
-    if (cacheStore.hostGroups.length) {
-      treeData.value = cacheStore.hostGroups;
-    } else {
-      // 加载数据
-      const { data } = await getHostGroupTree();
-      treeData.value = data;
-      cacheStore.set('hostGroups', data);
-    }
+  onBeforeMount(() => {
+    cacheStore.loadHostGroups().then(s => {
+      treeData.value = s;
+    });
   });
 
 </script>

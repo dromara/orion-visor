@@ -1,24 +1,23 @@
 import type { CacheState } from './types';
 import type { AxiosResponse } from 'axios';
+import type { TagType } from '@/api/meta/tag';
+import { getTagList } from '@/api/meta/tag';
 import { defineStore } from 'pinia';
 import { getUserList } from '@/api/user/user';
 import { getRoleList } from '@/api/user/role';
+import { getDictKeyList } from '@/api/system/dict-key';
+import { getHostKeyList } from '@/api/asset/host-key';
+import { getHostIdentityList } from '@/api/asset/host-identity';
+import { getHostList } from '@/api/asset/host';
+import { getHostGroupTree } from '@/api/asset/host-group';
+import { getMenuList } from '@/api/system/menu';
 
 export type CacheType = 'users' | 'menus' | 'roles'
-  | 'host' | 'hostGroups' | 'hostTags' | 'hostKeys' | 'hostIdentities'
+  | 'host' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
   | 'dictKeys' | string
 
 export default defineStore('cache', {
-  state: (): CacheState => ({
-    menus: [],
-    roles: [],
-    hosts: [],
-    hostGroups: [],
-    hostTags: [],
-    hostKeys: [],
-    hostIdentities: [],
-    dictKeys: [],
-  }),
+  state: (): CacheState => ({}),
 
   getters: {},
 
@@ -41,9 +40,9 @@ export default defineStore('cache', {
     },
 
     // 加载数据
-    async load<T>(name: CacheType, loader: () => Promise<AxiosResponse<T>>, onErrorValue = []) {
+    async load<T>(name: CacheType, loader: () => Promise<AxiosResponse<T>>, force = false, onErrorValue = []) {
       // 尝试直接从缓存中获取数据
-      if (this[name]) {
+      if (this[name] && !force) {
         return this[name] as T;
       }
       // 加载数据
@@ -57,13 +56,48 @@ export default defineStore('cache', {
     },
 
     // 获取用户列表
-    async loadUsers() {
-      return await this.load('users', getUserList);
+    async loadUsers(force = false) {
+      return await this.load('users', getUserList, force);
     },
 
     // 获取角色列表
-    async loadRoles() {
-      return await this.load('roles', getRoleList);
+    async loadRoles(force = false) {
+      return await this.load('roles', getRoleList, force);
+    },
+
+    // 获取菜单列表
+    async loadMenus(force = false) {
+      return await this.load('menus', () => getMenuList({}), force);
+    },
+
+    // 获取主机分组列表
+    async loadHostGroups(force = false) {
+      return await this.load('hostGroups', getHostGroupTree, force);
+    },
+
+    // 获取主机列表
+    async loadHosts(force = false) {
+      return await this.load('hosts', getHostList, force);
+    },
+
+    // 获取主机秘钥列表
+    async loadHostKeys(force = false) {
+      return await this.load('hostKeys', getHostKeyList, force);
+    },
+
+    // 获取主机身份列表
+    async loadHostIdentities(force = false) {
+      return await this.load('hostIdentities', getHostIdentityList, force);
+    },
+
+    // 获取字典配置项列表
+    async loadDictKeys(force = false) {
+      return await this.load('dictKeys', getDictKeyList, force);
+    },
+
+    // 加载 tags
+    async loadTags(type: TagType, force = false) {
+      return await this.load(`${type}_Tags`, () => getTagList(type), force);
     },
 
   }

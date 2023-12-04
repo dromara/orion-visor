@@ -57,10 +57,8 @@
   import useVisible from '@/hooks/visible';
   import { getRoleMenuId, grantRoleMenu } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
-  import { useCacheStore } from '@/store';
-  import { getMenuList } from '@/api/system/menu';
-  import MenuGrantTable from '@/components/system/menu/grant/menu-grant-table.vue';
   import { quickGrantMenuOperator } from '../types/const';
+  import MenuGrantTable from '@/components/system/menu/grant/menu-grant-table.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -74,13 +72,6 @@
     setVisible(true);
     try {
       setLoading(true);
-      // 获取菜单列表
-      const cacheStore = useCacheStore();
-      if (!cacheStore.menus?.length) {
-        // 加载菜单
-        const { data: menuData } = await getMenuList({});
-        cacheStore.set('menus', menuData);
-      }
       // 获取角色菜单
       const { data: roleMenuIdList } = await getRoleMenuId(record.id);
       table.value.init(roleMenuIdList);

@@ -43,7 +43,6 @@
                               :allowCreate="true"
                               :limit="5"
                               type="HOST"
-                              tag-type="hostTags"
                               placeholder="请选择主机标签"
                               @onLimited="onLimitedTag" />
         </a-form-item>

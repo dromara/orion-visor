@@ -1,7 +1,7 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
-import com.orion.ops.module.asset.entity.vo.AuthorizedHostGroupWrapperVO;
+import com.orion.ops.module.asset.entity.vo.AuthorizedHostWrapperVO;
 import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
 import com.orion.ops.module.asset.entity.vo.HostKeyVO;
 import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
@@ -27,12 +27,12 @@ public interface AssetAuthorizedDataService {
     List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request);
 
     /**
-     * 查询用户已授权的主机分组和主机
+     * 查询用户已授权的主机主机
      *
      * @param userId userId
      * @return group
      */
-    AuthorizedHostGroupWrapperVO getUserAuthorizedHostGroup(Long userId);
+    AuthorizedHostWrapperVO getUserAuthorizedHostGroup(Long userId);
 
     /**
      * 查询用户已授权的主机秘钥
