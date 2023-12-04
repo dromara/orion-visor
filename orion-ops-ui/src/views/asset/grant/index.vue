@@ -12,7 +12,7 @@
           <component :is="tab.icon" />
           {{ tab.title }}
         </template>
-        <component :is="tab.component" />
+        <component :is="tab.component" :type="tab.type" />
       </a-tab-pane>
     </a-tabs>
   </div>
