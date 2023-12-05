@@ -69,7 +69,7 @@
 
   .right-side {
     width: 280px;
-    margin-left: 16px;
+    margin-top: 16px;
   }
 
   .panel {

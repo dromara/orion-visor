@@ -2,7 +2,14 @@
   <div class="host-layout">
     <!-- 头部区域 -->
     <header class="host-layout-header">
-      <terminal-header />
+      <terminal-header>
+        <!-- 主机 tabs -->
+        <a-tabs :editable="true" :hide-content="true">
+          <a-tab-pane v-for="i in 30"
+                      :key="i"
+                      :title="'主机主机主机'+i+''" />
+        </a-tabs>
+      </terminal-header>
     </header>
     <!-- 主体区域 -->
     <main class="host-layout-main">

@@ -8,14 +8,11 @@
                content-class="terminal-sidebar-tooltip-content"
                arrow-class="terminal-sidebar-tooltip-arrow"
                :content="action.content">
-      <div class="terminal-sidebar-icon-wrapper">
+      <div class="terminal-sidebar-icon-wrapper" :style="action?.style">
         <div class="terminal-sidebar-icon" @click="action.event">
           <component :is="action.icon" />
         </div>
       </div>
-      外观
-      主题
-      快捷键
     </a-tooltip>
   </div>
 </template>
@@ -27,10 +24,12 @@
 </script>
 
 <script lang="ts" setup>
+  import { SidebarAction } from '../../types/terminal.type';
+
   const emits = defineEmits(['openAdd', 'openSetting']);
 
   // 操作
-  const actions = [
+  const actions: Array<SidebarAction> = [
     {
       icon: 'icon-plus',
       content: '新建连接',

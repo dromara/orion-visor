@@ -14,8 +14,15 @@ body[terminal-theme='light'] {
   --color-bg-content: #FEFEFE;
   --color-sidebar-icon: #737070;
   --color-sidebar-icon-bg: #D7D8DB;
-  --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
+  --color-text-white: rgba(255, 255, 255, .9);
+  --color-text-black: rgba(0, 0, 0, .9);
+  --color-sidebar-tooltip-text: var(--color-text-white);
   --color-sidebar-tooltip-bg: rgb(var(--gray-10));
+  --color-host-tabs-bg: var(--color-bg-header);
+  --color-host-tabs-active-bg: var(--color-bg-content);
+  --color-host-tabs-text: rgba(255, 255, 255, .6);
+  --color-host-tabs-hover-text: rgba(255, 255, 255, .8);
+  --color-host-tabs-active-text: var(--color-text-black);
 }
 
 // 暗色主题配色常量
@@ -25,8 +32,15 @@ body[terminal-theme='dark'] {
   --color-bg-content: #1A1B1F;
   --color-sidebar-icon: #C3C8CE;
   --color-sidebar-icon-bg: #43444C;
-  --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
+  --color-text-white: rgba(255, 255, 255, .9);
+  --color-text-black: rgba(0, 0, 0, .9);
+  --color-sidebar-tooltip-text: var(--color-text-white);
   --color-sidebar-tooltip-bg: var(--color-sidebar-icon-bg);
+  --color-host-tabs-bg: var(--color-bg-header);
+  --color-host-tabs-active-bg: var(--color-bg-content);
+  --color-host-tabs-text: rgba(255, 255, 255, .6);
+  --color-host-tabs-hover-text: rgba(255, 255, 255, .8);
+  --color-host-tabs-active-text: rgba(255, 255, 255, .9);
 }
 
 // 侧栏图标 wrapper
