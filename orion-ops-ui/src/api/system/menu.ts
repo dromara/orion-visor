@@ -12,6 +12,7 @@ export interface MenuCreateRequest {
   sort?: number;
   visible?: number;
   cache?: number;
+  newWindow?: number;
   icon?: string;
   path?: string;
   component?: string;
@@ -46,6 +47,7 @@ export interface MenuQueryResponse extends TableData {
   visible: number;
   status: number;
   cache: number;
+  newWindow: number,
   icon: string;
   path: string;
   component: string;

@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="host-workspace-layout">
+  <a-layout class="host-layout">
     <!-- 页面 -->
     <a-layout-content>
       <!-- 水印 -->
@@ -16,7 +16,7 @@
 
 <script lang="ts">
   export default {
-    name: 'hos-workspace-layout'
+    name: 'host-layout'
   };
 </script>
 
@@ -29,7 +29,7 @@
 </script>
 
 <style lang="less" scoped>
-  .host-workspace-layout {
+  .host-layout {
     height: 100vh;
     width: 100%;
 

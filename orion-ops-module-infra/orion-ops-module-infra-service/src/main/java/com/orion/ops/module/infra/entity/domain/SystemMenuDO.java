@@ -62,6 +62,10 @@ public class SystemMenuDO extends BaseDO {
     @TableField("cache")
     private Integer cache;
 
+    @Schema(description = "新窗口打开 0关闭 1开启")
+    @TableField("new_window")
+    private Integer newWindow;
+
     @Schema(description = "菜单图标")
     @TableField("icon")
     private String icon;

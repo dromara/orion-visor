@@ -13,7 +13,8 @@ Authorization: {{token}}
   "cache": "",
   "icon": "",
   "path": "",
-  "component": ""
+  "component": "",
+  "newWindow": ""
 }
 
 
@@ -33,7 +34,8 @@ Authorization: {{token}}
   "cache": "",
   "icon": "",
   "path": "",
-  "component": ""
+  "component": "",
+  "newWindow": ""
 }
 
 

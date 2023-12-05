@@ -1,7 +1,7 @@
 <script lang="tsx">
   import type { RouteMeta, RouteRecordRaw } from 'vue-router';
-  import { compile, computed, defineComponent, h, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { compile, computed, defineComponent, h, ref } from 'vue';
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/utils/route-listener';
   import { openWindow, regexUrl } from '@/utils';
@@ -28,27 +28,23 @@
       const openKeys = ref<string[]>([]);
       const selectedKey = ref<string[]>([]);
 
-      /**
-       * 跳转
-       */
+      // 跳转路由
       const goto = (e: any, item: RouteRecordRaw) => {
         // 打开外链
         if (regexUrl.test(item.path)) {
           openWindow(item.path);
-          selectedKey.value = [item.name as string];
           return;
         }
+        const { hideInMenu, activeMenu, newWindow } = item.meta as RouteMeta;
         // 新页面打开
-        if (e.ctrlKey) {
+        if (newWindow || e.ctrlKey) {
           const { href } = router.resolve({
             name: item.name,
           });
           openWindow(href);
-          selectedKey.value = [item.name as string];
           return;
         }
         // 设置 selectedKey
-        const { hideInMenu, activeMenu } = item.meta as RouteMeta;
         if (route.name === item.name && !hideInMenu && !activeMenu) {
           selectedKey.value = [item.name as string];
           return;
@@ -81,9 +77,7 @@
         return result;
       };
 
-      /**
-       * 监听路由 设置打开的 key
-       */
+      // 监听路由 设置打开的 key
       listenerRouteChange((newRoute) => {
         const { activeMenu, hideInMenu } = newRoute.meta;
         if (!hideInMenu || activeMenu) {

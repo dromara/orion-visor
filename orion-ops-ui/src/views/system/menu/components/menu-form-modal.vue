@@ -3,7 +3,7 @@
            body-class="modal-form"
            title-align="start"
            :title="title"
-           :top="80"
+           :top="30"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -17,8 +17,8 @@
               ref="formRef"
               label-align="right"
               :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
+              :label-col-props="{ span: 7 }"
+              :wrapper-col-props="{ span: 17 }"
               :rules="formRules">
         <!-- 上级菜单 -->
         <a-form-item field="parentId" label="上级菜单">
@@ -88,10 +88,23 @@
           <a-switch type="round"
                     size="large"
                     v-model="formModel.visible"
-                    :checked-text="getDictValue(menuVisibleKey, MenuVisible.SHOW)"
-                    :unchecked-text="getDictValue(menuVisibleKey, MenuVisible.HIDE)"
-                    :checked-value="MenuVisible.SHOW"
-                    :unchecked-value="MenuVisible.HIDE" />
+                    :checked-text="getDictValue(menuVisibleKey, EnabledStatus.ENABLED)"
+                    :unchecked-text="getDictValue(menuVisibleKey, EnabledStatus.DISABLED)"
+                    :checked-value="EnabledStatus.ENABLED"
+                    :unchecked-value="EnabledStatus.DISABLED" />
+        </a-form-item>
+        <!-- 是否新窗口打开 -->
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
+                     field="type"
+                     label="新窗口打开"
+                     tooltip="选择后点击菜单会使用新页面打开">
+          <a-switch type="round"
+                    size="large"
+                    v-model="formModel.newWindow"
+                    :checked-text="getDictValue(menuNewWindowKey, EnabledStatus.ENABLED)"
+                    :unchecked-text="getDictValue(menuNewWindowKey, EnabledStatus.DISABLED)"
+                    :checked-value="EnabledStatus.ENABLED"
+                    :unchecked-value="EnabledStatus.DISABLED" />
         </a-form-item>
         <!-- 是否缓存 -->
         <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
@@ -101,10 +114,10 @@
           <a-switch type="round"
                     size="large"
                     v-model="formModel.cache"
-                    :checked-text="getDictValue(menuCacheKey, MenuCache.ENABLED)"
-                    :unchecked-text="getDictValue(menuCacheKey, MenuCache.DISABLED)"
-                    :checked-value="MenuCache.ENABLED"
-                    :unchecked-value="MenuCache.DISABLED" />
+                    :checked-text="getDictValue(menuCacheKey, EnabledStatus.ENABLED)"
+                    :unchecked-text="getDictValue(menuCacheKey, EnabledStatus.DISABLED)"
+                    :checked-value="EnabledStatus.ENABLED"
+                    :unchecked-value="EnabledStatus.DISABLED" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -123,8 +136,9 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { menuCacheKey, sortStep } from '../types/const';
-  import { menuVisibleKey, menuTypeKey, MenuType, MenuVisible, MenuCache } from '../types/const';
+  import { menuCacheKey, menuNewWindowKey, sortStep } from '../types/const';
+  import { menuVisibleKey, menuTypeKey, MenuType } from '../types/const';
+  import { EnabledStatus } from '@/types/const';
   import { createMenu, updateMenu } from '@/api/system/menu';
   import { Message } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
@@ -147,7 +161,8 @@
       permission: undefined,
       sort: undefined,
       visible: MenuVisible.SHOW,
-      cache: MenuCache.ENABLED,
+      cache: EnabledStatus.ENABLED,
+      newWindow: EnabledStatus.DISABLED,
       icon: undefined,
       path: undefined,
       component: undefined,

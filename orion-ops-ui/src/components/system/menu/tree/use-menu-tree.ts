@@ -1,4 +1,4 @@
-import type { RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
+import type { RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
 import { computed } from 'vue';
 import { useMenuStore } from '@/store';
 import { cloneDeep } from 'lodash';
@@ -19,9 +19,8 @@ export default function useMenuTree() {
 
       const collector: any = _routes.map((element) => {
         // 隐藏子目录
-        if (element.meta?.hideChildrenInMenu || !element.children) {
+        if (element.meta?.hideInMenu || !element.children) {
           element.children = [];
-
           if (element.meta?.hideInMenu) {
             // 如果隐藏菜单 则不显示
             return null;

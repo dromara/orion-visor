@@ -18,6 +18,7 @@
         <result column="visible" property="visible"/>
         <result column="status" property="status"/>
         <result column="cache" property="cache"/>
+        <result column="new_window" property="newWindow"/>
         <result column="icon" property="icon"/>
         <result column="path" property="path"/>
         <result column="component" property="component"/>
@@ -25,7 +26,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, parent_id, name, permission, type, sort, visible, status, cache, icon, path, component, create_time, update_time, creator, updater, deleted
+        id, parent_id, name, permission, type, sort, visible, status, cache, new_window, icon, path, component, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

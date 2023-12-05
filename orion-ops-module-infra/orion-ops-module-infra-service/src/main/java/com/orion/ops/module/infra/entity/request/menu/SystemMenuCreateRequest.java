@@ -46,6 +46,9 @@ public class SystemMenuCreateRequest implements Serializable {
     @Schema(description = "菜单缓存 0不缓存 1缓存")
     private Integer cache;
 
+    @Schema(description = "新窗口打开 0关闭 1开启")
+    private Integer newWindow;
+
     @Schema(description = "菜单图标")
     private String icon;
 
