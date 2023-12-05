@@ -1,0 +1,184 @@
+// 布局常量
+.host-layout {
+  --header-height: 44px;
+  --sidebar-width: 44px;
+  --sidebar-icon-wrapper-size: var(--header-height);
+  --sidebar-icon-size: 32px;
+  --sidebar-icon-font-size: 22px;
+}
+
+// 亮色主题配色常量
+body[terminal-theme='light'] {
+  --color-bg-header: #292B31;
+  --color-bg-sidebar: #F2F3F5;
+  --color-bg-content: #FEFEFE;
+  --color-sidebar-icon: #737070;
+  --color-sidebar-icon-bg: #D7D8DB;
+  --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
+  --color-sidebar-tooltip-bg: rgb(var(--gray-10));
+}
+
+// 暗色主题配色常量
+body[terminal-theme='dark'] {
+  --color-bg-header: #2C2E31;
+  --color-bg-sidebar: #2C2E31;
+  --color-bg-content: #1A1B1F;
+  --color-sidebar-icon: #C3C8CE;
+  --color-sidebar-icon-bg: #43444C;
+  --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
+  --color-sidebar-tooltip-bg: var(--color-sidebar-icon-bg);
+}
+
+// 侧栏图标 wrapper
+.terminal-sidebar-icon-wrapper {
+  width: var(--sidebar-icon-wrapper-size);
+  height: var(--sidebar-icon-wrapper-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 侧栏图标
+.terminal-sidebar-icon {
+  width: var(--sidebar-icon-size);
+  height: var(--sidebar-icon-size);
+  font-size: var(--sidebar-icon-font-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-sidebar-icon);
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: 0.1s cubic-bezier(0, 0, 1, 1);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-sidebar-icon-bg);
+  }
+}
+
+// 侧栏 tooltip 内容
+.terminal-sidebar-tooltip-content {
+  color: var(--color-sidebar-tooltip-text);
+  background: var(--color-sidebar-tooltip-bg);
+}
+
+// 侧栏 tooltip 箭头
+.terminal-sidebar-tooltip-arrow {
+  display: none;
+}
+
+.host-layout.light {
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-border: rgb(var(--gray-3));
+  --color-bg-popup: var(--color-bg-5);
+  --color-bg-1: #FFFFFF;
+  --color-bg-2: #FFFFFF;
+  --color-bg-3: #FFFFFF;
+  --color-bg-4: #FFFFFF;
+  --color-bg-5: #FFFFFF;
+  --color-bg-white: #FFFFFF;
+  --color-neutral-1: rgb(var(--gray-1));
+  --color-neutral-2: rgb(var(--gray-2));
+  --color-neutral-3: rgb(var(--gray-3));
+  --color-neutral-4: rgb(var(--gray-4));
+  --color-neutral-5: rgb(var(--gray-5));
+  --color-neutral-6: rgb(var(--gray-6));
+  --color-neutral-7: rgb(var(--gray-7));
+  --color-neutral-8: rgb(var(--gray-8));
+  --color-neutral-9: rgb(var(--gray-9));
+  --color-neutral-10: rgb(var(--gray-10));
+  --color-text-1: var(--color-neutral-10);
+  --color-text-2: var(--color-neutral-8);
+  --color-text-3: var(--color-neutral-6);
+  --color-text-4: var(--color-neutral-4);
+  --color-border-1: var(--color-neutral-2);
+  --color-border-2: var(--color-neutral-3);
+  --color-border-3: var(--color-neutral-4);
+  --color-border-4: var(--color-neutral-6);
+  --color-fill-1: var(--color-neutral-1);
+  --color-fill-2: var(--color-neutral-2);
+  --color-fill-3: var(--color-neutral-3);
+  --color-fill-4: var(--color-neutral-4);
+  --color-primary-light-1: rgb(var(--primary-1));
+  --color-primary-light-2: rgb(var(--primary-2));
+  --color-primary-light-3: rgb(var(--primary-3));
+  --color-primary-light-4: rgb(var(--primary-4));
+  --color-link-light-1: rgb(var(--link-1));
+  --color-link-light-2: rgb(var(--link-2));
+  --color-link-light-3: rgb(var(--link-3));
+  --color-link-light-4: rgb(var(--link-4));
+  --color-secondary: var(--color-neutral-2);
+  --color-secondary-hover: var(--color-neutral-3);
+  --color-secondary-active: var(--color-neutral-4);
+  --color-secondary-disabled: var(--color-neutral-1);
+  --color-danger-light-1: rgb(var(--danger-1));
+  --color-danger-light-2: rgb(var(--danger-2));
+  --color-danger-light-3: rgb(var(--danger-3));
+  --color-danger-light-4: rgb(var(--danger-4));
+  --color-success-light-1: rgb(var(--success-1));
+  --color-success-light-2: rgb(var(--success-2));
+  --color-success-light-3: rgb(var(--success-3));
+  --color-success-light-4: rgb(var(--success-4));
+  --color-warning-light-1: rgb(var(--warning-1));
+  --color-warning-light-2: rgb(var(--warning-2));
+  --color-warning-light-3: rgb(var(--warning-3));
+  --color-warning-light-4: rgb(var(--warning-4));
+  --color-sidebar-tooltip-bg: rgb(var(--gray-10));
+  --color-spin-layer-bg: rgba(255, 255, 255, 0.6);
+  --color-menu-dark-bg: #232324;
+  --color-menu-light-bg: #FFFFFF;
+  --color-menu-dark-hover: rgba(255, 255, 255, 0.04);
+  --color-mask-bg: rgba(29, 33, 41, 0.6);
+}
+
+.host-layout.dark {
+  --color-white: rgba(255, 255, 255, 0.9);
+  --color-black: #000000;
+  --color-border: #333335;
+  --color-bg-1: #17171A;
+  --color-bg-2: #232324;
+  --color-bg-3: #2A2A2B;
+  --color-bg-4: #313132;
+  --color-bg-5: #373739;
+  --color-bg-white: #F6F6F6;
+  --color-text-1: rgba(255, 255, 255, 0.9);
+  --color-text-2: rgba(255, 255, 255, 0.7);
+  --color-text-3: rgba(255, 255, 255, 0.5);
+  --color-text-4: rgba(255, 255, 255, 0.3);
+  --color-fill-1: rgba(255, 255, 255, 0.04);
+  --color-fill-2: rgba(255, 255, 255, 0.08);
+  --color-fill-3: rgba(255, 255, 255, 0.12);
+  --color-fill-4: rgba(255, 255, 255, 0.16);
+  --color-primary-light-1: rgba(var(--primary-6), 0.2);
+  --color-primary-light-2: rgba(var(--primary-6), 0.35);
+  --color-primary-light-3: rgba(var(--primary-6), 0.5);
+  --color-primary-light-4: rgba(var(--primary-6), 0.65);
+  --color-secondary: rgba(var(--gray-9), 0.08);
+  --color-secondary-hover: rgba(var(--gray-8), 0.16);
+  --color-secondary-active: rgba(var(--gray-7), 0.24);
+  --color-secondary-disabled: rgba(var(--gray-9), 0.08);
+  --color-danger-light-1: rgba(var(--danger-6), 0.2);
+  --color-danger-light-2: rgba(var(--danger-6), 0.35);
+  --color-danger-light-3: rgba(var(--danger-6), 0.5);
+  --color-danger-light-4: rgba(var(--danger-6), 0.65);
+  --color-success-light-1: rgb(var(--success-6), 0.2);
+  --color-success-light-2: rgb(var(--success-6), 0.35);
+  --color-success-light-3: rgb(var(--success-6), 0.5);
+  --color-success-light-4: rgb(var(--success-6), 0.65);
+  --color-warning-light-1: rgb(var(--warning-6), 0.2);
+  --color-warning-light-2: rgb(var(--warning-6), 0.35);
+  --color-warning-light-3: rgb(var(--warning-6), 0.5);
+  --color-warning-light-4: rgb(var(--warning-6), 0.65);
+  --color-link-light-1: rgb(var(--link-6), 0.2);
+  --color-link-light-2: rgb(var(--link-6), 0.35);
+  --color-link-light-3: rgb(var(--link-6), 0.5);
+  --color-link-light-4: rgb(var(--link-6), 0.65);
+  --color-sidebar-tooltip-bg: #373739;
+  --color-spin-layer-bg: rgba(51, 51, 51, 0.6);
+  --color-menu-dark-bg: #232324;
+  --color-menu-light-bg: #232324;
+  --color-menu-dark-hover: var(--color-fill-2);
+  --color-mask-bg: rgba(23, 23, 26, 0.6);
+}

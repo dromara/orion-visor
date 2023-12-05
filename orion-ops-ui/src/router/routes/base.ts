@@ -1,14 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router';
-import {
-  DEFAULT_ROUTE_FULL_PATH,
-  REDIRECT_ROUTE_NAME,
-  LOGIN_ROUTE_NAME,
-  FORBIDDEN_ROUTER_NAME,
-  NOT_FOUND_ROUTER_NAME,
-} from '@/router/constants';
+import { DEFAULT_ROUTE_FULL_PATH, FORBIDDEN_ROUTER_NAME, LOGIN_ROUTE_NAME, NOT_FOUND_ROUTER_NAME, REDIRECT_ROUTE_NAME, } from '@/router/constants';
 
 // 默认布局
 export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue');
+
+// 全屏布局
+export const FULL_LAYOUT = () => import('@/layout/full-layout.vue');
 
 // 根页面
 export const ROOT_ROUTER: RouteRecordRaw = {

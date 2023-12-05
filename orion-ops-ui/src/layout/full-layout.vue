@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="host-layout">
+  <a-layout class="full-layout">
     <!-- 页面 -->
     <a-layout-content>
       <!-- 水印 -->
@@ -16,7 +16,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-layout'
+    name: 'full-layout'
   };
 </script>
 
@@ -29,7 +29,7 @@
 </script>
 
 <style lang="less" scoped>
-  .host-layout {
+  .full-layout {
     height: 100vh;
     width: 100%;
 

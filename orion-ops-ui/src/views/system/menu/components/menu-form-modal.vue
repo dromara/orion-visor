@@ -160,7 +160,7 @@
       type: MenuType.PARENT_MENU,
       permission: undefined,
       sort: undefined,
-      visible: MenuVisible.SHOW,
+      visible: EnabledStatus.ENABLED,
       cache: EnabledStatus.ENABLED,
       newWindow: EnabledStatus.DISABLED,
       icon: undefined,
