@@ -1,9 +1,10 @@
 import type { CSSProperties } from 'vue';
 
-// Sidebar 操作类型
+// sidebar 操作类型
 export interface SidebarAction {
-  icon: string,
-  content: string,
-  style?: CSSProperties
-  event: () => void,
+  icon: string;
+  content: string;
+  style?: CSSProperties;
+  visible?: boolean;
+  click: () => void;
 }

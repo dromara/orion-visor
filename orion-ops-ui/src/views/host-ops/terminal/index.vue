@@ -4,7 +4,10 @@
     <header class="host-layout-header">
       <terminal-header>
         <!-- 主机 tabs -->
-        <a-tabs :editable="true" :hide-content="true">
+        <a-tabs :editable="true"
+                :hide-content="true"
+                @tab-click="clickTab"
+                @delete="deleteTab">
           <a-tab-pane v-for="i in 30"
                       :key="i"
                       :title="'主机主机主机'+i+''" />
@@ -62,6 +65,14 @@
   const changeTheme = () => {
     console.log('current', darkTheme.value);
     darkTheme.value = !darkTheme.value;
+  };
+
+  const clickTab = (v: any) => {
+    console.log('click', v);
+  };
+
+  const deleteTab = (v: any) => {
+    console.log('delete', v);
   };
 
 </script>

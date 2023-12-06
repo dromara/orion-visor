@@ -9,20 +9,23 @@
       <slot />
     </div>
     <!-- 右侧操作 -->
-    <div class="terminal-header-right-actions">
+    <div class="terminal-header-right">
+      <!-- 分享用户 -->
+      <a-avatar-group v-if="false"
+                      class="terminal-header-right-avatar-group"
+                      :size="28"
+                      :max-count="4"
+                      :max-style="{background: '#168CFF'}">
+        <a-avatar v-for="i in 8" :key="i"
+                  :style="{background: '#168CFF'}">
+          {{ i }}
+        </a-avatar>
+      </a-avatar-group>
       <!-- 操作按钮 -->
-      <a-tooltip position="left"
-                 :mini="true"
-                 content-class="terminal-sidebar-tooltip-content"
-                 arrow-class="terminal-sidebar-tooltip-arrow"
-                 :content="isFullscreen ? '点击退出全屏模式' : '点击切换全屏模式'">
-        <div class="terminal-sidebar-icon-wrapper">
-          <div class="terminal-sidebar-icon" @click="toggleFullScreen">
-            <icon-fullscreen-exit v-if="isFullscreen" />
-            <icon-fullscreen v-else />
-          </div>
-        </div>
-      </a-tooltip>
+      <icon-actions class="terminal-header-right-actions"
+                    :actions="actions"
+                    position="br"
+                    icon-class="terminal-header-icon" />
     </div>
   </div>
 </template>
@@ -34,21 +37,47 @@
 </script>
 
 <script lang="ts" setup>
+  import type { SidebarAction } from '../../types/terminal.type';
   import { useFullscreen } from '@vueuse/core';
+  import { computed } from 'vue';
+  import IconActions from '@/views/host-ops/terminal/components/layout/icon-actions.vue';
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
+  const emits = defineEmits(['split', 'share']);
+
+  // 顶部操作
+  const actions = computed<Array<SidebarAction>>(() => [
+    {
+      icon: 'icon-interaction',
+      content: '分屏',
+      visible: false,
+      click: () => emits('split')
+    },
+    {
+      icon: 'icon-share-alt',
+      content: '分享链接',
+      visible: false,
+      click: () => emits('share')
+    },
+    {
+      icon: isFullscreen.value ? 'icon-fullscreen-exit' : 'icon-fullscreen',
+      content: isFullscreen.value ? '点击退出全屏模式' : '点击切换全屏模式',
+      click: () => toggleFullScreen()
+    },
+  ]);
 
 </script>
 
 <style lang="less" scoped>
   .terminal-header {
     --logo-width: 150px;
-    --right-action-width: calc(var(--header-height) * 2);
+    --right-avatar-width: calc(28px * 5 - 7px * 4);
+    --right-action-width: calc(var(--header-height) * 3);
   }
 
   .terminal-header {
     height: 100%;
-    color: var(--color-text-white);
+    color: var(--color-header-text-1);
     display: flex;
     user-select: none;
 
@@ -66,14 +95,35 @@
     }
 
     &-tabs {
-      width: calc(100% - var(--logo-width) - var(--right-action-width));
+      width: calc(100% - var(--logo-width) - var(--right-avatar-width) - var(--right-action-width));
       display: flex;
     }
 
-    &-right-actions {
-      width: var(--right-action-width);
+    &-right {
+      width: calc(var(--right-avatar-width) + var(--right-action-width));
       display: flex;
       justify-content: flex-end;
+
+      &-avatar-group {
+        width: var(--right-avatar-width);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      &-actions {
+        width: var(--right-action-width);
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    &-icon {
+      color: var(--color-header-text-1);
+
+      &:hover {
+        background: var(--color-bg-header-icon-1);
+      }
     }
   }
 
@@ -83,26 +133,22 @@
     &::before {
       display: none;
     }
-  }
 
-  :deep(.arco-tabs-nav-tab) {
-    height: 100%;
-  }
-
-  :deep(.arco-tabs-nav-ink) {
-    display: none;
-  }
-
-  :deep(.arco-tabs-tab-close-btn) {
-    margin-left: -12px;
-
-    &:hover {
-      color: var(--color-text-black);
+    &-tab {
+      height: 100%;
     }
-  }
 
-  :deep(.arco-tabs-nav-button .arco-icon-hover:hover) {
-    color: var(--color-text-black);
+    &-ink {
+      display: none;
+    }
+
+    &-button .arco-icon-hover:hover {
+      color: var(--color-header-text-1);
+
+      &::before {
+        background: var(--color-bg-header-icon-1);
+      }
+    }
   }
 
   :deep(.arco-tabs-nav-type-line .arco-tabs-tab:hover .arco-tabs-tab-title::before) {
@@ -112,33 +158,85 @@
   :deep(.arco-tabs-tab) {
     height: 100%;
     margin: 0;
-    padding: 8px 12px;
-    color: var(--color-host-tabs-text);
-    background: var(--color-host-tabs-bg);
+    padding: 0;
+    color: var(--color-header-text-2);
+    background: var(--color-header-tabs-bg);
+    position: relative;
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-header-tabs-sp);
+    }
 
     &:hover {
-      color: var(--color-host-tabs-hover-text);
+      color: var(--color-header-text-1);
+      transition: .2s;
+    }
+
+    &::after {
+      content: '';
+      width: 54px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    &:hover::after {
+      background: linear-gradient(270deg, var(--color-gradient-start) 45%, var(--color-gradient-end) 120%);
     }
 
     .arco-tabs-tab-title {
-      padding: 0 16px 0 0;
-      background: var(--color-host-tabs-bg);
-      z-index: 100;
+      padding: 11px 16px;
+      background: var(--color-header-tabs-bg);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &:hover .arco-tabs-tab-close-btn {
+      display: unset;
+    }
+
+    &-close-btn {
+      margin: 0 8px 0 0;
+      padding: 4px;
+      border-radius: 4px;
+      position: absolute;
+      right: 0;
+      z-index: 4;
+      display: none;
+      color: var(--color-header-text-1);
 
       &:hover {
-        z-index: 0;
+        transition: .2s;
+        background: var(--color-bg-header-icon-1);
+      }
+
+      &::before {
+        display: none;
       }
     }
   }
 
   :deep(.arco-tabs-tab-active) {
-    background: var(--color-host-tabs-active-bg);
-    color: var(--color-host-tabs-active-text) !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: var(--color-header-tabs-bg-hover);
+    color: var(--color-header-text-1) !important;
 
     .arco-tabs-tab-title {
-      background: var(--color-host-tabs-active-bg);
+      background: var(--color-header-tabs-bg-hover);
     }
+
+    &:hover::after {
+      background: linear-gradient(270deg, var(--color-gradient-hover-start) 45%, var(--color-gradient-hover-end) 120%);
+    }
+
   }
 
 </style>
