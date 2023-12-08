@@ -1,8 +1,12 @@
 <template>
   <div class="terminal-right-sidebar">
-    <!-- 操作按钮 -->
-    <icon-actions class="terminal-actions"
-                  :actions="actions"
+    <!-- 顶部操作按钮 -->
+    <icon-actions class="top-actions"
+                  :actions="topActions"
+                  position="left" />
+    <!-- 底部操作按钮 -->
+    <icon-actions class="bottom-actions"
+                  :actions="bottomActions"
                   position="left" />
   </div>
 </template>
@@ -14,13 +18,13 @@
 </script>
 
 <script lang="ts" setup>
-  import { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../types/terminal.type';
   import IconActions from './icon-actions.vue';
 
-  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'openHistory']);
+  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'openHistory', 'screenshot']);
 
-  // 操作
-  const actions: Array<SidebarAction> = [
+  // 顶部操作
+  const topActions: Array<SidebarAction> = [
     {
       icon: 'icon-code-block',
       content: '打开命令片段',
@@ -49,10 +53,23 @@
     },
   ];
 
+  // 底部操作
+  const bottomActions: Array<SidebarAction> = [
+    {
+      icon: 'icon-camera',
+      content: '截图',
+      style: {},
+      click: () => emits('screenshot')
+    },
+  ];
+
 </script>
 
 <style lang="less" scoped>
   .terminal-right-sidebar {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 </style>

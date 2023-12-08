@@ -18,17 +18,18 @@
 </script>
 
 <script lang="ts" setup>
-  import { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction, } from '../../types/terminal.type';
+  import { InnerTabs } from '../../types/terminal.type';
   import IconActions from './icon-actions.vue';
 
-  const emits = defineEmits(['openAdd', 'copyAddress', 'openShortcutSetting', 'openViewSetting', 'openThemeSetting']);
+  const emits = defineEmits(['switchTab', 'copyAddress']);
 
   // 顶部操作
   const topActions: Array<SidebarAction> = [
     {
       icon: 'icon-plus',
       content: '新建连接',
-      click: () => emits('openAdd')
+      click: () => emits('switchTab', InnerTabs.HOST_LIST)
     },
     {
       icon: 'icon-copy',
@@ -42,17 +43,17 @@
     {
       icon: 'icon-command',
       content: '快捷键设置',
-      click: () => emits('openShortcutSetting')
+      click: () => emits('switchTab', InnerTabs.SHORTCUT_SETTING)
     },
     {
       icon: 'icon-palette',
       content: '主题设置',
-      click: () => emits('openThemeSetting')
+      click: () => emits('switchTab', InnerTabs.THEME_SETTING)
     },
     {
       icon: 'icon-tool',
       content: '显示设置',
-      click: () => emits('openViewSetting')
+      click: () => emits('switchTab', InnerTabs.VIEW_SETTING)
     },
   ];
 

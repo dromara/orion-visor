@@ -6,7 +6,16 @@
     </div>
     <!-- 左侧 tabs -->
     <div class="terminal-header-tabs">
-      <slot />
+      <a-tabs v-model:active-key="activeKey"
+              :editable="true"
+              :hide-content="true"
+              :auto-switch="true"
+              @tab-click="e => emits('clickTab', e)"
+              @delete="e => emits('deleteTab', e)">
+        <a-tab-pane v-for="tab in tabs"
+                    :key="tab.key"
+                    :title="tab.title" />
+      </a-tabs>
     </div>
     <!-- 右侧操作 -->
     <div class="terminal-header-right">
@@ -37,13 +46,26 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction, TabItem } from '../../types/terminal.type';
+  import type { PropType } from 'vue';
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
-  import IconActions from '@/views/host-ops/terminal/components/layout/icon-actions.vue';
+  import IconActions from '../layout/icon-actions.vue';
+
+  const props = defineProps({
+    modelValue: {
+      type: String,
+      required: true
+    },
+    tabs: {
+      type: Array as PropType<Array<TabItem>>,
+      required: true
+    }
+  });
+
+  const emits = defineEmits(['update:modelValue', 'clickTab', 'deleteTab', 'split', 'share']);
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const emits = defineEmits(['split', 'share']);
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [
@@ -66,6 +88,19 @@
     },
   ]);
 
+  const activeKey = computed<String>({
+    get() {
+      return props.modelValue;
+    },
+    set(e) {
+      if (e) {
+        emits('update:modelValue', e);
+      } else {
+        emits('update:modelValue', null);
+      }
+    }
+  });
+
 </script>
 
 <style lang="less" scoped>
@@ -77,7 +112,7 @@
 
   .terminal-header {
     height: 100%;
-    color: var(--color-header-text-1);
+    color: var(--color-header-text-2);
     display: flex;
     user-select: none;
 
@@ -118,11 +153,11 @@
       }
     }
 
-    &-icon {
-      color: var(--color-header-text-1);
+    :deep(&-icon) {
+      color: var(--color-header-text-2) !important;
 
       &:hover {
-        background: var(--color-bg-header-icon-1);
+        background: var(--color-bg-header-icon-1) !important;
       }
     }
   }
@@ -143,7 +178,7 @@
     }
 
     &-button .arco-icon-hover:hover {
-      color: var(--color-header-text-1);
+      color: var(--color-header-text-2);
 
       &::before {
         background: var(--color-bg-header-icon-1);
@@ -159,16 +194,12 @@
     height: 100%;
     margin: 0;
     padding: 0;
-    color: var(--color-header-text-2);
+    color: var(--color-header-text-1);
     background: var(--color-header-tabs-bg);
     position: relative;
 
-    &:not(:first-child) {
-      border-left: 1px solid var(--color-header-tabs-sp);
-    }
-
     &:hover {
-      color: var(--color-header-text-1);
+      color: var(--color-header-text-2);
       transition: .2s;
     }
 
@@ -212,7 +243,7 @@
       right: 0;
       z-index: 4;
       display: none;
-      color: var(--color-header-text-1);
+      color: var(--color-header-text-2);
 
       &:hover {
         transition: .2s;
@@ -227,14 +258,14 @@
 
   :deep(.arco-tabs-tab-active) {
     background: var(--color-header-tabs-bg-hover);
-    color: var(--color-header-text-1) !important;
+    color: var(--color-header-text-2) !important;
 
     .arco-tabs-tab-title {
       background: var(--color-header-tabs-bg-hover);
     }
 
     &:hover::after {
-      background: linear-gradient(270deg, var(--color-gradient-hover-start) 45%, var(--color-gradient-hover-end) 120%);
+      background: linear-gradient(270deg, var(--color-gradient-start) 45%, var(--color-gradient-end) 120%);
     }
 
   }
