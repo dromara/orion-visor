@@ -46,7 +46,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction, TabItem } from '../../types/terminal.type';
+  import type { SidebarAction, TabItem } from '../../types/terminal.const';
   import type { PropType } from 'vue';
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';

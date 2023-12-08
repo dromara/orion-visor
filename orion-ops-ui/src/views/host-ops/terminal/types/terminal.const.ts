@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'vue';
-import type { TerminalTheme } from './terminal.theme';
 
 // 暗色主题
 export const DarkTheme = {
@@ -7,12 +6,6 @@ export const DarkTheme = {
   LIGHT: 'light',
   AUTO: 'auto'
 };
-
-// 用户终端偏好
-export interface TerminalPreference {
-  darkTheme: string,
-  terminalTheme: TerminalTheme
-}
 
 // sidebar 操作类型
 export interface SidebarAction {
@@ -46,11 +39,6 @@ export const InnerTabs = {
     title: '主题设置',
     type: TabType.SETTING
   },
-  VIEW_SETTING: {
-    key: 'viewSetting',
-    title: '显示设置',
-    type: TabType.SETTING
-  },
 };
 
 // tab 元素
@@ -61,6 +49,9 @@ export interface TabItem {
 
   [key: string]: unknown;
 }
+
+// 暗色主题切换标识
+export const DarkThemeChangeSymbol = Symbol('DARK_THEME_CHANGE');
 
 // 终端暗色模式 字典项
 export const darkThemeKey = 'terminalDarkTheme';

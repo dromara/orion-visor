@@ -1,5 +1,5 @@
 <template>
-  <div id="" class="terminal-example" ref="terminal"></div>
+  <div class="terminal-example" ref="terminal"></div>
 </template>
 
 <script lang="ts">
@@ -9,9 +9,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TerminalTheme } from '@/store/modules/terminal/types';
   import { Terminal } from '@xterm/xterm';
   import { onMounted, onUnmounted, ref } from 'vue';
-  import { TerminalTheme } from '../types/terminal.theme';
 
   const props = defineProps<{
     theme: TerminalTheme
@@ -22,13 +22,13 @@
 
   onMounted(() => {
     term.value = new Terminal({
-      theme: props.theme,
+      theme: { ...props.theme, cursor: props.theme.background },
       cols: 47,
       rows: 6,
       fontSize: 15,
       convertEol: true,
       cursorBlink: false,
-      cursorInactiveStyle: 'none'
+      cursorInactiveStyle: 'none',
     });
     term.value.open(terminal.value);
 
@@ -41,6 +41,8 @@
       '[92mlrwxrwxrwx.[0m   1 root root [90;42mtmp[0m'
     );
   });
+
+  defineExpose({ term });
 
   onUnmounted(() => {
     term.value?.dispose();

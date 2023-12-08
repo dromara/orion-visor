@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../types/terminal.const';
   import IconActions from './icon-actions.vue';
 
   const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'openHistory', 'screenshot']);

@@ -1,6 +1,6 @@
 package com.orion.ops.module.infra.handler.preference.strategy;
 
-import com.orion.ops.module.infra.handler.preference.model.AppPreferenceModel;
+import com.orion.ops.module.infra.handler.preference.model.SystemPreferenceModel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
  * @since 2023/10/8 13:48
  */
 @Component
-public class SystemPreferenceStrategy implements IPreferenceStrategy<AppPreferenceModel> {
+public class SystemPreferenceStrategy implements IPreferenceStrategy<SystemPreferenceModel> {
 
     @Override
-    public AppPreferenceModel getDefault() {
-        return AppPreferenceModel.builder()
+    public SystemPreferenceModel getDefault() {
+        return SystemPreferenceModel.builder()
                 .menu(true)
                 .topMenu(false)
                 .navbar(true)

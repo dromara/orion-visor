@@ -1,16 +1,25 @@
 <template>
   <div class="terminal-setting-container theme-setting-container">
     <div class="theme-setting-wrapper">
-      <!-- 大标题 -->
+      <!-- 主标题 -->
       <h2 class="terminal-setting-title">
-        主题设置
+        外观设置
       </h2>
-      <!-- 切换主题 -->
+      <!-- 基础设置 -->
       <div class="terminal-setting-block">
         <!-- 顶部 -->
         <div class="theme-subtitle-wrapper">
           <h3 class="terminal-setting-subtitle">
-            主题选择
+            字体设置
+          </h3>
+        </div>
+      </div>
+      <!-- 主题设置 -->
+      <div class="terminal-setting-block">
+        <!-- 顶部 -->
+        <div class="theme-subtitle-wrapper">
+          <h3 class="terminal-setting-subtitle">
+            主题设置
           </h3>
           <a-radio-group :default-value="preference.darkTheme"
                          size="mini"
@@ -59,38 +68,38 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalTheme } from '../types/terminal.theme';
-  import type { TerminalPreference } from '../types/terminal.type';
-  import { DarkTheme, darkThemeKey } from '../types/terminal.type';
-  import ThemeSchema from '../types/terminal.theme';
-  import useEmitter from '@/hooks/emitter';
+  import type { TerminalPreference, TerminalTheme } from '@/store/modules/terminal/types';
+  import { DarkTheme, DarkThemeChangeSymbol, darkThemeKey } from '../../types/terminal.const';
+  import ThemeSchema from '../../types/terminal.theme';
   import { useDebounceFn } from '@vueuse/core';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import TerminalExample from './terminal-example.vue';
   import { updatePreferencePartial } from '@/api/user/preference';
+  import { inject, ref } from 'vue';
 
-  const props = defineProps<{
-    preference: TerminalPreference
-  }>();
+  const preference = ref<TerminalPreference>({
+    darkTheme: 'auto',
+    terminalTheme: {} as TerminalTheme,
+  });
 
   const emits = defineEmits(['emitter']);
+  const changeLayoutTheme = inject(DarkThemeChangeSymbol) as (s: boolean) => void;
 
-  const { bubblesEmitter } = useEmitter(emits);
   const { toOptions } = useDictStore();
 
   // 修改暗色主题
   const changeDarkTheme = (value: string) => {
-    props.preference.darkTheme = value;
+    preference.value.darkTheme = value;
     if (value === DarkTheme.DARK) {
       // 暗色
-      bubblesEmitter('changeDarkTheme', true);
+      changeLayoutTheme(true);
     } else if (value === DarkTheme.LIGHT) {
       // 亮色
-      bubblesEmitter('changeDarkTheme', false);
+      changeLayoutTheme(false);
     } else if (value === DarkTheme.AUTO) {
       // 自动配色
-      bubblesEmitter('changeDarkTheme', props.preference.terminalTheme.dark);
+      changeLayoutTheme(preference.value.terminalTheme.dark);
     }
     // 同步用户偏好
     sync();
@@ -98,10 +107,10 @@
 
   // 选择终端主题
   const checkTheme = (theme: TerminalTheme) => {
-    props.preference.terminalTheme = theme;
+    preference.value.terminalTheme = theme;
     // 切换主题配色
-    if (props.preference.darkTheme === DarkTheme.AUTO) {
-      bubblesEmitter('changeDarkTheme', theme.dark);
+    if (preference.value.darkTheme === DarkTheme.AUTO) {
+      changeLayoutTheme(theme.dark);
     }
     // 同步用户偏好
     sync();
@@ -112,7 +121,7 @@
     try {
       await updatePreferencePartial({
         type: 'TERMINAL',
-        config: props.preference
+        config: preference
       });
       Message.success('同步成功');
     } catch (e) {

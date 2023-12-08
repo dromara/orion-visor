@@ -1,37 +1,8 @@
-// 主题
-export interface TerminalTheme {
-  name: string;
-  dark: boolean;
-  background: string;
-  foreground: string;
-  cursor: string;
-  cursorAccent?: string;
-  selectionInactiveBackground?: string;
-  selectionBackground?: string;
-  selectionForeground?: string;
-  black: string;
-  red: string;
-  green: string;
-  yellow: string;
-  blue: string;
-  magenta: string;
-  cyan: string;
-  white: string;
-  brightBlack: string;
-  brightRed: string;
-  brightGreen: string;
-  brightYellow: string;
-  brightBlue: string;
-  brightMagenta: string;
-  brightCyan: string;
-  brightWhite: string;
-
-  [key: string]: unknown;
-}
+import type { TerminalTheme } from '@/store/modules/terminal/types';
 
 // 默认配色
 export const DEFAULT_SCHEMA = {
-  name: 'frappe',
+  name: 'Frappe',
   dark: true,
   background: '#303446',
   foreground: '#C6D0F5',
@@ -61,7 +32,7 @@ export const DEFAULT_SCHEMA = {
 export default [
   DEFAULT_SCHEMA,
   {
-    name: 'latte',
+    name: 'Latte',
     dark: false,
     background: '#EFF1F5',
     foreground: '#4C4F69',
@@ -88,7 +59,7 @@ export default [
     brightWhite: '#BCC0CC'
   },
   {
-    name: 'macchiato',
+    name: 'Macchiato',
     dark: true,
     background: '#24273A',
     foreground: '#CAD3F5',
@@ -115,7 +86,7 @@ export default [
     brightWhite: '#A5ADCB'
   },
   {
-    name: 'mocha',
+    name: 'Mocha',
     dark: true,
     background: '#1E1E2E',
     foreground: '#CDD6F4',
@@ -142,7 +113,7 @@ export default [
     brightWhite: '#A6ADC8'
   },
   {
-    name: 'AtomOneLight',
+    name: 'Atom One Light',
     dark: false,
     background: '#F9F9F9',
     foreground: '#2A2C33',
@@ -164,7 +135,7 @@ export default [
     brightWhite: '#FFFFFF'
   },
   {
-    name: 'OneHalfDark',
+    name: 'One Half Dark',
     dark: true,
     background: '#282C34',
     foreground: '#DCDFE4',
@@ -186,7 +157,7 @@ export default [
     brightWhite: '#DCDFE4'
   },
   {
-    name: 'dracula',
+    name: 'Dracula',
     dark: true,
     background: '#282A36',
     foreground: '#F8F8F2',

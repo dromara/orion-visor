@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppPreferenceModel implements PreferenceModel {
+public class SystemPreferenceModel implements PreferenceModel {
 
     @Schema(description = "是否使用侧边菜单")
     private Boolean menu;

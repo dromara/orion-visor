@@ -27,7 +27,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../types/terminal.const';
   import type { PropType } from 'vue';
 
   defineProps({

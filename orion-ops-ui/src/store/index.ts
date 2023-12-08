@@ -6,6 +6,7 @@ import useTabBarStore from './modules/tab-bar';
 import useCacheStore from './modules/cache';
 import useTipsStore from './modules/tips';
 import useDictStore from './modules/dict';
+import useTerminalStore from './modules/terminal';
 
 const pinia = createPinia();
 
@@ -17,6 +18,7 @@ export {
   useCacheStore,
   useTipsStore,
   useDictStore,
+  useTerminalStore,
 };
 
 export default pinia;

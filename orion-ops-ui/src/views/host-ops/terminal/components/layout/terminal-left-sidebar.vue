@@ -18,8 +18,8 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction, } from '../../types/terminal.type';
-  import { InnerTabs } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../types/terminal.const';
+  import { InnerTabs } from '../../types/terminal.const';
   import IconActions from './icon-actions.vue';
 
   const emits = defineEmits(['switchTab', 'copyAddress']);
@@ -47,13 +47,8 @@
     },
     {
       icon: 'icon-palette',
-      content: '主题设置',
+      content: '外观设置',
       click: () => emits('switchTab', InnerTabs.THEME_SETTING)
-    },
-    {
-      icon: 'icon-tool',
-      content: '显示设置',
-      click: () => emits('switchTab', InnerTabs.VIEW_SETTING)
     },
   ];
 

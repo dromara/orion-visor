@@ -20,6 +20,11 @@ public enum PreferenceTypeEnum {
      */
     SYSTEM("systemPreferenceStrategy"),
 
+    /**
+     * 终端偏好
+     */
+    TERMINAL("terminalPreferenceStrategy"),
+
     ;
 
     PreferenceTypeEnum(String beanName) {

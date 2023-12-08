@@ -19,8 +19,6 @@ export type CacheType = 'users' | 'menus' | 'roles'
 export default defineStore('cache', {
   state: (): CacheState => ({}),
 
-  getters: {},
-
   actions: {
     // 设置
     set(name: CacheType, value: any) {

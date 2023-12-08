@@ -16,9 +16,7 @@
       <!-- 内容区域 -->
       <div class="host-layout-content">
         <terminal-content v-model="activeKey"
-                          :tabs="tabs"
-                          :preference="preference as TerminalPreference"
-                          @change-dark-theme="changeLayoutTheme" />
+                          :tabs="tabs" />
       </div>
       <!-- 右侧操作栏 -->
       <div class="host-layout-right">
@@ -35,12 +33,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TabItem, TerminalPreference } from './types/terminal.type';
-  import { ref, onBeforeMount } from 'vue';
+  import type { TerminalPreference } from '@/store/modules/terminal/types';
+  import type { TabItem } from './types/terminal.const';
+  import { ref, onBeforeMount, provide } from 'vue';
   import { useDark } from '@vueuse/core';
-  import { TabType, InnerTabs, DarkTheme, dictKeys } from './types/terminal.type';
+  import { TabType, InnerTabs, DarkTheme, dictKeys, DarkThemeChangeSymbol } from './types/terminal.const';
   import { DEFAULT_SCHEMA } from './types/terminal.theme';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useTerminalStore } from '@/store';
   import { getPreference } from '@/api/user/preference';
   import { Message } from '@arco-design/web-vue';
   import TerminalHeader from './components/layout/terminal-header.vue';
@@ -51,14 +50,15 @@
   import '@xterm/xterm/css/xterm.css';
 
   // 系统主题
-  const darkTheme = useDark({
-    selector: 'body',
-    attribute: 'terminal-theme',
-    valueDark: DarkTheme.DARK,
-    valueLight: DarkTheme.LIGHT,
-    initialValue: DarkTheme.DARK as any,
-    storageKey: null
-  });
+  // const darkTheme = useDark({
+  //   selector: 'body',
+  //   attribute: 'terminal-theme',
+  //   valueDark: DarkTheme.DARK,
+  //   valueLight: DarkTheme.LIGHT,
+  //   initialValue: DarkTheme.DARK as any,
+  //   storageKey: null
+  // });
+  const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
 
   const render = ref(false);
@@ -75,8 +75,10 @@
 
   // 切换系统主题
   const changeLayoutTheme = (dark: boolean) => {
-    darkTheme.value = dark;
+    terminalStore.changeDarkTheme(dark);
   };
+
+  provide(DarkThemeChangeSymbol, changeLayoutTheme);
 
   // 点击 tab
   const clickTab = (key: string) => {
@@ -104,24 +106,8 @@
 
   // 加载用户终端偏好
   onBeforeMount(async () => {
-    try {
-      const { data } = await getPreference<TerminalPreference>('TERMINAL');
-      // 设置默认终端主题
-      if (!data.config.terminalTheme?.name) {
-        data.config.terminalTheme = DEFAULT_SCHEMA;
-      }
-      preference.value = data.config;
-      // 设置暗色主题
-      const userDarkTheme = data.config.darkTheme;
-      if (userDarkTheme === DarkTheme.AUTO) {
-        changeLayoutTheme(data.config.terminalTheme?.dark === true);
-      } else {
-        changeLayoutTheme(userDarkTheme === DarkTheme.DARK);
-      }
-      render.value = true;
-    } catch (e) {
-      Message.error('配置加载失败');
-    }
+    await terminalStore.fetchPreference();
+    render.value = true;
   });
 
   // 加载字典值
@@ -136,6 +122,7 @@
     width: 100%;
     height: 100vh;
     position: relative;
+    color: var(--color-content-text-2);
 
     &-header {
       width: 100%;
