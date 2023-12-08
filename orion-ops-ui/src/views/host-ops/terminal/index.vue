@@ -33,15 +33,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalPreference } from '@/store/modules/terminal/types';
   import type { TabItem } from './types/terminal.const';
-  import { ref, onBeforeMount, provide } from 'vue';
-  import { useDark } from '@vueuse/core';
-  import { TabType, InnerTabs, DarkTheme, dictKeys, DarkThemeChangeSymbol } from './types/terminal.const';
-  import { DEFAULT_SCHEMA } from './types/terminal.theme';
+  import { ref, onBeforeMount } from 'vue';
+  import { TabType, InnerTabs, dictKeys } from './types/terminal.const';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { getPreference } from '@/api/user/preference';
-  import { Message } from '@arco-design/web-vue';
   import TerminalHeader from './components/layout/terminal-header.vue';
   import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
@@ -49,22 +44,12 @@
   import './assets/styles/layout.less';
   import '@xterm/xterm/css/xterm.css';
 
-  // 系统主题
-  // const darkTheme = useDark({
-  //   selector: 'body',
-  //   attribute: 'terminal-theme',
-  //   valueDark: DarkTheme.DARK,
-  //   valueLight: DarkTheme.LIGHT,
-  //   initialValue: DarkTheme.DARK as any,
-  //   storageKey: null
-  // });
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
 
   const render = ref(false);
   const activeKey = ref(InnerTabs.THEME_SETTING.key);
   const tabs = ref<Array<TabItem>>([InnerTabs.THEME_SETTING]);
-  const preference = ref<TerminalPreference>();
   for (let i = 0; i < 3; i++) {
     tabs.value.push({
       key: `host${i}`,
@@ -72,13 +57,6 @@
       type: TabType.TERMINAL
     });
   }
-
-  // 切换系统主题
-  const changeLayoutTheme = (dark: boolean) => {
-    terminalStore.changeDarkTheme(dark);
-  };
-
-  provide(DarkThemeChangeSymbol, changeLayoutTheme);
 
   // 点击 tab
   const clickTab = (key: string) => {

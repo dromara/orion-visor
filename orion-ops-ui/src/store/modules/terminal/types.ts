@@ -11,13 +11,6 @@ export interface TerminalPreference {
   terminalTheme: TerminalTheme,
 }
 
-// 暗色主题
-export const DarkTheme = {
-  DARK: 'dark',
-  LIGHT: 'light',
-  AUTO: 'auto'
-};
-
 // 终端主题
 export interface TerminalTheme {
   name: string;

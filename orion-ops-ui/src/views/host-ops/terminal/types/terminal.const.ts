@@ -1,12 +1,5 @@
 import type { CSSProperties } from 'vue';
 
-// 暗色主题
-export const DarkTheme = {
-  DARK: 'dark',
-  LIGHT: 'light',
-  AUTO: 'auto'
-};
-
 // sidebar 操作类型
 export interface SidebarAction {
   icon: string;
@@ -49,9 +42,6 @@ export interface TabItem {
 
   [key: string]: unknown;
 }
-
-// 暗色主题切换标识
-export const DarkThemeChangeSymbol = Symbol('DARK_THEME_CHANGE');
 
 // 终端暗色模式 字典项
 export const darkThemeKey = 'terminalDarkTheme';

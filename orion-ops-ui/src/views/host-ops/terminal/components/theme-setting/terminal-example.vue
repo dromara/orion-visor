@@ -14,7 +14,7 @@
   import { onMounted, onUnmounted, ref } from 'vue';
 
   const props = defineProps<{
-    theme: TerminalTheme
+    theme: TerminalTheme | Record<string, any>
   }>();
 
   const terminal = ref();

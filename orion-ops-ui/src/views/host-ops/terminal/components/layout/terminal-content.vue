@@ -7,8 +7,8 @@
                   :title="tab.title">
         <!-- 设置 -->
         <template v-if="tab.type === TabType.SETTING">
-          <!-- 主题设置 -->
-          <terminal-theme-setting v-if="tab.key === InnerTabs.THEME_SETTING.key" />
+          <!-- 显示设置 -->
+          <terminal-view-setting v-if="tab.key === InnerTabs.THEME_SETTING.key" />
           <span v-else>
             {{ tab.title }}
           </span>
@@ -34,10 +34,9 @@
 <script lang="ts" setup>
   import type { PropType } from 'vue';
   import type { TabItem } from '../../types/terminal.const';
-  import type { TerminalPreference } from '@/store/modules/terminal/types';
   import { computed } from 'vue';
   import { TabType, InnerTabs } from '../../types/terminal.const';
-  import TerminalThemeSetting from '../theme-setting/terminal-theme-setting.vue';
+  import TerminalViewSetting from '../theme-setting/terminal-view-setting.vue';
 
   const props = defineProps({
     modelValue: {

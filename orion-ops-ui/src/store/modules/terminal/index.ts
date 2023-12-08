@@ -1,10 +1,16 @@
 import type { TerminalPreference, TerminalState, TerminalTheme } from './types';
-import { DarkTheme } from './types';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreferencePartial } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
 import { useDark } from '@vueuse/core';
 import { DEFAULT_SCHEMA } from '@/views/host-ops/terminal/types/terminal.theme';
+
+// 暗色主题
+export const DarkTheme = {
+  DARK: 'dark',
+  LIGHT: 'light',
+  AUTO: 'auto'
+};
 
 export default defineStore('terminal', {
   state: (): TerminalState => ({
@@ -50,15 +56,13 @@ export default defineStore('terminal', {
     },
 
     // 更新终端偏好
-    async updatePreference(preference: TerminalPreference) {
+    async updatePreference() {
       try {
         // 修改配置
         await updatePreferencePartial({
           type: 'TERMINAL',
-          config: preference
+          config: this.preference
         });
-        this.preference = preference;
-        Message.success('同步成功');
       } catch (e) {
         Message.error('同步失败');
       }

@@ -220,9 +220,9 @@
     }
 
     .arco-tabs-tab-title {
-      padding: 11px 16px;
+      padding: 11px 18px;
       background: var(--color-header-tabs-bg);
-      font-size: 13px;
+      font-size: 12px;
       display: flex;
       align-items: center;
 
