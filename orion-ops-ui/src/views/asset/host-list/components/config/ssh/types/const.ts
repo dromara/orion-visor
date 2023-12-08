@@ -28,4 +28,4 @@ export const AuthType = {
 export const authTypeKey = 'hostAuthTypeType';
 
 // 加载的字典值
-export const dictKeys = ['hostAuthTypeType'];
+export const dictKeys = [authTypeKey];

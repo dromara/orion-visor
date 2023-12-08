@@ -9,6 +9,7 @@
         <template v-if="tab.type === TabType.SETTING">
           <!-- 主题设置 -->
           <terminal-theme-setting v-if="tab.key === InnerTabs.THEME_SETTING.key"
+                                  :preference="preference"
                                   @emitter="dispatchEmitter" />
           <span v-else>
             {{ tab.title }}
@@ -34,11 +35,11 @@
 
 <script lang="ts" setup>
   import type { PropType } from 'vue';
-  import type { TabItem } from '../../types/terminal.type';
+  import type { TabItem, TerminalPreference } from '../../types/terminal.type';
   import { computed } from 'vue';
   import { TabType, InnerTabs } from '../../types/terminal.type';
-  import TerminalThemeSetting from '../terminal-theme-setting.vue';
   import useEmitter from '@/hooks/emitter';
+  import TerminalThemeSetting from '../terminal-theme-setting.vue';
 
   const props = defineProps({
     modelValue: {
@@ -48,7 +49,11 @@
     tabs: {
       type: Array as PropType<Array<TabItem>>,
       required: true
-    }
+    },
+    preference: {
+      type: Object as PropType<TerminalPreference>,
+      required: true
+    },
   });
 
   const emits = defineEmits(['changeDarkTheme']);

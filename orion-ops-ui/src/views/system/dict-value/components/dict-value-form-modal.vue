@@ -21,7 +21,9 @@
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 配置项 -->
-        <a-form-item field="keyId" label="配置项">
+        <a-form-item v-if="visible"
+                     field="keyId"
+                     label="配置项">
           <dict-key-selector v-model="formModel.keyId" @change="changeKey" />
         </a-form-item>
         <!-- 配置值 -->
@@ -123,18 +125,18 @@
   const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
-  const openAdd = () => {
+  const openAdd = async () => {
     title.value = '添加字典配置值';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm(), keyId: formModel.value.keyId, sort: (formModel.value.sort || 0) + sortStep });
+    await renderForm({ ...defaultForm(), keyId: formModel.value.keyId, sort: (formModel.value.sort || 0) + sortStep });
     setVisible(true);
   };
 
   // 打开修改
-  const openUpdate = (record: any) => {
+  const openUpdate = async (record: any) => {
     title.value = '修改字典配置值';
     isAddHandle.value = false;
-    renderForm({ ...defaultForm(), ...record });
+    await renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
 
@@ -217,7 +219,6 @@
   // 清空
   const handlerClear = () => {
     setLoading(false);
-    setVisible(false);
   };
 
 </script>

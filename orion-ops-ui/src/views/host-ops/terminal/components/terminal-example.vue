@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
   import { Terminal } from '@xterm/xterm';
-  import { onMounted, ref } from 'vue';
+  import { onMounted, onUnmounted, ref } from 'vue';
   import { TerminalTheme } from '../types/terminal.theme';
 
   const props = defineProps<{
@@ -18,9 +18,10 @@
   }>();
 
   const terminal = ref();
+  const term = ref();
 
   onMounted(() => {
-    const term = new Terminal({
+    term.value = new Terminal({
       theme: props.theme,
       cols: 47,
       rows: 6,
@@ -29,9 +30,9 @@
       cursorBlink: false,
       cursorInactiveStyle: 'none'
     });
-    term.open(terminal.value);
+    term.value.open(terminal.value);
 
-    term.write(
+    term.value.write(
       '[94m[root[0m@[96mOrionServer usr]#[0m\n' +
       '[92mdr-xr-xr-x.[0m   2 root root [96mbin[0m\n' +
       '[92mdr-xr-xr-x.[0m   2 root root [96msbin[0m\n' +
@@ -39,6 +40,10 @@
       '[92mdr-xr-xr-x.[0m  62 root root [96mlib64[0m\n' +
       '[92mlrwxrwxrwx.[0m   1 root root [90;42mtmp[0m'
     );
+  });
+
+  onUnmounted(() => {
+    term.value?.dispose();
   });
 
 </script>

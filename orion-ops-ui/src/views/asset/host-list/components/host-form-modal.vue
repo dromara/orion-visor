@@ -183,7 +183,6 @@
   // 清空
   const handlerClear = () => {
     setLoading(false);
-    setVisible(false);
   };
 
 </script>

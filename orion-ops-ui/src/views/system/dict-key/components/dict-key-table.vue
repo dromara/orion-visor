@@ -144,7 +144,7 @@
   import { usePagination } from '@/types/table';
   import { dictValueTypeKey } from '../types/const';
   import useCopy from '@/hooks/copy';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { getDictValueList } from '@/api/system/dict-value';
 
   const tableRenderData = ref<DictKeyQueryResponse[]>([]);
@@ -154,6 +154,7 @@
   const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
+  const cacheStore = useCacheStore();
 
   const formModel = reactive<DictKeyQueryRequest>({
     id: undefined,
@@ -170,6 +171,7 @@
       // 调用删除接口
       await deleteDictKey(id);
       Message.success('删除成功');
+      cacheStore.reset('dictKeys');
       // 重新加载数据
       fetchTableData();
     } catch (e) {
@@ -181,11 +183,13 @@
   // 添加后回调
   const addedCallback = () => {
     fetchTableData();
+    cacheStore.reset('dictKeys');
   };
 
   // 更新后回调
   const updatedCallback = () => {
     fetchTableData();
+    cacheStore.reset('dictKeys');
   };
 
   defineExpose({

@@ -13,8 +13,8 @@ export interface PreferenceUpdateRequest {
 /**
  * 用户偏好查询响应
  */
-export interface PreferenceQueryResponse {
-  config: object;
+export interface PreferenceQueryResponse<T> {
+  config: T;
 }
 
 /**
@@ -34,7 +34,7 @@ export function updatePreferencePartial(request: PreferenceUpdateRequest) {
 /**
  * 查询用户偏好
  */
-export function getPreference(type: Preference) {
-  return axios.get<PreferenceQueryResponse>('/infra/preference/get', { params: { type } });
+export function getPreference<T>(type: Preference) {
+  return axios.get<PreferenceQueryResponse<T>>('/infra/preference/get', { params: { type } });
 }
 

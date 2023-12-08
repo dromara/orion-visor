@@ -1,20 +1,18 @@
 import type { CSSProperties } from 'vue';
+import type { TerminalTheme } from './terminal.theme';
 
 // 暗色主题
 export const DarkTheme = {
-  DARK: {
-    value: 'dark',
-    label: '暗色'
-  },
-  LIGHT: {
-    value: 'light',
-    label: '亮色'
-  },
-  AUTO: {
-    value: 'auto',
-    label: '自动'
-  }
+  DARK: 'dark',
+  LIGHT: 'light',
+  AUTO: 'auto'
 };
+
+// 用户终端偏好
+export interface TerminalPreference {
+  darkTheme: string,
+  terminalTheme: TerminalTheme
+}
 
 // sidebar 操作类型
 export interface SidebarAction {
@@ -63,3 +61,9 @@ export interface TabItem {
 
   [key: string]: unknown;
 }
+
+// 终端暗色模式 字典项
+export const darkThemeKey = 'terminalDarkTheme';
+
+// 加载的字典值
+export const dictKeys = [darkThemeKey];

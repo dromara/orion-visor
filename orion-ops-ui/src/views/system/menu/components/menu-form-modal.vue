@@ -255,7 +255,6 @@
   // 清空
   const handlerClear = () => {
     setLoading(false);
-    setVisible(false);
     // 触发 watch 防止第二次加载变成根目录
     renderForm(defaultForm());
   };

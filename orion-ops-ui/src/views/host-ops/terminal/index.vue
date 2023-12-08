@@ -1,5 +1,5 @@
 <template>
-  <div class="host-layout">
+  <div class="host-layout" v-if="render">
     <!-- 头部区域 -->
     <header class="host-layout-header">
       <terminal-header v-model="activeKey"
@@ -17,6 +17,7 @@
       <div class="host-layout-content">
         <terminal-content v-model="activeKey"
                           :tabs="tabs"
+                          :preference="preference as TerminalPreference"
                           @change-dark-theme="changeLayoutTheme" />
       </div>
       <!-- 右侧操作栏 -->
@@ -34,30 +35,36 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TabItem } from './types/terminal.type';
-  import { ref } from 'vue';
+  import type { TabItem, TerminalPreference } from './types/terminal.type';
+  import { ref, onBeforeMount } from 'vue';
   import { useDark } from '@vueuse/core';
-  import { TabType, InnerTabs, DarkTheme } from './types/terminal.type';
+  import { TabType, InnerTabs, DarkTheme, dictKeys } from './types/terminal.type';
+  import { DEFAULT_SCHEMA } from './types/terminal.theme';
+  import { useDictStore } from '@/store';
+  import { getPreference } from '@/api/user/preference';
+  import { Message } from '@arco-design/web-vue';
   import TerminalHeader from './components/layout/terminal-header.vue';
   import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
   import TerminalContent from './components/layout/terminal-content.vue';
   import './assets/styles/layout.less';
   import '@xterm/xterm/css/xterm.css';
-  import { onBeforeMount } from 'vue/dist/vue';
 
   // 系统主题
   const darkTheme = useDark({
     selector: 'body',
     attribute: 'terminal-theme',
-    valueDark: DarkTheme.DARK.value,
-    valueLight: DarkTheme.LIGHT.value,
-    initialValue: DarkTheme.DARK.value as any,
+    valueDark: DarkTheme.DARK,
+    valueLight: DarkTheme.LIGHT,
+    initialValue: DarkTheme.DARK as any,
     storageKey: null
   });
+  const dictStore = useDictStore();
 
+  const render = ref(false);
   const activeKey = ref(InnerTabs.THEME_SETTING.key);
   const tabs = ref<Array<TabItem>>([InnerTabs.THEME_SETTING]);
+  const preference = ref<TerminalPreference>();
   for (let i = 0; i < 3; i++) {
     tabs.value.push({
       key: `host${i}`,
@@ -70,7 +77,6 @@
   const changeLayoutTheme = (dark: boolean) => {
     darkTheme.value = dark;
   };
-  changeLayoutTheme(false);
 
   // 点击 tab
   const clickTab = (key: string) => {
@@ -96,8 +102,31 @@
     activeKey.value = tab.key;
   };
 
-  onBeforeMount(() => {
-    // FIXME 加载用户配置
+  // 加载用户终端偏好
+  onBeforeMount(async () => {
+    try {
+      const { data } = await getPreference<TerminalPreference>('TERMINAL');
+      // 设置默认终端主题
+      if (!data.config.terminalTheme?.name) {
+        data.config.terminalTheme = DEFAULT_SCHEMA;
+      }
+      preference.value = data.config;
+      // 设置暗色主题
+      const userDarkTheme = data.config.darkTheme;
+      if (userDarkTheme === DarkTheme.AUTO) {
+        changeLayoutTheme(data.config.terminalTheme?.dark === true);
+      } else {
+        changeLayoutTheme(userDarkTheme === DarkTheme.DARK);
+      }
+      render.value = true;
+    } catch (e) {
+      Message.error('配置加载失败');
+    }
+  });
+
+  // 加载字典值
+  onBeforeMount(async () => {
+    await dictStore.loadKeys([...dictKeys]);
   });
 
 </script>

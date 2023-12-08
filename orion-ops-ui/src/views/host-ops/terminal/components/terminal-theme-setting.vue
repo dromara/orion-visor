@@ -12,13 +12,11 @@
           <h3 class="terminal-setting-subtitle">
             主题选择
           </h3>
-          <a-radio-group v-model="userDarkTheme"
+          <a-radio-group :default-value="preference.darkTheme"
                          size="mini"
                          type="button"
-                         @change="changeDarkTheme">
-            <a-radio v-for="theme in DarkTheme" :key="theme.value" :value="theme.value">
-              {{ theme.label }}
-            </a-radio>
+                         @change="changeDarkTheme"
+                         :options="toOptions(darkThemeKey)">
           </a-radio-group>
         </div>
         <!-- 内容区域 -->
@@ -30,7 +28,7 @@
                     :key="theme.name"
                     class="terminal-theme-card simple-card"
                     :class="{
-                      'terminal-theme-card-check': theme.name === userTerminalTheme.name
+                      'terminal-theme-card-check': theme.name === preference.terminalTheme.name
                     }"
                     :title="theme.name"
                     :style="{
@@ -44,7 +42,7 @@
               <!-- 样例 -->
               <terminal-example :theme="theme" />
               <icon-check class="theme-check-icon" :style="{
-                display: theme.name === userTerminalTheme.name ? 'flex': 'none'
+                display: theme.name === preference.terminalTheme.name ? 'flex': 'none'
               }" />
             </a-card>
           </div>
@@ -62,59 +60,60 @@
 
 <script lang="ts" setup>
   import type { TerminalTheme } from '../types/terminal.theme';
-  import { DarkTheme } from '../types/terminal.type';
-  import ThemeSchema, { FRAPPE } from '../types/terminal.theme';
+  import type { TerminalPreference } from '../types/terminal.type';
+  import { DarkTheme, darkThemeKey } from '../types/terminal.type';
+  import ThemeSchema from '../types/terminal.theme';
   import useEmitter from '@/hooks/emitter';
-  import { onBeforeMount, ref } from 'vue';
-  import TerminalExample from './terminal-example.vue';
   import { useDebounceFn } from '@vueuse/core';
+  import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
+  import TerminalExample from './terminal-example.vue';
+  import { updatePreferencePartial } from '@/api/user/preference';
 
-  defineProps();
+  const props = defineProps<{
+    preference: TerminalPreference
+  }>();
 
   const emits = defineEmits(['emitter']);
 
   const { bubblesEmitter } = useEmitter(emits);
-
-  interface TerminalPreference {
-    darkTheme: string,
-    terminalTheme: TerminalTheme
-  }
-
-  const userDarkTheme = ref(DarkTheme.DARK.value);
-  const userTerminalTheme = ref<TerminalTheme>(FRAPPE);
+  const { toOptions } = useDictStore();
 
   // 修改暗色主题
   const changeDarkTheme = (value: string) => {
-    if (value === DarkTheme.DARK.value) {
+    props.preference.darkTheme = value;
+    if (value === DarkTheme.DARK) {
       // 暗色
       bubblesEmitter('changeDarkTheme', true);
-    } else if (value === DarkTheme.LIGHT.value) {
+    } else if (value === DarkTheme.LIGHT) {
       // 亮色
       bubblesEmitter('changeDarkTheme', false);
-    } else if (value === DarkTheme.AUTO.value) {
+    } else if (value === DarkTheme.AUTO) {
       // 自动配色
-      bubblesEmitter('changeDarkTheme', userTerminalTheme.value.dark ? DarkTheme.DARK.value : DarkTheme.LIGHT.value);
+      bubblesEmitter('changeDarkTheme', props.preference.terminalTheme.dark);
     }
+    // 同步用户偏好
     sync();
   };
 
   // 选择终端主题
   const checkTheme = (theme: TerminalTheme) => {
-    userTerminalTheme.value = theme;
+    props.preference.terminalTheme = theme;
     // 切换主题配色
-    if (userDarkTheme.value === DarkTheme.AUTO.value) {
-      changeDarkTheme(theme.dark ? DarkTheme.DARK.value : DarkTheme.LIGHT.value);
-    } else {
-      sync();
+    if (props.preference.darkTheme === DarkTheme.AUTO) {
+      bubblesEmitter('changeDarkTheme', theme.dark);
     }
+    // 同步用户偏好
+    sync();
   };
 
   // 同步用户偏好
   const syncUserPreference = async () => {
     try {
-      // FIXME 同步用户配置
-
+      await updatePreferencePartial({
+        type: 'TERMINAL',
+        config: props.preference
+      });
       Message.success('同步成功');
     } catch (e) {
       Message.error('同步失败');
@@ -122,10 +121,6 @@
   };
   // 同步用户偏好防抖
   const sync = useDebounceFn(syncUserPreference, 1500);
-
-  onBeforeMount(() => {
-    // FIXME 加载用户配置
-  });
 
 </script>
 

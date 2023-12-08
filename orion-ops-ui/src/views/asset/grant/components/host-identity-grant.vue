@@ -86,14 +86,18 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      // 加载主机秘钥
-      hostKeys.value = await cacheStore.loadHostKeys();
       // 加载主机身份
       hostIdentities.value = await cacheStore.loadHostIdentities();
     } catch (e) {
     } finally {
       setLoading(false);
     }
+  });
+
+  // 初始化数据
+  onMounted(async () => {
+    // 加载主机秘钥
+    hostKeys.value = await cacheStore.loadHostKeys();
   });
 
 </script>

@@ -30,7 +30,7 @@ export interface TerminalTheme {
 }
 
 // 默认配色
-export const FRAPPE = {
+export const DEFAULT_SCHEMA = {
   name: 'frappe',
   dark: true,
   background: '#303446',
@@ -59,7 +59,7 @@ export const FRAPPE = {
 };
 
 export default [
-  FRAPPE,
+  DEFAULT_SCHEMA,
   {
     name: 'latte',
     dark: false,
