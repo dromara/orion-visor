@@ -9,12 +9,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalTheme } from '@/store/modules/terminal/types';
+  import type { TerminalThemeSchema } from '@/store/modules/terminal/types';
   import { Terminal } from '@xterm/xterm';
   import { onMounted, onUnmounted, ref } from 'vue';
 
   const props = defineProps<{
-    theme: TerminalTheme | Record<string, any>
+    theme: TerminalThemeSchema | Record<string, any>
   }>();
 
   const terminal = ref();
@@ -22,22 +22,19 @@
 
   onMounted(() => {
     term.value = new Terminal({
-      theme: { ...props.theme, cursor: props.theme.background },
+      theme: props.theme,
       cols: 47,
       rows: 6,
       fontSize: 15,
-      convertEol: true,
-      cursorBlink: false,
       cursorInactiveStyle: 'none',
     });
     term.value.open(terminal.value);
-
     term.value.write(
-      '[94m[root[0m@[96mOrionServer usr]#[0m\n' +
-      '[92mdr-xr-xr-x.[0m   2 root root [96mbin[0m\n' +
-      '[92mdr-xr-xr-x.[0m   2 root root [96msbin[0m\n' +
-      '[92mdr-xr-xr-x.[0m  43 root root [96mlib[0m\n' +
-      '[92mdr-xr-xr-x.[0m  62 root root [96mlib64[0m\n' +
+      '[1;94m[root[0m@[1;96mOrionServer usr]#[0m\r\n' +
+      '[92mdr-xr-xr-x.[0m   2 root root [96mbin[0m\r\n' +
+      '[92mdr-xr-xr-x.[0m   2 root root [96msbin[0m\r\n' +
+      '[92mdr-xr-xr-x.[0m  43 root root [96mlib[0m\r\n' +
+      '[92mdr-xr-xr-x.[0m  62 root root [96mlib64[0m\r\n' +
       '[92mlrwxrwxrwx.[0m   1 root root [90;42mtmp[0m'
     );
   });

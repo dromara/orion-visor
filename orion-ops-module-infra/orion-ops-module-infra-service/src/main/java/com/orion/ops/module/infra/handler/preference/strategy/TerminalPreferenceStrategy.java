@@ -18,8 +18,19 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
     public TerminalPreferenceModel getDefault() {
         return TerminalPreferenceModel.builder()
                 .darkTheme("dark")
-                .terminalTheme(new JSONObject())
-                .viewSetting(new JSONObject())
+                .themeSchema(new JSONObject())
+                .displaySetting(TerminalPreferenceModel.DisplaySettingModel.builder()
+                        .fontFamily("_")
+                        .fontSize(15)
+                        .lineHeight(1.00)
+                        .fontWeight("normal")
+                        .fontWeightBold("bold")
+                        .cursorStyle("bar")
+                        .cursorBlink(true)
+                        .build()
+                        .toJson()
+                )
+                .backgroundSetting(new JSONObject())
                 .build();
     }
 

@@ -1,4 +1,4 @@
-import type { TerminalPreference, TerminalState, TerminalTheme } from './types';
+import type { TerminalDisplaySetting, TerminalPreference, TerminalState, TerminalThemeSchema } from './types';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreferencePartial } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
@@ -24,8 +24,9 @@ export default defineStore('terminal', {
     }),
     preference: {
       darkTheme: 'auto',
-      terminalTheme: {} as TerminalTheme,
-    }
+      themeSchema: {} as TerminalThemeSchema,
+      displaySetting: {} as TerminalDisplaySetting
+    },
   }),
 
   actions: {
@@ -39,14 +40,14 @@ export default defineStore('terminal', {
       try {
         const { data } = await getPreference<TerminalPreference>('TERMINAL');
         // 设置默认终端主题
-        if (!data.config.terminalTheme?.name) {
-          data.config.terminalTheme = DEFAULT_SCHEMA;
+        if (!data.config.themeSchema?.name) {
+          data.config.themeSchema = DEFAULT_SCHEMA;
         }
         this.preference = data.config;
         // 设置暗色主题
         const userDarkTheme = data.config.darkTheme;
         if (userDarkTheme === DarkTheme.AUTO) {
-          this.isDarkTheme = data.config.terminalTheme?.dark === true;
+          this.isDarkTheme = data.config.themeSchema?.dark === true;
         } else {
           this.isDarkTheme = userDarkTheme === DarkTheme.DARK;
         }

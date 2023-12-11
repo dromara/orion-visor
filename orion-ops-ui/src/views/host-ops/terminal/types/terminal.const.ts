@@ -43,8 +43,23 @@ export interface TabItem {
   [key: string]: unknown;
 }
 
+// 字体后缀 兜底
+export const fontFamilySuffix = ',courier-new, courier, monospace';
+
 // 终端暗色模式 字典项
 export const darkThemeKey = 'terminalDarkTheme';
 
+// 终端字体样式
+export const fontFamilyKey = 'terminalFontFamily';
+
+// 终端字体大小
+export const fontSizeKey = 'terminalFontSize';
+
+// 终端字体字重
+export const fontWeightKey = 'terminalFontWeight';
+
+// 终端光标样式
+export const cursorStyleKey = 'terminalCursorStyle';
+
 // 加载的字典值
-export const dictKeys = [darkThemeKey];
+export const dictKeys = [darkThemeKey, fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey];

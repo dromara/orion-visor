@@ -8,11 +8,12 @@ export interface TerminalState {
 // 终端配置
 export interface TerminalPreference {
   darkTheme: string,
-  terminalTheme: TerminalTheme,
+  themeSchema: TerminalThemeSchema,
+  displaySetting: TerminalDisplaySetting,
 }
 
 // 终端主题
-export interface TerminalTheme {
+export interface TerminalThemeSchema {
   name: string;
   dark: boolean;
   background: string;
@@ -40,4 +41,15 @@ export interface TerminalTheme {
   brightWhite: string;
 
   [key: string]: unknown;
+}
+
+// 显示设置
+export interface TerminalDisplaySetting {
+  fontFamily?: string;
+  fontSize?: number;
+  lineHeight?: number;
+  fontWeight?: string | number;
+  fontWeightBold?: string | number;
+  cursorStyle?: string;
+  cursorBlink?: boolean;
 }

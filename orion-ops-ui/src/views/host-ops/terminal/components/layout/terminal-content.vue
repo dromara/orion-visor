@@ -36,7 +36,7 @@
   import type { TabItem } from '../../types/terminal.const';
   import { computed } from 'vue';
   import { TabType, InnerTabs } from '../../types/terminal.const';
-  import TerminalViewSetting from '../theme-setting/terminal-view-setting.vue';
+  import TerminalViewSetting from '../view-setting/terminal-view-setting.vue';
 
   const props = defineProps({
     modelValue: {

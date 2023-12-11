@@ -1,4 +1,4 @@
-import type { TerminalTheme } from '@/store/modules/terminal/types';
+import type { TerminalThemeSchema } from '@/store/modules/terminal/types';
 
 // 默认配色
 export const DEFAULT_SCHEMA = {
@@ -248,4 +248,4 @@ export default [
     brightCyan: '#2488FF',
     brightWhite: '#EAE5FF'
   }
-] as Array<TerminalTheme>;
+] as Array<TerminalThemeSchema>;

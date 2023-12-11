@@ -7,6 +7,7 @@
       </h3>
       <!-- 暗色选择 -->
       <a-radio-group :default-value="preference.darkTheme"
+                     class="usn"
                      size="mini"
                      type="button"
                      @change="checkDarkTheme"
@@ -22,7 +23,7 @@
                 :key="theme.name"
                 class="terminal-theme-card simple-card"
                 :class="{
-                  'terminal-theme-card-check': theme.name === preference.terminalTheme.name
+                  'terminal-theme-card-check': theme.name === preference.themeSchema.name
                 }"
                 :title="theme.name"
                 :style="{
@@ -30,14 +31,15 @@
                   marginRight: index === 0 ? '16px' : 0
                 }"
                 :header-style="{
-                  color: theme.dark ? 'rgba(255, 255, 255, .8)' : 'rgba(0, 0, 0, .8)'
+                  color: theme.dark ? 'rgba(255, 255, 255, .8)' : 'rgba(0, 0, 0, .8)',
+                  userSelect: 'none'
                 }"
                 @click="checkTheme(theme)">
           <!-- 样例 -->
-          <terminal-example :theme="theme" />
+          <terminal-example :theme="{ ...theme, cursor: theme.background }" />
           <!-- 选中按钮 -->
           <icon-check class="theme-check-icon"
-                      v-show="theme.name === preference.terminalTheme.name" />
+                      v-show="theme.name === preference.themeSchema.name" />
         </a-card>
       </div>
     </div>
@@ -51,7 +53,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalTheme } from '@/store/modules/terminal/types';
+  import type { TerminalThemeSchema } from '@/store/modules/terminal/types';
   import { darkThemeKey } from '../../types/terminal.const';
   import ThemeSchema from '../../types/terminal.theme';
   import { useDebounceFn } from '@vueuse/core';
@@ -76,15 +78,15 @@
       changeDarkTheme(false);
     } else if (value === DarkTheme.AUTO) {
       // 自动配色
-      changeDarkTheme(preference.terminalTheme.dark);
+      changeDarkTheme(preference.themeSchema.dark);
     }
     // 同步用户偏好
     sync();
   };
 
   // 选择终端主题
-  const checkTheme = (theme: TerminalTheme) => {
-    preference.terminalTheme = theme;
+  const checkTheme = (theme: TerminalThemeSchema) => {
+    preference.themeSchema = theme;
     // 切换主题配色
     if (preference.darkTheme === DarkTheme.AUTO) {
       changeDarkTheme(theme.dark);

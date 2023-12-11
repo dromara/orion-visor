@@ -204,16 +204,16 @@ body[terminal-theme='dark'] .host-layout {
 }
 
 // 终端设置容器
-@setting-container-width: 1180px;
 .terminal-setting-container {
   padding: 32px 16px;
-  width: @setting-container-width;
+  width: max-content;
   margin: auto;
   display: flex;
   flex-direction: column;
 
   .terminal-setting-title {
     margin: 0 0 24px 0;
+    user-select: none;
     color: var(--color-content-text-3);
   }
 
@@ -230,6 +230,7 @@ body[terminal-theme='dark'] .host-layout {
 
   .terminal-setting-subtitle {
     margin: 0;
+    user-select: none;
     color: var(--color-content-text-3);
   }
 
