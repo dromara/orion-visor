@@ -8,12 +8,11 @@
                arrow-class="terminal-tooltip-arrow"
                :content="action.content">
       <div class="terminal-sidebar-icon-wrapper"
-           v-if="action.visible !== false"
-           :style="action?.style">
+           v-if="action.visible !== false">
         <div class="terminal-sidebar-icon"
              :class="iconClass"
              @click="action.click">
-          <component :is="action.icon" />
+          <component :is="action.icon" :style="action?.iconStyle" />
         </div>
       </div>
     </a-tooltip>

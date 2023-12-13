@@ -10,6 +10,9 @@ const HOST_OPS: AppRouteRecordRaw = {
       name: 'hostTerminal',
       path: '/host/terminal',
       component: () => import('@/views/host-ops/terminal/index.vue'),
+      meta: {
+        noAffix: true
+      }
     },
   ],
 };

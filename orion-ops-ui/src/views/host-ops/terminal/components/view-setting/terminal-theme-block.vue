@@ -15,7 +15,7 @@
       </a-radio-group>
     </div>
     <!-- 内容区域 -->
-    <div class="terminal-setting-body">
+    <div class="terminal-setting-body terminal-theme-container">
       <div class="theme-row"
            v-for="index in ThemeSchema.length / 2"
            :key="index">
@@ -101,9 +101,13 @@
   @terminal-width: 458px;
   @terminal-height: 138px;
 
-  .theme-row {
-    display: flex;
-    margin-bottom: 16px;
+  .terminal-theme-container {
+    flex-direction: column;
+
+    .theme-row {
+      display: flex;
+      margin-bottom: 16px;
+    }
   }
 
   .terminal-theme-card {

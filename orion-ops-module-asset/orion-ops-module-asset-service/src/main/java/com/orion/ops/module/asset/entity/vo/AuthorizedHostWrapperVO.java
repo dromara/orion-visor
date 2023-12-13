@@ -33,4 +33,7 @@ public class AuthorizedHostWrapperVO {
     @Schema(description = "分组树节点映射 'groupId':hostIdList")
     private Map<String, Set<Long>> treeNodes;
 
+    // TODO 我的收藏
+    // TODO 最近连接
+
 }

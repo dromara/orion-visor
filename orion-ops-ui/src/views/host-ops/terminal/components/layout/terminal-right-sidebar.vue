@@ -28,19 +28,17 @@
     {
       icon: 'icon-code-block',
       content: '打开命令片段',
-      style: {},
       click: () => emits('openSnippet')
     },
     {
       icon: 'icon-folder',
       content: '打开 SFTP',
-      style: {},
       click: () => emits('openSftp')
     },
     {
       icon: 'icon-swap',
       content: '文件传输列表',
-      style: {
+      iconStyle: {
         transform: 'rotate(90deg)'
       },
       click: () => emits('openTransfer')
@@ -58,7 +56,6 @@
     {
       icon: 'icon-camera',
       content: '截图',
-      style: {},
       click: () => emits('screenshot')
     },
   ];

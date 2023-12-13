@@ -2,6 +2,10 @@
   <div class="terminal-header">
     <!-- 左侧 logo -->
     <div class="terminal-header-left">
+      <img alt="logo"
+           class="terminal-header-logo-img"
+           draggable="false"
+           src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
       <h5 class="terminal-header-logo-text">Orion Ops Pro</h5>
     </div>
     <!-- 左侧 tabs -->
@@ -105,7 +109,7 @@
 
 <style lang="less" scoped>
   .terminal-header {
-    --logo-width: 150px;
+    --logo-width: 168px;
     --right-avatar-width: calc(28px * 5 - 7px * 4);
     --right-action-width: calc(var(--header-height) * 3);
   }
@@ -118,6 +122,15 @@
 
     &-left {
       width: var(--logo-width);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    &-logo-img {
+      padding-left: 6px;
+      width: 36px;
+      height: 36px;
     }
 
     &-logo-text {
@@ -125,7 +138,7 @@
       margin: 0;
       display: flex;
       align-items: center;
-      padding-left: 16px;
+      padding: 0 8px;
       font-size: 16px;
     }
 

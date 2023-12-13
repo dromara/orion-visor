@@ -205,21 +205,26 @@ body[terminal-theme='dark'] .host-layout {
 
 // 终端设置容器
 .terminal-setting-container {
-  padding: 32px 16px;
-  width: max-content;
+  padding: 32px 16px 16px 16px;
+  width: fit-content;
   margin: auto;
   display: flex;
   flex-direction: column;
 
+  .terminal-setting-wrapper {
+    min-width: 932px;
+  }
+
   .terminal-setting-title {
     margin: 0 0 24px 0;
     user-select: none;
+    font-size: 1.65em;
     color: var(--color-content-text-3);
   }
 
   .terminal-setting-block {
     color: var(--color-content-text-2);
-    margin-bottom: 18px;
+    margin-bottom: 24px;
   }
 
   .terminal-setting-subtitle-wrapper {
@@ -229,13 +234,13 @@ body[terminal-theme='dark'] .host-layout {
   }
 
   .terminal-setting-subtitle {
-    margin: 0;
+    margin: 0 0 16px 0;
     user-select: none;
     color: var(--color-content-text-3);
   }
 
   .terminal-setting-body {
-    margin: 16px 0 24px 0;
+    display: flex;
   }
 
 }

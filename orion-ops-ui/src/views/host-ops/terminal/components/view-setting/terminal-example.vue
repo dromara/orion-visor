@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
   import type { TerminalThemeSchema } from '@/store/modules/terminal/types';
-  import { Terminal } from '@xterm/xterm';
+  import { Terminal } from 'xterm';
   import { onMounted, onUnmounted, ref } from 'vue';
 
   const props = defineProps<{
@@ -23,7 +23,7 @@
   onMounted(() => {
     term.value = new Terminal({
       theme: props.theme,
-      cols: 47,
+      cols: 42,
       rows: 6,
       fontSize: 15,
       cursorInactiveStyle: 'none',
@@ -35,7 +35,7 @@
       '[92mdr-xr-xr-x.[0m   2 root root [96msbin[0m\r\n' +
       '[92mdr-xr-xr-x.[0m  43 root root [96mlib[0m\r\n' +
       '[92mdr-xr-xr-x.[0m  62 root root [96mlib64[0m\r\n' +
-      '[92mlrwxrwxrwx.[0m   1 root root [90;42mtmp[0m'
+      '[92mlrwxrwxrwx.[0m   1 root root [90;102mtmp[0m'
     );
   });
 

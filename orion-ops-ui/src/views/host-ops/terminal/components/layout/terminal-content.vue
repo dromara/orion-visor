@@ -7,9 +7,12 @@
                   :title="tab.title">
         <!-- 设置 -->
         <template v-if="tab.type === TabType.SETTING">
+          <!-- 新建连接 -->
+          <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
           <!-- 显示设置 -->
-          <terminal-view-setting v-if="tab.key === InnerTabs.THEME_SETTING.key" />
+          <terminal-view-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
           <span v-else>
+            {{ tab.key }}
             {{ tab.title }}
           </span>
         </template>
@@ -37,6 +40,7 @@
   import { computed } from 'vue';
   import { TabType, InnerTabs } from '../../types/terminal.const';
   import TerminalViewSetting from '../view-setting/terminal-view-setting.vue';
+  import NewConnectionView from '@/views/host-ops/terminal/components/new-connection/new-connection-view.vue';
 
   const props = defineProps({
     modelValue: {

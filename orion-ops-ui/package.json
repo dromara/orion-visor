@@ -33,12 +33,6 @@
     "@dangojs/a-query-header": "^0.0.31",
     "@sanqi377/arco-vue-icon-picker": "^1.0.7",
     "@vueuse/core": "^9.3.0",
-    "@xterm/addon-canvas": "0.6.0-beta.14",
-    "@xterm/addon-fit": "0.9.0-beta.14",
-    "@xterm/addon-search": "0.14.0-beta.14",
-    "@xterm/addon-web-links": "0.10.0-beta.1",
-    "@xterm/addon-webgl": "0.17.0-beta.14",
-    "@xterm/xterm": "5.4.0-beta.14",
     "axios": "^0.24.0",
     "dayjs": "^1.11.5",
     "echarts": "^5.4.0",
@@ -53,7 +47,14 @@
     "vue": "^3.2.40",
     "vue-echarts": "^6.2.3",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.14",
+    "xterm": "^5.3.0",
+    "xterm-addon-canvas": "^0.5.0",
+    "xterm-addon-fit": "^0.8.0",
+    "xterm-addon-image": "^0.5.0",
+    "xterm-addon-search": "^0.13.0",
+    "xterm-addon-web-links": "^0.9.0",
+    "xterm-addon-webgl": "^0.16.0"
   },
   "devDependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",

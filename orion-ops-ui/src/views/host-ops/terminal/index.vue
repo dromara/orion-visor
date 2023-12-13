@@ -42,14 +42,14 @@
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
   import TerminalContent from './components/layout/terminal-content.vue';
   import './assets/styles/layout.less';
-  import '@xterm/xterm/css/xterm.css';
+  import 'xterm/css/xterm.css';
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
 
   const render = ref(false);
-  const activeKey = ref(InnerTabs.THEME_SETTING.key);
-  const tabs = ref<Array<TabItem>>([InnerTabs.THEME_SETTING]);
+  const activeKey = ref(InnerTabs.NEW_CONNECTION.key);
+  const tabs = ref<Array<TabItem>>([InnerTabs.NEW_CONNECTION]);
   for (let i = 0; i < 3; i++) {
     tabs.value.push({
       key: `host${i}`,
@@ -125,7 +125,7 @@
     }
 
     &-content {
-      width: 100%;
+      width: calc(100% - var(--sidebar-width) * 2);
       height: 100%;
       background: var(--color-bg-content);
       overflow: auto;

@@ -4,7 +4,7 @@ import type { CSSProperties } from 'vue';
 export interface SidebarAction {
   icon: string;
   content: string;
-  style?: CSSProperties;
+  iconStyle?: CSSProperties;
   visible?: boolean;
   click: () => void;
 }
@@ -17,8 +17,8 @@ export const TabType = {
 
 // 内置 tab
 export const InnerTabs = {
-  HOST_LIST: {
-    key: 'hostList',
+  NEW_CONNECTION: {
+    key: 'newConnection',
     title: '新建连接',
     type: TabType.SETTING
   },

@@ -29,7 +29,7 @@
     {
       icon: 'icon-plus',
       content: '新建连接',
-      click: () => emits('switchTab', InnerTabs.HOST_LIST)
+      click: () => emits('switchTab', InnerTabs.NEW_CONNECTION)
     },
     {
       icon: 'icon-copy',

@@ -1,6 +1,6 @@
 <template>
-  <div class="terminal-setting-container view-setting-container">
-    <div class="view-setting-wrapper">
+  <div class="terminal-setting-container">
+    <div class="terminal-setting-wrapper">
       <!-- 主标题 -->
       <h2 class="terminal-setting-title">外观设置</h2>
       <!-- 显示设置 -->
@@ -24,8 +24,5 @@
 </script>
 
 <style lang="less" scoped>
-  .view-setting-wrapper {
-    width: 932px;
-  }
 
 </style>

@@ -20,9 +20,9 @@ export interface TerminalThemeSchema {
   foreground: string;
   cursor: string;
   cursorAccent?: string;
-  selectionInactiveBackground?: string;
   selectionBackground?: string;
   selectionForeground?: string;
+  selectionInactiveBackground?: string;
   black: string;
   red: string;
   green: string;
