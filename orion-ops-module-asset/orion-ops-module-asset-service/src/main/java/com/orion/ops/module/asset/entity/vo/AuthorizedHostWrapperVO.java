@@ -21,7 +21,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AuthorizedHostGroupWrapperVO", description = "已授权的主机分组 视图响应对象")
+@Schema(name = "AuthorizedHostWrapperVO", description = "已授权的主机分组 视图响应对象")
 public class AuthorizedHostWrapperVO {
 
     @Schema(description = "授权的主机分组")
