@@ -1,5 +1,5 @@
 <template>
-  <a-spin :loading="loading" class="main-container">
+  <div class="main-container">
     <span class="extra-message">
       <template v-if="user">
         用户 <span class="user-info">{{ user.nickname }}({{ user.username }})</span> 所有登录设备的会话列表
@@ -8,8 +8,14 @@
         所有登录设备的会话列表
       </template>
     </span>
+    <!-- 加载中 -->
+    <a-skeleton v-if="loading"
+                style="width: 70%;"
+                :animation="true">
+      <a-skeleton-line :rows="4" />
+    </a-skeleton>
     <!-- 登录会话时间线 -->
-    <a-timeline v-if="list.length">
+    <a-timeline v-else-if="list.length">
       <template v-for="item in list"
                 :key="item.loginTime">
         <a-timeline-item v-if="item.visible">
@@ -48,16 +54,9 @@
         </a-timeline-item>
       </template>
     </a-timeline>
-    <!-- 加载中 -->
-    <a-space direction="vertical"
-             v-else-if="loading"
-             :style="{width: '70%'}"
-             size="large">
-      <a-skeleton-line :rows="4" />
-    </a-space>
     <!-- 空 -->
     <a-empty v-else />
-  </a-spin>
+  </div>
 </template>
 
 <script lang="ts">
@@ -71,7 +70,7 @@
   import type { UserSessionQueryResponse } from '@/api/user/user';
   import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { ref, onMounted } from 'vue';
+  import { ref, onBeforeMount } from 'vue';
   import { getCurrentUserSessionList, offlineCurrentUserSession } from '@/api/user/mine';
   import { dateFormat } from '@/utils';
   import { isMobile } from '@/utils/is';
@@ -104,7 +103,7 @@
   };
 
   // 查询登录会话
-  onMounted(async () => {
+  onBeforeMount(async () => {
     try {
       setLoading(true);
       let sessions: UserSessionQueryResponse[];

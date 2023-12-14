@@ -29,7 +29,7 @@
                 mask-closable
                 :closable="false"
                 @cancel="drawerCancel">
-        <Menu />
+        <Menu style="padding: 12px 16px;" />
       </a-drawer>
       <!-- body -->
       <a-layout class="layout-content" :style="paddingStyle">
@@ -159,24 +159,6 @@
     height: 100%;
     overflow: auto;
     overflow-x: hidden;
-
-    :deep(.arco-menu) {
-      ::-webkit-scrollbar {
-        width: 12px;
-        height: 4px;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        border: 4px solid transparent;
-        background-clip: padding-box;
-        border-radius: 7px;
-        background-color: var(--color-text-4);
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: var(--color-text-3);
-      }
-    }
   }
 
   .layout-content {

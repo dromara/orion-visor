@@ -1,6 +1,5 @@
 <template>
   <a-drawer v-model:visible="visible"
-            class="drawer-body-padding-0"
             :width="420"
             :esc-to-close="false"
             :mask-closable="false"

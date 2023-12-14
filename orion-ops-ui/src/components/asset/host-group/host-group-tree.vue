@@ -3,7 +3,7 @@
     <!-- 分组树 -->
     <a-tree v-if="treeData.length"
             ref="tree"
-            class="tree-container"
+            class="tree-container block-tree"
             :blockNode="true"
             :draggable="editable"
             :data="treeData"
@@ -359,41 +359,8 @@
     color: var(--color-text-3);
   }
 
-  :deep(.arco-tree-node) {
-    cursor: unset;
-
-    .arco-tree-node-switcher {
-      margin-left: 8px;
-    }
-
-    &:hover {
-      background-color: var(--color-fill-1);
-    }
-  }
-
-  :deep(.arco-tree-node-selected) {
-    background-color: var(--color-fill-2);
-
-    &:hover {
-      background-color: var(--color-fill-1);
-    }
-  }
-
   :deep(.arco-tree-node-title) {
     padding: 0 80px 0 0;
-    height: 32px;
-
-    &:hover {
-      background-color: var(--color-fill-1);
-    }
-
-    .arco-tree-node-title-text {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
   }
 
   .node-title-wrapper {

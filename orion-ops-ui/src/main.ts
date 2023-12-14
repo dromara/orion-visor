@@ -11,6 +11,7 @@ import App from './App.vue';
 // 样式通过 arco-plugin 插件导入 详见目录文件 config/plugin/arcoStyleImport.ts
 import '@/assets/style/global.less';
 import '@/assets/style/layout.less';
+import '@/assets/style/arco-extends.less';
 import '@/api/interceptor';
 
 const app = createApp(App);

@@ -1,4 +1,5 @@
 <template>
+  <!-- 左侧固定配置按钮 -->
   <div v-if="!appStore.navbar" class="fixed-settings" @click="open">
     <a-button type="primary">
       <template #icon>
@@ -6,18 +7,21 @@
       </template>
     </a-button>
   </div>
+  <!-- 偏好配置抽屉 -->
   <a-drawer v-model:visible="visible"
             title="偏好设置"
             :width="300"
             :footer="false"
             :unmount-on-close="true"
             @cancel="() => setVisible(false)">
-    <!-- 布局设置 -->
-    <Block :options="layoutOpts" title="布局设置" />
-    <!-- 数据设置 -->
-    <Block :options="dataOpts" title="数据设置" />
-    <!-- 页面视图 -->
-    <Block :options="viewsOpts" title="页面视图" />
+    <div class="preference-containers">
+      <!-- 布局设置 -->
+      <Block :options="layoutOpts" title="布局设置" />
+      <!-- 数据设置 -->
+      <Block :options="dataOpts" title="数据设置" />
+      <!-- 页面视图 -->
+      <Block :options="viewsOpts" title="页面视图" />
+    </div>
   </a-drawer>
 </template>
 
@@ -151,4 +155,9 @@
       vertical-align: -4px;
     }
   }
+
+  .preference-containers{
+    padding: 0 16px;
+  }
+
 </style>

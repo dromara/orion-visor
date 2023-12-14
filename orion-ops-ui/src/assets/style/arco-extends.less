@@ -1,0 +1,143 @@
+// 内联菜单
+.arco-menu-inner::-webkit-scrollbar {
+  display: none;
+}
+
+// 吸顶列表
+.sticky-list {
+  .arco-list-header {
+    position: sticky;
+    background: var(--color-fill-2);
+    border-bottom: none;
+    top: 0;
+  }
+}
+
+// 表头
+.arco-table-td-content {
+  color: rgba(var(--gray-9), .95);
+  font-size: 13px;
+}
+
+// 表格
+.arco-table-cell {
+  .circle {
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: rgb(var(--blue-6));
+
+    &.pass {
+      background-color: rgb(var(--green-6));
+    }
+  }
+}
+
+// 垂直滚动
+.arco-scrollbar-track-direction-vertical {
+  width: 9px;
+
+  .arco-scrollbar-thumb-bar {
+    margin: 0;
+  }
+}
+
+// 水平滚动
+.arco-scrollbar-track-direction-horizontal {
+  height: 9px;
+
+  .arco-scrollbar-thumb-bar {
+    margin: 0;
+  }
+}
+
+// 表头
+.a-query-header-grid {
+  .arco-grid-item {
+    &:last-child {
+      display: flex !important;
+    }
+  }
+}
+
+// 标准卡片
+.general-card {
+  border-radius: 4px;
+  border: none;
+
+  & > .arco-card-header {
+    height: auto;
+    padding: 16px;
+    border: none;
+  }
+
+  & > .arco-card-body {
+    padding: 0 16px 16px 16px;
+  }
+}
+
+// 块状树
+.block-tree {
+  .arco-tree-node {
+    cursor: unset;
+
+    &-switcher {
+      margin-left: 8px;
+    }
+
+    &:hover {
+      background-color: var(--color-fill-1);
+    }
+
+    &-selected {
+      background-color: var(--color-fill-2);
+
+      &:hover {
+        background-color: var(--color-fill-1);
+      }
+    }
+
+    &-title {
+      padding: 0;
+      height: 32px;
+
+      &:hover {
+        background-color: var(--color-fill-1);
+      }
+
+      &-text {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// 抽屉
+.arco-drawer {
+  &-header {
+    border-bottom: unset;
+  }
+
+  &-footer {
+    border-top: unset;
+  }
+
+  &-body {
+    padding: 0;
+  }
+}
+
+.arco-trigger-menu {
+  user-select: none;
+}
+
+.arco-dropdown-option-content {
+  user-select: none;
+}

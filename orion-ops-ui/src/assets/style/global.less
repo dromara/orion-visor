@@ -12,8 +12,6 @@ body {
   background-color: var(--color-bg-1);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  --color-scrollbar-track: var(--color-neutral-1);
-  --color-scrollbar-thumb: var(--color-neutral-5);
 }
 
 // -- echarts
@@ -65,103 +63,6 @@ body {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-  }
-}
-
-// -- arco
-.arco-menu-inner::-webkit-scrollbar {
-  display: none;
-}
-
-.sticky-list {
-  .arco-list-header {
-    position: sticky;
-    background: var(--color-fill-2);
-    border-bottom: none;
-    top: 0;
-  }
-}
-
-.arco-table-td-content {
-  color: rgba(var(--gray-9), .95);
-  font-size: 13px;
-}
-
-.arco-table-cell {
-  .circle {
-    display: inline-block;
-    margin-right: 4px;
-    margin-bottom: 2px;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: rgb(var(--blue-6));
-
-    &.pass {
-      background-color: rgb(var(--green-6));
-    }
-  }
-}
-
-.arco-trigger-menu {
-  user-select: none;
-}
-
-.arco-dropdown-option-content {
-  user-select: none;
-}
-
-.arco-drawer-header {
-  border-bottom: unset;
-}
-
-.arco-drawer-footer {
-  border-top: unset;
-}
-
-.arco-drawer-container.drawer-body-padding-0 {
-  .arco-drawer-body {
-    padding: 0 !important;
-  }
-}
-
-.arco-scrollbar-track-direction-vertical {
-  width: 9px;
-
-  .arco-scrollbar-thumb-bar {
-    margin: 0;
-  }
-}
-
-.arco-scrollbar-track-direction-horizontal {
-  height: 9px;
-
-  .arco-scrollbar-thumb-bar {
-    margin: 0;
-  }
-}
-
-.a-query-header-grid {
-  .arco-grid-item {
-    &:last-child {
-      display: flex !important;
-    }
-  }
-}
-
-// -- card
-.general-card {
-  border-radius: 4px;
-  border: none;
-
-  & > .arco-card-header {
-    height: auto;
-    padding: 16px;
-    border: none;
-  }
-
-  & > .arco-card-body {
-    padding: 0 16px 16px 16px;
   }
 }
 
@@ -309,20 +210,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar-track {
-  background-color: var(--color-scrollbar-track);
-  border-radius: 8px;
-}
-
 ::-webkit-scrollbar {
   -webkit-appearance: none;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-neutral-1);
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  cursor: pointer;
+  border: 1px solid transparent;
+  background-clip: padding-box;
   border-radius: 8px;
-  background-color: var(--color-scrollbar-thumb);
-  transition: color .2s ease;
+  background-color: var(--color-neutral-5);
+
+  &:hover {
+    background-color: var(--color-neutral-6);
+  }
 }

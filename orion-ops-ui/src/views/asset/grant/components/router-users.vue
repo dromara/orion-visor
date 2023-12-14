@@ -8,7 +8,9 @@
                   :items="usersRouter"
                   @change="(key, item) => emits('change', key, item)" />
       <!-- 加载中 -->
-      <a-skeleton v-else-if="loading" class="skeleton-wrapper">
+      <a-skeleton v-else-if="loading"
+                  class="skeleton-wrapper"
+                  :animation="true">
         <a-skeleton-line :rows="4" />
       </a-skeleton>
       <!-- 暂无数据 -->
