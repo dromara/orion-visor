@@ -55,6 +55,7 @@
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
   import IconActions from '../layout/icon-actions.vue';
+  import { useTerminalStore } from '@/store';
 
   const props = defineProps({
     modelValue: {
@@ -67,23 +68,24 @@
     }
   });
 
-  const emits = defineEmits(['update:modelValue', 'clickTab', 'deleteTab', 'split', 'share']);
+  const emits = defineEmits(['update:modelValue', 'clickTab', 'deleteTab', 'share']);
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
+  const terminalStore = useTerminalStore();
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [
-    {
-      icon: 'icon-interaction',
-      content: '分屏',
-      visible: false,
-      click: () => emits('split')
-    },
     {
       icon: 'icon-share-alt',
       content: '分享链接',
       visible: false,
       click: () => emits('share')
+    },
+    {
+      // FIXME 持久化
+      icon: terminalStore.isDarkTheme ? 'icon-sun-fill' : 'icon-moon-fill',
+      content: terminalStore.isDarkTheme ? '点击切换为亮色模式' : '点击切换为暗色模式',
+      click: () => terminalStore.changeDarkTheme(!terminalStore.isDarkTheme)
     },
     {
       icon: isFullscreen.value ? 'icon-fullscreen-exit' : 'icon-fullscreen',

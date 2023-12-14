@@ -9,6 +9,15 @@ export interface SidebarAction {
   click: () => void;
 }
 
+// tab 元素
+export interface TabItem {
+  key: string;
+  title: string;
+  type: string;
+
+  [key: string]: unknown;
+}
+
 // tab 类型
 export const TabType = {
   SETTING: 'setting',
@@ -34,14 +43,13 @@ export const InnerTabs = {
   },
 };
 
-// tab 元素
-export interface TabItem {
-  key: string;
-  title: string;
-  type: string;
-
-  [key: string]: unknown;
-}
+// 新建连接类型
+export const NewConnectionType = {
+  GROUP: 'group',
+  LIST: 'list',
+  FAVORITE: 'favorite',
+  LATEST: 'latest'
+};
 
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';
@@ -61,5 +69,12 @@ export const fontWeightKey = 'terminalFontWeight';
 // 终端光标样式
 export const cursorStyleKey = 'terminalCursorStyle';
 
+// 终端新建连接类型
+export const NewConnectionTypeKey = 'terminalNewConnectionType';
+
 // 加载的字典值
-export const dictKeys = [darkThemeKey, fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey];
+export const dictKeys = [
+  darkThemeKey, fontFamilyKey,
+  fontSizeKey, fontWeightKey,
+  cursorStyleKey, NewConnectionTypeKey
+];

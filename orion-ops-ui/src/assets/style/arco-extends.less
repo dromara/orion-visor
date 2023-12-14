@@ -38,7 +38,7 @@
 
 // 垂直滚动
 .arco-scrollbar-track-direction-vertical {
-  width: 9px;
+  width: 6px;
 
   .arco-scrollbar-thumb-bar {
     margin: 0;
@@ -47,7 +47,7 @@
 
 // 水平滚动
 .arco-scrollbar-track-direction-horizontal {
-  height: 9px;
+  height: 6px;
 
   .arco-scrollbar-thumb-bar {
     margin: 0;
@@ -81,31 +81,42 @@
 
 // 块状树
 .block-tree {
+  @tree-node-hover-color: var(--color-fill-1);
+  @tree-node-selected-color: var(--color-fill-2);
+  @tree-node-selected-hover-color: var(--color-fill-2);
+
   .arco-tree-node {
     cursor: unset;
+    margin-bottom: 2px;
 
     &-switcher {
       margin-left: 8px;
     }
 
     &:hover {
-      background-color: var(--color-fill-1);
+      background-color: @tree-node-hover-color;
     }
 
     &-selected {
-      background-color: var(--color-fill-2);
+      background-color: @tree-node-selected-color;
 
       &:hover {
-        background-color: var(--color-fill-1);
+        background-color: @tree-node-selected-hover-color;
       }
     }
 
+    &-selected .arco-tree-node-title:hover {
+      background-color: unset;
+      //background-color: @tree-node-selected-hover-color;
+    }
+
     &-title {
-      padding: 0;
+      padding: 0 16px 0 0;
       height: 32px;
 
       &:hover {
-        background-color: var(--color-fill-1);
+        background-color: unset;
+        //background-color: @tree-node-hover-color;
       }
 
       &-text {

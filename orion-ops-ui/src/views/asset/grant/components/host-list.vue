@@ -15,7 +15,7 @@
     </template>
     <!-- 数据 -->
     <template #item="{ item }">
-      <a-list-item :title="`${item.name}(${item.code}) - ${ item.address}`">
+      <a-list-item :title="`${item.name}(${item.code}) - ${item.address}`">
         <icon-desktop class="host-list-icon" />
         <span>{{ `${item.name}(${item.code}) - ` }}</span>
         <span class="span-blue">{{ item.address }}</span>

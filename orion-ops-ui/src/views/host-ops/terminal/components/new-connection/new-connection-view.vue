@@ -5,16 +5,20 @@
       <h2 class="terminal-setting-title">新建连接</h2>
       <!-- 操作栏 -->
       <div class="terminal-setting-block header-actions">
-        <a-radio-group type="button">
-          <a-radio value="1">分组</a-radio>
-          <a-radio value="2">列表</a-radio>
-          <a-radio value="3">最近连接</a-radio>
-        </a-radio-group>
-        <a-input-search class="host-filter"
-                        placeholder="输入名称/编码/IP 进行过滤" />
+        <!-- 视图类型 -->
+        <a-radio-group v-model="newConnectionType"
+                       type="button"
+                       class="usn"
+                       :options="toOptions(NewConnectionTypeKey)"
+                       @change="changeConnectionType" />
+        <!-- 过滤 -->
+        <a-input-search v-model="filterValue"
+                        class="host-filter"
+                        placeholder="输入名称/编码/IP @标签"
+                        :allow-clear="true" />
       </div>
       <!-- 授权主机 -->
-      <div class="terminal-setting-block">
+      <div class="terminal-setting-block" style="margin: 0;">
         <!-- 顶部 -->
         <div class="terminal-setting-subtitle-wrapper">
           <h3 class="terminal-setting-subtitle">
@@ -22,17 +26,33 @@
           </h3>
         </div>
         <!-- 内容区域 -->
-        <div class="terminal-setting-body hosts-container">
-          <div class="host-tree">
-            <a-tree :data="hosts.groupTree"
-                    :blockNode="true"
-            >
+        <div class="terminal-setting-body body-container">
+          <!-- 加载中 -->
+          <a-skeleton v-if="loading"
+                      class="hosts-skeleton"
+                      :animation="true">
+            <a-skeleton-line :rows="6"
+                             :line-height="40"
+                             :line-spacing="20" />
+          </a-skeleton>
+          <!-- 无数据 -->
+          <a-empty v-else-if="!hosts.hostList?.length">
+            <template #image>
+              <icon-desktop />
+            </template>
+            Oops! 无授权主机 请联系管理员授权后重试!
+          </a-empty>
+          <!-- 主机列表 -->
+          <div v-else class="host-view-container">
+            <!-- 分组视图列表 -->
+            <host-group-view v-if="NewConnectionType.GROUP === newConnectionType"
+                             :hosts="hosts" />
+            <!-- 列表视图 -->
 
-            </a-tree>
-            {{ }}
-          </div>
-          <div class="host-list">
-            {{ hosts.treeNodes }}
+            <!-- 我的收藏 -->
+
+            <!-- 最近连接 -->
+
           </div>
         </div>
       </div>
@@ -49,13 +69,33 @@
 <script lang="ts" setup>
   import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
-  import { onMounted, ref } from 'vue';
+  import { onBeforeMount, ref } from 'vue';
+  import { NewConnectionType, NewConnectionTypeKey } from '../../types/terminal.const';
+  import useLoading from '@/hooks/loading';
+  import HostGroupView from './host-group-view.vue';
+  import { useDictStore } from '@/store';
 
+  const { loading, setLoading } = useLoading();
+  const { toOptions } = useDictStore();
+
+  const newConnectionType = ref(NewConnectionType.GROUP);
+  const filterValue = ref();
   const hosts = ref<AuthorizedHostQueryResponse>({} as AuthorizedHostQueryResponse);
 
-  onMounted(async () => {
-    const { data } = await getCurrentAuthorizedHost();
-    hosts.value = data;
+  // 修改连接类型
+  const changeConnectionType = () => {
+    // FIXME 持久化
+  };
+
+  // 加载主机信息
+  onBeforeMount(async () => {
+    try {
+      setLoading(true);
+      const { data } = await getCurrentAuthorizedHost();
+      hosts.value = data;
+    } finally {
+      setLoading(false);
+    }
   });
 </script>
 
@@ -66,20 +106,21 @@
     justify-content: space-between;
 
     .host-filter {
-      width: 40%;
+      width: 36%;
     }
   }
 
-  .hosts-container {
+  .body-container {
     justify-content: space-between;
 
-    .host-tree {
-      margin-right: 16px;
-      width: 350px;
+    .hosts-skeleton {
+      width: 100%;
     }
 
-    .host-list {
-      width: 490px;
+    .host-view-container {
+      width: 100%;
+      height: calc(100vh - 240px);
+      position: relative;
     }
   }
 
