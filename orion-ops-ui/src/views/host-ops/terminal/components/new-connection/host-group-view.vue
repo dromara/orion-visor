@@ -16,9 +16,9 @@
       </a-scrollbar>
     </div>
     <!-- 主机列表 -->
-    <div class="host-list">
-      <host-list :hosts="hosts" />
-    </div>
+    <host-list class="host-list"
+               :hostList="hosts.hostList"
+               empty-value="当前分组内无授权主机!" />
   </div>
 </template>
 

@@ -106,6 +106,8 @@
       width: 100%;
       height: 44px;
       background: var(--color-bg-header);
+      position: relative;
+      z-index: 9999;
     }
 
     &-main {

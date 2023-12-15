@@ -1,8 +1,8 @@
 <template>
-  <div class="list-view-container">
-    <!-- 主机列表 -->
-    <host-list :hosts="hosts" />
-  </div>
+  <!-- 主机列表 -->
+  <host-list class="list-view-container"
+             :hostList="hostList"
+             :empty-value="emptyValue" />
 </template>
 
 <script lang="ts">
@@ -12,11 +12,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
+  import type { HostQueryResponse } from '@/api/asset/host';
   import HostList from './host-list.vue';
 
   const props = defineProps<{
-    hosts: AuthorizedHostQueryResponse
+    hostList: Array<HostQueryResponse>,
+    emptyValue: string
   }>();
 
 </script>
