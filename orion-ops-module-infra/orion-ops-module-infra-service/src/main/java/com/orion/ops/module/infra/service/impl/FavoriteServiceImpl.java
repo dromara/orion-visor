@@ -46,16 +46,24 @@ public class FavoriteServiceImpl implements FavoriteService {
     public Long addFavorite(FavoriteOperatorRequest request) {
         String type = Valid.valid(FavoriteTypeEnum::of, request.getType()).name();
         Long userId = SecurityUtils.getLoginUserId();
+        // 检查是否存在
+        FavoriteDO check = favoriteDAO.of()
+                .createWrapper()
+                .eq(FavoriteDO::getUserId, userId)
+                .eq(FavoriteDO::getType, request.getType())
+                .eq(FavoriteDO::getRelId, request.getRelId())
+                .then()
+                .getOne();
+        if (check != null) {
+            return check.getId();
+        }
         // 转换
         FavoriteDO record = FavoriteConvert.MAPPER.to(request);
         record.setUserId(userId);
         // 插入
         int effect = favoriteDAO.insert(record);
-        // 设置缓存
-        String key = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
-        RedisLists.push(key, request.getRelId(), String::valueOf);
-        // 设置过期时间
-        RedisLists.setExpire(key, FavoriteCacheKeyDefine.FAVORITE);
+        // 删除缓存
+        RedisLists.delete(FavoriteCacheKeyDefine.FAVORITE.format(type, userId));
         return record.getId();
     }
 
@@ -67,8 +75,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         // 删除库
         int effect = favoriteDAO.deleteFavorite(type, userId, relId);
         // 删除缓存
-        String key = FavoriteCacheKeyDefine.FAVORITE.format(type, userId);
-        redisTemplate.opsForList().remove(key, 1, relId.toString());
+        RedisLists.delete(FavoriteCacheKeyDefine.FAVORITE.format(type, userId));
         return effect;
     }
 

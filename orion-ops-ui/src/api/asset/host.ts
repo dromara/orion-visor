@@ -29,7 +29,6 @@ export interface HostQueryRequest extends Pagination {
   name?: string;
   code?: string;
   address?: string;
-  favorite?: boolean;
   tags?: Array<number>;
   queryTag?: boolean;
 }
@@ -46,7 +45,6 @@ export interface HostQueryResponse extends TableData {
   updateTime: number;
   creator: string;
   updater: string;
-  // FIXME 删除
   favorite: boolean;
   tags: Array<{ id: number, name: string }>;
   groupIdList: Array<number>;

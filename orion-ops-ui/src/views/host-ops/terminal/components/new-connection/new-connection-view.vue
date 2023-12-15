@@ -48,6 +48,8 @@
             <host-group-view v-if="NewConnectionType.GROUP === newConnectionType"
                              :hosts="hosts" />
             <!-- 列表视图 -->
+            <host-list-view v-if="NewConnectionType.LIST === newConnectionType"
+                             :hosts="hosts" />
 
             <!-- 我的收藏 -->
 
@@ -72,8 +74,9 @@
   import { onBeforeMount, ref } from 'vue';
   import { NewConnectionType, NewConnectionTypeKey } from '../../types/terminal.const';
   import useLoading from '@/hooks/loading';
-  import HostGroupView from './host-group-view.vue';
   import { useDictStore } from '@/store';
+  import HostGroupView from './host-group-view.vue';
+  import HostListView from './host-list-view.vue';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();

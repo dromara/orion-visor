@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
  * 收藏 对外服务实现类
@@ -36,6 +38,14 @@ public class FavoriteApiImpl implements FavoriteApi {
         request.setType(type.name());
         request.setUserId(userId);
         return favoriteService.getFavoriteRelIdList(request);
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public Future<List<Long>> getFavoriteRelIdListAsync(FavoriteTypeEnum type, Long userId) {
+        Valid.allNotNull(type, userId);
+        // 查询
+        return CompletableFuture.completedFuture(this.getFavoriteRelIdList(type, userId));
     }
 
     @Override

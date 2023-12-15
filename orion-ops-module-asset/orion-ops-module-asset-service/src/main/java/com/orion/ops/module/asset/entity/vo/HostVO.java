@@ -52,6 +52,9 @@ public class HostVO implements Serializable {
     @Schema(description = "修改人")
     private String updater;
 
+    @Schema(description = "是否收藏")
+    private Boolean favorite;
+
     @Schema(description = "tags")
     private List<TagDTO> tags;
 

@@ -1,5 +1,6 @@
 <template>
-  <a-list size="large"
+  <a-list ref="listRel"
+          size="large"
           max-height="100%"
           :hoverable="true"
           :data="hosts.hostList">
@@ -14,7 +15,7 @@
     </template>
     <!-- 数据 -->
     <template #item="{ item }">
-      <a-list-item class="host-item-wrapper">
+      <a-list-item class="host-item-wrapper" @click="openTerminal(item)">
         <div class="host-item">
           <!-- 左侧图标-名称 -->
           <div class="flex-center host-item-left">
@@ -46,24 +47,65 @@
               </span>
             </a-tooltip>
           </div>
-          <!-- flex-center 右侧tag-操作 -->
+          <!-- 右侧tag-操作 -->
           <div class="flex-center host-item-right">
-            <div v-if="item.code === 'main'">
-              <a-tag v-for="i in 5"
-                     class="host-item-text"
-                     :style="{
-                    width: `calc(${100/5}% - ${i !== 5 ? '8px' : '0px'})`,
-                    maxWidth: `calc(${100/5}% - ${i !== 5 ? '8px' : '0px'})`,
-                    marginRight: `${i !== 5 ? '8px' : '0'}`,
-                   }"
-                     color="arcoblue">
-                <template v-for="j in i*5">
-                  {{ j }}
-                </template>
-              </a-tag>
+            <!-- tags -->
+            <div class="host-item-right-tags">
+              <template v-if="item.tags?.length">
+                <a-tag v-for="(tag, i) in item.tags"
+                       class="host-item-text"
+                       :key="tag.id"
+                       :style="{
+                         maxWidth: `calc(${100 / item.tags.length}% - ${i !== item.tags.length - 1 ? '8px' : '0px'})`,
+                         marginRight: `${i !== item.tags.length - 1 ? '8px' : '0'}`,
+                       }"
+                       :color="dataColor(tag.name, tagColor)">
+                  {{ tag.name }}
+                </a-tag>
+              </template>
             </div>
-            <div v-else>
-
+            <!-- 操作 -->
+            <div class="host-item-right-actions">
+              <!-- 连接主机 -->
+              <a-tooltip position="top"
+                         :mini="true"
+                         :popup-container="listRel?.$el?.parent"
+                         content-class="terminal-tooltip-content"
+                         arrow-class="terminal-tooltip-content"
+                         content="连接主机">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click.stop="openTerminal(item)">
+                    <icon-thunderbolt />
+                  </div>
+                </div>
+              </a-tooltip>
+              <!-- 连接设置 -->
+              <a-tooltip position="top"
+                         :mini="true"
+                         :popup-container="listRel?.$el?.parent"
+                         content-class="terminal-tooltip-content"
+                         arrow-class="terminal-tooltip-content"
+                         content="连接设置">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click.stop="openSetting(item)">
+                    <icon-settings />
+                  </div>
+                </div>
+              </a-tooltip>
+              <!-- 收藏 -->
+              <a-tooltip position="top"
+                         :mini="true"
+                         :popup-container="listRel?.$el?.parent"
+                         content-class="terminal-tooltip-content"
+                         arrow-class="terminal-tooltip-content"
+                         content="收藏">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click.stop="setFavorite(item)">
+                    <icon-star-fill class="favorite" v-if="item.favorite" />
+                    <icon-star v-else />
+                  </div>
+                </div>
+              </a-tooltip>
             </div>
           </div>
         </div>
@@ -80,10 +122,36 @@
 
 <script lang="ts" setup>
   import { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
+  import useFavorite from '@/hooks/favorite';
+  import { ref } from 'vue';
+  import { dataColor } from '@/utils';
+  import { tagColor } from '@/views/asset/host-list/types/const';
 
   const props = defineProps<{
     hosts: AuthorizedHostQueryResponse
   }>();
+
+  const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
+
+  const listRel = ref();
+
+  // 打开终端
+  const openTerminal = (item: any) => {
+    console.log('ter', item);
+  };
+
+  // 打开配置
+  const openSetting = (item: any) => {
+    console.log('set', item);
+  };
+
+  // 设置收藏
+  const setFavorite = async (item: any) => {
+    if (favoriteLoading.value) {
+      return;
+    }
+    await toggleFavorite(item, item.id);
+  };
 
 </script>
 
@@ -160,13 +228,44 @@
       width: 25%;
 
       &-address {
-        max-width: calc(100% - 8px);
+        max-width: 100%;
       }
     }
 
     .host-item-right {
       width: 40%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+
+      &-tags {
+        // 必须设置 最外层用的是 min-width
+        position: absolute;
+        width: 100%;
+      }
+
+      &-actions {
+        position: absolute;
+        display: none;
+        width: 100%;
+        justify-content: flex-end;
+      }
     }
 
+    &:hover {
+      .host-item-right-tags {
+        display: none;
+      }
+
+      .host-item-right-actions {
+        display: flex;
+      }
+    }
+
+  }
+
+  .favorite {
+    color: rgb(var(--yellow-6));
   }
 </style>

@@ -49,18 +49,6 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
-          <!-- 仅看收藏 fixme 去掉  -->
-          <a-checkbox v-if="false" v-model="formModel.favorite" @change="fetchTableData()">
-            <template #checkbox="{ checked }">
-              <a-tag :checked="checked"
-                     class="only-favorite"
-                     size="large"
-                     color="arcoblue"
-                     checkable>
-                仅看收藏
-              </a-tag>
-            </template>
-          </a-checkbox>
           <!-- 主机分组 -->
           <a-button type="primary"
                     v-permission="['asset:host-group:update']"
@@ -162,19 +150,6 @@
               删除
             </a-button>
           </a-popconfirm>
-          <!-- 收藏 -->
-          <span v-if="record.favorite"
-                title="取消收藏"
-                class="host-favorite host-favorite-choice"
-                @click="() => toggleFavorite(record, record.id)">
-            <icon-star-fill />
-          </span>
-          <span v-else
-                title="收藏"
-                class="host-favorite host-favorite-un-choice"
-                @click="() => toggleFavorite(record, record.id)">
-           <icon-star />
-          </span>
         </div>
       </template>
     </a-table>
@@ -197,7 +172,6 @@
   import { tagColor } from '../types/const';
   import { usePagination } from '@/types/table';
   import useCopy from '@/hooks/copy';
-  import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
@@ -208,7 +182,6 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
   const { copy } = useCopy();
-  const { toggle: toggleFavorite } = useFavorite('HOST');
 
   const pagination = usePagination();
 
@@ -217,7 +190,6 @@
     name: undefined,
     code: undefined,
     address: undefined,
-    favorite: undefined,
     tags: undefined,
     queryTag: true
   });
@@ -284,37 +256,5 @@
   .row-handle-wrapper {
     display: flex;
     align-items: center;
-
-    .host-favorite {
-      cursor: pointer;
-      line-height: 19px;
-      font-size: 19px;
-      margin: 0 4px;
-    }
-
-    .host-favorite-choice {
-      color: rgb(var(--yellow-6));
-
-      :hover {
-        transition: .2s;
-        color: rgba(232, 203, 12, .9);
-      }
-    }
-
-    .host-favorite-un-choice {
-      color: rgb(var(--gray-6));
-
-      :hover {
-        transition: .2s;
-        color: rgb(var(--yellow-6));
-      }
-    }
   }
-
-  .only-favorite {
-    user-select: none;
-    color: rgb(var(--arcoblue-5));
-    background: rgb(var(--gray-2));
-  }
-
 </style>

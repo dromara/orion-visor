@@ -199,7 +199,6 @@
     name: undefined,
     code: undefined,
     address: undefined,
-    favorite: undefined,
     tags: undefined,
     queryTag: true
   });

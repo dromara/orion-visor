@@ -12,18 +12,20 @@ import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.HostIdentityService;
 import com.orion.ops.module.asset.service.HostKeyService;
 import com.orion.ops.module.asset.service.HostService;
-import com.orion.ops.module.infra.api.DataGroupApi;
-import com.orion.ops.module.infra.api.DataGroupRelApi;
-import com.orion.ops.module.infra.api.DataPermissionApi;
-import com.orion.ops.module.infra.api.SystemUserApi;
+import com.orion.ops.module.infra.api.*;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
+import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
+import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
+import com.orion.ops.module.infra.enums.TagTypeEnum;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -59,6 +61,12 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     @Resource
     private HostIdentityService hostIdentityService;
 
+    @Resource
+    private FavoriteApi favoriteApi;
+
+    @Resource
+    private TagRelApi tagRelApi;
+
     @Override
     public List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request) {
         Long userId = request.getUserId();
@@ -77,7 +85,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     public AuthorizedHostWrapperVO getUserAuthorizedHostGroup(Long userId) {
         if (systemUserApi.isAdminUser(userId)) {
             // 管理员查询所有
-            return this.buildUserAuthorizedHostGroup(null);
+            return this.buildUserAuthorizedHostGroup(userId, null);
         } else {
             // 其他用户 查询授权的数据
             List<Long> authorizedIdList = dataPermissionApi.getUserAuthorizedRelIdList(DataPermissionTypeEnum.HOST_GROUP, userId);
@@ -88,7 +96,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                         .hostList(Lists.empty())
                         .build();
             }
-            return this.buildUserAuthorizedHostGroup(authorizedIdList);
+            return this.buildUserAuthorizedHostGroup(userId, authorizedIdList);
         }
     }
 
@@ -139,14 +147,16 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     /**
      * 构建授权的主机分组树
      *
+     * @param userId                userId
      * @param authorizedGroupIdList authorizedGroupIdList
      * @return tree
      */
-    private AuthorizedHostWrapperVO buildUserAuthorizedHostGroup(List<Long> authorizedGroupIdList) {
+    @SneakyThrows
+    private AuthorizedHostWrapperVO buildUserAuthorizedHostGroup(Long userId, List<Long> authorizedGroupIdList) {
         final boolean allData = Lists.isEmpty(authorizedGroupIdList);
         AuthorizedHostWrapperVO wrapper = new AuthorizedHostWrapperVO();
-        // TODO async get 最近连接
-        // TODO async get 我的收藏
+        // 查询我的收藏
+        Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用
@@ -161,12 +171,17 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 设置主机分组树
         wrapper.setGroupTree(this.getAuthorizedHostGroupTree(dataGroup));
         // 设置主机分组下的主机
-        wrapper.setTreeNodes(this.getAuthorizedHostGroupNodes(allData, dataGroup, dataGroupRel, authorizedGroupIdList));
+        wrapper.setTreeNodes(this.getAuthorizedHostGroupNodes(allData,
+                dataGroup,
+                dataGroupRel,
+                authorizedGroupIdList));
         // 设置已授权的所有主机
-        wrapper.setHostList(this.getAuthorizedHostList(allData, dataGroup, dataGroupRel, authorizedGroupIdList));
-        // TODO set 最近连接
-        // TODO set 我的收藏
-
+        wrapper.setHostList(this.getAuthorizedHostList(allData,
+                dataGroup,
+                dataGroupRel,
+                authorizedGroupIdList));
+        // 设置主机拓展信息
+        this.getAuthorizedHostExtra(wrapper.getHostList(), favoriteResult.get());
         return wrapper;
     }
 
@@ -223,6 +238,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                                                List<Long> authorizedGroupIdList) {
         // 查询主机列表
         List<HostVO> hosts = hostService.getHostListByCache();
+
         // 全部数据直接返回
         if (allData) {
             return hosts;
@@ -232,6 +248,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 仅设置已授权的数据
         return dataGroup.stream()
                 .map(DataGroupDTO::getId)
+                // 因为可能父菜单没有授权 这里需要判断分组权限
                 .filter(authorizedGroupIdList::contains)
                 .map(dataGroupRel::get)
                 .filter(Lists::isNoneEmpty)
@@ -239,6 +256,31 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                 .map(hostMap::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 设置授权主机的额外参数
+     *
+     * @param hosts    hosts
+     * @param favorite favorite
+     */
+    private void getAuthorizedHostExtra(List<HostVO> hosts,
+                                        List<Long> favorite) {
+        if (Lists.isEmpty(hosts)) {
+            return;
+        }
+        // 设置收藏结果
+        if (!Lists.isEmpty(favorite)) {
+            hosts.forEach(s -> s.setFavorite(favorite.contains(s.getId())));
+        }
+        List<Long> hostIdList = hosts.stream()
+                .map(HostVO::getId)
+                .collect(Collectors.toList());
+        // 查询 tag 信息
+        List<List<TagDTO>> tags = tagRelApi.getRelTags(TagTypeEnum.HOST, hostIdList);
+        for (int i = 0; i < hosts.size(); i++) {
+            hosts.get(i).setTags(tags.get(i));
+        }
     }
 
 }
