@@ -22,7 +22,7 @@
   import { InnerTabs } from '../../types/terminal.const';
   import IconActions from './icon-actions.vue';
 
-  const emits = defineEmits(['switchTab', 'copyAddress']);
+  const emits = defineEmits(['switchTab']);
 
   // 顶部操作
   const topActions: Array<SidebarAction> = [
@@ -30,11 +30,6 @@
       icon: 'icon-plus',
       content: '新建连接',
       click: () => emits('switchTab', InnerTabs.NEW_CONNECTION)
-    },
-    {
-      icon: 'icon-copy',
-      content: '复制主机IP',
-      click: () => emits('copyAddress')
     },
   ];
 

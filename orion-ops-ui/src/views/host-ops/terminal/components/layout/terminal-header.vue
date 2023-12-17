@@ -56,6 +56,7 @@
   import { computed } from 'vue';
   import IconActions from '../layout/icon-actions.vue';
   import { useTerminalStore } from '@/store';
+  import { DarkTheme } from '@/store/modules/terminal';
 
   const props = defineProps({
     modelValue: {
@@ -82,10 +83,9 @@
       click: () => emits('share')
     },
     {
-      // FIXME 持久化
       icon: terminalStore.isDarkTheme ? 'icon-sun-fill' : 'icon-moon-fill',
       content: terminalStore.isDarkTheme ? '点击切换为亮色模式' : '点击切换为暗色模式',
-      click: () => terminalStore.changeDarkTheme(!terminalStore.isDarkTheme)
+      click: () => terminalStore.changeDarkTheme(terminalStore.isDarkTheme ? DarkTheme.LIGHT : DarkTheme.DARK)
     },
     {
       icon: isFullscreen.value ? 'icon-fullscreen-exit' : 'icon-fullscreen',

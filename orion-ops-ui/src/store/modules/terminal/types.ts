@@ -3,13 +3,27 @@ import type { Ref } from 'vue';
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
+
+  updateTerminalPreferenceFn?: () => void;
 }
 
 // 终端配置
 export interface TerminalPreference {
-  darkTheme: string,
-  themeSchema: TerminalThemeSchema,
-  displaySetting: TerminalDisplaySetting,
+  darkTheme: string;
+  newConnectionType: string;
+  displaySetting: TerminalDisplaySetting;
+  themeSchema: TerminalThemeSchema;
+}
+
+// 显示设置
+export interface TerminalDisplaySetting {
+  fontFamily?: string;
+  fontSize?: number;
+  lineHeight?: number;
+  fontWeight?: string | number;
+  fontWeightBold?: string | number;
+  cursorStyle?: string;
+  cursorBlink?: boolean;
 }
 
 // 终端主题
@@ -41,15 +55,4 @@ export interface TerminalThemeSchema {
   brightWhite: string;
 
   [key: string]: unknown;
-}
-
-// 显示设置
-export interface TerminalDisplaySetting {
-  fontFamily?: string;
-  fontSize?: number;
-  lineHeight?: number;
-  fontWeight?: string | number;
-  fontWeightBold?: string | number;
-  cursorStyle?: string;
-  cursorBlink?: boolean;
 }

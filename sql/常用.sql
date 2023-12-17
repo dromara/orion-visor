@@ -17,3 +17,8 @@ ADD COLUMN `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TI
 ADD COLUMN `creator` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '创建人' AFTER update_time,
 ADD COLUMN `updater` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人' AFTER creator,
 ADD COLUMN `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除 0未删除 1已删除' AFTER updater;
+
+-- 删除已删除的元数据
+DELETE FROM dict_key WHERE deleted = 1;
+DELETE FROM dict_value WHERE deleted = 1;
+DELETE FROM system_menu WHERE deleted = 1;

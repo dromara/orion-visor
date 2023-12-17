@@ -40,7 +40,10 @@ export function md5(plain: string): string {
 /**
  * 获取数据颜色
  */
-export function dataColor(str: string, colors: string[]): string {
+export function dataColor(str: string, colors: string[], defaultColor = ''): string {
+  if (!colors?.length) {
+    return defaultColor;
+  }
   let total = 0;
   for (let i = 0; i < str.length; i++) {
     total += str.charCodeAt(i);
@@ -160,7 +163,7 @@ export const resetObject = (obj: any, ignore: string[] = []) => {
 export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
   return Object.keys(obj)
     .filter(s => !ignore.includes(s))
-    .reduce(function(acc, curr) {
+    .reduce(function (acc, curr) {
       const currVal = obj[curr];
       return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
     }, 0);
@@ -200,7 +203,7 @@ export function getRoute(url = location.href) {
  * 获取唯一的 UUID
  */
 export function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 | 0;
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);

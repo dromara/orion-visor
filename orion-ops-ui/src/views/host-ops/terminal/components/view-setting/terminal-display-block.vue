@@ -79,7 +79,7 @@
       <div class="terminal-example">
         <span class="terminal-example-label">预览效果</span>
         <div class="terminal-example-wrapper"
-             :style="{ background: preference.themeSchema.background }">
+             :style="{ background: preference.themeSchema?.background }">
           <terminal-example :theme="preference.themeSchema"
                             ref="previewTerminal" />
         </div>
@@ -96,22 +96,19 @@
 
 <script lang="ts" setup>
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
-  import { onMounted, ref, watch } from 'vue';
+  import { ref, watch } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../types/terminal.const';
   import { labelFilter } from '@/types/form';
-  import { useDebounceFn } from '@vueuse/core';
   import TerminalExample from '../view-setting/terminal-example.vue';
 
   const { toOptions } = useDictStore();
-  const { preference, updatePreference } = useTerminalStore();
+  const { preference, changeDisplaySetting } = useTerminalStore();
 
-  // 同步用户偏好 - 防抖函数
-  const sync = useDebounceFn(updatePreference, 1500);
   const previewTerminal = ref();
-  const formModel = ref<TerminalDisplaySetting>({});
+  const formModel = ref<TerminalDisplaySetting>({ ...preference.displaySetting });
 
-  // 监听主题变化
+  // 监听主题变化 动态修改预览样式
   watch(() => preference.themeSchema, (v) => {
     if (!v) {
       return;
@@ -129,7 +126,7 @@
     if (!options) {
       return;
     }
-    // 修改配置
+    // 修改预览终端配置
     Object.keys(v).forEach(key => {
       if (key === 'fontFamily') {
         options[key] = (formModel.value as any)[key] + fontFamilySuffix;
@@ -137,18 +134,11 @@
         options[key] = (formModel.value as any)[key];
       }
     });
-    preference.displaySetting = formModel.value;
     // 同步
-    sync();
+    changeDisplaySetting(formModel.value);
     // 聚焦
     previewTerminal.value.term.focus();
   }, { deep: true });
-
-  // 设置默认配置
-  onMounted(() => {
-    // 触发 watch 函数
-    formModel.value = { ...preference.displaySetting };
-  });
 
 </script>
 

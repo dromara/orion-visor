@@ -111,7 +111,7 @@ INSERT INTO `dict_value` VALUES (8, 6, 'systemMenuVisible', '0', '隐藏', '{\"c
 INSERT INTO `dict_value` VALUES (9, 6, 'systemMenuVisible', '1', '显示', '{\"color\": \"blue\"}', 20, '2023-10-27 00:25:30', '2023-10-27 00:25:58', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (10, 7, 'systemMenuCache', '0', '不缓存', '{}', 10, '2023-10-27 00:26:15', '2023-10-27 00:26:15', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (11, 7, 'systemMenuCache', '1', '缓存', '{}', 20, '2023-10-27 00:26:25', '2023-10-27 00:26:25', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (12, 8, 'dictValueType', 'STRING', '字符串', '{\"color\": \"blue\"}', 10, '2023-10-27 01:49:18', '2023-10-27 01:49:18', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (12, 8, 'dictValueType', 'STRING', '字符串', '{\"color\": \"arcoblue\"}', 10, '2023-10-27 01:49:18', '2023-10-27 01:49:18', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (13, 8, 'dictValueType', 'INTEGER', '整数', '{\"color\": \"arcoblue\"}', 20, '2023-10-27 01:54:30', '2023-10-27 01:54:30', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (14, 8, 'dictValueType', 'DECIMAL', '小数', '{\"color\": \"purple\"}', 30, '2023-10-27 01:54:43', '2023-10-27 01:54:43', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (15, 8, 'dictValueType', 'BOOLEAN', '布尔值', '{\"color\": \"pinkpurple\"}', 40, '2023-10-27 01:54:54', '2023-10-27 01:54:54', '1', '1', 0);

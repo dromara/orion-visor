@@ -8,6 +8,11 @@
             @exceed-limit="() => { emits('onLimited', limit, `最多选择${limit}个tag`) }"
             multiple
             allow-clear>
+    <template #option="{ data: { label } }">
+      <a-tag :color="dataColor(label, tagColor)">
+        {{ label }}
+      </a-tag>
+    </template>
   </a-select>
 </template>
 
@@ -23,7 +28,7 @@
   import type { TagCreateRequest } from '@/api/meta/tag';
   import { ref, computed, onBeforeMount } from 'vue';
   import { useCacheStore } from '@/store';
-  import { Message } from '@arco-design/web-vue';
+  import { dataColor } from '@/utils';
   import { createTag } from '@/api/meta/tag';
   import useLoading from '@/hooks/loading';
 
@@ -33,6 +38,10 @@
     limit: Number,
     type: String,
     allowCreate: Boolean,
+    tagColor: {
+      type: Array as PropType<Array<string>>,
+      default: () => []
+    },
   });
 
   const emits = defineEmits(['update:modelValue', 'onLimited']);
@@ -95,7 +104,10 @@
     // 插入 options
     optionData.value.push({
       label: name,
-      value: id
+      value: id,
+      tagProps: {
+        color: dataColor(name, props.tagColor)
+      }
     });
     return id;
   };
@@ -109,6 +121,9 @@
         return {
           label: s.name,
           value: s.id,
+          tagProps: {
+            color: dataColor(s.name, props.tagColor)
+          }
         };
       });
     } catch (e) {

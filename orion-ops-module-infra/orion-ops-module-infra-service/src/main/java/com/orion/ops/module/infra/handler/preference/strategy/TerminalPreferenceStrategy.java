@@ -18,7 +18,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
     public TerminalPreferenceModel getDefault() {
         return TerminalPreferenceModel.builder()
                 .darkTheme("dark")
-                .themeSchema(new JSONObject())
+                .newConnectionType("group")
                 .displaySetting(TerminalPreferenceModel.DisplaySettingModel.builder()
                         .fontFamily("_")
                         .fontSize(15)
@@ -31,6 +31,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                         .toJson()
                 )
                 .backgroundSetting(new JSONObject())
+                .themeSchema(new JSONObject())
                 .build();
     }
 

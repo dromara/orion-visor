@@ -43,6 +43,7 @@
                               :allowCreate="true"
                               :limit="5"
                               type="HOST"
+                              :tagColor="tagColor"
                               placeholder="请选择主机标签"
                               @onLimited="onLimitedTag" />
         </a-form-item>
@@ -68,6 +69,7 @@
   import { pick } from 'lodash';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import HostGroupTreeSelector from '@/components/asset/host-group/host-group-tree-selector.vue';
+  import { tagColor } from '@/views/asset/host-list/types/const';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -10,7 +10,7 @@
                      class="usn"
                      size="mini"
                      type="button"
-                     @change="checkDarkTheme"
+                     @change="changeDarkTheme"
                      :options="toOptions(darkThemeKey)">
       </a-radio-group>
     </div>
@@ -34,7 +34,7 @@
                   color: theme.dark ? 'rgba(255, 255, 255, .8)' : 'rgba(0, 0, 0, .8)',
                   userSelect: 'none'
                 }"
-                @click="checkTheme(theme)">
+                @click="changeThemeSchema(theme)">
           <!-- 样例 -->
           <terminal-example :theme="{ ...theme, cursor: theme.background }" />
           <!-- 选中按钮 -->
@@ -53,47 +53,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalThemeSchema } from '@/store/modules/terminal/types';
   import { darkThemeKey } from '../../types/terminal.const';
   import ThemeSchema from '../../types/terminal.theme';
-  import { useDebounceFn } from '@vueuse/core';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { DarkTheme } from '@/store/modules/terminal';
   import TerminalExample from './terminal-example.vue';
 
-  const { updatePreference, changeDarkTheme, preference } = useTerminalStore();
+  const { changeThemeSchema, changeDarkTheme, preference } = useTerminalStore();
   const { toOptions } = useDictStore();
-
-  // 同步用户偏好 - 防抖函数
-  const sync = useDebounceFn(updatePreference, 1500);
-
-  // 修改暗色主题
-  const checkDarkTheme = (value: string) => {
-    preference.darkTheme = value;
-    if (value === DarkTheme.DARK) {
-      // 暗色
-      changeDarkTheme(true);
-    } else if (value === DarkTheme.LIGHT) {
-      // 亮色
-      changeDarkTheme(false);
-    } else if (value === DarkTheme.AUTO) {
-      // 自动配色
-      changeDarkTheme(preference.themeSchema.dark);
-    }
-    // 同步用户偏好
-    sync();
-  };
-
-  // 选择终端主题
-  const checkTheme = (theme: TerminalThemeSchema) => {
-    preference.themeSchema = theme;
-    // 切换主题配色
-    if (preference.darkTheme === DarkTheme.AUTO) {
-      changeDarkTheme(theme.dark);
-    }
-    // 同步用户偏好
-    sync();
-  };
 
 </script>
 

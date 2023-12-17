@@ -10,7 +10,7 @@
                        type="button"
                        class="usn"
                        :options="toOptions(NewConnectionTypeKey)"
-                       @change="changeConnectionType" />
+                       @change="changeNewConnectionType" />
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
                          class="host-filter"
@@ -57,10 +57,10 @@
           </a-empty>
           <!-- 主机列表 -->
           <hosts-view v-else
-                     class="host-view-container"
-                     :hosts="hosts"
-                     :filter-value="filterValue"
-                     :new-connection-type="newConnectionType" />
+                      class="host-view-container"
+                      :hosts="hosts"
+                      :filter-value="filterValue"
+                      :new-connection-type="newConnectionType" />
         </div>
       </div>
     </div>
@@ -80,15 +80,16 @@
   import { onBeforeMount, ref } from 'vue';
   import { NewConnectionType, NewConnectionTypeKey } from '../../types/terminal.const';
   import useLoading from '@/hooks/loading';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useTerminalStore } from '@/store';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import HostsView from './hosts-view.vue';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
+  const { preference, changeNewConnectionType } = useTerminalStore();
 
-  const newConnectionType = ref(NewConnectionType.GROUP);
+  const newConnectionType = ref(preference.newConnectionType || NewConnectionType.GROUP);
   const filterValue = ref('');
   const filterOptions = ref<Array<SelectOptionData>>([]);
   const hosts = ref<AuthorizedHostQueryResponse>({} as AuthorizedHostQueryResponse);
@@ -122,11 +123,6 @@
     [...new Set(hostMeta)].map(value => {
       return { label: value, value };
     }).forEach(s => filterOptions.value.push(s));
-  };
-
-  // 修改连接类型
-  const changeConnectionType = () => {
-    // FIXME 持久化类型
   };
 
   // 初始化
