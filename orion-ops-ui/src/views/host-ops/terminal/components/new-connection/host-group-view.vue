@@ -4,21 +4,20 @@
     <div class="host-group-container">
       <a-scrollbar>
         <a-tree v-model:selected-keys="selectedGroup"
-                :data="hosts.groupTree"
-                :blockNode="true"
                 class="host-tree block-tree"
-                @select="chooseGroup">
+                :data="groupTree"
+                :blockNode="true">
           <!-- 组内数量 -->
           <template #extra="node">
-            <span class="node-host-count span-blue">{{ hosts?.treeNodes[node.key]?.length || 0 }}</span>
+            <span class="node-host-count span-blue">{{ treeNodes[node.key]?.length || 0 }}</span>
           </template>
         </a-tree>
       </a-scrollbar>
     </div>
     <!-- 主机列表 -->
-    <host-list class="host-list"
-               :hostList="hosts.hostList"
-               empty-value="当前分组内无授权主机!" />
+    <host-list-view class="host-list"
+                    :hostList="hostList"
+                    empty-value="当前分组内无授权主机!" />
   </div>
 </template>
 
@@ -29,19 +28,28 @@
 </script>
 
 <script lang="ts" setup>
-  import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
-  import { ref } from 'vue';
-  import HostList from './host-list.vue';
+  import { computed } from 'vue';
+  import { HostQueryResponse } from '@/api/asset/host';
+  import { HostGroupQueryResponse } from '@/api/asset/host-group';
+  import HostListView from './host-list-view.vue';
 
   const props = defineProps<{
-    hosts: AuthorizedHostQueryResponse
+    modelValue: number,
+    groupTree: Array<HostGroupQueryResponse>;
+    hostList: Array<HostQueryResponse>;
+    treeNodes: Record<string, Array<number>>;
   }>();
 
-  const selectedGroup = ref([0]);
+  const emits = defineEmits(['update:modelValue']);
 
-  const chooseGroup = () => {
-    console.log(selectedGroup.value[0]);
-  };
+  const selectedGroup = computed({
+    get() {
+      return [props.modelValue];
+    },
+    set(e) {
+      emits('update:modelValue', e[0]);
+    }
+  });
 
 </script>
 
