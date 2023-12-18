@@ -23,11 +23,13 @@ import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
+import com.orion.ops.module.infra.api.DataAliasApi;
 import com.orion.ops.module.infra.api.DataGroupRelApi;
 import com.orion.ops.module.infra.api.FavoriteApi;
 import com.orion.ops.module.infra.api.TagRelApi;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
+import com.orion.ops.module.infra.enums.DataAliasTypeEnum;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
 import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
 import com.orion.ops.module.infra.enums.TagTypeEnum;
@@ -70,6 +72,9 @@ public class HostServiceImpl implements HostService {
 
     @Resource
     private DataGroupRelApi dataGroupRelApi;
+
+    @Resource
+    private DataAliasApi dataAliasApi;
 
     @Override
     public Long createHost(HostCreateRequest request) {
@@ -213,6 +218,8 @@ public class HostServiceImpl implements HostService {
         tagRelApi.deleteRelId(TagTypeEnum.HOST, id);
         // 删除收藏引用
         favoriteApi.deleteByRelId(FavoriteTypeEnum.HOST, id);
+        // 删除主机别名
+        dataAliasApi.deleteByRelId(DataAliasTypeEnum.HOST, id);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,18 +33,6 @@ public class DataAliasServiceImpl implements DataAliasService {
 
     @Resource
     private DataAliasDAO dataAliasDAO;
-    // @Override
-    // public Integer deleteDataAlias(DataAliasQueryRequest request) {
-    //     log.info("DataAliasService.deleteDataAlias request: {}", JSON.toJSONString(request));
-    //     // 条件
-    //     LambdaQueryWrapper<DataAliasDO> wrapper = this.buildQueryWrapper(request);
-    //     // 删除
-    //     int effect = dataAliasDAO.delete(wrapper);
-    //     log.info("DataAliasService.deleteDataAlias effect: {}", effect);
-    //     // 删除缓存
-    //     RedisMaps.delete(DataAliasCacheKeyDefine.DATA_ALIAS);
-    //     return effect;
-    // }
 
     @Override
     public Integer updateDataAlias(DataAliasUpdateRequest request) {
@@ -77,7 +67,7 @@ public class DataAliasServiceImpl implements DataAliasService {
 
     @Override
     public String getDataAlias(Long userId, String type, Long relId) {
-        return null;
+        return this.getDataAlias(userId, type).get(relId);
     }
 
     @Override
@@ -98,7 +88,6 @@ public class DataAliasServiceImpl implements DataAliasService {
                             DataAliasDO::getAlias,
                             Functions.right())
                     );
-
             // 设置屏障 防止穿透
             CacheBarriers.MAP.check(entities);
             // 设置缓存
@@ -111,13 +100,36 @@ public class DataAliasServiceImpl implements DataAliasService {
     }
 
     @Override
-    public Integer deleteDataAliasByUserId(Long userId) {
-        return null;
+    public Integer deleteByUserId(Long userId) {
+        // 删除
+        int effect = dataAliasDAO.deleteByUserId(userId);
+        // 删除缓存
+        RedisMaps.scanKeysDelete(DataAliasCacheKeyDefine.DATA_ALIAS.format(userId, "*"));
+        return effect;
     }
 
     @Override
-    public Integer deleteDataAliasByRelId(String type, Long relId) {
-        return null;
+    public Integer deleteByRelId(String type, Long relId) {
+        LambdaQueryWrapper<DataAliasDO> wrapper = dataAliasDAO.lambda()
+                .eq(DataAliasDO::getType, type)
+                .eq(DataAliasDO::getRelId, relId);
+        // 查询
+        List<Long> userIdList = dataAliasDAO.selectList(wrapper)
+                .stream()
+                .map(DataAliasDO::getUserId)
+                .distinct()
+                .collect(Collectors.toList());
+        if (userIdList.isEmpty()) {
+            return 0;
+        }
+        // 删除
+        int effect = dataAliasDAO.delete(wrapper);
+        // 删除缓存
+        List<String> keys = userIdList.stream()
+                .map(s -> DataAliasCacheKeyDefine.DATA_ALIAS.format(s, type))
+                .collect(Collectors.toList());
+        RedisMaps.delete(keys);
+        return effect;
     }
 
 }

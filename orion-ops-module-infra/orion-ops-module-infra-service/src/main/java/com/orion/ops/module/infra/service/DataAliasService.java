@@ -46,7 +46,7 @@ public interface DataAliasService {
      * @param userId userId
      * @return effect
      */
-    Integer deleteDataAliasByUserId(Long userId);
+    Integer deleteByUserId(Long userId);
 
     /**
      * 删除数据别名
@@ -55,6 +55,6 @@ public interface DataAliasService {
      * @param relId relId
      * @return effect
      */
-    Integer deleteDataAliasByRelId(String type, Long relId);
+    Integer deleteByRelId(String type, Long relId);
 
 }

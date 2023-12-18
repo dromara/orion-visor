@@ -5,6 +5,7 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.HostOperatorType;
 import com.orion.ops.module.asset.entity.request.host.*;
@@ -12,6 +13,9 @@ import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
+import com.orion.ops.module.infra.api.DataAliasApi;
+import com.orion.ops.module.infra.entity.dto.data.DataAliasUpdateDTO;
+import com.orion.ops.module.infra.enums.DataAliasTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,6 +48,9 @@ public class HostController {
 
     @Resource
     private HostConfigService hostConfigService;
+
+    @Resource
+    private DataAliasApi dataAliasApi;
 
     @OperatorLog(HostOperatorType.CREATE)
     @PostMapping("/create")
@@ -93,6 +100,17 @@ public class HostController {
     @PreAuthorize("@ss.hasPermission('asset:host:delete')")
     public Integer deleteHost(@RequestParam("id") Long id) {
         return hostService.deleteHostById(id);
+    }
+
+    @PutMapping("/update-alias")
+    @Operation(summary = "修改主机别名")
+    public Integer updateHostAlias(@Validated @RequestBody HostAliasUpdateRequest request) {
+        DataAliasUpdateDTO update = DataAliasUpdateDTO.builder()
+                .userId(SecurityUtils.getLoginUserId())
+                .relId(request.getId())
+                .alias(request.getName())
+                .build();
+        return dataAliasApi.updateDataAlias(update, DataAliasTypeEnum.HOST);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

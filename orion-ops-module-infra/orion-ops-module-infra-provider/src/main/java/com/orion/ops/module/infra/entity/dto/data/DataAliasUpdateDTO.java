@@ -6,12 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
-import java.math.*;
 
 /**
  * 数据别名 更新请求业务对象
@@ -24,14 +21,10 @@ import java.math.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "DataAliasUpdateDTO", description = "数据别名 更新请求业务对象")
+@Schema(name = "DataAliasUpdateDTO", description = "数据别名 创建请求业务对象")
 public class DataAliasUpdateDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @NotNull
-    @Schema(description = "id")
-    private Long id;
 
     @NotNull
     @Schema(description = "用户id")
@@ -41,12 +34,6 @@ public class DataAliasUpdateDTO implements Serializable {
     @Schema(description = "数据id")
     private Long relId;
 
-    @NotBlank
-    @Size(max = 32)
-    @Schema(description = "数据类型")
-    private String type;
-
-    @NotBlank
     @Size(max = 32)
     @Schema(description = "别名")
     private String alias;

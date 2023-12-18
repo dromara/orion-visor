@@ -40,7 +40,6 @@ public class DataAliasUpdateRequest implements Serializable {
     @Schema(description = "数据类型")
     private String type;
 
-    @NotBlank
     @Size(max = 32)
     @Schema(description = "别名")
     private String alias;
