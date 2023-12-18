@@ -1,10 +1,14 @@
 package com.orion.ops.framework.redis.core.utils.barrier;
 
+import com.orion.lang.define.barrier.GenericsAnonymousCollectionBarrier;
+import com.orion.lang.define.barrier.GenericsAnonymousMapBarrier;
+import com.orion.lang.define.barrier.GenericsBarrier;
 import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.Const;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -19,7 +23,9 @@ public class CacheBarriers {
     private CacheBarriers() {
     }
 
-    public static final GenericsListBarrier<Long> LONG = GenericsListBarrier.create(Const.NONE_ID);
+    public static final GenericsBarrier<Collection<?>> LIST = GenericsAnonymousCollectionBarrier.create(Const.NONE_ID);
+
+    public static final GenericsBarrier<Map<?, ?>> MAP = GenericsAnonymousMapBarrier.create(Const.NONE_ID, Const.NONE_ID);
 
     /**
      * 创建屏障对象 防止穿透

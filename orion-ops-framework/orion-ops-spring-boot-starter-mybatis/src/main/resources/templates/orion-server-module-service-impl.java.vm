@@ -9,7 +9,9 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.office.excel.writer.exporting.ExcelExport;
 #end
 import com.orion.ops.framework.common.constant.ErrorMessage;
+#if($meta.enableExport)
 import com.orion.ops.framework.common.utils.FileNames;
+#end
 import com.orion.ops.framework.common.utils.Valid;
 #if($meta.enableCache)
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
@@ -21,14 +23,18 @@ import ${pkg}.*;
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
+#if($meta.enableExport)
 import com.orion.web.servlet.web.Servlets;
+#end
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+#if($meta.enableExport)
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+#end
 import java.util.List;
 import java.util.stream.Collectors;
 

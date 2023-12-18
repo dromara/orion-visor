@@ -36,10 +36,13 @@ public class HostSshConfigStrategy implements HostConfigStrategy<HostSshConfigMo
 
     private static final int SSH_PORT = 22;
 
+    private static final String USERNAME = "root";
+
     @Override
     public HostSshConfigModel getDefault() {
         return HostSshConfigModel.builder()
                 .port(SSH_PORT)
+                .username(USERNAME)
                 .charset(Const.UTF_8)
                 .connectTimeout(Const.MS_S_10)
                 .fileNameCharset(Const.UTF_8)

@@ -27,7 +27,7 @@ public class CodeGenerators {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "asset";
+        String module = "infra";
         // 生成的表
         Table[] tables = {
                 // Template.create("dict_key", "字典配置项", "dict")
@@ -45,17 +45,11 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("command_template", "命令模板", "command")
+                Template.create("data_alias", "数据别名", "data")
                         .disableUnitTest()
-                        .cache("command:template:list", "命令模板列表")
+                        .enableProviderApi()
+                        .cache("data:alias:{}:{}", "数据别名 ${userId} ${type}")
                         .expire(1, TimeUnit.DAYS)
-                        .vue("asset", "snippet")
-                        .enableDrawerForm()
-                        .dict("commandTemplateRender", "prepare_render")
-                        .comment("是否使用脚本渲染")
-                        .fields("UNUSED", "USED")
-                        .labels("不使用", "使用")
-                        .values(0, 1)
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

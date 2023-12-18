@@ -156,12 +156,12 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                     .distinct()
                     .collect(Collectors.toList());
             // 设置屏障 防止穿透
-            CacheBarriers.LONG.check(list);
+            CacheBarriers.LIST.check(list);
             // 设置缓存
             RedisLists.pushAll(cacheKey, DataPermissionCacheKeyDefine.DATA_PERMISSION_USER, list, String::valueOf);
         }
         // 删除屏障
-        CacheBarriers.LONG.remove(list);
+        CacheBarriers.LIST.remove(list);
         return list.stream()
                 .distinct()
                 .collect(Collectors.toList());

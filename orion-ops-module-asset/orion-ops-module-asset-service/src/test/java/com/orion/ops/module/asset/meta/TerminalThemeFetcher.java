@@ -48,7 +48,7 @@ public class TerminalThemeFetcher {
                 .limit(200)
                 .map(f -> {
                     JSONObject schema = JSONObject.parseObject(new String(FileReaders.readAllBytes(f)));
-                    schema.put("dark", isDarkColor(schema.getString("background")));
+                    schema.put("dark", Colors.isDarkColor(schema.getString("background")));
                     schema.put("selectionBackground", schema.getString("selection"));
                     // 转为对象
                     return JSON.parseObject(JSON.toJSONString(schema, colorFilter), TerminalTheme.class);
@@ -67,19 +67,6 @@ public class TerminalThemeFetcher {
         }
         Clipboards.setString(json);
         System.out.println("\n\njsCode 已复制到剪切板");
-    }
-
-    /**
-     * TODO kit
-     * 是否为深色
-     * 亮度值 < 128 ? 深色 : 128
-     *
-     * @param hex hex
-     * @return 是否为深色
-     */
-    public static boolean isDarkColor(String hex) {
-        int[] rgb = Colors.toRgbColor(hex);
-        return (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000 < 128;
     }
 
     //

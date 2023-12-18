@@ -214,12 +214,12 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                     .map(DataGroupRelDO::getRelId)
                     .collect(Collectors.toList());
             // 设置屏障 防止穿透
-            CacheBarriers.LONG.check(list);
+            CacheBarriers.LIST.check(list);
             // 设置缓存
             RedisLists.pushAll(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_GROUP, list, Object::toString);
         }
         // 删除屏障
-        CacheBarriers.LONG.remove(list);
+        CacheBarriers.LIST.remove(list);
         return list;
     }
 
