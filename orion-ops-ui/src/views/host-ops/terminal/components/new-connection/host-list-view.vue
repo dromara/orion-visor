@@ -21,18 +21,62 @@
             <div class="flex-center host-item-left">
               <!-- 图标 -->
               <span class="host-item-left-icon">
-              <icon-desktop />
-            </span>
-              <!-- 名称 -->
-              <a-tooltip position="top"
-                         :mini="true"
-                         content-class="terminal-tooltip-content"
-                         arrow-class="terminal-tooltip-content"
-                         :content="`${item.name} (${item.code})`">
-              <span class="host-item-text host-item-left-name">
-                {{ `${item.name} (${item.code})` }}
+                <icon-desktop />
               </span>
-              </a-tooltip>
+              <!-- 名称 -->
+              <span class="host-item-left-name">
+                <!-- 名称文本 -->
+                <template v-if="!item.editable">
+                  <!-- 文本 -->
+                  <a-tooltip position="top"
+                             :mini="true"
+                             content-class="terminal-tooltip-content"
+                             arrow-class="terminal-tooltip-content"
+                             :content="item.alias || `${item.name} (${item.code})`">
+                    <span class="host-item-text host-item-left-name-text">
+                      <template v-if="item.alias">
+                        {{ item.alias }}
+                      </template>
+                      <template v-else>
+                        {{ `${item.name} (${item.code})` }}
+                      </template>
+                    </span>
+                  </a-tooltip>
+                  <!-- 修改别名 -->
+                  <a-tooltip position="top"
+                             :mini="true"
+                             content-class="terminal-tooltip-content"
+                             arrow-class="terminal-tooltip-content"
+                             content="修改别名">
+                    <icon-edit class="host-item-left-name-edit"
+                               @click.stop="clickEditAlias(item)" />
+                  </a-tooltip>
+                </template>
+                <!-- 名称输入框 -->
+                <template v-else>
+                  <a-input v-model="item.alias"
+                           ref="aliasNameInput"
+                           class="host-item-left-name-input"
+                           :max-length="32"
+                           :disabled="item.loading"
+                           size="mini"
+                           placeholder="主机别名"
+                           @blur="saveAlias(item)"
+                           @pressEnter="saveAlias(item)"
+                           @change="saveAlias(item)"
+                           @click.stop>
+                    <template #suffix>
+                      <!-- 加载中 -->
+                      <icon-loading v-if="item.loading" />
+                      <!-- 保存 -->
+                      <icon-check v-else
+                                  class="pointer"
+                                  title="保存"
+                                  @click="saveAlias(item)" />
+                    </template>
+                  </a-input>
+                </template>
+              </span>
             </div>
             <!-- 中间ip -->
             <div class="flex-center host-item-center">
@@ -123,6 +167,8 @@
   import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
+  import { ref, nextTick } from 'vue';
+  import { updateHostAlias } from '@/api/asset/host';
 
   const props = defineProps<{
     hostList: Array<HostQueryResponse>,
@@ -131,18 +177,52 @@
 
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
+  const aliasNameInput = ref();
+
+  // 点击修改别名
+  const clickEditAlias = (item: HostQueryResponse) => {
+    item.editable = true;
+    if (!item.alias) {
+      item.alias = `${item.name} (${item.code})`;
+    }
+    nextTick(() => {
+      aliasNameInput.value?.focus();
+    });
+  };
+
+  // 保存别名
+  const saveAlias = async (item: HostQueryResponse) => {
+    item.loading = true;
+    item.modCount = (item.modCount || 0) + 1;
+    if (item.modCount != 1) {
+      return;
+    }
+    try {
+      // 修改别名
+      await updateHostAlias({
+        id: item.id,
+        name: item.alias || ''
+      });
+      item.editable = false;
+    } catch (e) {
+    } finally {
+      item.loading = false;
+      item.modCount = 0;
+    }
+  };
+
   // 打开终端
-  const openTerminal = (item: any) => {
+  const openTerminal = (item: HostQueryResponse) => {
     console.log('ter', item);
   };
 
   // 打开配置
-  const openSetting = (item: any) => {
+  const openSetting = (item: HostQueryResponse) => {
     console.log('set', item);
   };
 
   // 设置收藏
-  const setFavorite = async (item: any) => {
+  const setFavorite = async (item: HostQueryResponse) => {
     if (favoriteLoading.value) {
       return;
     }
@@ -184,11 +264,11 @@
 
     .host-item {
       width: 100%;
-      padding: 0 18px;
+      height: @host-item-height;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: @host-item-height;
+      position: relative;
 
       &-text {
         display: inline-block;
@@ -197,10 +277,27 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
+      &:hover {
+        .host-item-left-name-edit {
+          display: inline;
+        }
+
+        .host-item-right-tags {
+          display: none;
+        }
+
+        .host-item-right-actions {
+          display: flex;
+        }
+      }
     }
 
     .host-item-left {
       width: 35%;
+      height: 100%;
+      padding-left: 18px;
+      position: absolute;
 
       &-icon {
         width: 32px;
@@ -216,12 +313,36 @@
       }
 
       &-name {
-        max-width: calc(100% - 32px - 12px - 8px);
+        // 100% - icon-width - icon-margin-right
+        width: calc(100% - 42px);
+        display: flex;
+        align-items: center;
+
+        &-text {
+          // 100% - edit-margin-left - edit-font-size
+          max-width: calc(100% - 18px);
+        }
+
+        &-edit {
+          display: none;
+          margin-left: 4px;
+          cursor: pointer;
+          color: rgb(var(--blue-6));
+          font-size: 14px;
+        }
+
+        &-input {
+          width: 80%;
+        }
       }
     }
 
     .host-item-center {
       width: 25%;
+      height: 100%;
+      left: 35%;
+      padding: 0 8px;
+      position: absolute;
 
       &-address {
         max-width: 100%;
@@ -231,34 +352,22 @@
     .host-item-right {
       width: 40%;
       height: 100%;
+      left: 60%;
+      padding-right: 18px;
       flex-direction: column;
       justify-content: center;
-      position: relative;
+      position: absolute;
 
       &-tags {
-        // 必须设置 最外层用的是 min-width
-        position: absolute;
         width: 100%;
       }
 
       &-actions {
-        position: absolute;
         display: none;
         width: 100%;
         justify-content: flex-end;
       }
     }
-
-    &:hover {
-      .host-item-right-tags {
-        display: none;
-      }
-
-      .host-item-right-actions {
-        display: flex;
-      }
-    }
-
   }
 
   .favorite {

@@ -86,11 +86,12 @@
     }
   });
 
+  // FIXME 省略和tooltip
   // 渲染 label
   const renderLabel = (label: string) => {
     const last = label.lastIndexOf('-');
-    const prefix = label.substring(0, last);
-    const ip = label.substring(last + 1, label.length);
+    const prefix = label.substring(0, last - 1);
+    const ip = label.substring(last + 2, label.length);
     return `${prefix} - <span class="span-blue">${ip}</span>`;
   };
 
@@ -117,7 +118,7 @@
       data.value = hosts.map(s => {
         return {
           value: String(s.id),
-          label: `${s.name}(${s.code})-${s.address}`,
+          label: `${s.name} (${s.code}) - ${s.address}`,
           disabled: false
         };
       });

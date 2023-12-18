@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,7 @@ public class DataAliasServiceImpl implements DataAliasService {
                     .eq(DataAliasDO::getType, type)
                     .then()
                     .stream()
+                    .filter(s -> Objects.nonNull(s.getAlias()))
                     .collect(Collectors.toMap(
                             s -> String.valueOf(s.getRelId()),
                             DataAliasDO::getAlias,

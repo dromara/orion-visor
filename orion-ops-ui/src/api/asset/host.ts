@@ -46,8 +46,13 @@ export interface HostQueryResponse extends TableData {
   creator: string;
   updater: string;
   favorite: boolean;
+  alias: string;
   tags: Array<{ id: number, name: string }>;
   groupIdList: Array<number>;
+
+  editable: boolean;
+  loading: boolean;
+  modCount: number;
 }
 
 /**
@@ -70,6 +75,14 @@ export interface HostConfigQueryResponse {
   version: number;
   status: number;
   config: Record<string, any>;
+}
+
+/**
+ * 主机别名更新请求
+ */
+export interface HostAliasUpdateRequest {
+  id?: number;
+  name?: string;
 }
 
 /**
@@ -112,6 +125,13 @@ export function getHostPage(request: HostQueryRequest) {
  */
 export function deleteHost(id: number) {
   return axios.delete('/asset/host/delete', { params: { id } });
+}
+
+/**
+ * 修改主机别名
+ */
+export function updateHostAlias(request: HostAliasUpdateRequest) {
+  return axios.put('/asset/host/update-alias', request);
 }
 
 /**

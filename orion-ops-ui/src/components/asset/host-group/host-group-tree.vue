@@ -17,14 +17,14 @@
         <template v-if="node.editable">
           <a-input size="mini"
                    ref="renameInput"
-                   v-model="currName"
+                   v-model="node.title"
                    style="width: 138px;"
                    placeholder="名称"
                    :max-length="32"
                    :disabled="node.loading"
-                   @blur="() => saveNode(node.key)"
-                   @pressEnter="() => saveNode(node.key)"
-                   @change="() => saveNode(node.key)">
+                   @blur="saveNode(node)"
+                   @pressEnter="saveNode(node)"
+                   @change="saveNode(node)">
             <template #suffix>
               <!-- 加载中 -->
               <icon-loading v-if="node.loading" />
@@ -32,7 +32,7 @@
               <icon-check v-else
                           class="pointer"
                           title="保存"
-                          @click="() => saveNode(node.key)" />
+                          @click="saveNode(node)" />
             </template>
           </a-input>
         </template>
@@ -116,9 +116,7 @@
   const cacheStore = useCacheStore();
 
   const tree = ref();
-  const modCount = ref(0);
   const renameInput = ref();
-  const currName = ref();
   const treeData = ref<Array<TreeNodeData>>([]);
 
   const checkedKeys = computed<Array<number>>({
@@ -140,7 +138,6 @@
     if (!node) {
       return;
     }
-    currName.value = title;
     node.editable = true;
     nextTick(() => {
       renameInput.value?.focus();
@@ -178,14 +175,13 @@
   const addRootNode = () => {
     const newKey = `${createGroupGroupPrefix}${Date.now()}`;
     treeData.value.push({
-      title: '新分组',
+      title: '',
       key: newKey
     });
     // 编辑子节点
     const newNode = findNode<TreeNodeData>(newKey, treeData.value);
     if (newNode) {
       newNode.editable = true;
-      currName.value = '';
       nextTick(() => {
         renameInput.value?.focus();
       });
@@ -197,7 +193,7 @@
     const newKey = `${createGroupGroupPrefix}${Date.now()}`;
     const children = parentNode.children || [];
     children.push({
-      title: '新分组',
+      title: '',
       key: newKey
     });
     parentNode.children = children;
@@ -209,7 +205,6 @@
       const newNode = findNode<TreeNodeData>(newKey, treeData.value);
       if (newNode) {
         newNode.editable = true;
-        currName.value = '';
         nextTick(() => {
           renameInput.value?.focus();
         });
@@ -217,18 +212,16 @@
     });
   };
 
+  // FIXME 测试
   // 保存节点
-  const saveNode = async (key: string | number) => {
-    modCount.value++;
-    if (modCount.value !== 1) {
+  const saveNode = async (node: TreeNodeData) => {
+    const key = node.key
+    const newTitle = node.title
+    node.modCount = (node.modCount || 0) + 1;
+    if (node.modCount != 1) {
       return;
     }
-    // 寻找节点
-    const node = findNode<TreeNodeData>(key, treeData.value);
-    if (!node) {
-      return;
-    }
-    if (currName.value) {
+    if (newTitle) {
       node.loading = true;
       try {
         // 创建节点
@@ -240,17 +233,16 @@
           // 创建
           const { data } = await createHostGroup({
             parentId: parent.key as number,
-            name: currName.value
+            name: newTitle
           });
           node.key = data;
         } else {
           // 重命名节点
           await updateHostGroupName({
             id: key as unknown as number,
-            name: currName.value
+            name: newTitle
           });
         }
-        node.title = currName.value;
         node.editable = false;
       } catch (e) {
         // 重复 重新聚焦
@@ -282,7 +274,7 @@
       }
       node.editable = false;
     }
-    modCount.value = 0;
+    node.modCount = 0;
   };
 
   // 移动分组

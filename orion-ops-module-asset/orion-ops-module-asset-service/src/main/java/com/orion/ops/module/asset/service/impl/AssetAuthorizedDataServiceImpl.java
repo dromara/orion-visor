@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.TreeUtils;
 import com.orion.ops.framework.common.utils.Valid;
@@ -15,10 +16,7 @@ import com.orion.ops.module.asset.service.HostService;
 import com.orion.ops.module.infra.api.*;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
-import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
-import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
-import com.orion.ops.module.infra.enums.FavoriteTypeEnum;
-import com.orion.ops.module.infra.enums.TagTypeEnum;
+import com.orion.ops.module.infra.enums.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,6 +64,9 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
 
     @Resource
     private TagRelApi tagRelApi;
+
+    @Resource
+    private DataAliasApi dataAliasApi;
 
     @Override
     public List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request) {
@@ -157,6 +158,8 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         AuthorizedHostWrapperVO wrapper = new AuthorizedHostWrapperVO();
         // 查询我的收藏
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
+        // 查询数据别名
+        Future<Map<Long, String>> dataAliasResult = dataAliasApi.getDataAliasAsync(userId, DataAliasTypeEnum.HOST);
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用
@@ -181,7 +184,9 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                 dataGroupRel,
                 authorizedGroupIdList));
         // 设置主机拓展信息
-        this.getAuthorizedHostExtra(wrapper.getHostList(), favoriteResult.get());
+        this.getAuthorizedHostExtra(wrapper.getHostList(),
+                favoriteResult.get(),
+                dataAliasResult.get());
         return wrapper;
     }
 
@@ -263,9 +268,11 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
      *
      * @param hosts    hosts
      * @param favorite favorite
+     * @param aliasMap aliasMap
      */
     private void getAuthorizedHostExtra(List<HostVO> hosts,
-                                        List<Long> favorite) {
+                                        List<Long> favorite,
+                                        Map<Long, String> aliasMap) {
         if (Lists.isEmpty(hosts)) {
             return;
         }
@@ -280,6 +287,10 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         List<List<TagDTO>> tags = tagRelApi.getRelTags(TagTypeEnum.HOST, hostIdList);
         for (int i = 0; i < hosts.size(); i++) {
             hosts.get(i).setTags(tags.get(i));
+        }
+        // 设置主机别名
+        if (!Maps.isEmpty(aliasMap)) {
+            hosts.forEach(s -> s.setAlias(aliasMap.get(s.getId())));
         }
     }
 

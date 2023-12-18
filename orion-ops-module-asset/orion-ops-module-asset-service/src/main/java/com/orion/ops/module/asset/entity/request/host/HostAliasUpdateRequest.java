@@ -28,6 +28,7 @@ public class HostAliasUpdateRequest implements Serializable {
     @Schema(description = "id")
     private Long id;
 
+    @NotNull
     @Size(max = 32)
     @Schema(description = "别名")
     private String name;

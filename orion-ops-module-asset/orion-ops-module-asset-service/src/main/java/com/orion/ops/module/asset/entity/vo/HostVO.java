@@ -61,4 +61,7 @@ public class HostVO implements Serializable {
     @Schema(description = "分组 id")
     private Set<Long> groupIdList;
 
+    @Schema(description = "别名")
+    private String alias;
+
 }

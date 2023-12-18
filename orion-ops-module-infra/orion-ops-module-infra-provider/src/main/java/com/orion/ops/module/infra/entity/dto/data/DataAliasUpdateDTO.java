@@ -34,6 +34,7 @@ public class DataAliasUpdateDTO implements Serializable {
     @Schema(description = "数据id")
     private Long relId;
 
+    @NotNull
     @Size(max = 32)
     @Schema(description = "别名")
     private String alias;
