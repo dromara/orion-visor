@@ -4,7 +4,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.DataAliasApi;
 import com.orion.ops.module.infra.entity.dto.data.DataAliasUpdateDTO;
 import com.orion.ops.module.infra.entity.request.data.DataAliasUpdateRequest;
-import com.orion.ops.module.infra.enums.DataAliasTypeEnum;
+import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 import com.orion.ops.module.infra.service.DataAliasService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class DataAliasApiImpl implements DataAliasApi {
     private DataAliasService dataAliasService;
 
     @Override
-    public Integer updateDataAlias(DataAliasUpdateDTO dto, DataAliasTypeEnum type) {
+    public Integer updateDataAlias(DataAliasUpdateDTO dto, DataExtraTypeEnum type) {
         Valid.valid(dto);
         DataAliasUpdateRequest update = DataAliasUpdateRequest.builder()
                 .userId(dto.getUserId())
@@ -41,25 +41,25 @@ public class DataAliasApiImpl implements DataAliasApi {
     }
 
     @Override
-    public String getDataAlias(Long userId, DataAliasTypeEnum type, Long relId) {
+    public String getDataAlias(Long userId, DataExtraTypeEnum type, Long relId) {
         Valid.allNotNull(userId, relId);
         return dataAliasService.getDataAlias(userId, type.name(), relId);
     }
 
     @Override
-    public Map<Long, String> getDataAlias(Long userId, DataAliasTypeEnum type) {
+    public Map<Long, String> getDataAlias(Long userId, DataExtraTypeEnum type) {
         Valid.notNull(userId);
         return dataAliasService.getDataAlias(userId, type.name());
     }
 
     @Override
-    public Future<Map<Long, String>> getDataAliasAsync(Long userId, DataAliasTypeEnum type) {
+    public Future<Map<Long, String>> getDataAliasAsync(Long userId, DataExtraTypeEnum type) {
         Valid.notNull(userId);
         return CompletableFuture.completedFuture(dataAliasService.getDataAlias(userId, type.name()));
     }
 
     @Override
-    public Integer deleteByRelId(DataAliasTypeEnum type, Long relId) {
+    public Integer deleteByRelId(DataExtraTypeEnum type, Long relId) {
         Valid.notNull(relId);
         return dataAliasService.deleteByRelId(type.name(), relId);
     }

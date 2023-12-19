@@ -15,7 +15,7 @@ import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
 import com.orion.ops.module.infra.api.DataAliasApi;
 import com.orion.ops.module.infra.entity.dto.data.DataAliasUpdateDTO;
-import com.orion.ops.module.infra.enums.DataAliasTypeEnum;
+import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -110,7 +110,7 @@ public class HostController {
                 .relId(request.getId())
                 .alias(request.getName())
                 .build();
-        return dataAliasApi.updateDataAlias(update, DataAliasTypeEnum.HOST);
+        return dataAliasApi.updateDataAlias(update, DataExtraTypeEnum.HOST);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

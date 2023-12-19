@@ -2,10 +2,9 @@ package com.orion.ops.module.infra.handler.preference.model;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.orion.lang.define.wrapper.Ref;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.ops.framework.common.utils.Refs;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -25,7 +24,7 @@ public interface PreferenceModel {
      */
     default Map<String, String> toMap() {
         JSONObject map = JSON.parseObject(JSON.toJSONString(this));
-        return Maps.map(map, Function.identity(), v -> JSON.toJSONString(Ref.of(v)));
+        return Maps.map(map, Function.identity(), Refs::toJson);
     }
 
 }

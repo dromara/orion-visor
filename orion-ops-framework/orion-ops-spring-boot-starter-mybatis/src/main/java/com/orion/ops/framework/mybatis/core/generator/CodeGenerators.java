@@ -45,11 +45,9 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("data_alias", "数据别名", "data")
+                Template.create("data_extra", "数据拓展信息", "data")
                         .disableUnitTest()
                         .enableProviderApi()
-                        .cache("data:alias:{}:{}", "数据别名 ${userId} ${type}")
-                        .expire(1, TimeUnit.DAYS)
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

@@ -1,10 +1,9 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.define.wrapper.Ref;
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.ops.framework.common.utils.Refs;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -63,13 +62,13 @@ public class PreferenceServiceImpl implements PreferenceService {
             insertRecord.setUserId(userId);
             insertRecord.setType(type);
             insertRecord.setItem(item);
-            insertRecord.setValue(this.toJsonValue(request.getValue()));
+            insertRecord.setValue(Refs.toJson(request.getValue()));
             effect = preferenceDAO.insert(insertRecord);
         } else {
             // 更新
             PreferenceDO updateRecord = new PreferenceDO();
             updateRecord.setId(preference.getId());
-            updateRecord.setValue(this.toJsonValue(request.getValue()));
+            updateRecord.setValue(Refs.toJson(request.getValue()));
             effect = preferenceDAO.updateById(updateRecord);
         }
         // 删除缓存
@@ -77,6 +76,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         return effect;
     }
 
+    // FIXME updateBatch
     @Override
     public void updatePreferencePartial(PreferenceUpdatePartialRequest request) {
         Long userId = SecurityUtils.getLoginUserId();
@@ -97,7 +97,7 @@ public class PreferenceServiceImpl implements PreferenceService {
                     insertRecord.setUserId(userId);
                     insertRecord.setType(type);
                     insertRecord.setItem(s.getKey());
-                    insertRecord.setValue(this.toJsonValue(s.getValue()));
+                    insertRecord.setValue(Refs.toJson(s.getValue()));
                     return insertRecord;
                 }).collect(Collectors.toList());
         preferenceDAO.insertBatch(records);
@@ -183,17 +183,7 @@ public class PreferenceServiceImpl implements PreferenceService {
             RedisMaps.putAll(key, PreferenceCacheKeyDefine.PREFERENCE, config);
         }
         // unref
-        return Maps.map(config, Function.identity(), v -> JSON.parseObject(v, Ref.class).getValue());
-    }
-
-    /**
-     * 转为 json 对象
-     *
-     * @param o o
-     * @return value
-     */
-    private String toJsonValue(Object o) {
-        return JSON.toJSONString(Ref.of(o));
+        return Maps.map(config, Function.identity(), Refs::parseObject);
     }
 
 }

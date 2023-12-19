@@ -159,7 +159,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 查询我的收藏
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
         // 查询数据别名
-        Future<Map<Long, String>> dataAliasResult = dataAliasApi.getDataAliasAsync(userId, DataAliasTypeEnum.HOST);
+        Future<Map<Long, String>> dataAliasResult = dataAliasApi.getDataAliasAsync(userId, DataExtraTypeEnum.HOST);
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用

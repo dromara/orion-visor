@@ -70,7 +70,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     private DataPermissionService dataPermissionService;
 
     @Resource
-    private DataAliasService dataAliasService;
+    private DataExtraService dataExtraService;
 
     @Override
     public Long createSystemUser(SystemUserCreateRequest request) {
@@ -249,8 +249,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         preferenceService.deletePreferenceByUserId(id);
         // 删除用户数据权限
         dataPermissionService.deleteByUserId(id);
-        // 删除用户数据别名
-        dataAliasService.deleteByUserId(id);
+        // 删除用户拓展数据
+        dataExtraService.deleteByUserId(id);
     }
 
     @Override

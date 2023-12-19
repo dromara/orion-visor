@@ -1,7 +1,7 @@
 package com.orion.ops.module.infra.api;
 
 import com.orion.ops.module.infra.entity.dto.data.DataAliasUpdateDTO;
-import com.orion.ops.module.infra.enums.DataAliasTypeEnum;
+import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -22,7 +22,7 @@ public interface DataAliasApi {
      * @param type type
      * @return effect
      */
-    Integer updateDataAlias(DataAliasUpdateDTO dto, DataAliasTypeEnum type);
+    Integer updateDataAlias(DataAliasUpdateDTO dto, DataExtraTypeEnum type);
 
     /**
      * 查询数据别名
@@ -32,7 +32,7 @@ public interface DataAliasApi {
      * @param relId  relId
      * @return aliasName
      */
-    String getDataAlias(Long userId, DataAliasTypeEnum type, Long relId);
+    String getDataAlias(Long userId, DataExtraTypeEnum type, Long relId);
 
     /**
      * 查询数据别名
@@ -41,7 +41,7 @@ public interface DataAliasApi {
      * @param type   type
      * @return relId:aliasName
      */
-    Map<Long, String> getDataAlias(Long userId, DataAliasTypeEnum type);
+    Map<Long, String> getDataAlias(Long userId, DataExtraTypeEnum type);
 
     /**
      * 异步查询数据别名
@@ -50,7 +50,7 @@ public interface DataAliasApi {
      * @param type   type
      * @return relId:aliasName
      */
-    Future<Map<Long, String>> getDataAliasAsync(Long userId, DataAliasTypeEnum type);
+    Future<Map<Long, String>> getDataAliasAsync(Long userId, DataExtraTypeEnum type);
 
     /**
      * 删除数据别名
@@ -59,6 +59,6 @@ public interface DataAliasApi {
      * @param relId relId
      * @return effect
      */
-    Integer deleteByRelId(DataAliasTypeEnum type, Long relId);
+    Integer deleteByRelId(DataExtraTypeEnum type, Long relId);
 
 }

@@ -1,13 +1,13 @@
 package com.orion.ops.module.infra.enums;
 
 /**
- * 数据别名类型
+ * 数据拓展类型
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/12/18 21:51
  */
-public enum DataAliasTypeEnum {
+public enum DataExtraTypeEnum {
 
     /**
      * 主机
@@ -16,11 +16,11 @@ public enum DataAliasTypeEnum {
 
     ;
 
-    public static DataAliasTypeEnum of(String type) {
+    public static DataExtraTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (DataAliasTypeEnum value : values()) {
+        for (DataExtraTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }
