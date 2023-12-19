@@ -65,6 +65,7 @@
         : list.filter(item => {
           return (item.name as string)?.toLowerCase().indexOf(filterVal) > -1
             || (item.code as string)?.toLowerCase().indexOf(filterVal) > -1
+            || (item.alias as string)?.toLowerCase().indexOf(filterVal) > -1
             || (item.address as string)?.toLowerCase().indexOf(filterVal) > -1;
         });
     }

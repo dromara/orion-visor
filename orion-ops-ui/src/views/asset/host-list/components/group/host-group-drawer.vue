@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             class="host-group-drawer"
-            width="70%"
+            :width="1120"
             title="主机分组配置"
             :esc-to-close="false"
             :mask-closable="false"

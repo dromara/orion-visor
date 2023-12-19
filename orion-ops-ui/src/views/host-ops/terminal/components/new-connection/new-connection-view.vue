@@ -14,7 +14,7 @@
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
                          class="host-filter"
-                         placeholder="输入名称/编码/IP @标签"
+                         placeholder="别名/名称/编码/IP @标签"
                          :allow-clear="true"
                          :data="filterOptions"
                          :filter-option="searchFilter">
@@ -118,8 +118,8 @@
     }).forEach(s => filterOptions.value.push(s));
     // 添加主机信息
     const hostMeta = hosts.value.hostList?.map(s => {
-      return [s.name, s.code, s.address];
-    }).flat(1);
+      return [s.name, s.code, s.address, s.alias];
+    }).filter(Boolean).flat(1);
     [...new Set(hostMeta)].map(value => {
       return { label: value, value };
     }).forEach(s => filterOptions.value.push(s));

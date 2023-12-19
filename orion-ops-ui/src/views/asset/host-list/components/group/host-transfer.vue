@@ -34,7 +34,11 @@
       </template>
       <!-- 内容 -->
       <template #item="{ label }">
-        <span v-html="renderLabel(label)" />
+        <a-tooltip position="top"
+                   :mini="true"
+                   :content="label">
+          <span v-html="renderLabel(label)" />
+        </a-tooltip>
       </template>
     </a-transfer>
   </div>
@@ -86,7 +90,6 @@
     }
   });
 
-  // FIXME 省略和tooltip
   // 渲染 label
   const renderLabel = (label: string) => {
     const last = label.lastIndexOf('-');
@@ -142,10 +145,21 @@
       user-select: none;
     }
 
+    .arco-transfer-view-source {
+
+      .arco-transfer-list-item .arco-checkbox {
+        width: calc(100% - 24px);
+        position: absolute;
+      }
+    }
+
     .arco-transfer-view-target {
 
       .arco-transfer-list-item-content {
         margin-left: 4px;
+        position: absolute;
+        width: calc(100% - 52px);
+        display: inline-block;
       }
 
       .arco-transfer-list-item-remove-btn {

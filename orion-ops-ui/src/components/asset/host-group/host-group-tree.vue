@@ -212,7 +212,6 @@
     });
   };
 
-  // FIXME 测试
   // 保存节点
   const saveNode = async (node: TreeNodeData) => {
     const key = node.key
