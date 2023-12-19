@@ -7,13 +7,13 @@ import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 数据别名缓存 key
+ * 数据拓展缓存 key
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023-12-18 17:37
  */
-public interface DataAliasCacheKeyDefine {
+public interface DataExtraCacheKeyDefine {
 
     CacheKeyDefine DATA_ALIAS = new CacheKeyBuilder()
             .key("data:alias:{}:{}")

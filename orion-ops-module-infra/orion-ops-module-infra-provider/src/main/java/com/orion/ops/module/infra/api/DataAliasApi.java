@@ -52,13 +52,4 @@ public interface DataAliasApi {
      */
     Future<Map<Long, String>> getDataAliasAsync(Long userId, DataExtraTypeEnum type);
 
-    /**
-     * 删除数据别名
-     *
-     * @param type  type
-     * @param relId relId
-     * @return effect
-     */
-    Integer deleteByRelId(DataExtraTypeEnum type, Long relId);
-
 }

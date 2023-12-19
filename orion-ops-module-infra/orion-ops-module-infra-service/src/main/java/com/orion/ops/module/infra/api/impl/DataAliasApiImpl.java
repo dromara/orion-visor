@@ -58,10 +58,4 @@ public class DataAliasApiImpl implements DataAliasApi {
         return CompletableFuture.completedFuture(dataAliasService.getDataAlias(userId, type.name()));
     }
 
-    @Override
-    public Integer deleteByRelId(DataExtraTypeEnum type, Long relId) {
-        Valid.notNull(relId);
-        return dataAliasService.deleteByRelId(type.name(), relId);
-    }
-
 }

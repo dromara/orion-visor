@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.orion.lang.define.thread.ExecutorBuilder;
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.ops.framework.biz.operator.log.core.annotation.IgnoreParameter;
@@ -19,7 +20,6 @@ import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.security.SecurityHolder;
-import com.orion.ops.framework.common.utils.Refs;
 import com.orion.ops.framework.common.utils.Requests;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -270,7 +270,7 @@ public class OperatorLogAspect {
                     // 脱敏
                     model.setReturnValue(JSON.toJSONString(ret, serializeFilters));
                 } else if (ReturnType.TO_STRING.equals(retType)) {
-                    model.setReturnValue(Refs.toJson(Objects.toString(ret)));
+                    model.setReturnValue(Refs.json(Objects.toString(ret)));
                 }
             }
         } else {

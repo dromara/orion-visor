@@ -1,9 +1,9 @@
 package com.orion.ops.module.infra.api.impl;
 
-import com.orion.lang.define.collect.MultiHashMap;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.DataExtraApi;
 import com.orion.ops.module.infra.convert.DataExtraProviderConvert;
+import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraUpdateDTO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 数据拓展信息 对外服务实现类
@@ -40,23 +42,8 @@ public class DataExtraApiImpl implements DataExtraApi {
     }
 
     @Override
-    public Map<String, String> getExtraItems(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.valid(dto);
-        Valid.notNull(dto.getRelId());
-        // 查询
-        DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
-        request.setType(type.name());
-        return dataExtraService.getExtraItems(request);
-    }
-
-    @Override
-    public MultiHashMap<Long, String, String> getExtraItemsList(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.valid(dto);
-        Valid.notNull(dto.getRelIdList());
-        // 查询
-        DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
-        request.setType(type.name());
-        return dataExtraService.getExtraItemsList(request);
+    public void batchUpdate(Map<Long, Object> map) {
+        dataExtraService.batchUpdate(map);
     }
 
     @Override
@@ -77,6 +64,16 @@ public class DataExtraApiImpl implements DataExtraApi {
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
         return dataExtraService.getExtraItemList(request);
+    }
+
+    @Override
+    public List<DataExtraDTO> getExtraList(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
+        DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
+        request.setType(type.name());
+        return dataExtraService.getExtraList(request)
+                .stream()
+                .map(DataExtraProviderConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override

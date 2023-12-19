@@ -1,10 +1,11 @@
 package com.orion.ops.module.infra.api;
 
-import com.orion.lang.define.collect.MultiHashMap;
+import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraUpdateDTO;
 import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,22 +27,11 @@ public interface DataExtraApi {
     Integer updateExtraItem(DataExtraUpdateDTO dto, DataExtraTypeEnum type);
 
     /**
-     * 查询额外配置项
+     * 批量更新数据拓展信息
      *
-     * @param type type
-     * @param dto  dto
-     * @return items
+     * @param map map
      */
-    Map<String, String> getExtraItems(DataExtraQueryDTO dto, DataExtraTypeEnum type);
-
-    /**
-     * 查询额外配置项
-     *
-     * @param dto  dto
-     * @param type type
-     * @return items
-     */
-    MultiHashMap<Long, String, String> getExtraItemsList(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+    void batchUpdate(Map<Long, Object> map);
 
     /**
      * 查询额外配置项
@@ -60,6 +50,15 @@ public interface DataExtraApi {
      * @return item
      */
     Map<Long, String> getExtraItemList(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+
+    /**
+     * 查询额外配置
+     *
+     * @param dto  dto
+     * @param type type
+     * @return effect
+     */
+    List<DataExtraDTO> getExtraList(DataExtraQueryDTO dto, DataExtraTypeEnum type);
 
     /**
      * 通过 relId 删除

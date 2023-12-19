@@ -1,9 +1,10 @@
 package com.orion.ops.module.infra.service;
 
-import com.orion.lang.define.collect.MultiHashMap;
+import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
 import com.orion.ops.module.infra.entity.request.data.DataExtraUpdateRequest;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,20 +25,11 @@ public interface DataExtraService {
     Integer updateExtraItem(DataExtraUpdateRequest request);
 
     /**
-     * 查询额外配置项
+     * 批量更新数据拓展信息
      *
-     * @param request request
-     * @return items
+     * @param map map
      */
-    Map<String, String> getExtraItems(DataExtraQueryRequest request);
-
-    /**
-     * 查询额外配置项
-     *
-     * @param request request
-     * @return items
-     */
-    MultiHashMap<Long, String, String> getExtraItemsList(DataExtraQueryRequest request);
+    void batchUpdate(Map<Long, Object> map);
 
     /**
      * 查询额外配置项
@@ -54,6 +46,14 @@ public interface DataExtraService {
      * @return item
      */
     Map<Long, String> getExtraItemList(DataExtraQueryRequest request);
+
+    /**
+     * 查询额外配置
+     *
+     * @param request request
+     * @return rows
+     */
+    List<DataExtraDO> getExtraList(DataExtraQueryRequest request);
 
     /**
      * 通过 userId 删除

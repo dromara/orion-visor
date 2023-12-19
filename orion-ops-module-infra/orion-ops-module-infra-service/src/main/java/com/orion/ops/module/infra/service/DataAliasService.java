@@ -40,21 +40,4 @@ public interface DataAliasService {
      */
     Map<Long, String> getDataAlias(Long userId, String type);
 
-    /**
-     * 删除数据别名
-     *
-     * @param userId userId
-     * @return effect
-     */
-    Integer deleteByUserId(Long userId);
-
-    /**
-     * 删除数据别名
-     *
-     * @param type  type
-     * @param relId relId
-     * @return effect
-     */
-    Integer deleteByRelId(String type, Long relId);
-
 }

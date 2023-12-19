@@ -1,9 +1,9 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.define.collect.MultiHashMap;
 import com.orion.lang.function.Functions;
-import com.orion.ops.framework.common.utils.Refs;
+import com.orion.lang.utils.Refs;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.module.infra.dao.DataExtraDAO;
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -53,38 +54,32 @@ public class DataExtraServiceImpl implements DataExtraService {
             insert.setRelId(relId);
             insert.setType(type);
             insert.setItem(item);
-            insert.setValue(Refs.toJson(value));
+            insert.setValue(Refs.json(value));
             return dataExtraDAO.insert(insert);
         } else {
             // 修改
             DataExtraDO update = new DataExtraDO();
             update.setId(extraItem.getId());
-            update.setValue(Refs.toJson(value));
+            update.setValue(Refs.json(value));
             return dataExtraDAO.updateById(update);
         }
     }
 
-    // FIXME updateBatch
-
     @Override
-    public Map<String, String> getExtraItems(DataExtraQueryRequest request) {
-        return dataExtraDAO.of()
-                .wrapper(this.buildWrapper(request))
+    public void batchUpdate(Map<Long, Object> map) {
+        if (Maps.isEmpty(map)) {
+            return;
+        }
+        // 批量更新
+        List<DataExtraDO> list = map.entrySet()
                 .stream()
-                .collect(Collectors.toMap(DataExtraDO::getItem,
-                        DataExtraDO::getValue,
-                        Functions.right())
-                );
-    }
-
-    @Override
-    public MultiHashMap<Long, String, String> getExtraItemsList(DataExtraQueryRequest request) {
-        MultiHashMap<Long, String, String> result = MultiHashMap.create();
-        dataExtraDAO.of()
-                .wrapper(this.buildWrapper(request))
-                .list()
-                .forEach(s -> result.put(s.getRelId(), s.getItem(), s.getValue()));
-        return result;
+                .map(s -> {
+                    DataExtraDO extra = new DataExtraDO();
+                    extra.setId(s.getKey());
+                    extra.setValue(Refs.json(s.getValue()));
+                    return extra;
+                }).collect(Collectors.toList());
+        dataExtraDAO.updateBatch(list);
     }
 
     @Override
@@ -105,6 +100,13 @@ public class DataExtraServiceImpl implements DataExtraService {
                         DataExtraDO::getValue,
                         Functions.right())
                 );
+    }
+
+    @Override
+    public List<DataExtraDO> getExtraList(DataExtraQueryRequest request) {
+        return dataExtraDAO.of()
+                .wrapper(this.buildWrapper(request))
+                .list();
     }
 
     @Override

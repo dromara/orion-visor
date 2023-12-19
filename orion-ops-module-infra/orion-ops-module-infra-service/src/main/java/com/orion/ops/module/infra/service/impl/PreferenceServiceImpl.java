@@ -2,8 +2,8 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.function.Functions;
+import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Maps;
-import com.orion.ops.framework.common.utils.Refs;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -17,6 +17,7 @@ import com.orion.ops.module.infra.service.PreferenceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -62,13 +63,13 @@ public class PreferenceServiceImpl implements PreferenceService {
             insertRecord.setUserId(userId);
             insertRecord.setType(type);
             insertRecord.setItem(item);
-            insertRecord.setValue(Refs.toJson(request.getValue()));
+            insertRecord.setValue(Refs.json(request.getValue()));
             effect = preferenceDAO.insert(insertRecord);
         } else {
             // 更新
             PreferenceDO updateRecord = new PreferenceDO();
             updateRecord.setId(preference.getId());
-            updateRecord.setValue(Refs.toJson(request.getValue()));
+            updateRecord.setValue(Refs.json(request.getValue()));
             effect = preferenceDAO.updateById(updateRecord);
         }
         // 删除缓存
@@ -76,31 +77,49 @@ public class PreferenceServiceImpl implements PreferenceService {
         return effect;
     }
 
-    // FIXME updateBatch
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updatePreferencePartial(PreferenceUpdatePartialRequest request) {
         Long userId = SecurityUtils.getLoginUserId();
         String type = request.getType();
         Map<String, Object> config = request.getConfig();
         Valid.valid(PreferenceTypeEnum::of, type);
-        // 删除配置
+        // 查询配置
         LambdaQueryWrapper<PreferenceDO> wrapper = preferenceDAO.lambda()
                 .eq(PreferenceDO::getUserId, userId)
                 .eq(PreferenceDO::getType, type)
                 .in(PreferenceDO::getItem, config.keySet());
-        preferenceDAO.delete(wrapper);
-        // 插入配置
-        List<PreferenceDO> records = config.entrySet()
+        Map<String, PreferenceDO> items = preferenceDAO.selectList(wrapper)
                 .stream()
+                .collect(Collectors.toMap(
+                        PreferenceDO::getItem,
+                        Function.identity(),
+                        Functions.right())
+                );
+        // 修改配置
+        List<PreferenceDO> updateRecords = config.keySet()
+                .stream()
+                .filter(items::containsKey)
                 .map(s -> {
-                    PreferenceDO insertRecord = new PreferenceDO();
-                    insertRecord.setUserId(userId);
-                    insertRecord.setType(type);
-                    insertRecord.setItem(s.getKey());
-                    insertRecord.setValue(Refs.toJson(s.getValue()));
-                    return insertRecord;
+                    PreferenceDO update = new PreferenceDO();
+                    update.setId(items.get(s).getId());
+                    update.setValue(Refs.json(config.get(s)));
+                    return update;
                 }).collect(Collectors.toList());
-        preferenceDAO.insertBatch(records);
+        preferenceDAO.updateBatch(updateRecords);
+        // 插入配置
+        List<PreferenceDO> insertRecords = config.keySet()
+                .stream()
+                .filter(s -> !items.containsKey(s))
+                .map(s -> {
+                    PreferenceDO insert = new PreferenceDO();
+                    insert.setUserId(userId);
+                    insert.setType(type);
+                    insert.setItem(s);
+                    insert.setValue(Refs.json(config.get(s)));
+                    return insert;
+                }).collect(Collectors.toList());
+        preferenceDAO.insertBatch(insertRecords);
         // 删除缓存
         RedisMaps.delete(PreferenceCacheKeyDefine.PREFERENCE.format(userId, type));
     }
@@ -183,7 +202,7 @@ public class PreferenceServiceImpl implements PreferenceService {
             RedisMaps.putAll(key, PreferenceCacheKeyDefine.PREFERENCE, config);
         }
         // unref
-        return Maps.map(config, Function.identity(), Refs::parseObject);
+        return Maps.map(config, Function.identity(), Refs::unref);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.orion.ops.module.infra.convert;
 
+import com.orion.ops.module.infra.entity.domain.DataExtraDO;
+import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraUpdateDTO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
@@ -22,5 +24,7 @@ public interface DataExtraProviderConvert {
     DataExtraQueryRequest to(DataExtraQueryDTO query);
 
     DataExtraUpdateRequest to(DataExtraUpdateDTO update);
+
+    DataExtraDTO to(DataExtraDO domain);
 
 }

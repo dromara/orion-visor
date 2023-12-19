@@ -23,7 +23,7 @@ import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
-import com.orion.ops.module.infra.api.DataAliasApi;
+import com.orion.ops.module.infra.api.DataExtraApi;
 import com.orion.ops.module.infra.api.DataGroupRelApi;
 import com.orion.ops.module.infra.api.FavoriteApi;
 import com.orion.ops.module.infra.api.TagRelApi;
@@ -74,7 +74,7 @@ public class HostServiceImpl implements HostService {
     private DataGroupRelApi dataGroupRelApi;
 
     @Resource
-    private DataAliasApi dataAliasApi;
+    private DataExtraApi dataExtraApi;
 
     @Override
     public Long createHost(HostCreateRequest request) {
@@ -218,8 +218,8 @@ public class HostServiceImpl implements HostService {
         tagRelApi.deleteRelId(TagTypeEnum.HOST, id);
         // 删除收藏引用
         favoriteApi.deleteByRelId(FavoriteTypeEnum.HOST, id);
-        // 删除主机别名
-        dataAliasApi.deleteByRelId(DataExtraTypeEnum.HOST, id);
+        // 删除额外配置
+        dataExtraApi.deleteByRelId(DataExtraTypeEnum.HOST, id);
     }
 
     /**
