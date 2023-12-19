@@ -43,7 +43,7 @@
     {
       icon: 'icon-palette',
       content: '外观设置',
-      click: () => emits('switchTab', InnerTabs.THEME_SETTING)
+      click: () => emits('switchTab', InnerTabs.VIEW_SETTING)
     },
   ];
 

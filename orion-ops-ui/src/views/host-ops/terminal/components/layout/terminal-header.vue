@@ -55,8 +55,6 @@
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
   import IconActions from '../layout/icon-actions.vue';
-  import { useTerminalStore } from '@/store';
-  import { DarkTheme } from '@/store/modules/terminal';
 
   const props = defineProps({
     modelValue: {
@@ -72,7 +70,6 @@
   const emits = defineEmits(['update:modelValue', 'clickTab', 'deleteTab', 'share']);
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const terminalStore = useTerminalStore();
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [
@@ -81,11 +78,6 @@
       content: '分享链接',
       visible: false,
       click: () => emits('share')
-    },
-    {
-      icon: terminalStore.isDarkTheme ? 'icon-sun-fill' : 'icon-moon-fill',
-      content: terminalStore.isDarkTheme ? '点击切换为亮色模式' : '点击切换为暗色模式',
-      click: () => terminalStore.changeDarkTheme(terminalStore.isDarkTheme ? DarkTheme.LIGHT : DarkTheme.DARK)
     },
     {
       icon: isFullscreen.value ? 'icon-fullscreen-exit' : 'icon-fullscreen',
@@ -113,7 +105,7 @@
   .terminal-header {
     --logo-width: 168px;
     --right-avatar-width: calc(28px * 5 - 7px * 4);
-    --right-action-width: calc(var(--header-height) * 3);
+    --right-action-width: calc(var(--sidebar-icon-wrapper-size) * 2);
   }
 
   .terminal-header {

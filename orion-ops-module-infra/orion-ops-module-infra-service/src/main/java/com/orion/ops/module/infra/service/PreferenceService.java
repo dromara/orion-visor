@@ -1,7 +1,7 @@
 package com.orion.ops.module.infra.service;
 
+import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
 import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdateRequest;
-import com.orion.ops.module.infra.entity.vo.PreferenceVO;
 import com.orion.ops.module.infra.enums.PreferenceTypeEnum;
 
 import java.util.Map;
@@ -17,21 +17,27 @@ import java.util.concurrent.Future;
 public interface PreferenceService {
 
     /**
-     * 更新用户偏好
+     * 更新用户偏好-单个
      *
      * @param request request
-     * @param partial 是否为部分更新
      * @return effect
      */
-    Integer updatePreference(PreferenceUpdateRequest request, boolean partial);
+    Integer updatePreference(PreferenceUpdateRequest request);
+
+    /**
+     * 更新用户偏好-部分
+     *
+     * @param request request
+     */
+    void updatePreferencePartial(PreferenceUpdatePartialRequest request);
 
     /**
      * 查询用户偏好
      *
      * @param type type
-     * @return row
+     * @return rows
      */
-    PreferenceVO getPreferenceByType(String type);
+    Map<String, Object> getPreferenceByType(String type);
 
     /**
      * 获取用户偏好

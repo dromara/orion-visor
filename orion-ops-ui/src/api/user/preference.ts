@@ -1,24 +1,26 @@
 import axios from 'axios';
 
-type Preference = 'SYSTEM' | 'TERMINAL'
+type PreferenceType = 'SYSTEM' | 'TERMINAL'
 
 /**
- * 用户偏好更新请求
+ * 用户偏好更新请求-单个
  */
 export interface PreferenceUpdateRequest {
-  type: Preference;
-  config: object;
+  type: PreferenceType;
+  item: string;
+  value: any;
 }
 
 /**
- * 用户偏好查询响应
+ * 用户偏好更新请求-部分
  */
-export interface PreferenceQueryResponse<T> {
-  config: T;
+export interface PreferenceUpdatePartialRequest {
+  type: PreferenceType;
+  config: Record<string, any> | object;
 }
 
 /**
- * 更新用户偏好-整体
+ * 更新用户偏好-单个
  */
 export function updatePreference(request: PreferenceUpdateRequest) {
   return axios.put('/infra/preference/update', request);
@@ -27,14 +29,14 @@ export function updatePreference(request: PreferenceUpdateRequest) {
 /**
  * 更新用户偏好-部分
  */
-export function updatePreferencePartial(request: PreferenceUpdateRequest) {
+export function updatePreferencePartial(request: PreferenceUpdatePartialRequest) {
   return axios.put('/infra/preference/update-partial', request);
 }
 
 /**
  * 查询用户偏好
  */
-export function getPreference<T>(type: Preference) {
-  return axios.get<PreferenceQueryResponse<T>>('/infra/preference/get', { params: { type } });
+export function getPreference<T>(type: PreferenceType) {
+  return axios.get<T>('/infra/preference/get', { params: { type } });
 }
 

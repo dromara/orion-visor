@@ -3,8 +3,6 @@ import type { Ref } from 'vue';
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
-
-  updateTerminalPreferenceFn?: () => void;
 }
 
 // 终端配置

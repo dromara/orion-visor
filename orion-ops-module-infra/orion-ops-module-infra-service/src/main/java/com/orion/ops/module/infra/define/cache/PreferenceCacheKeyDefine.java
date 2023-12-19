@@ -1,9 +1,9 @@
 package com.orion.ops.module.infra.define.cache;
 
-import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.cache.key.CacheKeyBuilder;
 import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
+import com.orion.lang.define.wrapper.Ref;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +19,8 @@ public interface PreferenceCacheKeyDefine {
     CacheKeyDefine PREFERENCE = new CacheKeyBuilder()
             .key("user:preference:{}:{}")
             .desc("用户偏好 ${userId} ${type}")
-            .type(JSONObject.class)
-            .struct(RedisCacheStruct.STRING)
+            .type(Ref.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
             .build();
 

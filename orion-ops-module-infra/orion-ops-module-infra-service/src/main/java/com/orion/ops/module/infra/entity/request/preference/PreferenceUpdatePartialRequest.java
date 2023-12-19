@@ -7,11 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
- * 用户偏好 更新请求对象
+ * 用户偏好 部分更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -21,20 +23,16 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "PreferenceUpdateRequest", description = "用户偏好 更新请求对象")
-public class PreferenceUpdateRequest implements Serializable {
+@Schema(name = "PreferenceUpdatePartialRequest", description = "用户偏好 部分更新请求对象")
+public class PreferenceUpdatePartialRequest implements Serializable {
 
     @NotBlank
     @Size(max = 12)
     @Schema(description = "类型")
     private String type;
 
-    @NotBlank
-    @Size(max = 32)
+    @NotEmpty
     @Schema(description = "偏好配置")
-    private String item;
-
-    @Schema(description = "偏好配置")
-    private Object value;
+    private Map<String, Object> config;
 
 }

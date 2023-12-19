@@ -1,8 +1,8 @@
 import type { TerminalDisplaySetting, TerminalPreference, TerminalState, TerminalThemeSchema } from './types';
 import { defineStore } from 'pinia';
-import { getPreference, updatePreferencePartial } from '@/api/user/preference';
+import { getPreference, updatePreference } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
-import { useDark, useDebounceFn } from '@vueuse/core';
+import { useDark } from '@vueuse/core';
 import { DEFAULT_SCHEMA } from '@/views/host-ops/terminal/types/terminal.theme';
 
 // 暗色主题
@@ -36,14 +36,14 @@ export default defineStore('terminal', {
       try {
         const { data } = await getPreference<TerminalPreference>('TERMINAL');
         // 设置默认终端主题
-        if (!data.config.themeSchema?.name) {
-          data.config.themeSchema = DEFAULT_SCHEMA;
+        if (!data.themeSchema?.name) {
+          data.themeSchema = DEFAULT_SCHEMA;
         }
-        this.preference = data.config;
+        this.preference = data;
         // 设置暗色主题
-        const userDarkTheme = data.config.darkTheme;
+        const userDarkTheme = data.darkTheme;
         if (userDarkTheme === DarkTheme.AUTO) {
-          this.isDarkTheme = data.config.themeSchema?.dark === true;
+          this.isDarkTheme = data.themeSchema?.dark === true;
         } else {
           this.isDarkTheme = userDarkTheme === DarkTheme.DARK;
         }
@@ -53,7 +53,7 @@ export default defineStore('terminal', {
     },
 
     // 修改暗色主题
-    changeDarkTheme(darkTheme: string) {
+    async changeDarkTheme(darkTheme: string) {
       this.preference.darkTheme = darkTheme;
       if (darkTheme === DarkTheme.DARK) {
         // 暗色
@@ -66,53 +66,47 @@ export default defineStore('terminal', {
         this.isDarkTheme = this.preference.themeSchema.dark;
       }
       // 同步配置
-      this.updateTerminalPreference();
+      await this.updateTerminalPreference('darkTheme', darkTheme);
     },
 
     // 修改显示配置
-    changeDisplaySetting(displaySetting: TerminalDisplaySetting) {
+    async changeDisplaySetting(displaySetting: TerminalDisplaySetting) {
       this.preference.displaySetting = displaySetting;
       // 同步配置
-      this.updateTerminalPreference();
+      await this.updateTerminalPreference('displaySetting', displaySetting);
     },
 
     // 选择终端主题
-    changeThemeSchema(themeSchema: TerminalThemeSchema) {
+    async changeThemeSchema(themeSchema: TerminalThemeSchema) {
       this.preference.themeSchema = themeSchema;
       // 切换主题配色
       if (this.preference.darkTheme === DarkTheme.AUTO) {
         this.isDarkTheme = themeSchema.dark;
       }
       // 同步配置
-      this.updateTerminalPreference();
+      await this.updateTerminalPreference('themeSchema', themeSchema);
     },
 
     // 切换新建连接类型
-    changeNewConnectionType(newConnectionType: string) {
+    async changeNewConnectionType(newConnectionType: string) {
       this.preference.newConnectionType = newConnectionType;
       // 同步配置
-      this.updateTerminalPreference();
+      await this.updateTerminalPreference('newConnectionType', newConnectionType);
     },
 
     // 更新终端偏好-防抖
-    updateTerminalPreference() {
-      // 初始化函数
-      if (!this.updateTerminalPreferenceFn) {
-        this.updateTerminalPreferenceFn = useDebounceFn(async () => {
-          try {
-            // 修改配置
-            await updatePreferencePartial({
-              type: 'TERMINAL',
-              config: this.preference
-            });
-          } catch (e) {
-            Message.error('同步失败');
-          }
-        }, 1500);
+    async updateTerminalPreference(item: string, value: any) {
+      try {
+        // 修改配置
+        await updatePreference({
+          type: 'TERMINAL',
+          item,
+          value
+        });
+      } catch (e) {
+        Message.error('同步失败');
       }
-      // 更新
-      this.updateTerminalPreferenceFn();
     }
-
   },
+
 });

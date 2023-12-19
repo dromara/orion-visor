@@ -38,8 +38,12 @@ public class PreferenceDO extends BaseDO {
     @TableField("type")
     private String type;
 
-    @Schema(description = "偏好配置")
-    @TableField("config")
-    private String config;
+    @Schema(description = "配置项")
+    @TableField("item")
+    private String item;
+
+    @Schema(description = "配置值")
+    @TableField("value")
+    private String value;
 
 }

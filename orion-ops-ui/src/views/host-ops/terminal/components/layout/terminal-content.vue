@@ -10,7 +10,7 @@
           <!-- 新建连接 -->
           <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
           <!-- 显示设置 -->
-          <terminal-view-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
+          <terminal-view-setting v-else-if="tab.key === InnerTabs.VIEW_SETTING.key" />
           <span v-else>
             {{ tab.key }}
             {{ tab.title }}

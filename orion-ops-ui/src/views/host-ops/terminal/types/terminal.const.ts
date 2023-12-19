@@ -36,9 +36,9 @@ export const InnerTabs = {
     title: '快捷键设置',
     type: TabType.SETTING
   },
-  THEME_SETTING: {
-    key: 'themeSetting',
-    title: '主题设置',
+  VIEW_SETTING: {
+    key: 'viewSetting',
+    title: '外观设置',
     type: TabType.SETTING
   },
 };

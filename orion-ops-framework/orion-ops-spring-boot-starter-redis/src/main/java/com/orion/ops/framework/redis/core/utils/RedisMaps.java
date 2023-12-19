@@ -517,7 +517,7 @@ public class RedisMaps extends RedisUtils {
      * @param <V>   V
      * @return entity
      */
-    public static <K, V> Map<String, V> entitiesJson(String key, Class<V> clazz) {
+    public static <V> Map<String, V> entitiesJson(String key, Class<V> clazz) {
         return entitiesJson(key, Function.identity(), clazz);
     }
 

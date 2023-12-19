@@ -12,12 +12,13 @@
         <result column="deleted" property="deleted"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
-        <result column="config" property="config"/>
+        <result column="item" property="item"/>
+        <result column="value" property="value"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, type, config, create_time, update_time, creator, updater, deleted
+        id, user_id, type, item, value, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

@@ -6,12 +6,12 @@
         主题设置
       </h3>
       <!-- 暗色选择 -->
-      <a-radio-group :default-value="preference.darkTheme"
+      <a-radio-group v-model="preference.darkTheme"
                      class="usn"
                      size="mini"
                      type="button"
-                     @change="changeDarkTheme"
-                     :options="toOptions(darkThemeKey)">
+                     :options="toOptions(darkThemeKey)"
+                     @change="changeDarkTheme">
       </a-radio-group>
     </div>
     <!-- 内容区域 -->

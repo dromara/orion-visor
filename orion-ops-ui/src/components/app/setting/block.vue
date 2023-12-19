@@ -24,8 +24,7 @@
   import type { SelectOption } from '@arco-design/web-vue/es/select/interface';
   import { useAppStore } from '@/store';
   import FormWrapper from './form-wrapper.vue';
-  import { updatePreferencePartial } from '@/api/user/preference';
-  import { Message } from '@arco-design/web-vue';
+  import { updatePreference } from '@/api/user/preference';
 
   interface OptionsProps {
     name: string;
@@ -61,20 +60,15 @@
       });
     }
     // 修改配置
-    const updateConfig = { [key]: value };
-    appStore.updateSettings(updateConfig);
+    appStore.updateSettings({ [key]: value });
     // 同步偏好
-    Message.clear();
-    const loading = Message.loading('同步中...');
     try {
-      await updatePreferencePartial({
+      await updatePreference({
         type: 'SYSTEM',
-        config: updateConfig
+        item: key,
+        value
       });
-      Message.success('同步成功');
     } catch (e) {
-    } finally {
-      loading.close();
     }
   };
 </script>

@@ -5,8 +5,8 @@ Authorization: {{token}}
 
 {
   "type": "SYSTEM",
-  "config": {
-  }
+  "item": "",
+  "value": ""
 }
 
 
