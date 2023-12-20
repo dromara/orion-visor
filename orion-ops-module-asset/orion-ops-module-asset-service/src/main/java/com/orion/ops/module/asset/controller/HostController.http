@@ -53,15 +53,4 @@ DELETE {{baseUrl}}/asset/host/delete?id=1
 Authorization: {{token}}
 
 
-### 更新主机别名
-PUT {{baseUrl}}/asset/host/update-alias
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": 1,
-  "name": "alias"
-}
-
-
 ###

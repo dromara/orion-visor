@@ -33,7 +33,7 @@
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
-  import { getHostConfigAll } from '@/api/asset/host';
+  import { getHostConfigList } from '@/api/asset/host-config';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys as sshDictKeys } from './ssh/types/const';
   import SshConfigForm from './ssh/ssh-config-form.vue';
@@ -57,7 +57,7 @@
       const dictStore = useDictStore();
       await dictStore.loadKeys([...sshDictKeys]);
       // 加载配置
-      const { data } = await getHostConfigAll({ hostId: record.value.id });
+      const { data } = await getHostConfigList(record.value.id);
       data.forEach(s => {
         config.value[s.type] = s;
       });

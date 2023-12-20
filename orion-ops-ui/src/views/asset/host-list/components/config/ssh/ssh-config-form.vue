@@ -141,7 +141,7 @@
   import type { FieldRule } from '@arco-design/web-vue';
   import type { HostSshConfig } from './types/const';
   import { reactive, ref, watch } from 'vue';
-  import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host';
+  import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host-config';
   import { authTypeKey, AuthType } from './types/const';
   import rules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';

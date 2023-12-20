@@ -1,0 +1,11 @@
+### 修改主机别名
+PUT {{baseUrl}}/asset/host-extra/update-alias
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": 1,
+  "name": "alias"
+}
+
+###

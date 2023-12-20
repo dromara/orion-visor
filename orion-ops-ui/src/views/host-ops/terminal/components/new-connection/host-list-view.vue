@@ -168,7 +168,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { ref, nextTick } from 'vue';
-  import { updateHostAlias } from '@/api/asset/host';
+  import { updateHostAlias } from '@/api/asset/host-extra';
 
   const props = defineProps<{
     hostList: Array<HostQueryResponse>,

@@ -69,7 +69,7 @@ public class HostConfigServiceImpl implements HostConfigService {
     }
 
     @Override
-    public List<HostConfigVO> getHostConfig(Long hostId) {
+    public List<HostConfigVO> getHostConfigList(Long hostId) {
         List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostId(hostId);
         if (configs.isEmpty()) {
             // 初始化 兜底

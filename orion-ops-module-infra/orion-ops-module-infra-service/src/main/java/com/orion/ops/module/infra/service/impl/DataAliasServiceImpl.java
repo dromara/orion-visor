@@ -4,7 +4,7 @@ import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
-import com.orion.ops.module.infra.constant.DataExtraItemConst;
+import com.orion.ops.module.infra.constant.DataExtraItems;
 import com.orion.ops.module.infra.define.cache.DataExtraCacheKeyDefine;
 import com.orion.ops.module.infra.entity.request.data.DataAliasUpdateRequest;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
@@ -41,7 +41,7 @@ public class DataAliasServiceImpl implements DataAliasService {
         update.setUserId(userId);
         update.setRelId(request.getRelId());
         update.setType(type);
-        update.setItem(DataExtraItemConst.ALIAS);
+        update.setItem(DataExtraItems.ALIAS);
         update.setValue(request.getAlias());
         Integer effect = dataExtraService.updateExtraItem(update);
         // 删除缓存
@@ -64,7 +64,7 @@ public class DataAliasServiceImpl implements DataAliasService {
             DataExtraQueryRequest request = DataExtraQueryRequest.builder()
                     .userId(userId)
                     .type(type)
-                    .item(DataExtraItemConst.ALIAS)
+                    .item(DataExtraItems.ALIAS)
                     .build();
             Map<Long, String> extras = dataExtraService.getExtraItemList(request);
             entities = Maps.map(extras, String::valueOf, Refs::unrefToString);

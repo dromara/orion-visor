@@ -1,3 +1,5 @@
+-- replace regexp 'AUTO_INCREMENT = .*' to 'AUTO_INCREMENT = 1' --
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -76,7 +78,8 @@ CREATE TABLE `data_extra`
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `rel_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '数据id',
     `type`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '数据类型',
-    `extra_info`  json                                                         NULL COMMENT '额外信息',
+    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '拓展项',
+    `value`       json                                                         NULL COMMENT '拓展值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -88,7 +91,7 @@ CREATE TABLE `data_extra`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '数据推展信息表'
+  COLLATE = utf8mb4_general_ci COMMENT = '数据拓展信息表'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -110,7 +113,7 @@ CREATE TABLE `data_group`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_type` (`type`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 29
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '数据分组'
   ROW_FORMAT = Dynamic;
@@ -134,7 +137,7 @@ CREATE TABLE `data_group_rel`
     INDEX `idx_group_rel` (`group_id`, `rel_id`) USING BTREE,
     INDEX `idx_type` (`type`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 114
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '数据分组关联'
   ROW_FORMAT = Dynamic;
@@ -160,7 +163,7 @@ CREATE TABLE `data_permission`
     INDEX `idx_role_id` (`role_id`) USING BTREE,
     INDEX `idx_type_rel` (`type`, `rel_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 166
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci
   ROW_FORMAT = Dynamic;
@@ -184,7 +187,7 @@ CREATE TABLE `dict_key`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_key` (`key_name`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 26
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '字典配置项'
   ROW_FORMAT = Dynamic;
@@ -210,7 +213,7 @@ CREATE TABLE `dict_value`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_key_id` (`key_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 173
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '字典配置值'
   ROW_FORMAT = Dynamic;
@@ -233,7 +236,7 @@ CREATE TABLE `favorite`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_type_user` (`type`, `user_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 92
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '收藏关联'
   ROW_FORMAT = Dynamic;
@@ -254,7 +257,7 @@ CREATE TABLE `history_value`
     `deleted`      tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 26
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '历史归档表'
   ROW_FORMAT = Dynamic;
@@ -276,7 +279,7 @@ CREATE TABLE `host`
     `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 8
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '主机'
   ROW_FORMAT = Dynamic;
@@ -301,7 +304,7 @@ CREATE TABLE `host_config`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_host_type` (`host_id`, `type`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 14
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '主机配置'
   ROW_FORMAT = Dynamic;
@@ -324,7 +327,7 @@ CREATE TABLE `host_identity`
     `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 6
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '主机身份'
   ROW_FORMAT = Dynamic;
@@ -347,7 +350,7 @@ CREATE TABLE `host_key`
     `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 18
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '主机秘钥'
   ROW_FORMAT = Dynamic;
@@ -381,7 +384,7 @@ CREATE TABLE `operator_log`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_user_id` (`user_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 759
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '操作日志'
   ROW_FORMAT = Dynamic;
@@ -394,8 +397,9 @@ CREATE TABLE `preference`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
-    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '类型',
-    `config`      json                                                         NULL COMMENT '偏好配置',
+    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '偏好类型',
+    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置项',
+    `value`       json                                                         NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -404,7 +408,7 @@ CREATE TABLE `preference`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_user_type` (`user_id`, `type`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 9
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '用户偏好'
   ROW_FORMAT = Dynamic;
@@ -435,7 +439,7 @@ CREATE TABLE `system_menu`
     `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 147
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表'
   ROW_FORMAT = Dynamic;
@@ -457,7 +461,7 @@ CREATE TABLE `system_role`
     `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 8
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '角色表'
   ROW_FORMAT = Dynamic;
@@ -479,7 +483,7 @@ CREATE TABLE `system_role_menu`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_role` (`role_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 72
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '角色菜单表'
   ROW_FORMAT = Dynamic;
@@ -507,7 +511,7 @@ CREATE TABLE `system_user`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_username` (`username`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 15
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户表'
   ROW_FORMAT = Dynamic;
@@ -529,7 +533,7 @@ CREATE TABLE `system_user_role`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_user` (`user_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 48
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '用户角色关联表'
   ROW_FORMAT = Dynamic;
@@ -551,7 +555,7 @@ CREATE TABLE `tag`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_type` (`type`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 31
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '标签枚举'
   ROW_FORMAT = Dynamic;
@@ -576,7 +580,7 @@ CREATE TABLE `tag_rel`
     INDEX `idx_tag` (`tag_id`) USING BTREE,
     INDEX `idx_type_rel` (`tag_type`, `rel_id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 219
+  AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '标签关联'
   ROW_FORMAT = Dynamic;

@@ -41,7 +41,7 @@ public interface HostConfigService {
      * @param hostId hostId
      * @return 配置
      */
-    List<HostConfigVO> getHostConfig(Long hostId);
+    List<HostConfigVO> getHostConfigList(Long hostId);
 
     /**
      * 更新配置

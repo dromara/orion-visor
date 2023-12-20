@@ -7,7 +7,7 @@ package com.orion.ops.module.infra.constant;
  * @version 1.0.0
  * @since 2023/12/19 22:26
  */
-public interface DataExtraItemConst {
+public interface DataExtraItems {
 
     String ALIAS = "alias";
 

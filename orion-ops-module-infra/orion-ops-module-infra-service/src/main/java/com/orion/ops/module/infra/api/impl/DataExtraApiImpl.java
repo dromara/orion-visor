@@ -48,8 +48,7 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public String getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.valid(dto);
-        Valid.allNotNull(dto.getRelId(), dto.getItem());
+        Valid.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
         // 查询
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
@@ -58,8 +57,7 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public Map<Long, String> getExtraItemList(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.valid(dto);
-        Valid.allNotNull(dto.getRelIdList(), dto.getItem());
+        Valid.allNotNull(dto.getUserId(), dto.getRelIdList(), dto.getItem());
         // 查询
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());

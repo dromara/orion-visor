@@ -56,36 +56,6 @@ export interface HostQueryResponse extends TableData {
 }
 
 /**
- * 主机配置请求
- */
-export interface HostConfigRequest {
-  id?: number;
-  hostId?: number;
-  version?: number;
-  status?: number;
-  config?: string;
-}
-
-/**
- * 主机配置查询响应
- */
-export interface HostConfigQueryResponse {
-  id: number;
-  type: string;
-  version: number;
-  status: number;
-  config: Record<string, any>;
-}
-
-/**
- * 主机别名更新请求
- */
-export interface HostAliasUpdateRequest {
-  id?: number;
-  name?: string;
-}
-
-/**
  * 创建主机
  */
 export function createHost(request: HostCreateRequest) {
@@ -125,39 +95,4 @@ export function getHostPage(request: HostQueryRequest) {
  */
 export function deleteHost(id: number) {
   return axios.delete('/asset/host/delete', { params: { id } });
-}
-
-/**
- * 修改主机别名
- */
-export function updateHostAlias(request: HostAliasUpdateRequest) {
-  return axios.put('/asset/host/update-alias', request);
-}
-
-/**
- * 查询主机配置
- */
-export function getHostConfig(params: HostConfigRequest) {
-  return axios.get<HostConfigQueryResponse>('/asset/host/get-config', { params });
-}
-
-/**
- * 查询主机配置 - 全部
- */
-export function getHostConfigAll(params: HostConfigRequest) {
-  return axios.get<Array<HostConfigQueryResponse>>('/asset/host/get-config-all', { params });
-}
-
-/**
- * 更新主机配置
- */
-export function updateHostConfig(request: HostConfigRequest) {
-  return axios.put('/asset/host/update-config', request);
-}
-
-/**
- * 更新主机配置状态
- */
-export function updateHostConfigStatus(request: HostConfigRequest) {
-  return axios.put('/asset/host/update-config-status', request);
 }

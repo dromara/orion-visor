@@ -1,7 +1,10 @@
 package com.orion.ops.module.infra.entity.dto.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -23,7 +26,6 @@ public class DataExtraQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NonNull
     @Schema(description = "用户id")
     private Long userId;
 
