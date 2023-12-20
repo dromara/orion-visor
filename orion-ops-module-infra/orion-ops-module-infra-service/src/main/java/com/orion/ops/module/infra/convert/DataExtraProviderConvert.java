@@ -3,9 +3,9 @@ package com.orion.ops.module.infra.convert;
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataExtraUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataExtraSetDTO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
-import com.orion.ops.module.infra.entity.request.data.DataExtraUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataExtraSetRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -23,7 +23,7 @@ public interface DataExtraProviderConvert {
 
     DataExtraQueryRequest to(DataExtraQueryDTO query);
 
-    DataExtraUpdateRequest to(DataExtraUpdateDTO update);
+    DataExtraSetRequest to(DataExtraSetDTO update);
 
     DataExtraDTO to(DataExtraDO domain);
 

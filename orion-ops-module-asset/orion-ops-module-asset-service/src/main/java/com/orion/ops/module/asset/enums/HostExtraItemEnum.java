@@ -1,44 +1,43 @@
 package com.orion.ops.module.asset.enums;
 
-import com.orion.ops.framework.common.enums.EnableStatus;
 import com.orion.ops.framework.common.handler.data.GenericsDataDefinition;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
-import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
-import com.orion.ops.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
+import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
+import com.orion.ops.module.asset.handler.host.extra.strategy.HostSshExtraStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 主机配置类型枚举
+ * 主机额外配置项枚举
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/11 14:37
+ * @since 2023/12/20 22:48
  */
 @Getter
 @AllArgsConstructor
-public enum HostConfigTypeEnum implements GenericsDataDefinition {
+public enum HostExtraItemEnum implements GenericsDataDefinition {
 
     /**
-     * SSH 配置
+     * SSH 额外配置
      */
-    SSH(HostSshConfigModel.class, HostSshConfigStrategy.class, EnableStatus.ENABLED.getValue()),
+    SSH("ssh", HostSshExtraModel.class, HostSshExtraStrategy.class),
 
     ;
+
+    private final String item;
 
     private final Class<? extends GenericsDataModel> type;
 
     private final Class<? extends MapDataStrategy<? extends GenericsDataModel>> strategy;
 
-    private final Integer defaultStatus;
-
-    public static HostConfigTypeEnum of(String type) {
+    public static HostExtraItemEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (HostConfigTypeEnum value : values()) {
-            if (value.name().equals(type)) {
+        for (HostExtraItemEnum value : values()) {
+            if (value.item.equals(type)) {
                 return value;
             }
         }

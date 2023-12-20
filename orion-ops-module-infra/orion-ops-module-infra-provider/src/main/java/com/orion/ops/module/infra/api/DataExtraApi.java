@@ -2,7 +2,7 @@ package com.orion.ops.module.infra.api;
 
 import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataExtraUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataExtraSetDTO;
 import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 
 import java.util.List;
@@ -18,20 +18,38 @@ import java.util.Map;
 public interface DataExtraApi {
 
     /**
-     * 更新数据拓展信息
+     * 更新数据拓展信息 不存在则新增
      *
      * @param type type
      * @param dto  dto
      * @return effect
      */
-    Integer updateExtraItem(DataExtraUpdateDTO dto, DataExtraTypeEnum type);
+    Integer setExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type);
+
+    /**
+     * 新增数据拓展信息
+     *
+     * @param dto  dto
+     * @param type type
+     * @return id
+     */
+    Long addExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type);
+
+    /**
+     * 更新数据拓展信息
+     *
+     * @param id    id
+     * @param value value
+     * @return effect
+     */
+    Integer updateExtraValue(Long id, String value);
 
     /**
      * 批量更新数据拓展信息
      *
      * @param map map
      */
-    void batchUpdate(Map<Long, Object> map);
+    void batchUpdateExtraValue(Map<Long, String> map);
 
     /**
      * 查询额外配置项
@@ -40,7 +58,7 @@ public interface DataExtraApi {
      * @param dto  dto
      * @return item
      */
-    String getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+    String getExtraValue(DataExtraQueryDTO dto, DataExtraTypeEnum type);
 
     /**
      * 查询额外配置项
@@ -49,7 +67,7 @@ public interface DataExtraApi {
      * @param type type
      * @return item
      */
-    Map<Long, String> getExtraItemList(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+    Map<Long, String> getExtraItemValues(DataExtraQueryDTO dto, DataExtraTypeEnum type);
 
     /**
      * 查询额外配置
@@ -58,7 +76,16 @@ public interface DataExtraApi {
      * @param type type
      * @return effect
      */
-    List<DataExtraDTO> getExtraList(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+    DataExtraDTO getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+
+    /**
+     * 查询额外配置
+     *
+     * @param dto  dto
+     * @param type type
+     * @return effect
+     */
+    List<DataExtraDTO> getExtraItems(DataExtraQueryDTO dto, DataExtraTypeEnum type);
 
     /**
      * 通过 relId 删除

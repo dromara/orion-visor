@@ -1,13 +1,13 @@
 package com.orion.ops.module.infra.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.infra.dao.DataExtraDAO;
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
-import com.orion.ops.module.infra.entity.request.data.DataExtraUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataExtraSetRequest;
 import com.orion.ops.module.infra.service.DataExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,41 +32,49 @@ public class DataExtraServiceImpl implements DataExtraService {
     private DataExtraDAO dataExtraDAO;
 
     @Override
-    public Integer updateExtraItem(DataExtraUpdateRequest request) {
-        Long userId = request.getUserId();
-        Long relId = request.getRelId();
-        String type = request.getType();
-        String item = request.getItem();
-        Object value = request.getValue();
+    public Integer setExtraItem(DataExtraSetRequest request) {
         // 查询配置是否存在
         DataExtraDO extraItem = dataExtraDAO.of()
                 .createWrapper()
-                .eq(DataExtraDO::getUserId, userId)
-                .eq(DataExtraDO::getRelId, relId)
-                .eq(DataExtraDO::getType, type)
-                .eq(DataExtraDO::getItem, item)
+                .eq(DataExtraDO::getUserId, request.getUserId())
+                .eq(DataExtraDO::getRelId, request.getRelId())
+                .eq(DataExtraDO::getType, request.getType())
+                .eq(DataExtraDO::getItem, request.getItem())
                 .then()
                 .getOne();
         if (extraItem == null) {
             // 插入
-            DataExtraDO insert = new DataExtraDO();
-            insert.setUserId(userId);
-            insert.setRelId(relId);
-            insert.setType(type);
-            insert.setItem(item);
-            insert.setValue(JSON.toJSONString(value));
-            return dataExtraDAO.insert(insert);
+            this.addExtraItem(request);
+            return Const.N_1;
         } else {
             // 修改
-            DataExtraDO update = new DataExtraDO();
-            update.setId(extraItem.getId());
-            update.setValue(JSON.toJSONString(value));
-            return dataExtraDAO.updateById(update);
+            return this.updateExtraValue(extraItem.getId(), request.getValue());
         }
     }
 
     @Override
-    public void batchUpdate(Map<Long, Object> map) {
+    public Long addExtraItem(DataExtraSetRequest request) {
+        // 插入
+        DataExtraDO insert = new DataExtraDO();
+        insert.setUserId(request.getUserId());
+        insert.setRelId(request.getRelId());
+        insert.setType(request.getType());
+        insert.setItem(request.getItem());
+        insert.setValue(request.getValue());
+        dataExtraDAO.insert(insert);
+        return insert.getId();
+    }
+
+    @Override
+    public Integer updateExtraValue(Long id, String value) {
+        DataExtraDO update = new DataExtraDO();
+        update.setId(id);
+        update.setValue(value);
+        return dataExtraDAO.updateById(update);
+    }
+
+    @Override
+    public void batchUpdateExtraValue(Map<Long, String> map) {
         if (Maps.isEmpty(map)) {
             return;
         }
@@ -76,14 +84,14 @@ public class DataExtraServiceImpl implements DataExtraService {
                 .map(s -> {
                     DataExtraDO extra = new DataExtraDO();
                     extra.setId(s.getKey());
-                    extra.setValue(JSON.toJSONString(s.getValue()));
+                    extra.setValue(s.getValue());
                     return extra;
                 }).collect(Collectors.toList());
         dataExtraDAO.updateBatch(list);
     }
 
     @Override
-    public String getExtraItem(DataExtraQueryRequest request) {
+    public String getExtraItemValue(DataExtraQueryRequest request) {
         return dataExtraDAO.of()
                 .wrapper(this.buildWrapper(request))
                 .optionalOne()
@@ -92,7 +100,7 @@ public class DataExtraServiceImpl implements DataExtraService {
     }
 
     @Override
-    public Map<Long, String> getExtraItemList(DataExtraQueryRequest request) {
+    public Map<Long, String> getExtraItemValues(DataExtraQueryRequest request) {
         return dataExtraDAO.of()
                 .wrapper(this.buildWrapper(request))
                 .stream()
@@ -103,7 +111,14 @@ public class DataExtraServiceImpl implements DataExtraService {
     }
 
     @Override
-    public List<DataExtraDO> getExtraList(DataExtraQueryRequest request) {
+    public DataExtraDO getExtraItem(DataExtraQueryRequest request) {
+        return dataExtraDAO.of()
+                .wrapper(this.buildWrapper(request))
+                .getOne();
+    }
+
+    @Override
+    public List<DataExtraDO> getExtraItems(DataExtraQueryRequest request) {
         return dataExtraDAO.of()
                 .wrapper(this.buildWrapper(request))
                 .list();

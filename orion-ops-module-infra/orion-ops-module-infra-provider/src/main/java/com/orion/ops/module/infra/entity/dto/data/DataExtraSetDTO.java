@@ -22,8 +22,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "DataExtraUpdateDTO", description = "数据拓展信息 更新请求业务对象")
-public class DataExtraUpdateDTO implements Serializable {
+@Schema(name = "DataExtraSetDTO", description = "数据拓展信息 更新请求业务对象")
+public class DataExtraSetDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,11 +37,11 @@ public class DataExtraUpdateDTO implements Serializable {
 
     @NotBlank
     @Size(max = 32)
-    @Schema(description = "拓展项")
+    @Schema(description = "配置项")
     private String item;
 
     @NotBlank
-    @Schema(description = "拓展值")
+    @Schema(description = "配置值")
     private String value;
 
 }

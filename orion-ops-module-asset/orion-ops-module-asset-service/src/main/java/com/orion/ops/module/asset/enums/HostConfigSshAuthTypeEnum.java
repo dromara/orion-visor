@@ -1,13 +1,13 @@
 package com.orion.ops.module.asset.enums;
 
 /**
- * 主机验证类型
+ * 主机验证类型 - ssh
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/9/21 19:01
  */
-public enum HostAuthTypeEnum {
+public enum HostConfigSshAuthTypeEnum {
 
     /**
      * 密码验证
@@ -26,11 +26,11 @@ public enum HostAuthTypeEnum {
 
     ;
 
-    public static HostAuthTypeEnum of(String type) {
+    public static HostConfigSshAuthTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (HostAuthTypeEnum value : values()) {
+        for (HostConfigSshAuthTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }

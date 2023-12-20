@@ -9,43 +9,60 @@ import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
  * @version 1.0.0
  * @since 2023/12/20 22:09
  */
-public interface GenericsDataStrategy<Config extends GenericsDataModel, View> {
+public interface GenericsDataStrategy<Model extends GenericsDataModel, View> {
 
     /**
      * 获取默认值
      *
      * @return 默认值
      */
-    Config getDefault();
+    Model getDefault();
 
     /**
      * 更新填充
      *
-     * @param before 修改前配置
-     * @param after  修改后配置
+     * @param beforeModel 修改前的配置
+     * @param afterModel  修改后的配置
      */
-    void updateFill(Config before, Config after);
+    void updateFill(Model beforeModel, Model afterModel);
 
     /**
      * 预校验参数
      *
-     * @param config config
+     * @param model model
      */
-    void preValidConfig(Config config);
+    void preValid(Model model);
 
     /**
      * 校验参数
      *
-     * @param config config
+     * @param model model
      */
-    void validConfig(Config config);
+    void valid(Model model);
+
+    /**
+     * 执行完整验证链
+     * <p>
+     * preValid > updateFill > preValid
+     *
+     * @param beforeModel beforeModel
+     * @param afterModel  afterModel
+     */
+    default void doValidChain(Model beforeModel, Model afterModel) {
+        // 预校验参数
+        this.preValid(afterModel);
+        // 更新填充
+        this.updateFill(beforeModel, afterModel);
+        // 校验参数
+        this.valid(afterModel);
+    }
 
     /**
      * 转为视图配置
      *
-     * @param config config
+     * @param model model
      * @return 视图配置
      */
-    View toView(String config);
+    View toView(String model);
 
 }

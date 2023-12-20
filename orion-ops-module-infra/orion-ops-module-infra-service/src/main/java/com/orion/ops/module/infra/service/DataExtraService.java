@@ -2,7 +2,7 @@ package com.orion.ops.module.infra.service;
 
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
-import com.orion.ops.module.infra.entity.request.data.DataExtraUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataExtraSetRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -17,19 +17,36 @@ import java.util.Map;
 public interface DataExtraService {
 
     /**
-     * 更新数据拓展信息
+     * 更新数据拓展信息 不存在则新增
      *
      * @param request request
      * @return effect
      */
-    Integer updateExtraItem(DataExtraUpdateRequest request);
+    Integer setExtraItem(DataExtraSetRequest request);
+
+    /**
+     * 新增数据拓展信息
+     *
+     * @param request request
+     * @return id
+     */
+    Long addExtraItem(DataExtraSetRequest request);
+
+    /**
+     * 更新数据拓展信息
+     *
+     * @param id    id
+     * @param value value
+     * @return effect
+     */
+    Integer updateExtraValue(Long id, String value);
 
     /**
      * 批量更新数据拓展信息
      *
      * @param map map
      */
-    void batchUpdate(Map<Long, Object> map);
+    void batchUpdateExtraValue(Map<Long, String> map);
 
     /**
      * 查询额外配置项
@@ -37,7 +54,7 @@ public interface DataExtraService {
      * @param request request
      * @return item
      */
-    String getExtraItem(DataExtraQueryRequest request);
+    String getExtraItemValue(DataExtraQueryRequest request);
 
     /**
      * 查询额外配置项
@@ -45,7 +62,7 @@ public interface DataExtraService {
      * @param request request
      * @return item
      */
-    Map<Long, String> getExtraItemList(DataExtraQueryRequest request);
+    Map<Long, String> getExtraItemValues(DataExtraQueryRequest request);
 
     /**
      * 查询额外配置
@@ -53,7 +70,15 @@ public interface DataExtraService {
      * @param request request
      * @return rows
      */
-    List<DataExtraDO> getExtraList(DataExtraQueryRequest request);
+    DataExtraDO getExtraItem(DataExtraQueryRequest request);
+
+    /**
+     * 查询额外配置
+     *
+     * @param request request
+     * @return rows
+     */
+    List<DataExtraDO> getExtraItems(DataExtraQueryRequest request);
 
     /**
      * 通过 userId 删除

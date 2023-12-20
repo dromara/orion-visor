@@ -8,7 +8,7 @@ import com.orion.ops.module.infra.constant.DataExtraItems;
 import com.orion.ops.module.infra.define.cache.DataExtraCacheKeyDefine;
 import com.orion.ops.module.infra.entity.request.data.DataAliasUpdateRequest;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
-import com.orion.ops.module.infra.entity.request.data.DataExtraUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataExtraSetRequest;
 import com.orion.ops.module.infra.service.DataAliasService;
 import com.orion.ops.module.infra.service.DataExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +37,13 @@ public class DataAliasServiceImpl implements DataAliasService {
         Long userId = request.getUserId();
         String type = request.getType();
         // 更新
-        DataExtraUpdateRequest update = new DataExtraUpdateRequest();
+        DataExtraSetRequest update = new DataExtraSetRequest();
         update.setUserId(userId);
         update.setRelId(request.getRelId());
         update.setType(type);
         update.setItem(DataExtraItems.ALIAS);
         update.setValue(Refs.json(request.getAlias()));
-        Integer effect = dataExtraService.updateExtraItem(update);
+        Integer effect = dataExtraService.setExtraItem(update);
         // 删除缓存
         RedisMaps.delete(DataExtraCacheKeyDefine.DATA_ALIAS.format(userId, type));
         return effect;
@@ -66,7 +66,7 @@ public class DataAliasServiceImpl implements DataAliasService {
                     .type(type)
                     .item(DataExtraItems.ALIAS)
                     .build();
-            Map<Long, String> extras = dataExtraService.getExtraItemList(request);
+            Map<Long, String> extras = dataExtraService.getExtraItemValues(request);
             entities = Maps.map(extras, String::valueOf, Refs::unrefToString);
             // 设置屏障 防止穿透
             CacheBarriers.MAP.check(entities);

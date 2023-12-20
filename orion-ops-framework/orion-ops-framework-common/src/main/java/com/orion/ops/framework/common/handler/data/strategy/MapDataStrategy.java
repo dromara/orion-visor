@@ -1,5 +1,6 @@
 package com.orion.ops.framework.common.handler.data.strategy;
 
+import com.alibaba.fastjson.JSONObject;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 
 import java.util.Map;
@@ -11,6 +12,11 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2023/12/20 22:11
  */
-public interface MapDataStrategy<Config extends GenericsDataModel> extends GenericsDataStrategy<Config, Map<String, Object>> {
+public interface MapDataStrategy<Model extends GenericsDataModel> extends GenericsDataStrategy<Model, Map<String, Object>> {
+
+    @Override
+    default Map<String, Object> toView(String model) {
+        return JSONObject.parseObject(model);
+    }
 
 }

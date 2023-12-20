@@ -44,6 +44,8 @@ public class HostConfigServiceImpl implements HostConfigService {
     @Resource
     private HostConfigDAO hostConfigDAO;
 
+    // FIXME 动态初始化
+
     @Override
     public HostConfigVO getHostConfig(Long hostId, String type) {
         HostConfigTypeEnum configType = Valid.valid(HostConfigTypeEnum::of, type);
@@ -53,7 +55,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         // 转换
         HostConfigVO vo = HostConfigConvert.MAPPER.to(config);
         // 获取配置
-        Map<String, Object> configMap = configType.getStrategy().toView(config.getConfig());
+        Map<String, Object> configMap = configType.getStrategyBean().toView(config.getConfig());
         vo.setConfig(configMap);
         return vo;
     }
@@ -82,7 +84,7 @@ public class HostConfigServiceImpl implements HostConfigService {
             HostConfigVO vo = HostConfigConvert.MAPPER.to(s);
             // 获取配置
             Map<String, Object> config = HostConfigTypeEnum.of(s.getType())
-                    .getStrategy()
+                    .getStrategyBean()
                     .toView(s.getConfig());
             vo.setConfig(config);
             return vo;
@@ -96,7 +98,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         HostConfigDO record = hostConfigDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
         HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, record.getType());
-        GenericsDataModel config = JSON.parseObject(request.getConfig(), type.getType());
+        GenericsDataModel newConfig = type.parse(request.getConfig());
         // 查询主机
         HostDO host = hostDAO.selectById(record.getHostId());
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
@@ -106,19 +108,15 @@ public class HostConfigServiceImpl implements HostConfigService {
         OperatorLogs.add(OperatorLogs.TYPE, type.name());
         // 检查版本
         Valid.eq(record.getVersion(), request.getVersion(), ErrorMessage.DATA_MODIFIED);
-        MapDataStrategy<GenericsDataModel> strategy = type.getStrategy();
-        // 预校验参数
-        strategy.preValidConfig(config);
-        // 更新填充
-        GenericsDataModel beforeConfig = JSON.parseObject(record.getConfig(), type.getType());
-        strategy.updateFill(beforeConfig, config);
-        // 检查参数
-        strategy.validConfig(config);
+        MapDataStrategy<GenericsDataModel> strategy = type.getStrategyBean();
+        GenericsDataModel beforeConfig = type.parse(record.getConfig());
+        // 更新前校验
+        strategy.doValidChain(beforeConfig, newConfig);
         // 修改配置
         HostConfigDO update = new HostConfigDO();
         update.setId(id);
         update.setVersion(request.getVersion());
-        update.setConfig(config.serial());
+        update.setConfig(newConfig.serial());
         int effect = hostConfigDAO.updateById(update);
         Valid.version(effect);
         return update.getVersion();
@@ -158,7 +156,7 @@ public class HostConfigServiceImpl implements HostConfigService {
                     insert.setHostId(hostId);
                     insert.setType(s.name());
                     insert.setStatus(s.getDefaultStatus());
-                    insert.setConfig(s.getStrategy().getDefault().serial());
+                    insert.setConfig(s.getStrategyBean().getDefault().serial());
                     insert.setVersion(Const.DEFAULT_VERSION);
                     return insert;
                 }).collect(Collectors.toList());

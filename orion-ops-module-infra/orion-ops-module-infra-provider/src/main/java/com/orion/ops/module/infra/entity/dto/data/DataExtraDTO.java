@@ -36,10 +36,10 @@ public class DataExtraDTO implements Serializable {
     @Schema(description = "数据类型")
     private String type;
 
-    @Schema(description = "拓展项")
+    @Schema(description = "配置项")
     private String item;
 
-    @Schema(description = "拓展值")
+    @Schema(description = "配置值")
     private String value;
 
 }

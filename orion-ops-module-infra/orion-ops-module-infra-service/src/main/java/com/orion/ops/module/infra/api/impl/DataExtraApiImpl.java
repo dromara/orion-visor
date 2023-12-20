@@ -3,11 +3,12 @@ package com.orion.ops.module.infra.api.impl;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.DataExtraApi;
 import com.orion.ops.module.infra.convert.DataExtraProviderConvert;
+import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
-import com.orion.ops.module.infra.entity.dto.data.DataExtraUpdateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataExtraSetDTO;
 import com.orion.ops.module.infra.entity.request.data.DataExtraQueryRequest;
-import com.orion.ops.module.infra.entity.request.data.DataExtraUpdateRequest;
+import com.orion.ops.module.infra.entity.request.data.DataExtraSetRequest;
 import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 import com.orion.ops.module.infra.service.DataExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,42 +34,65 @@ public class DataExtraApiImpl implements DataExtraApi {
     private DataExtraService dataExtraService;
 
     @Override
-    public Integer updateExtraItem(DataExtraUpdateDTO dto, DataExtraTypeEnum type) {
+    public Integer setExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type) {
         Valid.valid(dto);
         // 更新
-        DataExtraUpdateRequest request = DataExtraProviderConvert.MAPPER.to(dto);
+        DataExtraSetRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
-        return dataExtraService.updateExtraItem(request);
+        return dataExtraService.setExtraItem(request);
     }
 
     @Override
-    public void batchUpdate(Map<Long, Object> map) {
-        dataExtraService.batchUpdate(map);
+    public Long addExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type) {
+        Valid.valid(dto);
+        // 更新
+        DataExtraSetRequest request = DataExtraProviderConvert.MAPPER.to(dto);
+        request.setType(type.name());
+        return dataExtraService.addExtraItem(request);
     }
 
     @Override
-    public String getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
+    public Integer updateExtraValue(Long id, String value) {
+        return dataExtraService.updateExtraValue(id, value);
+    }
+
+    @Override
+    public void batchUpdateExtraValue(Map<Long, String> map) {
+        dataExtraService.batchUpdateExtraValue(map);
+    }
+
+    @Override
+    public String getExtraValue(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
         Valid.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
         // 查询
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
-        return dataExtraService.getExtraItem(request);
+        return dataExtraService.getExtraItemValue(request);
     }
 
     @Override
-    public Map<Long, String> getExtraItemList(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
+    public Map<Long, String> getExtraItemValues(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
         Valid.allNotNull(dto.getUserId(), dto.getRelIdList(), dto.getItem());
         // 查询
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
-        return dataExtraService.getExtraItemList(request);
+        return dataExtraService.getExtraItemValues(request);
     }
 
     @Override
-    public List<DataExtraDTO> getExtraList(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
+    public DataExtraDTO getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
+        Valid.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
-        return dataExtraService.getExtraList(request)
+        DataExtraDO extraItem = dataExtraService.getExtraItem(request);
+        return DataExtraProviderConvert.MAPPER.to(extraItem);
+    }
+
+    @Override
+    public List<DataExtraDTO> getExtraItems(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
+        DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
+        request.setType(type.name());
+        return dataExtraService.getExtraItems(request)
                 .stream()
                 .map(DataExtraProviderConvert.MAPPER::to)
                 .collect(Collectors.toList());

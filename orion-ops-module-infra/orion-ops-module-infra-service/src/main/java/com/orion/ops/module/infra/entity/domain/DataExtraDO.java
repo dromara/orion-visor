@@ -42,11 +42,11 @@ public class DataExtraDO extends BaseDO {
     @TableField("type")
     private String type;
 
-    @Schema(description = "拓展项")
+    @Schema(description = "配置项")
     @TableField("item")
     private String item;
 
-    @Schema(description = "拓展值")
+    @Schema(description = "配置值")
     @TableField("value")
     private String value;
 
