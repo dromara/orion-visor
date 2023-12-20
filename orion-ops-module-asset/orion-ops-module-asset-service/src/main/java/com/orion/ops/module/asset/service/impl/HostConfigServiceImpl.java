@@ -5,6 +5,8 @@ import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.enums.EnableStatus;
+import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
+import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.HostConfigConvert;
 import com.orion.ops.module.asset.dao.HostConfigDAO;
@@ -15,8 +17,6 @@ import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostConfigUpdateStatusRequest;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
-import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
-import com.orion.ops.module.asset.handler.host.config.strategy.HostConfigStrategy;
 import com.orion.ops.module.asset.service.HostConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,8 @@ public class HostConfigServiceImpl implements HostConfigService {
     }
 
     @Override
-    public <T extends HostConfigModel> T getHostConfig(Long hostId, HostConfigTypeEnum type) {
+    @SuppressWarnings("unchecked")
+    public <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type) {
         // 查询配置
         HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type.name());
         if (config == null) {
@@ -95,7 +96,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         HostConfigDO record = hostConfigDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
         HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, record.getType());
-        HostConfigModel config = JSON.parseObject(request.getConfig(), type.getType());
+        GenericsDataModel config = JSON.parseObject(request.getConfig(), type.getType());
         // 查询主机
         HostDO host = hostDAO.selectById(record.getHostId());
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
@@ -105,11 +106,11 @@ public class HostConfigServiceImpl implements HostConfigService {
         OperatorLogs.add(OperatorLogs.TYPE, type.name());
         // 检查版本
         Valid.eq(record.getVersion(), request.getVersion(), ErrorMessage.DATA_MODIFIED);
-        HostConfigStrategy<HostConfigModel> strategy = type.getStrategy();
+        MapDataStrategy<GenericsDataModel> strategy = type.getStrategy();
         // 预校验参数
         strategy.preValidConfig(config);
         // 更新填充
-        HostConfigModel beforeConfig = JSON.parseObject(record.getConfig(), type.getType());
+        GenericsDataModel beforeConfig = JSON.parseObject(record.getConfig(), type.getType());
         strategy.updateFill(beforeConfig, config);
         // 检查参数
         strategy.validConfig(config);

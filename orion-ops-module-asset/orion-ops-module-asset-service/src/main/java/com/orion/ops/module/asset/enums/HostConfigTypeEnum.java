@@ -1,12 +1,13 @@
 package com.orion.ops.module.asset.enums;
 
 import com.orion.ops.framework.common.enums.EnableStatus;
-import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
+import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
+import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
-import com.orion.ops.module.asset.handler.host.config.strategy.HostConfigStrategy;
 import com.orion.ops.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
 import com.orion.spring.SpringHolder;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * 主机配置类型枚举
@@ -25,10 +26,12 @@ public enum HostConfigTypeEnum {
 
     ;
 
-    private final Class<? extends HostConfigModel> type;
+    @Getter
+    private final Class<? extends GenericsDataModel> type;
 
-    private final Class<? extends HostConfigStrategy<? extends HostConfigModel>> strategy;
+    private final Class<? extends MapDataStrategy<? extends GenericsDataModel>> strategy;
 
+    @Getter
     private final Integer defaultStatus;
 
     public static HostConfigTypeEnum of(String type) {
@@ -43,17 +46,9 @@ public enum HostConfigTypeEnum {
         return null;
     }
 
-    public Class<? extends HostConfigModel> getType() {
-        return type;
-    }
-
     @SuppressWarnings("unchecked")
-    public <Config extends HostConfigModel, T extends HostConfigStrategy<Config>> T getStrategy() {
+    public <Config extends GenericsDataModel, T extends MapDataStrategy<Config>> T getStrategy() {
         return (T) SpringHolder.getBean(strategy);
-    }
-
-    public Integer getDefaultStatus() {
-        return defaultStatus;
     }
 
 }

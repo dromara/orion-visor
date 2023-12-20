@@ -42,7 +42,7 @@ public class DataAliasServiceImpl implements DataAliasService {
         update.setRelId(request.getRelId());
         update.setType(type);
         update.setItem(DataExtraItems.ALIAS);
-        update.setValue(request.getAlias());
+        update.setValue(Refs.json(request.getAlias()));
         Integer effect = dataExtraService.updateExtraItem(update);
         // 删除缓存
         RedisMaps.delete(DataExtraCacheKeyDefine.DATA_ALIAS.format(userId, type));

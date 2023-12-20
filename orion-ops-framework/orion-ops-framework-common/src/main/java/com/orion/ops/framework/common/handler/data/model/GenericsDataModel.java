@@ -1,15 +1,15 @@
-package com.orion.ops.module.asset.handler.host.config.model;
+package com.orion.ops.framework.common.handler.data.model;
 
 import com.alibaba.fastjson.JSON;
 
 /**
- * 主机配置父类
+ * 标准数据模型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/13 14:47
+ * @since 2023/12/20 22:07
  */
-public interface HostConfigModel {
+public interface GenericsDataModel {
 
     /**
      * 序列化

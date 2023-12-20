@@ -1,8 +1,8 @@
 package com.orion.ops.module.infra.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.function.Functions;
-import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.module.infra.dao.DataExtraDAO;
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
@@ -54,13 +54,13 @@ public class DataExtraServiceImpl implements DataExtraService {
             insert.setRelId(relId);
             insert.setType(type);
             insert.setItem(item);
-            insert.setValue(Refs.json(value));
+            insert.setValue(JSON.toJSONString(value));
             return dataExtraDAO.insert(insert);
         } else {
             // 修改
             DataExtraDO update = new DataExtraDO();
             update.setId(extraItem.getId());
-            update.setValue(Refs.json(value));
+            update.setValue(JSON.toJSONString(value));
             return dataExtraDAO.updateById(update);
         }
     }
@@ -76,7 +76,7 @@ public class DataExtraServiceImpl implements DataExtraService {
                 .map(s -> {
                     DataExtraDO extra = new DataExtraDO();
                     extra.setId(s.getKey());
-                    extra.setValue(Refs.json(s.getValue()));
+                    extra.setValue(JSON.toJSONString(s.getValue()));
                     return extra;
                 }).collect(Collectors.toList());
         dataExtraDAO.updateBatch(list);

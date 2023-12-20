@@ -7,6 +7,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
 import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
@@ -26,7 +27,7 @@ import java.util.Map;
  * @since 2023/9/19 14:26
  */
 @Component
-public class HostSshConfigStrategy implements HostConfigStrategy<HostSshConfigModel> {
+public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel> {
 
     @Resource
     private HostKeyDAO hostKeyDAO;

@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.handler.host.config.model;
 
+import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.framework.common.security.UpdatePasswordAction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "HostSftpConfig", description = "主机 SSH 配置")
-public class HostSshConfigModel implements HostConfigModel, UpdatePasswordAction {
+public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordAction {
 
     @NotNull
     @Range(min = 1, max = 65535)

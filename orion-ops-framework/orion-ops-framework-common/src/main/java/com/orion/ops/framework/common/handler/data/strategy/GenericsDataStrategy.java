@@ -1,17 +1,15 @@
-package com.orion.ops.module.asset.handler.host.config.strategy;
+package com.orion.ops.framework.common.handler.data.strategy;
 
-import com.orion.ops.module.asset.handler.host.config.model.HostConfigModel;
-
-import java.util.Map;
+import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 
 /**
- * 主机配置策略
+ * 标准数据处理策略
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/19 14:27
+ * @since 2023/12/20 22:09
  */
-public interface HostConfigStrategy<Config extends HostConfigModel> {
+public interface GenericsDataStrategy<Config extends GenericsDataModel, View> {
 
     /**
      * 获取默认值
@@ -48,6 +46,6 @@ public interface HostConfigStrategy<Config extends HostConfigModel> {
      * @param config config
      * @return 视图配置
      */
-    Map<String, Object> toView(String config);
+    View toView(String config);
 
 }
