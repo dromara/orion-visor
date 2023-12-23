@@ -22,6 +22,7 @@ import com.orion.ops.module.asset.entity.request.host.HostKeyCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostKeyQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostKeyUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostKeyVO;
+import com.orion.ops.module.asset.service.HostExtraService;
 import com.orion.ops.module.asset.service.HostKeyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,9 @@ public class HostKeyServiceImpl implements HostKeyService {
 
     @Resource
     private HostConfigDAO hostConfigDAO;
+
+    @Resource
+    private HostExtraService hostExtraService;
 
     @Override
     public Long createHostKey(HostKeyCreateRequest request) {
@@ -171,6 +175,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         hostIdentityDAO.setKeyWithNull(id);
         // 删除主机配置
         hostConfigDAO.setKeyIdWithNull(id);
+        // 删除主机额外配置
+        hostExtraService.deleteHostKeyCallback(id);
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_KEY.getKey(), record.getId());
         log.info("HostKeyService-deleteHostKeyById effect: {}", effect);

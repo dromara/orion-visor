@@ -122,7 +122,6 @@ public class HostExtraServiceImpl implements HostExtraService {
         return dataExtraApi.updateExtraValue(beforeExtraItem.getId(), newExtra.serial());
     }
 
-
     @Override
     public void deleteHostKeyCallback(Long id) {
 
