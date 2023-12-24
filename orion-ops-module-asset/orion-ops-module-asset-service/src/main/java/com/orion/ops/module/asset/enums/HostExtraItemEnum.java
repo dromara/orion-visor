@@ -28,7 +28,7 @@ public enum HostExtraItemEnum implements GenericsDataDefinition {
 
     private final String item;
 
-    private final Class<? extends GenericsDataModel> type;
+    private final Class<? extends GenericsDataModel> model;
 
     private final Class<? extends MapDataStrategy<? extends GenericsDataModel>> strategy;
 

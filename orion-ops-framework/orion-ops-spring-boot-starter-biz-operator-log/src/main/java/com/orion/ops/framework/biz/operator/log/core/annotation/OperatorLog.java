@@ -30,7 +30,7 @@ public @interface OperatorLog {
      * - {@link org.springframework.web.bind.annotation.PathVariable}
      * <p>
      * 使用 @IgnoreParameter 可以忽略参数记录 {@link IgnoreParameter}
-     * 如果只需要忽略某个字段可以使用 {@code @Desensitize(toEmpty = true)} 标注
+     * 如果只需要忽略对象中的某个字段可以使用 {@code @Desensitize(toEmpty = true)} 标注
      */
     boolean parameter() default true;
 

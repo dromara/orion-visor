@@ -31,7 +31,7 @@ public class HostConfigDO extends BaseDO {
     @TableField("host_id")
     private Long hostId;
 
-    @Schema(description = "连接类型")
+    @Schema(description = "配置类型")
     @TableField("type")
     private String type;
 

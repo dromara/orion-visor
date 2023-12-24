@@ -292,7 +292,7 @@ CREATE TABLE `host_config`
 (
     `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
     `host_id`     bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
-    `type`        varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '连接类型',
+    `type`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置类型',
     `status`      tinyint(0)                                                    NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
     `config`      json                                                          NULL COMMENT '配置详情',
     `version`     int(0)                                                        NULL DEFAULT 0 COMMENT '配置版本号',

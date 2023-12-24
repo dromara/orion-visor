@@ -19,7 +19,7 @@ public interface GenericsDataDefinition {
      *
      * @return class
      */
-    Class<? extends GenericsDataModel> getType();
+    Class<? extends GenericsDataModel> getModel();
 
     /**
      * 获取数据处理策略
@@ -49,7 +49,7 @@ public interface GenericsDataDefinition {
      */
     @SuppressWarnings("unchecked")
     default <Model extends GenericsDataModel> Model parse(String json) {
-        return (Model) JSON.parseObject(json, this.getType());
+        return (Model) JSON.parseObject(json, this.getModel());
     }
 
 

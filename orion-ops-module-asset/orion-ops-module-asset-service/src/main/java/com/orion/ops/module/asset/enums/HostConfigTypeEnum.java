@@ -23,11 +23,16 @@ public enum HostConfigTypeEnum implements GenericsDataDefinition {
     /**
      * SSH 配置
      */
-    SSH(HostSshConfigModel.class, HostSshConfigStrategy.class, EnableStatus.ENABLED.getValue()),
+    SSH("ssh",
+            HostSshConfigModel.class,
+            HostSshConfigStrategy.class,
+            EnableStatus.ENABLED.getValue()),
 
     ;
 
-    private final Class<? extends GenericsDataModel> type;
+    private final String type;
+
+    private final Class<? extends GenericsDataModel> model;
 
     private final Class<? extends MapDataStrategy<? extends GenericsDataModel>> strategy;
 
@@ -38,7 +43,7 @@ public enum HostConfigTypeEnum implements GenericsDataDefinition {
             return null;
         }
         for (HostConfigTypeEnum value : values()) {
-            if (value.name().equals(type)) {
+            if (value.type.equals(type)) {
                 return value;
             }
         }

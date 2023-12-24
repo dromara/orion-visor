@@ -24,8 +24,8 @@ public class HostConfigQueryRequest extends PageRequest {
     @Schema(description = "主机id")
     private Long hostId;
 
-    @Size(max = 255)
-    @Schema(description = "连接类型")
+    @Size(max = 32)
+    @Schema(description = "配置类型")
     private String type;
 
 }

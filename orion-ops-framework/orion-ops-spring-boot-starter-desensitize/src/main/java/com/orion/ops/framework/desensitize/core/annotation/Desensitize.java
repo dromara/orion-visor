@@ -10,7 +10,11 @@ import java.lang.annotation.*;
  * FastJson / Jackson 脱敏配置元注解
  * <p>
  * Jackson 标注在字段上则标记该字段执行 http 序列化 (返回 VO)时脱敏 (http-message-converts 用的是 jackson)
+ * <p>
  * FastJson 需要组合 {@link DesensitizeObject} 一起使用
+ * JSON.toJSONString 时需要使用过滤器 {@link com.orion.ops.framework.desensitize.core.filter.DesensitizeValueFilter}
+ * - 全局日志打印 {@see LogPrinterInterceptor}
+ * - 操作日志切面 {@see OperatorLogAspect}
  *
  * @author Jiahang Li
  * @version 1.0.0

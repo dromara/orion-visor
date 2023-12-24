@@ -69,7 +69,7 @@ public class HostConfigController {
 
     @OperatorLog(HostOperatorType.UPDATE_CONFIG_STATUS)
     @PutMapping("/update-status")
-    @Operation(summary = "更新主机配置状态")
+    @Operation(summary = "更新主机配置状态/动态初始化配置")
     @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
     public Integer updateHostConfigStatus(@Validated @RequestBody HostConfigUpdateStatusRequest request) {
         return hostConfigService.updateHostConfigStatus(request);
