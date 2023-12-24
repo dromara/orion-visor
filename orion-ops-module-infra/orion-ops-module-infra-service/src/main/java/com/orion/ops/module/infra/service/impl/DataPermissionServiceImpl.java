@@ -105,6 +105,16 @@ public class DataPermissionServiceImpl implements DataPermissionService {
     }
 
     @Override
+    public boolean hasPermission(String type, Long userId, Long relId) {
+        // 查询用户授权列表
+        List<Long> relIdList = this.getUserAuthorizedRelIdList(type, userId);
+        if (relIdList.isEmpty()) {
+            return false;
+        }
+        return relIdList.contains(relId);
+    }
+
+    @Override
     public List<Long> getRelIdListByUserId(String type, Long userId) {
         return dataPermissionDAO.of()
                 .createWrapper()
@@ -185,41 +195,27 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                         .collect(Collectors.toList());
         List<Long> userIdList = mapper.apply(DataPermissionDO::getUserId);
         List<Long> roleIdList = mapper.apply(DataPermissionDO::getRoleId);
-        this.deleteCache(Lists.singleton(type), userIdList, roleIdList);
+        this.deleteCache(userIdList, roleIdList);
         return effect;
     }
 
     @Override
     public int deleteByUserId(Long userId) {
         LambdaQueryWrapper<DataPermissionDO> wrapper = Conditions.eq(DataPermissionDO::getUserId, userId);
-        // 查询
-        List<String> typeList = dataPermissionDAO.of()
-                .wrapper(wrapper)
-                .stream()
-                .map(DataPermissionDO::getType)
-                .distinct()
-                .collect(Collectors.toList());
         // 删除
         int effect = dataPermissionDAO.delete(wrapper);
         // 删除缓存
-        this.deleteCache(typeList, Lists.singleton(userId), null);
+        this.deleteCache(Lists.singleton(userId), null);
         return effect;
     }
 
     @Override
     public int deleteByRoleId(Long roleId) {
         LambdaQueryWrapper<DataPermissionDO> wrapper = Conditions.eq(DataPermissionDO::getRoleId, roleId);
-        // 查询
-        List<String> typeList = dataPermissionDAO.of()
-                .wrapper(wrapper)
-                .stream()
-                .map(DataPermissionDO::getType)
-                .distinct()
-                .collect(Collectors.toList());
         // 删除
         int effect = dataPermissionDAO.delete(wrapper);
         // 删除缓存
-        this.deleteCache(typeList, null, Lists.singleton(roleId));
+        this.deleteCache(null, Lists.singleton(roleId));
         return effect;
     }
 
@@ -241,12 +237,12 @@ public class DataPermissionServiceImpl implements DataPermissionService {
     @Override
     public void clearUserCache(List<Long> userIdList) {
         // 扫描的 key
-        List<String> keyMatchs = userIdList.stream()
+        List<String> keyMatches = userIdList.stream()
                 .distinct()
                 .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format("*", s))
                 .collect(Collectors.toList());
         // 扫描并删除
-        RedisUtils.scanKeysDelete(keyMatchs);
+        RedisUtils.scanKeysDelete(keyMatches);
     }
 
     /**
@@ -262,8 +258,10 @@ public class DataPermissionServiceImpl implements DataPermissionService {
             userIdList.add(userId);
         }
         // 查询角色的权限
-        List<Long> roleUserIdList = systemUserRoleDAO.selectUserIdByRoleId(roleId);
-        userIdList.addAll(roleUserIdList);
+        if (roleId != null) {
+            List<Long> roleUserIdList = systemUserRoleDAO.selectUserIdByRoleId(roleId);
+            userIdList.addAll(roleUserIdList);
+        }
         // 删除缓存
         if (!userIdList.isEmpty()) {
             List<String> keys = userIdList.stream()
@@ -276,11 +274,10 @@ public class DataPermissionServiceImpl implements DataPermissionService {
     /**
      * 删除缓存
      *
-     * @param typeList   typeList
      * @param userIdList userIdList
      * @param roleIdList roleIdList
      */
-    private void deleteCache(List<String> typeList, List<Long> userIdList, List<Long> roleIdList) {
+    private void deleteCache(List<Long> userIdList, List<Long> roleIdList) {
         Set<Long> deleteUserIdList = new HashSet<>(4);
         if (!Lists.isEmpty(userIdList)) {
             deleteUserIdList.addAll(userIdList);
@@ -295,10 +292,10 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         }
         // 删除缓存
         List<String> keys = new ArrayList<>();
-        for (String type : typeList) {
+        for (DataPermissionTypeEnum type : DataPermissionTypeEnum.values()) {
             userIdList.stream()
                     .filter(Objects::nonNull)
-                    .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type, s))
+                    .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type.name(), s))
                     .forEach(keys::add);
         }
         RedisLists.delete(keys);

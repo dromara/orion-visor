@@ -67,4 +67,6 @@ public interface ErrorMessage {
 
     String BEFORE_PASSWORD_ERROR = "原密码错误";
 
+    String DATA_NO_PERMISSION = "数据无权限";
+
 }

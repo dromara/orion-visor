@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 数据拓展信息 Mapper 接口
@@ -40,5 +41,21 @@ public interface DataExtraDAO extends IMapper<DataExtraDO> {
                 .eq(DataExtraDO::getRelId, relId);
         return this.delete(wrapper);
     }
+
+    /**
+     * 删除主机秘钥
+     *
+     * @param keyId keyId
+     * @return effect
+     */
+    int deleteHostKey(@Param("keyId") Long keyId);
+
+    /**
+     * 删除主机身份
+     *
+     * @param identityId identityId
+     * @return effect
+     */
+    int deleteHostIdentity(@Param("identityId") Long identityId);
 
 }

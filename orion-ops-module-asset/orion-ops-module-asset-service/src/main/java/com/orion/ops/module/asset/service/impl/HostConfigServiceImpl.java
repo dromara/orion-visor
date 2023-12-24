@@ -45,6 +45,7 @@ public class HostConfigServiceImpl implements HostConfigService {
     private HostConfigDAO hostConfigDAO;
 
     // FIXME 动态初始化
+    // 改为小写
 
     @Override
     public HostConfigVO getHostConfig(Long hostId, String type) {
@@ -73,12 +74,8 @@ public class HostConfigServiceImpl implements HostConfigService {
 
     @Override
     public List<HostConfigVO> getHostConfigList(Long hostId) {
+        // 查询
         List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostId(hostId);
-        if (configs.isEmpty()) {
-            // 初始化 兜底
-            this.initHostConfig(hostId);
-            configs = hostConfigDAO.getHostConfigByHostId(hostId);
-        }
         // 返回
         return configs.stream().map(s -> {
             HostConfigVO vo = HostConfigConvert.MAPPER.to(s);

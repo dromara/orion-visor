@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.api.impl;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.DataExtraApi;
 import com.orion.ops.module.infra.convert.DataExtraProviderConvert;
+import com.orion.ops.module.infra.dao.DataExtraDAO;
 import com.orion.ops.module.infra.entity.domain.DataExtraDO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
@@ -32,6 +33,9 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Resource
     private DataExtraService dataExtraService;
+
+    @Resource
+    private DataExtraDAO dataExtraDAO;
 
     @Override
     public Integer setExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type) {
@@ -101,6 +105,18 @@ public class DataExtraApiImpl implements DataExtraApi {
     @Override
     public Integer deleteByRelId(DataExtraTypeEnum type, Long relId) {
         return dataExtraService.deleteByRelId(type.name(), relId);
+    }
+
+    @Override
+    public int deleteHostKeyExtra(Long keyId) {
+        Valid.notNull(keyId);
+        return dataExtraDAO.deleteHostKey(keyId);
+    }
+
+    @Override
+    public int deleteHostIdentityExtra(Long identityId) {
+        Valid.notNull(identityId);
+        return dataExtraDAO.deleteHostIdentity(identityId);
     }
 
 }

@@ -50,6 +50,12 @@ public class DataPermissionApiImpl implements DataPermissionApi {
     }
 
     @Override
+    public boolean hasPermission(DataPermissionTypeEnum type, Long userId, Long relId) {
+        Valid.allNotNull(userId, relId);
+        return dataPermissionService.hasPermission(type.name(), userId, relId);
+    }
+
+    @Override
     public List<Long> getRelIdListByUserId(DataPermissionTypeEnum type, Long userId) {
         return dataPermissionService.getRelIdListByUserId(type.name(), userId);
     }

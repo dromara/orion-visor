@@ -31,6 +31,16 @@ public interface DataPermissionApi {
     void updateDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto);
 
     /**
+     * 检查用户是否有权限
+     *
+     * @param type   type
+     * @param userId userId
+     * @param relId  relId
+     * @return effect
+     */
+    boolean hasPermission(DataPermissionTypeEnum type, Long userId, Long relId);
+
+    /**
      * 通过 userId 查询数据权限 (不包含角色 不走缓存)
      *
      * @param type   type

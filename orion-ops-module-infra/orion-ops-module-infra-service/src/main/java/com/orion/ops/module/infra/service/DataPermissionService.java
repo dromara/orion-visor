@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.service;
 
 import com.orion.ops.module.infra.entity.request.data.DataPermissionUpdateRequest;
+import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 
 import java.util.List;
 
@@ -26,6 +27,16 @@ public interface DataPermissionService {
      * @param request request
      */
     void updateDataPermission(DataPermissionUpdateRequest request);
+
+    /**
+     * 检查用户是否有权限
+     *
+     * @param type   type
+     * @param userId userId
+     * @param relId  relId
+     * @return effect
+     */
+    boolean hasPermission(String type, Long userId, Long relId);
 
     /**
      * 通过 userId 查询数据权限 (不包含角色 不走缓存)

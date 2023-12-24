@@ -48,18 +48,4 @@ public interface HostExtraService {
      */
     Integer updateHostExtra(HostExtraUpdateRequest request);
 
-    /**
-     * 删除主机秘钥回调
-     *
-     * @param id id
-     */
-    void deleteHostKeyCallback(Long id);
-
-    /**
-     * 删除主机身份回调
-     *
-     * @param id id
-     */
-    void deleteHostIdentityCallback(Long id);
-
 }

@@ -22,4 +22,26 @@
         id, user_id, rel_id, type, item, value, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <delete id="deleteHostKey">
+        UPDATE data_extra
+        SET value = JSON_REPLACE(value,
+                                 "$.keyId", NULL,
+                                 "$.authType", IF(JSON_EXTRACT(value, "$.authType") = 'KEY', 'DEFAULT', JSON_EXTRACT(value, "$.authType")))
+        WHERE deleted = 0
+          AND type = 'HOST'
+          AND item = 'ssh'
+          AND JSON_CONTAINS(value, JSON_OBJECT('keyId', #{keyId}))
+    </delete>
+
+    <delete id="deleteHostIdentity">
+        UPDATE data_extra
+        SET value = JSON_REPLACE(value,
+                                 "$.identityId", NULL,
+                                 "$.authType", IF(JSON_EXTRACT(value, "$.authType") = 'IDENTITY', 'DEFAULT', JSON_EXTRACT(value, "$.authType")))
+        WHERE deleted = 0
+          AND type = 'HOST'
+          AND item = 'ssh'
+          AND JSON_CONTAINS(value, JSON_OBJECT('identityId', #{identityId}))
+    </delete>
+
 </mapper>

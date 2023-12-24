@@ -24,8 +24,8 @@ import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
-import com.orion.ops.module.asset.service.HostExtraService;
 import com.orion.ops.module.asset.service.HostIdentityService;
+import com.orion.ops.module.infra.api.DataExtraApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +56,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     private HostConfigDAO hostConfigDAO;
 
     @Resource
-    private HostExtraService hostExtraService;
+    private DataExtraApi dataExtraApi;
 
     @Override
     public Long createHostIdentity(HostIdentityCreateRequest request) {
@@ -178,8 +178,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         int effect = hostIdentityDAO.deleteById(id);
         // 删除主机配置
         hostConfigDAO.setIdentityIdWithNull(id);
-        // 删除主机额外配置
-        hostExtraService.deleteHostIdentityCallback(id);
+        // 删除主机身份额外配置
+        dataExtraApi.deleteHostIdentityExtra(id);
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY.getKey(), record.getId());
         log.info("HostIdentityService-deleteHostIdentityById effect: {}", effect);

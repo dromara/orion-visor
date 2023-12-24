@@ -96,4 +96,20 @@ public interface DataExtraApi {
      */
     Integer deleteByRelId(DataExtraTypeEnum type, Long relId);
 
+    /**
+     * 删除主机秘钥
+     *
+     * @param keyId keyId
+     * @return effect
+     */
+    int deleteHostKeyExtra(Long keyId);
+
+    /**
+     * 删除主机身份
+     *
+     * @param identityId identityId
+     * @return effect
+     */
+    int deleteHostIdentityExtra(Long identityId);
+
 }
