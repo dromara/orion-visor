@@ -15,14 +15,14 @@ public enum HostExtraSshAuthTypeEnum {
     DEFAULT,
 
     /**
-     * 秘钥验证
+     * 自定义秘钥验证
      */
-    KEY,
+    CUSTOM_KEY,
 
     /**
-     * 身份验证
+     * 自定义身份验证
      */
-    IDENTITY,
+    CUSTOM_IDENTITY,
 
     ;
 

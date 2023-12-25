@@ -12,7 +12,7 @@
            :cancel-button-props="{ disabled: loading }"
            :on-before-ok="handlerOk"
            @close="handleClose">
-    <a-spin :loading="loading">
+    <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"

@@ -34,9 +34,9 @@
 
 <script lang="ts" setup>
   import type { TabItem } from './types/terminal.const';
-  import { ref, onBeforeMount } from 'vue';
+  import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { TabType, InnerTabs, dictKeys } from './types/terminal.const';
-  import { useDictStore, useTerminalStore } from '@/store';
+  import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import TerminalHeader from './components/layout/terminal-header.vue';
   import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
@@ -46,6 +46,7 @@
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
+  const cacheStore = useCacheStore();
 
   const render = ref(false);
   const activeKey = ref(InnerTabs.NEW_CONNECTION.key);
@@ -91,6 +92,11 @@
   // 加载字典值
   onBeforeMount(async () => {
     await dictStore.loadKeys([...dictKeys]);
+  });
+
+  // 卸载时清除 cache
+  onUnmounted(() => {
+    cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities');
   });
 
 </script>

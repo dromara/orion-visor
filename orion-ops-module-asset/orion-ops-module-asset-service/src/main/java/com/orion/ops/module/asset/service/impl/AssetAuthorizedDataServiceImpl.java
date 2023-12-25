@@ -243,7 +243,6 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                                                List<Long> authorizedGroupIdList) {
         // 查询主机列表
         List<HostVO> hosts = hostService.getHostListByCache();
-
         // 全部数据直接返回
         if (allData) {
             return hosts;
@@ -258,6 +257,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                 .map(dataGroupRel::get)
                 .filter(Lists::isNoneEmpty)
                 .flatMap(Collection::stream)
+                .distinct()
                 .map(hostMap::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());

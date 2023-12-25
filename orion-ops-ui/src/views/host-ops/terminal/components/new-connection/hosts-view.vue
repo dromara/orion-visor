@@ -21,6 +21,8 @@
                     class="list-view-container"
                     :hostList="hostList"
                     empty-value="暂无连接记录, 快去体验吧!" />
+    <!-- 修改主机设置模态框 -->
+    <ssh-extra-modal ref="sshModal" />
   </div>
 </template>
 
@@ -31,12 +33,13 @@
 </script>
 
 <script lang="ts" setup>
-  import { onMounted, ref, watch } from 'vue';
-  import { NewConnectionType } from '../../types/terminal.const';
+  import { onMounted, provide, ref, watch } from 'vue';
+  import { NewConnectionType, sshModalKey } from '../../types/terminal.const';
   import { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import { HostQueryResponse } from '@/api/asset/host';
   import HostGroupView from './host-group-view.vue';
   import HostListView from './host-list-view.vue';
+  import SshExtraModal from './ssh-extra-modal.vue';
 
   const props = defineProps<{
     hosts: AuthorizedHostQueryResponse,
@@ -51,6 +54,12 @@
       ? props.hosts.groupTree[0].key
       : 0
   );
+  const sshModal = ref();
+
+  // 暴露打开 ssh 配置模态框
+  provide(sshModalKey, (record: any) => {
+    sshModal.value?.open(record);
+  });
 
   // 主机数据处理
   const shuffleHosts = () => {

@@ -14,8 +14,8 @@ export interface HostSshConfig {
   hasPassword?: boolean;
 }
 
-// 主机验证方式
-export const AuthType = {
+// 主机 ssh 验证方式
+export const SshAuthType = {
   // 密码验证
   PASSWORD: 'PASSWORD',
   // 秘钥验证
@@ -25,7 +25,7 @@ export const AuthType = {
 };
 
 // 主机验证方式 字典项
-export const authTypeKey = 'hostAuthTypeType';
+export const sshAuthTypeKey = 'hostSshAuthType';
 
 // 加载的字典值
-export const dictKeys = [authTypeKey];
+export const dictKeys = [sshAuthTypeKey];

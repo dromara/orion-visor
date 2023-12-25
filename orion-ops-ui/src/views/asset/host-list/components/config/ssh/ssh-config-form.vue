@@ -26,9 +26,9 @@
                      label="用户名"
                      :rules="usernameRules"
                      label-col-flex="60px"
-                     :help="AuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
+                     :help="SshAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
           <a-input v-model="formModel.username"
-                   :disabled="AuthType.IDENTITY === formModel.authType"
+                   :disabled="SshAuthType.IDENTITY === formModel.authType"
                    placeholder="请输入用户名" />
         </a-form-item>
         <!-- SSH 端口 -->
@@ -48,10 +48,10 @@
           <a-radio-group type="button"
                          class="auth-type-group usn"
                          v-model="formModel.authType"
-                         :options="toOptions(authTypeKey)" />
+                         :options="toOptions(sshAuthTypeKey)" />
         </a-form-item>
         <!-- 主机密码 -->
-        <a-form-item v-if="AuthType.PASSWORD === formModel.authType"
+        <a-form-item v-if="SshAuthType.PASSWORD === formModel.authType"
                      field="password"
                      label="主机密码"
                      :rules="passwordRules"
@@ -68,7 +68,7 @@
                     unchecked-text="使用原密码" />
         </a-form-item>
         <!-- 主机秘钥 -->
-        <a-form-item v-if="AuthType.KEY === formModel.authType"
+        <a-form-item v-if="SshAuthType.KEY === formModel.authType"
                      field="keyId"
                      label="主机秘钥"
                      :hide-asterisk="true"
@@ -76,7 +76,7 @@
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
         <!-- 主机身份 -->
-        <a-form-item v-if="AuthType.IDENTITY === formModel.authType"
+        <a-form-item v-if="SshAuthType.IDENTITY === formModel.authType"
                      field="identityId"
                      label="主机身份"
                      :hide-asterisk="true"
@@ -140,7 +140,7 @@
   import type { HostSshConfig } from './types/const';
   import { reactive, ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host-config';
-  import { authTypeKey, AuthType } from './types/const';
+  import { sshAuthTypeKey, SshAuthType } from './types/const';
   import rules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -170,7 +170,7 @@
     username: undefined,
     port: undefined,
     password: undefined,
-    authType: AuthType.PASSWORD,
+    authType: SshAuthType.PASSWORD,
     keyId: undefined,
     identityId: undefined,
     connectTimeout: undefined,
@@ -195,7 +195,7 @@
         cb('用户名长度不能大于128位');
         return;
       }
-      if (formModel.value.authType !== AuthType.IDENTITY && !value) {
+      if (formModel.value.authType !== SshAuthType.IDENTITY && !value) {
         cb('请输入用户名');
         return;
       }

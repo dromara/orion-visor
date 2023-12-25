@@ -20,6 +20,7 @@
 
   const props = defineProps({
     modelValue: Number,
+    authorized: Boolean
   });
 
   const emits = defineEmits(['update:modelValue']);
@@ -45,7 +46,9 @@
   onBeforeMount(async () => {
     setLoading(true);
     try {
-      const hostKeys = await cacheStore.loadHostKeys();
+      const hostKeys = props.authorized
+        ? await cacheStore.loadAuthorizedHostKeys()
+        : await cacheStore.loadHostKeys();
       optionData.value = hostKeys.map(s => {
         return {
           label: s.name,

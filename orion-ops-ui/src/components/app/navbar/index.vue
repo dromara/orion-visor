@@ -256,10 +256,10 @@
   const localeRef = ref();
 
   // 打开应用设置
-  const openAppSetting = inject(openAppSettingKey) as () => void;
+  const openAppSetting = inject<() => void>(openAppSettingKey);
 
   // 注入收缩菜单
-  const toggleDrawerMenu = inject(toggleDrawerMenuKey) as () => void;
+  const toggleDrawerMenu = inject<() => void>(toggleDrawerMenuKey);
 
   // 切换主题
   const handleToggleTheme = () => {

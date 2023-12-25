@@ -58,7 +58,7 @@ public class HostExtraController {
         return hostExtraService.getHostExtraList(request);
     }
 
-    @GetMapping("/update")
+    @PutMapping("/update")
     @Operation(summary = "修改主机拓展信息")
     public Integer updateHostExtra(@Validated @RequestBody HostExtraUpdateRequest request) {
         return hostExtraService.updateHostExtra(request);

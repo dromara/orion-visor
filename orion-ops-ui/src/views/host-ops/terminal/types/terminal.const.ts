@@ -51,6 +51,27 @@ export const NewConnectionType = {
   LATEST: 'latest'
 };
 
+// ssh 额外配置
+export interface SshExtraModel {
+  authType?: string;
+  username?: string;
+  keyId?: number;
+  identityId?: number;
+}
+
+// 主机额外配置 ssh 认证方式
+export const ExtraSshAuthType = {
+  // 使用默认认证方式
+  DEFAULT: 'DEFAULT',
+  // 自定义秘钥
+  CUSTOM_KEY: 'CUSTOM_KEY',
+  // 自定义身份
+  CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',
+};
+
+// 打开 sshModal key
+export const sshModalKey = Symbol();
+
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';
 
@@ -72,9 +93,13 @@ export const cursorStyleKey = 'terminalCursorStyle';
 // 终端新建连接类型
 export const NewConnectionTypeKey = 'terminalNewConnectionType';
 
+// 终端新建连接类型
+export const extraSshAuthTypeKey = 'hostExtraSshAuthType';
+
 // 加载的字典值
 export const dictKeys = [
   darkThemeKey, fontFamilyKey,
   fontSizeKey, fontWeightKey,
-  cursorStyleKey, NewConnectionTypeKey
+  cursorStyleKey, NewConnectionTypeKey,
+  extraSshAuthTypeKey
 ];

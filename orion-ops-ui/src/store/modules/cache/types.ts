@@ -16,6 +16,8 @@ export interface CacheState {
   hostKeys?: HostKeyQueryResponse[];
   hostIdentities?: HostIdentityQueryResponse[];
   dictKeys?: DictKeyQueryResponse[];
+  authorizedHostKeys?: HostKeyQueryResponse[];
+  authorizedHostIdentities?: HostIdentityQueryResponse[];
 
   [key: string]: unknown;
 }

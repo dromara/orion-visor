@@ -60,7 +60,7 @@
                            :max-length="32"
                            :disabled="item.loading"
                            size="mini"
-                           placeholder="主机别名"
+                           :placeholder="`${item.name} (${item.code})`"
                            @blur="saveAlias(item)"
                            @pressEnter="saveAlias(item)"
                            @change="saveAlias(item)"
@@ -164,11 +164,12 @@
 
 <script lang="ts" setup>
   import type { HostQueryResponse } from '@/api/asset/host';
+  import { ref, nextTick, inject } from 'vue';
   import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
-  import { ref, nextTick } from 'vue';
   import { updateHostAlias } from '@/api/asset/host-extra';
+  import { sshModalKey } from '../../types/terminal.const';
 
   const props = defineProps<{
     hostList: Array<HostQueryResponse>,
@@ -183,7 +184,7 @@
   const clickEditAlias = (item: HostQueryResponse) => {
     item.editable = true;
     if (!item.alias) {
-      item.alias = `${item.name} (${item.code})`;
+      item.alias = '';
     }
     nextTick(() => {
       aliasNameInput.value?.focus();
@@ -217,9 +218,7 @@
   };
 
   // 打开配置
-  const openSetting = (item: HostQueryResponse) => {
-    console.log('set', item);
-  };
+  const openSetting = inject<(record: HostQueryResponse) => void>(sshModalKey);
 
   // 设置收藏
   const setFavorite = async (item: HostQueryResponse) => {

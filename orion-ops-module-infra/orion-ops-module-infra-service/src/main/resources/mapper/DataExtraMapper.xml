@@ -26,7 +26,11 @@
         UPDATE data_extra
         SET value = JSON_REPLACE(value,
                                  "$.keyId", NULL,
-                                 "$.authType", IF(JSON_EXTRACT(value, "$.authType") = 'KEY', 'DEFAULT', JSON_EXTRACT(value, "$.authType")))
+                                 "$.authType", IF(
+                                         JSON_EXTRACT(value, "$.authType") = 'CUSTOM_KEY',
+                                         'DEFAULT',
+                                         JSON_EXTRACT(value, "$.authType")
+                                     ))
         WHERE deleted = 0
           AND type = 'HOST'
           AND item = 'ssh'
@@ -37,7 +41,11 @@
         UPDATE data_extra
         SET value = JSON_REPLACE(value,
                                  "$.identityId", NULL,
-                                 "$.authType", IF(JSON_EXTRACT(value, "$.authType") = 'IDENTITY', 'DEFAULT', JSON_EXTRACT(value, "$.authType")))
+                                 "$.authType", IF(
+                                         JSON_EXTRACT(value, "$.authType") = 'CUSTOM_IDENTITY',
+                                         'DEFAULT',
+                                         JSON_EXTRACT(value, "$.authType")
+                                     ))
         WHERE deleted = 0
           AND type = 'HOST'
           AND item = 'ssh'

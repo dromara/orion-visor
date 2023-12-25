@@ -55,9 +55,9 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
         Long keyId = model.getKeyId();
         Long identityId = model.getIdentityId();
         // 必填验证
-        if (HostExtraSshAuthTypeEnum.KEY.equals(authType)) {
+        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(authType)) {
             Valid.notNull(keyId);
-        } else if (HostExtraSshAuthTypeEnum.IDENTITY.equals(authType)) {
+        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(authType)) {
             Valid.notNull(identityId);
         }
         // 验证主机秘钥是否存在

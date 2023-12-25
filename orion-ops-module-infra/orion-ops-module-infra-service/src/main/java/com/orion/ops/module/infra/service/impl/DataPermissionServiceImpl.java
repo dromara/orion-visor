@@ -149,14 +149,17 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         List<Long> list = RedisLists.range(cacheKey, Long::valueOf);
         if (list.isEmpty()) {
             LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.lambda()
-                    .eq(DataPermissionDO::getType, type)
-                    .eq(DataPermissionDO::getUserId, userId);
-            // 查询用户角色
+                    .eq(DataPermissionDO::getType, type);
             if (dataType.isToRole()) {
+                // 查询用户角色
                 List<Long> roleIdList = systemUserRoleDAO.selectRoleIdByUserId(userId);
-                if (!roleIdList.isEmpty()) {
-                    wrapper.or().in(DataPermissionDO::getRoleId, roleIdList);
-                }
+                wrapper.and(s -> s.eq(DataPermissionDO::getUserId, userId)
+                        .or()
+                        .in(!roleIdList.isEmpty(), DataPermissionDO::getRoleId, roleIdList)
+                );
+            } else {
+                // 单用户
+                wrapper.eq(DataPermissionDO::getUserId, userId);
             }
             // 查询数据库
             list = dataPermissionDAO.of()

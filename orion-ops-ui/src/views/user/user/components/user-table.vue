@@ -127,6 +127,7 @@
           <!-- 分配角色 -->
           <a-button type="text"
                     size="mini"
+                    :disabled="record.id === userStore.id"
                     v-permission="['infra:system-user:grant-role']"
                     @click="emits('openGrantRole', record)">
             分配角色

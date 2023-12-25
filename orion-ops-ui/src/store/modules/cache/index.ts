@@ -11,10 +11,13 @@ import { getHostIdentityList } from '@/api/asset/host-identity';
 import { getHostList } from '@/api/asset/host';
 import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
+import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 
 export type CacheType = 'users' | 'menus' | 'roles'
   | 'host' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
-  | 'dictKeys' | string
+  | 'dictKeys'
+  | 'authorizedHostKeys' | 'authorizedHostIdentities'
+  | string
 
 export default defineStore('cache', {
   state: (): CacheState => ({}),
@@ -96,6 +99,16 @@ export default defineStore('cache', {
     // 加载 tags
     async loadTags(type: TagType, force = false) {
       return await this.load(`${type}_Tags`, () => getTagList(type), force);
+    },
+
+    // 获取已授权的主机秘钥列表
+    async loadAuthorizedHostKeys(force = false) {
+      return await this.load('authorizedHostKeys', getCurrentAuthorizedHostKey, force);
+    },
+
+    // 获取已授权的主机身份列表
+    async loadAuthorizedHostIdentities(force = false) {
+      return await this.load('authorizedHostIdentities', getCurrentAuthorizedHostIdentity, force);
     },
 
   }
