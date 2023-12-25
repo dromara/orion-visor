@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -43,13 +44,6 @@ public class HostConfigServiceImpl implements HostConfigService {
 
     @Resource
     private HostConfigDAO hostConfigDAO;
-
-    // FIXME
-    // T 动态初始化
-    // T 改为小写
-    // F 保存后重置有问题
-    // F 前端逻辑
-    // F 测试
 
     @Override
     public HostConfigVO getHostConfig(Long hostId, String type) {
@@ -81,22 +75,27 @@ public class HostConfigServiceImpl implements HostConfigService {
         // 查询
         List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostId(hostId);
         // 返回
-        return configs.stream().map(s -> {
-            HostConfigVO vo = HostConfigConvert.MAPPER.to(s);
-            // 获取配置
-            Map<String, Object> config = HostConfigTypeEnum.of(s.getType())
-                    .getStrategyBean()
-                    .toView(s.getConfig());
-            vo.setConfig(config);
-            return vo;
-        }).collect(Collectors.toList());
+        return configs.stream()
+                .map(s -> {
+                    // 获取配置
+                    HostConfigTypeEnum type = HostConfigTypeEnum.of(s.getType());
+                    if (type == null) {
+                        return null;
+                    }
+                    // 转为视图
+                    HostConfigVO vo = HostConfigConvert.MAPPER.to(s);
+                    Map<String, Object> config = type.getStrategyBean().toView(s.getConfig());
+                    vo.setConfig(config);
+                    return vo;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Integer updateHostConfig(HostConfigUpdateRequest request) {
-        Long id = request.getId();
         // 查询原配置
-        HostConfigDO record = hostConfigDAO.selectById(id);
+        HostConfigDO record = this.getHostConfigByType(request.getHostId(), request.getType());
         Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
         HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, record.getType());
         GenericsDataModel newConfig = type.parse(request.getConfig());
@@ -115,7 +114,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         strategy.doValidChain(beforeConfig, newConfig);
         // 修改配置
         HostConfigDO update = new HostConfigDO();
-        update.setId(id);
+        update.setId(record.getId());
         update.setVersion(request.getVersion());
         update.setConfig(newConfig.serial());
         int effect = hostConfigDAO.updateById(update);
@@ -125,33 +124,34 @@ public class HostConfigServiceImpl implements HostConfigService {
 
     @Override
     public Integer updateHostConfigStatus(HostConfigUpdateStatusRequest request) {
-        Long id = request.getId();
         Long hostId = request.getHostId();
+        String type = request.getType();
         Integer status = request.getStatus();
         EnableStatus statusEnum = Valid.valid(EnableStatus::of, status);
-        HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, request.getType());
+        HostConfigTypeEnum configType = Valid.valid(HostConfigTypeEnum::of, type);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        HostConfigDO config = this.getHostConfigByType(hostId, type);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.REL_ID, host.getId());
         OperatorLogs.add(OperatorLogs.NAME, host.getName());
         OperatorLogs.add(OperatorLogs.STATUS_NAME, statusEnum.name());
-        if (id != null) {
+        if (config != null) {
             // 修改 查询配置
-            HostConfigDO record = hostConfigDAO.selectById(id);
-            Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+            Integer version = request.getVersion();
+            Valid.notNull(version);
             // 修改状态
             HostConfigDO update = new HostConfigDO();
-            update.setId(id);
+            update.setId(config.getId());
             update.setStatus(status);
-            update.setVersion(request.getVersion());
+            update.setVersion(version);
             int effect = hostConfigDAO.updateById(update);
             Valid.version(effect);
             return update.getVersion();
         } else {
             // 新增 初始化
-            HostConfigDO defaultConfig = this.getDefaultConfig(hostId, type);
+            HostConfigDO defaultConfig = this.getDefaultConfig(hostId, configType);
             defaultConfig.setStatus(status);
             // 插入数据
             hostConfigDAO.insert(defaultConfig);
@@ -159,12 +159,30 @@ public class HostConfigServiceImpl implements HostConfigService {
         }
     }
 
+
     @Override
     public void initHostConfig(Long hostId) {
         List<HostConfigDO> configs = Arrays.stream(HostConfigTypeEnum.values())
                 .map(s -> this.getDefaultConfig(hostId, s))
                 .collect(Collectors.toList());
         hostConfigDAO.insertBatch(configs);
+    }
+
+    /**
+     * 通过类型获取配置
+     *
+     * @param hostId hostId
+     * @param type   type
+     * @return config
+     */
+    private HostConfigDO getHostConfigByType(Long hostId, String type) {
+        // 查询配置
+        return hostConfigDAO.of()
+                .createWrapper()
+                .eq(HostConfigDO::getHostId, hostId)
+                .eq(HostConfigDO::getType, type)
+                .then()
+                .getOne();
     }
 
     /**

@@ -16,7 +16,9 @@
     </template>
     <a-spin :loading="loading" class="host-config-container">
       <!-- SSH 配置 -->
-      <ssh-config-form :content="config.SSH" @submitted="(e) => config.SSH.config = e" />
+      <ssh-config-form :host-id="record.id"
+                       :content="config.ssh"
+                       @submitted="(e) => config.ssh.config = e" />
     </a-spin>
   </a-drawer>
 </template>
@@ -42,9 +44,9 @@
   const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
-  const record = ref();
+  const record = ref({} as any);
   const config = ref<HostConfigWrapper>({
-    SSH: undefined
+    ssh: undefined
   });
 
   // 打开
@@ -61,6 +63,7 @@
       data.forEach(s => {
         config.value[s.type] = s;
       });
+      console.log(config.value);
     } catch ({ message }) {
       Message.error(`配置加载失败 ${message}`);
       setVisible(false);

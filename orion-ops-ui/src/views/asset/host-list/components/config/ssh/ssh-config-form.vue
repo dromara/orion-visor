@@ -107,7 +107,6 @@
         <a-form-item field="fileNameCharset"
                      label="文件名称编码"
                      :hide-asterisk="true"
-
                      label-col-flex="86px">
           <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
         </a-form-item>
@@ -115,7 +114,6 @@
         <a-form-item field="fileContentCharset"
                      label="文件内容编码"
                      :hide-asterisk="true"
-
                      label-col-flex="86px">
           <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
         </a-form-item>
@@ -150,12 +148,14 @@
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
   import { EnabledStatus } from '@/types/const';
+  import { HostConfigType } from '../../../types/const';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
 
   const props = defineProps({
-    content: Object
+    content: Object,
+    hostId: Number,
   });
 
   const emits = defineEmits(['submitted']);
@@ -220,7 +220,8 @@
   const updateStatus = (e: number) => {
     setLoading(true);
     return updateHostConfigStatus({
-      id: props?.content?.id,
+      hostId: props?.hostId,
+      type: HostConfigType.SSH,
       status: e,
       version: config.version
     }).then(({ data }) => {
@@ -249,8 +250,10 @@
         return false;
       }
       setLoading(true);
+      // 更新
       const { data } = await updateHostConfig({
-        id: props?.content?.id,
+        hostId: props?.hostId,
+        type: HostConfigType.SSH,
         version: config.version,
         config: JSON.stringify(formModel.value)
       });
@@ -258,7 +261,7 @@
       setLoading(false);
       Message.success('修改成功');
       // 回调 props
-      emits('submitted', { ...formModel });
+      emits('submitted', { ...formModel.value });
     } catch (e) {
     } finally {
       setLoading(false);

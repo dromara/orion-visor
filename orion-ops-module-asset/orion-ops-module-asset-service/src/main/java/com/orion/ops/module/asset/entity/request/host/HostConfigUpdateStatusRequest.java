@@ -24,9 +24,6 @@ import java.io.Serializable;
 @Schema(name = "HostConfigUpdateRequest", description = "主机配置 更新请求对象")
 public class HostConfigUpdateStatusRequest implements Serializable {
 
-    @Schema(description = "id")
-    private Long id;
-
     @NotNull
     @Schema(description = "主机id")
     private Long hostId;

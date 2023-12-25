@@ -4,8 +4,8 @@ import axios from 'axios';
  * 主机配置请求
  */
 export interface HostConfigRequest {
-  id?: number;
   hostId?: number;
+  type?: string;
   version?: number;
   status?: number;
   config?: string;
