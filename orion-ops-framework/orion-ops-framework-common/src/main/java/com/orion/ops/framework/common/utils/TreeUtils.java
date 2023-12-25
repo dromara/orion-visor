@@ -49,8 +49,7 @@ public class TreeUtils {
                 .collect(Collectors.toList());
         // 如果为空 或者唯一的元素为 rootId 直接返回
         if (parentIdList.isEmpty()
-                || parentIdList.size() == 1
-                || parentIdList.get(0).equals(Const.ROOT_PARENT_ID)) {
+                || (parentIdList.size() == 1 && parentIdList.get(0).equals(Const.ROOT_PARENT_ID))) {
             return;
         }
         // 递归
