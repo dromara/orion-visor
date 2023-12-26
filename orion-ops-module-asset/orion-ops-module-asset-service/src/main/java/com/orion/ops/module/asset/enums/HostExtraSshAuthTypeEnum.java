@@ -28,14 +28,14 @@ public enum HostExtraSshAuthTypeEnum {
 
     public static HostExtraSshAuthTypeEnum of(String type) {
         if (type == null) {
-            return DEFAULT;
+            return null;
         }
         for (HostExtraSshAuthTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }
         }
-        return DEFAULT;
+        return null;
     }
 
 }

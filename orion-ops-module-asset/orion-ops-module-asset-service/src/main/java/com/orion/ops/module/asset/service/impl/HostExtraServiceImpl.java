@@ -68,6 +68,17 @@ public class HostExtraServiceImpl implements HostExtraService {
     }
 
     @Override
+    public <T extends GenericsDataModel> T getHostExtra(Long userId, Long hostId, HostExtraItemEnum item) {
+        DataExtraQueryDTO query = DataExtraQueryDTO.builder()
+                .userId(userId)
+                .relId(hostId)
+                .item(item.getItem())
+                .build();
+        String extraValue = dataExtraApi.getExtraValue(query, DataExtraTypeEnum.HOST);
+        return item.parse(extraValue);
+    }
+
+    @Override
     public Map<String, Map<String, Object>> getHostExtraList(HostExtraQueryRequest request) {
         Long hostId = request.getHostId();
         List<String> items = request.getItems();

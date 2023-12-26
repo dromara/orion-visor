@@ -102,6 +102,24 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     }
 
     @Override
+    public List<Long> getUserAuthorizedHostId(Long userId) {
+        // 查询授权的分组
+        List<Long> authorizedIdList = dataPermissionApi.getUserAuthorizedRelIdList(DataPermissionTypeEnum.HOST_GROUP, userId);
+        if (authorizedIdList.isEmpty()) {
+            return Lists.empty();
+        }
+        // 查询分组主机映射
+        Map<Long, Set<Long>> dataGroupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);
+        // 返回
+        return authorizedIdList.stream()
+                .map(dataGroupRel::get)
+                .filter(Lists::isNotEmpty)
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<HostKeyVO> getUserAuthorizedHostKey(Long userId) {
         if (systemUserApi.isAdminUser(userId)) {
             // 管理员查询所有

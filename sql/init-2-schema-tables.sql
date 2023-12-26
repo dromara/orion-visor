@@ -290,17 +290,17 @@ CREATE TABLE `host`
 DROP TABLE IF EXISTS `host_config`;
 CREATE TABLE `host_config`
 (
-    `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `host_id`     bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
+    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `host_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '主机id',
     `type`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置类型',
-    `status`      tinyint(0)                                                    NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
-    `config`      json                                                          NULL COMMENT '配置详情',
-    `version`     int(0)                                                        NULL DEFAULT 0 COMMENT '配置版本号',
-    `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
-    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
-    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
-    `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    `status`      tinyint(0)                                                   NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+    `config`      json                                                         NULL COMMENT '配置详情',
+    `version`     int(0)                                                       NULL DEFAULT 0 COMMENT '配置版本号',
+    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_host_type` (`host_id`, `type`) USING BTREE
 ) ENGINE = InnoDB

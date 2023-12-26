@@ -74,12 +74,14 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
             // 验证主机秘钥是否有权限
             if (keyId != null) {
                 Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
-                        ErrorMessage.DATA_NO_PERMISSION);
+                        ErrorMessage.ANY_NO_PERMISSION,
+                        DataPermissionTypeEnum.HOST_KEY.getPermissionName());
             }
             // 验证主机身份是否有权限
             if (identityId != null) {
                 Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
-                        ErrorMessage.DATA_NO_PERMISSION);
+                        ErrorMessage.ANY_NO_PERMISSION,
+                        DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
             }
         }
     }

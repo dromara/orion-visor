@@ -1,8 +1,10 @@
 package com.orion.ops.module.asset.service;
 
+import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.module.asset.entity.request.host.HostAliasUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraUpdateRequest;
+import com.orion.ops.module.asset.enums.HostExtraItemEnum;
 
 import java.util.Map;
 
@@ -31,6 +33,17 @@ public interface HostExtraService {
      * @return extra
      */
     Map<String, Object> getHostExtra(Long hostId, String item);
+
+    /**
+     * 获取主机额外配置
+     *
+     * @param userId userId
+     * @param hostId hostId
+     * @param item   item
+     * @param <T>    T
+     * @return extra
+     */
+    <T extends GenericsDataModel> T getHostExtra(Long userId, Long hostId, HostExtraItemEnum item);
 
     /**
      * 获取多个主机拓展信息

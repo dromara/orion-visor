@@ -17,17 +17,17 @@ public enum DataPermissionTypeEnum {
     /**
      * 主机分组
      */
-    HOST_GROUP(true),
+    HOST_GROUP(true, "主机"),
 
     /**
      * 主机秘钥
      */
-    HOST_KEY(true),
+    HOST_KEY(true, "主机秘钥"),
 
     /**
      * 主机身份
      */
-    HOST_IDENTITY(true),
+    HOST_IDENTITY(true, "主机身份"),
 
     ;
 
@@ -35,6 +35,11 @@ public enum DataPermissionTypeEnum {
      * 是否会分配给角色
      */
     private final boolean toRole;
+
+    /**
+     * 权限名称
+     */
+    private final String permissionName;
 
     public static DataPermissionTypeEnum of(String type) {
         if (type == null) {

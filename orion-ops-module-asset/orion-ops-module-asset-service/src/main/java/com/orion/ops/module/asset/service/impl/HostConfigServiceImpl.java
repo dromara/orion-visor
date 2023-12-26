@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
@@ -67,7 +66,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         if (config == null) {
             return null;
         }
-        return (T) JSON.parseObject(config.getConfig(), type.getModel());
+        return type.parse(config.getConfig());
     }
 
     @Override

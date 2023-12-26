@@ -12,7 +12,7 @@ import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
-import com.orion.ops.module.asset.enums.HostConfigSshAuthTypeEnum;
+import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +44,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
         return HostSshConfigModel.builder()
                 .port(SSH_PORT)
                 .username(USERNAME)
-                .authType(HostConfigSshAuthTypeEnum.PASSWORD.name())
+                .authType(HostSshAuthTypeEnum.PASSWORD.name())
                 .charset(Const.UTF_8)
                 .connectTimeout(Const.MS_S_10)
                 .fileNameCharset(Const.UTF_8)
@@ -55,7 +55,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
     @Override
     public void preValid(HostSshConfigModel model) {
         // 验证认证类型
-        Valid.valid(HostConfigSshAuthTypeEnum::of, model.getAuthType());
+        Valid.valid(HostSshAuthTypeEnum::of, model.getAuthType());
         // 验证编码格式
         this.validCharset(model.getCharset());
         this.validCharset(model.getFileNameCharset());
@@ -105,7 +105,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
      */
     private void checkEncryptPassword(HostSshConfigModel before, HostSshConfigModel after) {
         // 非密码认证则直接赋值
-        if (!HostConfigSshAuthTypeEnum.PASSWORD.name().equals(after.getAuthType())) {
+        if (!HostSshAuthTypeEnum.PASSWORD.name().equals(after.getAuthType())) {
             after.setPassword(before.getPassword());
             return;
         }

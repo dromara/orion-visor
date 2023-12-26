@@ -69,4 +69,6 @@ public interface ErrorMessage {
 
     String DATA_NO_PERMISSION = "数据无权限";
 
+    String ANY_NO_PERMISSION = "{}无权限";
+
 }

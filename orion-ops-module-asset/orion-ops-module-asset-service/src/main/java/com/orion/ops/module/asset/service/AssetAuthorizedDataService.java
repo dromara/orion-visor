@@ -35,6 +35,14 @@ public interface AssetAuthorizedDataService {
     AuthorizedHostWrapperVO getUserAuthorizedHostGroup(Long userId);
 
     /**
+     * 获取用户已授权的主机id 不查询角色
+     *
+     * @param userId userId
+     * @return hostId
+     */
+    List<Long> getUserAuthorizedHostId(Long userId);
+
+    /**
      * 查询用户已授权的主机秘钥
      *
      * @param userId userId

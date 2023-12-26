@@ -7,7 +7,7 @@ package com.orion.ops.module.asset.enums;
  * @version 1.0.0
  * @since 2023/9/21 19:01
  */
-public enum HostConfigSshAuthTypeEnum {
+public enum HostSshAuthTypeEnum {
 
     /**
      * 密码验证
@@ -26,11 +26,11 @@ public enum HostConfigSshAuthTypeEnum {
 
     ;
 
-    public static HostConfigSshAuthTypeEnum of(String type) {
+    public static HostSshAuthTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (HostConfigSshAuthTypeEnum value : values()) {
+        for (HostSshAuthTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }
