@@ -141,7 +141,7 @@ public class DictTemplate extends Template {
      */
     public DictTemplate extra(String key, Object... values) {
         // 初始化额外值
-        if (dictMeta.extraValues.size() == 0) {
+        if (dictMeta.extraValues.isEmpty()) {
             for (int i = 0; i < dictMeta.fields.size(); i++) {
                 dictMeta.extraValues.add(new LinkedHashMap<>());
             }

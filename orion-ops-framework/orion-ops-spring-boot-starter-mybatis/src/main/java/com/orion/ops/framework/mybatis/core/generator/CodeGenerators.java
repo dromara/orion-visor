@@ -27,7 +27,7 @@ public class CodeGenerators {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "infra";
+        String module = "asset";
         // 生成的表
         Table[] tables = {
                 // Template.create("dict_key", "字典配置项", "dict")
@@ -45,9 +45,9 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("data_extra", "数据拓展信息", "data")
+                Template.create("host_connect_log", "主机连接日志", "host")
                         .disableUnitTest()
-                        .enableProviderApi()
+                        .vue("asset", "host-connect-log")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

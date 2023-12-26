@@ -14,7 +14,7 @@ import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 
 export type CacheType = 'users' | 'menus' | 'roles'
-  | 'host' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
+  | 'hosts' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
   | 'dictKeys'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | string

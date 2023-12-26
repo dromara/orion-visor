@@ -22,6 +22,10 @@ const ASSET: AppRouteRecordRaw = {
       name: 'assetGrant',
       path: '/asset/grant',
       component: () => import('@/views/asset/grant/index.vue'),
+    }, {
+      name: 'assetHostConnectLog',
+      path: '/asset/host-connect-log',
+      component: () => import('@/views/asset/host-connect-log/index.vue'),
     },
   ],
 };

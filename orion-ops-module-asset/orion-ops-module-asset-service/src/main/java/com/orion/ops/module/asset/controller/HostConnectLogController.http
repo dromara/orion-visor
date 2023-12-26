@@ -1,0 +1,19 @@
+### 分页查询主机连接日志
+POST {{baseUrl}}/asset/host-connect-log/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "userId": "",
+  "hostId": "",
+  "type": "",
+  "token": "",
+  "status": "",
+  "startTimeStart": "",
+  "endTimeEnd": ""
+}
+
+
+###

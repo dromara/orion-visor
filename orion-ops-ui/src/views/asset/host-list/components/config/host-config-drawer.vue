@@ -63,7 +63,6 @@
       data.forEach(s => {
         config.value[s.type] = s;
       });
-      console.log(config.value);
     } catch ({ message }) {
       Message.error(`配置加载失败 ${message}`);
       setVisible(false);
