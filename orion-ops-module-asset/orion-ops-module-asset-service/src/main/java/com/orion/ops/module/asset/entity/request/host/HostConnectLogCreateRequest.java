@@ -1,8 +1,10 @@
 package com.orion.ops.module.asset.entity.request.host;
 
-import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Size;
 
@@ -17,9 +19,8 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Schema(name = "HostConnectLogCreateRequest", description = "主机连接日志 创建请求对象")
-public class HostConnectLogCreateRequest extends PageRequest {
+public class HostConnectLogCreateRequest {
 
     @Schema(description = "用户id")
     private Long userId;

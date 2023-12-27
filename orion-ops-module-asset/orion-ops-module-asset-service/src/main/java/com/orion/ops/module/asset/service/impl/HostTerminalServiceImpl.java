@@ -12,6 +12,7 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
+import com.orion.ops.module.asset.convert.HostConnectLogConvert;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
@@ -20,10 +21,8 @@ import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
 import com.orion.ops.module.asset.entity.dto.HostSshConnectDTO;
-import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
-import com.orion.ops.module.asset.enums.HostExtraItemEnum;
-import com.orion.ops.module.asset.enums.HostExtraSshAuthTypeEnum;
-import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
+import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateRequest;
+import com.orion.ops.module.asset.enums.*;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
 import com.orion.ops.module.asset.service.HostConfigService;
@@ -120,11 +119,14 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         // 获取连接配置
         HostSshConnectDTO connect = this.getHostConnectInfo(host, config, extra);
         connect.setUserId(userId);
-        connect.setUsername(user.getUsername());
         connect.setToken(token);
         // 设置缓存
         String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_CONNECT.format(token);
         RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_CONNECT, connect);
+        // 记录连接日志
+        HostConnectLogCreateRequest log = HostConnectLogConvert.MAPPER.to(connect);
+        log.setUsername(user.getUsername());
+        hostConnectLogService.create(HostConnectTypeEnum.SSH, log);
         // 设置日志参数
         OperatorLogs.add(connect);
         return token;
@@ -154,7 +156,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Override
     public SessionStore openSessionStore(HostSshConnectDTO conn) {
         Long hostId = conn.getHostId();
-        String address = conn.getAddress();
+        String address = conn.getHostAddress();
         String username = conn.getUsername();
         log.info("HostConnectService-openSessionStore-start hostId: {}, address: {}, username: {}", hostId, address, username);
         try {
@@ -236,7 +238,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         HostSshConnectDTO conn = new HostSshConnectDTO();
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
-        conn.setAddress(host.getAddress());
+        conn.setHostAddress(host.getAddress());
         conn.setPort(config.getPort());
         conn.setTimeout(config.getConnectTimeout());
         conn.setUsername(config.getUsername());
@@ -258,6 +260,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         if (keyId != null) {
             HostKeyDO key = hostKeyDAO.selectById(keyId);
             Valid.notNull(key, ErrorMessage.KEY_ABSENT);
+            conn.setKeyId(keyId);
             conn.setPublicKey(key.getPublicKey());
             conn.setPrivateKey(key.getPrivateKey());
             conn.setPrivateKeyPassword(key.getPassword());

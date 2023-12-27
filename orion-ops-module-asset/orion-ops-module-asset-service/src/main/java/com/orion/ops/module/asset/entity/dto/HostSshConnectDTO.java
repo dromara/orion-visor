@@ -36,7 +36,7 @@ public class HostSshConnectDTO {
     private String hostName;
 
     @Schema(description = "主机地址")
-    private String address;
+    private String hostAddress;
 
     @Schema(description = "端口")
     private Integer port;
