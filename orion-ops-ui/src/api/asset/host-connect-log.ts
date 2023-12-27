@@ -12,8 +12,7 @@ export interface HostConnectLogQueryRequest extends Pagination {
   type?: string;
   token?: string;
   status?: string;
-  startTimeStart?: string;
-  startTimeEnd?: string;
+  startTimeRange?: string[];
 }
 
 /**

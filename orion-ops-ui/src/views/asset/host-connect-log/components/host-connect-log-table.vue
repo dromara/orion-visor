@@ -3,21 +3,21 @@
   <a-card class="general-card table-search-card">
     <a-query-header :model="formModel"
                     label-align="left"
+                    :itemOptions="{ 5: { span: 2 } }"
                     @submit="fetchTableData"
-                    @reset="reset"
+                    @reset="fetchTableData"
                     @keyup.enter="() => fetchTableData()">
-      <!-- 用户 -->
-      <a-form-item field="userId" label="用户" label-col-flex="50px">
+      <!-- 连接用户 -->
+      <a-form-item field="userId" label="连接用户" label-col-flex="50px">
         <user-selector v-model="formModel.userId"
                        placeholder="请选择用户"
                        allow-clear />
       </a-form-item>
-      <!-- 主机 -->
-      <a-form-item field="hostId" label="主机" label-col-flex="50px">
-        <a-input-number v-model="formModel.hostId"
-                        placeholder="FIXME 请输入主机"
-                        allow-clear
-                        hide-button />
+      <!-- 连接主机 -->
+      <a-form-item field="hostId" label="连接主机" label-col-flex="50px">
+        <host-selector v-model="formModel.hostId"
+                       placeholder="请选择主机"
+                       allow-clear />
       </a-form-item>
       <!-- 主机地址 -->
       <a-form-item field="hostAddress" label="主机地址" label-col-flex="50px">
@@ -35,12 +35,12 @@
         <a-input v-model="formModel.token" placeholder="请输入token" allow-clear />
       </a-form-item>
       <!-- 开始时间 -->
-      <a-form-item field="startTime" label="开始时间" label-col-flex="50px">
-        <a-range-picker v-model="timeRange"
+      <a-form-item field="startTimeRange" label="开始时间" label-col-flex="50px">
+        <a-range-picker v-model="formModel.startTimeRange"
+                        style="width: 100%"
                         :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                         show-time
-                        format="YYYY-MM-DD HH:mm:ss"
-                        @ok="timeRangePicked" />
+                        format="YYYY-MM-DD HH:mm:ss" />
       </a-form-item>
     </a-query-header>
   </a-card>
@@ -69,6 +69,14 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 连接用户 -->
+      <template #username="{ record }">
+        {{ record.userId }} - {{ record.username }}
+      </template>
+      <!-- 连接主机 -->
+      <template #hostName="{ record }">
+        {{ record.hostId }} - {{ record.hostName }}
+      </template>
       <!-- 主机地址 -->
       <template #hostAddress="{ record }">
         <span class="copy-left" title="复制" @click="copy(record.hostAddress)">
@@ -104,6 +112,7 @@
   import { useDictStore } from '@/store';
   import useCopy from '@/hooks/copy';
   import UserSelector from '@/components/user/user/user-selector.vue';
+  import HostSelector from '@/components/asset/host/host-selector.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
@@ -114,7 +123,6 @@
   const { toOptions, getDictValue } = useDictStore();
   const { copy } = useCopy();
 
-  const timeRange = ref<string[]>([]);
   const formModel = reactive<HostConnectLogQueryRequest>({
     userId: undefined,
     hostId: undefined,
@@ -122,15 +130,8 @@
     type: undefined,
     token: undefined,
     status: undefined,
-    startTimeStart: undefined,
-    startTimeEnd: undefined,
+    startTimeRange: undefined,
   });
-
-  // 选择时间
-  const timeRangePicked = (e: string[]) => {
-    formModel.startTimeStart = e[0];
-    formModel.startTimeEnd = e[1];
-  };
 
   // 加载数据
   const doFetchTableData = async (request: HostConnectLogQueryRequest) => {
@@ -150,14 +151,6 @@
   // 切换页码
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
-  };
-
-  // 重置
-  const reset = () => {
-    timeRange.value = [];
-    formModel.startTimeStart = undefined;
-    formModel.startTimeEnd = undefined;
-    fetchTableData();
   };
 
   onMounted(() => {

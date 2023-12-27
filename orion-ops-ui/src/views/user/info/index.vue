@@ -33,7 +33,7 @@
       <!-- 返回 -->
       <a-tab-pane key="back" v-if="userId">
         <template #title>
-          <icon-arrow-left style="font-size: 16px" />
+          <icon-left style="font-size: 16px; padding-top: 2px;" />
           返回
         </template>
       </a-tab-pane>

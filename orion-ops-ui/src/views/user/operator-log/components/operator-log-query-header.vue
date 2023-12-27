@@ -1,8 +1,9 @@
 <template>
   <a-query-header :model="formModel"
                   label-align="left"
+                  :itemOptions="{ [visibleUser ? 5 : 4]: { span: 2 } }"
                   @submit="submit"
-                  @reset="reset"
+                  @reset="submit"
                   @keyup.enter="submit">
     <!-- 操作用户 -->
     <a-form-item v-if="visibleUser"
@@ -47,12 +48,12 @@
                 allow-clear />
     </a-form-item>
     <!-- 执行时间 -->
-    <a-form-item field="startTime" label="执行时间" label-col-flex="50px">
-      <a-range-picker v-model="timeRange"
+    <a-form-item field="startTimeRange" label="执行时间" label-col-flex="50px">
+      <a-range-picker v-model="formModel.startTimeRange"
+                      style="width: 100%"
                       :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                       show-time
-                      format="YYYY-MM-DD HH:mm:ss"
-                      @ok="timeRangePicked" />
+                      format="YYYY-MM-DD HH:mm:ss" />
     </a-form-item>
   </a-query-header>
 </template>
@@ -84,22 +85,14 @@
   const { loading, setLoading } = useLoading();
   const { $state: dictState, toOptions } = useDictStore();
 
-  const timeRange = ref<string[]>([]);
   const typeOptions = ref<SelectOptionData[]>(toOptions(operatorLogTypeKey));
   const formModel = reactive<OperatorLogQueryRequest>({
     module: undefined,
     type: undefined,
     riskLevel: undefined,
     result: undefined,
-    startTimeStart: undefined,
-    startTimeEnd: undefined,
+    startTimeRange: undefined,
   });
-
-  // 选择时间
-  const timeRangePicked = (e: string[]) => {
-    formModel.startTimeStart = e[0];
-    formModel.startTimeEnd = e[1];
-  };
 
   // 选择类型
   const selectedModule = (module: string) => {
@@ -116,14 +109,6 @@
     if (formModel.type && !formModel.type.startsWith(modulePrefix)) {
       formModel.type = undefined;
     }
-  };
-
-  // 重置
-  const reset = () => {
-    timeRange.value = [];
-    formModel.startTimeStart = undefined;
-    formModel.startTimeEnd = undefined;
-    submit();
   };
 
   // 切换页码

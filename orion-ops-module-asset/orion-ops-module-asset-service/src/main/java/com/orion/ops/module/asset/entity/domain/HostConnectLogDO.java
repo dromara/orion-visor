@@ -36,6 +36,10 @@ public class HostConnectLogDO extends BaseDO {
     @TableField("user_id")
     private Long userId;
 
+    @Schema(description = "用户名")
+    @TableField("username")
+    private String username;
+
     @Schema(description = "主机id")
     @TableField("host_id")
     private Long hostId;

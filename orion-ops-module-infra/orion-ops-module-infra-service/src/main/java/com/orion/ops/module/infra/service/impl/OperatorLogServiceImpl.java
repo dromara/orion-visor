@@ -2,6 +2,7 @@ package com.orion.ops.module.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Arrays1;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.infra.convert.OperatorLogConvert;
@@ -77,8 +78,8 @@ public class OperatorLogServiceImpl implements OperatorLogService {
                 .eq(OperatorLogDO::getModule, request.getModule())
                 .eq(OperatorLogDO::getType, request.getType())
                 .eq(OperatorLogDO::getResult, request.getResult())
-                .ge(OperatorLogDO::getStartTime, request.getStartTimeStart())
-                .le(OperatorLogDO::getStartTime, request.getStartTimeEnd())
+                .ge(OperatorLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
+                .le(OperatorLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
                 .orderByDesc(OperatorLogDO::getId);
     }
 

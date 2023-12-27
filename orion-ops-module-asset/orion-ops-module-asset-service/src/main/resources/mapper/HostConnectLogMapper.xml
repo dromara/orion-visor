@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.orion.ops.module.asset.entity.domain.HostConnectLogDO">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
         <result column="host_id" property="hostId"/>
         <result column="host_name" property="hostName"/>
         <result column="host_address" property="hostAddress"/>
@@ -22,7 +23,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, host_id, host_name, host_address, type, token, status, start_time, end_time, extra_info, create_time, update_time, deleted
+        id, user_id, username, host_id, host_name, host_address, type, token, status, start_time, end_time, extra_info, create_time, update_time, deleted
     </sql>
 
 </mapper>

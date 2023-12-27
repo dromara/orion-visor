@@ -11,8 +11,10 @@ Authorization: {{token}}
   "type": "",
   "token": "",
   "status": "",
-  "startTimeStart": "",
-  "endTimeEnd": ""
+  "startTimeRange": [
+    "",
+    ""
+  ]
 }
 
 

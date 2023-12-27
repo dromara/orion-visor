@@ -11,8 +11,7 @@ export interface OperatorLogQueryRequest extends Pagination {
   type?: string;
   riskLevel?: string;
   result?: number;
-  startTimeStart?: string;
-  startTimeEnd?: string;
+  startTimeRange?: string[];
 }
 
 /**

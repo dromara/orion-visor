@@ -94,8 +94,8 @@
   const renderLabel = (label: string) => {
     const last = label.lastIndexOf('-');
     const prefix = label.substring(0, last - 1);
-    const ip = label.substring(last + 2, label.length);
-    return `${prefix} - <span class="span-blue">${ip}</span>`;
+    const address = label.substring(last + 2, label.length);
+    return `${prefix} - <span class="span-blue">${address}</span>`;
   };
 
   // 查询组内数据
@@ -121,7 +121,7 @@
       data.value = hosts.map(s => {
         return {
           value: String(s.id),
-          label: `${s.name} (${s.code}) - ${s.address}`,
+          label: `${s.name} - ${s.address}`,
           disabled: false
         };
       });

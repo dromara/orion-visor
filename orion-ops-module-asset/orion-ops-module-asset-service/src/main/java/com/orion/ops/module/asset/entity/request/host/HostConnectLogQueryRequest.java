@@ -45,12 +45,8 @@ public class HostConnectLogQueryRequest extends PageRequest {
     @Schema(description = "状态")
     private String status;
 
-    @Schema(description = "开始时间-开区间")
+    @Schema(description = "开始时间-区间")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date startTimeStart;
-
-    @Schema(description = "开始时间-闭区间")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date startTimeEnd;
+    private Date[] startTimeRange;
 
 }

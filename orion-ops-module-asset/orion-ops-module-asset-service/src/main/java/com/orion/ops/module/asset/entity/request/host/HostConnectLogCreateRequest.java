@@ -24,8 +24,17 @@ public class HostConnectLogCreateRequest extends PageRequest {
     @Schema(description = "用户id")
     private Long userId;
 
+    @Schema(description = "用户名")
+    private String username;
+
     @Schema(description = "主机id")
     private Long hostId;
+
+    @Schema(description = "主机名称")
+    private String hostName;
+
+    @Schema(description = "主机地址")
+    private String hostAddress;
 
     @Size(max = 128)
     @Schema(description = "token")

@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Arrays1;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.module.asset.convert.HostConnectLogConvert;
 import com.orion.ops.module.asset.dao.HostConnectLogDAO;
@@ -74,8 +75,8 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
                 .eq(HostConnectLogDO::getType, request.getType())
                 .like(HostConnectLogDO::getToken, request.getToken())
                 .eq(HostConnectLogDO::getStatus, request.getStatus())
-                .ge(HostConnectLogDO::getStartTime, request.getStartTimeStart())
-                .le(HostConnectLogDO::getStartTime, request.getStartTimeEnd());
+                .ge(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
+                .le(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1));
     }
 
 }

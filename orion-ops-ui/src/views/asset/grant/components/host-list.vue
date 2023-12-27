@@ -15,11 +15,13 @@
     </template>
     <!-- 数据 -->
     <template #item="{ item }">
-      <a-list-item :title="`${item.name}(${item.code}) - ${item.address}`">
-        <icon-desktop class="host-list-icon" />
-        <span>{{ `${item.name}(${item.code}) - ` }}</span>
-        <span class="span-blue">{{ item.address }}</span>
-      </a-list-item>
+      <a-tooltip :content="`${item.name} - ${item.address}`">
+        <a-list-item>
+          <icon-desktop class="host-list-icon" />
+          <span>{{ `${item.name} - ` }}</span>
+          <span class="span-blue">{{ item.address }}</span>
+        </a-list-item>
+      </a-tooltip>
     </template>
   </a-list>
 </template>
