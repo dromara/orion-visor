@@ -1,4 +1,4 @@
-package com.orion.ops.framework.websocket.utils;
+package com.orion.ops.framework.websocket.core.utils;
 
 import com.orion.lang.exception.AuthenticationException;
 import com.orion.lang.exception.ConnectionRuntimeException;
@@ -6,7 +6,7 @@ import com.orion.lang.exception.DisabledException;
 import com.orion.lang.exception.TimeoutException;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Urls;
-import com.orion.ops.framework.websocket.constant.WsCloseCode;
+import com.orion.ops.framework.websocket.core.constant.WsCloseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.socket.CloseStatus;

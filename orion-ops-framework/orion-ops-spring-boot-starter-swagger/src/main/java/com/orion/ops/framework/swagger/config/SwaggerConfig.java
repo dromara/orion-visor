@@ -6,13 +6,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Map;
 
 /**
+ * swagger 配置
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/21 11:13
  */
 @Data
 @ConfigurationProperties("orion.swagger")
-public class SwaggerProperties {
+public class SwaggerConfig {
 
     /**
      * 标题

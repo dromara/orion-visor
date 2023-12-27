@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.swagger",
-      "type": "com.orion.ops.framework.swagger.config.SwaggerProperties",
-      "sourceType": "com.orion.ops.framework.swagger.config.SwaggerProperties"
+      "type": "com.orion.ops.framework.swagger.config.SwaggerConfig",
+      "sourceType": "com.orion.ops.framework.swagger.config.SwaggerConfig"
     }
   ],
   "properties": [

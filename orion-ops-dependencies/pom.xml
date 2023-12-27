@@ -15,23 +15,24 @@
 
     <properties>
         <revision>1.0.0</revision>
-        <spring.boot.version>2.7.11</spring.boot.version>
+        <spring.boot.version>2.7.17</spring.boot.version>
+        <spring.boot.admin.version>2.7.15</spring.boot.admin.version>
+        <flatten.maven.plugin.version>1.5.0</flatten.maven.plugin.version>
         <orion.kit.revision>1.0.6</orion.kit.revision>
         <aspectj.version>1.9.7</aspectj.version>
         <lombok.version>1.18.26</lombok.version>
         <springdoc.version>1.6.15</springdoc.version>
         <knife4j.version>4.1.0</knife4j.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
-        <mybatis-plus-generator.version>3.5.3.1</mybatis-plus-generator.version>
-        <mybatis-plus-join.version>1.4.6</mybatis-plus-join.version>
+        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+        <mybatis.plus.generator.version>3.5.3.1</mybatis.plus.generator.version>
+        <mybatis.plus.join.version>1.4.6</mybatis.plus.join.version>
         <velocity.version>2.3</velocity.version>
         <druid.version>1.2.16</druid.version>
         <redisson.version>3.18.0</redisson.version>
-        <spring-boot-admin.version>2.7.10</spring-boot-admin.version>
-        <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
-        <mockito-inline.version>4.11.0</mockito-inline.version>
-        <jedis-mock.version>1.0.7</jedis-mock.version>
+        <transmittable.thread.local.version>2.14.2</transmittable.thread.local.version>
+        <mockito.inline.version>4.11.0</mockito.inline.version>
+        <jedis.mock.version>1.0.7</jedis.mock.version>
         <podam.version>7.2.11.RELEASE</podam.version>
     </properties>
 
@@ -203,12 +204,12 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${mybatis.plus.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus-generator.version}</version>
+                <version>${mybatis.plus.generator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.velocity</groupId>
@@ -218,7 +219,7 @@
             <dependency>
                 <groupId>com.github.yulichang</groupId>
                 <artifactId>mybatis-plus-join-boot-starter</artifactId>
-                <version>${mybatis-plus-join.version}</version>
+                <version>${mybatis.plus.join.version}</version>
             </dependency>
 
             <!-- redis -->
@@ -245,19 +246,19 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-server</artifactId>
-                <version>${spring-boot-admin.version}</version>
+                <version>${spring.boot.admin.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId>
-                <version>${spring-boot-admin.version}</version>
+                <version>${spring.boot.admin.version}</version>
             </dependency>
 
             <!-- transmittable -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>transmittable-thread-local</artifactId>
-                <version>${transmittable-thread-local.version}</version>
+                <version>${transmittable.thread.local.version}</version>
             </dependency>
 
             <!-- test -->
@@ -285,14 +286,14 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-inline</artifactId>
-                <version>${mockito-inline.version}</version>
+                <version>${mockito.inline.version}</version>
             </dependency>
 
             <!-- test redis -->
             <dependency>
                 <groupId>com.github.fppt</groupId>
                 <artifactId>jedis-mock</artifactId>
-                <version>${jedis-mock.version}</version>
+                <version>${jedis.mock.version}</version>
             </dependency>
 
             <!-- test entity 随机生成器 -->
@@ -303,5 +304,36 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- 统一 revision 版本 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten.maven.plugin.version}</version>
+                <configuration>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

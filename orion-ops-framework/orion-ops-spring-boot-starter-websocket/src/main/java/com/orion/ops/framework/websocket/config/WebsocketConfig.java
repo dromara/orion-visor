@@ -1,4 +1,4 @@
-package com.orion.ops.framework.websocket.core;
+package com.orion.ops.framework.websocket.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties("spring.websocket")
-public class WebsocketContainerConfig {
+public class WebsocketConfig {
 
     /**
      * 二进制消息缓冲区大小 byte

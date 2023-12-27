@@ -1,7 +1,7 @@
-package com.orion.ops.framework.websocket.interceptor;
+package com.orion.ops.framework.websocket.core.interceptor;
 
 import com.orion.ops.framework.common.security.SecurityHolder;
-import com.orion.ops.framework.websocket.constant.WsAttr;
+import com.orion.ops.framework.websocket.core.constant.WsAttr;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;

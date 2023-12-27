@@ -1,4 +1,4 @@
-package com.orion.ops.framework.websocket.constant;
+package com.orion.ops.framework.websocket.core.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

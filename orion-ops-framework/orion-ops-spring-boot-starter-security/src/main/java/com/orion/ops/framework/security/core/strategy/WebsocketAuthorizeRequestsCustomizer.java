@@ -15,7 +15,7 @@ public class WebsocketAuthorizeRequestsCustomizer extends AuthorizeRequestsCusto
     @Override
     public void customize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry) {
         // websocket 允许匿名访问
-        registry.antMatchers("/keep-alive/**").permitAll();
+        registry.antMatchers("/orion/keep-alive/**").permitAll();
     }
 
 }

@@ -1,8 +1,7 @@
 package com.orion.ops.framework.websocket.config;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
-import com.orion.ops.framework.websocket.core.WebsocketContainerConfig;
-import com.orion.ops.framework.websocket.interceptor.UserHandshakeInterceptor;
+import com.orion.ops.framework.websocket.core.interceptor.UserHandshakeInterceptor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,14 +20,14 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocket
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_WEBSOCKET)
-@EnableConfigurationProperties(WebsocketContainerConfig.class)
+@EnableConfigurationProperties(WebsocketConfig.class)
 public class OrionWebsocketAutoConfiguration {
 
     /**
      * @return websocket 缓冲区大小配置
      */
     @Bean
-    public ServletServerContainerFactoryBean servletServerContainerFactoryBean(WebsocketContainerConfig config) {
+    public ServletServerContainerFactoryBean servletServerContainerFactoryBean(WebsocketConfig config) {
         ServletServerContainerFactoryBean factory = new ServletServerContainerFactoryBean();
         factory.setMaxBinaryMessageBufferSize(config.getBinaryBufferSize());
         factory.setMaxTextMessageBufferSize(config.getBinaryBufferSize());

@@ -1,4 +1,4 @@
-package com.orion.ops.framework.websocket.constant;
+package com.orion.ops.framework.websocket.core.constant;
 
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;

@@ -39,7 +39,7 @@ import java.util.Optional;
  */
 @Profile({"dev"})
 @ConditionalOnClass({OpenAPI.class})
-@EnableConfigurationProperties(SwaggerProperties.class)
+@EnableConfigurationProperties(SwaggerConfig.class)
 @ConditionalOnProperty(prefix = "springdoc.api-docs", name = "enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SWAGGER)
@@ -53,7 +53,7 @@ public class OrionSwaggerAutoConfiguration {
      * @return OpenAPI
      */
     @Bean
-    public OpenAPI openApi(SwaggerProperties properties) {
+    public OpenAPI openApi(SwaggerConfig properties) {
         Map<String, SecurityScheme> securitySchemas = this.buildSecuritySchemes();
         OpenAPI api = new OpenAPI()
                 // 接口信息
@@ -68,7 +68,7 @@ public class OrionSwaggerAutoConfiguration {
     /**
      * api 摘要信息
      */
-    private Info buildInfo(SwaggerProperties properties) {
+    private Info buildInfo(SwaggerConfig properties) {
         return new Info()
                 .title(properties.getTitle())
                 .description(properties.getDescription())
@@ -117,7 +117,7 @@ public class OrionSwaggerAutoConfiguration {
      */
     @Bean
     public GroupedOpenApi allGroupedOpenApi(ConfigurableListableBeanFactory beanFactory,
-                                            SwaggerProperties properties) {
+                                            SwaggerConfig properties) {
         // 全部
         GroupedOpenApi all = this.buildGroupedOpenApi("全部", "*");
         // 注册模块分组 api
