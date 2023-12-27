@@ -1,7 +1,7 @@
 package com.orion.ops.module.asset.entity.dto;
 
-import com.orion.ops.module.asset.entity.domain.HostKeyDO;
-import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
+import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
+import com.orion.ops.framework.desensitize.core.annotation.DesensitizeObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,11 +19,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DesensitizeObject
 @Schema(name = "HostSshConnectDTO", description = "主机连接参数")
 public class HostSshConnectDTO {
 
+    @Schema(description = "token")
+    private String token;
+
+    @Schema(description = "userId")
+    private Long userId;
+
     @Schema(description = "hostId")
     private Long hostId;
+
+    @Schema(description = "hostName")
+    private String hostName;
 
     @Schema(description = "主机地址")
     private String address;
@@ -34,19 +44,26 @@ public class HostSshConnectDTO {
     @Schema(description = "超时时间")
     private Integer timeout;
 
-    @Schema(description = "认证方式")
-    private HostSshAuthTypeEnum authType;
-
     @Schema(description = "用户名")
     private String username;
 
+    @Desensitize(toEmpty = true)
     @Schema(description = "密码")
     private String password;
 
-    @Schema(description = "主机秘钥")
-    private HostKeyDO key;
+    @Schema(description = "秘钥id")
+    private Long keyId;
 
-    // @Schema(description = "")
-    // private ;
+    @Desensitize(toEmpty = true)
+    @Schema(description = "公钥文本")
+    private String publicKey;
+
+    @Desensitize(toEmpty = true)
+    @Schema(description = "私钥文本")
+    private String privateKey;
+
+    @Desensitize(toEmpty = true)
+    @Schema(description = "私钥密码")
+    private String privateKeyPassword;
 
 }

@@ -65,7 +65,7 @@ INSERT INTO `system_menu` VALUES (106, 105, '查询字典配置值', 'infra:dict
 INSERT INTO `system_menu` VALUES (107, 105, '创建字典配置值', 'infra:dict-value:create', 3, 220, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (108, 105, '修改字典配置值', 'infra:dict-value:update', 3, 230, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (109, 105, '删除字典配置值', 'infra:dict-value:delete', 3, 240, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
-INSERT INTO `system_menu` VALUES (120, 97, '查询字典配置项', 'infra:dict-key:create', 3, 100, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-20 11:27:12', '2023-10-27 01:16:10', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (120, 97, '查询字典配置项', 'infra:dict-key:query', 3, 100, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-20 11:27:12', '2023-10-27 01:16:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (121, 97, '刷新缓存', 'infra:dict-key:management:refresh-cache', 3, 140, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-27 15:50:04', '2023-12-27 12:40:12', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (122, 5, '操作日志', NULL, 2, 30, 1, 1, 1, 0, 'IconCalendarClock', NULL, 'userOperatorLog', '2023-11-01 14:09:36', '2023-11-01 14:09:36', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (123, 122, '查询操作日志', 'infra:operator-log:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-02 11:22:54', '2023-11-02 11:22:54', '1', '1', 0);

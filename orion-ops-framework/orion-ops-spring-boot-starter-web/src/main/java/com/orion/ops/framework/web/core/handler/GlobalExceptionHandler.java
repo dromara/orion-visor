@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public HttpWrapper<?> defaultExceptionHandler(Exception ex) {
         log.error("defaultExceptionHandler", ex);
-        return ErrorCode.INTERNAL_SERVER_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.INTERNAL_SERVER_ERROR.wrapper();
     }
 
     // -------------------- http 异常 --------------------
@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     public HttpWrapper<?> maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException ex) {
         log.error("maxUploadSizeExceededExceptionHandler", ex);
-        return ErrorCode.PAYLOAD_TOO_LARGE.wrapper(ex.getMessage());
+        return ErrorCode.PAYLOAD_TOO_LARGE.wrapper();
     }
 
     // -------------------- 框架异常 --------------------
@@ -132,7 +132,7 @@ public class GlobalExceptionHandler {
     })
     public HttpWrapper<?> timeoutExceptionHandler(Exception ex) {
         log.error("timeoutExceptionHandler", ex);
-        return ErrorCode.REQUEST_TIMEOUT.wrapper(ex.getMessage());
+        return ErrorCode.REQUEST_TIMEOUT.wrapper();
     }
 
     @ExceptionHandler(value = {
@@ -142,7 +142,7 @@ public class GlobalExceptionHandler {
     })
     public HttpWrapper<?> interruptExceptionHandler(Exception ex) {
         log.error("interruptExceptionHandler", ex);
-        return ErrorCode.INTERRUPT_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.INTERRUPT_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = {
@@ -151,7 +151,7 @@ public class GlobalExceptionHandler {
     })
     public HttpWrapper<?> ioExceptionHandler(Exception ex) {
         log.error("ioExceptionHandler", ex);
-        return ErrorCode.IO_EXCEPTION.wrapper(ex.getMessage());
+        return ErrorCode.IO_EXCEPTION.wrapper();
     }
 
     @ExceptionHandler(value = SQLException.class)
@@ -178,7 +178,7 @@ public class GlobalExceptionHandler {
     })
     public HttpWrapper<?> sftpExceptionHandler(Exception ex) {
         log.error("sftpExceptionHandler", ex);
-        return ErrorCode.SFTP_EXCEPTION.wrapper(ex.getMessage());
+        return ErrorCode.SFTP_EXCEPTION.wrapper();
     }
 
     @ExceptionHandler(value = ParseRuntimeException.class)
@@ -186,22 +186,22 @@ public class GlobalExceptionHandler {
         log.error("parseExceptionHandler", ex);
         if (Exceptions.isCausedBy(ex, EncryptedDocumentException.class)) {
             // excel 密码错误
-            return ErrorCode.EXCEL_PASSWORD_ERROR.wrapper(ex.getMessage());
+            return ErrorCode.EXCEL_PASSWORD_ERROR.wrapper();
         } else {
-            return ErrorCode.PASER_FAILED.wrapper(ex.getMessage());
+            return ErrorCode.PASER_FAILED.wrapper();
         }
     }
 
     @ExceptionHandler(value = EncryptException.class)
     public HttpWrapper<?> encryptExceptionHandler(Exception ex) {
         log.error("encryptExceptionHandler", ex);
-        return ErrorCode.ENCRYPT_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.ENCRYPT_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = DecryptException.class)
     public HttpWrapper<?> decryptExceptionHandler(Exception ex) {
         log.error("decryptExceptionHandler", ex);
-        return ErrorCode.DECRYPT_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.DECRYPT_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = {HttpRequestException.class})
@@ -213,7 +213,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = VcsException.class)
     public HttpWrapper<?> vcsExceptionHandler(Exception ex) {
         log.error("vcsExceptionHandler", ex);
-        return ErrorCode.VCS_OPETATOR_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.VCS_OPETATOR_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = {
@@ -222,30 +222,31 @@ public class GlobalExceptionHandler {
     })
     public HttpWrapper<?> taskExceptionHandler(Exception ex) {
         log.error("taskExceptionHandler", ex);
-        return ErrorCode.TASK_EXECUTE_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.TASK_EXECUTE_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = ConnectionRuntimeException.class)
     public HttpWrapper<?> connectionExceptionHandler(Exception ex) {
         log.error("connectionExceptionHandler", ex);
-        return ErrorCode.CONNECT_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.CONNECT_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = UnsafeException.class)
     public HttpWrapper<?> unsafeExceptionHandler(Exception ex) {
         log.error("unsafeExceptionHandler", ex);
-        return ErrorCode.UNSAFE_OPERATOR.wrapper(ex.getMessage());
+        return ErrorCode.UNSAFE_OPERATOR.wrapper();
     }
 
     @ExceptionHandler(value = LogException.class)
     public HttpWrapper<?> logExceptionHandler(LogException ex) {
         log.error("logExceptionHandler", ex);
-        return ErrorCode.INTERNAL_SERVER_ERROR.wrapper(ex.getMessage());
+        return ErrorCode.INTERNAL_SERVER_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = ParseCronException.class)
     public HttpWrapper<?> parseCronExceptionHandler(ParseCronException ex) {
-        return ErrorCode.EXPRESSION_ERROR.wrapper(ex.getMessage());
+        log.error("parseCronExceptionHandler", ex);
+        return ErrorCode.EXPRESSION_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = CodeArgumentException.class)
