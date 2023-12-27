@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -131,6 +132,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 转换
         return list.stream()
                 .map(HostIdentityConvert.MAPPER::to)
+                .sorted(Comparator.comparing(HostIdentityVO::getId))
                 .collect(Collectors.toList());
     }
 

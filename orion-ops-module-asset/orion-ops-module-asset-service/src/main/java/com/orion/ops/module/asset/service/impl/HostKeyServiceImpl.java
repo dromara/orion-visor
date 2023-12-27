@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -145,6 +146,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 转换
         return list.stream()
                 .map(HostKeyConvert.MAPPER::to)
+                .sorted(Comparator.comparing(HostKeyVO::getId))
                 .collect(Collectors.toList());
     }
 

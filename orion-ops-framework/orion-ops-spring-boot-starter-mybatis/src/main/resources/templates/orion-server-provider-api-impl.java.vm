@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,7 +88,7 @@ public class ${type}ApiImpl implements ${type}Api {
     public List<${type}DTO> get${type}ByIdList(List<Long> idList) {
         log.info("${type}Api.get${type}ByIdList idList: {}", idList);
         if (Lists.isEmpty(idList)) {
-            return new ArrayList<>();
+            return Lists.empty();
         }
         // 查询
         List<${type}DO> rows = ${typeLower}DAO.selectBatchIds(idList);
@@ -112,6 +112,7 @@ public class ${type}ApiImpl implements ${type}Api {
         return ${typeLower}Service.get${type}ListByCache()
                 .stream()
                 .map(${type}ProviderConvert.MAPPER::to)
+                .sorted(Comparator.comparing(${type}DTO::getId))
                 .collect(Collectors.toList());
     }
 

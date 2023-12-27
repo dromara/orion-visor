@@ -34,6 +34,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -180,6 +181,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 转换
         return list.stream()
                 .map(SystemUserConvert.MAPPER::to)
+                .sorted(Comparator.comparing(SystemUserVO::getId))
                 .collect(Collectors.toList());
     }
 
