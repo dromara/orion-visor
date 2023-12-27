@@ -47,10 +47,5 @@ public class HostConnectLogController {
         return hostConnectLogService.getHostConnectLogPage(request);
     }
 
-    // FIXME management 菜单一键全选
-    // 前端选择
-    // 前端用户
-    // sql 元数据/菜单
-
 }
 

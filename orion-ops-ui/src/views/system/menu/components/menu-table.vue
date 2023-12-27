@@ -67,7 +67,7 @@
                         type="warning"
                         @ok="doRefreshCache">
             <a-button type="primary" status="warning"
-                      v-permission="['infra:system-menu:refresh-cache']">
+                      v-permission="['infra:system-menu:management:refresh-cache']">
               刷新缓存
               <template #icon>
                 <icon-sync />

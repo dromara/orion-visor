@@ -8,7 +8,7 @@
     </tr>
     </thead>
     <tbody>
-    <a-checkbox-group v-model="checkedKeys" style="display: contents">
+    <a-checkbox-group v-model="checkedKeys" style="display: contents;">
       <template v-for="parentMenu in menuData" :key="parentMenu.id">
         <template v-for="(childrenMenu, index) in parentMenu.children" :key="childrenMenu.id">
           <tr>
@@ -79,13 +79,13 @@
   };
 
   // 通过规则 选择/取消选择
-  const checkOrUncheckByRule = (rule: undefined | ((s: string) => boolean), check: boolean) => {
+  const checkOrUncheckByFilter = (filter: undefined | ((perm: string) => boolean), check: boolean) => {
     unTriggerChange.value = true;
     const nodes: Array<MenuQueryResponse> = [];
     flatNodes(menuData.value, nodes);
-    if (rule) {
+    if (filter) {
       const ruleNodes = nodes.filter(s => s.permission)
-        .filter(s => rule(s?.permission))
+        .filter(s => filter(s?.permission))
         .map(s => s.id)
         .filter(Boolean);
       if (check) {
@@ -106,7 +106,7 @@
     }
   };
 
-  defineExpose({ init, getValue, checkOrUncheckByRule });
+  defineExpose({ init, getValue, checkOrUncheckByFilter });
 
   // 监听级联变化
   watch(checkedKeys, (after: Array<number>, before: Array<number>) => {
@@ -170,6 +170,7 @@
     tbody {
       td {
         padding: 6px 16px;
+        border: 1px solid var(--color-fill-3);
       }
     }
   }

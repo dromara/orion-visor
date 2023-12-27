@@ -310,6 +310,37 @@ CREATE TABLE `host_config`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for host_connect_log
+-- ----------------------------
+DROP TABLE IF EXISTS `host_connect_log`;
+CREATE TABLE `host_connect_log`
+(
+    `id`           bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '用户id',
+    `username`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '用户名',
+    `host_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
+    `host_name`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '主机名称',
+    `host_address` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
+    `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '类型',
+    `token`        varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'token',
+    `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '状态',
+    `start_time`   datetime(0)                                                   NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time`     datetime(0)                                                   NULL DEFAULT NULL COMMENT '结束时间',
+    `extra_info`   json                                                          NULL COMMENT '额外信息',
+    `create_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `deleted`      tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user_id` (`user_id`) USING BTREE,
+    INDEX `idx_host_type` (`host_id`, `type`) USING BTREE,
+    INDEX `idx_token` (`token`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '主机连接日志'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for host_identity
 -- ----------------------------
 DROP TABLE IF EXISTS `host_identity`;

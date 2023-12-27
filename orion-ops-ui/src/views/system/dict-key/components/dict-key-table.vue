@@ -44,7 +44,7 @@
                         type="warning"
                         @ok="doRefreshCache">
             <a-button type="primary" status="warning"
-                      v-permission="['infra:dict-key:refresh-cache']">
+                      v-permission="['infra:dict-key:management:refresh-cache']">
               刷新缓存
               <template #icon>
                 <icon-sync />

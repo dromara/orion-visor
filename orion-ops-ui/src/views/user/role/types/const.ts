@@ -17,47 +17,47 @@ const standardWrite = [...addType, ...updateType];
 // 快速分配菜单操作
 export const quickGrantMenuOperator = [
   {
-    name: '',
-    rule: undefined
+    name: '全部',
+    filter: undefined
   }, {
-    name: '常规读操作',
-    rule: (perm: string) => {
+    name: '常规读',
+    filter: (perm: string) => {
       return !!standardRead.find(s => perm.includes(s));
     }
   }, {
-    name: '常规写操作',
-    rule: (perm: string) => {
+    name: '常规写',
+    filter: (perm: string) => {
       return !!standardWrite.find(s => perm.includes(s));
     }
   }, {
     name: '查询',
-    rule: (perm: string) => {
+    filter: (perm: string) => {
       return !!queryType.find(s => perm.includes(s));
     }
   }, {
     name: '新增',
-    rule: (perm: string) => {
+    filter: (perm: string) => {
       return !!addType.find(s => perm.includes(s));
     }
   }, {
     name: '修改',
-    rule: (perm: string) => {
+    filter: (perm: string) => {
       return !!updateType.find(s => perm.includes(s));
     }
   }, {
     name: '删除',
-    rule: (perm: string) => {
+    filter: (perm: string) => {
       return !!deleteType.find(s => perm.includes(s));
     }
   }, {
-    name: '导入',
-    rule: (perm: string) => {
-      return perm.includes('import');
+    name: '管理',
+    filter: (perm: string) => {
+      return perm.includes('management');
     }
   }, {
-    name: '导出',
-    rule: (perm: string) => {
-      return perm.includes('export');
+    name: '授权',
+    filter: (perm: string) => {
+      return perm.includes('grant');
     }
   },
 ];

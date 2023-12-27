@@ -94,7 +94,7 @@ public class SystemUserController {
     @OperatorLog(SystemUserOperatorType.RESET_PASSWORD)
     @PutMapping("/reset-password")
     @Operation(summary = "重置用户密码")
-    @PreAuthorize("@ss.hasPermission('infra:system-user:reset-password')")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:management:reset-password')")
     public HttpWrapper<?> resetUserPassword(@Validated @RequestBody UserResetPasswordRequest request) {
         systemUserService.resetPassword(request);
         return HttpWrapper.ok();
@@ -153,7 +153,7 @@ public class SystemUserController {
     @OperatorLog(SystemUserOperatorType.OFFLINE)
     @PutMapping("/session/offline")
     @Operation(summary = "下线用户会话")
-    @PreAuthorize("@ss.hasPermission('infra:system-user:offline-session')")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:management:offline-session')")
     public HttpWrapper<?> offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
         systemUserManagementService.offlineUserSession(request);
         return HttpWrapper.ok();

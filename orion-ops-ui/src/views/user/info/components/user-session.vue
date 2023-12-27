@@ -33,7 +33,7 @@
               <span>{{ item.address }}</span>
               <span>{{ item.location }}</span>
               <a-tag v-if="item.current" color="arcoblue">当前会话</a-tag>
-              <a-button v-else-if="hasPermission('infra:system-user:offline-session')"
+              <a-button v-else-if="!user || hasPermission('infra:system-user:management:offline-session')"
                         style="font-weight: 600;"
                         type="text"
                         size="mini"
@@ -76,7 +76,7 @@
   import { isMobile } from '@/utils/is';
   import { Message } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
-  import { getUserSessionList } from '@/api/user/user';
+  import { getUserSessionList, offlineUserSession } from '@/api/user/user';
 
   const props = defineProps({
     user: Object as PropType<UserQueryResponse>,
@@ -91,9 +91,18 @@
   const offline = async (item: UserSessionQueryResponse) => {
     try {
       setLoading(true);
-      await offlineCurrentUserSession({
-        timestamp: item.loginTime
-      });
+      if (props.user) {
+        // 下线其他用户
+        await offlineUserSession({
+          userId: props.user?.id,
+          timestamp: item.loginTime
+        });
+      } else {
+        // 下线当前用户
+        await offlineCurrentUserSession({
+          timestamp: item.loginTime
+        });
+      }
       Message.success('操作成功');
       item.visible = false;
     } catch (e) {

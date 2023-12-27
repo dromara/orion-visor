@@ -14,7 +14,7 @@
       </a-tab-pane>
       <!-- 登录日志 -->
       <a-tab-pane key="loginHistory"
-                  v-if="!user || hasPermission('infra:operator-log:query')"
+                  v-if="!user || hasPermission('infra:system-user:login-history')"
                   title="登录日志">
         <login-history :user="user" />
       </a-tab-pane>
@@ -48,8 +48,6 @@
 </script>
 
 <script lang="ts" setup>
-  import UserBaseInfo from './components/user-base-info.vue';
-  import LoginHistory from './components/login-history.vue';
   import UserSession from './components/user-session.vue';
   import OperatorLogList from './components/operator-log-list.vue';
   import { useRoute, useRouter } from 'vue-router';
@@ -57,6 +55,8 @@
   import usePermission from '@/hooks/permission';
   import { useUserStore } from '@/store';
   import { getUser, UserQueryResponse } from '@/api/user/user';
+  import UserBaseInfo from './components/user-base-info.vue';
+  import LoginHistory from './components/login-history.vue';
 
   const route = useRoute();
   const router = useRouter();

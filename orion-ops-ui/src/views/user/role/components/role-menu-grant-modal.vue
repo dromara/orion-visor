@@ -5,7 +5,7 @@
            title="分配菜单"
            width="80%"
            :top="40"
-           :body-style="{padding: '16px 16px 0 16px', 'margin-bottom': '16px'}"
+           :body-style="{ padding: '16px 16px 0 16px', 'margin-bottom': '16px' }"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -22,18 +22,22 @@
       </a-alert>
       <div class="usn mb8">
         <a-space>
+          <a-tag color="arcoblue">全选操作</a-tag>
+          <!-- 全选操作 -->
           <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
-            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByRule(opt.rule, true) }">
-              {{ '全选' + opt.name }}
+            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByFilter(opt.filter, true) }">
+              {{ opt.name }}
             </a-button>
           </template>
         </a-space>
       </div>
       <div class="usn mb8">
         <a-space>
+          <a-tag color="arcoblue">反选操作</a-tag>
+          <!-- 反选操作 -->
           <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
-            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByRule(opt.rule, false) }">
-              {{ '反选' + opt.name }}
+            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByFilter(opt.filter, false) }">
+              {{ opt.name }}
             </a-button>
           </template>
         </a-space>
@@ -124,5 +128,4 @@
     width: 100%;
     max-height: calc(100vh - 230px);
   }
-
 </style>

@@ -72,15 +72,15 @@ public class ServerTemplate extends Template {
         return this;
     }
 
-    /**
-     * 生成导出
-     *
-     * @return this
-     */
-    public ServerTemplate enableExport() {
-        table.enableExport = false;
-        return this;
-    }
+    // /**
+    //  * 生成导出
+    //  *
+    //  * @return this
+    //  */
+    // public ServerTemplate enableExport() {
+    //     table.enableExport = true;
+    //     return this;
+    // }
 
     /**
      * 不生成单元测试

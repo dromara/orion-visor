@@ -75,7 +75,7 @@ public class DictKeyController {
 
     @PutMapping("/refresh-cache")
     @Operation(summary = "刷新字典缓存")
-    @PreAuthorize("@ss.hasPermission('infra:dict-key:refresh-cache')")
+    @PreAuthorize("@ss.hasPermission('infra:dict-key:management:refresh-cache')")
     public HttpWrapper<?> refreshCache() {
         dictKeyService.refreshCache();
         return HttpWrapper.ok();
