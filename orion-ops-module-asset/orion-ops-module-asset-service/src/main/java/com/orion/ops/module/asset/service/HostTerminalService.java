@@ -1,7 +1,8 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.net.host.SessionStore;
-import com.orion.ops.module.asset.entity.dto.HostSshConnectDTO;
+import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
+import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 
 /**
  * 主机终端服务
@@ -13,21 +14,29 @@ import com.orion.ops.module.asset.entity.dto.HostSshConnectDTO;
 public interface HostTerminalService {
 
     /**
-     * 获取主机终端连接 token
+     * 获取主机终端访问 accessToken
+     *
+     * @param userId userId
+     * @return session
+     */
+    String getHostTerminalAccessToken(Long userId);
+
+    /**
+     * 通过 accessToken 获取主机终端访问信息
+     *
+     * @param token token
+     * @return config
+     */
+    HostTerminalAccessDTO getAccessInfoByToken(String token);
+
+    /**
+     * 使用用户配置打开获取连接信息
      *
      * @param hostId hostId
      * @param userId userId
      * @return session
      */
-    String getHostAccessToken(Long hostId, Long userId);
-
-    /**
-     * 通过 token 获取主机终端连接信息
-     *
-     * @param token token
-     * @return config
-     */
-    HostSshConnectDTO getConnectInfoByToken(String token);
+    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
 
     /**
      * 使用默认配置打开主机会话
@@ -43,6 +52,6 @@ public interface HostTerminalService {
      * @param conn conn
      * @return session
      */
-    SessionStore openSessionStore(HostSshConnectDTO conn);
+    SessionStore openSessionStore(HostTerminalConnectDTO conn);
 
 }

@@ -3,7 +3,7 @@ package com.orion.ops.framework.common.entity;
 import java.io.Serializable;
 
 /**
- * 请求身份
+ * 请求留痕
  *
  * @author Jiahang Li
  * @version 1.0.0

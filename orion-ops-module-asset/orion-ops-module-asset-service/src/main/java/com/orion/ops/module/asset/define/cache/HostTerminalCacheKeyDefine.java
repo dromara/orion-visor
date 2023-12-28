@@ -3,7 +3,7 @@ package com.orion.ops.module.asset.define.cache;
 import com.orion.lang.define.cache.key.CacheKeyBuilder;
 import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
-import com.orion.ops.module.asset.entity.dto.HostSshConnectDTO;
+import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
  */
 public interface HostTerminalCacheKeyDefine {
 
-    CacheKeyDefine HOST_TERMINAL_CONNECT = new CacheKeyBuilder()
-            .key("host:terminal:connect:{}")
-            .desc("主机终端连接信息 ${token}")
-            .type(HostSshConnectDTO.class)
+    CacheKeyDefine HOST_TERMINAL_ACCESS = new CacheKeyBuilder()
+            .key("host:terminal:access:{}")
+            .desc("主机终端访问token ${token}")
+            .type(HostTerminalAccessDTO.class)
             .struct(RedisCacheStruct.STRING)
             .timeout(3, TimeUnit.MINUTES)
             .build();

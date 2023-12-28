@@ -1,63 +1,57 @@
 package com.orion.ops.module.asset.interceptor;
 
-import com.orion.ops.framework.websocket.core.interceptor.UserHandshakeInterceptor;
-import org.springframework.context.annotation.Configuration;
+import com.orion.lang.utils.Urls;
+import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
+import com.orion.ops.framework.common.constant.ExtraFieldConst;
+import com.orion.ops.framework.common.entity.RequestIdentity;
+import com.orion.ops.framework.common.utils.Requests;
+import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
+import com.orion.ops.module.asset.service.HostTerminalService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.*;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
+ * 终端拦截器
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/12/27 23:53
  */
-@Configuration
-public class TerminalInterceptor implements WebSocketConfigurer {
-
-    // https://blog.csdn.net/oNew_Lifeo/article/details/130003676
-    // https://wstool.js.org/
+@Slf4j
+@Component
+public class TerminalInterceptor implements HandshakeInterceptor {
 
     @Resource
-    private UserHandshakeInterceptor userHandshakeInterceptor;
+    private HostTerminalService hostTerminalService;
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler1(), "/orion/keep-alive/host/terminal")
-                .addInterceptors(userHandshakeInterceptor)
-                .setAllowedOrigins("*");
-        System.out.println("123");
-    }
-
-    static class WebSocketHandler1 implements WebSocketHandler {
-
-        @Override
-        public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-            System.out.println(1);
-        }
-
-        @Override
-        public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-            System.out.println(message);
-        }
-
-        @Override
-        public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-            System.out.println(1);
-        }
-
-        @Override
-        public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-            System.out.println(1);
-        }
-
-        @Override
-        public boolean supportsPartialMessages() {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+        // 获取 token
+        String token = Urls.getUrlSource(request.getURI().getPath());
+        log.info("TerminalInterceptor-beforeHandshake start token: {}", token);
+        // 获取连接数据
+        HostTerminalAccessDTO access = hostTerminalService.getAccessInfoByToken(token);
+        if (access == null) {
+            log.error("TerminalInterceptor-beforeHandshake absent token: {}", token);
             return false;
         }
+        // 设置参数
+        attributes.put(ExtraFieldConst.USER_ID, access.getUserId());
+        OperatorLogModel identity = new OperatorLogModel();
+        Requests.fillIdentity(identity);
+        return true;
+    }
+
+    @Override
+    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+        log.info("afterHandshake");
     }
 
 }

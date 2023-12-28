@@ -16,12 +16,12 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
 @Module("asset:host-terminal")
 public class HostTerminalOperatorType extends InitializingOperatorTypes {
 
-    public static final String ACCESS = "host-terminal:access";
+    public static final String CONNECT = "host-terminal:connect";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, ACCESS, "连接主机终端 <sb>${hostName}</sb>"),
+                new OperatorType(L, CONNECT, "连接主机终端 <sb>${hostName}</sb>"),
         };
     }
 

@@ -1,11 +1,6 @@
 ### 获取主机终端连接 token
-POST {{baseUrl}}/asset/host-terminal/access
-Content-Type: application/json
+GET {{baseUrl}}/asset/host-terminal/access
 Authorization: {{token}}
-
-{
-  "hostId": 1
-}
 
 
 ###

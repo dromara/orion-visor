@@ -2,7 +2,7 @@ package com.orion.ops.framework.biz.operator.log.core.uitls;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
-import com.orion.ops.framework.biz.operator.log.core.constant.OperatorLogKeys;
+import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.common.security.LoginUser;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2023/10/10 11:32
  */
-public class OperatorLogs implements OperatorLogKeys {
+public class OperatorLogs implements ExtraFieldConst {
 
     private static final String UN_SAVE_FLAG = "__un__save__";
 

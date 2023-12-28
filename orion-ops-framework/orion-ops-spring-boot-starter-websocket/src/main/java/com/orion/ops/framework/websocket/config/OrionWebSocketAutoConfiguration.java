@@ -1,13 +1,11 @@
 package com.orion.ops.framework.websocket.config;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
-import com.orion.ops.framework.websocket.core.interceptor.UserHandshakeInterceptor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 /**
@@ -33,14 +31,6 @@ public class OrionWebSocketAutoConfiguration {
         factory.setMaxTextMessageBufferSize(config.getBinaryBufferSize());
         factory.setMaxSessionIdleTimeout(config.getSessionIdleTimeout());
         return factory;
-    }
-
-    /**
-     * @return 用户认证拦截器 按需注入
-     */
-    @Bean
-    public HandshakeInterceptor userHandshakeInterceptor() {
-        return new UserHandshakeInterceptor();
     }
 
 }

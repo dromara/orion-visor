@@ -1,7 +1,7 @@
 package com.orion.ops.module.asset.convert;
 
 import com.orion.ops.module.asset.entity.domain.HostConnectLogDO;
-import com.orion.ops.module.asset.entity.dto.HostSshConnectDTO;
+import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.HostConnectLogVO;
@@ -28,7 +28,7 @@ public interface HostConnectLogConvert {
 
     HostConnectLogVO to(HostConnectLogDO domain);
 
-    HostConnectLogCreateRequest to(HostSshConnectDTO dto);
+    HostConnectLogCreateRequest to(HostTerminalConnectDTO dto);
 
     List<HostConnectLogVO> to(List<HostConnectLogDO> list);
 

@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机连接参数
+ * 主机终端连接参数
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @DesensitizeObject
-@Schema(name = "HostSshConnectDTO", description = "主机连接参数")
-public class HostSshConnectDTO {
+@Schema(name = "HostTerminalConnectDTO", description = "主机终端连接参数")
+public class HostTerminalConnectDTO {
 
     @Schema(description = "token")
     private String token;

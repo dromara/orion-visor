@@ -242,7 +242,7 @@ public class OperatorLogAspect {
     }
 
     /**
-     * 填充请求信息
+     * 填充请求留痕信息
      *
      * @param model model
      */

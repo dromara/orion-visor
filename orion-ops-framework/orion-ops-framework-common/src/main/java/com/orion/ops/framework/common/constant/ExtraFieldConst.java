@@ -1,15 +1,17 @@
-package com.orion.ops.framework.biz.operator.log.core.constant;
-
-import com.orion.ops.framework.common.constant.FieldConst;
+package com.orion.ops.framework.common.constant;
 
 /**
- * 操作日志常量
+ * 额外字段常量
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/10/10 19:00
+ * @since 2023/12/28 18:34
  */
-public interface OperatorLogKeys extends FieldConst {
+public interface ExtraFieldConst extends FieldConst {
+
+    String USER_ID = "userId";
+
+    String TRACE_ID = "traceId";
 
     String GROUP_NAME = "groupName";
 

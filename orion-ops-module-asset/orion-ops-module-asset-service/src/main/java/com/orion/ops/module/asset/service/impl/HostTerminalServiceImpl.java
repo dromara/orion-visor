@@ -6,13 +6,11 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.net.host.SessionHolder;
 import com.orion.net.host.SessionStore;
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
-import com.orion.ops.module.asset.convert.HostConnectLogConvert;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
@@ -20,9 +18,12 @@ import com.orion.ops.module.asset.define.cache.HostTerminalCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
-import com.orion.ops.module.asset.entity.dto.HostSshConnectDTO;
-import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateRequest;
-import com.orion.ops.module.asset.enums.*;
+import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
+import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.enums.HostExtraItemEnum;
+import com.orion.ops.module.asset.enums.HostExtraSshAuthTypeEnum;
+import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
 import com.orion.ops.module.asset.service.HostConfigService;
@@ -79,8 +80,34 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     private SystemUserApi systemUserApi;
 
     @Override
-    public String getHostAccessToken(Long hostId, Long userId) {
-        log.info("HostConnectService.getHostAccessToken hostId: {}, userId: {}", hostId, userId);
+    public String getHostTerminalAccessToken(Long userId) {
+        log.info("HostConnectService.getHostAccessToken userId: {}", userId);
+        String token = UUIds.random19();
+        HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()
+                .token(token)
+                .userId(userId)
+                .build();
+        // 设置缓存
+        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(token);
+        RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS, access);
+        return token;
+    }
+
+    @Override
+    public HostTerminalAccessDTO getAccessInfoByToken(String token) {
+        // 获取缓存
+        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(token);
+        HostTerminalAccessDTO access = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS);
+        // 删除缓存
+        if (access != null) {
+            RedisStrings.delete(key);
+        }
+        return access;
+    }
+
+    @Override
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
+        log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
@@ -115,27 +142,11 @@ public class HostTerminalServiceImpl implements HostTerminalService {
                 }
             }
         }
-        String token = UUIds.random32();
         // 获取连接配置
-        HostSshConnectDTO connect = this.getHostConnectInfo(host, config, extra);
+        HostTerminalConnectDTO connect = this.getHostConnectInfo(host, config, extra);
         connect.setUserId(userId);
-        connect.setToken(token);
-        // 设置缓存
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_CONNECT.format(token);
-        RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_CONNECT, connect);
-        // 记录连接日志
-        HostConnectLogCreateRequest log = HostConnectLogConvert.MAPPER.to(connect);
-        log.setUsername(user.getUsername());
-        hostConnectLogService.create(HostConnectTypeEnum.SSH, log);
-        // 设置日志参数
-        OperatorLogs.add(connect);
-        return token;
-    }
-
-    @Override
-    public HostSshConnectDTO getConnectInfoByToken(String token) {
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_CONNECT.format(token);
-        return RedisStrings.getJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_CONNECT);
+        connect.setToken(UUIds.random15());
+        return connect;
     }
 
     @Override
@@ -148,13 +159,13 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         HostSshConfigModel model = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
         Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
         // 获取配置
-        HostSshConnectDTO connect = this.getHostConnectInfo(host, model, null);
+        HostTerminalConnectDTO connect = this.getHostConnectInfo(host, model, null);
         // 打开连接
         return this.openSessionStore(connect);
     }
 
     @Override
-    public SessionStore openSessionStore(HostSshConnectDTO conn) {
+    public SessionStore openSessionStore(HostTerminalConnectDTO conn) {
         Long hostId = conn.getHostId();
         String address = conn.getHostAddress();
         String username = conn.getUsername();
@@ -212,9 +223,9 @@ public class HostTerminalServiceImpl implements HostTerminalService {
      * @param extra  extra
      * @return session
      */
-    private HostSshConnectDTO getHostConnectInfo(HostDO host,
-                                                 HostSshConfigModel config,
-                                                 HostSshExtraModel extra) {
+    private HostTerminalConnectDTO getHostConnectInfo(HostDO host,
+                                                      HostSshConfigModel config,
+                                                      HostSshExtraModel extra) {
         // 获取认证方式
         HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
         HostExtraSshAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
@@ -235,7 +246,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         }
         Long keyId = null;
         // 填充认证信息
-        HostSshConnectDTO conn = new HostSshConnectDTO();
+        HostTerminalConnectDTO conn = new HostTerminalConnectDTO();
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
