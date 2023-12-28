@@ -12,10 +12,16 @@ import org.springframework.security.config.annotation.web.configurers.Expression
  */
 public class WebsocketAuthorizeRequestsCustomizer extends AuthorizeRequestsCustomizer {
 
+    private final String prefix;
+
+    public WebsocketAuthorizeRequestsCustomizer(String prefix) {
+        this.prefix = prefix;
+    }
+
     @Override
     public void customize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry) {
         // websocket 允许匿名访问
-        registry.antMatchers("/orion/keep-alive/**").permitAll();
+        registry.antMatchers(prefix + "/**").permitAll();
     }
 
 }

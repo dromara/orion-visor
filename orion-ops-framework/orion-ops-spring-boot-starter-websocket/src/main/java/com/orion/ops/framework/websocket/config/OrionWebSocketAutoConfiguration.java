@@ -20,14 +20,14 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocket
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_WEBSOCKET)
-@EnableConfigurationProperties(WebsocketConfig.class)
-public class OrionWebsocketAutoConfiguration {
+@EnableConfigurationProperties(WebSocketConfig.class)
+public class OrionWebSocketAutoConfiguration {
 
     /**
      * @return websocket 缓冲区大小配置
      */
     @Bean
-    public ServletServerContainerFactoryBean servletServerContainerFactoryBean(WebsocketConfig config) {
+    public ServletServerContainerFactoryBean servletServerContainerFactoryBean(WebSocketConfig config) {
         ServletServerContainerFactoryBean factory = new ServletServerContainerFactoryBean();
         factory.setMaxBinaryMessageBufferSize(config.getBinaryBufferSize());
         factory.setMaxTextMessageBufferSize(config.getBinaryBufferSize());

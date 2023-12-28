@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -162,8 +163,9 @@ public class OrionSecurityAutoConfiguration {
      * @return websocket 安全策略
      */
     @Bean
-    public WebsocketAuthorizeRequestsCustomizer websocketAuthorizeRequestsCustomizer() {
-        return new WebsocketAuthorizeRequestsCustomizer();
+    @ConditionalOnProperty(value = "orion.websocket.prefix")
+    public WebsocketAuthorizeRequestsCustomizer websocketAuthorizeRequestsCustomizer(@Value("${orion.websocket.prefix}") String prefix) {
+        return new WebsocketAuthorizeRequestsCustomizer(prefix);
     }
 
     /**

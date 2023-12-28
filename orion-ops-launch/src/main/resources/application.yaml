@@ -19,13 +19,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
-  websocket:
-    # 1MB
-    binary-buffer-size: 1048576
-    # 1MB
-    text-buffer-size: 1048576
-    # 30MIN
-    session-idle-timeout: 1800000
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -129,10 +122,19 @@ orion:
   # 版本
   version: @revision@
   api:
-    # 公共api前缀
+    # 公共 api 前缀
     prefix: /orion-api
     # 是否开启跨域
     cors: true
+  websocket:
+    # 公共 websocket 前缀
+    prefix: /orion/keep-alive
+    # 1MB
+    binary-buffer-size: 1048576
+    # 1MB
+    text-buffer-size: 1048576
+    # 30MIN
+    session-idle-timeout: 1800000
   swagger:
     # swagger 配置
     title: orion-ops-pro 运维平台
