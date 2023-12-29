@@ -1,5 +1,6 @@
 package com.orion.ops.framework.common.utils;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.file.FileClient;
 
 import java.io.InputStream;
@@ -130,6 +131,10 @@ public class FileClientUtils {
     }
 
     public static void setDelegate(FileClient delegate) {
+        if (FileClientUtils.delegate != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
         FileClientUtils.delegate = delegate;
     }
 

@@ -1,26 +1,20 @@
 package com.orion.ops.framework.biz.operator.log.core.aspect;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.orion.lang.define.thread.ExecutorBuilder;
 import com.orion.lang.utils.Arrays1;
-import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.ops.framework.biz.operator.log.core.annotation.IgnoreParameter;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
-import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
 import com.orion.ops.framework.biz.operator.log.core.factory.OperatorTypeHolder;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.enums.BooleanBit;
-import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.security.SecurityHolder;
-import com.orion.ops.framework.common.utils.Requests;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -178,24 +174,26 @@ public class OperatorLogAspect {
             if (user == null) {
                 return;
             }
-            // 获取请求信息
-            Map<String, Object> extra = OperatorLogs.get();
-            if (!OperatorLogs.isSave(extra)) {
+            // 检查是否保存
+            if (!OperatorLogs.isSave()) {
                 return;
             }
-            OperatorLogModel model = new OperatorLogModel();
-            // 填充使用时间
-            this.fillUseTime(model, start);
-            // 填充用户信息
-            this.fillUserInfo(model, user);
-            // 填充请求信息
-            this.fillRequest(model);
-            // 填充结果信息
-            this.fillResult(model, o, ret, exception);
-            // 填充拓展信息
-            this.fillExtra(model, extra);
-            // 填充日志
-            this.fillLogInfo(model, extra, type);
+            // 填充请求
+            Map<String, Object> extra = OperatorLogs.get();
+            OperatorLogModel model = OperatorLogFiller.create()
+                    // 填充使用时间
+                    .fillUsedTime(start)
+                    // 填充用户信息
+                    .fillUserInfo(user)
+                    // 填充请求信息
+                    .fillRequest()
+                    // 填充结果信息
+                    .fillResult(o.ret(), ret, exception)
+                    // 填充拓展信息
+                    .fillExtra(extra)
+                    // 填充日志
+                    .fillLogInfo(extra, type)
+                    .get();
             // 插入日志
             this.asyncSaveLog(model);
         } catch (Exception e) {
@@ -215,96 +213,6 @@ public class OperatorLogAspect {
         }
         // 登录上下文获取
         return securityHolder.getLoginUser();
-    }
-
-    /**
-     * 填充使用时间
-     *
-     * @param model model
-     * @param start start
-     */
-    private void fillUseTime(OperatorLogModel model, long start) {
-        long end = System.currentTimeMillis();
-        model.setDuration((int) (end - start));
-        model.setStartTime(new Date(start));
-        model.setEndTime(new Date(end));
-    }
-
-    /**
-     * 填充用户信息
-     *
-     * @param model model
-     * @param user  user
-     */
-    private void fillUserInfo(OperatorLogModel model, LoginUser user) {
-        model.setUserId(user.getId());
-        model.setUsername(user.getUsername());
-    }
-
-    /**
-     * 填充请求留痕信息
-     *
-     * @param model model
-     */
-    private void fillRequest(OperatorLogModel model) {
-        model.setTraceId(TraceIdHolder.get());
-        // 填充请求信息
-        Requests.fillIdentity(model);
-        Optional.ofNullable(model.getUserAgent())
-                .map(s -> Strings.retain(s, operatorLogConfig.getUserAgentLength()))
-                .ifPresent(model::setUserAgent);
-    }
-
-    /**
-     * 填充结果
-     *
-     * @param model     model
-     * @param exception exception
-     */
-    private void fillResult(OperatorLogModel model, OperatorLog o, Object ret, Throwable exception) {
-        if (exception == null) {
-            model.setResult(BooleanBit.TRUE.getValue());
-            ReturnType retType = o.ret();
-            if (ret != null) {
-                if (ReturnType.JSON.equals(retType)) {
-                    // 脱敏
-                    model.setReturnValue(JSON.toJSONString(ret, serializeFilters));
-                } else if (ReturnType.TO_STRING.equals(retType)) {
-                    model.setReturnValue(Refs.json(Objects.toString(ret)));
-                }
-            }
-        } else {
-            model.setResult(BooleanBit.FALSE.getValue());
-            // 错误信息
-            String errorMessage = Strings.retain(exception.getMessage(), operatorLogConfig.getErrorMessageLength());
-            model.setErrorMessage(errorMessage);
-        }
-    }
-
-    /**
-     * 填充拓展信息
-     *
-     * @param model model
-     * @param extra extra
-     */
-    private void fillExtra(OperatorLogModel model, Map<String, Object> extra) {
-        if (extra != null) {
-            model.setExtra(JSON.toJSONString(extra));
-        }
-    }
-
-    /**
-     * 填充日志信息
-     *
-     * @param model model
-     * @param extra extra
-     * @param type  type
-     */
-    private void fillLogInfo(OperatorLogModel model, Map<String, Object> extra, OperatorType type) {
-        model.setRiskLevel(type.getRiskLevel().name());
-        model.setModule(type.getModule());
-        model.setType(type.getType());
-        model.setLogInfo(ReplacementFormatters.format(type.getTemplate(), extra));
     }
 
     /**

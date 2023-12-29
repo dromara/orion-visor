@@ -1,5 +1,6 @@
 package com.orion.ops.framework.security.core.crypto;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.crypto.ValueCrypto;
 
 /**
@@ -11,7 +12,7 @@ import com.orion.ops.framework.common.crypto.ValueCrypto;
  */
 public class PrimaryValueCrypto implements ValueCrypto {
 
-    protected static ValueCrypto delegate;
+    private static ValueCrypto delegate;
 
     @Override
     public void init() {
@@ -25,6 +26,14 @@ public class PrimaryValueCrypto implements ValueCrypto {
     @Override
     public byte[] decrypt(byte[] text) {
         return delegate.decrypt(text);
+    }
+
+    protected static void setDelegate(ValueCrypto delegate) {
+        if (PrimaryValueCrypto.delegate != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
+        PrimaryValueCrypto.delegate = delegate;
     }
 
 }

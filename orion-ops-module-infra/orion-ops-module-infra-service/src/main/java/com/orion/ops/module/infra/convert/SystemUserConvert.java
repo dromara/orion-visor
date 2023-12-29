@@ -3,10 +3,7 @@ package com.orion.ops.module.infra.convert;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
-import com.orion.ops.module.infra.entity.request.user.SystemUserCreateRequest;
-import com.orion.ops.module.infra.entity.request.user.SystemUserQueryRequest;
-import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateRequest;
-import com.orion.ops.module.infra.entity.request.user.SystemUserUpdateStatusRequest;
+import com.orion.ops.module.infra.entity.request.user.*;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserCollectInfoVO;
 import org.mapstruct.Mapper;
@@ -39,6 +36,8 @@ public interface SystemUserConvert {
     SystemUserVO to(UserInfoDTO user);
 
     List<SystemUserVO> to(List<SystemUserDO> list);
+
+    LoginUser toLoginUser(UserLoginRequest request);
 
     LoginUser toLoginUser(SystemUserDO domain);
 

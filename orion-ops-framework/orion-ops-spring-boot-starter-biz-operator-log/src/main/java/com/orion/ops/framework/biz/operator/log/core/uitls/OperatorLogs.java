@@ -2,10 +2,11 @@ package com.orion.ops.framework.biz.operator.log.core.uitls;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.common.security.LoginUser;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ public class OperatorLogs implements ExtraFieldConst {
     /**
      * 拓展信息
      */
-    private static final ThreadLocal<Map<String, Object>> EXTRA_HOLDER = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, Object>> EXTRA_HOLDER = ThreadLocal.withInitial(Maps::newMap);
 
     /**
      * 当前用户 优先于登录用户
@@ -41,7 +42,7 @@ public class OperatorLogs implements ExtraFieldConst {
      * @param value value
      */
     public static void add(String key, Object value) {
-        initMap().put(key, value);
+        EXTRA_HOLDER.get().put(key, value);
     }
 
     /**
@@ -51,7 +52,7 @@ public class OperatorLogs implements ExtraFieldConst {
      * @param value value
      */
     public static void addJson(String key, Object value) {
-        initMap().put(key, JSON.parseObject(JSON.toJSONString(value, serializeFilters)));
+        EXTRA_HOLDER.get().put(key, JSON.parseObject(JSON.toJSONString(value, serializeFilters)));
     }
 
     /**
@@ -60,7 +61,7 @@ public class OperatorLogs implements ExtraFieldConst {
      * @param map map
      */
     public static void add(Map<String, ?> map) {
-        initMap().putAll(map);
+        EXTRA_HOLDER.get().putAll(map);
     }
 
     /**
@@ -74,10 +75,10 @@ public class OperatorLogs implements ExtraFieldConst {
             return;
         }
         if (obj instanceof Map) {
-            add((Map<String, ?>) obj);
-            return;
+            EXTRA_HOLDER.get().putAll((Map<String, ?>) obj);
+        } else {
+            EXTRA_HOLDER.get().putAll(JSON.parseObject(JSON.toJSONString(obj, serializeFilters)));
         }
-        initMap().putAll(JSON.parseObject(JSON.toJSONString(obj, serializeFilters)));
     }
 
     /**
@@ -93,9 +94,20 @@ public class OperatorLogs implements ExtraFieldConst {
      * @param save save
      */
     public static void setSave(boolean save) {
-        if (!save) {
-            initMap().put(UN_SAVE_FLAG, UN_SAVE_FLAG);
+        if (save) {
+            EXTRA_HOLDER.get().remove(UN_SAVE_FLAG);
+        } else {
+            EXTRA_HOLDER.get().put(UN_SAVE_FLAG, UN_SAVE_FLAG);
         }
+    }
+
+    /**
+     * 设置是否保存
+     *
+     * @return save
+     */
+    public static boolean isSave() {
+        return !UN_SAVE_FLAG.equals(EXTRA_HOLDER.get().get(UN_SAVE_FLAG));
     }
 
     /**
@@ -105,24 +117,6 @@ public class OperatorLogs implements ExtraFieldConst {
      */
     public static Map<String, Object> get() {
         return EXTRA_HOLDER.get();
-    }
-
-    /**
-     * 清空
-     */
-    public static void clear() {
-        EXTRA_HOLDER.remove();
-        USER_HOLDER.remove();
-    }
-
-    /**
-     * 设置是否保存
-     *
-     * @param map map
-     * @return save
-     */
-    public static boolean isSave(Map<String, Object> map) {
-        return map == null || !map.containsKey(UN_SAVE_FLAG);
     }
 
     /**
@@ -144,20 +138,18 @@ public class OperatorLogs implements ExtraFieldConst {
     }
 
     /**
-     * 初始化
-     *
-     * @return map
+     * 清空
      */
-    private static Map<String, Object> initMap() {
-        Map<String, Object> map = EXTRA_HOLDER.get();
-        if (map == null) {
-            map = new HashMap<>();
-            EXTRA_HOLDER.set(map);
-        }
-        return map;
+    public static void clear() {
+        EXTRA_HOLDER.remove();
+        USER_HOLDER.remove();
     }
 
     public static void setSerializeFilters(SerializeFilter[] serializeFilters) {
+        if (OperatorLogs.serializeFilters != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
         OperatorLogs.serializeFilters = serializeFilters;
     }
 

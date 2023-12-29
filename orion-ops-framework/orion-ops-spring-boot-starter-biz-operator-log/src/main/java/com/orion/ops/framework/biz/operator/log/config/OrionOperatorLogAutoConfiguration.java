@@ -6,6 +6,7 @@ import com.orion.ops.framework.biz.operator.log.core.aspect.OperatorLogAspect;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkServiceDelegate;
+import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.common.json.filter.FieldDesensitizeFilter;
@@ -67,8 +68,10 @@ public class OrionOperatorLogAutoConfiguration {
                 // 脱敏字段注解过滤器
                 desensitizeValueFilter
         };
-        // 设置过滤器到工具类中
+        // 设置参数到工具类中
         OperatorLogs.setSerializeFilters(serializeFilters);
+        OperatorLogFiller.setSerializeFilters(serializeFilters);
+        OperatorLogFiller.setOperatorLogConfig(operatorLogConfig);
         return new OperatorLogAspect(operatorLogConfig, service, serializeFilters);
     }
 

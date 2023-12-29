@@ -2,6 +2,7 @@ package com.orion.ops.framework.redis.core.utils;
 
 import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
@@ -165,6 +166,10 @@ public class RedisUtils {
     }
 
     public static void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
+        if (RedisUtils.redisTemplate != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
         RedisUtils.redisTemplate = redisTemplate;
     }
 

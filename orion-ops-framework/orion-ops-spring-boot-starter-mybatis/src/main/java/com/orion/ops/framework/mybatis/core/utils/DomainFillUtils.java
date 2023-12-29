@@ -1,5 +1,6 @@
 package com.orion.ops.framework.mybatis.core.utils;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 
@@ -69,6 +70,10 @@ public class DomainFillUtils {
     }
 
     public static void setSecurityHolder(SecurityHolder securityHolder) {
+        if (DomainFillUtils.securityHolder != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
         DomainFillUtils.securityHolder = securityHolder;
     }
 

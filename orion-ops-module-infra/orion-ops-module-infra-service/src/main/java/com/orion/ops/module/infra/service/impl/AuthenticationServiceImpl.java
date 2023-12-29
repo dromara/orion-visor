@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
@@ -66,13 +65,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserLoginVO login(UserLoginRequest request, HttpServletRequest servletRequest) {
+        // 设置日志上下文的用户 否则登录失败不会记录日志
+        OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(request));
         // 登录前检查
         this.preCheckLogin(request);
         // 获取登录用户
-        LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
-                .eq(SystemUserDO::getUsername, request.getUsername());
-        SystemUserDO user = systemUserDAO.of(wrapper).getOne();
-        // 设置日志上下文
+        SystemUserDO user = systemUserDAO.of()
+                .createWrapper()
+                .eq(SystemUserDO::getUsername, request.getUsername())
+                .then()
+                .getOne();
+        Valid.notNull(user, ErrorMessage.USERNAME_PASSWORD_ERROR);
+        // 重新设置日志上下文
         OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(user));
         // 检查密码
         boolean passwordCorrect = this.checkPassword(request, user);
@@ -225,17 +229,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @SuppressWarnings("ALL")
     private boolean checkPassword(UserLoginRequest request, SystemUserDO user) {
         // 密码正确
-        if (user != null && user.getPassword().equals(Signatures.md5(request.getPassword()))) {
+        if (user.getPassword().equals(Signatures.md5(request.getPassword()))) {
             return true;
         }
         // 刷新登录失败缓存
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         Long failedLoginCount = redisTemplate.opsForValue().increment(failedCountKey);
         RedisUtils.setExpire(failedCountKey, UserCacheKeyDefine.LOGIN_FAILED_COUNT);
-        // 用户不存在
-        if (user == null) {
-            return false;
-        }
         // 锁定用户
         if (failedLoginCount >= maxFailedLoginCount) {
             // 更新用户表
@@ -243,17 +243,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             updateUser.setId(user.getId());
             updateUser.setStatus(UserStatusEnum.LOCKED.getStatus());
             systemUserDAO.updateById(updateUser);
-            // 更新缓存
+            // 修改缓存状态
             String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
             String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
-            // 缓存不存在
-            if (userInfoCache == null) {
-                return false;
+            if (userInfoCache != null) {
+                LoginUser loginUser = JSON.parseObject(userInfoCache, LoginUser.class);
+                loginUser.setStatus(UserStatusEnum.LOCKED.getStatus());
+                RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
             }
-            // 修改缓存状态
-            LoginUser loginUser = JSON.parseObject(userInfoCache, LoginUser.class);
-            loginUser.setStatus(UserStatusEnum.LOCKED.getStatus());
-            RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
         }
         return false;
     }

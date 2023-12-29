@@ -1,5 +1,6 @@
 package com.orion.ops.framework.storage.core.client;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.file.FileClient;
 
 import java.io.InputStream;
@@ -13,7 +14,7 @@ import java.io.InputStream;
  */
 public class PrimaryFileClient implements FileClient {
 
-    protected static FileClient delegate;
+    private static FileClient delegate;
 
     @Override
     public String upload(String path, byte[] content) throws Exception {
@@ -58,6 +59,14 @@ public class PrimaryFileClient implements FileClient {
     @Override
     public InputStream getContentInputStream(String path) throws Exception {
         return delegate.getContentInputStream(path);
+    }
+
+    public static void setDelegate(FileClient delegate) {
+        if (PrimaryFileClient.delegate != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
+        PrimaryFileClient.delegate = delegate;
     }
 
 }

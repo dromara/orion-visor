@@ -18,7 +18,7 @@ public abstract class CryptoProcessor<Config extends CryptoConfig> implements Va
         this.config = config;
         // 设置为默认加密器
         if (config.isPrimary()) {
-            PrimaryValueCrypto.delegate = this;
+            PrimaryValueCrypto.setDelegate(this);
             CryptoUtils.setDelegate(this);
         }
     }

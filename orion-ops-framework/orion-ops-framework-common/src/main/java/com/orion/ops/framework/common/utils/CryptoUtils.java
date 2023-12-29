@@ -1,5 +1,6 @@
 package com.orion.ops.framework.common.utils;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.crypto.ValueCrypto;
 
 /**
@@ -141,6 +142,10 @@ public class CryptoUtils {
     }
 
     public static void setDelegate(ValueCrypto delegate) {
+        if (CryptoUtils.delegate != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
         CryptoUtils.delegate = delegate;
     }
 
