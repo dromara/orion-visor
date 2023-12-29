@@ -1,7 +1,7 @@
 package com.orion.ops.module.asset.config;
 
-import com.orion.ops.module.asset.handler.host.terminal.TerminalDispatchHandler;
-import com.orion.ops.module.asset.interceptor.TerminalInterceptor;
+import com.orion.ops.module.asset.handler.host.terminal.TerminalMessageDispatcher;
+import com.orion.ops.module.asset.interceptor.TerminalAccessInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -23,16 +23,16 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
     private String prefix;
 
     @Resource
-    private TerminalInterceptor terminalInterceptor;
+    private TerminalAccessInterceptor terminalAccessInterceptor;
 
     @Resource
-    private TerminalDispatchHandler terminalDispatchHandler;
+    private TerminalMessageDispatcher terminalMessageDispatcher;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // 终端
-        registry.addHandler(terminalDispatchHandler, prefix + "/host/terminal/{token}")
-                .addInterceptors(terminalInterceptor)
+        registry.addHandler(terminalMessageDispatcher, prefix + "/host/terminal/{token}")
+                .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
     }
 

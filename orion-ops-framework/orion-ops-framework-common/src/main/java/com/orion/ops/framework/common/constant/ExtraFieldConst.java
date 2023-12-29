@@ -13,6 +13,8 @@ public interface ExtraFieldConst extends FieldConst {
 
     String TRACE_ID = "traceId";
 
+    String IDENTITY = "identity";
+
     String GROUP_NAME = "groupName";
 
     String ID_LIST = "idList";

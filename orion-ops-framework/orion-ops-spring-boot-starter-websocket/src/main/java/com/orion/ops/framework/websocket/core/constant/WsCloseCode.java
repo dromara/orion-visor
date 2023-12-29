@@ -2,16 +2,20 @@ package com.orion.ops.framework.websocket.core.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketSession;
 
 /**
- * ws服务端关闭code
+ * ws 服务端关闭 code
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/6/16 15:18
  */
-@AllArgsConstructor
+@Slf4j
 @Getter
+@AllArgsConstructor
 public enum WsCloseCode {
 
     /**
@@ -124,6 +128,22 @@ public enum WsCloseCode {
     private final int code;
 
     private final String reason;
+
+    /**
+     * 关闭会话
+     *
+     * @param session session
+     */
+    public void close(WebSocketSession session) {
+        if (!session.isOpen()) {
+            return;
+        }
+        try {
+            session.close(new CloseStatus(code, reason));
+        } catch (Exception e) {
+            log.error("websocket close failure", e);
+        }
+    }
 
     public static WsCloseCode of(int code) {
         for (WsCloseCode value : values()) {

@@ -1,6 +1,7 @@
 package com.orion.ops.framework.common.utils;
 
 import com.orion.ops.framework.common.entity.RequestIdentity;
+import com.orion.ops.framework.common.entity.RequestIdentityModel;
 import com.orion.web.servlet.web.Servlets;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -17,6 +18,17 @@ import java.util.Optional;
 public class Requests {
 
     private Requests() {
+    }
+
+    /**
+     * 获取请求留痕信息
+     *
+     * @return model
+     */
+    public static RequestIdentityModel getIdentity() {
+        RequestIdentityModel model = new RequestIdentityModel();
+        fillIdentity(model);
+        return model;
     }
 
     /**
