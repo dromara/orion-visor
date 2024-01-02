@@ -35,6 +35,7 @@ public class TerminalAccessInterceptor implements HandshakeInterceptor {
         String token = Urls.getUrlSource(request.getURI().getPath());
         log.info("TerminalInterceptor-beforeHandshake start token: {}", token);
         attributes.put(ExtraFieldConst.USER_ID, 1L);
+        attributes.put(ExtraFieldConst.USERNAME, "1");
         attributes.put(ExtraFieldConst.TRACE_ID, TraceIdHolder.get());
         attributes.put(ExtraFieldConst.IDENTITY, Requests.getIdentity());
         // 获取连接数据
@@ -45,6 +46,7 @@ public class TerminalAccessInterceptor implements HandshakeInterceptor {
         // }
         // // 设置参数
         // attributes.put(ExtraFieldConst.USER_ID, access.getUserId());
+        // attributes.put(ExtraFieldConst.USERNAME, access.getUsername());
         // attributes.put(ExtraFieldConst.TRACE_ID, TraceIdHolder.get());
         // attributes.put(ExtraFieldConst.IDENTITY, Requests.getIdentity());
         return true;

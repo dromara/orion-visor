@@ -24,10 +24,10 @@ public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void process(WebSocketSession session, Message<?> message, String payload) {
+    public void process(WebSocketSession session, Message<?> message) {
         Message<T> res = (Message<T>) message;
         res.setBody(((JSONObject) message.getBody()).toJavaObject(convert));
-        this.onMessage(session, res);
+        this.handle(session, res);
     }
 
     /**
@@ -36,6 +36,19 @@ public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
      * @param session session
      * @param msg     msg
      */
-    protected abstract void onMessage(WebSocketSession session, Message<T> msg);
+    protected abstract void handle(WebSocketSession session, Message<T> msg);
+
+    /**
+     * 获取属性
+     *
+     * @param session session
+     * @param attr    attr
+     * @param <T>     T
+     * @return T
+     */
+    @SuppressWarnings("unchecked")
+    protected <T> T getAttr(WebSocketSession session, String attr) {
+        return (T) session.getAttributes().get(attr);
+    }
 
 }

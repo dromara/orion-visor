@@ -82,7 +82,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Override
     public String getHostTerminalAccessToken(Long userId) {
         log.info("HostConnectService.getHostAccessToken userId: {}", userId);
-        String token = UUIds.random19();
+        String token = UUIds.random32();
         HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()
                 .token(token)
                 .userId(userId)
@@ -107,10 +107,16 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Override
     public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
-        log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        return this.getTerminalConnectInfo(userId, host);
+    }
+
+    @Override
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
+        Long hostId = host.getId();
+        log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 查询用户
         SystemUserDTO user = systemUserApi.getUserById(userId);
         Valid.notNull(user, ErrorMessage.USER_ABSENT);
@@ -143,6 +149,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             }
         }
         // 获取连接配置
+        // TODO 看看需不需要 不需要的话就修改位置
         HostTerminalConnectDTO connect = this.getHostConnectInfo(host, config, extra);
         connect.setUserId(userId);
         connect.setToken(UUIds.random15());
@@ -251,6 +258,9 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setPort(config.getPort());
+        conn.setCharset(config.getCharset());
+        conn.setFileNameCharset(config.getFileNameCharset());
+        conn.setFileContentCharset(config.getFileContentCharset());
         conn.setTimeout(config.getConnectTimeout());
         conn.setUsername(config.getUsername());
         // 填充身份信息

@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.net.host.SessionStore;
+import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 
@@ -30,13 +31,22 @@ public interface HostTerminalService {
     HostTerminalAccessDTO getAccessInfoByToken(String token);
 
     /**
-     * 使用用户配置打开获取连接信息
+     * 使用用户配置获取连接信息
      *
      * @param hostId hostId
      * @param userId userId
      * @return session
      */
     HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
+
+    /**
+     * 使用用户配置获取连接信息
+     *
+     * @param host   host
+     * @param userId userId
+     * @return session
+     */
+    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
 
     /**
      * 使用默认配置打开主机会话

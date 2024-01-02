@@ -17,8 +17,7 @@ public interface ITerminalHandler {
      *
      * @param session session
      * @param message message
-     * @param payload payload
      */
-    void process(WebSocketSession session, Message<?> message, String payload);
+    void process(WebSocketSession session, Message<?> message);
 
 }

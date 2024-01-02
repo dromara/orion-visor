@@ -39,4 +39,6 @@ public interface FieldConst {
 
     String TARGET = "target";
 
+    String TOKEN = "token";
+
 }

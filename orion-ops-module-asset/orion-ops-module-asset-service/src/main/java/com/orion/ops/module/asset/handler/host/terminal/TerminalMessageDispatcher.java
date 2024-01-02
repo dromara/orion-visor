@@ -28,7 +28,7 @@ public class TerminalMessageDispatcher extends TextWebSocketHandler {
             InputOperatorTypeEnum type = InputOperatorTypeEnum.of(message.getType());
             if (type != null) {
                 // 处理消息
-                type.getHandler().process(session, message, payload);
+                type.getHandler().process(session, message);
             }
         } catch (Exception e) {
             log.error("TerminalDispatchHandler-handleMessage-error msg: {}", payload, e);

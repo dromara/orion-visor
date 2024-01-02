@@ -21,7 +21,7 @@ public class HostTerminalOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CONNECT, "连接主机终端 <sb>${hostName}</sb>"),
+                new OperatorType(L, CONNECT, "连接主机终端 <sb>${name}</sb>"),
         };
     }
 

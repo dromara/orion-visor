@@ -9,6 +9,7 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
+import com.orion.ops.framework.biz.operator.log.core.factory.OperatorTypeHolder;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 import com.orion.ops.framework.common.entity.RequestIdentity;
@@ -162,6 +163,17 @@ public class OperatorLogFiller implements Gettable<OperatorLogModel> {
     /**
      * 填充结果
      *
+     * @param ret       ret
+     * @param exception exception
+     * @return this
+     */
+    public OperatorLogFiller fillResult(Object ret, Throwable exception) {
+        return this.fillResult(ReturnType.JSON, ret, exception);
+    }
+
+    /**
+     * 填充结果
+     *
      * @param retType   retType
      * @param ret       ret
      * @param exception exception
@@ -207,6 +219,17 @@ public class OperatorLogFiller implements Gettable<OperatorLogModel> {
     public OperatorLogFiller fillExtra(Map<String, Object> extra) {
         model.setExtra(JSON.toJSONString(extra));
         return this;
+    }
+
+    /**
+     * 填充日志信息
+     *
+     * @param extra extra
+     * @param type  type
+     * @return this
+     */
+    public OperatorLogFiller fillLogInfo(Map<String, Object> extra, String type) {
+        return this.fillLogInfo(extra, OperatorTypeHolder.get(type));
     }
 
     /**
