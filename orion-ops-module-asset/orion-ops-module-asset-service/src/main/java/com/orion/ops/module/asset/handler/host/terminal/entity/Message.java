@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "MessageWrapper", description = "消息体包装")
-public class MessageWrapper<T> {
+public class Message<T> {
 
     @JSONField(name = "s")
     @Schema(description = "会话id")

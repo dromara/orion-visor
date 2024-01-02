@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
-import com.alibaba.fastjson.TypeReference;
-import com.orion.ops.module.asset.handler.host.terminal.entity.MessageWrapper;
+import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
 import com.orion.ops.module.asset.handler.host.terminal.entity.request.TerminalConnectRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,12 +16,11 @@ import org.springframework.web.socket.WebSocketSession;
 public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConnectRequest> {
 
     public TerminalConnectHandler() {
-        super(new TypeReference<MessageWrapper<TerminalConnectRequest>>(TerminalConnectRequest.class) {
-        });
+        super(TerminalConnectRequest.class);
     }
 
     @Override
-    protected void onMessage(WebSocketSession session, MessageWrapper<TerminalConnectRequest> msg) {
+    protected void onMessage(WebSocketSession session, Message<TerminalConnectRequest> msg) {
         System.out.println(msg);
     }
 

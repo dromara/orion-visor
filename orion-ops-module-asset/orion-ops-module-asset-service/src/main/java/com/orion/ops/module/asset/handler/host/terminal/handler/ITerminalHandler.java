@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
+import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -15,8 +16,9 @@ public interface ITerminalHandler {
      * 处理消息
      *
      * @param session session
+     * @param message message
      * @param payload payload
      */
-    void process(WebSocketSession session, String payload);
+    void process(WebSocketSession session, Message<?> message, String payload);
 
 }

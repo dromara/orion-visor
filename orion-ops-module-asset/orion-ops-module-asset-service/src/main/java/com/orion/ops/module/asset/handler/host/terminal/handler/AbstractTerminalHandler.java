@@ -1,8 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.orion.ops.module.asset.handler.host.terminal.entity.MessageWrapper;
+import com.alibaba.fastjson.JSONObject;
+import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -15,17 +14,20 @@ import org.springframework.web.socket.WebSocketSession;
 public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
 
     /**
-     * 类型转换器
+     * 类型
      */
-    private final TypeReference<MessageWrapper<T>> convert;
+    private final Class<T> convert;
 
-    public AbstractTerminalHandler(TypeReference<MessageWrapper<T>> convert) {
+    public AbstractTerminalHandler(Class<T> convert) {
         this.convert = convert;
     }
 
     @Override
-    public void process(WebSocketSession session, String payload) {
-        this.onMessage(session, JSON.parseObject(payload, convert));
+    @SuppressWarnings("unchecked")
+    public void process(WebSocketSession session, Message<?> message, String payload) {
+        Message<T> res = (Message<T>) message;
+        res.setBody(((JSONObject) message.getBody()).toJavaObject(convert));
+        this.onMessage(session, res);
     }
 
     /**
@@ -34,6 +36,6 @@ public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
      * @param session session
      * @param msg     msg
      */
-    protected abstract void onMessage(WebSocketSession session, MessageWrapper<T> msg);
+    protected abstract void onMessage(WebSocketSession session, Message<T> msg);
 
 }
