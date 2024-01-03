@@ -1,33 +1,33 @@
-package com.orion.ops.module.asset.handler.host.terminal.entity.request;
+package com.orion.ops.module.asset.handler.host.terminal.model.request;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 终端连接请求 实体对象
+ * <p>
+ * co|eff00a1|100|20
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/12/29 16:20
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "TerminalConnectRequest", description = "终端连接请求 实体对象")
-public class TerminalConnectRequest {
+public class TerminalConnectRequest extends TerminalBasePayload {
 
-    // 连接主机 {"t":"co","s": "1001","b":{"c":100,"r":20}}
-
-    @JSONField(name = "c")
     @Schema(description = "列数")
     private Integer cols;
 
-    @JSONField(name = "r")
     @Schema(description = "行数")
     private Integer rows;
 

@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
-import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -10,14 +10,14 @@ import org.springframework.web.socket.WebSocketSession;
  * @version 1.0.0
  * @since 2023/12/29 18:53
  */
-public interface ITerminalHandler {
+public interface ITerminalHandler<T extends TerminalBasePayload> {
 
     /**
      * 处理消息
      *
      * @param session session
-     * @param message message
+     * @param payload payload
      */
-    void process(WebSocketSession session, Message<?> message);
+    void handle(WebSocketSession session, T payload);
 
 }

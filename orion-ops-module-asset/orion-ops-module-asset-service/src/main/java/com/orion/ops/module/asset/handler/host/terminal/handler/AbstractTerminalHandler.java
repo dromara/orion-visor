@@ -1,9 +1,8 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
-import com.alibaba.fastjson.JSONObject;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
-import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
-import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -13,61 +12,20 @@ import org.springframework.web.socket.WebSocketSession;
  * @version 1.0.0
  * @since 2023/12/29 18:59
  */
-public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
-
-    /**
-     * 类型
-     */
-    private final Class<T> convert;
-
-    public AbstractTerminalHandler(Class<T> convert) {
-        this.convert = convert;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void process(WebSocketSession session, Message<?> message) {
-        Message<T> res = (Message<T>) message;
-        res.setBody(((JSONObject) message.getBody()).toJavaObject(convert));
-        this.handle(session, res);
-    }
-
-    /**
-     * 处理消息
-     *
-     * @param session session
-     * @param msg     msg
-     */
-    protected abstract void handle(WebSocketSession session, Message<T> msg);
-
-    /**
-     * 获取响应结构
-     *
-     * @param in   in
-     * @param type type
-     * @param body body
-     * @param <E>  E
-     * @return out
-     */
-    public <E> Message<E> out(Message<?> in, OutputOperatorTypeEnum type, E body) {
-        return Message.<E>builder()
-                .session(in.getSession())
-                .type(type.getType())
-                .body(body)
-                .build();
-    }
+public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> implements ITerminalHandler<T> {
 
     /**
      * 发送消息
      *
      * @param session session
-     * @param in      in
      * @param type    type
      * @param body    body
+     * @param <E>     E
      */
-    public void send(WebSocketSession session, Message<?> in, OutputOperatorTypeEnum type, Object body) {
+    public <E extends TerminalBasePayload> void send(WebSocketSession session, OutputTypeEnum type, E body) {
+        body.setType(type.getType());
         // 发送消息
-        this.send(session, this.out(in, type, body));
+        this.send(session, type.format(body));
     }
 
     /**
@@ -76,8 +34,8 @@ public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
      * @param session session
      * @param message message
      */
-    protected void send(WebSocketSession session, Message<?> message) {
-        WebSockets.sendJson(session, message);
+    protected void send(WebSocketSession session, String message) {
+        WebSockets.sendText(session, message);
     }
 
     /**

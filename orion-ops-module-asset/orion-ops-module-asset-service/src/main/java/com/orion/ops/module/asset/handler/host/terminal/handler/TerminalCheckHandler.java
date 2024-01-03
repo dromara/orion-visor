@@ -15,10 +15,9 @@ import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
-import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
-import com.orion.ops.module.asset.handler.host.terminal.entity.request.TerminalCheckRequest;
-import com.orion.ops.module.asset.handler.host.terminal.entity.response.TerminalCheckResponse;
-import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
@@ -51,25 +50,26 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
 
-    public TerminalCheckHandler() {
-        super(TerminalCheckRequest.class);
-    }
-
     @Override
-    protected void handle(WebSocketSession session, Message<TerminalCheckRequest> msg) {
-        Long hostId = msg.getBody().getHostId();
+    public void handle(WebSocketSession session, TerminalCheckRequest payload) {
+        Long hostId = payload.getHostId();
         Long userId = this.getAttr(session, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
-        String terminalToken = UUIds.random15();
-        log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, terminalToken: {}", userId, hostId, terminalToken);
+        String token = UUIds.random15();
+        log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, token: {}", userId, hostId, token);
         // 查询主机信息
         HostDO host = hostDAO.selectById(hostId);
         // 不存在返回错误信息
         if (host == null) {
             log.info("TerminalCheckHandler-handle unknown host userId: {}, hostId: {}", userId, hostId);
-            this.send(session, msg,
-                    OutputOperatorTypeEnum.CHECK,
-                    new TerminalCheckResponse(terminalToken, BooleanBit.FALSE.getValue(), ErrorMessage.HOST_ABSENT));
+            this.send(session,
+                    OutputTypeEnum.CHECK,
+                    TerminalCheckResponse.builder()
+                            .session(payload.getSession())
+                            .token(token)
+                            .result(BooleanBit.FALSE.getValue())
+                            .errorMessage(ErrorMessage.HOST_ABSENT)
+                            .build());
             return;
         }
         Exception ex = null;
@@ -77,19 +77,20 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             // 获取连接信息
             HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host);
             // 设置到缓存中
-            session.getAttributes().put(terminalToken, connect);
-            log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, token: {}", userId, hostId, terminalToken);
+            session.getAttributes().put(token, connect);
+            log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, token: {}", userId, hostId, token);
         } catch (Exception e) {
             ex = e;
-            log.error("TerminalCheckHandler-handle error userId: {}, hostId: {}, token: {}", userId, hostId, terminalToken, e);
+            log.error("TerminalCheckHandler-handle error userId: {}, hostId: {}, token: {}", userId, hostId, token, e);
         }
         // 记录主机日志
-        this.saveTerminalLog(session, userId, host, startTime, ex, terminalToken);
+        this.saveTerminalLog(session, userId, host, startTime, ex, token);
         // 响应检查结果
-        this.send(session, msg,
-                OutputOperatorTypeEnum.CHECK,
+        this.send(session,
+                OutputTypeEnum.CHECK,
                 TerminalCheckResponse.builder()
-                        .session(terminalToken)
+                        .session(payload.getSession())
+                        .token(token)
                         .result(BooleanBit.of(ex == null).getValue())
                         .errorMessage(ex == null ? null : ex.getMessage())
                         .build());

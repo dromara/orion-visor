@@ -1,9 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.ops.framework.websocket.core.handler.TextWebSocketHandler;
-import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
-import com.orion.ops.module.asset.handler.host.terminal.enums.InputOperatorTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.enums.InputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,11 +28,10 @@ public class TerminalMessageDispatcher extends TextWebSocketHandler {
     public void onMessage(WebSocketSession session, String payload) {
         try {
             // 解析类型
-            Message<?> message = JSON.parseObject(payload, Message.class);
-            InputOperatorTypeEnum type = InputOperatorTypeEnum.of(message.getType());
+            InputTypeEnum type = InputTypeEnum.of(payload);
             if (type != null) {
-                // 处理消息
-                type.getHandler().process(session, message);
+                // 解析并处理消息
+                type.getHandler().handle(session, type.parse(payload));
             }
         } catch (Exception e) {
             log.error("TerminalDispatchHandler-handleMessage-error id: {}, msg: {}", session.getId(), payload, e);

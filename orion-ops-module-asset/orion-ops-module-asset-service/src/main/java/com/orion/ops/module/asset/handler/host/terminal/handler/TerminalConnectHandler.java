@@ -12,11 +12,11 @@ import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
-import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
-import com.orion.ops.module.asset.handler.host.terminal.entity.request.TerminalConnectRequest;
-import com.orion.ops.module.asset.handler.host.terminal.entity.response.TerminalConnectResponse;
-import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalConnectRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalConnectResponse;
 import com.orion.ops.module.asset.handler.host.terminal.session.TerminalSession;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostTerminalService;
@@ -46,21 +46,21 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
     @Resource
     private TerminalManager terminalManager;
 
-    public TerminalConnectHandler() {
-        super(TerminalConnectRequest.class);
-    }
-
     @Override
-    protected void handle(WebSocketSession session, Message<TerminalConnectRequest> msg) {
-        String token = msg.getSession();
+    public void handle(WebSocketSession session, TerminalConnectRequest payload) {
+        String token = payload.getSession();
         log.info("TerminalConnectHandler-handle start token: {}", token);
         // 获取主机连接信息
         HostTerminalConnectDTO connect = this.getAttr(session, token);
         if (connect == null) {
             log.info("TerminalConnectHandler-handle unknown token: {}", token);
-            this.send(session, msg,
-                    OutputOperatorTypeEnum.CONNECT,
-                    new TerminalConnectResponse(BooleanBit.FALSE.getValue(), ErrorMessage.SESSION_ABSENT));
+            this.send(session,
+                    OutputTypeEnum.CONNECT,
+                    TerminalConnectResponse.builder()
+                            .session(payload.getSession())
+                            .result(BooleanBit.FALSE.getValue())
+                            .errorMessage(ErrorMessage.SESSION_ABSENT)
+                            .build());
             return;
         }
         // 移除会话连接信息
@@ -68,7 +68,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         Exception ex = null;
         try {
             // 连接主机
-            TerminalSession terminalSession = this.connect(token, connect, session, msg.getBody());
+            TerminalSession terminalSession = this.connect(token, connect, session, payload);
             // 添加会话到 manager
             terminalManager.addSession(terminalSession);
         } catch (Exception e) {
@@ -77,9 +77,10 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             hostConnectLogService.updateStatusByToken(token, HostConnectStatusEnum.FAILED);
         }
         // 返回连接状态
-        this.send(session, msg,
-                OutputOperatorTypeEnum.CONNECT,
+        this.send(session,
+                OutputTypeEnum.CONNECT,
                 TerminalConnectResponse.builder()
+                        .session(payload.getSession())
                         .result(BooleanBit.of(ex == null).getValue())
                         .errorMessage(this.getConnectErrorMessage(ex))
                         .build());
@@ -100,9 +101,15 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
                                     TerminalConnectRequest body) {
         TerminalSession terminalSession = null;
         try {
+            // 连接配置
+            TerminalConfig config = TerminalConfig.builder()
+                    .charset(connect.getCharset())
+                    .fileNameCharset(connect.getFileNameCharset())
+                    .fileContentCharset(connect.getFileContentCharset())
+                    .build();
             // 建立连接
             SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
-            terminalSession = new TerminalSession(token, session, sessionStore);
+            terminalSession = new TerminalSession(token, session, sessionStore, config);
             terminalSession.connect(body.getCols(), body.getRows());
             log.info("TerminalConnectHandler-handle success token: {}", token);
             return terminalSession;

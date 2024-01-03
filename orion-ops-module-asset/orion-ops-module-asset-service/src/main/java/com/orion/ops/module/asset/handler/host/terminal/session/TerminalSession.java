@@ -1,7 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
-import com.alibaba.fastjson.JSON;
-import com.orion.lang.utils.awt.Clipboards;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.ssh.TerminalType;
@@ -9,8 +7,9 @@ import com.orion.net.host.ssh.shell.ShellExecutor;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.define.AssetThreadPools;
-import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
-import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalOutputResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -18,7 +17,6 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * 终端会话
@@ -36,22 +34,32 @@ public class TerminalSession implements ITerminalSession {
     @Getter
     private final WebSocketSession session;
 
+    private final TerminalConfig config;
+
     private final SessionStore sessionStore;
 
     private ShellExecutor executor;
+
+    @Getter
+    private String lastLine;
 
     private volatile boolean close;
 
     public TerminalSession(String token,
                            WebSocketSession session,
-                           SessionStore sessionStore) {
+                           SessionStore sessionStore,
+                           TerminalConfig config) {
         this.token = token;
         this.session = session;
         this.sessionStore = sessionStore;
+        this.config = config;
     }
 
     @Override
     public void connect(int cols, int rows) {
+        config.setCols(cols);
+        config.setRows(rows);
+        // 打开 shell
         this.executor = sessionStore.getShellExecutor();
         executor.terminalType(TerminalType.XTERM_256_COLOR);
         executor.size(cols, rows);
@@ -66,6 +74,8 @@ public class TerminalSession implements ITerminalSession {
         if (!executor.isConnected()) {
             executor.connect();
         }
+        config.setCols(cols);
+        config.setRows(rows);
         executor.size(cols, rows);
         executor.resize();
     }
@@ -90,7 +100,7 @@ public class TerminalSession implements ITerminalSession {
             Streams.close(executor);
             Streams.close(sessionStore);
         } catch (Exception e) {
-            log.error("terminal 断开连接 失败 token: {}, {}", token, e);
+            log.error("terminal 断开连接 失败 token: {}", token, e);
         }
     }
 
@@ -105,16 +115,14 @@ public class TerminalSession implements ITerminalSession {
         int read;
         try {
             while (session.isOpen() && (read = in.read(bs)) != -1) {
+                String body = lastLine = new String(bs, 0, read, config.getCharset());
                 // 响应
-                String body = new String(bs, 0, read, StandardCharsets.UTF_8);
-                // TODO lastline
-                Message<?> msg = Message.builder()
+                TerminalOutputResponse resp = TerminalOutputResponse.builder()
                         .session(token)
-                        .type(OutputOperatorTypeEnum.OUTPUT.getType())
-                        // FIXME TERMINAL charset
+                        .type(OutputTypeEnum.OUTPUT.getType())
                         .body(body)
                         .build();
-                WebSockets.sendJson(session, msg);
+                WebSockets.sendText(session, OutputTypeEnum.OUTPUT.format(resp));
             }
         } catch (IOException ex) {
             log.error("terminal 读取流失败", ex);
