@@ -7,9 +7,12 @@ import com.orion.net.host.ssh.shell.ShellExecutor;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.define.AssetThreadPools;
+import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalOutputResponse;
+import com.orion.ops.module.asset.service.HostConnectLogService;
+import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -96,12 +99,15 @@ public class TerminalSession implements ITerminalSession {
             return;
         }
         this.close = true;
+        // 关闭流
         try {
             Streams.close(executor);
             Streams.close(sessionStore);
         } catch (Exception e) {
             log.error("terminal 断开连接 失败 token: {}", token, e);
         }
+        // 修改状态
+        SpringHolder.getBean(HostConnectLogService.class).updateStatusByToken(token, HostConnectStatusEnum.COMPLETE);
     }
 
     /**
@@ -129,9 +135,8 @@ public class TerminalSession implements ITerminalSession {
         }
         // eof
         if (close) {
-            return;
+            log.info("terminal eof回调 {}", token);
         }
-        log.info("terminal eof回调 {}", token);
     }
 
 }

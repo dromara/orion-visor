@@ -1,12 +1,9 @@
 package com.orion.ops.module.asset.handler.host.terminal.enums;
 
 import com.alibaba.fastjson.JSONObject;
-import com.orion.ops.module.asset.handler.host.terminal.handler.ITerminalHandler;
-import com.orion.ops.module.asset.handler.host.terminal.handler.TerminalCheckHandler;
-import com.orion.ops.module.asset.handler.host.terminal.handler.TerminalConnectHandler;
+import com.orion.ops.module.asset.handler.host.terminal.handler.*;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalConnectRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.*;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -42,41 +39,41 @@ public enum InputTypeEnum {
      * 关闭连接
      */
     CLOSE("cl",
-            TerminalConnectHandler.class,
+            TerminalCloseHandler.class,
             new String[]{"type", "session"},
-            TerminalConnectRequest.class),
+            TerminalBasePayload.class),
 
     /**
      * ping
      */
     PING("p",
-            TerminalConnectHandler.class,
-            new String[]{"type", "session"},
-            TerminalConnectRequest.class),
+            TerminalPingHandler.class,
+            new String[]{"type"},
+            TerminalBasePayload.class),
 
     /**
      * 修改大小
      */
     RESIZE("rs",
-            TerminalConnectHandler.class,
+            TerminalResizeHandler.class,
             new String[]{"type", "session", "cols", "rows"},
-            TerminalConnectRequest.class),
+            TerminalResizeRequest.class),
 
     /**
      * 执行
      */
     EXEC("e",
-            TerminalConnectHandler.class,
+            TerminalExecHandler.class,
             new String[]{"type", "session", "command"},
-            TerminalConnectRequest.class),
+            TerminalExecRequest.class),
 
     /**
      * 输入
      */
     INPUT("i",
-            TerminalConnectHandler.class,
+            TerminalInputHandler.class,
             new String[]{"type", "session", "command"},
-            TerminalConnectRequest.class),
+            TerminalInputRequest.class),
 
     ;
 
@@ -109,7 +106,7 @@ public enum InputTypeEnum {
             return null;
         }
         for (InputTypeEnum value : values()) {
-            if (payload.startsWith(value.type + SEPARATOR)) {
+            if (payload.startsWith(value.type + SEPARATOR) || value.type.equals(payload)) {
                 return value;
             }
         }

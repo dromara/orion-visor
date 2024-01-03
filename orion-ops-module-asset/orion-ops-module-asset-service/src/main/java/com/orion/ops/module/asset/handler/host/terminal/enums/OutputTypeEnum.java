@@ -28,21 +28,14 @@ public enum OutputTypeEnum {
     /**
      * pong
      */
-    PONG("p", "${type}|${session}"),
+    PONG("p", "${type}"),
 
     /**
      * 输出
      */
     OUTPUT("o", "${type}|${session}|${body}"),
 
-    /**
-     * 发生错误
-     */
-    ERROR("e", "${type}|${session}"),
-
     ;
-
-    private static final char SEPARATOR = '|';
 
     private final String type;
 

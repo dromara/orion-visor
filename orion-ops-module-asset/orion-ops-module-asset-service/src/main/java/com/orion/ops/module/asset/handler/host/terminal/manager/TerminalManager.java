@@ -51,9 +51,11 @@ public class TerminalManager {
      * @param token token
      */
     public void closeSession(String id, String token) {
-        ITerminalSession session = sessions.get(id, token);
-        Streams.close(session);
-        sessions.removeElement(id, token);
+        // 获取并移除
+        ITerminalSession session = sessions.removeElement(id, token);
+        if (session != null) {
+            Streams.close(session);
+        }
     }
 
     /**
@@ -62,12 +64,11 @@ public class TerminalManager {
      * @param id id
      */
     public void closeAll(String id) {
-        ConcurrentHashMap<String, ITerminalSession> session = sessions.get(id);
+        // 获取并移除
+        ConcurrentHashMap<String, ITerminalSession> session = sessions.remove(id);
         if (Maps.isEmpty(session)) {
-            return;
+            session.values().forEach(Streams::close);
         }
-        session.values().forEach(Streams::close);
-        sessions.remove(id);
     }
 
 }
