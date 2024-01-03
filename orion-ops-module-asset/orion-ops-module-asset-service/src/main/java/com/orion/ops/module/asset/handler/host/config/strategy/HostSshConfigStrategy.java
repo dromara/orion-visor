@@ -45,10 +45,8 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
                 .port(SSH_PORT)
                 .username(USERNAME)
                 .authType(HostSshAuthTypeEnum.PASSWORD.name())
-                .charset(Const.UTF_8)
                 .connectTimeout(Const.MS_S_10)
                 .fileNameCharset(Const.UTF_8)
-                .fileContentCharset(Const.UTF_8)
                 .build();
     }
 
@@ -57,9 +55,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
         // 验证认证类型
         Valid.valid(HostSshAuthTypeEnum::of, model.getAuthType());
         // 验证编码格式
-        this.validCharset(model.getCharset());
         this.validCharset(model.getFileNameCharset());
-        this.validCharset(model.getFileContentCharset());
         // 检查主机秘钥是否存在
         Long keyId = model.getKeyId();
         if (keyId != null) {

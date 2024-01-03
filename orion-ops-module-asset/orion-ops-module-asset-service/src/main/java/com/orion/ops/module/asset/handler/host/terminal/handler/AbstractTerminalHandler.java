@@ -43,12 +43,12 @@ public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
      *
      * @param session session
      * @param attr    attr
-     * @param <T>     T
+     * @param <E>     T
      * @return T
      */
     @SuppressWarnings("unchecked")
-    protected <T> T getAttr(WebSocketSession session, String attr) {
-        return (T) session.getAttributes().get(attr);
+    protected <E> E getAttr(WebSocketSession session, String attr) {
+        return (E) session.getAttributes().get(attr);
     }
 
 }

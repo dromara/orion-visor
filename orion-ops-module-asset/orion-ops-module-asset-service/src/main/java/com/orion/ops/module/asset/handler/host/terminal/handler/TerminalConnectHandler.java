@@ -1,6 +1,8 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
+import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
@@ -14,7 +16,8 @@ import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateReques
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
 import com.orion.ops.module.asset.handler.host.terminal.entity.request.TerminalConnectRequest;
-import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalSession;
+import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
+import com.orion.ops.module.asset.handler.host.terminal.session.TerminalSession;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +50,9 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
 
+    @Resource
+    private TerminalManager terminalManager;
+
     public TerminalConnectHandler() {
         super(TerminalConnectRequest.class);
     }
@@ -66,21 +72,22 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         }
         // 日志信息
         long startTime = System.currentTimeMillis();
+        String terminalToken = UUIds.random15();
+        TerminalSession terminalSession = null;
         Exception ex = null;
-        String terminalToken = null;
         try {
             // 连接主机
             HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host);
-            terminalToken = connect.getToken();
             SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
-            TerminalSession terminalSession = new TerminalSession(session, connect, sessionStore);
+            terminalSession = new TerminalSession(terminalToken, session, sessionStore);
             terminalSession.connect(body.getCols(), body.getRows());
-            log.info("TerminalConnectHandler-handle success userId: {}, hostId: {}", userId, hostId);
-            // TODO 添加到 manager
-
+            log.info("TerminalConnectHandler-handle success userId: {}, hostId: {}, token: {}", userId, hostId, terminalToken);
+            // 添加会话到 manager
+            terminalManager.addSession(terminalSession);
         } catch (Exception e) {
-            log.error("TerminalConnectHandler-handle error userId: {}, hostId: {}", userId, hostId, e);
+            log.error("TerminalConnectHandler-handle error userId: {}, hostId: {}, token: {}", userId, hostId, terminalToken, e);
             ex = e;
+            Streams.close(terminalSession);
         } finally {
             // 记录主机日志
             this.saveTerminalLog(session, userId, host, startTime, ex, terminalToken);

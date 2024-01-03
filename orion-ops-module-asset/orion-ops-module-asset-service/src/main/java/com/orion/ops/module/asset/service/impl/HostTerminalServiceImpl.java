@@ -149,11 +149,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             }
         }
         // 获取连接配置
-        // TODO 看看需不需要 不需要的话就修改位置
-        HostTerminalConnectDTO connect = this.getHostConnectInfo(host, config, extra);
-        connect.setUserId(userId);
-        connect.setToken(UUIds.random15());
-        return connect;
+        return this.getHostConnectInfo(host, config, extra);
     }
 
     @Override
@@ -258,9 +254,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setPort(config.getPort());
-        conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());
-        conn.setFileContentCharset(config.getFileContentCharset());
         conn.setTimeout(config.getConnectTimeout());
         conn.setUsername(config.getUsername());
         // 填充身份信息
