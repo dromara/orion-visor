@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 终端连接请求 实体对象
+ * 主机连接检查请求 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -18,17 +18,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "TerminalConnectRequest", description = "终端连接请求 实体对象")
-public class TerminalConnectRequest {
+@Schema(name = "TerminalConnectRequest", description = "主机连接检查请求 实体对象")
+public class TerminalCheckRequest {
 
-    // 连接主机 {"t":"co","s": "1001","b":{"c":100,"r":20}}
+    // 连接主机 {"t":"ck","s": "1001","b":{"h":1}}
 
-    @JSONField(name = "c")
-    @Schema(description = "列数")
-    private Integer cols;
-
-    @JSONField(name = "r")
-    @Schema(description = "行数")
-    private Integer rows;
+    @JSONField(name = "h")
+    @Schema(description = "主机id")
+    private Long hostId;
 
 }

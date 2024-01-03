@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 终端连接响应 实体对象
+ * 主机连接检查响应 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -18,8 +18,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "TerminalConnectResponse", description = "终端连接响应 实体对象")
-public class TerminalConnectResponse {
+@Schema(name = "TerminalCheckResponse", description = "主机连接检查响应 实体对象")
+public class TerminalCheckResponse {
+
+    @JSONField(name = "s")
+    @Schema(description = "会话id")
+    private String session;
 
     @JSONField(name = "r")
     @Schema(description = "检查结果")

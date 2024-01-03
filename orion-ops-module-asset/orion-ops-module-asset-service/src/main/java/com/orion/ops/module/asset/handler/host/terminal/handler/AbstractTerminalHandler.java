@@ -1,7 +1,9 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -37,6 +39,46 @@ public abstract class AbstractTerminalHandler<T> implements ITerminalHandler {
      * @param msg     msg
      */
     protected abstract void handle(WebSocketSession session, Message<T> msg);
+
+    /**
+     * 获取响应结构
+     *
+     * @param in   in
+     * @param type type
+     * @param body body
+     * @param <E>  E
+     * @return out
+     */
+    public <E> Message<E> out(Message<?> in, OutputOperatorTypeEnum type, E body) {
+        return Message.<E>builder()
+                .session(in.getSession())
+                .type(type.getType())
+                .body(body)
+                .build();
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param session session
+     * @param in      in
+     * @param type    type
+     * @param body    body
+     */
+    public void send(WebSocketSession session, Message<?> in, OutputOperatorTypeEnum type, Object body) {
+        // 发送消息
+        this.send(session, this.out(in, type, body));
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param session session
+     * @param message message
+     */
+    protected void send(WebSocketSession session, Message<?> message) {
+        WebSockets.sendJson(session, message);
+    }
 
     /**
      * 获取属性

@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.orion.ops.framework.websocket.core.handler.TextWebSocketHandler;
 import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
 import com.orion.ops.module.asset.handler.host.terminal.enums.InputOperatorTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
+
+import javax.annotation.Resource;
 
 /**
  * 终端处理器
@@ -20,6 +23,9 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class TerminalMessageDispatcher extends TextWebSocketHandler {
 
+    @Resource
+    private TerminalManager terminalManager;
+
     @Override
     public void onMessage(WebSocketSession session, String payload) {
         try {
@@ -31,19 +37,21 @@ public class TerminalMessageDispatcher extends TextWebSocketHandler {
                 type.getHandler().process(session, message);
             }
         } catch (Exception e) {
-            log.error("TerminalDispatchHandler-handleMessage-error msg: {}", payload, e);
+            log.error("TerminalDispatchHandler-handleMessage-error id: {}, msg: {}", session.getId(), payload, e);
         }
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        log.info("handleTransportError");
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
+        log.error("TerminalMessageDispatcher-handleTransportError id: {}", session.getId(), exception);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        log.info("afterConnectionClosed");
-        // release session
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        String id = session.getId();
+        log.info("TerminalMessageDispatcher-afterConnectionClosed  id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
+        // 关闭会话
+        terminalManager.closeAll(id);
     }
 
 }

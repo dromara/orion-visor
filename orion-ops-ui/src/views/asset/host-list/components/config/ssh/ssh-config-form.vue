@@ -96,7 +96,7 @@
             </template>
           </a-input-number>
         </a-form-item>
-        <!-- 用户名 -->
+        <!-- SSH输出编码 -->
         <a-form-item field="charset"
                      label="SSH输出编码"
                      :hide-asterisk="true"

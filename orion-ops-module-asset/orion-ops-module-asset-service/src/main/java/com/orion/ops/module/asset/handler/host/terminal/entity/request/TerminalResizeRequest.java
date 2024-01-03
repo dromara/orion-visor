@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 终端连接请求 实体对象
+ * 修改大小请求 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -18,10 +18,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "TerminalConnectRequest", description = "终端连接请求 实体对象")
-public class TerminalConnectRequest {
+@Schema(name = "TerminalResizeRequest", description = "修改大小请求 实体对象")
+public class TerminalResizeRequest {
 
-    // 连接主机 {"t":"co","s": "1001","b":{"c":100,"r":20}}
+    // 连接主机 {"t":"rs","s": "1001","b":{"c":100,"r":20}}
 
     @JSONField(name = "c")
     @Schema(description = "列数")

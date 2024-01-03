@@ -1,11 +1,16 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
+import com.alibaba.fastjson.JSON;
+import com.orion.lang.utils.awt.Clipboards;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.ssh.TerminalType;
 import com.orion.net.host.ssh.shell.ShellExecutor;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.define.AssetThreadPools;
+import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,6 +18,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 终端会话
@@ -100,18 +106,23 @@ public class TerminalSession implements ITerminalSession {
         try {
             while (session.isOpen() && (read = in.read(bs)) != -1) {
                 // 响应
-                // byte[] msg = WsProtocol.OK.msg(bs, 0, read);
-                // WebSockets.sendText(session, msg);
+                String body = new String(bs, 0, read, StandardCharsets.UTF_8);
+                // TODO lastline
+                Message<?> msg = Message.builder()
+                        .session(token)
+                        .type(OutputOperatorTypeEnum.OUTPUT.getType())
+                        // FIXME TERMINAL charset
+                        .body(body)
+                        .build();
+                WebSockets.sendJson(session, msg);
             }
         } catch (IOException ex) {
             log.error("terminal 读取流失败", ex);
-            // WebSockets.close(session, WsCloseCode.READ_EXCEPTION);
         }
         // eof
         if (close) {
             return;
         }
-        // WebSockets.close(session, WsCloseCode.EOF);
         log.info("terminal eof回调 {}", token);
     }
 

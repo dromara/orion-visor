@@ -25,7 +25,4 @@ public class HostTerminalAccessDTO {
     @Schema(description = "userId")
     private Long userId;
 
-    @Schema(description = "token")
-    private String token;
-
 }

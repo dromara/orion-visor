@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
@@ -37,8 +38,14 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     public void create(HostConnectTypeEnum type, HostConnectLogCreateRequest request) {
         HostConnectLogDO record = HostConnectLogConvert.MAPPER.to(request);
         record.setType(type.name());
-        record.setStatus(HostConnectStatusEnum.CONNECTING.name());
+        String status = request.getStatus();
+        record.setStatus(status);
         record.setStartTime(new Date());
+        record.setExtraInfo(JSON.toJSONString(request.getExtra()));
+        // 失败直接设置结束时间
+        if (HostConnectStatusEnum.FAILED.name().equals(status)) {
+            record.setEndTime(new Date());
+        }
         hostConnectLogDAO.insert(record);
     }
 

@@ -1,21 +1,21 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
-import com.orion.lang.id.UUIds;
-import com.orion.lang.utils.collect.Maps;
+import com.orion.lang.exception.AuthenticationException;
+import com.orion.lang.exception.ConnectionRuntimeException;
+import com.orion.lang.exception.TimeoutException;
+import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
-import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
-import com.orion.ops.framework.common.constant.ExtraFieldConst;
-import com.orion.ops.module.asset.dao.HostDAO;
-import com.orion.ops.module.asset.define.operator.HostTerminalOperatorType;
-import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateRequest;
-import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
+import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
+import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.ops.module.asset.handler.host.terminal.entity.Message;
 import com.orion.ops.module.asset.handler.host.terminal.entity.request.TerminalConnectRequest;
+import com.orion.ops.module.asset.handler.host.terminal.entity.response.TerminalConnectResponse;
+import com.orion.ops.module.asset.handler.host.terminal.enums.OutputOperatorTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.session.TerminalSession;
 import com.orion.ops.module.asset.service.HostConnectLogService;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * 连接主机处理器
@@ -39,16 +38,10 @@ import java.util.Map;
 public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConnectRequest> {
 
     @Resource
-    private HostDAO hostDAO;
-
-    @Resource
     private HostTerminalService hostTerminalService;
 
     @Resource
     private HostConnectLogService hostConnectLogService;
-
-    @Resource
-    private OperatorLogFrameworkService operatorLogFrameworkService;
 
     @Resource
     private TerminalManager terminalManager;
@@ -59,93 +52,93 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
 
     @Override
     protected void handle(WebSocketSession session, Message<TerminalConnectRequest> msg) {
-        TerminalConnectRequest body = msg.getBody();
-        Long hostId = body.getHostId();
-        Long userId = this.getAttr(session, ExtraFieldConst.USER_ID);
-        log.info("TerminalConnectHandler-handle start userId: {}, hostId: {}", userId, hostId);
-        // 查询主机信息
-        HostDO host = hostDAO.selectById(hostId);
-        if (host == null) {
-            // TODO 不存在返回错误信息
-
+        String token = msg.getSession();
+        log.info("TerminalConnectHandler-handle start token: {}", token);
+        // 获取主机连接信息
+        HostTerminalConnectDTO connect = this.getAttr(session, token);
+        if (connect == null) {
+            log.info("TerminalConnectHandler-handle unknown token: {}", token);
+            this.send(session, msg,
+                    OutputOperatorTypeEnum.CONNECT,
+                    new TerminalConnectResponse(BooleanBit.FALSE.getValue(), ErrorMessage.SESSION_ABSENT));
             return;
         }
-        // 日志信息
-        long startTime = System.currentTimeMillis();
-        String terminalToken = UUIds.random15();
-        TerminalSession terminalSession = null;
+        // 移除会话连接信息
+        session.getAttributes().remove(token);
         Exception ex = null;
         try {
             // 连接主机
-            HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host);
-            SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
-            terminalSession = new TerminalSession(terminalToken, session, sessionStore);
-            terminalSession.connect(body.getCols(), body.getRows());
-            log.info("TerminalConnectHandler-handle success userId: {}, hostId: {}, token: {}", userId, hostId, terminalToken);
+            TerminalSession terminalSession = this.connect(token, connect, session, msg.getBody());
             // 添加会话到 manager
             terminalManager.addSession(terminalSession);
         } catch (Exception e) {
-            log.error("TerminalConnectHandler-handle error userId: {}, hostId: {}, token: {}", userId, hostId, terminalToken, e);
             ex = e;
+            // 修改连接状态为失败
+            hostConnectLogService.updateStatusByToken(token, HostConnectStatusEnum.FAILED);
+        }
+        // 返回连接状态
+        this.send(session, msg,
+                OutputOperatorTypeEnum.CONNECT,
+                TerminalConnectResponse.builder()
+                        .result(BooleanBit.of(ex == null).getValue())
+                        .errorMessage(this.getConnectErrorMessage(ex))
+                        .build());
+    }
+
+    /**
+     * 连接主机
+     *
+     * @param token   token
+     * @param connect connect
+     * @param session session
+     * @param body    body
+     * @return session
+     */
+    private TerminalSession connect(String token,
+                                    HostTerminalConnectDTO connect,
+                                    WebSocketSession session,
+                                    TerminalConnectRequest body) {
+        TerminalSession terminalSession = null;
+        try {
+            // 建立连接
+            SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
+            terminalSession = new TerminalSession(token, session, sessionStore);
+            terminalSession.connect(body.getCols(), body.getRows());
+            log.info("TerminalConnectHandler-handle success token: {}", token);
+            return terminalSession;
+        } catch (Exception e) {
             Streams.close(terminalSession);
-        } finally {
-            // 记录主机日志
-            this.saveTerminalLog(session, userId, host, startTime, ex, terminalToken);
+            log.error("TerminalConnectHandler-handle error token: {}", token, e);
+            throw e;
         }
     }
 
     /**
-     * 记录主机日志
+     * 获取建立连接错误信息
      *
-     * @param session       session
-     * @param userId        userId
-     * @param host          host
-     * @param startTime     startTime
-     * @param ex            ex
-     * @param terminalToken terminalToken
+     * @param e e
+     * @return errorMessage
      */
-    private void saveTerminalLog(WebSocketSession session,
-                                 Long userId,
-                                 HostDO host,
-                                 long startTime,
-                                 Exception ex,
-                                 String terminalToken) {
-        Long hostId = host.getId();
-        String hostName = host.getName();
-        String username = this.getAttr(session, ExtraFieldConst.USERNAME);
-        // 额外参数
-        Map<String, Object> extra = Maps.newMap();
-        extra.put(OperatorLogs.ID, hostId);
-        extra.put(OperatorLogs.NAME, hostName);
-        extra.put(OperatorLogs.TOKEN, terminalToken);
-        // 日志参数
-        OperatorLogFiller logModel = OperatorLogFiller.create()
-                // 填充用户信息
-                .fillUserInfo(userId, username)
-                // 填充 traceId
-                .fillTraceId(this.getAttr(session, ExtraFieldConst.TRACE_ID))
-                // 填充请求留痕信息
-                .fillIdentity(this.getAttr(session, ExtraFieldConst.IDENTITY))
-                // 填充使用时间
-                .fillUsedTime(startTime)
-                // 填充结果信息
-                .fillResult(null, ex)
-                // 填充拓展信息
-                .fillExtra(extra)
-                // 填充日志
-                .fillLogInfo(extra, HostTerminalOperatorType.CONNECT);
-        // 记录操作日志
-        operatorLogFrameworkService.insert(logModel.get());
-        // 记录连接日志
-        HostConnectLogCreateRequest connectLog = HostConnectLogCreateRequest.builder()
-                .userId(userId)
-                .username(username)
-                .hostId(hostId)
-                .hostName(hostName)
-                .hostAddress(host.getAddress())
-                .token(terminalToken)
-                .build();
-        hostConnectLogService.create(HostConnectTypeEnum.SSH, connectLog);
+    private String getConnectErrorMessage(Exception e) {
+        if (e == null) {
+            return null;
+        }
+        if (Exceptions.isCausedBy(e, TimeoutException.class)) {
+            // 连接超时
+            return TerminalMessage.CONNECTION_TIMEOUT;
+        } else if (Exceptions.isCausedBy(e, ConnectionRuntimeException.class)) {
+            // 无法连接
+            return TerminalMessage.UNREACHABLE;
+        } else if (Exceptions.isCausedBy(e, AuthenticationException.class)) {
+            // 认证失败
+            return TerminalMessage.AUTHENTICATION_FAILURE;
+        } else if (Exceptions.isCausedBy(e, InvalidArgumentException.class)) {
+            // 参数错误
+            return e.getMessage();
+        } else {
+            // 其他错误
+            return TerminalMessage.UNREACHABLE;
+        }
     }
 
 }

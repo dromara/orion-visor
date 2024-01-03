@@ -84,7 +84,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         log.info("HostConnectService.getHostAccessToken userId: {}", userId);
         String token = UUIds.random32();
         HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()
-                .token(token)
                 .userId(userId)
                 .build();
         // 设置缓存
@@ -254,7 +253,9 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setPort(config.getPort());
+        conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());
+        conn.setFileContentCharset(config.getFileContentCharset());
         conn.setTimeout(config.getConnectTimeout());
         conn.setUsername(config.getUsername());
         // 填充身份信息

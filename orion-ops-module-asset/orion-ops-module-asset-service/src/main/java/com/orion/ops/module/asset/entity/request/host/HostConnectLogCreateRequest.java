@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Size;
+import java.util.Map;
 
 /**
  * 主机连接日志 创建请求对象
@@ -37,8 +38,14 @@ public class HostConnectLogCreateRequest {
     @Schema(description = "主机地址")
     private String hostAddress;
 
+    @Schema(description = "状态")
+    private String status;
+
     @Size(max = 128)
     @Schema(description = "token")
     private String token;
+
+    @Schema(description = "拓展信息")
+    private Map<String, Object> extra;
 
 }

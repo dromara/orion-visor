@@ -71,4 +71,6 @@ public interface ErrorMessage {
 
     String ANY_NO_PERMISSION = "{}无权限";
 
+    String SESSION_ABSENT = "会话不存在";
+
 }

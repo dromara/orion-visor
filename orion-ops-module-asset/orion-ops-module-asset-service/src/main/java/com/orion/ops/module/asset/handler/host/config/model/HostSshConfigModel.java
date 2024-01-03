@@ -56,8 +56,18 @@ public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordActi
 
     @NotBlank
     @Size(max = 12)
+    @Schema(description = "SSH输出编码")
+    private String charset;
+
+    @NotBlank
+    @Size(max = 12)
     @Schema(description = "文件名称编码")
     private String fileNameCharset;
+
+    @NotBlank
+    @Size(max = 12)
+    @Schema(description = "文件内容编码")
+    private String fileContentCharset;
 
     @Schema(description = "是否使用新密码 仅参数")
     private Boolean useNewPassword;

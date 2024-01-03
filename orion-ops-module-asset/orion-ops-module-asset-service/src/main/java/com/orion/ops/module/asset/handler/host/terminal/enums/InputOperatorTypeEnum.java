@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.enums;
 
 import com.orion.ops.module.asset.handler.host.terminal.handler.ITerminalHandler;
+import com.orion.ops.module.asset.handler.host.terminal.handler.TerminalCheckHandler;
 import com.orion.ops.module.asset.handler.host.terminal.handler.TerminalConnectHandler;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
@@ -16,6 +17,11 @@ import javax.annotation.PostConstruct;
  * @since 2023/12/29 15:33
  */
 public enum InputOperatorTypeEnum {
+
+    /**
+     * 主机连接检查 (临时 token 换实际 token / 检查权限)
+     */
+    CHECK("ck", TerminalCheckHandler.class),
 
     /**
      * 连接主机

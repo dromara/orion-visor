@@ -28,6 +28,10 @@ public enum BooleanBit {
 
     private final Integer value;
 
+    public static BooleanBit of(boolean value) {
+        return value ? TRUE : FALSE;
+    }
+
     public static BooleanBit of(Integer value) {
         if (value == null) {
             return null;

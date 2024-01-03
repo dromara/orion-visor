@@ -15,14 +15,14 @@ import lombok.Getter;
 public enum OutputOperatorTypeEnum {
 
     /**
-     * 连接主机成功
+     * 主机连接检查
      */
-    CONNECT_COMPLETE("cc"),
+    CHECK("ck"),
 
     /**
-     * 连接主机失败
+     * 主机连接
      */
-    CONNECT_FAILED("cf"),
+    CONNECT("co"),
 
     /**
      * pong
