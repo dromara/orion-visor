@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'vue';
-import type { TabItem } from '@/store/modules/terminal/types';
 
 // sidebar 操作类型
 export interface SidebarAction {
@@ -16,7 +15,7 @@ export const TabType = {
 };
 
 // 内置 tab
-export const InnerTabs: Record<string, TabItem> = {
+export const InnerTabs = {
   NEW_CONNECTION: {
     key: 'newConnection',
     title: '新建连接',

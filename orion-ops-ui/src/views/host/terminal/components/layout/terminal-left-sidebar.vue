@@ -30,7 +30,7 @@
     {
       icon: 'icon-plus',
       content: '新建连接',
-      click: () => terminalStore.switchTab(InnerTabs.NEW_CONNECTION)
+      click: () => terminalStore.dispatcher.openTab(InnerTabs.NEW_CONNECTION)
     },
   ];
 
@@ -39,12 +39,12 @@
     {
       icon: 'icon-command',
       content: '快捷键设置',
-      click: () => terminalStore.switchTab(InnerTabs.SHORTCUT_SETTING)
+      click: () => terminalStore.dispatcher.openTab(InnerTabs.SHORTCUT_SETTING)
     },
     {
       icon: 'icon-palette',
       content: '外观设置',
-      click: () => terminalStore.switchTab(InnerTabs.VIEW_SETTING)
+      click: () => terminalStore.dispatcher.openTab(InnerTabs.VIEW_SETTING)
     },
   ];
 

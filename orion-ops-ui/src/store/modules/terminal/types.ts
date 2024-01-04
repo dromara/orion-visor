@@ -1,11 +1,9 @@
 import type { Ref } from 'vue';
-import type { HostTerminalAccessResponse } from '@/api/asset/host-terminal';
 
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
-  tabs: TerminalTabs;
-  access?: HostTerminalAccessResponse;
+  dispatcher: ITerminalDispatcher;
 }
 
 // 终端配置
@@ -58,17 +56,33 @@ export interface TerminalThemeSchema {
   [key: string]: unknown;
 }
 
-// 终端 tab
-export interface TerminalTabs {
-  active: string;
-  items: Array<TabItem>;
-}
-
-// tab 元素
-export interface TabItem {
+// 终端 tab 元素
+export interface TerminalTabItem {
   key: string;
   title: string;
   type: string;
 
   [key: string]: unknown;
+}
+
+// 终端调度器
+export interface ITerminalDispatcher {
+  // 当前活跃 tab
+  active: string;
+  // 所有 tab
+  items: Array<TerminalTabItem>;
+
+  // 点击 tab
+  clickTab: (key: string) => void;
+  // 删除 tab
+  deleteTab: (key: string) => void;
+  // 打开 tab
+  openTab: (tab: TerminalTabItem) => void;
+  // 打开终端
+  openTerminal: (record: any) => void;
+  // 注册终端钩子
+  registerTerminalHook: (tab: TerminalTabItem) => void;
+
+  // 重置
+  reset: () => void;
 }

@@ -10,13 +10,13 @@
     </div>
     <!-- 左侧 tabs -->
     <div class="terminal-header-tabs">
-      <a-tabs v-model:active-key="terminalStore.tabs.active"
+      <a-tabs v-model:active-key="terminalStore.dispatcher.active"
               :editable="true"
               :hide-content="true"
               :auto-switch="true"
-              @tab-click="terminalStore.clickTab"
-              @delete="terminalStore.deleteTab">
-        <a-tab-pane v-for="tab in terminalStore.tabs.items"
+              @tab-click="k => terminalStore.dispatcher.clickTab(k as string)"
+              @delete="k => terminalStore.dispatcher.deleteTab(k as string)">
+        <a-tab-pane v-for="tab in terminalStore.dispatcher.items"
                     :key="tab.key"
                     :title="tab.title" />
       </a-tabs>

@@ -13,7 +13,7 @@ export interface Payload {
 }
 
 // 输入协议
-export const InputProtocol: Record<string, Protocol> = {
+export const InputProtocol = {
   // 主机连接检查
   CHECK: {
     type: 'ck',
@@ -52,7 +52,7 @@ export const InputProtocol: Record<string, Protocol> = {
 };
 
 // 输出协议
-export const OutputProtocol: Record<string, Protocol> = {
+export const OutputProtocol = {
   // 主机连接检查
   CHECK: {
     type: 'ck',
@@ -112,7 +112,7 @@ export const parse: Record<string, any> = (payload: string) => {
 };
 
 // 格式化参数
-export const format = (payload: Payload, protocol: Protocol) => {
+export const format = (protocol: Protocol, payload: Payload) => {
   payload.type = protocol.type;
   return protocol.template
     .map(i => payload[i] || '')

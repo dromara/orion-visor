@@ -1,8 +1,8 @@
 <template>
   <div class="terminal-content">
     <!-- 内容 tabs -->
-    <a-tabs v-model:active-key="terminalStore.tabs.active">
-      <a-tab-pane v-for="tab in terminalStore.tabs.items"
+    <a-tabs v-model:active-key="terminalStore.dispatcher.active">
+      <a-tab-pane v-for="tab in terminalStore.dispatcher.items"
                   :key="tab.key"
                   :title="tab.title">
         <!-- 设置 -->
@@ -14,13 +14,7 @@
         </template>
         <!-- 终端 -->
         <template v-else-if="tab.type === TabType.TERMINAL">
-          <terminal-view>
-
-          </terminal-view>
-          终端 {{ tab.key }}
-          <div v-for="i in 1000" :key="i">
-            {{ tab.title }}
-          </div>
+          <terminal-view :tab="tab" />
         </template>
       </a-tab-pane>
     </a-tabs>

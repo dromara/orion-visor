@@ -1,12 +1,10 @@
-import type { TabItem, TerminalDisplaySetting, TerminalPreference, TerminalState, TerminalThemeSchema } from './types';
-import type { HostQueryResponse } from '@/api/asset/host';
+import type { TerminalDisplaySetting, TerminalPreference, TerminalState, TerminalThemeSchema } from './types';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
 import { useDark } from '@vueuse/core';
 import { DEFAULT_SCHEMA } from '@/views/host/terminal/types/terminal.theme';
-import { InnerTabs } from '@/views/host/terminal/types/terminal.const';
-import { getHostTerminalAccessToken } from '@/api/asset/host-terminal';
+import TerminalDispatcher from '@/views/host/terminal/handler/TerminalDispatcher';
 
 // 暗色主题
 export const DarkTheme = {
@@ -31,11 +29,7 @@ export default defineStore('terminal', {
       displaySetting: {} as TerminalDisplaySetting,
       themeSchema: {} as TerminalThemeSchema
     },
-    tabs: {
-      active: InnerTabs.NEW_CONNECTION.key,
-      items: [InnerTabs.NEW_CONNECTION, InnerTabs.VIEW_SETTING]
-    },
-    access: undefined
+    dispatcher: new TerminalDispatcher()
   }),
 
   actions: {
@@ -115,41 +109,6 @@ export default defineStore('terminal', {
         Message.error('同步失败');
       }
     },
-
-    // 点击 tab
-    clickTab(key: string) {
-      this.tabs.active = key;
-    },
-
-    // 删除 tab
-    deleteTab(key: string) {
-      const tabIndex = this.tabs.items.findIndex(s => s.key === key);
-      this.tabs.items.splice(tabIndex, 1);
-      if (key === this.tabs.active && this.tabs.items.length !== 0) {
-        // 切换为前一个 tab
-        this.tabs.active = this.tabs.items[Math.max(tabIndex - 1, 0)].key;
-      }
-    },
-
-    // 切换 tab
-    switchTab(tab: TabItem) {
-      // 不存在则创建tab
-      if (!this.tabs.items.find(s => s.key === tab.key)) {
-        this.tabs.items.push(tab);
-      }
-      this.tabs.active = tab.key;
-    },
-
-    // 打开终端
-    async openTerminal(record: HostQueryResponse) {
-      // 获取 access
-      if (!this.access) {
-        const { data } = await getHostTerminalAccessToken();
-        this.access = data;
-      }
-      console.log(this.access);
-      console.log(record);
-    }
 
   },
 

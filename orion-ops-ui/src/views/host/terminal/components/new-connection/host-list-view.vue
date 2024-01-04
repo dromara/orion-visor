@@ -20,7 +20,7 @@
             <!-- 左侧图标-名称 -->
             <div class="flex-center host-item-left">
               <!-- 图标 -->
-              <span class="host-item-left-icon" @click="terminalStore.openTerminal(item)">
+              <span class="host-item-left-icon" @click="terminalStore.dispatcher.openTerminal(item)">
                 <icon-desktop />
               </span>
               <!-- 名称 -->
@@ -116,7 +116,7 @@
                            arrow-class="terminal-tooltip-content"
                            content="连接主机">
                   <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click="terminalStore.openTerminal(item)">
+                    <div class="terminal-sidebar-icon" @click="terminalStore.dispatcher.openTerminal(item)">
                       <icon-thunderbolt />
                     </div>
                   </div>
