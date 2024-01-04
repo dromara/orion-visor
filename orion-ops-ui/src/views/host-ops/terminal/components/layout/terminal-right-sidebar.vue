@@ -24,7 +24,7 @@
   import { useTerminalStore } from '@/store';
   import { DarkTheme } from '@/store/modules/terminal';
 
-  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'openHistory', 'screenshot']);
+  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'screenshot']);
 
   const terminalStore = useTerminalStore();
 
@@ -47,12 +47,6 @@
         transform: 'rotate(90deg)'
       },
       click: () => emits('openTransfer')
-    },
-    {
-      icon: 'icon-history',
-      content: '历史命令',
-      visible: false,
-      click: () => emits('openHistory')
     },
     {
       icon: terminalStore.isDarkTheme ? 'icon-sun-fill' : 'icon-moon-fill',

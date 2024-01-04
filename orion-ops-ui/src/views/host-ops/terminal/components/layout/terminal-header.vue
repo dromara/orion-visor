@@ -10,30 +10,19 @@
     </div>
     <!-- 左侧 tabs -->
     <div class="terminal-header-tabs">
-      <a-tabs v-model:active-key="activeKey"
+      <a-tabs v-model:active-key="terminalStore.tabs.active"
               :editable="true"
               :hide-content="true"
               :auto-switch="true"
-              @tab-click="e => emits('clickTab', e)"
-              @delete="e => emits('deleteTab', e)">
-        <a-tab-pane v-for="tab in tabs"
+              @tab-click="terminalStore.clickTab"
+              @delete="terminalStore.deleteTab">
+        <a-tab-pane v-for="tab in terminalStore.tabs.items"
                     :key="tab.key"
                     :title="tab.title" />
       </a-tabs>
     </div>
     <!-- 右侧操作 -->
     <div class="terminal-header-right">
-      <!-- 分享用户 -->
-      <a-avatar-group v-if="false"
-                      class="terminal-header-right-avatar-group"
-                      :size="28"
-                      :max-count="4"
-                      :max-style="{background: '#168CFF'}">
-        <a-avatar v-for="i in 8" :key="i"
-                  :style="{background: '#168CFF'}">
-          {{ i }}
-        </a-avatar>
-      </a-avatar-group>
       <!-- 操作按钮 -->
       <icon-actions class="terminal-header-right-actions"
                     :actions="actions"
@@ -50,62 +39,29 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction, TabItem } from '../../types/terminal.const';
-  import type { PropType } from 'vue';
+  import type { SidebarAction } from '../../types/terminal.const';
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
+  import { useTerminalStore } from '@/store';
   import IconActions from '../layout/icon-actions.vue';
 
-  const props = defineProps({
-    modelValue: {
-      type: String,
-      required: true
-    },
-    tabs: {
-      type: Array as PropType<Array<TabItem>>,
-      required: true
-    }
-  });
-
-  const emits = defineEmits(['update:modelValue', 'clickTab', 'deleteTab', 'share']);
-
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
+  const terminalStore = useTerminalStore();
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [
     {
-      icon: 'icon-share-alt',
-      content: '分享链接',
-      visible: false,
-      click: () => emits('share')
-    },
-    {
       icon: isFullscreen.value ? 'icon-fullscreen-exit' : 'icon-fullscreen',
       content: isFullscreen.value ? '点击退出全屏模式' : '点击切换全屏模式',
-      click: () => toggleFullScreen()
+      click: toggleFullScreen
     },
   ]);
-
-  const activeKey = computed<String>({
-    get() {
-      return props.modelValue;
-    },
-    set(e) {
-      if (e) {
-        emits('update:modelValue', e);
-      } else {
-        emits('update:modelValue', null);
-      }
-    }
-  });
 
 </script>
 
 <style lang="less" scoped>
   .terminal-header {
     --logo-width: 168px;
-    --right-avatar-width: calc(28px * 5 - 7px * 4);
-    --right-action-width: calc(var(--sidebar-icon-wrapper-size) * 2);
   }
 
   .terminal-header {
@@ -137,24 +93,17 @@
     }
 
     &-tabs {
-      width: calc(100% - var(--logo-width) - var(--right-avatar-width) - var(--right-action-width));
+      width: calc(100% - var(--logo-width) - var(--sidebar-icon-wrapper-size));
       display: flex;
     }
 
     &-right {
-      width: calc(var(--right-avatar-width) + var(--right-action-width));
+      width: var(--sidebar-icon-wrapper-size);
       display: flex;
       justify-content: flex-end;
 
-      &-avatar-group {
-        width: var(--right-avatar-width);
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-      }
-
       &-actions {
-        width: var(--right-action-width);
+        width: var(--sidebar-icon-wrapper-size);
         display: flex;
         justify-content: flex-end;
       }

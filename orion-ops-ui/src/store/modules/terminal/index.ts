@@ -1,9 +1,11 @@
-import type { TerminalDisplaySetting, TerminalPreference, TerminalState, TerminalThemeSchema } from './types';
+import type { TabItem, TerminalDisplaySetting, TerminalPreference, TerminalState, TerminalThemeSchema } from './types';
+import type { HostQueryResponse } from '@/api/asset/host';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
 import { useDark } from '@vueuse/core';
 import { DEFAULT_SCHEMA } from '@/views/host-ops/terminal/types/terminal.theme';
+import { InnerTabs } from '@/views/host-ops/terminal/types/terminal.const';
 
 // 暗色主题
 export const DarkTheme = {
@@ -28,6 +30,10 @@ export default defineStore('terminal', {
       displaySetting: {} as TerminalDisplaySetting,
       themeSchema: {} as TerminalThemeSchema
     },
+    tabs: {
+      active: InnerTabs.NEW_CONNECTION.key,
+      items: [InnerTabs.NEW_CONNECTION, InnerTabs.VIEW_SETTING]
+    }
   }),
 
   actions: {
@@ -94,7 +100,7 @@ export default defineStore('terminal', {
       await this.updateTerminalPreference('newConnectionType', newConnectionType);
     },
 
-    // 更新终端偏好-防抖
+    // 更新终端偏好
     async updateTerminalPreference(item: string, value: any) {
       try {
         // 修改配置
@@ -106,7 +112,37 @@ export default defineStore('terminal', {
       } catch (e) {
         Message.error('同步失败');
       }
+    },
+
+    // 点击 tab
+    clickTab(key: string) {
+      this.tabs.active = key;
+    },
+
+    // 删除 tab
+    deleteTab(key: string) {
+      const tabIndex = this.tabs.items.findIndex(s => s.key === key);
+      this.tabs.items.splice(tabIndex, 1);
+      if (key === this.tabs.active && this.tabs.items.length !== 0) {
+        // 切换为前一个 tab
+        this.tabs.active = this.tabs.items[Math.max(tabIndex - 1, 0)].key;
+      }
+    },
+
+    // 切换 tab
+    switchTab(tab: TabItem) {
+      // 不存在则创建tab
+      if (!this.tabs.items.find(s => s.key === tab.key)) {
+        this.tabs.items.push(tab);
+      }
+      this.tabs.active = tab.key;
+    },
+
+    // 打开终端
+    openTerminal(record: HostQueryResponse) {
+      console.log(record);
     }
+
   },
 
 });

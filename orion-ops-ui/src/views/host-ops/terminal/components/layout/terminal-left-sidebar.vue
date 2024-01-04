@@ -20,16 +20,17 @@
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.const';
   import { InnerTabs } from '../../types/terminal.const';
+  import { useTerminalStore } from '@/store';
   import IconActions from './icon-actions.vue';
 
-  const emits = defineEmits(['switchTab']);
+  const terminalStore = useTerminalStore();
 
   // 顶部操作
   const topActions: Array<SidebarAction> = [
     {
       icon: 'icon-plus',
       content: '新建连接',
-      click: () => emits('switchTab', InnerTabs.NEW_CONNECTION)
+      click: () => terminalStore.switchTab(InnerTabs.NEW_CONNECTION)
     },
   ];
 
@@ -38,12 +39,12 @@
     {
       icon: 'icon-command',
       content: '快捷键设置',
-      click: () => emits('switchTab', InnerTabs.SHORTCUT_SETTING)
+      click: () => terminalStore.switchTab(InnerTabs.SHORTCUT_SETTING)
     },
     {
       icon: 'icon-palette',
       content: '外观设置',
-      click: () => emits('switchTab', InnerTabs.VIEW_SETTING)
+      click: () => terminalStore.switchTab(InnerTabs.VIEW_SETTING)
     },
   ];
 

@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
   import { onMounted, provide, ref, watch } from 'vue';
-  import { NewConnectionType, sshModalKey } from '../../types/terminal.const';
+  import { NewConnectionType, openSshModalKey } from '../../types/terminal.const';
   import { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import { HostQueryResponse } from '@/api/asset/host';
   import HostGroupView from './host-group-view.vue';
@@ -57,7 +57,7 @@
   const sshModal = ref();
 
   // 暴露打开 ssh 配置模态框
-  provide(sshModalKey, (record: any) => {
+  provide(openSshModalKey, (record: any) => {
     sshModal.value?.open(record);
   });
 

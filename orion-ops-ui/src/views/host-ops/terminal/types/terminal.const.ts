@@ -1,21 +1,12 @@
 import type { CSSProperties } from 'vue';
+import type { TabItem } from '@/store/modules/terminal/types';
 
 // sidebar 操作类型
 export interface SidebarAction {
   icon: string;
   content: string;
   iconStyle?: CSSProperties;
-  visible?: boolean;
   click: () => void;
-}
-
-// tab 元素
-export interface TabItem {
-  key: string;
-  title: string;
-  type: string;
-
-  [key: string]: unknown;
 }
 
 // tab 类型
@@ -25,7 +16,7 @@ export const TabType = {
 };
 
 // 内置 tab
-export const InnerTabs = {
+export const InnerTabs: Record<string, TabItem> = {
   NEW_CONNECTION: {
     key: 'newConnection',
     title: '新建连接',
@@ -70,7 +61,7 @@ export const ExtraSshAuthType = {
 };
 
 // 打开 sshModal key
-export const sshModalKey = Symbol();
+export const openSshModalKey = Symbol();
 
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';

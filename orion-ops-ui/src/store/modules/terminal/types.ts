@@ -3,6 +3,7 @@ import type { Ref } from 'vue';
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
+  tabs: TerminalTabs;
 }
 
 // 终端配置
@@ -51,6 +52,21 @@ export interface TerminalThemeSchema {
   brightMagenta: string;
   brightCyan: string;
   brightWhite: string;
+
+  [key: string]: unknown;
+}
+
+// 终端 tab
+export interface TerminalTabs {
+  active: string;
+  items: Array<TabItem>;
+}
+
+// tab 元素
+export interface TabItem {
+  key: string;
+  title: string;
+  type: string;
 
   [key: string]: unknown;
 }

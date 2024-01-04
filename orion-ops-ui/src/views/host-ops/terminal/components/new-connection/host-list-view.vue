@@ -15,12 +15,12 @@
       </template>
       <!-- 数据 -->
       <template #item="{ item }">
-        <a-list-item class="host-item-wrapper" @click="openTerminal(item)">
+        <a-list-item class="host-item-wrapper">
           <div class="host-item">
             <!-- 左侧图标-名称 -->
             <div class="flex-center host-item-left">
               <!-- 图标 -->
-              <span class="host-item-left-icon">
+              <span class="host-item-left-icon" @click="terminalStore.openTerminal(item)">
                 <icon-desktop />
               </span>
               <!-- 名称 -->
@@ -49,7 +49,7 @@
                              arrow-class="terminal-tooltip-content"
                              content="修改别名">
                     <icon-edit class="host-item-left-name-edit"
-                               @click.stop="clickEditAlias(item)" />
+                               @click="clickEditAlias(item)" />
                   </a-tooltip>
                 </template>
                 <!-- 名称输入框 -->
@@ -63,8 +63,7 @@
                            :placeholder="`${item.name} (${item.code})`"
                            @blur="saveAlias(item)"
                            @pressEnter="saveAlias(item)"
-                           @change="saveAlias(item)"
-                           @click.stop>
+                           @change="saveAlias(item)">
                     <template #suffix>
                       <!-- 加载中 -->
                       <icon-loading v-if="item.loading" />
@@ -117,7 +116,7 @@
                            arrow-class="terminal-tooltip-content"
                            content="连接主机">
                   <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click.stop="openTerminal(item)">
+                    <div class="terminal-sidebar-icon" @click="terminalStore.openTerminal(item)">
                       <icon-thunderbolt />
                     </div>
                   </div>
@@ -129,7 +128,7 @@
                            arrow-class="terminal-tooltip-content"
                            content="连接设置">
                   <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click.stop="openSetting(item)">
+                    <div class="terminal-sidebar-icon" @click="openSetting(item)">
                       <icon-settings />
                     </div>
                   </div>
@@ -141,7 +140,7 @@
                            arrow-class="terminal-tooltip-content"
                            content="收藏">
                   <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click.stop="setFavorite(item)">
+                    <div class="terminal-sidebar-icon" @click="setFavorite(item)">
                       <icon-star-fill class="favorite" v-if="item.favorite" />
                       <icon-star v-else />
                     </div>
@@ -169,13 +168,15 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostAlias } from '@/api/asset/host-extra';
-  import { sshModalKey } from '../../types/terminal.const';
+  import { openSshModalKey } from '../../types/terminal.const';
+  import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
     hostList: Array<HostQueryResponse>,
     emptyValue: string
   }>();
 
+  const terminalStore = useTerminalStore();
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
   const aliasNameInput = ref();
@@ -212,13 +213,8 @@
     }
   };
 
-  // 打开终端
-  const openTerminal = (item: HostQueryResponse) => {
-    console.log('ter', item);
-  };
-
   // 打开配置
-  const openSetting = inject<(record: HostQueryResponse) => void>(sshModalKey);
+  const openSetting = inject<(record: HostQueryResponse) => void>(openSshModalKey);
 
   // 设置收藏
   const setFavorite = async (item: HostQueryResponse) => {
@@ -257,7 +253,6 @@
   .host-item-wrapper {
     padding: 0 !important;
     height: @host-item-height;
-    cursor: pointer;
     font-size: 12px;
     color: var(--color-content-text-2);
 
@@ -304,6 +299,7 @@
         border-radius: 32px;
         margin-right: 10px;
         font-size: 16px;
+        cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
