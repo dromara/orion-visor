@@ -15,9 +15,9 @@ public interface ITerminalHandler<T extends TerminalBasePayload> {
     /**
      * 处理消息
      *
-     * @param session session
+     * @param channel channel
      * @param payload payload
      */
-    void handle(WebSocketSession session, T payload);
+    void handle(WebSocketSession channel, T payload);
 
 }

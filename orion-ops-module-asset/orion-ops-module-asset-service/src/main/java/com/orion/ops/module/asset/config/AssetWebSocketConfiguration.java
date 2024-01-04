@@ -31,7 +31,7 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // 终端
-        registry.addHandler(terminalMessageDispatcher, prefix + "/host/terminal/{token}")
+        registry.addHandler(terminalMessageDispatcher, prefix + "/host/terminal/{accessToken}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
     }

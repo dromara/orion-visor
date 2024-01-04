@@ -8,9 +8,11 @@ import com.orion.net.host.SessionHolder;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
@@ -20,6 +22,7 @@ import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.ops.module.asset.entity.vo.HostTerminalAccessVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.enums.HostExtraItemEnum;
 import com.orion.ops.module.asset.enums.HostExtraSshAuthTypeEnum;
@@ -80,16 +83,22 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     private SystemUserApi systemUserApi;
 
     @Override
-    public String getHostTerminalAccessToken(Long userId) {
-        log.info("HostConnectService.getHostAccessToken userId: {}", userId);
-        String token = UUIds.random32();
+    public HostTerminalAccessVO getHostTerminalAccessToken() {
+        LoginUser user = SecurityUtils.getLoginUser();
+        log.info("HostConnectService.getHostAccessToken userId: {}", user.getId());
+        String accessToken = UUIds.random19();
         HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()
-                .userId(userId)
+                .userId(user.getId())
+                .username(user.getUsername())
                 .build();
-        // 设置缓存
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(token);
+        // 设置 access 缓存
+        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(accessToken);
         RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS, access);
-        return token;
+        return HostTerminalAccessVO.builder()
+                .accessToken(accessToken)
+                // 32 进制的 uuid 作为起始量
+                .sessionInitial(Long.toString(UUIds.random15Long(), 32))
+                .build();
     }
 
     @Override

@@ -32,10 +32,10 @@ import java.io.InputStream;
 public class TerminalSession implements ITerminalSession {
 
     @Getter
-    private final String token;
+    private final String sessionId;
 
     @Getter
-    private final WebSocketSession session;
+    private final WebSocketSession channel;
 
     private final TerminalConfig config;
 
@@ -48,12 +48,12 @@ public class TerminalSession implements ITerminalSession {
 
     private volatile boolean close;
 
-    public TerminalSession(String token,
-                           WebSocketSession session,
+    public TerminalSession(String sessionId,
+                           WebSocketSession channel,
                            SessionStore sessionStore,
                            TerminalConfig config) {
-        this.token = token;
-        this.session = session;
+        this.sessionId = sessionId;
+        this.channel = channel;
         this.sessionStore = sessionStore;
         this.config = config;
     }
@@ -104,10 +104,10 @@ public class TerminalSession implements ITerminalSession {
             Streams.close(executor);
             Streams.close(sessionStore);
         } catch (Exception e) {
-            log.error("terminal 断开连接 失败 token: {}", token, e);
+            log.error("terminal 断开连接失败 {}", sessionId, e);
         }
         // 修改状态
-        SpringHolder.getBean(HostConnectLogService.class).updateStatusByToken(token, HostConnectStatusEnum.COMPLETE);
+        SpringHolder.getBean(HostConnectLogService.class).updateStatusByToken(sessionId, HostConnectStatusEnum.COMPLETE);
     }
 
     /**
@@ -120,22 +120,22 @@ public class TerminalSession implements ITerminalSession {
         BufferedInputStream in = new BufferedInputStream(inputStream, Const.BUFFER_KB_4);
         int read;
         try {
-            while (session.isOpen() && (read = in.read(bs)) != -1) {
+            while (channel.isOpen() && (read = in.read(bs)) != -1) {
                 String body = lastLine = new String(bs, 0, read, config.getCharset());
                 // 响应
                 TerminalOutputResponse resp = TerminalOutputResponse.builder()
-                        .session(token)
+                        .session(sessionId)
                         .type(OutputTypeEnum.OUTPUT.getType())
                         .body(body)
                         .build();
-                WebSockets.sendText(session, OutputTypeEnum.OUTPUT.format(resp));
+                WebSockets.sendText(channel, OutputTypeEnum.OUTPUT.format(resp));
             }
         } catch (IOException ex) {
             log.error("terminal 读取流失败", ex);
         }
         // eof
         if (close) {
-            log.info("terminal eof回调 {}", token);
+            log.info("terminal eof回调 {}", sessionId);
         }
     }
 

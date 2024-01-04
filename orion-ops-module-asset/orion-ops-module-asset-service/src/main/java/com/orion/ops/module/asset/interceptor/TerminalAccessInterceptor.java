@@ -4,6 +4,7 @@ import com.orion.lang.utils.Urls;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.utils.Requests;
+import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -31,24 +32,20 @@ public class TerminalAccessInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        // 获取 token
-        String token = Urls.getUrlSource(request.getURI().getPath());
-        log.info("TerminalInterceptor-beforeHandshake start token: {}", token);
-        attributes.put(ExtraFieldConst.USER_ID, 1L);
-        attributes.put(ExtraFieldConst.USERNAME, "1");
+        // 获取 accessToken
+        String accessToken = Urls.getUrlSource(request.getURI().getPath());
+        log.info("TerminalInterceptor-beforeHandshake start accessToken: {}", accessToken);
+        // 获取连接数据
+        HostTerminalAccessDTO access = hostTerminalService.getAccessInfoByToken(accessToken);
+        if (access == null) {
+            log.error("TerminalInterceptor-beforeHandshake absent accessToken: {}", accessToken);
+            return false;
+        }
+        // 设置参数
+        attributes.put(ExtraFieldConst.USER_ID, access.getUserId());
+        attributes.put(ExtraFieldConst.USERNAME, access.getUsername());
         attributes.put(ExtraFieldConst.TRACE_ID, TraceIdHolder.get());
         attributes.put(ExtraFieldConst.IDENTITY, Requests.getIdentity());
-        // 获取连接数据
-        // HostTerminalAccessDTO access = hostTerminalService.getAccessInfoByToken(token);
-        // if (access == null) {
-        //     log.error("TerminalInterceptor-beforeHandshake absent token: {}", token);
-        //     return false;
-        // }
-        // // 设置参数
-        // attributes.put(ExtraFieldConst.USER_ID, access.getUserId());
-        // attributes.put(ExtraFieldConst.USERNAME, access.getUsername());
-        // attributes.put(ExtraFieldConst.TRACE_ID, TraceIdHolder.get());
-        // attributes.put(ExtraFieldConst.IDENTITY, Requests.getIdentity());
         return true;
     }
 

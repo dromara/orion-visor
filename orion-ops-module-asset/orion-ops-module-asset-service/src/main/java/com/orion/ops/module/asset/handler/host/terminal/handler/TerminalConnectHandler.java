@@ -47,14 +47,14 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
     private TerminalManager terminalManager;
 
     @Override
-    public void handle(WebSocketSession session, TerminalConnectRequest payload) {
-        String token = payload.getSession();
-        log.info("TerminalConnectHandler-handle start token: {}", token);
+    public void handle(WebSocketSession channel, TerminalConnectRequest payload) {
+        String sessionId = payload.getSession();
+        log.info("TerminalConnectHandler-handle start sessionId: {}", sessionId);
         // 获取主机连接信息
-        HostTerminalConnectDTO connect = this.getAttr(session, token);
+        HostTerminalConnectDTO connect = this.getAttr(channel, sessionId);
         if (connect == null) {
-            log.info("TerminalConnectHandler-handle unknown token: {}", token);
-            this.send(session,
+            log.info("TerminalConnectHandler-handle unknown sessionId: {}", sessionId);
+            this.send(channel,
                     OutputTypeEnum.CONNECT,
                     TerminalConnectResponse.builder()
                             .session(payload.getSession())
@@ -64,20 +64,20 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             return;
         }
         // 移除会话连接信息
-        session.getAttributes().remove(token);
+        channel.getAttributes().remove(sessionId);
         Exception ex = null;
         try {
             // 连接主机
-            TerminalSession terminalSession = this.connect(token, connect, session, payload);
+            TerminalSession terminalSession = this.connect(sessionId, connect, channel, payload);
             // 添加会话到 manager
             terminalManager.addSession(terminalSession);
         } catch (Exception e) {
             ex = e;
             // 修改连接状态为失败
-            hostConnectLogService.updateStatusByToken(token, HostConnectStatusEnum.FAILED);
+            hostConnectLogService.updateStatusByToken(sessionId, HostConnectStatusEnum.FAILED);
         }
         // 返回连接状态
-        this.send(session,
+        this.send(channel,
                 OutputTypeEnum.CONNECT,
                 TerminalConnectResponse.builder()
                         .session(payload.getSession())
@@ -89,15 +89,15 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
     /**
      * 连接主机
      *
-     * @param token   token
-     * @param connect connect
-     * @param session session
-     * @param body    body
-     * @return session
+     * @param sessionId sessionId
+     * @param connect   connect
+     * @param channel   channel
+     * @param body      body
+     * @return channel
      */
-    private TerminalSession connect(String token,
+    private TerminalSession connect(String sessionId,
                                     HostTerminalConnectDTO connect,
-                                    WebSocketSession session,
+                                    WebSocketSession channel,
                                     TerminalConnectRequest body) {
         TerminalSession terminalSession = null;
         try {
@@ -109,13 +109,13 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
                     .build();
             // 建立连接
             SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
-            terminalSession = new TerminalSession(token, session, sessionStore, config);
+            terminalSession = new TerminalSession(sessionId, channel, sessionStore, config);
             terminalSession.connect(body.getCols(), body.getRows());
-            log.info("TerminalConnectHandler-handle success token: {}", token);
+            log.info("TerminalConnectHandler-handle success sessionId: {}", sessionId);
             return terminalSession;
         } catch (Exception e) {
             Streams.close(terminalSession);
-            log.error("TerminalConnectHandler-handle error token: {}", token, e);
+            log.error("TerminalConnectHandler-handle error sessionId: {}", sessionId, e);
             throw e;
         }
     }

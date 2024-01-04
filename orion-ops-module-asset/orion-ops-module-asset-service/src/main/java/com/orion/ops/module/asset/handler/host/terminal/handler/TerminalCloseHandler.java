@@ -23,9 +23,10 @@ public class TerminalCloseHandler extends AbstractTerminalHandler<TerminalBasePa
     private TerminalManager terminalManager;
 
     @Override
-    public void handle(WebSocketSession session, TerminalBasePayload payload) {
+    public void handle(WebSocketSession channel, TerminalBasePayload payload) {
+        log.info("TerminalCloseHandler-handle start session: {}", payload.getSession());
         // 关闭会话
-        terminalManager.closeSession(session.getId(), payload.getSession());
+        terminalManager.closeSession(channel.getId(), payload.getSession());
     }
 
 }

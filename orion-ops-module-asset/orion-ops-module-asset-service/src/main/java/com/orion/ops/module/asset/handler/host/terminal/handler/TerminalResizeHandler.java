@@ -24,9 +24,9 @@ public class TerminalResizeHandler extends AbstractTerminalHandler<TerminalResiz
     private TerminalManager terminalManager;
 
     @Override
-    public void handle(WebSocketSession session, TerminalResizeRequest payload) {
+    public void handle(WebSocketSession channel, TerminalResizeRequest payload) {
         // 获取会话
-        ITerminalSession terminalSession = terminalManager.getSession(session.getId(), payload.getSession());
+        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSession());
         if (terminalSession != null) {
             // 修改大小
             terminalSession.resize(payload.getCols(), payload.getRows());

@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
-import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
@@ -16,8 +15,10 @@ import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateReques
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
+import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,26 +51,25 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
 
+    @Resource
+    private TerminalManager terminalManager;
+
     @Override
-    public void handle(WebSocketSession session, TerminalCheckRequest payload) {
+    public void handle(WebSocketSession channel, TerminalCheckRequest payload) {
         Long hostId = payload.getHostId();
-        Long userId = this.getAttr(session, ExtraFieldConst.USER_ID);
+        Long userId = this.getAttr(channel, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
-        String token = UUIds.random15();
-        log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, token: {}", userId, hostId, token);
-        // 查询主机信息
-        HostDO host = hostDAO.selectById(hostId);
-        // 不存在返回错误信息
+        String sessionId = payload.getSession();
+        log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
+        // 检查 session 是否存在
+        if (this.checkSession(channel, payload)) {
+            log.info("TerminalCheckHandler-handle present session userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
+            return;
+        }
+        // 获取主机信息
+        HostDO host = this.checkHost(channel, payload, hostId);
         if (host == null) {
-            log.info("TerminalCheckHandler-handle unknown host userId: {}, hostId: {}", userId, hostId);
-            this.send(session,
-                    OutputTypeEnum.CHECK,
-                    TerminalCheckResponse.builder()
-                            .session(payload.getSession())
-                            .token(token)
-                            .result(BooleanBit.FALSE.getValue())
-                            .errorMessage(ErrorMessage.HOST_ABSENT)
-                            .build());
+            log.info("TerminalCheckHandler-handle unknown host userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
             return;
         }
         Exception ex = null;
@@ -77,58 +77,108 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             // 获取连接信息
             HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host);
             // 设置到缓存中
-            session.getAttributes().put(token, connect);
-            log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, token: {}", userId, hostId, token);
+            channel.getAttributes().put(sessionId, connect);
+            log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         } catch (Exception e) {
             ex = e;
-            log.error("TerminalCheckHandler-handle error userId: {}, hostId: {}, token: {}", userId, hostId, token, e);
+            log.error("TerminalCheckHandler-handle error userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
-        this.saveTerminalLog(session, userId, host, startTime, ex, token);
+        this.saveTerminalLog(channel, userId, host, startTime, ex, sessionId);
         // 响应检查结果
-        this.send(session,
+        this.send(channel,
                 OutputTypeEnum.CHECK,
                 TerminalCheckResponse.builder()
                         .session(payload.getSession())
-                        .token(token)
                         .result(BooleanBit.of(ex == null).getValue())
                         .errorMessage(ex == null ? null : ex.getMessage())
                         .build());
     }
 
     /**
+     * 检查会话是否存在
+     *
+     * @param channel channel
+     * @param payload payload
+     * @return 是否存在
+     */
+    private boolean checkSession(WebSocketSession channel, TerminalCheckRequest payload) {
+        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSession());
+        if (terminalSession != null) {
+            this.sendCheckFailedMessage(channel, payload, ErrorMessage.SESSION_PRESENT);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取主机信息
+     *
+     * @param channel channel
+     * @param payload payload
+     * @param hostId  hostId
+     * @return host
+     */
+    private HostDO checkHost(WebSocketSession channel, TerminalCheckRequest payload, Long hostId) {
+        // 查询主机信息
+        HostDO host = hostDAO.selectById(hostId);
+        // 不存在返回错误信息
+        if (host == null) {
+            this.sendCheckFailedMessage(channel, payload, ErrorMessage.HOST_ABSENT);
+        }
+        return host;
+    }
+
+    /**
+     * 发送检查失败消息
+     *
+     * @param channel channel
+     * @param payload payload
+     * @param msg     msg
+     */
+    private void sendCheckFailedMessage(WebSocketSession channel, TerminalCheckRequest payload, String msg) {
+        TerminalCheckResponse build = TerminalCheckResponse.builder()
+                .session(payload.getSession())
+                .result(BooleanBit.FALSE.getValue())
+                .errorMessage(msg)
+                .build();
+        // 发送
+        this.send(channel, OutputTypeEnum.CHECK, build);
+    }
+
+    /**
      * 记录主机日志
      *
-     * @param session       session
-     * @param userId        userId
-     * @param host          host
-     * @param startTime     startTime
-     * @param ex            ex
-     * @param terminalToken terminalToken
+     * @param channel   channel
+     * @param userId    userId
+     * @param host      host
+     * @param startTime startTime
+     * @param ex        ex
+     * @param sessionId sessionId
      */
-    private void saveTerminalLog(WebSocketSession session,
+    private void saveTerminalLog(WebSocketSession channel,
                                  Long userId,
                                  HostDO host,
                                  long startTime,
                                  Exception ex,
-                                 String terminalToken) {
+                                 String sessionId) {
         Long hostId = host.getId();
         String hostName = host.getName();
-        String username = this.getAttr(session, ExtraFieldConst.USERNAME);
+        String username = this.getAttr(channel, ExtraFieldConst.USERNAME);
         // 额外参数
         Map<String, Object> extra = Maps.newMap();
         extra.put(OperatorLogs.ID, hostId);
         extra.put(OperatorLogs.NAME, hostName);
-        extra.put(OperatorLogs.TOKEN, terminalToken);
-        extra.put(OperatorLogs.SESSION_ID, session.getId());
+        extra.put(OperatorLogs.CHANNEL_ID, channel.getId());
+        extra.put(OperatorLogs.SESSION_ID, sessionId);
         // 日志参数
         OperatorLogFiller logModel = OperatorLogFiller.create()
                 // 填充用户信息
                 .fillUserInfo(userId, username)
                 // 填充 traceId
-                .fillTraceId(this.getAttr(session, ExtraFieldConst.TRACE_ID))
+                .fillTraceId(this.getAttr(channel, ExtraFieldConst.TRACE_ID))
                 // 填充请求留痕信息
-                .fillIdentity(this.getAttr(session, ExtraFieldConst.IDENTITY))
+                .fillIdentity(this.getAttr(channel, ExtraFieldConst.IDENTITY))
                 // 填充使用时间
                 .fillUsedTime(startTime)
                 // 填充结果信息
@@ -147,7 +197,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
                 .hostName(hostName)
                 .hostAddress(host.getAddress())
                 .status(ex == null ? HostConnectStatusEnum.CONNECTING.name() : HostConnectStatusEnum.FAILED.name())
-                .token(terminalToken)
+                .token(sessionId)
                 .extra(extra)
                 .build();
         hostConnectLogService.create(HostConnectTypeEnum.SSH, connectLog);

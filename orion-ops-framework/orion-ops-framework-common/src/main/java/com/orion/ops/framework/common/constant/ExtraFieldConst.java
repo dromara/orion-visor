@@ -13,8 +13,6 @@ public interface ExtraFieldConst extends FieldConst {
 
     String TRACE_ID = "traceId";
 
-    String SESSION_ID = "sessionId";
-
     String IDENTITY = "identity";
 
     String GROUP_NAME = "groupName";
@@ -32,5 +30,9 @@ public interface ExtraFieldConst extends FieldConst {
     String GRANT_TYPE = "grantType";
 
     String GRANT_NAME = "grantName";
+
+    String CHANNEL_ID = "channelId";
+
+    String SESSION_ID = "sessionId";
 
 }

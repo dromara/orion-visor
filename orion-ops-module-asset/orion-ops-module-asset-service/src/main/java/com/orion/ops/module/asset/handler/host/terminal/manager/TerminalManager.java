@@ -22,37 +22,37 @@ public class TerminalManager {
     /**
      * 会话存储器
      */
-    private final MultiConcurrentHashMap<String, String, ITerminalSession> sessions = MultiConcurrentHashMap.create();
+    private final MultiConcurrentHashMap<String, String, ITerminalSession> channelSessions = MultiConcurrentHashMap.create();
 
     /**
      * 添加会话
      *
-     * @param terminalSession terminalSession
+     * @param session session
      */
-    public void addSession(TerminalSession terminalSession) {
-        sessions.put(terminalSession.getSession().getId(), terminalSession.getToken(), terminalSession);
+    public void addSession(TerminalSession session) {
+        channelSessions.put(session.getChannel().getId(), session.getSessionId(), session);
     }
 
     /**
      * 获取会话
      *
-     * @param id    id
-     * @param token token
+     * @param channelId channelId
+     * @param sessionId sessionId
      * @return session
      */
-    public ITerminalSession getSession(String id, String token) {
-        return sessions.get(id, token);
+    public ITerminalSession getSession(String channelId, String sessionId) {
+        return channelSessions.get(channelId, sessionId);
     }
 
     /**
      * 关闭会话
      *
-     * @param id    id
-     * @param token token
+     * @param channelId channelId
+     * @param sessionId sessionId
      */
-    public void closeSession(String id, String token) {
+    public void closeSession(String channelId, String sessionId) {
         // 获取并移除
-        ITerminalSession session = sessions.removeElement(id, token);
+        ITerminalSession session = channelSessions.removeElement(channelId, sessionId);
         if (session != null) {
             Streams.close(session);
         }
@@ -61,11 +61,11 @@ public class TerminalManager {
     /**
      * 关闭全部会话
      *
-     * @param id id
+     * @param channelId channelId
      */
-    public void closeAll(String id) {
+    public void closeAll(String channelId) {
         // 获取并移除
-        ConcurrentHashMap<String, ITerminalSession> session = sessions.remove(id);
+        ConcurrentHashMap<String, ITerminalSession> session = channelSessions.remove(channelId);
         if (Maps.isEmpty(session)) {
             session.values().forEach(Streams::close);
         }

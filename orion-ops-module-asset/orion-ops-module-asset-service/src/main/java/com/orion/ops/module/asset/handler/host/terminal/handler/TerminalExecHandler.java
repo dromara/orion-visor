@@ -24,9 +24,9 @@ public class TerminalExecHandler extends AbstractTerminalHandler<TerminalExecReq
     private TerminalManager terminalManager;
 
     @Override
-    public void handle(WebSocketSession session, TerminalExecRequest payload) {
+    public void handle(WebSocketSession channel, TerminalExecRequest payload) {
         // 获取会话
-        ITerminalSession terminalSession = terminalManager.getSession(session.getId(), payload.getSession());
+        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSession());
         if (terminalSession != null) {
             // 执行命令
             terminalSession.write(payload.getCommand());

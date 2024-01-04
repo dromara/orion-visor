@@ -18,9 +18,9 @@ import org.springframework.web.socket.WebSocketSession;
 public class TerminalPingHandler extends AbstractTerminalHandler<TerminalBasePayload> {
 
     @Override
-    public void handle(WebSocketSession session, TerminalBasePayload payload) {
+    public void handle(WebSocketSession channel, TerminalBasePayload payload) {
         // 发送 pong
-        this.send(session, OutputTypeEnum.PONG.getType());
+        this.send(channel, OutputTypeEnum.PONG.getType());
     }
 
 }

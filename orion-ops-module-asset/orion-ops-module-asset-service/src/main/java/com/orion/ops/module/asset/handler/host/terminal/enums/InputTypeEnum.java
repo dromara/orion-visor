@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 public enum InputTypeEnum {
 
     /**
-     * 主机连接检查  置换token / 检查权限
+     * 主机连接检查
      */
     CHECK("ck",
             TerminalCheckHandler.class,
@@ -106,7 +106,7 @@ public enum InputTypeEnum {
             return null;
         }
         for (InputTypeEnum value : values()) {
-            if (payload.startsWith(value.type + SEPARATOR) || value.type.equals(payload)) {
+            if (payload.startsWith(value.type + SEPARATOR) || payload.equals(value.type)) {
                 return value;
             }
         }

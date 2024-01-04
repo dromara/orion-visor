@@ -23,9 +23,6 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "TerminalCheckResponse", description = "主机连接检查响应 实体对象")
 public class TerminalCheckResponse extends TerminalBasePayload {
 
-    @Schema(description = "token")
-    private String token;
-
     @Schema(description = "检查结果")
     private Integer result;
 

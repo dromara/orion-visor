@@ -17,38 +17,38 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
     /**
      * 发送消息
      *
-     * @param session session
+     * @param channel channel
      * @param type    type
      * @param body    body
      * @param <E>     E
      */
-    public <E extends TerminalBasePayload> void send(WebSocketSession session, OutputTypeEnum type, E body) {
+    public <E extends TerminalBasePayload> void send(WebSocketSession channel, OutputTypeEnum type, E body) {
         body.setType(type.getType());
         // 发送消息
-        this.send(session, type.format(body));
+        this.send(channel, type.format(body));
     }
 
     /**
      * 发送消息
      *
-     * @param session session
+     * @param channel channel
      * @param message message
      */
-    protected void send(WebSocketSession session, String message) {
-        WebSockets.sendText(session, message);
+    protected void send(WebSocketSession channel, String message) {
+        WebSockets.sendText(channel, message);
     }
 
     /**
      * 获取属性
      *
-     * @param session session
+     * @param channel channel
      * @param attr    attr
      * @param <E>     T
      * @return T
      */
     @SuppressWarnings("unchecked")
-    protected <E> E getAttr(WebSocketSession session, String attr) {
-        return (E) session.getAttributes().get(attr);
+    protected <E> E getAttr(WebSocketSession channel, String attr) {
+        return (E) channel.getAttributes().get(attr);
     }
 
 }

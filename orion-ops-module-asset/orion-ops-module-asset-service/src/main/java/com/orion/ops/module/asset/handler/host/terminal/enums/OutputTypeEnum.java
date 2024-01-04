@@ -18,7 +18,7 @@ public enum OutputTypeEnum {
     /**
      * 主机连接检查
      */
-    CHECK("ck", "${type}|${session}|${token}|${result}|${errorMessage}"),
+    CHECK("ck", "${type}|${session}|${result}|${errorMessage}"),
 
     /**
      * 主机连接

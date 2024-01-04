@@ -4,6 +4,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.ops.module.asset.entity.vo.HostTerminalAccessVO;
 
 /**
  * 主机终端服务
@@ -17,10 +18,9 @@ public interface HostTerminalService {
     /**
      * 获取主机终端访问 accessToken
      *
-     * @param userId userId
      * @return session
      */
-    String getHostTerminalAccessToken(Long userId);
+    HostTerminalAccessVO getHostTerminalAccessToken();
 
     /**
      * 通过 accessToken 获取主机终端访问信息
