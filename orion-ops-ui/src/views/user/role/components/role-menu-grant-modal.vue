@@ -52,7 +52,7 @@
 
 <script lang="ts">
   export default {
-    name: 'role-menu-grant-modal'
+    name: 'roleMenuGrantModal'
   };
 </script>
 

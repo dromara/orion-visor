@@ -38,7 +38,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-user-reset-password-form-modal'
+    name: 'userUserResetPasswordFormModal'
   };
 </script>
 

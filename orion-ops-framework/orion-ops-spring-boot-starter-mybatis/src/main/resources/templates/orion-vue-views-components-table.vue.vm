@@ -130,7 +130,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}-${vue.feature}-table'
+    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}Table'
   };
 </script>
 

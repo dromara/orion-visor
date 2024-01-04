@@ -19,7 +19,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-grant'
+    name: 'hostGroupGrant'
   };
 </script>
 

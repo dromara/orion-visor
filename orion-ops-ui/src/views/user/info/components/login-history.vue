@@ -54,7 +54,7 @@
 
 <script lang="ts">
   export default {
-    name: 'login-history'
+    name: 'loginHistory'
   };
 </script>
 

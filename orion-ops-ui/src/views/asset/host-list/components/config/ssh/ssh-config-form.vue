@@ -131,7 +131,7 @@
 
 <script lang="ts">
   export default {
-    name: 'ssh-config-form'
+    name: 'sshConfigForm'
   };
 </script>
 

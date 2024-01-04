@@ -52,7 +52,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}-${vue.feature}-form-modal'
+    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}FormModal'
   };
 </script>
 

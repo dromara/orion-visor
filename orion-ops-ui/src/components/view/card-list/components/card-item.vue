@@ -75,7 +75,7 @@
 
 <script lang="ts">
   export default {
-    name: 'card-item'
+    name: 'cardItem'
   };
 </script>
 

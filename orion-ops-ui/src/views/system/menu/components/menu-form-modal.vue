@@ -126,7 +126,7 @@
 
 <script lang="ts">
   export default {
-    name: 'menu-form-modal'
+    name: 'menuFormModal'
   };
 </script>
 

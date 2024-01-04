@@ -11,7 +11,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-role-selector'
+    name: 'userRoleSelector'
   };
 </script>
 

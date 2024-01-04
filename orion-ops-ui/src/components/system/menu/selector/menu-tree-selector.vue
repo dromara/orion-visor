@@ -10,7 +10,7 @@
 
 <script lang="ts">
   export default {
-    name: 'menu-tree-selector'
+    name: 'menuTreeSelector'
   };
 </script>
 

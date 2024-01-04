@@ -61,7 +61,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-session'
+    name: 'userSession'
   };
 </script>
 

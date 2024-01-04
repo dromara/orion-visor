@@ -74,7 +74,7 @@
 
 <script lang="ts">
   export default {
-    name: 'history-value-modal'
+    name: 'historyValueModal'
   };
 </script>
 

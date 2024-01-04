@@ -59,7 +59,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-drawer'
+    name: 'hostGroupDrawer'
   };
 </script>
 

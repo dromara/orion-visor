@@ -83,7 +83,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-tree'
+    name: 'hostGroupTree'
   };
 </script>
 

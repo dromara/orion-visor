@@ -176,7 +176,7 @@
 
 <script lang="ts">
   export default {
-    name: 'menu-table'
+    name: 'menuTable'
   };
 </script>
 

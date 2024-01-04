@@ -11,7 +11,7 @@
 
 <script lang="ts">
   export default {
-    name: 'dict-key-selector'
+    name: 'dictKeySelector'
   };
 </script>
 

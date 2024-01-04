@@ -130,7 +130,7 @@
 
 <script lang="ts">
   export default {
-    name: 'system-dict-key-table'
+    name: 'systemDictKeyTable'
   };
 </script>
 

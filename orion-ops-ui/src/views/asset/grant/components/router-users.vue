@@ -25,7 +25,7 @@
 
 <script lang="ts">
   export default {
-    name: 'router-users'
+    name: 'routerUsers'
   };
 </script>
 

@@ -18,7 +18,7 @@
 
 <script lang="ts">
   export default {
-    name: 'tag-multi-selector'
+    name: 'tagMultiSelector'
   };
 </script>
 

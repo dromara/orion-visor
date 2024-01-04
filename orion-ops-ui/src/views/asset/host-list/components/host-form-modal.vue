@@ -54,7 +54,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-form-modal'
+    name: 'assetHostFormModal'
   };
 </script>
 

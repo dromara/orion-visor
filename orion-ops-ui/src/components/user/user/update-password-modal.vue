@@ -35,7 +35,7 @@
 
 <script lang="ts">
   export default {
-    name: 'update-password-modal'
+    name: 'updatePasswordModal'
   };
 </script>
 

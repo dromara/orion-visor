@@ -97,7 +97,7 @@
 
 <script lang="ts">
   export default {
-    name: 'card-header'
+    name: 'cardHeader'
   };
 </script>
 

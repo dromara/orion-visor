@@ -69,7 +69,7 @@
 
 <script lang="ts">
   export default {
-    name: 'card-list'
+    name: 'cardList'
   };
 </script>
 

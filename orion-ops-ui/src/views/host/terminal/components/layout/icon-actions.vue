@@ -20,7 +20,7 @@
 
 <script lang="ts">
   export default {
-    name: 'icon-actions'
+    name: 'iconActions'
   };
 </script>
 

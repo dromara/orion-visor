@@ -83,7 +83,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-key-form-drawer'
+    name: 'assetHostKeyFormDrawer'
   };
 </script>
 

@@ -127,7 +127,7 @@
 
 <script lang="ts">
   export default {
-    name: 'system-dict-value-table'
+    name: 'systemDictValueTable'
   };
 </script>
 

@@ -46,7 +46,7 @@
 
 <script lang="ts">
   export default {
-    name: 'menu-grant-table'
+    name: 'menuGrantTable'
   };
 </script>
 

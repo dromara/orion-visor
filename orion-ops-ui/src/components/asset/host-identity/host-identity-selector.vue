@@ -8,7 +8,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-identity-selector'
+    name: 'hostIdentitySelector'
   };
 </script>
 

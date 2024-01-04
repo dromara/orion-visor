@@ -140,7 +140,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-identity-card-list'
+    name: 'assetHostIdentityCardList'
   };
 </script>
 

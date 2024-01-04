@@ -48,7 +48,7 @@
 
 <script lang="ts">
   export default {
-    name: 'operator-log-table'
+    name: 'operatorLogTable'
   };
 </script>
 

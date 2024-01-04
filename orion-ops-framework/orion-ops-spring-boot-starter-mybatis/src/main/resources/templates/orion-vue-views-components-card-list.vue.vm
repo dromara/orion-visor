@@ -109,7 +109,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}-${vue.feature}-card-list'
+    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}CardList'
   };
 </script>
 

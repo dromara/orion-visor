@@ -60,7 +60,7 @@
 
 <script lang="ts">
   export default {
-    name: 'operator-log-query-header'
+    name: 'operatorLogQueryHeader'
   };
 </script>
 

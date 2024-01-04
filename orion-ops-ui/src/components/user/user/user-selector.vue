@@ -11,7 +11,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-selector'
+    name: 'userSelector'
   };
 </script>
 

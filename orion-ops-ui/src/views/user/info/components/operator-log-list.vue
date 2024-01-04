@@ -31,7 +31,7 @@
 
 <script lang="ts">
   export default {
-    name: 'operator-log-list'
+    name: 'operatorLogList'
   };
 </script>
 

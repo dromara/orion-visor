@@ -11,7 +11,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-group-tree-selector'
+    name: 'hostGroupTreeSelector'
   };
 </script>
 

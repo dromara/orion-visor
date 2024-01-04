@@ -56,7 +56,7 @@
 
 <script lang="ts">
   export default {
-    name: 'ssh-extra-modal'
+    name: 'sshExtraModal'
   };
 </script>
 

@@ -48,7 +48,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.module}-${vue.feature}-form-drawer'
+    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}FormDrawer'
   };
 </script>
 

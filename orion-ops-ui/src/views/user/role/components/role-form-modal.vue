@@ -35,7 +35,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-role-form-modal'
+    name: 'userRoleFormModal'
   };
 </script>
 

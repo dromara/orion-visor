@@ -28,7 +28,7 @@
 
 <script lang="ts">
   export default {
-    name: 'host-list'
+    name: 'hostList'
   };
 </script>
 

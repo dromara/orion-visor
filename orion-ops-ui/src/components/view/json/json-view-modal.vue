@@ -19,7 +19,7 @@
 
 <script lang="ts">
   export default {
-    name: 'json-view-modal'
+    name: 'jsonViewModal'
   };
 </script>
 

@@ -159,7 +159,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-table'
+    name: 'assetHostTable'
   };
 </script>
 

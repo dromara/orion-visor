@@ -43,7 +43,7 @@
 
 <script lang="ts">
   export default {
-    name: 'user-base-info'
+    name: 'userBaseInfo'
   };
 </script>
 

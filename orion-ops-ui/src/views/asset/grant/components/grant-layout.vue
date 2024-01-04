@@ -47,7 +47,7 @@
 
 <script lang="ts">
   export default {
-    name: 'grant-layout'
+    name: 'grantLayout'
   };
 </script>
 

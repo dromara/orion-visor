@@ -138,7 +138,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-identity-table'
+    name: 'assetHostIdentityTable'
   };
 </script>
 
