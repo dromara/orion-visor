@@ -4,8 +4,9 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
 import { useDark } from '@vueuse/core';
-import { DEFAULT_SCHEMA } from '@/views/host-ops/terminal/types/terminal.theme';
-import { InnerTabs } from '@/views/host-ops/terminal/types/terminal.const';
+import { DEFAULT_SCHEMA } from '@/views/host/terminal/types/terminal.theme';
+import { InnerTabs } from '@/views/host/terminal/types/terminal.const';
+import { getHostTerminalAccessToken } from '@/api/asset/host-terminal';
 
 // 暗色主题
 export const DarkTheme = {
@@ -33,7 +34,8 @@ export default defineStore('terminal', {
     tabs: {
       active: InnerTabs.NEW_CONNECTION.key,
       items: [InnerTabs.NEW_CONNECTION, InnerTabs.VIEW_SETTING]
-    }
+    },
+    access: undefined
   }),
 
   actions: {
@@ -139,7 +141,13 @@ export default defineStore('terminal', {
     },
 
     // 打开终端
-    openTerminal(record: HostQueryResponse) {
+    async openTerminal(record: HostQueryResponse) {
+      // 获取 access
+      if (!this.access) {
+        const { data } = await getHostTerminalAccessToken();
+        this.access = data;
+      }
+      console.log(this.access);
       console.log(record);
     }
 

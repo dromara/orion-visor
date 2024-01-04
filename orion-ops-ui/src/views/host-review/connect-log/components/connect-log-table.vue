@@ -97,7 +97,7 @@
 
 <script lang="ts">
   export default {
-    name: 'asset-host-connect-log-table'
+    name: 'hostReviewConnectLogTable'
   };
 </script>
 

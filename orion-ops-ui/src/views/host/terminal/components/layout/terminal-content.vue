@@ -11,10 +11,6 @@
           <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
           <!-- 显示设置 -->
           <terminal-view-setting v-else-if="tab.key === InnerTabs.VIEW_SETTING.key" />
-          <span v-else>
-            {{ tab.key }}
-            {{ tab.title }}
-          </span>
         </template>
         <!-- 终端 -->
         <template v-else-if="tab.type === TabType.TERMINAL">

@@ -1,9 +1,11 @@
 import type { Ref } from 'vue';
+import type { HostTerminalAccessResponse } from '@/api/asset/host-terminal';
 
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
   tabs: TerminalTabs;
+  access?: HostTerminalAccessResponse;
 }
 
 // 终端配置

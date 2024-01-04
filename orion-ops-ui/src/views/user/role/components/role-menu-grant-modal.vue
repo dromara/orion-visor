@@ -14,37 +14,39 @@
            :cancel-button-props="{ disabled: loading }"
            :on-before-ok="handlerOk"
            @close="handleClose">
-    <a-spin :loading="loading" class="role-menu-wrapper">
-      <a-alert class="usn mb8">
-        <span>{{ roleRecord.name }} {{ roleRecord.code }}</span>
-        <span class="mx8">-</span>
-        <span>菜单分配后需要用户手动刷新页面才会生效</span>
-      </a-alert>
-      <div class="usn mb8">
-        <a-space>
-          <a-tag color="arcoblue">全选操作</a-tag>
-          <!-- 全选操作 -->
-          <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
-            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByFilter(opt.filter, true) }">
-              {{ opt.name }}
-            </a-button>
-          </template>
-        </a-space>
-      </div>
-      <div class="usn mb8">
-        <a-space>
-          <a-tag color="arcoblue">反选操作</a-tag>
-          <!-- 反选操作 -->
-          <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
-            <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByFilter(opt.filter, false) }">
-              {{ opt.name }}
-            </a-button>
-          </template>
-        </a-space>
-      </div>
-      <!-- 菜单 -->
-      <menu-grant-table ref="table" />
-    </a-spin>
+    <div class="role-menu-wrapper">
+      <a-spin :loading="loading">
+        <a-alert class="usn mb8">
+          <span>{{ roleRecord.name }} {{ roleRecord.code }}</span>
+          <span class="mx8">-</span>
+          <span>菜单分配后需要用户手动刷新页面才会生效</span>
+        </a-alert>
+        <div class="usn mb8">
+          <a-space>
+            <a-tag color="arcoblue">全选操作</a-tag>
+            <!-- 全选操作 -->
+            <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
+              <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByFilter(opt.filter, true) }">
+                {{ opt.name }}
+              </a-button>
+            </template>
+          </a-space>
+        </div>
+        <div class="usn mb8">
+          <a-space>
+            <a-tag color="arcoblue">反选操作</a-tag>
+            <!-- 反选操作 -->
+            <template v-for="opt of quickGrantMenuOperator" :key="opt.name">
+              <a-button size="mini" type="text" @click="() => { table.checkOrUncheckByFilter(opt.filter, false) }">
+                {{ opt.name }}
+              </a-button>
+            </template>
+          </a-space>
+        </div>
+        <!-- 菜单 -->
+        <menu-grant-table ref="table" />
+      </a-spin>
+    </div>
   </a-modal>
 </template>
 

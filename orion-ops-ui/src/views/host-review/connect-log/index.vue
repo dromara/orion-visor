@@ -1,18 +1,18 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <host-connect-log-table />
+    <connect-log-table />
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'assetHostConnectLog'
+    name: 'hostReviewConnectLog'
   };
 </script>
 
 <script lang="ts" setup>
-  import HostConnectLogTable from './components/host-connect-log-table.vue';
+  import ConnectLogTable from './components/connect-log-table.vue';
   import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
