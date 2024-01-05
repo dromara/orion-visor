@@ -21,9 +21,8 @@
   import type { TerminalTabItem } from '@/store/modules/terminal/types';
   import { onMounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { FitAddon } from 'xterm-addon-fit';
-  import { WebglAddon } from 'xterm-addon-webgl';
-  import { Terminal } from 'xterm';
+  import TerminalHandler from '@/views/host/terminal/handler/TerminalHandler';
+  import { sleep } from '@/utils';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -34,27 +33,13 @@
   const terminalRef = ref();
 
   // 初始化
-  const init = () => {
-    // FIXME fontfamily
-    // 初始化终端
-    const term = new Terminal({
-      theme: preference.themeSchema,
-      fastScrollModifier: 'shift',
-      ...(preference.displaySetting as any),
-    });
-    // 注册插件
-    const fitAddon = new FitAddon();
-    const webglAddon = new WebglAddon();
-    term.loadAddon(fitAddon);
-    term.loadAddon(webglAddon);
-    // 打开终端
-    term.open(terminalRef.value);
-    // 自适应
-    fitAddon.fit();
-    // 注册钩子
-    dispatcher.registerTerminalHook(props.tab);
-    // 初始化终端
-
+  const init = async () => {
+    // 创建终端处理器
+    const handler = new TerminalHandler(props.tab.key, terminalRef.value);
+    // 等待前端渲染完成
+    await sleep(100);
+    // 注册处理器
+    dispatcher.registerTerminalHandler(props.tab, handler);
   };
 
   onMounted(init);

@@ -7,7 +7,7 @@ export interface Protocol {
 // 终端内容
 export interface Payload {
   type?: string;
-  session: string;
+  session?: string;
 
   [key: string]: unknown;
 }
@@ -79,7 +79,7 @@ export const OutputProtocol = {
 export const SEPARATOR = '|';
 
 // 解析参数
-export const parse: Record<string, any> = (payload: string) => {
+export const parse = (payload: string) => {
   const protocols = Object.values(OutputProtocol);
   const useProtocol = protocols.find(p => payload.startsWith(p.type + SEPARATOR) || p.type === payload);
   if (!useProtocol) {

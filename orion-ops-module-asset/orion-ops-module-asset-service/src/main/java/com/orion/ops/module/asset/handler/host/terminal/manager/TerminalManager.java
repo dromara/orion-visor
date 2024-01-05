@@ -66,7 +66,7 @@ public class TerminalManager {
     public void closeAll(String channelId) {
         // 获取并移除
         ConcurrentHashMap<String, ITerminalSession> session = channelSessions.remove(channelId);
-        if (Maps.isEmpty(session)) {
+        if (!Maps.isEmpty(session)) {
             session.values().forEach(Streams::close);
         }
     }

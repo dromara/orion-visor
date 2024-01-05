@@ -29,7 +29,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
+  import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
   import { dictKeys } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import TerminalHeader from './components/layout/terminal-header.vue';
@@ -45,6 +45,12 @@
 
   const render = ref(false);
 
+  // 关闭视口处理
+  const handleBeforeUnload = (event: any) => {
+    event.preventDefault();
+    event.returnValue = confirm('系统可能不会保存您所做的更改');
+  };
+
   // 加载用户终端偏好
   onBeforeMount(async () => {
     await terminalStore.fetchPreference();
@@ -56,9 +62,17 @@
     await dictStore.loadKeys([...dictKeys]);
   });
 
-  // 卸载时清除 cache
+  // 注册关闭视口事件
+  onMounted(() => {
+    // TODO 开发阶段
+    // window.addEventListener('beforeunload', handleBeforeUnload);
+  });
+
   onUnmounted(() => {
+    // 卸载时清除 cache
     cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities');
+    // 移除关闭视口事件
+    window.removeEventListener('beforeunload', handleBeforeUnload);
   });
 
 </script>

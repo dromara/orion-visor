@@ -77,10 +77,14 @@ public class TerminalSession implements ITerminalSession {
         if (!executor.isConnected()) {
             executor.connect();
         }
-        config.setCols(cols);
-        config.setRows(rows);
-        executor.size(cols, rows);
-        executor.resize();
+        // 大小发生变化 则修改大小
+        if (cols != config.getCols() ||
+                rows != config.getRows()) {
+            config.setCols(cols);
+            config.setRows(rows);
+            executor.size(cols, rows);
+            executor.resize();
+        }
     }
 
     @Override

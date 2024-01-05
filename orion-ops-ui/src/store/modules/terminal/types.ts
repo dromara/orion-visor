@@ -1,4 +1,5 @@
 import type { Ref } from 'vue';
+import { Terminal } from 'xterm';
 
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
@@ -80,9 +81,29 @@ export interface ITerminalDispatcher {
   openTab: (tab: TerminalTabItem) => void;
   // 打开终端
   openTerminal: (record: any) => void;
-  // 注册终端钩子
-  registerTerminalHook: (tab: TerminalTabItem) => void;
+  // 注册终端处理器
+  registerTerminalHandler: (tab: TerminalTabItem, handler: ITerminalHandler) => void;
+  // 发送消息
+  onMessage: (session: string, value: string) => void;
 
   // 重置
   reset: () => void;
+}
+
+// 终端处理器
+export interface ITerminalHandler {
+  inst: Terminal;
+  connected: boolean;
+
+  // 连接
+  connect: () => void;
+  // 设置是否可写
+  setCanWrite: (canWrite: boolean) => void;
+  // 写入数据
+  write: (value: string) => void;
+  // 自适应
+  fit: () => void;
+
+  // 关闭
+  close: () => void;
 }
