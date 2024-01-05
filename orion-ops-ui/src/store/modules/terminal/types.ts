@@ -4,6 +4,7 @@ import { Terminal } from 'xterm';
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
+  tabs: ITerminalTabManager;
   dispatcher: ITerminalDispatcher;
 }
 
@@ -66,11 +67,11 @@ export interface TerminalTabItem {
   [key: string]: unknown;
 }
 
-// 终端调度器
-export interface ITerminalDispatcher {
-  // 当前活跃 tab
+// 终端 tab 管理器定义
+export interface ITerminalTabManager {
+  // 当前 tab
   active: string;
-  // 所有 tab
+  // 全部 tab
   items: Array<TerminalTabItem>;
 
   // 点击 tab
@@ -79,6 +80,12 @@ export interface ITerminalDispatcher {
   deleteTab: (key: string) => void;
   // 打开 tab
   openTab: (tab: TerminalTabItem) => void;
+  // 清空
+  clear: () => void;
+}
+
+// 终端调度器
+export interface ITerminalDispatcher {
   // 打开终端
   openTerminal: (record: any) => void;
   // 注册终端处理器

@@ -2,12 +2,13 @@ import type { ITerminalDispatcher, ITerminalHandler, TerminalTabItem } from '@/s
 import type { HostQueryResponse } from '@/api/asset/host';
 import type { HostTerminalAccessResponse } from '@/api/asset/host-terminal';
 import { getHostTerminalAccessToken } from '@/api/asset/host-terminal';
-import { InnerTabs, TabType } from '@/views/host/terminal/types/terminal.const';
+import { TabType } from '@/views/host/terminal/types/terminal.const';
 import { Message } from '@arco-design/web-vue';
 import { sleep } from '@/utils';
-import { format, InputProtocol, OutputProtocol, parse } from '../types/terminal.protocol';
+import { format, InputProtocol, OutputProtocol, parse, Payload } from '../types/terminal.protocol';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';
+import { useTerminalStore } from '@/store';
 
 export const wsBase = import.meta.env.VITE_WS_BASE_URL;
 
@@ -20,10 +21,6 @@ export const wsBase = import.meta.env.VITE_WS_BASE_URL;
  */
 export default class TerminalDispatcher implements ITerminalDispatcher {
 
-  public active: string;
-
-  public items: Array<TerminalTabItem>;
-
   private access?: HostTerminalAccessResponse;
 
   private client?: WebSocket;
@@ -35,42 +32,10 @@ export default class TerminalDispatcher implements ITerminalDispatcher {
   private readonly dispatchResizeFn: () => {};
 
   constructor() {
-    this.active = InnerTabs.NEW_CONNECTION.key;
-    this.items = [InnerTabs.NEW_CONNECTION];
     this.handlers = {};
     this.dispatchResizeFn = useDebounceFn(this.dispatchResize).bind(this);
   }
 
-  // 点击 tab
-  clickTab(key: string): void {
-    this.active = key;
-  }
-
-  // 删除 tab
-  deleteTab(key: string): void {
-    // 获取当前 tab
-    const tabIndex = this.items.findIndex(s => s.key === key);
-    if (this.items[tabIndex]?.type === TabType.TERMINAL) {
-      // 如果是 terminal 则需要关闭
-      this.closeTerminal(key);
-    }
-    // 删除 tab
-    this.items.splice(tabIndex, 1);
-    if (key === this.active && this.items.length !== 0) {
-      // 切换为前一个 tab
-      this.active = this.items[Math.max(tabIndex - 1, 0)].key;
-    }
-    // fixme 关闭 socket
-  }
-
-  // 打开 tab
-  openTab(tab: TerminalTabItem): void {
-    // 不存在则创建 tab
-    if (!this.items.find(s => s.key === tab.key)) {
-      this.items.push(tab);
-    }
-    this.active = tab.key;
-  }
 
   // 初始化客户端
   async initClient() {
@@ -92,7 +57,7 @@ export default class TerminalDispatcher implements ITerminalDispatcher {
     this.client.onmessage = this.handlerMessage.bind(this);
     // 注册 ping 事件
     this.pingTask = setInterval(() => {
-      this.client?.send(format(InputProtocol.PING, {}));
+      this.client?.send(format(InputProtocol.PING, {} as Payload));
     }, 150000);
     // 注册 resize 事件
     addEventListen(window, 'resize', this.dispatchResizeFn);
@@ -140,7 +105,7 @@ export default class TerminalDispatcher implements ITerminalDispatcher {
     }
     const session = this.access.sessionInitial = (parseInt(this.access.sessionInitial as string, 32) + 1).toString(32);
     // 打开会话
-    this.openTab({
+    useTerminalStore().tabs.openTab({
       type: TabType.TERMINAL,
       key: session,
       title: record.alias || (`${record.name} ${record.address}`),
@@ -211,8 +176,6 @@ export default class TerminalDispatcher implements ITerminalDispatcher {
 
   // 重置
   reset(): void {
-    this.active = undefined as unknown as string;
-    this.items = [];
     this.access = undefined;
     this.handlers = {};
     // 关闭 client

@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
   import type { TerminalTabItem } from '@/store/modules/terminal/types';
-  import { onMounted, ref } from 'vue';
+  import { onMounted, onUnmounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import TerminalHandler from '@/views/host/terminal/handler/TerminalHandler';
   import { sleep } from '@/utils';
@@ -43,6 +43,11 @@
   };
 
   onMounted(init);
+
+  onUnmounted(() => {
+    // 发送关闭
+    console.log('12312312');
+  });
 
 </script>
 

@@ -10,13 +10,13 @@
     </div>
     <!-- 左侧 tabs -->
     <div class="terminal-header-tabs">
-      <a-tabs v-model:active-key="terminalStore.dispatcher.active"
+      <a-tabs v-model:active-key="tabs.active"
               :editable="true"
               :hide-content="true"
               :auto-switch="true"
-              @tab-click="k => terminalStore.dispatcher.clickTab(k as string)"
-              @delete="k => terminalStore.dispatcher.deleteTab(k as string)">
-        <a-tab-pane v-for="tab in terminalStore.dispatcher.items"
+              @tab-click="k => tabs.clickTab(k as string)"
+              @delete="k => tabs.deleteTab(k as string)">
+        <a-tab-pane v-for="tab in tabs.items"
                     :key="tab.key"
                     :title="tab.title" />
       </a-tabs>
@@ -46,7 +46,7 @@
   import IconActions from '../layout/icon-actions.vue';
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const terminalStore = useTerminalStore();
+  const { tabs } = useTerminalStore();
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [

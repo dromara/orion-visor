@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue';
+import { getUUID } from '@/utils';
 
 // sidebar 操作类型
 export interface SidebarAction {
@@ -57,6 +58,11 @@ export const ExtraSshAuthType = {
   CUSTOM_KEY: 'CUSTOM_KEY',
   // 自定义身份
   CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',
+};
+
+// 获取会话id
+export const nextSessionId = (): string => {
+  return getUUID().replaceAll('-', '').substring(0, 10);
 };
 
 // 打开 sshModal key

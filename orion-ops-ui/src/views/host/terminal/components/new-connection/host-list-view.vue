@@ -20,7 +20,7 @@
             <!-- 左侧图标-名称 -->
             <div class="flex-center host-item-left">
               <!-- 图标 -->
-              <span class="host-item-left-icon" @click="terminalStore.dispatcher.openTerminal(item)">
+              <span class="host-item-left-icon" @click="openTerminal(item)">
                 <icon-desktop />
               </span>
               <!-- 名称 -->
@@ -116,7 +116,7 @@
                            arrow-class="terminal-tooltip-content"
                            content="连接主机">
                   <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click="terminalStore.dispatcher.openTerminal(item)">
+                    <div class="terminal-sidebar-icon" @click="openTerminal(item)">
                       <icon-thunderbolt />
                     </div>
                   </div>
@@ -168,7 +168,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostAlias } from '@/api/asset/host-extra';
-  import { openSshModalKey } from '../../types/terminal.const';
+  import { nextSessionId, openSshModalKey, TabType } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -176,7 +176,7 @@
     emptyValue: string
   }>();
 
-  const terminalStore = useTerminalStore();
+  const { tabs } = useTerminalStore();
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
   const aliasNameInput = ref();
@@ -211,6 +211,17 @@
       item.loading = false;
       item.modCount = 0;
     }
+  };
+
+  // 打开终端
+  const openTerminal = (record: HostQueryResponse) => {
+    tabs.openTab({
+      type: TabType.TERMINAL,
+      key: nextSessionId(),
+      title: record.alias || (`${record.name} ${record.address}`),
+      hostId: record.id,
+      address: record.address
+    });
   };
 
   // 打开配置

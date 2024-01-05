@@ -4,7 +4,8 @@ import { getPreference, updatePreference } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
 import { useDark } from '@vueuse/core';
 import { DEFAULT_SCHEMA } from '@/views/host/terminal/types/terminal.theme';
-import TerminalDispatcher from '@/views/host/terminal/handler/TerminalDispatcher';
+import TerminalDispatcher from '@/views/host/terminal/handler/terminal-dispatcher';
+import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 
 // 暗色主题
 export const DarkTheme = {
@@ -29,6 +30,7 @@ export default defineStore('terminal', {
       displaySetting: {} as TerminalDisplaySetting,
       themeSchema: {} as TerminalThemeSchema
     },
+    tabs: new TerminalTabManager(),
     dispatcher: new TerminalDispatcher()
   }),
 
