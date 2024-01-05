@@ -176,7 +176,7 @@
     emptyValue: string
   }>();
 
-  const { tabs } = useTerminalStore();
+  const { tabManager } = useTerminalStore();
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
   const aliasNameInput = ref();
@@ -215,7 +215,7 @@
 
   // 打开终端
   const openTerminal = (record: HostQueryResponse) => {
-    tabs.openTab({
+    tabManager.openTab({
       type: TabType.TERMINAL,
       key: nextSessionId(),
       title: record.alias || (`${record.name} ${record.address}`),

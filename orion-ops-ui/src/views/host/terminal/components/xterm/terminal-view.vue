@@ -18,35 +18,27 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalTabItem } from '@/store/modules/terminal/types';
+  import type { TerminalTabItem } from '../../types/terminal.type';
   import { onMounted, onUnmounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import TerminalHandler from '@/views/host/terminal/handler/TerminalHandler';
-  import { sleep } from '@/utils';
 
   const props = defineProps<{
     tab: TerminalTabItem
   }>();
 
-  const { preference, dispatcher } = useTerminalStore();
+  const { sessionManager } = useTerminalStore();
 
   const terminalRef = ref();
 
-  // 初始化
-  const init = async () => {
+  // 初始化回话
+  onMounted(async () => {
     // 创建终端处理器
-    const handler = new TerminalHandler(props.tab.key, terminalRef.value);
-    // 等待前端渲染完成
-    await sleep(100);
-    // 注册处理器
-    dispatcher.registerTerminalHandler(props.tab, handler);
-  };
+    sessionManager.openSession(props.tab, terminalRef.value);
+  });
 
-  onMounted(init);
-
+  // 关闭回话
   onUnmounted(() => {
-    // 发送关闭
-    console.log('12312312');
+    sessionManager.closeSession(props.tab.key);
   });
 
 </script>

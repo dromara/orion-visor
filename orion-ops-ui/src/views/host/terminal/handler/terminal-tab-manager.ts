@@ -1,5 +1,5 @@
-import type { ITerminalTabManager, TerminalTabItem } from '@/store/modules/terminal/types';
-import { InnerTabs } from '@/views/host/terminal/types/terminal.const';
+import type { ITerminalTabManager, TerminalTabItem } from '../types/terminal.type';
+import { InnerTabs } from '../types/terminal.const';
 
 // 终端 tab 管理器实现
 export default class TerminalTabManager implements ITerminalTabManager {
@@ -28,7 +28,6 @@ export default class TerminalTabManager implements ITerminalTabManager {
       // 切换为前一个 tab
       this.active = this.items[Math.max(tabIndex - 1, 0)].key;
     }
-    // fixme 关闭 ws
   }
 
   // 打开 tab

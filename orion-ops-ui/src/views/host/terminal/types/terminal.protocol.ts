@@ -1,17 +1,3 @@
-// 终端协议
-export interface Protocol {
-  type: string;
-  template: string[];
-}
-
-// 终端内容
-export interface Payload {
-  type?: string;
-  session?: string;
-
-  [key: string]: unknown;
-}
-
 // 输入协议
 export const InputProtocol = {
   // 主机连接检查
@@ -73,48 +59,4 @@ export const OutputProtocol = {
     type: 'o',
     template: ['type', 'session', 'body']
   },
-};
-
-// 分隔符
-export const SEPARATOR = '|';
-
-// 解析参数
-export const parse = (payload: string) => {
-  const protocols = Object.values(OutputProtocol);
-  const useProtocol = protocols.find(p => payload.startsWith(p.type + SEPARATOR) || p.type === payload);
-  if (!useProtocol) {
-    return undefined;
-  }
-  const template = useProtocol.template;
-  const res: Record<string, any> = {};
-  let curr = 0;
-  let len = payload.length;
-  for (let i = 0, pl = template.length; i < pl; i++) {
-    if (i == pl - 1) {
-      // 最后一次
-      res[template[i]] = payload.substring(curr, len);
-    } else {
-      // 非最后一次
-      let tmp = '';
-      for (; curr < len; curr++) {
-        const c = payload.charAt(curr);
-        if (c == SEPARATOR) {
-          res[template[i]] = tmp;
-          curr++;
-          break;
-        } else {
-          tmp += c;
-        }
-      }
-    }
-  }
-  return res;
-};
-
-// 格式化参数
-export const format = (protocol: Protocol, payload: Payload) => {
-  payload.type = protocol.type;
-  return protocol.template
-    .map(i => payload[i] || '')
-    .join(SEPARATOR);
 };

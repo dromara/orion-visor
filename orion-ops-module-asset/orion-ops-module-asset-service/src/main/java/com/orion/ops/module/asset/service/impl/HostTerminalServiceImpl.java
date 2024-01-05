@@ -22,7 +22,6 @@ import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.ops.module.asset.entity.vo.HostTerminalAccessVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.enums.HostExtraItemEnum;
 import com.orion.ops.module.asset.enums.HostExtraSshAuthTypeEnum;
@@ -83,7 +82,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     private SystemUserApi systemUserApi;
 
     @Override
-    public HostTerminalAccessVO getHostTerminalAccessToken() {
+    public String getHostTerminalAccessToken() {
         LoginUser user = SecurityUtils.getLoginUser();
         log.info("HostConnectService.getHostAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();
@@ -94,11 +93,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         // 设置 access 缓存
         String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(accessToken);
         RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS, access);
-        return HostTerminalAccessVO.builder()
-                .accessToken(accessToken)
-                // 32 进制的 uuid 作为起始量
-                .sessionInitial(Long.toString(UUIds.random15Long(), 32))
-                .build();
+        return accessToken;
     }
 
     @Override

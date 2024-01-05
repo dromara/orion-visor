@@ -1,11 +1,11 @@
 import type { Ref } from 'vue';
-import { Terminal } from 'xterm';
+import type { ITerminalTabManager, ITerminalSessionManager } from '@/views/host/terminal/types/terminal.type';
 
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
   preference: TerminalPreference;
-  tabs: ITerminalTabManager;
-  dispatcher: ITerminalDispatcher;
+  tabManager: ITerminalTabManager;
+  sessionManager: ITerminalSessionManager;
 }
 
 // 终端配置
@@ -58,59 +58,3 @@ export interface TerminalThemeSchema {
   [key: string]: unknown;
 }
 
-// 终端 tab 元素
-export interface TerminalTabItem {
-  key: string;
-  title: string;
-  type: string;
-
-  [key: string]: unknown;
-}
-
-// 终端 tab 管理器定义
-export interface ITerminalTabManager {
-  // 当前 tab
-  active: string;
-  // 全部 tab
-  items: Array<TerminalTabItem>;
-
-  // 点击 tab
-  clickTab: (key: string) => void;
-  // 删除 tab
-  deleteTab: (key: string) => void;
-  // 打开 tab
-  openTab: (tab: TerminalTabItem) => void;
-  // 清空
-  clear: () => void;
-}
-
-// 终端调度器
-export interface ITerminalDispatcher {
-  // 打开终端
-  openTerminal: (record: any) => void;
-  // 注册终端处理器
-  registerTerminalHandler: (tab: TerminalTabItem, handler: ITerminalHandler) => void;
-  // 发送消息
-  onMessage: (session: string, value: string) => void;
-
-  // 重置
-  reset: () => void;
-}
-
-// 终端处理器
-export interface ITerminalHandler {
-  inst: Terminal;
-  connected: boolean;
-
-  // 连接
-  connect: () => void;
-  // 设置是否可写
-  setCanWrite: (canWrite: boolean) => void;
-  // 写入数据
-  write: (value: string) => void;
-  // 自适应
-  fit: () => void;
-
-  // 关闭
-  close: () => void;
-}

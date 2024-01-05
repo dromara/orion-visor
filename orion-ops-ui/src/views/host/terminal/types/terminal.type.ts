@@ -1,6 +1,15 @@
-// 终端协议
-import { Terminal } from 'xterm';
+import type { Terminal } from 'xterm';
 
+// 终端 tab 元素
+export interface TerminalTabItem {
+  key: string;
+  title: string;
+  type: string;
+
+  [key: string]: unknown;
+}
+
+// 终端协议
 export interface Protocol {
   type: string;
   template: string[];
@@ -22,13 +31,43 @@ export interface OutputPayload {
   [key: string]: string;
 }
 
+// 终端 tab 管理器定义
+export interface ITerminalTabManager {
+  // 当前 tab
+  active: string;
+  // 全部 tab
+  items: Array<TerminalTabItem>;
+
+  // 点击 tab
+  clickTab: (key: string) => void;
+  // 删除 tab
+  deleteTab: (key: string) => void;
+  // 打开 tab
+  openTab: (tab: TerminalTabItem) => void;
+  // 清空
+  clear: () => void;
+}
+
+// 终端会话管理器定义
+export interface ITerminalSessionManager {
+  // 打开终端会话
+  openSession: (tab: TerminalTabItem, dom: HTMLElement) => void;
+  // 获取终端会话
+  getSession: (sessionId: string) => ITerminalSession;
+  // 关闭终端会话
+  closeSession: (sessionId: string) => void;
+  // 重置
+  reset: () => void;
+}
+
 // 终端通信处理器 定义
 export interface ITerminalChannel {
   // 初始化
   init: () => Promise<void>;
+  // 是否已连接
+  isConnected: () => boolean;
   // 发送消息
   send: (protocol: Protocol, payload: InputPayload) => void;
-
   // 关闭
   close: () => void;
 }

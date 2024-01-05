@@ -1,8 +1,8 @@
 <template>
   <div class="terminal-content">
     <!-- 内容 tabs -->
-    <a-tabs v-model:active-key="tabs.active">
-      <a-tab-pane v-for="tab in tabs.items"
+    <a-tabs v-model:active-key="tabManager.active">
+      <a-tab-pane v-for="tab in tabManager.items"
                   :key="tab.key"
                   :title="tab.title">
         <!-- 设置 -->
@@ -34,7 +34,7 @@
   import NewConnectionView from '../new-connection/new-connection-view.vue';
   import TerminalView from '../xterm/terminal-view.vue';
 
-  const { tabs } = useTerminalStore();
+  const { tabManager } = useTerminalStore();
 
 </script>
 

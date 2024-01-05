@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.entity.vo.HostTerminalAccessVO;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +35,7 @@ public class HostTerminalController {
     @GetMapping("/access")
     @Operation(summary = "获取主机终端 accessToken")
     @PreAuthorize("@ss.hasPermission('asset:host-terminal:access')")
-    public HostTerminalAccessVO getHostTerminalAccessToken() {
+    public String getHostTerminalAccessToken() {
         return hostTerminalService.getHostTerminalAccessToken();
     }
 

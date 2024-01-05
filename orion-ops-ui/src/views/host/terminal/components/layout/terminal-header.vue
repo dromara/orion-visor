@@ -1,6 +1,7 @@
 <template>
   <div class="terminal-header">
     <!-- 左侧 logo -->
+    <!-- FIXME -->
     <div class="terminal-header-left">
       <img alt="logo"
            class="terminal-header-logo-img"
@@ -10,13 +11,13 @@
     </div>
     <!-- 左侧 tabs -->
     <div class="terminal-header-tabs">
-      <a-tabs v-model:active-key="tabs.active"
+      <a-tabs v-model:active-key="tabManager.active"
               :editable="true"
               :hide-content="true"
               :auto-switch="true"
-              @tab-click="k => tabs.clickTab(k as string)"
-              @delete="k => tabs.deleteTab(k as string)">
-        <a-tab-pane v-for="tab in tabs.items"
+              @tab-click="k => tabManager.clickTab(k as string)"
+              @delete="k => tabManager.deleteTab(k as string)">
+        <a-tab-pane v-for="tab in tabManager.items"
                     :key="tab.key"
                     :title="tab.title" />
       </a-tabs>
@@ -46,7 +47,7 @@
   import IconActions from '../layout/icon-actions.vue';
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const { tabs } = useTerminalStore();
+  const { tabManager } = useTerminalStore();
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [

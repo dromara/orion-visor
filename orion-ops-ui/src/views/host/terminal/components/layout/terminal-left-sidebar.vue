@@ -23,14 +23,14 @@
   import { useTerminalStore } from '@/store';
   import IconActions from './icon-actions.vue';
 
-  const { tabs } = useTerminalStore();
+  const { tabManager } = useTerminalStore();
 
   // 顶部操作
   const topActions: Array<SidebarAction> = [
     {
       icon: 'icon-plus',
       content: '新建连接',
-      click: () => tabs.openTab(InnerTabs.NEW_CONNECTION)
+      click: () => tabManager.openTab(InnerTabs.NEW_CONNECTION)
     },
   ];
 
@@ -39,12 +39,12 @@
     {
       icon: 'icon-command',
       content: '快捷键设置',
-      click: () => tabs.openTab(InnerTabs.SHORTCUT_SETTING)
+      click: () => tabManager.openTab(InnerTabs.SHORTCUT_SETTING)
     },
     {
       icon: 'icon-palette',
       content: '外观设置',
-      click: () => tabs.openTab(InnerTabs.VIEW_SETTING)
+      click: () => tabManager.openTab(InnerTabs.VIEW_SETTING)
     },
   ];
 

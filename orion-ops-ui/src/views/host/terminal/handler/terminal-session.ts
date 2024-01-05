@@ -1,7 +1,7 @@
 import type { ITerminalChannel, ITerminalSession } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
-import { fontFamilySuffix } from '@/views/host/terminal/types/terminal.const';
-import { InputProtocol } from '@/views/host/terminal/types/terminal.protocol';
+import { fontFamilySuffix } from '../types/terminal.const';
+import { InputProtocol } from '../types/terminal.protocol';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebglAddon } from 'xterm-addon-webgl';
@@ -54,14 +54,13 @@ export default class TerminalSession implements ITerminalSession {
     // 注册插件
     this.addons.fit = new FitAddon();
     this.addons.webgl = new WebglAddon();
-    // TODO check
-    const inst = this.inst;
-    Object.values(this.addons).forEach(s => inst.loadAddon(s));
+    for (const addon of Object.values(this.addons)) {
+      this.inst.loadAddon(addon);
+    }
     // 打开终端
     this.inst.open(dom);
     // 自适应
     this.addons.fit.fit();
-    // TODO sendCheck
   }
 
   // 设置已连接
