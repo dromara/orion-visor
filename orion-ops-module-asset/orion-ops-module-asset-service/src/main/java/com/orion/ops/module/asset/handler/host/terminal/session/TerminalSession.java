@@ -2,14 +2,15 @@ package com.orion.ops.module.asset.handler.host.terminal.session;
 
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
-import com.orion.net.host.ssh.TerminalType;
 import com.orion.net.host.ssh.shell.ShellExecutor;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
+import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCloseResponse;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalOutputResponse;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.spring.SpringHolder;
@@ -64,9 +65,9 @@ public class TerminalSession implements ITerminalSession {
         config.setRows(rows);
         // 打开 shell
         this.executor = sessionStore.getShellExecutor();
-        executor.terminalType(TerminalType.XTERM_256_COLOR);
         executor.size(cols, rows);
         executor.streamHandler(this::streamHandler);
+        executor.callback(this::eofCallback);
         executor.connect();
         // 开始监听输出
         AssetThreadPools.TERMINAL_SCHEDULER.execute(executor);
@@ -98,7 +99,18 @@ public class TerminalSession implements ITerminalSession {
     }
 
     @Override
+    public void keepAlive() {
+        try {
+            // 发送个信号 保证 socket 不自动关闭
+            executor.sendSignal(Const.EMPTY);
+        } catch (Exception e) {
+            log.error("terminal keep-alive error {}", sessionId, e);
+        }
+    }
+
+    @Override
     public void close() {
+        log.info("terminal close {}", sessionId);
         if (close) {
             return;
         }
@@ -128,8 +140,8 @@ public class TerminalSession implements ITerminalSession {
                 String body = lastLine = new String(bs, 0, read, config.getCharset());
                 // 响应
                 TerminalOutputResponse resp = TerminalOutputResponse.builder()
-                        .session(sessionId)
                         .type(OutputTypeEnum.OUTPUT.getType())
+                        .sessionId(sessionId)
                         .body(body)
                         .build();
                 WebSockets.sendText(channel, OutputTypeEnum.OUTPUT.format(resp));
@@ -137,10 +149,22 @@ public class TerminalSession implements ITerminalSession {
         } catch (IOException ex) {
             log.error("terminal 读取流失败", ex);
         }
-        // eof
-        if (close) {
-            log.info("terminal eof回调 {}", sessionId);
-        }
+    }
+
+    /**
+     * eof 回调
+     */
+    private void eofCallback() {
+        log.info("terminal eof回调 {}, forClose: {}", sessionId, this.close);
+        // 发送关闭信息
+        TerminalCloseResponse resp = TerminalCloseResponse.builder()
+                .type(OutputTypeEnum.CLOSE.getType())
+                .sessionId(this.sessionId)
+                .msg(TerminalMessage.CLOSED_CONNECTION)
+                .build();
+        WebSockets.sendText(channel, OutputTypeEnum.CLOSE.format(resp));
+        // 需要调用关闭 - 可能是 logout 需要手动触发
+        this.close();
     }
 
 }

@@ -21,7 +21,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .newConnectionType("group")
                 .displaySetting(TerminalPreferenceModel.DisplaySettingModel.builder()
                         .fontFamily("_")
-                        .fontSize(15)
+                        .fontSize(12)
                         .lineHeight(1.00)
                         .fontWeight("normal")
                         .fontWeightBold("bold")

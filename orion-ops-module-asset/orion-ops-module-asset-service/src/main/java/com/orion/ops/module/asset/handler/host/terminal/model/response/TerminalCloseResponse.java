@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 主机连接检查响应 实体对象
+ * 主机连接关闭响应 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,13 +20,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TerminalCheckResponse", description = "主机连接检查响应 实体对象")
-public class TerminalCheckResponse extends TerminalBasePayload {
+@Schema(name = "TerminalCloseResponse", description = "主机连接关闭响应 实体对象")
+public class TerminalCloseResponse extends TerminalBasePayload {
 
-    @Schema(description = "检查结果")
-    private Integer result;
-
-    @Schema(description = "错误信息")
+    @Schema(description = "关闭信息")
     private String msg;
 
 }

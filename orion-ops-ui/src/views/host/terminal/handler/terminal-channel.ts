@@ -2,6 +2,7 @@ import type {
   InputPayload,
   ITerminalChannel,
   ITerminalOutputProcessor,
+  ITerminalSessionManager,
   OutputPayload,
   Protocol,
 } from '../types/terminal.type';
@@ -9,6 +10,7 @@ import { OutputProtocol } from '../types/terminal.protocol';
 import { getHostTerminalAccessToken } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
 import { sleep } from '@/utils';
+import TerminalOutputProcessor from './terminal-output-processor';
 
 export const wsBase = import.meta.env.VITE_WS_BASE_URL;
 
@@ -17,10 +19,10 @@ export default class TerminalChannel implements ITerminalChannel {
 
   private client?: WebSocket;
 
-  private readonly processor;
+  private readonly processor: ITerminalOutputProcessor;
 
-  constructor(processor: ITerminalOutputProcessor) {
-    this.processor = processor;
+  constructor(sessionManager: ITerminalSessionManager) {
+    this.processor = new TerminalOutputProcessor(sessionManager, this);
   }
 
   // 初始化
@@ -68,26 +70,14 @@ export default class TerminalChannel implements ITerminalChannel {
     if (!payload) {
       return;
     }
-    // 消息调度
-    switch (payload.type) {
-      case OutputProtocol.CHECK.type:
-        // 检查 回调
-        this.processor.processCheck.call(this.processor, payload);
-        break;
-      case OutputProtocol.CONNECT.type:
-        // 连接 回调
-        this.processor.processConnect.call(this.processor, payload);
-        break;
-      case OutputProtocol.PONG.type:
-        // pong 回调
-        this.processor.processPong.call(this.processor, payload);
-        break;
-      case OutputProtocol.OUTPUT.type:
-        // 输出 回调
-        this.processor.processOutput.call(this.processor, payload);
-        break;
-      default:
-        break;
+    // 获取消息处理方法
+    const processMethod = Object.values(OutputProtocol)
+      .find(protocol => protocol.type === payload.type)
+      ?.processMethod;
+    //  处理消息
+    if (processMethod) {
+      const processMethodFn = this.processor[processMethod as keyof ITerminalOutputProcessor] as Function;
+      processMethodFn && processMethodFn.call(this.processor, payload);
     }
   }
 

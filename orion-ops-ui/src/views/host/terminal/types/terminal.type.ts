@@ -13,12 +13,14 @@ export interface TerminalTabItem {
 export interface Protocol {
   type: string;
   template: string[];
+
+  [key: string]: unknown;
 }
 
 // 终端输入消息内容
 export interface InputPayload {
   type?: string;
-  session?: string;
+  sessionId?: string;
 
   [key: string]: unknown;
 }
@@ -26,7 +28,7 @@ export interface InputPayload {
 // 终端输出消息内容
 export interface OutputPayload {
   type: string;
-  session: string;
+  sessionId: string;
 
   [key: string]: string;
 }
@@ -78,6 +80,8 @@ export interface ITerminalOutputProcessor {
   processCheck: (payload: OutputPayload) => void;
   // 处理连接消息
   processConnect: (payload: OutputPayload) => void;
+  // 处理关闭消息
+  processClose: (payload: OutputPayload) => void;
   // 处理 pong 消息
   processPong: (payload: OutputPayload) => void;
   // 处理输出消息

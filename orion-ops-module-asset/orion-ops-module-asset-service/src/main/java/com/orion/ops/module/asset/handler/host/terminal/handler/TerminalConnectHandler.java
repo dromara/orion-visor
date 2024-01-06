@@ -48,7 +48,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
 
     @Override
     public void handle(WebSocketSession channel, TerminalConnectRequest payload) {
-        String sessionId = payload.getSession();
+        String sessionId = payload.getSessionId();
         log.info("TerminalConnectHandler-handle start sessionId: {}", sessionId);
         // 获取主机连接信息
         HostTerminalConnectDTO connect = this.getAttr(channel, sessionId);
@@ -57,9 +57,9 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             this.send(channel,
                     OutputTypeEnum.CONNECT,
                     TerminalConnectResponse.builder()
-                            .session(payload.getSession())
+                            .sessionId(payload.getSessionId())
                             .result(BooleanBit.FALSE.getValue())
-                            .errorMessage(ErrorMessage.SESSION_ABSENT)
+                            .msg(ErrorMessage.SESSION_ABSENT)
                             .build());
             return;
         }
@@ -80,9 +80,9 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         this.send(channel,
                 OutputTypeEnum.CONNECT,
                 TerminalConnectResponse.builder()
-                        .session(payload.getSession())
+                        .sessionId(payload.getSessionId())
                         .result(BooleanBit.of(ex == null).getValue())
-                        .errorMessage(this.getConnectErrorMessage(ex))
+                        .msg(this.getConnectErrorMessage(ex))
                         .build());
     }
 

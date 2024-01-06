@@ -7,6 +7,7 @@ import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession
 import com.orion.ops.module.asset.handler.host.terminal.session.TerminalSession;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,17 +35,6 @@ public class TerminalManager {
     }
 
     /**
-     * 获取会话
-     *
-     * @param channelId channelId
-     * @param sessionId sessionId
-     * @return session
-     */
-    public ITerminalSession getSession(String channelId, String sessionId) {
-        return channelSessions.get(channelId, sessionId);
-    }
-
-    /**
      * 关闭会话
      *
      * @param channelId channelId
@@ -56,6 +46,27 @@ public class TerminalManager {
         if (session != null) {
             Streams.close(session);
         }
+    }
+
+    /**
+     * 获取会话
+     *
+     * @param channelId channelId
+     * @param sessionId sessionId
+     * @return session
+     */
+    public ITerminalSession getSession(String channelId, String sessionId) {
+        return channelSessions.get(channelId, sessionId);
+    }
+
+    /**
+     * 获取会话
+     *
+     * @param channelId channelId
+     * @return session
+     */
+    public Map<String, ITerminalSession> getSession(String channelId) {
+        return channelSessions.get(channelId);
     }
 
     /**

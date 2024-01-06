@@ -27,6 +27,6 @@ public class TerminalConnectResponse extends TerminalBasePayload {
     private Integer result;
 
     @Schema(description = "错误信息")
-    private String errorMessage;
+    private String msg;
 
 }

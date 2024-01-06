@@ -41,4 +41,9 @@ public interface ITerminalSession extends SafeCloseable {
      */
     void write(byte[] b);
 
+    /**
+     * 活跃回话
+     */
+    void keepAlive();
+
 }

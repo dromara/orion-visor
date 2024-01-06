@@ -24,7 +24,7 @@ public enum InputTypeEnum {
      */
     CHECK("ck",
             TerminalCheckHandler.class,
-            new String[]{"type", "session", "hostId"},
+            new String[]{"type", "sessionId", "hostId"},
             TerminalCheckRequest.class),
 
     /**
@@ -32,7 +32,7 @@ public enum InputTypeEnum {
      */
     CONNECT("co",
             TerminalConnectHandler.class,
-            new String[]{"type", "session", "cols", "rows"},
+            new String[]{"type", "sessionId", "cols", "rows"},
             TerminalConnectRequest.class),
 
     /**
@@ -40,7 +40,7 @@ public enum InputTypeEnum {
      */
     CLOSE("cl",
             TerminalCloseHandler.class,
-            new String[]{"type", "session"},
+            new String[]{"type", "sessionId"},
             TerminalBasePayload.class),
 
     /**
@@ -56,7 +56,7 @@ public enum InputTypeEnum {
      */
     RESIZE("rs",
             TerminalResizeHandler.class,
-            new String[]{"type", "session", "cols", "rows"},
+            new String[]{"type", "sessionId", "cols", "rows"},
             TerminalResizeRequest.class),
 
     /**
@@ -64,7 +64,7 @@ public enum InputTypeEnum {
      */
     EXEC("e",
             TerminalExecHandler.class,
-            new String[]{"type", "session", "command"},
+            new String[]{"type", "sessionId", "command"},
             TerminalExecRequest.class),
 
     /**
@@ -72,7 +72,7 @@ public enum InputTypeEnum {
      */
     INPUT("i",
             TerminalInputHandler.class,
-            new String[]{"type", "session", "command"},
+            new String[]{"type", "sessionId", "command"},
             TerminalInputRequest.class),
 
     ;

@@ -1,20 +1,13 @@
-import type {
-  ITerminalChannel,
-  ITerminalSession,
-  ITerminalSessionManager,
-  ITerminalOutputProcessor,
-  OutputPayload,
-  TerminalTabItem
-} from '../types/terminal.type';
+import type { ITerminalChannel, ITerminalSession, ITerminalSessionManager, TerminalTabItem } from '../types/terminal.type';
 import { sleep } from '@/utils';
 import { InputProtocol } from '../types/terminal.protocol';
-import TerminalSession from './terminal-session';
 import { useDebounceFn } from '@vueuse/core';
-import TerminalChannel from '@/views/host/terminal/handler/terminal-channel';
 import { addEventListen, removeEventListen } from '@/utils/event';
+import TerminalSession from './terminal-session';
+import TerminalChannel from './terminal-channel';
 
 // 终端会话管理器实现
-export default class TerminalSessionManager implements ITerminalSessionManager, ITerminalOutputProcessor {
+export default class TerminalSessionManager implements ITerminalSessionManager {
 
   private readonly channel: ITerminalChannel;
 
@@ -50,9 +43,31 @@ export default class TerminalSessionManager implements ITerminalSessionManager, 
     this.sessions[sessionId] = session;
     // 发送会话初始化请求
     this.channel.send(InputProtocol.CHECK, {
-      session: sessionId,
-      hostId: hostId
+      sessionId,
+      hostId
     });
+  }
+
+  // 获取终端会话
+  getSession(sessionId: string): ITerminalSession {
+    return this.sessions[sessionId];
+  }
+
+  // 关闭终端会话
+  closeSession(sessionId: string): void {
+    // 发送关闭消息
+    this.channel?.send(InputProtocol.CLOSE, { sessionId });
+    // 关闭 session
+    const session = this.sessions[sessionId];
+    if (session) {
+      session.close();
+    }
+    // 移除 session
+    this.sessions[sessionId] = undefined as unknown as ITerminalSession;
+    // session 全部关闭后 关闭 channel
+    if (Object.values(this.sessions).filter(Boolean).every(s => !s?.connected)) {
+      this.reset();
+    }
   }
 
   // 初始化 channel
@@ -71,73 +86,12 @@ export default class TerminalSessionManager implements ITerminalSessionManager, 
     }, 15000);
   }
 
-  // 获取终端会话
-  getSession(sessionId: string): ITerminalSession {
-    return this.sessions[sessionId];
-  }
-
-  // 关闭终端会话
-  closeSession(sessionId: string): void {
-    // 发送关闭消息
-    this.channel?.send(InputProtocol.CLOSE, { session: sessionId });
-    // 关闭 session
-    const session = this.sessions[sessionId];
-    if (session) {
-      session.close();
-    }
-    // 移除 session
-    this.sessions[sessionId] = undefined as unknown as ITerminalSession;
-    // session 全部关闭后 关闭 channel
-    if (Object.values(this.sessions).filter(Boolean).every(s => !s?.connected)) {
-      this.reset();
-    }
-  }
-
   // 调度重置大小
   private dispatchResize() {
     // 对所有已连接的会话重置大小
     Object.values(this.sessions)
       .filter(h => h.connected)
       .forEach(h => h.fit());
-  }
-
-  // 处理检查消息
-  processCheck({ session: sessionId, result, errorMessage }: OutputPayload): void {
-    const success = !!Number.parseInt(result);
-    const session = this.sessions[sessionId];
-    // 未成功展示错误信息
-    if (!success) {
-      session.write('[91m' + errorMessage + '[0m');
-      return;
-    }
-    // 发送 connect 命令
-    this.channel.send(InputProtocol.CONNECT, { session: sessionId, cols: session.inst.cols, rows: session.inst.rows });
-  }
-
-  // 处理连接消息
-  processConnect({ session: sessionId, result, errorMessage }: OutputPayload): void {
-    const success = !!Number.parseInt(result);
-    const session = this.sessions[sessionId];
-    // 未成功展示错误信息
-    if (!success) {
-      session.write('[91m' + errorMessage + '[0m');
-      return;
-    }
-    // 设置可写
-    session.setCanWrite(true);
-    // 执行连接逻辑
-    session.connect();
-  }
-
-  // 处理 pong 消息
-  processPong(payload: OutputPayload): void {
-    console.log('pong');
-  }
-
-  // 处理输出消息
-  processOutput({ session: sessionId, body }: OutputPayload): void {
-    const session = this.sessions[sessionId];
-    session && session.write(body);
   }
 
   // 重置

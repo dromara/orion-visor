@@ -59,7 +59,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Long hostId = payload.getHostId();
         Long userId = this.getAttr(channel, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
-        String sessionId = payload.getSession();
+        String sessionId = payload.getSessionId();
         log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         // 检查 session 是否存在
         if (this.checkSession(channel, payload)) {
@@ -89,9 +89,9 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         this.send(channel,
                 OutputTypeEnum.CHECK,
                 TerminalCheckResponse.builder()
-                        .session(payload.getSession())
+                        .sessionId(payload.getSessionId())
                         .result(BooleanBit.of(ex == null).getValue())
-                        .errorMessage(ex == null ? null : ex.getMessage())
+                        .msg(ex == null ? null : ex.getMessage())
                         .build());
     }
 
@@ -103,7 +103,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @return 是否存在
      */
     private boolean checkSession(WebSocketSession channel, TerminalCheckRequest payload) {
-        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSession());
+        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSessionId());
         if (terminalSession != null) {
             this.sendCheckFailedMessage(channel, payload, ErrorMessage.SESSION_PRESENT);
             return true;
@@ -137,13 +137,13 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @param msg     msg
      */
     private void sendCheckFailedMessage(WebSocketSession channel, TerminalCheckRequest payload, String msg) {
-        TerminalCheckResponse build = TerminalCheckResponse.builder()
-                .session(payload.getSession())
+        TerminalCheckResponse resp = TerminalCheckResponse.builder()
+                .sessionId(payload.getSessionId())
                 .result(BooleanBit.FALSE.getValue())
-                .errorMessage(msg)
+                .msg(msg)
                 .build();
         // 发送
-        this.send(channel, OutputTypeEnum.CHECK, build);
+        this.send(channel, OutputTypeEnum.CHECK, resp);
     }
 
     /**

@@ -26,7 +26,7 @@ public class TerminalInputHandler extends AbstractTerminalHandler<TerminalInputR
     @Override
     public void handle(WebSocketSession channel, TerminalInputRequest payload) {
         // 获取会话
-        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSession());
+        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSessionId());
         if (terminalSession != null) {
             // 处理输入
             terminalSession.write(payload.getCommand());

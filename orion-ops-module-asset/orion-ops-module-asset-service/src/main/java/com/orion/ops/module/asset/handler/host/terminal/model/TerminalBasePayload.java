@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 public class TerminalBasePayload {
 
     @Schema(description = "会话id")
-    private String session;
+    private String sessionId;
 
     @Schema(description = "消息类型")
     private String type;

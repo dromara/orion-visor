@@ -73,14 +73,14 @@ export default class TerminalSession implements ITerminalSession {
       }
       // 输入
       this.channel.send(InputProtocol.INPUT, {
-        session: this.sessionId,
+        sessionId: this.sessionId,
         command: s
       });
     });
     // 注册 resize 事件
     this.inst.onResize(({ cols, rows }) => {
       this.channel.send(InputProtocol.RESIZE, {
-        session: this.sessionId,
+        sessionId: this.sessionId,
         cols,
         rows
       });
@@ -90,6 +90,11 @@ export default class TerminalSession implements ITerminalSession {
   // 设置是否可写
   setCanWrite(canWrite: boolean): void {
     this.canWrite = canWrite;
+    if (canWrite) {
+      this.inst.options.cursorBlink = useTerminalStore().preference.displaySetting.cursorBlink;
+    } else {
+      this.inst.options.cursorBlink = false;
+    }
   }
 
   // 写入数据
