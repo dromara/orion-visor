@@ -20,16 +20,11 @@
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.const';
   import IconActions from './icon-actions.vue';
-  import { computed } from 'vue';
-  import { useTerminalStore } from '@/store';
-  import { DarkTheme } from '@/store/modules/terminal';
 
   const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'screenshot']);
 
-  const terminalStore = useTerminalStore();
-
   // 顶部操作
-  const topActions = computed<Array<SidebarAction>>(() => [
+  const topActions = [
     {
       icon: 'icon-code-block',
       content: '打开命令片段',
@@ -48,12 +43,7 @@
       },
       click: () => emits('openTransfer')
     },
-    {
-      icon: terminalStore.isDarkTheme ? 'icon-sun-fill' : 'icon-moon-fill',
-      content: terminalStore.isDarkTheme ? '点击切换为亮色模式' : '点击切换为暗色模式',
-      click: () => terminalStore.changeDarkTheme(terminalStore.isDarkTheme ? DarkTheme.LIGHT : DarkTheme.DARK)
-    },
-  ]);
+  ];
 
   // 底部操作
   const bottomActions: Array<SidebarAction> = [

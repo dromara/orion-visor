@@ -3,8 +3,11 @@ import { Message } from '@arco-design/web-vue';
 
 export default function useCopy() {
   const { isSupported, copy: c, text, copied } = useClipboard();
-  const copy = async (value: string, tips = `${value} 已复制`) => {
+  const copy = async (value: string | undefined, tips = `${value} 已复制`) => {
     try {
+      if (!value) {
+        return;
+      }
       await c(value);
       if (tips) {
         Message.success(tips);

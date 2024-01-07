@@ -60,7 +60,7 @@
                            :max-length="32"
                            :disabled="item.loading"
                            size="mini"
-                           :placeholder="`${item.name} (${item.code})`"
+                           :placeholder="item.name"
                            @blur="saveAlias(item)"
                            @pressEnter="saveAlias(item)"
                            @change="saveAlias(item)">
@@ -215,10 +215,20 @@
 
   // 打开终端
   const openTerminal = (record: HostQueryResponse) => {
+    // 获取 seq
+    const tabSeqArr = tabManager.items
+      .map(s => s.seq)
+      .filter(Boolean)
+      .map(Number);
+    const nextSeq = tabSeqArr.length
+      ? Math.max(...tabSeqArr) + 1
+      : 1;
+    // 打开 tab
     tabManager.openTab({
       type: TabType.TERMINAL,
       key: nextSessionId(),
-      title: record.alias || (`${record.name} ${record.address}`),
+      seq: nextSeq,
+      title: `(${nextSeq})  ${record.alias || record.name}`,
       hostId: record.id,
       address: record.address
     });
