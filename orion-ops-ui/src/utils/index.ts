@@ -163,7 +163,7 @@ export const resetObject = (obj: any, ignore: string[] = []) => {
 export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
   return Object.keys(obj)
     .filter(s => !ignore.includes(s))
-    .reduce(function (acc, curr) {
+    .reduce(function(acc, curr) {
       const currVal = obj[curr];
       return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
     }, 0);
@@ -193,21 +193,34 @@ export function detectZoom() {
 }
 
 /**
- * 获取页面路由
- */
-export function getRoute(url = location.href) {
-  return url.substring(url.lastIndexOf('#') + 1).split('?')[0];
-}
-
-/**
  * 获取唯一的 UUID
  */
 export function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
+}
+
+/**
+ * 调整颜色
+ * @param color color
+ * @param range 正数越浅 负数越深
+ */
+export function adjustColor(color: string, range: number) {
+  let newColor = '#';
+  for (let i = 0; i < 3; i++) {
+    let c = parseInt(color.substring(i * 2 + 1, i * 2 + 3), 16);
+    c += range;
+    if (c < 0) {
+      c = 0;
+    } else if (c > 255) {
+      c = 255;
+    }
+    newColor += c.toString(16).padStart(2, '0');
+  }
+  return newColor;
 }
 
 /**

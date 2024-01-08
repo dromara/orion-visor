@@ -91,6 +91,9 @@
     } else if (NewConnectionType.FAVORITE === props.newConnectionType) {
       // 过滤-个人收藏
       list = list.filter(item => item.favorite);
+    } else if (NewConnectionType.LATEST === props.newConnectionType) {
+      // 过滤-最近连接
+      // todo
     }
     // 排序
     hostList.value = list?.sort((o1, o2) => {

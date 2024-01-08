@@ -2,7 +2,7 @@ import type { ITerminalChannel, ITerminalSession } from '../types/terminal.type'
 import { useTerminalStore } from '@/store';
 import { fontFamilySuffix } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
-import { Terminal } from 'xterm';
+import { ITerminalOptions, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebglAddon } from 'xterm-addon-webgl';
 
@@ -21,7 +21,7 @@ export default class TerminalSession implements ITerminalSession {
 
   public connected: boolean;
 
-  private canWrite: boolean;
+  public canWrite: boolean;
 
   private readonly sessionId: string;
 
@@ -105,6 +105,52 @@ export default class TerminalSession implements ITerminalSession {
   // 自适应
   fit(): void {
     this.addons.fit?.fit();
+  }
+
+  // 聚焦
+  focus(): void {
+    this.inst.focus();
+  }
+
+  // 清空
+  clear(): void {
+    this.inst.clear();
+    this.inst.clearSelection();
+    this.inst.focus();
+  }
+
+  // 粘贴
+  paste(value: string): void {
+    this.inst.paste(value);
+    this.inst.focus();
+  }
+
+  // 选中全部
+  selectAll(): void {
+    this.inst.selectAll();
+  }
+
+  // 获取选中
+  getSelection(): string {
+    return this.inst.getSelection();
+  }
+
+  // 获取配置
+  getOption(option: string): any {
+    return this.inst.options[option as keyof ITerminalOptions] as any;
+  }
+
+  // 设置配置
+  setOption(option: string, value: any): void {
+    this.inst.options[option as keyof ITerminalOptions] = value;
+  }
+
+  // 登出
+  logout(): void {
+    // 发送关闭消息
+    this.channel.send(InputProtocol.CLOSE, {
+      sessionId: this.sessionId
+    });
   }
 
   // 关闭

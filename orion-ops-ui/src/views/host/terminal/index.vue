@@ -108,6 +108,14 @@
       overflow: hidden;
     }
 
+    &-left {
+      border-right: 1px solid var(--color-bg-content);
+    }
+
+    &-right {
+      border-left: 1px solid var(--color-bg-content);
+    }
+
     &-content {
       width: calc(100% - var(--sidebar-width) * 2);
       height: 100%;

@@ -46,6 +46,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       sessionId,
       hostId
     });
+    return session;
   }
 
   // 获取终端会话
@@ -55,13 +56,14 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
 
   // 关闭终端会话
   closeSession(sessionId: string): void {
-    // 发送关闭消息
-    this.channel?.send(InputProtocol.CLOSE, { sessionId });
-    // 关闭 session
     const session = this.sessions[sessionId];
-    if (session) {
-      session.close();
+    if (!session) {
+      return;
     }
+    // 登出
+    session.logout();
+    // 关闭 session
+    session.close();
     // 移除 session
     this.sessions[sessionId] = undefined as unknown as ITerminalSession;
     // session 全部关闭后 关闭 channel

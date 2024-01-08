@@ -53,7 +53,7 @@ export interface ITerminalTabManager {
 // 终端会话管理器定义
 export interface ITerminalSessionManager {
   // 打开终端会话
-  openSession: (tab: TerminalTabItem, dom: HTMLElement) => void;
+  openSession: (tab: TerminalTabItem, dom: HTMLElement) => Promise<ITerminalSession>;
   // 获取终端会话
   getSession: (sessionId: string) => ITerminalSession;
   // 关闭终端会话
@@ -95,6 +95,8 @@ export interface ITerminalSession {
   inst: Terminal;
   // 是否已连接
   connected: boolean;
+  // 是否可写
+  canWrite: boolean;
 
   // 初始化
   init: (dom: HTMLElement) => void;
@@ -106,6 +108,22 @@ export interface ITerminalSession {
   write: (value: string) => void;
   // 自适应
   fit: () => void;
+  // 聚焦
+  focus: () => void;
+  // 清空
+  clear: () => void;
+  // 粘贴
+  paste: (value: string) => void;
+  // 选中全部
+  selectAll: () => void;
+  // 获取选中
+  getSelection: () => string;
+  // 获取配置
+  getOption: (option: string) => any;
+  // 设置配置
+  setOption: (option: string, value: any) => void;
+  // 登出
+  logout: () => void;
   // 关闭
   close: () => void;
 }
