@@ -9,7 +9,7 @@
         <a-radio-group v-model="newConnectionType"
                        type="button"
                        class="usn"
-                       :options="toOptions(NewConnectionTypeKey)"
+                       :options="toOptions(newConnectionTypeKey)"
                        @change="changeNewConnectionType" />
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
@@ -60,7 +60,8 @@
                       class="host-view-container"
                       :hosts="hosts"
                       :filter-value="filterValue"
-                      :new-connection-type="newConnectionType" />
+                      :new-connection-type="newConnectionType"
+                      :latest-hosts="latestHosts" />
         </div>
       </div>
     </div>
@@ -78,12 +79,13 @@
   import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
   import { onBeforeMount, ref } from 'vue';
-  import { NewConnectionType, NewConnectionTypeKey } from '../../types/terminal.const';
+  import { NewConnectionType, newConnectionTypeKey } from '../../types/terminal.const';
   import useLoading from '@/hooks/loading';
-  import { useDictStore, useTerminalStore } from '@/store';
+  import { useAppStore, useDictStore, useTerminalStore } from '@/store';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import HostsView from './hosts-view.vue';
+  import { getLatestConnectHostId } from '@/api/asset/host-connect-log';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
@@ -93,6 +95,7 @@
   const filterValue = ref('');
   const filterOptions = ref<Array<SelectOptionData>>([]);
   const hosts = ref<AuthorizedHostQueryResponse>({} as AuthorizedHostQueryResponse);
+  const latestHosts = ref<Array<number>>([]);
 
   // 过滤输入
   const searchFilter = (searchValue: string, option: SelectOptionData) => {
@@ -125,10 +128,11 @@
     }).forEach(s => filterOptions.value.push(s));
   };
 
-  // 初始化
-  const init = async () => {
+  // 加载主机信息
+  const initHosts = async () => {
     try {
       setLoading(true);
+      // 加载主机信息
       const { data } = await getCurrentAuthorizedHost();
       hosts.value = data;
       // 初始化过滤项
@@ -138,8 +142,23 @@
     }
   };
 
+  // 加载最近连接主机
+  const loadLatestConnectHost = async () => {
+    try {
+      setLoading(true);
+      // 加载最近连接主机
+      const { data } = await getLatestConnectHostId('SSH', useAppStore().defaultTablePageSize);
+      latestHosts.value = data;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 加载主机信息
-  onBeforeMount(init);
+  onBeforeMount(initHosts);
+
+  // 加载最近连接主机
+  onBeforeMount(loadLatestConnectHost);
 
 </script>
 

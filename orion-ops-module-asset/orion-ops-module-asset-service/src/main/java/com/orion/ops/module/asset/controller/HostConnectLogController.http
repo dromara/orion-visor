@@ -17,5 +17,15 @@ Authorization: {{token}}
   ]
 }
 
+### 查询用户最近连接的 ssh 主机
+POST {{baseUrl}}/asset/host-connect-log/latest-connect
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "limit": 10,
+  "type": "SSH"
+}
+
 
 ###

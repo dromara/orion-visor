@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 主机连接日志 api
@@ -45,6 +46,13 @@ public class HostConnectLogController {
     @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:query')")
     public DataGrid<HostConnectLogVO> getHostConnectLogPage(@Validated(Page.class) @RequestBody HostConnectLogQueryRequest request) {
         return hostConnectLogService.getHostConnectLogPage(request);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @PostMapping("/latest-connect")
+    @Operation(summary = "查询用户最近连接的主机")
+    public List<Long> getLatestConnectHostId(@RequestBody HostConnectLogQueryRequest request) {
+        return hostConnectLogService.getLatestConnectHostId(request);
     }
 
 }

@@ -42,3 +42,13 @@ export interface HostConnectLogQueryResponse extends TableData {
 export function getHostConnectLogPage(request: HostConnectLogQueryRequest) {
   return axios.post<DataGrid<HostConnectLogQueryResponse>>('/asset/host-connect-log/query', request);
 }
+
+/**
+ * 查询用户最近连接的主机
+ */
+export function getLatestConnectHostId(type: string, limit: number) {
+  return axios.post<Array<number>>('/asset/host-connect-log/latest-connect', {
+    type,
+    limit
+  });
+}

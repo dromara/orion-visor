@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.HostConnectLogConvert;
 import com.orion.ops.module.asset.dao.HostConnectLogDAO;
 import com.orion.ops.module.asset.entity.domain.HostConnectLogDO;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 主机连接日志 服务实现类
@@ -66,6 +68,11 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
         update.setStatus(status.name());
         update.setEndTime(new Date());
         hostConnectLogDAO.update(update, Conditions.eq(HostConnectLogDO::getToken, token));
+    }
+
+    @Override
+    public List<Long> getLatestConnectHostId(HostConnectLogQueryRequest request) {
+        return hostConnectLogDAO.selectLatestConnectHostId(SecurityUtils.getLoginUserId(), request.getType(), request.getLimit());
     }
 
     /**

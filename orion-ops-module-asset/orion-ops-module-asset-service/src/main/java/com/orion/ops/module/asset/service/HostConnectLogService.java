@@ -7,6 +7,8 @@ import com.orion.ops.module.asset.entity.vo.HostConnectLogVO;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 
+import java.util.List;
+
 /**
  * 主机连接日志 服务类
  *
@@ -39,5 +41,13 @@ public interface HostConnectLogService {
      * @param status status
      */
     void updateStatusByToken(String token, HostConnectStatusEnum status);
+
+    /**
+     * 查询用户最近连接的主机
+     *
+     * @param request request
+     * @return hostId
+     */
+    List<Long> getLatestConnectHostId(HostConnectLogQueryRequest request);
 
 }

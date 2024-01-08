@@ -3,6 +3,9 @@ package com.orion.ops.module.asset.dao;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.HostConnectLogDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 主机连接日志 Mapper 接口
@@ -13,5 +16,15 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface HostConnectLogDAO extends IMapper<HostConnectLogDO> {
+
+    /**
+     * 查询最近连接的 hostId
+     *
+     * @param userId userId
+     * @param type   type
+     * @param limit  limit
+     * @return hostId
+     */
+    List<Long> selectLatestConnectHostId(@Param("userId") Long userId, @Param("type") String type, @Param("limit") Integer limit);
 
 }

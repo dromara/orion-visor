@@ -44,7 +44,8 @@
   const props = defineProps<{
     hosts: AuthorizedHostQueryResponse,
     filterValue: string,
-    newConnectionType: string
+    newConnectionType: string,
+    latestHosts: Array<number>
   }>();
 
   const hostList = ref<Array<HostQueryResponse>>([]);
@@ -93,7 +94,7 @@
       list = list.filter(item => item.favorite);
     } else if (NewConnectionType.LATEST === props.newConnectionType) {
       // 过滤-最近连接
-      // todo
+      list = list.filter(s => props.latestHosts.includes(s.id));
     }
     // 排序
     hostList.value = list?.sort((o1, o2) => {

@@ -26,4 +26,14 @@
         id, user_id, username, host_id, host_name, host_address, type, token, status, start_time, end_time, extra_info, create_time, update_time, deleted
     </sql>
 
+    <select id="selectLatestConnectHostId" resultType="java.lang.Long">
+        SELECT DISTINCT host_id
+        FROM host_connect_log
+        WHERE deleted = 0
+          AND type = #{type}
+          AND user_id = #{userId}
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>
