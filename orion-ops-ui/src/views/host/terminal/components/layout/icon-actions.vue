@@ -7,10 +7,10 @@
                content-class="terminal-tooltip-content"
                arrow-class="terminal-tooltip-arrow"
                :content="action.content">
-      <div class="terminal-sidebar-icon-wrapper">
+      <div class="terminal-sidebar-icon-wrapper" v-if="action.visible !== false">
         <div class="terminal-sidebar-icon"
-             :class="iconClass"
-             @click="action.click">
+             :class="[iconClass, action.disabled !== false ? '' : 'disabled-item']"
+             @click="action.disabled !== false ? action.click() : false">
           <component :is="action.icon" :style="action?.iconStyle" />
         </div>
       </div>

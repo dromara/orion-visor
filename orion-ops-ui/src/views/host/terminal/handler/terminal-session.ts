@@ -1,6 +1,6 @@
 import type { ITerminalChannel, ITerminalSession } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
-import { fontFamilySuffix } from '../types/terminal.const';
+import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
 import { ITerminalOptions, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
@@ -23,6 +23,8 @@ export default class TerminalSession implements ITerminalSession {
 
   public canWrite: boolean;
 
+  public status: number;
+
   private readonly sessionId: string;
 
   private readonly channel: ITerminalChannel;
@@ -37,6 +39,7 @@ export default class TerminalSession implements ITerminalSession {
     this.channel = channel;
     this.connected = false;
     this.canWrite = false;
+    this.status = TerminalStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
     this.addons = {} as TerminalAddons;
   }
@@ -65,6 +68,7 @@ export default class TerminalSession implements ITerminalSession {
 
   // 设置已连接
   connect(): void {
+    this.status = TerminalStatus.CONNECTED;
     this.connected = true;
     // 注册输入事件
     this.inst.onData(s => {
@@ -98,7 +102,7 @@ export default class TerminalSession implements ITerminalSession {
   }
 
   // 写入数据
-  write(value: string): void {
+  write(value: string | Uint8Array): void {
     this.inst.write(value);
   }
 
@@ -128,11 +132,26 @@ export default class TerminalSession implements ITerminalSession {
   // 选中全部
   selectAll(): void {
     this.inst.selectAll();
+    this.inst.focus();
   }
 
   // 获取选中
   getSelection(): string {
-    return this.inst.getSelection();
+    const selection = this.inst.getSelection();
+    this.inst.focus();
+    return selection;
+  }
+
+  // 去顶部
+  toTop(): void {
+    this.inst.scrollToTop();
+    this.inst.focus();
+  }
+
+  // 去底部
+  toBottom(): void {
+    this.inst.scrollToBottom();
+    this.inst.focus();
   }
 
   // 获取配置

@@ -5,6 +5,8 @@ import { getUUID } from '@/utils';
 export interface SidebarAction {
   icon: string;
   content: string;
+  visible?: boolean;
+  disabled?: boolean;
   iconStyle?: CSSProperties;
   click: () => void;
 }
@@ -60,6 +62,16 @@ export const ExtraSshAuthType = {
   CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',
 };
 
+// 终端状态
+export const TerminalStatus = {
+  // 连接中
+  CONNECTING: 0,
+  // 已连接
+  CONNECTED: 1,
+  // 已断开
+  CLOSED: 2
+};
+
 // 获取会话id
 export const nextSessionId = (): string => {
   return getUUID().replaceAll('-', '').substring(0, 10);
@@ -87,15 +99,18 @@ export const fontWeightKey = 'terminalFontWeight';
 export const cursorStyleKey = 'terminalCursorStyle';
 
 // 终端新建连接类型
-export const NewConnectionTypeKey = 'terminalNewConnectionType';
+export const newConnectionTypeKey = 'terminalNewConnectionType';
 
 // 终端新建连接类型
 export const extraSshAuthTypeKey = 'hostExtraSshAuthType';
+
+// 终端状态
+export const connectStatusKey = 'terminalConnectStatus';
 
 // 加载的字典值
 export const dictKeys = [
   darkThemeKey, fontFamilyKey,
   fontSizeKey, fontWeightKey,
-  cursorStyleKey, NewConnectionTypeKey,
-  extraSshAuthTypeKey
+  cursorStyleKey, newConnectionTypeKey,
+  extraSshAuthTypeKey, connectStatusKey
 ];

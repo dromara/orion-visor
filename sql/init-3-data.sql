@@ -65,22 +65,24 @@ INSERT INTO `system_menu` VALUES (106, 105, '查询字典配置值', 'infra:dict
 INSERT INTO `system_menu` VALUES (107, 105, '创建字典配置值', 'infra:dict-value:create', 3, 220, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (108, 105, '修改字典配置值', 'infra:dict-value:update', 3, 230, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (109, 105, '删除字典配置值', 'infra:dict-value:delete', 3, 240, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-17 11:38:18', '2023-10-27 01:16:10', NULL, '1', 0);
-INSERT INTO `system_menu` VALUES (120, 97, '查询字典配置项', 'infra:dict-key:query', 3, 100, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-20 11:27:12', '2023-10-27 01:16:10', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (120, 97, '查询字典配置项', 'infra:dict-key:query', 3, 100, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-20 11:27:12', '2023-12-27 18:39:22', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (121, 97, '刷新缓存', 'infra:dict-key:management:refresh-cache', 3, 140, 1, 1, 1, 0, NULL, NULL, NULL, '2023-10-27 15:50:04', '2023-12-27 12:40:12', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (122, 5, '操作日志', NULL, 2, 30, 1, 1, 1, 0, 'IconCalendarClock', NULL, 'userOperatorLog', '2023-11-01 14:09:36', '2023-11-01 14:09:36', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (123, 122, '查询操作日志', 'infra:operator-log:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-02 11:22:54', '2023-11-02 11:22:54', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (124, 48, '查询用户会话', 'infra:system-user:query-session', 3, 50, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-02 11:24:14', '2023-11-02 11:24:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (125, 48, '下线用户会话', 'infra:system-user:management:offline-session', 3, 60, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-02 11:24:37', '2023-12-27 12:39:17', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (126, 48, '查询用户登录日志', 'infra:system-user:login-history', 3, 70, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 15:05:37', '2023-12-27 15:05:37', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (126, 48, '查询用户登录日志', 'infra:system-user:login-history', 3, 70, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 15:05:37', '2023-12-27 15:07:19', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (129, 64, '编辑主机分组', 'asset:host-group:update', 3, 100, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-13 18:16:32', '2023-12-01 01:47:58', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (133, 144, '主机分组授权', 'asset:host-group:grant', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-23 18:08:57', '2023-11-30 22:39:53', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (142, 144, '主机秘钥授权', 'asset:host-key:grant', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-30 21:06:13', '2023-11-30 22:39:47', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (143, 144, '主机身份授权', 'asset:host-identity:grant', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-30 21:06:26', '2023-11-30 22:40:11', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (144, 63, '资产授权', NULL, 2, 70, 1, 1, 1, 0, 'icon-safe', NULL, 'assetGrant', '2023-11-30 22:38:57', '2023-11-30 22:39:06', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (145, 0, '主机运维', NULL, 1, 400, 1, 1, 1, 1, 'IconDesktop', NULL, 'hostOps', '2023-12-04 23:33:25', '2023-12-05 14:51:46', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (145, 0, '主机运维', NULL, 1, 400, 1, 1, 1, 1, 'IconDesktop', NULL, 'host', '2023-12-04 23:33:25', '2024-01-04 17:35:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (146, 145, 'Terminal', NULL, 2, 10, 1, 1, 1, 1, 'icon-code-square', NULL, 'hostTerminal', '2023-12-04 23:38:01', '2023-12-13 21:09:13', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (148, 63, '连接日志', NULL, 2, 80, 1, 1, 1, 0, 'IconLink', NULL, 'assetHostConnectLog', '2023-12-26 22:53:07', '2023-12-26 23:12:18', NULL, '1', 0);
+INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'hostReviewConnectLog', '2023-12-26 22:53:07', '2024-01-04 17:55:14', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (149, 148, '查询主机连接日志', 'asset:host-connect-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-26 22:53:08', '2023-12-26 22:54:24', NULL, '1', 0);
+INSERT INTO `system_menu` VALUES (151, 146, '连接终端', 'asset:host-terminal:access', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 18:56:33', '2023-12-27 18:56:33', '2', '2', 0);
+INSERT INTO `system_menu` VALUES (152, 0, '运维审计', NULL, 1, 410, 1, 1, 1, 0, 'IconSafe', NULL, 'hostReview', '2024-01-04 17:54:56', '2024-01-04 17:57:31', '1', '1', 0);
 
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', '1', '1', 0);
@@ -105,6 +107,7 @@ INSERT INTO `dict_key` VALUES (25, 'terminalNewConnectionType', 'STRING', '[]', 
 INSERT INTO `dict_key` VALUES (26, 'hostExtraSshAuthType', 'STRING', '[]', '主机额外配置ssh认证方式', '2023-12-25 15:41:22', '2023-12-25 15:41:22', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (27, 'hostConnectType', 'STRING', '[]', '主机连接类型', '2023-12-26 23:23:08', '2023-12-26 23:23:08', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (28, 'hostConnectStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机连接状态', '2023-12-26 23:23:51', '2023-12-26 23:28:15', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (29, 'terminalConnectStatus', 'INTEGER', '[{\"name\": \"status\", \"type\": \"STRING\"}]', '终端连接状态', '2024-01-09 00:32:00', '2024-01-09 00:32:16', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -179,7 +182,7 @@ INSERT INTO `dict_value` VALUES (103, 16, 'operatorRiskLevel', 'L', '低风险',
 INSERT INTO `dict_value` VALUES (104, 16, 'operatorRiskLevel', 'M', '中风险', '{\"color\": \"orangered\"}', 20, '2023-11-01 16:04:24', '2023-11-01 16:04:24', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (105, 16, 'operatorRiskLevel', 'H', '高风险', '{\"color\": \"red\"}', 30, '2023-11-01 16:04:41', '2023-11-01 16:04:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (106, 2, 'operatorLogType', 'system-user:offline', '下线用户会话', '{}', 10, '2023-11-02 11:32:39', '2023-11-02 11:32:39', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (107, 1, 'operatorLogModule', 'asset:host-group', '主机分组', '{}', 10, '2023-11-13 18:26:13', '2023-11-13 18:26:13', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (107, 1, 'operatorLogModule', 'asset:host-group', '主机分组', '{}', 2040, '2023-11-13 18:26:13', '2023-12-27 18:42:48', '1', '2', 0);
 INSERT INTO `dict_value` VALUES (108, 2, 'operatorLogType', 'host-group:create', '创建主机分组', '{}', 10, '2023-11-13 18:27:05', '2023-11-13 18:27:28', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (109, 2, 'operatorLogType', 'host-group:rename', '重命名主机分组', '{}', 20, '2023-11-13 18:27:51', '2023-11-13 18:27:51', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (110, 2, 'operatorLogType', 'host-group:move', '移动主机分组', '{}', 30, '2023-11-13 18:28:02', '2023-11-13 18:28:02', '1', '1', 0);
@@ -239,3 +242,8 @@ INSERT INTO `dict_value` VALUES (176, 27, 'hostConnectType', 'SSH', 'SSH', '{}',
 INSERT INTO `dict_value` VALUES (177, 28, 'hostConnectStatus', 'CONNECTING', '连接中', '{\"color\": \"rgb(var(--green-6))\"}', 10, '2023-12-26 23:29:00', '2023-12-26 23:29:00', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (178, 28, 'hostConnectStatus', 'COMPLETE', '完成', '{\"color\": \"rgb(var(--blue-6))\"}', 20, '2023-12-26 23:29:15', '2023-12-26 23:29:15', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (179, 28, 'hostConnectStatus', 'FAILED', '失败', '{\"color\": \"rgb(var(--red-6))\"}', 30, '2023-12-26 23:29:34', '2023-12-26 23:29:34', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (180, 1, 'operatorLogModule', 'asset:host-terminal', '主机终端', '{}', 2050, '2023-12-27 18:42:39', '2023-12-27 18:42:39', '2', '2', 0);
+INSERT INTO `dict_value` VALUES (181, 2, 'operatorLogType', 'host-terminal:connect', '连接主机终端', '{}', 10, '2023-12-27 18:43:17', '2023-12-28 18:44:20', '2', '2', 0);
+INSERT INTO `dict_value` VALUES (182, 29, 'terminalConnectStatus', '0', '连接中', '{\"status\": \"normal\"}', 10, '2024-01-09 00:32:47', '2024-01-09 00:32:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (183, 29, 'terminalConnectStatus', '1', '已连接', '{\"status\": \"processing\"}', 20, '2024-01-09 00:32:59', '2024-01-09 00:32:59', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (184, 29, 'terminalConnectStatus', '2', '已断开', '{\"status\": \"danger\"}', 30, '2024-01-09 00:33:09', '2024-01-09 00:37:35', '1', '1', 0);

@@ -97,6 +97,8 @@ export interface ITerminalSession {
   connected: boolean;
   // 是否可写
   canWrite: boolean;
+  // 状态
+  status: number;
 
   // 初始化
   init: (dom: HTMLElement) => void;
@@ -105,7 +107,7 @@ export interface ITerminalSession {
   // 设置是否可写
   setCanWrite: (canWrite: boolean) => void;
   // 写入数据
-  write: (value: string) => void;
+  write: (value: string | Uint8Array) => void;
   // 自适应
   fit: () => void;
   // 聚焦
@@ -118,6 +120,10 @@ export interface ITerminalSession {
   selectAll: () => void;
   // 获取选中
   getSelection: () => string;
+  // 去顶部
+  toTop: () => void;
+  // 去底部
+  toBottom: () => void;
   // 获取配置
   getOption: (option: string) => any;
   // 设置配置

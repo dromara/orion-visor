@@ -5,6 +5,7 @@ import {
   OutputPayload
 } from '../types/terminal.type';
 import { InputProtocol } from '../types/terminal.protocol';
+import { TerminalStatus } from '../types/terminal.const';
 
 // 终端输出消息体处理器实现
 export default class TerminalOutputProcessor implements ITerminalOutputProcessor {
@@ -25,6 +26,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     // 未成功展示错误信息
     if (!success) {
       session.write(`[91m${msg || ''}[0m`);
+      session.status = TerminalStatus.CLOSED;
       return;
     }
     // 发送 connect 命令
@@ -38,6 +40,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     // 未成功展示错误信息
     if (!success) {
       session.write(`[91m${msg || ''}[0m`);
+      session.status = TerminalStatus.CLOSED;
       return;
     }
     // 设置可写
@@ -54,6 +57,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       // 提示消息
       session.write(`\r\n[91m${msg || ''}[0m`);
       // 设置状态
+      session.status = TerminalStatus.CLOSED;
       session.connected = false;
       // 设置不可写
       session.setCanWrite(false);

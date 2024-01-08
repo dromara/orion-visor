@@ -252,7 +252,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--color-neutral-1);
+  background-color: var(--color-fill-1);
   border-radius: 8px;
 }
 
@@ -260,9 +260,13 @@ body {
   border: 1px solid transparent;
   background-clip: padding-box;
   border-radius: 8px;
-  background-color: var(--color-neutral-5);
+  background-color: var(--color-fill-4);
 
-  &:hover {
-    background-color: var(--color-neutral-6);
-  }
+  //&:hover {
+  //  background-color: var(--color-neutral-6);
+  //}
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
 }
