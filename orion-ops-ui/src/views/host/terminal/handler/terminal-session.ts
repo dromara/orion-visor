@@ -1,16 +1,13 @@
-import type { ITerminalChannel, ITerminalSession } from '../types/terminal.type';
+import type { ITerminalChannel, ITerminalSession, TerminalAddons } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
 import { ITerminalOptions, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebglAddon } from 'xterm-addon-webgl';
-
-// 终端插件
-export interface TerminalAddons {
-  fit: FitAddon;
-  webgl: WebglAddon;
-}
+import { WebLinksAddon } from 'xterm-addon-web-links';
+import { SearchAddon } from 'xterm-addon-search';
+import { ImageAddon } from 'xterm-addon-image';
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
@@ -57,6 +54,9 @@ export default class TerminalSession implements ITerminalSession {
     // 注册插件
     this.addons.fit = new FitAddon();
     this.addons.webgl = new WebglAddon();
+    this.addons.link = new WebLinksAddon();
+    this.addons.search = new SearchAddon();
+    this.addons.image = new ImageAddon();
     for (const addon of Object.values(this.addons)) {
       this.inst.loadAddon(addon);
     }

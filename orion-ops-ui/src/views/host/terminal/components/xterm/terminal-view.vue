@@ -29,7 +29,7 @@
                       :actions="rightActions"
                       position="bottom" />
         <!-- 状态 -->
-        <a-badge style="margin: 0 2px 0 8px;"
+        <a-badge class="status-bridge"
                  :status="getDictValue(connectStatusKey, session ? session.status : 0, 'status')"
                  :text="getDictValue(connectStatusKey, session ? session.status : 0)" />
       </div>
@@ -41,6 +41,13 @@
          }">
       <div class="terminal-inst" ref="terminalRef" />
     </div>
+    <!-- 命令编辑器 -->
+    <shell-editor-modal ref="modal"
+                        :closable="false"
+                        :body-style="{ padding: '16px 16px 16px 0' }"
+                        :dark="themeSchema.dark"
+                        cancel-text="关闭"
+                        @ok="writeCommand(modal.getValue())" />
   </div>
 </template>
 
@@ -51,13 +58,15 @@
 </script>
 
 <script lang="ts" setup>
+  import type { SidebarAction } from '../../types/terminal.const';
   import type { ITerminalSession, TerminalTabItem } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';
   import IconActions from '@/views/host/terminal/components/layout/icon-actions.vue';
-  import { connectStatusKey, SidebarAction } from '@/views/host/terminal/types/terminal.const';
+  import { connectStatusKey } from '../../types/terminal.const';
   import { adjustColor } from '@/utils';
+  import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -67,24 +76,38 @@
   const { getDictValue } = useDictStore();
   const { preference, sessionManager } = useTerminalStore();
 
+  const modal = ref();
   const commandInput = ref();
   const themeSchema = preference.themeSchema;
   const terminalRef = ref();
   const session = ref<ITerminalSession>();
 
   // FIXME
-  // 命令编辑器 搜索
+  // 卸载 最外层 terminal 组件, 卸载 style
+  // terminal themes 改成非同步 style
   // (改成可配置/拆分)
   // 自定义 font siderBar 颜色, 集成到主题里面, 现在的问题是切换主题字体颜色就变了
+  // 是否开启 link, url 匹配策略
+  // 是否开启 image
+  // search color 配置
   // 右键菜单补充
+  // 搜索
   // 搜索插件, link插件
+  // 截屏
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {
     const value = commandInput.value;
-    if (value && e.code === 'F8' && session.value?.canWrite) {
-      session.value.paste(value);
+    if (value && e.code === 'F8') {
+      writeCommand(value);
       commandInput.value = undefined;
+    }
+  };
+
+  // 发送命令
+  const writeCommand = (value: string) => {
+    if (session.value?.canWrite) {
+      session.value.paste(value);
     }
   };
 
@@ -140,6 +163,7 @@
       content: '命令编辑器',
       disabled: session.value?.canWrite,
       click: () => {
+        modal.value.open('', '');
       }
     }, {
       icon: 'icon-search',
@@ -268,6 +292,11 @@
         height: 28px;
         font-size: 20px;
       }
+    }
+
+    .status-bridge {
+      margin: 0 2px 0 8px;
+      user-select: none;
     }
   }
 

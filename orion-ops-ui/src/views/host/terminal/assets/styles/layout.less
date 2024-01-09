@@ -44,7 +44,7 @@ body[terminal-theme='dark'] {
 }
 
 // arco 亮色配色
-body .host-layout {
+body .host-layout, .arco-modal-container {
   --color-white: #ffffff;
   --color-black: #000000;
   --color-border: rgb(var(--gray-3));
@@ -115,7 +115,8 @@ body .host-layout {
 }
 
 // arco 暗色配色
-body[terminal-theme='dark'] .host-layout {
+body[terminal-theme='dark'] .host-layout,
+body[terminal-theme='dark'] .arco-modal-container {
   --color-white: rgba(255, 255, 255, 0.9);
   --color-black: #000000;
   --color-border: #333335;
@@ -125,6 +126,7 @@ body[terminal-theme='dark'] .host-layout {
   --color-bg-4: #313132;
   --color-bg-5: #373739;
   --color-bg-white: #f6f6f6;
+  --color-neutral-3: rgba(255, 255, 255, 0.12);
   --color-text-1: rgba(255, 255, 255, 0.9);
   --color-text-2: rgba(255, 255, 255, 0.7);
   --color-text-3: rgba(255, 255, 255, 0.5);

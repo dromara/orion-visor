@@ -18,3 +18,4 @@ declare module 'monaco-editor';
 declare module 'monaco-editor/esm/vs/editor/editor.worker?worker'
 declare module 'monaco-editor/esm/vs/language/json/json.worker?worker'
 declare module 'monaco-editor/esm/vs/basic-languages/yaml/yaml.js';
+declare module 'monaco-editor/esm/vs/basic-languages/shell/shell.js';
