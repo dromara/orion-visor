@@ -5,7 +5,7 @@
             position="left"
             :lazy-load="true"
             :destroy-on-hide="true"
-            @tab-click="clickTab">
+            @tab-click="k => clickTab(k as string)">
       <!-- 个人信息 -->
       <a-tab-pane key="mineInfo"
                   v-if="!user || hasPermission('infra:system-user:update')"

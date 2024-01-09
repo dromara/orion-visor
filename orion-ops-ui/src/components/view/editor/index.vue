@@ -1,9 +1,9 @@
 <template>
   <div ref="editorContainer"
-       :class="{
-         'editor-wrapper': true,
-         [containerClass]: !!containerClass
-       }"
+       class="editor-wrapper"
+       :class="[
+         !!containerClass ? containerClass : ''
+       ]"
        :style="{
           ...containerStyle
        }" />
@@ -22,6 +22,7 @@
   import { createDefaultOptions } from './core';
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import { useAppStore } from '@/store';
+  import { language as shellLanguage } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js';
 
   const appStore = useAppStore();
 
@@ -82,6 +83,48 @@
       emits('update:modelValue', value);
       emits('change', value);
     });
+
+    // FIXME test containerClass
+    // TODO
+    // 代码提示
+    monaco.languages.registerCompletionItemProvider('shell', {
+      provideCompletionItems() {
+        const suggestions: any = [];
+        // 这个keywords就是java.java文件中有的
+        shellLanguage.keywords?.forEach((item: any) => {
+          suggestions.push({
+            label: item,
+            kind: monaco.languages.CompletionItemKind.Keyword,
+            insertText: item,
+          });
+        });
+        shellLanguage.operators?.forEach((item: any) => {
+          suggestions.push({
+            label: item,
+            kind: monaco.languages.CompletionItemKind.Operator,
+            insertText: item,
+          });
+        });
+        shellLanguage.builtinFunctions?.forEach((item: any) => {
+          suggestions.push({
+            label: item,
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: item,
+          });
+        });
+        shellLanguage.builtinVariables?.forEach((item: any) => {
+          suggestions.push({
+            label: item,
+            kind: monaco.languages.CompletionItemKind.Variable,
+            insertText: item,
+          });
+        });
+        return {
+          suggestions,
+        };
+      },
+    });
+
     emits('editor-mounted', editor);
   };
 

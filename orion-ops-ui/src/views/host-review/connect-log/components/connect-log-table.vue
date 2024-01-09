@@ -1,7 +1,7 @@
 <template>
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
-    <a-query-header :model="formModel"
+    <query-header :model="formModel"
                     label-align="left"
                     :itemOptions="{ 5: { span: 2 } }"
                     @submit="fetchTableData"
@@ -42,7 +42,7 @@
                         show-time
                         format="YYYY-MM-DD HH:mm:ss" />
       </a-form-item>
-    </a-query-header>
+    </query-header>
   </a-card>
   <!-- 表格 -->
   <a-card class="general-card table-card">

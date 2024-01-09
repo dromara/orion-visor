@@ -235,7 +235,7 @@
   };
 
   // 打开配置
-  const openSetting = inject<(record: HostQueryResponse) => void>(openSshModalKey);
+  const openSetting = inject<(record: HostQueryResponse) => void>(openSshModalKey) as any;
 
   // 设置收藏
   const setFavorite = async (item: HostQueryResponse) => {

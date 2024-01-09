@@ -11,7 +11,7 @@
            :unmount-on-close="true"
            :footer="false"
            @close="handleClose">
-    <div :style="{width: '100%', 'height': height}">
+    <div :style="{ width: '100%', 'height': height }">
       <editor v-model="value" readonly />
     </div>
   </a-modal>
@@ -19,7 +19,7 @@
 
 <script lang="ts">
   export default {
-    name: 'jsonViewModal'
+    name: 'jsonEditorModal'
   };
 </script>
 
@@ -44,7 +44,6 @@
   const title = ref<string>();
   const value = ref<string | any>();
 
-
   // 打开
   const open = (editorValue: string | any, editorTitle = 'json') => {
     title.value = editorTitle;
@@ -62,6 +61,7 @@
   const handleClose = () => {
     setVisible(false);
   };
+
 </script>
 
 <style lang="less" scoped>

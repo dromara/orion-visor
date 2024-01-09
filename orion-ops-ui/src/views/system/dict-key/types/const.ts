@@ -45,6 +45,6 @@ export const dictKeys = [dictValueTypeKey];
  * 额外参数类型
  */
 export interface ExtraParamType {
-  name?: string;
-  type?: string;
+  name: string;
+  type: string;
 }

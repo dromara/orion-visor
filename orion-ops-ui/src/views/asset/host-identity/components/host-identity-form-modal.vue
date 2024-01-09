@@ -41,7 +41,6 @@
                     v-if="!isAddHandle"
                     class="password-switch"
                     type="round"
-                    size="large"
                     checked-text="使用新密码"
                     unchecked-text="使用原密码" />
         </a-form-item>

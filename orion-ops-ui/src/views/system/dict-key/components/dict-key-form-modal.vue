@@ -161,7 +161,7 @@
       return;
     }
     extraSchemaArr.value.push({
-      name: name,
+      name: name as string,
       type: type || ValueType.STRING
     });
   };

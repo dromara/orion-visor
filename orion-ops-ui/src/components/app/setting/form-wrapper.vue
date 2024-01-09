@@ -10,7 +10,7 @@
   <!-- 开关 -->
   <a-switch v-else-if="type === 'switch'"
             type="round"
-            :default-checked="defaultValue"
+            :default-checked="defaultValue as boolean"
             size="small"
             @change="handleChange" />
   <!-- 单选按钮 -->

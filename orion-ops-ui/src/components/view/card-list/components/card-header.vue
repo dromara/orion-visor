@@ -12,7 +12,7 @@
                         size="mini"
                         v-model:current="(pagination as PaginationProps).current"
                         v-model:page-size="(pagination as PaginationProps).pageSize"
-                        v-bind="pagination"
+                        v-bind="pagination as any"
                         :auto-adjust="false"
                         @change="page => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, page, (pagination as PaginationProps).pageSize)"
                         @page-size-change="limit => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, 1, limit)" />

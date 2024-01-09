@@ -10,7 +10,7 @@
                   type="round"
                   :checked-value="1"
                   :unchecked-value="0"
-                  :beforeChange="updateStatus" />
+                  :beforeChange="s => updateStatus(s as number)" />
       </div>
     </template>
     <a-spin v-show="config.status" :loading="loading" class="config-form-wrapper">
@@ -48,7 +48,7 @@
           <a-radio-group type="button"
                          class="auth-type-group usn"
                          v-model="formModel.authType"
-                         :options="toOptions(sshAuthTypeKey)" />
+                         :options="toOptions(sshAuthTypeKey) as RadioOption[]" />
         </a-form-item>
         <!-- 主机密码 -->
         <a-form-item v-if="SshAuthType.PASSWORD === formModel.authType"
@@ -63,7 +63,6 @@
                     v-model="formModel.useNewPassword"
                     class="password-switch"
                     type="round"
-                    size="large"
                     checked-text="使用新密码"
                     unchecked-text="使用原密码" />
         </a-form-item>
@@ -136,6 +135,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import type { FieldRule } from '@arco-design/web-vue';
   import type { HostSshConfig } from './types/const';
   import { reactive, ref, watch } from 'vue';
@@ -145,10 +145,10 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
-  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
   import { EnabledStatus } from '@/types/const';
   import { HostConfigType } from '../../../types/const';
+  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();

@@ -1,5 +1,5 @@
 <template>
-  <a-query-header :model="formModel"
+  <query-header :model="formModel"
                   label-align="left"
                   :itemOptions="{ [visibleUser ? 5 : 4]: { span: 2 } }"
                   @submit="submit"
@@ -21,7 +21,7 @@
                 :allow-search="true"
                 :filter-option="labelFilter"
                 placeholder="请选择操作模块"
-                @change="selectedModule"
+                @change="m => selectedModule(m as string)"
                 allow-clear />
     </a-form-item>
     <!-- 操作类型 -->
@@ -55,7 +55,7 @@
                       show-time
                       format="YYYY-MM-DD HH:mm:ss" />
     </a-form-item>
-  </a-query-header>
+  </query-header>
 </template>
 
 <script lang="ts">

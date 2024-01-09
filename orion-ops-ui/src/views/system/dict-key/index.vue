@@ -10,7 +10,7 @@
                          @added="modalAddCallback"
                          @updated="modalUpdateCallback" />
     <!-- json 查看器模态框 -->
-    <json-view-modal ref="view" />
+    <json-editor-modal ref="view" />
   </div>
 </template>
 
@@ -24,7 +24,7 @@
   import { ref, onBeforeMount } from 'vue';
   import DictKeyTable from './components/dict-key-table.vue';
   import DictKeyFormModal from './components/dict-key-form-modal.vue';
-  import JsonViewModal from '@/components/view/json/json-view-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
 

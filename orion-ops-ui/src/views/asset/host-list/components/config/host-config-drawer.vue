@@ -18,7 +18,7 @@
       <!-- SSH 配置 -->
       <ssh-config-form :host-id="record.id"
                        :content="config.ssh"
-                       @submitted="(e) => config.ssh.config = e" />
+                       @submitted="(e) => config.ssh = e" />
     </a-spin>
   </a-drawer>
 </template>
@@ -31,6 +31,7 @@
 
 <script lang="ts" setup>
   import type { HostConfigWrapper } from '../../types/const';
+  import { HostSshConfig } from './ssh/types/const';
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
@@ -46,7 +47,7 @@
 
   const record = ref({} as any);
   const config = ref<HostConfigWrapper>({
-    ssh: undefined
+    ssh: {} as HostSshConfig
   });
 
   // 打开

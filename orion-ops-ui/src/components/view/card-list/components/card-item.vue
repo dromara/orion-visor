@@ -49,7 +49,7 @@
                      'field-value',
                      field.ellipsis ? 'field-value-ellipsis' : ''
                    ]">
-              <slot :name="field.slotName" :record="item" :index="index" :key="item[key]">
+              <slot :name="field.slotName" :record="item" :index="index" :key="item[key as string]">
                 <a-tooltip v-if="field.tooltip" :content="item[field.dataIndex]">
                   <span v-if="field.render" v-html="field.render({ record: item, index })" />
                   <span v-else>{{ item[field.dataIndex] }}</span>

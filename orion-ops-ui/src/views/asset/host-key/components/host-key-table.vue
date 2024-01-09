@@ -1,7 +1,7 @@
 <template>
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
-    <a-query-header :model="formModel"
+    <query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
                     @reset="fetchTableData"
@@ -17,7 +17,7 @@
       <a-form-item field="name" label="名称" label-col-flex="30px">
         <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
-    </a-query-header>
+    </query-header>
   </a-card>
   <!-- 表格 -->
   <a-card class="general-card table-card">

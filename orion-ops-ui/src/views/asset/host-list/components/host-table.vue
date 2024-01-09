@@ -1,7 +1,7 @@
 <template>
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
-    <a-query-header :model="formModel"
+    <query-header :model="formModel"
                     label-align="left"
                     @submit="fetchTableData"
                     @reset="fetchTableData"
@@ -35,7 +35,7 @@
                             :tagColor="tagColor"
                             placeholder="请选择主机标签" />
       </a-form-item>
-    </a-query-header>
+    </query-header>
   </a-card>
   <!-- 表格 -->
   <a-card class="general-card table-card">

@@ -15,7 +15,7 @@
         <a-radio-group
           v-model:model-value="type"
           type="button"
-          @change="typeChange"
+          @change="s => typeChange(s as string)"
         >
           <a-radio value="text">
             {{ $t('workplace.popularContent.text') }}

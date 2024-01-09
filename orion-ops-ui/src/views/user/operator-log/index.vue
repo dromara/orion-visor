@@ -20,7 +20,7 @@
       <operator-log-table ref="table" @viewDetail="(e) => view.open(e)" />
     </a-card>
     <!-- json 查看器模态框 -->
-    <json-view-modal ref="view" />
+    <json-editor-modal ref="view" />
   </div>
 </template>
 
@@ -36,7 +36,7 @@
   import { dictKeys } from './types/const';
   import OperatorLogQueryHeader from './components/operator-log-query-header.vue';
   import OperatorLogTable from './components/operator-log-table.vue';
-  import JsonViewModal from '@/components/view/json/json-view-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
 
   const cacheStore = useCacheStore();
 

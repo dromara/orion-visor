@@ -6,7 +6,7 @@
                   class="role-router"
                   v-model="value"
                   :items="rolesRouter"
-                  @change="(key, item) => emits('change', key, item)" />
+                  @change="(key: number, item: any) => emits('change', key, item)" />
       <!-- 加载中 -->
       <a-skeleton v-else-if="loading"
                   class="skeleton-wrapper"

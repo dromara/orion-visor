@@ -25,7 +25,7 @@
                           @viewDetail="(e) => view.open(e)" />
     </a-card>
     <!-- json 查看器模态框 -->
-    <json-view-modal ref="view" />
+    <json-editor-modal ref="view" />
   </div>
 </template>
 
@@ -43,7 +43,7 @@
   import { dictKeys } from '../../operator-log/types/const';
   import OperatorLogQueryHeader from '../../operator-log/components/operator-log-query-header.vue';
   import OperatorLogTable from '../../operator-log/components/operator-log-table.vue';
-  import JsonViewModal from '@/components/view/json/json-view-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
 
   const props = defineProps({
     user: Object as PropType<UserQueryResponse>,

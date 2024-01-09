@@ -10,16 +10,16 @@
                      class="usn"
                      size="mini"
                      type="button"
-                     :options="toOptions(darkThemeKey)"
-                     @change="changeDarkTheme">
+                     :options="toOptions(darkThemeKey) as RadioOption[]"
+                     @change="s => changeDarkTheme(s as string)">
       </a-radio-group>
     </div>
     <!-- 内容区域 -->
     <div class="terminal-setting-body terminal-theme-container">
       <div class="theme-row"
-           v-for="index in ThemeSchema.length / 2"
-           :key="index">
-        <a-card v-for="(theme, index) in [ThemeSchema[(index - 1) * 2], ThemeSchema[(index - 1) * 2 + 1]]"
+           v-for="rowIndex in ThemeSchema.length / 2"
+           :key="rowIndex">
+        <a-card v-for="(theme, colIndex) in [ThemeSchema[(rowIndex - 1) * 2], ThemeSchema[(rowIndex - 1) * 2 + 1]]"
                 :key="theme.name"
                 class="terminal-theme-card simple-card"
                 :class="{
@@ -28,7 +28,7 @@
                 :title="theme.name"
                 :style="{
                   background: theme.background,
-                  marginRight: index === 0 ? '16px' : 0
+                  marginRight: colIndex === 0 ? '16px' : 0
                 }"
                 :header-style="{
                   color: theme.dark ? 'rgba(255, 255, 255, .8)' : 'rgba(0, 0, 0, .8)',
@@ -53,6 +53,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import { darkThemeKey } from '../../types/terminal.const';
   import ThemeSchema from '../../types/terminal.theme';
   import { useDictStore, useTerminalStore } from '@/store';

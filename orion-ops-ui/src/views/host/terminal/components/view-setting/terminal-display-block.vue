@@ -64,7 +64,7 @@
               <a-radio-group type="button"
                              v-model="formModel.cursorStyle"
                              class="form-item form-item-cursor-style usn"
-                             :options="toOptions(cursorStyleKey)" />
+                             :options="toOptions(cursorStyleKey) as RadioOption[]" />
             </a-form-item>
             <!-- 光标闪烁 -->
             <a-form-item field="cursorBlink" label="光标是否闪烁">
@@ -95,6 +95,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';

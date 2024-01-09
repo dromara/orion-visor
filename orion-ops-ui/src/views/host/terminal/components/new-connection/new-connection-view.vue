@@ -9,8 +9,8 @@
         <a-radio-group v-model="newConnectionType"
                        type="button"
                        class="usn"
-                       :options="toOptions(newConnectionTypeKey)"
-                       @change="changeNewConnectionType" />
+                       :options="toOptions(newConnectionTypeKey) as RadioOption[]"
+                       @change="s => changeNewConnectionType(s as string)" />
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
                          class="host-filter"
@@ -75,6 +75,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
@@ -84,8 +85,8 @@
   import { useAppStore, useDictStore, useTerminalStore } from '@/store';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
-  import HostsView from './hosts-view.vue';
   import { getLatestConnectHostId } from '@/api/asset/host-connect-log';
+  import HostsView from './hosts-view.vue';
 
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
