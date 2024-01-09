@@ -48,7 +48,7 @@
           <a-radio-group type="button"
                          class="auth-type-group usn"
                          v-model="formModel.authType"
-                         :options="toOptions(sshAuthTypeKey) as RadioOption[]" />
+                         :options="toRadioOptions(sshAuthTypeKey)" />
         </a-form-item>
         <!-- 主机密码 -->
         <a-form-item v-if="SshAuthType.PASSWORD === formModel.authType"
@@ -135,7 +135,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import type { FieldRule } from '@arco-design/web-vue';
   import type { HostSshConfig } from './types/const';
   import { reactive, ref, watch } from 'vue';
@@ -151,7 +150,7 @@
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
 
   const { loading, setLoading } = useLoading();
-  const { toOptions } = useDictStore();
+  const { toRadioOptions } = useDictStore();
 
   const props = defineProps({
     content: Object,

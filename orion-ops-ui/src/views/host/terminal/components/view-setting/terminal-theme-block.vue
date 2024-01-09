@@ -10,7 +10,7 @@
                      class="usn"
                      size="mini"
                      type="button"
-                     :options="toOptions(darkThemeKey) as RadioOption[]"
+                     :options="toRadioOptions(darkThemeKey)"
                      @change="s => changeDarkTheme(s as string)">
       </a-radio-group>
     </div>
@@ -53,14 +53,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import { darkThemeKey } from '../../types/terminal.const';
   import ThemeSchema from '../../types/terminal.theme';
   import { useDictStore, useTerminalStore } from '@/store';
   import TerminalExample from './terminal-example.vue';
 
   const { changeThemeSchema, changeDarkTheme, preference } = useTerminalStore();
-  const { toOptions } = useDictStore();
+  const { toRadioOptions } = useDictStore();
 
 </script>
 

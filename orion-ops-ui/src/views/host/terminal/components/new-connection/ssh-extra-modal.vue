@@ -25,7 +25,7 @@
         <a-form-item field="authType" label="验证方式">
           <a-radio-group type="button"
                          v-model="formModel.authType"
-                         :options="toOptions(extraSshAuthTypeKey) as RadioOption[]" />
+                         :options="toRadioOptions(extraSshAuthTypeKey)" />
         </a-form-item>
         <!-- 用户名 -->
         <a-form-item v-if="formModel.authType === ExtraSshAuthType.CUSTOM_KEY"
@@ -61,7 +61,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import type { HostQueryResponse } from '@/api/asset/host';
   import type { SshExtraModel } from '../../types/terminal.const';
   import { ref } from 'vue';
@@ -74,7 +73,7 @@
   import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
   import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
 
-  const { toOptions } = useDictStore();
+  const { toRadioOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 

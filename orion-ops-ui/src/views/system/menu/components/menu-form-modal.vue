@@ -35,7 +35,7 @@
                      label="菜单类型">
           <a-radio-group type="button"
                          v-model="formModel.type"
-                         :options="toOptions(menuTypeKey)" />
+                         :options="toRadioOptions(menuTypeKey)" />
         </a-form-item>
         <!-- 菜单图标 -->
         <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
@@ -86,7 +86,6 @@
                      label="是否可见"
                      tooltip="选择隐藏后不会在菜单以及 tab 中显示 但是可以访问">
           <a-switch type="round"
-                    size="large"
                     v-model="formModel.visible"
                     :checked-text="getDictValue(menuVisibleKey, EnabledStatus.ENABLED)"
                     :unchecked-text="getDictValue(menuVisibleKey, EnabledStatus.DISABLED)"
@@ -99,7 +98,6 @@
                      label="新窗口打开"
                      tooltip="选择后点击菜单会使用新页面打开">
           <a-switch type="round"
-                    size="large"
                     v-model="formModel.newWindow"
                     :checked-text="getDictValue(menuNewWindowKey, EnabledStatus.ENABLED)"
                     :unchecked-text="getDictValue(menuNewWindowKey, EnabledStatus.DISABLED)"
@@ -112,7 +110,6 @@
                      label="是否缓存"
                      tooltip="选择缓存后则会使用 keep-alive 缓存组件">
           <a-switch type="round"
-                    size="large"
                     v-model="formModel.cache"
                     :checked-text="getDictValue(menuCacheKey, EnabledStatus.ENABLED)"
                     :unchecked-text="getDictValue(menuCacheKey, EnabledStatus.DISABLED)"
@@ -147,7 +144,7 @@
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
-  const { toOptions, getDictValue } = useDictStore();
+  const { toRadioOptions, getDictValue } = useDictStore();
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);

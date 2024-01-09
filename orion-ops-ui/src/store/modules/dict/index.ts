@@ -1,3 +1,4 @@
+import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
 import type { DictState } from './types';
 import type { Options } from '@/types/global';
 import { defineStore } from 'pinia';
@@ -26,6 +27,11 @@ export default defineStore('dict', {
     // 获取字典选项
     toOptions(key: string) {
       return this.$state[key];
+    },
+
+    // 获取字典选项
+    toRadioOptions(key: string) {
+      return this.$state[key] as RadioOption[];
     },
 
     // 获取字典值
