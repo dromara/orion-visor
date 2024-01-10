@@ -1,5 +1,6 @@
 import type { Ref } from 'vue';
-import type { ITerminalTabManager, ITerminalSessionManager } from '@/views/host/terminal/types/terminal.type';
+import type { ITerminalSessionManager, ITerminalTabManager } from '@/views/host/terminal/types/terminal.type';
+import type { TerminalTheme } from '@/api/asset/host-terminal';
 
 export interface TerminalState {
   isDarkTheme: Ref<boolean>;
@@ -13,6 +14,7 @@ export interface TerminalPreference {
   darkTheme: string;
   newConnectionType: string;
   displaySetting: TerminalDisplaySetting;
+  theme: TerminalTheme;
   themeSchema: TerminalThemeSchema;
 }
 

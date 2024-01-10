@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
@@ -15,11 +16,18 @@ import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 public interface HostTerminalService {
 
     /**
+     * 获取主机终端主题
+     *
+     * @return themes
+     */
+    JSONArray getTerminalThemes();
+
+    /**
      * 获取主机终端访问 accessToken
      *
      * @return accessToken
      */
-    String getHostTerminalAccessToken();
+    String getTerminalAccessToken();
 
     /**
      * 通过 accessToken 获取主机终端访问信息

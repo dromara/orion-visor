@@ -47,7 +47,8 @@
                         :body-style="{ padding: '16px 16px 16px 0' }"
                         :dark="themeSchema.dark"
                         cancel-text="关闭"
-                        @ok="writeCommand(modal.getValue())" />
+                        @ok="writeCommand(modal.getValue())"
+                        @cancel="focus" />
   </div>
 </template>
 
@@ -83,17 +84,18 @@
   const session = ref<ITerminalSession>();
 
   // FIXME
-  // 卸载 最外层 terminal 组件, 卸载 style
+  // 调教 theme
   // terminal themes 改成非同步 style
+  // 从后端获取 theme
   // (改成可配置/拆分)
   // 自定义 font siderBar 颜色, 集成到主题里面, 现在的问题是切换主题字体颜色就变了
-  // 是否开启 link, url 匹配策略
+  // 是否开启 link
   // 是否开启 image
   // search color 配置
   // 右键菜单补充
   // 搜索
-  // 搜索插件, link插件
   // 截屏
+  // 最近连接逻辑 偏好逻辑
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {
@@ -109,6 +111,11 @@
     if (session.value?.canWrite) {
       session.value.paste(value);
     }
+  };
+
+  // 聚焦
+  const focus = () => {
+    session.value?.focus();
   };
 
   // 右侧操作
@@ -310,7 +317,7 @@
       width: 100%;
       height: 100%;
 
-      ::-webkit-scrollbar {
+      ::-webkit-scrollbar-track {
         display: none;
       }
     }

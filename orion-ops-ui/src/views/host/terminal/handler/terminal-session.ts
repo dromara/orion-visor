@@ -70,6 +70,7 @@ export default class TerminalSession implements ITerminalSession {
   connect(): void {
     this.status = TerminalStatus.CONNECTED;
     this.connected = true;
+    this.inst.focus();
     // 注册输入事件
     this.inst.onData(s => {
       if (!this.canWrite) {

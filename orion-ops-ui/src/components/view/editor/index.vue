@@ -43,6 +43,10 @@
       type: Boolean,
       default: false
     },
+    autoFocus: {
+      type: Boolean,
+      default: false
+    },
     language: {
       type: String,
       default: 'json',
@@ -76,6 +80,10 @@
     };
     // 创建编辑器
     editor = monaco.editor.create(editorContainer.value, options);
+    // 自动聚焦
+    if (props.autoFocus) {
+      editor.focus();
+    }
     // 监听值的变化
     editor.onDidChangeModelContent(() => {
       const value = editor.getValue();

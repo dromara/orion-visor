@@ -43,6 +43,7 @@
   const dictStore = useDictStore();
   const cacheStore = useCacheStore();
 
+  const originTitle = document.title;
   const render = ref(false);
 
   // 关闭视口处理
@@ -54,6 +55,9 @@
   // 加载用户终端偏好
   onBeforeMount(async () => {
     await terminalStore.fetchPreference();
+    // 设置系统主题配色
+    const dark = terminalStore.preference.theme.dark;
+    document.body.setAttribute('terminal-theme', dark ? 'dark' : 'light');
     render.value = true;
   });
 
@@ -73,6 +77,10 @@
     cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities');
     // 移除关闭视口事件
     window.removeEventListener('beforeunload', handleBeforeUnload);
+    // 去除 body style
+    document.body.removeAttribute('terminal-theme');
+    // 重置 title
+    document.title = originTitle;
   });
 
 </script>

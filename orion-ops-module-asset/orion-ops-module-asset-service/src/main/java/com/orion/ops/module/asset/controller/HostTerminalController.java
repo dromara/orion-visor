@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,11 +33,17 @@ public class HostTerminalController {
     @Resource
     private HostTerminalService hostTerminalService;
 
+    @GetMapping("/themes")
+    @Operation(summary = "获取主机终端主题")
+    public JSONArray getTerminalThemes() {
+        return hostTerminalService.getTerminalThemes();
+    }
+
     @GetMapping("/access")
     @Operation(summary = "获取主机终端 accessToken")
     @PreAuthorize("@ss.hasPermission('asset:host-terminal:access')")
-    public String getHostTerminalAccessToken() {
-        return hostTerminalService.getHostTerminalAccessToken();
+    public String getTerminalAccessToken() {
+        return hostTerminalService.getTerminalAccessToken();
     }
 
 }

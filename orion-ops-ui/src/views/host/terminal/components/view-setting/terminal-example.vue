@@ -31,11 +31,11 @@
     term.value.open(terminal.value);
     term.value.write(
       '[1;94m[root[0m@[1;96mOrionServer usr]#[0m\r\n' +
-      '[92mdr-xr-xr-x.[0m   2 root root [96mbin[0m\r\n' +
-      '[92mdr-xr-xr-x.[0m   2 root root [96msbin[0m\r\n' +
-      '[92mdr-xr-xr-x.[0m  43 root root [96mlib[0m\r\n' +
-      '[92mdr-xr-xr-x.[0m  62 root root [96mlib64[0m\r\n' +
-      '[92mlrwxrwxrwx.[0m   1 root root [90;102mtmp[0m'
+      'dr-xr-xr-x.  2 root root [0m[01;34mbin[0m\r\n' +
+      'dr-xr-xr-x.  2 root root [01;34msbin[0m\r\n' +
+      'drwxr-xr-x. 89 root root [01;34mshare[0m\r\n' +
+      'drwxr-xr-x.  4 root root [01;34msrc[0m\r\n' +
+      'lrwxrwxrwx.  1 root root [01;36mtmp[0m -> [30;42m../var/tmp[0m'
     );
   });
 

@@ -5,16 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.lang.utils.Colors;
-import com.orion.lang.utils.awt.Clipboards;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.FileReaders;
 import com.orion.lang.utils.io.Files1;
-import com.orion.lang.utils.reflect.Fields;
 import lombok.Data;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +27,14 @@ public class TerminalThemeFetcher {
     public static void main(String[] args) {
         List<File> files = Files1.listFiles("D:\\idea-project\\iTerm2-Color-Schemes\\vhs");
         // 过滤的 theme
-        List<String> schemaFilter = new ArrayList<>();
-        // List<String> schemaFilter = Lists.of("oneHalf", "material", "github", "iTerm2", "JetBrains");
-        // List<String> schemaFilter = Lists.of("catppuccin", "3024", "OneHalfDark", "OneHalfLight", "MaterialDesignColors", "MaterialOcean", "Solarized Light");
+        List<String> schemaFilter = Lists.of(
+                "catppuccin-macchiato", "catppuccin-mocha",
+                "OneHalfDark", "MaterialDesignColors",
+                "Dracula", "Dracula+",
+                "Apple System Colors", "Builtin Tango Light",
+                "Duotone Dark", "BlulocoLight",
+                "Chester", "CLRS"
+        );
         // 颜色大写
         ValueFilter colorFilter = (Object object, String name, Object value) -> {
             if (value instanceof String && value.toString().contains("#")) {
@@ -44,32 +46,26 @@ public class TerminalThemeFetcher {
         // 转换
         List<TerminalTheme> arr = files.stream()
                 .filter(f -> Lists.isEmpty(schemaFilter) || schemaFilter.stream()
-                        .anyMatch(s -> f.getName().toLowerCase().contains(s.toLowerCase())))
-                .limit(200)
+                        .map(s -> s + ".json")
+                        .anyMatch(s -> f.getName().equalsIgnoreCase(s)))
                 .map(f -> {
                     JSONObject schema = JSONObject.parseObject(new String(FileReaders.readAllBytes(f)));
-                    schema.put("dark", Colors.isDarkColor(schema.getString("background")));
                     schema.put("selectionBackground", schema.getString("selection"));
-                    // 转为对象
-                    return JSON.parseObject(JSON.toJSONString(schema, colorFilter), TerminalTheme.class);
+                    TerminalTheme theme = new TerminalTheme();
+                    theme.setName(schema.getString("name"));
+                    theme.setDark(Colors.isDarkColor(schema.getString("background")));
+                    theme.setSchema(JSON.parseObject(JSON.toJSONString(schema), TerminalThemeSchema.class));
+                    return theme;
                 }).collect(Collectors.toList());
-
+        // 排序
+        if (!Lists.isEmpty(schemaFilter)) {
+            arr.sort(Comparator.comparing(s -> schemaFilter.indexOf(s.getName())));
+        }
         // 打印 json
         String json = JSON.toJSONString(arr, colorFilter);
         System.out.println("\n\n" + json);
-        // 转为 jsCode
-        List<String> formatter = Fields.getFields(TerminalTheme.class)
-                .stream()
-                .map(Field::getName)
-                .collect(Collectors.toList());
-        for (String s : formatter) {
-            json = json.replaceAll("\"" + s + "\"", s);
-        }
-        Clipboards.setString(json);
-        System.out.println("\n\njsCode 已复制到剪切板");
     }
 
-    //
     /*
       var term = new Terminal();
       var doc = document.getElementById('themes');
@@ -110,44 +106,50 @@ public class TerminalThemeFetcher {
         @JSONField(ordinal = 1)
         private Boolean dark;
         @JSONField(ordinal = 2)
+        private TerminalThemeSchema schema;
+    }
+
+    @Data
+    public static class TerminalThemeSchema {
+        @JSONField(ordinal = 0)
         private String background;
-        @JSONField(ordinal = 3)
+        @JSONField(ordinal = 1)
         private String foreground;
-        @JSONField(ordinal = 4)
+        @JSONField(ordinal = 2)
         private String cursor;
-        @JSONField(ordinal = 5)
+        @JSONField(ordinal = 3)
         private String selectionBackground;
-        @JSONField(ordinal = 6)
+        @JSONField(ordinal = 4)
         private String black;
-        @JSONField(ordinal = 7)
+        @JSONField(ordinal = 5)
         private String red;
-        @JSONField(ordinal = 8)
+        @JSONField(ordinal = 6)
         private String green;
-        @JSONField(ordinal = 9)
+        @JSONField(ordinal = 7)
         private String yellow;
-        @JSONField(ordinal = 10)
+        @JSONField(ordinal = 8)
         private String blue;
-        @JSONField(ordinal = 11)
+        @JSONField(ordinal = 9)
         private String magenta;
-        @JSONField(ordinal = 12)
+        @JSONField(ordinal = 10)
         private String cyan;
-        @JSONField(ordinal = 13)
+        @JSONField(ordinal = 11)
         private String white;
-        @JSONField(ordinal = 14)
+        @JSONField(ordinal = 12)
         private String brightBlack;
-        @JSONField(ordinal = 15)
+        @JSONField(ordinal = 13)
         private String brightRed;
-        @JSONField(ordinal = 16)
+        @JSONField(ordinal = 14)
         private String brightGreen;
-        @JSONField(ordinal = 17)
+        @JSONField(ordinal = 15)
         private String brightYellow;
-        @JSONField(ordinal = 18)
+        @JSONField(ordinal = 16)
         private String brightBlue;
-        @JSONField(ordinal = 19)
+        @JSONField(ordinal = 17)
         private String brightMagenta;
-        @JSONField(ordinal = 20)
+        @JSONField(ordinal = 18)
         private String brightCyan;
-        @JSONField(ordinal = 21)
+        @JSONField(ordinal = 19)
         private String brightWhite;
     }
 

@@ -14,6 +14,7 @@
     <div :style="{ width: '100%', 'height': height }">
       <editor v-model="value"
               language="shell"
+              :auto-focus="true"
               :theme="dark ? 'vs-dark' : 'vs'" />
     </div>
   </a-modal>

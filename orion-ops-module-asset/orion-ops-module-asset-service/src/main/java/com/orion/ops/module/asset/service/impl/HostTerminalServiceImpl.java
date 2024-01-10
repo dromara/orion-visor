@@ -1,9 +1,11 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.orion.lang.exception.AuthenticationException;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.io.StreamReaders;
 import com.orion.net.host.SessionHolder;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.framework.common.constant.Const;
@@ -40,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +56,8 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class HostTerminalServiceImpl implements HostTerminalService {
+
+    private static final String TERMINAL_PATH = "/template/theme/terminal.theme.json";
 
     @Resource
     private HostConfigService hostConfigService;
@@ -82,7 +87,17 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     private SystemUserApi systemUserApi;
 
     @Override
-    public String getHostTerminalAccessToken() {
+    public JSONArray getTerminalThemes() {
+        try (InputStream in = HostTerminalService.class.getResourceAsStream(TERMINAL_PATH)) {
+            byte[] bytes = StreamReaders.readAllBytes(in);
+            return JSONArray.parseArray(new String(bytes));
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    @Override
+    public String getTerminalAccessToken() {
         LoginUser user = SecurityUtils.getLoginUser();
         log.info("HostConnectService.getHostAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();

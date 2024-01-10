@@ -1,13 +1,6 @@
-import type {
-  InputPayload,
-  ITerminalChannel,
-  ITerminalOutputProcessor,
-  ITerminalSessionManager,
-  OutputPayload,
-  Protocol,
-} from '../types/terminal.type';
+import type { InputPayload, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload, Protocol, } from '../types/terminal.type';
 import { OutputProtocol } from '../types/terminal.protocol';
-import { getHostTerminalAccessToken } from '@/api/asset/host-terminal';
+import { getTerminalAccessToken } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
 import { sleep } from '@/utils';
 import TerminalOutputProcessor from './terminal-output-processor';
@@ -28,7 +21,7 @@ export default class TerminalChannel implements ITerminalChannel {
   // 初始化
   async init() {
     // 获取 access
-    const { data: accessToken } = await getHostTerminalAccessToken();
+    const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
     this.client = new WebSocket(`${wsBase}/host/terminal/${accessToken}`);
     this.client.onerror = event => {

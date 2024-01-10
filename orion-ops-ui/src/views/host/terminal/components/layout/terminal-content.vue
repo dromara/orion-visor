@@ -30,11 +30,30 @@
 <script lang="ts" setup>
   import { TabType, InnerTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
+  import { watch } from 'vue';
   import TerminalViewSetting from '../view-setting/terminal-view-setting.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
-  import TerminalView from '../xterm/terminal-view.vue';
 
-  const { tabManager } = useTerminalStore();
+  import TerminalView from '../xterm/terminal-view.vue';
+  const { tabManager, sessionManager } = useTerminalStore();
+
+  // 监听 tab 修改
+  watch(() => tabManager.active, active => {
+    if (!active) {
+      return;
+    }
+    // 获取 tab
+    const tab = tabManager.items.find(s => s.key === active);
+    if (!tab) {
+      return;
+    }
+    // 修改标题
+    document.title = tab.title;
+    // terminal 自动聚焦
+    if (tab?.type === TabType.TERMINAL) {
+      sessionManager.getSession(active)?.focus();
+    }
+  });
 
 </script>
 

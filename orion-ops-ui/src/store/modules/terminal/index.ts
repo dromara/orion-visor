@@ -3,9 +3,10 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { Message } from '@arco-design/web-vue';
 import { useDark } from '@vueuse/core';
-import { DEFAULT_SCHEMA } from '@/views/host/terminal/types/terminal.theme';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
+import type { TerminalTheme } from '@/api/asset/host-terminal';
+import { getTerminalThemes } from '@/api/asset/host-terminal';
 
 // 暗色主题
 export const DarkTheme = {
@@ -28,7 +29,8 @@ export default defineStore('terminal', {
       darkTheme: 'auto',
       newConnectionType: 'group',
       displaySetting: {} as TerminalDisplaySetting,
-      themeSchema: {} as TerminalThemeSchema
+      themeSchema: {} as TerminalThemeSchema,
+      theme: {} as TerminalTheme
     },
     tabManager: new TerminalTabManager(),
     sessionManager: new TerminalSessionManager()
@@ -38,25 +40,21 @@ export default defineStore('terminal', {
     // 加载终端偏好
     async fetchPreference() {
       try {
+        // 加载偏好
         const { data } = await getPreference<TerminalPreference>('TERMINAL');
-        // 设置默认终端主题
-        if (!data.themeSchema?.name) {
-          data.themeSchema = DEFAULT_SCHEMA;
+        // theme 不存在则默认加载第一个
+        if (!data.theme) {
+          const { data: themes } = await getTerminalThemes();
+          data.theme = themes[0];
         }
         this.preference = data;
-        // 设置暗色主题
-        const userDarkTheme = data.darkTheme;
-        if (userDarkTheme === DarkTheme.AUTO) {
-          this.isDarkTheme = data.themeSchema?.dark === true;
-        } else {
-          this.isDarkTheme = userDarkTheme === DarkTheme.DARK;
-        }
       } catch (e) {
         Message.error('配置加载失败');
       }
     },
 
     // 修改暗色主题
+    // FIXME 删除 terminalDarkTheme
     async changeDarkTheme(darkTheme: string) {
       this.preference.darkTheme = darkTheme;
       if (darkTheme === DarkTheme.DARK) {
