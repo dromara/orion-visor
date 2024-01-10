@@ -21,9 +21,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TerminalPreferenceModel implements PreferenceModel {
 
-    @Schema(description = "暗色主题")
-    private String darkTheme;
-
     @Schema(description = "新建连接类型")
     private String newConnectionType;
 
@@ -34,7 +31,7 @@ public class TerminalPreferenceModel implements PreferenceModel {
     private JSONObject backgroundSetting;
 
     @Schema(description = "终端主题")
-    private JSONObject themeSchema;
+    private JSONObject theme;
 
     @Data
     @Builder

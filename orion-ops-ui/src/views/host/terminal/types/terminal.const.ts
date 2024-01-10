@@ -24,14 +24,24 @@ export const InnerTabs = {
     title: '新建连接',
     type: TabType.SETTING
   },
+  SFTP_SETTING: {
+    key: 'sftpSetting',
+    title: 'sftp设置',
+    type: TabType.SETTING
+  },
   SHORTCUT_SETTING: {
     key: 'shortcutSetting',
     title: '快捷键设置',
     type: TabType.SETTING
   },
-  TOOL_SETTING: {
-    key: 'toolSetting',
-    title: '终端设置',
+  DISPLAY_SETTING: {
+    key: 'displaySetting',
+    title: '显示设置',
+    type: TabType.SETTING
+  },
+  INTERACT_SETTING: {
+    key: 'interactSetting',
+    title: '交互设置',
     type: TabType.SETTING
   },
   THEME_SETTING: {
@@ -39,7 +49,36 @@ export const InnerTabs = {
     title: '主题设置',
     type: TabType.SETTING
   },
+  TERMINAL_SETTING: {
+    key: 'terminalSetting',
+    title: '终端设置',
+    type: TabType.SETTING
+  },
 };
+
+// TODO
+// 显示设置
+// 显示基础设置
+// 右侧栏
+
+// 交互设置
+// 右键选中词条
+// 右键粘贴
+// 启用右键菜单
+// 自动将选中内容复制到剪切板
+// 粘贴时删除空格
+// 复制时删除空格
+// 分隔符  /\()"'-.,:;<>~!@#$%^&*|+=[]{}~?│   在终端中双击文本将使用到这些符号
+// 自动检测 url 并可以点击
+// 支持显示图片 使用 sixel 打开图片
+
+// 终端设置
+// bell sound
+// terminal emulation type: xterm 256color
+// 回滚（ScrollBack）
+// 保存在缓冲区的行数
+
+
 
 // 新建连接类型
 export const NewConnectionType = {
