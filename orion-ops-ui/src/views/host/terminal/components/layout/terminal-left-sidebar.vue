@@ -29,7 +29,7 @@
   const topActions: Array<SidebarAction> = [
     {
       icon: 'icon-plus',
-      content: '新建连接',
+      content: InnerTabs.NEW_CONNECTION.title,
       click: () => tabManager.openTab(InnerTabs.NEW_CONNECTION)
     },
   ];
@@ -38,13 +38,19 @@
   const bottomActions: Array<SidebarAction> = [
     {
       icon: 'icon-command',
-      content: '快捷键设置',
+      content: InnerTabs.SHORTCUT_SETTING.title,
+      visible: false,
       click: () => tabManager.openTab(InnerTabs.SHORTCUT_SETTING)
     },
     {
+      icon: 'icon-tool',
+      content: InnerTabs.TOOL_SETTING.title,
+      click: () => tabManager.openTab(InnerTabs.TOOL_SETTING)
+    },
+    {
       icon: 'icon-palette',
-      content: '外观设置',
-      click: () => tabManager.openTab(InnerTabs.VIEW_SETTING)
+      content: InnerTabs.THEME_SETTING.title,
+      click: () => tabManager.openTab(InnerTabs.THEME_SETTING)
     },
   ];
 

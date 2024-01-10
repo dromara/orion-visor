@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 终端主题拉取 __META__
+ * 终端主题生成 __META__
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/12/7 10:52
  */
-public class TerminalThemeFetcher {
+public class TerminalThemeGenerator {
 
     public static void main(String[] args) {
         List<File> files = Files1.listFiles("D:\\idea-project\\iTerm2-Color-Schemes\\vhs");
@@ -33,7 +33,8 @@ public class TerminalThemeFetcher {
                 "Dracula", "Dracula+",
                 "Apple System Colors", "Builtin Tango Light",
                 "Duotone Dark", "BlulocoLight",
-                "Chester", "CLRS"
+                "Chester", "CLRS",
+                "Calamity", "Tomorrow"
         );
         // 颜色大写
         ValueFilter colorFilter = (Object object, String name, Object value) -> {

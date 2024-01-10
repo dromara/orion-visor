@@ -2,21 +2,21 @@
   <div class="terminal-setting-container">
     <div class="terminal-setting-wrapper">
       <!-- 主标题 -->
-      <h2 class="terminal-setting-title">外观设置</h2>
-      <!-- 显示设置 -->
-      <terminal-display-block />
+      <h2 class="terminal-setting-title">主题设置</h2>
+      <!-- 主题设置 -->
+      <terminal-theme-block />
     </div>
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'TerminalViewSetting'
+    name: 'TerminalThemeSetting'
   };
 </script>
 
 <script lang="ts" setup>
-  import TerminalDisplayBlock from './terminal-display-block.vue';
+  import TerminalThemeBlock from './terminal-theme-block.vue';
 
 </script>
 

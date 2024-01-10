@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,8 +51,10 @@ public class PreferenceController {
     @GetMapping("/get")
     @Operation(summary = "查询用户偏好")
     @Parameter(name = "type", description = "type", required = true)
-    public Map<String, Object> getPreference(@RequestParam("type") String type) {
-        return preferenceService.getPreferenceByType(type);
+    @Parameter(name = "items", description = "items")
+    public Map<String, Object> getPreference(@RequestParam("type") String type,
+                                             @RequestParam(name = "items", required = false) List<String> items) {
+        return preferenceService.getPreferenceByType(type, items);
     }
 
 }

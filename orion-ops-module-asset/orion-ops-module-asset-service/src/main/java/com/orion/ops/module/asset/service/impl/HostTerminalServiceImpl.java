@@ -31,7 +31,6 @@ import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
 import com.orion.ops.module.asset.service.HostConfigService;
-import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostExtraService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.ops.module.infra.api.DataPermissionApi;
@@ -57,7 +56,7 @@ import java.util.Optional;
 @Service
 public class HostTerminalServiceImpl implements HostTerminalService {
 
-    private static final String TERMINAL_PATH = "/template/theme/terminal.theme.json";
+    private static final String TERMINAL_PATH = "/theme/terminal.theme.json";
 
     @Resource
     private HostConfigService hostConfigService;
@@ -67,9 +66,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Resource
     private AssetAuthorizedDataServiceImpl assetAuthorizedDataService;
-
-    @Resource
-    private HostConnectLogService hostConnectLogService;
 
     @Resource
     private HostDAO hostDAO;
@@ -89,6 +85,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Override
     public JSONArray getTerminalThemes() {
         try (InputStream in = HostTerminalService.class.getResourceAsStream(TERMINAL_PATH)) {
+            Valid.notNull(in, ErrorMessage.CONFIG_ABSENT);
             byte[] bytes = StreamReaders.readAllBytes(in);
             return JSONArray.parseArray(new String(bytes));
         } catch (Exception e) {

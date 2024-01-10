@@ -29,9 +29,14 @@ export const InnerTabs = {
     title: '快捷键设置',
     type: TabType.SETTING
   },
-  VIEW_SETTING: {
-    key: 'viewSetting',
-    title: '外观设置',
+  TOOL_SETTING: {
+    key: 'toolSetting',
+    title: '终端设置',
+    type: TabType.SETTING
+  },
+  THEME_SETTING: {
+    key: 'themeSetting',
+    title: '主题设置',
     type: TabType.SETTING
   },
 };
@@ -83,9 +88,6 @@ export const openSshModalKey = Symbol();
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';
 
-// 终端暗色模式 字典项
-export const darkThemeKey = 'terminalDarkTheme';
-
 // 终端字体样式
 export const fontFamilyKey = 'terminalFontFamily';
 
@@ -109,7 +111,7 @@ export const connectStatusKey = 'terminalConnectStatus';
 
 // 加载的字典值
 export const dictKeys = [
-  darkThemeKey, fontFamilyKey,
+  fontFamilyKey,
   fontSizeKey, fontWeightKey,
   cursorStyleKey, newConnectionTypeKey,
   extraSshAuthTypeKey, connectStatusKey

@@ -126,7 +126,7 @@
       "background": "#212121",
       "foreground": "#F8F8F2",
       "cursor": "#ECEFF4",
-      "selectionBackground": "#F8F8F2",
+      "selectionBackground": "#44475A",
       "black": "#21222C",
       "red": "#FF5555",
       "green": "#50FA7B",
@@ -285,6 +285,54 @@
       "brightBlue": "#1670FF",
       "brightCyan": "#3AD5CE",
       "brightWhite": "#EEEEEC"
+    }
+  },
+  {
+    "name": "Calamity",
+    "dark": true,
+    "schema": {
+      "background": "#2F2833",
+      "foreground": "#D5CED9",
+      "cursor": "#D5CED9",
+      "selectionBackground": "#7E6C88",
+      "black": "#2F2833",
+      "red": "#FC644D",
+      "green": "#A5F69C",
+      "yellow": "#E9D7A5",
+      "blue": "#3B79C7",
+      "cyan": "#74D3DE",
+      "white": "#D5CED9",
+      "brightBlack": "#7E6C88",
+      "brightRed": "#FC644D",
+      "brightGreen": "#A5F69C",
+      "brightYellow": "#E9D7A5",
+      "brightBlue": "#3B79C7",
+      "brightCyan": "#74D3DE",
+      "brightWhite": "#FFFFFF"
+    }
+  },
+  {
+    "name": "Tomorrow",
+    "dark": false,
+    "schema": {
+      "background": "#FFFFFF",
+      "foreground": "#4D4D4C",
+      "cursor": "#4D4D4C",
+      "selectionBackground": "#D6D6D6",
+      "black": "#000000",
+      "red": "#C82829",
+      "green": "#718C00",
+      "yellow": "#EAB700",
+      "blue": "#4271AE",
+      "cyan": "#3E999F",
+      "white": "#FFFFFF",
+      "brightBlack": "#000000",
+      "brightRed": "#C82829",
+      "brightGreen": "#718C00",
+      "brightYellow": "#EAB700",
+      "brightBlue": "#4271AE",
+      "brightCyan": "#3E999F",
+      "brightWhite": "#FFFFFF"
     }
   }
 ]

@@ -3,6 +3,7 @@ package com.orion.ops.module.infra.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.Refs;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
@@ -125,10 +126,17 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
-    public Map<String, Object> getPreferenceByType(String type) {
+    public Map<String, Object> getPreferenceByType(String type, List<String> items) {
         Long userId = SecurityUtils.getLoginUserId();
         PreferenceTypeEnum typeEnum = Valid.valid(PreferenceTypeEnum::of, type);
-        return this.getPreferenceByCache(userId, typeEnum);
+        // 查询缓存
+        Map<String, Object> preference = this.getPreferenceByCache(userId, typeEnum);
+        if (Lists.isEmpty(items)) {
+            return preference;
+        }
+        Map<String, Object> partial = Maps.newMap();
+        items.forEach(s -> partial.put(s, preference.get(s)));
+        return partial;
     }
 
     @Override

@@ -37,7 +37,7 @@
     <!-- 终端 -->
     <div class="terminal-wrapper"
          :style="{
-           background: themeSchema.background
+           background: preference.theme.schema.background
          }">
       <div class="terminal-inst" ref="terminalRef" />
     </div>
@@ -45,7 +45,7 @@
     <shell-editor-modal ref="modal"
                         :closable="false"
                         :body-style="{ padding: '16px 16px 16px 0' }"
-                        :dark="themeSchema.dark"
+                        :dark="preference.theme.dark"
                         cancel-text="关闭"
                         @ok="writeCommand(modal.getValue())"
                         @cancel="focus" />
@@ -64,9 +64,9 @@
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';
-  import IconActions from '@/views/host/terminal/components/layout/icon-actions.vue';
   import { connectStatusKey } from '../../types/terminal.const';
   import { adjustColor } from '@/utils';
+  import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
 
   const props = defineProps<{
@@ -79,7 +79,6 @@
 
   const modal = ref();
   const commandInput = ref();
-  const themeSchema = preference.themeSchema;
   const terminalRef = ref();
   const session = ref<ITerminalSession>();
 

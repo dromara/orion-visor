@@ -79,8 +79,8 @@
       <div class="terminal-example">
         <span class="terminal-example-label">预览效果</span>
         <div class="terminal-example-wrapper"
-             :style="{ background: preference.themeSchema?.background }">
-          <terminal-example :theme="preference.themeSchema"
+             :style="{ background: preference.theme.schema.background }">
+          <terminal-example :schema="preference.theme.schema"
                             ref="previewTerminal" />
         </div>
       </div>
@@ -100,16 +100,17 @@
   import { useDictStore, useTerminalStore } from '@/store';
   import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../types/terminal.const';
   import { labelFilter } from '@/types/form';
+  import { PreferenceItem } from '@/store/modules/terminal';
   import TerminalExample from '../view-setting/terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
-  const { preference, changeDisplaySetting } = useTerminalStore();
+  const { preference, updateTerminalPreference } = useTerminalStore();
 
   const previewTerminal = ref();
   const formModel = ref<TerminalDisplaySetting>({ ...preference.displaySetting });
 
   // 监听主题变化 动态修改预览样式
-  watch(() => preference.themeSchema, (v) => {
+  watch(() => preference.theme, (v) => {
     if (!v) {
       return;
     }
@@ -135,7 +136,7 @@
       }
     });
     // 同步
-    changeDisplaySetting(formModel.value);
+    updateTerminalPreference(PreferenceItem.DISPLAY_SETTING, formModel.value);
     // 聚焦
     previewTerminal.value.term.focus();
   }, { deep: true });

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'query-string';
 
 type PreferenceType = 'SYSTEM' | 'TERMINAL'
 
@@ -36,7 +37,15 @@ export function updatePreferencePartial(request: PreferenceUpdatePartialRequest)
 /**
  * 查询用户偏好
  */
-export function getPreference<T>(type: PreferenceType) {
-  return axios.get<T>('/infra/preference/get', { params: { type } });
+export function getPreference<T>(type: PreferenceType, items: Array<string> | undefined = undefined) {
+  return axios.get<T>('/infra/preference/get', {
+    params: {
+      type,
+      items
+    },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
 

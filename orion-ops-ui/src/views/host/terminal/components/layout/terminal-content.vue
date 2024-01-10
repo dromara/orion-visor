@@ -9,8 +9,8 @@
         <template v-if="tab.type === TabType.SETTING">
           <!-- 新建连接 -->
           <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
-          <!-- 显示设置 -->
-          <terminal-view-setting v-else-if="tab.key === InnerTabs.VIEW_SETTING.key" />
+          <!-- 主题设置 -->
+          <terminal-theme-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
         </template>
         <!-- 终端 -->
         <template v-else-if="tab.type === TabType.TERMINAL">
@@ -31,10 +31,10 @@
   import { TabType, InnerTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { watch } from 'vue';
-  import TerminalViewSetting from '../view-setting/terminal-view-setting.vue';
+  import TerminalThemeSetting from '../view-setting/terminal-theme-setting.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
-
   import TerminalView from '../xterm/terminal-view.vue';
+
   const { tabManager, sessionManager } = useTerminalStore();
 
   // 监听 tab 修改

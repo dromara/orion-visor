@@ -5,41 +5,42 @@
       <h3 class="terminal-setting-subtitle">
         主题设置
       </h3>
-      <!-- 暗色选择 -->
-      <a-radio-group v-model="preference.darkTheme"
-                     class="usn"
-                     size="mini"
-                     type="button"
-                     :options="toRadioOptions(darkThemeKey)"
-                     @change="s => changeDarkTheme(s as string)">
-      </a-radio-group>
     </div>
+    <!-- 加载中 -->
+    <a-skeleton v-if="loading"
+                class="skeleton-wrapper"
+                :animation="true">
+      <a-skeleton-line :rows="8" />
+    </a-skeleton>
     <!-- 内容区域 -->
-    <div class="terminal-setting-body terminal-theme-container">
+    <div v-else class="terminal-setting-body terminal-theme-container">
+      <!-- 提示 -->
+      <a-alert class="mb16">选择后会立刻保存, 刷新页面生效</a-alert>
+      <!-- 终端主题 -->
       <div class="theme-row"
-           v-for="rowIndex in ThemeSchema.length / 2"
+           v-for="rowIndex in themes.length / 2"
            :key="rowIndex">
-        <a-card v-for="(theme, colIndex) in [ThemeSchema[(rowIndex - 1) * 2], ThemeSchema[(rowIndex - 1) * 2 + 1]]"
+        <a-card v-for="(theme, colIndex) in [themes[(rowIndex - 1) * 2], themes[(rowIndex - 1) * 2 + 1]]"
                 :key="theme.name"
                 class="terminal-theme-card simple-card"
                 :class="{
-                  'terminal-theme-card-check': theme.name === preference.themeSchema.name
+                  'terminal-theme-card-check': theme.name === currentThemeName
                 }"
                 :title="theme.name"
                 :style="{
-                  background: theme.background,
+                  background: theme.schema.background,
                   marginRight: colIndex === 0 ? '16px' : 0
                 }"
                 :header-style="{
                   color: theme.dark ? 'rgba(255, 255, 255, .8)' : 'rgba(0, 0, 0, .8)',
                   userSelect: 'none'
                 }"
-                @click="changeThemeSchema(theme)">
+                @click="selectTheme(theme)">
           <!-- 样例 -->
-          <terminal-example :theme="{ ...theme, cursor: theme.background }" />
+          <terminal-example :schema="theme.schema" />
           <!-- 选中按钮 -->
           <icon-check class="theme-check-icon"
-                      v-show="theme.name === preference.themeSchema.name" />
+                      v-show="theme.name === currentThemeName" />
         </a-card>
       </div>
     </div>
@@ -53,13 +54,48 @@
 </script>
 
 <script lang="ts" setup>
-  import { darkThemeKey } from '../../types/terminal.const';
-  import ThemeSchema from '../../types/terminal.theme';
-  import { useDictStore, useTerminalStore } from '@/store';
+  import type { TerminalTheme } from '@/api/asset/host-terminal';
+  import { useTerminalStore } from '@/store';
+  import { PreferenceItem } from '@/store/modules/terminal';
+  import { onMounted, ref } from 'vue';
+  import { getTerminalThemes } from '@/api/asset/host-terminal';
   import TerminalExample from './terminal-example.vue';
+  import { getPreference } from '@/api/user/preference';
+  import useLoading from '@/hooks/loading';
 
-  const { changeThemeSchema, changeDarkTheme, preference } = useTerminalStore();
-  const { toRadioOptions } = useDictStore();
+  const { updateTerminalPreference } = useTerminalStore();
+  const { loading, setLoading } = useLoading();
+
+  const currentThemeName = ref();
+  const themes = ref<Array<TerminalTheme>>([]);
+
+  // 选择主题
+  const selectTheme = async (theme: TerminalTheme) => {
+    currentThemeName.value = theme.name;
+    await updateTerminalPreference(PreferenceItem.THEME, theme);
+  };
+
+  // 加载用户主题
+  onMounted(async () => {
+    try {
+      const { data } = await getPreference<Record<string, any>>('TERMINAL', [PreferenceItem.THEME]);
+      currentThemeName.value = data[PreferenceItem.THEME]?.name;
+    } catch (e) {
+    }
+  });
+
+  // 加载主题列表
+  onMounted(async () => {
+    setLoading(true);
+    try {
+      // 加载全部主题
+      const { data } = await getTerminalThemes();
+      themes.value = data;
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  });
 
 </script>
 

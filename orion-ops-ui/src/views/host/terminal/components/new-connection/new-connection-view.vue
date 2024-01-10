@@ -10,7 +10,7 @@
                        type="button"
                        class="usn"
                        :options="toRadioOptions(newConnectionTypeKey)"
-                       @change="s => changeNewConnectionType(s as string)" />
+                       @change="s => updateTerminalPreference(PreferenceItem.NEW_CONNECTION_TYPE, s as string, true)" />
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
                          class="host-filter"
@@ -82,6 +82,7 @@
   import { NewConnectionType, newConnectionTypeKey } from '../../types/terminal.const';
   import useLoading from '@/hooks/loading';
   import { useAppStore, useDictStore, useTerminalStore } from '@/store';
+  import { PreferenceItem } from '@/store/modules/terminal';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { getLatestConnectHostId } from '@/api/asset/host-connect-log';
@@ -89,7 +90,7 @@
 
   const { loading, setLoading } = useLoading();
   const { toRadioOptions } = useDictStore();
-  const { preference, changeNewConnectionType } = useTerminalStore();
+  const { preference, updateTerminalPreference } = useTerminalStore();
 
   const newConnectionType = ref(preference.newConnectionType || NewConnectionType.GROUP);
   const filterValue = ref('');

@@ -4,6 +4,7 @@ import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdatePart
 import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdateRequest;
 import com.orion.ops.module.infra.enums.PreferenceTypeEnum;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -34,10 +35,11 @@ public interface PreferenceService {
     /**
      * 查询用户偏好
      *
-     * @param type type
+     * @param type  type
+     * @param items items
      * @return rows
      */
-    Map<String, Object> getPreferenceByType(String type);
+    Map<String, Object> getPreferenceByType(String type, List<String> items);
 
     /**
      * 获取用户偏好
