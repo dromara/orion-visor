@@ -1,4 +1,12 @@
-import type { TerminalActionBarSetting, TerminalDisplaySetting, TerminalPreference, TerminalState } from './types';
+import type {
+  TerminalActionBarSetting,
+  TerminalDisplaySetting,
+  TerminalInteractSetting,
+  TerminalPluginsSetting,
+  TerminalPreference,
+  TerminalSessionSetting,
+  TerminalState
+} from './types';
 import type { TerminalTheme } from '@/api/asset/host-terminal';
 import { getTerminalThemes } from '@/api/asset/host-terminal';
 import { defineStore } from 'pinia';
@@ -17,6 +25,12 @@ export const PreferenceItem = {
   DISPLAY_SETTING: 'displaySetting',
   // 操作栏设置
   ACTION_BAR_SETTING: 'actionBarSetting',
+  // 交互设置
+  INTERACT_SETTING: 'interactSetting',
+  // 插件设置
+  PLUGINS_SETTING: 'pluginsSetting',
+  // 会话设置
+  SESSION_SETTING: 'sessionSetting',
 };
 
 export default defineStore('terminal', {
@@ -26,6 +40,9 @@ export default defineStore('terminal', {
       theme: {} as TerminalTheme,
       displaySetting: {} as TerminalDisplaySetting,
       actionBarSetting: {} as TerminalActionBarSetting,
+      interactSetting: {} as TerminalInteractSetting,
+      pluginsSetting: {} as TerminalPluginsSetting,
+      sessionSetting: {} as TerminalSessionSetting,
     },
     tabManager: new TerminalTabManager(),
     sessionManager: new TerminalSessionManager()

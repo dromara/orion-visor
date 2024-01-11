@@ -10,11 +10,9 @@
     <div class="terminal-setting-body setting-body">
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 超链接插件 -->
-        <block-setting-item label="超链接插件" desc="自动检测 http url 并可以点击">
+        <block-setting-item label="超链接插件" desc="自动检测 http(https) url 并可以点击">
           <a-switch type="round"
-                    v-model="formModel.enableWeblinkPlugin"
-                    checked-value="alt"
-                    unchecked-value="none" />
+                    v-model="formModel.enableWeblinkPlugin" />
         </block-setting-item>
         <!-- WebGL 渲染插件 -->
         <block-setting-item label="WebGL 渲染插件" desc="使用 WebGL 加速渲染终端 (建议开启, 若无法开启终端请关闭)">
@@ -40,16 +38,24 @@
 </script>
 
 <script lang="ts" setup>
-
-  // fixme
-  // 自动检测 url 并可以点击  enableWeblinkPlugin
-  // 启用 webgl 支持  enableWebglPlugin
-  // 支持显示图片 使用 sixel 打开图片 enableImagePlugin
-
-  import { ref } from 'vue';
+  import type { TerminalPluginsSetting } from '@/store/modules/terminal/types';
+  import { ref, watch } from 'vue';
+  import { useTerminalStore } from '@/store';
+  import { PreferenceItem } from '@/store/modules/terminal';
   import BlockSettingItem from './block-setting-item.vue';
 
-  const formModel = ref<Record<string, any>>({});
+  const { preference, updateTerminalPreference } = useTerminalStore();
+
+  const formModel = ref<TerminalPluginsSetting>({ ...preference.pluginsSetting });
+
+  // 监听内容变化
+  watch(formModel, (v) => {
+    if (!v) {
+      return;
+    }
+    // 同步
+    updateTerminalPreference(PreferenceItem.PLUGINS_SETTING, formModel.value, true);
+  }, { deep: true });
 
 </script>
 

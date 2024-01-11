@@ -14,9 +14,7 @@
         <!-- 快速滚动 -->
         <block-setting-item label="快速滚动" desc="alt + 鼠标滚轮快速滚动">
           <a-switch type="round"
-                    v-model="formModel.fastScrollModifier"
-                    checked-value="alt"
-                    unchecked-value="none" />
+                    v-model="formModel.fastScrollModifier" />
         </block-setting-item>
         <!-- 点击移动光标 -->
         <block-setting-item label="点击移动光标" desc="alt + 鼠标左键可以切换光标位置">
@@ -57,7 +55,7 @@
         <!-- 启用右键菜单 -->
         <block-setting-item label="启用右键菜单" desc="右键终端将打开自定义菜单, 启用后需要关闭右键粘贴">
           <a-switch type="round"
-                    v-model="formModel.pasteAutoTrim" />
+                    v-model="formModel.enableRightClickMenu" />
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
@@ -67,7 +65,7 @@
                     v-model="formModel.enableBell" />
         </block-setting-item>
         <!-- 单词分隔符 -->
-        <block-setting-item label="单词分隔符" desc="在终端中双击文本将使用该分隔符进行分割">
+        <block-setting-item label="单词分隔符" desc="在终端中双击文本将使用该分隔符进行分割 (一般不用修改)">
           <a-input size="small"
                    v-model="formModel.wordSeparator"
                    placeholder="单词分隔符"
@@ -85,26 +83,24 @@
 </script>
 
 <script lang="ts" setup>
-
-  // 快速滚动 fastScrollModifier
-  // 点击移动光标 altClickMovesCursor
-
-  // 右键选中词条  rightClickSelectsWord
-  // 自动将选中内容复制到剪切板 selectionChangeCopy onSelectionChange
-
-  // 复制时删除空格 pasteAutoTrim
-  // 粘贴时删除空格 copyAutoTrim
-
-  // 右键粘贴 rightClickPaste
-  // 启用右键菜单 enableRightClickMenu
-
-  // 启用响铃  enableBell
-  // 单词分隔符  /\()"'` -.,:;<>~!@#$%^&*|+=[]{}~?│    wordSeparator
-
-  import { ref } from 'vue';
+  import type { TerminalInteractSetting } from '@/store/modules/terminal/types';
+  import { ref, watch } from 'vue';
+  import { useTerminalStore } from '@/store';
+  import { PreferenceItem } from '@/store/modules/terminal';
   import BlockSettingItem from './block-setting-item.vue';
 
-  const formModel = ref<Record<string, any>>({});
+  const { preference, updateTerminalPreference } = useTerminalStore();
+
+  const formModel = ref<TerminalInteractSetting>({ ...preference.interactSetting });
+
+  // 监听内容变化
+  watch(formModel, (v) => {
+    if (!v) {
+      return;
+    }
+    // 同步
+    updateTerminalPreference(PreferenceItem.INTERACT_SETTING, formModel.value, true);
+  }, { deep: true });
 
 </script>
 

@@ -22,7 +22,7 @@
                           size="small"
                           :min="1"
                           :max="10000"
-                          placeholder="缓冲区行数"
+                          placeholder="缓冲区行数 默认 1000 行"
                           allow-clear
                           hide-button />
         </block-setting-item>
@@ -38,19 +38,26 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TerminalSessionSetting } from '@/store/modules/terminal/types';
+  import { ref, watch } from 'vue';
+  import { useDictStore, useTerminalStore } from '@/store';
+  import { PreferenceItem } from '@/store/modules/terminal';
   import { terminalEmulationTypeKey } from '../../types/terminal.const';
+  import BlockSettingItem from './block-setting-item.vue';
 
   const { toOptions } = useDictStore();
+  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  // TODO
-  // terminalEmulationType: xterm 256color
-  // scrollBackLine 保存在缓冲区的行数 1000
+  const formModel = ref<TerminalSessionSetting>({ ...preference.sessionSetting });
 
-  import { ref } from 'vue';
-  import BlockSettingItem from './block-setting-item.vue';
-  import { useDictStore } from '@/store';
-
-  const formModel = ref<Record<string, any>>({});
+  // 监听内容变化
+  watch(formModel, (v) => {
+    if (!v) {
+      return;
+    }
+    // 同步
+    updateTerminalPreference(PreferenceItem.SESSION_SETTING, formModel.value, true);
+  }, { deep: true });
 
 </script>
 

@@ -30,7 +30,6 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .cursorBlink(true)
                 .build()
                 .toJsonString();
-
         // 默认交互设置
         String defaultInteractSetting = TerminalPreferenceModel.InteractSettingModel.builder()
                 .fastScrollModifier(true)

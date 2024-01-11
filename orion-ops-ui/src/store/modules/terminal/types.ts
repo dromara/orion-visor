@@ -13,6 +13,9 @@ export interface TerminalPreference {
   theme: TerminalTheme;
   displaySetting: TerminalDisplaySetting;
   actionBarSetting: TerminalActionBarSetting;
+  interactSetting: TerminalInteractSetting;
+  pluginsSetting: TerminalPluginsSetting;
+  sessionSetting: TerminalSessionSetting;
 }
 
 // 显示设置
@@ -34,3 +37,29 @@ export interface TerminalActionBarSetting {
   [key: string]: unknown;
 }
 
+// 交互设置
+export interface TerminalInteractSetting {
+  fastScrollModifier: boolean;
+  altClickMovesCursor: boolean;
+  rightClickSelectsWord: boolean;
+  selectionChangeCopy: boolean;
+  copyAutoTrim: boolean;
+  pasteAutoTrim: boolean;
+  rightClickPaste: boolean;
+  enableRightClickMenu: boolean;
+  enableBell: boolean;
+  wordSeparator: string;
+}
+
+// 插件设置
+export interface TerminalPluginsSetting {
+  enableWeblinkPlugin: boolean;
+  enableWebglPlugin: boolean;
+  enableImagePlugin: boolean;
+}
+
+// 会话设置
+export interface TerminalSessionSetting {
+  terminalEmulationType: string;
+  scrollBackLine: number;
+}

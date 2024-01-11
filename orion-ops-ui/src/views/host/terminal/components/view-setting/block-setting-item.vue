@@ -64,5 +64,8 @@
     :deep(.arco-input-wrapper) {
       background-color: var(--color-fill-3)
     }
+    :deep(.arco-select) {
+      background-color: var(--color-fill-3)
+    }
   }
 </style>
