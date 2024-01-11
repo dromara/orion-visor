@@ -13,6 +13,8 @@
           <terminal-display-setting v-else-if="tab.key === InnerTabs.DISPLAY_SETTING.key" />
           <!-- 主题设置 -->
           <terminal-theme-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
+          <!-- 终端设置 -->
+          <terminal-general-setting v-else-if="tab.key === InnerTabs.TERMINAL_SETTING.key" />
         </template>
         <!-- 终端 -->
         <template v-else-if="tab.type === TabType.TERMINAL">
@@ -33,9 +35,10 @@
   import { TabType, InnerTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { watch } from 'vue';
+  import NewConnectionView from '../new-connection/new-connection-view.vue';
   import TerminalDisplaySetting from '../view-setting/terminal-display-setting.vue';
   import TerminalThemeSetting from '../view-setting/terminal-theme-setting.vue';
-  import NewConnectionView from '../new-connection/new-connection-view.vue';
+  import TerminalGeneralSetting from '../view-setting/terminal-general-setting.vue';
   import TerminalView from '../xterm/terminal-view.vue';
 
   const { tabManager, sessionManager } = useTerminalStore();

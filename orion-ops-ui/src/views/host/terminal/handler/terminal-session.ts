@@ -48,7 +48,7 @@ export default class TerminalSession implements ITerminalSession {
     this.inst = new Terminal({
       ...(preference.displaySetting as any),
       theme: preference.theme.schema,
-      fastScrollModifier: 'shift',
+      fastScrollModifier: 'ctrl',
       fontFamily: preference.displaySetting.fontFamily + fontFamilySuffix,
     });
     // 注册插件

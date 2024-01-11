@@ -68,7 +68,7 @@
 
   // 注册关闭视口事件
   onMounted(() => {
-    // TODO 开发阶段
+    // FIXME 开发阶段
     // window.addEventListener('beforeunload', handleBeforeUnload);
   });
 

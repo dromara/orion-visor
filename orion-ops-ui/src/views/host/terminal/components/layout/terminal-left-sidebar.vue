@@ -47,11 +47,6 @@
       click: () => tabManager.openTab(InnerTabs.DISPLAY_SETTING)
     },
     {
-      icon: 'icon-stamp',
-      content: InnerTabs.INTERACT_SETTING.title,
-      click: () => tabManager.openTab(InnerTabs.INTERACT_SETTING)
-    },
-    {
       icon: 'icon-palette',
       content: InnerTabs.THEME_SETTING.title,
       click: () => tabManager.openTab(InnerTabs.THEME_SETTING)

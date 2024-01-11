@@ -23,11 +23,6 @@ export const InnerTabs = {
     title: '显示设置',
     type: TabType.SETTING
   },
-  INTERACT_SETTING: {
-    key: 'interactSetting',
-    title: '交互设置',
-    type: TabType.SETTING
-  },
   THEME_SETTING: {
     key: 'themeSetting',
     title: '主题设置',
