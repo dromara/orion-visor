@@ -44,7 +44,14 @@ export default defineStore('terminal', {
           // 更新默认主题偏好
           await this.updateTerminalPreference(PreferenceItem.THEME, data.theme);
         }
-        this.preference = data;
+        // 选择赋值
+        const keys = Object.keys(this.preference);
+        keys.forEach(key => {
+          const item = data[key as keyof TerminalPreference];
+          if (item) {
+            this.preference[key as keyof TerminalPreference] = item as any;
+          }
+        });
       } catch (e) {
         Message.error('配置加载失败');
       }

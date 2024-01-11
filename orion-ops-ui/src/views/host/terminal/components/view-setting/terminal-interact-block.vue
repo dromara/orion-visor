@@ -9,21 +9,70 @@
     <!-- 提示 -->
     <a-alert class="mb16">修改后会立刻保存, 刷新页面后生效</a-alert>
     <!-- 内容区域 -->
-    <div class="terminal-setting-body">
-      <a-row class="" :gutter="[16, 16]">
-        <a-col :span="12">
-          <div class="block-form-item-wrapper">
-            <div class="block-form-item-label">
-              label
-            </div>
-            <div class="block-form-item-desc">
-              描述一下
-            </div>
-            <div class="block-form-item-value">
-              <a-switch />
-            </div>
-          </div>
-        </a-col>
+    <div class="terminal-setting-body setting-body">
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 快速滚动 -->
+        <block-setting-item label="快速滚动" desc="alt + 鼠标滚轮快速滚动">
+          <a-switch type="round"
+                    v-model="formModel.fastScrollModifier"
+                    checked-value="alt"
+                    unchecked-value="none" />
+        </block-setting-item>
+        <!-- 点击移动光标 -->
+        <block-setting-item label="点击移动光标" desc="alt + 鼠标左键可以切换光标位置">
+          <a-switch type="round"
+                    v-model="formModel.altClickMovesCursor" />
+        </block-setting-item>
+      </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 右键选中词条 -->
+        <block-setting-item label="右键选中词条" desc="右键文本">
+          <a-switch type="round"
+                    v-model="formModel.rightClickSelectsWord" />
+        </block-setting-item>
+        <!-- 选中词条自动复制 -->
+        <block-setting-item label="选中词条自动复制" desc="自动将选中的词条复制到剪切板">
+          <a-switch type="round"
+                    v-model="formModel.selectionChangeCopy" />
+        </block-setting-item>
+      </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 复制去除空格 -->
+        <block-setting-item label="复制去除空格" desc="复制文本后自动删除尾部空格">
+          <a-switch type="round"
+                    v-model="formModel.copyAutoTrim" />
+        </block-setting-item>
+        <!-- 粘贴去除空格 -->
+        <block-setting-item label="粘贴去除空格" desc="粘贴文本前自动删除尾部空格">
+          <a-switch type="round"
+                    v-model="formModel.pasteAutoTrim" />
+        </block-setting-item>
+      </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 右键粘贴 -->
+        <block-setting-item label="右键粘贴" desc="右键自动粘贴, 启用后需要关闭右键菜单">
+          <a-switch type="round"
+                    v-model="formModel.rightClickPaste" />
+        </block-setting-item>
+        <!-- 启用右键菜单 -->
+        <block-setting-item label="启用右键菜单" desc="右键终端将打开自定义菜单, 启用后需要关闭右键粘贴">
+          <a-switch type="round"
+                    v-model="formModel.pasteAutoTrim" />
+        </block-setting-item>
+      </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 启用响铃 -->
+        <block-setting-item label="启用响铃" desc="系统接受到 \a 时候会发出响铃 (一般不用开启)">
+          <a-switch type="round"
+                    v-model="formModel.enableBell" />
+        </block-setting-item>
+        <!-- 单词分隔符 -->
+        <block-setting-item label="单词分隔符" desc="在终端中双击文本将使用该分隔符进行分割">
+          <a-input size="small"
+                   v-model="formModel.wordSeparator"
+                   placeholder="单词分隔符"
+                   allow-clear />
+        </block-setting-item>
       </a-row>
     </div>
   </div>
@@ -37,46 +86,31 @@
 
 <script lang="ts" setup>
 
-  // TODO
-  // 交互设置
-  // alt + 滚轮快速滚动 fastScrollModifier  'none' | 'alt'
-  // alt 点击可以切换光标位置  altClickMovesCursor
+  // 快速滚动 fastScrollModifier
+  // 点击移动光标 altClickMovesCursor
 
   // 右键选中词条  rightClickSelectsWord
-  // 自动将选中内容复制到剪切板 onSelectionChange
+  // 自动将选中内容复制到剪切板 selectionChangeCopy onSelectionChange
 
-  // 粘贴时删除空格
-  // 复制时删除空格
+  // 复制时删除空格 pasteAutoTrim
+  // 粘贴时删除空格 copyAutoTrim
 
-  // 右键粘贴
-  // 启用右键菜单
+  // 右键粘贴 rightClickPaste
+  // 启用右键菜单 enableRightClickMenu
 
-  // 自动检测 url 并可以点击
-  // 支持显示图片 使用 sixel 打开图片
+  // 启用响铃  enableBell
+  // 单词分隔符  /\()"'` -.,:;<>~!@#$%^&*|+=[]{}~?│    wordSeparator
 
-  // bell sound
-  // 分隔符  /\()"'-.,:;<>~!@#$%^&*|+=[]{}~?│   在终端中双击文本将使用到这些符号 wordSeparator
+  import { ref } from 'vue';
+  import BlockSettingItem from './block-setting-item.vue';
+
+  const formModel = ref<Record<string, any>>({});
 
 </script>
 
 <style lang="less" scoped>
-  .block-form-item-wrapper {
-    height: 84px;
-    border-radius: 4px;
-    background: var(--color-fill-2);
-    display: flex;
-    padding: 16px;
-
-    .block-form-item-label {
-      color: var(--color-content-text-3);
-      font-size: 15px;
-      font-weight: bold;
-    }
-
-    .block-form-item-desc {
-      color: var(--color-content-text-2);
-      font-size: 12px;
-    }
+  .setting-body {
+    flex-direction: column;
   }
 
 </style>

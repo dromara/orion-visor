@@ -1,5 +1,6 @@
 import type { Terminal } from 'xterm';
 import type { FitAddon } from 'xterm-addon-fit';
+import type { CanvasAddon } from 'xterm-addon-canvas';
 import type { WebglAddon } from 'xterm-addon-webgl';
 import type { WebLinksAddon } from 'xterm-addon-web-links';
 import type { SearchAddon } from 'xterm-addon-search';
@@ -117,6 +118,7 @@ export interface ITerminalOutputProcessor {
 export interface TerminalAddons {
   fit: FitAddon;
   webgl: WebglAddon;
+  canvas: CanvasAddon;
   link: WebLinksAddon;
   search: SearchAddon;
   image: ImageAddon;

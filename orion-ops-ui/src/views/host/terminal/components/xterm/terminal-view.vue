@@ -227,7 +227,6 @@
         height: 100%;
         display: inline-flex;
         align-items: center;
-        user-select: none;
 
         .address-copy {
           display: none;

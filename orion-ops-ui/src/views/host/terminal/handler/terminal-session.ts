@@ -8,6 +8,7 @@ import { WebglAddon } from 'xterm-addon-webgl';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { SearchAddon } from 'xterm-addon-search';
 import { ImageAddon } from 'xterm-addon-image';
+import { CanvasAddon } from 'xterm-addon-canvas';
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
@@ -48,12 +49,13 @@ export default class TerminalSession implements ITerminalSession {
     this.inst = new Terminal({
       ...(preference.displaySetting as any),
       theme: preference.theme.schema,
-      fastScrollModifier: 'ctrl',
+      fastScrollModifier: 'alt',
       fontFamily: preference.displaySetting.fontFamily + fontFamilySuffix,
     });
     // 注册插件
     this.addons.fit = new FitAddon();
-    this.addons.webgl = new WebglAddon();
+    // this.addons.webgl = new WebglAddon();
+    this.addons.canvas = new CanvasAddon();
     this.addons.link = new WebLinksAddon();
     this.addons.search = new SearchAddon();
     this.addons.image = new ImageAddon();

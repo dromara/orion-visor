@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.handler.host.terminal.session;
 
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
+import com.orion.net.host.ssh.TerminalType;
 import com.orion.net.host.ssh.shell.ShellExecutor;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
@@ -66,6 +67,8 @@ public class TerminalSession implements ITerminalSession {
         // 打开 shell
         this.executor = sessionStore.getShellExecutor();
         executor.size(cols, rows);
+        // FIXME
+        executor.terminalType(TerminalType.XTERM.getType());
         executor.streamHandler(this::streamHandler);
         executor.callback(this::eofCallback);
         executor.connect();

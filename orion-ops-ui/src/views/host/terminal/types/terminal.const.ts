@@ -156,10 +156,13 @@ export const extraSshAuthTypeKey = 'hostExtraSshAuthType';
 // 终端状态
 export const connectStatusKey = 'terminalConnectStatus';
 
+// 终端类型
+export const terminalEmulationTypeKey = 'terminalEmulationType';
+
 // 加载的字典值
 export const dictKeys = [
-  fontFamilyKey,
-  fontSizeKey, fontWeightKey,
-  cursorStyleKey, newConnectionTypeKey,
-  extraSshAuthTypeKey, connectStatusKey
+  fontFamilyKey, fontSizeKey,
+  fontWeightKey, cursorStyleKey,
+  newConnectionTypeKey, extraSshAuthTypeKey,
+  connectStatusKey, terminalEmulationTypeKey
 ];

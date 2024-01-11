@@ -5,6 +5,8 @@
       <h2 class="terminal-setting-title">终端设置</h2>
       <!-- 交互设置 -->
       <terminal-interact-block />
+      <!-- 插件设置 -->
+      <terminal-plugins-block />
       <!-- 会话设置 -->
       <terminal-session-block />
     </div>
@@ -19,6 +21,7 @@
 
 <script lang="ts" setup>
   import TerminalInteractBlock from './terminal-interact-block.vue';
+  import TerminalPluginsBlock from './terminal-plugins-block.vue';
   import TerminalSessionBlock from './terminal-session-block.vue';
 
 </script>
