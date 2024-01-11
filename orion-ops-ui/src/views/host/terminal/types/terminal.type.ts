@@ -21,6 +21,7 @@ export interface SidebarAction {
   content: string;
   visible?: boolean;
   disabled?: boolean;
+  checked?: boolean;
   iconStyle?: CSSProperties;
   click: () => void;
 }
@@ -161,8 +162,8 @@ export interface ITerminalSession {
   getOption: (option: string) => any;
   // 设置配置
   setOption: (option: string, value: any) => void;
-  // 登出
-  logout: () => void;
+  // 断开连接
+  disconnect: () => void;
   // 关闭
   close: () => void;
 }

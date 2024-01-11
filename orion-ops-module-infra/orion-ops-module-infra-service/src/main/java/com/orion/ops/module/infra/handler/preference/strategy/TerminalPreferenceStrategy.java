@@ -16,21 +16,24 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
 
     @Override
     public TerminalPreferenceModel getDefault() {
+        // 默认显示设置
+        JSONObject defaultDisplaySetting = TerminalPreferenceModel.DisplaySettingModel
+                .builder()
+                .fontFamily("_")
+                .fontSize(14)
+                .lineHeight(1.00)
+                .fontWeight("normal")
+                .fontWeightBold("bold")
+                .cursorStyle("bar")
+                .cursorBlink(true)
+                .build()
+                .toJson();
         return TerminalPreferenceModel.builder()
                 .newConnectionType("group")
-                .displaySetting(TerminalPreferenceModel.DisplaySettingModel.builder()
-                        .fontFamily("_")
-                        .fontSize(12)
-                        .lineHeight(1.00)
-                        .fontWeight("normal")
-                        .fontWeightBold("bold")
-                        .cursorStyle("bar")
-                        .cursorBlink(true)
-                        .build()
-                        .toJson()
-                )
-                .backgroundSetting(new JSONObject())
                 .theme(new JSONObject())
+                .displaySetting(defaultDisplaySetting)
+                .actionBarSetting(new JSONObject())
+                .backgroundSetting(new JSONObject())
                 .build();
     }
 

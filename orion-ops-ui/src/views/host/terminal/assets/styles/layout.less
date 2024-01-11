@@ -192,11 +192,14 @@ body[terminal-theme='dark'] .arco-modal-container {
       background: var(--color-sidebar-icon-bg);
     }
 
+    &.checked-item {
+      background: var(--color-sidebar-icon-bg);
+    }
+
     &.disabled-item {
       cursor: not-allowed;
     }
   }
-
 }
 
 // 终端设置容器
@@ -239,6 +242,14 @@ body[terminal-theme='dark'] .arco-modal-container {
 
   .terminal-setting-body {
     display: flex;
+
+    &.block-body {
+      display: flex;
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--color-fill-4);
+      border-radius: 4px;
+    }
   }
 
 }

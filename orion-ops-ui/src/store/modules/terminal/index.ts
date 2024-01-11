@@ -1,4 +1,4 @@
-import type { TerminalDisplaySetting, TerminalPreference, TerminalState } from './types';
+import type { TerminalActionBarSetting, TerminalDisplaySetting, TerminalPreference, TerminalState } from './types';
 import type { TerminalTheme } from '@/api/asset/host-terminal';
 import { getTerminalThemes } from '@/api/asset/host-terminal';
 import { defineStore } from 'pinia';
@@ -15,14 +15,17 @@ export const PreferenceItem = {
   THEME: 'theme',
   // 显示设置
   DISPLAY_SETTING: 'displaySetting',
+  // 操作栏设置
+  ACTION_BAR_SETTING: 'actionBarSetting',
 };
 
 export default defineStore('terminal', {
   state: (): TerminalState => ({
     preference: {
       newConnectionType: 'group',
+      theme: {} as TerminalTheme,
       displaySetting: {} as TerminalDisplaySetting,
-      theme: {} as TerminalTheme
+      actionBarSetting: {} as TerminalActionBarSetting,
     },
     tabManager: new TerminalTabManager(),
     sessionManager: new TerminalSessionManager()

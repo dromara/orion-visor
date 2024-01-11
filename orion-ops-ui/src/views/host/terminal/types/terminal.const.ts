@@ -68,6 +68,67 @@ export const TerminalStatus = {
   CLOSED: 2
 };
 
+// 终端操作栏-操作项
+export const ActionBarItems = [
+  {
+    item: 'toTop',
+    icon: 'icon-up',
+    content: '去顶部',
+  }, {
+    item: 'toBottom',
+    icon: 'icon-down',
+    content: '去底部',
+  }, {
+    item: 'checkAll',
+    icon: 'icon-expand',
+    content: '全选',
+  }, {
+    item: 'copy',
+    icon: 'icon-copy',
+    content: '复制选中部分',
+  }, {
+    item: 'paste',
+    icon: 'icon-paste',
+    content: '粘贴',
+  }, {
+    item: 'interrupt',
+    icon: 'icon-formula',
+    content: 'ctrl + c',
+  }, {
+    item: 'enter',
+    icon: 'icon-play-arrow-fill',
+    content: '回车',
+  }, {
+    item: 'commandEditor',
+    icon: 'icon-code-square',
+    content: '命令编辑器',
+  }, {
+    item: 'search',
+    icon: 'icon-search',
+    content: '搜索',
+  }, {
+    item: 'fontSizePlus',
+    icon: 'icon-zoom-in',
+    content: '增大字号',
+  }, {
+    item: 'fontSizeSubtract',
+    icon: 'icon-zoom-out',
+    content: '减小字号',
+  }, {
+    item: 'clear',
+    icon: 'icon-delete',
+    content: '清空',
+  }, {
+    item: 'disconnect',
+    icon: 'icon-poweroff',
+    content: '断开连接',
+  }, {
+    item: 'close',
+    icon: 'icon-close',
+    content: '关闭',
+  }
+];
+
 // 获取会话id
 export const nextSessionId = (): string => {
   return getUUID().replaceAll('-', '').substring(0, 10);

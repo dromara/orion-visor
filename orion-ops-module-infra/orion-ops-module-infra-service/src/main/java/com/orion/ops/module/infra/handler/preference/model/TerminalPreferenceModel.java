@@ -24,14 +24,17 @@ public class TerminalPreferenceModel implements PreferenceModel {
     @Schema(description = "新建连接类型")
     private String newConnectionType;
 
+    @Schema(description = "终端主题")
+    private JSONObject theme;
+
     @Schema(description = "显示设置")
     private JSONObject displaySetting;
 
+    @Schema(description = "操作栏设置")
+    private JSONObject actionBarSetting;
+
     @Schema(description = "背景设置")
     private JSONObject backgroundSetting;
-
-    @Schema(description = "终端主题")
-    private JSONObject theme;
 
     @Data
     @Builder

@@ -17,19 +17,21 @@
       </div>
       <!-- 右侧操作 -->
       <div class="terminal-header-right">
-        <!-- 代码输入框 -->
+        <!-- 命令输入框 -->
         <a-textarea class="command-input mr8"
+                    v-if="preference.actionBarSetting.commandInput !== false"
                     v-model="commandInput"
                     :auto-size="{ minRows: 1, maxRows: 1 }"
                     placeholder="F8 发送命令"
                     allow-clear
                     @keyup="writeCommandInput" />
         <!-- 操作按钮 -->
-        <icon-actions class="terminal-header-right-icon-actions"
+        <icon-actions class="terminal-header-right-action-bar"
                       :actions="rightActions"
                       position="bottom" />
-        <!-- 状态 -->
-        <a-badge class="status-bridge"
+        <!-- 连接状态 -->
+        <a-badge v-if="preference.actionBarSetting.connectStatus !== false"
+                 class="status-bridge"
                  :status="getDictValue(connectStatusKey, session ? session.status : 0, 'status')"
                  :text="getDictValue(connectStatusKey, session ? session.status : 0)" />
       </div>
@@ -59,12 +61,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
-  import type { ITerminalSession, TerminalTabItem } from '../../types/terminal.type';
+  import type { ITerminalSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';
-  import { connectStatusKey } from '../../types/terminal.const';
+  import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
   import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
 
@@ -74,7 +75,7 @@
 
   const { copy, readText } = useCopy();
   const { getDictValue } = useDictStore();
-  const { preference, sessionManager } = useTerminalStore();
+  const { preference, tabManager, sessionManager } = useTerminalStore();
 
   const modal = ref();
   const commandInput = ref();
@@ -127,104 +128,80 @@
     session.value?.focus();
   };
 
-  // 右侧操作
-  const rightActions = computed<Array<SidebarAction>>(() => [
-    {
-      icon: 'icon-up',
-      content: '去顶部',
-      click: () => {
-        session.value?.toTop();
-      }
-    }, {
-      icon: 'icon-down',
-      content: '去底部',
-      click: () => {
-        session.value?.toBottom();
-      }
-    }, {
-      icon: 'icon-expand',
-      content: '全选',
-      click: () => {
-        session.value?.selectAll();
-      }
-    }, {
-      icon: 'icon-copy',
-      content: '复制选中部分',
-      click: () => {
-        copy(session.value?.getSelection(), '已复制');
-      }
-    }, {
-      icon: 'icon-paste',
-      content: '粘贴',
-      disabled: session.value?.canWrite,
-      click: async () => {
-        session.value?.paste(await readText());
-      }
-    }, {
-      icon: 'icon-formula',
-      content: 'ctrl + c',
-      disabled: session.value?.canWrite,
-      click: () => {
-        session.value?.paste(String.fromCharCode(3));
-      }
-    }, {
-      icon: 'icon-play-arrow-fill',
-      content: '回车',
-      disabled: session.value?.canWrite,
-      click: () => {
-        session.value?.paste(String.fromCharCode(13));
-      }
-    }, {
-      icon: 'icon-code-square',
-      content: '命令编辑器',
-      disabled: session.value?.canWrite,
-      click: () => {
-        modal.value.open('', '');
-      }
-    }, {
-      icon: 'icon-search',
-      content: '搜索',
-      click: () => {
-      }
-    }, {
-      icon: 'icon-zoom-in',
-      content: '增大字号',
-      click: () => {
-        if (session.value) {
-          session.value.setOption('fontSize', session.value.getOption('fontSize') + 1);
-          if (session.value.connected) {
-            session.value.fit();
-            session.value.focus();
-          }
+  // 操作禁用状态
+  const actionsDisableStatus = computed<Record<string, boolean | undefined>>(() => {
+    return {
+      paste: session.value?.canWrite,
+      interrupt: session.value?.canWrite,
+      enter: session.value?.canWrite,
+      commandEditor: session.value?.canWrite,
+      disconnect: session.value?.connected,
+    };
+  });
+
+  // 操作点击逻辑
+  const actionsClickHandler: Record<string, () => void> = {
+    // 去顶部
+    toTop: () => session.value?.toTop(),
+    // 去底部
+    toBottom: () => session.value?.toBottom(),
+    // 全选
+    checkAll: () => session.value?.selectAll(),
+    // 复制选中部分
+    copy: () => copy(session.value?.getSelection(), '已复制'),
+    // 粘贴
+    paste: async () => session.value?.paste(await readText()),
+    // ctrl + c
+    interrupt: () => session.value?.paste(String.fromCharCode(3)),
+    // 回车
+    enter: () => session.value?.paste(String.fromCharCode(13)),
+    // 命令编辑器
+    commandEditor: () => modal.value.open('', ''),
+    // 搜索
+    search: () => {
+    },
+    // 增大字号
+    fontSizePlus: () => {
+      if (session.value) {
+        session.value.setOption('fontSize', session.value.getOption('fontSize') + 1);
+        if (session.value.connected) {
+          session.value.fit();
+          session.value.focus();
         }
-      }
-    }, {
-      icon: 'icon-zoom-out',
-      content: '减小字号',
-      click: () => {
-        if (session.value) {
-          session.value.setOption('fontSize', session.value.getOption('fontSize') - 1);
-          if (session.value.connected) {
-            session.value.fit();
-            session.value.focus();
-          }
-        }
-      }
-    }, {
-      icon: 'icon-delete',
-      content: '清空',
-      click: () => {
-        session.value?.clear();
-      }
-    }, {
-      icon: 'icon-poweroff',
-      content: '关闭',
-      disabled: session.value?.connected,
-      click: () => {
-        session.value?.logout();
       }
     },
-  ]);
+    // 减小字号
+    fontSizeSubtract: () => {
+      if (session.value) {
+        session.value.setOption('fontSize', session.value.getOption('fontSize') - 1);
+        if (session.value.connected) {
+          session.value.fit();
+          session.value.focus();
+        }
+      }
+    },
+    // 清空
+    clear: () => session.value?.clear(),
+    // 断开连接
+    disconnect: () => session.value?.disconnect(),
+    // 关闭
+    close: () => tabManager.deleteTab(props.tab.key),
+  };
+
+  // 右侧操作
+  const rightActions = computed<Array<SidebarAction>>(() => {
+    return ActionBarItems.map(s => {
+      return {
+        icon: s.icon,
+        content: s.content,
+        visible: preference.actionBarSetting[s.item] !== false,
+        disabled: actionsDisableStatus.value[s.item] !== false,
+        click: () => {
+          actionsClickHandler[s.item] && actionsClickHandler[s.item]();
+        }
+      };
+    });
+  });
 
   // 初始化会话
   onMounted(async () => {
@@ -297,7 +274,7 @@
       }
     }
 
-    &-right-icon-actions {
+    &-right-action-bar {
       display: flex;
 
       :deep(.terminal-sidebar-icon-wrapper) {
@@ -315,6 +292,10 @@
     .status-bridge {
       margin: 0 2px 0 8px;
       user-select: none;
+
+      :deep(.arco-badge-status-text) {
+        width: 36px;
+      }
     }
   }
 

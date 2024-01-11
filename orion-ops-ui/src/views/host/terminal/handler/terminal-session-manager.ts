@@ -60,8 +60,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     if (!session) {
       return;
     }
-    // 登出
-    session.logout();
+    // 关闭连接
+    session.disconnect();
     // 关闭 session
     session.close();
     // 移除 session

@@ -10,8 +10,9 @@ export interface TerminalState {
 // 终端配置
 export interface TerminalPreference {
   newConnectionType: string;
-  displaySetting: TerminalDisplaySetting;
   theme: TerminalTheme;
+  displaySetting: TerminalDisplaySetting;
+  actionBarSetting: TerminalActionBarSetting;
 }
 
 // 显示设置
@@ -23,5 +24,13 @@ export interface TerminalDisplaySetting {
   fontWeightBold?: string | number;
   cursorStyle?: string;
   cursorBlink?: boolean;
+}
+
+// 操作栏设置
+export interface TerminalActionBarSetting {
+  commandInput?: boolean;
+  connectStatus?: boolean;
+
+  [key: string]: unknown;
 }
 

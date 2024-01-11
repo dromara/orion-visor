@@ -165,8 +165,8 @@ export default class TerminalSession implements ITerminalSession {
     this.inst.options[option as keyof ITerminalOptions] = value;
   }
 
-  // 登出
-  logout(): void {
+  // 断开连接
+  disconnect(): void {
     // 发送关闭消息
     this.channel.send(InputProtocol.CLOSE, {
       sessionId: this.sessionId

@@ -85,12 +85,13 @@
     }
 
     &-logo-text {
-      height: var(--header-height);
       margin: 0;
       display: flex;
       align-items: center;
       padding: 0 8px;
       font-size: 16px;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     &-tabs {
