@@ -15,7 +15,7 @@
     <!-- 内容区域 -->
     <div v-else class="terminal-setting-body terminal-theme-container">
       <!-- 提示 -->
-      <a-alert class="mb16">选择后会立刻保存, 刷新页面生效</a-alert>
+      <a-alert class="mb16">选择后会立刻保存, 刷新页面后生效</a-alert>
       <!-- 终端主题 -->
       <div class="theme-row"
            v-for="rowIndex in themes.length / 2"

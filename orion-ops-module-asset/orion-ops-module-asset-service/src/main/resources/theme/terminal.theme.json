@@ -2,6 +2,7 @@
   {
     "name": "catppuccin-macchiato",
     "dark": true,
+    "headerBackgroundColor": "#181B2E",
     "schema": {
       "background": "#24273A",
       "foreground": "#CAD3F5",
@@ -26,6 +27,7 @@
   {
     "name": "catppuccin-mocha",
     "dark": true,
+    "headerBackgroundColor": "#121222",
     "schema": {
       "background": "#1E1E2E",
       "foreground": "#CDD6F4",
@@ -50,6 +52,7 @@
   {
     "name": "OneHalfDark",
     "dark": true,
+    "headerBackgroundColor": "#1C2028",
     "schema": {
       "background": "#282C34",
       "foreground": "#DCDFE4",
@@ -74,6 +77,7 @@
   {
     "name": "MaterialDesignColors",
     "dark": true,
+    "headerBackgroundColor": "#111A1E",
     "schema": {
       "background": "#1D262A",
       "foreground": "#E7EBED",
@@ -98,6 +102,7 @@
   {
     "name": "Dracula",
     "dark": true,
+    "headerBackgroundColor": "#12131D",
     "schema": {
       "background": "#1E1F29",
       "foreground": "#F8F8F2",
@@ -120,32 +125,34 @@
     }
   },
   {
-    "name": "Dracula+",
+    "name": "Atom",
     "dark": true,
+    "headerBackgroundColor": "#0A0B0D",
     "schema": {
-      "background": "#212121",
-      "foreground": "#F8F8F2",
-      "cursor": "#ECEFF4",
-      "selectionBackground": "#44475A",
-      "black": "#21222C",
-      "red": "#FF5555",
-      "green": "#50FA7B",
-      "yellow": "#FFCB6B",
-      "blue": "#82AAFF",
-      "cyan": "#8BE9FD",
-      "white": "#F8F8F2",
-      "brightBlack": "#545454",
-      "brightRed": "#FF6E6E",
-      "brightGreen": "#69FF94",
-      "brightYellow": "#FFCB6B",
-      "brightBlue": "#D6ACFF",
-      "brightCyan": "#A4FFFF",
-      "brightWhite": "#F8F8F2"
+      "background": "#161719",
+      "foreground": "#C5C8C6",
+      "cursor": "#D0D0D0",
+      "selectionBackground": "#444444",
+      "black": "#000000",
+      "red": "#FD5FF1",
+      "green": "#87C38A",
+      "yellow": "#FFD7B1",
+      "blue": "#85BEFD",
+      "cyan": "#85BEFD",
+      "white": "#E0E0E0",
+      "brightBlack": "#000000",
+      "brightRed": "#FD5FF1",
+      "brightGreen": "#94FA36",
+      "brightYellow": "#F5FFA8",
+      "brightBlue": "#96CBFE",
+      "brightCyan": "#85BEFD",
+      "brightWhite": "#E0E0E0"
     }
   },
   {
     "name": "Apple System Colors",
     "dark": true,
+    "headerBackgroundColor": "#121212",
     "schema": {
       "background": "#1E1E1E",
       "foreground": "#FFFFFF",
@@ -170,6 +177,7 @@
   {
     "name": "Builtin Tango Light",
     "dark": false,
+    "headerBackgroundColor": "#F3F3F3",
     "schema": {
       "background": "#FFFFFF",
       "foreground": "#000000",
@@ -194,6 +202,7 @@
   {
     "name": "Duotone Dark",
     "dark": true,
+    "headerBackgroundColor": "#13111B",
     "schema": {
       "background": "#1F1D27",
       "foreground": "#B7A1FF",
@@ -218,6 +227,7 @@
   {
     "name": "BlulocoLight",
     "dark": false,
+    "headerBackgroundColor": "#EDEDED",
     "schema": {
       "background": "#F9F9F9",
       "foreground": "#373A41",
@@ -242,6 +252,7 @@
   {
     "name": "Chester",
     "dark": true,
+    "headerBackgroundColor": "#202A37",
     "schema": {
       "background": "#2C3643",
       "foreground": "#FFFFFF",
@@ -266,6 +277,7 @@
   {
     "name": "CLRS",
     "dark": false,
+    "headerBackgroundColor": "#F3F3F3",
     "schema": {
       "background": "#FFFFFF",
       "foreground": "#262626",
@@ -290,6 +302,7 @@
   {
     "name": "Calamity",
     "dark": true,
+    "headerBackgroundColor": "#231C27",
     "schema": {
       "background": "#2F2833",
       "foreground": "#D5CED9",
@@ -314,6 +327,7 @@
   {
     "name": "Tomorrow",
     "dark": false,
+    "headerBackgroundColor": "#F3F3F3",
     "schema": {
       "background": "#FFFFFF",
       "foreground": "#4D4D4C",

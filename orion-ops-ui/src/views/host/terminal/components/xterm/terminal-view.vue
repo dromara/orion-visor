@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="terminal-header"
          :style="{
-           background: adjustColor(themeSchema.background, -12)
+           background: preference.theme.headerBackgroundColor
          }">
       <!-- 左侧操作 -->
       <div class="terminal-header-left">
@@ -44,7 +44,7 @@
     <!-- 命令编辑器 -->
     <shell-editor-modal ref="modal"
                         :closable="false"
-                        :body-style="{ padding: '16px 16px 16px 0' }"
+                        :body-style="{ padding: '16px' }"
                         :dark="preference.theme.dark"
                         cancel-text="关闭"
                         @ok="writeCommand(modal.getValue())"
@@ -59,13 +59,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.const';
+  import type { SidebarAction } from '../../types/terminal.type';
   import type { ITerminalSession, TerminalTabItem } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';
   import { connectStatusKey } from '../../types/terminal.const';
-  import { adjustColor } from '@/utils';
   import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
 
@@ -83,18 +82,29 @@
   const session = ref<ITerminalSession>();
 
   // FIXME
-  // 调教 theme
-  // terminal themes 改成非同步 style
-  // 从后端获取 theme
-  // (改成可配置/拆分)
-  // 自定义 font siderBar 颜色, 集成到主题里面, 现在的问题是切换主题字体颜色就变了
-  // 是否开启 link
-  // 是否开启 image
-  // search color 配置
   // 右键菜单补充
-  // 搜索
+  // 搜索 search color 配置
   // 截屏
-  // 最近连接逻辑 偏好逻辑
+  // 主机获取逻辑 最近连接逻辑 偏好逻辑
+
+
+  // TODO
+  // 交互设置
+  // 右键选中词条
+  // 右键粘贴
+  // 启用右键菜单
+  // 自动将选中内容复制到剪切板
+  // 粘贴时删除空格
+  // 复制时删除空格
+  // 分隔符  /\()"'-.,:;<>~!@#$%^&*|+=[]{}~?│   在终端中双击文本将使用到这些符号
+  // 自动检测 url 并可以点击
+  // 支持显示图片 使用 sixel 打开图片
+
+  // 终端设置
+  // bell sound
+  // terminal emulation type: xterm 256color
+  // 回滚（ScrollBack）
+  // 保存在缓冲区的行数
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {
@@ -249,11 +259,12 @@
     &-left, &-right {
       display: flex;
       align-items: center;
-      width: 100%;
       height: 100%;
     }
 
     &-left {
+      width: 34%;
+
       .address-wrapper {
         height: 100%;
         display: inline-flex;
@@ -278,6 +289,7 @@
     }
 
     &-right {
+      width: 66%;
       justify-content: flex-end;
 
       .command-input {

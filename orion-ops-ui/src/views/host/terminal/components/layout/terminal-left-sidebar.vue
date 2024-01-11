@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.const';
+  import type { SidebarAction } from '../../types/terminal.type';
   import { InnerTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import IconActions from './icon-actions.vue';
@@ -36,11 +36,6 @@
 
   // 底部操作
   const bottomActions: Array<SidebarAction> = [
-    {
-      icon: 'icon-drive-file',
-      content: InnerTabs.SFTP_SETTING.title,
-      click: () => tabManager.openTab(InnerTabs.SFTP_SETTING)
-    },
     {
       icon: 'icon-command',
       content: InnerTabs.SHORTCUT_SETTING.title,

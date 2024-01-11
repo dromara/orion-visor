@@ -4,6 +4,7 @@ import axios from 'axios';
 export interface TerminalTheme {
   name: string;
   dark: boolean;
+  headerBackgroundColor: string;
   schema: TerminalThemeSchema;
 }
 

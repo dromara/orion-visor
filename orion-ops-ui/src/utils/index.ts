@@ -204,26 +204,6 @@ export function getUUID() {
 }
 
 /**
- * 调整颜色
- * @param color color
- * @param range 正数越浅 负数越深
- */
-export function adjustColor(color: string, range: number) {
-  let newColor = '#';
-  for (let i = 0; i < 3; i++) {
-    let c = parseInt(color.substring(i * 2 + 1, i * 2 + 3), 16);
-    c += range;
-    if (c < 0) {
-      c = 0;
-    } else if (c > 255) {
-      c = 255;
-    }
-    newColor += c.toString(16).padStart(2, '0');
-  }
-  return newColor;
-}
-
-/**
  * 清除 xss
  */
 export function cleanXss(s: string) {

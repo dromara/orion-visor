@@ -40,7 +40,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.const';
+  import type { SidebarAction } from '../../types/terminal.type';
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
   import { useTerminalStore } from '@/store';

@@ -62,7 +62,7 @@
 
 <script lang="ts" setup>
   import type { HostQueryResponse } from '@/api/asset/host';
-  import type { SshExtraModel } from '../../types/terminal.const';
+  import type { SshExtraModel } from '../../types/terminal.type';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';

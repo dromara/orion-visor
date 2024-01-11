@@ -4,6 +4,7 @@ import type { WebglAddon } from 'xterm-addon-webgl';
 import type { WebLinksAddon } from 'xterm-addon-web-links';
 import type { SearchAddon } from 'xterm-addon-search';
 import type { ImageAddon } from 'xterm-addon-image';
+import type { CSSProperties } from 'vue';
 
 // 终端 tab 元素
 export interface TerminalTabItem {
@@ -12,6 +13,24 @@ export interface TerminalTabItem {
   type: string;
 
   [key: string]: unknown;
+}
+
+// sidebar 操作类型
+export interface SidebarAction {
+  icon: string;
+  content: string;
+  visible?: boolean;
+  disabled?: boolean;
+  iconStyle?: CSSProperties;
+  click: () => void;
+}
+
+// ssh 额外配置
+export interface SshExtraModel {
+  authType?: string;
+  username?: string;
+  keyId?: number;
+  identityId?: number;
 }
 
 // 终端协议
