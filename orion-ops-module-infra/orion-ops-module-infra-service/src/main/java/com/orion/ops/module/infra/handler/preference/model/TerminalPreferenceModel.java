@@ -86,7 +86,7 @@ public class TerminalPreferenceModel implements PreferenceModel {
         @Schema(description = "右键选中词条")
         private Boolean rightClickSelectsWord;
 
-        @Schema(description = "选中词条自动复制")
+        @Schema(description = "选中自动复制")
         private Boolean selectionChangeCopy;
 
         @Schema(description = "复制去除空格")

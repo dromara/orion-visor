@@ -25,6 +25,9 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "TerminalConnectRequest", description = "终端连接请求 实体对象")
 public class TerminalConnectRequest extends TerminalBasePayload {
 
+    @Schema(description = "伪终端类型")
+    private String terminalType;
+
     @Schema(description = "列数")
     private Integer cols;
 

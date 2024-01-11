@@ -110,7 +110,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             // 建立连接
             SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
             terminalSession = new TerminalSession(sessionId, channel, sessionStore, config);
-            terminalSession.connect(body.getCols(), body.getRows());
+            terminalSession.connect(body.getTerminalType(), body.getCols(), body.getRows());
             log.info("TerminalConnectHandler-handle success sessionId: {}", sessionId);
             return terminalSession;
         } catch (Exception e) {

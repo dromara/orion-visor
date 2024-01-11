@@ -1,11 +1,7 @@
-import {
-  ITerminalChannel,
-  ITerminalOutputProcessor,
-  ITerminalSessionManager,
-  OutputPayload
-} from '../types/terminal.type';
+import { ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload } from '../types/terminal.type';
 import { InputProtocol } from '../types/terminal.protocol';
 import { TerminalStatus } from '../types/terminal.const';
+import { useTerminalStore } from '@/store';
 
 // 终端输出消息体处理器实现
 export default class TerminalOutputProcessor implements ITerminalOutputProcessor {
@@ -29,8 +25,14 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       session.status = TerminalStatus.CLOSED;
       return;
     }
+    const { preference } = useTerminalStore();
     // 发送 connect 命令
-    this.channel.send(InputProtocol.CONNECT, { sessionId, cols: session.inst.cols, rows: session.inst.rows });
+    this.channel.send(InputProtocol.CONNECT, {
+      sessionId,
+      terminalType: preference.sessionSetting.terminalEmulationType || 'xterm',
+      cols: session.inst.cols,
+      rows: session.inst.rows
+    });
   }
 
   // 处理连接消息

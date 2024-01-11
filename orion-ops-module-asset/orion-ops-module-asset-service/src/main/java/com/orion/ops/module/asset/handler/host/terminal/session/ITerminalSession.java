@@ -14,10 +14,11 @@ public interface ITerminalSession extends SafeCloseable {
     /**
      * 连接
      *
-     * @param cols cols
-     * @param rows rows
+     * @param terminalType terminalType
+     * @param cols         cols
+     * @param rows         rows
      */
-    void connect(int cols, int rows);
+    void connect(String terminalType, int cols, int rows);
 
     /**
      * 重置大小

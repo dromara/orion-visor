@@ -119,7 +119,7 @@ export interface TerminalAddons {
   fit: FitAddon;
   webgl: WebglAddon;
   canvas: CanvasAddon;
-  link: WebLinksAddon;
+  weblink: WebLinksAddon;
   search: SearchAddon;
   image: ImageAddon;
 }
@@ -152,10 +152,12 @@ export interface ITerminalSession {
   clear: () => void;
   // 粘贴
   paste: (value: string) => void;
+  // 粘贴并且去除尾部空格 (如果配置)
+  pasteTrimEnd: (value: string) => void;
   // 选中全部
   selectAll: () => void;
-  // 获取选中
-  getSelection: () => string;
+  // 复制选中
+  copySelection: () => string;
   // 去顶部
   toTop: () => void;
   // 去底部

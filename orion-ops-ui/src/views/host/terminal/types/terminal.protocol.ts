@@ -8,7 +8,7 @@ export const InputProtocol = {
   // 连接主机
   CONNECT: {
     type: 'co',
-    template: ['type', 'sessionId', 'cols', 'rows']
+    template: ['type', 'sessionId', 'terminalType', 'cols', 'rows']
   },
   // 关闭连接
   CLOSE: {

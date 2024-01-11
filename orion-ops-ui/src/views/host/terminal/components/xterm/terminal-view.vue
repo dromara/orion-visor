@@ -83,8 +83,9 @@
   const session = ref<ITerminalSession>();
 
   // FIXME
-  // 右键菜单补充
   // 搜索 search color 配置
+  // 右键菜单补充     启用右键菜单 enableRightClickMenu  粘贴逻辑
+  // 快捷键补充 粘贴逻辑
   // 截屏
   // 主机获取逻辑 最近连接逻辑
 
@@ -100,7 +101,7 @@
   // 发送命令
   const writeCommand = (value: string) => {
     if (session.value?.canWrite) {
-      session.value.paste(value);
+      session.value.pasteTrimEnd(value);
     }
   };
 
@@ -129,9 +130,9 @@
     // 全选
     checkAll: () => session.value?.selectAll(),
     // 复制选中部分
-    copy: () => copy(session.value?.getSelection(), '已复制'),
+    copy: () => session.value?.copySelection(),
     // 粘贴
-    paste: async () => session.value?.paste(await readText()),
+    paste: async () => session.value?.pasteTrimEnd(await readText()),
     // ctrl + c
     interrupt: () => session.value?.paste(String.fromCharCode(3)),
     // 回车

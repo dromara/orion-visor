@@ -32,7 +32,7 @@ public enum InputTypeEnum {
      */
     CONNECT("co",
             TerminalConnectHandler.class,
-            new String[]{"type", "sessionId", "cols", "rows"},
+            new String[]{"type", "sessionId", "terminalType", "cols", "rows"},
             TerminalConnectRequest.class),
 
     /**

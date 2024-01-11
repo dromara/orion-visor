@@ -24,12 +24,12 @@
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 右键选中词条 -->
-        <block-setting-item label="右键选中词条" desc="右键文本">
+        <block-setting-item label="右键选中词条" desc="右键文本后会根据单词分隔符自动选中词条">
           <a-switch type="round"
                     v-model="formModel.rightClickSelectsWord" />
         </block-setting-item>
-        <!-- 选中词条自动复制 -->
-        <block-setting-item label="选中词条自动复制" desc="自动将选中的词条复制到剪切板">
+        <!-- 选中自动复制 -->
+        <block-setting-item label="选中自动复制" desc="自动将选中的文本复制到剪切板">
           <a-switch type="round"
                     v-model="formModel.selectionChangeCopy" />
         </block-setting-item>
@@ -41,14 +41,14 @@
                     v-model="formModel.copyAutoTrim" />
         </block-setting-item>
         <!-- 粘贴去除空格 -->
-        <block-setting-item label="粘贴去除空格" desc="粘贴文本前自动删除尾部空格">
+        <block-setting-item label="粘贴去除空格" desc="粘贴文本前自动删除尾部空格 如: 命令输入框, 命令编辑器, 右键粘贴, 粘贴按钮, 右键菜单粘贴, 自定义粘贴快捷键. (系统快捷键无法干预 如: ctrl + shift + v, shift + insert)">
           <a-switch type="round"
                     v-model="formModel.pasteAutoTrim" />
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 右键粘贴 -->
-        <block-setting-item label="右键粘贴" desc="右键自动粘贴, 启用后需要关闭右键菜单">
+        <block-setting-item label="右键粘贴" desc="右键自动粘贴, 启用后需要关闭右键菜单 (若开启了右键选中词条, 有选中的文本时, 右键粘贴无效)">
           <a-switch type="round"
                     v-model="formModel.rightClickPaste" />
         </block-setting-item>

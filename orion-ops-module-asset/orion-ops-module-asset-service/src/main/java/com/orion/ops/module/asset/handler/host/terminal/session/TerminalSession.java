@@ -61,14 +61,13 @@ public class TerminalSession implements ITerminalSession {
     }
 
     @Override
-    public void connect(int cols, int rows) {
+    public void connect(String terminalType, int cols, int rows) {
         config.setCols(cols);
         config.setRows(rows);
         // 打开 shell
         this.executor = sessionStore.getShellExecutor();
         executor.size(cols, rows);
-        // FIXME
-        executor.terminalType(TerminalType.XTERM.getType());
+        executor.terminalType(terminalType);
         executor.streamHandler(this::streamHandler);
         executor.callback(this::eofCallback);
         executor.connect();

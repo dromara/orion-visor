@@ -1,14 +1,20 @@
+import type { UnwrapRef } from 'vue';
+import type { TerminalPreference } from '@/store/modules/terminal/types';
 import type { ITerminalChannel, ITerminalSession, TerminalAddons } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
 import { ITerminalOptions, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
-import { WebglAddon } from 'xterm-addon-webgl';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { SearchAddon } from 'xterm-addon-search';
 import { ImageAddon } from 'xterm-addon-image';
 import { CanvasAddon } from 'xterm-addon-canvas';
+import { WebglAddon } from 'xterm-addon-webgl';
+import { playBell } from '@/utils/bell';
+import useCopy from '@/hooks/copy';
+
+const copy = useCopy();
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
@@ -49,33 +55,29 @@ export default class TerminalSession implements ITerminalSession {
     this.inst = new Terminal({
       ...(preference.displaySetting as any),
       theme: preference.theme.schema,
-      fastScrollModifier: 'alt',
+      fastScrollModifier: !!preference.interactSetting.fastScrollModifier ? 'alt' : 'none',
+      altClickMovesCursor: !!preference.interactSetting.altClickMovesCursor,
+      rightClickSelectsWord: !!preference.interactSetting.rightClickSelectsWord,
       fontFamily: preference.displaySetting.fontFamily + fontFamilySuffix,
+      wordSeparator: preference.interactSetting.wordSeparator,
+      scrollback: preference.sessionSetting.scrollBackLine,
     });
+    // 注册快捷键
+    // 注册事件
+    this.registerEvent(dom, preference);
     // 注册插件
-    this.addons.fit = new FitAddon();
-    // this.addons.webgl = new WebglAddon();
-    this.addons.canvas = new CanvasAddon();
-    this.addons.link = new WebLinksAddon();
-    this.addons.search = new SearchAddon();
-    this.addons.image = new ImageAddon();
-    for (const addon of Object.values(this.addons)) {
-      this.inst.loadAddon(addon);
-    }
+    this.registerAddions(preference);
     // 打开终端
     this.inst.open(dom);
     // 自适应
     this.addons.fit.fit();
   }
 
-  // 设置已连接
-  connect(): void {
-    this.status = TerminalStatus.CONNECTED;
-    this.connected = true;
-    this.inst.focus();
+  // 注册事件
+  private registerEvent(dom: HTMLElement, preference: UnwrapRef<TerminalPreference>) {
     // 注册输入事件
     this.inst.onData(s => {
-      if (!this.canWrite) {
+      if (!this.canWrite || !this.connected) {
         return;
       }
       // 输入
@@ -84,14 +86,81 @@ export default class TerminalSession implements ITerminalSession {
         command: s
       });
     });
+    // 启用响铃
+    if (preference.interactSetting.enableBell) {
+      this.inst.onBell(() => {
+        // 播放蜂鸣
+        playBell();
+      });
+    }
+    // 选中复制
+    if (preference.interactSetting.selectionChangeCopy) {
+      this.inst.onSelectionChange(() => {
+        // 复制选中内容
+        this.copySelection();
+      });
+    }
     // 注册 resize 事件
     this.inst.onResize(({ cols, rows }) => {
+      if (!this.connected) {
+        return;
+      }
       this.channel.send(InputProtocol.RESIZE, {
         sessionId: this.sessionId,
         cols,
         rows
       });
     });
+    // 设置右键选项
+    dom.addEventListener('contextmenu', async (event) => {
+      // 如果开启了右键粘贴 右键选中 右键菜单 则关闭默认右键菜单
+      if (preference.interactSetting.rightClickSelectsWord
+        || preference.interactSetting.rightClickPaste
+        || preference.interactSetting.enableRightClickMenu) {
+        event.preventDefault();
+      }
+      // 右键粘贴逻辑
+      if (preference.interactSetting.rightClickPaste) {
+        if (!this.canWrite || !this.connected) {
+          return;
+        }
+        // 未开启右键选中 || 开启并无选中的内容则粘贴
+        if (!preference.interactSetting.rightClickSelectsWord || !this.inst.hasSelection()) {
+          this.pasteTrimEnd(await copy.readText());
+        }
+      }
+    });
+  }
+
+  // 注册插件
+  private registerAddions(preference: UnwrapRef<TerminalPreference>) {
+    this.addons.fit = new FitAddon();
+    this.addons.search = new SearchAddon();
+    // 超链接插件
+    if (preference.pluginsSetting.enableWeblinkPlugin) {
+      this.addons.weblink = new WebLinksAddon();
+    }
+    if (preference.pluginsSetting.enableWebglPlugin) {
+      // WebGL 渲染插件
+      this.addons.webgl = new WebglAddon();
+    } else {
+      // canvas 渲染插件
+      this.addons.canvas = new CanvasAddon();
+    }
+    // 图片渲染插件
+    if (preference.pluginsSetting.enableImagePlugin) {
+      this.addons.image = new ImageAddon();
+    }
+    for (const addon of Object.values(this.addons)) {
+      this.inst.loadAddon(addon);
+    }
+  }
+
+  // 设置已连接
+  connect(): void {
+    this.status = TerminalStatus.CONNECTED;
+    this.connected = true;
+    this.inst.focus();
   }
 
   // 设置是否可写
@@ -132,15 +201,36 @@ export default class TerminalSession implements ITerminalSession {
     this.inst.focus();
   }
 
+  // 粘贴并且去除尾部空格 (如果配置)
+  pasteTrimEnd(value: string): void {
+    if (useTerminalStore().preference.interactSetting.pasteAutoTrim) {
+      // 粘贴前去除尾部空格
+      this.inst.paste(value.trimEnd());
+    } else {
+      this.inst.paste(value);
+    }
+    this.inst.focus();
+  }
+
   // 选中全部
   selectAll(): void {
     this.inst.selectAll();
     this.inst.focus();
   }
 
-  // 获取选中
-  getSelection(): string {
-    const selection = this.inst.getSelection();
+  // 复制选中
+  copySelection(): string {
+    let selection = this.inst.getSelection();
+    if (selection) {
+      // 去除尾部空格
+      const { preference } = useTerminalStore();
+      if (preference.interactSetting.copyAutoTrim) {
+        selection = selection.trimEnd();
+      }
+      // 复制
+      copy.copy(selection, false);
+    }
+    // 聚焦
     this.inst.focus();
     return selection;
   }
