@@ -29,8 +29,8 @@ public class TerminalThemeGenerator {
         List<File> files = Files1.listFiles("D:\\idea-project\\iTerm2-Color-Schemes\\vhs");
         // 过滤的 theme
         List<String> schemaFilter = Lists.of(
-                "catppuccin-macchiato", "catppuccin-mocha",
-                "OneHalfDark", "MaterialDesignColors",
+                "catppuccin-mocha", "MaterialDesignColors",
+                "catppuccin-macchiato", "OneHalfDark",
                 "Dracula", "Atom",
                 "Apple System Colors", "Builtin Tango Light",
                 "Duotone Dark", "BlulocoLight",

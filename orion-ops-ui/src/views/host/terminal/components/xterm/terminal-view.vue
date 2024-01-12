@@ -42,14 +42,18 @@
            background: preference.theme.schema.background
          }">
       <div class="terminal-inst" ref="terminalRef" />
+      <!-- 搜索模态框 -->
+      <terminal-search-modal ref="searchModal"
+                             @find="findWords"
+                             @close="focus" />
     </div>
     <!-- 命令编辑器 -->
-    <shell-editor-modal ref="modal"
+    <shell-editor-modal ref="editorModal"
                         :closable="false"
                         :body-style="{ padding: '16px' }"
                         :dark="preference.theme.dark"
                         cancel-text="关闭"
-                        @ok="writeCommand(modal.getValue())"
+                        @ok="writeCommand(editorModal.getValue())"
                         @cancel="focus" />
   </div>
 </template>
@@ -68,6 +72,7 @@
   import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
   import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
+  import TerminalSearchModal from './terminal-search-modal.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -77,18 +82,18 @@
   const { getDictValue } = useDictStore();
   const { preference, tabManager, sessionManager } = useTerminalStore();
 
-  const modal = ref();
+  const editorModal = ref();
+  const searchModal = ref();
   const commandInput = ref();
   const terminalRef = ref();
   const session = ref<ITerminalSession>();
 
   // TODO
-  // index 页面
-  // 搜索 search color 配置
   // 右键菜单补充     启用右键菜单 enableRightClickMenu  粘贴逻辑
-  // 快捷键补充 粘贴逻辑
+  // 设置快捷键  粘贴逻辑
+  // 读取快捷键并且禁用快捷键
   // 截屏
-  // 主机获取逻辑 最近连接逻辑
+  // sftp
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {
@@ -109,6 +114,11 @@
   // 聚焦
   const focus = () => {
     session.value?.focus();
+  };
+
+  // 查询关键字
+  const findWords = (word: string, next: boolean, options: any) => {
+    session.value?.find(word, next, options);
   };
 
   // 操作禁用状态
@@ -132,6 +142,8 @@
     checkAll: () => session.value?.selectAll(),
     // 复制选中部分
     copy: () => session.value?.copySelection(),
+    // 搜索
+    search: () => searchModal.value.toggle(),
     // 粘贴
     paste: async () => session.value?.pasteTrimEnd(await readText()),
     // ctrl + c
@@ -139,10 +151,7 @@
     // 回车
     enter: () => session.value?.paste(String.fromCharCode(13)),
     // 命令编辑器
-    commandEditor: () => modal.value.open('', ''),
-    // 搜索
-    search: () => {
-    },
+    commandEditor: () => editorModal.value.open('', ''),
     // 增大字号
     fontSizePlus: () => {
       if (session.value) {

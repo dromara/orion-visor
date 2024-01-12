@@ -21,7 +21,7 @@ export const InnerTabs = {
   DISPLAY_SETTING: {
     key: 'displaySetting',
     title: '显示设置',
-    icon: 'icon-dice',
+    icon: 'icon-stamp',
     type: TerminalTabType.SETTING
   },
   THEME_SETTING: {
@@ -89,6 +89,10 @@ export const ActionBarItems = [
     icon: 'icon-paste',
     content: '粘贴',
   }, {
+    item: 'search',
+    icon: 'icon-find-replace',
+    content: '搜索',
+  }, {
     item: 'interrupt',
     icon: 'icon-formula',
     content: 'ctrl + c',
@@ -100,10 +104,6 @@ export const ActionBarItems = [
     item: 'commandEditor',
     icon: 'icon-code-square',
     content: '命令编辑器',
-  }, {
-    item: 'search',
-    icon: 'icon-search',
-    content: '搜索',
   }, {
     item: 'fontSizePlus',
     icon: 'icon-zoom-in',

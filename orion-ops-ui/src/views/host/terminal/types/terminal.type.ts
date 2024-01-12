@@ -3,7 +3,7 @@ import type { FitAddon } from 'xterm-addon-fit';
 import type { CanvasAddon } from 'xterm-addon-canvas';
 import type { WebglAddon } from 'xterm-addon-webgl';
 import type { WebLinksAddon } from 'xterm-addon-web-links';
-import type { SearchAddon } from 'xterm-addon-search';
+import type { ISearchOptions, SearchAddon } from 'xterm-addon-search';
 import type { ImageAddon } from 'xterm-addon-image';
 import type { CSSProperties } from 'vue';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -169,6 +169,8 @@ export interface ITerminalSession {
   selectAll: () => void;
   // 复制选中
   copySelection: () => string;
+  // 查找
+  find: (word: string, next: boolean, options: ISearchOptions) => void;
   // 去顶部
   toTop: () => void;
   // 去底部

@@ -7,7 +7,7 @@ import { InputProtocol } from '../types/terminal.protocol';
 import { ITerminalOptions, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
-import { SearchAddon } from 'xterm-addon-search';
+import { ISearchOptions, SearchAddon } from 'xterm-addon-search';
 import { ImageAddon } from 'xterm-addon-image';
 import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebglAddon } from 'xterm-addon-webgl';
@@ -233,6 +233,15 @@ export default class TerminalSession implements ITerminalSession {
     // 聚焦
     this.inst.focus();
     return selection;
+  }
+
+  // 查找
+  find(word: string, next: boolean, options: ISearchOptions): void {
+    if (next) {
+      this.addons.search.findNext(word, options);
+    } else {
+      this.addons.search.findPrevious(word, options);
+    }
   }
 
   // 去顶部

@@ -35,7 +35,7 @@
   import { InnerTabs, TerminalTabType } from '../../types/terminal.const';
   import { get } from 'lodash';
 
-  const totalCount = 8;
+  const totalCount = 7;
   const { tabManager, hosts, openTerminal } = useTerminalStore();
 
   const combinedHandlers = ref<Array<CombinedHandlerItem>>([{
@@ -104,7 +104,7 @@
   .combined-container {
     padding: 12px;
     margin: 64px auto;
-    width: 424px;
+    width: 398px;
     height: 448px;
     display: flex;
     flex-direction: column;
@@ -145,7 +145,7 @@
       width: calc(100% - @handler-height - 12px);
       display: flex;
       align-items: center;
-      font-size: 14px;
+      font-size: 12px;
 
       &-wrapper {
         display: block;
