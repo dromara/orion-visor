@@ -6,12 +6,14 @@ import type { WebLinksAddon } from 'xterm-addon-web-links';
 import type { SearchAddon } from 'xterm-addon-search';
 import type { ImageAddon } from 'xterm-addon-image';
 import type { CSSProperties } from 'vue';
+import type { HostQueryResponse } from '@/api/asset/host';
 
 // 终端 tab 元素
 export interface TerminalTabItem {
   key: string;
   title: string;
   type: string;
+  icon?: string;
 
   [key: string]: unknown;
 }
@@ -25,6 +27,15 @@ export interface SidebarAction {
   checked?: boolean;
   iconStyle?: CSSProperties;
   click: () => void;
+}
+
+// 组合操作元素
+export interface CombinedHandlerItem {
+  icon: string,
+  type: string,
+  title: string;
+  settingTab?: TerminalTabItem;
+  host?: HostQueryResponse;
 }
 
 // ssh 额外配置

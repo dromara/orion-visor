@@ -102,7 +102,7 @@
   import { useDictStore, useTerminalStore } from '@/store';
   import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../types/terminal.const';
   import { labelFilter } from '@/types/form';
-  import { PreferenceItem } from '@/store/modules/terminal';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import TerminalExample from '../view-setting/terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
@@ -129,7 +129,7 @@
       }
     });
     // 同步
-    updateTerminalPreference(PreferenceItem.DISPLAY_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.DISPLAY_SETTING, formModel.value, true);
     // 聚焦
     previewTerminal.value.term.focus();
   }, { deep: true });

@@ -50,7 +50,7 @@
   import type { SidebarAction } from '../../types/terminal.type';
   import { computed, ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PreferenceItem } from '@/store/modules/terminal';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { ActionBarItems } from '../../types/terminal.const';
   import IconActions from '../layout/icon-actions.vue';
 
@@ -64,7 +64,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(PreferenceItem.ACTION_BAR_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.ACTION_BAR_SETTING, formModel.value, true);
   }, { deep: true });
 
   // 右侧操作

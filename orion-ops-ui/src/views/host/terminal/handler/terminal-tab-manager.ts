@@ -9,9 +9,7 @@ export default class TerminalTabManager implements ITerminalTabManager {
   public items: Array<TerminalTabItem>;
 
   constructor() {
-    // fixme
-    // this.active = InnerTabs.NEW_CONNECTION.key;
-    this.active = undefined as unknown as string;
+    this.active = InnerTabs.NEW_CONNECTION.key;
     this.items = [InnerTabs.NEW_CONNECTION];
   }
 

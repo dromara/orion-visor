@@ -7,7 +7,7 @@
                   :key="tab.key"
                   :title="tab.title">
         <!-- 设置 -->
-        <template v-if="tab.type === TabType.SETTING">
+        <template v-if="tab.type === TerminalTabType.SETTING">
           <!-- 新建连接 -->
           <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
           <!-- 显示设置 -->
@@ -18,7 +18,7 @@
           <terminal-general-setting v-else-if="tab.key === InnerTabs.TERMINAL_SETTING.key" />
         </template>
         <!-- 终端 -->
-        <template v-else-if="tab.type === TabType.TERMINAL">
+        <template v-else-if="tab.type === TerminalTabType.TERMINAL">
           <terminal-view :tab="tab" />
         </template>
       </a-tab-pane>
@@ -35,7 +35,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { TabType, InnerTabs } from '../../types/terminal.const';
+  import { TerminalTabType, InnerTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { watch } from 'vue';
   import EmptyRecommend from './empty-recommend.vue';
@@ -62,7 +62,7 @@
     // 修改标题
     document.title = tab.title;
     // terminal 自动聚焦
-    if (tab?.type === TabType.TERMINAL) {
+    if (tab?.type === TerminalTabType.TERMINAL) {
       sessionManager.getSession(active)?.focus();
     }
   });

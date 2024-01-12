@@ -86,7 +86,7 @@
   import type { TerminalInteractSetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PreferenceItem } from '@/store/modules/terminal';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import BlockSettingItem from './block-setting-item.vue';
 
   const { preference, updateTerminalPreference } = useTerminalStore();
@@ -99,7 +99,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(PreferenceItem.INTERACT_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.INTERACT_SETTING, formModel.value, true);
   }, { deep: true });
 
 </script>

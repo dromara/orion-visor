@@ -10,7 +10,7 @@
                        type="button"
                        class="usn"
                        :options="toRadioOptions(newConnectionTypeKey)"
-                       @change="s => updateTerminalPreference(PreferenceItem.NEW_CONNECTION_TYPE, s as string, true)" />
+                       @change="s => updateTerminalPreference(TerminalPreferenceItem.NEW_CONNECTION_TYPE, s as string, true)" />
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
                          class="host-filter"
@@ -70,7 +70,7 @@
   import { onBeforeMount, ref } from 'vue';
   import { NewConnectionType, newConnectionTypeKey } from '../../types/terminal.const';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { PreferenceItem } from '@/store/modules/terminal';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import HostsView from './hosts-view.vue';

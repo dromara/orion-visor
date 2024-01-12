@@ -168,7 +168,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostAlias } from '@/api/asset/host-extra';
-  import { nextSessionId, openSshModalKey, TabType } from '../../types/terminal.const';
+  import { openSshModalKey } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -176,7 +176,7 @@
     emptyValue: string
   }>();
 
-  const { tabManager, addToLatestConnect } = useTerminalStore();
+  const { openTerminal } = useTerminalStore();
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
   const aliasNameInput = ref();
@@ -211,29 +211,6 @@
       item.loading = false;
       item.modCount = 0;
     }
-  };
-
-  // 打开终端
-  const openTerminal = (record: HostQueryResponse) => {
-    // 添加到最近连接
-    addToLatestConnect(record.id);
-    // 获取 seq
-    const tabSeqArr = tabManager.items
-      .map(s => s.seq)
-      .filter(Boolean)
-      .map(Number);
-    const nextSeq = tabSeqArr.length
-      ? Math.max(...tabSeqArr) + 1
-      : 1;
-    // 打开 tab
-    tabManager.openTab({
-      type: TabType.TERMINAL,
-      key: nextSessionId(),
-      seq: nextSeq,
-      title: `(${nextSeq})  ${record.alias || record.name}`,
-      hostId: record.id,
-      address: record.address
-    });
   };
 
   // 打开配置

@@ -9,16 +9,19 @@ import type {
 } from './types';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
+import type { HostQueryResponse } from '@/api/asset/host';
 import type { TerminalTheme } from '@/api/asset/host-terminal';
 import { getTerminalThemes } from '@/api/asset/host-terminal';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
+import { nextSessionId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
+import { TerminalTabType } from '@/views/host/terminal/types/terminal.const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 
-// 偏好项
-export const PreferenceItem = {
+// 终端偏好项
+export const TerminalPreferenceItem = {
   // 新建连接类型
   NEW_CONNECTION_TYPE: 'newConnectionType',
   // 终端主题
@@ -62,7 +65,7 @@ export default defineStore('terminal', {
           const { data: themes } = await getTerminalThemes();
           data.theme = themes[0];
           // 更新默认主题偏好
-          await this.updateTerminalPreference(PreferenceItem.THEME, data.theme);
+          await this.updateTerminalPreference(TerminalPreferenceItem.THEME, data.theme);
         }
         // 选择赋值
         const keys = Object.keys(this.preference);
@@ -105,10 +108,28 @@ export default defineStore('terminal', {
       });
     },
 
-    // 添加到最近连接列表
-    addToLatestConnect(hostId: number) {
-      this.hosts.latestHosts = [...new Set([hostId, ...this.hosts.latestHosts])];
-    }
+    // 打开终端
+    openTerminal(record: HostQueryResponse) {
+      // 添加到最近连接
+      this.hosts.latestHosts = [...new Set([record.id, ...this.hosts.latestHosts])];
+      // 获取 seq
+      const tabSeqArr = this.tabManager.items
+        .map(s => s.seq)
+        .filter(Boolean)
+        .map(Number);
+      const nextSeq = tabSeqArr.length
+        ? Math.max(...tabSeqArr) + 1
+        : 1;
+      // 打开 tab
+      this.tabManager.openTab({
+        type: TerminalTabType.TERMINAL,
+        key: nextSessionId(10),
+        seq: nextSeq,
+        title: `(${nextSeq})  ${record.alias || record.name}`,
+        hostId: record.id,
+        address: record.address
+      });
+    },
 
   },
 

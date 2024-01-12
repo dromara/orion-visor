@@ -56,12 +56,12 @@
 <script lang="ts" setup>
   import type { TerminalTheme } from '@/api/asset/host-terminal';
   import { useTerminalStore } from '@/store';
-  import { PreferenceItem } from '@/store/modules/terminal';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { onMounted, ref } from 'vue';
   import { getTerminalThemes } from '@/api/asset/host-terminal';
-  import TerminalExample from './terminal-example.vue';
   import { getPreference } from '@/api/user/preference';
   import useLoading from '@/hooks/loading';
+  import TerminalExample from './terminal-example.vue';
 
   const { updateTerminalPreference } = useTerminalStore();
   const { loading, setLoading } = useLoading();
@@ -72,14 +72,14 @@
   // 选择主题
   const selectTheme = async (theme: TerminalTheme) => {
     currentThemeName.value = theme.name;
-    await updateTerminalPreference(PreferenceItem.THEME, theme);
+    await updateTerminalPreference(TerminalPreferenceItem.THEME, theme);
   };
 
   // 加载用户主题
   onMounted(async () => {
     try {
-      const { data } = await getPreference<Record<string, any>>('TERMINAL', [PreferenceItem.THEME]);
-      currentThemeName.value = data[PreferenceItem.THEME]?.name;
+      const { data } = await getPreference<Record<string, any>>('TERMINAL', [TerminalPreferenceItem.THEME]);
+      currentThemeName.value = data[TerminalPreferenceItem.THEME]?.name;
     } catch (e) {
     }
   });

@@ -1,7 +1,5 @@
-import { getUUID } from '@/utils';
-
 // tab 类型
-export const TabType = {
+export const TerminalTabType = {
   SETTING: 'setting',
   TERMINAL: 'terminal',
 };
@@ -11,27 +9,32 @@ export const InnerTabs = {
   NEW_CONNECTION: {
     key: 'newConnection',
     title: '新建连接',
-    type: TabType.SETTING
+    icon: 'icon-plus',
+    type: TerminalTabType.SETTING
   },
   SHORTCUT_SETTING: {
     key: 'shortcutSetting',
     title: '快捷键设置',
-    type: TabType.SETTING
+    icon: 'icon-command',
+    type: TerminalTabType.SETTING
   },
   DISPLAY_SETTING: {
     key: 'displaySetting',
     title: '显示设置',
-    type: TabType.SETTING
+    icon: 'icon-dice',
+    type: TerminalTabType.SETTING
   },
   THEME_SETTING: {
     key: 'themeSetting',
     title: '主题设置',
-    type: TabType.SETTING
+    icon: 'icon-palette',
+    type: TerminalTabType.SETTING
   },
   TERMINAL_SETTING: {
     key: 'terminalSetting',
     title: '终端设置',
-    type: TabType.SETTING
+    icon: 'icon-settings',
+    type: TerminalTabType.SETTING
   },
 };
 
@@ -123,11 +126,6 @@ export const ActionBarItems = [
     content: '关闭',
   }
 ];
-
-// 获取会话id
-export const nextSessionId = (): string => {
-  return getUUID().replaceAll('-', '').substring(0, 10);
-};
 
 // 打开 sshModal key
 export const openSshModalKey = Symbol();

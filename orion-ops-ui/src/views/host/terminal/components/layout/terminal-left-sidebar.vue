@@ -28,7 +28,7 @@
   // 顶部操作
   const topActions: Array<SidebarAction> = [
     {
-      icon: 'icon-plus',
+      icon: InnerTabs.NEW_CONNECTION.icon,
       content: InnerTabs.NEW_CONNECTION.title,
       click: () => tabManager.openTab(InnerTabs.NEW_CONNECTION)
     },
@@ -37,22 +37,22 @@
   // 底部操作
   const bottomActions: Array<SidebarAction> = [
     {
-      icon: 'icon-command',
+      icon: InnerTabs.SHORTCUT_SETTING.icon,
       content: InnerTabs.SHORTCUT_SETTING.title,
       click: () => tabManager.openTab(InnerTabs.SHORTCUT_SETTING)
     },
     {
-      icon: 'icon-desktop',
+      icon: InnerTabs.DISPLAY_SETTING.icon,
       content: InnerTabs.DISPLAY_SETTING.title,
       click: () => tabManager.openTab(InnerTabs.DISPLAY_SETTING)
     },
     {
-      icon: 'icon-palette',
+      icon: InnerTabs.THEME_SETTING.icon,
       content: InnerTabs.THEME_SETTING.title,
       click: () => tabManager.openTab(InnerTabs.THEME_SETTING)
     },
     {
-      icon: 'icon-settings',
+      icon: InnerTabs.TERMINAL_SETTING.icon,
       content: InnerTabs.TERMINAL_SETTING.title,
       click: () => tabManager.openTab(InnerTabs.TERMINAL_SETTING)
     },

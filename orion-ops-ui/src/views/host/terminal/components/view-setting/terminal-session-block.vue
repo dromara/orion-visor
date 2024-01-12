@@ -41,7 +41,7 @@
   import type { TerminalSessionSetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { PreferenceItem } from '@/store/modules/terminal';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { terminalEmulationTypeKey } from '../../types/terminal.const';
   import BlockSettingItem from './block-setting-item.vue';
 
@@ -56,7 +56,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(PreferenceItem.SESSION_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.SESSION_SETTING, formModel.value, true);
   }, { deep: true });
 
 </script>
