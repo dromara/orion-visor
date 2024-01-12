@@ -12,7 +12,10 @@
       </div>
       <!-- 内容区域 -->
       <div class="host-layout-content">
-        <terminal-content />
+        <!-- 主机加载中骨架 -->
+        <loading-skeleton v-if="contentLoading" />
+        <!-- 终端内容区域 -->
+        <terminal-content v-else />
       </div>
       <!-- 右侧操作栏 -->
       <div class="host-layout-right">
@@ -36,12 +39,15 @@
   import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
   import TerminalContent from './components/layout/terminal-content.vue';
+  import LoadingSkeleton from './components/layout/loading-skeleton.vue';
   import './assets/styles/layout.less';
   import 'xterm/css/xterm.css';
+  import useLoading from '@/hooks/loading';
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
   const cacheStore = useCacheStore();
+  const { loading: contentLoading, setLoading: setContentLoading } = useLoading(true);
 
   const originTitle = document.title;
   const render = ref(false);
@@ -64,6 +70,16 @@
   // 加载字典值
   onBeforeMount(async () => {
     await dictStore.loadKeys([...dictKeys]);
+  });
+
+  // 加载主机信息
+  onMounted(async () => {
+    try {
+      await terminalStore.loadHosts();
+    } catch (e) {
+    } finally {
+      setContentLoading(false);
+    }
   });
 
   // 注册关闭视口事件

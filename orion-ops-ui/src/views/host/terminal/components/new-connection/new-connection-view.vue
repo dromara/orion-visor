@@ -40,16 +40,8 @@
         </div>
         <!-- 内容区域 -->
         <div class="terminal-setting-body body-container">
-          <!-- 加载中 -->
-          <a-skeleton v-if="loading"
-                      class="hosts-skeleton"
-                      :animation="true">
-            <a-skeleton-line :rows="6"
-                             :line-height="40"
-                             :line-spacing="20" />
-          </a-skeleton>
           <!-- 无数据 -->
-          <a-empty v-else-if="!hosts.hostList?.length">
+          <a-empty v-if="!hosts.hostList?.length">
             <template #image>
               <icon-desktop />
             </template>
@@ -77,16 +69,14 @@
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { onBeforeMount, ref } from 'vue';
   import { NewConnectionType, newConnectionTypeKey } from '../../types/terminal.const';
-  import useLoading from '@/hooks/loading';
   import { useDictStore, useTerminalStore } from '@/store';
   import { PreferenceItem } from '@/store/modules/terminal';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import HostsView from './hosts-view.vue';
 
-  const { loading, setLoading } = useLoading();
   const { toRadioOptions } = useDictStore();
-  const { preference, updateTerminalPreference, hosts, loadHosts } = useTerminalStore();
+  const { preference, updateTerminalPreference, hosts } = useTerminalStore();
 
   const newConnectionType = ref(preference.newConnectionType || NewConnectionType.GROUP);
   const filterValue = ref('');
@@ -123,21 +113,8 @@
     }).forEach(s => filterOptions.value.push(s));
   };
 
-  // 加载主机信息
-  const initHosts = async () => {
-    try {
-      setLoading(true);
-      // 加载主机信息
-      await loadHosts();
-      // 初始化过滤项
-      initFilterOptions();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 加载主机信息
-  onBeforeMount(initHosts);
+  // 初始化过滤器项
+  onBeforeMount(initFilterOptions);
 
 </script>
 
@@ -154,10 +131,6 @@
 
   .body-container {
     justify-content: space-between;
-
-    .hosts-skeleton {
-      width: 100%;
-    }
 
     .host-view-container {
       width: 100%;

@@ -9,7 +9,9 @@ export default class TerminalTabManager implements ITerminalTabManager {
   public items: Array<TerminalTabItem>;
 
   constructor() {
-    this.active = InnerTabs.NEW_CONNECTION.key;
+    // fixme
+    // this.active = InnerTabs.NEW_CONNECTION.key;
+    this.active = undefined as unknown as string;
     this.items = [InnerTabs.NEW_CONNECTION];
   }
 
@@ -27,6 +29,8 @@ export default class TerminalTabManager implements ITerminalTabManager {
     if (key === this.active && this.items.length !== 0) {
       // 切换为前一个 tab
       this.active = this.items[Math.max(tabIndex - 1, 0)].key;
+    } else {
+      this.active = undefined as unknown as string;
     }
   }
 

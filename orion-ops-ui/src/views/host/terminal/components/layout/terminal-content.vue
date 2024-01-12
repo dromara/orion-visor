@@ -1,7 +1,8 @@
 <template>
   <div class="terminal-content">
     <!-- 内容 tabs -->
-    <a-tabs v-model:active-key="tabManager.active">
+    <a-tabs v-if="tabManager.active"
+            v-model:active-key="tabManager.active">
       <a-tab-pane v-for="tab in tabManager.items"
                   :key="tab.key"
                   :title="tab.title">
@@ -22,6 +23,8 @@
         </template>
       </a-tab-pane>
     </a-tabs>
+    <!-- 承载页推荐 -->
+    <empty-recommend v-else />
   </div>
 </template>
 
@@ -35,6 +38,7 @@
   import { TabType, InnerTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { watch } from 'vue';
+  import EmptyRecommend from './empty-recommend.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
   import TerminalDisplaySetting from '../view-setting/terminal-display-setting.vue';
   import TerminalThemeSetting from '../view-setting/terminal-theme-setting.vue';
@@ -46,6 +50,8 @@
   // 监听 tab 修改
   watch(() => tabManager.active, active => {
     if (!active) {
+      // 修改标题
+      document.title = '主机终端';
       return;
     }
     // 获取 tab
