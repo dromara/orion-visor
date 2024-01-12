@@ -34,6 +34,6 @@ public class AuthorizedHostWrapperVO {
     private Map<String, Set<Long>> treeNodes;
 
     @Schema(description = "最近访问的主机")
-    private List<Long> latestHosts;
+    private Set<Long> latestHosts;
 
 }

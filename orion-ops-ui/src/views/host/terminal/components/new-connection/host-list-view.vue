@@ -176,7 +176,7 @@
     emptyValue: string
   }>();
 
-  const { tabManager } = useTerminalStore();
+  const { tabManager, addToLatestConnect } = useTerminalStore();
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
   const aliasNameInput = ref();
@@ -215,6 +215,8 @@
 
   // 打开终端
   const openTerminal = (record: HostQueryResponse) => {
+    // 添加到最近连接
+    addToLatestConnect(record.id);
     // 获取 seq
     const tabSeqArr = tabManager.items
       .map(s => s.seq)

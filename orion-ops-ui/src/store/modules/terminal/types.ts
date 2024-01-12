@@ -1,8 +1,10 @@
 import type { ITerminalSessionManager, ITerminalTabManager } from '@/views/host/terminal/types/terminal.type';
 import type { TerminalTheme } from '@/api/asset/host-terminal';
+import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 
 export interface TerminalState {
   preference: TerminalPreference;
+  hosts: AuthorizedHostQueryResponse;
   tabManager: ITerminalTabManager;
   sessionManager: ITerminalSessionManager;
 }

@@ -11,6 +11,7 @@ export interface AuthorizedHostQueryResponse {
   groupTree: Array<HostGroupQueryResponse>;
   hostList: Array<HostQueryResponse>;
   treeNodes: Record<string, Array<number>>;
+  latestHosts: Array<number>;
 }
 
 /**

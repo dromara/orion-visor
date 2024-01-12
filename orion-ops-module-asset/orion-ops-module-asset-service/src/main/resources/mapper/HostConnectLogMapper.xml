@@ -27,7 +27,7 @@
     </sql>
 
     <select id="selectLatestConnectHostId" resultType="java.lang.Long">
-        SELECT DISTINCT host_id
+        SELECT host_id
         FROM host_connect_log
         WHERE deleted = 0
           AND type = #{type}

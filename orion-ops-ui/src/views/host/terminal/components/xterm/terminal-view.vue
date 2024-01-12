@@ -82,7 +82,8 @@
   const terminalRef = ref();
   const session = ref<ITerminalSession>();
 
-  // FIXME
+  // TODO
+  // index 页面
   // 搜索 search color 配置
   // 右键菜单补充     启用右键菜单 enableRightClickMenu  粘贴逻辑
   // 快捷键补充 粘贴逻辑

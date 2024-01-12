@@ -60,8 +60,7 @@
                       class="host-view-container"
                       :hosts="hosts"
                       :filter-value="filterValue"
-                      :new-connection-type="newConnectionType"
-                      :latest-hosts="latestHosts" />
+                      :new-connection-type="newConnectionType" />
         </div>
       </div>
     </div>
@@ -76,27 +75,22 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
-  import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
   import { onBeforeMount, ref } from 'vue';
   import { NewConnectionType, newConnectionTypeKey } from '../../types/terminal.const';
   import useLoading from '@/hooks/loading';
-  import { useAppStore, useDictStore, useTerminalStore } from '@/store';
+  import { useDictStore, useTerminalStore } from '@/store';
   import { PreferenceItem } from '@/store/modules/terminal';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
-  import { getLatestConnectHostId } from '@/api/asset/host-connect-log';
   import HostsView from './hosts-view.vue';
 
   const { loading, setLoading } = useLoading();
   const { toRadioOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
+  const { preference, updateTerminalPreference, hosts, loadHosts } = useTerminalStore();
 
   const newConnectionType = ref(preference.newConnectionType || NewConnectionType.GROUP);
   const filterValue = ref('');
   const filterOptions = ref<Array<SelectOptionData>>([]);
-  const hosts = ref<AuthorizedHostQueryResponse>({} as AuthorizedHostQueryResponse);
-  const latestHosts = ref<Array<number>>([]);
 
   // 过滤输入
   const searchFilter = (searchValue: string, option: SelectOptionData) => {
@@ -112,7 +106,7 @@
   // 初始化过滤器项
   const initFilterOptions = () => {
     // 添加 tags
-    const tagNames = hosts.value.hostList?.map(s => s.tags)
+    const tagNames = hosts.hostList?.map(s => s.tags)
       .filter(s => s?.length)
       .flat(1)
       .sort((o1, o2) => o1.id - o2.id)
@@ -121,7 +115,7 @@
       return { label: value, value: `@${value}`, isTag: true };
     }).forEach(s => filterOptions.value.push(s));
     // 添加主机信息
-    const hostMeta = hosts.value.hostList?.map(s => {
+    const hostMeta = hosts.hostList?.map(s => {
       return [s.name, s.code, s.address, s.alias];
     }).filter(Boolean).flat(1);
     [...new Set(hostMeta)].map(value => {
@@ -134,8 +128,7 @@
     try {
       setLoading(true);
       // 加载主机信息
-      const { data } = await getCurrentAuthorizedHost();
-      hosts.value = data;
+      await loadHosts();
       // 初始化过滤项
       initFilterOptions();
     } finally {
@@ -143,23 +136,8 @@
     }
   };
 
-  // 加载最近连接主机
-  const loadLatestConnectHost = async () => {
-    try {
-      setLoading(true);
-      // 加载最近连接主机
-      const { data } = await getLatestConnectHostId('SSH', useAppStore().defaultTablePageSize);
-      latestHosts.value = data;
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // 加载主机信息
   onBeforeMount(initHosts);
-
-  // 加载最近连接主机
-  onBeforeMount(loadLatestConnectHost);
 
 </script>
 

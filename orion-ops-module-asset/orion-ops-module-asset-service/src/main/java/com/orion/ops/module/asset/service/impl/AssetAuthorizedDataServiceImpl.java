@@ -209,7 +209,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                 favoriteResult.get(),
                 dataAliasResult.get());
         // 设置最近连接的主机
-        wrapper.setLatestHosts(latestConnectHostIdList.get());
+        wrapper.setLatestHosts(new LinkedHashSet<>(latestConnectHostIdList.get()));
         return wrapper;
     }
 

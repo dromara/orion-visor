@@ -7,6 +7,8 @@ import type {
   TerminalSessionSetting,
   TerminalState
 } from './types';
+import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
+import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { TerminalTheme } from '@/api/asset/host-terminal';
 import { getTerminalThemes } from '@/api/asset/host-terminal';
 import { defineStore } from 'pinia';
@@ -44,6 +46,7 @@ export default defineStore('terminal', {
       pluginsSetting: {} as TerminalPluginsSetting,
       sessionSetting: {} as TerminalSessionSetting,
     },
+    hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(),
     sessionManager: new TerminalSessionManager()
   }),
@@ -55,7 +58,7 @@ export default defineStore('terminal', {
         // 加载偏好
         const { data } = await getPreference<TerminalPreference>('TERMINAL');
         // theme 不存在则默认加载第一个
-        if (!data.theme) {
+        if (!data.theme?.name) {
           const { data: themes } = await getTerminalThemes();
           data.theme = themes[0];
           // 更新默认主题偏好
@@ -90,6 +93,22 @@ export default defineStore('terminal', {
         Message.error('同步失败');
       }
     },
+
+    // 加载主机列表
+    async loadHosts() {
+      if (this.hosts.hostList?.length) {
+        return;
+      }
+      const { data } = await getCurrentAuthorizedHost();
+      Object.keys(data).forEach(k => {
+        this.hosts[k as keyof AuthorizedHostQueryResponse] = data[k as keyof AuthorizedHostQueryResponse] as any;
+      });
+    },
+
+    // 添加到最近连接列表
+    addToLatestConnect(hostId: number) {
+      this.hosts.latestHosts = [...new Set([hostId, ...this.hosts.latestHosts])];
+    }
 
   },
 

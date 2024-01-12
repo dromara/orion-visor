@@ -44,8 +44,7 @@
   const props = defineProps<{
     hosts: AuthorizedHostQueryResponse,
     filterValue: string,
-    newConnectionType: string,
-    latestHosts: Array<number>
+    newConnectionType: string
   }>();
 
   const hostList = ref<Array<HostQueryResponse>>([]);
@@ -94,19 +93,26 @@
       list = list.filter(item => item.favorite);
     } else if (NewConnectionType.LATEST === props.newConnectionType) {
       // 过滤-最近连接
-      list = list.filter(s => props.latestHosts.includes(s.id));
+      list = props.hosts.latestHosts
+        .map(s => list.find(item => item.id === s) as HostQueryResponse)
+        .filter(Boolean);
     }
-    // 排序
-    hostList.value = list?.sort((o1, o2) => {
-      if (o1.favorite || o2.favorite) {
-        if (o1.favorite && o2.favorite) {
+    // 非最近连接排序
+    if (NewConnectionType.LATEST !== props.newConnectionType) {
+      hostList.value = list.sort((o1, o2) => {
+        if (o1.favorite || o2.favorite) {
+          if (o1.favorite && o2.favorite) {
+            return o2.id < o1.id ? 1 : -1;
+          }
+          return o2.favorite ? 1 : -1;
+        } else {
           return o2.id < o1.id ? 1 : -1;
         }
-        return o2.favorite ? 1 : -1;
-      } else {
-        return o2.id < o1.id ? 1 : -1;
-      }
-    });
+      });
+    } else {
+      // 最近连接不排序
+      hostList.value = list;
+    }
   };
 
   // 监听搜索值变化
