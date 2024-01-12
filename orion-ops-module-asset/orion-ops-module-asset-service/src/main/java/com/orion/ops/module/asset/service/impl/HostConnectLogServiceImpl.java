@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.constant.Const;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
@@ -16,11 +17,14 @@ import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
  * 主机连接日志 服务实现类
@@ -73,6 +77,13 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     @Override
     public List<Long> getLatestConnectHostId(HostConnectLogQueryRequest request) {
         return hostConnectLogDAO.selectLatestConnectHostId(SecurityUtils.getLoginUserId(), request.getType(), request.getLimit());
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public Future<List<Long>> getLatestConnectHostIdAsync(HostConnectTypeEnum type, Long userId) {
+        List<Long> hostIdList = hostConnectLogDAO.selectLatestConnectHostId(userId, type.name(), Const.N_10);
+        return CompletableFuture.completedFuture(hostIdList);
     }
 
     /**

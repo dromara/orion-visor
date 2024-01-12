@@ -7,6 +7,7 @@ import com.orion.ops.module.infra.entity.request.data.DataAliasUpdateRequest;
 import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 import com.orion.ops.module.infra.service.DataAliasService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,6 +54,7 @@ public class DataAliasApiImpl implements DataAliasApi {
     }
 
     @Override
+    @Async("asyncExecutor")
     public Future<Map<Long, String>> getDataAliasAsync(Long userId, DataExtraTypeEnum type) {
         Valid.notNull(userId);
         return CompletableFuture.completedFuture(dataAliasService.getDataAlias(userId, type.name()));

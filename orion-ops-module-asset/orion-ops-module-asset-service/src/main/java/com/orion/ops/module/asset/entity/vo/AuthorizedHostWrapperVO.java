@@ -30,7 +30,10 @@ public class AuthorizedHostWrapperVO {
     @Schema(description = "授权的主机列表")
     private List<HostVO> hostList;
 
-    @Schema(description = "分组树节点映射 'groupId':hostIdList")
+    @Schema(description = "分组树节点映射 groupId:hostIdList")
     private Map<String, Set<Long>> treeNodes;
+
+    @Schema(description = "最近访问的主机")
+    private List<Long> latestHosts;
 
 }

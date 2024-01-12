@@ -9,10 +9,8 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.HostGroupConvert;
 import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
 import com.orion.ops.module.asset.entity.vo.*;
-import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
-import com.orion.ops.module.asset.service.HostIdentityService;
-import com.orion.ops.module.asset.service.HostKeyService;
-import com.orion.ops.module.asset.service.HostService;
+import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
+import com.orion.ops.module.asset.service.*;
 import com.orion.ops.module.infra.api.*;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
@@ -58,6 +56,9 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
 
     @Resource
     private HostIdentityService hostIdentityService;
+
+    @Resource
+    private HostConnectLogService hostConnectLogService;
 
     @Resource
     private FavoriteApi favoriteApi;
@@ -176,6 +177,8 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         AuthorizedHostWrapperVO wrapper = new AuthorizedHostWrapperVO();
         // 查询我的收藏
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
+        // 查询最近连接的主机
+        Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.SSH, userId);
         // 查询数据别名
         Future<Map<Long, String>> dataAliasResult = dataAliasApi.getDataAliasAsync(userId, DataExtraTypeEnum.HOST);
         // 查询分组
@@ -205,6 +208,8 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         this.getAuthorizedHostExtra(wrapper.getHostList(),
                 favoriteResult.get(),
                 dataAliasResult.get());
+        // 设置最近连接的主机
+        wrapper.setLatestHosts(latestConnectHostIdList.get());
         return wrapper;
     }
 

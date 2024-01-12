@@ -1,6 +1,8 @@
 package com.orion.ops.module.asset.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.orion.ops.framework.log.core.annotation.IgnoreLog;
+import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +35,7 @@ public class HostTerminalController {
     @Resource
     private HostTerminalService hostTerminalService;
 
+    @IgnoreLog(IgnoreLogMode.ALL)
     @GetMapping("/themes")
     @Operation(summary = "获取主机终端主题")
     public JSONArray getTerminalThemes() {

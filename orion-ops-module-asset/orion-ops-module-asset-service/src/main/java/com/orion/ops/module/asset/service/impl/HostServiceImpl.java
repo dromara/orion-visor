@@ -36,6 +36,7 @@ import com.orion.ops.module.infra.enums.TagTypeEnum;
 import com.orion.spring.SpringHolder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -211,6 +212,7 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    @Async("asyncExecutor")
     public void deleteHostRelByIdAsync(Long id) {
         // 删除配置
         hostConfigDAO.deleteByHostId(id);

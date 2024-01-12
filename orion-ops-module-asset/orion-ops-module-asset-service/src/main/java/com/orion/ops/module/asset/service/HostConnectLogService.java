@@ -8,6 +8,7 @@ import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * 主机连接日志 服务类
@@ -49,5 +50,14 @@ public interface HostConnectLogService {
      * @return hostId
      */
     List<Long> getLatestConnectHostId(HostConnectLogQueryRequest request);
+
+    /**
+     * 查询用户最近连接的主机
+     *
+     * @param type   type
+     * @param userId userId
+     * @return hostId
+     */
+    Future<List<Long>> getLatestConnectHostIdAsync(HostConnectTypeEnum type, Long userId);
 
 }
