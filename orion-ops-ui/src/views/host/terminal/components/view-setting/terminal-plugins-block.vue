@@ -54,7 +54,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.PLUGINS_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.PLUGINS_SETTING, formModel.value);
   }, { deep: true });
 
 </script>

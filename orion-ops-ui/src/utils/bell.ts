@@ -3,7 +3,7 @@
  * @param frequency 蜂鸣器频率Hz
  * @param duration 持续时间
  */
-export const playBell = (frequency: number = 400, duration: number = .2) => {
+export const playBell = (frequency: number = 400, duration: number = .15) => {
   try {
     // 创建 AudioContext 对象
     const audioCtx = new (window.AudioContext)();

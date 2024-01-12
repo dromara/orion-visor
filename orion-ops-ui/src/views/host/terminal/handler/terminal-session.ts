@@ -113,12 +113,6 @@ export default class TerminalSession implements ITerminalSession {
     });
     // 设置右键选项
     dom.addEventListener('contextmenu', async (event) => {
-      // 如果开启了右键粘贴 右键选中 右键菜单 则关闭默认右键菜单
-      if (preference.interactSetting.rightClickSelectsWord
-        || preference.interactSetting.rightClickPaste
-        || preference.interactSetting.enableRightClickMenu) {
-        event.preventDefault();
-      }
       // 右键粘贴逻辑
       if (preference.interactSetting.rightClickPaste) {
         if (!this.canWrite || !this.connected) {

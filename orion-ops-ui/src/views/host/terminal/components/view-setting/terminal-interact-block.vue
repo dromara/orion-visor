@@ -60,7 +60,7 @@
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 启用响铃 -->
-        <block-setting-item label="启用响铃" desc="系统接受到 \a 时候会发出响铃 (一般不用开启)">
+        <block-setting-item label="启用响铃" desc="系统接收到 \a 时发出响铃 (一般不用开启)">
           <a-switch type="round"
                     v-model="formModel.enableBell" />
         </block-setting-item>
@@ -99,7 +99,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.INTERACT_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.INTERACT_SETTING, formModel.value);
   }, { deep: true });
 
 </script>

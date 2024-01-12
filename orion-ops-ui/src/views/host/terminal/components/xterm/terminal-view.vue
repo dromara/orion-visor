@@ -36,17 +36,19 @@
                  :text="getDictValue(connectStatusKey, session ? session.status : 0)" />
       </div>
     </div>
-    <!-- 终端 -->
-    <div class="terminal-wrapper"
-         :style="{
-           background: preference.theme.schema.background
-         }">
-      <div class="terminal-inst" ref="terminalRef" />
-      <!-- 搜索模态框 -->
-      <terminal-search-modal ref="searchModal"
-                             @find="findWords"
-                             @close="focus" />
-    </div>
+    <!-- 终端右键菜单 -->
+    <terminal-context-menu>
+      <!-- 终端容器 -->
+      <div class="terminal-wrapper"
+           :style="{ background: preference.theme.schema.background }">
+        <!-- 终端实例 -->
+        <div class="terminal-inst" ref="terminalRef" />
+        <!-- 搜索模态框 -->
+        <terminal-search-modal ref="searchModal"
+                               @find="findWords"
+                               @close="focus" />
+      </div>
+    </terminal-context-menu>
     <!-- 命令编辑器 -->
     <shell-editor-modal ref="editorModal"
                         :closable="false"
@@ -73,6 +75,7 @@
   import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
   import TerminalSearchModal from './terminal-search-modal.vue';
+  import TerminalContextMenu from './terminal-context-menu.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -89,7 +92,7 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // 右键菜单补充     启用右键菜单 enableRightClickMenu  粘贴逻辑
+  // 右键菜单补充   enableRightClickMenu  粘贴逻辑
   // 设置快捷键  粘贴逻辑
   // 读取快捷键并且禁用快捷键
   // 截屏

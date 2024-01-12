@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
-  import { dictKeys } from './types/terminal.const';
+  import { dictKeys, InnerTabs } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import TerminalHeader from './components/layout/terminal-header.vue';
   import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
@@ -82,8 +82,11 @@
     }
   });
 
-  // 注册关闭视口事件
+  // 事件处理
   onMounted(() => {
+    // 默认标题
+    document.title = InnerTabs.NEW_CONNECTION.title;
+    // 注册关闭视口事件
     // FIXME 开发阶段
     // window.addEventListener('beforeunload', handleBeforeUnload);
   });
