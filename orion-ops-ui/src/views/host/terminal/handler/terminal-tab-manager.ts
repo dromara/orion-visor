@@ -9,6 +9,9 @@ export default class TerminalTabManager implements ITerminalTabManager {
   public items: Array<TerminalTabItem>;
 
   constructor() {
+    // fixme
+    // this.active = InnerTabs.SHORTCUT_SETTING.key;
+    // this.items = [InnerTabs.SHORTCUT_SETTING];
     this.active = InnerTabs.NEW_CONNECTION.key;
     this.items = [InnerTabs.NEW_CONNECTION];
   }

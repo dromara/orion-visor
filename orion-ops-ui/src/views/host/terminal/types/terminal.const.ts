@@ -81,17 +81,17 @@ export const ActionBarItems = [
     icon: 'icon-expand',
     content: '全选',
   }, {
+    item: 'search',
+    icon: 'icon-find-replace',
+    content: '搜索',
+  }, {
     item: 'copy',
     icon: 'icon-copy',
-    content: '复制选中部分',
+    content: '复制',
   }, {
     item: 'paste',
     icon: 'icon-paste',
     content: '粘贴',
-  }, {
-    item: 'search',
-    icon: 'icon-find-replace',
-    content: '搜索',
   }, {
     item: 'interrupt',
     icon: 'icon-formula',
@@ -101,10 +101,6 @@ export const ActionBarItems = [
     icon: 'icon-play-arrow-fill',
     content: '回车',
   }, {
-    item: 'commandEditor',
-    icon: 'icon-code-square',
-    content: '命令编辑器',
-  }, {
     item: 'fontSizePlus',
     icon: 'icon-zoom-in',
     content: '增大字号',
@@ -112,6 +108,10 @@ export const ActionBarItems = [
     item: 'fontSizeSubtract',
     icon: 'icon-zoom-out',
     content: '减小字号',
+  }, {
+    item: 'commandEditor',
+    icon: 'icon-code-square',
+    content: '命令编辑器',
   }, {
     item: 'clear',
     icon: 'icon-delete',
@@ -123,7 +123,7 @@ export const ActionBarItems = [
   }, {
     item: 'close',
     icon: 'icon-close',
-    content: '关闭',
+    content: '关闭终端',
   }
 ];
 

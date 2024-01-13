@@ -126,6 +126,7 @@
     color: var(--color-content-text-1);
     cursor: pointer;
     transition: transform 0.3s ease;
+    will-change: transform;
 
     &:hover {
       transform: scale(1.04);

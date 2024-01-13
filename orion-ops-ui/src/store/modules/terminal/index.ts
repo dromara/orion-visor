@@ -10,7 +10,7 @@ import type {
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
-import type { TerminalTheme } from '@/api/asset/host-terminal';
+import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/host-terminal';
 import { getTerminalThemes } from '@/api/asset/host-terminal';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
@@ -26,10 +26,14 @@ export const TerminalPreferenceItem = {
   NEW_CONNECTION_TYPE: 'newConnectionType',
   // 终端主题
   THEME: 'theme',
+  // 快捷键设置
+  SHORTCUT_SETTING: 'shortcutSetting',
   // 显示设置
   DISPLAY_SETTING: 'displaySetting',
   // 操作栏设置
   ACTION_BAR_SETTING: 'actionBarSetting',
+  // 右键菜单设置
+  RIGHT_MENU_SETTING: 'rightMenuSetting',
   // 交互设置
   INTERACT_SETTING: 'interactSetting',
   // 插件设置
@@ -42,9 +46,12 @@ export default defineStore('terminal', {
   state: (): TerminalState => ({
     preference: {
       newConnectionType: 'group',
-      theme: {} as TerminalTheme,
+      theme: {
+        schema: {} as TerminalThemeSchema
+      } as TerminalTheme,
       displaySetting: {} as TerminalDisplaySetting,
       actionBarSetting: {} as TerminalActionBarSetting,
+      rightMenuSetting: [],
       interactSetting: {} as TerminalInteractSetting,
       pluginsSetting: {} as TerminalPluginsSetting,
       sessionSetting: {} as TerminalSessionSetting,

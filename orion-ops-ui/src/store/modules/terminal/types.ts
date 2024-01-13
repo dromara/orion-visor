@@ -1,6 +1,6 @@
 import type { ITerminalSessionManager, ITerminalTabManager } from '@/views/host/terminal/types/terminal.type';
-import type { TerminalTheme } from '@/api/asset/host-terminal';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
+import type { TerminalTheme } from '@/api/asset/host-terminal';
 
 export interface TerminalState {
   preference: TerminalPreference;
@@ -15,6 +15,7 @@ export interface TerminalPreference {
   theme: TerminalTheme;
   displaySetting: TerminalDisplaySetting;
   actionBarSetting: TerminalActionBarSetting;
+  rightMenuSetting: Array<string>,
   interactSetting: TerminalInteractSetting;
   pluginsSetting: TerminalPluginsSetting;
   sessionSetting: TerminalSessionSetting;

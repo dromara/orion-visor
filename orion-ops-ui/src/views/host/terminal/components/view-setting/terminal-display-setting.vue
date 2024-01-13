@@ -7,6 +7,8 @@
       <terminal-display-block />
       <!-- 顶部工具栏 -->
       <terminal-action-bar-block />
+      <!-- 右键菜单 -->
+      <terminal-right-menu-block />
     </div>
   </div>
 </template>
@@ -20,6 +22,7 @@
 <script lang="ts" setup>
   import TerminalDisplayBlock from './terminal-display-block.vue';
   import TerminalActionBarBlock from './terminal-action-bar-block.vue';
+  import TerminalRightMenuBlock from './terminal-right-menu-block.vue';
 
 </script>
 

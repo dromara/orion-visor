@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 终端偏好模型
  *
@@ -32,6 +34,9 @@ public class TerminalPreferenceModel implements PreferenceModel {
 
     @Schema(description = "操作栏设置")
     private JSONObject actionBarSetting;
+
+    @Schema(description = "右键菜单设置")
+    private List<String> rightMenuSetting;
 
     @Schema(description = "交互设置")
     private JSONObject interactSetting;

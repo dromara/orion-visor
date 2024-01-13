@@ -38,6 +38,13 @@ export interface CombinedHandlerItem {
   host?: HostQueryResponse;
 }
 
+// 右键菜单元素
+export interface ContextMenuItem {
+  item: string;
+  icon: string;
+  content: string;
+}
+
 // ssh 额外配置
 export interface SshExtraModel {
   authType?: string;

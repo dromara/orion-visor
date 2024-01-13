@@ -1,15 +1,25 @@
 <template>
   <!-- 终端右键菜单 -->
-  <a-dropdown trigger="contextMenu"
+  <a-dropdown class="terminal-context-menu"
+              trigger="contextMenu"
+              :popup-max-height="false"
               position="bl"
               alignPoint>
     <!-- 终端插槽 -->
     <slot />
     <!-- 右键菜单 -->
     <template v-if="preference.interactSetting.enableRightClickMenu" #content>
-      <a-doption>Option 1</a-doption>
-      <a-doption>Option 2</a-doption>
-      <a-doption>Option 3</a-doption>
+      <a-doption v-for="(action, index) in actions"
+                 :key="index"
+                 :disabled="enabledStatus[action.item] === false"
+                 @click="emits('click', action.item)">
+        <!-- 图标 -->
+        <div class="action-icon">
+          <component :is="action.icon" />
+        </div>
+        <!-- 文本 -->
+        <div>{{ action.content }}</div>
+      </a-doption>
     </template>
   </a-dropdown>
 </template>
@@ -21,14 +31,31 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ContextMenuItem } from '../../types/terminal.type';
+  import { ActionBarItems } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
+
+  defineProps<{
+    enabledStatus: Record<string, boolean | undefined>
+  }>();
+
+  const emits = defineEmits(['click']);
 
   const { preference } = useTerminalStore();
 
-  // TODO 颜色 配置 触发事件
+  const actions: Array<ContextMenuItem> = !preference.interactSetting.enableRightClickMenu
+    ? []
+    : preference.rightMenuSetting
+      .map(s => ActionBarItems.find(i => i.item === s) as ContextMenuItem)
+      .filter(Boolean);
 
 </script>
 
 <style lang="less" scoped>
+
+  .action-icon {
+    font-size: 16px;
+    margin: 0 8px 0 4px;
+  }
 
 </style>

@@ -35,6 +35,7 @@
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
   import { dictKeys, InnerTabs } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
+  import useLoading from '@/hooks/loading';
   import TerminalHeader from './components/layout/terminal-header.vue';
   import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
@@ -42,7 +43,6 @@
   import LoadingSkeleton from './components/layout/loading-skeleton.vue';
   import './assets/styles/layout.less';
   import 'xterm/css/xterm.css';
-  import useLoading from '@/hooks/loading';
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();

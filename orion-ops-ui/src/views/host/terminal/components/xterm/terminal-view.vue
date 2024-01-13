@@ -37,7 +37,8 @@
       </div>
     </div>
     <!-- 终端右键菜单 -->
-    <terminal-context-menu>
+    <terminal-context-menu :enabled-status="actionsEnabledStatus"
+                           @click="action => actionsClickHandler[action] && actionsClickHandler[action]()">
       <!-- 终端容器 -->
       <div class="terminal-wrapper"
            :style="{ background: preference.theme.schema.background }">
@@ -92,9 +93,7 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // 右键菜单补充   enableRightClickMenu  粘贴逻辑
-  // 设置快捷键  粘贴逻辑
-  // 读取快捷键并且禁用快捷键
+  // 设置快捷键  粘贴逻辑 禁用
   // 截屏
   // sftp
 
@@ -124,14 +123,14 @@
     session.value?.find(word, next, options);
   };
 
-  // 操作禁用状态
-  const actionsDisableStatus = computed<Record<string, boolean | undefined>>(() => {
+  // 操作启用状态
+  const actionsEnabledStatus = computed<Record<string, boolean | undefined>>(() => {
     return {
-      paste: session.value?.canWrite,
-      interrupt: session.value?.canWrite,
-      enter: session.value?.canWrite,
-      commandEditor: session.value?.canWrite,
-      disconnect: session.value?.connected,
+      paste: !!session.value?.canWrite,
+      interrupt: !!session.value?.canWrite,
+      enter: !!session.value?.canWrite,
+      commandEditor: !!session.value?.canWrite,
+      disconnect: !!session.value?.connected,
     };
   });
 
@@ -143,18 +142,16 @@
     toBottom: () => session.value?.toBottom(),
     // 全选
     checkAll: () => session.value?.selectAll(),
-    // 复制选中部分
-    copy: () => session.value?.copySelection(),
     // 搜索
     search: () => searchModal.value.toggle(),
+    // 复制选中部分
+    copy: () => session.value?.copySelection(),
     // 粘贴
     paste: async () => session.value?.pasteTrimEnd(await readText()),
     // ctrl + c
     interrupt: () => session.value?.paste(String.fromCharCode(3)),
     // 回车
     enter: () => session.value?.paste(String.fromCharCode(13)),
-    // 命令编辑器
-    commandEditor: () => editorModal.value.open('', ''),
     // 增大字号
     fontSizePlus: () => {
       if (session.value) {
@@ -175,6 +172,8 @@
         }
       }
     },
+    // 命令编辑器
+    commandEditor: () => editorModal.value.open('', ''),
     // 清空
     clear: () => session.value?.clear(),
     // 断开连接
@@ -190,7 +189,7 @@
         icon: s.icon,
         content: s.content,
         visible: preference.actionBarSetting[s.item] !== false,
-        disabled: actionsDisableStatus.value[s.item] !== false,
+        disabled: actionsEnabledStatus.value[s.item] === false,
         click: () => {
           actionsClickHandler[s.item] && actionsClickHandler[s.item]();
         }

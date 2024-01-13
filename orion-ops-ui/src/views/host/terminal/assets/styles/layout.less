@@ -131,11 +131,13 @@ body .host-layout, .arco-modal-container {
 }
 
 // arco 暗色配色
+body[terminal-theme='dark'],
 body[terminal-theme='dark'] .host-layout,
 body[terminal-theme='dark'] .arco-modal-container {
   --color-white: rgba(255, 255, 255, 0.9);
   --color-black: #000000;
   --color-border: #333335;
+  --color-bg-popup: var(--color-bg-5);
   --color-bg-1: #17171a;
   --color-bg-2: #232324;
   --color-bg-3: #2a2a2b;
@@ -260,7 +262,6 @@ body[terminal-theme='dark'] .arco-modal-container {
     display: flex;
 
     &.block-body {
-      display: flex;
       width: 100%;
       padding: 16px;
       border: 1px solid var(--color-fill-4);
@@ -279,4 +280,18 @@ body[terminal-theme='dark'] .arco-modal-container {
 // tooltip 箭头
 .terminal-tooltip-arrow {
   display: none;
+}
+
+// 终端右键菜单
+.terminal-context-menu {
+  .arco-dropdown-option {
+    padding: 0 6px;
+    line-height: 32px;
+
+    &-content {
+      width: 120px;
+      display: flex;
+      align-items: center;
+    }
+  }
 }

@@ -11,10 +11,10 @@
         <div class="terminal-sidebar-icon"
              :class="[
                iconClass,
-               action.disabled !== false ? '' : 'disabled-item',
+               action.disabled === true ? 'disabled-item' : '',
                action.checked === true ? 'checked-item' : '',
              ]"
-             @click="action.disabled !== false ? action.click() : false">
+             @click="action.disabled === true ? false : action.click()">
           <component :is="action.icon" :style="action?.iconStyle" />
         </div>
       </div>

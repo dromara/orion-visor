@@ -1,6 +1,7 @@
 package com.orion.ops.module.infra.handler.preference.strategy;
 
 import com.alibaba.fastjson.JSONObject;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.net.host.ssh.TerminalType;
 import com.orion.ops.module.infra.handler.preference.model.TerminalPreferenceModel;
 import org.springframework.stereotype.Component;
@@ -63,6 +64,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .theme(new JSONObject())
                 .displaySetting(JSONObject.parseObject(defaultDisplaySetting))
                 .actionBarSetting(new JSONObject())
+                .rightMenuSetting(Lists.of("copy", "paste", "checkAll", "search", "clear"))
                 .interactSetting(JSONObject.parseObject(defaultInteractSetting))
                 .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))
                 .sessionSetting(JSONObject.parseObject(defaultSessionSetting))
