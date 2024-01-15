@@ -77,7 +77,7 @@ export const ActionBarItems = [
     icon: 'icon-down',
     content: '去底部',
   }, {
-    item: 'checkAll',
+    item: 'selectAll',
     icon: 'icon-expand',
     content: '全选',
   }, {

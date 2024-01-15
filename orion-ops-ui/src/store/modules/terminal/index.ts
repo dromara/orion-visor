@@ -5,6 +5,7 @@ import type {
   TerminalPluginsSetting,
   TerminalPreference,
   TerminalSessionSetting,
+  TerminalShortcutSetting,
   TerminalState
 } from './types';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
@@ -55,6 +56,10 @@ export default defineStore('terminal', {
       interactSetting: {} as TerminalInteractSetting,
       pluginsSetting: {} as TerminalPluginsSetting,
       sessionSetting: {} as TerminalSessionSetting,
+      shortcutSetting: {
+        enabled: true,
+        keys: []
+      } as TerminalShortcutSetting,
     },
     hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(),

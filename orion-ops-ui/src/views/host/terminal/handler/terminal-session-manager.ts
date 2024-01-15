@@ -1,4 +1,4 @@
-import type { ITerminalChannel, ITerminalSession, ITerminalSessionManager, TerminalTabItem } from '../types/terminal.type';
+import type { ITerminalChannel, ITerminalSession, ITerminalSessionManager, TerminalDomRef, TerminalTabItem } from '../types/terminal.type';
 import { sleep } from '@/utils';
 import { InputProtocol } from '../types/terminal.protocol';
 import { useDebounceFn } from '@vueuse/core';
@@ -24,7 +24,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   }
 
   // 打开终端会话
-  async openSession(tab: TerminalTabItem, dom: HTMLElement) {
+  async openSession(tab: TerminalTabItem,
+                    domRef: TerminalDomRef) {
     const sessionId = tab.key;
     const hostId = tab.hostId as number;
     // 初始化客户端
@@ -36,7 +37,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       this.channel
     );
     // 初始化
-    session.init(dom);
+    session.init(domRef);
     // 等待前端渲染完成
     await sleep(100);
     // 添加会话

@@ -19,6 +19,7 @@ export interface TerminalPreference {
   interactSetting: TerminalInteractSetting;
   pluginsSetting: TerminalPluginsSetting;
   sessionSetting: TerminalSessionSetting;
+  shortcutSetting: TerminalShortcutSetting;
 }
 
 // 显示设置
@@ -65,4 +66,19 @@ export interface TerminalPluginsSetting {
 export interface TerminalSessionSetting {
   terminalEmulationType: string;
   scrollBackLine: number;
+}
+
+// 终端快捷键设置
+export interface TerminalShortcutSetting {
+  enabled: boolean;
+  keys: Array<TerminalShortcutKey>;
+}
+
+// 终端快捷键
+export interface TerminalShortcutKey {
+  option: string;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+  key: string;
 }

@@ -68,7 +68,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ITerminalSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
+  import type { ITerminalSession, TerminalTabItem, SidebarAction, ITerminalSessionHandler } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';
@@ -82,7 +82,7 @@
     tab: TerminalTabItem
   }>();
 
-  const { copy, readText } = useCopy();
+  const { copy } = useCopy();
   const { getDictValue } = useDictStore();
   const { preference, tabManager, sessionManager } = useTerminalStore();
 
@@ -93,7 +93,7 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // 设置快捷键  粘贴逻辑 禁用
+  // 设置快捷键
   // 截屏
   // sftp
 
@@ -134,48 +134,19 @@
     };
   });
 
+  // 执行终端操作
+  const doTerminalHandle = (handle: string) => {
+    // 处理器
+    const handler = session.value?.handler[handle as keyof ITerminalSessionHandler] as () => void;
+    handler && handler.call(session.value?.handler);
+  };
+
   // 操作点击逻辑
   const actionsClickHandler: Record<string, () => void> = {
-    // 去顶部
-    toTop: () => session.value?.toTop(),
-    // 去底部
-    toBottom: () => session.value?.toBottom(),
-    // 全选
-    checkAll: () => session.value?.selectAll(),
     // 搜索
     search: () => searchModal.value.toggle(),
-    // 复制选中部分
-    copy: () => session.value?.copySelection(),
-    // 粘贴
-    paste: async () => session.value?.pasteTrimEnd(await readText()),
-    // ctrl + c
-    interrupt: () => session.value?.paste(String.fromCharCode(3)),
-    // 回车
-    enter: () => session.value?.paste(String.fromCharCode(13)),
-    // 增大字号
-    fontSizePlus: () => {
-      if (session.value) {
-        session.value.setOption('fontSize', session.value.getOption('fontSize') + 1);
-        if (session.value.connected) {
-          session.value.fit();
-          session.value.focus();
-        }
-      }
-    },
-    // 减小字号
-    fontSizeSubtract: () => {
-      if (session.value) {
-        session.value.setOption('fontSize', session.value.getOption('fontSize') - 1);
-        if (session.value.connected) {
-          session.value.fit();
-          session.value.focus();
-        }
-      }
-    },
     // 命令编辑器
     commandEditor: () => editorModal.value.open('', ''),
-    // 清空
-    clear: () => session.value?.clear(),
     // 断开连接
     disconnect: () => session.value?.disconnect(),
     // 关闭
@@ -189,10 +160,8 @@
         icon: s.icon,
         content: s.content,
         visible: preference.actionBarSetting[s.item] !== false,
-        disabled: actionsEnabledStatus.value[s.item] === false,
-        click: () => {
-          actionsClickHandler[s.item] && actionsClickHandler[s.item]();
-        }
+        disabled: session.value?.handler.enabledStatus(s.item) === false,
+        click: () => doTerminalHandle(s.item)
       };
     });
   });
@@ -200,7 +169,11 @@
   // 初始化会话
   onMounted(async () => {
     // 创建终端处理器
-    session.value = await sessionManager.openSession(props.tab, terminalRef.value);
+    session.value = await sessionManager.openSession(props.tab, {
+      el: terminalRef.value,
+      editorModal: editorModal.value,
+      searchModal: searchModal.value
+    });
   });
 
   // 会话

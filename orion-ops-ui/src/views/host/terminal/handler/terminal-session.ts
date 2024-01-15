@@ -1,6 +1,6 @@
 import type { UnwrapRef } from 'vue';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
-import type { ITerminalChannel, ITerminalSession, TerminalAddons } from '../types/terminal.type';
+import type { ITerminalChannel, ITerminalSession, ITerminalSessionHandler, TerminalAddons, TerminalDomRef } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
@@ -13,13 +13,17 @@ import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebglAddon } from 'xterm-addon-webgl';
 import { playBell } from '@/utils/bell';
 import useCopy from '@/hooks/copy';
+import TerminalShortcutDispatcher from './terminal-shortcut-dispatch';
+import TerminalSessionHandler from './terminal-session-handler';
 
 const copy = useCopy();
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
 
-  public hostId: number;
+  public readonly hostId: number;
+
+  public sessionId: string;
 
   public inst: Terminal;
 
@@ -29,7 +33,7 @@ export default class TerminalSession implements ITerminalSession {
 
   public status: number;
 
-  private readonly sessionId: string;
+  public handler: ITerminalSessionHandler;
 
   private readonly channel: ITerminalChannel;
 
@@ -45,11 +49,12 @@ export default class TerminalSession implements ITerminalSession {
     this.canWrite = false;
     this.status = TerminalStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
+    this.handler = undefined as unknown as ITerminalSessionHandler;
     this.addons = {} as TerminalAddons;
   }
 
   // 初始化
-  init(dom: HTMLElement): void {
+  init(domRef: TerminalDomRef): void {
     const { preference } = useTerminalStore();
     // 初始化实例
     this.inst = new Terminal({
@@ -62,15 +67,37 @@ export default class TerminalSession implements ITerminalSession {
       wordSeparator: preference.interactSetting.wordSeparator,
       scrollback: preference.sessionSetting.scrollBackLine,
     });
+    // 处理器
+    this.handler = new TerminalSessionHandler(this, domRef);
     // 注册快捷键
+    this.registerShortcut(preference);
     // 注册事件
-    this.registerEvent(dom, preference);
+    this.registerEvent(domRef.el, preference);
     // 注册插件
-    this.registerAddions(preference);
+    this.registerAddons(preference);
     // 打开终端
-    this.inst.open(dom);
+    this.inst.open(domRef.el);
     // 自适应
     this.addons.fit.fit();
+  }
+
+  // 注册快捷键
+  private registerShortcut(preference: UnwrapRef<TerminalPreference>) {
+    const dispatcher = new TerminalShortcutDispatcher(this, preference.shortcutSetting.keys);
+    // 处理自定义按键
+    this.inst.attachCustomKeyEventHandler((e: KeyboardEvent) => {
+      e.preventDefault();
+      // 未开启
+      if (!preference.shortcutSetting.enabled) {
+        return true;
+      }
+      // 只监听 keydown 事件
+      if (e.type !== 'keydown') {
+        return true;
+      }
+      // 调度快捷键
+      return dispatcher.dispatch(e);
+    });
   }
 
   // 注册事件
@@ -127,7 +154,7 @@ export default class TerminalSession implements ITerminalSession {
   }
 
   // 注册插件
-  private registerAddions(preference: UnwrapRef<TerminalPreference>) {
+  private registerAddons(preference: UnwrapRef<TerminalPreference>) {
     this.addons.fit = new FitAddon();
     this.addons.search = new SearchAddon();
     // 超链接插件

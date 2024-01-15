@@ -77,6 +77,13 @@ export interface OutputPayload {
   [key: string]: string;
 }
 
+// 终端 dom 元素引用
+export interface TerminalDomRef {
+  el: HTMLElement;
+  searchModal: any;
+  editorModal: any;
+}
+
 // 终端 tab 管理器定义
 export interface ITerminalTabManager {
   // 当前 tab
@@ -97,7 +104,7 @@ export interface ITerminalTabManager {
 // 终端会话管理器定义
 export interface ITerminalSessionManager {
   // 打开终端会话
-  openSession: (tab: TerminalTabItem, dom: HTMLElement) => Promise<ITerminalSession>;
+  openSession: (tab: TerminalTabItem, domRef: TerminalDomRef) => Promise<ITerminalSession>;
   // 获取终端会话
   getSession: (sessionId: string) => ITerminalSession;
   // 关闭终端会话
@@ -145,6 +152,7 @@ export interface TerminalAddons {
 // 终端会话定义
 export interface ITerminalSession {
   hostId: number;
+  sessionId: string;
   // terminal 实例
   inst: Terminal;
   // 是否已连接
@@ -153,9 +161,11 @@ export interface ITerminalSession {
   canWrite: boolean;
   // 状态
   status: number;
+  // 处理器
+  handler: ITerminalSessionHandler;
 
   // 初始化
-  init: (dom: HTMLElement) => void;
+  init: (domRef: TerminalDomRef) => void;
   // 连接
   connect: () => void;
   // 设置是否可写
@@ -190,4 +200,48 @@ export interface ITerminalSession {
   disconnect: () => void;
   // 关闭
   close: () => void;
+}
+
+// 终端会话处理器定义
+export interface ITerminalSessionHandler {
+  // 启用状态
+  enabledStatus: (option: string) => boolean;
+  // 复制选中
+  copy: () => void;
+  // 粘贴
+  paste: () => void;
+  // 粘贴并且去除尾部空格 (如果配置)
+  pasteTrimEnd: (value: string) => void;
+  // 选中全部
+  selectAll: () => void;
+  // 去顶部
+  toTop: () => void;
+  // 去底部
+  toBottom: () => void;
+  // 打开搜索
+  search: () => void;
+  // 增大字号
+  fontSizePlus: () => void;
+  // 减小字号
+  fontSizeSubtract: () => void;
+  // 打开命令编辑器
+  commandEditor: () => void;
+  // 中断
+  interrupt: () => void;
+  // 回车
+  enter: () => void;
+  // 清空
+  clear: () => void;
+  // 断开连接
+  disconnect: () => void;
+  // 关闭
+  close: () => void;
+  // 聚焦
+  focus: () => void;
+}
+
+// 终端快捷键调度定义
+export interface ITerminalShortcutDispatcher {
+  // 调度快捷键
+  dispatch(e: KeyboardEvent): boolean;
 }

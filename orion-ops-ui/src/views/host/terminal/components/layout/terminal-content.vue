@@ -67,6 +67,8 @@
     }
   });
 
+  // TODO 快捷键逻辑 主机加载逻辑 加载中逻辑
+
 </script>
 
 <style lang="less" scoped>
