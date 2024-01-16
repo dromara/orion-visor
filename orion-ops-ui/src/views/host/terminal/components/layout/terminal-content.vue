@@ -16,6 +16,8 @@
           <terminal-theme-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
           <!-- 终端设置 -->
           <terminal-general-setting v-else-if="tab.key === InnerTabs.TERMINAL_SETTING.key" />
+          <!-- 快捷键设置 -->
+          <terminal-shortcut-setting v-else-if="tab.key === InnerTabs.SHORTCUT_SETTING.key" />
         </template>
         <!-- 终端 -->
         <template v-else-if="tab.type === TerminalTabType.TERMINAL">
@@ -41,9 +43,10 @@
   import { addEventListen, removeEventListen } from '@/utils/event';
   import EmptyRecommend from './empty-recommend.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
-  import TerminalDisplaySetting from '../view-setting/terminal-display-setting.vue';
-  import TerminalThemeSetting from '../view-setting/terminal-theme-setting.vue';
-  import TerminalGeneralSetting from '../view-setting/terminal-general-setting.vue';
+  import TerminalDisplaySetting from '../setting/terminal-display-setting.vue';
+  import TerminalThemeSetting from '../setting/terminal-theme-setting.vue';
+  import TerminalGeneralSetting from '../setting/terminal-general-setting.vue';
+  import TerminalShortcutSetting from '../setting/terminal-shortcut-setting.vue';
   import TerminalView from '../xterm/terminal-view.vue';
 
   const { preference, tabManager, sessionManager } = useTerminalStore();

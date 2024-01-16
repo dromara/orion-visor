@@ -93,9 +93,9 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // 设置快捷键
   // 截屏
   // sftp
+  // 代码片段
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {

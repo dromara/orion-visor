@@ -58,6 +58,27 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .scrollBackLine(1000)
                 .build()
                 .toJsonString();
+        // 默认快捷键设置
+        String shortcutSetting = TerminalPreferenceModel.ShortcutSettingModel.builder()
+                .enabled(true)
+                .keys(Lists.of(
+                        new TerminalPreferenceModel.ShortcutKeysModel("copy", true, true, false, "KeyC", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("paste", true, true, false, "KeyV", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("toTop", true, true, false, "ArrowUp", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("toBottom", true, true, false, "ArrowDown", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("selectAll", true, true, false, "KeyA", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("search", true, true, false, "KeyF", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("commandEditor", true, false, true, "KeyE", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("fontSizePlus", true, false, true, "Equal", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("fontSizeSubtract", true, false, true, "Minus", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("closeTab", true, false, true, "KeyW", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevTab", true, false, true, "ArrowLeft", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTab", true, false, true, "ArrowRight", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("openCopyTerminalTab", true, false, true, "KeyO", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectTab", true, false, true, "KeyN", true)
+                        ))
+                .build()
+                .toJsonString();
         // 默认配置
         return TerminalPreferenceModel.builder()
                 .newConnectionType("group")
@@ -68,6 +89,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .interactSetting(JSONObject.parseObject(defaultInteractSetting))
                 .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))
                 .sessionSetting(JSONObject.parseObject(defaultSessionSetting))
+                .shortcutSetting(JSONObject.parseObject(shortcutSetting))
                 .build();
     }
 

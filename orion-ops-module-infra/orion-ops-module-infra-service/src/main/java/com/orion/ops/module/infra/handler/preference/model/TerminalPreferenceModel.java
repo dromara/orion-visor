@@ -47,6 +47,9 @@ public class TerminalPreferenceModel implements PreferenceModel {
     @Schema(description = "会话设置")
     private JSONObject sessionSetting;
 
+    @Schema(description = "快捷键设置")
+    private JSONObject shortcutSetting;
+
     @Data
     @Builder
     @NoArgsConstructor
@@ -142,6 +145,46 @@ public class TerminalPreferenceModel implements PreferenceModel {
 
         @Schema(description = "保存在缓冲区的行数")
         private Integer scrollBackLine;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ShortcutSettingModel implements IJsonObject {
+
+        @Schema(description = "是否启用")
+        private Boolean enabled;
+
+        @Schema(description = "快捷键定义")
+        private List<ShortcutKeysModel> keys;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ShortcutKeysModel implements IJsonObject {
+
+        @Schema(description = "快捷键操作")
+        private String item;
+
+        @Schema(description = "ctrl 按键")
+        private Boolean ctrlKey;
+
+        @Schema(description = "shift 按键")
+        private Boolean shiftKey;
+
+        @Schema(description = "alt 按键")
+        private Boolean altKey;
+
+        @Schema(description = "实际按键")
+        private String code;
+
+        @Schema(description = "是否启用")
+        private Boolean enabled;
 
     }
 

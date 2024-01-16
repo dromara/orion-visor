@@ -27,8 +27,6 @@ export const TerminalPreferenceItem = {
   NEW_CONNECTION_TYPE: 'newConnectionType',
   // 终端主题
   THEME: 'theme',
-  // 快捷键设置
-  SHORTCUT_SETTING: 'shortcutSetting',
   // 显示设置
   DISPLAY_SETTING: 'displaySetting',
   // 操作栏设置
@@ -41,6 +39,8 @@ export const TerminalPreferenceItem = {
   PLUGINS_SETTING: 'pluginsSetting',
   // 会话设置
   SESSION_SETTING: 'sessionSetting',
+  // 快捷键设置
+  SHORTCUT_SETTING: 'shortcutSetting',
 };
 
 export default defineStore('terminal', {

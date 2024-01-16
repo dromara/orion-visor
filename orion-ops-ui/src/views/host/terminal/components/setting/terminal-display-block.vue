@@ -103,7 +103,7 @@
   import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../types/terminal.const';
   import { labelFilter } from '@/types/form';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import TerminalExample from '../view-setting/terminal-example.vue';
+  import TerminalExample from '../setting/terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
   const { preference, updateTerminalPreference } = useTerminalStore();
