@@ -97,6 +97,12 @@ export interface ITerminalTabManager {
   deleteTab: (key: string) => void;
   // 打开 tab
   openTab: (tab: TerminalTabItem) => void;
+  // 切换到前一个 tab
+  changeToPrev: () => void;
+  // 切换到后一个 tab
+  changeToNext: () => void;
+  // 切换索引 tab
+  changeToIndex: (index: number) => void;
   // 清空
   clear: () => void;
 }
@@ -172,10 +178,12 @@ export interface ITerminalSession {
   setCanWrite: (canWrite: boolean) => void;
   // 写入数据
   write: (value: string | Uint8Array) => void;
-  // 自适应
-  fit: () => void;
   // 聚焦
   focus: () => void;
+  // 失焦
+  blur: () => void;
+  // 自适应
+  fit: () => void;
   // 查找
   find: (word: string, next: boolean, options: ISearchOptions) => void;
   // 断开连接
@@ -221,6 +229,14 @@ export interface ITerminalSessionHandler {
   clear: () => void;
   // 断开连接
   disconnect: () => void;
-  // 关闭
-  close: () => void;
+  // 关闭 tab
+  closeTab: () => void;
+  // 切换到前一个 tab
+  changeToPrev: () => void;
+  // 切换到后一个 tab
+  changeToNext: () => void;
+  // 复制终端
+  openCopyTerminal: () => void;
+  // 打开新建连接页面
+  openNewConnect: () => void;
 }

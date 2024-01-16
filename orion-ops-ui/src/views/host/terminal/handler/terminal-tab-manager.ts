@@ -44,6 +44,30 @@ export default class TerminalTabManager implements ITerminalTabManager {
     this.active = tab.key;
   }
 
+  // 切换到前一个 tab
+  changeToPrev() {
+    this.changeToIndex(this.getCurrentTabIndex() - 1);
+  }
+
+  // 切换到后一个 tab
+  changeToNext() {
+    this.changeToIndex(this.getCurrentTabIndex() + 1);
+  }
+
+  // 切换索引 tab
+  changeToIndex(index: number) {
+    if (index < 0 || index >= this.items.length) {
+      return;
+    }
+    // 切换 tab
+    this.active = this.items[index].key;
+  }
+
+  // 获取当前索引
+  private getCurrentTabIndex(): number {
+    return this.items.findIndex(s => s.key === this.active);
+  }
+
   // 清空
   clear() {
     this.active = undefined as unknown as string;

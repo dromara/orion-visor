@@ -143,6 +143,15 @@ export default defineStore('terminal', {
       });
     },
 
+    // 复制并且打开终端
+    openCopyTerminal(hostId: number) {
+      const host = this.hosts.hostList
+        .find(s => s.id === hostId);
+      if (host) {
+        this.openTerminal(host);
+      }
+    }
+
   },
 
 });

@@ -80,5 +80,5 @@ export interface TerminalShortcutKey {
   ctrlKey: boolean;
   shiftKey: boolean;
   altKey: boolean;
-  key: string;
+  code: string;
 }

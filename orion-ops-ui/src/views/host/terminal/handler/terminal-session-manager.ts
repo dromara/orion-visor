@@ -99,16 +99,19 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
 
   // 重置
   reset(): void {
-    this.sessions = {};
-    // 关闭 channel
-    this.channel.close();
-    // 清除 ping 事件
-    if (this.keepAliveTask) {
-      clearInterval(this.keepAliveTask);
-      this.keepAliveTask = undefined;
+    try {
+      this.sessions = {};
+      // 关闭 channel
+      this.channel.close();
+      // 清除 ping 事件
+      if (this.keepAliveTask) {
+        clearInterval(this.keepAliveTask);
+        this.keepAliveTask = undefined;
+      }
+      // 移除 resize 事件
+      removeEventListen(window, 'resize', this.dispatchResizeFn);
+    } catch (e) {
     }
-    // 移除 resize 事件
-    removeEventListen(window, 'resize', this.dispatchResizeFn);
   }
 
 }
