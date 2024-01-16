@@ -37,7 +37,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { TerminalTabType, InnerTabs, TerminalTabShortcutItems } from '../../types/terminal.const';
+  import { TerminalTabType, InnerTabs, TerminalShortcutKeys } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';
@@ -98,21 +98,21 @@
     }
     // 触发逻辑
     switch (key.item) {
-      case TerminalTabShortcutItems.CLOSE_TAB.item:
+      case TerminalShortcutKeys.CLOSE_TAB:
         // 关闭 tab
         if (tabManager.active) {
           tabManager.deleteTab(tabManager.active);
         }
         break;
-      case TerminalTabShortcutItems.CHANGE_TO_PREV_TAB.item:
+      case TerminalShortcutKeys.CHANGE_TO_PREV_TAB:
         // 切换至前一个 tab
         tabManager.changeToPrevTab();
         break;
-      case TerminalTabShortcutItems.CHANGE_TO_NEXT_TAB.item:
+      case TerminalShortcutKeys.CHANGE_TO_NEXT_TAB:
         // 切换至后一个 tab
         tabManager.changeToNextTab();
         break;
-      case TerminalTabShortcutItems.OPEN_NEW_CONNECT_TAB.item:
+      case TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB:
         // 切换到新建连接 tab
         tabManager.openTab(InnerTabs.NEW_CONNECTION);
         break;

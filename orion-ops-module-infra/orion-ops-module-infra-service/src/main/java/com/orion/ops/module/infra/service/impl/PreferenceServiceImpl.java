@@ -140,6 +140,22 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
+    public Map<String, Object> getDefaultPreferenceByType(String type, List<String> items) {
+        PreferenceTypeEnum preferenceType = Valid.valid(PreferenceTypeEnum::of, type);
+        // 获取默认值
+        Map<String, String> defaultModel = preferenceType.getStrategy()
+                .getDefault()
+                .toMap();
+        Map<String, Object> result = Maps.newMap();
+        if (Lists.isEmpty(items)) {
+            defaultModel.forEach((k, v) -> result.put(k, Refs.unref(defaultModel.get(k))));
+        } else {
+            items.forEach(s -> result.put(s, Refs.unref(defaultModel.get(s))));
+        }
+        return result;
+    }
+
+    @Override
     @Async("asyncExecutor")
     public Future<Map<String, Object>> getPreferenceAsync(Long userId, PreferenceTypeEnum type) {
         Map<String, Object> config = this.getPreferenceByCache(userId, type);

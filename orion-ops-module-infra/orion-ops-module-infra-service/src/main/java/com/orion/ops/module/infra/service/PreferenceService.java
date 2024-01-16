@@ -42,6 +42,15 @@ public interface PreferenceService {
     Map<String, Object> getPreferenceByType(String type, List<String> items);
 
     /**
+     * 查询默认偏好
+     *
+     * @param type  type
+     * @param items items
+     * @return rows
+     */
+    Map<String, Object> getDefaultPreferenceByType(String type, List<String> items);
+
+    /**
      * 获取用户偏好
      *
      * @param userId userId

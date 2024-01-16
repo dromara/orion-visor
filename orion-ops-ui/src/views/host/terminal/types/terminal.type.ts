@@ -49,6 +49,7 @@ export interface ContextMenuItem {
 export interface ShortcutKeyItem {
   item: string;
   content: string;
+  type: number;
 }
 
 // ssh 额外配置

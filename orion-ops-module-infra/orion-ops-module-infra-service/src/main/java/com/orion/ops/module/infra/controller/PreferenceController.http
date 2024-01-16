@@ -26,3 +26,8 @@ Authorization: {{token}}
 GET {{baseUrl}}/infra/preference/get?type=SYSTEM
 Authorization: {{token}}
 
+
+### 查询默认偏好
+GET {{baseUrl}}/infra/preference/get-default?type=TERMINAL&items=shortcutSetting
+Authorization: {{token}}
+

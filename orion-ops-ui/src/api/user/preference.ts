@@ -49,3 +49,18 @@ export function getPreference<T>(type: PreferenceType, items: Array<string> | un
   });
 }
 
+/**
+ * 查询默认偏好
+ */
+export function getDefaultPreference<T>(type: PreferenceType, items: Array<string> | undefined = undefined) {
+  return axios.get<T>('/infra/preference/get-default', {
+    params: {
+      type,
+      items
+    },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
+}
+

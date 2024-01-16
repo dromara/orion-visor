@@ -57,5 +57,14 @@ public class PreferenceController {
         return preferenceService.getPreferenceByType(type, items);
     }
 
+    @GetMapping("/get-default")
+    @Operation(summary = "查询默认偏好")
+    @Parameter(name = "type", description = "type", required = true)
+    @Parameter(name = "items", description = "items")
+    public Map<String, Object> getDefaultPreference(@RequestParam("type") String type,
+                                                    @RequestParam(name = "items", required = false) List<String> items) {
+        return preferenceService.getDefaultPreferenceByType(type, items);
+    }
+
 }
 
