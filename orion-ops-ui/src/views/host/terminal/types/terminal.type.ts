@@ -45,6 +45,12 @@ export interface ContextMenuItem {
   content: string;
 }
 
+// 快捷键元素
+export interface ShortcutKeyItem {
+  item: string;
+  content: string;
+}
+
 // ssh 额外配置
 export interface SshExtraModel {
   authType?: string;
@@ -98,9 +104,9 @@ export interface ITerminalTabManager {
   // 打开 tab
   openTab: (tab: TerminalTabItem) => void;
   // 切换到前一个 tab
-  changeToPrev: () => void;
+  changeToPrevTab: () => void;
   // 切换到后一个 tab
-  changeToNext: () => void;
+  changeToNextTab: () => void;
   // 切换索引 tab
   changeToIndex: (index: number) => void;
   // 清空
@@ -232,11 +238,11 @@ export interface ITerminalSessionHandler {
   // 关闭 tab
   closeTab: () => void;
   // 切换到前一个 tab
-  changeToPrev: () => void;
+  changeToPrevTab: () => void;
   // 切换到后一个 tab
-  changeToNext: () => void;
-  // 复制终端
-  openCopyTerminal: () => void;
-  // 打开新建连接页面
-  openNewConnect: () => void;
+  changeToNextTab: () => void;
+  // 复制终端 tab
+  openCopyTerminalTab: () => void;
+  // 打开新建连接 tab
+  openNewConnectTab: () => void;
 }

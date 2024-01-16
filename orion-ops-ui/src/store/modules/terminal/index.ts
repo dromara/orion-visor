@@ -57,7 +57,7 @@ export default defineStore('terminal', {
       pluginsSetting: {} as TerminalPluginsSetting,
       sessionSetting: {} as TerminalSessionSetting,
       shortcutSetting: {
-        enabled: true,
+        enabled: false,
         keys: []
       } as TerminalShortcutSetting,
     },
@@ -79,7 +79,16 @@ export default defineStore('terminal', {
           // 更新默认主题偏好
           await this.updateTerminalPreference(TerminalPreferenceItem.THEME, data.theme);
         }
-        // 选择赋值
+        // 移除禁用的快捷键
+        if (data.shortcutSetting?.enabled) {
+          data.shortcutSetting.keys = data.shortcutSetting.keys.filter(s => s.enabled);
+        } else {
+          data.shortcutSetting = {
+            enabled: false,
+            keys: []
+          };
+        }
+        // 选择赋值 (不能修改引用)
         const keys = Object.keys(this.preference);
         keys.forEach(key => {
           const item = data[key as keyof TerminalPreference];

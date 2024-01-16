@@ -35,9 +35,10 @@
 </script>
 
 <script lang="ts" setup>
-  import { TerminalTabType, InnerTabs } from '../../types/terminal.const';
+  import { TerminalTabType, InnerTabs, TerminalTabShortcutItems } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
-  import { watch } from 'vue';
+  import { onMounted, onUnmounted, watch } from 'vue';
+  import { addEventListen, removeEventListen } from '@/utils/event';
   import EmptyRecommend from './empty-recommend.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
   import TerminalDisplaySetting from '../view-setting/terminal-display-setting.vue';
@@ -45,29 +46,91 @@
   import TerminalGeneralSetting from '../view-setting/terminal-general-setting.vue';
   import TerminalView from '../xterm/terminal-view.vue';
 
-  const { tabManager, sessionManager } = useTerminalStore();
+  const { preference, tabManager, sessionManager } = useTerminalStore();
 
   // 监听 tab 修改
-  watch(() => tabManager.active, active => {
-    if (!active) {
+  watch(() => tabManager.active, (active, before) => {
+    if (before) {
+      // 失焦已经切换的终端
+      const beforeTab = tabManager.items.find(s => s.key === before);
+      if (beforeTab && beforeTab?.type === TerminalTabType.TERMINAL) {
+        sessionManager.getSession(before)?.blur();
+      }
+    }
+    if (active) {
+      // 获取 activeTab
+      const activeTab = tabManager.items.find(s => s.key === active);
+      if (!activeTab) {
+        return;
+      }
+      // 修改标题
+      document.title = activeTab.title;
+      // 终端自动聚焦
+      if (activeTab?.type === TerminalTabType.TERMINAL) {
+        sessionManager.getSession(active)?.focus();
+      }
+    } else {
       // 修改标题
       document.title = '主机终端';
-      return;
-    }
-    // 获取 tab
-    const tab = tabManager.items.find(s => s.key === active);
-    if (!tab) {
-      return;
-    }
-    // 修改标题
-    document.title = tab.title;
-    // terminal 自动聚焦
-    if (tab?.type === TerminalTabType.TERMINAL) {
-      sessionManager.getSession(active)?.focus();
     }
   });
 
-  // TODO 快捷键逻辑 主机加载逻辑 加载中逻辑
+  // 处理快捷键逻辑
+  const handlerKeyboard = (event: Event) => {
+    // 当前页面非 terminal 的时候再触发快捷键 (terminal 有内置逻辑)
+    if (tabManager.active
+      && tabManager.items.find(s => s.key === tabManager.active)?.type === TerminalTabType.TERMINAL) {
+      return;
+    }
+    const e = event as KeyboardEvent;
+    // 检测触发的快捷键
+    const key = preference.shortcutSetting.keys.find(key => {
+      return key.code === e.code
+        && key.altKey === e.altKey
+        && key.shiftKey === e.shiftKey
+        && key.ctrlKey === e.ctrlKey;
+    });
+    if (!key) {
+      return;
+    }
+    // 触发逻辑
+    switch (key.item) {
+      case TerminalTabShortcutItems.CLOSE_TAB.item:
+        // 关闭 tab
+        if (tabManager.active) {
+          tabManager.deleteTab(tabManager.active);
+        }
+        break;
+      case TerminalTabShortcutItems.CHANGE_TO_PREV_TAB.item:
+        // 切换至前一个 tab
+        tabManager.changeToPrevTab();
+        break;
+      case TerminalTabShortcutItems.CHANGE_TO_NEXT_TAB.item:
+        // 切换至后一个 tab
+        tabManager.changeToNextTab();
+        break;
+      case TerminalTabShortcutItems.OPEN_NEW_CONNECT_TAB.item:
+        // 切换到新建连接 tab
+        tabManager.openTab(InnerTabs.NEW_CONNECTION);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 监听键盘事件
+  onMounted(() => {
+    if (preference.shortcutSetting.enabled) {
+      addEventListen(window, 'keydown', handlerKeyboard);
+    }
+  });
+
+  // 移除键盘事件
+  onUnmounted(() => {
+    if (preference.shortcutSetting.enabled) {
+      removeEventListen(window, 'keydown', handlerKeyboard);
+    }
+  });
 
 </script>
 

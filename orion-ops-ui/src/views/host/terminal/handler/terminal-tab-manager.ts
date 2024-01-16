@@ -45,12 +45,12 @@ export default class TerminalTabManager implements ITerminalTabManager {
   }
 
   // 切换到前一个 tab
-  changeToPrev() {
+  changeToPrevTab() {
     this.changeToIndex(this.getCurrentTabIndex() - 1);
   }
 
   // 切换到后一个 tab
-  changeToNext() {
+  changeToNextTab() {
     this.changeToIndex(this.getCurrentTabIndex() + 1);
   }
 

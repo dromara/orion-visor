@@ -127,6 +127,66 @@ export const ActionBarItems = [
   }
 ];
 
+// 终端 tab 快捷键操作
+export const TerminalTabShortcutItems = {
+  CHANGE_TO_PREV_TAB: {
+    item: 'changeToPrevTab',
+    content: '切换为前一个 tab'
+  },
+  CHANGE_TO_NEXT_TAB: {
+    item: 'changeToNextTab',
+    content: '切换为后一个 tab'
+  },
+  CLOSE_TAB: {
+    item: 'closeTab',
+    content: '关闭当前 tab'
+  },
+  OPEN_NEW_CONNECT_TAB: {
+    item: 'openNewConnectTab',
+    content: '打开新建连接 tab'
+  },
+  OPEN_COPY_TERMINAL_TAB: {
+    item: 'openCopyTerminalTab',
+    content: '复制当前终端 tab'
+  },
+  COPY: {
+    item: 'copy',
+    content: '复制'
+  },
+  PASTE: {
+    item: 'paste',
+    content: '粘贴'
+  },
+  TO_TOP: {
+    item: 'toTop',
+    content: '去顶部'
+  },
+  TO_BOTTOM: {
+    item: 'toBottom',
+    content: '去底部'
+  },
+  SELECT_ALL: {
+    item: 'selectAll',
+    content: '全选'
+  },
+  SEARCH: {
+    item: 'search',
+    content: '搜索'
+  },
+  FONT_SIZE_PLUS: {
+    item: 'fontSizePlus',
+    content: '增大字号'
+  },
+  FONT_SIZE_SUBTRACT: {
+    item: 'fontSizeSubtract',
+    content: '减小字号'
+  },
+  COMMAND_EDITOR: {
+    item: 'commandEditor',
+    content: '命令编辑器'
+  },
+};
+
 // 打开 sshModal key
 export const openSshModalKey = Symbol();
 

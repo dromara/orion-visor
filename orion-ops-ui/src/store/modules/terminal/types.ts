@@ -76,9 +76,10 @@ export interface TerminalShortcutSetting {
 
 // 终端快捷键
 export interface TerminalShortcutKey {
-  option: string;
+  item: string;
   ctrlKey: boolean;
   shiftKey: boolean;
   altKey: boolean;
   code: string;
+  enabled: boolean;
 }

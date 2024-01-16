@@ -29,94 +29,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     this.domRef = domRef;
     const { preference, tabManager } = useTerminalStore();
     this.interactSetting = preference.interactSetting;
-    // this.shortcutKeys = preference.shortcutSetting.keys;
-    this.shortcutKeys = [
-      {
-        option: 'copy',
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: false,
-        code: 'KeyC'
-      }, {
-        option: 'paste',
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: false,
-        code: 'KeyV'
-      }, {
-        option: 'toTop',
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: false,
-        code: 'ArrowUp'
-      }, {
-        option: 'toBottom',
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: false,
-        code: 'ArrowDown'
-      }, {
-        option: 'selectAll',
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: false,
-        code: 'KeyA'
-      }, {
-        option: 'search',
-        ctrlKey: true,
-        shiftKey: true,
-        altKey: false,
-        code: 'KeyF'
-      }, {
-        option: 'fontSizePlus',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'Equal'
-      }, {
-        option: 'fontSizeSubtract',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'Minus'
-      }, {
-        option: 'commandEditor',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'KeyE'
-      }, {
-        option: 'close',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'KeyW'
-      }, {
-        option: 'changeToPrev',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'ArrowLeft'
-      }, {
-        option: 'changeToNext',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'ArrowRight'
-      }, {
-        option: 'openCopyTerminal',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'KeyO'
-      }, {
-        option: 'openNewConnect',
-        ctrlKey: true,
-        shiftKey: false,
-        altKey: true,
-        code: 'KeyN'
-      },
-    ];
+    this.shortcutKeys = preference.shortcutSetting.keys;
     this.tabManager = tabManager;
   }
 
@@ -158,7 +71,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     });
     if (key) {
       // 调用处理方法
-      this.invokeHandle.call(this, key.option);
+      this.invokeHandle.call(this, key.item);
       return false;
     } else {
       return true;
@@ -271,22 +184,22 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
   }
 
   // 切换到前一个 tab
-  changeToPrev() {
-    this.tabManager.changeToPrev();
+  changeToPrevTab() {
+    this.tabManager.changeToPrevTab();
   }
 
   // 切换到后一个 tab
-  changeToNext() {
-    this.tabManager.changeToNext();
+  changeToNextTab() {
+    this.tabManager.changeToNextTab();
   }
 
-  // 复制终端
-  openCopyTerminal() {
+  // 复制终端 tab
+  openCopyTerminalTab() {
     useTerminalStore().openCopyTerminal(this.session.hostId);
   }
 
-  // 打开新建连接页面
-  openNewConnect() {
+  // 打开新建连接 tab
+  openNewConnectTab() {
     this.tabManager.openTab(InnerTabs.NEW_CONNECTION);
   }
 

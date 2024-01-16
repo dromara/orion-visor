@@ -2,8 +2,8 @@ import type { UnwrapRef } from 'vue';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
 import type { ITerminalChannel, ITerminalSession, ITerminalSessionHandler, TerminalAddons, TerminalDomRef } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
-import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
+import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
@@ -13,6 +13,7 @@ import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebglAddon } from 'xterm-addon-webgl';
 import { playBell } from '@/utils/bell';
 import TerminalSessionHandler from './terminal-session-handler';
+import { addEventListen } from '@/utils/event';
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
@@ -82,16 +83,14 @@ export default class TerminalSession implements ITerminalSession {
     // 处理自定义按键
     this.inst.attachCustomKeyEventHandler((e: KeyboardEvent) => {
       e.preventDefault();
-      // 未开启
-      if (!preference.shortcutSetting.enabled) {
-        return true;
+      // 触发快捷键检测
+      if (e.type === 'keydown'
+        && preference.shortcutSetting.enabled
+        && preference.shortcutSetting.keys.length) {
+        // 触发快捷键
+        return this.handler.triggerShortcutKey(e);
       }
-      // 只监听 keydown 事件
-      if (e.type !== 'keydown') {
-        return true;
-      }
-      // 触发快捷键
-      return this.handler.triggerShortcutKey(e);
+      return true;
     });
   }
 
@@ -134,7 +133,7 @@ export default class TerminalSession implements ITerminalSession {
       });
     });
     // 设置右键选项
-    dom.addEventListener('contextmenu', async () => {
+    addEventListen(dom, 'contextmenu', async () => {
       // 右键粘贴逻辑
       if (preference.interactSetting.rightClickPaste) {
         if (!this.canWrite || !this.connected) {
@@ -195,14 +194,19 @@ export default class TerminalSession implements ITerminalSession {
     this.inst.write(value);
   }
 
-  // 自适应
-  fit(): void {
-    this.addons.fit?.fit();
-  }
-
   // 聚焦
   focus(): void {
     this.inst.focus();
+  }
+
+  // 失焦
+  blur(): void {
+    this.inst.blur();
+  }
+
+  // 自适应
+  fit(): void {
+    this.addons.fit?.fit();
   }
 
   // 查找
@@ -229,7 +233,7 @@ export default class TerminalSession implements ITerminalSession {
       Object.values(this.addons)
         .filter(Boolean)
         .forEach(s => s.dispose());
-      // 卸载实体
+      // 卸载终端
       this.inst.dispose();
     } catch (e) {
     }
