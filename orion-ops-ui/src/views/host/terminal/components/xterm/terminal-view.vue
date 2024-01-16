@@ -37,8 +37,8 @@
       </div>
     </div>
     <!-- 终端右键菜单 -->
-    <terminal-context-menu :enabled-status="actionsEnabledStatus"
-                           @click="action => actionsClickHandler[action] && actionsClickHandler[action]()">
+    <terminal-context-menu :session="session"
+                           @click="doTerminalHandle">
       <!-- 终端容器 -->
       <div class="terminal-wrapper"
            :style="{ background: preference.theme.schema.background }">
@@ -84,7 +84,7 @@
 
   const { copy } = useCopy();
   const { getDictValue } = useDictStore();
-  const { preference, tabManager, sessionManager } = useTerminalStore();
+  const { preference, sessionManager } = useTerminalStore();
 
   const editorModal = ref();
   const searchModal = ref();
@@ -123,34 +123,10 @@
     session.value?.find(word, next, options);
   };
 
-  // 操作启用状态
-  const actionsEnabledStatus = computed<Record<string, boolean | undefined>>(() => {
-    return {
-      paste: !!session.value?.canWrite,
-      interrupt: !!session.value?.canWrite,
-      enter: !!session.value?.canWrite,
-      commandEditor: !!session.value?.canWrite,
-      disconnect: !!session.value?.connected,
-    };
-  });
-
   // 执行终端操作
   const doTerminalHandle = (handle: string) => {
-    // 处理器
     const handler = session.value?.handler[handle as keyof ITerminalSessionHandler] as () => void;
     handler && handler.call(session.value?.handler);
-  };
-
-  // 操作点击逻辑
-  const actionsClickHandler: Record<string, () => void> = {
-    // 搜索
-    search: () => searchModal.value.toggle(),
-    // 命令编辑器
-    commandEditor: () => editorModal.value.open('', ''),
-    // 断开连接
-    disconnect: () => session.value?.disconnect(),
-    // 关闭
-    close: () => tabManager.deleteTab(props.tab.key),
   };
 
   // 右侧操作

@@ -8,10 +8,10 @@
     <!-- 终端插槽 -->
     <slot />
     <!-- 右键菜单 -->
-    <template v-if="preference.interactSetting.enableRightClickMenu" #content>
+    <template v-if="session && preference.interactSetting.enableRightClickMenu" #content>
       <a-doption v-for="(action, index) in actions"
                  :key="index"
-                 :disabled="enabledStatus[action.item] === false"
+                 :disabled="!session.handler.enabledStatus(action.item)"
                  @click="emits('click', action.item)">
         <!-- 图标 -->
         <div class="action-icon">
@@ -31,12 +31,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ContextMenuItem } from '../../types/terminal.type';
+  import type { ContextMenuItem, ITerminalSession } from '../../types/terminal.type';
   import { ActionBarItems } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   defineProps<{
-    enabledStatus: Record<string, boolean | undefined>
+    session: ITerminalSession | undefined
   }>();
 
   const emits = defineEmits(['click']);
