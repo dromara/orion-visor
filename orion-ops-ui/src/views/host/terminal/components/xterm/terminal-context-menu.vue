@@ -1,8 +1,8 @@
 <template>
   <!-- 终端右键菜单 -->
   <a-dropdown class="terminal-context-menu"
-              trigger="contextMenu"
               :popup-max-height="false"
+              trigger="contextMenu"
               position="bl"
               alignPoint>
     <!-- 终端插槽 -->

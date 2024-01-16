@@ -4,7 +4,7 @@ import type { ITerminalChannel, ITerminalSession, ITerminalSessionHandler, Termi
 import { useTerminalStore } from '@/store';
 import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
 import { InputProtocol } from '../types/terminal.protocol';
-import { ITerminalOptions, Terminal } from 'xterm';
+import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { ISearchOptions, SearchAddon } from 'xterm-addon-search';
@@ -12,11 +12,7 @@ import { ImageAddon } from 'xterm-addon-image';
 import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebglAddon } from 'xterm-addon-webgl';
 import { playBell } from '@/utils/bell';
-import useCopy from '@/hooks/copy';
-import TerminalShortcutDispatcher from './terminal-shortcut-dispatch';
 import TerminalSessionHandler from './terminal-session-handler';
-
-const copy = useCopy();
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
@@ -83,7 +79,6 @@ export default class TerminalSession implements ITerminalSession {
 
   // 注册快捷键
   private registerShortcut(preference: UnwrapRef<TerminalPreference>) {
-    const dispatcher = new TerminalShortcutDispatcher(this, preference.shortcutSetting.keys);
     // 处理自定义按键
     this.inst.attachCustomKeyEventHandler((e: KeyboardEvent) => {
       e.preventDefault();
@@ -95,8 +90,8 @@ export default class TerminalSession implements ITerminalSession {
       if (e.type !== 'keydown') {
         return true;
       }
-      // 调度快捷键
-      return dispatcher.dispatch(e);
+      // 触发快捷键
+      return this.handler.triggerShortcutKey(e);
     });
   }
 
@@ -124,7 +119,7 @@ export default class TerminalSession implements ITerminalSession {
     if (preference.interactSetting.selectionChangeCopy) {
       this.inst.onSelectionChange(() => {
         // 复制选中内容
-        this.copySelection();
+        this.handler.copy();
       });
     }
     // 注册 resize 事件
@@ -139,7 +134,7 @@ export default class TerminalSession implements ITerminalSession {
       });
     });
     // 设置右键选项
-    dom.addEventListener('contextmenu', async (event) => {
+    dom.addEventListener('contextmenu', async () => {
       // 右键粘贴逻辑
       if (preference.interactSetting.rightClickPaste) {
         if (!this.canWrite || !this.connected) {
@@ -147,7 +142,7 @@ export default class TerminalSession implements ITerminalSession {
         }
         // 未开启右键选中 || 开启并无选中的内容则粘贴
         if (!preference.interactSetting.rightClickSelectsWord || !this.inst.hasSelection()) {
-          this.pasteTrimEnd(await copy.readText());
+          this.handler.paste();
         }
       }
     });
@@ -172,6 +167,7 @@ export default class TerminalSession implements ITerminalSession {
     if (preference.pluginsSetting.enableImagePlugin) {
       this.addons.image = new ImageAddon();
     }
+    // 加载插件
     for (const addon of Object.values(this.addons)) {
       this.inst.loadAddon(addon);
     }
@@ -209,53 +205,6 @@ export default class TerminalSession implements ITerminalSession {
     this.inst.focus();
   }
 
-  // 清空
-  clear(): void {
-    this.inst.clear();
-    this.inst.clearSelection();
-    this.inst.focus();
-  }
-
-  // 粘贴
-  paste(value: string): void {
-    this.inst.paste(value);
-    this.inst.focus();
-  }
-
-  // 粘贴并且去除尾部空格 (如果配置)
-  pasteTrimEnd(value: string): void {
-    if (useTerminalStore().preference.interactSetting.pasteAutoTrim) {
-      // 粘贴前去除尾部空格
-      this.inst.paste(value.trimEnd());
-    } else {
-      this.inst.paste(value);
-    }
-    this.inst.focus();
-  }
-
-  // 选中全部
-  selectAll(): void {
-    this.inst.selectAll();
-    this.inst.focus();
-  }
-
-  // 复制选中
-  copySelection(): string {
-    let selection = this.inst.getSelection();
-    if (selection) {
-      // 去除尾部空格
-      const { preference } = useTerminalStore();
-      if (preference.interactSetting.copyAutoTrim) {
-        selection = selection.trimEnd();
-      }
-      // 复制
-      copy.copy(selection, false);
-    }
-    // 聚焦
-    this.inst.focus();
-    return selection;
-  }
-
   // 查找
   find(word: string, next: boolean, options: ISearchOptions): void {
     if (next) {
@@ -263,28 +212,6 @@ export default class TerminalSession implements ITerminalSession {
     } else {
       this.addons.search.findPrevious(word, options);
     }
-  }
-
-  // 去顶部
-  toTop(): void {
-    this.inst.scrollToTop();
-    this.inst.focus();
-  }
-
-  // 去底部
-  toBottom(): void {
-    this.inst.scrollToBottom();
-    this.inst.focus();
-  }
-
-  // 获取配置
-  getOption(option: string): any {
-    return this.inst.options[option as keyof ITerminalOptions] as any;
-  }
-
-  // 设置配置
-  setOption(option: string, value: any): void {
-    this.inst.options[option as keyof ITerminalOptions] = value;
   }
 
   // 断开连接

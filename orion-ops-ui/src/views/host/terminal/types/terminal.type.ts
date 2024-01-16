@@ -176,26 +176,8 @@ export interface ITerminalSession {
   fit: () => void;
   // 聚焦
   focus: () => void;
-  // 清空
-  clear: () => void;
-  // 粘贴
-  paste: (value: string) => void;
-  // 粘贴并且去除尾部空格 (如果配置)
-  pasteTrimEnd: (value: string) => void;
-  // 选中全部
-  selectAll: () => void;
-  // 复制选中
-  copySelection: () => string;
   // 查找
   find: (word: string, next: boolean, options: ISearchOptions) => void;
-  // 去顶部
-  toTop: () => void;
-  // 去底部
-  toBottom: () => void;
-  // 获取配置
-  getOption: (option: string) => any;
-  // 设置配置
-  setOption: (option: string, value: any) => void;
   // 断开连接
   disconnect: () => void;
   // 关闭
@@ -206,6 +188,11 @@ export interface ITerminalSession {
 export interface ITerminalSessionHandler {
   // 启用状态
   enabledStatus: (option: string) => boolean;
+  // 调用处理方法
+  invokeHandle: (option: string) => void;
+  // 触发快捷键
+  triggerShortcutKey: (e: KeyboardEvent) => boolean;
+
   // 复制选中
   copy: () => void;
   // 粘贴
@@ -236,12 +223,4 @@ export interface ITerminalSessionHandler {
   disconnect: () => void;
   // 关闭
   close: () => void;
-  // 聚焦
-  focus: () => void;
-}
-
-// 终端快捷键调度定义
-export interface ITerminalShortcutDispatcher {
-  // 调度快捷键
-  dispatch(e: KeyboardEvent): boolean;
 }

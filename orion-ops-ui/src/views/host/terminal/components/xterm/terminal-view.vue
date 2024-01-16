@@ -109,7 +109,7 @@
   // 发送命令
   const writeCommand = (value: string) => {
     if (session.value?.canWrite) {
-      session.value.pasteTrimEnd(value);
+      session.value?.handler.pasteTrimEnd(value);
     }
   };
 
@@ -125,8 +125,7 @@
 
   // 执行终端操作
   const doTerminalHandle = (handle: string) => {
-    const handler = session.value?.handler[handle as keyof ITerminalSessionHandler] as () => void;
-    handler && handler.call(session.value?.handler);
+    session.value?.handler.invokeHandle.call(session.value?.handler, handle);
   };
 
   // 右侧操作
@@ -152,7 +151,7 @@
     });
   });
 
-  // 会话
+  // 关闭会话
   onUnmounted(() => {
     sessionManager.closeSession(props.tab.key);
   });
