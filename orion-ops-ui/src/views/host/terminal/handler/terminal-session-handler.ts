@@ -44,6 +44,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
       case 'interrupt':
       case 'enter':
       case 'commandEditor':
+      case 'checkAppendMissing':
         return this.session.canWrite;
       case 'disconnect':
         return this.session.connected;
@@ -179,6 +180,36 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
   // 断开连接
   disconnect() {
     this.session.disconnect();
+  }
+
+  // 检查追加缺失的部分
+  checkAppendMissing(value: string): void {
+    // 获取最后一行数据
+    const buffer = this.inst.buffer?.active;
+    let lastLine = (buffer?.getLine(buffer?.viewportY + buffer?.cursorY)?.translateToString() || '').trimEnd();
+    // 边界检查
+    const lastLineLen = lastLine.length;
+    const spinPartLen = value.length;
+    let checkEnd;
+    if (spinPartLen >= lastLineLen) {
+      checkEnd = lastLineLen;
+    } else {
+      checkEnd = spinPartLen;
+    }
+    // 获取缺失的数据
+    let append = undefined;
+    for (let i = 0; i < checkEnd; i++) {
+      if (lastLine.endsWith(value.substring(0, checkEnd - i))) {
+        append = value.substring(checkEnd - i, spinPartLen);
+        break;
+      }
+    }
+    // 全部缺失
+    if (append == undefined) {
+      append = value;
+    }
+    // 追加
+    this.pasteTrimEnd(append);
   }
 
   // 截图

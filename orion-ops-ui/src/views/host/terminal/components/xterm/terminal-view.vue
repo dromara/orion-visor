@@ -93,8 +93,8 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // sftp
   // 代码片段
+  // sftp
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {

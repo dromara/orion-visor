@@ -240,6 +240,8 @@ export interface ITerminalSessionHandler {
   disconnect: () => void;
   // 截图
   screenshot: () => void;
+  // 检查追加缺失的部分
+  checkAppendMissing: (value: string) => void;
   // 关闭 tab
   closeTab: () => void;
   // 切换到前一个 tab

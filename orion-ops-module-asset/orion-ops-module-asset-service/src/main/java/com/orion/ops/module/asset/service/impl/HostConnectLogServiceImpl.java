@@ -101,7 +101,8 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
                 .like(HostConnectLogDO::getToken, request.getToken())
                 .eq(HostConnectLogDO::getStatus, request.getStatus())
                 .ge(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
-                .le(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1));
+                .le(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
+                .orderByDesc(HostConnectLogDO::getId);
     }
 
 }
