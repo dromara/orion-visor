@@ -93,7 +93,6 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // 截屏
   // sftp
   // 代码片段
 

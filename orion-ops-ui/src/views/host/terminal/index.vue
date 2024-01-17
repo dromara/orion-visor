@@ -11,7 +11,7 @@
         <terminal-left-sidebar />
       </div>
       <!-- 内容区域 -->
-      <div class="host-layout-content">
+      <div class="host-layout-content" ref="content">
         <!-- 主机加载中骨架 -->
         <loading-skeleton v-if="contentLoading" />
         <!-- 终端内容区域 -->
@@ -19,7 +19,7 @@
       </div>
       <!-- 右侧操作栏 -->
       <div class="host-layout-right">
-        <terminal-right-sidebar />
+        <terminal-right-sidebar @screenshot="screenshotTerminal" />
       </div>
     </main>
   </div>
@@ -41,8 +41,11 @@
   import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
   import TerminalContent from './components/layout/terminal-content.vue';
   import LoadingSkeleton from './components/layout/loading-skeleton.vue';
+  import html2canvas from 'html2canvas';
+  import { saveAs } from 'file-saver';
   import './assets/styles/layout.less';
   import 'xterm/css/xterm.css';
+  import { Message } from '@arco-design/web-vue';
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
@@ -51,11 +54,36 @@
 
   const originTitle = document.title;
   const render = ref(false);
+  const content = ref();
 
   // 关闭视口处理
   const handleBeforeUnload = (event: any) => {
     event.preventDefault();
     event.returnValue = confirm('系统可能不会保存您所做的更改');
+  };
+
+  // 终端截图
+  // FIXME test 水印
+  const screenshotTerminal = async () => {
+    try {
+      console.log(content.value);
+      const canvas = await html2canvas(content.value, {
+        useCORS: true,
+        backgroundColor: 'transparent',
+      });
+      console.log(canvas);
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('截屏失败'));
+          }
+          resolve(blob);
+        }, 'image/png');
+      });
+      saveAs(blob, `screenshot-${Date.now()}.png`);
+    } catch (e) {
+      Message.error('保存失败');
+    }
   };
 
   // 加载用户终端偏好

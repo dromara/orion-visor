@@ -54,6 +54,7 @@
   import useLoading from '@/hooks/loading';
   import { useDebounceFn } from '@vueuse/core';
   import { addEventListen, removeEventListen } from '@/utils/event';
+  import { Message } from '@arco-design/web-vue';
   import TerminalShortcutKeysBlock from './terminal-shortcut-keys-block.vue';
   import TerminalShortcutActionBlock from './terminal-shortcut-action-block.vue';
 
@@ -166,6 +167,7 @@
         enabled: enabled.value,
         keys: shortcutKeys.value
       } as TerminalShortcutSetting);
+      Message.success('保存成功');
     } catch (e) {
     } finally {
       setLoading(false);
