@@ -157,7 +157,7 @@ export default class TerminalSession implements ITerminalSession {
     }
     if (preference.pluginsSetting.enableWebglPlugin) {
       // WebGL 渲染插件
-      this.addons.webgl = new WebglAddon();
+      this.addons.webgl = new WebglAddon(true);
     } else {
       // canvas 渲染插件
       this.addons.canvas = new CanvasAddon();

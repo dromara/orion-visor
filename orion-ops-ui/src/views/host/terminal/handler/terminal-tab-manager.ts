@@ -13,6 +13,14 @@ export default class TerminalTabManager implements ITerminalTabManager {
     this.items = [InnerTabs.NEW_CONNECTION];
   }
 
+  // 获取当前 tab
+  getCurrentTab() {
+    if (!this.active) {
+      return undefined;
+    }
+    return this.items.find(s => s.key === this.active);
+  }
+
   // 点击 tab
   clickTab(key: string): void {
     this.active = key;

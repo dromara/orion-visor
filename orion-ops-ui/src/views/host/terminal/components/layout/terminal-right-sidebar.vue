@@ -19,9 +19,27 @@
 
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.type';
+  import { useTerminalStore } from '@/store';
+  import { TerminalTabType } from '../../types/terminal.const';
   import IconActions from './icon-actions.vue';
+  import { Message } from '@arco-design/web-vue';
 
-  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer', 'screenshot']);
+  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer']);
+
+  const { tabManager, sessionManager } = useTerminalStore();
+
+  // 终端截屏
+  const screenshot = () => {
+    const tab = tabManager.getCurrentTab();
+    if (!tab || tab.type !== TerminalTabType.TERMINAL) {
+      Message.warning('请切换到终端标签页');
+      return;
+    }
+    // 获取处理器并截图
+    sessionManager.getSession(tab.key)
+      ?.handler
+      ?.screenshot();
+  };
 
   // 顶部操作
   const topActions = [
@@ -50,7 +68,7 @@
     {
       icon: 'icon-camera',
       content: '截图',
-      click: () => emits('screenshot')
+      click: screenshot
     },
   ];
 

@@ -98,6 +98,8 @@ export interface ITerminalTabManager {
   // 全部 tab
   items: Array<TerminalTabItem>;
 
+  // 获取当前 tab
+  getCurrentTab: () => TerminalTabItem | undefined;
   // 点击 tab
   clickTab: (key: string) => void;
   // 删除 tab
@@ -236,6 +238,8 @@ export interface ITerminalSessionHandler {
   clear: () => void;
   // 断开连接
   disconnect: () => void;
+  // 截图
+  screenshot: () => void;
   // 关闭 tab
   closeTab: () => void;
   // 切换到前一个 tab

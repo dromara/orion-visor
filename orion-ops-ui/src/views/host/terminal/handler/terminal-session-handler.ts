@@ -4,6 +4,9 @@ import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
 import { useTerminalStore } from '@/store';
 import { InnerTabs } from '../types/terminal.const';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import { Message } from '@arco-design/web-vue';
 
 const { copy: copyValue, readText } = useCopy();
 
@@ -176,6 +179,29 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
   // 断开连接
   disconnect() {
     this.session.disconnect();
+  }
+
+  // 截图
+  async screenshot() {
+    try {
+      // 获取截屏
+      const canvas = await html2canvas(this.inst.element as HTMLElement, {
+        useCORS: true,
+        backgroundColor: 'transparent',
+      });
+      // 保存图片
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject();
+          }
+          resolve(blob);
+        }, 'image/png');
+      });
+      saveAs(blob as Blob, `screenshot-${Date.now()}.png`);
+    } catch (e) {
+      Message.error('保存失败');
+    }
   }
 
   // 关闭 tab
