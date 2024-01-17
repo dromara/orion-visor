@@ -82,8 +82,12 @@ export interface TerminalShortcutKey {
   shiftKey: boolean;
   altKey: boolean;
   code: string;
-  // extra
-  edit: boolean;
+}
+
+// 终端快捷键编辑
+export interface TerminalShortcutKeyEditable extends TerminalShortcutKey {
+  editable: boolean;
   content: string;
   type: number;
+  shortcutKey?: string;
 }

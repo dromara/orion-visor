@@ -79,7 +79,7 @@
       </a-form>
       <!-- 预览区域 -->
       <div class="terminal-example">
-        <span class="terminal-example-label">预览效果</span>
+        <span class="vertical-form-label">预览效果</span>
         <div class="terminal-example-wrapper"
              :style="{ background: preference.theme.schema.background }">
           <terminal-example :schema="preference.theme.schema"
@@ -184,14 +184,6 @@
 
   .terminal-example {
     height: 100%;
-
-    &-label {
-      color: var(--color-text-2);
-      display: block;
-      height: 16px;
-      margin-bottom: 12px;
-      user-select: none;
-    }
 
     &-wrapper {
       border-radius: 4px;

@@ -12,7 +12,7 @@
     <div class="terminal-setting-body block-body setting-body">
       <!-- 功能项 -->
       <div class="actions-container">
-        <div class="setting-label">功能</div>
+        <div class="vertical-form-label">功能</div>
         <!-- 功能项列表 -->
         <div class="actions-wrapper">
           <a-row :gutter="[8, 8]">
@@ -35,7 +35,7 @@
       </div>
       <!-- 菜单预览容器 -->
       <div class="preview-container">
-        <div class="setting-label">菜单预览</div>
+        <div class="vertical-form-label">菜单预览</div>
         <div ref="popupContainer" />
       </div>
       <!-- 预览下拉菜单 -->
@@ -119,18 +119,6 @@
 
   .setting-body {
     display: flex;
-  }
-
-  .setting-label {
-    display: flex;
-    max-width: 100%;
-    color: var(--color-text-2);
-    font-size: 14px;
-    margin-bottom: 8px;
-    padding: 0;
-    line-height: 1.5715;
-    white-space: normal;
-    user-select: none;
   }
 
   .actions-container {
