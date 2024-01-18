@@ -2,11 +2,12 @@ import type { TerminalInteractSetting, TerminalShortcutKey } from '@/store/modul
 import type { ITerminalSession, ITerminalSessionHandler, ITerminalTabManager, TerminalDomRef } from '../types/terminal.type';
 import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
-import { useTerminalStore } from '@/store';
-import { InnerTabs } from '../types/terminal.const';
 import html2canvas from 'html2canvas';
+import { useTerminalStore, useUserStore } from '@/store';
+import { InnerTabs } from '../types/terminal.const';
 import { saveAs } from 'file-saver';
 import { Message } from '@arco-design/web-vue';
+import { dateFormat } from '@/utils';
 
 const { copy: copyValue, readText } = useCopy();
 
@@ -220,6 +221,33 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
         useCORS: true,
         backgroundColor: 'transparent',
       });
+
+      // 绘制水印
+      const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+      const wPx = canvas.style.width;
+      const hPx = canvas.style.height;
+      const w = Number.parseInt(wPx.substring(0, wPx.length - 2));
+      const h = Number.parseInt(hPx.substring(0, hPx.length - 2));
+      const fontSize = 14;
+      ctx.fillStyle = useTerminalStore().preference.theme.dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+      ctx.font = `${fontSize}px Arial`;
+      ctx.rotate(-24 * Math.PI / 180);
+      // 水印内容
+      const watermark = useUserStore().username || '';
+      const time = '(' + dateFormat() + ')';
+      const textWidth = ctx.measureText(time.length > watermark.length ? time : watermark).width * 1.5;
+      const textHeight = (textWidth / 4 * 3) * 1.5;
+      // 绘制文本
+      for (let yi = -1; yi < h / textHeight + 2; yi++) {
+        for (let xi = -1; xi < w / textWidth + 2; xi++) {
+          if ((xi % 2 === 0 && yi % 2 === 0) || (xi % 2 !== 0 && yi % 2 !== 0)) {
+            continue;
+          }
+          ctx.fillText(watermark, textWidth * (xi - 1), textHeight * (yi + 1));
+          ctx.fillText(time, textWidth * (xi - 1), textHeight * (yi + 1) + fontSize * 1.12);
+        }
+      }
+
       // 保存图片
       const blob = await new Promise((resolve, reject) => {
         canvas.toBlob((blob) => {
