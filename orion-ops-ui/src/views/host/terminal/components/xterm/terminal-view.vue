@@ -93,7 +93,6 @@
   const session = ref<ITerminalSession>();
 
   // TODO
-  // 代码片段
   // sftp
 
   // 发送命令

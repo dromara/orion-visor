@@ -8,7 +8,7 @@
     <icon-actions class="bottom-actions"
                   :actions="bottomActions"
                   position="left" />
-    <!-- 代码片段 -->
+    <!-- 命令片段 -->
     <snippet-drawer ref="snippetRef" />
   </div>
 </template>
