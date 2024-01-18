@@ -8,6 +8,8 @@
     <icon-actions class="bottom-actions"
                   :actions="bottomActions"
                   position="left" />
+    <!-- 代码片段 -->
+    <snippet-drawer ref="snippetRef" />
   </div>
 </template>
 
@@ -21,32 +23,23 @@
   import type { SidebarAction } from '../../types/terminal.type';
   import { useTerminalStore } from '@/store';
   import { TerminalTabType } from '../../types/terminal.const';
-  import IconActions from './icon-actions.vue';
   import { Message } from '@arco-design/web-vue';
+  import { ref } from 'vue';
+  import IconActions from './icon-actions.vue';
+  import SnippetDrawer from '../snippet/snippet-drawer.vue';
 
-  const emits = defineEmits(['openSnippet', 'openSftp', 'openTransfer']);
+  const emits = defineEmits(['openSftp', 'openTransfer']);
 
   const { tabManager, sessionManager } = useTerminalStore();
 
-  // 终端截屏
-  const screenshot = () => {
-    const tab = tabManager.getCurrentTab();
-    if (!tab || tab.type !== TerminalTabType.TERMINAL) {
-      Message.warning('请切换到终端标签页');
-      return;
-    }
-    // 获取处理器并截图
-    sessionManager.getSession(tab.key)
-      ?.handler
-      ?.screenshot();
-  };
+  const snippetRef = ref();
 
   // 顶部操作
   const topActions = [
     {
-      icon: 'icon-code-block',
+      icon: 'icon-code',
       content: '打开命令片段',
-      click: () => emits('openSnippet')
+      click: () => snippetRef.value.open()
     },
     {
       icon: 'icon-folder',
@@ -68,9 +61,22 @@
     {
       icon: 'icon-camera',
       content: '截图',
-      click: screenshot
+      click: () => screenshot()
     },
   ];
+
+  // 终端截屏
+  const screenshot = () => {
+    const tab = tabManager.getCurrentTab();
+    if (!tab || tab.type !== TerminalTabType.TERMINAL) {
+      Message.warning('请切换到终端标签页');
+      return;
+    }
+    // 获取处理器并截图
+    sessionManager.getSession(tab.key)
+      ?.handler
+      ?.screenshot();
+  };
 
 </script>
 

@@ -45,6 +45,7 @@
                   <!-- 修改别名 -->
                   <a-tooltip position="top"
                              :mini="true"
+                             :auto-fix-position="false"
                              content-class="terminal-tooltip-content"
                              arrow-class="terminal-tooltip-content"
                              content="修改别名">
@@ -82,6 +83,7 @@
               <!-- ip -->
               <a-tooltip position="top"
                          :mini="true"
+                         :auto-fix-position="false"
                          content-class="terminal-tooltip-content"
                          arrow-class="terminal-tooltip-content"
                          :content="item.address">
@@ -112,6 +114,7 @@
                 <!-- 连接主机 -->
                 <a-tooltip position="top"
                            :mini="true"
+                           :auto-fix-position="false"
                            content-class="terminal-tooltip-content"
                            arrow-class="terminal-tooltip-content"
                            content="连接主机">
@@ -124,6 +127,7 @@
                 <!-- 连接设置 -->
                 <a-tooltip position="top"
                            :mini="true"
+                           :auto-fix-position="false"
                            content-class="terminal-tooltip-content"
                            arrow-class="terminal-tooltip-content"
                            content="连接设置">
@@ -136,6 +140,7 @@
                 <!-- 收藏 -->
                 <a-tooltip position="top"
                            :mini="true"
+                           :auto-fix-position="false"
                            content-class="terminal-tooltip-content"
                            arrow-class="terminal-tooltip-content"
                            content="收藏">

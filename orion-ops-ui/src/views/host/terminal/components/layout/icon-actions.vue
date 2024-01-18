@@ -4,8 +4,9 @@
                :key="index"
                :position="position as any"
                :mini="true"
+               :show-arrow="false"
                content-class="terminal-tooltip-content"
-               arrow-class="terminal-tooltip-arrow"
+               :auto-fix-position="false"
                :content="action.content">
       <div class="terminal-sidebar-icon-wrapper" v-if="action.visible !== false">
         <div class="terminal-sidebar-icon"

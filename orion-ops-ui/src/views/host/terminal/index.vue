@@ -11,7 +11,7 @@
         <terminal-left-sidebar />
       </div>
       <!-- 内容区域 -->
-      <div class="host-layout-content">
+      <div id="terminal-layout-content" class="host-layout-content">
         <!-- 主机加载中骨架 -->
         <loading-skeleton v-if="contentLoading" />
         <!-- 终端内容区域 -->
@@ -116,7 +116,6 @@
       height: var(--header-height);
       background: var(--color-bg-header);
       position: relative;
-      z-index: 9999;
     }
 
     &-main {

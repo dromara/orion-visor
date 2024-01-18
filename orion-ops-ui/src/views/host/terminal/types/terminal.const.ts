@@ -208,6 +208,9 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   },
 ];
 
+// 代码片段操作提示
+export const snippetTipsKey = 'snippet:opt';
+
 // 打开 sshModal key
 export const openSshModalKey = Symbol();
 

@@ -5,7 +5,8 @@
            ref="inputRef"
            v-model="inputValue"
            placeholder="搜索关键字"
-           @keyup.enter="find(true)" />
+           @keyup.enter="find(true)"
+           @keyup.esc="close" />
     <div class="options-wrapper">
       <!-- 上一个-->
       <div class="icon-wrapper"
@@ -124,7 +125,7 @@
     width: 272px;
     height: 32px;
     padding: 4px;
-    z-index: 9999;
+    z-index: 30;
     border-radius: 2px;
     display: flex;
     align-items: center;
