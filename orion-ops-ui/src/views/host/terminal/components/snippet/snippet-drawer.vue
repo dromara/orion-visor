@@ -1,6 +1,6 @@
 <template>
   <a-drawer v-model:visible="visible"
-            :width="368"
+            :width="388"
             :footer="false">
     <!-- 表头 -->
     <template #title>
@@ -15,7 +15,7 @@
       <div class="snippet-header-container">
         <!-- 头部操作 -->
         <div class="snippet-header">
-          <a-button>新建</a-button>
+          <a-button @click="toggle">新建</a-button>
           <a-button>搜索</a-button>
         </div>
         <!-- 提示 -->
@@ -43,9 +43,9 @@
         <div>
           <div v-for="item in snippet.snippets"
                :key="item.id"
-               class="snippet-item-wrapper">
+               class="snippet-item-wrapper"
+               :class="[loading&&item.id===3 ? 'snippet-item-wrapper-expand' : '']">
             <div class="snippet-item">
-
             <span class="snippet-item-title">
               {{ item.name }}
             </span>
@@ -89,8 +89,10 @@
   import { useTipsStore } from '@/store';
   import useVisible from '@/hooks/visible';
   import { snippetTipsKey } from '../../types/terminal.const';
+  import useLoading from '@/hooks/loading';
 
   const { isNotTipped, setTipped } = useTipsStore();
+  const { loading, toggle } = useLoading();
   const { visible, setVisible } = useVisible(true);
   const snippet = ref<SnippetGroupResponse>({
     groups: [{
@@ -105,27 +107,27 @@
     snippets: [{
       id: 1,
       name: 'command1command1command1command1command1command1command1command1command1command1command1command1command1command1command1',
-      command: 'echo 123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123'
+      command: 'echo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci aliquid, atque cupiditate doloribus eligendi enim fugiat itaque iusto laborum magnam maiores natus nemo, neque quae, reprehenderit sed ullam voluptatem?'
     }, {
       id: 2,
       name: 'command2',
-      command: 'echo 123123123123123123123123123123123123123123'
+      command: 'echo Lorem'
     }, {
       id: 3,
       name: 'command3',
-      command: 'echo 123123123123123123123123123123123123123123'
+      command: 'echo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci aliquid, atque cupiditate doloribus eligendi enim fugiat itaque iusto laborum magnam maiores natus nemo, neque quae, reprehenderit sed ullam voluptatem?'
     }, {
       id: 4,
       name: 'command4',
-      command: 'echo 123123123123123123123123123123123123123123'
+      command: 'echo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci aliquid, atque cupiditate doloribus eligendi enim fugiat itaque iusto laborum magnam maiores natus nemo, neque quae, reprehenderit sed ullam voluptatem?'
     }, {
       id: 5,
       name: 'command5',
-      command: 'echo 123123123123123123123123123123123123123123'
+      command: 'echo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci aliquid, atque cupiditate doloribus eligendi enim fugiat itaque iusto laborum magnam maiores natus nemo, neque quae, reprehenderit sed ullam voluptatem?'
     }, {
       id: 6,
       name: 'command6',
-      command: 'echo 123123123123123123123123123123123123123123'
+      command: 'echo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci aliquid, atque cupiditate doloribus eligendi enim fugiat itaque iusto laborum magnam maiores natus nemo, neque quae, reprehenderit sed ullam voluptatem?'
     }]
   });
 
@@ -144,13 +146,24 @@
 
 </script>
 
+
 <style lang="less" scoped>
+  @transform-x: 8px;
+  @drawer-width: 388px;
+  @item-wrapper-p-y: 4px;
+  @item-wrapper-p-x: 12px;
+  @item-p: 8px;
+  @item-width: @drawer-width - @item-wrapper-p-x * 2;
+  @item-width-transform: @item-width + @transform-x;
+  @item-inline-width: @item-width - @item-p * 2;
+
   .snippet-drawer-title {
     font-size: 14px;
   }
 
   .snippet-container {
     position: relative;
+    background: var(--color-bg-2);
     height: 100%;
 
     .snippet-header-container {
@@ -173,21 +186,43 @@
   }
 
   .snippet-item-wrapper {
-    padding: 4px 12px;
+    padding: @item-wrapper-p-y 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    &-expand {
+
+      .snippet-item {
+        width: @item-width-transform !important;
+        background: var(--color-fill-3) !important;
+
+        :hover {
+        }
+
+        .snippet-item-command {
+          color: var(--color-text-1);
+          text-overflow: unset;
+          word-break: break-all;
+          white-space: unset;
+        }
+      }
+    }
 
     .snippet-item {
       display: flex;
       flex-direction: column;
-      padding: 8px;
-      background: var(--color-fill-1);
+      padding: @item-p;
+      background: var(--color-fill-2);
       border-radius: 4px;
       cursor: pointer;
-      transition: transform 0.3s ease;
-      will-change: transform;
+      transition: all 0.2s;
+      width: @item-width;
 
       &:hover {
-        transform: scale(1.02);
-        background: var(--color-fill-2);
+        width: @item-width-transform;
+        background: var(--color-fill-3);
       }
 
       &-title {
@@ -195,6 +230,7 @@
         margin-bottom: 8px;
         overflow: hidden;
         text-overflow: ellipsis;
+        width: @item-inline-width;
       }
 
       &-command {
@@ -203,9 +239,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: pre;
-        word-break: break-all;
+        width: @item-inline-width;
       }
-
     }
   }
 
