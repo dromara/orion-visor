@@ -17,6 +17,7 @@
         <div class="actions-wrapper">
           <a-row :gutter="[8, 8]">
             <a-col :span="12"
+                   class="action-item-wrapper"
                    v-for="(action, index) in ActionBarItems"
                    :key="index">
               <div class="action-item" @click="clickAction(action.item)">
@@ -116,18 +117,37 @@
 </script>
 
 <style lang="less" scoped>
+  @container-width: 418px;
+  @wrapper-margin-r: 32px;
+  @wrapper-width: (@container-width - @wrapper-margin-r) / 2px;
 
   .setting-body {
     display: flex;
   }
 
   .actions-container {
-    width: 418px;
+    width: @container-width;
     height: auto;
 
     .actions-wrapper {
+      width: @wrapper-width;
       padding-right: 8px;
-      margin-right: 32px;
+      margin-right: @wrapper-margin-r;
+    }
+
+    .action-item-wrapper {
+      transition: all 0.2s;
+      width: 185px;
+      border-radius: 4px;
+
+      &:hover {
+        width: 192px;
+        padding: 4px 0 !important;
+
+        .action-item{
+          background: var(--color-fill-3);
+        }
+      }
     }
 
     .action-item {
@@ -136,13 +156,8 @@
       align-items: center;
       cursor: pointer;
       border-radius: 4px;
-      background-color: var(--color-fill-2);
-      transition: transform 0.3s ease;
-      will-change: transform;
-
-      &:hover {
-        transform: scale(1.04);
-      }
+      width: inherit;
+      background: var(--color-fill-2);
     }
 
     .action-icon {
