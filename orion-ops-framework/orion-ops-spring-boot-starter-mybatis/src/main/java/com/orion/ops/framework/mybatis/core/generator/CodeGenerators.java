@@ -45,9 +45,11 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("host_connect_log", "主机连接日志", "host")
+                Template.create("command_snippet", "命令片段", "command")
                         .disableUnitTest()
-                        .vue("asset", "host-connect-log")
+                        .cache("command:snippet:list:{}", "命令片段列表 ${userId}")
+                        .expire(1, TimeUnit.DAYS)
+                        .vue("host", "command-snippet")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

@@ -14,6 +14,11 @@ public enum DataGroupTypeEnum {
      */
     HOST,
 
+    /**
+     * 命令片段
+     */
+    COMMAND_SNIPPET,
+
     ;
 
     public static DataGroupTypeEnum of(String type) {
