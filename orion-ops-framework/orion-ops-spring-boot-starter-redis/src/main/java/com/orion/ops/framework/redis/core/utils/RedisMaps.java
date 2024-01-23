@@ -584,6 +584,18 @@ public class RedisMaps extends RedisUtils {
     /**
      * 获取所有值 json
      *
+     * @param key    key
+     * @param define define
+     * @param <V>    V
+     * @return values
+     */
+    public static <V> List<V> valuesJson(String key, CacheKeyDefine define) {
+        return valuesJson(key, (Class<V>) define.getType());
+    }
+
+    /**
+     * 获取所有值 json
+     *
      * @param key key
      * @param <V> V
      * @return values

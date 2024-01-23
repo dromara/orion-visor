@@ -34,6 +34,10 @@ public class DataGroupDO extends BaseDO {
     @TableField("parent_id")
     private Long parentId;
 
+    @Schema(description = "用户id")
+    @TableField("user_id")
+    private Long userId;
+
     @Schema(description = "组名称")
     @TableField("name")
     private String name;

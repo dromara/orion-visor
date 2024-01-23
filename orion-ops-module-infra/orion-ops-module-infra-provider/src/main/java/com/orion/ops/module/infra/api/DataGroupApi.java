@@ -53,10 +53,29 @@ public interface DataGroupApi {
     /**
      * 通过缓存查询数据分组
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
+     * @return rows
+     */
+    List<DataGroupDTO> getDataGroupList(DataGroupTypeEnum type, Long userId);
+
+    /**
+     * 通过缓存查询数据分组
+     *
+     * @param type   type
+     * @param userId userId
      * @return rows
      */
     List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type);
+
+    /**
+     * 通过缓存查询数据分组
+     *
+     * @param type   type
+     * @param userId userId
+     * @return rows
+     */
+    List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type, Long userId);
 
     /**
      * 通过 id 查询

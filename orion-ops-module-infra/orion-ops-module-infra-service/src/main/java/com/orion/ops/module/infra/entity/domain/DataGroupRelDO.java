@@ -34,6 +34,10 @@ public class DataGroupRelDO extends BaseDO {
     @TableField("group_id")
     private Long groupId;
 
+    @Schema(description = "用户id")
+    @TableField("user_id")
+    private Long userId;
+
     @Schema(description = "引用id")
     @TableField("rel_id")
     private Long relId;

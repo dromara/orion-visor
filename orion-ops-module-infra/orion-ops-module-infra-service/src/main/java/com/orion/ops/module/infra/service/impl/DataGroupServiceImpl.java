@@ -26,7 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +64,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         Long id = record.getId();
         log.info("DataGroupService-createDataGroup id: {}, effect: {}", id, effect);
         // 删除缓存
-        this.deleteCache(request.getType());
+        this.deleteCache(record);
         return id;
     }
 
@@ -85,7 +88,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 更新
         int effect = dataGroupDAO.updateById(updateRecord);
         // 删除缓存
-        this.deleteCache(record.getType());
+        this.deleteCache(record);
         return effect;
     }
 
@@ -139,7 +142,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             effect = dataGroupDAO.updateById(update);
         }
         // 删除缓存
-        this.deleteCache(type);
+        this.deleteCache(moveRecord);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.SOURCE, moveRecord.getName());
         OperatorLogs.add(OperatorLogs.TARGET, targetRecord.getName());
@@ -148,15 +151,16 @@ public class DataGroupServiceImpl implements DataGroupService {
     }
 
     @Override
-    public List<DataGroupCacheDTO> getDataGroupListByCache(String type) {
+    public List<DataGroupCacheDTO> getDataGroupListByCache(String type, Long userId) {
         // 查询缓存
-        String key = DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type);
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type, userId);
         List<DataGroupCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST);
         if (Lists.isEmpty(list)) {
             // 查询数据库
             list = dataGroupDAO.of()
                     .createWrapper()
                     .eq(DataGroupDO::getType, type)
+                    .eq(DataGroupDO::getUserId, userId)
                     .then()
                     .list(DataGroupConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
@@ -170,13 +174,13 @@ public class DataGroupServiceImpl implements DataGroupService {
     }
 
     @Override
-    public List<DataGroupCacheDTO> getDataGroupTreeByCache(String type) {
+    public List<DataGroupCacheDTO> getDataGroupTreeByCache(String type, Long userId) {
         // 查询缓存
-        String key = DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type);
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type, userId);
         List<DataGroupCacheDTO> treeData = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_TREE);
         if (Lists.isEmpty(treeData)) {
             // 查询列表缓存
-            List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type);
+            List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type, userId);
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(rows, DataGroupCacheDTO::new);
             if (!Lists.isEmpty(rows)) {
@@ -213,10 +217,37 @@ public class DataGroupServiceImpl implements DataGroupService {
         dataGroupRelService.deleteByGroupIdList(type, deleteIdList);
         log.info("DataGroupService-deleteDataGroupById id: {}, effect: {}", id, effect);
         // 删除缓存
-        this.deleteCache(type);
+        this.deleteCache(record);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.GROUP_NAME, record.getName());
         return effect;
+    }
+
+    @Override
+    public Integer deleteDataGroupByUserId(Long userId) {
+        // 查询数据
+        List<DataGroupDO> rows = dataGroupDAO.selectByUserId(userId);
+        if (rows.isEmpty()) {
+            return rows.size();
+        }
+        // 删除分组
+        List<Long> idList = rows.stream()
+                .map(DataGroupDO::getId)
+                .collect(Collectors.toList());
+        dataGroupDAO.deleteBatchIds(idList);
+        // 删除分组内数据
+        Map<String, List<Long>> groupRelGroup = rows.stream()
+                .collect(Collectors.groupingBy(
+                        DataGroupDO::getType,
+                        Collectors.mapping(
+                                DataGroupDO::getId,
+                                Collectors.toList()
+                        )
+                ));
+        groupRelGroup.forEach((k, v) -> dataGroupRelService.deleteByGroupIdList(k, v));
+        // 删除缓存
+        this.deleteCache(userId, groupRelGroup.keySet());
+        return rows.size();
     }
 
     /**
@@ -252,6 +283,7 @@ public class DataGroupServiceImpl implements DataGroupService {
                 .ne(DataGroupDO::getId, domain.getId())
                 // 用其他字段做重复校验
                 .eq(DataGroupDO::getParentId, domain.getParentId())
+                .eq(DataGroupDO::getUserId, domain.getUserId())
                 .eq(DataGroupDO::getName, domain.getName())
                 .eq(DataGroupDO::getType, domain.getType());
         // 检查是否存在
@@ -262,11 +294,30 @@ public class DataGroupServiceImpl implements DataGroupService {
     /**
      * 删除缓存
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
      */
-    private void deleteCache(String type) {
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
-                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
+    private void deleteCache(DataGroupDO record) {
+        String type = record.getType();
+        Long userId = record.getUserId();
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type, userId),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type, userId));
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param userId userId
+     * @param types  types
+     * @param userId userId
+     */
+    private void deleteCache(Long userId, Collection<String> types) {
+        List<String> deleteKeys = new ArrayList<>();
+        for (String type : types) {
+            deleteKeys.add(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type, userId));
+            deleteKeys.add(DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type, userId));
+        }
+        RedisStrings.delete(deleteKeys);
     }
 
 }

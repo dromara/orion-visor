@@ -3,7 +3,6 @@ package com.orion.ops.module.asset.convert;
 import com.orion.ops.module.asset.entity.domain.CommandSnippetDO;
 import com.orion.ops.module.asset.entity.dto.CommandSnippetCacheDTO;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetCreateRequest;
-import com.orion.ops.module.asset.entity.request.command.CommandSnippetQueryRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.CommandSnippetVO;
 import org.mapstruct.Mapper;
@@ -26,8 +25,6 @@ public interface CommandSnippetConvert {
     CommandSnippetDO to(CommandSnippetCreateRequest request);
 
     CommandSnippetDO to(CommandSnippetUpdateRequest request);
-
-    CommandSnippetDO to(CommandSnippetQueryRequest request);
 
     CommandSnippetVO to(CommandSnippetDO domain);
 

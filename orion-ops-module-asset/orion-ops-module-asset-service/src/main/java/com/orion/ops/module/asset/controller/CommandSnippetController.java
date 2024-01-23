@@ -4,7 +4,6 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetCreateRequest;
-import com.orion.ops.module.asset.entity.request.command.CommandSnippetQueryRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.CommandSnippetVO;
 import com.orion.ops.module.asset.service.CommandSnippetService;
@@ -50,10 +49,10 @@ public class CommandSnippetController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list")
+    @GetMapping("/list")
     @Operation(summary = "查询全部命令片段")
-    public List<CommandSnippetVO> getCommandSnippetList(@Validated @RequestBody CommandSnippetQueryRequest request) {
-        return commandSnippetService.getCommandSnippetList(request);
+    public List<CommandSnippetVO> getCommandSnippetList() {
+        return commandSnippetService.getCommandSnippetList();
     }
 
     @DeleteMapping("/delete")

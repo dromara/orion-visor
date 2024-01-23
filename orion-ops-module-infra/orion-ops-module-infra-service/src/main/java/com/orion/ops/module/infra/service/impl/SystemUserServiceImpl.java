@@ -71,6 +71,9 @@ public class SystemUserServiceImpl implements SystemUserService {
     private DataPermissionService dataPermissionService;
 
     @Resource
+    private DataGroupService dataGroupService;
+
+    @Resource
     private DataExtraService dataExtraService;
 
     @Override
@@ -251,6 +254,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         preferenceService.deletePreferenceByUserId(id);
         // 删除用户数据权限
         dataPermissionService.deleteByUserId(id);
+        // 删除用户分组信息
+        dataGroupService.deleteDataGroupByUserId(id);
         // 删除用户拓展数据
         dataExtraService.deleteByUserId(id);
     }

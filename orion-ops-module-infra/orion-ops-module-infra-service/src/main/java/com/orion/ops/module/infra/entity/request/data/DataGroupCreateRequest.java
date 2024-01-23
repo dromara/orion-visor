@@ -26,6 +26,10 @@ import java.io.Serializable;
 public class DataGroupCreateRequest implements Serializable {
 
     @NotNull
+    @Schema(description = "userId")
+    private Long userId;
+
+    @NotNull
     @Schema(description = "父id")
     private Long parentId;
 

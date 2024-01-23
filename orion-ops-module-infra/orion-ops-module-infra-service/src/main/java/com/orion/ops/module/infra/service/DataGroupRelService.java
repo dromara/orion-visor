@@ -27,25 +27,28 @@ public interface DataGroupRelService {
      * 设置关联
      *
      * @param type        type
+     * @param userId      userId
      * @param groupIdList groupIdList
      * @param relId       relId
      */
-    void updateGroupRel(String type, List<Long> groupIdList, Long relId);
+    void updateGroupRel(String type, Long userId, List<Long> groupIdList, Long relId);
 
     /**
      * 添加关联
      *
+     * @param userId  userId
      * @param groupId groupId
      * @param relId   relId
      */
-    void addGroupRel(Long groupId, Long relId);
+    void addGroupRel(Long userId, Long groupId, Long relId);
 
     /**
      * 添加关联
      *
-     * @param list list
+     * @param userId userId
+     * @param list   list
      */
-    void addGroupRel(List<DataGroupRelCreateRequest> list);
+    void addGroupRel(Long userId, List<DataGroupRelCreateRequest> list);
 
     /**
      * 通过 type 查询 relId 缓存

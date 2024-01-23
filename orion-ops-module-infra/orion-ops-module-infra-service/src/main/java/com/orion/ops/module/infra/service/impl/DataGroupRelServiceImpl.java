@@ -84,6 +84,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                 List<DataGroupRelDO> insertRecords = relIdList.stream()
                         .map(s -> DataGroupRelDO.builder()
                                 .groupId(groupId)
+                                .userId(group.getUserId())
                                 .type(type)
                                 .relId(s)
                                 .build())
@@ -92,12 +93,12 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
             }
         }
         // 删除缓存
-        this.deleteCache(type, Lists.of(groupId));
+        this.deleteCache(type, group.getUserId(), Lists.of(groupId));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateGroupRel(String type, List<Long> groupIdList, Long relId) {
+    public void updateGroupRel(String type, Long userId, List<Long> groupIdList, Long relId) {
         Valid.notNull(relId);
         // 删除引用
         this.deleteByRelId(type, relId);
@@ -108,11 +109,12 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                             .type(type)
                             .groupId(s)
                             .relId(relId)
+                            .userId(userId)
                             .build())
                     .collect(Collectors.toList());
             dataGroupRelDAO.insertBatch(relList);
             // 删除缓存
-            this.deleteCache(type, groupIdList);
+            this.deleteCache(type, userId, groupIdList);
         }
     }
 
@@ -125,7 +127,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                 .build();
         // 插入
         SpringHolder.getBean(DataGroupRelService.class)
-                .addGroupRel(Lists.singleton(record));
+                .addGroupRel(groupId,Lists.singleton(record));
     }
 
     @Override
@@ -286,11 +288,12 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
      * 删除缓存
      *
      * @param type        type
+     * @param userId      userId
      * @param groupIdList groupIdList
      */
-    private void deleteCache(String type, Collection<Long> groupIdList) {
+    private void deleteCache(String type, Long userId, Collection<Long> groupIdList) {
         // 类型缓存
-        List<String> keyList = Lists.of(DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type));
+        List<String> keyList = Lists.of(DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type, userId));
         // 分组缓存
         if (!Lists.isEmpty(groupIdList)) {
             groupIdList.stream()
