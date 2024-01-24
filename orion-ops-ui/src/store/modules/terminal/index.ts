@@ -159,7 +159,20 @@ export default defineStore('terminal', {
       if (host) {
         this.openTerminal(host);
       }
-    }
+    },
+
+    // 获取当前终端会话
+    getCurrentTerminalSession(tips: boolean = true) {
+      const tab = this.tabManager.getCurrentTab();
+      if (!tab || tab.type !== TerminalTabType.TERMINAL) {
+        if (tips) {
+          Message.warning('请切换到终端标签页');
+        }
+        return;
+      }
+      // 获取处理器并截图
+      return this.sessionManager.getSession(tab.key);
+    },
 
   },
 

@@ -74,10 +74,10 @@
       </template>
     </a-tree>
     <!-- 无数据 -->
-    <div v-else-if="!loading" class="empty-container">
-      <span>暂无数据</span>
+    <a-empty v-else-if="!loading" class="empty-container">
+      <span>暂无数据</span><br>
       <span v-if="editable">点击上方 '<icon-plus />' 添加一个分组吧~</span>
-    </div>
+    </a-empty>
   </a-scrollbar>
 </template>
 
@@ -214,8 +214,8 @@
 
   // 保存节点
   const saveNode = async (node: TreeNodeData) => {
-    const key = node.key
-    const newTitle = node.title
+    const key = node.key;
+    const newTitle = node.title;
     node.modCount = (node.modCount || 0) + 1;
     if (node.modCount != 1) {
       return;

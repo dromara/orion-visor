@@ -30,7 +30,7 @@
 
   const emits = defineEmits(['openSftp', 'openTransfer']);
 
-  const { tabManager, sessionManager } = useTerminalStore();
+  const { getCurrentTerminalSession } = useTerminalStore();
 
   const snippetRef = ref();
 
@@ -67,15 +67,10 @@
 
   // 终端截屏
   const screenshot = () => {
-    const tab = tabManager.getCurrentTab();
-    if (!tab || tab.type !== TerminalTabType.TERMINAL) {
-      Message.warning('请切换到终端标签页');
-      return;
+    const handler = getCurrentTerminalSession()?.handler;
+    if (handler && handler.enabledStatus('screenshot')) {
+      handler.screenshot();
     }
-    // 获取处理器并截图
-    sessionManager.getSession(tab.key)
-      ?.handler
-      ?.screenshot();
   };
 
 </script>

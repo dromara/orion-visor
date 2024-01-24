@@ -1,7 +1,8 @@
 <template>
   <a-drawer v-model:visible="visible"
             :width="388"
-            :footer="false">
+            :footer="false"
+            @close="onClose">
     <!-- 表头 -->
     <template #title>
       <span class="snippet-drawer-title">
@@ -10,7 +11,7 @@
       </span>
     </template>
     <!-- 命令容器 -->
-    <a-spin class="snippet-container" :loading="loading">
+    <div class="snippet-container">
       <!-- 命令头部 -->
       <div class="snippet-header">
         <!-- 创建命令 -->
@@ -25,8 +26,22 @@
                         @search="filterSnippet"
                         @keyup.enter="filterSnippet" />
       </div>
+      <!-- 加载中 -->
+      <a-skeleton v-if="loading"
+                  style="padding: 0 12px"
+                  :animation="true">
+        <a-skeleton-line :rows="4"
+                         :line-height="66"
+                         :line-spacing="12" />
+      </a-skeleton>
+      <!-- 无数据 -->
+      <a-empty v-else-if="!snippet || (snippet.groups.length === 0 && snippet.ungroupedItems.length === 0)"
+               style="padding: 28px 0">
+        <span>暂无数据</span><br>
+        <span>点击上方 '<icon-plus />' 添加一条数据吧~</span>
+      </a-empty>
       <!-- 命令片段 -->
-      <div v-if="snippet" class="snippet-list-container">
+      <div v-else class="snippet-list-container">
         <!-- 命令片段组 -->
         <snippet-group :snippet="snippet" />
         <!-- 未分组命令片段 -->
@@ -38,7 +53,7 @@
           </template>
         </div>
       </div>
-    </a-spin>
+    </div>
   </a-drawer>
 </template>
 
@@ -56,9 +71,11 @@
   import { getCommandSnippetList } from '@/api/asset/command-snippet';
   import SnippetItem from './snippet-item.vue';
   import SnippetGroup from './snippet-group.vue';
+  import { useTerminalStore } from '@/store';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
+  const { getCurrentTerminalSession } = useTerminalStore();
 
   const filterValue = ref<string>();
   const snippet = ref<CommandSnippetWrapperResponse>();
@@ -69,6 +86,8 @@
     // 加载数据
     await fetchData();
   };
+
+  // TODO 新增
 
   defineExpose({ open });
 
@@ -106,12 +125,17 @@
     });
   };
 
-  onMounted(() => {
-    open();
-  });
+  // 关闭
+  const onClose = () => {
+    setVisible(false);
+    // 聚焦终端
+    getCurrentTerminalSession(false)?.focus();
+  };
+
+  // fixme
+  onMounted(open);
 
 </script>
-
 
 <style lang="less" scoped>
   .snippet-drawer-title {
