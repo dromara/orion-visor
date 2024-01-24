@@ -10,7 +10,7 @@
       </span>
     </template>
     <!-- 命令容器 -->
-    <div class="snippet-container">
+    <a-spin class="snippet-container" :loading="loading">
       <!-- 命令头部 -->
       <div class="snippet-header">
         <!-- 创建命令 -->
@@ -19,19 +19,26 @@
         </span>
         <!-- 搜索框 -->
         <a-input-search class="snippet-header-input"
+                        v-model="filterValue"
                         placeholder="名称"
-                        allow-clear />
+                        allow-clear
+                        @search="filterSnippet"
+                        @keyup.enter="filterSnippet" />
       </div>
       <!-- 命令片段 -->
-      <div class="snippet-list-container">
+      <div v-if="snippet" class="snippet-list-container">
+        <!-- 命令片段组 -->
         <snippet-group :snippet="snippet" />
-        <div>
-          <snippet-item v-for="item in snippet.items"
-                        :key="item.id"
-                        :item="item" />
+        <!-- 未分组命令片段 -->
+        <div class="ungrouped-snippet-container">
+          <template v-for="item in snippet.ungroupedItems">
+            <snippet-item v-if="item.visible"
+                          :key="item.id"
+                          :item="item" />
+          </template>
         </div>
       </div>
-    </div>
+    </a-spin>
   </a-drawer>
 </template>
 
@@ -46,25 +53,58 @@
   import { onMounted, ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
+  import { getCommandSnippetList } from '@/api/asset/command-snippet';
   import SnippetItem from './snippet-item.vue';
   import SnippetGroup from './snippet-group.vue';
 
-  const { loading, toggle } = useLoading();
+  const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
-  const snippet = ref<CommandSnippetWrapperResponse>({
-    groups: [],
-    items: []
-  });
+
+  const filterValue = ref<string>();
+  const snippet = ref<CommandSnippetWrapperResponse>();
 
   // 打开
-  const open = () => {
+  const open = async () => {
     setVisible(true);
-
-    console.log('loading');
-    // loading
+    // 加载数据
+    await fetchData();
   };
 
   defineExpose({ open });
+
+  // 加载数据
+  const fetchData = async () => {
+    if (snippet.value) {
+      return;
+    }
+    setLoading(true);
+    try {
+      // 查询
+      const { data } = await getCommandSnippetList();
+      snippet.value = data;
+      // 设置状态
+      filterSnippet();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 过滤
+  const filterSnippet = () => {
+    snippet.value?.groups.forEach(g => {
+      g.items?.forEach(s => {
+        s.visible = !filterValue.value
+          || s.name.toLowerCase().includes(filterValue.value.toLowerCase())
+          || s.command.toLowerCase().includes(filterValue.value.toLowerCase());
+      });
+    });
+    snippet.value?.ungroupedItems.forEach(s => {
+      s.visible = !filterValue.value
+        || s.name.toLowerCase().includes(filterValue.value.toLowerCase())
+        || s.command.toLowerCase().includes(filterValue.value.toLowerCase());
+    });
+  };
 
   onMounted(() => {
     open();
@@ -82,6 +122,8 @@
     position: relative;
     background: var(--color-bg-2);
     height: 100%;
+    width: 100%;
+    display: block;
 
     .snippet-header {
       padding: 12px;

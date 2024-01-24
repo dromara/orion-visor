@@ -28,7 +28,7 @@ public class CommandSnippetWrapperVO implements Serializable {
     @Schema(description = "分组")
     private List<CommandSnippetGroupVO> groups;
 
-    @Schema(description = "命令片段")
-    private List<CommandSnippetVO> items;
+    @Schema(description = "未分组的命令片段")
+    private List<CommandSnippetVO> ungroupedItems;
 
 }

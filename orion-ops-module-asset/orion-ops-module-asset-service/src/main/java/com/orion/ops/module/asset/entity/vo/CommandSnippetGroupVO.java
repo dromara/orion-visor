@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 命令片段分组 视图响应对象
@@ -29,5 +30,8 @@ public class CommandSnippetGroupVO implements Serializable {
 
     @Schema(description = "分组名称")
     private String name;
+
+    @Schema(description = "命令片段列表")
+    private List<CommandSnippetVO> items;
 
 }

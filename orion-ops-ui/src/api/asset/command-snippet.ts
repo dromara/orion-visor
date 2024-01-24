@@ -20,12 +20,16 @@ export interface CommandSnippetUpdateRequest extends CommandSnippetCreateRequest
 /**
  * 命令片段查询响应
  */
-export interface CommandSnippetQueryResponse {
+export interface CommandSnippetQueryResponse extends CommandSnippetQueryResponseExtra {
   id: number;
   groupId: number;
   name: string;
   command: string;
-  expand?: boolean;
+}
+
+export interface CommandSnippetQueryResponseExtra {
+  visible: boolean;
+  expand: boolean;
 }
 
 /**
@@ -33,7 +37,7 @@ export interface CommandSnippetQueryResponse {
  */
 export interface CommandSnippetWrapperResponse {
   groups: Array<CommandSnippetGroupQueryResponse>;
-  items: Array<CommandSnippetQueryResponse>;
+  ungroupedItems: Array<CommandSnippetQueryResponse>;
 }
 
 /**
@@ -54,7 +58,7 @@ export function updateCommandSnippet(request: CommandSnippetUpdateRequest) {
  * 查询全部命令片段
  */
 export function getCommandSnippetList() {
-  return axios.get<Array<CommandSnippetQueryResponse>>('/asset/command-snippet/list');
+  return axios.get<CommandSnippetWrapperResponse>('/asset/command-snippet/list');
 }
 
 /**

@@ -1,3 +1,4 @@
+import type { CommandSnippetQueryResponse } from './command-snippet';
 import axios from 'axios';
 
 /**
@@ -20,6 +21,7 @@ export interface CommandSnippetGroupUpdateRequest extends CommandSnippetGroupCre
 export interface CommandSnippetGroupQueryResponse {
   id: number;
   name: string;
+  items: Array<CommandSnippetQueryResponse>;
 }
 
 /**

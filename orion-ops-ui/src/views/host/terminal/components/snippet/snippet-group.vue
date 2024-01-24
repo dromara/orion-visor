@@ -1,16 +1,21 @@
 <template>
   <a-collapse :bordered="false">
-    <a-collapse-item v-for="group in snippet.groups"
-                     :key="group.id"
-                     :header="group.name">
-      <!-- 总量 -->
-      <template #extra>
-        {{ 1 }} 条
-      </template>
-      <snippet-item v-for="item in snippet.items"
-                    :key="item.id"
-                    :item="item" />
-    </a-collapse-item>
+    <template v-for="group in snippet.groups">
+      <a-collapse-item v-if="calcTotal(group) > 0"
+                       :key="group.id"
+                       :header="group.name">
+        <!-- 总量 -->
+        <template #extra>
+          {{ calcTotal(group) }} 条
+        </template>
+        <!-- snippet -->
+        <template v-for="item in group.items">
+          <snippet-item v-if="item.visible"
+                        :key="item.id"
+                        :item="item" />
+        </template>
+      </a-collapse-item>
+    </template>
   </a-collapse>
 </template>
 
@@ -21,12 +26,18 @@
 </script>
 
 <script lang="ts" setup>
+  import type { CommandSnippetGroupQueryResponse } from '@/api/asset/command-snippet-group';
   import type { CommandSnippetWrapperResponse } from '@/api/asset/command-snippet';
   import SnippetItem from './snippet-item.vue';
 
   defineProps<{
     snippet: CommandSnippetWrapperResponse
   }>();
+
+  // 计算总量
+  const calcTotal = (group: CommandSnippetGroupQueryResponse) => {
+    return group.items.filter(s => s.visible).length;
+  };
 
 </script>
 

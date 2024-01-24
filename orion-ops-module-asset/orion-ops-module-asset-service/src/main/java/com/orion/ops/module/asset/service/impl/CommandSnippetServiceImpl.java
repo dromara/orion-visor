@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
@@ -25,7 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -92,9 +96,22 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
         List<CommandSnippetGroupVO> groups = commandSnippetGroupService.getCommandSnippetGroupList();
         // 查询命令片段
         List<CommandSnippetVO> items = this.getCommandSnippetList();
+        // 设置组内数据
+        Map<Long, CommandSnippetGroupVO> groupMap = groups.stream()
+                .collect(Collectors.toMap(CommandSnippetGroupVO::getId, Function.identity()));
+        groupMap.forEach((groupId, group) -> {
+            List<CommandSnippetVO> groupedItems = items.stream()
+                    .filter(s -> groupId.equals(s.getGroupId()))
+                    .collect(Collectors.toList());
+            group.setItems(groupedItems);
+        });
+        // 未分组数据
+        List<CommandSnippetVO> ungroupedItems = items.stream()
+                .filter(s -> s.getGroupId() == null)
+                .collect(Collectors.toList());
         return CommandSnippetWrapperVO.builder()
                 .groups(groups)
-                .items(items)
+                .ungroupedItems(ungroupedItems)
                 .build();
     }
 
