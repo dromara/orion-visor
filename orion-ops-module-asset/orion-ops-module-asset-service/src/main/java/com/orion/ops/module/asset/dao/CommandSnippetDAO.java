@@ -1,5 +1,8 @@
 package com.orion.ops.module.asset.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.CommandSnippetDO;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,5 +16,30 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CommandSnippetDAO extends IMapper<CommandSnippetDO> {
+
+    /**
+     * 设置 groupId 为 null
+     *
+     * @param groupId groupId
+     * @return effect
+     */
+    default int setGroupIdWithNull(Long groupId) {
+        LambdaUpdateWrapper<CommandSnippetDO> wrapper = Wrappers.<CommandSnippetDO>lambdaUpdate()
+                .set(CommandSnippetDO::getGroupId, null)
+                .eq(CommandSnippetDO::getGroupId, groupId);
+        return this.update(null, wrapper);
+    }
+
+    /**
+     * 通过 groupId 删除
+     *
+     * @param groupId groupId
+     * @return effect
+     */
+    default int deleteByGroupId(Long groupId) {
+        LambdaQueryWrapper<CommandSnippetDO> wrapper = this.lambda()
+                .eq(CommandSnippetDO::getGroupId, groupId);
+        return this.delete(wrapper);
+    }
 
 }

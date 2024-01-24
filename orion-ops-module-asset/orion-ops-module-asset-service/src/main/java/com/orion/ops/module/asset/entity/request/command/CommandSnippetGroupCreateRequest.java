@@ -11,31 +11,24 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 命令片段 创建请求对象
+ * 命令片段分组 创建请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024-1-22 15:28
+ * @since 2024-1-24 12:28
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "CommandSnippetCreateRequest", description = "命令片段 创建请求对象")
-public class CommandSnippetCreateRequest implements Serializable {
+@Schema(name = "CommandSnippetGroupCreateRequest", description = "命令片段分组 创建请求对象")
+public class CommandSnippetGroupCreateRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @NotBlank
     @Size(max = 64)
-    @Schema(description = "名称")
+    @Schema(description = "分组名称")
     private String name;
-
-    @Schema(description = "分组id")
-    private Long groupId;
-
-    @NotBlank
-    @Schema(description = "代码片段")
-    private String command;
 
 }

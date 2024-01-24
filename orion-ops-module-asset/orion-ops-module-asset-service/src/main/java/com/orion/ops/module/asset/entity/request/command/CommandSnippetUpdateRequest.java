@@ -31,13 +31,13 @@ public class CommandSnippetUpdateRequest implements Serializable {
     @Schema(description = "id")
     private Long id;
 
+    @Schema(description = "分组id")
+    private Long groupId;
+
     @NotBlank
     @Size(max = 64)
     @Schema(description = "名称")
     private String name;
-
-    @Schema(description = "groupId")
-    private Long groupId;
 
     @NotBlank
     @Schema(description = "代码片段")

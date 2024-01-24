@@ -1,0 +1,32 @@
+### 创建命令片段分组
+POST {{baseUrl}}/asset/command-snippet-group/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": ""
+}
+
+
+### 更新命令片段分组
+PUT {{baseUrl}}/asset/command-snippet-group/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": ""
+}
+
+
+### 查询全部命令片段分组
+GET {{baseUrl}}/asset/command-snippet-group/list
+Authorization: {{token}}
+
+
+### 删除命令片段分组
+DELETE {{baseUrl}}/asset/command-snippet-group/delete?id=1
+Authorization: {{token}}
+
+
+###

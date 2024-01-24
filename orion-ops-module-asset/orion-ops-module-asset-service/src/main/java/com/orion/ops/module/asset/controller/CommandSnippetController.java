@@ -5,7 +5,7 @@ import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetCreateRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetUpdateRequest;
-import com.orion.ops.module.asset.entity.vo.CommandSnippetVO;
+import com.orion.ops.module.asset.entity.vo.CommandSnippetWrapperVO;
 import com.orion.ops.module.asset.service.CommandSnippetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 命令片段 api
@@ -51,8 +50,8 @@ public class CommandSnippetController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询全部命令片段")
-    public List<CommandSnippetVO> getCommandSnippetList() {
-        return commandSnippetService.getCommandSnippetList();
+    public CommandSnippetWrapperVO getCommandSnippetList() {
+        return commandSnippetService.getCommandSnippet();
     }
 
     @DeleteMapping("/delete")

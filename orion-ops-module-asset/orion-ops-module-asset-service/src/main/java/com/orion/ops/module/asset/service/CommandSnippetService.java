@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.service;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetCreateRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.CommandSnippetVO;
+import com.orion.ops.module.asset.entity.vo.CommandSnippetWrapperVO;
 
 import java.util.List;
 
@@ -32,6 +33,13 @@ public interface CommandSnippetService {
     Integer updateCommandSnippetById(CommandSnippetUpdateRequest request);
 
     /**
+     * 查询命令片段
+     *
+     * @return rows
+     */
+    CommandSnippetWrapperVO getCommandSnippet();
+
+    /**
      * 查询全部命令片段
      *
      * @return rows
@@ -45,5 +53,23 @@ public interface CommandSnippetService {
      * @return effect
      */
     Integer deleteCommandSnippetById(Long id);
+
+    /**
+     * 设置分组为 null
+     *
+     * @param userId  userId
+     * @param groupId groupId
+     * @return effect
+     */
+    Integer setGroupNull(Long userId, Long groupId);
+
+    /**
+     * 通过 groupId 删除
+     *
+     * @param userId  userId
+     * @param groupId groupId
+     * @return effect
+     */
+    Integer deleteByGroupId(Long userId, Long groupId);
 
 }

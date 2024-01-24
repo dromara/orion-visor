@@ -1,12 +1,12 @@
 package com.orion.ops.module.asset.entity.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-
-import java.util.*;
-import java.math.*;
 
 /**
  * 命令片段 实体对象
@@ -33,6 +33,10 @@ public class CommandSnippetDO extends BaseDO {
     @Schema(description = "用户id")
     @TableField("user_id")
     private Long userId;
+
+    @Schema(description = "分组id")
+    @TableField("group_id")
+    private Long groupId;
 
     @Schema(description = "名称")
     @TableField("name")

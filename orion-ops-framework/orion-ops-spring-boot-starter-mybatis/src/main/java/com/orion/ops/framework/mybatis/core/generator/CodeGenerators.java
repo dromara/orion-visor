@@ -45,9 +45,9 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("command_snippet", "命令片段", "command")
+                Template.create("command_snippet_group", "命令片段分组", "command")
                         .disableUnitTest()
-                        .cache("command:snippet:list:{}", "命令片段列表 ${userId}")
+                        .cache("command:snippet:group:{}", "命令片段分组 ${userId}")
                         .expire(1, TimeUnit.DAYS)
                         .vue("host", "command-snippet")
                         .build(),

@@ -9,34 +9,25 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 命令片段 视图响应对象
+ * 命令片段分组 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024-1-22 15:28
+ * @since 2024-1-24 12:28
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "CommandSnippetVO", description = "命令片段 视图响应对象")
-public class CommandSnippetVO implements Serializable {
+@Schema(name = "CommandSnippetGroupVO", description = "命令片段分组 视图响应对象")
+public class CommandSnippetGroupVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "分组id")
-    private Long groupId;
-
-    @Schema(description = "名称")
+    @Schema(description = "分组名称")
     private String name;
-
-    @Schema(description = "触发前缀")
-    private String prefix;
-
-    @Schema(description = "代码片段")
-    private String command;
 
 }
