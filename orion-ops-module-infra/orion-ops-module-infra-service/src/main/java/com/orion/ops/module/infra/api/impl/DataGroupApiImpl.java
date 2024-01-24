@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.api.impl;
 
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.DataGroupApi;
 import com.orion.ops.module.infra.convert.DataGroupProviderConvert;
@@ -43,9 +42,6 @@ public class DataGroupApiImpl implements DataGroupApi {
     @Override
     public Long createDataGroup(DataGroupTypeEnum type, DataGroupCreateDTO dto) {
         Valid.valid(dto);
-        if (dto.getUserId() == null) {
-            dto.setUserId(Const.SYSTEM_USER_ID);
-        }
         DataGroupCreateRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         request.setType(type.name());
         return dataGroupService.createDataGroup(request);
@@ -67,23 +63,13 @@ public class DataGroupApiImpl implements DataGroupApi {
 
     @Override
     public List<DataGroupDTO> getDataGroupList(DataGroupTypeEnum type) {
-        return this.getDataGroupList(type, Const.SYSTEM_USER_ID);
-    }
-
-    @Override
-    public List<DataGroupDTO> getDataGroupList(DataGroupTypeEnum type, Long userId) {
-        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupListByCache(type.name(), userId);
+        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupListByCache(type.name());
         return DataGroupProviderConvert.MAPPER.toList(rows);
     }
 
     @Override
     public List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type) {
-        return this.getDataGroupTree(type, Const.SYSTEM_USER_ID);
-    }
-
-    @Override
-    public List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type, Long userId) {
-        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupTreeByCache(type.name(), userId);
+        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupTreeByCache(type.name());
         return DataGroupProviderConvert.MAPPER.toList(rows);
     }
 

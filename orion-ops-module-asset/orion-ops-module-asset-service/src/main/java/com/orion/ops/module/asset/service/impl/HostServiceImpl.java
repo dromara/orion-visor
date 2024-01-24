@@ -146,12 +146,8 @@ public class HostServiceImpl implements HostService {
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostVO vo = HostConvert.MAPPER.to(record);
-        // 设置 tag 信息
-        List<TagDTO> tags = tagFuture.get();
-        // 设置分组信息
-        vo.setTags(tags);
-        Set<Long> groupIdList = groupIdFuture.get();
-        vo.setGroupIdList(groupIdList);
+        vo.setTags(tagFuture.get());
+        vo.setGroupIdList(groupIdFuture.get());
         return vo;
     }
 

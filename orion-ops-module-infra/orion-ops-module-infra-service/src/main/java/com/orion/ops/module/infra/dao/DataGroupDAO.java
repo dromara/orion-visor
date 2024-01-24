@@ -53,16 +53,4 @@ public interface DataGroupDAO extends IMapper<DataGroupDO> {
         return this.selectList(wrapper);
     }
 
-    /**
-     * 通过 userId 查询
-     *
-     * @param userId userId
-     * @return rows
-     */
-    default List<DataGroupDO> selectByUserId(Long userId) {
-        LambdaQueryWrapper<DataGroupDO> wrapper = this.lambda()
-                .eq(DataGroupDO::getUserId, userId);
-        return this.selectList(wrapper);
-    }
-
 }

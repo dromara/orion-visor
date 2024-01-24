@@ -25,9 +25,6 @@ import java.io.Serializable;
 @Schema(name = "DataGroupCreateDTO", description = "数据分组 创建请求业务对象")
 public class DataGroupCreateDTO implements Serializable {
 
-    @Schema(description = "userId")
-    private Long userId;
-
     @NotNull
     @Schema(description = "父id")
     private Long parentId;

@@ -18,16 +18,16 @@ import java.util.concurrent.TimeUnit;
 public interface DataGroupCacheKeyDefine {
 
     CacheKeyDefine DATA_GROUP_LIST = new CacheKeyBuilder()
-            .key("data:group-list:{}:{}")
-            .desc("数据分组列表结构 ${type} ${userId}")
+            .key("data:group-list:{}")
+            .desc("数据分组列表结构 ${type}")
             .type(DataGroupCacheDTO.class)
             .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
             .build();
 
     CacheKeyDefine DATA_GROUP_TREE = new CacheKeyBuilder()
-            .key("data:group-tree:{}:{}")
-            .desc("数据分组树结构 ${type} ${userId}")
+            .key("data:group-tree:{}")
+            .desc("数据分组树结构 ${type}")
             .type(DataGroupCacheDTO.class)
             .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)
@@ -42,8 +42,8 @@ public interface DataGroupCacheKeyDefine {
             .build();
 
     CacheKeyDefine DATA_GROUP_REL_TYPE = new CacheKeyBuilder()
-            .key("data:group-rel:type:{}:{}")
-            .desc("数据分组数据关联-类型 ${type} ${userId}")
+            .key("data:group-rel:type:{}")
+            .desc("数据分组数据关联-类型 ${type}")
             .type(DataGroupRelCacheDTO.class)
             .struct(RedisCacheStruct.STRING)
             .timeout(1, TimeUnit.DAYS)

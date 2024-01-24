@@ -1,12 +1,12 @@
 package com.orion.ops.module.infra.entity.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.orion.ops.framework.mybatis.core.domain.BaseDO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-
-import java.util.*;
-import java.math.*;
 
 /**
  * 数据分组 实体对象
@@ -33,10 +33,6 @@ public class DataGroupDO extends BaseDO {
     @Schema(description = "父id")
     @TableField("parent_id")
     private Long parentId;
-
-    @Schema(description = "用户id")
-    @TableField("user_id")
-    private Long userId;
 
     @Schema(description = "组名称")
     @TableField("name")
