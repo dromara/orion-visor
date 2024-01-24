@@ -49,7 +49,7 @@ public class CodeGenerators {
                         .disableUnitTest()
                         .cache("command:snippet:group:{}", "命令片段分组 ${userId}")
                         .expire(1, TimeUnit.DAYS)
-                        .vue("host", "command-snippet")
+                        .vue("host", "command-snippet-group")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

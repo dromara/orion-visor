@@ -99,15 +99,20 @@
 </script>
 
 <style lang="less" scoped>
+  @transform-x: 8px;
+  @container-width: 406px;
+  @container-height: 448px;
   @handler-height: 44px;
 
   .combined-container {
     padding: 12px;
     margin: 64px auto;
-    width: 398px;
-    height: 448px;
+    width: @container-width;
+    height: @container-height;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    box-sizing: content-box;
     overflow: hidden;
 
     &:hover {
@@ -116,20 +121,19 @@
   }
 
   .combined-handler {
-    width: 100%;
+    width: calc(@container-width - @transform-x);
     height: @handler-height;
     border-radius: 4px;
     margin-bottom: 6px;
+    color: var(--color-content-text-1);
     background-color: var(--color-fill-2);
     display: flex;
     align-items: center;
-    color: var(--color-content-text-1);
     cursor: pointer;
-    transition: transform 0.3s ease;
-    will-change: transform;
+    transition: all 0.2s;
 
     &:hover {
-      transform: scale(1.04);
+      width: @container-width;
     }
 
     &-icon {

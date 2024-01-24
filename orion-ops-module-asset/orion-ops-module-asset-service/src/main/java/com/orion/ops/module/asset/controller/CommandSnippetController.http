@@ -6,7 +6,6 @@ Authorization: {{token}}
 {
   "groupId": "",
   "name": "",
-  "prefix": "",
   "command": ""
 }
 
@@ -20,7 +19,6 @@ Authorization: {{token}}
   "id": "",
   "groupId": "",
   "name": "",
-  "prefix": "",
   "command": ""
 }
 

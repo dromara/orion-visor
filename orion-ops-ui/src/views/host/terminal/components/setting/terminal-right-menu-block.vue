@@ -119,7 +119,8 @@
 <style lang="less" scoped>
   @container-width: 418px;
   @wrapper-margin-r: 32px;
-  @wrapper-width: (@container-width - @wrapper-margin-r) / 2px;
+  @transform-x: 8px;
+  @item-width: (@container-width - @wrapper-margin-r) / 2;
 
   .setting-body {
     display: flex;
@@ -130,22 +131,25 @@
     height: auto;
 
     .actions-wrapper {
-      width: @wrapper-width;
       padding-right: 8px;
       margin-right: @wrapper-margin-r;
     }
 
     .action-item-wrapper {
       transition: all 0.2s;
-      width: 185px;
       border-radius: 4px;
+      width: calc((@item-width) - @transform-x);
 
       &:hover {
-        width: 192px;
+        width: calc(@item-width);
         padding: 4px 0 !important;
 
-        .action-item{
+        .action-item {
           background: var(--color-fill-3);
+        }
+
+        .action-icon {
+          background: var(--color-fill-4);
         }
       }
     }

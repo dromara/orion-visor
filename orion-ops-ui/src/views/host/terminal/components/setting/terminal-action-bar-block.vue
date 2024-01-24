@@ -84,7 +84,6 @@
 </script>
 
 <style lang="less" scoped>
-
   .form-item-actions {
     display: flex;
     background-color: var(--color-fill-2);

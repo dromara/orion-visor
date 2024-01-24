@@ -50,7 +50,7 @@ public class CommandSnippetGroupController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list")
+    @GetMapping("/list")
     @Operation(summary = "查询全部命令片段分组")
     public List<CommandSnippetGroupVO> getCommandSnippetGroupList() {
         return commandSnippetGroupService.getCommandSnippetGroupList();

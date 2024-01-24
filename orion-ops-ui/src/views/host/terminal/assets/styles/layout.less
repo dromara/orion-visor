@@ -5,6 +5,7 @@ body {
   --color-bg-content: #FEFEFE;
   --color-sidebar-icon: #737070;
   --color-sidebar-icon-bg: #D7D8DB;
+  --color-sidebar-icon-checked: #CBCCCF;
   --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
   --color-sidebar-tooltip-bg: rgb(29, 33, 41);
   --color-content-text-1: rgba(0, 0, 0, .8);
@@ -25,8 +26,9 @@ body[terminal-theme='dark'] {
   --color-bg-header: #232323;
   --color-bg-sidebar: #2C2E31;
   --color-bg-content: #1A1B1C;
-  --color-sidebar-icon: #C3C8CE;
-  --color-sidebar-icon-bg: #43444C;
+  --color-sidebar-icon: #C3C6C9;
+  --color-sidebar-icon-bg: #3D3E3F;
+  --color-sidebar-icon-checked: #51525C;
   --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
   --color-sidebar-tooltip-bg: var(--color-sidebar-icon-bg);
   --color-content-text-1: rgba(255, 255, 255, .8);
@@ -214,7 +216,7 @@ body[terminal-theme='dark'] .arco-modal-container {
     }
 
     &.checked-item {
-      background: var(--color-sidebar-icon-bg);
+      background: var(--color-sidebar-icon-checked);
     }
 
     &.disabled-item {
