@@ -214,10 +214,12 @@ export interface ITerminalSessionHandler {
 
   // 复制选中
   copy: () => void;
-  // 粘贴
+  // 从剪切板粘贴并且去除尾部空格 (如果配置)
   paste: () => void;
   // 粘贴并且去除尾部空格 (如果配置)
   pasteTrimEnd: (value: string) => void;
+  // 粘贴原文
+  pasteOrigin: (value: string) => void;
   // 选中全部
   selectAll: () => void;
   // 去顶部

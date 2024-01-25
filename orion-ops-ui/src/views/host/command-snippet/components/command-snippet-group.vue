@@ -10,7 +10,7 @@
         </template>
         <!-- snippet -->
         <template v-for="item in group.items">
-          <snippet-item v-if="item.visible"
+          <command-snippet-item v-if="item.visible"
                         :key="item.id"
                         :item="item" />
         </template>
@@ -21,14 +21,14 @@
 
 <script lang="ts">
   export default {
-    name: 'snippetGroup'
+    name: 'commandSnippetGroup'
   };
 </script>
 
 <script lang="ts" setup>
   import type { CommandSnippetGroupQueryResponse } from '@/api/asset/command-snippet-group';
   import type { CommandSnippetWrapperResponse } from '@/api/asset/command-snippet';
-  import SnippetItem from './snippet-item.vue';
+  import CommandSnippetItem from './command-snippet-item.vue';
 
   defineProps<{
     snippet: CommandSnippetWrapperResponse

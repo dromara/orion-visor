@@ -45,11 +45,12 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("command_snippet_group", "命令片段分组", "command")
+                Template.create("command_snippet", "命令片段", "command")
                         .disableUnitTest()
-                        .cache("command:snippet:group:{}", "命令片段分组 ${userId}")
+                        .cache("command:snippet:group:{}", "命令片段 ${userId}")
                         .expire(1, TimeUnit.DAYS)
-                        .vue("host", "command-snippet-group")
+                        .vue("asset", "command-snippet")
+                        .enableDrawerForm()
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

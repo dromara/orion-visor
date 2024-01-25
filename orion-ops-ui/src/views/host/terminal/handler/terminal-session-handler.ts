@@ -70,6 +70,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     switch (option) {
       case 'paste':
       case 'pasteTrimEnd':
+      case 'pasteOrigin':
       case 'interrupt':
       case 'enter':
       case 'commandEditor':
@@ -126,7 +127,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     this.inst.focus();
   }
 
-  // 粘贴
+  // 从剪切板粘贴并且去除尾部空格 (如果配置)
   paste() {
     readText().then(s => this.pasteTrimEnd(s));
   }
@@ -139,6 +140,12 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     } else {
       this.inst.paste(value);
     }
+    this.inst.focus();
+  }
+
+  // 粘贴原文
+  pasteOrigin(value: string) {
+    this.inst.paste(value);
     this.inst.focus();
   }
 
@@ -246,7 +253,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
       append = value;
     }
     // 追加
-    this.pasteTrimEnd(append);
+    this.pasteOrigin(append);
   }
 
   // 截图

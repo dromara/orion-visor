@@ -72,14 +72,14 @@
         <div>执行</div>
       </a-doption>
       <!-- 修改 -->
-      <a-doption @click="exec">
+      <a-doption @click="openUpdateSnippet(item)">
         <div class="terminal-context-menu-icon">
           <icon-edit />
         </div>
         <div>修改</div>
       </a-doption>
       <!-- 删除 -->
-      <a-doption @click="exec">
+      <a-doption @click="removeSnippet(item.id)">
         <div class="terminal-context-menu-icon">
           <icon-delete />
         </div>
@@ -107,7 +107,7 @@
 
 <script lang="ts">
   export default {
-    name: 'snippetItem'
+    name: 'commandSnippetItem'
   };
 </script>
 
@@ -116,6 +116,8 @@
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
   import useCopy from '@/hooks/copy';
+  import { inject } from 'vue';
+  import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
 
   const props = defineProps<{
     item: CommandSnippetQueryResponse
@@ -124,9 +126,15 @@
   const { copy } = useCopy();
   const { getCurrentTerminalSession } = useTerminalStore();
 
-  // TODO 修改 删除 拼接有bug
+  // TODO  多行拼接有bug
 
   let clickCount = 0;
+
+  // 修改
+  const openUpdateSnippet = inject<(item: CommandSnippetQueryResponse) => void>(openUpdateSnippetKey);
+
+  // 删除
+  const removeSnippet = inject<(id: number) => void>(removeSnippetKey);
 
   // 点击命令
   const clickItem = () => {
@@ -161,7 +169,7 @@
 
   // 执行
   const exec = () => {
-    write(props.item.command + '\n');
+    write(props.item.command + '\r\n');
   };
 
   // 写入命令

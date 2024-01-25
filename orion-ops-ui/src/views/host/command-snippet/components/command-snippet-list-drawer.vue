@@ -15,7 +15,9 @@
       <!-- 命令头部 -->
       <div class="snippet-header">
         <!-- 创建命令 -->
-        <span class="click-icon-wrapper snippet-header-icon" title="创建命令">
+        <span class="click-icon-wrapper snippet-header-icon"
+              title="创建命令"
+              @click="openAdd">
           <icon-plus />
         </span>
         <!-- 搜索框 -->
@@ -43,40 +45,45 @@
       <!-- 命令片段 -->
       <div v-else class="snippet-list-container">
         <!-- 命令片段组 -->
-        <snippet-group :snippet="snippet" />
+        <command-snippet-group :snippet="snippet" />
         <!-- 未分组命令片段 -->
         <div class="ungrouped-snippet-container">
           <template v-for="item in snippet.ungroupedItems">
-            <snippet-item v-if="item.visible"
-                          :key="item.id"
-                          :item="item" />
+            <command-snippet-item v-if="item.visible"
+                                  :key="item.id"
+                                  :item="item" />
           </template>
         </div>
       </div>
     </div>
+    <!-- 命令编辑抽屉 -->
+    <command-snippet-form-drawer ref="formDrawer" />
   </a-drawer>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'snippetDrawer'
+    name: 'commandSnippetListDrawer'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { CommandSnippetWrapperResponse } from '@/api/asset/command-snippet';
-  import { onMounted, ref } from 'vue';
+  import type { CommandSnippetWrapperResponse, CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
+  import { onMounted, ref, provide } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
-  import { getCommandSnippetList } from '@/api/asset/command-snippet';
-  import SnippetItem from './snippet-item.vue';
-  import SnippetGroup from './snippet-group.vue';
+  import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
   import { useTerminalStore } from '@/store';
+  import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
+  import CommandSnippetItem from './command-snippet-item.vue';
+  import CommandSnippetGroup from './command-snippet-group.vue';
+  import CommandSnippetFormDrawer from './command-snippet-form-drawer.vue';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
   const { getCurrentTerminalSession } = useTerminalStore();
 
+  const formDrawer = ref();
   const filterValue = ref<string>();
   const snippet = ref<CommandSnippetWrapperResponse>();
 
@@ -86,8 +93,6 @@
     // 加载数据
     await fetchData();
   };
-
-  // TODO 新增
 
   defineExpose({ open });
 
@@ -125,9 +130,51 @@
     });
   };
 
+  // 新建
+  const openAdd = () => {
+    formDrawer.value.openAdd();
+  };
+
+  // 打开修改
+  provide(openUpdateSnippetKey, (e: CommandSnippetQueryResponse) => {
+    formDrawer.value.openUpdate(e);
+  });
+
+  // 删除
+  provide(removeSnippetKey, async (id: number) => {
+    if (!snippet.value) {
+      return;
+    }
+
+    // 查找并且删除
+    function findAndSplice(items: Array<CommandSnippetQueryResponse>) {
+      if (items) {
+        const index = items.findIndex(s => s.id === id);
+        if (index !== -1) {
+          items.splice(index, 1);
+          return true;
+        }
+        return false;
+      }
+    }
+
+    // 删除
+    await deleteCommandSnippet(id);
+
+    // 查找并且删除未分组的数据
+    if (findAndSplice(snippet.value.ungroupedItems)) {
+      return;
+    }
+    // 查找并且删除分组内数据
+    for (let group of snippet.value.groups) {
+      if (findAndSplice(group.items)) {
+        return;
+      }
+    }
+  });
+
   // 关闭
   const onClose = () => {
-    setVisible(false);
     // 聚焦终端
     getCurrentTerminalSession(false)?.focus();
   };
@@ -164,6 +211,7 @@
 
       &-input {
         width: 220px;
+        user-select: none;
       }
     }
   }

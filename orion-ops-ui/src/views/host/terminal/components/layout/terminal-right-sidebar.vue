@@ -8,8 +8,8 @@
     <icon-actions class="bottom-actions"
                   :actions="bottomActions"
                   position="left" />
-    <!-- 命令片段 -->
-    <snippet-drawer ref="snippetRef" />
+    <!-- 命令片段列表抽屉 -->
+    <command-snippet-list-drawer ref="snippetRef" />
   </div>
 </template>
 
@@ -22,11 +22,9 @@
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.type';
   import { useTerminalStore } from '@/store';
-  import { TerminalTabType } from '../../types/terminal.const';
-  import { Message } from '@arco-design/web-vue';
   import { ref } from 'vue';
   import IconActions from './icon-actions.vue';
-  import SnippetDrawer from '../snippet/snippet-drawer.vue';
+  import CommandSnippetListDrawer from '../../../command-snippet/components/command-snippet-list-drawer.vue';
 
   const emits = defineEmits(['openSftp', 'openTransfer']);
 
