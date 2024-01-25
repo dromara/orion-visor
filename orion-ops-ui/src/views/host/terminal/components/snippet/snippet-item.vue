@@ -1,47 +1,108 @@
 <template>
-  <div class="snippet-item-wrapper"
-       :class="[!!item.expand ? 'snippet-item-wrapper-expand' : '']"
-       @click="expandItem">
-    <div class="snippet-item">
-      <div class="snippet-item-title">
-        <!-- 名称 -->
-        <span class="snippet-item-title-name">
+  <a-dropdown class="terminal-context-menu"
+              :popup-max-height="false"
+              trigger="contextMenu"
+              position="bl"
+              alignPoint>
+    <!-- 命令 -->
+    <div class="snippet-item-wrapper"
+         :class="[!!item.expand ? 'snippet-item-wrapper-expand' : '']"
+         @click="clickItem">
+      <div class="snippet-item">
+        <div class="snippet-item-title">
+          <!-- 名称 -->
+          <span class="snippet-item-title-name">
           {{ item.name }}
         </span>
-        <!-- 操作 -->
-        <div class="snippet-item-title-actions">
-          <a-space>
-            <!-- 粘贴 -->
-            <a-tag class="pointer usn"
-                   size="small"
-                   :checkable="true"
-                   :checked="true"
-                   @click.stop="paste">
-              <template #icon>
-                <icon-paste />
-              </template>
-              粘贴
-            </a-tag>
-            <!-- 执行 -->
-            <a-tag class="pointer usn"
-                   size="small"
-                   :checkable="true"
-                   :checked="true"
-                   @click.stop="exec">
-              <template #icon>
-                <icon-thunderbolt />
-              </template>
-              执行
-            </a-tag>
-          </a-space>
+          <!-- 操作 -->
+          <div class="snippet-item-title-actions">
+            <a-space>
+              <!-- 粘贴 -->
+              <a-tag class="pointer usn"
+                     size="small"
+                     :checkable="true"
+                     :checked="true"
+                     @click.stop.prevent="paste">
+                <template #icon>
+                  <icon-paste />
+                </template>
+                粘贴
+              </a-tag>
+              <!-- 执行 -->
+              <a-tag class="pointer usn"
+                     size="small"
+                     :checkable="true"
+                     :checked="true"
+                     @click.stop="exec">
+                <template #icon>
+                  <icon-thunderbolt />
+                </template>
+                执行
+              </a-tag>
+            </a-space>
+          </div>
         </div>
-      </div>
-      <!-- 命令 -->
-      <span class="snippet-item-command">
+        <!-- 命令 -->
+        <span class="snippet-item-command">
         {{ item.command }}
       </span>
+      </div>
     </div>
-  </div>
+    <!-- 右键菜单 -->
+    <template #content>
+      <!-- 复制 -->
+      <a-doption @click="copyCommand">
+        <div class="terminal-context-menu-icon">
+          <icon-copy />
+        </div>
+        <div>复制</div>
+      </a-doption>
+      <!-- 粘贴 -->
+      <a-doption @click="paste">
+        <div class="terminal-context-menu-icon">
+          <icon-paste />
+        </div>
+        <div>粘贴</div>
+      </a-doption>
+      <!-- 执行 -->
+      <a-doption @click="exec">
+        <div class="terminal-context-menu-icon">
+          <icon-thunderbolt />
+        </div>
+        <div>执行</div>
+      </a-doption>
+      <!-- 修改 -->
+      <a-doption @click="exec">
+        <div class="terminal-context-menu-icon">
+          <icon-edit />
+        </div>
+        <div>修改</div>
+      </a-doption>
+      <!-- 删除 -->
+      <a-doption @click="exec">
+        <div class="terminal-context-menu-icon">
+          <icon-delete />
+        </div>
+        <div>删除</div>
+      </a-doption>
+      <!-- 展开 -->
+      <a-doption v-if="!item.expand"
+                 @click="() => item.expand = true">
+        <div class="terminal-context-menu-icon">
+          <icon-expand />
+        </div>
+        <div>展开</div>
+      </a-doption>
+      <!-- 收起 -->
+      <a-doption v-else
+                 @click="() => item.expand = false">
+        <div class="terminal-context-menu-icon">
+          <icon-shrink />
+        </div>
+        <div>收起</div>
+      </a-doption>
+    </template>
+  </a-dropdown>
 </template>
 
 <script lang="ts">
@@ -53,18 +114,44 @@
 <script lang="ts" setup>
   import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { useTerminalStore } from '@/store';
+  import { useDebounceFn } from '@vueuse/core';
+  import useCopy from '@/hooks/copy';
 
   const props = defineProps<{
     item: CommandSnippetQueryResponse
   }>();
 
+  const { copy } = useCopy();
   const { getCurrentTerminalSession } = useTerminalStore();
 
-  // TODO 右键菜单 复制 粘贴 删除 执行 修改
+  // TODO 修改 删除 拼接有bug
 
-  // 展开命令
-  const expandItem = () => {
-    props.item.expand = !props.item.expand;
+  let clickCount = 0;
+
+  // 点击命令
+  const clickItem = () => {
+    if (++clickCount == 2) {
+      clickCount = 0;
+      exec();
+    } else {
+      expandItem();
+    }
+  };
+
+  // 展开
+  const expandItem = useDebounceFn(() => {
+    setTimeout(() => {
+      // 为 0 则代表为双击
+      if (clickCount !== 0) {
+        props.item.expand = !props.item.expand;
+        clickCount = 0;
+      }
+    }, 50);
+  });
+
+  // 复制命令
+  const copyCommand = () => {
+    copy(props.item.command, false);
   };
 
   // 粘贴
@@ -116,6 +203,7 @@
           text-overflow: unset;
           word-break: break-all;
           white-space: unset;
+          user-select: unset;
         }
       }
     }
@@ -153,6 +241,7 @@
         height: 24px;
         display: flex;
         align-items: center;
+        user-select: none;
 
         &-name {
           width: @item-inline-width;
@@ -173,7 +262,9 @@
         text-overflow: ellipsis;
         white-space: pre;
         width: @item-inline-width;
+        user-select: none;
       }
     }
   }
+
 </style>

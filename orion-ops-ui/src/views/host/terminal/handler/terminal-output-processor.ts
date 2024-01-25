@@ -68,7 +68,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
 
   // 处理 pong 消息
   processPong(payload: OutputPayload): void {
-    console.log('pong');
+    // console.log('pong');
   }
 
   // 处理输出消息

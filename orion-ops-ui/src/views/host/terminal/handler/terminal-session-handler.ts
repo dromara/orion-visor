@@ -1,4 +1,4 @@
-import type { TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
+import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
 import type { ITerminalSession, ITerminalSessionHandler, ITerminalTabManager, TerminalDomRef } from '../types/terminal.type';
 import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
@@ -8,6 +8,21 @@ import { InnerTabs } from '../types/terminal.const';
 import { saveAs } from 'file-saver';
 import { Message } from '@arco-design/web-vue';
 import { dateFormat } from '@/utils';
+
+// 组织默认行为的快捷键
+const preventKeys: Array<ShortcutKey> = [
+  {
+    ctrlKey: true,
+    altKey: false,
+    shiftKey: true,
+    code: 'KeyV'
+  }, {
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: true,
+    code: 'Insert'
+  },
+];
 
 const { copy: copyValue, readText } = useCopy();
 
@@ -35,6 +50,19 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     this.interactSetting = preference.interactSetting;
     this.shortcutKeys = preference.shortcutSetting.keys;
     this.tabManager = tabManager;
+  }
+
+  // 检测是否忽略默认行为
+  checkPreventDefault(e: KeyboardEvent): boolean {
+    if (e.type !== 'keydown') {
+      return false;
+    }
+    return !!preventKeys.find(key => {
+      return key.code === e.code
+        && key.altKey === e.altKey
+        && key.shiftKey === e.shiftKey
+        && key.ctrlKey === e.ctrlKey;
+    });
   }
 
   // 启用状态
@@ -187,7 +215,15 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
   checkAppendMissing(value: string): void {
     // 获取最后一行数据
     const buffer = this.inst.buffer?.active;
-    let lastLine = (buffer?.getLine(buffer?.viewportY + buffer?.cursorY)?.translateToString() || '').trimEnd();
+    let lastLine = '';
+    if (buffer) {
+      for (let i = buffer.viewportY + buffer.cursorY; i >= 0; i--) {
+        lastLine = (buffer.getLine(i)?.translateToString() || '').trimEnd() + lastLine;
+        if (lastLine.length > value.length) {
+          break;
+        }
+      }
+    }
     // 边界检查
     const lastLineLen = lastLine.length;
     const spinPartLen = value.length;

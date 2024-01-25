@@ -75,13 +75,17 @@ export interface TerminalShortcutSetting {
 }
 
 // 终端快捷键
-export interface TerminalShortcutKey {
-  item: string;
-  enabled: boolean;
+export interface ShortcutKey {
   ctrlKey: boolean;
   shiftKey: boolean;
   altKey: boolean;
   code: string;
+}
+
+// 终端快捷键
+export interface TerminalShortcutKey extends ShortcutKey {
+  item: string;
+  enabled: boolean;
 }
 
 // 终端快捷键编辑

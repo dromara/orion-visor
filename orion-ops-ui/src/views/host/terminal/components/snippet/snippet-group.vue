@@ -45,20 +45,24 @@
   :deep(.arco-collapse-item) {
     border: none;
 
-    .arco-collapse-item-header-title {
-      user-select: none;
-    }
-
-    .arco-collapse-item-header {
+    &-header {
       border: none;
+
+      &-title {
+        user-select: none;
+      }
+
+      &-extra {
+        user-select: none;
+      }
     }
 
-    .arco-collapse-item-content {
+    &-content {
       background-color: unset;
       padding: 0;
     }
 
-    .arco-collapse-item-content-box {
+    &-content-box {
       padding: 0;
     }
   }

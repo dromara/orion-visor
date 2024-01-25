@@ -82,7 +82,10 @@ export default class TerminalSession implements ITerminalSession {
   private registerShortcut(preference: UnwrapRef<TerminalPreference>) {
     // 处理自定义按键
     this.inst.attachCustomKeyEventHandler((e: KeyboardEvent) => {
-      e.preventDefault();
+      // 检测是否忽略默认行为
+      if (this.handler.checkPreventDefault(e)) {
+        e.preventDefault();
+      }
       // 触发快捷键检测
       if (e.type === 'keydown'
         && preference.shortcutSetting.enabled

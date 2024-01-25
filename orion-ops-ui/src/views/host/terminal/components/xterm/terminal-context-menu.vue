@@ -14,7 +14,7 @@
                  :disabled="!session.handler.enabledStatus(action.item)"
                  @click="emits('click', action.item)">
         <!-- 图标 -->
-        <div class="action-icon">
+        <div class="terminal-context-menu-icon">
           <component :is="action.icon" />
         </div>
         <!-- 文本 -->
@@ -52,10 +52,5 @@
 </script>
 
 <style lang="less" scoped>
-
-  .action-icon {
-    font-size: 16px;
-    margin: 0 8px 0 4px;
-  }
 
 </style>

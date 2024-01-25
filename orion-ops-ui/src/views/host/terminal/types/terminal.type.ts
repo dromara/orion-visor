@@ -203,6 +203,8 @@ export interface ITerminalSession {
 
 // 终端会话处理器定义
 export interface ITerminalSessionHandler {
+  // 检测是否忽略默认行为
+  checkPreventDefault: (e: KeyboardEvent) => boolean;
   // 启用状态
   enabledStatus: (option: string) => boolean;
   // 调用处理方法

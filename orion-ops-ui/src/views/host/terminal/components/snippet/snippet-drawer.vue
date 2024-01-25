@@ -5,7 +5,7 @@
             @close="onClose">
     <!-- 表头 -->
     <template #title>
-      <span class="snippet-drawer-title">
+      <span class="snippet-drawer-title usn">
         <icon-code />
         命令片段
       </span>
