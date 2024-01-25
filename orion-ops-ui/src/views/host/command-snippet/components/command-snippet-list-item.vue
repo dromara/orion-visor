@@ -131,10 +131,10 @@
   let clickCount = 0;
 
   // 修改
-  const openUpdateSnippet = inject<(item: CommandSnippetQueryResponse) => void>(openUpdateSnippetKey);
+  const openUpdateSnippet = inject(openUpdateSnippetKey) as (item: CommandSnippetQueryResponse) => void;
 
   // 删除
-  const removeSnippet = inject<(id: number) => void>(removeSnippetKey);
+  const removeSnippet = inject(removeSnippetKey) as (id: number) => void;
 
   // 点击命令
   const clickItem = () => {
@@ -210,7 +210,7 @@
           color: var(--color-text-1);
           text-overflow: unset;
           word-break: break-all;
-          white-space: unset;
+          white-space: pre-wrap;
           user-select: unset;
         }
       }
@@ -268,7 +268,7 @@
         font-size: 12px;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: pre;
+        white-space: nowrap;
         width: @item-inline-width;
         user-select: none;
       }

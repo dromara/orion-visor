@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,6 +108,7 @@ public class CommandSnippetGroupServiceImpl implements CommandSnippetGroupServic
         // 转换
         return list.stream()
                 .map(CommandSnippetGroupConvert.MAPPER::to)
+                .sorted(Comparator.comparing(CommandSnippetGroupVO::getId))
                 .collect(Collectors.toList());
     }
 

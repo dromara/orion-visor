@@ -10,9 +10,9 @@
         </template>
         <!-- snippet -->
         <template v-for="item in group.items">
-          <command-snippet-item v-if="item.visible"
-                        :key="item.id"
-                        :item="item" />
+          <command-snippet-list-item v-if="item.visible"
+                                     :key="item.id"
+                                     :item="item" />
         </template>
       </a-collapse-item>
     </template>
@@ -28,7 +28,7 @@
 <script lang="ts" setup>
   import type { CommandSnippetGroupQueryResponse } from '@/api/asset/command-snippet-group';
   import type { CommandSnippetWrapperResponse } from '@/api/asset/command-snippet';
-  import CommandSnippetItem from './command-snippet-item.vue';
+  import CommandSnippetListItem from './command-snippet-list-item.vue';
 
   defineProps<{
     snippet: CommandSnippetWrapperResponse

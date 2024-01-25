@@ -218,8 +218,8 @@
     }
   };
 
-  // 打开配置 FIXME
-  const openSetting = inject<(record: HostQueryResponse) => void>(openSshModalKey);
+  // 打开配置
+  const openSetting = inject(openSshModalKey) as (record: HostQueryResponse) => void;
 
   // 设置收藏
   const setFavorite = async (item: HostQueryResponse) => {

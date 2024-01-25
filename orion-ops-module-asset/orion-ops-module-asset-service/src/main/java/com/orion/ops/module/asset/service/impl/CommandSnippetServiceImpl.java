@@ -3,7 +3,6 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -138,6 +137,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
         // 转换
         return list.stream()
                 .map(CommandSnippetConvert.MAPPER::to)
+                .sorted(Comparator.comparing(CommandSnippetVO::getId))
                 .collect(Collectors.toList());
     }
 

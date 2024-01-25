@@ -93,7 +93,7 @@
 
   onUnmounted(() => {
     // 卸载时清除 cache
-    cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities');
+    cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups');
     // 移除关闭视口事件
     window.removeEventListener('beforeunload', handleBeforeUnload);
     // 去除 body style

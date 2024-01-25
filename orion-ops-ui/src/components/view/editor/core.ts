@@ -45,15 +45,20 @@ export interface Options {
   disableLayerHinting?: boolean;
   // 行亮
   renderLineHighlight?: RenderLineHighlight;
-  // 显示行号
+  // 点击行号时是否应该选择相应的行
   selectOnLineNumbers?: boolean;
+  // 行号最小字符
+  lineNumbersMinChars?: number;
+  // 输入提示
   placeholder?: string;
+  // 小地图
   minimap?: {
     // 关闭小地图
     enabled?: boolean;
 
     [key: string]: unknown;
   };
+  // 字体大小
   fontSize?: number;
   // 取消代码后面一大段空白
   scrollBeyondLastLine?: boolean;
@@ -80,6 +85,7 @@ export const createDefaultOptions = (): Options => {
     showFoldingControls: 'always',
     renderLineHighlight: 'line',
     selectOnLineNumbers: true,
+    lineNumbersMinChars: 2,
     disableLayerHinting: true,
     minimap: {
       enabled: false,

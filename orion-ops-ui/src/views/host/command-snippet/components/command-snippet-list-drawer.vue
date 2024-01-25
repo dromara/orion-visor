@@ -45,19 +45,21 @@
       <!-- 命令片段 -->
       <div v-else class="snippet-list-container">
         <!-- 命令片段组 -->
-        <command-snippet-group :snippet="snippet" />
+        <command-snippet-list-group :snippet="snippet" />
         <!-- 未分组命令片段 -->
         <div class="ungrouped-snippet-container">
           <template v-for="item in snippet.ungroupedItems">
-            <command-snippet-item v-if="item.visible"
-                                  :key="item.id"
-                                  :item="item" />
+            <command-snippet-list-item v-if="item.visible"
+                                       :key="item.id"
+                                       :item="item" />
           </template>
         </div>
       </div>
     </div>
     <!-- 命令编辑抽屉 -->
-    <command-snippet-form-drawer ref="formDrawer" />
+    <command-snippet-form-drawer ref="formDrawer"
+                                 @added="onAdded"
+                                 @updated="onUpdated" />
   </a-drawer>
 </template>
 
@@ -73,15 +75,16 @@
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
-  import { useTerminalStore } from '@/store';
+  import { useCacheStore, useTerminalStore } from '@/store';
   import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
-  import CommandSnippetItem from './command-snippet-item.vue';
-  import CommandSnippetGroup from './command-snippet-group.vue';
+  import CommandSnippetListItem from './command-snippet-list-item.vue';
+  import CommandSnippetListGroup from './command-snippet-list-group.vue';
   import CommandSnippetFormDrawer from './command-snippet-form-drawer.vue';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
   const { getCurrentTerminalSession } = useTerminalStore();
+  const cacheStore = useCacheStore();
 
   const formDrawer = ref();
   const filterValue = ref<string>();
@@ -135,45 +138,133 @@
     formDrawer.value.openAdd();
   };
 
-  // 打开修改
+  // 查找并且删除
+  const findAndSplice = (id: number, items: Array<CommandSnippetQueryResponse>) => {
+    if (items) {
+      const index = items.findIndex(s => s.id === id);
+      if (index !== -1) {
+        items.splice(index, 1);
+        return true;
+      }
+      return false;
+    }
+  };
+
+  // 暴露 修改抽屉
   provide(openUpdateSnippetKey, (e: CommandSnippetQueryResponse) => {
     formDrawer.value.openUpdate(e);
   });
 
-  // 删除
+  // 暴露 删除
   provide(removeSnippetKey, async (id: number) => {
     if (!snippet.value) {
       return;
     }
-
-    // 查找并且删除
-    function findAndSplice(items: Array<CommandSnippetQueryResponse>) {
-      if (items) {
-        const index = items.findIndex(s => s.id === id);
-        if (index !== -1) {
-          items.splice(index, 1);
-          return true;
-        }
-        return false;
-      }
-    }
-
     // 删除
     await deleteCommandSnippet(id);
-
     // 查找并且删除未分组的数据
-    if (findAndSplice(snippet.value.ungroupedItems)) {
+    if (findAndSplice(id, snippet.value.ungroupedItems)) {
       return;
     }
     // 查找并且删除分组内数据
     for (let group of snippet.value.groups) {
-      if (findAndSplice(group.items)) {
+      if (findAndSplice(id, group.items)) {
         return;
       }
     }
   });
 
-  // 关闭
+  // 添加回调
+  const onAdded = async (item: CommandSnippetQueryResponse) => {
+    if (item.groupId) {
+      let group = snippet.value?.groups.find(g => g.id === item.groupId);
+      if (group) {
+        group?.items.push(item);
+      } else {
+        const cacheGroups = await cacheStore.loadCommandSnippetGroups();
+        const findGroup = cacheGroups.find(s => s.id === item.groupId);
+        if (findGroup) {
+          snippet.value?.groups.push({
+            id: item.groupId,
+            name: findGroup.name,
+            items: [item]
+          });
+        }
+      }
+    } else {
+      snippet.value?.ungroupedItems.push(item);
+    }
+    // 重置过滤
+    filterSnippet();
+  };
+
+  // 修改回调
+  const onUpdated = async (item: CommandSnippetQueryResponse) => {
+    if (!snippet.value) {
+      return;
+    }
+    // 查找原始数据
+    let originItem;
+    const findInUngrouped = snippet.value.ungroupedItems.find(s => s.id === item.id);
+    if (findInUngrouped) {
+      originItem = findInUngrouped;
+    } else {
+      for (let group of snippet.value.groups) {
+        const find = group.items.find(s => s.id === item.id);
+        if (find) {
+          originItem = find;
+          break;
+        }
+      }
+    }
+    if (!originItem) {
+      return;
+    }
+    // 检查分组是否存在
+    const findGroup = snippet.value.groups.find(s => s.id === item.groupId);
+    if (!findGroup) {
+      const cacheGroups = await cacheStore.loadCommandSnippetGroups();
+      const cacheGroup = cacheGroups.find(s => s.id === item.groupId);
+      if (cacheGroup) {
+        snippet.value.groups.push({
+          id: item.groupId,
+          name: cacheGroup.name,
+          items: []
+        });
+      }
+    }
+    // 设置数据
+    const originGroupId = originItem.groupId;
+    originItem.groupId = item.groupId;
+    originItem.name = item.name;
+    originItem.command = item.command;
+    // 移动分组
+    if (item.groupId !== originGroupId) {
+      // 从原始分组移除
+      if (originGroupId) {
+        const findGroup = snippet.value.groups.find(s => s.id === originGroupId);
+        if (findGroup) {
+          findAndSplice(item.id, findGroup.items);
+        }
+      } else {
+        // 从未分组数据中移除
+        findAndSplice(item.id, snippet.value.ungroupedItems);
+      }
+      // 添加到新分组
+      if (item.groupId) {
+        const findGroup = snippet.value.groups.find(s => s.id === item.groupId);
+        if (findGroup) {
+          findGroup.items.push(item);
+        }
+      } else {
+        snippet.value.ungroupedItems.push(originItem);
+      }
+    }
+    // 重置过滤
+    filterSnippet();
+  };
+
+  // 关闭回调
   const onClose = () => {
     // 聚焦终端
     getCurrentTerminalSession(false)?.focus();

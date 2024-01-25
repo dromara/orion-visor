@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            :width="488"
+            :width="388"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -16,18 +16,20 @@
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
-        <!-- 分组 -->
-        <a-form-item field="groupId" label="命令分组">
-          <a-input-number v-model="formModel.groupId"
-                          placeholder="请输入命令分组"
-                          hide-button />
-        </a-form-item>
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
-          <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
+          <a-input v-model="formModel.name"
+                   placeholder="请输入名称"
+                   allow-clear />
+        </a-form-item>
+        <!-- 分组 -->
+        <a-form-item field="groupId" label="命令分组">
+          <command-snippet-group-select v-model="formModel.groupId" />
         </a-form-item>
         <!-- 代码片段 -->
-        <a-form-item field="command" label="代码片段">
+        <a-form-item field="command"
+                     label="代码片段"
+                     style="margin: 0;">
           <editor v-model="formModel.command"
                   containerClass="command-editor"
                   language="shell"
@@ -50,10 +52,11 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/form.rules';
   import { createCommandSnippet, updateCommandSnippet } from '@/api/asset/command-snippet';
+  import formRules from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import { useTerminalStore } from '@/store';
+  import CommandSnippetGroupSelect from './command-snippet-group-select.vue';
 
   const { preference } = useTerminalStore();
   const { visible, setVisible } = useVisible();
@@ -110,14 +113,15 @@
       }
       if (isAddHandle.value) {
         // 新增
-        await createCommandSnippet(formModel.value);
+        const { data: id } = await createCommandSnippet(formModel.value);
+        formModel.value.id = id;
         Message.success('创建成功');
-        emits('added');
+        emits('added', formModel.value);
       } else {
         // 修改
         await updateCommandSnippet(formModel.value);
         Message.success('修改成功');
-        emits('updated');
+        emits('updated', formModel.value);
       }
       // 清空
       handlerClear();
@@ -146,7 +150,7 @@
   }
 
   .command-editor {
-    height: 340px;
+    height: calc(100vh - 330px);
   }
 
 </style>

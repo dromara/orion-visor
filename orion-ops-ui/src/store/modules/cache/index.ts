@@ -12,11 +12,13 @@ import { getHostList } from '@/api/asset/host';
 import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
+import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
 
 export type CacheType = 'users' | 'menus' | 'roles'
   | 'hosts' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
   | 'dictKeys'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
+  | 'commandSnippetGroups'
   | string
 
 export default defineStore('cache', {
@@ -109,6 +111,11 @@ export default defineStore('cache', {
     // 获取已授权的主机身份列表
     async loadAuthorizedHostIdentities(force = false) {
       return await this.load('authorizedHostIdentities', getCurrentAuthorizedHostIdentity, force);
+    },
+
+    // 获取命令片段分组
+    async loadCommandSnippetGroups(force = false) {
+      return await this.load('commandSnippetGroups', getCommandSnippetGroupList, force);
     },
 
   }
