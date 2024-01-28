@@ -71,7 +71,7 @@
 
 <script lang="ts" setup>
   import type { CommandSnippetWrapperResponse, CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
-  import { onMounted, ref, provide } from 'vue';
+  import { ref, provide } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
@@ -269,9 +269,6 @@
     // 聚焦终端
     getCurrentTerminalSession(false)?.focus();
   };
-
-  // fixme
-  onMounted(open);
 
 </script>
 

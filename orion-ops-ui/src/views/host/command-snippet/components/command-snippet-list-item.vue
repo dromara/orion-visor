@@ -126,8 +126,6 @@
   const { copy } = useCopy();
   const { getCurrentTerminalSession } = useTerminalStore();
 
-  // TODO  多行拼接有bug
-
   let clickCount = 0;
 
   // 修改
