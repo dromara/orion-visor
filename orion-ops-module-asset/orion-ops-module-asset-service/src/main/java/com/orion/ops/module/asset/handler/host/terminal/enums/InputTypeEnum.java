@@ -75,6 +75,13 @@ public enum InputTypeEnum {
             new String[]{"type", "sessionId", "command"},
             TerminalInputRequest.class),
 
+    // LS
+    // DEL
+    // MV
+    // TC
+    // MK
+    // CD
+
     ;
 
     private static final char SEPARATOR = '|';
