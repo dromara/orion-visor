@@ -22,7 +22,7 @@ body {
 }
 
 // 暗色主题配色常量
-body[terminal-theme='dark'] {
+body[host-space-theme='dark'] {
   --color-bg-header: #232323;
   --color-bg-sidebar: #2C2E31;
   --color-bg-content: #1A1B1C;
@@ -45,7 +45,7 @@ body[terminal-theme='dark'] {
 }
 
 // 布局常量
-.host-layout {
+.host-space-layout {
   --header-height: 44px;
   --sidebar-width: 44px;
   --sidebar-icon-wrapper-size: var(--header-height);
@@ -62,7 +62,7 @@ body[terminal-theme='dark'] {
 }
 
 // arco 亮色配色
-body .host-layout, .arco-modal-container {
+body .host-space-layout, .arco-modal-container {
   --color-white: #ffffff;
   --color-black: #000000;
   --color-border: rgb(var(--gray-3));
@@ -133,9 +133,9 @@ body .host-layout, .arco-modal-container {
 }
 
 // arco 暗色配色
-body[terminal-theme='dark'],
-body[terminal-theme='dark'] .host-layout,
-body[terminal-theme='dark'] .arco-modal-container {
+body[host-space-theme='dark'],
+body[host-space-theme='dark'] .host-space-layout,
+body[host-space-theme='dark'] .arco-modal-container {
   --color-white: rgba(255, 255, 255, 0.9);
   --color-black: #000000;
   --color-border: #333335;

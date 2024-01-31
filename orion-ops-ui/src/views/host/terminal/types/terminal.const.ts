@@ -1,5 +1,5 @@
 // tab 类型
-import { ShortcutKeyItem } from '@/views/host/terminal/types/terminal.type';
+import { ShortcutKeyItem } from '@/views/host/space/types/terminal.type';
 
 export const TerminalTabType = {
   SETTING: 'setting',

@@ -7,9 +7,9 @@ const HOST: AppRouteRecordRaw = {
   component: FULL_LAYOUT,
   children: [
     {
-      name: 'hostTerminal',
-      path: '/host/terminal',
-      component: () => import('@/views/host/terminal/index.vue'),
+      name: 'hostSpace',
+      path: '/host/space',
+      component: () => import('@/views/host/space/index.vue'),
       meta: {
         noAffix: true
       }

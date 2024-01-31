@@ -7,7 +7,7 @@
 
 <script lang="ts">
   export default {
-    name: 'hostReviewConnectLog'
+    name: 'hostAuditConnectLog'
   };
 </script>
 

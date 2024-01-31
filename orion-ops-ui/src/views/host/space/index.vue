@@ -1,24 +1,24 @@
 <template>
-  <div class="host-layout" v-if="render">
+  <div class="host-space-layout" v-if="render">
     <!-- 头部区域 -->
-    <header class="host-layout-header">
-      <terminal-header />
+    <header class="host-space-layout-header">
+      <layout-header />
     </header>
     <!-- 主体区域 -->
-    <main class="host-layout-main">
+    <main class="host-space-layout-main">
       <!-- 左侧操作栏 -->
-      <div class="host-layout-left">
+      <div class="host-space-layout-left">
         <terminal-left-sidebar />
       </div>
       <!-- 内容区域 -->
-      <div id="terminal-layout-content" class="host-layout-content">
+      <div class="host-space-layout-content">
         <!-- 主机加载中骨架 -->
         <loading-skeleton v-if="contentLoading" />
         <!-- 终端内容区域 -->
         <terminal-content v-else />
       </div>
       <!-- 右侧操作栏 -->
-      <div class="host-layout-right">
+      <div class="host-space-layout-right">
         <terminal-right-sidebar />
       </div>
     </main>
@@ -27,22 +27,22 @@
 
 <script lang="ts">
   export default {
-    name: 'hostTerminal'
+    name: 'hostSpace'
   };
 </script>
 
 <script lang="ts" setup>
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
-  import { dictKeys, InnerTabs } from './types/terminal.const';
+  import { dictKeys, InnerTabs } from '../terminal/types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import TerminalHeader from './components/layout/terminal-header.vue';
-  import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
-  import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
-  import TerminalContent from './components/layout/terminal-content.vue';
-  import LoadingSkeleton from './components/layout/loading-skeleton.vue';
+  import TerminalLeftSidebar from '../terminal/components/layout/terminal-left-sidebar.vue';
+  import TerminalRightSidebar from '../terminal/components/layout/terminal-right-sidebar.vue';
+  import TerminalContent from '../terminal/components/layout/terminal-content.vue';
+  import LoadingSkeleton from '../terminal/components/layout/loading-skeleton.vue';
   import '@/assets/style/host-space-layout.less';
   import 'xterm/css/xterm.css';
+  import LayoutHeader from './components/layout-header.vue';
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();
@@ -105,7 +105,7 @@
 </script>
 
 <style lang="less" scoped>
-  .host-layout {
+  .host-space-layout {
     width: 100%;
     height: 100vh;
     position: relative;

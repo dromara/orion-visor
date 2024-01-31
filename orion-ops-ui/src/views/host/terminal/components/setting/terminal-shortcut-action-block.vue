@@ -9,7 +9,7 @@
     <!-- 内容区域 -->
     <div class="terminal-setting-body setting-body">
       <!-- 提示 -->
-      <a-alert class="mb16">点击保存按钮后需要刷新页面生效 (恢复默认配置后也需要点击保存按钮) (设置时需要避免使用浏览器内置快捷键)</a-alert>
+      <a-alert class="mb16">点击保存按钮后需要刷新页面生效 (恢复默认配置后也需要点击保存按钮) (设置时需要避免与浏览器内置快捷键冲突)</a-alert>
       <a-space class="action-container" size="mini">
         <!-- 是否启用 -->
         <a-switch v-model="value"
