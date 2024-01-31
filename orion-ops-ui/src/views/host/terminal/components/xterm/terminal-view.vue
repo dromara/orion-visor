@@ -68,7 +68,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ITerminalSession, TerminalTabItem, SidebarAction, ITerminalSessionHandler } from '../../types/terminal.type';
+  import type { ITerminalSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';

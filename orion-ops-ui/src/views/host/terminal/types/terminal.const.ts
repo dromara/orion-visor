@@ -1,5 +1,5 @@
 // tab 类型
-import { ShortcutKeyItem } from '@/views/host/space/types/terminal.type';
+import { ShortcutKeyItem } from './terminal.type';
 
 export const TerminalTabType = {
   SETTING: 'setting',
@@ -226,8 +226,8 @@ export const fontWeightKey = 'terminalFontWeight';
 // 终端光标样式
 export const cursorStyleKey = 'terminalCursorStyle';
 
-// 终端新建连接类型
-export const newConnectionTypeKey = 'terminalNewConnectionType';
+// 主机新建连接类型
+export const newConnectionTypeKey = 'hostNewConnectionType';
 
 // 终端新建连接类型
 export const extraSshAuthTypeKey = 'hostExtraSshAuthType';

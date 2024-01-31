@@ -5,11 +5,11 @@
                :position="position as any"
                :mini="true"
                :show-arrow="false"
-               content-class="terminal-tooltip-content"
+               content-class="host-space-tooltip-content"
                :auto-fix-position="false"
                :content="action.content">
-      <div class="terminal-sidebar-icon-wrapper" v-if="action.visible !== false">
-        <div class="terminal-sidebar-icon"
+      <div class="host-space-sidebar-icon-wrapper" v-if="action.visible !== false">
+        <div class="host-space-sidebar-icon"
              :class="[
                iconClass,
                action.disabled === true ? 'disabled-item' : '',
@@ -30,7 +30,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../terminal/types/terminal.type';
+  import type { SidebarAction } from '../../types/type';
   import type { PropType } from 'vue';
 
   defineProps({

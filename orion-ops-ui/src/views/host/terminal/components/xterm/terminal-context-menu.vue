@@ -1,6 +1,6 @@
 <template>
   <!-- 终端右键菜单 -->
-  <a-dropdown class="terminal-context-menu"
+  <a-dropdown class="host-space-context-menu"
               :popup-max-height="false"
               trigger="contextMenu"
               position="bl"
@@ -14,7 +14,7 @@
                  :disabled="!session.handler.enabledStatus(action.item)"
                  @click="emits('click', action.item)">
         <!-- 图标 -->
-        <div class="terminal-context-menu-icon">
+        <div class="host-space-context-menu-icon">
           <component :is="action.icon" />
         </div>
         <!-- 文本 -->

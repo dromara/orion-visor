@@ -8,18 +8,18 @@
     <main class="host-space-layout-main">
       <!-- 左侧操作栏 -->
       <div class="host-space-layout-left">
-        <terminal-left-sidebar />
+        <left-sidebar />
       </div>
       <!-- 内容区域 -->
       <div class="host-space-layout-content">
         <!-- 主机加载中骨架 -->
         <loading-skeleton v-if="contentLoading" />
-        <!-- 终端内容区域 -->
-        <terminal-content v-else />
+        <!-- 内容区域 -->
+        <layout-main v-else />
       </div>
       <!-- 右侧操作栏 -->
       <div class="host-space-layout-right">
-        <terminal-right-sidebar />
+        <right-sidebar />
       </div>
     </main>
   </div>
@@ -33,18 +33,18 @@
 
 <script lang="ts" setup>
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
-  import { dictKeys, InnerTabs } from '../terminal/types/terminal.const';
-  import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
+  import { dictKeys, InnerTabs } from './types/const';
+  import { useCacheStore, useDictStore, useHostSpaceStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import TerminalLeftSidebar from '../terminal/components/layout/terminal-left-sidebar.vue';
-  import TerminalRightSidebar from '../terminal/components/layout/terminal-right-sidebar.vue';
-  import TerminalContent from '../terminal/components/layout/terminal-content.vue';
-  import LoadingSkeleton from '../terminal/components/layout/loading-skeleton.vue';
+  import LayoutHeader from './components/layout/layout-header.vue';
+  import LeftSidebar from './components/layout/left-sidebar.vue';
+  import RightSidebar from './components/layout/right-sidebar.vue';
+  import LoadingSkeleton from './components/layout/loading-skeleton.vue';
+  import LayoutMain from './components/layout/layout-main.vue';
   import '@/assets/style/host-space-layout.less';
   import 'xterm/css/xterm.css';
-  import LayoutHeader from './components/layout-header.vue';
 
-  const terminalStore = useTerminalStore();
+  const hostSpaceStore = useHostSpaceStore();
   const dictStore = useDictStore();
   const cacheStore = useCacheStore();
   const { loading: contentLoading, setLoading: setContentLoading } = useLoading(true);
@@ -60,9 +60,9 @@
 
   // 加载用户终端偏好
   onBeforeMount(async () => {
-    await terminalStore.fetchPreference();
+    await hostSpaceStore.fetchPreference();
     // 设置系统主题配色
-    const dark = terminalStore.preference.theme.dark;
+    const dark = hostSpaceStore.preference.theme.dark;
     document.body.setAttribute('host-space-theme', dark ? 'dark' : 'light');
     render.value = true;
   });
@@ -75,7 +75,7 @@
   // 加载主机信息
   onMounted(async () => {
     try {
-      await terminalStore.loadHosts();
+      await hostSpaceStore.loadHosts();
     } catch (e) {
     } finally {
       setContentLoading(false);

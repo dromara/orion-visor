@@ -40,14 +40,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../terminal/types/terminal.type';
+  import type { SidebarAction } from '../../types/type';
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
-  import { useTerminalStore } from '@/store';
+  import { useHostSpaceStore } from '@/store';
   import IconActions from './icon-actions.vue';
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const { tabManager } = useTerminalStore();
+  const { tabManager } = useHostSpaceStore();
 
   // 顶部操作
   const actions = computed<Array<SidebarAction>>(() => [
