@@ -17,9 +17,10 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextSessionId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
-import { TerminalTabs } from '@/views/host/terminal/types/terminal.const';
+import { TerminalPanelTabType, TerminalTabs } from '@/views/host/terminal/types/terminal.const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
+import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';
 
 // 终端偏好项
 export const TerminalPreferenceItem = {
@@ -63,7 +64,7 @@ export default defineStore('terminal', {
     },
     hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(TerminalTabs.NEW_CONNECTION),
-    routerTabManager: [new TerminalTabManager()],
+    panelManager: new TerminalPanelManager(),
     sessionManager: new TerminalSessionManager()
   }),
 
@@ -137,43 +138,57 @@ export default defineStore('terminal', {
       // 切换到终端面板页面
       this.tabManager.openTab(TerminalTabs.TERMINAL_PANEL);
       // 获取 seq
-      const tabSeqArr = this.tabManager.items
+      const seqArr = this.panelManager
+        .getPanel(panelIndex)
+        .items
         .map(s => s.seq)
         .filter(Boolean)
         .map(Number);
-      const nextSeq = tabSeqArr.length
-        ? Math.max(...tabSeqArr) + 1
+      const nextSeq = seqArr.length
+        ? Math.max(...seqArr) + 1
         : 1;
-      // FIXME
       // 打开 tab
-      this.tabManager.openTab({
+      this.panelManager.getPanel(panelIndex).openTab({
         key: nextSessionId(10),
         seq: nextSeq,
         title: `(${nextSeq})  ${record.alias || record.name}`,
         hostId: record.id,
-        address: record.address
+        address: record.address,
+        icon: 'icon-desktop',
+        type: TerminalPanelTabType.TERMINAL
       });
     },
 
     // 复制并且打开终端
-    openCopyTerminal(hostId: number) {
+    openCopyTerminal(hostId: number, panelIndex: number = 0) {
       const host = this.hosts.hostList
         .find(s => s.id === hostId);
       if (host) {
-        this.openTerminal(host);
+        this.openTerminal(host, panelIndex);
       }
     },
 
     // 获取当前终端会话
     getCurrentTerminalSession(tips: boolean = true) {
+      // 获取当前 tab
       const tab = this.tabManager.getCurrentTab();
-      // FIXME
-      if (!tab || tab.type !== 'TERMINAL') {
+      if (!tab || tab.key !== TerminalTabs.TERMINAL_PANEL.key) {
         if (tips) {
           Message.warning('请切换到终端标签页');
         }
         return;
       }
+      // 获取面板会话
+      const activeTab = this.panelManager
+        .getCurrentPanel()
+        .getCurrentTab();
+      if (!activeTab || activeTab.type !== TerminalPanelTabType.TERMINAL) {
+        if (tips) {
+          Message.warning('请打开终端');
+        }
+        return;
+      }
+      // 获取会话
       return this.sessionManager.getSession(tab.key);
     },
 

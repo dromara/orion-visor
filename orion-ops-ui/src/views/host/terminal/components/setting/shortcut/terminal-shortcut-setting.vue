@@ -21,7 +21,7 @@
                                         @save="savePreference" />
         <!-- 系统快捷键 -->
         <terminal-shortcut-keys-block title="系统快捷键"
-                                      :type="TerminalShortcutType.SYSTEM"
+                                      :type="TerminalShortcutType.TAB"
                                       :items="shortcutKeys"
                                       @set-editable="setEditableStatus"
                                       @clear-editable="clearEditableStatus"

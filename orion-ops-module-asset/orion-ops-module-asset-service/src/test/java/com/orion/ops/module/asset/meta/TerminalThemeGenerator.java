@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.orion.lang.utils.Colors;
-import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.FileReaders;
 import com.orion.lang.utils.io.Files1;
@@ -59,8 +58,6 @@ public class TerminalThemeGenerator {
                     TerminalTheme theme = new TerminalTheme();
                     theme.setName(schema.getString("name"));
                     theme.setDark(Colors.isDarkColor(background));
-                    // header 颜色为深 12
-                    theme.setHeaderBackgroundColor(adjustColor(background, -12));
                     theme.setSchema(JSON.parseObject(JSON.toJSONString(schema), TerminalThemeSchema.class));
                     return theme;
                 }).collect(Collectors.toList());
@@ -113,8 +110,6 @@ public class TerminalThemeGenerator {
         @JSONField(ordinal = 1)
         private Boolean dark;
         @JSONField(ordinal = 2)
-        private String headerBackgroundColor;
-        @JSONField(ordinal = 3)
         private TerminalThemeSchema schema;
     }
 
@@ -160,28 +155,6 @@ public class TerminalThemeGenerator {
         private String brightCyan;
         @JSONField(ordinal = 19)
         private String brightWhite;
-    }
-
-    /**
-     * 调整颜色
-     *
-     * @param color color
-     * @param range 正数越浅 负数越深
-     * @return color
-     */
-    private static String adjustColor(String color, int range) {
-        StringBuilder newColor = new StringBuilder("#");
-        for (int i = 0; i < 3; i++) {
-            int c = Integer.parseInt(color.substring(i * 2 + 1, i * 2 + 3), 16);
-            c += range;
-            if (c < 0) {
-                c = 0;
-            } else if (c > 255) {
-                c = 255;
-            }
-            newColor.append(Strings.leftPad(Integer.toString(c, 16), 2, "0"));
-        }
-        return newColor.toString();
     }
 
 }

@@ -1,7 +1,8 @@
 // 亮色主题配色常量
 body {
   --color-bg-header: #232323;
-  --color-bg-sidebar: #F2F3F4;
+  --color-bg-sidebar: #EBECED;
+  --color-bg-panel: var(--color-bg-sidebar);
   --color-bg-content: #FEFEFE;
   --color-sidebar-icon: #737070;
   --color-sidebar-icon-bg: #D7D8DB;
@@ -11,6 +12,14 @@ body {
   --color-content-text-1: rgba(0, 0, 0, .8);
   --color-content-text-2: rgba(0, 0, 0, .85);
   --color-content-text-3: rgba(0, 0, 0, .95);
+  --color-bg-panel-tabs: var(--color-bg-panel);
+  --color-bg-panel-tabs-active: #F9F9F9;
+  --color-bg-panel-icon-1: #F5F5F5;
+  --color-bg-panel-bar: #F3F4F5;
+  --color-panel-text-1: var(--color-content-text-1);
+  --color-panel-text-2: var(--color-content-text-3);
+  --color-panel-gradient-start: rgba(218, 218, 218, 1);
+  --color-panel-gradient-end: rgba(218, 218, 218, 0);
   --search-bg-focus: rgba(234, 234, 234, .75);
   --search-bg: rgba(234, 234, 234, .95);
   --search-color-text: #0E0E0E;
@@ -25,6 +34,7 @@ body {
 body[terminal-theme='dark'] {
   --color-bg-header: #232323;
   --color-bg-sidebar: #2C2E31;
+  --color-bg-panel: var(--color-bg-sidebar);
   --color-bg-content: #1A1B1C;
   --color-sidebar-icon: #C3C6C9;
   --color-sidebar-icon-bg: #3D3E3F;
@@ -34,6 +44,14 @@ body[terminal-theme='dark'] {
   --color-content-text-1: rgba(255, 255, 255, .8);
   --color-content-text-2: rgba(255, 255, 255, .85);
   --color-content-text-3: rgba(255, 255, 255, .95);
+  --color-bg-panel-tabs: var(--color-bg-panel);
+  --color-bg-panel-tabs-active: #434343;
+  --color-bg-panel-icon-1: var(--color-bg-panel-tabs-active);
+  --color-bg-panel-bar: #323538;
+  --color-panel-text-1: var(--color-content-text-1);
+  --color-panel-text-2: var(--color-content-text-3);
+  --color-panel-gradient-start: rgba(38, 38, 38, 1);
+  --color-panel-gradient-end: rgba(38, 38, 38, 0);
   --search-bg: rgba(12, 12, 12, .75);
   --search-bg-focus: rgba(12, 12, 12, .95);
   --search-color-text: #E0E0E0;
@@ -47,14 +65,14 @@ body[terminal-theme='dark'] {
 // 布局常量
 .host-terminal-layout {
   --header-height: 44px;
+  --panel-nav-height: 40px;
   --sidebar-width: 44px;
   --sidebar-icon-wrapper-size: var(--header-height);
   --sidebar-icon-size: 32px;
   --sidebar-icon-font-size: 22px;
-
-  --color-bg-header-icon-1: #434343;
-  --color-header-tabs-bg: var(--color-bg-header);
-  --color-header-tabs-bg-hover: #434343;
+  --color-bg-header-tabs: var(--color-bg-header);
+  --color-bg-header-tabs-active: #434343;
+  --color-bg-header-icon-1: var(--color-bg-header-tabs-active);
   --color-header-text-1: rgba(255, 255, 255, .75);
   --color-header-text-2: rgba(255, 255, 255, .9);
   --color-gradient-start: rgba(38, 38, 38, 1);

@@ -18,8 +18,17 @@
               @tab-click="k => tabManager.clickTab(k as string)"
               @delete="k => tabManager.deleteTab(k as string)">
         <a-tab-pane v-for="tab in tabManager.items"
-                    :key="tab.key"
-                    :title="tab.title" />
+                    :key="tab.key">
+          <!-- 标题 -->
+          <template #title>
+            <span class="tab-title-wrapper">
+              <span class="tab-title-icon">
+                <component :is="tab.icon" />
+              </span>
+              {{ tab.title }}
+            </span>
+          </template>
+        </a-tab-pane>
       </a-tabs>
     </div>
     <!-- 右侧操作 -->
@@ -45,6 +54,7 @@
   import { computed } from 'vue';
   import { useTerminalStore } from '@/store';
   import IconActions from '../layout/icon-actions.vue';
+  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const { tabManager } = useTerminalStore();
@@ -118,6 +128,16 @@
     }
   }
 
+  .tab-title-wrapper {
+    display: flex;
+    align-items: center;
+
+    .tab-title-icon {
+      font-size: 16px;
+      margin-right: 4px;
+    }
+  }
+
   :deep(.arco-tabs-nav) {
     height: 100%;
 
@@ -151,7 +171,7 @@
     margin: 0;
     padding: 0;
     color: var(--color-header-text-1);
-    background: var(--color-header-tabs-bg);
+    background: var(--color-bg-header-tabs);
     position: relative;
 
     &:hover {
@@ -177,8 +197,9 @@
 
     .arco-tabs-tab-title {
       padding: 11px 18px;
-      background: var(--color-header-tabs-bg);
-      font-size: 12px;
+      background: var(--color-bg-header-tabs);
+      font-size: 14px;
+      height: var(--header-height);
       display: flex;
       align-items: center;
 
@@ -213,11 +234,11 @@
   }
 
   :deep(.arco-tabs-tab-active) {
-    background: var(--color-header-tabs-bg-hover);
+    background: var(--color-bg-header-tabs-active);
     color: var(--color-header-text-2) !important;
 
     .arco-tabs-tab-title {
-      background: var(--color-header-tabs-bg-hover);
+      background: var(--color-bg-header-tabs-active);
     }
 
     &:hover::after {

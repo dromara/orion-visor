@@ -75,4 +75,6 @@ public interface ErrorMessage {
 
     String SESSION_ABSENT = "会话不存在";
 
+    String CONNECT_ERROR = "连接失败";
+
 }

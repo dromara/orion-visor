@@ -2,7 +2,6 @@
   {
     "name": "catppuccin-mocha",
     "dark": true,
-    "headerBackgroundColor": "#121222",
     "schema": {
       "background": "#1E1E2E",
       "foreground": "#CDD6F4",
@@ -27,7 +26,6 @@
   {
     "name": "MaterialDesignColors",
     "dark": true,
-    "headerBackgroundColor": "#111A1E",
     "schema": {
       "background": "#1D262A",
       "foreground": "#E7EBED",
@@ -52,7 +50,6 @@
   {
     "name": "catppuccin-macchiato",
     "dark": true,
-    "headerBackgroundColor": "#181B2E",
     "schema": {
       "background": "#24273A",
       "foreground": "#CAD3F5",
@@ -77,7 +74,6 @@
   {
     "name": "OneHalfDark",
     "dark": true,
-    "headerBackgroundColor": "#1C2028",
     "schema": {
       "background": "#282C34",
       "foreground": "#DCDFE4",
@@ -102,7 +98,6 @@
   {
     "name": "Dracula",
     "dark": true,
-    "headerBackgroundColor": "#12131D",
     "schema": {
       "background": "#1E1F29",
       "foreground": "#F8F8F2",
@@ -127,7 +122,6 @@
   {
     "name": "Atom",
     "dark": true,
-    "headerBackgroundColor": "#0A0B0D",
     "schema": {
       "background": "#161719",
       "foreground": "#C5C8C6",
@@ -152,7 +146,6 @@
   {
     "name": "Apple System Colors",
     "dark": true,
-    "headerBackgroundColor": "#121212",
     "schema": {
       "background": "#1E1E1E",
       "foreground": "#FFFFFF",
@@ -177,7 +170,6 @@
   {
     "name": "Builtin Tango Light",
     "dark": false,
-    "headerBackgroundColor": "#F3F3F3",
     "schema": {
       "background": "#FFFFFF",
       "foreground": "#000000",
@@ -202,7 +194,6 @@
   {
     "name": "Duotone Dark",
     "dark": true,
-    "headerBackgroundColor": "#13111B",
     "schema": {
       "background": "#1F1D27",
       "foreground": "#B7A1FF",
@@ -227,7 +218,6 @@
   {
     "name": "BlulocoLight",
     "dark": false,
-    "headerBackgroundColor": "#EDEDED",
     "schema": {
       "background": "#F9F9F9",
       "foreground": "#373A41",
@@ -252,7 +242,6 @@
   {
     "name": "Chester",
     "dark": true,
-    "headerBackgroundColor": "#202A37",
     "schema": {
       "background": "#2C3643",
       "foreground": "#FFFFFF",
@@ -277,7 +266,6 @@
   {
     "name": "CLRS",
     "dark": false,
-    "headerBackgroundColor": "#F3F3F3",
     "schema": {
       "background": "#FFFFFF",
       "foreground": "#262626",
@@ -302,7 +290,6 @@
   {
     "name": "Calamity",
     "dark": true,
-    "headerBackgroundColor": "#231C27",
     "schema": {
       "background": "#2F2833",
       "foreground": "#D5CED9",
@@ -327,7 +314,6 @@
   {
     "name": "Tomorrow",
     "dark": false,
-    "headerBackgroundColor": "#F3F3F3",
     "schema": {
       "background": "#FFFFFF",
       "foreground": "#4D4D4C",

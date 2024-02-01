@@ -52,6 +52,12 @@ export const ExtraSshAuthType = {
   CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',
 };
 
+// 终端面板 tab 类型
+export const TerminalPanelTabType = {
+  TERMINAL: 'terminal',
+  SFTP: 'sftp',
+};
+
 // 终端状态
 export const TerminalStatus = {
   // 连接中
@@ -125,7 +131,7 @@ export const ActionBarItems = [
 
 // 终端快捷键操作类型
 export const TerminalShortcutType = {
-  SYSTEM: 1,
+  TAB: 1,
   TERMINAL: 2
 };
 
@@ -146,19 +152,19 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   {
     item: TerminalShortcutKeys.CHANGE_TO_PREV_TAB,
     content: '切换为前一个 tab',
-    type: TerminalShortcutType.SYSTEM
+    type: TerminalShortcutType.TAB
   }, {
     item: TerminalShortcutKeys.CHANGE_TO_NEXT_TAB,
     content: '切换为后一个 tab',
-    type: TerminalShortcutType.SYSTEM
+    type: TerminalShortcutType.TAB
   }, {
     item: TerminalShortcutKeys.CLOSE_TAB,
     content: '关闭当前 tab',
-    type: TerminalShortcutType.SYSTEM
+    type: TerminalShortcutType.TAB
   }, {
     item: TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB,
     content: '打开新建连接 tab',
-    type: TerminalShortcutType.SYSTEM
+    type: TerminalShortcutType.TAB
   }, {
     item: 'openCopyTerminalTab',
     content: '复制当前终端 tab',

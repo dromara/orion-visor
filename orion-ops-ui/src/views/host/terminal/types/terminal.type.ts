@@ -12,9 +12,17 @@ import type { HostQueryResponse } from '@/api/asset/host';
 export interface TerminalTabItem {
   key: string;
   title: string;
-  icon?: string;
+  icon: string;
 
   [key: string]: unknown;
+}
+
+// 终端面板 tab 元素
+export interface TerminalPanelTabItem extends TerminalTabItem {
+  seq: number;
+  hostId: number;
+  address: string;
+  type: string;
 }
 
 // sidebar 操作类型
@@ -90,20 +98,20 @@ export interface TerminalDomRef {
 }
 
 // 终端 tab 管理器定义
-export interface ITerminalTabManager {
+export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem> {
   // 当前 tab
   active: string;
   // 全部 tab
-  items: Array<TerminalTabItem>;
+  items: Array<T>;
 
   // 获取当前 tab
-  getCurrentTab: () => TerminalTabItem | undefined;
+  getCurrentTab: () => T | undefined;
   // 点击 tab
   clickTab: (key: string) => void;
   // 删除 tab
   deleteTab: (key: string) => void;
   // 打开 tab
-  openTab: (tab: TerminalTabItem) => void;
+  openTab: (tab: T) => void;
   // 切换到前一个 tab
   changeToPrevTab: () => void;
   // 切换到后一个 tab
@@ -112,6 +120,23 @@ export interface ITerminalTabManager {
   changeToIndex: (index: number) => void;
   // 清空
   clear: () => void;
+}
+
+// 终端面板管理器定义
+export interface ITerminalPanelManager<T extends TerminalPanelTabItem = TerminalPanelTabItem> {
+  // 当前面板
+  active: number;
+  // 面板列表
+  panels: Array<ITerminalTabManager<T>>;
+
+  // 获取当前面板
+  getCurrentPanel: () => ITerminalTabManager<T>;
+  // 设置当前面板
+  setCurrentPanel: (active: number) => void;
+  // 获取面板
+  getPanel: (index: number) => ITerminalTabManager<T>;
+  // 重置
+  reset: () => void;
 }
 
 // 终端会话管理器定义

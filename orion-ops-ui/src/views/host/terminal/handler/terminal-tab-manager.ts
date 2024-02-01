@@ -1,13 +1,13 @@
 import type { ITerminalTabManager, TerminalTabItem } from '../types/terminal.type';
 
 // 终端 tab 管理器实现
-export default class TerminalTabManager implements ITerminalTabManager {
+export default class TerminalTabManagerm<T extends TerminalTabItem = TerminalTabItem> implements ITerminalTabManager<T> {
 
   public active: string;
 
-  public items: Array<TerminalTabItem>;
+  public items: Array<T>;
 
-  constructor(def: TerminalTabItem | undefined = undefined) {
+  constructor(def: T | undefined = undefined) {
     if (def) {
       this.active = def.key;
       this.items = [def];
@@ -45,7 +45,7 @@ export default class TerminalTabManager implements ITerminalTabManager {
   }
 
   // 打开 tab
-  openTab(tab: TerminalTabItem): void {
+  openTab(tab: T): void {
     // 不存在则创建 tab
     if (!this.items.find(s => s.key === tab.key)) {
       this.items.push(tab);

@@ -130,7 +130,6 @@
       width: var(--sidebar-width);
       height: 100%;
       background: var(--color-bg-sidebar);
-      border-top: 1px solid var(--color-bg-content);
       overflow: hidden;
     }
 

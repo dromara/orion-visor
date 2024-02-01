@@ -1,10 +1,7 @@
 <template>
   <div class="terminal-container">
     <!-- 头部 -->
-    <div class="terminal-header"
-         :style="{
-           background: preference.theme.headerBackgroundColor
-         }">
+    <div class="terminal-header">
       <!-- 左侧操作 -->
       <div class="terminal-header-left">
         <!-- 主机地址 -->
@@ -161,7 +158,7 @@
 
   .terminal-container {
     width: 100%;
-    height: calc(100vh - var(--header-height));
+    height: calc(100vh - var(--header-height) - var(--panel-nav-height));
     position: relative;
   }
 
@@ -172,6 +169,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: var(--color-bg-panel-bar);
 
     &-left, &-right {
       display: flex;

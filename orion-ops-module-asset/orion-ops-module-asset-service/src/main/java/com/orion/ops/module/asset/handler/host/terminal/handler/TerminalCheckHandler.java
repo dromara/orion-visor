@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
+import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
@@ -79,9 +81,12 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);
             log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
-        } catch (Exception e) {
+        } catch (InvalidArgumentException e) {
             ex = e;
             log.error("TerminalCheckHandler-handle error userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
+        } catch (Exception e) {
+            ex = Exceptions.runtime(ErrorMessage.CONNECT_ERROR);
+            log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
         this.saveTerminalLog(channel, userId, host, startTime, ex, sessionId);
