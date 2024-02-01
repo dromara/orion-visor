@@ -1,13 +1,13 @@
 <template>
-  <div class="host-space-setting-block">
+  <div class="terminal-setting-block">
     <!-- 顶部 -->
-    <div class="host-space-setting-subtitle-wrapper">
-      <h3 class="host-space-setting-subtitle">
+    <div class="terminal-setting-subtitle-wrapper">
+      <h3 class="terminal-setting-subtitle">
         会话设置
       </h3>
     </div>
     <!-- 内容区域 -->
-    <div class="host-space-setting-body setting-body">
+    <div class="terminal-setting-body setting-body">
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 终端类型 -->
         <block-setting-item label="终端类型" desc="若显示异常请尝试切换此选项 兼容性 vt100 > xterm > 16color > 256color">
@@ -38,15 +38,15 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalSessionSetting } from '@/store/modules/host-space/types';
+  import type { TerminalSessionSetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
-  import { useDictStore, useHostSpaceStore } from '@/store';
-  import { TerminalPreferenceItem } from '@/store/modules/host-space';
-  import { terminalEmulationTypeKey } from '../../types/const';
-  import BlockSettingItem from './block-setting-item.vue';
+  import { useDictStore, useTerminalStore } from '@/store';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import { terminalEmulationTypeKey } from '../../../types/terminal.const';
+  import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useHostSpaceStore();
+  const { preference, updateTerminalPreference } = useTerminalStore();
 
   const formModel = ref<TerminalSessionSetting>({ ...preference.sessionSetting });
 

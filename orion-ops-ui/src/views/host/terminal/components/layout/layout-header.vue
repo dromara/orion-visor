@@ -35,7 +35,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TerminalHeader'
+    name: 'layoutHeader'
   };
 </script>
 
@@ -61,9 +61,7 @@
 </script>
 
 <style lang="less" scoped>
-  .terminal-header {
-    --logo-width: 168px;
-  }
+  @logo-width: 168px;
 
   .terminal-header {
     height: 100%;
@@ -72,7 +70,7 @@
     user-select: none;
 
     &-left {
-      width: var(--logo-width);
+      width: @logo-width;
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -95,7 +93,7 @@
     }
 
     &-tabs {
-      width: calc(100% - var(--logo-width) - var(--sidebar-icon-wrapper-size));
+      width: calc(100% - @logo-width - var(--sidebar-icon-wrapper-size));
       display: flex;
     }
 

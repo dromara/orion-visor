@@ -13,7 +13,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TerminalLeftSidebar'
+    name: 'leftSidebar'
   };
 </script>
 

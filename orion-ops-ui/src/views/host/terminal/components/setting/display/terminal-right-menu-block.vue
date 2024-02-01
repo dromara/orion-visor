@@ -1,15 +1,15 @@
 <template>
-  <div class="host-space-setting-block">
+  <div class="terminal-setting-block">
     <!-- 顶部 -->
-    <div class="host-space-setting-subtitle-wrapper">
-      <h3 class="host-space-setting-subtitle">
+    <div class="terminal-setting-subtitle-wrapper">
+      <h3 class="terminal-setting-subtitle">
         右键菜单设置
       </h3>
     </div>
     <!-- 提示 -->
     <a-alert class="mb16">修改后会立刻保存, 重新打开终端后生效 (无需刷新页面)</a-alert>
     <!-- 内容区域 -->
-    <div class="host-space-setting-body block-body setting-body">
+    <div class="terminal-setting-body block-body setting-body">
       <!-- 功能项 -->
       <div class="actions-container">
         <div class="vertical-form-label">功能</div>
@@ -79,13 +79,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ContextMenuItem } from '../../types/type';
+  import type { ContextMenuItem } from '../../../types/terminal.type';
   import { computed, ref, watch } from 'vue';
-  import { useHostSpaceStore } from '@/store';
-  import { TerminalPreferenceItem } from '@/store/modules/host-space';
-  import { ActionBarItems } from '../../types/const';
+  import { useTerminalStore } from '@/store';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import { ActionBarItems } from '../../../types/terminal.const';
 
-  const { preference, updateTerminalPreference } = useHostSpaceStore();
+  const { preference, updateTerminalPreference } = useTerminalStore();
 
   const popupContainer = ref();
   const rightActionItems = ref<Array<string>>([...preference.rightMenuSetting]);

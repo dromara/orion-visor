@@ -100,10 +100,10 @@
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../types/terminal.const';
+  import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../../types/terminal.const';
   import { labelFilter } from '@/types/form';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import TerminalExample from '../setting/terminal-example.vue';
+  import TerminalExample from '../terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
   const { preference, updateTerminalPreference } = useTerminalStore();

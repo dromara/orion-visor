@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-right-sidebar">
+  <div class="terminal-right-sidebar">
     <!-- 顶部操作按钮 -->
     <icon-actions class="top-actions"
                   :actions="topActions"
@@ -20,15 +20,15 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/type';
-  import { useHostSpaceStore } from '@/store';
+  import type { SidebarAction } from '../../types/terminal.type';
+  import { useTerminalStore } from '@/store';
   import { ref } from 'vue';
   import IconActions from './icon-actions.vue';
   import CommandSnippetListDrawer from '../../../command-snippet/components/command-snippet-list-drawer.vue';
 
   const emits = defineEmits(['openSftp', 'openTransfer']);
 
-  const { getCurrentTerminalSession } = useHostSpaceStore();
+  const { getCurrentTerminalSession } = useTerminalStore();
 
   const snippetRef = ref();
 
@@ -74,7 +74,7 @@
 </script>
 
 <style lang="less" scoped>
-  .layout-right-sidebar {
+  .terminal-right-sidebar {
     height: 100%;
     display: flex;
     flex-direction: column;

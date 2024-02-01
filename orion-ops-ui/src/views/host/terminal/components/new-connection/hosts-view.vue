@@ -39,7 +39,7 @@
   import { HostQueryResponse } from '@/api/asset/host';
   import HostGroupView from './host-group-view.vue';
   import HostListView from './host-list-view.vue';
-  import SshExtraModal from './ssh-extra-modal.vue';
+  import SshExtraModal from '../setting/ssh-extra-modal.vue';
 
   const props = defineProps<{
     hosts: AuthorizedHostQueryResponse,

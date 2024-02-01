@@ -61,7 +61,7 @@
   import { getTerminalThemes } from '@/api/asset/host-terminal';
   import { getPreference } from '@/api/user/preference';
   import useLoading from '@/hooks/loading';
-  import TerminalExample from './terminal-example.vue';
+  import TerminalExample from '../terminal-example.vue';
 
   const { updateTerminalPreference } = useTerminalStore();
   const { loading, setLoading } = useLoading();

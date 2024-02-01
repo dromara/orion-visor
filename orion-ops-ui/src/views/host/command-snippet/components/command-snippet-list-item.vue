@@ -1,5 +1,5 @@
 <template>
-  <a-dropdown class="host-space-context-menu"
+  <a-dropdown class="terminal-context-menu"
               :popup-max-height="false"
               trigger="contextMenu"
               position="bl"
@@ -52,35 +52,35 @@
     <template #content>
       <!-- 复制 -->
       <a-doption @click="copyCommand">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-copy />
         </div>
         <div>复制</div>
       </a-doption>
       <!-- 粘贴 -->
       <a-doption @click="paste">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-paste />
         </div>
         <div>粘贴</div>
       </a-doption>
       <!-- 执行 -->
       <a-doption @click="exec">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-thunderbolt />
         </div>
         <div>执行</div>
       </a-doption>
       <!-- 修改 -->
       <a-doption @click="openUpdateSnippet(item)">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-edit />
         </div>
         <div>修改</div>
       </a-doption>
       <!-- 删除 -->
       <a-doption @click="removeSnippet(item.id)">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-delete />
         </div>
         <div>删除</div>
@@ -88,7 +88,7 @@
       <!-- 展开 -->
       <a-doption v-if="!item.expand"
                  @click="() => item.expand = true">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-expand />
         </div>
         <div>展开</div>
@@ -96,7 +96,7 @@
       <!-- 收起 -->
       <a-doption v-else
                  @click="() => item.expand = false">
-        <div class="host-space-context-menu-icon">
+        <div class="terminal-context-menu-icon">
           <icon-shrink />
         </div>
         <div>收起</div>

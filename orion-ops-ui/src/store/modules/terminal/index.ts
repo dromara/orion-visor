@@ -170,7 +170,6 @@ export default defineStore('terminal', {
         }
         return;
       }
-      // 获取处理器并截图
       return this.sessionManager.getSession(tab.key);
     },
 

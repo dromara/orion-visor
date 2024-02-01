@@ -1,6 +1,7 @@
 // tab 类型
 import { ShortcutKeyItem } from './terminal.type';
 
+// tab 类型
 export const TerminalTabType = {
   SETTING: 'setting',
   TERMINAL: 'terminal',
@@ -226,10 +227,10 @@ export const fontWeightKey = 'terminalFontWeight';
 // 终端光标样式
 export const cursorStyleKey = 'terminalCursorStyle';
 
-// 主机新建连接类型
+// 新建连接类型
 export const newConnectionTypeKey = 'hostNewConnectionType';
 
-// 终端新建连接类型
+// ssh 认证类型
 export const extraSshAuthTypeKey = 'hostExtraSshAuthType';
 
 // 终端状态

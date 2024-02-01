@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-main">
+  <div class="terminal-content">
     <!-- 内容 tabs -->
     <a-tabs v-if="tabManager.active"
             v-model:active-key="tabManager.active">
@@ -7,21 +7,21 @@
                   :key="tab.key"
                   :title="tab.title">
         <!-- 设置 -->
-        <template v-if="tab.type === TabType.SETTING">
+        <template v-if="tab.type === TerminalTabType.SETTING">
           <!-- 新建连接 -->
           <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
+          <!-- 快捷键设置 -->
+          <terminal-shortcut-setting v-else-if="tab.key === InnerTabs.SHORTCUT_SETTING.key" />
           <!-- 显示设置 -->
           <terminal-display-setting v-else-if="tab.key === InnerTabs.DISPLAY_SETTING.key" />
           <!-- 主题设置 -->
           <terminal-theme-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
           <!-- 终端设置 -->
           <terminal-general-setting v-else-if="tab.key === InnerTabs.TERMINAL_SETTING.key" />
-          <!-- 快捷键设置 -->
-          <terminal-shortcut-setting v-else-if="tab.key === InnerTabs.SHORTCUT_SETTING.key" />
         </template>
         <!-- 终端 -->
-        <template v-else-if="tab.type === TabType.TERMINAL">
-          <!--          <terminal-view :tab="tab" />-->
+        <template v-else-if="tab.type === TerminalTabType.TERMINAL">
+          <terminal-view :tab="tab" />
         </template>
       </a-tab-pane>
     </a-tabs>
@@ -32,31 +32,31 @@
 
 <script lang="ts">
   export default {
-    name: 'layoutMain'
+    name: 'mainContent'
   };
 </script>
 
 <script lang="ts" setup>
-  import { TabType, InnerTabs, TabShortcutKeys } from '../../types/const';
-  import { useHostSpaceStore } from '@/store';
+  import { TerminalTabType, InnerTabs, TerminalShortcutKeys } from '../../types/terminal.const';
+  import { useTerminalStore } from '@/store';
   import { onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';
   import EmptyRecommend from './empty-recommend.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
-  import TerminalDisplaySetting from '../setting/terminal-display-setting.vue';
-  import TerminalThemeSetting from '../setting/terminal-theme-setting.vue';
-  import TerminalGeneralSetting from '../setting/terminal-general-setting.vue';
-  import TerminalShortcutSetting from '../setting/terminal-shortcut-setting.vue';
-  // import TerminalView from '../xterm/terminal-view.vue';
+  import TerminalDisplaySetting from '../setting/display/terminal-display-setting.vue';
+  import TerminalThemeSetting from '../setting/theme/terminal-theme-setting.vue';
+  import TerminalGeneralSetting from '../setting/general/terminal-general-setting.vue';
+  import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
+  import TerminalView from '../xterm/terminal-view.vue';
 
-  const { preference, tabManager, sessionManager } = useHostSpaceStore();
+  const { preference, tabManager, sessionManager } = useTerminalStore();
 
   // 监听 tab 修改
   watch(() => tabManager.active, (active, before) => {
     if (before) {
       // 失焦已经切换的终端
       const beforeTab = tabManager.items.find(s => s.key === before);
-      if (beforeTab && beforeTab?.type === TabType.TERMINAL) {
+      if (beforeTab && beforeTab?.type === TerminalTabType.TERMINAL) {
         sessionManager.getSession(before)?.blur();
       }
     }
@@ -69,7 +69,7 @@
       // 修改标题
       document.title = activeTab.title;
       // 终端自动聚焦
-      if (activeTab?.type === TabType.TERMINAL) {
+      if (activeTab?.type === TerminalTabType.TERMINAL) {
         sessionManager.getSession(active)?.focus();
       }
     } else {
@@ -82,7 +82,7 @@
   const handlerKeyboard = (event: Event) => {
     // 当前页面非 terminal 的时候再触发快捷键 (terminal 有内置逻辑)
     if (tabManager.active
-      && tabManager.items.find(s => s.key === tabManager.active)?.type === TabType.TERMINAL) {
+      && tabManager.items.find(s => s.key === tabManager.active)?.type === TerminalTabType.TERMINAL) {
       return;
     }
     const e = event as KeyboardEvent;
@@ -98,21 +98,21 @@
     }
     // 触发逻辑
     switch (key.item) {
-      case TabShortcutKeys.CLOSE_TAB:
+      case TerminalShortcutKeys.CLOSE_TAB:
         // 关闭 tab
         if (tabManager.active) {
           tabManager.deleteTab(tabManager.active);
         }
         break;
-      case TabShortcutKeys.CHANGE_TO_PREV_TAB:
+      case TerminalShortcutKeys.CHANGE_TO_PREV_TAB:
         // 切换至前一个 tab
         tabManager.changeToPrevTab();
         break;
-      case TabShortcutKeys.CHANGE_TO_NEXT_TAB:
+      case TerminalShortcutKeys.CHANGE_TO_NEXT_TAB:
         // 切换至后一个 tab
         tabManager.changeToNextTab();
         break;
-      case TabShortcutKeys.OPEN_NEW_CONNECT_TAB:
+      case TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB:
         // 切换到新建连接 tab
         tabManager.openTab(InnerTabs.NEW_CONNECTION);
         break;
@@ -138,7 +138,7 @@
 </script>
 
 <style lang="less" scoped>
-  .layout-main {
+  .terminal-content {
     width: 100%;
     height: 100%;
     position: relative;

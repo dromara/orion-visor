@@ -87,7 +87,7 @@
   import { ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import BlockSettingItem from './block-setting-item.vue';
+  import BlockSettingItem from '../block-setting-item.vue';
 
   const { preference, updateTerminalPreference } = useTerminalStore();
 

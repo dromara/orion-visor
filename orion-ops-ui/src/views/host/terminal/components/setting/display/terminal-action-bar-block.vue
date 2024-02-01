@@ -47,12 +47,12 @@
 
 <script lang="ts" setup>
   import type { TerminalActionBarSetting } from '@/store/modules/terminal/types';
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../../types/terminal.type';
   import { computed, ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import { ActionBarItems } from '../../types/terminal.const';
-  import IconActions from '../layout/icon-actions.vue';
+  import { ActionBarItems } from '../../../types/terminal.const';
+  import IconActions from '../../layout/icon-actions.vue';
 
   const { preference, updateTerminalPreference } = useTerminalStore();
 

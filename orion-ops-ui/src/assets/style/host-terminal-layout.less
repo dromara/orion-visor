@@ -22,7 +22,7 @@ body {
 }
 
 // 暗色主题配色常量
-body[host-space-theme='dark'] {
+body[terminal-theme='dark'] {
   --color-bg-header: #232323;
   --color-bg-sidebar: #2C2E31;
   --color-bg-content: #1A1B1C;
@@ -45,7 +45,7 @@ body[host-space-theme='dark'] {
 }
 
 // 布局常量
-.host-space-layout {
+.host-terminal-layout {
   --header-height: 44px;
   --sidebar-width: 44px;
   --sidebar-icon-wrapper-size: var(--header-height);
@@ -62,7 +62,7 @@ body[host-space-theme='dark'] {
 }
 
 // arco 亮色配色
-body .host-space-layout, .arco-modal-container {
+body .host-terminal-layout, .arco-modal-container {
   --color-white: #ffffff;
   --color-black: #000000;
   --color-border: rgb(var(--gray-3));
@@ -133,9 +133,9 @@ body .host-space-layout, .arco-modal-container {
 }
 
 // arco 暗色配色
-body[host-space-theme='dark'],
-body[host-space-theme='dark'] .host-space-layout,
-body[host-space-theme='dark'] .arco-modal-container {
+body[terminal-theme='dark'],
+body[terminal-theme='dark'] .host-terminal-layout,
+body[terminal-theme='dark'] .arco-modal-container {
   --color-white: rgba(255, 255, 255, 0.9);
   --color-black: #000000;
   --color-border: #333335;
@@ -191,14 +191,14 @@ body[host-space-theme='dark'] .arco-modal-container {
 }
 
 // 侧栏图标
-.host-space-sidebar-icon-wrapper {
+.terminal-sidebar-icon-wrapper {
   width: var(--sidebar-icon-wrapper-size);
   height: var(--sidebar-icon-wrapper-size);
   display: flex;
   align-items: center;
   justify-content: center;
 
-  .host-space-sidebar-icon {
+  .terminal-sidebar-icon {
     width: var(--sidebar-icon-size);
     height: var(--sidebar-icon-size);
     font-size: var(--sidebar-icon-font-size);
@@ -226,44 +226,44 @@ body[host-space-theme='dark'] .arco-modal-container {
 }
 
 // 终端设置容器
-.host-space-setting-container {
+.terminal-setting-container {
   padding: 32px 16px 16px 16px;
   width: 100%;
   display: flex;
   flex-direction: column;
 
-  .host-space-setting-wrapper {
+  .terminal-setting-wrapper {
     min-width: 932px;
     max-width: 90%;
     margin: 0 auto;
     position: relative;
   }
 
-  .host-space-setting-title {
+  .terminal-setting-title {
     margin: 0 0 24px 0;
     user-select: none;
     font-size: 1.65em;
     color: var(--color-content-text-3);
   }
 
-  .host-space-setting-block {
+  .terminal-setting-block {
     color: var(--color-content-text-2);
     margin-bottom: 24px;
   }
 
-  .host-space-setting-subtitle-wrapper {
+  .terminal-setting-subtitle-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
 
-  .host-space-setting-subtitle {
+  .terminal-setting-subtitle {
     margin: 0 0 16px 0;
     user-select: none;
     color: var(--color-content-text-3);
   }
 
-  .host-space-setting-body {
+  .terminal-setting-body {
     display: flex;
 
     &.block-body {
@@ -277,13 +277,13 @@ body[host-space-theme='dark'] .arco-modal-container {
 }
 
 // tooltip 内容
-.host-space-tooltip-content {
+.terminal-tooltip-content {
   color: var(--color-sidebar-tooltip-text);
   background: var(--color-sidebar-tooltip-bg);
 }
 
-// 右键菜单
-.host-space-context-menu {
+// 终端右键菜单
+.terminal-context-menu {
   .arco-dropdown-option {
     padding: 0 6px;
     line-height: 32px;

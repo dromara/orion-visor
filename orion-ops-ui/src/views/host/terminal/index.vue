@@ -1,25 +1,25 @@
 <template>
-  <div class="host-layout" v-if="render">
+  <div class="host-terminal-layout" v-if="render">
     <!-- 头部区域 -->
-    <header class="host-layout-header">
-      <terminal-header />
+    <header class="host-terminal-layout-header">
+      <layout-header />
     </header>
     <!-- 主体区域 -->
-    <main class="host-layout-main">
+    <main class="host-terminal-layout-main">
       <!-- 左侧操作栏 -->
-      <div class="host-layout-left">
-        <terminal-left-sidebar />
+      <div class="host-terminal-layout-left">
+        <left-sidebar />
       </div>
       <!-- 内容区域 -->
-      <div id="terminal-layout-content" class="host-layout-content">
+      <main class="host-terminal-layout-content">
         <!-- 主机加载中骨架 -->
         <loading-skeleton v-if="contentLoading" />
         <!-- 终端内容区域 -->
-        <terminal-content v-else />
-      </div>
+        <main-content v-else />
+      </main>
       <!-- 右侧操作栏 -->
-      <div class="host-layout-right">
-        <terminal-right-sidebar />
+      <div class="host-terminal-layout-right">
+        <right-sidebar />
       </div>
     </main>
   </div>
@@ -36,12 +36,12 @@
   import { dictKeys, InnerTabs } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import TerminalHeader from './components/layout/terminal-header.vue';
-  import TerminalLeftSidebar from './components/layout/terminal-left-sidebar.vue';
-  import TerminalRightSidebar from './components/layout/terminal-right-sidebar.vue';
-  import TerminalContent from './components/layout/terminal-content.vue';
+  import LayoutHeader from './components/layout/layout-header.vue';
+  import LeftSidebar from './components/layout/left-sidebar.vue';
+  import RightSidebar from './components/layout/right-sidebar.vue';
+  import MainContent from './components/layout/main-content.vue';
   import LoadingSkeleton from './components/layout/loading-skeleton.vue';
-  import '@/assets/style/host-space-layout.less';
+  import '@/assets/style/host-terminal-layout.less';
   import 'xterm/css/xterm.css';
 
   const terminalStore = useTerminalStore();
@@ -63,7 +63,7 @@
     await terminalStore.fetchPreference();
     // 设置系统主题配色
     const dark = terminalStore.preference.theme.dark;
-    document.body.setAttribute('host-space-theme', dark ? 'dark' : 'light');
+    document.body.setAttribute('terminal-theme', dark ? 'dark' : 'light');
     render.value = true;
   });
 
@@ -97,7 +97,7 @@
     // 移除关闭视口事件
     window.removeEventListener('beforeunload', handleBeforeUnload);
     // 去除 body style
-    document.body.removeAttribute('host-space-theme');
+    document.body.removeAttribute('terminal-theme');
     // 重置 title
     document.title = originTitle;
   });
@@ -105,7 +105,7 @@
 </script>
 
 <style lang="less" scoped>
-  .host-layout {
+  .host-terminal-layout {
     width: 100%;
     height: 100vh;
     position: relative;
