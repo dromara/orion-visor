@@ -6,23 +6,18 @@
       <a-tab-pane v-for="tab in tabManager.items"
                   :key="tab.key"
                   :title="tab.title">
-        <!-- 设置 -->
-        <template v-if="tab.type === TerminalTabType.SETTING">
-          <!-- 新建连接 -->
-          <new-connection-view v-if="tab.key === InnerTabs.NEW_CONNECTION.key" />
-          <!-- 快捷键设置 -->
-          <terminal-shortcut-setting v-else-if="tab.key === InnerTabs.SHORTCUT_SETTING.key" />
-          <!-- 显示设置 -->
-          <terminal-display-setting v-else-if="tab.key === InnerTabs.DISPLAY_SETTING.key" />
-          <!-- 主题设置 -->
-          <terminal-theme-setting v-else-if="tab.key === InnerTabs.THEME_SETTING.key" />
-          <!-- 终端设置 -->
-          <terminal-general-setting v-else-if="tab.key === InnerTabs.TERMINAL_SETTING.key" />
-        </template>
-        <!-- 终端 -->
-        <template v-else-if="tab.type === TerminalTabType.TERMINAL">
-          <terminal-view :tab="tab" />
-        </template>
+        <!-- 新建连接 -->
+        <new-connection-view v-if="tab.key === TerminalTabs.NEW_CONNECTION.key" />
+        <!-- 快捷键设置 -->
+        <terminal-shortcut-setting v-else-if="tab.key === TerminalTabs.SHORTCUT_SETTING.key" />
+        <!-- 显示设置 -->
+        <terminal-display-setting v-else-if="tab.key === TerminalTabs.DISPLAY_SETTING.key" />
+        <!-- 主题设置 -->
+        <terminal-theme-setting v-else-if="tab.key === TerminalTabs.THEME_SETTING.key" />
+        <!-- 终端设置 -->
+        <terminal-general-setting v-else-if="tab.key === TerminalTabs.TERMINAL_SETTING.key" />
+        <!-- 主机终端 -->
+        <terminal-panel-view v-else-if="tab.key === TerminalTabs.TERMINAL_PANEL.key" />
       </a-tab-pane>
     </a-tabs>
     <!-- 承载页推荐 -->
@@ -37,7 +32,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { TerminalTabType, InnerTabs, TerminalShortcutKeys } from '../../types/terminal.const';
+  import { TerminalTabs, TerminalShortcutKeys } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';
@@ -47,16 +42,17 @@
   import TerminalThemeSetting from '../setting/theme/terminal-theme-setting.vue';
   import TerminalGeneralSetting from '../setting/general/terminal-general-setting.vue';
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
-  import TerminalView from '../xterm/terminal-view.vue';
+  import TerminalPanelView from '@/views/host/terminal/components/layout/terminal-panel-view.vue';
 
   const { preference, tabManager, sessionManager } = useTerminalStore();
 
+  // fixme TerminalTabType.TERMINAL
   // 监听 tab 修改
   watch(() => tabManager.active, (active, before) => {
     if (before) {
       // 失焦已经切换的终端
       const beforeTab = tabManager.items.find(s => s.key === before);
-      if (beforeTab && beforeTab?.type === TerminalTabType.TERMINAL) {
+      if (beforeTab && beforeTab?.type === 'TerminalTabType.TERMINAL') {
         sessionManager.getSession(before)?.blur();
       }
     }
@@ -66,10 +62,11 @@
       if (!activeTab) {
         return;
       }
+      console.log(activeTab.title);
       // 修改标题
       document.title = activeTab.title;
       // 终端自动聚焦
-      if (activeTab?.type === TerminalTabType.TERMINAL) {
+      if (activeTab?.type === 'TerminalTabType.TERMINAL') {
         sessionManager.getSession(active)?.focus();
       }
     } else {
@@ -82,7 +79,7 @@
   const handlerKeyboard = (event: Event) => {
     // 当前页面非 terminal 的时候再触发快捷键 (terminal 有内置逻辑)
     if (tabManager.active
-      && tabManager.items.find(s => s.key === tabManager.active)?.type === TerminalTabType.TERMINAL) {
+      && tabManager.items.find(s => s.key === tabManager.active)?.type === 'TerminalTabType.TERMINAL') {
       return;
     }
     const e = event as KeyboardEvent;
@@ -114,7 +111,7 @@
         break;
       case TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB:
         // 切换到新建连接 tab
-        tabManager.openTab(InnerTabs.NEW_CONNECTION);
+        tabManager.openTab(TerminalTabs.NEW_CONNECTION);
         break;
       default:
         break;

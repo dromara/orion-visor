@@ -4,7 +4,7 @@ import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
 import html2canvas from 'html2canvas';
 import { useTerminalStore, useUserStore } from '@/store';
-import { InnerTabs } from '../types/terminal.const';
+import { TerminalTabs } from '../types/terminal.const';
 import { saveAs } from 'file-saver';
 import { Message } from '@arco-design/web-vue';
 import { dateFormat } from '@/utils';
@@ -328,7 +328,7 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
 
   // 打开新建连接 tab
   openNewConnectTab() {
-    this.tabManager.openTab(InnerTabs.NEW_CONNECTION);
+    this.tabManager.openTab(TerminalTabs.NEW_CONNECTION);
   }
 
 }

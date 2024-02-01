@@ -6,6 +6,7 @@ export interface TerminalState {
   preference: TerminalPreference;
   hosts: AuthorizedHostQueryResponse;
   tabManager: ITerminalTabManager;
+  routerTabManager: Array<ITerminalTabManager>;
   sessionManager: ITerminalSessionManager;
 }
 
