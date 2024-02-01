@@ -1,43 +1,36 @@
-// tab 类型
 import { ShortcutKeyItem } from './terminal.type';
 
-// tab 类型
-export const TerminalTabType = {
-  SETTING: 'setting',
-  TERMINAL: 'terminal',
-};
-
-// 内置 tab
-export const InnerTabs = {
+// 终端 tab
+export const TerminalTabs = {
   NEW_CONNECTION: {
     key: 'newConnection',
     title: '新建连接',
     icon: 'icon-plus',
-    type: TerminalTabType.SETTING
   },
   SHORTCUT_SETTING: {
     key: 'shortcutSetting',
     title: '快捷键设置',
     icon: 'icon-command',
-    type: TerminalTabType.SETTING
   },
   DISPLAY_SETTING: {
     key: 'displaySetting',
     title: '显示设置',
     icon: 'icon-stamp',
-    type: TerminalTabType.SETTING
   },
   THEME_SETTING: {
     key: 'themeSetting',
     title: '主题设置',
     icon: 'icon-palette',
-    type: TerminalTabType.SETTING
   },
   TERMINAL_SETTING: {
     key: 'terminalSetting',
     title: '终端设置',
     icon: 'icon-settings',
-    type: TerminalTabType.SETTING
+  },
+  TERMINAL_PANEL: {
+    key: 'terminalPanel',
+    title: '主机终端',
+    icon: 'icon-desktop',
   },
 };
 

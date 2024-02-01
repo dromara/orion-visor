@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
-  import { dictKeys, InnerTabs } from './types/terminal.const';
+  import { dictKeys, TerminalTabs } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import LayoutHeader from './components/layout/layout-header.vue';
@@ -85,7 +85,7 @@
   // 事件处理
   onMounted(() => {
     // 默认标题
-    document.title = InnerTabs.NEW_CONNECTION.title;
+    document.title = TerminalTabs.NEW_CONNECTION.title;
     // 注册关闭视口事件
     // FIXME 开发阶段
     // window.addEventListener('beforeunload', handleBeforeUnload);

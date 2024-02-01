@@ -12,7 +12,6 @@ import type { HostQueryResponse } from '@/api/asset/host';
 export interface TerminalTabItem {
   key: string;
   title: string;
-  type: string;
   icon?: string;
 
   [key: string]: unknown;
@@ -32,9 +31,8 @@ export interface SidebarAction {
 // 组合操作元素
 export interface CombinedHandlerItem {
   icon: string,
-  type: string,
   title: string;
-  settingTab?: TerminalTabItem;
+  tab?: TerminalTabItem;
   host?: HostQueryResponse;
 }
 

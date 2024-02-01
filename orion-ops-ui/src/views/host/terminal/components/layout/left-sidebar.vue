@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.type';
-  import { InnerTabs } from '../../types/terminal.const';
+  import { TerminalTabs } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import IconActions from './icon-actions.vue';
 
@@ -28,33 +28,33 @@
   // 顶部操作
   const topActions: Array<SidebarAction> = [
     {
-      icon: InnerTabs.NEW_CONNECTION.icon,
-      content: InnerTabs.NEW_CONNECTION.title,
-      click: () => tabManager.openTab(InnerTabs.NEW_CONNECTION)
+      icon: TerminalTabs.NEW_CONNECTION.icon,
+      content: TerminalTabs.NEW_CONNECTION.title,
+      click: () => tabManager.openTab(TerminalTabs.NEW_CONNECTION)
     },
   ];
 
   // 底部操作
   const bottomActions: Array<SidebarAction> = [
     {
-      icon: InnerTabs.SHORTCUT_SETTING.icon,
-      content: InnerTabs.SHORTCUT_SETTING.title,
-      click: () => tabManager.openTab(InnerTabs.SHORTCUT_SETTING)
+      icon: TerminalTabs.SHORTCUT_SETTING.icon,
+      content: TerminalTabs.SHORTCUT_SETTING.title,
+      click: () => tabManager.openTab(TerminalTabs.SHORTCUT_SETTING)
     },
     {
-      icon: InnerTabs.DISPLAY_SETTING.icon,
-      content: InnerTabs.DISPLAY_SETTING.title,
-      click: () => tabManager.openTab(InnerTabs.DISPLAY_SETTING)
+      icon: TerminalTabs.DISPLAY_SETTING.icon,
+      content: TerminalTabs.DISPLAY_SETTING.title,
+      click: () => tabManager.openTab(TerminalTabs.DISPLAY_SETTING)
     },
     {
-      icon: InnerTabs.THEME_SETTING.icon,
-      content: InnerTabs.THEME_SETTING.title,
-      click: () => tabManager.openTab(InnerTabs.THEME_SETTING)
+      icon: TerminalTabs.THEME_SETTING.icon,
+      content: TerminalTabs.THEME_SETTING.title,
+      click: () => tabManager.openTab(TerminalTabs.THEME_SETTING)
     },
     {
-      icon: InnerTabs.TERMINAL_SETTING.icon,
-      content: InnerTabs.TERMINAL_SETTING.title,
-      click: () => tabManager.openTab(InnerTabs.TERMINAL_SETTING)
+      icon: TerminalTabs.TERMINAL_SETTING.icon,
+      content: TerminalTabs.TERMINAL_SETTING.title,
+      click: () => tabManager.openTab(TerminalTabs.TERMINAL_SETTING)
     },
   ];
 
