@@ -71,7 +71,7 @@
       }
     } else {
       // 修改标题
-      document.title = '主机终端';
+      document.title = TerminalTabs.TERMINAL_PANEL.title;
     }
   });
 

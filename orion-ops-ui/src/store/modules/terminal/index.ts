@@ -189,7 +189,7 @@ export default defineStore('terminal', {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession(tab.key);
+      return this.sessionManager.getSession(activeTab.key);
     },
 
   },

@@ -166,6 +166,62 @@ public class TerminalPreferenceModel implements PreferenceModel {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class ActionBarSettingModel implements IJsonObject {
+
+        @Schema(description = "命令输入框")
+        private Boolean commandInput;
+
+        @Schema(description = "连接状态")
+        private Boolean connectStatus;
+
+        @Schema(description = "去顶部")
+        private Boolean toTop;
+
+        @Schema(description = "去底部")
+        private Boolean toBottom;
+
+        @Schema(description = "全选")
+        private Boolean selectAll;
+
+        @Schema(description = "搜索")
+        private Boolean search;
+
+        @Schema(description = "复制")
+        private Boolean copy;
+
+        @Schema(description = "粘贴")
+        private Boolean paste;
+
+        @Schema(description = "中断")
+        private Boolean interrupt;
+
+        @Schema(description = "回车")
+        private Boolean enter;
+
+        @Schema(description = "增大字号")
+        private Boolean fontSizePlus;
+
+        @Schema(description = "减小字号")
+        private Boolean fontSizeSubtract;
+
+        @Schema(description = "命令编辑器")
+        private Boolean commandEditor;
+
+        @Schema(description = "清空")
+        private Boolean clear;
+
+        @Schema(description = "断开连接")
+        private Boolean disconnect;
+
+        @Schema(description = "关闭终端")
+        private Boolean closeTab;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ShortcutKeysModel implements IJsonObject {
 
         @Schema(description = "快捷键操作")

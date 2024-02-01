@@ -76,7 +76,27 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                         new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTab", true, false, true, "ArrowRight", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("openCopyTerminalTab", true, false, true, "KeyO", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectTab", true, false, true, "KeyN", true)
-                        ))
+                ))
+                .build()
+                .toJsonString();
+        // 操作栏设置
+        String actionBarSetting = TerminalPreferenceModel.ActionBarSettingModel.builder()
+                .commandInput(false)
+                .connectStatus(true)
+                .toTop(true)
+                .toBottom(true)
+                .selectAll(false)
+                .search(true)
+                .copy(true)
+                .paste(true)
+                .interrupt(false)
+                .enter(false)
+                .fontSizePlus(false)
+                .fontSizeSubtract(false)
+                .commandEditor(true)
+                .clear(true)
+                .disconnect(false)
+                .closeTab(true)
                 .build()
                 .toJsonString();
         // 默认配置
@@ -84,7 +104,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .newConnectionType("group")
                 .theme(new JSONObject())
                 .displaySetting(JSONObject.parseObject(defaultDisplaySetting))
-                .actionBarSetting(new JSONObject())
+                .actionBarSetting(JSONObject.parseObject(actionBarSetting))
                 .rightMenuSetting(Lists.of("copy", "paste", "checkAll", "search", "clear"))
                 .interactSetting(JSONObject.parseObject(defaultInteractSetting))
                 .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))

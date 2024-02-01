@@ -130,11 +130,11 @@
 
   .tab-title-wrapper {
     display: flex;
-    align-items: center;
+    align-items: stretch;
 
     .tab-title-icon {
       font-size: 16px;
-      margin-right: 4px;
+      margin-right: 6px;
     }
   }
 

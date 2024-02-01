@@ -37,7 +37,7 @@
     panel: ITerminalTabManager
   }>();
 
-  // FIXME 全部关闭则关闭
+  // FIXME 全部关闭展示新增
 
 </script>
 
@@ -49,11 +49,11 @@
 
   .tab-title-wrapper {
     display: flex;
-    align-items: center;
+    align-items: stretch;
 
     .tab-title-icon {
       font-size: 16px;
-      margin-right: 4px;
+      margin-right: 6px;
     }
   }
 
