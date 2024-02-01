@@ -1,5 +1,4 @@
 import type { ITerminalTabManager, TerminalTabItem } from '../types/terminal.type';
-import { InnerTabs } from '../types/terminal.const';
 
 // 终端 tab 管理器实现
 export default class TerminalTabManager implements ITerminalTabManager {
@@ -8,9 +7,14 @@ export default class TerminalTabManager implements ITerminalTabManager {
 
   public items: Array<TerminalTabItem>;
 
-  constructor() {
-    this.active = InnerTabs.NEW_CONNECTION.key;
-    this.items = [InnerTabs.NEW_CONNECTION];
+  constructor(def: TerminalTabItem | undefined = undefined) {
+    if (def) {
+      this.active = def.key;
+      this.items = [def];
+    } else {
+      this.active = undefined as unknown as string;
+      this.items = [];
+    }
   }
 
   // 获取当前 tab

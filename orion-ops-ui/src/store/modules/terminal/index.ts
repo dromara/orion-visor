@@ -17,7 +17,7 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextSessionId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
-import { TerminalTabType } from '@/views/host/terminal/types/terminal.const';
+import { TerminalTabs } from '@/views/host/terminal/types/terminal.const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 
@@ -62,7 +62,8 @@ export default defineStore('terminal', {
       } as TerminalShortcutSetting,
     },
     hosts: {} as AuthorizedHostQueryResponse,
-    tabManager: new TerminalTabManager(),
+    tabManager: new TerminalTabManager(TerminalTabs.NEW_CONNECTION),
+    routerTabManager: [new TerminalTabManager()],
     sessionManager: new TerminalSessionManager()
   }),
 
@@ -130,9 +131,11 @@ export default defineStore('terminal', {
     },
 
     // 打开终端
-    openTerminal(record: HostQueryResponse) {
+    openTerminal(record: HostQueryResponse, panelIndex: number = 0) {
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([record.id, ...this.hosts.latestHosts])];
+      // 切换到终端面板页面
+      this.tabManager.openTab(TerminalTabs.TERMINAL_PANEL);
       // 获取 seq
       const tabSeqArr = this.tabManager.items
         .map(s => s.seq)
@@ -141,9 +144,9 @@ export default defineStore('terminal', {
       const nextSeq = tabSeqArr.length
         ? Math.max(...tabSeqArr) + 1
         : 1;
+      // FIXME
       // 打开 tab
       this.tabManager.openTab({
-        type: TerminalTabType.TERMINAL,
         key: nextSessionId(10),
         seq: nextSeq,
         title: `(${nextSeq})  ${record.alias || record.name}`,
@@ -164,7 +167,8 @@ export default defineStore('terminal', {
     // 获取当前终端会话
     getCurrentTerminalSession(tips: boolean = true) {
       const tab = this.tabManager.getCurrentTab();
-      if (!tab || tab.type !== TerminalTabType.TERMINAL) {
+      // FIXME
+      if (!tab || tab.type !== 'TERMINAL') {
         if (tips) {
           Message.warning('请切换到终端标签页');
         }

@@ -32,27 +32,25 @@
   import type { HostQueryResponse } from '@/api/asset/host';
   import { onMounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { InnerTabs, TerminalTabType } from '../../types/terminal.const';
-  import { get } from 'lodash';
+  import { TerminalTabs } from '../../types/terminal.const';
 
   const totalCount = 7;
   const { tabManager, hosts, openTerminal } = useTerminalStore();
 
   const combinedHandlers = ref<Array<CombinedHandlerItem>>([{
-    title: InnerTabs.NEW_CONNECTION.title,
-    settingTab: InnerTabs.NEW_CONNECTION,
-    type: TerminalTabType.SETTING,
-    icon: InnerTabs.NEW_CONNECTION.icon
+    title: TerminalTabs.NEW_CONNECTION.title,
+    tab: TerminalTabs.NEW_CONNECTION,
+    icon: TerminalTabs.NEW_CONNECTION.icon
   }]);
 
   // 点击组合操作元素
   const clickHandlerItem = (item: CombinedHandlerItem) => {
-    if (item.type === TerminalTabType.SETTING) {
-      // 打开内置 tab
-      tabManager.openTab(item.settingTab as TerminalTabItem);
-    } else {
+    if (item.host) {
       // 打开终端
       openTerminal(item.host as HostQueryResponse);
+    } else {
+      // 打开 tab
+      tabManager.openTab(item.tab as TerminalTabItem);
     }
   };
 
@@ -71,7 +69,6 @@
       .map(s => {
         return {
           title: `${s.alias || s.name} (${s.address})`,
-          type: TerminalTabType.TERMINAL,
           host: s,
           icon: 'icon-desktop'
         };
@@ -80,15 +77,13 @@
     combinedHandlers.value.push(...combinedHosts);
     // 不足显示的行数用设置补充
     if (totalCount - 1 - combinedHosts.length > 0) {
-      const fillTabs = Object.keys(InnerTabs)
-        .filter(s => s !== 'NEW_CONNECTION')
-        .map(s => get(InnerTabs, s) as TerminalTabItem)
+      const fillTabs = Object.values(TerminalTabs)
+        .filter(s => s.key !== TerminalTabs.NEW_CONNECTION.key)
         .slice(0, totalCount - 1 - combinedHosts.length)
         .map(s => {
           return {
             title: s.title,
-            settingTab: s,
-            type: TerminalTabType.SETTING,
+            tab: s,
             icon: s.icon as string
           };
         });
