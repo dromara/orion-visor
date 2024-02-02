@@ -1,10 +1,18 @@
 <template>
   <div class="terminal-panel-container">
+    <!-- 终端 tab -->
     <a-tabs v-model:active-key="panel.active"
             :editable="true"
             :auto-switch="true"
+            :show-add-button="true"
+            @add="openHostModal"
             @tab-click="k => panel.clickTab(k as string)"
             @delete="k => panel.deleteTab(k as string)">
+      <!-- 右侧按钮 -->
+      <template #extra>
+        <a-button>Action</a-button>
+      </template>
+      <!-- 终端面板 -->
       <a-tab-pane v-for="tab in panel.items"
                   :key="tab.key">
         <!-- 标题 -->
@@ -20,6 +28,9 @@
         <terminal-view :tab="tab" />
       </a-tab-pane>
     </a-tabs>
+    <!-- 新建连接模态框 -->
+    <host-list-modal ref="hostModal"
+                     @choose="item => openTerminal(item, index)" />
   </div>
 </template>
 
@@ -31,13 +42,27 @@
 
 <script lang="ts" setup>
   import type { ITerminalTabManager } from '../../types/terminal.type';
-  import TerminalView from '@/views/host/terminal/components/xterm/terminal-view.vue';
+  import TerminalView from '../xterm/terminal-view.vue';
+  import HostListModal from '../new-connection/host-list-modal.vue';
+  import { onMounted, ref } from 'vue';
+  import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
-    panel: ITerminalTabManager
+    index: number,
+    panel: ITerminalTabManager,
   }>();
 
+  const { openTerminal } = useTerminalStore();
+
+  const hostModal = ref();
+
+  // 打开主机模态框
+  const openHostModal = () => {
+    hostModal.value.open();
+  };
+
   // FIXME 全部关闭展示新增
+  onMounted(openHostModal);
 
 </script>
 
@@ -49,10 +74,10 @@
 
   .tab-title-wrapper {
     display: flex;
-    align-items: stretch;
+    align-items: center;
 
     .tab-title-icon {
-      font-size: 16px;
+      font-size: 18px;
       margin-right: 6px;
     }
   }
@@ -89,6 +114,14 @@
       display: none;
     }
 
+    &-add-btn {
+      padding: 0 14px;
+
+      .arco-icon-hover {
+        font-size: 14px;
+      }
+    }
+
     &-button .arco-icon-hover:hover {
       color: var(--color-panel-text-2);
 
@@ -96,6 +129,7 @@
         background: var(--color-bg-panel-icon-1);
       }
     }
+
   }
 
   :deep(.arco-tabs-nav-type-line .arco-tabs-tab:hover .arco-tabs-tab-title::before) {
@@ -132,7 +166,7 @@
     }
 
     .arco-tabs-tab-title {
-      padding: 11px 18px;
+      padding: 11px 18px 11px 14px;
       background: var(--color-bg-panel-tabs);
       font-size: 14px;
       height: var(--panel-nav-height);

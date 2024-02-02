@@ -130,10 +130,10 @@
 
   .tab-title-wrapper {
     display: flex;
-    align-items: stretch;
+    align-items: center;
 
     .tab-title-icon {
-      font-size: 16px;
+      font-size: 18px;
       margin-right: 6px;
     }
   }
@@ -196,7 +196,7 @@
     }
 
     .arco-tabs-tab-title {
-      padding: 11px 18px;
+      padding: 11px 18px 11px 14px;
       background: var(--color-bg-header-tabs);
       font-size: 14px;
       height: var(--header-height);

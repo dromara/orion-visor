@@ -3,6 +3,7 @@
     <!-- 面板 -->
     <terminal-panel v-for="panelIndex in panelManager.panels.length"
                     :key="panelIndex"
+                    :index="panelIndex - 1"
                     :panel="panelManager.panels[panelIndex - 1]" />
   </div>
 </template>

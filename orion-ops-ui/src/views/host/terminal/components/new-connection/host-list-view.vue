@@ -1,30 +1,30 @@
 <template>
-  <div class="hosts-list-container">
-    <a-list size="large"
-            max-height="100%"
-            :hoverable="true"
-            :data="hostList">
-      <!-- 空数据 -->
-      <template #empty>
-        <a-empty>
-          <template #image>
-            <icon-desktop />
-          </template>
-          {{ emptyValue }}
-        </a-empty>
-      </template>
-      <!-- 数据 -->
-      <template #item="{ item }">
-        <a-list-item class="host-item-wrapper">
-          <div class="host-item">
-            <!-- 左侧图标-名称 -->
-            <div class="flex-center host-item-left">
-              <!-- 图标 -->
-              <span class="host-item-left-icon" @click="openTerminal(item)">
+  <a-list class="hosts-list-container"
+          size="large"
+          max-height="100%"
+          :hoverable="true"
+          :data="hostList">
+    <!-- 空数据 -->
+    <template #empty>
+      <a-empty>
+        <template #image>
+          <icon-desktop />
+        </template>
+        {{ emptyValue }}
+      </a-empty>
+    </template>
+    <!-- 数据 -->
+    <template #item="{ item }">
+      <a-list-item class="host-item-wrapper">
+        <div class="host-item">
+          <!-- 左侧图标-名称 -->
+          <div class="flex-center host-item-left">
+            <!-- 图标 -->
+            <span class="host-item-left-icon" @click="openTerminal(item)">
                 <icon-desktop />
               </span>
-              <!-- 名称 -->
-              <span class="host-item-left-name">
+            <!-- 名称 -->
+            <span class="host-item-left-name">
                 <!-- 名称文本 -->
                 <template v-if="!item.editable">
                   <!-- 文本 -->
@@ -53,7 +53,7 @@
                                @click="clickEditAlias(item)" />
                   </a-tooltip>
                 </template>
-                <!-- 名称输入框 -->
+              <!-- 名称输入框 -->
                 <template v-else>
                   <a-input v-model="item.alias"
                            ref="aliasNameInput"
@@ -77,87 +77,86 @@
                   </a-input>
                 </template>
               </span>
+          </div>
+          <!-- 中间ip -->
+          <div class="flex-center host-item-center">
+            <!-- ip -->
+            <a-tooltip position="top"
+                       :mini="true"
+                       :auto-fix-position="false"
+                       content-class="terminal-tooltip-content"
+                       arrow-class="terminal-tooltip-content"
+                       :content="item.address">
+              <span class="host-item-text host-item-center-address">
+                {{ item.address }}
+              </span>
+            </a-tooltip>
+          </div>
+          <!-- 右侧tag-操作 -->
+          <div class="flex-center host-item-right">
+            <!-- tags -->
+            <div class="host-item-right-tags">
+              <template v-if="item.tags?.length">
+                <a-tag v-for="(tag, i) in item.tags"
+                       class="host-item-text"
+                       :key="tag.id"
+                       :style="{
+                           maxWidth: `calc(${100 / item.tags.length}% - ${i !== item.tags.length - 1 ? '8px' : '0px'})`,
+                           marginRight: `${i !== item.tags.length - 1 ? '8px' : '0'}`,
+                         }"
+                       :color="dataColor(tag.name, tagColor)">
+                  {{ tag.name }}
+                </a-tag>
+              </template>
             </div>
-            <!-- 中间ip -->
-            <div class="flex-center host-item-center">
-              <!-- ip -->
+            <!-- 操作 -->
+            <div class="host-item-right-actions">
+              <!-- 连接主机 -->
               <a-tooltip position="top"
                          :mini="true"
                          :auto-fix-position="false"
                          content-class="terminal-tooltip-content"
                          arrow-class="terminal-tooltip-content"
-                         :content="item.address">
-              <span class="host-item-text host-item-center-address">
-                {{ item.address }}
-              </span>
+                         content="连接主机">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click="openTerminal(item)">
+                    <icon-thunderbolt />
+                  </div>
+                </div>
+              </a-tooltip>
+              <!-- 连接设置 -->
+              <a-tooltip position="top"
+                         :mini="true"
+                         :auto-fix-position="false"
+                         content-class="terminal-tooltip-content"
+                         arrow-class="terminal-tooltip-content"
+                         content="连接设置">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click="openSetting(item)">
+                    <icon-settings />
+                  </div>
+                </div>
+              </a-tooltip>
+              <!-- 收藏 -->
+              <a-tooltip position="top"
+                         :mini="true"
+                         :auto-fix-position="false"
+                         content-class="terminal-tooltip-content"
+                         arrow-class="terminal-tooltip-content"
+                         content="收藏">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click="setFavorite(item)">
+                    <icon-star-fill class="favorite" v-if="item.favorite" />
+                    <icon-star v-else />
+                  </div>
+                </div>
               </a-tooltip>
             </div>
-            <!-- 右侧tag-操作 -->
-            <div class="flex-center host-item-right">
-              <!-- tags -->
-              <div class="host-item-right-tags">
-                <template v-if="item.tags?.length">
-                  <a-tag v-for="(tag, i) in item.tags"
-                         class="host-item-text"
-                         :key="tag.id"
-                         :style="{
-                           maxWidth: `calc(${100 / item.tags.length}% - ${i !== item.tags.length - 1 ? '8px' : '0px'})`,
-                           marginRight: `${i !== item.tags.length - 1 ? '8px' : '0'}`,
-                         }"
-                         :color="dataColor(tag.name, tagColor)">
-                    {{ tag.name }}
-                  </a-tag>
-                </template>
-              </div>
-              <!-- 操作 -->
-              <div class="host-item-right-actions">
-                <!-- 连接主机 -->
-                <a-tooltip position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           content="连接主机">
-                  <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click="openTerminal(item)">
-                      <icon-thunderbolt />
-                    </div>
-                  </div>
-                </a-tooltip>
-                <!-- 连接设置 -->
-                <a-tooltip position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           content="连接设置">
-                  <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click="openSetting(item)">
-                      <icon-settings />
-                    </div>
-                  </div>
-                </a-tooltip>
-                <!-- 收藏 -->
-                <a-tooltip position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           content="收藏">
-                  <div class="terminal-sidebar-icon-wrapper">
-                    <div class="terminal-sidebar-icon" @click="setFavorite(item)">
-                      <icon-star-fill class="favorite" v-if="item.favorite" />
-                      <icon-star v-else />
-                    </div>
-                  </div>
-                </a-tooltip>
-              </div>
-            </div>
           </div>
-        </a-list-item>
-      </template>
-    </a-list>
-  </div>
+        </div>
+      </a-list-item>
+    </template>
+  </a-list>
 </template>
 
 <script lang="ts">
@@ -234,24 +233,32 @@
 <style lang="less" scoped>
   @host-item-height: 56px;
 
-  :deep(.arco-list-bordered) {
-    border: 1px solid var(--color-fill-3);
+  .hosts-list-container {
+    height: 100%;
+  }
 
-    .arco-empty {
-      padding: 16px 0;
-      flex-direction: column;
+  :deep(.arco-scrollbar) {
+    height: 100%;
 
-      .arco-empty-image {
-        margin-bottom: 0;
+    .arco-list-bordered {
+      border: 1px solid var(--color-fill-3);
+
+      .arco-empty {
+        padding: 16px 0;
+        flex-direction: column;
+
+        .arco-empty-image {
+          margin-bottom: 0;
+        }
       }
-    }
 
-    .arco-list-item:not(:last-child) {
-      border-bottom: 1px solid var(--color-fill-3);
-    }
+      .arco-list-item:not(:last-child) {
+        border-bottom: 1px solid var(--color-fill-3);
+      }
 
-    .arco-list-item:hover {
-      background-color: var(--color-fill-2);
+      .arco-list-item:hover {
+        background-color: var(--color-fill-2);
+      }
     }
   }
 
