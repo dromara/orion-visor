@@ -5,7 +5,7 @@
             :editable="true"
             :auto-switch="true"
             :show-add-button="true"
-            @add="openHostModal"
+            @add="openNewConnect"
             @tab-click="k => panel.clickTab(k as string)"
             @delete="k => panel.deleteTab(k as string)">
       <!-- 右侧按钮 -->
@@ -32,9 +32,6 @@
         <terminal-view :tab="tab" />
       </a-tab-pane>
     </a-tabs>
-    <!-- 新建连接模态框 -->
-    <host-list-modal ref="hostModal"
-                     @choose="item => openTerminal(item, index)" />
   </div>
 </template>
 
@@ -46,22 +43,19 @@
 
 <script lang="ts" setup>
   import type { ITerminalTabManager, TerminalPanelTabItem } from '../../types/terminal.type';
-  import { ref, watch } from 'vue';
+  import { watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { TerminalPanelTabType } from '../../types/terminal.const';
   import TerminalView from '../xterm/terminal-view.vue';
-  import HostListModal from '../new-connection/host-list-modal.vue';
 
   const props = defineProps<{
     index: number,
     panel: ITerminalTabManager<TerminalPanelTabItem>,
   }>();
 
-  const emits = defineEmits(['close']);
+  const emits = defineEmits(['close', 'openNewConnect']);
 
-  const { sessionManager, openTerminal } = useTerminalStore();
-
-  const hostModal = ref();
+  const { sessionManager } = useTerminalStore();
 
   // 监听 tab 切换
   watch(() => props.panel.active, (active, before) => {
@@ -86,8 +80,8 @@
   });
 
   // 打开主机模态框
-  const openHostModal = () => {
-    hostModal.value.open();
+  const openNewConnect = () => {
+    emits('openNewConnect', props.index);
   };
 
   // 关闭面板

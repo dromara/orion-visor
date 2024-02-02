@@ -26,8 +26,15 @@
                                       @set-editable="setEditableStatus"
                                       @clear-editable="clearEditableStatus"
                                       @update-enabled="updateEnabledStatus" />
-        <!-- 终端快捷键 -->
-        <terminal-shortcut-keys-block title="终端快捷键"
+        <!-- 终端面板快捷键 -->
+        <terminal-shortcut-keys-block title="终端面板快捷键"
+                                      :type="TerminalShortcutType.PANEL"
+                                      :items="shortcutKeys"
+                                      @set-editable="setEditableStatus"
+                                      @clear-editable="clearEditableStatus"
+                                      @update-enabled="updateEnabledStatus" />
+        <!-- 终端会话快捷键 -->
+        <terminal-shortcut-keys-block title="终端会话快捷键"
                                       :type="TerminalShortcutType.TERMINAL"
                                       :items="shortcutKeys"
                                       @set-editable="setEditableStatus"

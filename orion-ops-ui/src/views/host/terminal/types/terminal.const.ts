@@ -131,8 +131,9 @@ export const ActionBarItems = [
 
 // 终端快捷键操作类型
 export const TerminalShortcutType = {
-  TAB: 1,
-  TERMINAL: 2
+  GLOBAL: 1,
+  PANEL: 2,
+  TERMINAL: 3
 };
 
 // 终端操作快捷键 key
@@ -145,6 +146,16 @@ export const TerminalShortcutKeys = {
   CLOSE_TAB: 'closeTab',
   // 打开新建连接 tab
   OPEN_NEW_CONNECT_TAB: 'openNewConnectTab',
+  // 打开新建连接弹框
+  OPEN_NEW_CONNECT_MODAL: 'openNewConnectModal',
+  // 复制终端
+  COPY_TERMINAL: 'copyTerminal',
+  // 关闭终端
+  CLOSE_TERMINAL: 'closeTerminal',
+  // 切换至前一个终端
+  CHANGE_TO_PREV_TERMINAL: 'changeToPrevTerminal',
+  // 切换至后一个终端
+  CHANGE_TO_NEXT_TERMINAL: 'changeToNextTerminal',
 };
 
 // 终端操作快捷键
@@ -152,23 +163,39 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   {
     item: TerminalShortcutKeys.CHANGE_TO_PREV_TAB,
     content: '切换为前一个 tab',
-    type: TerminalShortcutType.TAB
+    type: TerminalShortcutType.GLOBAL
   }, {
     item: TerminalShortcutKeys.CHANGE_TO_NEXT_TAB,
     content: '切换为后一个 tab',
-    type: TerminalShortcutType.TAB
+    type: TerminalShortcutType.GLOBAL
   }, {
     item: TerminalShortcutKeys.CLOSE_TAB,
     content: '关闭当前 tab',
-    type: TerminalShortcutType.TAB
+    type: TerminalShortcutType.GLOBAL
   }, {
     item: TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB,
     content: '打开新建连接 tab',
-    type: TerminalShortcutType.TAB
+    type: TerminalShortcutType.GLOBAL
   }, {
-    item: 'openCopyTerminalTab',
-    content: '复制当前终端 tab',
-    type: TerminalShortcutType.TERMINAL
+    item: TerminalShortcutKeys.OPEN_NEW_CONNECT_MODAL,
+    content: '打开新建连接弹框',
+    type: TerminalShortcutType.PANEL
+  }, {
+    item: TerminalShortcutKeys.COPY_TERMINAL,
+    content: '复制终端',
+    type: TerminalShortcutType.PANEL
+  }, {
+    item: TerminalShortcutKeys.CLOSE_TERMINAL,
+    content: '关闭终端',
+    type: TerminalShortcutType.PANEL
+  }, {
+    item: TerminalShortcutKeys.CHANGE_TO_PREV_TERMINAL,
+    content: '切换至前一个终端',
+    type: TerminalShortcutType.PANEL
+  }, {
+    item: TerminalShortcutKeys.CHANGE_TO_NEXT_TERMINAL,
+    content: '切换至后一个终端',
+    type: TerminalShortcutType.PANEL
   }, {
     item: 'copy',
     content: '复制',

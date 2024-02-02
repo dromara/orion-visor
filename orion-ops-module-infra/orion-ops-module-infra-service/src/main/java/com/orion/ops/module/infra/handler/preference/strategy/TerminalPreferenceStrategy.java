@@ -62,6 +62,18 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
         String shortcutSetting = TerminalPreferenceModel.ShortcutSettingModel.builder()
                 .enabled(true)
                 .keys(Lists.of(
+                        // 全局快捷键
+                        new TerminalPreferenceModel.ShortcutKeysModel("closeTab", true, true, true, "KeyW", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevTab", true, true, true, "BracketLeft", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTab", true, true, true, "BracketRight", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectTab", true, true, true, "KeyN", true),
+                        // 终端面板快捷键
+                        new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectModal", true, false, true, "KeyN", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("copyTerminal", true, false, true, "KeyO", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("closeTerminal", true, false, true, "KeyW", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevTerminal", true, false, true, "BracketLeft", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTerminal", true, false, true, "BracketRight", true),
+                        // 终端会话快捷键
                         new TerminalPreferenceModel.ShortcutKeysModel("copy", true, true, false, "KeyC", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("paste", true, true, false, "KeyV", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("toTop", true, true, false, "ArrowUp", true),
@@ -70,12 +82,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                         new TerminalPreferenceModel.ShortcutKeysModel("search", true, true, false, "KeyF", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("commandEditor", true, false, true, "KeyE", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("fontSizePlus", true, false, true, "Equal", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("fontSizeSubtract", true, false, true, "Minus", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("closeTab", true, false, true, "KeyW", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevTab", true, false, true, "ArrowLeft", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTab", true, false, true, "ArrowRight", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("openCopyTerminalTab", true, false, true, "KeyO", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectTab", true, false, true, "KeyN", true)
+                        new TerminalPreferenceModel.ShortcutKeysModel("fontSizeSubtract", true, false, true, "Minus", true)
                 ))
                 .build()
                 .toJsonString();

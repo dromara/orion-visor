@@ -157,7 +157,7 @@
   });
 
   // 点击命令
-  const clickCommand = (e: PointerEvent) => {
+  const clickCommand = (e: Event) => {
     if (props.item.expand) {
       // 获取选中的文本
       const selectedText = window.getSelection()?.toString();

@@ -49,17 +49,17 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import useVisible from '@/hooks/visible';
-  import { HostQueryResponse } from '@/api/asset/host';
 
-  const emits = defineEmits(['choose']);
-
-  const { hosts } = useTerminalStore();
+  const { hosts, openTerminal } = useTerminalStore();
   const { visible, setVisible } = useVisible();
 
+  const panelIndex = ref();
   const filterValue = ref('');
+
   const hostList = computed(() => {
     const filterVal = filterValue.value.toLowerCase();
     let list;
@@ -88,7 +88,8 @@
   });
 
   // 打开配置
-  const open = () => {
+  const open = (index: number) => {
+    panelIndex.value = index;
     setVisible(true);
   };
 
@@ -96,7 +97,7 @@
 
   // 打开终端
   const clickHost = (item: HostQueryResponse) => {
-    emits('choose', item);
+    openTerminal(item, panelIndex.value);
     setVisible(false);
   };
 
