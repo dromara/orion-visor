@@ -28,7 +28,7 @@
 
   const emits = defineEmits(['openSftp', 'openTransfer']);
 
-  const { getCurrentTerminalSession } = useTerminalStore();
+  const { getAndCheckCurrentTerminalSession } = useTerminalStore();
 
   const snippetRef = ref();
 
@@ -65,7 +65,7 @@
 
   // 终端截屏
   const screenshot = () => {
-    const handler = getCurrentTerminalSession()?.handler;
+    const handler = getAndCheckCurrentTerminalSession()?.handler;
     if (handler && handler.enabledStatus('screenshot')) {
       handler.screenshot();
     }

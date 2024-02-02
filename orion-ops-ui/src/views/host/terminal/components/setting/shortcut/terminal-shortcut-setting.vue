@@ -19,9 +19,9 @@
         <terminal-shortcut-action-block v-model:enabled="enabled"
                                         @reset="loadDefaultPreference"
                                         @save="savePreference" />
-        <!-- 系统快捷键 -->
-        <terminal-shortcut-keys-block title="系统快捷键"
-                                      :type="TerminalShortcutType.TAB"
+        <!-- 全局快捷键 -->
+        <terminal-shortcut-keys-block title="全局快捷键"
+                                      :type="TerminalShortcutType.GLOBAL"
                                       :items="shortcutKeys"
                                       @set-editable="setEditableStatus"
                                       @clear-editable="clearEditableStatus"

@@ -1,17 +1,22 @@
 import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
-import type { ITerminalSession, ITerminalSessionHandler, ITerminalTabManager, TerminalDomRef } from '../types/terminal.type';
+import type { ITerminalSession, ITerminalSessionHandler, TerminalDomRef } from '../types/terminal.type';
 import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
 import html2canvas from 'html2canvas';
 import { useTerminalStore, useUserStore } from '@/store';
-import { TerminalTabs } from '../types/terminal.const';
+import { TerminalShortcutItems } from '../types/terminal.const';
 import { saveAs } from 'file-saver';
 import { Message } from '@arco-design/web-vue';
 import { dateFormat } from '@/utils';
 
-// 组织默认行为的快捷键
+// 阻止默认行为的快捷键
 const preventKeys: Array<ShortcutKey> = [
   {
+    ctrlKey: true,
+    altKey: false,
+    shiftKey: true,
+    code: 'KeyC'
+  }, {
     ctrlKey: true,
     altKey: false,
     shiftKey: true,
@@ -39,8 +44,6 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
 
   private readonly shortcutKeys: Array<TerminalShortcutKey>;
 
-  private readonly tabManager: ITerminalTabManager;
-
   constructor(session: ITerminalSession,
               domRef: TerminalDomRef) {
     this.session = session;
@@ -49,7 +52,6 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     const { preference, tabManager } = useTerminalStore();
     this.interactSetting = preference.interactSetting;
     this.shortcutKeys = preference.shortcutSetting.keys;
-    this.tabManager = tabManager;
   }
 
   // 检测是否忽略默认行为
@@ -94,22 +96,18 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     handler && handler.call(this);
   }
 
-  // 触发快捷键
-  triggerShortcutKey(e: KeyboardEvent): boolean {
-    // 检测触发的快捷键
+  // 获取快捷键
+  getShortcutKey(e: KeyboardEvent) {
     const key = this.shortcutKeys.find(key => {
       return key.code === e.code
         && key.altKey === e.altKey
         && key.shiftKey === e.shiftKey
         && key.ctrlKey === e.ctrlKey;
     });
-    if (key) {
-      // 调用处理方法
-      this.invokeHandle.call(this, key.item);
-      return false;
-    } else {
-      return true;
+    if (!key) {
+      return undefined;
     }
+    return TerminalShortcutItems.find(s => s.item === key.item);
   }
 
   // 复制选中
@@ -304,31 +302,6 @@ export default class TerminalSessionHandler implements ITerminalSessionHandler {
     } catch (e) {
       Message.error('保存失败');
     }
-  }
-
-  // 关闭 tab
-  closeTab() {
-    this.tabManager.deleteTab(this.session.sessionId);
-  }
-
-  // 切换到前一个 tab
-  changeToPrevTab() {
-    this.tabManager.changeToPrevTab();
-  }
-
-  // 切换到后一个 tab
-  changeToNextTab() {
-    this.tabManager.changeToNextTab();
-  }
-
-  // 复制终端 tab
-  openCopyTerminalTab() {
-    useTerminalStore().openCopyTerminal(this.session.hostId);
-  }
-
-  // 打开新建连接 tab
-  openNewConnectTab() {
-    this.tabManager.openTab(TerminalTabs.NEW_CONNECTION);
   }
 
 }

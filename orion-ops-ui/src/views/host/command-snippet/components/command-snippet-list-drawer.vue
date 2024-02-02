@@ -267,7 +267,7 @@
   // 关闭回调
   const onClose = () => {
     // 聚焦终端
-    getCurrentTerminalSession(false)?.focus();
+    getCurrentTerminalSession()?.focus();
   };
 
 </script>

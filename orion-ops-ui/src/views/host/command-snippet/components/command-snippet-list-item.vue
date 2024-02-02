@@ -125,7 +125,7 @@
   }>();
 
   const { copy } = useCopy();
-  const { getCurrentTerminalSession } = useTerminalStore();
+  const { getAndCheckCurrentTerminalSession } = useTerminalStore();
 
   let clickCount = 0;
 
@@ -184,7 +184,7 @@
 
   // 写入命令
   const write = (command: string) => {
-    const handler = getCurrentTerminalSession()?.handler;
+    const handler = getAndCheckCurrentTerminalSession()?.handler;
     if (handler && handler.enabledStatus('checkAppendMissing')) {
       handler.checkAppendMissing(command);
     }

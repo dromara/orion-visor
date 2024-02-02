@@ -29,6 +29,12 @@ export default class TerminalPanelManager<T extends TerminalPanelTabItem = Termi
     return this.panels[index];
   };
 
+  // 移除面板
+  removePanel(index: number) {
+    this.panels.splice(index, 1);
+    this.active = index >= this.panels.length ? this.panels.length - 1 : index;
+  };
+
   // 重置
   reset() {
     for (let panel of this.panels) {

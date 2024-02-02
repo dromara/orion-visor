@@ -45,43 +45,26 @@
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
   import TerminalPanelsView from '@/views/host/terminal/components/layout/terminal-panels-view.vue';
 
-  const { preference, tabManager, sessionManager } = useTerminalStore();
+  const { preference, tabManager, getCurrentTerminalSession } = useTerminalStore();
 
-  // fixme title逻辑 失焦逻辑
-  // 监听 tab 修改
+  // 监听 tab 切换
   watch(() => tabManager.active, (active, before) => {
-    if (before) {
-      // 失焦已经切换的终端
-      const beforeTab = tabManager.items.find(s => s.key === before);
-      if (beforeTab && beforeTab?.type === 'TerminalTabType.TERMINAL') {
-        sessionManager.getSession(before)?.blur();
-      }
+    // 失焦 tab
+    if (before === TerminalTabs.TERMINAL_PANEL.key) {
+      getCurrentTerminalSession()?.blur();
     }
-    if (active) {
-      // 获取 activeTab
-      const activeTab = tabManager.getCurrentTab();
-      if (!activeTab) {
-        return;
-      }
-      // 修改标题
-      document.title = activeTab.title;
-      // 终端自动聚焦
-      if (activeTab?.type === 'TerminalTabType.TERMINAL') {
-        sessionManager.getSession(active)?.focus();
-      }
-    } else {
-      // 修改标题
-      document.title = TerminalTabs.TERMINAL_PANEL.title;
+    // 聚焦 tab
+    if (active === TerminalTabs.TERMINAL_PANEL.key) {
+      getCurrentTerminalSession()?.focus();
     }
+    // 修改标题
+    document.title = Object.values(TerminalTabs)
+        .find(s => s.key === active)?.title
+      || TerminalTabs.TERMINAL_PANEL.title;
   });
 
-  // 处理快捷键逻辑
+  // 处理全局快捷键逻辑
   const handlerKeyboard = (event: Event) => {
-    // 当前页面非 terminal 的时候再触发快捷键 (terminal 有内置逻辑)
-    // fixme panel 无数据继续触发
-    if (tabManager.getCurrentTab()?.key === TerminalTabs.TERMINAL_PANEL.key) {
-      return;
-    }
     const e = event as KeyboardEvent;
     // 检测触发的快捷键
     const key = preference.shortcutSetting.keys.find(key => {

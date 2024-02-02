@@ -10,19 +10,23 @@
             @delete="k => panel.deleteTab(k as string)">
       <!-- 右侧按钮 -->
       <template #extra>
-        <a-button>Action</a-button>
+        <a-space class="panel-extra">
+          <span class="extra-icon" @click="close">
+            <icon-close />
+          </span>
+        </a-space>
       </template>
       <!-- 终端面板 -->
       <a-tab-pane v-for="tab in panel.items"
                   :key="tab.key">
         <!-- 标题 -->
         <template #title>
-            <span class="tab-title-wrapper">
-              <span class="tab-title-icon">
-                <component :is="tab.icon" />
-              </span>
-              {{ tab.title }}
+          <span class="tab-title-wrapper">
+            <span class="tab-title-icon">
+              <component :is="tab.icon" />
             </span>
+            {{ tab.title }}
+          </span>
         </template>
         <!-- 终端 -->
         <terminal-view :tab="tab" />
@@ -41,28 +45,55 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ITerminalTabManager } from '../../types/terminal.type';
+  import type { ITerminalTabManager, TerminalPanelTabItem } from '../../types/terminal.type';
+  import { ref, watch } from 'vue';
+  import { useTerminalStore } from '@/store';
+  import { TerminalPanelTabType } from '../../types/terminal.const';
   import TerminalView from '../xterm/terminal-view.vue';
   import HostListModal from '../new-connection/host-list-modal.vue';
-  import { onMounted, ref } from 'vue';
-  import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
     index: number,
-    panel: ITerminalTabManager,
+    panel: ITerminalTabManager<TerminalPanelTabItem>,
   }>();
 
-  const { openTerminal } = useTerminalStore();
+  const emits = defineEmits(['close']);
+
+  const { sessionManager, openTerminal } = useTerminalStore();
 
   const hostModal = ref();
+
+  // 监听 tab 切换
+  watch(() => props.panel.active, (active, before) => {
+    // 失焦自动终端
+    if (before) {
+      const beforeTab = props.panel.items.find(s => s.key === before);
+      if (beforeTab && beforeTab?.type === TerminalPanelTabType.TERMINAL) {
+        sessionManager.getSession(before)?.blur();
+      }
+    }
+    // 终端自动聚焦
+    if (active) {
+      const activeTab = props.panel.items.find(s => s.key === active);
+      if (activeTab && activeTab?.type === TerminalPanelTabType.TERMINAL) {
+        sessionManager.getSession(active)?.focus();
+      }
+    }
+    // 无终端自动关闭
+    if (!props.panel.items.length) {
+      close();
+    }
+  });
 
   // 打开主机模态框
   const openHostModal = () => {
     hostModal.value.open();
   };
 
-  // FIXME 全部关闭展示新增
-  onMounted(openHostModal);
+  // 关闭面板
+  const close = () => {
+    emits('close', props.index);
+  };
 
 </script>
 
@@ -79,6 +110,27 @@
     .tab-title-icon {
       font-size: 18px;
       margin-right: 6px;
+    }
+  }
+
+  .panel-extra {
+    margin-right: 8px;
+
+    .extra-icon {
+      color: var(--color-panel-text-2);
+      transition: 0.2s;
+      font-size: 16px;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      &:hover {
+        background: var(--color-bg-panel-icon-1);
+      }
     }
   }
 
@@ -129,7 +181,6 @@
         background: var(--color-bg-panel-icon-1);
       }
     }
-
   }
 
   :deep(.arco-tabs-nav-type-line .arco-tabs-tab:hover .arco-tabs-tab-title::before) {
@@ -214,7 +265,6 @@
     &:hover::after {
       background: linear-gradient(270deg, var(--color-panel-gradient-start) 45%, var(--color-panel-gradient-end) 120%);
     }
-
   }
 
 </style>

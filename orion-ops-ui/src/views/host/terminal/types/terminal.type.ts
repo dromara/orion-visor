@@ -135,6 +135,8 @@ export interface ITerminalPanelManager<T extends TerminalPanelTabItem = Terminal
   setCurrentPanel: (active: number) => void;
   // 获取面板
   getPanel: (index: number) => ITerminalTabManager<T>;
+  // 移除面板
+  removePanel: (index: number) => void;
   // 重置
   reset: () => void;
 }
@@ -232,8 +234,8 @@ export interface ITerminalSessionHandler {
   enabledStatus: (option: string) => boolean;
   // 调用处理方法
   invokeHandle: (option: string) => void;
-  // 触发快捷键
-  triggerShortcutKey: (e: KeyboardEvent) => boolean;
+  // 获取快捷键
+  getShortcutKey: (e: KeyboardEvent) => ShortcutKeyItem | undefined;
 
   // 复制选中
   copy: () => void;
@@ -269,14 +271,4 @@ export interface ITerminalSessionHandler {
   screenshot: () => void;
   // 检查追加缺失的部分
   checkAppendMissing: (value: string) => void;
-  // 关闭 tab
-  closeTab: () => void;
-  // 切换到前一个 tab
-  changeToPrevTab: () => void;
-  // 切换到后一个 tab
-  changeToNextTab: () => void;
-  // 复制终端 tab
-  openCopyTerminalTab: () => void;
-  // 打开新建连接 tab
-  openNewConnectTab: () => void;
 }

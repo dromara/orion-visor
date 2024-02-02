@@ -3,7 +3,7 @@ import type { TerminalPreference } from '@/store/modules/terminal/types';
 import type { ITerminalChannel, ITerminalSession, ITerminalSessionHandler, TerminalAddons, TerminalDomRef } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '../types/terminal.protocol';
-import { fontFamilySuffix, TerminalStatus } from '../types/terminal.const';
+import { fontFamilySuffix, TerminalShortcutType, TerminalStatus } from '../types/terminal.const';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
@@ -12,8 +12,8 @@ import { ImageAddon } from 'xterm-addon-image';
 import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebglAddon } from 'xterm-addon-webgl';
 import { playBell } from '@/utils/bell';
-import TerminalSessionHandler from './terminal-session-handler';
 import { addEventListen } from '@/utils/event';
+import TerminalSessionHandler from './terminal-session-handler';
 
 // 终端会话实现
 export default class TerminalSession implements ITerminalSession {
@@ -82,16 +82,21 @@ export default class TerminalSession implements ITerminalSession {
   private registerShortcut(preference: UnwrapRef<TerminalPreference>) {
     // 处理自定义按键
     this.inst.attachCustomKeyEventHandler((e: KeyboardEvent) => {
-      // 检测是否忽略默认行为
+      if (e.type !== 'keydown') {
+        return true;
+      }
+      // 检测是否阻止默认行为
       if (this.handler.checkPreventDefault(e)) {
         e.preventDefault();
       }
-      // 触发快捷键检测
-      if (e.type === 'keydown'
-        && preference.shortcutSetting.enabled
-        && preference.shortcutSetting.keys.length) {
-        // 触发快捷键
-        return this.handler.triggerShortcutKey(e);
+      if (preference.shortcutSetting.enabled && preference.shortcutSetting.keys.length) {
+        // 获取触发的快捷键
+        const shortcutKey = this.handler.getShortcutKey(e);
+        // 触发终端快捷键
+        if (shortcutKey?.type === TerminalShortcutType.TERMINAL) {
+          this.handler.invokeHandle.call(this.handler, shortcutKey.item);
+          return false;
+        }
       }
       return true;
     });

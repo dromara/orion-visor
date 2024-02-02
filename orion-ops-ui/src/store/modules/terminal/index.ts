@@ -160,7 +160,7 @@ export default defineStore('terminal', {
     },
 
     // 复制并且打开终端
-    openCopyTerminal(hostId: number, panelIndex: number = 0) {
+    copyTerminalSession(hostId: number, panelIndex: number = 0) {
       const host = this.hosts.hostList
         .find(s => s.id === hostId);
       if (host) {
@@ -168,28 +168,35 @@ export default defineStore('terminal', {
       }
     },
 
-    // 获取当前终端会话
-    getCurrentTerminalSession(tips: boolean = true) {
-      // 获取当前 tab
-      const tab = this.tabManager.getCurrentTab();
-      if (!tab || tab.key !== TerminalTabs.TERMINAL_PANEL.key) {
+    // 检查当前是否为终端页面 并且获取当前终端会话
+    getAndCheckCurrentTerminalSession(tips: boolean = true) {
+      // 获取当前 activeTab
+      const activeTab = this.tabManager.active;
+      if (activeTab !== TerminalTabs.TERMINAL_PANEL.key) {
         if (tips) {
           Message.warning('请切换到终端标签页');
         }
         return;
       }
+      // 获取当前会话
+      const session = this.getCurrentTerminalSession();
+      if (!session && tips) {
+        Message.warning('请打开终端');
+      }
+      return session;
+    },
+
+    // 获取当前终端会话
+    getCurrentTerminalSession() {
       // 获取面板会话
-      const activeTab = this.panelManager
+      const panelTab = this.panelManager
         .getCurrentPanel()
         .getCurrentTab();
-      if (!activeTab || activeTab.type !== TerminalPanelTabType.TERMINAL) {
-        if (tips) {
-          Message.warning('请打开终端');
-        }
+      if (!panelTab || panelTab.type !== TerminalPanelTabType.TERMINAL) {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession(activeTab.key);
+      return this.sessionManager.getSession(panelTab.key);
     },
 
   },
