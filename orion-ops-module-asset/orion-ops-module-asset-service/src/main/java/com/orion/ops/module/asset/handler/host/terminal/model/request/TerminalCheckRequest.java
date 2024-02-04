@@ -28,4 +28,7 @@ public class TerminalCheckRequest extends TerminalBasePayload {
     @Schema(description = "主机id")
     private Long hostId;
 
+    @Schema(description = "连接类型")
+    private String connectType;
+
 }

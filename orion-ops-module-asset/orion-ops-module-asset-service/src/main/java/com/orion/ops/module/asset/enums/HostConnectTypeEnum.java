@@ -14,6 +14,11 @@ public enum HostConnectTypeEnum {
      */
     SSH,
 
+    /**
+     * sftp
+     */
+    SFTP,
+
     ;
 
     public static HostConnectTypeEnum of(String type) {

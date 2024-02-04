@@ -35,4 +35,6 @@ public interface ExtraFieldConst extends FieldConst {
 
     String SESSION_ID = "sessionId";
 
+    String CONNECT_TYPE = "connectType";
+
 }

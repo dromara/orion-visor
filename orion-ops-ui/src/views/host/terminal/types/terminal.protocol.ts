@@ -3,7 +3,7 @@ export const InputProtocol = {
   // 主机连接检查
   CHECK: {
     type: 'ck',
-    template: ['type', 'sessionId', 'hostId']
+    template: ['type', 'sessionId', 'hostId', 'connectType']
   },
   // 连接主机
   CONNECT: {
@@ -24,11 +24,6 @@ export const InputProtocol = {
   RESIZE: {
     type: 'rs',
     template: ['type', 'sessionId', 'cols', 'rows']
-  },
-  // 执行
-  EXEC: {
-    type: 'e',
-    template: ['type', 'sessionId', 'command']
   },
   // 输入
   INPUT: {

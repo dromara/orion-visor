@@ -61,6 +61,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Long hostId = payload.getHostId();
         Long userId = this.getAttr(channel, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
+        HostConnectTypeEnum connectType = HostConnectTypeEnum.of(payload.getConnectType());
         String sessionId = payload.getSessionId();
         log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         // 检查 session 是否存在
@@ -77,7 +78,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Exception ex = null;
         try {
             // 获取连接信息
-            HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host);
+            HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host, connectType);
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);
             log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
@@ -89,7 +90,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
-        this.saveTerminalLog(channel, userId, host, startTime, ex, sessionId);
+        this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
         // 响应检查结果
         this.send(channel,
                 OutputTypeEnum.CHECK,
@@ -108,8 +109,8 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @return 是否存在
      */
     private boolean checkSession(WebSocketSession channel, TerminalCheckRequest payload) {
-        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSessionId());
-        if (terminalSession != null) {
+        ITerminalSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        if (session != null) {
             this.sendCheckFailedMessage(channel, payload, ErrorMessage.SESSION_PRESENT);
             return true;
         }
@@ -154,19 +155,21 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     /**
      * 记录主机日志
      *
-     * @param channel   channel
-     * @param userId    userId
-     * @param host      host
-     * @param startTime startTime
-     * @param ex        ex
-     * @param sessionId sessionId
+     * @param channel     channel
+     * @param userId      userId
+     * @param host        host
+     * @param startTime   startTime
+     * @param ex          ex
+     * @param sessionId   sessionId
+     * @param connectType connectType
      */
-    private void saveTerminalLog(WebSocketSession channel,
-                                 Long userId,
-                                 HostDO host,
-                                 long startTime,
-                                 Exception ex,
-                                 String sessionId) {
+    private void saveHostLog(WebSocketSession channel,
+                             Long userId,
+                             HostDO host,
+                             long startTime,
+                             Exception ex,
+                             String sessionId,
+                             HostConnectTypeEnum connectType) {
         Long hostId = host.getId();
         String hostName = host.getName();
         String username = this.getAttr(channel, ExtraFieldConst.USERNAME);
@@ -174,6 +177,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Map<String, Object> extra = Maps.newMap();
         extra.put(OperatorLogs.ID, hostId);
         extra.put(OperatorLogs.NAME, hostName);
+        extra.put(OperatorLogs.CONNECT_TYPE, connectType.name());
         extra.put(OperatorLogs.CHANNEL_ID, channel.getId());
         extra.put(OperatorLogs.SESSION_ID, sessionId);
         // 日志参数
@@ -205,7 +209,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
                 .token(sessionId)
                 .extra(extra)
                 .build();
-        hostConnectLogService.create(HostConnectTypeEnum.SSH, connectLog);
+        hostConnectLogService.create(connectType, connectLog);
     }
 
 }

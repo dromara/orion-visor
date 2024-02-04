@@ -18,7 +18,6 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
 
     @Override
     public TerminalPreferenceModel getDefault() {
-        // ...快捷键 ...背景
         // 默认显示设置
         String defaultDisplaySetting = TerminalPreferenceModel.DisplaySettingModel
                 .builder()

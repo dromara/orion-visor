@@ -24,10 +24,7 @@ import com.orion.ops.module.asset.entity.domain.HostIdentityDO;
 import com.orion.ops.module.asset.entity.domain.HostKeyDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
-import com.orion.ops.module.asset.enums.HostExtraItemEnum;
-import com.orion.ops.module.asset.enums.HostExtraSshAuthTypeEnum;
-import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
+import com.orion.ops.module.asset.enums.*;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
 import com.orion.ops.module.asset.service.HostConfigService;
@@ -121,15 +118,15 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId, HostConnectTypeEnum type) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        return this.getTerminalConnectInfo(userId, host);
+        return this.getTerminalConnectInfo(userId, host, type);
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host, HostConnectTypeEnum type) {
         Long hostId = host.getId();
         log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 查询用户
@@ -164,7 +161,9 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             }
         }
         // 获取连接配置
-        return this.getHostConnectInfo(host, config, extra);
+        HostTerminalConnectDTO connectInfo = this.getHostConnectInfo(host, config, extra);
+        connectInfo.setConnectType(type.name());
+        return connectInfo;
     }
 
     @Override

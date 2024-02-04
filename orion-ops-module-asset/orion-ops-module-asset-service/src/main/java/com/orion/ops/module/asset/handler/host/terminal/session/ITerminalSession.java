@@ -12,38 +12,21 @@ import com.orion.lang.able.SafeCloseable;
 public interface ITerminalSession extends SafeCloseable {
 
     /**
-     * 连接
+     * 获取 sessionId
      *
-     * @param terminalType terminalType
-     * @param cols         cols
-     * @param rows         rows
+     * @return sessionId
      */
-    void connect(String terminalType, int cols, int rows);
+    String getSessionId();
 
     /**
-     * 重置大小
+     * 获取 channelId
      *
-     * @param cols cols
-     * @param rows rows
+     * @return channelId
      */
-    void resize(int cols, int rows);
+    String getChannelId();
 
     /**
-     * 写入内容
-     *
-     * @param b b
-     */
-    void write(String b);
-
-    /**
-     * 写入内容
-     *
-     * @param b b
-     */
-    void write(byte[] b);
-
-    /**
-     * 活跃回话
+     * 活跃会话
      */
     void keepAlive();
 

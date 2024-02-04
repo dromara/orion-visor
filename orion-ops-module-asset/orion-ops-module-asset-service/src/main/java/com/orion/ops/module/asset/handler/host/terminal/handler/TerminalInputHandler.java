@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalInputRequest;
+import com.orion.ops.module.asset.handler.host.terminal.session.ISshSession;
 import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,10 +27,10 @@ public class TerminalInputHandler extends AbstractTerminalHandler<TerminalInputR
     @Override
     public void handle(WebSocketSession channel, TerminalInputRequest payload) {
         // 获取会话
-        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSessionId());
-        if (terminalSession != null) {
+        ITerminalSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        if (session instanceof ISshSession) {
             // 处理输入
-            terminalSession.write(payload.getCommand());
+            ((ISshSession) session).write(payload.getCommand());
         }
     }
 

@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalResizeRequest;
+import com.orion.ops.module.asset.handler.host.terminal.session.ISshSession;
 import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,10 +27,10 @@ public class TerminalResizeHandler extends AbstractTerminalHandler<TerminalResiz
     @Override
     public void handle(WebSocketSession channel, TerminalResizeRequest payload) {
         // 获取会话
-        ITerminalSession terminalSession = terminalManager.getSession(channel.getId(), payload.getSessionId());
-        if (terminalSession != null) {
+        ITerminalSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        if (session instanceof ISshSession) {
             // 修改大小
-            terminalSession.resize(payload.getCols(), payload.getRows());
+            ((ISshSession) session).resize(payload.getCols(), payload.getRows());
         }
     }
 

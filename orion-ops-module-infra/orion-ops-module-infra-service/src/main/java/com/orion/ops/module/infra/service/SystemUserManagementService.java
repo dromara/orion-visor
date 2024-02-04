@@ -18,7 +18,7 @@ public interface SystemUserManagementService {
      * 获取用户会话列表
      *
      * @param userId userId
-     * @return 回话列表
+     * @return 会话列表
      */
     List<UserSessionVO> getUserSessionList(Long userId);
 

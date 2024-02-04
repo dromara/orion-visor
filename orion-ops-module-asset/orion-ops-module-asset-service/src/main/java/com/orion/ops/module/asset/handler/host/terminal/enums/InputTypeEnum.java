@@ -3,7 +3,10 @@ package com.orion.ops.module.asset.handler.host.terminal.enums;
 import com.alibaba.fastjson.JSONObject;
 import com.orion.ops.module.asset.handler.host.terminal.handler.*;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.*;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalConnectRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalInputRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalResizeRequest;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -24,7 +27,7 @@ public enum InputTypeEnum {
      */
     CHECK("ck",
             TerminalCheckHandler.class,
-            new String[]{"type", "sessionId", "hostId"},
+            new String[]{"type", "sessionId", "hostId", "connectType"},
             TerminalCheckRequest.class),
 
     /**
@@ -60,14 +63,6 @@ public enum InputTypeEnum {
             TerminalResizeRequest.class),
 
     /**
-     * 执行
-     */
-    EXEC("e",
-            TerminalExecHandler.class,
-            new String[]{"type", "sessionId", "command"},
-            TerminalExecRequest.class),
-
-    /**
      * 输入
      */
     INPUT("i",
@@ -76,10 +71,10 @@ public enum InputTypeEnum {
             TerminalInputRequest.class),
 
     // LS
-    // DEL
+    // MK
+    // RM
     // MV
     // TC
-    // MK
     // CD
 
     ;

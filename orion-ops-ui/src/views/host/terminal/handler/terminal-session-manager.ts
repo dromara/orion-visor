@@ -45,7 +45,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     // 发送会话初始化请求
     this.channel.send(InputProtocol.CHECK, {
       sessionId,
-      hostId
+      hostId,
+      connectType: 'SSH'
     });
     return session;
   }

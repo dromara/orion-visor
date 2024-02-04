@@ -5,6 +5,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 
 /**
  * 主机终端服务
@@ -42,18 +43,20 @@ public interface HostTerminalService {
      *
      * @param hostId hostId
      * @param userId userId
+     * @param type   type
      * @return session
      */
-    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
+    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId, HostConnectTypeEnum type);
 
     /**
      * 使用用户配置获取连接信息
      *
      * @param host   host
      * @param userId userId
+     * @param type   type
      * @return session
      */
-    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
+    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host, HostConnectTypeEnum type);
 
     /**
      * 使用默认配置打开主机会话

@@ -11,13 +11,16 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
+import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalConnectRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalConnectResponse;
-import com.orion.ops.module.asset.handler.host.terminal.session.TerminalSession;
+import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
+import com.orion.ops.module.asset.handler.host.terminal.session.SftpSession;
+import com.orion.ops.module.asset.handler.host.terminal.session.SshSession;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
@@ -68,9 +71,9 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         Exception ex = null;
         try {
             // 连接主机
-            TerminalSession terminalSession = this.connect(sessionId, connect, channel, payload);
+            ITerminalSession session = this.connect(sessionId, connect, channel, payload);
             // 添加会话到 manager
-            terminalManager.addSession(terminalSession);
+            terminalManager.addSession(session);
         } catch (Exception e) {
             ex = e;
             // 修改连接状态为失败
@@ -95,11 +98,12 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
      * @param body      body
      * @return channel
      */
-    private TerminalSession connect(String sessionId,
-                                    HostTerminalConnectDTO connect,
-                                    WebSocketSession channel,
-                                    TerminalConnectRequest body) {
-        TerminalSession terminalSession = null;
+    private ITerminalSession connect(String sessionId,
+                                     HostTerminalConnectDTO connect,
+                                     WebSocketSession channel,
+                                     TerminalConnectRequest body) {
+        String connectType = connect.getConnectType();
+        ITerminalSession session = null;
         try {
             // 连接配置
             TerminalConfig config = TerminalConfig.builder()
@@ -109,12 +113,21 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
                     .build();
             // 建立连接
             SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
-            terminalSession = new TerminalSession(sessionId, channel, sessionStore, config);
-            terminalSession.connect(body.getTerminalType(), body.getCols(), body.getRows());
+            if (HostConnectTypeEnum.SSH.name().equals(connectType)) {
+                // 打开 ssh 会话
+                SshSession sshSession = new SshSession(sessionId, channel, sessionStore, config);
+                sshSession.connect(body.getTerminalType(), body.getCols(), body.getRows());
+                session = sshSession;
+            } else if (HostConnectTypeEnum.SFTP.name().equals(connectType)) {
+                // 打开 sftp 会话
+                SftpSession sftpSession = new SftpSession(sessionId, channel, sessionStore, config);
+                sftpSession.connect();
+                session = sftpSession;
+            }
             log.info("TerminalConnectHandler-handle success sessionId: {}", sessionId);
-            return terminalSession;
+            return session;
         } catch (Exception e) {
-            Streams.close(terminalSession);
+            Streams.close(session);
             log.error("TerminalConnectHandler-handle error sessionId: {}", sessionId, e);
             throw e;
         }

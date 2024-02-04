@@ -53,7 +53,7 @@ public interface MineService {
     /**
      * 获取当前用户会话列表
      *
-     * @return 回话列表
+     * @return 会话列表
      */
     List<UserSessionVO> getCurrentUserSessionList();
 

@@ -4,7 +4,6 @@ import com.orion.lang.define.collect.MultiConcurrentHashMap;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Streams;
 import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
-import com.orion.ops.module.asset.handler.host.terminal.session.TerminalSession;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -30,8 +29,8 @@ public class TerminalManager {
      *
      * @param session session
      */
-    public void addSession(TerminalSession session) {
-        channelSessions.put(session.getChannel().getId(), session.getSessionId(), session);
+    public void addSession(ITerminalSession session) {
+        channelSessions.put(session.getChannelId(), session.getSessionId(), session);
     }
 
     /**
