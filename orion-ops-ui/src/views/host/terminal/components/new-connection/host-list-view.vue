@@ -119,7 +119,7 @@
                          arrow-class="terminal-tooltip-content"
                          content="打开 SSH">
                 <div class="terminal-sidebar-icon-wrapper">
-                  <div class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.TERMINAL)">
+                  <div class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.SSH)">
                     <icon-thunderbolt />
                   </div>
                 </div>

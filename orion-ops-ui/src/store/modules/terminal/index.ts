@@ -197,7 +197,7 @@ export default defineStore('terminal', {
       const sessionTab = this.panelManager
         .getCurrentPanel()
         .getCurrentTab();
-      if (!sessionTab || sessionTab.type !== PanelSessionType.TERMINAL.type) {
+      if (!sessionTab || sessionTab.type !== PanelSessionType.SSH.type) {
         return;
       }
       // 获取会话

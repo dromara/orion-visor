@@ -98,7 +98,7 @@
 
   // 打开终端
   const clickHost = (item: HostQueryResponse) => {
-    openSession(item, PanelSessionType.TERMINAL, panelIndex.value);
+    openSession(item, PanelSessionType.SSH, panelIndex.value);
     setVisible(false);
   };
 

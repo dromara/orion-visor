@@ -133,7 +133,7 @@
     align-items: center;
 
     .tab-title-icon {
-      font-size: 18px;
+      font-size: 16px;
       margin-right: 6px;
     }
   }

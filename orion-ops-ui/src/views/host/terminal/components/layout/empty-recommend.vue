@@ -3,17 +3,60 @@
     <div class="terminal-setting-wrapper">
       <!-- 组合容器 -->
       <div class="combined-container">
-        <!-- 新建连接 -->
         <div class="combined-handler" v-for="(handler, index) in combinedHandlers"
-             :key="index"
-             @click="clickHandlerItem(handler)">
-          <!-- 图标 -->
-          <div class="combined-handler-icon">
-            <component :is="handler.icon" />
+             :key="index">
+          <!-- 左侧固定 -->
+          <div class="combined-handler-left">
+            <!-- 图标 -->
+            <div class="combined-handler-icon">
+              <component :is="handler.icon" />
+            </div>
+            <!-- 内容 -->
+            <div class="combined-handler-text">
+              {{ handler.title }}
+            </div>
           </div>
-          <!-- 内容 -->
-          <div class="combined-handler-text">
-            {{ handler.title }}
+          <!-- 操作 -->
+          <div class="combined-handler-actions">
+            <!-- 跳转页面 -->
+            <a-tooltip position="top"
+                       :mini="true"
+                       :auto-fix-position="false"
+                       content-class="terminal-tooltip-content"
+                       arrow-class="terminal-tooltip-content"
+                       content="跳转页面">
+              <span v-if="!handler.host"
+                    class="click-icon-wrapper"
+                    @click="openTab(handler)">
+                <icon-right />
+              </span>
+            </a-tooltip>
+            <!-- 打开 SSH -->
+            <a-tooltip position="top"
+                       :mini="true"
+                       :auto-fix-position="false"
+                       content-class="terminal-tooltip-content"
+                       arrow-class="terminal-tooltip-content"
+                       content="打开 SSH">
+              <span v-if="handler.host"
+                    class="click-icon-wrapper"
+                    @click="openSession(handler.host as any, PanelSessionType.SSH)">
+                <icon-thunderbolt />
+              </span>
+            </a-tooltip>
+            <!-- 打开 SFTP -->
+            <a-tooltip position="top"
+                       :mini="true"
+                       :auto-fix-position="false"
+                       content-class="terminal-tooltip-content"
+                       arrow-class="terminal-tooltip-content"
+                       content="打开 SFTP">
+              <span v-if="handler.host"
+                    class="click-icon-wrapper"
+                    @click="openSession(handler.host as any, PanelSessionType.SFTP)">
+                <icon-folder />
+              </span>
+            </a-tooltip>
           </div>
         </div>
       </div>
@@ -43,15 +86,12 @@
     icon: TerminalTabs.NEW_CONNECTION.icon
   }]);
 
-  // 点击组合操作元素
-  const clickHandlerItem = (item: CombinedHandlerItem) => {
+  // 打开 tab
+  const openTab = (item: CombinedHandlerItem) => {
     if (item.host) {
-      // 打开会话
-      openSession(item.host as HostQueryResponse, PanelSessionType.TERMINAL);
-    } else {
-      // 打开 tab
-      tabManager.openTab(item.tab as TerminalTabItem);
+      return;
     }
+    tabManager.openTab(item.tab as TerminalTabItem);
   };
 
   // 组合主机列表
@@ -98,6 +138,8 @@
   @container-width: 406px;
   @container-height: 448px;
   @handler-height: 44px;
+  @icon-size: @handler-height;
+  @actions-width: 80px;
 
   .combined-container {
     padding: 12px;
@@ -116,7 +158,7 @@
   }
 
   .combined-handler {
-    width: calc(@container-width - @transform-x);
+    width: @container-width - @transform-x;
     height: @handler-height;
     border-radius: 4px;
     margin-bottom: 6px;
@@ -124,16 +166,30 @@
     background-color: var(--color-fill-2);
     display: flex;
     align-items: center;
-    cursor: pointer;
+    justify-content: space-between;
     transition: all 0.2s;
 
     &:hover {
       width: @container-width;
+
+      .combined-handler-left {
+        width: calc(100% - @actions-width);
+      }
+
+      .combined-handler-actions {
+        display: flex;
+      }
+    }
+
+    &-left {
+      width: 100%;
+      display: flex;
+      align-items: center;
     }
 
     &-icon {
-      width: @handler-height;
-      height: @handler-height;
+      width: @icon-size;
+      height: @icon-size;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -142,16 +198,31 @@
 
     &-text {
       height: 100%;
-      width: calc(100% - @handler-height - 12px);
+      width: calc(100% - @icon-size - 12px);
       display: flex;
       align-items: center;
       font-size: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
-      &-wrapper {
-        display: block;
-        overflow: hidden;
-        white-space: pre;
-        text-overflow: ellipsis;
+    &-actions {
+      display: none;
+      width: @actions-width;
+      height: 100%;
+      padding-right: 8px;
+      align-items: center;
+      justify-content: flex-end;
+
+      .click-icon-wrapper {
+        font-size: 18px;
+        padding: 4px;
+        border-radius: 4px;
+        margin: 0 4px;
+
+        &:hover {
+          background: var(--color-neutral-4);
+        }
       }
     }
   }

@@ -66,6 +66,12 @@ export interface SshExtraModel {
   identityId?: number;
 }
 
+// session tab
+export interface PanelSessionTab {
+  type: string;
+  icon: string;
+}
+
 // 终端协议
 export interface Protocol {
   type: string;

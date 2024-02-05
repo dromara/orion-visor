@@ -52,10 +52,16 @@ export const ExtraSshAuthType = {
   CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',
 };
 
-// 终端面板 tab 类型
-export const TerminalPanelTabType = {
-  TERMINAL: 'terminal',
-  SFTP: 'sftp',
+// 面板会话 tab 类型
+export const PanelSessionType = {
+  SSH: {
+    type: 'ssh',
+    icon: 'icon-desktop'
+  },
+  SFTP: {
+    type: 'sftp',
+    icon: 'icon-folder'
+  },
 };
 
 // 终端状态
@@ -133,7 +139,8 @@ export const ActionBarItems = [
 export const TerminalShortcutType = {
   GLOBAL: 1,
   PANEL: 2,
-  TERMINAL: 3
+  SESSION: 3,
+  TERMINAL: 4
 };
 
 // 终端操作快捷键 key
@@ -148,14 +155,14 @@ export const TerminalShortcutKeys = {
   OPEN_NEW_CONNECT_TAB: 'openNewConnectTab',
   // 打开新建连接弹框
   OPEN_NEW_CONNECT_MODAL: 'openNewConnectModal',
-  // 复制终端
-  COPY_TERMINAL: 'copyTerminal',
-  // 关闭终端
-  CLOSE_TERMINAL: 'closeTerminal',
-  // 切换至前一个终端
-  CHANGE_TO_PREV_TERMINAL: 'changeToPrevTerminal',
-  // 切换至后一个终端
-  CHANGE_TO_NEXT_TERMINAL: 'changeToNextTerminal',
+  // 复制会话
+  COPY_SESSION: 'copySession',
+  // 关闭会话
+  CLOSE_SESSION: 'closeSession',
+  // 切换至前一个会话
+  CHANGE_TO_PREV_SESSION: 'changeToPrevSession',
+  // 切换至后一个会话
+  CHANGE_TO_NEXT_SESSION: 'changeToNextSession',
 };
 
 // 终端操作快捷键
@@ -181,19 +188,19 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
     content: '打开新建连接弹框',
     type: TerminalShortcutType.PANEL
   }, {
-    item: TerminalShortcutKeys.COPY_TERMINAL,
+    item: TerminalShortcutKeys.COPY_SESSION,
     content: '复制终端',
     type: TerminalShortcutType.PANEL
   }, {
-    item: TerminalShortcutKeys.CLOSE_TERMINAL,
+    item: TerminalShortcutKeys.CLOSE_SESSION,
     content: '关闭终端',
     type: TerminalShortcutType.PANEL
   }, {
-    item: TerminalShortcutKeys.CHANGE_TO_PREV_TERMINAL,
+    item: TerminalShortcutKeys.CHANGE_TO_PREV_SESSION,
     content: '切换至前一个终端',
     type: TerminalShortcutType.PANEL
   }, {
-    item: TerminalShortcutKeys.CHANGE_TO_NEXT_TERMINAL,
+    item: TerminalShortcutKeys.CHANGE_TO_NEXT_SESSION,
     content: '切换至后一个终端',
     type: TerminalShortcutType.PANEL
   }, {

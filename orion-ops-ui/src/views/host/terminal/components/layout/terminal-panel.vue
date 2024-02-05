@@ -62,14 +62,14 @@
     // 失焦自动终端
     if (before) {
       const beforeTab = props.panel.items.find(s => s.key === before);
-      if (beforeTab && beforeTab?.type === PanelSessionType.TERMINAL.type) {
+      if (beforeTab && beforeTab?.type === PanelSessionType.SSH.type) {
         sessionManager.getSession(before)?.blur();
       }
     }
     // 终端自动聚焦
     if (active) {
       const activeTab = props.panel.items.find(s => s.key === active);
-      if (activeTab && activeTab?.type === PanelSessionType.TERMINAL.type) {
+      if (activeTab && activeTab?.type === PanelSessionType.SSH.type) {
         sessionManager.getSession(active)?.focus();
       }
     }
@@ -102,7 +102,7 @@
     align-items: center;
 
     .tab-title-icon {
-      font-size: 18px;
+      font-size: 16px;
       margin-right: 6px;
     }
   }

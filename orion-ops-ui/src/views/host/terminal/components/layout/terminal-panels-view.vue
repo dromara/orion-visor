@@ -66,15 +66,15 @@
         // 打开新建连接弹框
         hostModal.value.open(panelManager.active);
         break;
-      case TerminalShortcutKeys.COPY_TERMINAL:
+      case TerminalShortcutKeys.COPY_SESSION:
         // 复制会话
         const currentTab = panelManager.getCurrentPanel().getCurrentTab();
         if (currentTab) {
           copySession(currentTab, panelManager.active);
         }
         break;
-      case TerminalShortcutKeys.CLOSE_TERMINAL:
-        // 关闭终端
+      case TerminalShortcutKeys.CLOSE_SESSION:
+        // 关闭会话
         const panel = panelManager.getCurrentPanel();
         if (panel.active) {
           panel.deleteTab(panel.active);
