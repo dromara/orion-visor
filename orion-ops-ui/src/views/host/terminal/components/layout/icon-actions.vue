@@ -8,7 +8,9 @@
                content-class="terminal-tooltip-content"
                :auto-fix-position="false"
                :content="action.content">
-      <div class="terminal-sidebar-icon-wrapper" v-if="action.visible !== false">
+      <div v-if="action.visible !== false"
+           class="terminal-sidebar-icon-wrapper"
+           :class="[wrapperClass]">
         <div class="terminal-sidebar-icon"
              :class="[
                iconClass,
@@ -36,6 +38,7 @@
   defineProps({
     actions: Array as PropType<Array<SidebarAction>>,
     position: String,
+    wrapperClass: String,
     iconClass: String,
   });
 

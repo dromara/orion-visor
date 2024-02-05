@@ -1,5 +1,5 @@
 <template>
-  <div class="terminal-setting-container">
+  <div class="terminal-setting-container recommend-container">
     <div class="terminal-setting-wrapper">
       <!-- 组合容器 -->
       <div class="combined-container">
@@ -12,7 +12,7 @@
               <component :is="handler.icon" />
             </div>
             <!-- 内容 -->
-            <div class="combined-handler-text">
+            <div class="combined-handler-text" :title="handler.title">
               {{ handler.title }}
             </div>
           </div>
@@ -141,9 +141,13 @@
   @icon-size: @handler-height;
   @actions-width: 80px;
 
+  .recommend-container {
+    overflow: hidden;
+  }
+
   .combined-container {
     padding: 12px;
-    margin: 64px auto;
+    margin: 64px auto 0 auto;
     width: @container-width;
     height: @container-height;
     display: flex;
@@ -193,17 +197,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     &-text {
       height: 100%;
       width: calc(100% - @icon-size - 12px);
-      display: flex;
-      align-items: center;
       font-size: 12px;
       overflow: hidden;
       white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &-actions {

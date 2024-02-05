@@ -1,9 +1,9 @@
 <template>
-  <div class="terminal-container">
+  <div class="ssh-container">
     <!-- 头部 -->
-    <div class="terminal-header">
+    <div class="ssh-header">
       <!-- 左侧操作 -->
-      <div class="terminal-header-left">
+      <div class="ssh-header-left">
         <!-- 主机地址 -->
         <span class="address-wrapper">
           {{ tab.address }}
@@ -13,7 +13,7 @@
         </span>
       </div>
       <!-- 右侧操作 -->
-      <div class="terminal-header-right">
+      <div class="ssh-header-right">
         <!-- 命令输入框 -->
         <a-textarea class="command-input mr8"
                     v-if="preference.actionBarSetting.commandInput !== false"
@@ -23,7 +23,9 @@
                     allow-clear
                     @keyup="writeCommandInput" />
         <!-- 操作按钮 -->
-        <icon-actions class="terminal-header-right-action-bar"
+        <icon-actions class="ssh-header-right-action-bar"
+                      wrapper-class="ssh-header-icon-wrapper"
+                      icon-class="ssh-header-icon"
                       :actions="rightActions"
                       position="bottom" />
         <!-- 连接状态 -->
@@ -34,19 +36,19 @@
       </div>
     </div>
     <!-- 终端右键菜单 -->
-    <terminal-context-menu :session="session"
-                           @click="doTerminalHandle">
+    <ssh-context-menu :session="session"
+                      @click="doTerminalHandle">
       <!-- 终端容器 -->
-      <div class="terminal-wrapper"
+      <div class="ssh-wrapper"
            :style="{ background: preference.theme.schema.background }">
         <!-- 终端实例 -->
-        <div class="terminal-inst" ref="terminalRef" />
+        <div class="ssh-inst" ref="terminalRef" />
         <!-- 搜索模态框 -->
-        <terminal-search-modal ref="searchModal"
-                               @find="findWords"
-                               @close="focus" />
+        <ssh-search-modal ref="searchModal"
+                          @find="findWords"
+                          @close="focus" />
       </div>
-    </terminal-context-menu>
+    </ssh-context-menu>
     <!-- 命令编辑器 -->
     <shell-editor-modal ref="editorModal"
                         :closable="false"
@@ -60,7 +62,7 @@
 
 <script lang="ts">
   export default {
-    name: 'terminalView'
+    name: 'sshView'
   };
 </script>
 
@@ -72,8 +74,8 @@
   import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
   import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
-  import TerminalSearchModal from './terminal-search-modal.vue';
-  import TerminalContextMenu from './terminal-context-menu.vue';
+  import SshSearchModal from './ssh-search-modal.vue';
+  import SshContextMenu from './ssh-context-menu.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -88,9 +90,6 @@
   const commandInput = ref();
   const terminalRef = ref();
   const session = ref<ITerminalSession>();
-
-  // TODO
-  // sftp
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {
@@ -154,18 +153,18 @@
 </script>
 
 <style lang="less" scoped>
-  @terminal-header-height: 36px;
+  @ssh-header-height: 36px;
 
-  .terminal-container {
+  .ssh-container {
     width: 100%;
     height: calc(100vh - var(--header-height) - var(--panel-nav-height));
     position: relative;
   }
 
-  .terminal-header {
+  .ssh-header {
     width: 100%;
-    height: @terminal-header-height;
-    padding: 0 6px;
+    height: @ssh-header-height;
+    padding: 0 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -214,12 +213,13 @@
     &-right-action-bar {
       display: flex;
 
-      :deep(.terminal-sidebar-icon-wrapper) {
-        width: 30px;
-        height: 30px;
+      :deep(.ssh-header-icon-wrapper) {
+        width: 28px;
+        height: 28px;
+        margin: 0 2px;
       }
 
-      :deep(.terminal-sidebar-icon) {
+      :deep(.ssh-header-icon) {
         width: 28px;
         height: 28px;
         font-size: 20px;
@@ -236,13 +236,13 @@
     }
   }
 
-  .terminal-wrapper {
+  .ssh-wrapper {
     width: 100%;
-    height: calc(100% - @terminal-header-height);
+    height: calc(100% - @ssh-header-height);
     position: relative;
     padding: 6px 0 0 6px;
 
-    .terminal-inst {
+    .ssh-inst {
       width: 100%;
       height: 100%;
 

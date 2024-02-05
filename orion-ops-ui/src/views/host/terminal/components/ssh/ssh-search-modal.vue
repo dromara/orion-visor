@@ -53,7 +53,7 @@
 
 <script lang="ts">
   export default {
-    name: 'terminalSearchModal'
+    name: 'sshSearchModal'
   };
 </script>
 

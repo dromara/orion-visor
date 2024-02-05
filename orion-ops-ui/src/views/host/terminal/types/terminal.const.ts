@@ -186,23 +186,23 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   }, {
     item: TerminalShortcutKeys.OPEN_NEW_CONNECT_MODAL,
     content: '打开新建连接弹框',
-    type: TerminalShortcutType.PANEL
+    type: TerminalShortcutType.SESSION
   }, {
     item: TerminalShortcutKeys.COPY_SESSION,
-    content: '复制终端',
-    type: TerminalShortcutType.PANEL
+    content: '复制会话',
+    type: TerminalShortcutType.SESSION
   }, {
     item: TerminalShortcutKeys.CLOSE_SESSION,
-    content: '关闭终端',
-    type: TerminalShortcutType.PANEL
+    content: '关闭会话',
+    type: TerminalShortcutType.SESSION
   }, {
     item: TerminalShortcutKeys.CHANGE_TO_PREV_SESSION,
-    content: '切换至前一个终端',
-    type: TerminalShortcutType.PANEL
+    content: '切换至前一个会话',
+    type: TerminalShortcutType.SESSION
   }, {
     item: TerminalShortcutKeys.CHANGE_TO_NEXT_SESSION,
-    content: '切换至后一个终端',
-    type: TerminalShortcutType.PANEL
+    content: '切换至后一个会话',
+    type: TerminalShortcutType.SESSION
   }, {
     item: 'copy',
     content: '复制',

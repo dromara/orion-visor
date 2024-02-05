@@ -28,8 +28,10 @@
             {{ tab.title }}
           </span>
         </template>
-        <!-- 终端 -->
-        <terminal-view :tab="tab" />
+        <!-- ssh -->
+        <ssh-view v-if="tab.type === PanelSessionType.SSH.type" :tab="tab" />
+        <!-- sftp -->
+        <sftp-view v-if="tab.type === PanelSessionType.SFTP.type" :tab="tab" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -46,7 +48,8 @@
   import { watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { PanelSessionType } from '../../types/terminal.const';
-  import TerminalView from '../xterm/terminal-view.vue';
+  import SshView from '../ssh/ssh-view.vue';
+  import SftpView from '../sftp/sftp-view.vue';
 
   const props = defineProps<{
     index: number,
