@@ -26,7 +26,7 @@
   import IconActions from './icon-actions.vue';
   import CommandSnippetListDrawer from '../../../command-snippet/components/command-snippet-list-drawer.vue';
 
-  const emits = defineEmits(['openSftp', 'openTransfer']);
+  const emits = defineEmits(['openTransfer']);
 
   const { getAndCheckCurrentTerminalSession } = useTerminalStore();
 
@@ -38,13 +38,7 @@
       icon: 'icon-code',
       content: '打开命令片段',
       click: () => snippetRef.value.open()
-    },
-    {
-      icon: 'icon-folder',
-      content: '打开 SFTP',
-      click: () => emits('openSftp')
-    },
-    {
+    }, {
       icon: 'icon-swap',
       content: '文件传输列表',
       iconStyle: {

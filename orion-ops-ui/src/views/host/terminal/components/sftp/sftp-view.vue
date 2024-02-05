@@ -1,6 +1,8 @@
 <template>
   <div>
     {{ tab }}
+    <div>header</div>
+    <div>table</div>
   </div>
 </template>
 
