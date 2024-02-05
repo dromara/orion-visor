@@ -32,10 +32,10 @@
   import type { HostQueryResponse } from '@/api/asset/host';
   import { onMounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { TerminalTabs } from '../../types/terminal.const';
+  import { PanelSessionType, TerminalTabs } from '../../types/terminal.const';
 
   const totalCount = 7;
-  const { tabManager, hosts, openTerminal } = useTerminalStore();
+  const { tabManager, hosts, openSession } = useTerminalStore();
 
   const combinedHandlers = ref<Array<CombinedHandlerItem>>([{
     title: TerminalTabs.NEW_CONNECTION.title,
@@ -46,8 +46,8 @@
   // 点击组合操作元素
   const clickHandlerItem = (item: CombinedHandlerItem) => {
     if (item.host) {
-      // 打开终端
-      openTerminal(item.host as HostQueryResponse);
+      // 打开会话
+      openSession(item.host as HostQueryResponse, PanelSessionType.TERMINAL);
     } else {
       // 打开 tab
       tabManager.openTab(item.tab as TerminalTabItem);

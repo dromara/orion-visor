@@ -20,13 +20,13 @@
           <!-- 左侧图标-名称 -->
           <div class="flex-center host-item-left">
             <!-- 图标 -->
-            <span class="host-item-left-icon" @click="openTerminal(item)">
-                <icon-desktop />
-              </span>
+            <span class="host-item-left-icon">
+              <icon-desktop />
+            </span>
             <!-- 名称 -->
             <span class="host-item-left-name">
-                <!-- 名称文本 -->
-                <template v-if="!item.editable">
+              <!-- 名称文本 -->
+              <template v-if="!item.editable">
                   <!-- 文本 -->
                   <a-tooltip position="top"
                              :mini="true"
@@ -42,7 +42,7 @@
                       </template>
                     </span>
                   </a-tooltip>
-                  <!-- 修改别名 -->
+                <!-- 修改别名 -->
                   <a-tooltip position="top"
                              :mini="true"
                              :auto-fix-position="false"
@@ -54,7 +54,7 @@
                   </a-tooltip>
                 </template>
               <!-- 名称输入框 -->
-                <template v-else>
+              <template v-else>
                   <a-input v-model="item.alias"
                            ref="aliasNameInput"
                            class="host-item-left-name-input"
@@ -76,7 +76,7 @@
                     </template>
                   </a-input>
                 </template>
-              </span>
+            </span>
           </div>
           <!-- 中间ip -->
           <div class="flex-center host-item-center">
@@ -111,16 +111,29 @@
             </div>
             <!-- 操作 -->
             <div class="host-item-right-actions">
-              <!-- 连接主机 -->
+              <!-- 打开 SSH -->
               <a-tooltip position="top"
                          :mini="true"
                          :auto-fix-position="false"
                          content-class="terminal-tooltip-content"
                          arrow-class="terminal-tooltip-content"
-                         content="连接主机">
+                         content="打开 SSH">
                 <div class="terminal-sidebar-icon-wrapper">
-                  <div class="terminal-sidebar-icon" @click="openTerminal(item)">
+                  <div class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.TERMINAL)">
                     <icon-thunderbolt />
+                  </div>
+                </div>
+              </a-tooltip>
+              <!-- 打开 SFTP -->
+              <a-tooltip position="top"
+                         :mini="true"
+                         :auto-fix-position="false"
+                         content-class="terminal-tooltip-content"
+                         arrow-class="terminal-tooltip-content"
+                         content="打开 SFTP">
+                <div class="terminal-sidebar-icon-wrapper">
+                  <div class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.SFTP)">
+                    <icon-folder />
                   </div>
                 </div>
               </a-tooltip>
@@ -172,7 +185,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostAlias } from '@/api/asset/host-extra';
-  import { openSshModalKey } from '../../types/terminal.const';
+  import { openSshModalKey, PanelSessionType } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -180,7 +193,7 @@
     emptyValue: string
   }>();
 
-  const { openTerminal } = useTerminalStore();
+  const { openSession } = useTerminalStore();
   const { toggle: toggleFavorite, loading: favoriteLoading } = useFavorite('HOST');
 
   const aliasNameInput = ref();
@@ -311,7 +324,6 @@
         border-radius: 32px;
         margin-right: 10px;
         font-size: 16px;
-        cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;

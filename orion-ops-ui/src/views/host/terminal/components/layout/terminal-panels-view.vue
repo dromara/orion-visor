@@ -26,7 +26,7 @@
   import TerminalPanel from './terminal-panel.vue';
   import HostListModal from '../new-connection/host-list-modal.vue';
 
-  const { preference, tabManager, panelManager, copyTerminalSession } = useTerminalStore();
+  const { preference, tabManager, panelManager, copySession } = useTerminalStore();
 
   const hostModal = ref();
 
@@ -67,10 +67,10 @@
         hostModal.value.open(panelManager.active);
         break;
       case TerminalShortcutKeys.COPY_TERMINAL:
-        // 复制终端
-        const hostId = panelManager.getCurrentPanel().getCurrentTab()?.hostId;
-        if (hostId) {
-          copyTerminalSession(hostId, panelManager.active);
+        // 复制会话
+        const currentTab = panelManager.getCurrentPanel().getCurrentTab();
+        if (currentTab) {
+          copySession(currentTab, panelManager.active);
         }
         break;
       case TerminalShortcutKeys.CLOSE_TERMINAL:
@@ -80,11 +80,11 @@
           panel.deleteTab(panel.active);
         }
         break;
-      case TerminalShortcutKeys.CHANGE_TO_PREV_TERMINAL:
+      case TerminalShortcutKeys.CHANGE_TO_PREV_SESSION:
         // 切换至前一个终端
         panelManager.getCurrentPanel().changeToPrevTab();
         break;
-      case TerminalShortcutKeys.CHANGE_TO_NEXT_TERMINAL:
+      case TerminalShortcutKeys.CHANGE_TO_NEXT_SESSION:
         // 切换至后一个终端
         panelManager.getCurrentPanel().changeToNextTab();
         break;

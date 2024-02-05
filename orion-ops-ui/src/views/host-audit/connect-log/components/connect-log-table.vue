@@ -2,11 +2,11 @@
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
-                    label-align="left"
-                    :itemOptions="{ 5: { span: 2 } }"
-                    @submit="fetchTableData"
-                    @reset="fetchTableData"
-                    @keyup.enter="() => fetchTableData()">
+                  label-align="left"
+                  :itemOptions="{ 6: { span: 2 } }"
+                  @submit="fetchTableData"
+                  @reset="fetchTableData"
+                  @keyup.enter="() => fetchTableData()">
       <!-- 连接用户 -->
       <a-form-item field="userId" label="连接用户" label-col-flex="50px">
         <user-selector v-model="formModel.userId"
@@ -28,6 +28,13 @@
         <a-select v-model="formModel.status"
                   placeholder="请选择状态"
                   :options="toOptions(connectStatusKey)"
+                  allow-clear />
+      </a-form-item>
+      <!-- 类型 -->
+      <a-form-item field="type" label="类型" label-col-flex="50px">
+        <a-select v-model="formModel.type"
+                  placeholder="请选择类型"
+                  :options="toOptions(connectTypeKey)"
                   allow-clear />
       </a-form-item>
       <!-- token -->
@@ -107,7 +114,7 @@
   import { getHostConnectLogPage } from '@/api/asset/host-connect-log';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { connectStatusKey } from '../types/const';
+  import { connectStatusKey, connectTypeKey } from '../types/const';
   import { usePagination } from '@/types/table';
   import { useDictStore } from '@/store';
   import useCopy from '@/hooks/copy';

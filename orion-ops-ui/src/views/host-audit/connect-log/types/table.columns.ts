@@ -31,13 +31,11 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
-    title: 'token',
-    dataIndex: 'token',
-    slotName: 'token',
+    title: '类型',
+    dataIndex: 'type',
+    slotName: 'type',
+    width: 68,
     align: 'left',
-    width: 180,
-    ellipsis: true,
-    tooltip: true,
   }, {
     title: '状态',
     dataIndex: 'status',
@@ -45,22 +43,23 @@ const columns = [
     align: 'left',
     width: 90,
   }, {
-    title: '开始时间',
-    dataIndex: 'startTime',
-    slotName: 'startTime',
+    title: 'token',
+    dataIndex: 'token',
+    slotName: 'token',
     align: 'left',
-    width: 180,
-    render: ({ record }) => {
-      return record.startTime && dateFormat(new Date(record.startTime));
-    },
+    width: 120,
+    ellipsis: true,
+    tooltip: true,
   }, {
-    title: '结束时间',
-    dataIndex: 'endTime',
-    slotName: 'endTime',
+    title: '连接时间',
+    dataIndex: 'connectTime',
+    slotName: 'connectTime',
     align: 'left',
-    width: 180,
+    width: 310,
     render: ({ record }) => {
-      return record.endTime && dateFormat(new Date(record.endTime));
+      return (record.startTime && dateFormat(new Date(record.startTime)))
+        + ' - '
+        + (record.endTime && dateFormat(new Date(record.endTime)) || '现在');
     },
   },
 ] as TableColumnData[];

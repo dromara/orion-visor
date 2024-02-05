@@ -52,9 +52,10 @@
   import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, ref } from 'vue';
   import { useTerminalStore } from '@/store';
+  import { PanelSessionType } from '../../types/terminal.const';
   import useVisible from '@/hooks/visible';
 
-  const { hosts, openTerminal } = useTerminalStore();
+  const { hosts, openSession } = useTerminalStore();
   const { visible, setVisible } = useVisible();
 
   const panelIndex = ref();
@@ -97,7 +98,7 @@
 
   // 打开终端
   const clickHost = (item: HostQueryResponse) => {
-    openTerminal(item, panelIndex.value);
+    openSession(item, PanelSessionType.TERMINAL, panelIndex.value);
     setVisible(false);
   };
 

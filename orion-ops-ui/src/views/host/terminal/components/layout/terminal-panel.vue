@@ -45,7 +45,7 @@
   import type { ITerminalTabManager, TerminalPanelTabItem } from '../../types/terminal.type';
   import { watch } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { TerminalPanelTabType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/terminal.const';
   import TerminalView from '../xterm/terminal-view.vue';
 
   const props = defineProps<{
@@ -62,14 +62,14 @@
     // 失焦自动终端
     if (before) {
       const beforeTab = props.panel.items.find(s => s.key === before);
-      if (beforeTab && beforeTab?.type === TerminalPanelTabType.TERMINAL) {
+      if (beforeTab && beforeTab?.type === PanelSessionType.TERMINAL.type) {
         sessionManager.getSession(before)?.blur();
       }
     }
     // 终端自动聚焦
     if (active) {
       const activeTab = props.panel.items.find(s => s.key === active);
-      if (activeTab && activeTab?.type === TerminalPanelTabType.TERMINAL) {
+      if (activeTab && activeTab?.type === PanelSessionType.TERMINAL.type) {
         sessionManager.getSession(active)?.focus();
       }
     }

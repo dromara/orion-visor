@@ -8,6 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
+import type { PanelSessionTab, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -17,7 +18,7 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextSessionId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
-import { TerminalPanelTabType, TerminalTabs } from '@/views/host/terminal/types/terminal.const';
+import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/terminal.const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';
@@ -131,8 +132,8 @@ export default defineStore('terminal', {
       });
     },
 
-    // 打开终端
-    openTerminal(record: HostQueryResponse, panelIndex: number = 0) {
+    // 打开会话
+    openSession(record: HostQueryResponse, session: PanelSessionTab, panelIndex: number = 0) {
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([record.id, ...this.hosts.latestHosts])];
       // 切换到终端面板页面
@@ -154,17 +155,21 @@ export default defineStore('terminal', {
         title: `(${nextSeq})  ${record.alias || record.name}`,
         hostId: record.id,
         address: record.address,
-        icon: 'icon-desktop',
-        type: TerminalPanelTabType.TERMINAL
+        icon: session.icon,
+        type: session.type
       });
     },
 
-    // 复制并且打开终端
-    copyTerminalSession(hostId: number, panelIndex: number = 0) {
+    // 复制并且打开会话
+    copySession(item: TerminalPanelTabItem, panelIndex: number = 0) {
       const host = this.hosts.hostList
-        .find(s => s.id === hostId);
+        .find(s => s.id === item.hostId);
       if (host) {
-        this.openTerminal(host, panelIndex);
+        const sessionType = {
+          type: item.type,
+          icon: item.icon
+        };
+        this.openSession(host, sessionType, panelIndex);
       }
     },
 
@@ -189,14 +194,14 @@ export default defineStore('terminal', {
     // 获取当前终端会话
     getCurrentTerminalSession() {
       // 获取面板会话
-      const panelTab = this.panelManager
+      const sessionTab = this.panelManager
         .getCurrentPanel()
         .getCurrentTab();
-      if (!panelTab || panelTab.type !== TerminalPanelTabType.TERMINAL) {
+      if (!sessionTab || sessionTab.type !== PanelSessionType.TERMINAL.type) {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession(panelTab.key);
+      return this.sessionManager.getSession(sessionTab.key);
     },
 
   },

@@ -66,13 +66,13 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                         new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevTab", true, true, true, "BracketLeft", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTab", true, true, true, "BracketRight", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectTab", true, true, true, "KeyN", true),
-                        // 终端面板快捷键
+                        // 会话快捷键
                         new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectModal", true, false, true, "KeyN", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("copyTerminal", true, false, true, "KeyO", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("closeTerminal", true, false, true, "KeyW", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevTerminal", true, false, true, "BracketLeft", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("changeToNextTerminal", true, false, true, "BracketRight", true),
-                        // 终端会话快捷键
+                        new TerminalPreferenceModel.ShortcutKeysModel("copySession", true, false, true, "KeyO", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("closeSession", true, false, true, "KeyW", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToPrevSession", true, false, true, "BracketLeft", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("changeToNextSession", true, false, true, "BracketRight", true),
+                        // 终端快捷键
                         new TerminalPreferenceModel.ShortcutKeysModel("copy", true, true, false, "KeyC", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("paste", true, true, false, "KeyV", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("toTop", true, true, false, "ArrowUp", true),
