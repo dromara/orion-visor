@@ -36,9 +36,14 @@ public enum OutputTypeEnum {
     PONG("p", "${type}"),
 
     /**
-     * 输出
+     * SSH 输出
      */
-    OUTPUT("o", "${type}|${sessionId}|${body}"),
+    SSH_OUTPUT("o", "${type}|${sessionId}|${body}"),
+
+    /**
+     * SFTP 文件列表
+     */
+    SFTP_LIST("ls", "${type}|${sessionId}|${result}|${path}|${body}"),
 
     ;
 

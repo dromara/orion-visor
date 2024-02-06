@@ -145,7 +145,7 @@ export interface ITerminalSessionManager {
   // 打开 ssh 会话
   openSsh: (tab: TerminalTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
   // 打开 sftp 会话
-  openSftp: (tab: TerminalTabItem) => Promise<ISftpSession>;
+  openSftp: (tab: TerminalTabItem, dataRef: SftpDataRef) => Promise<ISftpSession>;
   // 获取终端会话
   getSession: <T extends ITerminalSession>(sessionId: string) => T;
   // 关闭终端会话
@@ -176,18 +176,20 @@ export interface ITerminalOutputProcessor {
   processClose: (payload: OutputPayload) => void;
   // 处理 pong 消息
   processPong: (payload: OutputPayload) => void;
-  // 处理输出消息
-  processOutput: (payload: OutputPayload) => void;
+  // 处理 SSH 输出消息
+  processSshOutput: (payload: OutputPayload) => void;
+  // 处理 SFTP 文件列表
+  processSftpList: (payload: OutputPayload) => void;
 }
 
-// 终端 dom 元素引用
+// xterm dom 元素引用
 export interface XtermDomRef {
   el: HTMLElement;
   searchModal: any;
   editorModal: any;
 }
 
-// 终端插件
+// xterm 插件
 export interface XtermAddons {
   fit: FitAddon;
   webgl: WebglAddon;
@@ -195,6 +197,16 @@ export interface XtermAddons {
   weblink: WebLinksAddon;
   search: SearchAddon;
   image: ImageAddon;
+}
+
+// sftp 数据引用
+export interface SftpDataRef {
+  // 文件列表
+  list: any;
+  // 当前路径
+  currentPath: any;
+  // 设置加载状态
+  setLoading: (loading: boolean) => void;
 }
 
 // 终端会话定义
@@ -288,5 +300,32 @@ export interface ISshSessionHandler {
 
 // sftp 会话定义
 export interface ISftpSession extends ITerminalSession {
+  // 接收器
+  resolver: ISftpSessionResolver;
 
+  // 初始化
+  init: (dataRef: SftpDataRef) => void;
+  // 查询文件列表
+  list: (path: string | undefined) => void;
+}
+
+// sftp 会话接收器定义
+export interface ISftpSessionResolver {
+  // 接受文件列表响应
+  resolveList: (result: string, path: string, list: Array<SftpFile>) => void;
+}
+
+// sftp 文件
+export interface SftpFile {
+  name: string;
+  path: string;
+  suffix: string;
+  size: string;
+  sizeByte: number;
+  attr: string;
+  isDir: boolean;
+  permission: number;
+  uid: number;
+  gid: number;
+  modifyTime: number;
 }

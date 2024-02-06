@@ -9,19 +9,25 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 主机输出响应 实体对象
+ * sftp 列表响应 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/29 16:20
+ * @since 2024/2/6 16:20
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TerminalOutputResponse", description = "主机输出响应 实体对象")
-public class TerminalOutputResponse extends TerminalBasePayload {
+@Schema(name = "SftpListResponse", description = "sftp 列表响应 实体对象")
+public class SftpListResponse extends TerminalBasePayload {
+
+    @Schema(description = "检查结果")
+    private Integer result;
+
+    @Schema(description = "path")
+    private String path;
 
     @Schema(description = "body")
     private String body;

@@ -1,5 +1,9 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
+import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileResponse;
+
+import java.util.List;
+
 /**
  * sftp 会话定义
  *
@@ -13,5 +17,20 @@ public interface ISftpSession extends ITerminalSession {
      * 建立连接
      */
     void connect();
+
+    /**
+     * 获取 home 路径
+     *
+     * @return homePath
+     */
+    String getHome();
+
+    /**
+     * 文件列表
+     *
+     * @param path path
+     * @return list
+     */
+    List<SftpFileResponse> list(String path);
 
 }

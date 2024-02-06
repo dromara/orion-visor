@@ -9,23 +9,26 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 输入请求 实体对象
+ * sftp 修改文件权限 实体对象
  * <p>
- * i|eff00a1|command
+ * i|eff00a1|path|mode
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/29 16:20
+ * @since 2024/2/6 13:31
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TerminalInputRequest", description = "输入请求 实体对象")
-public class TerminalInputRequest extends TerminalBasePayload {
+@Schema(name = "SftpChangeModeRequest", description = "sftp 修改文件权限 实体对象")
+public class SftpChangeModeRequest extends TerminalBasePayload {
 
-    @Schema(description = "command")
-    private String command;
+    @Schema(description = "path")
+    private String path;
+
+    @Schema(description = "权限")
+    private String mode;
 
 }

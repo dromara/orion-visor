@@ -3,10 +3,7 @@ package com.orion.ops.module.asset.handler.host.terminal.enums;
 import com.alibaba.fastjson.JSONObject;
 import com.orion.ops.module.asset.handler.host.terminal.handler.*;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalConnectRequest;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalInputRequest;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalResizeRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.*;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -55,27 +52,46 @@ public enum InputTypeEnum {
             TerminalBasePayload.class),
 
     /**
-     * 修改大小
+     * SSH 修改大小
      */
-    RESIZE("rs",
-            TerminalResizeHandler.class,
+    SSH_RESIZE("rs",
+            SshResizeHandler.class,
             new String[]{"type", "sessionId", "cols", "rows"},
-            TerminalResizeRequest.class),
+            SshResizeRequest.class),
 
     /**
-     * 输入
+     * SSH  输入
      */
-    INPUT("i",
-            TerminalInputHandler.class,
+    SSH_INPUT("i",
+            SshInputHandler.class,
             new String[]{"type", "sessionId", "command"},
-            TerminalInputRequest.class),
+            SshInputRequest.class),
 
-    // LS
-    // MK
-    // RM
-    // MV
-    // TC
-    // CD
+    /**
+     * SFTP 文件列表
+     */
+    SFTP_LIST("ls",
+            SftpListHandler.class,
+            new String[]{"type", "sessionId", "path"},
+            SftpListRequest.class),
+
+
+    // TODO
+    // MKDIR
+    // TOUCH
+
+    // REMOVE
+    // MOVE
+    // TRUNCATE
+
+    // CHMOD
+
+    // GET
+    // SAVE
+
+    // COPY
+    // UPLOAD
+    // DOWNLOAD
 
     ;
 

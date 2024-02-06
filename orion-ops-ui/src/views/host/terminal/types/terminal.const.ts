@@ -55,11 +55,11 @@ export const ExtraSshAuthType = {
 // 面板会话 tab 类型
 export const PanelSessionType = {
   SSH: {
-    type: 'ssh',
+    type: 'SSH',
     icon: 'icon-desktop'
   },
   SFTP: {
-    type: 'sftp',
+    type: 'SFTP',
     icon: 'icon-folder'
   },
 };

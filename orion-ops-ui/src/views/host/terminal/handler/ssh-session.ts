@@ -110,7 +110,7 @@ export default class SshSession implements ISshSession {
         return;
       }
       // 输入
-      this.channel.send(InputProtocol.INPUT, {
+      this.channel.send(InputProtocol.SSH_INPUT, {
         sessionId: this.sessionId,
         command: s
       });
@@ -134,7 +134,7 @@ export default class SshSession implements ISshSession {
       if (!this.connected) {
         return;
       }
-      this.channel.send(InputProtocol.RESIZE, {
+      this.channel.send(InputProtocol.SSH_RESIZE, {
         sessionId: this.sessionId,
         cols,
         rows

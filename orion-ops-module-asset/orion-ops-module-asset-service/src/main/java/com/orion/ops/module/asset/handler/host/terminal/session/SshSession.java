@@ -10,7 +10,7 @@ import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCloseResponse;
-import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalOutputResponse;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.SshOutputResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -117,12 +117,12 @@ public class SshSession extends TerminalSession implements ISshSession {
             while (channel.isOpen() && (read = in.read(bs)) != -1) {
                 String body = lastLine = new String(bs, 0, read, config.getCharset());
                 // 响应
-                TerminalOutputResponse resp = TerminalOutputResponse.builder()
-                        .type(OutputTypeEnum.OUTPUT.getType())
+                SshOutputResponse resp = SshOutputResponse.builder()
+                        .type(OutputTypeEnum.SSH_OUTPUT.getType())
                         .sessionId(sessionId)
                         .body(body)
                         .build();
-                WebSockets.sendText(channel, OutputTypeEnum.OUTPUT.format(resp));
+                WebSockets.sendText(channel, OutputTypeEnum.SSH_OUTPUT.format(resp));
             }
         } catch (IOException ex) {
             log.error("terminal 读取流失败", ex);

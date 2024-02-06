@@ -1,4 +1,4 @@
-import { ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload } from '../types/terminal.type';
+import { ISftpSession, ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload } from '../types/terminal.type';
 import { InputProtocol } from '../types/terminal.protocol';
 import { TerminalStatus } from '../types/terminal.const';
 import { useTerminalStore } from '@/store';
@@ -42,8 +42,9 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       // sftp 会话
       if (success) {
         // 检查成功发送 connect 命令
-        // TODO
-
+        this.channel.send(InputProtocol.CONNECT, {
+          sessionId,
+        });
       } else {
         // 未成功提示错误信息
         Message.error(msg || '建立 SFTP 失败');
@@ -105,10 +106,17 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     // console.log('pong');
   }
 
-  // 处理输出消息
-  processOutput({ sessionId, body }: OutputPayload): void {
+  // 处理 SSH 输出消息
+  processSshOutput({ sessionId, body }: OutputPayload): void {
     const session = this.sessionManager.getSession<ISshSession>(sessionId);
     session && session.write(body);
+  }
+
+  // 处理 SFTP 文件列表
+  processSftpList({ sessionId, result, path, body }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveList(result, path, JSON.parse(body));
   }
 
 }

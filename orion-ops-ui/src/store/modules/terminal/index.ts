@@ -64,8 +64,7 @@ export default defineStore('terminal', {
       } as TerminalShortcutSetting,
     },
     hosts: {} as AuthorizedHostQueryResponse,
-    // fixme
-    tabManager: new TerminalTabManager(TerminalTabs.TERMINAL_PANEL),
+    tabManager: new TerminalTabManager(TerminalTabs.NEW_CONNECTION),
     panelManager: new TerminalPanelManager(),
     sessionManager: new TerminalSessionManager()
   }),

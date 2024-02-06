@@ -9,26 +9,26 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 修改大小请求 实体对象
+ * sftp 移动文件 实体对象
  * <p>
- * rs|eff00a1|100|20
+ * i|eff00a1|source|target
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/29 16:20
+ * @since 2024/2/6 13:31
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TerminalResizeRequest", description = "修改大小请求 实体对象")
-public class TerminalResizeRequest extends TerminalBasePayload {
+@Schema(name = "SftpMoveRequest", description = "sftp 移动文件 实体对象")
+public class SftpMoveRequest extends TerminalBasePayload {
 
-    @Schema(description = "列数")
-    private Integer cols;
+    @Schema(description = "source")
+    private String source;
 
-    @Schema(description = "行数")
-    private Integer rows;
+    @Schema(description = "target")
+    private String target;
 
 }

@@ -20,16 +20,21 @@ export const InputProtocol = {
     type: 'p',
     template: ['type']
   },
-  // 修改大小
-  RESIZE: {
+  // SSH 修改大小
+  SSH_RESIZE: {
     type: 'rs',
     template: ['type', 'sessionId', 'cols', 'rows']
   },
-  // 输入
-  INPUT: {
+  // SSH 输入
+  SSH_INPUT: {
     type: 'i',
     template: ['type', 'sessionId', 'command']
-  }
+  },
+  // SFTP 文件列表
+  SFTP_LIST: {
+    type: 'ls',
+    template: ['type', 'sessionId', 'path']
+  },
 };
 
 // 输出协议
@@ -58,10 +63,16 @@ export const OutputProtocol = {
     template: ['type'],
     processMethod: 'processPong'
   },
-  // 输出
-  OUTPUT: {
+  // SSH 输出
+  SSH_OUTPUT: {
     type: 'o',
     template: ['type', 'sessionId', 'body'],
-    processMethod: 'processOutput'
+    processMethod: 'processSshOutput'
+  },
+  // SFTP 文件列表
+  SFTP_LIST: {
+    type: 'ls',
+    template: ['type', 'sessionId', 'result', 'path', 'body'],
+    processMethod: 'processSftpList'
   },
 };
