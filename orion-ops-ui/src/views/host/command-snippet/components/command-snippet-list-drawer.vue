@@ -83,7 +83,7 @@
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
-  const { getCurrentTerminalSession } = useTerminalStore();
+  const { getCurrentSshSession } = useTerminalStore();
   const cacheStore = useCacheStore();
 
   const formDrawer = ref();
@@ -267,7 +267,7 @@
   // 关闭回调
   const onClose = () => {
     // 聚焦终端
-    getCurrentTerminalSession()?.focus();
+    getCurrentSshSession()?.focus();
   };
 
 </script>

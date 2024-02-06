@@ -1,5 +1,5 @@
 import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
-import type { ITerminalSession, ITerminalSessionHandler, TerminalDomRef } from '../types/terminal.type';
+import type { ISshSession, ISshSessionHandler, XtermDomRef } from '../types/terminal.type';
 import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
 import html2canvas from 'html2canvas';
@@ -31,21 +31,21 @@ const preventKeys: Array<ShortcutKey> = [
 
 const { copy: copyValue, readText } = useCopy();
 
-// 终端会话处理器实现
-export default class TerminalSessionHandler implements ITerminalSessionHandler {
+// ssh 会话处理器实现
+export default class SshSessionHandler implements ISshSessionHandler {
 
-  private readonly domRef: TerminalDomRef;
+  private readonly domRef: XtermDomRef;
 
   private readonly inst: Terminal;
 
-  private readonly session: ITerminalSession;
+  private readonly session: ISshSession;
 
   private readonly interactSetting: TerminalInteractSetting;
 
   private readonly shortcutKeys: Array<TerminalShortcutKey>;
 
-  constructor(session: ITerminalSession,
-              domRef: TerminalDomRef) {
+  constructor(session: ISshSession,
+              domRef: XtermDomRef) {
     this.session = session;
     this.inst = session.inst;
     this.domRef = domRef;

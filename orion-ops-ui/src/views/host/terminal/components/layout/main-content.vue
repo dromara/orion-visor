@@ -45,17 +45,17 @@
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
   import TerminalPanelsView from '@/views/host/terminal/components/layout/terminal-panels-view.vue';
 
-  const { preference, tabManager, getCurrentTerminalSession } = useTerminalStore();
+  const { preference, tabManager, getCurrentSshSession } = useTerminalStore();
 
   // 监听 tab 切换
   watch(() => tabManager.active, (active, before) => {
     // 失焦 tab
     if (before === TerminalTabs.TERMINAL_PANEL.key) {
-      getCurrentTerminalSession()?.blur();
+      getCurrentSshSession()?.blur();
     }
     // 聚焦 tab
     if (active === TerminalTabs.TERMINAL_PANEL.key) {
-      getCurrentTerminalSession()?.focus();
+      getCurrentSshSession()?.focus();
     }
     // 修改标题
     document.title = Object.values(TerminalTabs)

@@ -67,7 +67,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ITerminalSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
+  import type { ISshSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import useCopy from '@/hooks/copy';
@@ -89,7 +89,7 @@
   const searchModal = ref();
   const commandInput = ref();
   const terminalRef = ref();
-  const session = ref<ITerminalSession>();
+  const session = ref<ISshSession>();
 
   // 发送命令
   const writeCommandInput = async (e: KeyboardEvent) => {
@@ -138,7 +138,7 @@
   // 初始化会话
   onMounted(async () => {
     // 创建终端处理器
-    session.value = await sessionManager.openSession(props.tab, {
+    session.value = await sessionManager.openSsh(props.tab, {
       el: terminalRef.value,
       editorModal: editorModal.value,
       searchModal: searchModal.value

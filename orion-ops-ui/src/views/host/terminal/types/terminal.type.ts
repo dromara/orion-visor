@@ -96,13 +96,6 @@ export interface OutputPayload {
   [key: string]: string;
 }
 
-// 终端 dom 元素引用
-export interface TerminalDomRef {
-  el: HTMLElement;
-  searchModal: any;
-  editorModal: any;
-}
-
 // 终端 tab 管理器定义
 export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem> {
   // 当前 tab
@@ -149,10 +142,12 @@ export interface ITerminalPanelManager<T extends TerminalPanelTabItem = Terminal
 
 // 终端会话管理器定义
 export interface ITerminalSessionManager {
-  // 打开终端会话
-  openSession: (tab: TerminalTabItem, domRef: TerminalDomRef) => Promise<ITerminalSession>;
+  // 打开 ssh 会话
+  openSsh: (tab: TerminalTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
+  // 打开 sftp 会话
+  openSftp: (tab: TerminalTabItem) => Promise<ISftpSession>;
   // 获取终端会话
-  getSession: (sessionId: string) => ITerminalSession;
+  getSession: <T extends ITerminalSession>(sessionId: string) => T;
   // 关闭终端会话
   closeSession: (sessionId: string) => void;
   // 重置
@@ -185,8 +180,15 @@ export interface ITerminalOutputProcessor {
   processOutput: (payload: OutputPayload) => void;
 }
 
+// 终端 dom 元素引用
+export interface XtermDomRef {
+  el: HTMLElement;
+  searchModal: any;
+  editorModal: any;
+}
+
 // 终端插件
-export interface TerminalAddons {
+export interface XtermAddons {
   fit: FitAddon;
   webgl: WebglAddon;
   canvas: CanvasAddon;
@@ -199,21 +201,30 @@ export interface TerminalAddons {
 export interface ITerminalSession {
   hostId: number;
   sessionId: string;
-  // terminal 实例
-  inst: Terminal;
   // 是否已连接
   connected: boolean;
+
+  // 连接
+  connect: () => void;
+  // 断开连接
+  disconnect: () => void;
+  // 关闭
+  close: () => void;
+}
+
+// ssh 会话定义
+export interface ISshSession extends ITerminalSession {
+  // terminal 实例
+  inst: Terminal;
   // 是否可写
   canWrite: boolean;
   // 状态
   status: number;
   // 处理器
-  handler: ITerminalSessionHandler;
+  handler: ISshSessionHandler;
 
   // 初始化
-  init: (domRef: TerminalDomRef) => void;
-  // 连接
-  connect: () => void;
+  init: (domRef: XtermDomRef) => void;
   // 设置是否可写
   setCanWrite: (canWrite: boolean) => void;
   // 写入数据
@@ -226,14 +237,10 @@ export interface ITerminalSession {
   fit: () => void;
   // 查找
   find: (word: string, next: boolean, options: ISearchOptions) => void;
-  // 断开连接
-  disconnect: () => void;
-  // 关闭
-  close: () => void;
 }
 
-// 终端会话处理器定义
-export interface ITerminalSessionHandler {
+// ssh 会话处理器定义
+export interface ISshSessionHandler {
   // 检测是否忽略默认行为
   checkPreventDefault: (e: KeyboardEvent) => boolean;
   // 启用状态
@@ -277,4 +284,9 @@ export interface ITerminalSessionHandler {
   screenshot: () => void;
   // 检查追加缺失的部分
   checkAppendMissing: (value: string) => void;
+}
+
+// sftp 会话定义
+export interface ISftpSession extends ITerminalSession {
+
 }

@@ -31,12 +31,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ContextMenuItem, ITerminalSession } from '../../types/terminal.type';
+  import type { ContextMenuItem, ISshSession } from '../../types/terminal.type';
   import { ActionBarItems } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   defineProps<{
-    session: ITerminalSession | undefined
+    session: ISshSession | undefined
   }>();
 
   const emits = defineEmits(['click']);

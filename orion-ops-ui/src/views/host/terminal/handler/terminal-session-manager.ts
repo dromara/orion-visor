@@ -1,10 +1,12 @@
-import type { ITerminalChannel, ITerminalSession, ITerminalSessionManager, TerminalDomRef, TerminalTabItem } from '../types/terminal.type';
+import type { ISftpSession, ITerminalChannel, ITerminalSession, ITerminalSessionManager, TerminalTabItem, XtermDomRef } from '../types/terminal.type';
 import { sleep } from '@/utils';
 import { InputProtocol } from '../types/terminal.protocol';
+import { PanelSessionType } from '../types/terminal.const';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';
-import TerminalSession from './terminal-session';
 import TerminalChannel from './terminal-channel';
+import SshSession from './ssh-session';
+import SftpSession from './sftp-session';
 
 // 终端会话管理器实现
 export default class TerminalSessionManager implements ITerminalSessionManager {
@@ -23,15 +25,15 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     this.dispatchResizeFn = useDebounceFn(this.dispatchResize).bind(this);
   }
 
-  // 打开终端会话
-  async openSession(tab: TerminalTabItem,
-                    domRef: TerminalDomRef) {
+  // 打开 ssh 会话
+  async openSsh(tab: TerminalTabItem,
+                domRef: XtermDomRef) {
     const sessionId = tab.key;
     const hostId = tab.hostId as number;
     // 初始化客户端
     await this.initChannel();
     // 新建会话
-    const session = new TerminalSession(
+    const session = new SshSession(
       hostId,
       sessionId,
       this.channel
@@ -46,14 +48,37 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     this.channel.send(InputProtocol.CHECK, {
       sessionId,
       hostId,
-      connectType: 'SSH'
+      connectType: PanelSessionType.SSH.type
+    });
+    return session;
+  }
+
+  // 打开 sftp 会话
+  async openSftp(tab: TerminalTabItem): Promise<ISftpSession> {
+    const sessionId = tab.key;
+    const hostId = tab.hostId as number;
+    // 初始化客户端
+    await this.initChannel();
+    // 新建会话
+    const session = new SftpSession(
+      hostId,
+      sessionId,
+      this.channel
+    );
+    // 添加会话
+    this.sessions[sessionId] = session;
+    // 发送会话初始化请求
+    this.channel.send(InputProtocol.CHECK, {
+      sessionId,
+      hostId,
+      connectType: PanelSessionType.SFTP.type
     });
     return session;
   }
 
   // 获取终端会话
-  getSession(sessionId: string): ITerminalSession {
-    return this.sessions[sessionId];
+  getSession<T>(sessionId: string): T {
+    return this.sessions[sessionId] as T;
   }
 
   // 关闭终端会话
@@ -64,7 +89,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     }
     // 关闭连接
     session.disconnect();
-    // 关闭 session
+    // 关闭会话
     session.close();
     // 移除 session
     this.sessions[sessionId] = undefined as unknown as ITerminalSession;
@@ -94,6 +119,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   private dispatchResize() {
     // 对所有已连接的会话重置大小
     Object.values(this.sessions)
+      .filter(s => s instanceof SshSession)
+      .map(s => s as SshSession)
       .filter(h => h.connected)
       .forEach(h => h.fit());
   }

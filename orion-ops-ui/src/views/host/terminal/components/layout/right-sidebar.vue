@@ -28,7 +28,7 @@
 
   const emits = defineEmits(['openTransfer']);
 
-  const { getAndCheckCurrentTerminalSession } = useTerminalStore();
+  const { getAndCheckCurrentSshSession } = useTerminalStore();
 
   const snippetRef = ref();
 
@@ -59,7 +59,7 @@
 
   // 终端截屏
   const screenshot = () => {
-    const handler = getAndCheckCurrentTerminalSession()?.handler;
+    const handler = getAndCheckCurrentSshSession()?.handler;
     if (handler && handler.enabledStatus('screenshot')) {
       handler.screenshot();
     }

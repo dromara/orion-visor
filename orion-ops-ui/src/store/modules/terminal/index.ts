@@ -8,7 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
-import type { PanelSessionTab, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
+import type { ISshSession, PanelSessionTab, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -64,7 +64,8 @@ export default defineStore('terminal', {
       } as TerminalShortcutSetting,
     },
     hosts: {} as AuthorizedHostQueryResponse,
-    tabManager: new TerminalTabManager(TerminalTabs.NEW_CONNECTION),
+    // fixme
+    tabManager: new TerminalTabManager(TerminalTabs.TERMINAL_PANEL),
     panelManager: new TerminalPanelManager(),
     sessionManager: new TerminalSessionManager()
   }),
@@ -173,8 +174,8 @@ export default defineStore('terminal', {
       }
     },
 
-    // 检查当前是否为终端页面 并且获取当前终端会话
-    getAndCheckCurrentTerminalSession(tips: boolean = true) {
+    // 检查当前是否为终端页面 并且获取当前 ssh 会话
+    getAndCheckCurrentSshSession(tips: boolean = true) {
       // 获取当前 activeTab
       const activeTab = this.tabManager.active;
       if (activeTab !== TerminalTabs.TERMINAL_PANEL.key) {
@@ -184,15 +185,15 @@ export default defineStore('terminal', {
         return;
       }
       // 获取当前会话
-      const session = this.getCurrentTerminalSession();
+      const session = this.getCurrentSshSession();
       if (!session && tips) {
         Message.warning('请打开终端');
       }
       return session;
     },
 
-    // 获取当前终端会话
-    getCurrentTerminalSession() {
+    // 获取当前 ssh 会话
+    getCurrentSshSession() {
       // 获取面板会话
       const sessionTab = this.panelManager
         .getCurrentPanel()
@@ -201,7 +202,7 @@ export default defineStore('terminal', {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession(sessionTab.key);
+      return this.sessionManager.getSession<ISshSession>(sessionTab.key);
     },
 
   },

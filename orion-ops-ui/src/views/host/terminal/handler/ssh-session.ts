@@ -1,6 +1,6 @@
 import type { UnwrapRef } from 'vue';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
-import type { ITerminalChannel, ITerminalSession, ITerminalSessionHandler, TerminalAddons, TerminalDomRef } from '../types/terminal.type';
+import type { ISshSession, ISshSessionHandler, ITerminalChannel, XtermAddons, XtermDomRef } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '../types/terminal.protocol';
 import { fontFamilySuffix, TerminalShortcutType, TerminalStatus } from '../types/terminal.const';
@@ -13,10 +13,10 @@ import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebglAddon } from 'xterm-addon-webgl';
 import { playBell } from '@/utils/bell';
 import { addEventListen } from '@/utils/event';
-import TerminalSessionHandler from './terminal-session-handler';
+import SshSessionHandler from './ssh-session-handler';
 
-// 终端会话实现
-export default class TerminalSession implements ITerminalSession {
+// ssh 会话实现
+export default class SshSession implements ISshSession {
 
   public readonly hostId: number;
 
@@ -30,11 +30,11 @@ export default class TerminalSession implements ITerminalSession {
 
   public status: number;
 
-  public handler: ITerminalSessionHandler;
+  public handler: ISshSessionHandler;
 
   private readonly channel: ITerminalChannel;
 
-  private readonly addons: TerminalAddons;
+  private readonly addons: XtermAddons;
 
   constructor(hostId: number,
               sessionId: string,
@@ -46,12 +46,12 @@ export default class TerminalSession implements ITerminalSession {
     this.canWrite = false;
     this.status = TerminalStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
-    this.handler = undefined as unknown as ITerminalSessionHandler;
-    this.addons = {} as TerminalAddons;
+    this.handler = undefined as unknown as ISshSessionHandler;
+    this.addons = {} as XtermAddons;
   }
 
   // 初始化
-  init(domRef: TerminalDomRef): void {
+  init(domRef: XtermDomRef): void {
     const { preference } = useTerminalStore();
     // 初始化实例
     this.inst = new Terminal({
@@ -65,7 +65,7 @@ export default class TerminalSession implements ITerminalSession {
       scrollback: preference.sessionSetting.scrollBackLine,
     });
     // 处理器
-    this.handler = new TerminalSessionHandler(this, domRef);
+    this.handler = new SshSessionHandler(this, domRef);
     // 注册快捷键
     this.registerShortcut(preference);
     // 注册事件

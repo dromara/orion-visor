@@ -44,7 +44,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ITerminalTabManager, TerminalPanelTabItem } from '../../types/terminal.type';
+  import type { ISshSession, ITerminalTabManager, TerminalPanelTabItem } from '../../types/terminal.type';
   import { watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { PanelSessionType } from '../../types/terminal.const';
@@ -66,14 +66,14 @@
     if (before) {
       const beforeTab = props.panel.items.find(s => s.key === before);
       if (beforeTab && beforeTab?.type === PanelSessionType.SSH.type) {
-        sessionManager.getSession(before)?.blur();
+        sessionManager.getSession<ISshSession>(before)?.blur();
       }
     }
     // 终端自动聚焦
     if (active) {
       const activeTab = props.panel.items.find(s => s.key === active);
       if (activeTab && activeTab?.type === PanelSessionType.SSH.type) {
-        sessionManager.getSession(active)?.focus();
+        sessionManager.getSession<ISshSession>(active)?.focus();
       }
     }
     // 无终端自动关闭
@@ -214,12 +214,13 @@
     }
 
     .arco-tabs-tab-title {
-      padding: 11px 18px 11px 14px;
+      padding: 11px 18px 7px 14px;
       background: var(--color-bg-panel-tabs);
       font-size: 14px;
       height: var(--panel-nav-height);
       display: flex;
       align-items: center;
+      border-bottom: 4px transparent solid;
 
       &::before {
         display: none;
