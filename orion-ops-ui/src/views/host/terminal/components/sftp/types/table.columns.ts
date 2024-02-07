@@ -1,13 +1,13 @@
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
-import { dateFormat } from '@/utils';
 
 // 表格列
 const columns = [
   {
     title: '名称',
     dataIndex: 'name',
-    slotName: 'name',
-    fixed: 'left',
+    slotName: 'fileName',
+    ellipsis: true,
+    tooltip: true,
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
@@ -34,15 +34,7 @@ const columns = [
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
-    render: ({ record }) => {
-      return dateFormat(new Date(record.modifyTime));
-    },
-  }, {
-    title: '操作',
-    dataIndex: 'actions',
-    slotName: 'actions',
-    align: 'left',
-    fixed: 'right',
+    cellClass: 'action-cell',
   },
 ] as TableColumnData[];
 

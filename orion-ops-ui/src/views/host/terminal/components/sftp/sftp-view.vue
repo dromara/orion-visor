@@ -1,24 +1,19 @@
 <template>
   <div class="sftp-container">
-    <!-- 头部 -->
-    <div class="sftp-header">
-      <!-- 左侧操作 -->
-      <div class="sftp-header-left">
-        home input
-      </div>
-      <!-- 右侧操作 -->
-      <div class="sftp-header-right">
-        上传 下载 删除 刷新 copy touch mk
-      </div>
-    </div>
     <a-split class="split-view"
              v-model:size="splitSize"
              :min="0.3"
              :disabled="!editView">
-      <!-- 表格 -->
+      <!-- 左侧面板表格 -->
       <template #first>
-        <sftp-table :list="list"
-                    :loading="loading" />
+        <div class="sftp-table-container">
+          <!-- 表头 -->
+          <sftp-table-header class="sftp-table-header" />
+          <!-- 表格 -->
+          <sftp-table class="sftp-table-wrapper"
+                      :list="list"
+                      :loading="loading" />
+        </div>
       </template>
       <template #second v-if="editView">
         <div>editor</div>
@@ -39,7 +34,8 @@
   import { useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import data from './data';
-  import SftpTable from '@/views/host/terminal/components/sftp/sftp-table.vue';
+  import SftpTable from './sftp-table.vue';
+  import SftpTableHeader from './sftp-table-header.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -72,36 +68,31 @@
 </script>
 
 <style lang="less" scoped>
-  @sftp-header-height: 36px;
+  @sftp-table-header-height: 32px + 8px;
 
   .sftp-container {
     width: 100%;
     height: calc(100vh - var(--header-height) - var(--panel-nav-height));
     position: relative;
-  }
 
-  .split-view {
-    width: 100%;
-    height: calc(100% - @sftp-header-height);
-  }
-
-  .sftp-header {
-    width: 100%;
-    height: @sftp-header-height;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--color-bg-panel-bar);
-
-    &-left, &-right {
-      display: flex;
-      align-items: center;
+    .split-view {
+      width: 100%;
       height: 100%;
     }
+  }
 
-    &-right {
-      justify-content: flex-end;
+  .sftp-table-container {
+    padding: 8px;
+    height: 100%;
+
+    .sftp-table-header {
+      width: 100%;
+      height: @sftp-table-header-height;
+      padding-bottom: 8px;
+    }
+
+    .sftp-table-wrapper {
+      height: calc(100% - @sftp-table-header-height);
     }
   }
 

@@ -52,6 +52,45 @@ export const ExtraSshAuthType = {
   CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',
 };
 
+// 文件类型
+export const FILE_TYPE = {
+  NORMAL_FILE: {
+    value: '-',
+    label: '普通文件',
+    icon: 'icon-file'
+  },
+  DIRECTORY: {
+    value: 'd',
+    label: '目录',
+    icon: 'icon-folder'
+  },
+  LINK_FILE: {
+    value: 'l',
+    label: '链接文件',
+    icon: 'icon-link'
+  },
+  MANAGE_FILE: {
+    value: 'p',
+    label: '管理文件',
+    icon: 'icon-drive-file'
+  },
+  BLOCK_DEVICE_FILE: {
+    value: 'b',
+    label: '块设备文件',
+    icon: 'icon-drive-file'
+  },
+  CHARACTER_DEVICE_FILE: {
+    value: 'c',
+    label: '字符设备文件',
+    icon: 'icon-drive-file'
+  },
+  SOCKET_FILE: {
+    value: 's',
+    label: '套接字文件',
+    icon: 'icon-drive-file'
+  }
+};
+
 // 面板会话 tab 类型
 export const PanelSessionType = {
   SSH: {

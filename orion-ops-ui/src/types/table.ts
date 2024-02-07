@@ -7,7 +7,7 @@ import { TablePageSizeOptions } from '@/types/const';
 /**
  * 创建列表分页
  */
-export const usePagination = (): PaginationProps => {
+export const usePagination = (ext?: PaginationProps): PaginationProps => {
   const appStore = useAppStore();
   return reactive({
     total: 0,
@@ -15,17 +15,19 @@ export const usePagination = (): PaginationProps => {
     pageSize: isNumber(appStore.defaultTablePageSize) ? appStore.defaultTablePageSize : TablePageSizeOptions[0],
     showTotal: true,
     showPageSize: true,
-    pageSizeOptions: TablePageSizeOptions
+    pageSizeOptions: TablePageSizeOptions,
+    ...ext
   });
 };
 
 /**
  * 创建行选择器
  */
-export const useRowSelection = (type = 'checkbox'): TableRowSelection => {
+export const useRowSelection = (ext?: TableRowSelection): TableRowSelection => {
   return reactive({
-    type: type as any,
+    type: 'checkbox',
     showCheckedAll: true,
     onlyCurrent: true,
+    ...ext
   });
 };
