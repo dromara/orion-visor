@@ -145,7 +145,7 @@ export interface ITerminalSessionManager {
   // 打开 ssh 会话
   openSsh: (tab: TerminalTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
   // 打开 sftp 会话
-  openSftp: (tab: TerminalTabItem, dataRef: SftpDataRef) => Promise<ISftpSession>;
+  openSftp: (tab: TerminalTabItem, resolver: ISftpSessionResolver) => Promise<ISftpSession>;
   // 获取终端会话
   getSession: <T extends ITerminalSession>(sessionId: string) => T;
   // 关闭终端会话
@@ -197,16 +197,6 @@ export interface XtermAddons {
   weblink: WebLinksAddon;
   search: SearchAddon;
   image: ImageAddon;
-}
-
-// sftp 数据引用
-export interface SftpDataRef {
-  // 文件列表
-  list: any;
-  // 当前路径
-  currentPath: any;
-  // 设置加载状态
-  setLoading: (loading: boolean) => void;
 }
 
 // 终端会话定义
@@ -304,13 +294,15 @@ export interface ISftpSession extends ITerminalSession {
   resolver: ISftpSessionResolver;
 
   // 初始化
-  init: (dataRef: SftpDataRef) => void;
+  init: (resolver: ISftpSessionResolver) => void;
   // 查询文件列表
   list: (path: string | undefined) => void;
 }
 
 // sftp 会话接收器定义
 export interface ISftpSessionResolver {
+  // 连接后回调
+  connectCallback: () => void;
   // 接受文件列表响应
   resolveList: (result: string, path: string, list: Array<SftpFile>) => void;
 }

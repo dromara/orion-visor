@@ -1,14 +1,14 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://116.62.194.246:3306/orion-ops-pro?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
+      url: jdbc:mysql://127.0.0.1:3306/orion-ops-pro?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
       username: root
       password: Data@123456
       initial-size: 0
       min-idle: 1
       max-active: 5
   redis:
-    host: 116.62.194.246
+    host: 127.0.0.1
     port: 6379
     database: 0
     password: lijiahang

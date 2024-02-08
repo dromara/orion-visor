@@ -11,8 +11,8 @@
           <sftp-table-header class="sftp-table-header" />
           <!-- 表格 -->
           <sftp-table class="sftp-table-wrapper"
-                      :list="list"
-                      :loading="loading" />
+                      :list="fileList"
+                      :loading="tableLoading" />
         </div>
       </template>
       <template #second v-if="editView">
@@ -33,7 +33,8 @@
   import { onMounted, onUnmounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import data from './data';
+  import mockData from './data';
+  import { Message } from '@arco-design/web-vue';
   import SftpTable from './sftp-table.vue';
   import SftpTableHeader from './sftp-table-header.vue';
 
@@ -42,21 +43,38 @@
   }>();
 
   const { preference, sessionManager } = useTerminalStore();
-  const { loading, setLoading } = useLoading(true);
+  const { loading: tableLoading, setLoading: setTableLoading } = useLoading(true);
 
   const session = ref<ISftpSession>();
   const currentPath = ref<string>('');
-  const list = ref<Array<SftpFile>>(data);
+  const fileList = ref<Array<SftpFile>>(mockData);
   const splitSize = ref(1);
   const editView = ref(true);
+
+  // 连接成功回调
+  const connectCallback = () => {
+    setTableLoading(true);
+    session.value?.list(undefined);
+  };
+
+  // 接收列表回调
+  const resolveList = (result: string, path: string, list: Array<SftpFile>) => {
+    const success = !!Number.parseInt(result);
+    setLoading(false);
+    if (!success) {
+      Message.error('查询失败');
+      return;
+    }
+    currentPath.value = path;
+    fileList.value = list;
+  };
 
   // 初始化会话
   onMounted(async () => {
     // 创建终端处理器
     session.value = await sessionManager.openSftp(props.tab, {
-      list,
-      currentPath,
-      setLoading
+      connectCallback,
+      resolveList
     });
   });
 

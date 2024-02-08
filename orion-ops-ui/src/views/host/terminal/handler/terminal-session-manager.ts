@@ -1,9 +1,9 @@
 import type {
   ISftpSession,
+  ISftpSessionResolver,
   ITerminalChannel,
   ITerminalSession,
   ITerminalSessionManager,
-  SftpDataRef,
   TerminalTabItem,
   XtermDomRef
 } from '../types/terminal.type';
@@ -62,7 +62,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   }
 
   // 打开 sftp 会话
-  async openSftp(tab: TerminalTabItem, dataRef: SftpDataRef): Promise<ISftpSession> {
+  async openSftp(tab: TerminalTabItem, resolver: ISftpSessionResolver): Promise<ISftpSession> {
     const sessionId = tab.key;
     const hostId = tab.hostId as number;
     // 初始化客户端
@@ -74,7 +74,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       this.channel
     );
     // 初始化
-    session.init(dataRef);
+    session.init(resolver);
     // 添加会话
     this.sessions[sessionId] = session;
     // 发送会话初始化请求

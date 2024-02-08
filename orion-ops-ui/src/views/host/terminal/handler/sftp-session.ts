@@ -1,6 +1,5 @@
-import type { ISftpSession, ISftpSessionResolver, ITerminalChannel, SftpDataRef } from '../types/terminal.type';
+import type { ISftpSession, ISftpSessionResolver, ITerminalChannel } from '../types/terminal.type';
 import { InputProtocol } from '../types/terminal.protocol';
-import SftpSessionResolver from './sftp-session-resolver';
 
 // sftp 会话实现
 export default class SftpSession implements ISftpSession {
@@ -13,8 +12,6 @@ export default class SftpSession implements ISftpSession {
 
   public resolver: ISftpSessionResolver;
 
-  private dataRef: SftpDataRef;
-
   private readonly channel: ITerminalChannel;
 
   constructor(hostId: number,
@@ -24,27 +21,23 @@ export default class SftpSession implements ISftpSession {
     this.sessionId = sessionId;
     this.channel = channel;
     this.connected = false;
-    this.dataRef = undefined as unknown as SftpDataRef;
     this.resolver = undefined as unknown as ISftpSessionResolver;
   }
 
   // 初始化
-  init(dataRef: SftpDataRef): void {
-    this.dataRef = dataRef;
-    // 处理器
-    this.resolver = new SftpSessionResolver(this, dataRef);
+  init(resolver: ISftpSessionResolver): void {
+    this.resolver = resolver;
   }
 
   // 设置已连接
   connect(): void {
     this.connected = true;
-    // 加载 home 目录文件数据
-    this.list(undefined);
+    // 连接回调
+    this.resolver.connectCallback();
   }
 
   // 查询文件列表
   list(path: string | undefined) {
-    this.dataRef.setLoading(true);
     this.channel.send(InputProtocol.SFTP_LIST, {
       sessionId: this.sessionId,
       path
