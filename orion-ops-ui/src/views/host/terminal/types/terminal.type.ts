@@ -295,6 +295,8 @@ export interface ISftpSession extends ITerminalSession {
 
   // 初始化
   init: (resolver: ISftpSessionResolver) => void;
+  // 设置显示隐藏文件
+  setShowHiddenFile: (show: boolean) => void;
   // 查询文件列表
   list: (path: string | undefined) => void;
 }

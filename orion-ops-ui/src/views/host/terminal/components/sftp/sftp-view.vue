@@ -6,11 +6,18 @@
              :disabled="!editView">
       <!-- 左侧面板表格 -->
       <template #first>
+        <!-- FIXME spin -->
         <div class="sftp-table-container">
           <!-- 表头 -->
-          <sftp-table-header class="sftp-table-header" />
+          <sftp-table-header class="sftp-table-header"
+                             :current-path="currentPath"
+                             :session="session"
+                             :selected-files="selectFiles"
+                             @load-file="loadFiles" />
           <!-- 表格 -->
           <sftp-table class="sftp-table-wrapper"
+                      v-model:selected-files="selectFiles"
+                      :session="session"
                       :list="fileList"
                       :loading="tableLoading" />
         </div>
@@ -48,19 +55,25 @@
   const session = ref<ISftpSession>();
   const currentPath = ref<string>('');
   const fileList = ref<Array<SftpFile>>(mockData);
+  const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
   const editView = ref(true);
 
   // 连接成功回调
   const connectCallback = () => {
+    loadFiles(undefined);
+  };
+
+  // 加载文件列表
+  const loadFiles = (path: string | undefined) => {
     setTableLoading(true);
-    session.value?.list(undefined);
+    session.value?.list(path);
   };
 
   // 接收列表回调
   const resolveList = (result: string, path: string, list: Array<SftpFile>) => {
     const success = !!Number.parseInt(result);
-    setLoading(false);
+    setTableLoading(false);
     if (!success) {
       Message.error('查询失败');
       return;

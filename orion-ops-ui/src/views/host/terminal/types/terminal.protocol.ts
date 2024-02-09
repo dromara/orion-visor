@@ -33,7 +33,7 @@ export const InputProtocol = {
   // SFTP 文件列表
   SFTP_LIST: {
     type: 'ls',
-    template: ['type', 'sessionId', 'path']
+    template: ['type', 'sessionId', 'showHiddenFile', 'path']
   },
 };
 

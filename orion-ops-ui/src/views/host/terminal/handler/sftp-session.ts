@@ -12,6 +12,8 @@ export default class SftpSession implements ISftpSession {
 
   public resolver: ISftpSessionResolver;
 
+  private showHiddenFile: boolean;
+
   private readonly channel: ITerminalChannel;
 
   constructor(hostId: number,
@@ -21,6 +23,7 @@ export default class SftpSession implements ISftpSession {
     this.sessionId = sessionId;
     this.channel = channel;
     this.connected = false;
+    this.showHiddenFile = false;
     this.resolver = undefined as unknown as ISftpSessionResolver;
   }
 
@@ -36,10 +39,16 @@ export default class SftpSession implements ISftpSession {
     this.resolver.connectCallback();
   }
 
+  // 设置显示隐藏文件
+  setShowHiddenFile(show: boolean): void {
+    this.showHiddenFile = show;
+  }
+
   // 查询文件列表
   list(path: string | undefined) {
     this.channel.send(InputProtocol.SFTP_LIST, {
       sessionId: this.sessionId,
+      showHiddenFile: ~~this.showHiddenFile,
       path
     });
   };

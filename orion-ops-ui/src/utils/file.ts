@@ -26,7 +26,7 @@ export function readFileText(e: File, encoding = 'UTF-8'): Promise<string> {
 /**
  * 解析路径类型
  */
-type PathAnalysis = {
+export interface PathAnalysis {
   name: string;
   path: string;
 }
@@ -34,23 +34,19 @@ type PathAnalysis = {
 /**
  * 获取解析路径
  */
-export function getPathAnalysis(analysisPath: string, paths: PathAnalysis[] = []): PathAnalysis[] {
-  const lastSymbol = analysisPath.lastIndexOf('/');
-  if (lastSymbol === -1) {
-    paths.unshift({
-      name: '/',
-      path: '/'
-    });
+export function getPathAnalysis(path: string, paths: PathAnalysis[] = []): PathAnalysis[] {
+  const lastSeparatorIndex = path.lastIndexOf('/');
+  if (lastSeparatorIndex === -1) {
     return paths;
   }
-  const name = analysisPath.substring(lastSymbol, analysisPath.length);
+  const name = path.substring(lastSeparatorIndex, path.length);
   if (!isEmptyStr(name) && name !== '/') {
     paths.unshift({
       name: name.substring(1, name.length),
-      path: analysisPath
+      path: path
     });
   }
-  return getPathAnalysis(analysisPath.substring(0, lastSymbol), paths);
+  return getPathAnalysis(path.substring(0, lastSeparatorIndex), paths);
 }
 
 /**
@@ -58,7 +54,7 @@ export function getPathAnalysis(analysisPath: string, paths: PathAnalysis[] = []
  */
 export function getPath(path: string) {
   return path.replace(new RegExp('\\\\+', 'g'), '/')
-  .replace(new RegExp('/+', 'g'), '/');
+    .replace(new RegExp('/+', 'g'), '/');
 }
 
 /**

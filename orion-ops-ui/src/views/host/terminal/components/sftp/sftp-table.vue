@@ -1,5 +1,5 @@
 <template>
-  <a-table row-key="name"
+  <a-table row-key="path"
            class="sftp-table"
            label-align="left"
            :columns="columns"
@@ -44,7 +44,7 @@
     <!-- 修改时间/操作 -->
     <template #modifyTime="{ record }">
       <!-- 修改时间 -->
-      <span v-if="editName !== record.name">{{ dateFormat(new Date(record.modifyTime)) }}</span>
+      <span v-if="editRowName !== record.name">{{ dateFormat(new Date(record.modifyTime)) }}</span>
       <!-- 操作 -->
       <a-space v-else>
         <!-- 复制路径 -->
@@ -67,10 +67,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="删除">
-        <span class="click-icon-wrapper row-action-icon"
-              @click="deleteFile(record.path)">
-          <icon-delete />
-        </span>
+          <span class="click-icon-wrapper row-action-icon"
+                @click="deleteFile(record.path)">
+            <icon-delete />
+          </span>
         </a-tooltip>
         <!-- 下载 -->
         <a-tooltip position="top"
@@ -79,10 +79,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="下载">
-        <span class="click-icon-wrapper row-action-icon"
-              @click="downloadFile(record.path)">
-          <icon-download />
-        </span>
+          <span class="click-icon-wrapper row-action-icon"
+                @click="downloadFile(record.path)">
+            <icon-download />
+          </span>
         </a-tooltip>
         <!-- 移动 -->
         <a-tooltip position="top"
@@ -91,10 +91,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="移动">
-        <span class="click-icon-wrapper row-action-icon"
-              @click="moveFile(record.path)">
-          <icon-paste />
-        </span>
+          <span class="click-icon-wrapper row-action-icon"
+                @click="moveFile(record.path)">
+            <icon-paste />
+          </span>
         </a-tooltip>
         <!-- 提权 -->
         <a-tooltip position="top"
@@ -103,10 +103,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="提权">
-        <span class="click-icon-wrapper row-action-icon"
-              @click="chmodFile(record.path)">
-          <icon-user-group />
-        </span>
+          <span class="click-icon-wrapper row-action-icon"
+                @click="chmodFile(record.path, record.attr)">
+            <icon-user-group />
+          </span>
         </a-tooltip>
       </a-space>
     </template>
@@ -129,20 +129,37 @@
   import useCopy from '@/hooks/copy';
   import { FILE_TYPE } from '../../types/terminal.const';
 
+  import type { ISftpSession } from '../../types/terminal.type';
+  import useLoading from '@/hooks/loading';
+  import { useCacheStore } from '@/store';
+  import { computed } from 'vue/dist/vue';
+
   const props = defineProps<{
+    session: ISftpSession | undefined;
     list: Array<SftpFile>;
     loading: boolean;
+    selectedFiles: Array<string>;
   }>();
+
+  const emits = defineEmits(['update:selectedFiles']);
 
   const rowSelection = useRowSelection({ width: 40 });
   const { copy } = useCopy();
 
-  const selectedKeys = ref<Array<string>>([]);
-  const editName = ref<string>('');
+  const selectedKeys = computed({
+    get() {
+      return props.selectedFiles;
+    },
+    set(e) {
+      emits('update:selectedFiles', e);
+    }
+  });
+
+  const editRowName = ref<string>('');
 
   // 设置选中状态
   const setEditable = (record: TableData) => {
-    editName.value = record.name;
+    editRowName.value = record.name;
     record.hover = true;
   };
 
@@ -150,8 +167,8 @@
   const unsetEditable = (record: TableData) => {
     setTimeout(() => {
       // 等待后如果还是当前行 但是未被选中则代表已经被失焦
-      if (record.name === editName.value && !record.hover) {
-        editName.value = '';
+      if (record.name === editRowName.value && !record.hover) {
+        editRowName.value = '';
       }
     }, 20);
     record.hover = false;
@@ -159,6 +176,7 @@
 
   // 删除文件
   const deleteFile = (path: string) => {
+    // confirm
   };
 
   // 下载文件
@@ -167,10 +185,13 @@
 
   // 移动文件
   const moveFile = (path: string) => {
+    // openModal('path')
   };
 
   // 文件提权
-  const chmodFile = (path: string) => {
+  const chmodFile = (path: string, attr: string) => {
+    // openModal('path','mod')
+
   };
 
   // 格式化文件类型
