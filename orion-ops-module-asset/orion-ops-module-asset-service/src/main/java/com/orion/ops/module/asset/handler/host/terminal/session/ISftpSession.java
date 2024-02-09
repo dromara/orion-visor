@@ -28,9 +28,10 @@ public interface ISftpSession extends ITerminalSession {
     /**
      * 文件列表
      *
-     * @param path path
+     * @param path           path
+     * @param showHiddenFile 是否显示隐藏文件
      * @return list
      */
-    List<SftpFileResponse> list(String path);
+    List<SftpFileResponse> list(String path, boolean showHiddenFile);
 
 }

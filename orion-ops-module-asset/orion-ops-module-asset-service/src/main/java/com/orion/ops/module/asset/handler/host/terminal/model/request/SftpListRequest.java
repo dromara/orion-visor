@@ -28,4 +28,7 @@ public class SftpListRequest extends TerminalBasePayload {
     @Schema(description = "path")
     private String path;
 
+    @Schema(description = "是否显示隐藏文件")
+    private Integer showHiddenFile;
+
 }

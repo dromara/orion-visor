@@ -46,7 +46,7 @@ public class SftpListHandler extends AbstractTerminalHandler<SftpListRequest> {
                     path = ((ISftpSession) session).getHome();
                 }
                 // 文件列表
-                list = ((ISftpSession) session).list(path);
+                list = ((ISftpSession) session).list(path, BooleanBit.toBoolean(payload.getShowHiddenFile()));
             } catch (Exception e) {
                 log.error("SftpListHandler-handle error", e);
                 ex = e;

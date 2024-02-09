@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * sftp 修改文件权限 实体对象
  * <p>
- * i|eff00a1|path|mode
+ * i|eff00a1|path|mod
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,13 +22,13 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpChangeModeRequest", description = "sftp 修改文件权限 实体对象")
-public class SftpChangeModeRequest extends TerminalBasePayload {
+@Schema(name = "SftpChangeModRequest", description = "sftp 修改文件权限 实体对象")
+public class SftpChangeModRequest extends TerminalBasePayload {
 
     @Schema(description = "path")
     private String path;
 
     @Schema(description = "权限")
-    private String mode;
+    private String mod;
 
 }

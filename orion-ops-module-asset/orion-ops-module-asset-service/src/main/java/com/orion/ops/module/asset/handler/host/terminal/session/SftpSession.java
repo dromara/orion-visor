@@ -1,7 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
-import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.convert.TypeStore;
 import com.orion.lang.utils.io.FileType;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
@@ -56,9 +54,12 @@ public class SftpSession extends TerminalSession implements ISftpSession {
     }
 
     @Override
-    public List<SftpFileResponse> list(String path) {
+    public List<SftpFileResponse> list(String path, boolean showHiddenFile) {
         // 查询文件
-        List<SftpFile> files = executor.listFilesFilter(path, f -> !f.getName().startsWith("."), false, true);
+        List<SftpFile> files = executor.listFilesFilter(path,
+                s -> showHiddenFile || !s.getName().startsWith(Const.DOT),
+                false,
+                true);
         return files.stream()
                 .map(SftpSession::fileMapping)
                 .collect(Collectors.toList());

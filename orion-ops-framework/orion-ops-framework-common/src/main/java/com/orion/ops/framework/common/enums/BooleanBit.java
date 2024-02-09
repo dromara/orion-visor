@@ -28,6 +28,15 @@ public enum BooleanBit {
 
     private final Integer value;
 
+    /**
+     * 是否为布尔值
+     *
+     * @return boolean
+     */
+    public boolean booleanValue() {
+        return this == TRUE;
+    }
+
     public static BooleanBit of(boolean value) {
         return value ? TRUE : FALSE;
     }
@@ -42,6 +51,16 @@ public enum BooleanBit {
             }
         }
         return null;
+    }
+
+    /**
+     * 转为布尔值
+     *
+     * @param value value
+     * @return boolean
+     */
+    public static boolean toBoolean(Integer value) {
+        return TRUE.value.equals(value);
     }
 
 }
