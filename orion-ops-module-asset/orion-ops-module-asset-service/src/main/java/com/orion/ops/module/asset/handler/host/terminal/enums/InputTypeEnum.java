@@ -72,7 +72,7 @@ public enum InputTypeEnum {
      */
     SFTP_LIST("ls",
             SftpListHandler.class,
-            new String[]{"type", "sessionId", "path"},
+            new String[]{"type", "sessionId", "showHiddenFile", "path"},
             SftpListRequest.class),
 
 

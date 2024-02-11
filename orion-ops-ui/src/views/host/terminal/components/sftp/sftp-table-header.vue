@@ -17,17 +17,19 @@
         </span>
       </a-tooltip>
       <!-- 当前路径 -->
-      <div class="sftp-path-wrapper"
+      <div class="sftp-path-container"
            @click="setPathEditable(true)">
         <!-- 路径输入框 -->
         <div v-if="pathEditable">
           <a-input v-model="pathInput"
+                   ref="pathInputRef"
+                   size="mini"
                    placeholder="文件夹路径"
                    allow-clear
                    @press-enter="doChangePath" />
         </div>
         <!-- 路径视图 -->
-        <a-breadcrumb v-else>
+        <a-breadcrumb class="sftp-path-wrapper" v-else>
           <!-- 根目录 -->
           <a-breadcrumb-item class="sftp-path-unit"
                              @click.stop="loadFileList('/')">
@@ -82,7 +84,7 @@
                  arrow-class="terminal-tooltip-content"
                  content="刷新">
         <span class="click-icon-wrapper header-action-icon"
-              @click="loadFileList">
+              @click="loadFileList()">
           <icon-refresh />
         </span>
       </a-tooltip>
@@ -140,14 +142,15 @@
         </span>
       </a-tooltip>
       <!-- 复制 FIXME 不行就删除 -->
-      <a-tooltip position="top"
+      <a-tooltip v-if="false"
+                 position="top"
                  :mini="true"
                  :overlay-inverse="true"
                  :auto-fix-position="false"
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="复制">
-        <span v-if="false" class="click-icon-wrapper header-action-icon">
+        <span class="click-icon-wrapper header-action-icon">
           <icon-copy />
         </span>
       </a-tooltip>
@@ -202,7 +205,7 @@
 <script lang="ts" setup>
   import type { PathAnalysis } from '@/utils/file';
   import type { ISftpSession } from '../../types/terminal.type';
-  import { ref, watch } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
 
   const props = defineProps<{
@@ -217,6 +220,7 @@
   const analysisPaths = ref<Array<PathAnalysis>>([]);
   const pathEditable = ref(false);
   const pathInput = ref('');
+  const pathInputRef = ref();
 
   // 监听路径变化
   watch(() => props.currentPath, (path) => {
@@ -236,6 +240,12 @@
   const setPathEditable = (editable: boolean) => {
     pathEditable.value = editable;
     pathInput.value = editable ? props.currentPath : '';
+    // 自动聚焦
+    nextTick(() => {
+      if (editable) {
+        pathInputRef.value?.focus();
+      }
+    });
   };
 
   // 执行修改目录
@@ -262,26 +272,30 @@
   // 创建文件
   const createFile = () => {
     // openModal(true, "props.currentPath")
+    console.log(props.currentPath);
   };
 
   // 创建文件夹
   const createDir = () => {
     // openModal(false, "props.currentPath")
+    console.log(props.currentPath);
   };
 
   // 删除选中文件
   const deleteSelectFiles = () => {
     // confirm
-
+    console.log(props.selectedFiles);
   };
 
   // 上传文件
   const uploadFile = () => {
     // openModal("props.currentPath")
+    console.log(props.currentPath);
   };
 
   // 下载文件
   const downloadFile = () => {
+    console.log(props.selectedFiles);
   };
 
   // FIXME 图标宽度提成变量
@@ -312,11 +326,10 @@
     }
   }
 
-  .sftp-path-wrapper {
+  .sftp-path-container {
     background: var(--color-fill-2);
     width: 100%;
     border-radius: 2px;
-    padding: 1px 6px;
     overflow: hidden;
 
     :deep(.sftp-path-unit) {
@@ -325,6 +338,10 @@
       &:hover {
         color: rgb(var(--arcoblue-6));
       }
+    }
+
+    .sftp-path-wrapper {
+      padding: 0 6px 1px 6px;
     }
   }
 

@@ -121,18 +121,13 @@
 
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { SftpFile } from '../../types/terminal.type';
-  import { ref } from 'vue';
+  import type { SftpFile, ISftpSession } from '../../types/terminal.type';
+  import { ref, computed } from 'vue';
   import { useRowSelection } from '@/types/table';
   import { dateFormat } from '@/utils';
   import columns from './types/table.columns';
   import useCopy from '@/hooks/copy';
   import { FILE_TYPE } from '../../types/terminal.const';
-
-  import type { ISftpSession } from '../../types/terminal.type';
-  import useLoading from '@/hooks/loading';
-  import { useCacheStore } from '@/store';
-  import { computed } from 'vue/dist/vue';
 
   const props = defineProps<{
     session: ISftpSession | undefined;
@@ -177,20 +172,24 @@
   // 删除文件
   const deleteFile = (path: string) => {
     // confirm
+    console.log(path);
   };
 
   // 下载文件
   const downloadFile = (path: string) => {
+    console.log(path);
   };
 
   // 移动文件
   const moveFile = (path: string) => {
     // openModal('path')
+    console.log(path);
   };
 
   // 文件提权
   const chmodFile = (path: string, attr: string) => {
     // openModal('path','mod')
+    console.log(path, attr);
 
   };
 

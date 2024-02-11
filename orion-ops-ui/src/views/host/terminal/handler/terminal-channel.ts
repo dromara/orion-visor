@@ -127,6 +127,14 @@ export const parse = (payload: string) => {
 export const format = (protocol: Protocol, payload: InputPayload) => {
   payload.type = protocol.type;
   return protocol.template
-    .map(i => payload[i] || '')
+    .map(i => getPayloadValueString(payload[i]))
     .join(SEPARATOR);
+};
+
+// 获取默认值
+export const getPayloadValueString = (value: unknown): any => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  return value;
 };
