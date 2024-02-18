@@ -6,8 +6,8 @@
              :disabled="!editView">
       <!-- 左侧面板表格 -->
       <template #first>
-        <!-- FIXME spin -->
-        <div class="sftp-table-container">
+        <a-spin class="sftp-table-container"
+                :loading="tableLoading">
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
                              :current-path="currentPath"
@@ -19,8 +19,9 @@
                       v-model:selected-files="selectFiles"
                       :session="session"
                       :list="fileList"
-                      :loading="tableLoading" />
-        </div>
+                      :loading="tableLoading"
+                      @load-file="loadFiles" />
+        </a-spin>
       </template>
       <template #second v-if="editView">
         <div>editor</div>
@@ -39,9 +40,8 @@
   import type { ISftpSession, SftpFile, TerminalTabItem } from '../../types/terminal.type';
   import { onMounted, onUnmounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import useLoading from '@/hooks/loading';
-  import mockData from './data';
   import { Message } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
   import SftpTable from './sftp-table.vue';
   import SftpTableHeader from './sftp-table-header.vue';
 
@@ -54,7 +54,7 @@
 
   const session = ref<ISftpSession>();
   const currentPath = ref<string>('');
-  const fileList = ref<Array<SftpFile>>(mockData);
+  const fileList = ref<Array<SftpFile>>([]);
   const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
   const editView = ref(true);
@@ -114,6 +114,7 @@
 
   .sftp-table-container {
     padding: 8px;
+    width: 100%;
     height: 100%;
 
     .sftp-table-header {

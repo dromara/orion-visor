@@ -11,7 +11,7 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="返回上级">
-        <span class="click-icon-wrapper header-action-icon mr4"
+        <span class="click-icon-wrapper header-action-icon mr8"
               @click="backParentPath">
           <icon-left />
         </span>
@@ -141,31 +141,6 @@
           <icon-delete />
         </span>
       </a-tooltip>
-      <!-- 复制 FIXME 不行就删除 -->
-      <a-tooltip v-if="false"
-                 position="top"
-                 :mini="true"
-                 :overlay-inverse="true"
-                 :auto-fix-position="false"
-                 content-class="terminal-tooltip-content"
-                 arrow-class="terminal-tooltip-content"
-                 content="复制">
-        <span class="click-icon-wrapper header-action-icon">
-          <icon-copy />
-        </span>
-      </a-tooltip>
-      <!-- 移动 FIXME 不行就删除 -->
-      <a-tooltip position="top"
-                 :mini="true"
-                 :overlay-inverse="true"
-                 :auto-fix-position="false"
-                 content-class="terminal-tooltip-content"
-                 arrow-class="terminal-tooltip-content"
-                 content="移动">
-        <span class="click-icon-wrapper header-action-icon">
-          <icon-paste />
-        </span>
-      </a-tooltip>
       <!-- 上传 -->
       <a-tooltip position="top"
                  :mini="true"
@@ -271,38 +246,41 @@
 
   // 创建文件
   const createFile = () => {
-    // openModal(true, "props.currentPath")
+    // TODO openModal(true, "props.currentPath")
     console.log(props.currentPath);
   };
 
   // 创建文件夹
   const createDir = () => {
-    // openModal(false, "props.currentPath")
+    // TODO openModal(false, "props.currentPath")
     console.log(props.currentPath);
   };
 
   // 删除选中文件
   const deleteSelectFiles = () => {
-    // confirm
+    // TODO confirm
     console.log(props.selectedFiles);
   };
 
   // 上传文件
   const uploadFile = () => {
-    // openModal("props.currentPath")
+    // TODO openModal("props.currentPath")
     console.log(props.currentPath);
   };
 
   // 下载文件
   const downloadFile = () => {
+    // TODO
     console.log(props.selectedFiles);
   };
-
-  // FIXME 图标宽度提成变量
 
 </script>
 
 <style lang="less" scoped>
+  @action-num: 7;
+  @action-gap: 8px;
+  @action-width: 26px;
+  @actions-width: @action-num * (@action-width + @action-gap);
 
   .sftp-table-header {
     width: 100%;
@@ -317,11 +295,11 @@
     }
 
     &-left {
-      width: calc(100% - 302px);
+      width: calc(100% - @actions-width);
     }
 
     &-right {
-      width: 302px;
+      width: @actions-width;
       justify-content: flex-end;
     }
   }

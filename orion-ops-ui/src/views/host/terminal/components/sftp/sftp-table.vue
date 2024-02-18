@@ -29,12 +29,15 @@
     </template>
     <!-- 文件名称 -->
     <template #fileName="{ record }">
-      <!-- 文件图标 -->
-      <span class="file-name-icon" :title="formatFileType(record.attr).label">
-        <component :is="formatFileType(record.attr).icon" />
-      </span>
-      <span>
-        {{ record.name }}
+      <span :title="record.name"
+            class="pointer"
+            @click="clickFilename(record)">
+        <!-- 文件图标 -->
+        <span class="file-name-icon" :title="formatFileType(record.attr).label">
+          <component :is="formatFileType(record.attr).icon" />
+        </span>
+        <!-- 文件名称 -->
+        <span>{{ record.name }}</span>
       </span>
     </template>
     <!-- 文件大小 -->
@@ -136,7 +139,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile']);
 
   const rowSelection = useRowSelection({ width: 40 });
   const { copy } = useCopy();
@@ -169,26 +172,38 @@
     record.hover = false;
   };
 
+  // 点击文件名称
+  const clickFilename = (record: TableData) => {
+    if (FILE_TYPE.DIRECTORY.value === formatFileType(record.attr).value) {
+      // 进入文件夹
+      emits('loadFile', record.path);
+    } else {
+      // 点击文件
+      // TODO VIEW
+    }
+  };
+
   // 删除文件
   const deleteFile = (path: string) => {
-    // confirm
+    // TODO confirm
     console.log(path);
   };
 
   // 下载文件
   const downloadFile = (path: string) => {
+    // TODO
     console.log(path);
   };
 
   // 移动文件
   const moveFile = (path: string) => {
-    // openModal('path')
+    // TODO openModal('path')
     console.log(path);
   };
 
   // 文件提权
   const chmodFile = (path: string, attr: string) => {
-    // openModal('path','mod')
+    // TODO openModal('path','mod')
     console.log(path, attr);
 
   };
