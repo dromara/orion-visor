@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -89,8 +90,8 @@ public class SftpSession extends TerminalSession implements ISftpSession {
     }
 
     @Override
-    public void remove(List<String> paths) {
-        paths.stream()
+    public void remove(String[] paths) {
+        Arrays.stream(paths)
                 .map(Valid::checkNormalize)
                 .forEach(executor::remove);
     }

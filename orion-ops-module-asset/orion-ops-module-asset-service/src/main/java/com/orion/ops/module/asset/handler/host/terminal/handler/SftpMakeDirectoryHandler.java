@@ -27,6 +27,7 @@ public class SftpMakeDirectoryHandler extends AbstractTerminalHandler<SftpBaseRe
         String path = payload.getPath();
         log.info("SftpMakeDirectoryHandler-handle session: {}, path: {}", payload.getSessionId(), path);
         Exception ex = null;
+        // 创建文件夹
         try {
             session.mkdir(path);
         } catch (Exception e) {

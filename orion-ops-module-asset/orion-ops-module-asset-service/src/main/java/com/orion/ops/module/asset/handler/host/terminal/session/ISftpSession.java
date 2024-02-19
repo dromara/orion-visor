@@ -61,7 +61,7 @@ public interface ISftpSession extends ITerminalSession {
      *
      * @param paths paths
      */
-    void remove(List<String> paths);
+    void remove(String[] paths);
 
     /**
      * 截断文件

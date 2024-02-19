@@ -27,6 +27,7 @@ public class SftpTouchHandler extends AbstractTerminalHandler<SftpBaseRequest> {
         String path = payload.getPath();
         log.info("SftpTouchHandler-handle session: {}, path: {}", payload.getSessionId(), path);
         Exception ex = null;
+        // 创建文件
         try {
             session.touch(path);
         } catch (Exception e) {

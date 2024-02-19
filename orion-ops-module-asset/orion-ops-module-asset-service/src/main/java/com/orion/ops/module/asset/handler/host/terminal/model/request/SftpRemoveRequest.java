@@ -27,6 +27,6 @@ import java.util.List;
 public class SftpRemoveRequest extends SftpBaseRequest {
 
     @Schema(description = "paths 多个用|分割")
-    private List<String> paths;
+    private String paths;
 
 }
