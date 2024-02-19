@@ -119,4 +119,53 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     session && session.resolver.resolveList(result, path, JSON.parse(body));
   }
 
+  // 处理 SFTP 创建文件夹
+  processSftpMkdir({ sessionId, result, msg }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpMkdir(result, msg);
+  }
+
+  // 处理 SFTP 创建文件
+  processSftpTouch({ sessionId, result, msg }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpTouch(result, msg);
+  }
+
+  // 处理 SFTP 移动文件
+  processSftpMove({ sessionId, result, msg }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpMove(result, msg);
+  }
+
+  // 处理 SFTP 删除文件
+  processSftpRemove({ sessionId, result, msg }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpRemove(result, msg);
+  }
+
+  // 处理 SFTP 修改文件权限
+  processSftpChmod({ sessionId, result, msg }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpChmod(result, msg);
+  }
+
+  // 处理 SFTP 获取文件内容
+  processSftpGetContent({ sessionId, path, result, content }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpGetContent(path, result, content);
+  }
+
+  // 处理 SFTP 修改文件内容
+  processSftpSetContent({ sessionId, result, msg }: OutputPayload) {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveSftpSetContent(result, msg);
+  }
+
 }

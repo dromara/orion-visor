@@ -79,4 +79,6 @@ public interface ErrorMessage {
 
     String PATH_NOT_NORMALIZE = "路径不合法";
 
+    String OPERATE_ERROR = "操作失败";
+
 }

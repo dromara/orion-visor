@@ -35,6 +35,41 @@ export const InputProtocol = {
     type: 'ls',
     template: ['type', 'sessionId', 'showHiddenFile', 'path']
   },
+  // SFTP 创建文件夹
+  SFTP_MKDIR: {
+    type: 'mk',
+    template: ['type', 'sessionId', 'path']
+  },
+  // SFTP 创建文件
+  SFTP_TOUCH: {
+    type: 'to',
+    template: ['type', 'sessionId', 'path']
+  },
+  // SFTP 移动文件
+  SFTP_MOVE: {
+    type: 'mv',
+    template: ['type', 'sessionId', 'path', 'target']
+  },
+  // SFTP 删除文件
+  SFTP_REMOVE: {
+    type: 'rm',
+    template: ['type', 'sessionId', 'path']
+  },
+  // SFTP 修改文件权限
+  SFTP_CHMOD: {
+    type: 'cm',
+    template: ['type', 'sessionId', 'path', 'mod']
+  },
+  // SFTP 获取内容
+  SFTP_GET_CONTENT: {
+    type: 'gc',
+    template: ['type', 'sessionId', 'path']
+  },
+  // SFTP 修改内容
+  SFTP_SET_CONTENT: {
+    type: 'sc',
+    template: ['type', 'sessionId', 'path', 'content']
+  },
 };
 
 // 输出协议
@@ -72,7 +107,49 @@ export const OutputProtocol = {
   // SFTP 文件列表
   SFTP_LIST: {
     type: 'ls',
-    template: ['type', 'sessionId', 'result', 'path', 'body'],
+    template: ['type', 'sessionId', 'path', 'result', 'body'],
     processMethod: 'processSftpList'
+  },
+  // SFTP 创建文件夹
+  SFTP_MKDIR: {
+    type: 'mk',
+    template: ['type', 'sessionId', 'result', 'msg'],
+    processMethod: 'processSftpMkdir'
+  },
+  // SFTP 创建文件
+  SFTP_TOUCH: {
+    type: 'to',
+    template: ['type', 'sessionId', 'result', 'msg'],
+    processMethod: 'processSftpTouch'
+  },
+  // SFTP 移动文件
+  SFTP_MOVE: {
+    type: 'mv',
+    template: ['type', 'sessionId', 'result', 'msg'],
+    processMethod: 'processSftpMove'
+  },
+  // SFTP 删除文件
+  SFTP_REMOVE: {
+    type: 'rm',
+    template: ['type', 'sessionId', 'result', 'msg'],
+    processMethod: 'processSftpRemove'
+  },
+  // SFTP 修改文件权限
+  SFTP_CHMOD: {
+    type: 'cm',
+    template: ['type', 'sessionId', 'result', 'msg'],
+    processMethod: 'processSftpChmod'
+  },
+  // SFTP 获取文件内容
+  SFTP_GET_CONTENT: {
+    type: 'gc',
+    template: ['type', 'sessionId', 'path', 'result', 'content'],
+    processMethod: 'processSftpGetContent'
+  },
+  // SFTP 修改文件内容
+  SFTP_SET_CONTENT: {
+    type: 'sc',
+    template: ['type', 'sessionId', 'result', 'msg'],
+    processMethod: 'processSftpSetContent'
   },
 };

@@ -104,8 +104,8 @@ public enum InputTypeEnum {
      */
     SFTP_REMOVE("rm",
             SftpRemoveHandler.class,
-            new String[]{"type", "sessionId", "paths"},
-            SftpRemoveRequest.class),
+            new String[]{"type", "sessionId", "path"},
+            SftpBaseRequest.class),
 
     /**
      * SFTP 截断文件

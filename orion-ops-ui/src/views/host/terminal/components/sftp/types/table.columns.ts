@@ -34,7 +34,7 @@ const columns = [
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
-    width: 218,
+    width: 234,
     cellClass: 'action-cell',
   },
 ] as TableColumnData[];

@@ -48,12 +48,12 @@ public enum OutputTypeEnum {
     /**
      * SFTP 创建文件夹
      */
-    SFTP_MKDIR("md", "${type}|${sessionId}|${result}|${msg}"),
+    SFTP_MKDIR("mk", "${type}|${sessionId}|${result}|${msg}"),
 
     /**
      * SFTP 创建文件
      */
-    SFTP_TOUCH("to", "${type}|${sessionId}${result}|${msg}"),
+    SFTP_TOUCH("to", "${type}|${sessionId}|${result}|${msg}"),
 
     /**
      * SFTP 移动文件

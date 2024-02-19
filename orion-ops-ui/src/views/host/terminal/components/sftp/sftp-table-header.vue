@@ -33,7 +33,7 @@
           <!-- 根目录 -->
           <a-breadcrumb-item class="sftp-path-unit"
                              @click.stop="loadFileList('/')">
-            <icon-home />
+            <icon-storage />
           </a-breadcrumb-item>
           <!-- 子目录 -->
           <a-breadcrumb-item class="sftp-path-unit"
@@ -180,8 +180,9 @@
 <script lang="ts" setup>
   import type { PathAnalysis } from '@/utils/file';
   import type { ISftpSession } from '../../types/terminal.type';
-  import { nextTick, ref, watch } from 'vue';
+  import { inject, nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
+  import { openSftpCreateModalKey } from '../../types/terminal.const';
 
   const props = defineProps<{
     currentPath: string;
@@ -196,6 +197,8 @@
   const pathEditable = ref(false);
   const pathInput = ref('');
   const pathInputRef = ref();
+
+  const openSftpCreateModal = inject(openSftpCreateModalKey) as (sessionId: string, path: string, isTouch: boolean) => void;
 
   // 监听路径变化
   watch(() => props.currentPath, (path) => {
@@ -246,20 +249,19 @@
 
   // 创建文件
   const createFile = () => {
-    // TODO openModal(true, "props.currentPath")
-    console.log(props.currentPath);
+    openSftpCreateModal(props.session?.sessionId as string, props.currentPath + '/', true);
   };
 
   // 创建文件夹
   const createDir = () => {
-    // TODO openModal(false, "props.currentPath")
-    console.log(props.currentPath);
+    openSftpCreateModal(props.session?.sessionId as string, props.currentPath + '/', false);
   };
 
   // 删除选中文件
   const deleteSelectFiles = () => {
-    // TODO confirm
-    console.log(props.selectedFiles);
+    if (props.selectedFiles?.length) {
+      props.session?.remove(props.selectedFiles);
+    }
   };
 
   // 上传文件
@@ -279,8 +281,8 @@
 <style lang="less" scoped>
   @action-num: 7;
   @action-gap: 8px;
-  @action-width: 26px;
-  @actions-width: @action-num * (@action-width + @action-gap);
+  @action-size: 26px;
+  @actions-width: @action-num * (@action-size + @action-gap);
 
   .sftp-table-header {
     width: 100%;
@@ -312,6 +314,7 @@
 
     :deep(.sftp-path-unit) {
       cursor: pointer;
+      font-size: 12px;
 
       &:hover {
         color: rgb(var(--arcoblue-6));
@@ -326,5 +329,7 @@
   .header-action-icon {
     font-size: 16px;
     padding: 4px;
+    width: @action-size;
+    height: @action-size;
   }
 </style>

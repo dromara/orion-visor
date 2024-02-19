@@ -2,7 +2,7 @@ package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.ops.module.asset.handler.host.terminal.model.request.SftpRemoveRequest;
+import com.orion.ops.module.asset.handler.host.terminal.model.request.SftpBaseRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpBaseResponse;
 import com.orion.ops.module.asset.handler.host.terminal.session.ISftpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +18,14 @@ import org.springframework.web.socket.WebSocketSession;
  */
 @Slf4j
 @Component
-public class SftpRemoveHandler extends AbstractTerminalHandler<SftpRemoveRequest> {
+public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> {
 
     @Override
-    public void handle(WebSocketSession channel, SftpRemoveRequest payload) {
+    public void handle(WebSocketSession channel, SftpBaseRequest payload) {
         // 获取会话
         ISftpSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
-        String[] paths = payload.getPaths().split("\\|");
-        log.info("SftpRemoveHandler-handle session: {}, paths: {}", payload.getSessionId(), paths);
+        String[] paths = payload.getPath().split("\\|");
+        log.info("SftpRemoveHandler-handle session: {}, path: {}", payload.getSessionId(), paths);
         Exception ex = null;
         // 删除
         try {
@@ -40,7 +40,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpRemoveRequest
                 SftpBaseResponse.builder()
                         .sessionId(payload.getSessionId())
                         .result(BooleanBit.of(ex == null).getValue())
-                        .msg(ex == null ? null : ex.getMessage())
+                        .msg(this.getErrorMessage(ex))
                         .build());
     }
 

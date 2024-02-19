@@ -17,7 +17,7 @@
             <!-- 启用-修改中 -->
             <a-input v-if="item.editable && item.enabled"
                      v-model="item.shortcutKey"
-                     :ref="setEditRef as unknown as VNodeRef"
+                     :ref="setAutoFocus as unknown as VNodeRef"
                      class="trigger-input"
                      size="small"
                      placeholder="请按下快捷键"
@@ -67,7 +67,7 @@
 <script lang="ts" setup>
   import type { TerminalShortcutKeyEditable } from '@/store/modules/terminal/types';
   import type { VNodeRef } from 'vue';
-  import { nextTick } from 'vue';
+  import { setAutoFocus } from '@/utils/dom';
 
   defineProps<{
     title: string;
@@ -76,14 +76,6 @@
   }>();
 
   const emits = defineEmits(['setEditable', 'clearEditable', 'updateEnabled']);
-
-  // 设置 ref
-  const setEditRef = (el: HTMLElement) => {
-    // 自动聚焦
-    nextTick(() => {
-      el && el.focus();
-    });
-  };
 
   // 修改启用状态
   const updateEnabledStatus = (item: TerminalShortcutKeyEditable, enabled: boolean) => {

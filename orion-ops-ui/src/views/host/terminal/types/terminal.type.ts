@@ -180,6 +180,20 @@ export interface ITerminalOutputProcessor {
   processSshOutput: (payload: OutputPayload) => void;
   // 处理 SFTP 文件列表
   processSftpList: (payload: OutputPayload) => void;
+  // 处理 SFTP 创建文件夹
+  processSftpMkdir: (payload: OutputPayload) => void;
+  // 处理 SFTP 创建文件
+  processSftpTouch: (payload: OutputPayload) => void;
+  // 处理 SFTP 移动文件
+  processSftpMove: (payload: OutputPayload) => void;
+  // 处理 SFTP 删除文件
+  processSftpRemove: (payload: OutputPayload) => void;
+  // 处理 SFTP 修改文件权限
+  processSftpChmod: (payload: OutputPayload) => void;
+  // 处理 SFTP 获取文件内容
+  processSftpGetContent: (payload: OutputPayload) => void;
+  // 处理 SFTP 修改文件内容
+  processSftpSetContent: (payload: OutputPayload) => void;
 }
 
 // xterm dom 元素引用
@@ -299,6 +313,20 @@ export interface ISftpSession extends ITerminalSession {
   setShowHiddenFile: (show: boolean) => void;
   // 查询文件列表
   list: (path: string | undefined) => void;
+  // 创建文件夹
+  mkdir: (path: string) => void;
+  // 创建文件
+  touch: (path: string) => void;
+  // 移动文件
+  move: (path: string, target: string) => void;
+  // 删除文件
+  remove: (path: string[]) => void;
+  // 修改权限
+  chmod: (path: string, mod: number) => void;
+  // 获取内容
+  getContent: (path: string) => void;
+  // 修改内容
+  setContent: (path: string, content: string) => void;
 }
 
 // sftp 会话接收器定义
@@ -307,6 +335,20 @@ export interface ISftpSessionResolver {
   connectCallback: () => void;
   // 接受文件列表响应
   resolveList: (result: string, path: string, list: Array<SftpFile>) => void;
+  // 接收创建文件夹响应
+  resolveSftpMkdir: (result: string, msg: string) => void;
+  // 接收创建文件响应
+  resolveSftpTouch: (result: string, msg: string) => void;
+  // 接收移动文件响应
+  resolveSftpMove: (result: string, msg: string) => void;
+  // 接收删除文件响应
+  resolveSftpRemove: (result: string, msg: string) => void;
+  // 接收修改文件权限响应
+  resolveSftpChmod: (result: string, msg: string) => void;
+  // 接收获取文件内容响应
+  resolveSftpGetContent: (path: string, result: string, content: string) => void;
+  // 接收修改文件内容响应
+  resolveSftpSetContent: (result: string, msg: string) => void;
 }
 
 // sftp 文件

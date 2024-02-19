@@ -185,7 +185,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostAlias } from '@/api/asset/host-extra';
-  import { openSshModalKey, PanelSessionType } from '../../types/terminal.const';
+  import { openSshSettingModalKey, PanelSessionType } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -231,7 +231,7 @@
   };
 
   // 打开配置
-  const openSetting = inject(openSshModalKey) as (record: HostQueryResponse) => void;
+  const openSetting = inject(openSshSettingModalKey) as (record: HostQueryResponse) => void;
 
   // 设置收藏
   const setFavorite = async (item: HostQueryResponse) => {

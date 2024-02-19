@@ -1,5 +1,6 @@
 <template>
   <a-table row-key="path"
+           ref="tableRef"
            class="sftp-table"
            label-align="left"
            :columns="columns"
@@ -9,16 +10,19 @@
            :data="list"
            :pagination="false"
            :bordered="false"
-           @cell-mouse-enter="setEditable"
-           @cell-mouse-leave="unsetEditable">
+           :loading="loading"
+           @cell-mouse-enter="setOperable"
+           @cell-mouse-leave="unsetOperable">
     <!-- 文件搜索框 -->
     <template #nameFilter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
       <div class="name-filter">
         <a-space direction="vertical">
           <!-- 过滤输入框 -->
           <a-input size="small"
+                   :ref="setAutoFocus as unknown as VNodeRef"
                    :model-value="filterValue[0]"
-                   @input="(value) => setFilterValue([value])" />
+                   @input="(value) => setFilterValue([value])"
+                   @pressEnter="handleFilterConfirm" />
           <!-- 按钮 -->
           <div class="name-filter-footer">
             <a-button size="small" @click="handleFilterConfirm">过滤</a-button>
@@ -59,8 +63,22 @@
                    arrow-class="terminal-tooltip-content"
                    content="复制路径">
           <span class="click-icon-wrapper row-action-icon"
-                @click="copy(record.path, false)">
+                @click="copy(record.path, '已复制')">
             <icon-copy />
+          </span>
+        </a-tooltip>
+        <!-- 编辑内容 -->
+        <a-tooltip v-if="canEditable(record.attr)"
+                   position="top"
+                   :mini="true"
+                   :overlay-inverse="true"
+                   :auto-fix-position="false"
+                   content-class="terminal-tooltip-content"
+                   arrow-class="terminal-tooltip-content"
+                   content="编辑内容">
+          <span class="click-icon-wrapper row-action-icon"
+                @click="editFile(record)">
+            <icon-edit />
           </span>
         </a-tooltip>
         <!-- 删除 -->
@@ -125,12 +143,14 @@
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { SftpFile, ISftpSession } from '../../types/terminal.type';
-  import { ref, computed } from 'vue';
+  import type { VNodeRef } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useRowSelection } from '@/types/table';
   import { dateFormat } from '@/utils';
-  import columns from './types/table.columns';
   import useCopy from '@/hooks/copy';
+  import columns from './types/table.columns';
   import { FILE_TYPE } from '../../types/terminal.const';
+  import { setAutoFocus } from '@/utils/dom';
 
   const props = defineProps<{
     session: ISftpSession | undefined;
@@ -144,6 +164,11 @@
   const rowSelection = useRowSelection({ width: 40 });
   const { copy } = useCopy();
 
+  // 切换页面自动清空过滤
+  watch(() => props.list, () => {
+    tableRef.value?.clearFilters();
+  });
+
   const selectedKeys = computed({
     get() {
       return props.selectedFiles;
@@ -154,15 +179,16 @@
   });
 
   const editRowName = ref<string>('');
+  const tableRef = ref();
 
-  // 设置选中状态
-  const setEditable = (record: TableData) => {
+  // 设置可操作状态
+  const setOperable = (record: TableData) => {
     editRowName.value = record.name;
     record.hover = true;
   };
 
-  // 设置未选中状态
-  const unsetEditable = (record: TableData) => {
+  // 设置不可操作状态
+  const unsetOperable = (record: TableData) => {
     setTimeout(() => {
       // 等待后如果还是当前行 但是未被选中则代表已经被失焦
       if (record.name === editRowName.value && !record.hover) {
@@ -172,21 +198,30 @@
     record.hover = false;
   };
 
+  // 是否可编辑
+  const canEditable = (attr: string) => {
+    const typeValue = formatFileType(attr).value;
+    // 非文件夹和链接文件可以编辑
+    return FILE_TYPE.DIRECTORY.value !== typeValue
+      && FILE_TYPE.LINK_FILE.value !== typeValue;
+  };
+
   // 点击文件名称
   const clickFilename = (record: TableData) => {
     if (FILE_TYPE.DIRECTORY.value === formatFileType(record.attr).value) {
       // 进入文件夹
       emits('loadFile', record.path);
-    } else {
-      // 点击文件
-      // TODO VIEW
     }
+  };
+
+  // 编辑文件
+  const editFile = (record: TableData) => {
+    // TODO
   };
 
   // 删除文件
   const deleteFile = (path: string) => {
-    // TODO confirm
-    console.log(path);
+    props.session?.remove([path]);
   };
 
   // 下载文件

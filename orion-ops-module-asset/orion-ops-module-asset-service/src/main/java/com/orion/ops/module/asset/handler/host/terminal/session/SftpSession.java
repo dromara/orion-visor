@@ -17,6 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,6 +69,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
                 true);
         return files.stream()
                 .map(SftpSession::fileMapping)
+                .sorted(Comparator.comparing(SftpFileVO::getName))
                 .collect(Collectors.toList());
     }
 

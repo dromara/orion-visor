@@ -7,7 +7,8 @@
       <!-- 左侧面板表格 -->
       <template #first>
         <a-spin class="sftp-table-container"
-                :loading="tableLoading">
+                :loading="tableLoading"
+                :hide-icon="true">
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
                              :current-path="currentPath"
@@ -27,6 +28,8 @@
         <div>editor</div>
       </template>
     </a-split>
+    <!-- 创建文件模态框 -->
+    <sftp-create-modal ref="createModal" />
   </div>
 </template>
 
@@ -38,12 +41,14 @@
 
 <script lang="ts" setup>
   import type { ISftpSession, SftpFile, TerminalTabItem } from '../../types/terminal.type';
-  import { onMounted, onUnmounted, ref } from 'vue';
+  import { onMounted, onUnmounted, provide, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
+  import { openSftpCreateModalKey } from '../../types/terminal.const';
   import SftpTable from './sftp-table.vue';
   import SftpTableHeader from './sftp-table-header.vue';
+  import SftpCreateModal from './sftp-create-modal.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -53,11 +58,17 @@
   const { loading: tableLoading, setLoading: setTableLoading } = useLoading(true);
 
   const session = ref<ISftpSession>();
+  const createModal = ref();
   const currentPath = ref<string>('');
   const fileList = ref<Array<SftpFile>>([]);
   const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
   const editView = ref(true);
+
+  // 暴露打开创建方法
+  provide(openSftpCreateModalKey, (sessionId: string, path: string, isTouch: boolean) => {
+    createModal.value?.open(sessionId, path, isTouch);
+  });
 
   // 连接成功回调
   const connectCallback = () => {
@@ -70,16 +81,44 @@
     session.value?.list(path);
   };
 
+  // 检查结果
+  const checkResult = (result: string, msg: string): boolean => {
+    const success = !!Number.parseInt(result);
+    if (!success) {
+      Message.error(msg);
+    }
+    return success;
+  };
+
   // 接收列表回调
   const resolveList = (result: string, path: string, list: Array<SftpFile>) => {
-    const success = !!Number.parseInt(result);
     setTableLoading(false);
-    if (!success) {
-      Message.error('查询失败');
+    if (!checkResult(result, '查询失败')) {
       return;
     }
     currentPath.value = path;
     fileList.value = list;
+    selectFiles.value = [];
+  };
+
+  // 接收文件响应
+  const resolveFileAction = (result: string, msg: string) => {
+    setTableLoading(false);
+    // 检查结果
+    if (!checkResult(result, msg)) {
+      return;
+    }
+    Message.success('操作成功');
+    // 刷新列表
+    loadFiles(currentPath.value);
+  };
+
+  // 接收获取文件内容响应
+  const resolveSftpGetContent = (path: string, result: string, content: string) => {
+  };
+
+  // 接收修改文件内容响应
+  const resolveSftpSetContent = (result: string, msg: string) => {
   };
 
   // 初始化会话
@@ -87,7 +126,14 @@
     // 创建终端处理器
     session.value = await sessionManager.openSftp(props.tab, {
       connectCallback,
-      resolveList
+      resolveList,
+      resolveSftpMkdir: resolveFileAction,
+      resolveSftpTouch: resolveFileAction,
+      resolveSftpMove: resolveFileAction,
+      resolveSftpRemove: resolveFileAction,
+      resolveSftpChmod: resolveFileAction,
+      resolveSftpGetContent,
+      resolveSftpSetContent,
     });
   });
 

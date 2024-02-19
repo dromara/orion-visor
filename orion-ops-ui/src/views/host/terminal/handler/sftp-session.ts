@@ -1,5 +1,6 @@
 import type { ISftpSession, ISftpSessionResolver, ITerminalChannel } from '../types/terminal.type';
 import { InputProtocol } from '../types/terminal.protocol';
+import { Modal } from '@arco-design/web-vue';
 
 // sftp 会话实现
 export default class SftpSession implements ISftpSession {
@@ -50,6 +51,71 @@ export default class SftpSession implements ISftpSession {
       sessionId: this.sessionId,
       showHiddenFile: ~~this.showHiddenFile,
       path
+    });
+  };
+
+  // 创建文件夹
+  mkdir(path: string) {
+    this.channel.send(InputProtocol.SFTP_MKDIR, {
+      sessionId: this.sessionId,
+      path
+    });
+  };
+
+  // 创建文件
+  touch(path: string) {
+    this.channel.send(InputProtocol.SFTP_TOUCH, {
+      sessionId: this.sessionId,
+      path
+    });
+  };
+
+  // 移动文件
+  move(path: string, target: string) {
+    this.channel.send(InputProtocol.SFTP_MOVE, {
+      sessionId: this.sessionId,
+      path,
+      target
+    });
+  };
+
+  // 删除文件
+  remove(path: string[]) {
+    Modal.confirm({
+      title: '删除确认',
+      content: `确定要删除 ${path} 吗? 确定后将立即删除且无法恢复!`,
+      onOk: () => {
+        this.channel.send(InputProtocol.SFTP_REMOVE, {
+          sessionId: this.sessionId,
+          path: path.join('|')
+        });
+      }
+    });
+  };
+
+  // 修改权限
+  chmod(path: string, mod: number) {
+    this.channel.send(InputProtocol.SFTP_CHMOD, {
+      sessionId: this.sessionId,
+      path,
+      mod
+    });
+  };
+
+  // 获取内容
+  getContent(path: string) {
+    this.channel.send(InputProtocol.SFTP_GET_CONTENT, {
+      sessionId: this.sessionId,
+      path
+    });
+  };
+
+  // 修改内容
+  setContent(path: string, content: string) {
+    this.channel.send(InputProtocol.SFTP_SET_CONTENT, {
+      sessionId: this.sessionId,
+      path,
+      content
     });
   };
 
