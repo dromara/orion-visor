@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
+import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
@@ -55,6 +57,22 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
     @SuppressWarnings("unchecked")
     protected <E> E getAttr(WebSocketSession channel, String attr) {
         return (E) channel.getAttributes().get(attr);
+    }
+
+    /**
+     * 获取 sftp 错误信息
+     *
+     * @param ex ex
+     * @return msg
+     */
+    protected String getErrorMessage(Exception ex) {
+        if (ex == null) {
+            return null;
+        }
+        if (ex instanceof InvalidArgumentException) {
+            return ex.getMessage();
+        }
+        return ErrorMessage.OPERATE_ERROR;
     }
 
 }

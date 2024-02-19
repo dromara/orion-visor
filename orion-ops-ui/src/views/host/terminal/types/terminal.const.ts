@@ -281,8 +281,11 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   },
 ];
 
-// 打开 sshModal key
-export const openSshModalKey = Symbol();
+// 打开 sshSettingModal key
+export const openSshSettingModalKey = Symbol();
+
+// 打开 sftpCreateModal key
+export const openSftpCreateModalKey = Symbol();
 
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';

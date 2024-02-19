@@ -42,7 +42,7 @@ public class SftpGetContentHandler extends AbstractTerminalHandler<SftpBaseReque
                         .sessionId(payload.getSessionId())
                         .result(BooleanBit.of(ex == null).getValue())
                         .content(content)
-                        .msg(ex == null ? null : ex.getMessage())
+                        .msg(this.getErrorMessage(ex))
                         .build());
     }
 

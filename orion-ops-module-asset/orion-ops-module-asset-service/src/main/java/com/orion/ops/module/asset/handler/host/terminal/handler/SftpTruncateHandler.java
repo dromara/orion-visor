@@ -40,7 +40,7 @@ public class SftpTruncateHandler extends AbstractTerminalHandler<SftpBaseRequest
                 SftpBaseResponse.builder()
                         .sessionId(payload.getSessionId())
                         .result(BooleanBit.of(ex == null).getValue())
-                        .msg(ex == null ? null : ex.getMessage())
+                        .msg(this.getErrorMessage(ex))
                         .build());
     }
 
