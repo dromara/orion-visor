@@ -43,7 +43,47 @@ public enum OutputTypeEnum {
     /**
      * SFTP 文件列表
      */
-    SFTP_LIST("ls", "${type}|${sessionId}|${result}|${path}|${body}"),
+    SFTP_LIST("ls", "${type}|${sessionId}|${path}|${result}|${body}"),
+
+    /**
+     * SFTP 创建文件夹
+     */
+    SFTP_MKDIR("md", "${type}|${sessionId}|${result}|${msg}"),
+
+    /**
+     * SFTP 创建文件
+     */
+    SFTP_TOUCH("to", "${type}|${sessionId}${result}|${msg}"),
+
+    /**
+     * SFTP 移动文件
+     */
+    SFTP_MOVE("mv", "${type}|${sessionId}|${result}|${msg}"),
+
+    /**
+     * SFTP 删除文件
+     */
+    SFTP_REMOVE("rm", "${type}|${sessionId}|${result}|${msg}"),
+
+    /**
+     * SFTP 截断文件
+     */
+    SFTP_TRUNCATE("tc", "${type}|${sessionId}|${result}|${msg}"),
+
+    /**
+     * SFTP 修改文件权限
+     */
+    SFTP_CHMOD("cm", "${type}|${sessionId}|${result}|${msg}"),
+
+    /**
+     * SFTP 获取文件内容
+     */
+    SFTP_GET_CONTENT("gc", "${type}|${sessionId}|${path}|${result}|${content}"),
+
+    /**
+     * SFTP 修改文件内容
+     */
+    SFTP_SET_CONTENT("sc", "${type}|${sessionId}|${result}|${msg}"),
 
     ;
 

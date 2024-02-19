@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.model.request;
 
-import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "SftpRemoveRequest", description = "sftp 删除文件 实体对象")
-public class SftpRemoveRequest extends TerminalBasePayload {
+public class SftpRemoveRequest extends SftpBaseRequest {
 
     @Schema(description = "paths 多个用|分割")
     private List<String> paths;

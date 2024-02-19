@@ -20,7 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "SftpFileResponse", description = "sftp 文件响应 实体对象")
-public class SftpFileResponse {
+public class SftpFileVO {
 
     @Schema(description = "名称")
     private String name;

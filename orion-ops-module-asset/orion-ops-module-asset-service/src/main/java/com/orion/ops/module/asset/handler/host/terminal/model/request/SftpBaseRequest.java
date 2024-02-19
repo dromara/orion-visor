@@ -9,21 +9,19 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * sftp 截断文件 实体对象
- * <p>
- * i|eff00a1|path
+ * sftp 基础请求 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/2/6 13:31
+ * @since 2024/2/19 17:46
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpTruncateRequest", description = "sftp 截断文件 实体对象")
-public class SftpTruncateRequest extends TerminalBasePayload {
+@Schema(name = "SftpBaseRequest", description = "sftp 基础请求 实体对象")
+public class SftpBaseRequest extends TerminalBasePayload {
 
     @Schema(description = "path")
     private String path;

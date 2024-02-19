@@ -75,20 +75,71 @@ public enum InputTypeEnum {
             new String[]{"type", "sessionId", "showHiddenFile", "path"},
             SftpListRequest.class),
 
+    /**
+     * SFTP 创建文件夹
+     */
+    SFTP_MKDIR("mk",
+            SftpMakeDirectoryHandler.class,
+            new String[]{"type", "sessionId", "path"},
+            SftpBaseRequest.class),
+
+    /**
+     * SFTP 创建文件
+     */
+    SFTP_TOUCH("to",
+            SftpTouchHandler.class,
+            new String[]{"type", "sessionId", "path"},
+            SftpBaseRequest.class),
+
+    /**
+     * SFTP 移动文件
+     */
+    SFTP_MOVE("mv",
+            SftpMoveHandler.class,
+            new String[]{"type", "sessionId", "path", "target"},
+            SftpMoveRequest.class),
+
+    /**
+     * SFTP 删除文件
+     */
+    SFTP_REMOVE("rm",
+            SftpRemoveHandler.class,
+            new String[]{"type", "sessionId", "paths"},
+            SftpRemoveRequest.class),
+
+    /**
+     * SFTP 截断文件
+     */
+    SFTP_TRUNCATE("tc",
+            SftpTruncateHandler.class,
+            new String[]{"type", "sessionId", "path"},
+            SftpBaseRequest.class),
+
+    /**
+     * SFTP 修改文件权限
+     */
+    SFTP_CHMOD("cm",
+            SftpChangeModHandler.class,
+            new String[]{"type", "sessionId", "path", "mod"},
+            SftpChangeModRequest.class),
+
+    /**
+     * SFTP 获取内容
+     */
+    SFTP_GET_CONTENT("gc",
+            SftpGetContentHandler.class,
+            new String[]{"type", "sessionId", "path"},
+            SftpBaseRequest.class),
+
+    /**
+     * SFTP 修改内容
+     */
+    SFTP_SET_CONTENT("sc",
+            SftpSetContentHandler.class,
+            new String[]{"type", "sessionId", "path", "content"},
+            SftpSetContentRequest.class),
 
     // TODO
-    // MKDIR
-    // TOUCH
-
-    // REMOVE
-    // MOVE
-    // TRUNCATE
-
-    // CHMOD
-
-    // GET
-    // SAVE
-
     // COPY
     // UPLOAD
     // DOWNLOAD

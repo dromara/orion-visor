@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.model.request;
 
-import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,10 +22,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "SftpChangeModRequest", description = "sftp 修改文件权限 实体对象")
-public class SftpChangeModRequest extends TerminalBasePayload {
-
-    @Schema(description = "path")
-    private String path;
+public class SftpChangeModRequest extends SftpBaseRequest {
 
     @Schema(description = "10进制的8进制 权限")
     private Integer mod;

@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.model.request;
 
-import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * sftp 创建文件夹 实体对象
+ * sftp 设置文件内容 实体对象
  * <p>
- * i|eff00a1|path
+ * i|eff00a1|path|content
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,10 +21,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpMakeDirectoryRequest", description = "sftp 创建文件夹 实体对象")
-public class SftpMakeDirectoryRequest extends TerminalBasePayload {
+@Schema(name = "SftpSetContentRequest", description = "sftp 设置文件内容 实体对象")
+public class SftpSetContentRequest extends SftpBaseRequest {
 
-    @Schema(description = "path")
-    private String path;
+    @Schema(description = "content")
+    private String content;
 
 }

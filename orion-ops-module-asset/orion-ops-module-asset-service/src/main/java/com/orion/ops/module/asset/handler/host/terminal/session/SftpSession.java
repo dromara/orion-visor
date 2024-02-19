@@ -11,7 +11,7 @@ import com.orion.net.host.sftp.SftpFile;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
-import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileResponse;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -58,7 +58,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
     }
 
     @Override
-    public List<SftpFileResponse> list(String path, boolean showHiddenFile) {
+    public List<SftpFileVO> list(String path, boolean showHiddenFile) {
         path = Files1.getPath(path);
         // 查询文件
         List<SftpFile> files = executor.listFilesFilter(path,
@@ -149,8 +149,8 @@ public class SftpSession extends TerminalSession implements ISftpSession {
      * @param sftpFile sftpFile
      * @return file
      */
-    private static SftpFileResponse fileMapping(SftpFile sftpFile) {
-        SftpFileResponse file = new SftpFileResponse();
+    private static SftpFileVO fileMapping(SftpFile sftpFile) {
+        SftpFileVO file = new SftpFileVO();
         file.setName(sftpFile.getName());
         file.setPath(sftpFile.getPath());
         file.setSuffix(Files1.getSuffix(sftpFile.getName()));

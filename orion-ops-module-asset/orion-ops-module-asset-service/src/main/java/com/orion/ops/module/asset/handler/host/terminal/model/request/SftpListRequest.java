@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.model.request;
 
-import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,10 +22,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "SftpListRequest", description = "sftp 列表请求 实体对象")
-public class SftpListRequest extends TerminalBasePayload {
-
-    @Schema(description = "path")
-    private String path;
+public class SftpListRequest extends SftpBaseRequest {
 
     @Schema(description = "是否显示隐藏文件")
     private Integer showHiddenFile;

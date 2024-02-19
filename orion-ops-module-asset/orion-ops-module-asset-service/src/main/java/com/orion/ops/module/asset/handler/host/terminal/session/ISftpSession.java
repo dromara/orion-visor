@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
-import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileResponse;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileVO;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface ISftpSession extends ITerminalSession {
      * @param showHiddenFile 是否显示隐藏文件
      * @return list
      */
-    List<SftpFileResponse> list(String path, boolean showHiddenFile);
+    List<SftpFileVO> list(String path, boolean showHiddenFile);
 
     /**
      * 创建文件夹
