@@ -77,4 +77,6 @@ public interface ErrorMessage {
 
     String CONNECT_ERROR = "连接失败";
 
+    String PATH_NOT_NORMALIZE = "路径不合法";
+
 }

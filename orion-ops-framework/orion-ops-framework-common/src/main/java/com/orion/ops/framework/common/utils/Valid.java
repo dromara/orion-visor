@@ -1,6 +1,7 @@
 package com.orion.ops.framework.common.utils;
 
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.io.Files1;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.spring.SpringHolder;
 
@@ -114,6 +115,17 @@ public class Valid extends com.orion.lang.utils.Valid {
     public static int version(int effect) {
         isTrue(effect > 0, ErrorMessage.DATA_MODIFIED);
         return effect;
+    }
+
+    /**
+     * 检查路径是否合法化 即不包含 ./ ../
+     *
+     * @param path path
+     */
+    public static String checkNormalize(String path) {
+        Valid.notBlank(path);
+        Valid.isTrue(Files1.isNormalize(path), ErrorMessage.PATH_NOT_NORMALIZE);
+        return Files1.getPath(path);
     }
 
 }

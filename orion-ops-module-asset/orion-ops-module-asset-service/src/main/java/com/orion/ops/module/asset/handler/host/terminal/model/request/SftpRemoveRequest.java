@@ -8,10 +8,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 /**
  * sftp 删除文件 实体对象
  * <p>
- * i|eff00a1|path
+ * i|eff00a1|paths
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -25,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "SftpRemoveRequest", description = "sftp 删除文件 实体对象")
 public class SftpRemoveRequest extends TerminalBasePayload {
 
-    @Schema(description = "path")
-    private String path;
+    @Schema(description = "paths 多个用|分割")
+    private List<String> paths;
 
 }

@@ -28,7 +28,7 @@ public class SftpChangeModRequest extends TerminalBasePayload {
     @Schema(description = "path")
     private String path;
 
-    @Schema(description = "权限")
-    private String mod;
+    @Schema(description = "10进制的8进制 权限")
+    private Integer mod;
 
 }

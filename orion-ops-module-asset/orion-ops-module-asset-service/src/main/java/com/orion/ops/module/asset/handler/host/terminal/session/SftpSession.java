@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.FileType;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
@@ -7,17 +9,19 @@ import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.net.host.sftp.SftpFile;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 终端 ssh 会话
+ * 终端 sftp 会话
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -55,6 +59,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
 
     @Override
     public List<SftpFileResponse> list(String path, boolean showHiddenFile) {
+        path = Files1.getPath(path);
         // 查询文件
         List<SftpFile> files = executor.listFilesFilter(path,
                 s -> showHiddenFile || !s.getName().startsWith(Const.DOT),
@@ -63,6 +68,63 @@ public class SftpSession extends TerminalSession implements ISftpSession {
         return files.stream()
                 .map(SftpSession::fileMapping)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void mkdir(String path) {
+        path = Valid.checkNormalize(path);
+        executor.makeDirectories(path);
+    }
+
+    @Override
+    public void touch(String path) {
+        path = Valid.checkNormalize(path);
+        executor.touch(path);
+    }
+
+    @Override
+    public void move(String source, String target) {
+        source = Valid.checkNormalize(source);
+        executor.move(source, target);
+    }
+
+    @Override
+    public void remove(List<String> paths) {
+        paths.stream()
+                .map(Valid::checkNormalize)
+                .forEach(executor::remove);
+    }
+
+    @Override
+    public void truncate(String path) {
+        path = Valid.checkNormalize(path);
+        executor.truncate(path);
+    }
+
+    @Override
+    public void chmod(String path, int mod) {
+        path = Valid.checkNormalize(path);
+        executor.changeMode(path, mod);
+    }
+
+    @Override
+    public String getContent(String path) {
+        path = Valid.checkNormalize(path);
+        try (InputStream in = executor.openInputStream(path)) {
+            return Streams.toString(in, config.getFileContentCharset());
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    @Override
+    public void setContent(String path, String content) {
+        path = Valid.checkNormalize(path);
+        try {
+            executor.write(path, Strings.bytes(content, config.getFileContentCharset()));
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
     @Override

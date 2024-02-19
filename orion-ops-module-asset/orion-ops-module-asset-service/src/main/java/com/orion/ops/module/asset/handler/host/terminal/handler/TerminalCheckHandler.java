@@ -17,7 +17,6 @@ import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateReques
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
 import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
@@ -52,9 +51,6 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
 
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
-
-    @Resource
-    private TerminalManager terminalManager;
 
     @Override
     public void handle(WebSocketSession channel, TerminalCheckRequest payload) {

@@ -23,11 +23,11 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "SftpListResponse", description = "sftp 列表响应 实体对象")
 public class SftpListResponse extends TerminalBasePayload {
 
-    @Schema(description = "检查结果")
-    private Integer result;
-
     @Schema(description = "path")
     private String path;
+
+    @Schema(description = "结果")
+    private Integer result;
 
     @Schema(description = "body")
     private String body;

@@ -14,7 +14,6 @@ import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalConnectRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalConnectResponse;
@@ -45,9 +44,6 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
 
     @Resource
     private HostConnectLogService hostConnectLogService;
-
-    @Resource
-    private TerminalManager terminalManager;
 
     @Override
     public void handle(WebSocketSession channel, TerminalConnectRequest payload) {

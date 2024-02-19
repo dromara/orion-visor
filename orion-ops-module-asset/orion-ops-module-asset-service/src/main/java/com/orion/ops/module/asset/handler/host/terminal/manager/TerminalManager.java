@@ -52,10 +52,12 @@ public class TerminalManager {
      *
      * @param channelId channelId
      * @param sessionId sessionId
+     * @param T         T
      * @return session
      */
-    public ITerminalSession getSession(String channelId, String sessionId) {
-        return channelSessions.get(channelId, sessionId);
+    @SuppressWarnings("unchecked")
+    public <T extends ITerminalSession> T getSession(String channelId, String sessionId) {
+        return (T) channelSessions.get(channelId, sessionId);
     }
 
     /**

@@ -2,8 +2,11 @@ package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import org.springframework.web.socket.WebSocketSession;
+
+import javax.annotation.Resource;
 
 /**
  * 终端消息处理器 基类
@@ -13,6 +16,9 @@ import org.springframework.web.socket.WebSocketSession;
  * @since 2023/12/29 18:59
  */
 public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> implements ITerminalHandler<T> {
+
+    @Resource
+    protected TerminalManager terminalManager;
 
     /**
      * 发送消息
