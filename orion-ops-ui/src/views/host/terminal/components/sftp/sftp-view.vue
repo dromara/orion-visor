@@ -30,6 +30,10 @@
     </a-split>
     <!-- 创建文件模态框 -->
     <sftp-create-modal ref="createModal" />
+    <!-- 移动文件模态框 -->
+    <sftp-move-modal ref="moveModal" />
+    <!-- 文件提权模态框 -->
+    <sftp-chmod-modal ref="chmodModal" />
   </div>
 </template>
 
@@ -45,10 +49,12 @@
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import { openSftpCreateModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey } from '../../types/terminal.const';
   import SftpTable from './sftp-table.vue';
   import SftpTableHeader from './sftp-table-header.vue';
   import SftpCreateModal from './sftp-create-modal.vue';
+  import SftpMoveModal from './sftp-move-modal.vue';
+  import SftpChmodModal from './sftp-chmod-modal.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
@@ -58,16 +64,28 @@
   const { loading: tableLoading, setLoading: setTableLoading } = useLoading(true);
 
   const session = ref<ISftpSession>();
-  const createModal = ref();
   const currentPath = ref<string>('');
   const fileList = ref<Array<SftpFile>>([]);
   const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
   const editView = ref(true);
+  const createModal = ref();
+  const moveModal = ref();
+  const chmodModal = ref();
 
-  // 暴露打开创建方法
+  // 暴露打开创建模态框
   provide(openSftpCreateModalKey, (sessionId: string, path: string, isTouch: boolean) => {
     createModal.value?.open(sessionId, path, isTouch);
+  });
+
+  // 暴露打开移动模态框
+  provide(openSftpMoveModalKey, (sessionId: string, path: string) => {
+    moveModal.value?.open(sessionId, path);
+  });
+
+  // 暴露打开提权模态框
+  provide(openSftpChmodModalKey, (sessionId: string, path: string, permission: number) => {
+    chmodModal.value?.open(sessionId, path, permission);
   });
 
   // 连接成功回调

@@ -287,6 +287,12 @@ export const openSshSettingModalKey = Symbol();
 // 打开 sftpCreateModal key
 export const openSftpCreateModalKey = Symbol();
 
+// 打开 sftpMoveModal key
+export const openSftpMoveModalKey = Symbol();
+
+// 打开 sftpChmodModal key
+export const openSftpChmodModalKey = Symbol();
+
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';
 

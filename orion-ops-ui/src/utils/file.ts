@@ -104,6 +104,9 @@ export function downloadFile(res: any, fileName: string) {
  * 10进制权限 转 字符串权限
  */
 export function permission10toString(permission: number) {
+  if (permission === undefined) {
+    return '---';
+  }
   const ps = (permission + '');
   let res = '';
   for (let i = 0; i < ps.length; i++) {
@@ -123,6 +126,11 @@ export function permission10toString(permission: number) {
     } else {
       res += 'x';
     }
+  }
+  if (res.length <= 9) {
+    res = res.padEnd(9, '-');
+  } else {
+    res = res.substring(0, 9);
   }
   return res;
 }

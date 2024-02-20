@@ -6,12 +6,10 @@
            :align-center="false"
            :mask-closable="false"
            :unmount-on-close="true"
-           :on-before-ok="handlerOk"
-           @close="handleClose">
+           :on-before-ok="handlerOk">
     <a-form :model="formModel"
             ref="formRef"
             label-align="right"
-            layout="horizontal"
             :style="{ width: '460px' }"
             :label-col-props="{ span: 6 }"
             :wrapper-col-props="{ span: 18 }">
@@ -35,13 +33,11 @@
 
 <script lang="ts" setup>
   import useVisible from '@/hooks/visible';
-  import useLoading from '@/hooks/loading';
   import { nextTick, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import SftpSession from '../../handler/sftp-session';
 
   const { visible, setVisible } = useVisible();
-  const { loading, setLoading } = useLoading();
   const { sessionManager } = useTerminalStore();
 
   const sessionId = ref();
@@ -68,7 +64,6 @@
 
   // 确定
   const handlerOk = async () => {
-    setLoading(true);
     try {
       // 验证参数
       const error = await formRef.value.validate();
@@ -86,23 +81,9 @@
           session.mkdir(formModel.value.path);
         }
       }
-      // 清空
-      handlerClear();
     } catch (e) {
       return false;
-    } finally {
-      setLoading(false);
     }
-  };
-
-  // 关闭
-  const handleClose = () => {
-    handlerClear();
-  };
-
-  // 清空
-  const handlerClear = () => {
-    setLoading(false);
   };
 
 </script>

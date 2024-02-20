@@ -125,7 +125,7 @@
                    arrow-class="terminal-tooltip-content"
                    content="提权">
           <span class="click-icon-wrapper row-action-icon"
-                @click="chmodFile(record.path, record.attr)">
+                @click="chmodFile(record.path, record.permission)">
             <icon-user-group />
           </span>
         </a-tooltip>
@@ -144,13 +144,13 @@
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { SftpFile, ISftpSession } from '../../types/terminal.type';
   import type { VNodeRef } from 'vue';
-  import { ref, computed, watch } from 'vue';
+  import { ref, computed, watch, inject } from 'vue';
   import { useRowSelection } from '@/types/table';
   import { dateFormat } from '@/utils';
+  import { setAutoFocus } from '@/utils/dom';
   import useCopy from '@/hooks/copy';
   import columns from './types/table.columns';
-  import { FILE_TYPE } from '../../types/terminal.const';
-  import { setAutoFocus } from '@/utils/dom';
+  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/terminal.const';
 
   const props = defineProps<{
     session: ISftpSession | undefined;
@@ -160,6 +160,9 @@
   }>();
 
   const emits = defineEmits(['update:selectedFiles', 'loadFile']);
+
+  const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionId: string, path: string) => void;
+  const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
 
   const rowSelection = useRowSelection({ width: 40 });
   const { copy } = useCopy();
@@ -211,6 +214,8 @@
     if (FILE_TYPE.DIRECTORY.value === formatFileType(record.attr).value) {
       // 进入文件夹
       emits('loadFile', record.path);
+    } else {
+      copy(record.name, '名称已复制');
     }
   };
 
@@ -232,15 +237,12 @@
 
   // 移动文件
   const moveFile = (path: string) => {
-    // TODO openModal('path')
-    console.log(path);
+    openSftpMoveModal(props.session?.sessionId as string, path);
   };
 
   // 文件提权
-  const chmodFile = (path: string, attr: string) => {
-    // TODO openModal('path','mod')
-    console.log(path, attr);
-
+  const chmodFile = (path: string, permission: number) => {
+    openSftpChmodModal(props.session?.sessionId as string, path, permission);
   };
 
   // 格式化文件类型
