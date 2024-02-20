@@ -3,7 +3,7 @@
     <a-split class="split-view"
              v-model:size="splitSize"
              :min="0.3"
-             :disabled="!editView">
+             :disabled="!editorView">
       <!-- 左侧面板表格 -->
       <template #first>
         <a-spin class="sftp-table-container"
@@ -21,11 +21,24 @@
                       :session="session"
                       :list="fileList"
                       :loading="tableLoading"
-                      @load-file="loadFiles" />
+                      @load-file="loadFiles"
+                      @edit-file="editFile" />
         </a-spin>
       </template>
-      <template #second v-if="editView">
-        <div>editor</div>
+      <template #second v-if="editorView">
+        <a-spin class="sftp-editor-container"
+                :loading="editorLoading">
+          <!-- 表头 -->
+          <sftp-editor-header class="sftp-editor-header"
+                              :name="editorFileName"
+                              :path="editorFilePath"
+                              :session="session"
+                              @save="editorSave"
+                              @close="closeEditor" />
+          <!-- 编辑器 -->
+          <sftp-editor class="sftp-editor-wrapper"
+                       ref="editorRef" />
+        </a-spin>
       </template>
     </a-split>
     <!-- 创建文件模态框 -->
@@ -50,8 +63,10 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey } from '../../types/terminal.const';
-  import SftpTable from './sftp-table.vue';
   import SftpTableHeader from './sftp-table-header.vue';
+  import SftpTable from './sftp-table.vue';
+  import SftpEditorHeader from './sftp-editor-header.vue';
+  import SftpEditor from './sftp-editor.vue';
   import SftpCreateModal from './sftp-create-modal.vue';
   import SftpMoveModal from './sftp-move-modal.vue';
   import SftpChmodModal from './sftp-chmod-modal.vue';
@@ -62,13 +77,17 @@
 
   const { preference, sessionManager } = useTerminalStore();
   const { loading: tableLoading, setLoading: setTableLoading } = useLoading(true);
+  const { loading: editorLoading, setLoading: setEditorLoading } = useLoading();
 
   const session = ref<ISftpSession>();
   const currentPath = ref<string>('');
   const fileList = ref<Array<SftpFile>>([]);
   const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
-  const editView = ref(true);
+  const editorView = ref(false);
+  const editorRef = ref();
+  const editorFileName = ref('');
+  const editorFilePath = ref('');
   const createModal = ref();
   const moveModal = ref();
   const chmodModal = ref();
@@ -87,6 +106,30 @@
   provide(openSftpChmodModalKey, (sessionId: string, path: string, permission: number) => {
     chmodModal.value?.open(sessionId, path, permission);
   });
+
+  // 编辑文件
+  const editFile = (name: string, path: string) => {
+    setEditorLoading(true);
+    splitSize.value = 0.6;
+    editorView.value = true;
+    editorFileName.value = name;
+    editorFilePath.value = path;
+  };
+
+  // 编辑器保存
+  const editorSave = () => {
+    setEditorLoading(true);
+    const value = editorRef.value?.getValue() || '';
+    session.value?.setContent(editorFilePath.value, value);
+  };
+
+  // 关闭编辑器
+  const closeEditor = () => {
+    splitSize.value = 1;
+    editorView.value = false;
+    editorFileName.value = '';
+    editorFilePath.value = '';
+  };
 
   // 连接成功回调
   const connectCallback = () => {
@@ -133,10 +176,22 @@
 
   // 接收获取文件内容响应
   const resolveSftpGetContent = (path: string, result: string, content: string) => {
+    setEditorLoading(false);
+    // 检查结果
+    if (!checkResult(result, '加载失败')) {
+      return;
+    }
+    editorRef.value?.setValue(content);
   };
 
   // 接收修改文件内容响应
   const resolveSftpSetContent = (result: string, msg: string) => {
+    setEditorLoading(false);
+    // 检查结果
+    if (!checkResult(result, msg)) {
+      return;
+    }
+    Message.success('保存成功');
   };
 
   // 初始化会话
@@ -176,18 +231,18 @@
     }
   }
 
-  .sftp-table-container {
+  .sftp-table-container, .sftp-editor-container {
     padding: 8px;
     width: 100%;
     height: 100%;
 
-    .sftp-table-header {
+    .sftp-table-header, .sftp-editor-header {
       width: 100%;
       height: @sftp-table-header-height;
       padding-bottom: 8px;
     }
 
-    .sftp-table-wrapper {
+    .sftp-table-wrapper, .sftp-editor-wrapper {
       height: calc(100% - @sftp-table-header-height);
     }
   }

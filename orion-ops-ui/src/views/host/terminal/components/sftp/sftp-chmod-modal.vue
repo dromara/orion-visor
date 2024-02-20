@@ -50,8 +50,8 @@
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import SftpSession from '../../handler/sftp-session';
   import { permission10toString } from '@/utils/file';
+  import SftpSession from '../../handler/sftp-session';
 
   const { visible, setVisible } = useVisible();
   const { sessionManager } = useTerminalStore();

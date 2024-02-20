@@ -68,7 +68,7 @@
           </span>
         </a-tooltip>
         <!-- 编辑内容 -->
-        <a-tooltip v-if="canEditable(record.attr)"
+        <a-tooltip v-if="canEditable(record.sizeByte, record.attr)"
                    position="top"
                    :mini="true"
                    :overlay-inverse="true"
@@ -159,7 +159,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile']);
 
   const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionId: string, path: string) => void;
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
@@ -202,11 +202,12 @@
   };
 
   // 是否可编辑
-  const canEditable = (attr: string) => {
+  const canEditable = (sizeByte: number, attr: string) => {
     const typeValue = formatFileType(attr).value;
-    // 非文件夹和链接文件可以编辑
+    // 非文件夹和链接文件 并且文件大小小于 2MB 可以编辑
     return FILE_TYPE.DIRECTORY.value !== typeValue
-      && FILE_TYPE.LINK_FILE.value !== typeValue;
+      && FILE_TYPE.LINK_FILE.value !== typeValue
+      && sizeByte <= 2 * 1024 * 1024;
   };
 
   // 点击文件名称
@@ -221,7 +222,8 @@
 
   // 编辑文件
   const editFile = (record: TableData) => {
-    // TODO
+    emits('editFile', record.name, record.path);
+    props.session?.getContent(record.path);
   };
 
   // 删除文件

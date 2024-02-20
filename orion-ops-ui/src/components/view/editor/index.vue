@@ -93,6 +93,18 @@
     emits('editor-mounted', editor);
   };
 
+  // 获取值
+  const getValue = () => {
+    return editor?.getValue();
+  };
+
+  // 设置值
+  const setValue = (value: string) => {
+    editor?.setValue(value);
+  };
+
+  defineExpose({ getValue, setValue });
+
   // 监听主题变更
   watch(() => appStore.theme, (v) => {
     if (editor && props.theme === true) {
