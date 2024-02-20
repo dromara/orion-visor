@@ -152,6 +152,8 @@
   import columns from './types/table.columns';
   import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/terminal.const';
 
+  const previewSize = import.meta.env.VITE_SFTP_PREVIEW_MB;
+
   const props = defineProps<{
     session: ISftpSession | undefined;
     list: Array<SftpFile>;
@@ -204,10 +206,10 @@
   // 是否可编辑
   const canEditable = (sizeByte: number, attr: string) => {
     const typeValue = formatFileType(attr).value;
-    // 非文件夹和链接文件 并且文件大小小于 2MB 可以编辑
+    // 非文件夹和链接文件 并且文件小于 配置大小(MB) 可以编辑
     return FILE_TYPE.DIRECTORY.value !== typeValue
       && FILE_TYPE.LINK_FILE.value !== typeValue
-      && sizeByte <= 2 * 1024 * 1024;
+      && sizeByte <= previewSize * 1024 * 1024;
   };
 
   // 点击文件名称

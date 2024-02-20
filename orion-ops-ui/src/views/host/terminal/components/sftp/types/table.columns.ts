@@ -19,6 +19,7 @@ const columns = [
     title: '大小',
     dataIndex: 'sizeByte',
     slotName: 'size',
+    ellipsis: true,
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
@@ -26,6 +27,7 @@ const columns = [
     title: '属性',
     dataIndex: 'attr',
     slotName: 'attr',
+    ellipsis: true,
   }, {
     title: '修改时间',
     dataIndex: 'modifyTime',

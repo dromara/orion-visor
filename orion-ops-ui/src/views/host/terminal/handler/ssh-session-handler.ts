@@ -4,7 +4,7 @@ import type { Terminal } from 'xterm';
 import useCopy from '@/hooks/copy';
 import html2canvas from 'html2canvas';
 import { useTerminalStore, useUserStore } from '@/store';
-import { TerminalShortcutItems } from '../types/terminal.const';
+import { PanelSessionType, TerminalShortcutItems } from '../types/terminal.const';
 import { saveAs } from 'file-saver';
 import { Message } from '@arco-design/web-vue';
 import { dateFormat } from '@/utils';
@@ -76,6 +76,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
       case 'interrupt':
       case 'enter':
       case 'commandEditor':
+      case 'openSftp':
       case 'checkAppendMissing':
         return this.session.canWrite;
       case 'disconnect':
@@ -192,6 +193,16 @@ export default class SshSessionHandler implements ISshSessionHandler {
   // 打开命令编辑器
   commandEditor() {
     this.domRef.editorModal?.open('', '');
+  }
+
+  // 打开 sftp
+  openSftp() {
+    const terminalStore = useTerminalStore();
+    const host = terminalStore.hosts.hostList
+      .find(s => s.id === this.session.hostId);
+    if (host) {
+      terminalStore.openSession(host, PanelSessionType.SFTP);
+    }
   }
 
   // ctrl + c

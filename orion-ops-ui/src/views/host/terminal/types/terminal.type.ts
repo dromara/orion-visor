@@ -288,6 +288,8 @@ export interface ISshSessionHandler {
   fontSizeSubtract: () => void;
   // 打开命令编辑器
   commandEditor: () => void;
+  // 打开 sftp
+  openSftp: () => void;
   // 中断
   interrupt: () => void;
   // 回车

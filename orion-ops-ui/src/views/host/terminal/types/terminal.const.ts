@@ -160,6 +160,10 @@ export const ActionBarItems = [
     icon: 'icon-code-square',
     content: '命令编辑器',
   }, {
+    item: 'openSftp',
+    icon: 'icon-folder',
+    content: '打开 SFTP',
+  }, {
     item: 'clear',
     icon: 'icon-delete',
     content: '清空',

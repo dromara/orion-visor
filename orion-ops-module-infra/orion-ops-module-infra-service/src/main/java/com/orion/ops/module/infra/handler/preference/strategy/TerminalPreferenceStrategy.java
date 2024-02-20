@@ -100,6 +100,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .fontSizePlus(false)
                 .fontSizeSubtract(false)
                 .commandEditor(true)
+                .openSftp(true)
                 .clear(true)
                 .disconnect(false)
                 .closeTab(true)

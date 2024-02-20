@@ -207,6 +207,9 @@ public class TerminalPreferenceModel implements PreferenceModel {
         @Schema(description = "命令编辑器")
         private Boolean commandEditor;
 
+        @Schema(description = "打开 SFTP")
+        private Boolean openSftp;
+
         @Schema(description = "清空")
         private Boolean clear;
 
