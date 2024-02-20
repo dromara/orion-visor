@@ -150,7 +150,7 @@
                  arrow-class="terminal-tooltip-content"
                  content="上传">
         <span class="click-icon-wrapper header-action-icon"
-              @click="uploadFile">
+              @click="openSftpUploadModal">
           <icon-upload />
         </span>
       </a-tooltip>
@@ -182,7 +182,7 @@
   import type { ISftpSession } from '../../types/terminal.type';
   import { inject, nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
-  import { openSftpCreateModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
 
   const props = defineProps<{
     currentPath: string;
@@ -199,6 +199,8 @@
   const pathInputRef = ref();
 
   const openSftpCreateModal = inject(openSftpCreateModalKey) as (sessionId: string, path: string, isTouch: boolean) => void;
+
+  const openSftpUploadModal = inject(openSftpUploadModalKey) as () => void;
 
   // 监听路径变化
   watch(() => props.currentPath, (path) => {
@@ -262,12 +264,6 @@
     if (props.selectedFiles?.length) {
       props.session?.remove(props.selectedFiles);
     }
-  };
-
-  // 上传文件
-  const uploadFile = () => {
-    // TODO openModal("props.currentPath")
-    console.log(props.currentPath);
   };
 
   // 下载文件

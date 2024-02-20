@@ -64,7 +64,7 @@
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
   import SftpTableHeader from './sftp-table-header.vue';
   import SftpTable from './sftp-table.vue';
   import SftpEditorHeader from './sftp-editor-header.vue';
@@ -94,6 +94,7 @@
   const createModal = ref();
   const moveModal = ref();
   const chmodModal = ref();
+  const uploadModal = ref();
 
   // 暴露打开创建模态框
   provide(openSftpCreateModalKey, (sessionId: string, path: string, isTouch: boolean) => {
@@ -108,6 +109,11 @@
   // 暴露打开提权模态框
   provide(openSftpChmodModalKey, (sessionId: string, path: string, permission: number) => {
     chmodModal.value?.open(sessionId, path, permission);
+  });
+
+  // 暴露打开上传模态框
+  provide(openSftpUploadModalKey, () => {
+    uploadModal.value?.open(props.tab.hostId, currentPath.value);
   });
 
   // 编辑文件

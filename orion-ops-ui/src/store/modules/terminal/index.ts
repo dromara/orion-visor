@@ -22,6 +22,7 @@ import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/term
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';
+import SftpTransferManager from '@/views/host/terminal/handler/sftp-transfer-manager';
 
 // 终端偏好项
 export const TerminalPreferenceItem = {
@@ -66,7 +67,8 @@ export default defineStore('terminal', {
     hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(TerminalTabs.NEW_CONNECTION),
     panelManager: new TerminalPanelManager(),
-    sessionManager: new TerminalSessionManager()
+    sessionManager: new TerminalSessionManager(),
+    transferManager: new SftpTransferManager(),
   }),
 
   actions: {

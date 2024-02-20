@@ -297,6 +297,9 @@ export const openSftpMoveModalKey = Symbol();
 // 打开 sftpChmodModal key
 export const openSftpChmodModalKey = Symbol();
 
+// 打开 sftpUploadModal key
+export const openSftpUploadModalKey = Symbol();
+
 // 字体后缀 兜底
 export const fontFamilySuffix = ',courier-new, courier, monospace';
 

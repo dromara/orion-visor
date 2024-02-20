@@ -367,3 +367,17 @@ export interface SftpFile {
   gid: number;
   modifyTime: number;
 }
+
+// sftp 传输管理器定义
+export interface ISftpTransferManager {
+  transferList: Array<SftpUploadItem>;
+  // 添加上传文件
+  addUpload: (items: Array<SftpUploadItem>) => void;
+}
+
+// sftp 上传文件项
+export interface SftpUploadItem {
+  hostId: number;
+  targetPath: string;
+  file: File;
+}
