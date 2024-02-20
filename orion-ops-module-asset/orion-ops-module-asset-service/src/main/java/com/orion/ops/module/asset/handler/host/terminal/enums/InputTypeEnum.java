@@ -140,7 +140,6 @@ public enum InputTypeEnum {
             SftpSetContentRequest.class),
 
     // TODO
-    // COPY
     // UPLOAD
     // DOWNLOAD
 

@@ -47,6 +47,8 @@
     <sftp-move-modal ref="moveModal" />
     <!-- 文件提权模态框 -->
     <sftp-chmod-modal ref="chmodModal" />
+    <!-- 文件上传模态框 -->
+    <sftp-upload-modal ref="uploadModal" />
   </div>
 </template>
 
@@ -70,6 +72,7 @@
   import SftpCreateModal from './sftp-create-modal.vue';
   import SftpMoveModal from './sftp-move-modal.vue';
   import SftpChmodModal from './sftp-chmod-modal.vue';
+  import SftpUploadModal from './sftp-upload-modal.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
