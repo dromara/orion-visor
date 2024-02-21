@@ -135,4 +135,24 @@ export function permission10toString(permission: number) {
   return res;
 }
 
+// 获取文件大小
+export function getFileSize(size: number, scale: number = 2) {
+  let result;
+  let unit;
+  if (size >= 1024 * 1024 * 1024) {
+    result = (size / (1024 * 1024 * 1024)).toFixed(scale);
+    unit = 'GB';
+  } else if (size >= 1024 * 1024) {
+    result = (size / (1024 * 1024)).toFixed(scale);
+    unit = 'MB';
+  } else if (size >= 1024) {
+    result = (size / 1024).toFixed(scale);
+    unit = 'KB';
+  } else {
+    result = size;
+    unit = 'B';
+  }
+  return `${result} ${unit}`;
+}
+
 export default null;

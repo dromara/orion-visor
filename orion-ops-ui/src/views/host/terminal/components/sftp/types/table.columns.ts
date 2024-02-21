@@ -1,4 +1,5 @@
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+import { getFileSize } from '@/utils/file';
 
 // 表格列
 const columns = [
@@ -17,11 +18,14 @@ const columns = [
     }
   }, {
     title: '大小',
-    dataIndex: 'sizeByte',
+    dataIndex: 'size',
     slotName: 'size',
     ellipsis: true,
     sortable: {
       sortDirections: ['ascend', 'descend'],
+    },
+    render: ({ record }) => {
+      return getFileSize(record.size);
     },
   }, {
     title: '属性',

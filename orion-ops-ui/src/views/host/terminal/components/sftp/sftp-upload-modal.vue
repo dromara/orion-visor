@@ -76,11 +76,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SftpUploadItem } from '../../types/terminal.type';
-  import useVisible from '@/hooks/visible';
   import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
+  import useVisible from '@/hooks/visible';
+  import { TransferStatus, TransferType } from '../../types/terminal.const';
 
   const { visible, setVisible } = useVisible();
   const { transferManager } = useTerminalStore();
@@ -106,10 +106,15 @@
     // 添加到上传列表
     const files = fileList.value.map(s => {
       return {
+        type: TransferType.UPLOAD,
         hostId: hostId.value,
-        targetPath: parentPath.value + '/' + (s.file.webkitRelativePath || s.file.name),
-        file: s.file as File
-      } as SftpUploadItem;
+        name: s.file.webkitRelativePath || s.file.name,
+        currentSize: 0,
+        totalSize: s.file.size,
+        status: TransferStatus.WAITING,
+        parentPath: parentPath.value,
+        file: s.file
+      };
     });
     transferManager.addUpload(files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');

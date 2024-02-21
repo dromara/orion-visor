@@ -358,8 +358,7 @@ export interface SftpFile {
   name: string;
   path: string;
   suffix: string;
-  size: string;
-  sizeByte: number;
+  size: number;
   attr: string;
   isDir: boolean;
   permission: number;
@@ -370,14 +369,19 @@ export interface SftpFile {
 
 // sftp 传输管理器定义
 export interface ISftpTransferManager {
-  transferList: Array<SftpUploadItem>;
+  transferList: Array<SftpTransferItem>;
   // 添加上传文件
-  addUpload: (items: Array<SftpUploadItem>) => void;
+  addUpload: (items: Array<SftpTransferItem>) => void;
 }
 
 // sftp 上传文件项
-export interface SftpUploadItem {
+export interface SftpTransferItem {
+  type: string;
   hostId: number;
-  targetPath: string;
+  name: string;
+  parentPath: string;
+  currentSize: number,
+  totalSize: number;
+  status: string;
   file: File;
 }

@@ -31,11 +31,8 @@ public class SftpFileVO {
     @Schema(description = "文件后缀")
     private String suffix;
 
-    @Schema(description = "文件大小")
-    private String size;
-
     @Schema(description = "文件大小(byte)")
-    private Long sizeByte;
+    private Long size;
 
     @Schema(description = "属性")
     private String attr;

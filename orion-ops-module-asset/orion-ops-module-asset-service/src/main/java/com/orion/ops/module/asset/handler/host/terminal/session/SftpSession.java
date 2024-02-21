@@ -157,8 +157,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
         file.setName(sftpFile.getName());
         file.setPath(sftpFile.getPath());
         file.setSuffix(Files1.getSuffix(sftpFile.getName()));
-        file.setSize(Files1.getSize(sftpFile.getSize()));
-        file.setSizeByte(sftpFile.getSize());
+        file.setSize(sftpFile.getSize());
         file.setPermission(sftpFile.getPermission());
         file.setUid(sftpFile.getUid());
         file.setGid(sftpFile.getGid());

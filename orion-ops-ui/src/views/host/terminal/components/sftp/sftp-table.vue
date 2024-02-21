@@ -68,7 +68,7 @@
           </span>
         </a-tooltip>
         <!-- 编辑内容 -->
-        <a-tooltip v-if="canEditable(record.sizeByte, record.attr)"
+        <a-tooltip v-if="canEditable(record.size, record.attr)"
                    position="top"
                    :mini="true"
                    :overlay-inverse="true"
@@ -204,12 +204,12 @@
   };
 
   // 是否可编辑
-  const canEditable = (sizeByte: number, attr: string) => {
+  const canEditable = (size: number, attr: string) => {
     const typeValue = formatFileType(attr).value;
     // 非文件夹和链接文件 并且文件小于 配置大小(MB) 可以编辑
     return FILE_TYPE.DIRECTORY.value !== typeValue
       && FILE_TYPE.LINK_FILE.value !== typeValue
-      && sizeByte <= previewSize * 1024 * 1024;
+      && size <= previewSize * 1024 * 1024;
   };
 
   // 点击文件名称

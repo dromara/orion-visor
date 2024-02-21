@@ -285,6 +285,20 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   },
 ];
 
+// 传输状态
+export const TransferStatus = {
+  WAITING: 'waiting',
+  TRANSFERRING: 'normal',
+  SUCCESS: 'success',
+  ERROR: 'danger',
+};
+
+// 传输类型
+export const TransferType = {
+  UPLOAD: 'upload',
+  DOWNLOAD: 'download'
+};
+
 // 打开 sshSettingModal key
 export const openSshSettingModalKey = Symbol();
 
