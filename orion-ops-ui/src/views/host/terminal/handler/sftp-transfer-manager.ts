@@ -1,8 +1,10 @@
 import type { ISftpTransferManager, SftpTransferItem } from '../types/terminal.type';
-import { TransferStatus, TransferType } from '../types/terminal.const';
+import { TransferOperatorResponse } from '../types/terminal.type';
+import { TransferOperatorType, TransferStatus, TransferType } from '../types/terminal.const';
 import { sleep } from '@/utils';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
+import { getPath } from '@/utils/file';
 
 export const BLOCK_SIZE = 1024 * 1024;
 
@@ -16,6 +18,8 @@ export default class SftpTransferManager implements ISftpTransferManager {
   private client?: WebSocket;
 
   private run: boolean;
+
+  private resp?: TransferOperatorResponse;
 
   transferList: Array<SftpTransferItem>;
 
@@ -96,27 +100,35 @@ export default class SftpTransferManager implements ISftpTransferManager {
   // 接收消息
   private async resolveMessage(message: MessageEvent) {
     // TODO
-    console.log();
-    const data = message.data;
-    if (data === 'flush') {
-
-    } else if (data === 'error') {
-
-    } else if (data === 'close') {
-      // TODO 关闭会话
-      this.client?.close();
-    }
+    this.resp = JSON.parse(message.data);
+    //   // TODO 关闭会话
+    //   this.client?.close();
+    // }
   }
 
   // 上传文件
   private async uploadFile(item: SftpTransferItem) {
     const file = item.file;
-    // TODO 发送开始
+    // 发送开始上传信息
+    this.client?.send(JSON.stringify({
+      type: TransferOperatorType.UPLOAD_START,
+      path: getPath(item.parentPath + '/' + item.name),
+      hostId: item.hostId
+    }));
+    // TODO 等待处理结果 吧错误信息展示出来
+    try {
+      await this.awaitProcessedThrow();
+    } catch (ex: any) {
+      console.log(ex);
+      item.status = TransferStatus.ERROR;
+      item.errorMessage = ex.message;
+      return;
+    }
     // 计算分片数量
     const totalBlock = Math.ceil(file.size / BLOCK_SIZE);
     // 分片上传
     for (let i = 0; i < totalBlock; i++) {
-      // TODO wait ACK
+
       // 读取数据
       const start = i * BLOCK_SIZE;
       const end = Math.min(file.size, start + BLOCK_SIZE);
@@ -127,9 +139,9 @@ export default class SftpTransferManager implements ISftpTransferManager {
         reader.onerror = (error) => reject(error);
         reader.readAsArrayBuffer(chunk);
       });
-      // 上传 TODO
-      console.log(arrayBuffer);
       this.client?.send(arrayBuffer as ArrayBuffer);
+      // TODO 等待处理结果
+      await this.awaitProcessedThrow();
     }
     // TODO 发送 END
   }
@@ -137,6 +149,29 @@ export default class SftpTransferManager implements ISftpTransferManager {
   // 下载文件
   private async uploadDownload(item: SftpTransferItem) {
     // TODO
+  }
+
+  // 等待处理完成
+  private async awaitProcessedThrow() {
+    for (let i = 0; i < 100; i++) {
+      await sleep(50);
+      if (this.resp) {
+        break;
+      }
+    }
+    const resp = this.resp;
+    // const resp = undefined;
+    this.resp = undefined;
+    // 抛出异常
+    if (resp) {
+      if (resp.success) {
+        return;
+      } else {
+        throw new Error(resp.msg || '处理失败');
+      }
+    } else {
+      throw new Error('处理超时');
+    }
   }
 
 }

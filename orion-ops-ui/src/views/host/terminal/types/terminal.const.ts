@@ -299,6 +299,13 @@ export const TransferType = {
   DOWNLOAD: 'download'
 };
 
+// 传输操作类型
+export const TransferOperatorType = {
+  PROCESSED: 'processed',
+  UPLOAD_START: 'upload_start',
+  UPLOAD_FINISH: 'upload_finish'
+};
+
 // 打开 sshSettingModal key
 export const openSshSettingModalKey = Symbol();
 

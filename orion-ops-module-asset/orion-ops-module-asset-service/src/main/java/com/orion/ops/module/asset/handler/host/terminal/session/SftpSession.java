@@ -49,7 +49,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
 
     @Override
     public void connect() {
-        // 打开 shell
+        // 打开 sftp
         this.executor = sessionStore.getSftpExecutor(config.getFileNameCharset());
         executor.connect();
     }

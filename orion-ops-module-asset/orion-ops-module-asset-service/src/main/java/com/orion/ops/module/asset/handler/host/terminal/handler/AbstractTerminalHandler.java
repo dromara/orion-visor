@@ -60,7 +60,7 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
     }
 
     /**
-     * 获取 sftp 错误信息
+     * 获取错误信息
      *
      * @param ex ex
      * @return msg

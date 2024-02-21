@@ -1,5 +1,10 @@
-package com.orion.ops.module.asset.handler.host.sftp;
+package com.orion.ops.module.asset.handler.host.transfer;
 
+import com.alibaba.fastjson.JSON;
+import com.orion.lang.utils.io.Streams;
+import com.orion.ops.module.asset.handler.host.transfer.handler.ITransferHandler;
+import com.orion.ops.module.asset.handler.host.transfer.handler.TransferHandler;
+import com.orion.ops.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
@@ -7,6 +12,8 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * sftp 传输消息处理器
@@ -17,16 +24,21 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
  */
 @Slf4j
 @Component
-public class TransferMessageHandler extends AbstractWebSocketHandler {
+public class TransferMessageDispatcher extends AbstractWebSocketHandler {
+
+    private final ConcurrentHashMap<String, ITransferHandler> handlers = new ConcurrentHashMap<>();
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        System.out.println("text");
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        // 获取处理器
+        ITransferHandler handler = handlers.computeIfAbsent(session.getId(), s -> new TransferHandler(session));
+        // 处理消息
+        handler.handleMessage(JSON.parseObject(message.getPayload(), TransferOperatorRequest.class));
     }
 
     @Override
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
-        System.out.println("binary");
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
+        handlers.get(session.getId()).putContent(message.getPayload().array());
     }
 
     @Override
@@ -42,6 +54,8 @@ public class TransferMessageHandler extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String id = session.getId();
+        // 关闭会话
+        Streams.close(handlers.get(id));
         log.info("TransferMessageHandler-afterConnectionClosed  id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
     }
 
