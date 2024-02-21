@@ -206,7 +206,7 @@ export function getUUID() {
 /**
  * 获取会话id
  */
-export const nextSessionId = (len: number): string => {
+export const nextId = (len: number): string => {
   return getUUID().replaceAll('-', '').substring(0, len);
 };
 

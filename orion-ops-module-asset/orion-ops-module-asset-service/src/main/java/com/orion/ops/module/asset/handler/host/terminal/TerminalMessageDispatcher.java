@@ -1,12 +1,13 @@
 package com.orion.ops.module.asset.handler.host.terminal;
 
-import com.orion.ops.framework.websocket.core.handler.TextWebSocketHandler;
 import com.orion.ops.module.asset.handler.host.terminal.enums.InputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import javax.annotation.Resource;
 
@@ -19,13 +20,14 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class TerminalMessageDispatcher extends TextWebSocketHandler {
+public class TerminalMessageDispatcher extends AbstractWebSocketHandler {
 
     @Resource
     private TerminalManager terminalManager;
 
     @Override
-    public void onMessage(WebSocketSession session, String payload) {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        String payload = message.getPayload();
         try {
             // 解析类型
             InputTypeEnum type = InputTypeEnum.of(payload);
@@ -36,6 +38,11 @@ public class TerminalMessageDispatcher extends TextWebSocketHandler {
         } catch (Exception e) {
             log.error("TerminalDispatchHandler-handleMessage-error id: {}, msg: {}", session.getId(), payload, e);
         }
+    }
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) {
+        log.info("TerminalMessageDispatcher-afterConnectionEstablished id: {}", session.getId());
     }
 
     @Override

@@ -16,7 +16,7 @@ import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/host-termin
 import { getTerminalThemes } from '@/api/asset/host-terminal';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
-import { nextSessionId } from '@/utils';
+import { nextId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
 import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/terminal.const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
@@ -152,7 +152,7 @@ export default defineStore('terminal', {
         : 1;
       // 打开 tab
       this.panelManager.getPanel(panelIndex).openTab({
-        key: nextSessionId(10),
+        key: nextId(10),
         seq: nextSeq,
         title: `(${nextSeq})  ${record.alias || record.name}`,
         hostId: record.id,

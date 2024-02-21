@@ -14,7 +14,8 @@
               :data="transferManager.transferList">
         <!-- 空数据 -->
         <template #empty>
-          <a-empty description="无数据" />
+          <a-empty style="flex-direction: column;"
+                   description="无传输文件" />
         </template>
         <!-- 数据 -->
         <template #item="{ item }">

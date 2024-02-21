@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.config;
 
+import com.orion.ops.module.asset.handler.host.sftp.TransferMessageHandler;
 import com.orion.ops.module.asset.handler.host.terminal.TerminalMessageDispatcher;
 import com.orion.ops.module.asset.interceptor.TerminalAccessInterceptor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,10 +29,17 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
     @Resource
     private TerminalMessageDispatcher terminalMessageDispatcher;
 
+    @Resource
+    private TransferMessageHandler transferMessageHandler;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // 终端
         registry.addHandler(terminalMessageDispatcher, prefix + "/host/terminal/{accessToken}")
+                .addInterceptors(terminalAccessInterceptor)
+                .setAllowedOrigins("*");
+        // 文件传输
+        registry.addHandler(transferMessageHandler, prefix + "/host/transfer/{accessToken}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
     }

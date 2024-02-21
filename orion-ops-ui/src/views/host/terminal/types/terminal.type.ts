@@ -370,12 +370,13 @@ export interface SftpFile {
 // sftp 传输管理器定义
 export interface ISftpTransferManager {
   transferList: Array<SftpTransferItem>;
-  // 添加上传文件
-  addUpload: (items: Array<SftpTransferItem>) => void;
+  // 添加传输
+  addTransfer: (items: Array<SftpTransferItem>) => void;
 }
 
 // sftp 上传文件项
 export interface SftpTransferItem {
+  id: string;
   type: string;
   hostId: number;
   name: string;

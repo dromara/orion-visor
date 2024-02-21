@@ -81,6 +81,7 @@
   import { Message } from '@arco-design/web-vue';
   import useVisible from '@/hooks/visible';
   import { TransferStatus, TransferType } from '../../types/terminal.const';
+  import { nextId } from '@/utils';
 
   const { visible, setVisible } = useVisible();
   const { transferManager } = useTerminalStore();
@@ -106,6 +107,7 @@
     // 添加到上传列表
     const files = fileList.value.map(s => {
       return {
+        id: nextId(10),
         type: TransferType.UPLOAD,
         hostId: hostId.value,
         name: s.file.webkitRelativePath || s.file.name,
@@ -116,7 +118,7 @@
         file: s.file
       };
     });
-    transferManager.addUpload(files);
+    transferManager.addTransfer(files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');
     // 清空
     handlerClear();
