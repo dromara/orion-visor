@@ -333,6 +333,8 @@ export interface ISftpSession extends ITerminalSession {
 
 // sftp 会话接收器定义
 export interface ISftpSessionResolver {
+  // 设置加载状态
+  setLoading: (loading: boolean) => void;
   // 连接后回调
   connectCallback: () => void;
   // 接受文件列表响应
@@ -372,27 +374,33 @@ export interface ISftpTransferManager {
   transferList: Array<SftpTransferItem>;
   // 添加传输
   addTransfer: (items: Array<SftpTransferItem>) => void;
+  // 取消传输
+  cancelTransfer: (fileId: string) => void;
 }
 
 // sftp 上传器定义
 export interface ISftpTransferUploader {
   // 是否完成
   finish: boolean;
+  // 是否中断
+  abort: boolean;
   // 开始上传
   startUpload: () => void;
   // 是否有下一个分片
   hasNextBlock: () => boolean;
   // 上传下一个分片
-  uploadNextBlock: () => void;
+  uploadNextBlock: () => Promise<void>;
   // 上传完成
   uploadFinish: () => void;
   // 上传失败
   uploadError: (msg: string | undefined) => void;
+  // 上传中断
+  uploadAbort: () => void;
 }
 
 // sftp 上传文件项
 export interface SftpTransferItem {
-  id: string;
+  fileId: string;
   type: string;
   hostId: number;
   name: string;

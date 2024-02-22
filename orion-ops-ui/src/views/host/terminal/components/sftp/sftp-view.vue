@@ -207,6 +207,7 @@
   onMounted(async () => {
     // 创建终端处理器
     session.value = await sessionManager.openSftp(props.tab, {
+      setLoading: setTableLoading,
       connectCallback,
       resolveList,
       resolveSftpMkdir: resolveFileAction,

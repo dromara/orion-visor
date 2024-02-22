@@ -11,8 +11,11 @@
            :on-before-ok="handlerOk"
            @cancel="handleClose">
     <div class="upload-container">
-      <div class="mb16">
-        上传至文件夹: {{ parentPath }}
+      <div class="parent-wrapper mb16">
+        <span class="parent-label">上传至文件夹:</span>
+        <a-input class="parent-input"
+                 v-model="parentPath"
+                 placeholder="上传目录" />
       </div>
       <a-space>
         <!-- 选择文件 -->
@@ -101,13 +104,17 @@
 
   // 确定
   const handlerOk = () => {
+    if (!parentPath.value) {
+      Message.error('请输入上传目录');
+      return false;
+    }
     if (!fileList.value.length) {
       return true;
     }
     // 添加到上传列表
     const files = fileList.value.map(s => {
       return {
-        id: nextId(10),
+        fileId: nextId(10),
         type: TransferType.UPLOAD,
         hostId: hostId.value,
         name: s.file.webkitRelativePath || s.file.name,
@@ -140,6 +147,20 @@
 <style lang="less" scoped>
   .upload-container {
     width: 100%;
+  }
+
+  .parent-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .parent-label {
+      width: 98px;
+    }
+
+    .parent-input {
+      width: 386px;
+    }
   }
 
   .file-list-uploader {

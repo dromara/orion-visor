@@ -301,9 +301,15 @@ export const TransferType = {
 
 // 传输操作类型
 export const TransferOperatorType = {
-  PROCESSED: 'processed',
-  UPLOAD_START: 'upload_start',
-  UPLOAD_FINISH: 'upload_finish'
+  UPLOAD_START: 'uploadStart',
+  UPLOAD_FINISH: 'uploadFinish',
+  UPLOAD_ERROR: 'uploadError',
+};
+
+// 传输响应类型
+export const TransferReceiverType = {
+  NEXT_BLOCK: 'nextBlock',
+  NEXT_TRANSFER: 'nextTransfer',
 };
 
 // 打开 sshSettingModal key

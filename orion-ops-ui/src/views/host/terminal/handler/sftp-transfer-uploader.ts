@@ -7,6 +7,7 @@ export const BLOCK_SIZE = 1024 * 1024;
 // sftp 上传器实现
 export default class SftpTransferUploader implements ISftpTransferUploader {
 
+  public abort: boolean;
   public finish: boolean;
   private currentBlock: number;
   private totalBlock: number;
@@ -15,6 +16,7 @@ export default class SftpTransferUploader implements ISftpTransferUploader {
   private file: File;
 
   constructor(item: SftpTransferItem, client: WebSocket) {
+    this.abort = false;
     this.finish = false;
     this.item = item;
     this.client = client;
@@ -73,6 +75,16 @@ export default class SftpTransferUploader implements ISftpTransferUploader {
     this.finish = true;
     this.item.status = TransferStatus.ERROR;
     this.item.errorMessage = msg || '上传失败';
+    // 发送上传完成的信息
+    this.client?.send(JSON.stringify({
+      type: TransferOperatorType.UPLOAD_ERROR,
+      hostId: this.item.hostId
+    }));
+  }
+
+  // 上传中断
+  uploadAbort() {
+    this.abort = true;
   }
 
 }

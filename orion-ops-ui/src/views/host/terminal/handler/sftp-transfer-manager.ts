@@ -1,14 +1,11 @@
 import type { ISftpTransferManager, ISftpTransferUploader, SftpTransferItem } from '../types/terminal.type';
 import { TransferOperatorResponse } from '../types/terminal.type';
-import { TransferOperatorType, TransferStatus, TransferType } from '../types/terminal.const';
+import { TransferReceiverType, TransferStatus, TransferType } from '../types/terminal.const';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
 import SftpTransferUploader from '@/views/host/terminal/handler/sftp-transfer-uploader';
 
 export const wsBase = import.meta.env.VITE_WS_BASE_URL;
-
-// todo 考虑一下单文件上传失败 (网络/文件被删除)
-// todo 取消任务
 
 // sftp 传输管理器实现
 export default class SftpTransferManager implements ISftpTransferManager {
@@ -35,6 +32,23 @@ export default class SftpTransferManager implements ISftpTransferManager {
     if (!this.run) {
       this.openClient();
     }
+  }
+
+  // 取消传输
+  cancelTransfer(fileId: string): void {
+    const index = this.transferList.findIndex(s => s.fileId === fileId);
+    if (index === -1) {
+      return;
+    }
+    const item = this.transferList[index];
+    if (item.status === TransferStatus.TRANSFERRING) {
+      // 传输中则中断传输
+      if (this.currentUploader) {
+        this.currentUploader.uploadAbort();
+      }
+    }
+    // 从列表中移除
+    this.transferList.splice(index, 1);
   }
 
   // 打开会话
@@ -91,9 +105,12 @@ export default class SftpTransferManager implements ISftpTransferManager {
   // 接收消息
   private async resolveMessage(message: MessageEvent) {
     const data = JSON.parse(message.data) as TransferOperatorResponse;
-    if (data.type === TransferOperatorType.PROCESSED) {
-      // 接收处理完成
-      this.resolveProcessed(data);
+    if (data.type === TransferReceiverType.NEXT_BLOCK) {
+      // 接收下一块上传数据
+      await this.resolveNextBlock();
+    } else if (data.type === TransferReceiverType.NEXT_TRANSFER) {
+      // 接收接收下一个传输任务处理完成
+      this.resolveNextTransfer(data);
     }
   }
 
@@ -110,35 +127,40 @@ export default class SftpTransferManager implements ISftpTransferManager {
     // TODO
   }
 
-  // 接收处理完成回调
-  private resolveProcessed(data: TransferOperatorResponse) {
-    // 操作回调
-    if (data.success) {
-      // 操作成功
-      if (this.currentUploader) {
-        if (this.currentUploader.hasNextBlock()) {
-          // 有下一个分片则上传 (上一个分片传输完成)
-          this.currentUploader.uploadNextBlock();
-        } else {
-          // 没有下一个分片则检查是否完成
-          if (this.currentUploader.finish) {
-            // 已完成 开始下一个传输任务 (发送 finish 后的回调)
-            this.transferNextItem();
-          } else {
-            // 未完成则发送完成 (最后一个分片传输完成但还未发送 finish 指令)
-            this.currentUploader.uploadFinish();
-          }
-        }
+  // 接收下一块上传数据
+  private async resolveNextBlock() {
+    // 只可能为上传并且成功
+    if (!this.currentUploader) {
+      return;
+    }
+    if (this.currentUploader.hasNextBlock()
+      && !this.currentUploader.abort
+      && !this.currentUploader.finish) {
+      try {
+        // 有下一个分片则上传 (上一个分片传输完成)
+        await this.currentUploader.uploadNextBlock();
+      } catch (e) {
+        // 读取文件失败
+        this.currentUploader.uploadError((e as Error).message);
       }
     } else {
-      // 操作失败
-      if (this.currentUploader) {
-        // 上传失败
-        this.currentUploader.uploadError(data.msg);
-      }
-      // 开始下一个传输任务
-      this.transferNextItem();
+      // 没有下一个分片则发送完成
+      this.currentUploader.uploadFinish();
     }
+  }
+
+  // 接收下一个传输任务
+  private resolveNextTransfer(data: TransferOperatorResponse) {
+    if (this.currentItem) {
+      if (data.success) {
+        this.currentItem.status = TransferStatus.SUCCESS;
+      } else {
+        this.currentItem.status = TransferStatus.ERROR;
+        this.currentItem.errorMessage = data.msg || '上传失败';
+      }
+    }
+    // 开始下一个传输任务
+    this.transferNextItem();
   }
 
 }

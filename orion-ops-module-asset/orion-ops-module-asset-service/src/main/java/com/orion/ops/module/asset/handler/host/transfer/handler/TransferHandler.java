@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferOperatorType;
+import com.orion.ops.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.ops.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import com.orion.ops.module.asset.handler.host.transfer.model.TransferOperatorResponse;
 import com.orion.ops.module.asset.handler.host.transfer.session.ITransferHostSession;
@@ -72,6 +74,10 @@ public class TransferHandler implements ITransferHandler {
                 // 上传完成
                 this.uploadFinish();
                 break;
+            case UPLOAD_ERROR:
+                // 上传失败
+                this.uploadError();
+                break;
             default:
                 break;
         }
@@ -79,23 +85,18 @@ public class TransferHandler implements ITransferHandler {
 
     @Override
     public void putContent(byte[] content) {
-        Exception ex = null;
         try {
             // 写入内容
             currentSession.putContent(content);
+            // 响应结果
+            this.sendMessage(TransferReceiverType.NEXT_BLOCK, null);
         } catch (IOException e) {
-            ex = e;
             log.error("TransferHandler.putContent error", e);
             // 写入完成
             currentSession.putFinish();
+            // 响应结果
+            this.sendMessage(TransferReceiverType.NEXT_TRANSFER, e);
         }
-        // 响应结果
-        TransferOperatorResponse resp = TransferOperatorResponse.builder()
-                .type(TransferOperatorType.PROCESSED.getType())
-                .success(ex == null)
-                .msg(this.getErrorMessage(ex))
-                .build();
-        WebSockets.sendText(this.channel, JSON.toJSONString(resp));
     }
 
     /**
@@ -104,20 +105,18 @@ public class TransferHandler implements ITransferHandler {
      * @param payload payload
      */
     private void uploadStart(TransferOperatorRequest payload) {
-        Exception ex = null;
         try {
+            // 开始上传
             currentSession.startUpload(payload.getPath());
+            // 响应结果
+            this.sendMessage(TransferReceiverType.NEXT_BLOCK, null);
         } catch (Exception e) {
-            ex = e;
             log.error("TransferHandler.uploadStart error", e);
+            // 传输完成
+            currentSession.putFinish();
+            // 响应结果
+            this.sendMessage(TransferReceiverType.NEXT_TRANSFER, e);
         }
-        // 响应结果
-        TransferOperatorResponse resp = TransferOperatorResponse.builder()
-                .type(TransferOperatorType.PROCESSED.getType())
-                .success(ex == null)
-                .msg(this.getErrorMessage(ex))
-                .build();
-        WebSockets.sendText(this.channel, JSON.toJSONString(resp));
     }
 
     /**
@@ -126,11 +125,16 @@ public class TransferHandler implements ITransferHandler {
     private void uploadFinish() {
         currentSession.putFinish();
         // 响应结果
-        TransferOperatorResponse resp = TransferOperatorResponse.builder()
-                .type(TransferOperatorType.PROCESSED.getType())
-                .success(true)
-                .build();
-        WebSockets.sendText(this.channel, JSON.toJSONString(resp));
+        this.sendMessage(TransferReceiverType.NEXT_TRANSFER, null);
+    }
+
+    /**
+     * 上传失败
+     */
+    private void uploadError() {
+        currentSession.putFinish();
+        // 响应结果
+        this.sendMessage(TransferReceiverType.NEXT_TRANSFER, new InvalidArgumentException(Const.EMPTY));
     }
 
     /**
@@ -158,14 +162,24 @@ public class TransferHandler implements ITransferHandler {
         } catch (Exception e) {
             log.error("TransferHandler.getAndInitSession error", e);
             // 响应结果
-            TransferOperatorResponse resp = TransferOperatorResponse.builder()
-                    .type(TransferOperatorType.PROCESSED.getType())
-                    .success(false)
-                    .msg(this.getErrorMessage(e))
-                    .build();
-            WebSockets.sendText(this.channel, JSON.toJSONString(resp));
+            this.sendMessage(TransferReceiverType.NEXT_TRANSFER, e);
             return false;
         }
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param type type
+     * @param ex   ex
+     */
+    private void sendMessage(TransferReceiverType type, Exception ex) {
+        TransferOperatorResponse resp = TransferOperatorResponse.builder()
+                .type(type.getType())
+                .success(ex == null)
+                .msg(this.getErrorMessage(ex))
+                .build();
+        WebSockets.sendText(this.channel, JSON.toJSONString(resp));
     }
 
     /**

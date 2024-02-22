@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 传输操作类型
+ * 传输响应类型
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -12,32 +12,27 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum TransferOperatorType {
+public enum TransferReceiverType {
 
     /**
-     * 开始上传
+     * 请求下一块上传数据
      */
-    UPLOAD_START("uploadStart"),
+    NEXT_BLOCK("nextBlock"),
 
     /**
-     * 上传完成
+     * 请求下一个传输任务
      */
-    UPLOAD_FINISH("uploadFinish"),
-
-    /**
-     * 上传失败
-     */
-    UPLOAD_ERROR("uploadError"),
+    NEXT_TRANSFER("nextTransfer"),
 
     ;
 
     private final String type;
 
-    public static TransferOperatorType of(String type) {
+    public static TransferReceiverType of(String type) {
         if (type == null) {
             return null;
         }
-        for (TransferOperatorType value : values()) {
+        for (TransferReceiverType value : values()) {
             if (value.type.equals(type)) {
                 return value;
             }

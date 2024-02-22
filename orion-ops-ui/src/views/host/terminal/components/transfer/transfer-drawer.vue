@@ -2,7 +2,6 @@
   <a-drawer v-model:visible="visible"
             title="文件传输列表"
             :width="388"
-            :mask-closable="false"
             :unmount-on-close="false"
             :footer="false">
     <a-spin class="full" :loading="loading">
@@ -42,7 +41,15 @@
                 </a-tooltip>
                 <!-- 传输进度 -->
                 <span class="transfer-progress">
-                  {{ getFileSize(item.currentSize) }}/{{ getFileSize(item.totalSize) }}
+                  <!-- 当前大小 -->
+                  <span v-if="item.status === TransferStatus.TRANSFERRING">{{ getFileSize(item.currentSize) }}</span>
+                  <span class="mx4" v-if="item.status === TransferStatus.TRANSFERRING">/</span>
+                  <!-- 总大小 -->
+                  <span>{{ getFileSize(item.totalSize) }}</span>
+                  <!-- 进度百分比 -->
+                  <span class="ml8" v-if="item.status === TransferStatus.TRANSFERRING">
+                    {{ (item.currentSize / item.totalSize * 100).toFixed(2) }}%
+                  </span>
                 </span>
                 <!-- 目标目录 -->
                 <a-tooltip v-if="item.parentPath"
@@ -71,14 +78,24 @@
               </div>
               <!-- 右侧状态/操作-->
               <div class="transfer-item-right">
-                <!-- 等待传输 -->
-                <icon-loading v-if="item.status === TransferStatus.WAITING" />
-                <!-- 传输进度 -->
-                <a-progress v-else
-                            type="circle"
-                            size="mini"
-                            :status="item.status"
-                            :percent="item.currentSize / item.totalSize" />
+                <!-- 传输状态 -->
+                <div class="transfer-item-right-progress">
+                  <!-- 等待传输 -->
+                  <icon-loading v-if="item.status === TransferStatus.WAITING" />
+                  <!-- 传输进度 -->
+                  <a-progress v-else
+                              type="circle"
+                              size="mini"
+                              :status="item.status"
+                              :percent="item.currentSize / item.totalSize" />
+                </div>
+                <!-- 传输操作 -->
+                <div class="transfer-item-right-actions">
+                  <!-- 关闭 -->
+                  <span class="close-icon" @click="removeTask(item.fileId)">
+                    <icon-close />
+                 </span>
+                </div>
               </div>
             </div>
           </a-list-item>
@@ -112,6 +129,11 @@
 
   defineExpose({ open });
 
+  // 移除任务
+  const removeTask = (fileId: string) => {
+    transferManager.cancelTransfer(fileId);
+  };
+
   // 关闭
   const handleClose = () => {
     handlerClear();
@@ -125,6 +147,7 @@
 </script>
 
 <style lang="less" scoped>
+  @icon-size: 20px;
   @item-left-width: 42px;
   @item-right-width: 42px;
   @item-center-width: 388px - @item-left-width - @item-right-width;
@@ -134,6 +157,16 @@
     padding: 8px 0;
     display: flex;
     align-items: center;
+
+    &:hover {
+      .transfer-item-right-progress {
+        display: none;
+      }
+
+      .transfer-item-right-actions {
+        display: flex;
+      }
+    }
 
     &-left {
       width: @item-left-width;
@@ -173,8 +206,30 @@
 
     &-right {
       width: @item-right-width;
-      display: flex;
-      justify-content: center;
+
+      &-progress {
+        display: flex;
+        justify-content: center;
+      }
+
+      &-actions {
+        display: none;
+        justify-content: center;
+
+        .close-icon {
+          width: @icon-size;
+          height: @icon-size;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+
+          &:hover {
+            background: var(--color-fill-2);
+          }
+        }
+      }
     }
   }
 

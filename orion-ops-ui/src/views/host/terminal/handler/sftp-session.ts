@@ -56,6 +56,7 @@ export default class SftpSession implements ISftpSession {
 
   // 创建文件夹
   mkdir(path: string) {
+    this.resolver.setLoading(true);
     this.channel.send(InputProtocol.SFTP_MKDIR, {
       sessionId: this.sessionId,
       path
@@ -64,6 +65,7 @@ export default class SftpSession implements ISftpSession {
 
   // 创建文件
   touch(path: string) {
+    this.resolver.setLoading(true);
     this.channel.send(InputProtocol.SFTP_TOUCH, {
       sessionId: this.sessionId,
       path
@@ -72,6 +74,7 @@ export default class SftpSession implements ISftpSession {
 
   // 移动文件
   move(path: string, target: string) {
+    this.resolver.setLoading(true);
     this.channel.send(InputProtocol.SFTP_MOVE, {
       sessionId: this.sessionId,
       path,
@@ -85,6 +88,7 @@ export default class SftpSession implements ISftpSession {
       title: '删除确认',
       content: `确定要删除 ${path} 吗? 确定后将立即删除且无法恢复!`,
       onOk: () => {
+        this.resolver.setLoading(true);
         this.channel.send(InputProtocol.SFTP_REMOVE, {
           sessionId: this.sessionId,
           path: path.join('|')
@@ -95,6 +99,7 @@ export default class SftpSession implements ISftpSession {
 
   // 修改权限
   chmod(path: string, mod: number) {
+    this.resolver.setLoading(true);
     this.channel.send(InputProtocol.SFTP_CHMOD, {
       sessionId: this.sessionId,
       path,
