@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
@@ -22,11 +23,14 @@ public abstract class TerminalSession implements ITerminalSession {
 
     protected final WebSocketSession channel;
 
+    protected final TerminalConfig config;
+
     protected volatile boolean close;
 
-    public TerminalSession(String sessionId, WebSocketSession channel) {
+    public TerminalSession(String sessionId, WebSocketSession channel, TerminalConfig config) {
         this.sessionId = sessionId;
         this.channel = channel;
+        this.config = config;
     }
 
     /**

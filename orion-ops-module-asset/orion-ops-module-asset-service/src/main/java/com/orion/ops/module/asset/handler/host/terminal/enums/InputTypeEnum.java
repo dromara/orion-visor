@@ -124,6 +124,14 @@ public enum InputTypeEnum {
             SftpChangeModRequest.class),
 
     /**
+     * SFTP 下载文件夹 flat
+     */
+    SFTP_DOWNLOAD_DIRECTORY_FLAT("df",
+            SftpDownloadDirectoryFlatHandler.class,
+            new String[]{"type", "sessionId", "currentPath", "path"},
+            SftpDownloadDirectoryFlatRequest.class),
+
+    /**
      * SFTP 获取内容
      */
     SFTP_GET_CONTENT("gc",
@@ -138,10 +146,6 @@ public enum InputTypeEnum {
             SftpSetContentHandler.class,
             new String[]{"type", "sessionId", "path", "content"},
             SftpSetContentRequest.class),
-
-    // TODO
-    // UPLOAD
-    // DOWNLOAD
 
     ;
 

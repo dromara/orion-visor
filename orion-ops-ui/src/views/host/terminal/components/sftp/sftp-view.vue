@@ -11,10 +11,11 @@
                 :hide-icon="true">
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
+                             v-model:selected-files="selectFiles"
                              :current-path="currentPath"
                              :session="session"
-                             :selected-files="selectFiles"
-                             @load-file="loadFiles" />
+                             @load-file="loadFiles"
+                             @download="downloadFiles" />
           <!-- 表格 -->
           <sftp-table class="sftp-table-wrapper"
                       v-model:selected-files="selectFiles"
@@ -22,7 +23,8 @@
                       :list="fileList"
                       :loading="tableLoading"
                       @load-file="loadFiles"
-                      @edit-file="editFile" />
+                      @edit-file="editFile"
+                      @download="downloadFiles" />
         </a-spin>
       </template>
       <template #second v-if="editorView">
@@ -78,7 +80,7 @@
     tab: TerminalTabItem
   }>();
 
-  const { preference, sessionManager } = useTerminalStore();
+  const { preference, sessionManager, transferManager } = useTerminalStore();
   const { loading: tableLoading, setLoading: setTableLoading } = useLoading(true);
   const { loading: editorLoading, setLoading: setEditorLoading } = useLoading();
 
@@ -138,6 +140,25 @@
     editorView.value = false;
     editorFileName.value = '';
     editorFilePath.value = '';
+  };
+
+  // 下载文件
+  const downloadFiles = (paths: Array<string>) => {
+    if (!paths.length) {
+      return paths;
+    }
+    Message.success('已开始下载, 点击右侧传输列表查看进度');
+    // 映射为文件
+    const files = fileList.value.filter(s => paths.includes(s.path))
+      .map(s => {
+        return { ...s };
+      });
+    // 添加普通文件到下载队列
+    const normalFiles = files.filter(s => !s.isDir);
+    transferManager.addDownload(props.tab.hostId as number, currentPath.value, normalFiles);
+    // 将文件夹转为普通文件
+    const directoryFiles = files.filter(s => s.isDir);
+    // TODO
   };
 
   // 连接成功回调

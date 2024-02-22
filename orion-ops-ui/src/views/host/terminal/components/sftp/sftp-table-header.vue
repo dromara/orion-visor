@@ -190,7 +190,7 @@
     selectedFiles: Array<string>
   }>();
 
-  const emits = defineEmits(['loadFile']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'download']);
 
   const showHiddenFile = ref(false);
   const analysisPaths = ref<Array<PathAnalysis>>([]);
@@ -268,8 +268,8 @@
 
   // 下载文件
   const downloadFile = () => {
-    // TODO
-    console.log(props.selectedFiles);
+    emits('download', [...props.selectedFiles]);
+    emits('update:selectedFiles', []);
   };
 
 </script>

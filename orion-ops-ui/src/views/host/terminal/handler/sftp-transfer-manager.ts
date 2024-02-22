@@ -1,9 +1,10 @@
 import type { ISftpTransferManager, ISftpTransferUploader, SftpTransferItem } from '../types/terminal.type';
-import { TransferOperatorResponse } from '../types/terminal.type';
+import { SftpFile, TransferOperatorResponse } from '../types/terminal.type';
 import { TransferReceiverType, TransferStatus, TransferType } from '../types/terminal.const';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
 import SftpTransferUploader from '@/views/host/terminal/handler/sftp-transfer-uploader';
+import { nextId } from '@/utils';
 
 export const wsBase = import.meta.env.VITE_WS_BASE_URL;
 
@@ -25,8 +26,43 @@ export default class SftpTransferManager implements ISftpTransferManager {
     this.transferList = [];
   }
 
-  // 添加传输
-  addTransfer(items: Array<SftpTransferItem>): void {
+  // 添加上传任务
+  addUpload(hostId: number, parentPath: string, files: Array<File>) {
+    // 转为上传任务
+    const items = files.map(s => {
+      return {
+        fileId: nextId(10),
+        type: TransferType.UPLOAD,
+        hostId: hostId,
+        name: s.webkitRelativePath || s.name,
+        currentSize: 0,
+        totalSize: s.size,
+        status: TransferStatus.WAITING,
+        parentPath: parentPath,
+        file: s
+      };
+    });
+    this.transferList.push(...items);
+    // 开始传输
+    if (!this.run) {
+      this.openClient();
+    }
+  }
+
+  // 添加下载任务
+  addDownload(hostId: number, currentPath: string, files: Array<SftpFile>) {
+    // 转为下载文件
+    const items = files.map(s => {
+      return {
+        fileId: nextId(10),
+        type: TransferType.DOWNLOAD,
+        hostId: hostId,
+        name: s.path.substring(currentPath.length),
+        currentSize: 0,
+        totalSize: s.size,
+        status: TransferStatus.WAITING,
+      };
+    }) as Array<SftpTransferItem>;
     this.transferList.push(...items);
     // 开始传输
     if (!this.run) {
@@ -85,6 +121,10 @@ export default class SftpTransferManager implements ISftpTransferManager {
   // 传输下一条任务
   private transferNextItem() {
     this.currentUploader = undefined;
+    // 释放内存
+    if (this.currentItem) {
+      this.currentItem.file = null as unknown as File;
+    }
     // 获取任务
     this.currentItem = this.transferList.find(s => s.status === TransferStatus.WAITING);
     if (this.currentItem) {

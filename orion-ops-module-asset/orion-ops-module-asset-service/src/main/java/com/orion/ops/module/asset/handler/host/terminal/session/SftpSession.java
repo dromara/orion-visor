@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SftpSession extends TerminalSession implements ISftpSession {
 
-    private final TerminalConfig config;
-
     private final SessionStore sessionStore;
 
     private SftpExecutor executor;
@@ -42,9 +40,8 @@ public class SftpSession extends TerminalSession implements ISftpSession {
                        WebSocketSession channel,
                        SessionStore sessionStore,
                        TerminalConfig config) {
-        super(sessionId, channel);
+        super(sessionId, channel, config);
         this.sessionStore = sessionStore;
-        this.config = config;
     }
 
     @Override

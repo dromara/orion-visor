@@ -112,20 +112,8 @@
       return true;
     }
     // 添加到上传列表
-    const files = fileList.value.map(s => {
-      return {
-        fileId: nextId(10),
-        type: TransferType.UPLOAD,
-        hostId: hostId.value,
-        name: s.file.webkitRelativePath || s.file.name,
-        currentSize: 0,
-        totalSize: s.file.size,
-        status: TransferStatus.WAITING,
-        parentPath: parentPath.value,
-        file: s.file
-      };
-    });
-    transferManager.addTransfer(files);
+    const files = fileList.value.map(s => s.file);
+    transferManager.addUpload(hostId.value, parentPath.value, files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');
     // 清空
     handlerClear();

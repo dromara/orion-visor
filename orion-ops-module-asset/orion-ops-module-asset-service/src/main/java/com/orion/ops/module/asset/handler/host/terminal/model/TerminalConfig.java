@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 @Schema(name = "TerminalConfig", description = "主机终端连接参数")
 public class TerminalConfig {
 
+    @Schema(description = "主机id")
+    private Long hostId;
+
     @Schema(description = "cols")
     private Integer cols;
 

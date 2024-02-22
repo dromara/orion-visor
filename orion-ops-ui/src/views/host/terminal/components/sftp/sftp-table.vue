@@ -68,7 +68,7 @@
           </span>
         </a-tooltip>
         <!-- 编辑内容 -->
-        <a-tooltip v-if="canEditable(record.size, record.attr)"
+        <a-tooltip v-if="canEditable(record.size, record.isDir)"
                    position="top"
                    :mini="true"
                    :overlay-inverse="true"
@@ -161,7 +161,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'download']);
 
   const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionId: string, path: string) => void;
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
@@ -204,12 +204,9 @@
   };
 
   // 是否可编辑
-  const canEditable = (size: number, attr: string) => {
-    const typeValue = formatFileType(attr).value;
-    // 非文件夹和链接文件 并且文件小于 配置大小(MB) 可以编辑
-    return FILE_TYPE.DIRECTORY.value !== typeValue
-      && FILE_TYPE.LINK_FILE.value !== typeValue
-      && size <= previewSize * 1024 * 1024;
+  const canEditable = (size: number, isDir: boolean) => {
+    // 非文件夹并且文件小于 配置大小(MB) 可以编辑
+    return !isDir && size <= previewSize * 1024 * 1024;
   };
 
   // 点击文件名称
@@ -235,8 +232,7 @@
 
   // 下载文件
   const downloadFile = (path: string) => {
-    // TODO
-    console.log(path);
+    emits('download', [path]);
   };
 
   // 移动文件

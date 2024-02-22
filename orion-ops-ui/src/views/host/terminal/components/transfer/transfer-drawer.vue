@@ -81,7 +81,7 @@
                 <!-- 传输状态 -->
                 <div class="transfer-item-right-progress">
                   <!-- 等待传输 -->
-                  <icon-loading v-if="item.status === TransferStatus.WAITING" />
+                  <icon-clock-circle v-if="item.status === TransferStatus.WAITING" />
                   <!-- 传输进度 -->
                   <a-progress v-else
                               type="circle"

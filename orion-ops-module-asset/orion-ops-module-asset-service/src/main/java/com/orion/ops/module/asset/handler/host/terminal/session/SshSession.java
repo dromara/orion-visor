@@ -9,8 +9,8 @@ import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
-import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCloseResponse;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.SshOutputResponse;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCloseResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -29,8 +29,6 @@ import java.io.InputStream;
 @Slf4j
 public class SshSession extends TerminalSession implements ISshSession {
 
-    private final TerminalConfig config;
-
     private final SessionStore sessionStore;
 
     private ShellExecutor executor;
@@ -42,9 +40,8 @@ public class SshSession extends TerminalSession implements ISshSession {
                       WebSocketSession channel,
                       SessionStore sessionStore,
                       TerminalConfig config) {
-        super(sessionId, channel);
+        super(sessionId, channel, config);
         this.sessionStore = sessionStore;
-        this.config = config;
     }
 
     @Override

@@ -372,8 +372,10 @@ export interface SftpFile {
 // sftp 传输管理器定义
 export interface ISftpTransferManager {
   transferList: Array<SftpTransferItem>;
-  // 添加传输
-  addTransfer: (items: Array<SftpTransferItem>) => void;
+  // 添加上传任务
+  addUpload: (hostId: number, parentPath: string, files: Array<File>) => void;
+  // 添加下载任务
+  addDownload: (hostId: number, currentPath: string, files: Array<SftpFile>) => void;
   // 取消传输
   cancelTransfer: (fileId: string) => void;
 }

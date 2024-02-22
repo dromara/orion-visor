@@ -103,6 +103,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         try {
             // 连接配置
             TerminalConfig config = TerminalConfig.builder()
+                    .hostId(connect.getHostId())
                     .charset(connect.getCharset())
                     .fileNameCharset(connect.getFileNameCharset())
                     .fileContentCharset(connect.getFileContentCharset())
