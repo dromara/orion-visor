@@ -190,6 +190,7 @@
         text-overflow: ellipsis;
         width: fit-content;
         max-width: 100%;
+        white-space: nowrap;
       }
 
       .transfer-progress, .target-path, .error-message {

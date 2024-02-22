@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * sftp 下载文件夹 flat 实体对象
+ * sftp 下载文件夹展开文件 实体对象
  * <p>
  * i|eff00a1|currentPath|path
  *
@@ -21,10 +21,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpDownloadDirectoryFlatRequest", description = "sftp 下载文件夹 flat 实体对象")
-public class SftpDownloadDirectoryFlatRequest extends SftpBaseRequest {
+@Schema(name = "SftpDownloadDirectoryFlatRequest", description = "sftp 下载文件夹展开文件 实体对象")
+public class SftpDownloadFlatDirectoryRequest extends SftpBaseRequest {
 
     @Schema(description = "当前路径")
-    private Integer currentPath;
+    private String currentPath;
 
 }

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.Arrays;
+
 /**
  * sftp 删除文件
  *
@@ -25,7 +27,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
         // 获取会话
         ISftpSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
         String[] paths = payload.getPath().split("\\|");
-        log.info("SftpRemoveHandler-handle session: {}, path: {}", payload.getSessionId(), paths);
+        log.info("SftpRemoveHandler-handle session: {}, path: {}", payload.getSessionId(), Arrays.toString(paths));
         Exception ex = null;
         // 删除
         try {

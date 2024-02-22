@@ -156,9 +156,11 @@
     // 添加普通文件到下载队列
     const normalFiles = files.filter(s => !s.isDir);
     transferManager.addDownload(props.tab.hostId as number, currentPath.value, normalFiles);
-    // 将文件夹转为普通文件
-    const directoryFiles = files.filter(s => s.isDir);
-    // TODO
+    // 将文件夹展开普通文件
+    const directoryPaths = files.filter(s => s.isDir).map(s => s.path);
+    if (directoryPaths.length) {
+      session.value?.downloadFlatDirectory(currentPath.value, directoryPaths);
+    }
   };
 
   // 连接成功回调
@@ -224,6 +226,12 @@
     Message.success('保存成功');
   };
 
+  // 接收下载文件夹展开文件响应
+  const resolveDownloadFlatDirectory = (currentPath: string, list: Array<SftpFile>) => {
+    setTableLoading(false);
+    transferManager.addDownload(props.tab.hostId as number, currentPath, list);
+  };
+
   // 初始化会话
   onMounted(async () => {
     // 创建终端处理器
@@ -236,6 +244,7 @@
       resolveSftpMove: resolveFileAction,
       resolveSftpRemove: resolveFileAction,
       resolveSftpChmod: resolveFileAction,
+      resolveDownloadFlatDirectory,
       resolveSftpGetContent,
       resolveSftpSetContent,
     });

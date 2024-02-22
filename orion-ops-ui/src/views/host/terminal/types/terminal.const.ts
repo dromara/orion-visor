@@ -304,12 +304,18 @@ export const TransferOperatorType = {
   UPLOAD_START: 'uploadStart',
   UPLOAD_FINISH: 'uploadFinish',
   UPLOAD_ERROR: 'uploadError',
+  DOWNLOAD_START: 'downloadStart',
+  DOWNLOAD_ABORT: 'downloadAbort',
 };
 
 // 传输响应类型
 export const TransferReceiverType = {
-  NEXT_BLOCK: 'nextBlock',
   NEXT_TRANSFER: 'nextTransfer',
+  UPLOAD_NEXT_BLOCK: 'uploadNextBlock',
+  UPLOAD_FINISH: 'uploadFinish',
+  UPLOAD_ERROR: 'uploadError',
+  DOWNLOAD_FINISH: 'downloadFinish',
+  DOWNLOAD_ERROR: 'downloadError',
 };
 
 // 打开 sshSettingModal key

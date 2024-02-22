@@ -81,4 +81,8 @@ public interface ErrorMessage {
 
     String OPERATE_ERROR = "操作失败";
 
+    String UNKNOWN_TYPE = "未知类型";
+
+    String FILE_ABSENT = "文件不存在";
+
 }

@@ -60,6 +60,11 @@ export const InputProtocol = {
     type: 'cm',
     template: ['type', 'sessionId', 'path', 'mod']
   },
+  // SFTP 修改文件权限
+  SFTP_DOWNLOAD_FLAT_DIRECTORY: {
+    type: 'df',
+    template: ['type', 'sessionId', 'currentPath', 'path']
+  },
   // SFTP 获取内容
   SFTP_GET_CONTENT: {
     type: 'gc',
@@ -139,6 +144,12 @@ export const OutputProtocol = {
     type: 'cm',
     template: ['type', 'sessionId', 'result', 'msg'],
     processMethod: 'processSftpChmod'
+  },
+  // SFTP 修改文件权限
+  SFTP_DOWNLOAD_FLAT_DIRECTORY: {
+    type: 'df',
+    template: ['type', 'sessionId', 'currentPath', 'body'],
+    processMethod: 'processDownloadFlatDirectory'
   },
   // SFTP 获取文件内容
   SFTP_GET_CONTENT: {

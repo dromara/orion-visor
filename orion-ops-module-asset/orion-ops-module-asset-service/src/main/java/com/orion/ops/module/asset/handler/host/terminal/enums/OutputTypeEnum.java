@@ -76,9 +76,9 @@ public enum OutputTypeEnum {
     SFTP_CHMOD("cm", "${type}|${sessionId}|${result}|${msg}"),
 
     /**
-     * SFTP 下载文件夹 flat
+     * SFTP 下载文件夹展开文件
      */
-    SFTP_DOWNLOAD_DIRECTORY_FLAT("df", "${type}|${sessionId}|${currentPath}|${body}"),
+    SFTP_DOWNLOAD_FLAT_DIRECTORY("df", "${type}|${sessionId}|${currentPath}|${body}"),
 
     /**
      * SFTP 获取文件内容

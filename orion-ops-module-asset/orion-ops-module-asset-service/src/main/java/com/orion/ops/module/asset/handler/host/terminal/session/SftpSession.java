@@ -16,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -105,6 +102,15 @@ public class SftpSession extends TerminalSession implements ISftpSession {
     public void chmod(String path, int mod) {
         path = Valid.checkNormalize(path);
         executor.changeMode(path, mod);
+    }
+
+    @Override
+    public List<SftpFileVO> flatDirectory(String[] paths) {
+        return Arrays.stream(paths)
+                .map(s -> executor.listFiles(s, true, false))
+                .flatMap(Collection::stream)
+                .map(SftpSession::fileMapping)
+                .collect(Collectors.toList());
     }
 
     @Override

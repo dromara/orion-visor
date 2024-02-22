@@ -7,8 +7,8 @@ export const BLOCK_SIZE = 1024 * 1024;
 // sftp 上传器实现
 export default class SftpTransferUploader implements ISftpTransferUploader {
 
-  public abort: boolean;
   public finish: boolean;
+  public abort: boolean;
   private currentBlock: number;
   private totalBlock: number;
   private client: WebSocket;

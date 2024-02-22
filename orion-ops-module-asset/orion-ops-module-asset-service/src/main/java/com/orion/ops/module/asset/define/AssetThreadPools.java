@@ -27,4 +27,16 @@ public interface AssetThreadPools {
             .allowCoreThreadTimeout(true)
             .build();
 
+    /**
+     * SFTP 下载线程池
+     */
+    ThreadPoolExecutor SFTP_DOWNLOAD_SCHEDULER = ExecutorBuilder.create()
+            .namedThreadFactory("sftp-download-thread-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
 }

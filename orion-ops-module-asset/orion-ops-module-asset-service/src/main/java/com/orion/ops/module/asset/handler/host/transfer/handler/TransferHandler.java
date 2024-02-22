@@ -1,27 +1,22 @@
 package com.orion.ops.module.asset.handler.host.transfer.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
-import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferOperatorType;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.ops.module.asset.handler.host.transfer.model.TransferOperatorRequest;
-import com.orion.ops.module.asset.handler.host.transfer.model.TransferOperatorResponse;
-import com.orion.ops.module.asset.handler.host.transfer.session.ITransferHostSession;
-import com.orion.ops.module.asset.handler.host.transfer.session.TransferHostSession;
+import com.orion.ops.module.asset.handler.host.transfer.session.*;
+import com.orion.ops.module.asset.handler.host.transfer.utils.TransferUtils;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -48,7 +43,7 @@ public class TransferHandler implements ITransferHandler {
     /**
      * 会话列表
      */
-    private final ConcurrentHashMap<Long, ITransferHostSession> sessions;
+    private final ConcurrentHashMap<String, ITransferHostSession> sessions;
 
     public TransferHandler(WebSocketSession channel) {
         this.channel = channel;
@@ -61,22 +56,30 @@ public class TransferHandler implements ITransferHandler {
         // 解析消息类型
         TransferOperatorType type = TransferOperatorType.of(payload.getType());
         // 获取会话
-        if (!this.getAndInitSession(payload)) {
+        if (!this.getAndInitSession(payload, type)) {
             return;
         }
         // 处理消息
         switch (type) {
             case UPLOAD_START:
-                // 准备上传
-                this.uploadStart(payload);
+                // 开始上传
+                ((IUploadSession) currentSession).startUpload(payload.getPath());
                 break;
             case UPLOAD_FINISH:
                 // 上传完成
-                this.uploadFinish();
+                ((IUploadSession) currentSession).uploadFinish();
                 break;
             case UPLOAD_ERROR:
                 // 上传失败
-                this.uploadError();
+                ((IUploadSession) currentSession).uploadError();
+                break;
+            case DOWNLOAD_START:
+                // 开始下载
+                ((IDownloadSession) currentSession).startDownload(payload.getPath());
+                break;
+            case DOWNLOAD_ABORT:
+                // 中断下载
+                ((IDownloadSession) currentSession).abortDownload();
                 break;
             default:
                 break;
@@ -85,117 +88,47 @@ public class TransferHandler implements ITransferHandler {
 
     @Override
     public void putContent(byte[] content) {
-        try {
-            // 写入内容
-            currentSession.putContent(content);
-            // 响应结果
-            this.sendMessage(TransferReceiverType.NEXT_BLOCK, null);
-        } catch (IOException e) {
-            log.error("TransferHandler.putContent error", e);
-            // 写入完成
-            currentSession.putFinish();
-            // 响应结果
-            this.sendMessage(TransferReceiverType.NEXT_TRANSFER, e);
-        }
-    }
-
-    /**
-     * 准备上传
-     *
-     * @param payload payload
-     */
-    private void uploadStart(TransferOperatorRequest payload) {
-        try {
-            // 开始上传
-            currentSession.startUpload(payload.getPath());
-            // 响应结果
-            this.sendMessage(TransferReceiverType.NEXT_BLOCK, null);
-        } catch (Exception e) {
-            log.error("TransferHandler.uploadStart error", e);
-            // 传输完成
-            currentSession.putFinish();
-            // 响应结果
-            this.sendMessage(TransferReceiverType.NEXT_TRANSFER, e);
-        }
-    }
-
-    /**
-     * 上传完成
-     */
-    private void uploadFinish() {
-        currentSession.putFinish();
-        // 响应结果
-        this.sendMessage(TransferReceiverType.NEXT_TRANSFER, null);
-    }
-
-    /**
-     * 上传失败
-     */
-    private void uploadError() {
-        currentSession.putFinish();
-        // 响应结果
-        this.sendMessage(TransferReceiverType.NEXT_TRANSFER, new InvalidArgumentException(Const.EMPTY));
+        ((IUploadSession) currentSession).putContent(content);
     }
 
     /**
      * 获取并且初始化会话
      *
      * @param payload payload
+     * @param type    type
      * @return success
      */
-    private boolean getAndInitSession(TransferOperatorRequest payload) {
+    private boolean getAndInitSession(TransferOperatorRequest payload, TransferOperatorType type) {
         Long hostId = payload.getHostId();
+        String sessionKey = hostId + "_" + type.getOperator();
         try {
             // 获取会话
-            ITransferHostSession session = sessions.get(hostId);
+            ITransferHostSession session = sessions.get(sessionKey);
             if (session == null) {
                 // 获取主机信息
                 HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(hostId, this.userId, HostConnectTypeEnum.SFTP);
                 SessionStore sessionStore = hostTerminalService.openSessionStore(connectInfo);
                 // 打开会话并初始化
-                session = new TransferHostSession(connectInfo, sessionStore);
+                if (TransferOperatorType.UPLOAD.equals(type.getOperator())) {
+                    // 上传操作
+                    session = new UploadSession(connectInfo, sessionStore, this.channel);
+                } else if (TransferOperatorType.DOWNLOAD.equals(type.getOperator())) {
+                    // 下载操作
+                    session = new DownloadSession(connectInfo, sessionStore, this.channel);
+                } else {
+                    throw Exceptions.invalidArgument(ErrorMessage.UNKNOWN_TYPE);
+                }
                 session.init();
-                this.currentSession = session;
-                sessions.put(hostId, session);
+                sessions.put(sessionKey, session);
             }
+            this.currentSession = session;
             return true;
         } catch (Exception e) {
             log.error("TransferHandler.getAndInitSession error", e);
             // 响应结果
-            this.sendMessage(TransferReceiverType.NEXT_TRANSFER, e);
+            TransferUtils.sendMessage(this.channel, TransferReceiverType.NEXT_TRANSFER, e);
             return false;
         }
-    }
-
-    /**
-     * 发送消息
-     *
-     * @param type type
-     * @param ex   ex
-     */
-    private void sendMessage(TransferReceiverType type, Exception ex) {
-        TransferOperatorResponse resp = TransferOperatorResponse.builder()
-                .type(type.getType())
-                .success(ex == null)
-                .msg(this.getErrorMessage(ex))
-                .build();
-        WebSockets.sendText(this.channel, JSON.toJSONString(resp));
-    }
-
-    /**
-     * 获取错误信息
-     *
-     * @param ex ex
-     * @return msg
-     */
-    private String getErrorMessage(Exception ex) {
-        if (ex == null) {
-            return null;
-        }
-        if (ex instanceof InvalidArgumentException) {
-            return ex.getMessage();
-        }
-        return ErrorMessage.OPERATE_ERROR;
     }
 
     @Override

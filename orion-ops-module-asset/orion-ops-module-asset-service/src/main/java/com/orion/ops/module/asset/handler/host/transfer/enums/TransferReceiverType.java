@@ -15,14 +15,34 @@ import lombok.Getter;
 public enum TransferReceiverType {
 
     /**
-     * 请求下一块上传数据
-     */
-    NEXT_BLOCK("nextBlock"),
-
-    /**
      * 请求下一个传输任务
      */
     NEXT_TRANSFER("nextTransfer"),
+
+    /**
+     * 请求下一块上传数据
+     */
+    UPLOAD_NEXT_BLOCK("uploadNextBlock"),
+
+    /**
+     * 上传完成
+     */
+    UPLOAD_FINISH("uploadFinish"),
+
+    /**
+     * 上传失败
+     */
+    UPLOAD_ERROR("uploadError"),
+
+    /**
+     * 下载完成
+     */
+    DOWNLOAD_FINISH("downloadFinish"),
+
+    /**
+     * 下载失败
+     */
+    DOWNLOAD_ERROR("downloadError"),
 
     ;
 

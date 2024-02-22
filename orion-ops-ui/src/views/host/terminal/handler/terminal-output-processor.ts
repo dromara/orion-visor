@@ -154,6 +154,13 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     session && session.resolver.resolveSftpChmod(result, msg);
   }
 
+  // 处理 SFTP 下载文件夹展开文件
+  processDownloadFlatDirectory({ sessionId, currentPath, body }: OutputPayload): void {
+    // 获取会话
+    const session = this.sessionManager.getSession<ISftpSession>(sessionId);
+    session && session.resolver.resolveDownloadFlatDirectory(currentPath, JSON.parse(body));
+  }
+
   // 处理 SFTP 获取文件内容
   processSftpGetContent({ sessionId, path, result, content }: OutputPayload): void {
     // 获取会话

@@ -58,6 +58,14 @@ export function getPath(path: string) {
 }
 
 /**
+ * 获取文件名
+ */
+export function getFileName(path: string) {
+  path = getPath(path);
+  return path.substring(path.lastIndexOf('/') + 1);
+}
+
+/**
  * 获取父级路径
  */
 export function getParentPath(path: string) {

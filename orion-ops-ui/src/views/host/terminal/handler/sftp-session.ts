@@ -107,6 +107,16 @@ export default class SftpSession implements ISftpSession {
     });
   };
 
+  // 下载文件夹展开文件
+  downloadFlatDirectory(currentPath: string, path: string[]) {
+    this.resolver.setLoading(true);
+    this.channel.send(InputProtocol.SFTP_DOWNLOAD_FLAT_DIRECTORY, {
+      sessionId: this.sessionId,
+      currentPath,
+      path: path.join('|')
+    });
+  }
+
   // 获取内容
   getContent(path: string) {
     this.channel.send(InputProtocol.SFTP_GET_CONTENT, {

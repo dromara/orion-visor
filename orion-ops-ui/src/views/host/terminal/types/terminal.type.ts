@@ -190,6 +190,8 @@ export interface ITerminalOutputProcessor {
   processSftpRemove: (payload: OutputPayload) => void;
   // 处理 SFTP 修改文件权限
   processSftpChmod: (payload: OutputPayload) => void;
+  // 处理 SFTP 下载文件夹展开文件
+  processDownloadFlatDirectory: (payload: OutputPayload) => void;
   // 处理 SFTP 获取文件内容
   processSftpGetContent: (payload: OutputPayload) => void;
   // 处理 SFTP 修改文件内容
@@ -325,6 +327,8 @@ export interface ISftpSession extends ITerminalSession {
   remove: (path: string[]) => void;
   // 修改权限
   chmod: (path: string, mod: number) => void;
+  // 下载文件夹展开文件
+  downloadFlatDirectory: (currentPath: string, path: string[]) => void;
   // 获取内容
   getContent: (path: string) => void;
   // 修改内容
@@ -349,6 +353,8 @@ export interface ISftpSessionResolver {
   resolveSftpRemove: (result: string, msg: string) => void;
   // 接收修改文件权限响应
   resolveSftpChmod: (result: string, msg: string) => void;
+  // 接收下载文件夹展开文件响应
+  resolveDownloadFlatDirectory: (currentPath: string, list: Array<SftpFile>) => void;
   // 接收获取文件内容响应
   resolveSftpGetContent: (path: string, result: string, content: string) => void;
   // 接收修改文件内容响应
@@ -398,6 +404,22 @@ export interface ISftpTransferUploader {
   uploadError: (msg: string | undefined) => void;
   // 上传中断
   uploadAbort: () => void;
+}
+
+// sftp 下载器定义
+export interface ISftpTransferDownloader {
+  // 是否中断
+  abort: boolean;
+  // 开始下载
+  startDownload: () => void;
+  // 接收 blob
+  resolveBlob: (blob: Blob) => void;
+  // 下载完成
+  downloadFinish: () => void;
+  // 下载失败
+  downloadError: (msg: string | undefined) => void;
+  // 下载中断
+  downloadAbort: () => void;
 }
 
 // sftp 上传文件项

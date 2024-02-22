@@ -124,12 +124,12 @@ public enum InputTypeEnum {
             SftpChangeModRequest.class),
 
     /**
-     * SFTP 下载文件夹 flat
+     * SFTP 下载文件夹展开文件
      */
-    SFTP_DOWNLOAD_DIRECTORY_FLAT("df",
-            SftpDownloadDirectoryFlatHandler.class,
+    SFTP_DOWNLOAD_FLAT_DIRECTORY("df",
+            SftpDownloadFlatDirectoryHandler.class,
             new String[]{"type", "sessionId", "currentPath", "path"},
-            SftpDownloadDirectoryFlatRequest.class),
+            SftpDownloadFlatDirectoryRequest.class),
 
     /**
      * SFTP 获取内容

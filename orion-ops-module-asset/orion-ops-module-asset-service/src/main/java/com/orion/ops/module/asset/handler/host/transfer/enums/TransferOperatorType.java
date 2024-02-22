@@ -17,19 +17,35 @@ public enum TransferOperatorType {
     /**
      * 开始上传
      */
-    UPLOAD_START("uploadStart"),
+    UPLOAD_START(TransferOperatorType.UPLOAD, "uploadStart"),
 
     /**
      * 上传完成
      */
-    UPLOAD_FINISH("uploadFinish"),
+    UPLOAD_FINISH(TransferOperatorType.UPLOAD, "uploadFinish"),
 
     /**
      * 上传失败
      */
-    UPLOAD_ERROR("uploadError"),
+    UPLOAD_ERROR(TransferOperatorType.UPLOAD, "uploadError"),
+
+    /**
+     * 开始下载
+     */
+    DOWNLOAD_START(TransferOperatorType.DOWNLOAD, "downloadStart"),
+
+    /**
+     * 中断下载
+     */
+    DOWNLOAD_ABORT(TransferOperatorType.DOWNLOAD, "downloadAbort"),
 
     ;
+
+    public static final String UPLOAD = "UPLOAD";
+
+    public static final String DOWNLOAD = "DOWNLOAD";
+
+    private final String operator;
 
     private final String type;
 

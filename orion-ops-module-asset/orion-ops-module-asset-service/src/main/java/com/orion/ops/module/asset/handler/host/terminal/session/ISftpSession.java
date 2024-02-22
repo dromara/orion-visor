@@ -79,6 +79,14 @@ public interface ISftpSession extends ITerminalSession {
     void chmod(String path, int mod);
 
     /**
+     * 展开文件夹内的所有文件
+     *
+     * @param paths paths
+     * @return files
+     */
+    List<SftpFileVO> flatDirectory(String[] paths);
+
+    /**
      * 获取内容
      *
      * @param path path
