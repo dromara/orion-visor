@@ -1,16 +1,14 @@
-import type { ISftpTransferManager, SftpTransferItem } from '../types/terminal.type';
+import type { ISftpTransferManager, ISftpTransferUploader, SftpTransferItem } from '../types/terminal.type';
 import { TransferOperatorResponse } from '../types/terminal.type';
 import { TransferOperatorType, TransferStatus, TransferType } from '../types/terminal.const';
-import { sleep } from '@/utils';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
-import { getPath } from '@/utils/file';
-
-export const BLOCK_SIZE = 1024 * 1024;
+import SftpTransferUploader from '@/views/host/terminal/handler/sftp-transfer-uploader';
 
 export const wsBase = import.meta.env.VITE_WS_BASE_URL;
 
 // todo 考虑一下单文件上传失败 (网络/文件被删除)
+// todo 取消任务
 
 // sftp 传输管理器实现
 export default class SftpTransferManager implements ISftpTransferManager {
@@ -19,9 +17,11 @@ export default class SftpTransferManager implements ISftpTransferManager {
 
   private run: boolean;
 
-  private resp?: TransferOperatorResponse;
+  private currentItem?: SftpTransferItem;
 
-  transferList: Array<SftpTransferItem>;
+  private currentUploader?: ISftpTransferUploader;
+
+  public transferList: Array<SftpTransferItem>;
 
   constructor() {
     this.run = false;
@@ -33,12 +33,13 @@ export default class SftpTransferManager implements ISftpTransferManager {
     this.transferList.push(...items);
     // 开始传输
     if (!this.run) {
-      this.startTransfer();
+      this.openClient();
     }
   }
 
   // 打开会话
   private async openClient() {
+    this.run = true;
     // 获取 access
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
@@ -47,7 +48,11 @@ export default class SftpTransferManager implements ISftpTransferManager {
       // 打开失败将传输列表置为失效
       Message.error('会话打开失败');
       console.error('error', event);
-      this.transferList.forEach(s => {
+      // 将等待中和传输中任务修改为失败状态
+      this.transferList.filter(s => {
+        return s.status === TransferStatus.WAITING
+          || s.status === TransferStatus.TRANSFERRING;
+      }).forEach(s => {
         s.status = TransferStatus.ERROR;
       });
     };
@@ -56,121 +61,83 @@ export default class SftpTransferManager implements ISftpTransferManager {
       this.run = false;
       console.warn('close', event);
     };
+    this.client.onopen = () => {
+      // 打开后自动传输下一个任务
+      this.transferNextItem();
+    };
     this.client.onmessage = this.resolveMessage.bind(this);
-    // 等待会话连接
-    for (let i = 0; i < 100; i++) {
-      await sleep(50);
-      if (this.client.readyState !== WebSocket.CONNECTING) {
-        break;
-      }
-    }
   }
 
-  // 开始传输
-  private async startTransfer() {
-    this.run = true;
-    // 打开会话
-    await this.openClient();
-    if (!this.run) {
-      return;
-    }
-    // 开始传输
-    while (true) {
-      const item = this.transferList.find(s => s.status === TransferStatus.WAITING);
-      if (!item) {
-        break;
-      }
+  // 传输下一条任务
+  private transferNextItem() {
+    this.currentUploader = undefined;
+    // 获取任务
+    this.currentItem = this.transferList.find(s => s.status === TransferStatus.WAITING);
+    if (this.currentItem) {
       // 开始传输
-      try {
-        item.status = TransferStatus.TRANSFERRING;
-        if (item.type === TransferType.UPLOAD) {
-          // 上传
-          await this.uploadFile(item);
-        } else {
-          // 下载
-          await this.uploadDownload(item);
-        }
-        item.status = TransferStatus.SUCCESS;
-      } catch (e) {
-        item.status = TransferStatus.ERROR;
+      if (this.currentItem.type === TransferType.UPLOAD) {
+        // 上传
+        this.uploadFile();
+      } else {
+        // 下载
+        this.uploadDownload();
       }
+    } else {
+      // 无任务关闭会话
+      this.client?.close();
     }
   }
 
   // 接收消息
   private async resolveMessage(message: MessageEvent) {
-    // TODO
-    this.resp = JSON.parse(message.data);
-    //   // TODO 关闭会话
-    //   this.client?.close();
-    // }
+    const data = JSON.parse(message.data) as TransferOperatorResponse;
+    if (data.type === TransferOperatorType.PROCESSED) {
+      // 接收处理完成
+      this.resolveProcessed(data);
+    }
   }
 
   // 上传文件
-  private async uploadFile(item: SftpTransferItem) {
-    const file = item.file;
-    // 发送开始上传信息
-    this.client?.send(JSON.stringify({
-      type: TransferOperatorType.UPLOAD_START,
-      path: getPath(item.parentPath + '/' + item.name),
-      hostId: item.hostId
-    }));
-    // TODO 等待处理结果 吧错误信息展示出来
-    try {
-      await this.awaitProcessedThrow();
-    } catch (ex: any) {
-      console.log(ex);
-      item.status = TransferStatus.ERROR;
-      item.errorMessage = ex.message;
-      return;
-    }
-    // 计算分片数量
-    const totalBlock = Math.ceil(file.size / BLOCK_SIZE);
-    // 分片上传
-    for (let i = 0; i < totalBlock; i++) {
-
-      // 读取数据
-      const start = i * BLOCK_SIZE;
-      const end = Math.min(file.size, start + BLOCK_SIZE);
-      const chunk = file.slice(start, end);
-      const reader = new FileReader();
-      const arrayBuffer = await new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-        reader.readAsArrayBuffer(chunk);
-      });
-      this.client?.send(arrayBuffer as ArrayBuffer);
-      // TODO 等待处理结果
-      await this.awaitProcessedThrow();
-    }
-    // TODO 发送 END
+  private uploadFile() {
+    // 创建上传器
+    this.currentUploader = new SftpTransferUploader(this.currentItem as SftpTransferItem, this.client as WebSocket);
+    // 开始上传
+    this.currentUploader.startUpload();
   }
 
   // 下载文件
-  private async uploadDownload(item: SftpTransferItem) {
+  private uploadDownload() {
     // TODO
   }
 
-  // 等待处理完成
-  private async awaitProcessedThrow() {
-    for (let i = 0; i < 100; i++) {
-      await sleep(50);
-      if (this.resp) {
-        break;
-      }
-    }
-    const resp = this.resp;
-    // const resp = undefined;
-    this.resp = undefined;
-    // 抛出异常
-    if (resp) {
-      if (resp.success) {
-        return;
-      } else {
-        throw new Error(resp.msg || '处理失败');
+  // 接收处理完成回调
+  private resolveProcessed(data: TransferOperatorResponse) {
+    // 操作回调
+    if (data.success) {
+      // 操作成功
+      if (this.currentUploader) {
+        if (this.currentUploader.hasNextBlock()) {
+          // 有下一个分片则上传 (上一个分片传输完成)
+          this.currentUploader.uploadNextBlock();
+        } else {
+          // 没有下一个分片则检查是否完成
+          if (this.currentUploader.finish) {
+            // 已完成 开始下一个传输任务 (发送 finish 后的回调)
+            this.transferNextItem();
+          } else {
+            // 未完成则发送完成 (最后一个分片传输完成但还未发送 finish 指令)
+            this.currentUploader.uploadFinish();
+          }
+        }
       }
     } else {
-      throw new Error('处理超时');
+      // 操作失败
+      if (this.currentUploader) {
+        // 上传失败
+        this.currentUploader.uploadError(data.msg);
+      }
+      // 开始下一个传输任务
+      this.transferNextItem();
     }
   }
 

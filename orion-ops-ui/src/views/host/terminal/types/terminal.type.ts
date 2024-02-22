@@ -374,6 +374,22 @@ export interface ISftpTransferManager {
   addTransfer: (items: Array<SftpTransferItem>) => void;
 }
 
+// sftp 上传器定义
+export interface ISftpTransferUploader {
+  // 是否完成
+  finish: boolean;
+  // 开始上传
+  startUpload: () => void;
+  // 是否有下一个分片
+  hasNextBlock: () => boolean;
+  // 上传下一个分片
+  uploadNextBlock: () => void;
+  // 上传完成
+  uploadFinish: () => void;
+  // 上传失败
+  uploadError: (msg: string | undefined) => void;
+}
+
 // sftp 上传文件项
 export interface SftpTransferItem {
   id: string;

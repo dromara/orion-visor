@@ -56,6 +56,18 @@
                     {{ item.parentPath }}
                   </span>
                 </a-tooltip>
+                <!-- 错误信息 -->
+                <a-tooltip v-if="item.errorMessage"
+                           position="top"
+                           :mini="true"
+                           :auto-fix-position="false"
+                           content-class="terminal-tooltip-content"
+                           arrow-class="terminal-tooltip-content"
+                           :content="item.errorMessage">
+                  <span class="error-message">
+                    {{ item.errorMessage }}
+                  </span>
+                </a-tooltip>
               </div>
               <!-- 右侧状态/操作-->
               <div class="transfer-item-right">
@@ -147,11 +159,15 @@
         max-width: 100%;
       }
 
-      .transfer-progress, .target-path {
+      .transfer-progress, .target-path, .error-message {
         padding-top: 4px;
         font-size: 13px;
         color: var(--color-neutral-8);
         width: fit-content;
+      }
+
+      .error-message {
+        color: rgba(var(--red-6));
       }
     }
 
