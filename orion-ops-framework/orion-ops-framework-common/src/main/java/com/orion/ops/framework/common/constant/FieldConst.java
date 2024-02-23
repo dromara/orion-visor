@@ -41,4 +41,10 @@ public interface FieldConst {
 
     String TOKEN = "token";
 
+    String PATH = "path";
+
+    String ADDRESS = "address";
+
+    String MOD = "mod";
+
 }

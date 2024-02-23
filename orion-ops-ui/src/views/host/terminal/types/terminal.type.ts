@@ -439,7 +439,6 @@ export interface SftpTransferItem {
 // 传输操作响应
 export interface TransferOperatorResponse {
   type: string;
-  fileId?: string;
   hostId?: number;
   success: boolean;
   msg?: string;

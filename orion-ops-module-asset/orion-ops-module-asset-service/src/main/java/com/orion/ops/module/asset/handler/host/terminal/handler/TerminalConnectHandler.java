@@ -9,6 +9,7 @@ import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.enums.BooleanBit;
+import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
@@ -50,7 +51,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         String sessionId = payload.getSessionId();
         log.info("TerminalConnectHandler-handle start sessionId: {}", sessionId);
         // 获取主机连接信息
-        HostTerminalConnectDTO connect = this.getAttr(channel, sessionId);
+        HostTerminalConnectDTO connect = WebSockets.getAttr(channel, sessionId);
         if (connect == null) {
             log.info("TerminalConnectHandler-handle unknown sessionId: {}", sessionId);
             this.send(channel,
@@ -104,6 +105,8 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             // 连接配置
             TerminalConfig config = TerminalConfig.builder()
                     .hostId(connect.getHostId())
+                    .hostName(connect.getHostName())
+                    .address(connect.getHostAddress())
                     .charset(connect.getCharset())
                     .fileNameCharset(connect.getFileNameCharset())
                     .fileContentCharset(connect.getFileContentCharset())

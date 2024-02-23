@@ -1,14 +1,21 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
+import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.ops.module.asset.handler.host.terminal.model.TerminalBasePayload;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
+import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
+import com.orion.ops.module.asset.handler.host.terminal.utils.TerminalUtils;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * 终端消息处理器 基类
@@ -21,6 +28,9 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
 
     @Resource
     protected TerminalManager terminalManager;
+
+    @Resource
+    private OperatorLogFrameworkService operatorLogFrameworkService;
 
     /**
      * 发送消息
@@ -47,16 +57,37 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
     }
 
     /**
-     * 获取属性
+     * 保存操作日志
      *
-     * @param channel channel
-     * @param attr    attr
-     * @param <E>     T
-     * @return T
+     * @param payload   payload
+     * @param channel   channel
+     * @param extra     extra
+     * @param type      type
+     * @param startTime startTime
+     * @param ex        ex
      */
-    @SuppressWarnings("unchecked")
-    protected <E> E getAttr(WebSocketSession channel, String attr) {
-        return (E) channel.getAttributes().get(attr);
+    protected void saveOperatorLog(T payload,
+                                   WebSocketSession channel,
+                                   Map<String, Object> extra,
+                                   String type,
+                                   long startTime,
+                                   Exception ex) {
+        String channelId = channel.getId();
+        String sessionId = payload.getSessionId();
+        // 获取会话并且设置参数
+        ITerminalSession session = terminalManager.getSession(channelId, sessionId);
+        if (session != null) {
+            TerminalConfig config = session.getConfig();
+            extra.put(OperatorLogs.HOST_ID, config.getHostId());
+            extra.put(OperatorLogs.HOST_NAME, config.getHostName());
+            extra.put(OperatorLogs.ADDRESS, config.getAddress());
+        }
+        extra.put(OperatorLogs.CHANNEL_ID, channelId);
+        extra.put(OperatorLogs.SESSION_ID, sessionId);
+        // 获取日志
+        OperatorLogModel model = TerminalUtils.getOperatorLogModel(channel, extra, type, startTime, ex);
+        // 保存
+        operatorLogFrameworkService.insert(model);
     }
 
     /**

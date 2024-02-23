@@ -23,6 +23,7 @@ public abstract class TerminalSession implements ITerminalSession {
 
     protected final WebSocketSession channel;
 
+    @Getter
     protected final TerminalConfig config;
 
     protected volatile boolean close;

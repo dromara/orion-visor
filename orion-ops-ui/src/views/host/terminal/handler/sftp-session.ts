@@ -86,7 +86,7 @@ export default class SftpSession implements ISftpSession {
   remove(path: string[]) {
     Modal.confirm({
       title: '删除确认',
-      content: `确定要删除 ${path} 吗? 确定后将立即删除且无法恢复!`,
+      content: `确定要删除 ${path.join(',')} 吗? 确定后将立即删除且无法恢复!`,
       onOk: () => {
         this.resolver.setLoading(true);
         this.channel.send(InputProtocol.SFTP_REMOVE, {

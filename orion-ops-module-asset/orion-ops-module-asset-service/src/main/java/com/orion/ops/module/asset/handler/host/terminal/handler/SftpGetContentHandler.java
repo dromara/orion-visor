@@ -23,23 +23,25 @@ public class SftpGetContentHandler extends AbstractTerminalHandler<SftpBaseReque
     @Override
     public void handle(WebSocketSession channel, SftpBaseRequest payload) {
         // 获取会话
-        ISftpSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        String sessionId = payload.getSessionId();
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
-        log.info("SftpGetContentHandler-handle session: {}, path: {}", payload.getSessionId(), path);
+        log.info("SftpGetContentHandler-handle start sessionId: {}, path: {}", sessionId, path);
         String content = null;
         Exception ex = null;
         // 获取内容
         try {
             content = session.getContent(path);
+            log.info("SftpGetContentHandler-handle success sessionId: {}, path: {}", sessionId, path);
         } catch (Exception e) {
-            log.error("SftpGetContentHandler-handle error", e);
+            log.error("SftpGetContentHandler-handle error sessionId: {}", sessionId, e);
             ex = e;
         }
         // 返回
         this.send(channel,
                 OutputTypeEnum.SFTP_GET_CONTENT,
                 SftpGetContentResponse.builder()
-                        .sessionId(payload.getSessionId())
+                        .sessionId(sessionId)
                         .result(BooleanBit.of(ex == null).getValue())
                         .content(content)
                         .msg(this.getErrorMessage(ex))

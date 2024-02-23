@@ -32,6 +32,7 @@
     </template>
     <!-- 操作日志 -->
     <template #originLogInfo="{ record }">
+      <icon-copy class="copy-left" @click="copy(record.originLogInfo, '已复制')" />
       <span v-html="replaceHtmlTag(record.logInfo)" />
     </template>
     <!-- 操作 -->
@@ -64,6 +65,7 @@
   import { replaceHtmlTag, clearHtmlTag, dateFormat } from '@/utils';
   import { pick } from 'lodash';
   import { getCurrentUserOperatorLog } from '@/api/user/mine';
+  import useCopy from '@/hooks/copy';
 
   const emits = defineEmits(['viewDetail']);
   const props = defineProps({
@@ -83,12 +85,13 @@
     }
   });
 
-  const tableColumns = ref();
-  const tableRenderData = ref<OperatorLogQueryResponse[]>([]);
-
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
+  const { copy } = useCopy();
+
+  const tableColumns = ref();
+  const tableRenderData = ref<OperatorLogQueryResponse[]>([]);
 
   // 查看详情
   const viewDetail = (record: OperatorLogQueryResponse) => {

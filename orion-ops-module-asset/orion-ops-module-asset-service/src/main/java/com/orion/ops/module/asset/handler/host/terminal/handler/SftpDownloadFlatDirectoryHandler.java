@@ -29,23 +29,25 @@ public class SftpDownloadFlatDirectoryHandler extends AbstractTerminalHandler<Sf
     @Override
     public void handle(WebSocketSession channel, SftpDownloadFlatDirectoryRequest payload) {
         // 获取会话
-        ISftpSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        String sessionId = payload.getSessionId();
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String[] paths = payload.getPath().split("\\|");
-        log.info("SftpDownloadFlatDirectoryHandler-handle session: {}, paths: {}", payload.getSessionId(), Arrays.toString(paths));
+        log.info("SftpDownloadFlatDirectoryHandler-handle start sessionId: {}, paths: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;
         List<SftpFileVO> files = Lists.empty();
         // 展开文件夹内的全部文件
         try {
             files = session.flatDirectory(paths);
+            log.info("SftpDownloadFlatDirectoryHandler-handle success sessionId: {}, paths: {}", sessionId, Arrays.toString(paths));
         } catch (Exception e) {
-            log.error("SftpDownloadFlatDirectoryHandler-handle error", e);
+            log.error("SftpDownloadFlatDirectoryHandler-handle error sessionId: {}", sessionId, e);
             ex = e;
         }
         // 返回
         this.send(channel,
                 OutputTypeEnum.SFTP_DOWNLOAD_FLAT_DIRECTORY,
                 SftpDownloadFlatDirectoryResponse.builder()
-                        .sessionId(payload.getSessionId())
+                        .sessionId(sessionId)
                         .currentPath(payload.getCurrentPath())
                         .body(JSON.toJSONString(files))
                         .result(BooleanBit.of(ex == null).getValue())

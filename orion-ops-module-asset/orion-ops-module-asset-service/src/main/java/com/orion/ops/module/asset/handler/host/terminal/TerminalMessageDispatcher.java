@@ -53,7 +53,7 @@ public class TerminalMessageDispatcher extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String id = session.getId();
-        log.info("TerminalMessageDispatcher-afterConnectionClosed  id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
+        log.info("TerminalMessageDispatcher-afterConnectionClosed id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
         // 关闭会话
         terminalManager.closeAll(id);
     }

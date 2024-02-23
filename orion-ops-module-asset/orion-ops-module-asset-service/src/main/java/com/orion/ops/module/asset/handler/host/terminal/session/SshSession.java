@@ -61,10 +61,6 @@ public class SshSession extends TerminalSession implements ISshSession {
 
     @Override
     public void resize(int cols, int rows) {
-        // FIXME 没啥用就删了
-        // if (!executor.isConnected()) {
-        //     executor.connect();
-        // }
         // 大小发生变化 则修改大小
         if (cols != config.getCols() ||
                 rows != config.getRows()) {

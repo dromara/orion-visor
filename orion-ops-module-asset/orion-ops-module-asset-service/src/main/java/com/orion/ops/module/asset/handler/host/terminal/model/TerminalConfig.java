@@ -25,6 +25,12 @@ public class TerminalConfig {
     @Schema(description = "主机id")
     private Long hostId;
 
+    @Schema(description = "主机名称")
+    private String hostName;
+
+    @Schema(description = "主机地址")
+    private String address;
+
     @Schema(description = "cols")
     private Integer cols;
 

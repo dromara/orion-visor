@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
 import com.orion.lang.able.SafeCloseable;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 
 /**
  * 终端会话定义
@@ -24,6 +25,13 @@ public interface ITerminalSession extends SafeCloseable {
      * @return channelId
      */
     String getChannelId();
+
+    /**
+     * 获取配置
+     *
+     * @return config
+     */
+    TerminalConfig getConfig();
 
     /**
      * 活跃会话

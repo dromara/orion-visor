@@ -37,4 +37,8 @@ public interface ExtraFieldConst extends FieldConst {
 
     String CONNECT_TYPE = "connectType";
 
+    String HOST_ID = "hostId";
+
+    String HOST_NAME = "hostName";
+
 }

@@ -3,12 +3,13 @@ package com.orion.ops.module.asset.handler.host.terminal.handler;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogFiller;
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.common.enums.BooleanBit;
+import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.ops.module.asset.entity.domain.HostDO;
@@ -20,6 +21,7 @@ import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
 import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
+import com.orion.ops.module.asset.handler.host.terminal.utils.TerminalUtils;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +57,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     @Override
     public void handle(WebSocketSession channel, TerminalCheckRequest payload) {
         Long hostId = payload.getHostId();
-        Long userId = this.getAttr(channel, ExtraFieldConst.USER_ID);
+        Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
         HostConnectTypeEnum connectType = HostConnectTypeEnum.of(payload.getConnectType());
         String sessionId = payload.getSessionId();
@@ -168,32 +170,19 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
                              HostConnectTypeEnum connectType) {
         Long hostId = host.getId();
         String hostName = host.getName();
-        String username = this.getAttr(channel, ExtraFieldConst.USERNAME);
+        String username = WebSockets.getAttr(channel, ExtraFieldConst.USERNAME);
         // 额外参数
         Map<String, Object> extra = Maps.newMap();
         extra.put(OperatorLogs.ID, hostId);
-        extra.put(OperatorLogs.NAME, hostName);
+        extra.put(OperatorLogs.HOST_NAME, hostName);
         extra.put(OperatorLogs.CONNECT_TYPE, connectType.name());
         extra.put(OperatorLogs.CHANNEL_ID, channel.getId());
         extra.put(OperatorLogs.SESSION_ID, sessionId);
         // 日志参数
-        OperatorLogFiller logModel = OperatorLogFiller.create()
-                // 填充用户信息
-                .fillUserInfo(userId, username)
-                // 填充 traceId
-                .fillTraceId(this.getAttr(channel, ExtraFieldConst.TRACE_ID))
-                // 填充请求留痕信息
-                .fillIdentity(this.getAttr(channel, ExtraFieldConst.IDENTITY))
-                // 填充使用时间
-                .fillUsedTime(startTime)
-                // 填充结果信息
-                .fillResult(null, ex)
-                // 填充拓展信息
-                .fillExtra(extra)
-                // 填充日志
-                .fillLogInfo(extra, HostTerminalOperatorType.CONNECT);
+        OperatorLogModel logModel = TerminalUtils.getOperatorLogModel(channel, extra,
+                HostTerminalOperatorType.CONNECT, startTime, ex);
         // 记录操作日志
-        operatorLogFrameworkService.insert(logModel.get());
+        operatorLogFrameworkService.insert(logModel);
         // 记录连接日志
         HostConnectLogCreateRequest connectLog = HostConnectLogCreateRequest.builder()
                 .userId(userId)

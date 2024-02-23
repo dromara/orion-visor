@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.service.impl;
 
-import com.orion.ops.framework.biz.operator.log.core.uitls.OperatorLogs;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.enums.EnableStatus;

@@ -1,3 +1,9 @@
+// 主机连接类型
+export const HostConnectType = {
+  SSH: 'SSH',
+  SFTP: 'SFTP'
+};
+
 // 主机连接状态 字典项
 export const connectStatusKey = 'hostConnectStatus';
 

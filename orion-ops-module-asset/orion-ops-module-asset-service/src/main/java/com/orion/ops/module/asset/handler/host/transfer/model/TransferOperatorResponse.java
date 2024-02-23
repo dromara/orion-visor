@@ -23,9 +23,6 @@ public class TransferOperatorResponse {
     @Schema(description = "type")
     private String type;
 
-    @Schema(description = "fileId")
-    private String fileId;
-
     @Schema(description = "主机id")
     private Long hostId;
 

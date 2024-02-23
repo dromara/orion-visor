@@ -8,6 +8,7 @@ import com.orion.net.host.sftp.SftpFile;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.module.asset.define.AssetThreadPools;
+import com.orion.ops.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.ops.module.asset.handler.host.transfer.utils.TransferUtils;
@@ -35,7 +36,11 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
 
     @Override
     public void startDownload(String path) {
+        String channelId = channel.getId();
         try {
+            log.info("DownloadSession.startDownload open start channelId: {}, path: {}", channelId, path);
+            // 保存操作日志
+            this.saveOperatorLog(HostTerminalOperatorType.SFTP_DOWNLOAD, path);
             // 检查连接
             this.init();
             // 检查文件是否存在
@@ -43,8 +48,9 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
             Valid.notNull(file, ErrorMessage.FILE_ABSENT);
             // 打开输入流
             this.inputStream = executor.openInputStream(path);
+            log.info("DownloadSession.startDownload open success channelId: {}, path: {}", channelId, path);
         } catch (Exception e) {
-            log.error("DownloadSession.startDownload error", e);
+            log.error("DownloadSession.startDownload open error channelId: {}, path: {}", channelId, path, e);
             // 响应结果
             TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, e);
             return;
@@ -59,9 +65,9 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
                 while (this.inputStream != null && (len = this.inputStream.read(buffer)) != -1) {
                     this.channel.sendMessage(new BinaryMessage(buffer, 0, len, true));
                 }
-                log.info("DownloadSession.startDownload finish");
+                log.info("DownloadSession.download finish channelId: {}, path: {}", channelId, path);
             } catch (Exception e) {
-                log.error("DownloadSession.startDownload error", e);
+                log.error("DownloadSession.download error channelId: {}, path: {}", channelId, path, e);
                 ex = e;
             }
             // 关闭等待 jsch 内部处理
@@ -79,21 +85,13 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
 
     @Override
     public void abortDownload() {
-        log.info("DownloadSession.abortDownload");
+        log.info("DownloadSession.abortDownload channelId: {}", channel.getId());
         // 关闭流
         this.closeStream();
     }
 
     @Override
-    public void close() {
-        this.closeStream();
-        super.close();
-    }
-
-    /**
-     * 关闭流
-     */
-    private void closeStream() {
+    protected void closeStream() {
         // 关闭 inputStream 会被阻塞 ??..?? 只能关闭 executor
         Streams.close(this.executor);
         this.executor = null;

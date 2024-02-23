@@ -5,7 +5,7 @@
                   label-align="left"
                   :itemOptions="{ 6: { span: 2 } }"
                   @submit="fetchTableData"
-                  @reset="fetchTableData"
+                  @reset="resetTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 连接用户 -->
       <a-form-item field="userId" label="连接用户" label-col-flex="50px">
@@ -114,7 +114,7 @@
   import { getHostConnectLogPage } from '@/api/asset/host-connect-log';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { connectStatusKey, connectTypeKey } from '../types/const';
+  import { connectStatusKey, connectTypeKey, HostConnectType } from '../types/const';
   import { usePagination } from '@/types/table';
   import { useDictStore } from '@/store';
   import useCopy from '@/hooks/copy';
@@ -134,7 +134,7 @@
     userId: undefined,
     hostId: undefined,
     hostAddress: undefined,
-    type: undefined,
+    type: HostConnectType.SSH,
     token: undefined,
     status: undefined,
     startTimeRange: undefined,
@@ -153,6 +153,12 @@
     } finally {
       setLoading(false);
     }
+  };
+
+  // 重置
+  const resetTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    formModel.type = HostConnectType.SSH;
+    doFetchTableData({ page, limit, ...form });
   };
 
   // 切换页码

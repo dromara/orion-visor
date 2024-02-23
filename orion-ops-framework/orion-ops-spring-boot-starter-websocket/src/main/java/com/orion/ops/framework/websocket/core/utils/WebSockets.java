@@ -24,6 +24,19 @@ public class WebSockets {
     }
 
     /**
+     * 获取属性
+     *
+     * @param channel channel
+     * @param attr    attr
+     * @param <E>     T
+     * @return T
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> E getAttr(WebSocketSession channel, String attr) {
+        return (E) channel.getAttributes().get(attr);
+    }
+
+    /**
      * 发送消息 忽略并发报错
      *
      * @param session session

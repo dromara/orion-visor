@@ -49,7 +49,7 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
-    title: '创建时间',
+    title: '操作时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
     align: 'center',

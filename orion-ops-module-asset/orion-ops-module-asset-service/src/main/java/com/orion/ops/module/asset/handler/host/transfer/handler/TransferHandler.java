@@ -5,6 +5,7 @@ import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
+import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferOperatorType;
@@ -47,7 +48,7 @@ public class TransferHandler implements ITransferHandler {
 
     public TransferHandler(WebSocketSession channel) {
         this.channel = channel;
-        this.userId = (Long) channel.getAttributes().get(ExtraFieldConst.USER_ID);
+        this.userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
         this.sessions = new ConcurrentHashMap<>();
     }
 
@@ -120,11 +121,12 @@ public class TransferHandler implements ITransferHandler {
                 }
                 session.init();
                 sessions.put(sessionKey, session);
+                log.info("TransferHandler.getAndInitSession success channelId: {}, hostId: {}", channel.getId(), hostId);
             }
             this.currentSession = session;
             return true;
         } catch (Exception e) {
-            log.error("TransferHandler.getAndInitSession error", e);
+            log.error("TransferHandler.getAndInitSession error channelId: {}", channel.getId(), e);
             // 响应结果
             TransferUtils.sendMessage(this.channel, TransferReceiverType.NEXT_TRANSFER, e);
             return false;
