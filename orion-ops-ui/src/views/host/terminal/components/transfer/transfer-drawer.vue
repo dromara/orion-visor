@@ -23,7 +23,8 @@
               <!-- 左侧图标 -->
               <div class="transfer-item-left">
                 <span class="file-icon">
-                  <icon-upload />
+                  <icon-upload v-if="item.type === TransferType.UPLOAD" />
+                  <icon-download v-else-if="item.type === TransferType.DOWNLOAD" />
                 </span>
               </div>
               <!-- 中间信息 -->
@@ -116,7 +117,7 @@
   import useVisible from '@/hooks/visible';
   import { useTerminalStore } from '@/store';
   import { getFileSize } from '@/utils/file';
-  import { TransferStatus } from '../../types/terminal.const';
+  import { TransferStatus, TransferType } from '../../types/terminal.const';
 
   const { transferManager } = useTerminalStore();
   const { visible, setVisible } = useVisible();

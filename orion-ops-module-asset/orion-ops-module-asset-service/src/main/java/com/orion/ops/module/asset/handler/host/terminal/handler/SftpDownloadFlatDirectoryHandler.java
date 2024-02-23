@@ -5,7 +5,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.SftpDownloadFlatDirectoryRequest;
-import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpDownloadDirectoryFlatResponse;
+import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpDownloadFlatDirectoryResponse;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.SftpFileVO;
 import com.orion.ops.module.asset.handler.host.terminal.session.ISftpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class SftpDownloadFlatDirectoryHandler extends AbstractTerminalHandler<Sf
         // 返回
         this.send(channel,
                 OutputTypeEnum.SFTP_DOWNLOAD_FLAT_DIRECTORY,
-                SftpDownloadDirectoryFlatResponse.builder()
+                SftpDownloadFlatDirectoryResponse.builder()
                         .sessionId(payload.getSessionId())
                         .currentPath(payload.getCurrentPath())
                         .body(JSON.toJSONString(files))

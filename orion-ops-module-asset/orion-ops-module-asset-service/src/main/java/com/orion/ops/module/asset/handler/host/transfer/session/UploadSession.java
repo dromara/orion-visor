@@ -69,6 +69,7 @@ public class UploadSession extends TransferHostSession implements IUploadSession
 
     @Override
     public void uploadFinish() {
+        log.info("UploadSession.uploadFinish");
         this.closeStream();
         // 响应结果
         TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_FINISH, null);
@@ -76,6 +77,7 @@ public class UploadSession extends TransferHostSession implements IUploadSession
 
     @Override
     public void uploadError() {
+        log.error("UploadSession.uploadError");
         this.closeStream();
         // 响应结果
         TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_ERROR, new InvalidArgumentException((String) null));
@@ -83,8 +85,8 @@ public class UploadSession extends TransferHostSession implements IUploadSession
 
     @Override
     public void close() {
-        super.close();
         this.closeStream();
+        super.close();
     }
 
     /**

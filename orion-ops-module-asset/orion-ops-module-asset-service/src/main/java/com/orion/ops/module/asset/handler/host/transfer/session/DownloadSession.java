@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.handler.host.transfer.session;
 
+import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
@@ -43,28 +44,35 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
             // 打开输入流
             this.inputStream = executor.openInputStream(path);
         } catch (Exception e) {
-            log.error("DownloadSession.uploadStart error", e);
+            log.error("DownloadSession.startDownload error", e);
             // 响应结果
             TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, e);
             return;
         }
-        // 异步读取文件内容  FIXME bug
-        AssetThreadPools.TERMINAL_SCHEDULER.execute(() -> {
+        // 异步读取文件内容
+        AssetThreadPools.SFTP_DOWNLOAD_SCHEDULER.execute(() -> {
+            Exception ex = null;
             try {
                 byte[] buffer = new byte[Const.BUFFER_KB_32];
                 int len;
                 // 响应文件内容
-                while ((len = this.inputStream.read(buffer)) != -1) {
+                while (this.inputStream != null && (len = this.inputStream.read(buffer)) != -1) {
                     this.channel.sendMessage(new BinaryMessage(buffer, 0, len, true));
                 }
-                // 响应结果
-                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_FINISH, null);
+                log.info("DownloadSession.startDownload finish");
             } catch (Exception e) {
-                log.error("DownloadSession.transfer error", e);
-                // 响应结果
-                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, e);
-            } finally {
-                this.closeStream();
+                log.error("DownloadSession.startDownload error", e);
+                ex = e;
+            }
+            // 关闭等待 jsch 内部处理
+            Threads.sleep(100);
+            this.closeStream();
+            Threads.sleep(100);
+            // 响应结果
+            if (ex == null) {
+                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_FINISH, null);
+            } else {
+                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, ex);
             }
         });
     }
@@ -73,23 +81,22 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
     public void abortDownload() {
         log.info("DownloadSession.abortDownload");
         // 关闭流
-        Streams.close(inputStream);
-        // 响应结果
-        TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_FINISH, null);
+        this.closeStream();
     }
 
     @Override
     public void close() {
-        super.close();
         this.closeStream();
+        super.close();
     }
 
     /**
      * 关闭流
      */
     private void closeStream() {
-        // 关闭流
-        Streams.close(inputStream);
+        // 关闭 inputStream 会被阻塞 ??..?? 只能关闭 executor
+        Streams.close(this.executor);
+        this.executor = null;
         this.inputStream = null;
     }
 
