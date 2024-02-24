@@ -123,7 +123,7 @@ orion:
   version: @revision@
   api:
     # 公共 api 前缀
-    prefix: /orion-api
+    prefix: /orion/api
     # 是否开启跨域
     cors: true
   websocket:

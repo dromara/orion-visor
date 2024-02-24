@@ -4,10 +4,9 @@ import { TransferReceiverType, TransferStatus, TransferType } from '../types/ter
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
 import { nextId } from '@/utils';
+import { webSocketBaseUrl } from '@/utils/env';
 import SftpTransferUploader from './sftp-transfer-uploader';
 import SftpTransferDownloader from './sftp-transfer-downloader';
-
-export const wsBase = import.meta.env.VITE_WS_BASE_URL;
 
 // sftp 传输管理器实现
 export default class SftpTransferManager implements ISftpTransferManager {
@@ -99,7 +98,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
     // 获取 access
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
-    this.client = new WebSocket(`${wsBase}/host/transfer/${accessToken}`);
+    this.client = new WebSocket(`${webSocketBaseUrl}/host/transfer/${accessToken}`);
     this.client.onerror = event => {
       // 打开失败将传输列表置为失效
       Message.error('会话打开失败');

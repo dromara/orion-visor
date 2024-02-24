@@ -3,9 +3,8 @@ import { OutputProtocol } from '../types/terminal.protocol';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
 import { sleep } from '@/utils';
+import { webSocketBaseUrl } from '@/utils/env';
 import TerminalOutputProcessor from './terminal-output-processor';
-
-export const wsBase = import.meta.env.VITE_WS_BASE_URL;
 
 // 终端通信处理器 实现
 export default class TerminalChannel implements ITerminalChannel {
@@ -23,7 +22,7 @@ export default class TerminalChannel implements ITerminalChannel {
     // 获取 access
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
-    this.client = new WebSocket(`${wsBase}/host/terminal/${accessToken}`);
+    this.client = new WebSocket(`${webSocketBaseUrl}/host/terminal/${accessToken}`);
     this.client.onerror = event => {
       Message.error('无法连接至服务器');
       console.error('error', event);

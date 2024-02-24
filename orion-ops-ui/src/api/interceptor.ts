@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Message } from '@arco-design/web-vue';
 import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';
+import { httpBaseUrl } from '@/utils/env';
 import { reLoginTipsKey } from '@/types/symbol';
 
 export interface HttpResponse<T = unknown> {
@@ -13,9 +14,7 @@ export interface HttpResponse<T = unknown> {
 
 axios.defaults.timeout = 10000;
 axios.defaults.promptBizErrorMessage = true;
-if (import.meta.env.VITE_API_BASE_URL) {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-}
+axios.defaults.baseURL = httpBaseUrl;
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {

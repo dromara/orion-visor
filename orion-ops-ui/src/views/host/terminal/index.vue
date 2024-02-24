@@ -88,7 +88,7 @@
     // 默认标题
     document.title = TerminalTabs.NEW_CONNECTION.title;
     // 注册关闭视口事件
-    if (debug) {
+    if (!debug) {
       window.addEventListener('beforeunload', handleBeforeUnload);
     }
   });
