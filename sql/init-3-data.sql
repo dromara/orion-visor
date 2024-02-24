@@ -78,11 +78,11 @@ INSERT INTO `system_menu` VALUES (142, 144, '主机秘钥授权', 'asset:host-ke
 INSERT INTO `system_menu` VALUES (143, 144, '主机身份授权', 'asset:host-identity:grant', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-30 21:06:26', '2023-11-30 22:40:11', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (144, 63, '资产授权', NULL, 2, 70, 1, 1, 1, 0, 'icon-safe', NULL, 'assetGrant', '2023-11-30 22:38:57', '2023-11-30 22:39:06', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (145, 0, '主机运维', NULL, 1, 400, 1, 1, 1, 1, 'IconDesktop', NULL, 'host', '2023-12-04 23:33:25', '2024-01-04 17:35:14', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (146, 145, 'Terminal', NULL, 2, 10, 1, 1, 1, 1, 'icon-code-square', NULL, 'hostTerminal', '2023-12-04 23:38:01', '2023-12-13 21:09:13', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'hostReviewConnectLog', '2023-12-26 22:53:07', '2024-01-04 17:55:14', NULL, '1', 0);
+INSERT INTO `system_menu` VALUES (146, 145, '主机终端', NULL, 2, 10, 1, 1, 1, 1, 'icon-code-square', NULL, 'hostTerminal', '2023-12-04 23:38:01', '2024-02-01 15:23:07', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'hostAuditConnectLog', '2023-12-26 22:53:07', '2024-01-31 17:20:20', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (149, 148, '查询主机连接日志', 'asset:host-connect-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-26 22:53:08', '2023-12-26 22:54:24', NULL, '1', 0);
 INSERT INTO `system_menu` VALUES (151, 146, '连接终端', 'asset:host-terminal:access', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 18:56:33', '2023-12-27 18:56:33', '2', '2', 0);
-INSERT INTO `system_menu` VALUES (152, 0, '运维审计', NULL, 1, 410, 1, 1, 1, 0, 'IconSafe', NULL, 'hostReview', '2024-01-04 17:54:56', '2024-01-04 17:57:31', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (152, 0, '运维审计', NULL, 1, 410, 1, 1, 1, 0, 'IconSafe', NULL, 'hostAudit', '2024-01-04 17:54:56', '2024-01-31 17:20:12', '1', '1', 0);
 
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', '1', '1', 0);
@@ -98,16 +98,16 @@ INSERT INTO `dict_key` VALUES (11, 'hostSshAuthType', 'STRING', '[]', '主机ssh
 INSERT INTO `dict_key` VALUES (15, 'operatorLogResult', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '操作日志结果', '2023-10-31 17:35:28', '2023-10-31 17:42:50', '2', '2', 0);
 INSERT INTO `dict_key` VALUES (16, 'operatorRiskLevel', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '操作风险等级', '2023-11-01 16:03:00', '2023-11-01 16:03:00', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (19, 'systemMenuNewWindow', 'INTEGER', '[]', '菜单是否开启新窗口', '2023-12-05 14:14:29', '2023-12-05 14:14:29', '1', '1', 0);
-INSERT INTO `dict_key` VALUES (20, 'terminalDarkTheme', 'STRING', '[]', '终端暗色模式', '2023-12-08 15:35:36', '2023-12-08 15:53:23', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (21, 'terminalFontFamily', 'STRING', '[]', '终端字体样式', '2023-12-11 16:46:24', '2023-12-11 17:10:32', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (22, 'terminalFontSize', 'INTEGER', '[]', '终端字体大小', '2023-12-11 17:07:25', '2023-12-11 17:07:25', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (23, 'terminalFontWeight', 'STRING', '[]', '终端文本粗细', '2023-12-11 17:18:43', '2023-12-11 17:21:36', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (24, 'terminalCursorStyle', 'STRING', '[]', '终端光标样式', '2023-12-11 18:24:47', '2023-12-11 18:26:11', '1', '1', 0);
-INSERT INTO `dict_key` VALUES (25, 'terminalNewConnectionType', 'STRING', '[]', '终端新建连接类型', '2023-12-14 17:24:19', '2023-12-14 17:24:19', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (25, 'hostNewConnectionType', 'STRING', '[]', '主机新建连接类型', '2023-12-14 17:24:19', '2024-01-31 23:39:19', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (26, 'hostExtraSshAuthType', 'STRING', '[]', '主机额外配置ssh认证方式', '2023-12-25 15:41:22', '2023-12-25 15:41:22', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (27, 'hostConnectType', 'STRING', '[]', '主机连接类型', '2023-12-26 23:23:08', '2023-12-26 23:23:08', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (28, 'hostConnectStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机连接状态', '2023-12-26 23:23:51', '2023-12-26 23:28:15', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (29, 'terminalConnectStatus', 'INTEGER', '[{\"name\": \"status\", \"type\": \"STRING\"}]', '终端连接状态', '2024-01-09 00:32:00', '2024-01-09 00:32:16', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (31, 'terminalEmulationType', 'STRING', '[]', '伪终端类型', '2024-01-11 23:35:01', '2024-01-11 23:35:01', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -193,9 +193,6 @@ INSERT INTO `dict_value` VALUES (122, 2, 'operatorLogType', 'host-key:grant', '�
 INSERT INTO `dict_value` VALUES (123, 2, 'operatorLogType', 'host-identity:grant', '主机身份授权', '{}', 40, '2023-11-30 21:04:48', '2023-11-30 21:04:48', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (124, 19, 'systemMenuNewWindow', '0', '关闭', '{}', 10, '2023-12-05 14:15:17', '2023-12-05 14:15:17', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (125, 19, 'systemMenuNewWindow', '1', '开启', '{}', 20, '2023-12-05 14:15:24', '2023-12-05 14:15:24', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (126, 20, 'terminalDarkTheme', 'dark', '暗色', '{}', 10, '2023-12-08 15:36:48', '2023-12-08 15:52:33', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (127, 20, 'terminalDarkTheme', 'light', '亮色', '{}', 20, '2023-12-08 15:36:59', '2023-12-08 15:52:33', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (128, 20, 'terminalDarkTheme', 'auto', '自动', '{}', 30, '2023-12-08 15:37:04', '2023-12-08 15:52:33', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (129, 21, 'terminalFontFamily', '_', '默认', '{}', 10, '2023-12-11 16:46:48', '2023-12-11 17:54:03', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (130, 21, 'terminalFontFamily', 'Courier New', 'Courier New', '{}', 20, '2023-12-11 16:46:57', '2023-12-11 17:07:39', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (131, 21, 'terminalFontFamily', 'Fira Code', 'Fira Code', '{}', 30, '2023-12-11 16:47:04', '2023-12-11 17:07:39', '1', '1', 0);
@@ -231,10 +228,10 @@ INSERT INTO `dict_value` VALUES (165, 23, 'terminalFontWeight', '900', '900', '{
 INSERT INTO `dict_value` VALUES (166, 24, 'terminalCursorStyle', 'block', '▋', '{}', 10, '2023-12-11 18:26:36', '2023-12-11 18:48:35', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (167, 24, 'terminalCursorStyle', 'underline', '▁', '{}', 20, '2023-12-11 18:27:32', '2023-12-11 18:27:32', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (168, 24, 'terminalCursorStyle', 'bar', '▏', '{}', 30, '2023-12-11 18:27:57', '2023-12-11 18:48:25', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (169, 25, 'terminalNewConnectionType', 'group', '分组', '{}', 10, '2023-12-14 17:24:43', '2023-12-14 17:24:43', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (170, 25, 'terminalNewConnectionType', 'list', '列表', '{}', 20, '2023-12-14 17:24:49', '2023-12-14 17:24:49', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (171, 25, 'terminalNewConnectionType', 'favorite', '收藏', '{}', 30, '2023-12-14 17:25:00', '2023-12-14 17:25:00', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (172, 25, 'terminalNewConnectionType', 'latest', '最近连接', '{}', 40, '2023-12-14 17:25:10', '2023-12-14 17:25:10', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (169, 25, 'hostNewConnectionType', 'group', '分组', '{}', 10, '2023-12-14 17:24:43', '2024-01-31 23:39:19', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (170, 25, 'hostNewConnectionType', 'list', '列表', '{}', 20, '2023-12-14 17:24:49', '2024-01-31 23:39:19', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (171, 25, 'hostNewConnectionType', 'favorite', '收藏', '{}', 30, '2023-12-14 17:25:00', '2024-01-31 23:39:19', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (172, 25, 'hostNewConnectionType', 'latest', '最近连接', '{}', 40, '2023-12-14 17:25:10', '2024-01-31 23:39:19', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (173, 26, 'hostExtraSshAuthType', 'DEFAULT', '主机默认配置', '{}', 10, '2023-12-25 15:48:26', '2023-12-25 15:48:26', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (174, 26, 'hostExtraSshAuthType', 'CUSTOM_KEY', '自定义秘钥', '{}', 20, '2023-12-25 15:48:42', '2023-12-25 16:05:36', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (175, 26, 'hostExtraSshAuthType', 'CUSTOM_IDENTITY', '自定义身份', '{}', 30, '2023-12-25 15:48:52', '2023-12-25 16:05:31', '1', '1', 0);
@@ -247,3 +244,17 @@ INSERT INTO `dict_value` VALUES (181, 2, 'operatorLogType', 'host-terminal:conne
 INSERT INTO `dict_value` VALUES (182, 29, 'terminalConnectStatus', '0', '连接中', '{\"status\": \"normal\"}', 10, '2024-01-09 00:32:47', '2024-01-09 00:32:47', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (183, 29, 'terminalConnectStatus', '1', '已连接', '{\"status\": \"processing\"}', 20, '2024-01-09 00:32:59', '2024-01-09 00:32:59', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (184, 29, 'terminalConnectStatus', '2', '已断开', '{\"status\": \"danger\"}', 30, '2024-01-09 00:33:09', '2024-01-09 00:37:35', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (189, 31, 'terminalEmulationType', 'xterm', 'xterm', '{}', 10, '2024-01-11 23:35:40', '2024-01-11 23:35:40', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (190, 31, 'terminalEmulationType', 'xterm-16color', 'xterm-16color', '{}', 20, '2024-01-11 23:35:49', '2024-01-11 23:35:49', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (191, 31, 'terminalEmulationType', 'xterm-256color', 'xterm-256color', '{}', 30, '2024-01-11 23:35:55', '2024-01-11 23:35:55', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (192, 31, 'terminalEmulationType', 'vt100', 'vt100', '{}', 40, '2024-01-11 23:36:00', '2024-01-11 23:36:00', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (193, 27, 'hostConnectType', 'SFTP', 'SFTP', '{}', 20, '2024-02-04 18:23:10', '2024-02-04 18:23:10', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (194, 2, 'operatorLogType', 'host-terminal:sftp-mkdir', '创建文件夹', '{}', 20, '2024-02-23 17:53:21', '2024-02-23 17:53:21', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (195, 2, 'operatorLogType', 'host-terminal:sftp-touch', '创建文件', '{}', 30, '2024-02-23 17:53:28', '2024-02-23 17:53:28', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (196, 2, 'operatorLogType', 'host-terminal:sftp-move', '移动文件', '{}', 40, '2024-02-23 17:53:39', '2024-02-23 17:53:39', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (197, 2, 'operatorLogType', 'host-terminal:sftp-remove', '删除文件', '{}', 50, '2024-02-23 17:53:51', '2024-02-23 17:53:51', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (198, 2, 'operatorLogType', 'host-terminal:sftp-truncate', '截断文件', '{}', 60, '2024-02-23 17:54:06', '2024-02-23 17:54:06', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (199, 2, 'operatorLogType', 'host-terminal:sftp-chmod', '文件提权', '{}', 70, '2024-02-23 17:54:17', '2024-02-23 17:54:17', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (200, 2, 'operatorLogType', 'host-terminal:sftp-set-content', '修改文件内容', '{}', 80, '2024-02-23 17:54:37', '2024-02-23 17:54:37', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (201, 2, 'operatorLogType', 'host-terminal:sftp-upload', '上传文件', '{}', 90, '2024-02-23 17:54:52', '2024-02-23 17:54:52', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (202, 2, 'operatorLogType', 'host-terminal:sftp-download', '下载文件', '{}', 100, '2024-02-23 17:55:03', '2024-02-23 17:55:03', '1', '1', 0);

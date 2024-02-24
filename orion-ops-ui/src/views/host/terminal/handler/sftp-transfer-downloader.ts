@@ -38,14 +38,11 @@ export default class SftpTransferDownloader implements ISftpTransferDownloader {
 
   // 下载完成
   downloadFinish() {
-    console.log(this.abort);
     if (this.abort) {
       // 中断则不触发下载
       return;
     }
-    // fixme bug
     try {
-      console.log('saveAs');
       // 触发下载
       saveAs(new Blob(this.blobArr, {
         type: 'application/octet-stream'

@@ -23,25 +23,50 @@ CREATE TABLE `_copy`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for code_snippet
+-- Table structure for command_snippet
 -- ----------------------------
-DROP TABLE IF EXISTS `code_snippet`;
-CREATE TABLE `code_snippet`
+DROP TABLE IF EXISTS `command_snippet`;
+CREATE TABLE `command_snippet`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
+    `group_id`    bigint(0)                                                    NULL DEFAULT NULL COMMENT '分组id',
     `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
     `prefix`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '触发前缀',
-    `snippet`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '代码片段',
+    `command`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '代码片段',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
     `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
     `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
-    PRIMARY KEY (`id`) USING BTREE
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user` (`user_id`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '代码片段'
+  COLLATE = utf8mb4_general_ci COMMENT = '命令片段'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for command_snippet_group
+-- ----------------------------
+DROP TABLE IF EXISTS `command_snippet_group`;
+CREATE TABLE `command_snippet_group`
+(
+    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分组名称',
+    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user` (`user_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '命令片段分组'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------

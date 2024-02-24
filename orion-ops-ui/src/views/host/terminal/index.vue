@@ -36,6 +36,7 @@
   import { dictKeys, TerminalTabs } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
+  import debug from '@/utils/env';
   import LayoutHeader from './components/layout/layout-header.vue';
   import LeftSidebar from './components/layout/left-sidebar.vue';
   import RightSidebar from './components/layout/right-sidebar.vue';
@@ -82,15 +83,17 @@
     }
   });
 
-  // 事件处理
+  // 加载处理
   onMounted(() => {
     // 默认标题
     document.title = TerminalTabs.NEW_CONNECTION.title;
     // 注册关闭视口事件
-    // FIXME 开发阶段
-    // window.addEventListener('beforeunload', handleBeforeUnload);
+    if (debug) {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
   });
 
+  // 卸载处理
   onUnmounted(() => {
     // 卸载时清除 cache
     cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups');
