@@ -1,0 +1,53 @@
+version: '3.3'
+services:
+  orion-ops-pro:
+    build:
+      context: .
+      dockerfile: docker/orion-ops-pro/Dockerfile
+    image: orion-ops-pro:1.0.0
+    ports:
+      - 1081:80
+    environment:
+      - REDIS_HOST=orion-ops-pro-redis
+      - MYSQL_HOST=orion-ops-pro-db
+      - MYSQL_USER=orion
+      - MYSQL_PASSWORD=Data@123456
+      - SECRET_KEY=secret-key
+    volumes:
+      - /data/orion-ops-pro-space/docker-volumes/orion-ops-pro/logs:/root/orion/logs/orion-ops-pro
+    depends_on:
+      - orion-ops-pro-db
+      - orion-ops-pro-redis
+  orion-ops-pro-db:
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    privileged: true
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_DATABASE=orion-ops-pro
+      - MYSQL_USER=orion
+      - MYSQL_PASSWORD=Data@123456
+      - MYSQL_ROOT_PASSWORD=Data@123456
+    volumes:
+      - /data/orion-ops-pro-space/docker-volumes/mysql/var-lib-mysql:/var/lib/mysql
+      - /data/orion-ops-pro-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
+      - /data/orion-ops-pro-space/docker-volumes/mysql/etc-mysql:/etc/mysql
+    image: orion-ops-pro-db:8.0
+  orion-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+  orion-ops-pro-redis:
+    image: redis:6.0.16-alpine
+    command: redis-server --requirepass Data@123456
+    ports:
+      - 6380:6379
+    volumes:
+      - /data/orion-ops-pro-space/docker-volumes/redis/var-lib-mysql:/etc/redis
+      - /data/orion-ops-pro-space/docker-volumes/redis/data:/data
+
+
+:

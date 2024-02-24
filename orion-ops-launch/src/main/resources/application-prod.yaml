@@ -1,9 +1,9 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://127.0.0.1:3306/orion-ops-pro?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
-      username: root
-      password: Data@123456
+      url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:3306/orion-ops-pro?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
+      username: ${MYSQL_USER:root}
+      password: ${MYSQL_PASSWORD:Data@123456}
       # 初始连接数
       initial-size: 5
       # 最小连接池数量
@@ -18,10 +18,10 @@ spring:
         stat:
           enabled: true
   redis:
-    host: 127.0.0.1
-    port: 6379
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
     database: 0
-    password: lijiahang
+    password: ${REDIS_PASSWORD:Data@123456}
     timeout: 3000
 
 springdoc:
@@ -40,7 +40,7 @@ orion:
   crypto:
     aes:
       # 加密秘钥
-      secret-key: uQeacXV8b3isvKLK
+      secret-key: ${SECRET_KEY:uQeacXV8b3isvKLK}
   async:
     executor:
       core-pool-size: 8
