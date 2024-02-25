@@ -66,8 +66,8 @@
   });
 
   // 修改预览
-  const updatePreview = (v: number) => {
-    formModel.value.permission = permission10toString(v);
+  const updatePreview = (v: number|undefined) => {
+    formModel.value.permission = permission10toString(v as number);
   };
 
   // 打开新增

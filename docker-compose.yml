@@ -35,11 +35,6 @@ services:
       - /data/orion-ops-pro-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
       - /data/orion-ops-pro-space/docker-volumes/mysql/etc-mysql:/etc/mysql
     image: orion-ops-pro-db:8.0
-  orion-adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8081:8080
   orion-ops-pro-redis:
     image: redis:6.0.16-alpine
     command: redis-server --requirepass Data@123456
@@ -48,6 +43,7 @@ services:
     volumes:
       - /data/orion-ops-pro-space/docker-volumes/redis/var-lib-mysql:/etc/redis
       - /data/orion-ops-pro-space/docker-volumes/redis/data:/data
-
-
-:
+  orion-ops-pro-adminer:
+    image: adminer
+    ports:
+      - 8081:8080

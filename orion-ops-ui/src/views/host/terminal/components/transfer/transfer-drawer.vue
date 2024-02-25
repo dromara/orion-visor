@@ -6,7 +6,7 @@
             :footer="false">
     <a-spin class="full" :loading="loading">
       <a-list class="hosts-list-container"
-              size="smail"
+              size="small"
               max-height="100%"
               :hoverable="true"
               :bordered="false"
@@ -152,6 +152,10 @@
   @item-left-width: 42px;
   @item-right-width: 42px;
   @item-center-width: 388px - @item-left-width - @item-right-width;
+
+  :deep(.transfer-item-wrapper) {
+    padding: 0 !important;
+  }
 
   .transfer-item {
     min-height: 36px;
