@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.SftpBaseRequest;
@@ -27,7 +28,7 @@ public class SftpGetContentHandler extends AbstractTerminalHandler<SftpBaseReque
         ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         log.info("SftpGetContentHandler-handle start sessionId: {}, path: {}", sessionId, path);
-        String content = null;
+        String content = Const.EMPTY;
         Exception ex = null;
         // 获取内容
         try {

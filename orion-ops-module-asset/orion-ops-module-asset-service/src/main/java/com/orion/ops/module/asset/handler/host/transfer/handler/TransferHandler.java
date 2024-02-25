@@ -107,7 +107,7 @@ public class TransferHandler implements ITransferHandler {
             ITransferHostSession session = sessions.get(sessionKey);
             if (session == null) {
                 // 获取主机信息
-                HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(hostId, this.userId, HostConnectTypeEnum.SFTP);
+                HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(this.userId, hostId, HostConnectTypeEnum.SFTP);
                 SessionStore sessionStore = hostTerminalService.openSessionStore(connectInfo);
                 // 打开会话并初始化
                 if (TransferOperatorType.UPLOAD.equals(type.getOperator())) {

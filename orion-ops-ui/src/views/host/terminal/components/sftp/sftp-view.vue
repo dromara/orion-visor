@@ -121,6 +121,7 @@
   // 编辑文件
   const editFile = (name: string, path: string) => {
     setEditorLoading(true);
+    setTableLoading(true);
     splitSize.value = 0.6;
     editorView.value = true;
     editorFileName.value = name;
@@ -208,6 +209,7 @@
 
   // 接收获取文件内容响应
   const resolveSftpGetContent = (path: string, result: string, content: string) => {
+    setTableLoading(false);
     setEditorLoading(false);
     // 检查结果
     if (!checkResult(result, '加载失败')) {

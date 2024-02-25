@@ -260,7 +260,7 @@
       setLoading(false);
       Message.success('修改成功');
       // 回调 props
-      emits('submitted', { ...formModel.value });
+      emits('submitted', { ...props.content, config: { ...formModel.value } });
     } catch (e) {
     } finally {
       setLoading(false);

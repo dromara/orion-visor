@@ -68,7 +68,7 @@
           </span>
         </a-tooltip>
         <!-- 编辑内容 -->
-        <a-tooltip v-if="canEditable(record.size, record.isDir)"
+        <a-tooltip v-if="canEditable(record.size, record.attr)"
                    position="top"
                    :mini="true"
                    :overlay-inverse="true"
@@ -204,14 +204,15 @@
   };
 
   // 是否可编辑
-  const canEditable = (size: number, isDir: boolean) => {
-    // 非文件夹并且文件小于 配置大小(MB) 可以编辑
-    return !isDir && size <= previewSize * 1024 * 1024;
+  const canEditable = (size: number, attr: string) => {
+    // 是普通文件 && 文件小于 配置大小(MB) 可以编辑
+    return FILE_TYPE.NORMAL_FILE.value == formatFileType(attr).value
+      && size <= previewSize * 1024 * 1024;
   };
 
   // 点击文件名称
   const clickFilename = (record: TableData) => {
-    if (FILE_TYPE.DIRECTORY.value === formatFileType(record.attr).value) {
+    if (record.isDir) {
       // 进入文件夹
       emits('loadFile', record.path);
     } else {

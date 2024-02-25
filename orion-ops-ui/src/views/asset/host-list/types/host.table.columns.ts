@@ -30,8 +30,8 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 180,
-    align: 'right',
+    width: 162,
+    align: 'center',
     fixed: 'right',
   },
 ] as TableColumnData[];

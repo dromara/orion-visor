@@ -186,8 +186,8 @@
 
   :deep(.arco-tabs-tab) {
     height: 100%;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
     color: var(--color-panel-text-1);
     background: var(--color-bg-panel-tabs);
     position: relative;

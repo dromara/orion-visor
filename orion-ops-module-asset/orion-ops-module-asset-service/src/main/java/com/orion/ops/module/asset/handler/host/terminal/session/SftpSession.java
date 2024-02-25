@@ -116,10 +116,22 @@ public class SftpSession extends TerminalSession implements ISftpSession {
     @Override
     public String getContent(String path) {
         path = Valid.checkNormalize(path);
-        try (InputStream in = executor.openInputStream(path)) {
+        try {
+            // 获取文件
+            SftpFile file = executor.getFile(path);
+            if (file == null || file.getSize() == 0L) {
+                return Const.EMPTY;
+            }
+            // 读取文件
+            InputStream in = executor.openInputStream(path);
             return Streams.toString(in, config.getFileContentCharset());
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
+        } finally {
+            // 同关闭 transfer downloader
+            // 关闭 inputStream 可能会被阻塞 ??..?? 只能关闭 executor
+            Streams.close(this.executor);
+            this.connect();
         }
     }
 

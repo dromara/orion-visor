@@ -46,6 +46,12 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
             // 检查文件是否存在
             SftpFile file = executor.getFile(path);
             Valid.notNull(file, ErrorMessage.FILE_ABSENT);
+            if (file.getSize() == 0L) {
+                // 文件为空
+                log.info("DownloadSession.startDownload file empty channelId: {}, path: {}", channelId, path);
+                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_FINISH, null);
+                return;
+            }
             // 打开输入流
             this.inputStream = executor.openInputStream(path);
             log.info("DownloadSession.startDownload open success channelId: {}, path: {}", channelId, path);
@@ -92,7 +98,7 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
 
     @Override
     protected void closeStream() {
-        // 关闭 inputStream 会被阻塞 ??..?? 只能关闭 executor
+        // 关闭 inputStream 可能会被阻塞 ??..?? 只能关闭 executor
         Streams.close(this.executor);
         this.executor = null;
         this.inputStream = null;
