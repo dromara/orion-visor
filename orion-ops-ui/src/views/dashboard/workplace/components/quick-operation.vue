@@ -1,35 +1,57 @@
 <template>
-  <a-card
-    class="general-card"
-    :title="$t('workplace.quick.operation')"
-    :header-style="{ paddingBottom: '0' }"
-    :body-style="{ padding: '24px 20px 0 20px' }"
-  >
-    <template #extra>
-      <a-link>{{ $t('workplace.quickOperation.setup') }}</a-link>
-    </template>
+  <a-card class="general-card"
+          title="快捷操作"
+          :header-style="{ paddingBottom: '0' }"
+          :body-style="{ padding: '20px 20px 0 20px' }">
     <a-row :gutter="8">
-      <a-col v-for="link in links" :key="link.text" :span="8" class="wrapper">
+      <a-col v-for="link in links"
+             :key="link.meta.locale as string"
+             :span="8"
+             class="wrapper"
+             @click="openRoute($event, link)">
         <div class="icon">
-          <component :is="link.icon" />
+          <component v-if="link.meta.icon" :is="link.meta.icon" />
         </div>
         <a-typography-paragraph class="text">
-          {{ $t(link.text) }}
+          {{ link.meta.locale }}
         </a-typography-paragraph>
       </a-col>
     </a-row>
-    <a-divider class="split-line" style="margin: 0" />
   </a-card>
 </template>
 
 <script lang="ts" setup>
-  const links = [
-    { text: 'workplace.contentManagement', icon: 'icon-file' },
-    { text: 'workplace.contentStatistical', icon: 'icon-storage' },
-    { text: 'workplace.advanced', icon: 'icon-settings' },
-    { text: 'workplace.onlinePromotion', icon: 'icon-mobile' },
-    { text: 'workplace.contentPutIn', icon: 'icon-fire' },
-  ];
+  import type { RouteRecordNormalized } from 'vue-router';
+  import { useRouter } from 'vue-router';
+  import { openWindow } from '@/utils';
+  import { useMenuStore } from '@/store';
+
+  const router = useRouter();
+  const { appMenus } = useMenuStore();
+
+  const links = appMenus.map(s => s.children)
+    .filter(s => s?.length)
+    .flat(1)
+    .filter(s => s.meta)
+    .map(s => s as RouteRecordNormalized)
+    .slice(0, 12);
+
+  // 打开路由
+  const openRoute = (e: any, route: RouteRecordNormalized) => {
+    // 新页面打开
+    if (route.meta.newWindow || e.ctrlKey) {
+      const { href } = router.resolve({
+        name: route.name as string,
+      });
+      openWindow(href);
+      return;
+    }
+    // 触发跳转
+    router.push({
+      name: route.name as string,
+    });
+  };
+
 </script>
 
 <style lang="less" scoped>

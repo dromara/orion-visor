@@ -2,15 +2,16 @@
   <a-layout-footer class="footer">
     <a-space direction="vertical" size="medium">
       <a-space size="large">
-        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">官网</a>
-        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">文档</a>
-        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">教程</a>
-        <a target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">github</a>
-        <a target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a>
+        <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">官网</a-link> -->
+        <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">教程</a-link> -->
+        <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">github</a-link>
+        <a-link target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a-link>
+        <a-link target="_blank" href="https://lijiahangmax.gitee.io/orion-ops-pro">文档</a-link>
+        <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE">License</a-link>
         <span title="当前版本">v{{ version }}</span>
       </a-space>
       <span class="copyright">
-          Copyright<icon-copyright /> 2024 By lijiahang
+          Copyright<icon-copyright /> 2024 Li Jiahang All rights reserved.
         </span>
     </a-space>
   </a-layout-footer>
@@ -34,7 +35,7 @@
     }
 
     .copyright {
-      color: var(--color-text-3)
+      color: var(--color-text-3);
     }
 
   }

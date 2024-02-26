@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container" v-if="render">
+  <div class="layout-container">
     <!-- 查询头 -->
     <a-card class="general-card table-search-card">
       <!-- 查询头组件 -->
@@ -31,30 +31,22 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
-  import { dictKeys } from './types/const';
+  import { ref, onUnmounted } from 'vue';
+  import { useCacheStore } from '@/store';
   import OperatorLogQueryHeader from './components/operator-log-query-header.vue';
   import OperatorLogTable from './components/operator-log-table.vue';
   import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
 
   const cacheStore = useCacheStore();
 
-  const render = ref();
   const table = ref();
   const view = ref();
-
-  onBeforeMount(async () => {
-    // 加载字典值
-    const dictStore = useDictStore();
-    await dictStore.loadKeys(dictKeys);
-    render.value = true;
-  });
 
   // 卸载时清除 cache
   onUnmounted(() => {
     cacheStore.reset('users');
   });
+
 </script>
 
 <style lang="less" scoped>

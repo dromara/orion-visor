@@ -1,40 +1,34 @@
 <template>
   <div class="layout-container">
-    <div class="left-side">
+    <!-- 顶部 -->
+    <div class="top-side">
+      <!-- 提示 -->
       <div class="panel">
         <Banner />
-        <DataPanel />
-        <ContentChart />
       </div>
-      <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
-        <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
-        >
-          <PopularContent />
-        </a-grid-item>
-        <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
-        >
-          <CategoriesPercent />
-        </a-grid-item>
-      </a-grid>
     </div>
-    <div class="right-side">
-      <a-grid :cols="24" :row-gap="16">
-        <a-grid-item :span="24">
-          <div class="panel moduler-wrap">
-            <QuickOperation />
-            <RecentlyVisited />
-          </div>
+    <div class="row-wrapper">
+      <div class="left-side">
+        <!-- 操作日志 -->
+        <a-card class="general-card"
+                title="操作日志"
+                :header-style="{ paddingBottom: '0' }"
+                :body-style="{ padding: '8px 20px 8px 20px' }">
+          <operator-log-table :visible-user="false"
+                              :visible-handle="false"
+                              :current="true" />
+        </a-card>
+      </div>
+      <a-grid class="right-side"
+              :cols="24"
+              :row-gap="16">
+        <!-- 快捷操作 -->
+        <a-grid-item class="card-wrapper" :span="24">
+          <quick-operation />
         </a-grid-item>
+        <!-- 文档 -->
         <a-grid-item class="panel" :span="24">
-          <Carousel />
-        </a-grid-item>
-        <a-grid-item class="panel" :span="24">
-          <Announcement />
-        </a-grid-item>
-        <a-grid-item class="panel" :span="24">
-          <Docs />
+          <docs />
         </a-grid-item>
       </a-grid>
     </div>
@@ -43,15 +37,9 @@
 
 <script lang="ts" setup>
   import Banner from './components/banner.vue';
-  import DataPanel from './components/data-panel.vue';
-  import ContentChart from './components/content-chart.vue';
-  import PopularContent from './components/popular-content.vue';
-  import CategoriesPercent from './components/categories-percent.vue';
-  import RecentlyVisited from './components/recently-visited.vue';
   import QuickOperation from './components/quick-operation.vue';
-  import Announcement from './components/announcement.vue';
-  import Carousel from './components/carousel.vue';
   import Docs from './components/docs.vue';
+  import OperatorLogTable from '@/views/user/operator-log/components/operator-log-table.vue';
 </script>
 
 <script lang="ts">
@@ -61,15 +49,24 @@
 </script>
 
 <style lang="less" scoped>
-
-  .left-side {
+  .top-side {
     flex: 1;
     overflow: auto;
   }
 
-  .right-side {
-    width: 280px;
+  .row-wrapper {
     margin-top: 16px;
+    width: 100%;
+    display: flex;
+
+    .left-side {
+      width: calc(100% - 296px);
+      margin-right: 16px;
+    }
+
+    .right-side {
+      width: 280px;
+    }
   }
 
   .panel {
@@ -83,7 +80,7 @@
     border-bottom: 1px solid rgb(var(--gray-2));
   }
 
-  .moduler-wrap {
+  .card-wrapper {
     border-radius: 4px;
     background-color: var(--color-bg-2);
 
@@ -127,22 +124,6 @@
       text-align: center;
       background-color: rgb(var(--gray-1));
       border-radius: 4px;
-    }
-  }
-</style>
-
-<style lang="less" scoped>
-  // responsive
-  .mobile {
-    .layout-container {
-      display: block;
-    }
-
-    .right-side {
-      // display: none;
-      width: 100%;
-      margin-left: 0;
-      margin-top: 16px;
     }
   }
 </style>

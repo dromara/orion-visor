@@ -6,7 +6,10 @@
           <div :key="item.slogan" class="carousel-item">
             <div class="carousel-title">{{ item.slogan }}</div>
             <div class="carousel-sub-title">{{ item.subSlogan }}</div>
-            <img class="carousel-image" :src="item.image" />
+            <img class="carousel-image usn"
+                 draggable="false"
+                 :src="item.image"
+                 :alt="item.slogan" />
           </div>
         </a-carousel-item>
       </a-carousel>

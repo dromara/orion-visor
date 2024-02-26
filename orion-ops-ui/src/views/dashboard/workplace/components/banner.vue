@@ -2,7 +2,7 @@
   <a-col class="banner">
     <a-col :span="8">
       <a-typography-title :heading="5" style="margin-top: 0">
-        {{ $t('workplace.welcome') }} {{ userInfo.name }}
+        欢迎回来! {{ userInfo.name }}
       </a-typography-title>
     </a-col>
     <a-divider class="panel-border" />

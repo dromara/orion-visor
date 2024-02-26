@@ -55,8 +55,8 @@
 
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from '@/api/user/operator-log';
-  import { ref, onMounted } from 'vue';
-  import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
+  import { ref, onMounted, onBeforeMount } from 'vue';
+  import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, dictKeys } from '../types/const';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { usePagination } from '@/types/table';
@@ -70,6 +70,10 @@
   const emits = defineEmits(['viewDetail']);
   const props = defineProps({
     visibleUser: {
+      type: Boolean,
+      default: true
+    },
+    visibleHandle: {
       type: Boolean,
       default: true
     },
@@ -141,12 +145,24 @@
     doFetchTableData({ page, limit, ...form });
   };
 
+  // 加载字典值
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+  });
+
+  // 初始化
   onMounted(() => {
-    if (props.visibleUser) {
-      tableColumns.value = columns;
-    } else {
-      tableColumns.value = columns.filter(s => s.dataIndex !== 'username');
+    let cols = columns;
+    // 不显示用户
+    if (!props.visibleUser) {
+      cols = cols.filter(s => s.dataIndex !== 'username');
     }
+    // 不显示操作
+    if (!props.visibleHandle) {
+      cols = cols.filter(s => s.dataIndex !== 'handle');
+    }
+    tableColumns.value = cols;
     fetchTableData();
   });
 
