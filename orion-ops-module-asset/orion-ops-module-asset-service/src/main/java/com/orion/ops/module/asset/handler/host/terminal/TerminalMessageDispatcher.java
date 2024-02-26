@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal;
 
+import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.handler.host.terminal.enums.InputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,17 @@ public class TerminalMessageDispatcher extends AbstractWebSocketHandler {
         try {
             // 解析类型
             InputTypeEnum type = InputTypeEnum.of(payload);
-            if (type != null) {
-                // 解析并处理消息
+            if (type == null) {
+                return;
+            }
+            // 解析并处理消息
+            if (type.isAsyncExec()) {
+                // 异步执行
+                AssetThreadPools.TERMINAL_OPERATOR.execute(() -> {
+                    type.getHandler().handle(session, type.parse(payload));
+                });
+            } else {
+                // 同步执行
                 type.getHandler().handle(session, type.parse(payload));
             }
         } catch (Exception e) {

@@ -56,7 +56,7 @@ public class SshSession extends TerminalSession implements ISshSession {
         executor.callback(this::eofCallback);
         executor.connect();
         // 开始监听输出
-        AssetThreadPools.TERMINAL_SCHEDULER.execute(executor);
+        AssetThreadPools.TERMINAL_STDOUT.execute(executor);
     }
 
     @Override

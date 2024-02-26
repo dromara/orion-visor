@@ -25,7 +25,8 @@ public enum InputTypeEnum {
     CHECK("ck",
             TerminalCheckHandler.class,
             new String[]{"type", "sessionId", "hostId", "connectType"},
-            TerminalCheckRequest.class),
+            TerminalCheckRequest.class,
+            true),
 
     /**
      * 连接主机
@@ -33,7 +34,8 @@ public enum InputTypeEnum {
     CONNECT("co",
             TerminalConnectHandler.class,
             new String[]{"type", "sessionId", "terminalType", "cols", "rows"},
-            TerminalConnectRequest.class),
+            TerminalConnectRequest.class,
+            true),
 
     /**
      * 关闭连接
@@ -41,7 +43,8 @@ public enum InputTypeEnum {
     CLOSE("cl",
             TerminalCloseHandler.class,
             new String[]{"type", "sessionId"},
-            TerminalBasePayload.class),
+            TerminalBasePayload.class,
+            true),
 
     /**
      * ping
@@ -49,7 +52,8 @@ public enum InputTypeEnum {
     PING("p",
             TerminalPingHandler.class,
             new String[]{"type"},
-            TerminalBasePayload.class),
+            TerminalBasePayload.class,
+            true),
 
     /**
      * SSH 修改大小
@@ -57,7 +61,8 @@ public enum InputTypeEnum {
     SSH_RESIZE("rs",
             SshResizeHandler.class,
             new String[]{"type", "sessionId", "cols", "rows"},
-            SshResizeRequest.class),
+            SshResizeRequest.class,
+            true),
 
     /**
      * SSH  输入
@@ -65,7 +70,8 @@ public enum InputTypeEnum {
     SSH_INPUT("i",
             SshInputHandler.class,
             new String[]{"type", "sessionId", "command"},
-            SshInputRequest.class),
+            SshInputRequest.class,
+            false),
 
     /**
      * SFTP 文件列表
@@ -73,7 +79,8 @@ public enum InputTypeEnum {
     SFTP_LIST("ls",
             SftpListHandler.class,
             new String[]{"type", "sessionId", "showHiddenFile", "path"},
-            SftpListRequest.class),
+            SftpListRequest.class,
+            true),
 
     /**
      * SFTP 创建文件夹
@@ -81,7 +88,8 @@ public enum InputTypeEnum {
     SFTP_MKDIR("mk",
             SftpMakeDirectoryHandler.class,
             new String[]{"type", "sessionId", "path"},
-            SftpBaseRequest.class),
+            SftpBaseRequest.class,
+            true),
 
     /**
      * SFTP 创建文件
@@ -89,7 +97,8 @@ public enum InputTypeEnum {
     SFTP_TOUCH("to",
             SftpTouchHandler.class,
             new String[]{"type", "sessionId", "path"},
-            SftpBaseRequest.class),
+            SftpBaseRequest.class,
+            true),
 
     /**
      * SFTP 移动文件
@@ -97,7 +106,8 @@ public enum InputTypeEnum {
     SFTP_MOVE("mv",
             SftpMoveHandler.class,
             new String[]{"type", "sessionId", "path", "target"},
-            SftpMoveRequest.class),
+            SftpMoveRequest.class,
+            true),
 
     /**
      * SFTP 删除文件
@@ -105,7 +115,8 @@ public enum InputTypeEnum {
     SFTP_REMOVE("rm",
             SftpRemoveHandler.class,
             new String[]{"type", "sessionId", "path"},
-            SftpBaseRequest.class),
+            SftpBaseRequest.class,
+            true),
 
     /**
      * SFTP 截断文件
@@ -113,7 +124,8 @@ public enum InputTypeEnum {
     SFTP_TRUNCATE("tc",
             SftpTruncateHandler.class,
             new String[]{"type", "sessionId", "path"},
-            SftpBaseRequest.class),
+            SftpBaseRequest.class,
+            true),
 
     /**
      * SFTP 修改文件权限
@@ -121,7 +133,8 @@ public enum InputTypeEnum {
     SFTP_CHMOD("cm",
             SftpChangeModHandler.class,
             new String[]{"type", "sessionId", "path", "mod"},
-            SftpChangeModRequest.class),
+            SftpChangeModRequest.class,
+            true),
 
     /**
      * SFTP 下载文件夹展开文件
@@ -129,7 +142,8 @@ public enum InputTypeEnum {
     SFTP_DOWNLOAD_FLAT_DIRECTORY("df",
             SftpDownloadFlatDirectoryHandler.class,
             new String[]{"type", "sessionId", "currentPath", "path"},
-            SftpDownloadFlatDirectoryRequest.class),
+            SftpDownloadFlatDirectoryRequest.class,
+            true),
 
     /**
      * SFTP 获取内容
@@ -137,7 +151,8 @@ public enum InputTypeEnum {
     SFTP_GET_CONTENT("gc",
             SftpGetContentHandler.class,
             new String[]{"type", "sessionId", "path"},
-            SftpBaseRequest.class),
+            SftpBaseRequest.class,
+            true),
 
     /**
      * SFTP 修改内容
@@ -145,7 +160,8 @@ public enum InputTypeEnum {
     SFTP_SET_CONTENT("sc",
             SftpSetContentHandler.class,
             new String[]{"type", "sessionId", "path", "content"},
-            SftpSetContentRequest.class),
+            SftpSetContentRequest.class,
+            true),
 
     ;
 
@@ -161,16 +177,21 @@ public enum InputTypeEnum {
     private final Class<? extends TerminalBasePayload> payloadClass;
 
     @Getter
+    private final boolean asyncExec;
+
+    @Getter
     private ITerminalHandler<? extends TerminalBasePayload> handler;
 
     <T extends TerminalBasePayload> InputTypeEnum(String type,
                                                   Class<? extends ITerminalHandler<T>> handlerBean,
                                                   String[] payloadDefine,
-                                                  Class<T> payloadClass) {
+                                                  Class<T> payloadClass,
+                                                  boolean asyncExec) {
         this.type = type;
         this.handlerBean = handlerBean;
         this.payloadDefine = payloadDefine;
         this.payloadClass = payloadClass;
+        this.asyncExec = asyncExec;
     }
 
     public static InputTypeEnum of(String payload) {

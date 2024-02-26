@@ -2,6 +2,7 @@ package com.orion.ops.framework.websocket.core.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Threads;
 import com.orion.ops.framework.websocket.core.constant.WsCloseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
@@ -57,13 +58,35 @@ public class WebSockets {
             return;
         }
         try {
-            // 响应
+            // 发重消息
             session.sendMessage(new TextMessage(message));
         } catch (IllegalStateException e) {
             // 并发异常
-            log.error("发送消息失败 {}", Exceptions.getDigest(e));
+            log.error("发送消息失败, 准备进行重试 {}", Exceptions.getDigest(e));
+            // 并发重试
+            retrySendText(session, message, 50);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 重试发送消息 忽略并发报错
+     *
+     * @param session session
+     * @param message message
+     * @param delay   delay
+     */
+    public static void retrySendText(WebSocketSession session, String message, long delay) {
+        if (!session.isOpen()) {
+            return;
+        }
+        try {
+            Threads.sleep(delay);
+            session.sendMessage(new TextMessage(message));
+            Threads.sleep(delay);
+        } catch (Exception ex) {
+            throw Exceptions.ioRuntime(ex);
         }
     }
 

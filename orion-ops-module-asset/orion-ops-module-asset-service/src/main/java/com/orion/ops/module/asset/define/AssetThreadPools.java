@@ -16,10 +16,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 public interface AssetThreadPools {
 
     /**
-     * terminal 调度线程池
+     * terminal 标准输出线程池
      */
-    ThreadPoolExecutor TERMINAL_SCHEDULER = ExecutorBuilder.create()
-            .namedThreadFactory("terminal-thread-")
+    ThreadPoolExecutor TERMINAL_STDOUT = ExecutorBuilder.create()
+            .namedThreadFactory("terminal-stdout-")
             .corePoolSize(1)
             .maxPoolSize(Integer.MAX_VALUE)
             .keepAliveTime(Const.MS_S_60)
@@ -28,10 +28,10 @@ public interface AssetThreadPools {
             .build();
 
     /**
-     * SFTP 下载线程池
+     * terminal 操作线程池
      */
-    ThreadPoolExecutor SFTP_DOWNLOAD_SCHEDULER = ExecutorBuilder.create()
-            .namedThreadFactory("sftp-download-thread-")
+    ThreadPoolExecutor TERMINAL_OPERATOR = ExecutorBuilder.create()
+            .namedThreadFactory("terminal-operator-")
             .corePoolSize(1)
             .maxPoolSize(Integer.MAX_VALUE)
             .keepAliveTime(Const.MS_S_60)

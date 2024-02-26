@@ -62,7 +62,7 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
             return;
         }
         // 异步读取文件内容
-        AssetThreadPools.SFTP_DOWNLOAD_SCHEDULER.execute(() -> {
+        AssetThreadPools.TERMINAL_OPERATOR.execute(() -> {
             Exception ex = null;
             try {
                 byte[] buffer = new byte[Const.BUFFER_KB_32];
