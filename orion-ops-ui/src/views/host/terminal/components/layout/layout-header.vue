@@ -1,12 +1,11 @@
 <template>
   <div class="terminal-header">
     <!-- 左侧 logo -->
-    <!-- FIXME -->
     <div class="terminal-header-left">
       <img alt="logo"
-           class="terminal-header-logo-img"
+           class="terminal-header-logo"
            draggable="false"
-           src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
+           src="@/assets/images/logo.svg?url" />
       <h5 class="terminal-header-logo-text">Orion Ops Pro</h5>
     </div>
     <!-- 左侧 tabs -->
@@ -54,7 +53,6 @@
   import { computed } from 'vue';
   import { useTerminalStore } from '@/store';
   import IconActions from '../layout/icon-actions.vue';
-  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
 
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const { tabManager } = useTerminalStore();
@@ -71,7 +69,7 @@
 </script>
 
 <style lang="less" scoped>
-  @logo-width: 168px;
+  @logo-width: 176px;
 
   .terminal-header {
     height: 100%;
@@ -80,16 +78,16 @@
     user-select: none;
 
     &-left {
+      padding-left: 6px;
       width: @logo-width;
       display: flex;
       align-items: center;
       justify-content: flex-start;
     }
 
-    &-logo-img {
-      padding-left: 6px;
-      width: 36px;
-      height: 36px;
+    &-logo {
+      width: 32px;
+      height: 32px;
     }
 
     &-logo-text {

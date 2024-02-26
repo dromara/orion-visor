@@ -3,11 +3,11 @@
     <!-- 左侧按钮 -->
     <div class="left-side">
       <a-space>
-        <!-- FIXME -->
         <!-- LOGO -->
-        <img alt="logo"
+        <img class="left-side-logo"
+             alt="logo"
              draggable="false"
-             src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
+             src="@/assets/images/logo.svg?url" />
         <!-- 标头 -->
         <a-typography-title :heading="5"
                             :style="{ margin: 0, fontSize: '18px', height: '1.4em', overflow: 'hidden' }">
@@ -322,6 +322,11 @@
     display: flex;
     align-items: center;
     padding-left: 20px;
+
+    &-logo {
+      width: 32px;
+      height: 32px;
+    }
   }
 
   .center-side {

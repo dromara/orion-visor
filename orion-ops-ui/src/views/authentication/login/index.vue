@@ -2,8 +2,9 @@
   <div class="container">
     <!-- 顶部 logo -->
     <div class="logo">
-      <img alt="logo"
-           src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
+      <img class="logo-img"
+           alt="logo"
+           src="@/assets/images/logo.svg?url" />
       <div class="logo-text">Orion Ops Pro</div>
     </div>
     <!-- 左侧 banner -->
@@ -23,11 +24,11 @@
 </template>
 
 <script lang="ts" setup>
+  import { Notification } from '@arco-design/web-vue';
+  import { reLoginTipsKey } from '@/types/symbol';
   import Footer from '@/components/app/footer/index.vue';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
-  import { Notification } from '@arco-design/web-vue';
-  import { reLoginTipsKey } from '@/types/symbol';
 
   // 登录提示
   const tips = window.sessionStorage.getItem(reLoginTipsKey);
@@ -75,6 +76,11 @@
     z-index: 1;
     display: inline-flex;
     align-items: center;
+
+    &-img {
+      width: 32px;
+      height: 32px;
+    }
 
     &-text {
       margin-right: 4px;
