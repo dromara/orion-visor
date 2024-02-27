@@ -102,7 +102,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemRoleDO record = systemRoleDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 检查是否为管理员账号
+        // 检查是否为管理员角色
         Valid.isTrue(!RoleDefine.isAdmin(record.getCode()), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
@@ -167,7 +167,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.CODE, code);
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
-        // 检查是否为管理员账号
+        // 检查是否为管理员角色
         Valid.isTrue(!RoleDefine.isAdmin(code), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 删除角色
         int effect = systemRoleDAO.deleteById(id);
