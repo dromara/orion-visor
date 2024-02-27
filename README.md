@@ -34,8 +34,8 @@ gitee: https://gitee.com/lijiahangmax/orion-ops-pro
 文档: https://lijiahangmax.gitee.io/orion-ops-pro/#/    
 demo: http://101.43.254.243:1081/#/
 
-演示账号: `orionuser`    
-演示密码: `orionuser`  
+演示账号: `admin`    
+演示密码: `admin`  
 留个小星星再走吧⭐
 
 ## 特性
