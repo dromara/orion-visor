@@ -47,9 +47,12 @@ demo: http://101.43.254.243:1081/#/
 * 在线终端: 提供便捷的在线 Web 终端服务, 支持自定义快捷键和主题风格。
 * 文件管理: 实现远程主机文件的批量上传、下载和在线编辑等操作。
 * 可扩展性: 前后端代码规范统一, 代码质量高、健壮且易于阅读和扩展。
-  [//]: # (FIXME * 批量操作: 支持远程主机批量执行命令 以及 批量执行上传文件)
-  [//]: # (FIXME * 调度任务: 维护 cron 表达式, 定时执行主机命令)
-  [//]: # (FIXME * 功能强大: 命令批量执行, 任务定时调度, 远程日志查看, 操作日志全记录等)
+
+[comment]: <> (  FIXME * 批量操作: 支持远程主机批量执行命令 以及 批量执行上传文件)
+
+[comment]: <> (  FIXME * 调度任务: 维护 cron 表达式, 定时执行主机命令)
+
+[comment]: <> (  FIXME * 功能强大: 命令批量执行, 任务定时调度, 远程日志查看, 操作日志全记录等)
 
 ## 快速开始
 
@@ -104,8 +107,10 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 
 ## 联系我
 
-<img src="./assert/img/qq_group1.jpg" alt="qq" width="268px"/>  
-<img src="./assert/img/wx.jpg" alt="wx" width="268px"/>  
+<div style="display: flex;">
+  <img src="./assert/img/qq_group1.jpg" alt="qq" width="268px" height="398px"/>  
+  <img src="./assert/img/wx.jpg" alt="wx" width="298px" height="398px"/>  
+</div>
 
 📧 微信添加备注: ops
 
