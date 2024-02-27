@@ -14,7 +14,7 @@ spring:
     multipart:
       # 单个文件大小
       max-file-size: 16MB
-      # 设置总上传的文件大小
+      # 消息体大小
       max-request-size: 32MB
   mvc:
     pathmatch:

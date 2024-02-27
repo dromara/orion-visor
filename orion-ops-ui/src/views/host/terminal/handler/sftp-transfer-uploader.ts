@@ -2,7 +2,8 @@ import type { ISftpTransferUploader, SftpTransferItem } from '../types/terminal.
 import { TransferOperatorType, TransferStatus } from '../types/terminal.const';
 import { getPath } from '@/utils/file';
 
-export const BLOCK_SIZE = 1024 * 1024;
+// 512 KB
+export const BLOCK_SIZE = 512 * 1024;
 
 // sftp 上传器实现
 export default class SftpTransferUploader implements ISftpTransferUploader {

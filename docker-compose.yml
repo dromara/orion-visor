@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: docker/orion-ops-pro/Dockerfile
-    image: orion-ops-pro:1.0.0
+    image: orion-ops-pro:1.0.0-beta.1
     ports:
       - 1081:80
     environment:
@@ -12,7 +12,8 @@ services:
       - MYSQL_HOST=orion-ops-pro-db
       - MYSQL_USER=orion
       - MYSQL_PASSWORD=Data@123456
-      - SECRET_KEY=secret-key
+      - REDIS_PASSWORD=Data@123456
+      - SECRET_KEY=uQeacXV8b3isvKLK
     volumes:
       - /data/orion-ops-pro-space/docker-volumes/orion-ops-pro/logs:/root/orion/logs/orion-ops-pro
     depends_on:
