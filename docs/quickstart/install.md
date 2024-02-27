@@ -118,7 +118,7 @@ server {
 ### 部署
 
 ```
-复制 orion-ops-pro/orion-ops-ui 到 /usr/share/nginx/html
+复制 orion-ops-pro/orion-ops-ui/dist 到 /usr/share/nginx/html
 复制 orion-ops-pro/orion-ops-launch/target/orion-ops-launch.jar 到 /data/orion
 # 启动后台服务
 nohup java -jar orion-ops-launch.jar --spring.profiles.active=prod 2>&1 &

@@ -1,9 +1,6 @@
 version: '3.3'
 services:
   orion-ops-pro:
-    #    build:
-    #      context: .
-    #      dockerfile: docker/orion-ops-pro/Dockerfile
     image: orion-ops-pro:1.0.0-beta.1
     ports:
       - 1081:80
