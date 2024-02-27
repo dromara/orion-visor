@@ -12,6 +12,4 @@ COPY ./orion-ops-launch.jar /app/app.jar
 COPY ./dist /usr/share/nginx/html
 COPY ./entrypoint.sh /app/entrypoint.sh
 COPY ./nginx.conf /etc/nginx/conf.d
-COPY ./wait-for-it.sh /app/wait-for-it.sh
-RUN chmod +x /app/wait-for-it.sh
 ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]
