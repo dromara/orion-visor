@@ -164,13 +164,13 @@
     background: transparent;
   }
 
-  :deep(.arco-tabs-tab) {
+  :deep(.arco-tabs-nav-type-line .arco-tabs-tab) {
+    position: relative;
     height: 100%;
     margin: 0 !important;
     padding: 0 !important;
     color: var(--color-header-text-1);
     background: var(--color-bg-header-tabs);
-    position: relative;
 
     &:hover {
       color: var(--color-header-text-2);
