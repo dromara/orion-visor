@@ -66,6 +66,8 @@ export interface Options {
   overviewRulerBorder?: boolean;
   // 颜色装饰器
   colorDecorators?: boolean;
+  // 将溢出小部件显示为 fixed  编辑器较小的话需要设置为 true 否则 suggest 会被覆盖
+  fixedOverflowWidgets?: boolean;
 
   [key: string]: unknown;
 }
@@ -94,7 +96,7 @@ export const createDefaultOptions = (): Options => {
     scrollBeyondLastLine: false,
     overviewRulerBorder: false,
     colorDecorators: true,
-    suggest: true,
+    fixedOverflowWidgets: true,
   };
 };
 

@@ -13,8 +13,7 @@
               :data="transferManager.transferList">
         <!-- 空数据 -->
         <template #empty>
-          <a-empty style="flex-direction: column;"
-                   description="无传输文件" />
+          <a-empty class="list-empty" description="无传输文件" />
         </template>
         <!-- 数据 -->
         <template #item="{ item }">
@@ -155,6 +154,11 @@
 
   :deep(.transfer-item-wrapper) {
     padding: 0 !important;
+  }
+
+  .list-empty {
+    flex-direction: column;
+    margin-top: 32px;
   }
 
   .transfer-item {

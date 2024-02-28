@@ -9,6 +9,7 @@ import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.PasswordModifier;
+import com.orion.ops.framework.common.utils.CryptoUtils;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisMaps;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
@@ -68,6 +69,11 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         HostIdentityDO record = HostIdentityConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostIdentityPresent(record);
+        // 加密密码
+        String password = record.getPassword();
+        if (!Strings.isBlank(password)) {
+            record.setPassword(CryptoUtils.encryptAsString(password));
+        }
         // 插入
         int effect = hostIdentityDAO.insert(record);
         log.info("HostIdentityService-createHostIdentity effect: {}", effect);

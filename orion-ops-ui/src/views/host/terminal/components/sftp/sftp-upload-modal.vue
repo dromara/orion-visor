@@ -159,7 +159,7 @@
     }
 
     :deep(.arco-upload-list) {
-      max-height: calc(100vh - 388px);
+      max-height: calc(100vh - 386px);
       overflow-y: auto;
       padding: 0 12px 0 0;
     }

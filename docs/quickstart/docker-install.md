@@ -23,11 +23,11 @@ Dashboard 修改)
 # 进入仓库目录
 cd orion-ops-pro
 # 修改 docker-compose.yml (建议修改)
-    # SECRET_KEY          加密秘钥
     # MYSQL_USER          mysql 用户名
     # MYSQL_PASSWORD      mysql 用户密码
     # MYSQL_ROOT_PASSWORD mysql root 密码
     # REDIS_PASSWORD      redis 密码
+    # SECRET_KEY          加密秘钥
 # 构建
 docker compose build
 ```

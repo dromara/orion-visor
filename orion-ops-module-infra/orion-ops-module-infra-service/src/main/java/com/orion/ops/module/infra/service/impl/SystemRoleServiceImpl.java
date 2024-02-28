@@ -68,6 +68,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 查询编码是否存在
         this.checkCodePresent(record);
         // 插入
+        record.setStatus(RoleStatusEnum.ENABLED.getStatus());
         int effect = systemRoleDAO.insert(record);
         log.info("SystemRoleService-createSystemRole effect: {}, domain: {}", effect, JSON.toJSONString(record));
         // 设置到缓存

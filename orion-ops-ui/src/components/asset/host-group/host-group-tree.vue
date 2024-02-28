@@ -306,7 +306,7 @@
     try {
       const groups = await cacheStore.loadHostGroups(force);
       emits('loading', true);
-      treeData.value = groups;
+      treeData.value = groups || [];
     } catch (e) {
     } finally {
       emits('loading', false);
