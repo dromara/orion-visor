@@ -147,7 +147,6 @@ public class DataExtraServiceImpl implements DataExtraService {
 
     @Override
     public Map<Long, String> getExtraItemValuesByCache(Long userId, String type, String item) {
-        // todo TEST
         // 查询缓存
         String key = DataExtraCacheKeyDefine.DATA_EXTRA.format(userId, type, item);
         Map<String, String> entities = RedisMaps.entities(key);
@@ -187,7 +186,6 @@ public class DataExtraServiceImpl implements DataExtraService {
 
     @Override
     public Integer deleteByUserId(Long userId) {
-        // 查询数据 TODO TEST
         List<DataExtraDO> list = this.getCacheSelectWrapper()
                 .eq(DataExtraDO::getUserId, userId)
                 .then()
@@ -204,7 +202,6 @@ public class DataExtraServiceImpl implements DataExtraService {
 
     @Override
     public Integer deleteByRelId(String type, Long relId) {
-        // 查询数据 TODO TEST
         List<DataExtraDO> list = this.getCacheSelectWrapper()
                 .eq(DataExtraDO::getType, type)
                 .eq(DataExtraDO::getRelId, relId)
