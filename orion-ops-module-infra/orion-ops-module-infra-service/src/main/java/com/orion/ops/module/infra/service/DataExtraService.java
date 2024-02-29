@@ -65,6 +65,27 @@ public interface DataExtraService {
     Map<Long, String> getExtraItemValues(DataExtraQueryRequest request);
 
     /**
+     * 查询额外配置项 (查询缓存)
+     *
+     * @param userId userId
+     * @param type   type
+     * @param item   item
+     * @param relId  relId
+     * @return value
+     */
+    String getExtraItemValueByCache(Long userId, String type, String item, Long relId);
+
+    /**
+     * 查询额外配置项 (查询缓存)
+     *
+     * @param userId userId
+     * @param type   type
+     * @param item   item
+     * @return relId:value
+     */
+    Map<Long, String> getExtraItemValuesByCache(Long userId, String type, String item);
+
+    /**
      * 查询额外配置
      *
      * @param request request

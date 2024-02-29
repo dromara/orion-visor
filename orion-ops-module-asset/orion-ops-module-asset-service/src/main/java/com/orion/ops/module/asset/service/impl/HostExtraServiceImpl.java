@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.service.impl;
 
 import com.orion.lang.function.Functions;
+import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
@@ -12,9 +13,8 @@ import com.orion.ops.module.asset.entity.request.host.HostExtraQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraUpdateRequest;
 import com.orion.ops.module.asset.enums.HostExtraItemEnum;
 import com.orion.ops.module.asset.service.HostExtraService;
-import com.orion.ops.module.infra.api.DataAliasApi;
 import com.orion.ops.module.infra.api.DataExtraApi;
-import com.orion.ops.module.infra.entity.dto.data.DataAliasUpdateDTO;
+import com.orion.ops.module.infra.constant.DataExtraItems;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraSetDTO;
@@ -37,19 +37,17 @@ import java.util.stream.Collectors;
 public class HostExtraServiceImpl implements HostExtraService {
 
     @Resource
-    private DataAliasApi dataAliasApi;
-
-    @Resource
     private DataExtraApi dataExtraApi;
 
     @Override
     public Integer updateHostAlias(HostAliasUpdateRequest request) {
-        DataAliasUpdateDTO update = DataAliasUpdateDTO.builder()
+        DataExtraSetDTO update = DataExtraSetDTO.builder()
                 .userId(SecurityUtils.getLoginUserId())
+                .item(DataExtraItems.ALIAS)
                 .relId(request.getId())
-                .alias(request.getName())
+                .value(Refs.json(request.getName()))
                 .build();
-        return dataAliasApi.updateDataAlias(update, DataExtraTypeEnum.HOST);
+        return dataExtraApi.setExtraItem(update, DataExtraTypeEnum.HOST);
     }
 
     @Override

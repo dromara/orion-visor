@@ -1,6 +1,8 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.orion.lang.function.Functions;
+import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.common.constant.Const;
@@ -10,8 +12,10 @@ import com.orion.ops.module.asset.convert.HostGroupConvert;
 import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
 import com.orion.ops.module.asset.entity.vo.*;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
+import com.orion.ops.module.asset.handler.host.extra.model.HostColorExtraModel;
 import com.orion.ops.module.asset.service.*;
 import com.orion.ops.module.infra.api.*;
+import com.orion.ops.module.infra.constant.DataExtraItems;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
 import com.orion.ops.module.infra.enums.*;
@@ -67,7 +71,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     private TagRelApi tagRelApi;
 
     @Resource
-    private DataAliasApi dataAliasApi;
+    private DataExtraApi dataExtraApi;
 
     @Override
     public List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request) {
@@ -179,8 +183,10 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
         // 查询最近连接的主机
         Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.SSH, userId);
-        // 查询数据别名
-        Future<Map<Long, String>> dataAliasResult = dataAliasApi.getDataAliasAsync(userId, DataExtraTypeEnum.HOST);
+        // 查询别名
+        Future<Map<Long, String>> dataAliasResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId, DataExtraTypeEnum.HOST, DataExtraItems.ALIAS);
+        // 查询颜色
+        Future<Map<Long, String>> dataColorResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId, DataExtraTypeEnum.HOST, DataExtraItems.COLOR);
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用
@@ -207,7 +213,8 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 设置主机拓展信息
         this.getAuthorizedHostExtra(wrapper.getHostList(),
                 favoriteResult.get(),
-                dataAliasResult.get());
+                dataAliasResult.get(),
+                dataColorResult.get());
         // 设置最近连接的主机
         wrapper.setLatestHosts(new LinkedHashSet<>(latestConnectHostIdList.get()));
         return wrapper;
@@ -292,10 +299,12 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
      * @param hosts    hosts
      * @param favorite favorite
      * @param aliasMap aliasMap
+     * @param colorMap colorMap
      */
     private void getAuthorizedHostExtra(List<HostVO> hosts,
                                         List<Long> favorite,
-                                        Map<Long, String> aliasMap) {
+                                        Map<Long, String> aliasMap,
+                                        Map<Long, String> colorMap) {
         if (Lists.isEmpty(hosts)) {
             return;
         }
@@ -313,7 +322,21 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         }
         // 设置主机别名
         if (!Maps.isEmpty(aliasMap)) {
-            hosts.forEach(s -> s.setAlias(aliasMap.get(s.getId())));
+            hosts.forEach(s -> {
+                String alias = aliasMap.get(s.getId());
+                if (alias != null) {
+                    s.setAlias(Refs.unrefToString(alias));
+                }
+            });
+        }
+        // 设置主机颜色
+        if (!Maps.isEmpty(colorMap)) {
+            hosts.forEach(s -> {
+                HostColorExtraModel color = JSON.parseObject(colorMap.get(s.getId()), HostColorExtraModel.class);
+                if (color != null) {
+                    s.setColor(Refs.unrefToString(color.getColor()));
+                }
+            });
         }
     }
 
