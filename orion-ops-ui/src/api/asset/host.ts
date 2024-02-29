@@ -36,7 +36,7 @@ export interface HostQueryRequest extends Pagination {
 /**
  * 主机查询响应
  */
-export interface HostQueryResponse extends TableData {
+export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   id: number;
   name: string;
   code: string;
@@ -47,9 +47,15 @@ export interface HostQueryResponse extends TableData {
   updater: string;
   favorite: boolean;
   alias: string;
+  color: string;
   tags: Array<{ id: number, name: string }>;
   groupIdList: Array<number>;
+}
 
+/**
+ * 主机操作拓展
+ */
+export interface HostQueryResponseExtra {
   editable: boolean;
   loading: boolean;
   modCount: number;
