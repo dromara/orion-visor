@@ -108,6 +108,7 @@ INSERT INTO `dict_key` VALUES (27, 'hostConnectType', 'STRING', '[]', '主机连
 INSERT INTO `dict_key` VALUES (28, 'hostConnectStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机连接状态', '2023-12-26 23:23:51', '2023-12-26 23:28:15', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (29, 'terminalConnectStatus', 'INTEGER', '[{\"name\": \"status\", \"type\": \"STRING\"}]', '终端连接状态', '2024-01-09 00:32:00', '2024-01-09 00:32:16', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (31, 'terminalEmulationType', 'STRING', '[]', '伪终端类型', '2024-01-11 23:35:01', '2024-01-11 23:35:01', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (32, 'terminalTabColor', 'COLOR', '[]', '终端标签页颜色', '2024-03-01 15:01:44', '2024-03-01 15:01:44', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -258,3 +259,13 @@ INSERT INTO `dict_value` VALUES (199, 2, 'operatorLogType', 'host-terminal:sftp-
 INSERT INTO `dict_value` VALUES (200, 2, 'operatorLogType', 'host-terminal:sftp-set-content', '修改文件内容', '{}', 80, '2024-02-23 17:54:37', '2024-02-23 17:54:37', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (201, 2, 'operatorLogType', 'host-terminal:sftp-upload', '上传文件', '{}', 90, '2024-02-23 17:54:52', '2024-02-23 17:54:52', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (202, 2, 'operatorLogType', 'host-terminal:sftp-download', '下载文件', '{}', 100, '2024-02-23 17:55:03', '2024-02-23 17:55:03', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (203, 32, 'terminalTabColor', 'rgb(var(--red-6))', '红色', '{}', 10, '2024-03-01 15:07:41', '2024-03-01 15:07:41', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (204, 32, 'terminalTabColor', 'rgb(var(--orange-6))', '橙色', '{}', 20, '2024-03-01 15:07:55', '2024-03-01 15:07:55', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (205, 32, 'terminalTabColor', 'rgb(var(--yellow-6))', '黄色', '{}', 30, '2024-03-01 15:08:13', '2024-03-01 15:08:13', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (206, 32, 'terminalTabColor', 'rgb(var(--green-6))', '绿色', '{}', 40, '2024-03-01 15:08:23', '2024-03-01 15:08:23', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (207, 32, 'terminalTabColor', 'rgb(var(--cyan-6))', '青色', '{}', 50, '2024-03-01 15:08:46', '2024-03-01 15:08:46', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (208, 32, 'terminalTabColor', 'rgb(var(--blue-6))', '浅蓝', '{}', 60, '2024-03-01 15:11:01', '2024-03-01 15:11:01', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (209, 32, 'terminalTabColor', 'rgb(var(--arcoblue-6))', '蓝色', '{}', 70, '2024-03-01 15:11:11', '2024-03-01 15:11:11', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (210, 32, 'terminalTabColor', 'rgb(var(--purple-6))', '紫色', '{}', 80, '2024-03-01 15:11:20', '2024-03-01 15:11:20', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (211, 32, 'terminalTabColor', 'rgb(var(--pinkpurple-6))', '粉紫', '{}', 90, '2024-03-01 15:11:41', '2024-03-01 15:11:41', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (213, 32, 'terminalTabColor', 'rgb(var(--gray-6))', '灰色', '{}', 100, '2024-03-01 15:12:01', '2024-03-01 15:39:34', '1', '1', 0);

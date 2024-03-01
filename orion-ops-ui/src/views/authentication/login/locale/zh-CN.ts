@@ -7,7 +7,7 @@ export default {
   'login.form.userName.placeholder': '用户名',
   'login.form.password.placeholder': '密码',
   'login.form.login': '登录',
-  'login.banner.slogan1': '开箱即用的运维平台',
+  'login.banner.slogan1': '开箱即用的一站式智能运维平台',
   'login.banner.subSlogan1': '一站式操作 智能运维 让运维变得更简单',
   'login.banner.slogan2': '内置权限角色管理',
   'login.banner.subSlogan2': '让每一次操作都安全可控可追溯',

@@ -14,11 +14,11 @@
         </div>
       </div>
       <!-- 其他颜色 -->
-      <template v-for="color in TabColors">
+      <template v-for="color in toOptions(terminalTabColorKey)">
         <div class="color-wrapper"
-             :class="[formModel.color === color ? 'selected-color' : '']"
-             :style="{ '--color': `${color}` }"
-             @click="clickColor(color)">
+             :class="[formModel.color === color.value ? 'selected-color' : '']"
+             :style="{ '--color': `${color.value}` }"
+             @click="clickColor(color.value as string)">
           <div class="color-item">
             <div class="color-item-dot" />
           </div>
@@ -37,13 +37,16 @@
 <script lang="ts" setup>
   import type { ColorExtraSettingModel } from '../../../types/terminal.type';
   import { onMounted, ref } from 'vue';
-  import { TabColors } from '../../../types/terminal.const';
+  import { terminalTabColorKey } from '../../../types/terminal.const';
   import { getHostExtraItem } from '@/api/asset/host-extra';
+  import { useDictStore } from '@/store';
 
   const props = defineProps<{
     hostId: number,
     item: string
   }>();
+
+  const { toOptions } = useDictStore();
 
   const formModel = ref<ColorExtraSettingModel>({
     color: ''

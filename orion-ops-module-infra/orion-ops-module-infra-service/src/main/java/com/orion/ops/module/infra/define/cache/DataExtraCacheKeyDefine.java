@@ -17,7 +17,7 @@ public interface DataExtraCacheKeyDefine {
 
     CacheKeyDefine DATA_EXTRA = new CacheKeyBuilder()
             .key("data:extra:{}:{}:{}")
-            .desc("数据推展信息 ${userId} ${type} ${item}")
+            .desc("数据拓展信息 ${userId} ${type} ${item}")
             .type(String.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
