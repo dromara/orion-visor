@@ -48,6 +48,20 @@ export const ExtraSettingItems = {
   COLOR: 'color'
 };
 
+// tab 颜色
+export const TabColors = [
+  'rgb(var(--red-6))',
+  'rgb(var(--orange-6))',
+  'rgb(var(--yellow-6))',
+  'rgb(var(--green-6))',
+  'rgb(var(--cyan-6))',
+  'rgb(var(--blue-6))',
+  'rgb(var(--arcoblue-6))',
+  'rgb(var(--purple-6))',
+  'rgb(var(--pinkpurple-6))',
+  'rgb(var(--gray-6))',
+];
+
 // 主机额外配置 ssh 认证方式
 export const ExtraSshAuthType = {
   // 使用默认认证方式

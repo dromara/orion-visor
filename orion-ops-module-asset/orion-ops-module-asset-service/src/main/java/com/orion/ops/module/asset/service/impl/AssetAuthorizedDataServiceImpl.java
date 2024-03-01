@@ -334,7 +334,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
             hosts.forEach(s -> {
                 HostColorExtraModel color = JSON.parseObject(colorMap.get(s.getId()), HostColorExtraModel.class);
                 if (color != null) {
-                    s.setColor(Refs.unrefToString(color.getColor()));
+                    s.setColor(color.getColor());
                 }
             });
         }

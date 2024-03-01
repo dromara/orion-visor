@@ -15,7 +15,7 @@
            :on-before-ok="handlerOk"
            @close="handleClose">
     <a-spin class="full" :loading="loading">
-      <a-tabs v-model="item"
+      <a-tabs v-model:active-key="activeItem"
               position="left"
               type="rounded"
               :lazy-load="true">
@@ -27,8 +27,9 @@
         </a-tab-pane>
         <!-- 标签颜色 -->
         <a-tab-pane :key="ExtraSettingItems.COLOR" title="标签颜色">
-          <!-- TODO -->
-          <span>颜色</span>
+          <color-setting-form ref="colorForm"
+                              :host-id="hostId as number"
+                              :item="ExtraSettingItems.COLOR" />
         </a-tab-pane>
       </a-tabs>
     </a-spin>
@@ -47,14 +48,15 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { ExtraSettingItems } from '../../../types/terminal.const';
-  import SshSettingForm from './ssh-setting-form.vue';
   import { updateHostExtra } from '@/api/asset/host-extra';
   import { Message } from '@arco-design/web-vue';
+  import SshSettingForm from './ssh-setting-form.vue';
+  import ColorSettingForm from './color-setting-form.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const item = ref<string>(ExtraSettingItems.SSH);
+  const activeItem = ref<string>(ExtraSettingItems.SSH);
   const title = ref<string>();
   const hostId = ref<number>();
   const sshForm = ref();
@@ -74,10 +76,10 @@
     setLoading(true);
     try {
       let value;
-      if (item.value === ExtraSettingItems.SSH) {
+      if (activeItem.value === ExtraSettingItems.SSH) {
         // SSH 配置
         value = await sshForm.value.getValue();
-      } else if (item.value === ExtraSettingItems.COLOR) {
+      } else if (activeItem.value === ExtraSettingItems.COLOR) {
         // 颜色配置
         value = await colorForm.value.getValue();
       }
@@ -87,7 +89,7 @@
       // 保存
       await updateHostExtra({
         hostId: hostId.value,
-        item: item.value,
+        item: activeItem.value,
         extra: value as string
       });
       Message.success('保存成功');

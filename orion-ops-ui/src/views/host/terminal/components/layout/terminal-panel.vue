@@ -22,7 +22,7 @@
         <!-- 标题 -->
         <template #title>
           <span class="tab-title-wrapper"
-                :style="{ 'border-bottom': `4px ${tab.color || 'transparent'} solid` }">
+                :style="{ 'border-bottom': `2px ${tab.color || 'transparent'} solid` }">
             <span class="tab-title-icon">
               <component :is="tab.icon" />
             </span>
@@ -106,7 +106,7 @@
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 11px 18px 7px 14px;
+    padding: 11px 18px 9px 14px;
 
     .tab-title-icon {
       font-size: 16px;

@@ -60,11 +60,16 @@ export interface ShortcutKeyItem {
 }
 
 // ssh 额外配置
-export interface SshExtraModel {
+export interface SshExtraSettingModel {
   authType?: string;
   username?: string;
   keyId?: number;
   identityId?: number;
+}
+
+// 颜色 额外配置
+export interface ColorExtraSettingModel {
+  color: string;
 }
 
 // session tab
@@ -96,25 +101,6 @@ export interface OutputPayload {
 
   [key: string]: string;
 }
-
-/*
-TODO
---red-6: 245, 63, 63;
---orangered-6: 247, 114, 52;
---orange-6: 255, 125, 0;
---gold-6: 247, 186, 30;
---yellow-6: 250, 220, 25;
---lime-6: 159, 219, 29;
---green-6: 0, 180, 42;
---cyan-6: 20, 201, 201;
---blue-6: 52, 145, 250;
---arcoblue-6: 22, 93, 255;
---purple-6: 114, 46, 209;
---pinkpurple-6: 217, 26, 217;
---magenta-6: 245, 49, 157;
---gray-6: 134, 144, 156;
-
- */
 
 // 终端 tab 管理器定义
 export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem> {
