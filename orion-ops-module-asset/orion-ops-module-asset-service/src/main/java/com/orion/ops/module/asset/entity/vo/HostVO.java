@@ -64,4 +64,7 @@ public class HostVO implements Serializable {
     @Schema(description = "别名")
     private String alias;
 
+    @Schema(description = "颜色")
+    private String color;
+
 }

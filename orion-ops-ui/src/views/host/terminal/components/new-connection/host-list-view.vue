@@ -137,13 +137,13 @@
                   </div>
                 </div>
               </a-tooltip>
-              <!-- 连接设置 -->
+              <!-- 主机设置 -->
               <a-tooltip position="top"
                          :mini="true"
                          :auto-fix-position="false"
                          content-class="terminal-tooltip-content"
                          arrow-class="terminal-tooltip-content"
-                         content="连接设置">
+                         content="主机设置">
                 <div class="terminal-sidebar-icon-wrapper">
                   <div class="terminal-sidebar-icon" @click="openSetting(item)">
                     <icon-settings />
@@ -185,7 +185,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostAlias } from '@/api/asset/host-extra';
-  import { openSshSettingModalKey, PanelSessionType } from '../../types/terminal.const';
+  import { openSettingModalKey, PanelSessionType } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -231,7 +231,7 @@
   };
 
   // 打开配置
-  const openSetting = inject(openSshSettingModalKey) as (record: HostQueryResponse) => void;
+  const openSetting = inject(openSettingModalKey) as (record: HostQueryResponse) => void;
 
   // 设置收藏
   const setFavorite = async (item: HostQueryResponse) => {

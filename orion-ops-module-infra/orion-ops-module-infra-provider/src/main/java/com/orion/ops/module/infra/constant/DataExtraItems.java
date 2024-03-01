@@ -11,4 +11,6 @@ public interface DataExtraItems {
 
     String ALIAS = "alias";
 
+    String COLOR = "color";
+
 }

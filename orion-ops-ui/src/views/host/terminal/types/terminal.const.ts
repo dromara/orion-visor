@@ -42,6 +42,12 @@ export const NewConnectionType = {
   LATEST: 'latest'
 };
 
+// 主机额外配置项
+export const ExtraSettingItems = {
+  SSH: 'ssh',
+  COLOR: 'color'
+};
+
 // 主机额外配置 ssh 认证方式
 export const ExtraSshAuthType = {
   // 使用默认认证方式
@@ -318,8 +324,8 @@ export const TransferReceiverType = {
   DOWNLOAD_ERROR: 'downloadError',
 };
 
-// 打开 sshSettingModal key
-export const openSshSettingModalKey = Symbol();
+// 打开 settingModal key
+export const openSettingModalKey = Symbol();
 
 // 打开 sftpCreateModal key
 export const openSftpCreateModalKey = Symbol();
@@ -360,10 +366,14 @@ export const connectStatusKey = 'terminalConnectStatus';
 // 终端类型
 export const terminalEmulationTypeKey = 'terminalEmulationType';
 
+// 终端标签颜色
+export const terminalTabColorKey = 'terminalTabColor';
+
 // 加载的字典值
 export const dictKeys = [
   fontFamilyKey, fontSizeKey,
   fontWeightKey, cursorStyleKey,
   newConnectionTypeKey, extraSshAuthTypeKey,
-  connectStatusKey, terminalEmulationTypeKey
+  connectStatusKey, terminalEmulationTypeKey,
+  terminalTabColorKey
 ];

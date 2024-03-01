@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -81,6 +83,23 @@ public class DataExtraApiImpl implements DataExtraApi {
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
         return dataExtraService.getExtraItemValues(request);
+    }
+
+    @Override
+    public String getExtraItemValueByCache(Long userId, DataExtraTypeEnum type, String item, Long relId) {
+        Valid.allNotNull(userId, type, item, relId);
+        return dataExtraService.getExtraItemValueByCache(userId, type.name(), item, relId);
+    }
+
+    @Override
+    public Map<Long, String> getExtraItemValuesByCache(Long userId, DataExtraTypeEnum type, String item) {
+        Valid.allNotNull(userId, type, item);
+        return dataExtraService.getExtraItemValuesByCache(userId, type.name(), item);
+    }
+
+    @Override
+    public Future<Map<Long, String>> getExtraItemValuesByCacheAsync(Long userId, DataExtraTypeEnum type, String item) {
+        return CompletableFuture.completedFuture(this.getExtraItemValuesByCache(userId, type, item));
     }
 
     @Override

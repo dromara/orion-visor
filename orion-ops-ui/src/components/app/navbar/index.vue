@@ -160,7 +160,7 @@
       </li>
       <!-- 用户信息 -->
       <li>
-        <a-dropdown trigger="click">
+        <a-dropdown trigger="click" position="br">
           <!-- 头像 -->
           <a-avatar draggable="false"
                     :size="32"
@@ -256,10 +256,10 @@
   const localeRef = ref();
 
   // 打开应用设置
-  const openAppSetting = inject<() => void>(openAppSettingKey);
+  const openAppSetting = inject(openAppSettingKey) as () => void;
 
   // 注入收缩菜单
-  const toggleDrawerMenu = inject<() => void>(toggleDrawerMenuKey);
+  const toggleDrawerMenu = inject(toggleDrawerMenuKey) as () => void;
 
   // 切换主题
   const handleToggleTheme = () => {

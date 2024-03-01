@@ -84,6 +84,7 @@ public class WebSockets {
         try {
             Threads.sleep(delay);
             session.sendMessage(new TextMessage(message));
+            log.info("消息重发成功");
             Threads.sleep(delay);
         } catch (Exception ex) {
             throw Exceptions.ioRuntime(ex);

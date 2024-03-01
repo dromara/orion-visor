@@ -157,6 +157,7 @@ export default defineStore('terminal', {
         title: `(${nextSeq})  ${record.alias || record.name}`,
         hostId: record.id,
         address: record.address,
+        color: record.color,
         icon: session.icon,
         type: session.type
       });

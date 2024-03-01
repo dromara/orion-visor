@@ -170,7 +170,6 @@
     margin: 0 !important;
     padding: 0 !important;
     color: var(--color-header-text-1);
-    background: var(--color-bg-header-tabs);
 
     &:hover {
       color: var(--color-header-text-2);
@@ -232,11 +231,10 @@
   }
 
   :deep(.arco-tabs-tab-active) {
-    background: var(--color-bg-header-tabs-active);
     color: var(--color-header-text-2) !important;
 
     .arco-tabs-tab-title {
-      background: var(--color-bg-header-tabs-active);
+      background: var(--color-bg-header-tabs-active) !important;
     }
 
     &:hover::after {

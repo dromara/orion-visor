@@ -21,7 +21,8 @@
                   :key="tab.key">
         <!-- 标题 -->
         <template #title>
-          <span class="tab-title-wrapper">
+          <span class="tab-title-wrapper"
+                :style="{ 'border-bottom': `2px ${tab.color || 'transparent'} solid` }">
             <span class="tab-title-icon">
               <component :is="tab.icon" />
             </span>
@@ -101,8 +102,12 @@
   }
 
   .tab-title-wrapper {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
+    padding: 11px 18px 9px 14px;
+    margin: 0 2px;
 
     .tab-title-icon {
       font-size: 16px;
@@ -214,13 +219,11 @@
     }
 
     .arco-tabs-tab-title {
-      padding: 11px 18px 7px 14px;
       background: var(--color-bg-panel-tabs);
       font-size: 14px;
       height: var(--panel-nav-height);
       display: flex;
       align-items: center;
-      border-bottom: 4px transparent solid;
 
       &::before {
         display: none;
@@ -253,7 +256,7 @@
   }
 
   :deep(.arco-tabs-tab-active) {
-    background: var(--color-bg-panel-tabs-active);
+    background: var(--color-bg-panel-tabs-active) !important;
     color: var(--color-panel-text-2) !important;
 
     .arco-tabs-tab-title {

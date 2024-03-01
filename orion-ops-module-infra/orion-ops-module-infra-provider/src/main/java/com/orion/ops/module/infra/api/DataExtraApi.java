@@ -7,6 +7,7 @@ import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * 数据拓展信息 对外服务类
@@ -68,6 +69,37 @@ public interface DataExtraApi {
      * @return item
      */
     Map<Long, String> getExtraItemValues(DataExtraQueryDTO dto, DataExtraTypeEnum type);
+
+    /**
+     * 查询额外配置项 (查询缓存)
+     *
+     * @param userId userId
+     * @param type   type
+     * @param item   item
+     * @param relId  relId
+     * @return value
+     */
+    String getExtraItemValueByCache(Long userId, DataExtraTypeEnum type, String item, Long relId);
+
+    /**
+     * 查询额外配置项 (查询缓存)
+     *
+     * @param userId userId
+     * @param type   type
+     * @param item   item
+     * @return relId:value
+     */
+    Map<Long, String> getExtraItemValuesByCache(Long userId, DataExtraTypeEnum type, String item);
+
+    /**
+     * 异步查询额外配置项 (查询缓存)
+     *
+     * @param userId userId
+     * @param type   type
+     * @param item   item
+     * @return value
+     */
+    Future<Map<Long, String>> getExtraItemValuesByCacheAsync(Long userId, DataExtraTypeEnum type, String item);
 
     /**
      * 查询额外配置

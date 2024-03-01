@@ -23,6 +23,7 @@ export interface TerminalPanelTabItem extends TerminalTabItem {
   hostId: number;
   address: string;
   type: string;
+  color?: string;
 }
 
 // sidebar 操作类型
@@ -59,11 +60,16 @@ export interface ShortcutKeyItem {
 }
 
 // ssh 额外配置
-export interface SshExtraModel {
+export interface SshExtraSettingModel {
   authType?: string;
   username?: string;
   keyId?: number;
   identityId?: number;
+}
+
+// 颜色 额外配置
+export interface ColorExtraSettingModel {
+  color: string;
 }
 
 // session tab

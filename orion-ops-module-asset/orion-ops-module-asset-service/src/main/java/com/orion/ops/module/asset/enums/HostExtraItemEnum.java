@@ -3,7 +3,9 @@ package com.orion.ops.module.asset.enums;
 import com.orion.ops.framework.common.handler.data.GenericsDataDefinition;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.ops.module.asset.handler.host.extra.model.HostColorExtraModel;
 import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
+import com.orion.ops.module.asset.handler.host.extra.strategy.HostColorExtraStrategy;
 import com.orion.ops.module.asset.handler.host.extra.strategy.HostSshExtraStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +25,11 @@ public enum HostExtraItemEnum implements GenericsDataDefinition {
      * SSH 额外配置
      */
     SSH("ssh", HostSshExtraModel.class, HostSshExtraStrategy.class),
+
+    /**
+     * 颜色额外配置
+     */
+    COLOR("color", HostColorExtraModel.class, HostColorExtraStrategy.class),
 
     ;
 

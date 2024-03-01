@@ -15,9 +15,9 @@ import java.util.concurrent.TimeUnit;
  */
 public interface DataExtraCacheKeyDefine {
 
-    CacheKeyDefine DATA_ALIAS = new CacheKeyBuilder()
-            .key("data:alias:{}:{}")
-            .desc("数据别名 ${userId} ${type}")
+    CacheKeyDefine DATA_EXTRA = new CacheKeyBuilder()
+            .key("data:extra:{}:{}:{}")
+            .desc("数据拓展信息 ${userId} ${type} ${item}")
             .type(String.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(1, TimeUnit.DAYS)
