@@ -12,7 +12,7 @@ public interface OrionOpsProConst {
     /**
      * 同 ${orion.version} 迭代时候需要手动更改
      */
-    String VERSION = "1.0.0-beta.1";
+    String VERSION = "1.0.0";
 
     String GITHUB = "https://github.com/lijiahangmax/orion-ops-pro";
 
