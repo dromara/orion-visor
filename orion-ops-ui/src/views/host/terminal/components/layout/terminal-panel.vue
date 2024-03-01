@@ -107,6 +107,7 @@
     display: flex;
     align-items: center;
     padding: 11px 18px 9px 14px;
+    margin: 0 2px;
 
     .tab-title-icon {
       font-size: 16px;
@@ -255,7 +256,7 @@
   }
 
   :deep(.arco-tabs-tab-active) {
-    background: var(--color-bg-panel-tabs-active);
+    background: var(--color-bg-panel-tabs-active) !important;
     color: var(--color-panel-text-2) !important;
 
     .arco-tabs-tab-title {
