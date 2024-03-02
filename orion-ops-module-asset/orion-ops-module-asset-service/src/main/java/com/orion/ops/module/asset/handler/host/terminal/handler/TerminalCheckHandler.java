@@ -173,7 +173,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         String username = WebSockets.getAttr(channel, ExtraFieldConst.USERNAME);
         // 额外参数
         Map<String, Object> extra = Maps.newMap();
-        extra.put(OperatorLogs.ID, hostId);
+        extra.put(OperatorLogs.HOST_ID, hostId);
         extra.put(OperatorLogs.HOST_NAME, hostName);
         extra.put(OperatorLogs.CONNECT_TYPE, connectType.name());
         extra.put(OperatorLogs.CHANNEL_ID, channel.getId());
@@ -194,6 +194,13 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
                 .token(sessionId)
                 .extra(extra)
                 .build();
+        // 填充其他信息
+        extra.put(OperatorLogs.TRACE_ID, logModel.getTraceId());
+        extra.put(OperatorLogs.ADDRESS, logModel.getAddress());
+        extra.put(OperatorLogs.LOCATION, logModel.getLocation());
+        extra.put(OperatorLogs.USER_AGENT, logModel.getUserAgent());
+        extra.put(OperatorLogs.ERROR_MESSAGE, logModel.getErrorMessage());
+        // 记录连接日志
         hostConnectLogService.create(connectType, connectLog);
     }
 

@@ -38,4 +38,9 @@ public interface ITerminalSession extends SafeCloseable {
      */
     void keepAlive();
 
+    /**
+     * 强制下线
+     */
+    void forceOffline();
+
 }

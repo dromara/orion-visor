@@ -41,9 +41,27 @@ public abstract class TerminalSession implements ITerminalSession {
 
     @Override
     public void close() {
+        // 检查并且关闭
+        if (this.checkAndClose()) {
+            // 修改状态
+            SpringHolder.getBean(HostConnectLogService.class).updateStatusByToken(sessionId, HostConnectStatusEnum.COMPLETE);
+        }
+    }
+
+    @Override
+    public void forceOffline() {
+        this.checkAndClose();
+    }
+
+    /**
+     * 检查并且关闭会话
+     *
+     * @return close
+     */
+    private boolean checkAndClose() {
         log.info("terminal close {}", sessionId);
         if (close) {
-            return;
+            return false;
         }
         this.close = true;
         // 释放资源
@@ -52,8 +70,7 @@ public abstract class TerminalSession implements ITerminalSession {
         } catch (Exception e) {
             log.error("terminal release error {}", sessionId, e);
         }
-        // 修改状态
-        SpringHolder.getBean(HostConnectLogService.class).updateStatusByToken(sessionId, HostConnectStatusEnum.COMPLETE);
+        return true;
     }
 
     @Override

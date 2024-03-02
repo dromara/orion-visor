@@ -23,6 +23,9 @@ import java.util.Date;
 @Schema(name = "HostConnectLogQueryRequest", description = "主机连接日志 查询请求对象")
 public class HostConnectLogQueryRequest extends PageRequest {
 
+    @Schema(description = "id")
+    private Long id;
+
     @Schema(description = "用户id")
     private Long userId;
 

@@ -46,9 +46,6 @@ public class HostConnectLogVO implements Serializable {
     @Schema(description = "类型")
     private String type;
 
-    @Schema(description = "token")
-    private String token;
-
     @Schema(description = "状态")
     private String status;
 
@@ -66,11 +63,5 @@ public class HostConnectLogVO implements Serializable {
 
     @Schema(description = "修改时间")
     private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
 
 }

@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
+import com.orion.lang.utils.ansi.AnsiAppender;
+import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.ssh.shell.ShellExecutor;
@@ -95,6 +97,26 @@ public class SshSession extends TerminalSession implements ISshSession {
     protected void releaseResource() {
         Streams.close(executor);
         Streams.close(sessionStore);
+    }
+
+    @Override
+    public void forceOffline() {
+        if (this.close) {
+            return;
+        }
+        // 发送消息
+        String body = AnsiAppender.create()
+                .newLine()
+                .append(AnsiForeground.BRIGHT_RED, TerminalMessage.FORCED_OFFLINE)
+                .toString();
+        SshOutputResponse resp = SshOutputResponse.builder()
+                .type(OutputTypeEnum.SSH_OUTPUT.getType())
+                .sessionId(sessionId)
+                .body(body)
+                .build();
+        WebSockets.sendText(channel, OutputTypeEnum.SSH_OUTPUT.format(resp));
+        // 强制下线
+        super.forceOffline();
     }
 
     /**
