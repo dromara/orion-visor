@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer class="footer">
-    <a-space direction="vertical" size="medium">
+    <a-space direction="vertical" size="small">
       <a-space size="large">
         <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">官网</a-link> -->
         <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">教程</a-link> -->

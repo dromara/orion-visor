@@ -5,7 +5,7 @@
                   label-align="left"
                   :itemOptions="{ 6: { span: 2 } }"
                   @submit="fetchTableData"
-                  @reset="resetTableData"
+                  @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 连接用户 -->
       <a-form-item field="userId" label="连接用户" label-col-flex="50px">
@@ -58,7 +58,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          主机连接日志 - 用户
+          主机连接日志
         </div>
       </div>
       <!-- 右侧操作 -->
@@ -78,18 +78,20 @@
              :bordered="false">
       <!-- 连接用户 -->
       <template #username="{ record }">
-        {{ record.userId }} - {{ record.username }}
+        {{ record.username }}
       </template>
       <!-- 连接主机 -->
       <template #hostName="{ record }">
-        {{ record.hostId }} - {{ record.hostName }}
-      </template>
-      <!-- 主机地址 -->
-      <template #hostAddress="{ record }">
+        <span class="host-name" :title="record.hostName">
+          {{ record.hostName }}
+        </span>
+        <br>
         <span class="copy-left" title="复制" @click="copy(record.hostAddress)">
           <icon-copy />
         </span>
-        <span>{{ record.hostAddress }}</span>
+        <span class="host-address">
+          {{ record.hostAddress }}
+        </span>
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
@@ -134,7 +136,7 @@
     userId: undefined,
     hostId: undefined,
     hostAddress: undefined,
-    type: HostConnectType.SSH,
+    type: undefined,
     token: undefined,
     status: undefined,
     startTimeRange: undefined,
@@ -155,12 +157,6 @@
     }
   };
 
-  // 重置
-  const resetTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
-    formModel.type = HostConnectType.SSH;
-    doFetchTableData({ page, limit, ...form });
-  };
-
   // 切换页码
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
@@ -173,5 +169,13 @@
 </script>
 
 <style lang="less" scoped>
+  .host-name {
+    color: var(--color-text-2);
+  }
 
+  .host-address {
+    margin-top: 4px;
+    display: inline-block;
+    color: var(--color-text-3);
+  }
 </style>
