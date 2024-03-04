@@ -46,7 +46,7 @@
             </template>
           </a-button>
           <!-- 删除 -->
-          <a-popconfirm :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
@@ -167,7 +167,7 @@
       setLoading(true);
       // 调用删除接口
       await batchDeleteDictValue(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();

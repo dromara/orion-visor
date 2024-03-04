@@ -26,7 +26,7 @@ public class HostConnectLogOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(H, DELETE, "删除主机连接记录 <sb>${count}</sb>条"),
-                new OperatorType(H, CLEAR, "清理主机连接记录 <sb>${count}</sb>条"),
+                new OperatorType(H, CLEAR, "清空主机连接记录 <sb>${count}</sb>条"),
                 new OperatorType(M, FORCE_OFFLINE, "强制下线主机连接 <sb>${hostName}</sb>"),
         };
     }

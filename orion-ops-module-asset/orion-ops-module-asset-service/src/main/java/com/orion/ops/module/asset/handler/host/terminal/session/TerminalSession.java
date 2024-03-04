@@ -28,6 +28,8 @@ public abstract class TerminalSession implements ITerminalSession {
 
     protected volatile boolean close;
 
+    protected volatile boolean forceOffline;
+
     public TerminalSession(String sessionId, WebSocketSession channel, TerminalConfig config) {
         this.sessionId = sessionId;
         this.channel = channel;
@@ -41,6 +43,7 @@ public abstract class TerminalSession implements ITerminalSession {
 
     @Override
     public void close() {
+        log.info("terminal close {}", sessionId);
         // 检查并且关闭
         if (this.checkAndClose()) {
             // 修改状态
@@ -50,6 +53,8 @@ public abstract class TerminalSession implements ITerminalSession {
 
     @Override
     public void forceOffline() {
+        log.info("terminal forceOffline {}", sessionId);
+        this.forceOffline = true;
         this.checkAndClose();
     }
 
@@ -59,7 +64,6 @@ public abstract class TerminalSession implements ITerminalSession {
      * @return close
      */
     private boolean checkAndClose() {
-        log.info("terminal close {}", sessionId);
         if (close) {
             return false;
         }

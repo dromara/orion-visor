@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 主机连接日志 视图响应对象
@@ -56,12 +57,6 @@ public class HostConnectLogVO implements Serializable {
     private Date endTime;
 
     @Schema(description = "额外信息")
-    private String extraInfo;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
+    private Map<String, Object> extra;
 
 }

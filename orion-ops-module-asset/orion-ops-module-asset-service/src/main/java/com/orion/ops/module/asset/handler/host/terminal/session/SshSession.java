@@ -1,7 +1,5 @@
 package com.orion.ops.module.asset.handler.host.terminal.session;
 
-import com.orion.lang.utils.ansi.AnsiAppender;
-import com.orion.lang.utils.ansi.style.color.AnsiForeground;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.ssh.shell.ShellExecutor;
@@ -99,26 +97,6 @@ public class SshSession extends TerminalSession implements ISshSession {
         Streams.close(sessionStore);
     }
 
-    @Override
-    public void forceOffline() {
-        if (this.close) {
-            return;
-        }
-        // 发送消息
-        String body = AnsiAppender.create()
-                .newLine()
-                .append(AnsiForeground.BRIGHT_RED, TerminalMessage.FORCED_OFFLINE)
-                .toString();
-        SshOutputResponse resp = SshOutputResponse.builder()
-                .type(OutputTypeEnum.SSH_OUTPUT.getType())
-                .sessionId(sessionId)
-                .body(body)
-                .build();
-        WebSockets.sendText(channel, OutputTypeEnum.SSH_OUTPUT.format(resp));
-        // 强制下线
-        super.forceOffline();
-    }
-
     /**
      * 标准输出处理
      *
@@ -148,12 +126,12 @@ public class SshSession extends TerminalSession implements ISshSession {
      * eof 回调
      */
     private void eofCallback() {
-        log.info("terminal eof回调 {}, forClose: {}", sessionId, this.close);
+        log.info("terminal eof回调 {}, forClose: {}, forceOffline: {}", sessionId, this.close, this.forceOffline);
         // 发送关闭信息
         TerminalCloseResponse resp = TerminalCloseResponse.builder()
                 .type(OutputTypeEnum.CLOSE.getType())
                 .sessionId(this.sessionId)
-                .msg(TerminalMessage.CLOSED_CONNECTION)
+                .msg(this.forceOffline ? TerminalMessage.FORCED_OFFLINE : TerminalMessage.CLOSED_CONNECTION)
                 .build();
         WebSockets.sendText(channel, OutputTypeEnum.CLOSE.format(resp));
         // 需要调用关闭 - 可能是 logout 需要手动触发

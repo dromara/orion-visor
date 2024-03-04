@@ -78,7 +78,7 @@ public interface HostConnectLogService {
     Long getHostConnectLogCount(HostConnectLogQueryRequest request);
 
     /**
-     * 清理主机连接日志
+     * 清空主机连接日志
      *
      * @param request request
      * @return effect

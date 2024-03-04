@@ -3,12 +3,12 @@ import { dateFormat } from '@/utils';
 
 const columns = [
   {
-    title: 'id',
-    dataIndex: 'id',
-    slotName: 'id',
-    width: 70,
+    title: '连接地址',
+    dataIndex: 'address',
+    slotName: 'address',
+    width: 156,
     align: 'left',
-    fixed: 'left',
+    ellipsis: true,
   }, {
     title: '连接用户',
     dataIndex: 'username',
@@ -16,7 +16,6 @@ const columns = [
     width: 180,
     align: 'left',
     ellipsis: true,
-    tooltip: true,
   }, {
     title: '连接主机',
     dataIndex: 'hostName',
@@ -34,7 +33,7 @@ const columns = [
     dataIndex: 'status',
     slotName: 'status',
     align: 'left',
-    width: 96,
+    width: 106,
   }, {
     title: '连接时间',
     dataIndex: 'connectTime',
@@ -50,7 +49,7 @@ const columns = [
     title: '操作',
     slotName: 'handle',
     width: 180,
-    align: 'center',
+    align: 'left',
     fixed: 'right',
   },
 ] as TableColumnData[];

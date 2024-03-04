@@ -71,7 +71,11 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
         // 查询
         return hostConnectLogDAO.of(wrapper)
                 .page(request)
-                .dataGrid(HostConnectLogConvert.MAPPER::to);
+                .dataGrid(s -> {
+                    HostConnectLogVO vo = HostConnectLogConvert.MAPPER.to(s);
+                    vo.setExtra(JSON.parseObject(s.getExtraInfo()));
+                    return vo;
+                });
     }
 
     @Override
@@ -97,7 +101,6 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
 
     @Override
     public Integer deleteHostConnectLog(List<Long> idList) {
-        // TODO 测试一下参数
         log.info("HostConnectLogService.deleteHostConnectLog start {}", JSON.toJSONString(idList));
         int effect = hostConnectLogDAO.deleteBatchIds(idList);
         log.info("HostConnectLogService.deleteHostConnectLog finish {}", effect);
