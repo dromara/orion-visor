@@ -28,7 +28,7 @@
       <a-tab-pane key="operatorLog"
                   v-if="!user || hasPermission('infra:operator-log:query')"
                   title="操作日志">
-        <operator-log-list :user="user" />
+        <user-operator-log :user="user" />
       </a-tab-pane>
       <!-- 返回 -->
       <a-tab-pane key="back" v-if="userId">
@@ -48,14 +48,15 @@
 </script>
 
 <script lang="ts" setup>
-  import UserSession from './components/user-session.vue';
-  import OperatorLogList from './components/operator-log-list.vue';
+  import type { UserQueryResponse } from '@/api/user/user';
   import { useRoute, useRouter } from 'vue-router';
-  import { onBeforeMount, ref } from 'vue';
   import usePermission from '@/hooks/permission';
+  import { onBeforeMount, ref } from 'vue';
   import { useUserStore } from '@/store';
-  import { getUser, UserQueryResponse } from '@/api/user/user';
+  import { getUser } from '@/api/user/user';
   import UserBaseInfo from './components/user-base-info.vue';
+  import UserSession from './components/user-session.vue';
+  import UserOperatorLog from './components/user-operator-log.vue';
   import LoginHistory from './components/login-history.vue';
 
   const route = useRoute();
