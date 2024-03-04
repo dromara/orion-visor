@@ -3,13 +3,6 @@ import { dateFormat } from '@/utils';
 
 const columns = [
   {
-    title: 'id',
-    dataIndex: 'id',
-    slotName: 'id',
-    width: 70,
-    align: 'left',
-    fixed: 'left',
-  }, {
     title: '操作用户',
     dataIndex: 'username',
     slotName: 'username',
@@ -20,16 +13,7 @@ const columns = [
     title: '操作模块',
     dataIndex: 'module',
     slotName: 'module',
-    width: 120,
-    ellipsis: true,
-    tooltip: true,
-  }, {
-    title: '操作类型',
-    dataIndex: 'type',
-    slotName: 'type',
-    width: 150,
-    ellipsis: true,
-    tooltip: true,
+    width: 214,
   }, {
     title: '风险等级',
     dataIndex: 'riskLevel',
@@ -61,7 +45,7 @@ const columns = [
     title: '操作',
     dataIndex: 'handle',
     slotName: 'handle',
-    width: 90,
+    width: 138,
     align: 'center',
     fixed: 'right',
   },

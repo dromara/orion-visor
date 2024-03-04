@@ -32,7 +32,20 @@ export interface HostConnectLogQueryResponse extends TableData {
   status: string;
   startTime: number;
   endTime: number;
-  extra: Record<string, any>;
+  extra: HostConnectLogExtra;
+}
+
+/**
+ * 主机连接日志拓展对象
+ */
+export interface HostConnectLogExtra {
+  traceId: string;
+  channelId: string;
+  sessionId: string;
+  address: string;
+  location: string;
+  userAgent: string;
+  errorMessage: string;
 }
 
 /**

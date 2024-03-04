@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="主机连接日志详情"
-            :width="420"
+            :width="428"
             :mask-closable="false"
             :unmount-on-close="true"
             ok-text="关闭"
@@ -49,6 +49,10 @@
       <a-descriptions-item label="userAgent">
         {{ record.extra?.userAgent }}
       </a-descriptions-item>
+      <!-- 错误信息 -->
+      <a-descriptions-item v-if="record.extra?.errorMessage" label="错误信息">
+        {{ record.extra?.errorMessage }}
+      </a-descriptions-item>
       <!-- 开始时间 -->
       <a-descriptions-item label="开始时间">
         {{ dateFormat(new Date(record.startTime)) }}
@@ -56,6 +60,18 @@
       <!-- 结束时间 -->
       <a-descriptions-item label="结束时间">
         {{ dateFormat(new Date(record.endTime)) }}
+      </a-descriptions-item>
+      <!-- traceId -->
+      <a-descriptions-item label="traceId">
+        {{ record.extra?.traceId }}
+      </a-descriptions-item>
+      <!-- channelId -->
+      <a-descriptions-item label="channelId">
+        {{ record.extra?.channelId }}
+      </a-descriptions-item>
+      <!-- sessionId -->
+      <a-descriptions-item label="sessionId">
+        {{ record.extra?.sessionId }}
       </a-descriptions-item>
     </a-descriptions>
   </a-drawer>

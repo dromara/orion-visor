@@ -8,6 +8,7 @@ import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -40,9 +41,10 @@ public interface HostConnectLogService {
      *
      * @param token  token
      * @param status status
+     * @param extra  extra
      * @return effect
      */
-    Integer updateStatusByToken(String token, HostConnectStatusEnum status);
+    Integer updateStatusByToken(String token, HostConnectStatusEnum status, Map<String, Object> extra);
 
     /**
      * 查询用户最近连接的主机

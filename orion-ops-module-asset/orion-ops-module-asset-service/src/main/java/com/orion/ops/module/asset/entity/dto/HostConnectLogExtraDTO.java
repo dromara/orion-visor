@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Schema(name = "HostConnectLogExtraDTO", description = "主机连接日志推展信息对象")
 public class HostConnectLogExtraDTO {
 
-    @Schema(description = "主机 id")
+    @Schema(description = "hostId")
     private Long hostId;
 
     @Schema(description = "主机名称")
@@ -29,14 +29,14 @@ public class HostConnectLogExtraDTO {
     @Schema(description = "连接类型")
     private String connectType;
 
+    @Schema(description = "traceId")
+    private String traceId;
+
     @Schema(description = "channelId")
     private String channelId;
 
     @Schema(description = "sessionId")
     private String sessionId;
-
-    @Schema(description = "traceId")
-    private String traceId;
 
     @Schema(description = "请求地址")
     private String address;

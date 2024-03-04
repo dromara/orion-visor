@@ -5,9 +5,11 @@ import com.orion.lang.exception.ConnectionRuntimeException;
 import com.orion.lang.exception.TimeoutException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * 连接主机处理器
@@ -74,7 +77,9 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         } catch (Exception e) {
             ex = e;
             // 修改连接状态为失败
-            hostConnectLogService.updateStatusByToken(sessionId, HostConnectStatusEnum.FAILED);
+            Map<String, Object> extra = Maps.newMap(4);
+            extra.put(ExtraFieldConst.ERROR_MESSAGE, this.getConnectErrorMessage(e));
+            hostConnectLogService.updateStatusByToken(sessionId, HostConnectStatusEnum.FAILED, extra);
         }
         // 返回连接状态
         this.send(channel,

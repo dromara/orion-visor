@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.entity.vo;
 
+import com.orion.ops.module.asset.entity.dto.HostConnectLogExtraDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * 主机连接日志 视图响应对象
@@ -57,6 +57,6 @@ public class HostConnectLogVO implements Serializable {
     private Date endTime;
 
     @Schema(description = "额外信息")
-    private Map<String, Object> extra;
+    private HostConnectLogExtraDTO extra;
 
 }

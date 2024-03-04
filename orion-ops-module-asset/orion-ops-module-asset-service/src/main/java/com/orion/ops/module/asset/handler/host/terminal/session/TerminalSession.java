@@ -47,7 +47,8 @@ public abstract class TerminalSession implements ITerminalSession {
         // 检查并且关闭
         if (this.checkAndClose()) {
             // 修改状态
-            SpringHolder.getBean(HostConnectLogService.class).updateStatusByToken(sessionId, HostConnectStatusEnum.COMPLETE);
+            SpringHolder.getBean(HostConnectLogService.class)
+                    .updateStatusByToken(sessionId, HostConnectStatusEnum.COMPLETE, null);
         }
     }
 
