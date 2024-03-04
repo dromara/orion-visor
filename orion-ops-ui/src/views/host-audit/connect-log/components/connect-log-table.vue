@@ -89,7 +89,6 @@
     </template>
     <!-- table -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
              :loading="loading"
              v-model:selected-keys="selectedKeys"

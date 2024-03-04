@@ -33,6 +33,13 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
+    title: '操作地址',
+    dataIndex: 'address',
+    slotName: 'address',
+    width: 156,
+    align: 'left',
+    ellipsis: true,
+  }, {
     title: '操作时间',
     dataIndex: 'createTime',
     slotName: 'createTime',

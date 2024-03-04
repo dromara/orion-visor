@@ -12,6 +12,8 @@
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
                              v-model:selected-files="selectFiles"
+                             :is-close="closed"
+                             :close-message="closeMessage"
                              :current-path="currentPath"
                              :session="session"
                              @load-file="loadFiles"
@@ -89,6 +91,8 @@
   const fileList = ref<Array<SftpFile>>([]);
   const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
+  const closed = ref(false);
+  const closeMessage = ref('');
   const editorView = ref(false);
   const editorRef = ref();
   const editorFileName = ref('');
@@ -184,6 +188,14 @@
     return success;
   };
 
+  // 关闭回调
+  const onClose = (forceClose: string, msg: string) => {
+    console.log(forceClose);
+    console.log(msg);
+    closed.value = true;
+    closeMessage.value = msg;
+  };
+
   // 接收列表回调
   const resolveList = (result: string, path: string, list: Array<SftpFile>) => {
     setTableLoading(false);
@@ -240,6 +252,7 @@
     session.value = await sessionManager.openSftp(props.tab, {
       setLoading: setTableLoading,
       connectCallback,
+      onClose,
       resolveList,
       resolveSftpMkdir: resolveFileAction,
       resolveSftpTouch: resolveFileAction,

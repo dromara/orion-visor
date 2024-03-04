@@ -4,6 +4,7 @@ import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.ssh.shell.ShellExecutor;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
@@ -53,7 +54,7 @@ public class SshSession extends TerminalSession implements ISshSession {
         executor.size(cols, rows);
         executor.terminalType(terminalType);
         executor.streamHandler(this::streamHandler);
-        executor.callback(this::eofCallback);
+        executor.callback(this::close);
         executor.connect();
         // 开始监听输出
         AssetThreadPools.TERMINAL_STDOUT.execute(executor);
@@ -120,22 +121,6 @@ public class SshSession extends TerminalSession implements ISshSession {
         } catch (IOException ex) {
             log.error("terminal 读取流失败", ex);
         }
-    }
-
-    /**
-     * eof 回调
-     */
-    private void eofCallback() {
-        log.info("terminal eof回调 {}, forClose: {}, forceOffline: {}", sessionId, this.close, this.forceOffline);
-        // 发送关闭信息
-        TerminalCloseResponse resp = TerminalCloseResponse.builder()
-                .type(OutputTypeEnum.CLOSE.getType())
-                .sessionId(this.sessionId)
-                .msg(this.forceOffline ? TerminalMessage.FORCED_OFFLINE : TerminalMessage.CLOSED_CONNECTION)
-                .build();
-        WebSockets.sendText(channel, OutputTypeEnum.CLOSE.format(resp));
-        // 需要调用关闭 - 可能是 logout 需要手动触发
-        this.close();
     }
 
 }

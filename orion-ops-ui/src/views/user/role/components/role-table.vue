@@ -50,7 +50,6 @@
     </template>
     <!-- table -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
              :loading="loading"
              :columns="columns"

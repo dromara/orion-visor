@@ -94,7 +94,7 @@ export const OutputProtocol = {
   // 主机连接关闭
   CLOSE: {
     type: 'cl',
-    template: ['type', 'sessionId', 'msg'],
+    template: ['type', 'sessionId', 'forceClose', 'msg'],
     processMethod: 'processClose'
   },
   // pong

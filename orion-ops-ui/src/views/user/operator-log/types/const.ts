@@ -19,7 +19,7 @@ export const getLogDetail = (record: OperatorLogQueryResponse): Record<string, a
     detail.duration = `${record.duration} ms`;
     detail.startTime = dateFormat(new Date(record.startTime));
     detail.endTime = dateFormat(new Date(record.endTime));
-    detail.extra = record?.extra;
+    detail.extra = JSON.parse(record?.extra);
     detail.returnValue = JSON.parse(record?.returnValue);
     return detail;
   } catch (e) {

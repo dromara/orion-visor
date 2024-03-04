@@ -28,7 +28,7 @@ public enum OutputTypeEnum {
     /**
      * 关闭连接
      */
-    CLOSE("cl", "${type}|${sessionId}|${msg}"),
+    CLOSE("cl", "${type}|${sessionId}|${forceClose}|${msg}"),
 
     /**
      * pong

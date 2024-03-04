@@ -46,7 +46,6 @@
     </template>
     <!-- 表格 -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
              :loading="loading"
              v-model:selected-keys="selectedKeys"
@@ -79,6 +78,19 @@
       <template #originLogInfo="{ record }">
         <icon-copy class="copy-left" @click="copy(record.originLogInfo, '已复制')" />
         <span v-html="replaceHtmlTag(record.logInfo)" />
+      </template>
+      <!-- 操作地址 -->
+      <template #address="{ record }">
+        <span class="operator-location" :title="record.location">
+          {{ record.location }}
+        </span>
+        <br>
+        <span class="copy-left" title="复制" @click="copy(record.address)">
+          <icon-copy />
+        </span>
+        <span class="operator-address" :title="record.address">
+          {{ record.address }}
+        </span>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
@@ -220,5 +232,13 @@
 </script>
 
 <style lang="less" scoped>
+  .operator-location {
+    color: var(--color-text-2);
+  }
 
+  .operator-address {
+    margin-top: 4px;
+    display: inline-block;
+    color: var(--color-text-3);
+  }
 </style>

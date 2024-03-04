@@ -50,11 +50,7 @@ public class OperatorLogServiceImpl implements OperatorLogService {
         // 查询
         return operatorLogDAO.of(wrapper)
                 .page(request)
-                .dataGrid(s -> {
-                    OperatorLogVO vo = OperatorLogConvert.MAPPER.to(s);
-                    vo.setExtra(JSON.parseObject(s.getExtra()));
-                    return vo;
-                });
+                .dataGrid(OperatorLogConvert.MAPPER::to);
     }
 
     @Override

@@ -23,6 +23,9 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "TerminalCloseResponse", description = "主机连接关闭响应 实体对象")
 public class TerminalCloseResponse extends TerminalBasePayload {
 
+    @Schema(description = "是否为强制关闭")
+    private Integer forceClose;
+
     @Schema(description = "关闭信息")
     private String msg;
 

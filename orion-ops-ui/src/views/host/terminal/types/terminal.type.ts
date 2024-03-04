@@ -347,6 +347,8 @@ export interface ISftpSessionResolver {
   setLoading: (loading: boolean) => void;
   // 连接后回调
   connectCallback: () => void;
+  // 关闭回调
+  onClose: (forceClose: string, msg: string) => void;
   // 接受文件列表响应
   resolveList: (result: string, path: string, list: Array<SftpFile>) => void;
   // 接收创建文件夹响应

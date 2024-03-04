@@ -85,12 +85,25 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
         HostConnectLogDO record = hostConnectLogDAO.of()
                 .createWrapper()
                 .eq(HostConnectLogDO::getToken, token)
+                .orderByDesc(HostConnectLogDO::getId)
                 .then()
                 .getOne();
         if (record == null) {
             log.info("HostConnectLogService-updateStatusByToken no record token: {}", token);
             return Const.N_0;
         }
+        return this.updateStatus(record, status, partial);
+    }
+
+    /**
+     * 更新状态
+     *
+     * @param record  record
+     * @param status  status
+     * @param partial partial
+     * @return effect
+     */
+    private int updateStatus(HostConnectLogDO record, HostConnectStatusEnum status, Map<String, Object> partial) {
         // 更新
         HostConnectLogDO update = new HostConnectLogDO();
         update.setId(record.getId());
@@ -151,20 +164,20 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     public Integer forceOffline(HostConnectLogQueryRequest request) {
         Long id = request.getId();
         // 查询数据是否存在
-        HostConnectLogDO connect = hostConnectLogDAO.selectById(id);
-        Valid.notNull(connect, ErrorMessage.LOG_ABSENT);
-        Valid.eq(connect.getStatus(), HostConnectStatusEnum.CONNECTING.name(), ErrorMessage.ILLEGAL_STATUS);
+        HostConnectLogDO record = hostConnectLogDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.LOG_ABSENT);
+        Valid.eq(record.getStatus(), HostConnectStatusEnum.CONNECTING.name(), ErrorMessage.ILLEGAL_STATUS);
         // 设置日志参数
-        OperatorLogs.add(OperatorLogs.HOST_NAME, connect.getHostName());
+        OperatorLogs.add(OperatorLogs.HOST_NAME, record.getHostName());
         // 获取会话
-        HostConnectLogExtraDTO extra = JSON.parseObject(connect.getExtraInfo(), HostConnectLogExtraDTO.class);
+        HostConnectLogExtraDTO extra = JSON.parseObject(record.getExtraInfo(), HostConnectLogExtraDTO.class);
         ITerminalSession session = terminalManager.getSession(extra.getChannelId(), extra.getSessionId());
         if (session != null) {
             // 关闭会话
             session.forceOffline();
         }
         // 更新状态
-        return this.updateStatusByToken(connect.getToken(), HostConnectStatusEnum.FORCE_OFFLINE, null);
+        return this.updateStatus(record, HostConnectStatusEnum.FORCE_OFFLINE, null);
     }
 
     /**

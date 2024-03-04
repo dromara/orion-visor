@@ -33,7 +33,6 @@
                     :allow-search="true"
                     :filter-option="labelFilter"
                     placeholder="请选择操作模块"
-                    @change="m => selectedModule(m as string)"
                     allow-clear />
         </a-form-item>
         <!-- 操作类型 -->
@@ -81,7 +80,7 @@
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface';
   import type { OperatorLogQueryRequest } from '@/api/user/operator-log';
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { getOperatorLogCount, clearOperatorLog } from '@/api/user/operator-log';
@@ -123,8 +122,8 @@
 
   defineExpose({ open });
 
-  // 选择类型
-  const selectedModule = (module: string) => {
+  // 监听类型变化
+  watch(() => formModel.value.module, (module: string | undefined) => {
     if (!module) {
       // 不选择则重置 options
       typeOptions.value = toOptions(operatorLogTypeKey);
@@ -138,7 +137,7 @@
     if (formModel.value.type && !formModel.value.type.startsWith(modulePrefix)) {
       formModel.value.type = undefined;
     }
-  };
+  });
 
   // 确定
   const handlerOk = async () => {

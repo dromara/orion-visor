@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * 操作日志 视图响应对象
@@ -60,7 +59,7 @@ public class OperatorLogVO implements Serializable {
     private String logInfo;
 
     @Schema(description = "参数")
-    private Map<String, Object> extra;
+    private String extra;
 
     @Schema(description = "操作结果 0失败 1成功")
     private Integer result;
