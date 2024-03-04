@@ -59,14 +59,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { UserQueryResponse } from '@/api/user/user';
-  import type { LoginHistoryQueryResponse } from '@/api/user/operator-log';
+  import type { UserQueryResponse, LoginHistoryQueryResponse } from '@/api/user/user';
   import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { ref, onBeforeMount } from 'vue';
   import { ResultStatus } from '../types/const';
   import { getCurrentLoginHistory } from '@/api/user/mine';
-  import { getLoginHistory } from '@/api/user/operator-log';
+  import { getLoginHistory } from '@/api/user/user';
   import { dateFormat } from '@/utils';
   import { isMobile } from '@/utils/is';
 

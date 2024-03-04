@@ -1,0 +1,12 @@
+### 分页查询 SFTP 操作日志
+POST {{baseUrl}}/asset/sftp-log/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10
+}
+
+
+###

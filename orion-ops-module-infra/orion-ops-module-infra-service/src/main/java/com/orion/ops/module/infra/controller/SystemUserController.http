@@ -67,4 +67,10 @@ DELETE {{baseUrl}}/infra/system-user/delete?id=1
 Authorization: {{token}}
 
 
+### 查询登录日志
+GET {{baseUrl}}/infra/system-user/login-history?username=admin
+Content-Type: application/json
+Authorization: {{token}}
+
+
 ###

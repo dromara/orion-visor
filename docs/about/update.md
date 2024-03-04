@@ -5,7 +5,8 @@
 > sql 脚本
 
 ```sql
-
+ALTER TABLE `operator_log` 
+ADD INDEX `idx_type`(`type`);
 ```
 
 ## v1.0.0

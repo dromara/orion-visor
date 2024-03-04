@@ -1,8 +1,11 @@
 package com.orion.ops.module.asset.define.operator;
 
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.annotation.Module;
 import com.orion.ops.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
+
+import java.util.List;
 
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
@@ -35,6 +38,18 @@ public class HostTerminalOperatorType extends InitializingOperatorTypes {
     public static final String SFTP_UPLOAD = "host-terminal:sftp-upload";
 
     public static final String SFTP_DOWNLOAD = "host-terminal:sftp-download";
+
+    public static final List<String> SFTP_TYPES = Lists.of(
+            SFTP_MKDIR,
+            SFTP_TOUCH,
+            SFTP_MOVE,
+            SFTP_REMOVE,
+            SFTP_TRUNCATE,
+            SFTP_CHMOD,
+            SFTP_SET_CONTENT,
+            SFTP_UPLOAD,
+            SFTP_DOWNLOAD
+    );
 
     @Override
     public OperatorType[] types() {

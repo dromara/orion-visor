@@ -8,7 +8,6 @@ import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.OperatorLogOperatorType;
 import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryRequest;
-import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import com.orion.ops.module.infra.service.OperatorLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,14 +69,6 @@ public class OperatorLogController {
     @PreAuthorize("@ss.hasPermission('infra:operator-log:clear')")
     public Integer clearOperatorLog(@RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.clearOperatorLog(request);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/login-history")
-    @Operation(summary = "查询用户登录日志")
-    @PreAuthorize("@ss.hasPermission('infra:system-user:login-history')")
-    public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username) {
-        return operatorLogService.getLoginHistory(username);
     }
 
 }

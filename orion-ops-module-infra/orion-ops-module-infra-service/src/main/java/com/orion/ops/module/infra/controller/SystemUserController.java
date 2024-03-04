@@ -10,8 +10,10 @@ import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.define.operator.SystemUserOperatorType;
 import com.orion.ops.module.infra.entity.request.user.*;
+import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.SystemUserVO;
 import com.orion.ops.module.infra.entity.vo.UserSessionVO;
+import com.orion.ops.module.infra.service.OperatorLogService;
 import com.orion.ops.module.infra.service.SystemUserManagementService;
 import com.orion.ops.module.infra.service.SystemUserRoleService;
 import com.orion.ops.module.infra.service.SystemUserService;
@@ -50,6 +52,9 @@ public class SystemUserController {
 
     @Resource
     private SystemUserManagementService systemUserManagementService;
+
+    @Resource
+    private OperatorLogService operatorLogService;
 
     @OperatorLog(SystemUserOperatorType.CREATE)
     @PostMapping("/create")
@@ -159,5 +164,12 @@ public class SystemUserController {
         return HttpWrapper.ok();
     }
 
-}
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/login-history")
+    @Operation(summary = "查询用户登录日志")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:login-history')")
+    public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username) {
+        return operatorLogService.getLoginHistory(username);
+    }
 
+}
