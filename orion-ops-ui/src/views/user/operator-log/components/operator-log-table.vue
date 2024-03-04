@@ -2,7 +2,6 @@
   <a-table row-key="id"
            class="table-wrapper-8"
            ref="tableRef"
-           label-align="left"
            :loading="loading"
            :columns="tableColumns"
            :data="tableRenderData"
@@ -39,7 +38,9 @@
     <template #handle="{ record }">
       <div class="table-handle-wrapper">
         <!-- 详情 -->
-        <a-button type="text" size="mini" @click="viewDetail(record)">
+        <a-button type="text"
+                  size="mini"
+                  @click="viewDetail(record)">
           详情
         </a-button>
       </div>

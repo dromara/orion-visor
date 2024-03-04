@@ -6,7 +6,6 @@
     <!-- 主机秘钥表格 -->
     <a-table row-key="id"
              class="host-key-main-table"
-             label-align="left"
              :columns="hostKeyColumns"
              v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"

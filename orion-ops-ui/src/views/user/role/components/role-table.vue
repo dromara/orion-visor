@@ -2,10 +2,10 @@
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
-                    label-align="left"
-                    @submit="fetchTableData"
-                    @reset="fetchTableData"
-                    @keyup.enter="() => fetchTableData()">
+                  label-align="left"
+                  @submit="fetchTableData"
+                  @reset="fetchTableData"
+                  @keyup.enter="() => fetchTableData()">
       <!-- 角色名称 -->
       <a-form-item field="name" label="角色名称" label-col-flex="50px">
         <a-input v-model="formModel.name" placeholder="请输入角色名称" allow-clear />
@@ -52,7 +52,6 @@
     <a-table row-key="id"
              class="table-wrapper-8"
              ref="tableRef"
-             label-align="left"
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"

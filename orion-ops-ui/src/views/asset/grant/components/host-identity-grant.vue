@@ -6,7 +6,6 @@
     <!-- 主机身份表格 -->
     <a-table row-key="id"
              class="host-identity-main-table"
-             label-align="left"
              :columns="hostIdentityColumns"
              v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"

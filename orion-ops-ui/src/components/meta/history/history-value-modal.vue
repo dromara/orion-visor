@@ -31,7 +31,6 @@
       <a-table row-key="id"
                class="table-wrapper-8"
                ref="tableRef"
-               label-align="left"
                :loading="loading"
                :columns="columns"
                :data="tableRenderData"

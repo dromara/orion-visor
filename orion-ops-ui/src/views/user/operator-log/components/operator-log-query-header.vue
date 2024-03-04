@@ -1,10 +1,10 @@
 <template>
   <query-header :model="formModel"
-                  label-align="left"
-                  :itemOptions="{ [visibleUser ? 5 : 4]: { span: 2 } }"
-                  @submit="submit"
-                  @reset="submit"
-                  @keyup.enter="submit">
+                label-align="left"
+                :itemOptions="{ [visibleUser ? 5 : 4]: { span: 2 } }"
+                @submit="submit"
+                @reset="submit"
+                @keyup.enter="submit">
     <!-- 操作用户 -->
     <a-form-item v-if="visibleUser"
                  field="userId"
