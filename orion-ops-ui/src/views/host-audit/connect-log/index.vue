@@ -12,14 +12,12 @@
 </script>
 
 <script lang="ts" setup>
-  import ConnectLogTable from './components/connect-log-table.vue';
   import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import ConnectLogTable from './components/connect-log-table.vue';
 
   const render = ref(false);
-  const table = ref();
-  const modal = ref();
 
   // 加载字典配置
   onBeforeMount(async () => {

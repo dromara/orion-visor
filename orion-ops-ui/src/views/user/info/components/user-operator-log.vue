@@ -18,20 +18,16 @@
         </div>
       </template>
       <!-- 表格组件 -->
-      <operator-log-table ref="table"
-                          :visible-user="false"
-                          :current="!user"
-                          :base-params="{userId: user?.id}"
-                          @viewDetail="(e) => view.open(e)" />
+      <operator-log-simple-table ref="table"
+                                 :current="!user"
+                                 :base-params="{ userId: user?.id }" />
     </a-card>
-    <!-- json 查看器模态框 -->
-    <json-editor-modal ref="view" />
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'operatorLogList'
+    name: 'userOperatorLog'
   };
 </script>
 
@@ -40,10 +36,9 @@
   import type { PropType } from 'vue';
   import { ref, onBeforeMount } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
-  import { dictKeys } from '../../operator-log/types/const';
-  import OperatorLogQueryHeader from '../../operator-log/components/operator-log-query-header.vue';
-  import OperatorLogTable from '../../operator-log/components/operator-log-table.vue';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
+  import { dictKeys } from '@/views/user/operator-log/types/const';
+  import OperatorLogQueryHeader from '@/views/user/operator-log/components/operator-log-query-header.vue';
+  import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
 
   const props = defineProps({
     user: Object as PropType<UserQueryResponse>,
@@ -53,7 +48,6 @@
 
   const render = ref();
   const table = ref();
-  const view = ref();
 
   onBeforeMount(async () => {
     // 加载字典值

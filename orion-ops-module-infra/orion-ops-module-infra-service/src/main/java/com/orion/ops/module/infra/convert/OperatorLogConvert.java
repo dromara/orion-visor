@@ -6,6 +6,7 @@ import com.orion.ops.module.infra.entity.request.operator.OperatorLogQueryReques
 import com.orion.ops.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.ops.module.infra.entity.vo.OperatorLogVO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -24,6 +25,7 @@ public interface OperatorLogConvert {
 
     OperatorLogDO to(OperatorLogQueryRequest request);
 
+    @Mapping(target = "extra", ignore = true)
     OperatorLogVO to(OperatorLogDO domain);
 
     LoginHistoryVO toLoginHistory(OperatorLogDO domain);

@@ -174,12 +174,12 @@
         </div>
       </template>
     </a-table>
-    <!-- 清空模态框 -->
-    <connect-log-clear-modal ref="clearModal"
-                             @clear="fetchTableData" />
-    <!-- 详情模态框 -->
-    <connect-log-detail-drawer ref="detailModal" />
   </a-card>
+  <!-- 清空模态框 -->
+  <connect-log-clear-modal ref="clearModal"
+                           @clear="fetchTableData" />
+  <!-- 详情模态框 -->
+  <connect-log-detail-drawer ref="detailModal" />
 </template>
 
 <script lang="ts">
