@@ -16,6 +16,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.ops.module.infra.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
@@ -39,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +52,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+
+    @Resource
+    private AppAuthenticationConfig appAuthenticationConfig;
 
     @Resource
     private SystemUserDAO systemUserDAO;
@@ -95,7 +100,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String userAgent = Servlets.getUserAgent(servletRequest);
         long current = System.currentTimeMillis();
         // 不允许多端登录
-        if (!allowMultiDevice) {
+        if (!appAuthenticationConfig.getAllowMultiDevice()) {
             // 无效化其他缓存
             this.invalidOtherDeviceToken(user.getId(), current, remoteAddr, location, userAgent);
         }
@@ -157,7 +162,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return JSON.parseObject(loginCache, LoginTokenDTO.class);
         }
         // loginToken 不存在 需要查询 refreshToken
-        if (!allowRefresh) {
+        if (!appAuthenticationConfig.getAllowRefresh()) {
             return null;
         }
         String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(pair.getKey(), pair.getValue());
@@ -172,7 +177,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         refresh.setRefreshCount(refreshCount);
         // 设置登录缓存
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, refresh);
-        if (refreshCount < maxRefreshCount) {
+        if (refreshCount < appAuthenticationConfig.getMaxRefreshCount()) {
             // 小于续签最大次数 则再次设置 refreshToken
             RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, refresh);
         } else {
@@ -214,7 +219,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 检查登录失败次数
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         String failedCount = redisTemplate.opsForValue().get(failedCountKey);
-        if (failedCount != null && Integer.parseInt(failedCount) >= maxFailedLoginCount) {
+        if (failedCount != null
+                && Integer.parseInt(failedCount) >= appAuthenticationConfig.getLoginFailedLockCount()) {
             throw Exceptions.argument(ErrorMessage.MAX_LOGIN_FAILED);
         }
     }
@@ -235,23 +241,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 刷新登录失败缓存
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         Long failedLoginCount = redisTemplate.opsForValue().increment(failedCountKey);
-        RedisUtils.setExpire(failedCountKey, UserCacheKeyDefine.LOGIN_FAILED_COUNT);
-        // 锁定用户
-        if (failedLoginCount >= maxFailedLoginCount) {
-            // 更新用户表
-            SystemUserDO updateUser = new SystemUserDO();
-            updateUser.setId(user.getId());
-            updateUser.setStatus(UserStatusEnum.LOCKED.getStatus());
-            systemUserDAO.updateById(updateUser);
-            // 修改缓存状态
-            String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
-            String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
-            if (userInfoCache != null) {
-                LoginUser loginUser = JSON.parseObject(userInfoCache, LoginUser.class);
-                loginUser.setStatus(UserStatusEnum.LOCKED.getStatus());
-                RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
-            }
-        }
+        RedisUtils.setExpire(failedCountKey, appAuthenticationConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
+        // // 锁定用户
+        // if (failedLoginCount >= appAuthenticationConfig.getLoginFailedLockCount()) {
+        //     // 更新用户表
+        //     SystemUserDO updateUser = new SystemUserDO();
+        //     updateUser.setId(user.getId());
+        //     updateUser.setStatus(UserStatusEnum.LOCKED.getStatus());
+        //     systemUserDAO.updateById(updateUser);
+        //     // 修改缓存状态
+        //     String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
+        //     String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
+        //     if (userInfoCache != null) {
+        //         LoginUser loginUser = JSON.parseObject(userInfoCache, LoginUser.class);
+        //         loginUser.setStatus(UserStatusEnum.LOCKED.getStatus());
+        //         RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
+        //     }
+        // }
         return false;
     }
 
@@ -337,7 +343,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
         }
         // 删除续签信息
-        if (allowRefresh) {
+        if (appAuthenticationConfig.getAllowRefresh()) {
             RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
         }
     }
@@ -365,7 +371,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginValue);
         // 生成 refreshToken
-        if (allowRefresh) {
+        if (appAuthenticationConfig.getAllowRefresh()) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, loginTime);
             RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, loginValue);
         }

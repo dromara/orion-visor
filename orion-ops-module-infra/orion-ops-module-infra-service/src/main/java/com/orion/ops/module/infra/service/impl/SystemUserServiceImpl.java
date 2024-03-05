@@ -14,6 +14,7 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.ops.module.infra.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
@@ -48,6 +49,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class SystemUserServiceImpl implements SystemUserService {
+
+    @Resource
+    private AppAuthenticationConfig appAuthenticationConfig;
 
     @Resource
     private SystemUserDAO systemUserDAO;
@@ -274,7 +278,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 删除登录缓存
         RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*"));
         // 删除续签信息
-        if (AuthenticationService.allowRefresh) {
+        if (appAuthenticationConfig.getAllowRefresh()) {
             RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
         }
     }

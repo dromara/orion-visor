@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -163,6 +164,18 @@ public class RedisUtils {
             // 设置过期时间
             redisTemplate.expire(key, define.getTimeout(), define.getUnit());
         }
+    }
+
+    /**
+     * 设置过期时间
+     *
+     * @param key     key
+     * @param timeout timeout
+     * @param unit    unit
+     */
+    public static void setExpire(String key, long timeout, TimeUnit unit) {
+        // 设置过期时间
+        redisTemplate.expire(key, timeout, unit);
     }
 
     public static void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {

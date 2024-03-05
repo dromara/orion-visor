@@ -38,7 +38,6 @@ public interface UserCacheKeyDefine {
             .desc("用户登录失败次数 ${username}")
             .type(Integer.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(3, TimeUnit.DAYS)
             .build();
 
     CacheKeyDefine LOGIN_TOKEN = new CacheKeyBuilder()
