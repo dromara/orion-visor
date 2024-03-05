@@ -1,13 +1,13 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <sftp-log-table />
+    <connect-log-table />
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'hostAuditSftpLog'
+    name: 'assetAuditConnectLog'
   };
 </script>
 
@@ -15,7 +15,7 @@
   import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
-  import SftpLogTable from './components/sftp-log-table.vue';
+  import ConnectLogTable from './components/connect-log-table.vue';
 
   const render = ref(false);
 

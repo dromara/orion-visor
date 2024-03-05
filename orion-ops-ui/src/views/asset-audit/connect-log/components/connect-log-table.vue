@@ -3,34 +3,38 @@
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
                   label-align="left"
-                  :itemOptions="{ 4: { span: 2 } }"
+                  :itemOptions="{ 5: { span: 2 } }"
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      <!-- 操作用户 -->
-      <a-form-item field="userId" label="操作用户" label-col-flex="50px">
+      <!-- 连接用户 -->
+      <a-form-item field="userId" label="连接用户" label-col-flex="50px">
         <user-selector v-model="formModel.userId"
                        placeholder="请选择用户"
                        allow-clear />
       </a-form-item>
-      <!-- 操作主机 -->
-      <a-form-item field="hostId" label="操作主机" label-col-flex="50px">
+      <!-- 连接主机 -->
+      <a-form-item field="hostId" label="连接主机" label-col-flex="50px">
         <host-selector v-model="formModel.hostId"
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>
-      <!-- 操作类型 -->
-      <a-form-item field="type" label="操作类型" label-col-flex="50px">
-        <a-select v-model="formModel.type"
-                  placeholder="请选择类型"
-                  :options="toOptions(sftpOperatorTypeKey)"
+      <!-- 主机地址 -->
+      <a-form-item field="hostAddress" label="主机地址" label-col-flex="50px">
+        <a-input v-model="formModel.hostAddress" placeholder="请输入主机地址" allow-clear />
+      </a-form-item>
+      <!-- 状态 -->
+      <a-form-item field="status" label="状态" label-col-flex="50px">
+        <a-select v-model="formModel.status"
+                  placeholder="请选择状态"
+                  :options="toOptions(connectStatusKey)"
                   allow-clear />
       </a-form-item>
-      <!-- 执行结果 -->
-      <a-form-item field="result" label="执行结果" label-col-flex="50px">
-        <a-select v-model="formModel.result"
-                  placeholder="请选择执行结果"
-                  :options="toOptions(sftpOperatorResultKey)"
+      <!-- 类型 -->
+      <a-form-item field="type" label="类型" label-col-flex="50px">
+        <a-select v-model="formModel.type"
+                  placeholder="请选择类型"
+                  :options="toOptions(connectTypeKey)"
                   allow-clear />
       </a-form-item>
       <!-- 开始时间 -->
@@ -50,18 +54,27 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          SFTP 操作日志
+          主机连接日志
         </div>
       </div>
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
+          <!-- 清空 -->
+          <a-button v-permission="['asset:host-connect-log:management:clear']"
+                    status="danger"
+                    @click="openClear">
+            清空
+            <template #icon>
+              <icon-close />
+            </template>
+          </a-button>
           <!-- 删除 -->
           <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
-            <a-button v-permission="['infra:operator-log:delete', 'asset:host-sftp-log:management:delete']"
+            <a-button v-permission="['asset:host-connect-log:management:delete']"
                       type="secondary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -86,11 +99,11 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
-      <!-- 操作用户 -->
+      <!-- 连接用户 -->
       <template #username="{ record }">
         {{ record.username }}
       </template>
-      <!-- 操作主机 -->
+      <!-- 连接主机 -->
       <template #hostName="{ record }">
         <span class="host-name" :title="record.hostName">
           {{ record.hostName }}
@@ -102,56 +115,53 @@
           {{ record.hostAddress }}
         </span>
       </template>
-      <!-- 操作类型 -->
-      <template #type="{ record }">
-        {{ getDictValue(sftpOperatorTypeKey, record.type) }}
-      </template>
-      <!-- 操作文件 -->
-      <template #paths="{ record }">
-        <div class="paths-wrapper">
-          <span v-for="path in record.paths"
-                class="path-wrapper text-ellipsis text-copy"
-                :title="path"
-                @click="copy(path)">
-            {{ path }}
-          </span>
-          <!-- 移动目标路径 -->
-          <span class="sub-text" v-if="SftpOperatorType.SFTP_MOVE === record.type">
-            移动到 {{ record.extra?.target }}
-          </span>
-          <!-- 提权信息 -->
-          <span class="sub-text" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
-            提权 {{ record.extra?.mod }} {{ permission10toString(record.extra?.mod as number) }}
-          </span>
-        </div>
-      </template>
-      <!-- 执行结果 -->
-      <template #result="{ record }">
-        <a-tag :color="getDictValue(sftpOperatorResultKey, record.result, 'color')">
-          {{ getDictValue(sftpOperatorResultKey, record.result) }}
-        </a-tag>
+      <!-- 状态 -->
+      <template #status="{ record }">
+        <span class="circle" :style="{
+           background: getDictValue(connectStatusKey, record.status, 'color')
+        }" />
+        {{ getDictValue(connectStatusKey, record.status) }}
       </template>
       <!-- 留痕地址 -->
       <template #address="{ record }">
-        <span class="operator-location" :title="record.location">
-          {{ record.location }}
+        <span class="connect-location" :title="record.extra?.location">
+          {{ record.extra?.location }}
         </span>
         <br>
-        <span class="operator-address text-copy"
-              :title="record.address"
-              @click="copy(record.address)">
-          {{ record.address }}
+        <span class="connect-address text-copy"
+              :title="record.extra?.address"
+              @click="copy(record.extra?.address)">
+          {{ record.extra?.address }}
         </span>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <!-- 详情 -->
+          <a-button type="text"
+                    size="mini"
+                    @click="openDetail(record)">
+            详情
+          </a-button>
+          <!-- 下线 -->
+          <a-popconfirm v-if="record.status === HostConnectStatus.CONNECTING"
+                        content="确认要强制下线吗?"
+                        position="left"
+                        type="warning"
+                        @ok="forceOffline(record)">
+            <a-button v-permission="['asset:host-connect-log:management:force-offline']"
+                      type="text"
+                      size="mini"
+                      status="danger">
+              下线
+            </a-button>
+          </a-popconfirm>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['infra:operator-log:delete', 'asset:host-sftp-log:management:delete']"
+            <a-button v-permission="['asset:host-connect-log:management:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -162,19 +172,24 @@
       </template>
     </a-table>
   </a-card>
+  <!-- 清空模态框 -->
+  <connect-log-clear-modal ref="clearModal"
+                           @clear="fetchTableData" />
+  <!-- 详情模态框 -->
+  <connect-log-detail-drawer ref="detailModal" />
 </template>
 
 <script lang="ts">
   export default {
-    name: 'hostAuditSftpLogTable'
+    name: 'assetAuditConnectLogTable'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { HostSftpLogQueryRequest, HostSftpLogQueryResponse } from '@/api/asset/host-sftp-log';
+  import type { HostConnectLogQueryRequest, HostConnectLogQueryResponse } from '@/api/asset/host-connect-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { getHostSftpLogPage, deleteHostSftpLog } from '@/api/asset/host-sftp-log';
-  import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType } from '../types/const';
+  import { deleteHostConnectLog, getHostConnectLogPage, hostForceOffline } from '@/api/asset/host-connect-log';
+  import { connectStatusKey, connectTypeKey, HostConnectStatus } from '../types/const';
   import { usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -183,10 +198,13 @@
   import useCopy from '@/hooks/copy';
   import UserSelector from '@/components/user/user/user-selector.vue';
   import HostSelector from '@/components/asset/host/host-selector.vue';
-  import { permission10toString } from '@/utils/file';
+  import ConnectLogClearModal from './connect-log-clear-modal.vue';
+  import ConnectLogDetailDrawer from './connect-log-detail-drawer.vue';
 
-  const tableRenderData = ref<HostSftpLogQueryResponse[]>([]);
+  const tableRenderData = ref<HostConnectLogQueryResponse[]>([]);
   const selectedKeys = ref<number[]>([]);
+  const clearModal = ref();
+  const detailModal = ref();
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
@@ -194,19 +212,20 @@
   const { toOptions, getDictValue } = useDictStore();
   const { copy } = useCopy();
 
-  const formModel = reactive<HostSftpLogQueryRequest>({
+  const formModel = reactive<HostConnectLogQueryRequest>({
     userId: undefined,
     hostId: undefined,
+    hostAddress: undefined,
     type: undefined,
-    result: undefined,
+    status: undefined,
     startTimeRange: undefined,
   });
 
   // 加载数据
-  const doFetchTableData = async (request: HostSftpLogQueryRequest) => {
+  const doFetchTableData = async (request: HostConnectLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostSftpLogPage(request);
+      const { data } = await getHostConnectLogPage(request);
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
@@ -223,12 +242,36 @@
     doFetchTableData({ page, limit, ...form });
   };
 
+  // 打开清空
+  const openClear = () => {
+    clearModal.value?.open({ ...formModel });
+  };
+
+  // 打开详情
+  const openDetail = (record: HostConnectLogQueryResponse) => {
+    detailModal.value?.open(record);
+  };
+
+  // 强制下线
+  const forceOffline = async (record: HostConnectLogQueryResponse) => {
+    try {
+      setLoading(true);
+      await hostForceOffline({ id: record.id });
+      record.status = HostConnectStatus.FORCE_OFFLINE;
+      record.endTime = Date.now();
+      Message.success('已下线');
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 删除选中行
   const deleteSelectRows = async () => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostSftpLog(selectedKeys.value);
+      await deleteHostConnectLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
@@ -246,7 +289,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostSftpLog([id]);
+      await deleteHostConnectLog([id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载数据
@@ -264,23 +307,13 @@
 </script>
 
 <style lang="less" scoped>
-  .host-name, .operator-location {
+  .host-name, .connect-location {
     color: var(--color-text-2);
   }
 
-  .host-address, .operator-address, .sub-text {
+  .host-address, .connect-address {
     margin-top: 4px;
     display: inline-block;
     color: var(--color-text-3);
-  }
-
-  .paths-wrapper {
-    display: flex;
-    flex-direction: column;
-
-    .path-wrapper {
-      display: block;
-      padding: 2px;
-    }
   }
 </style>

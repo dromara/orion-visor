@@ -1,4 +1,4 @@
-# orion-ops-pro <small>1.0.0</small>
+# orion-ops-pro <small>1.0.1</small>
 
 > 一款开箱即用的运维平台。
 
