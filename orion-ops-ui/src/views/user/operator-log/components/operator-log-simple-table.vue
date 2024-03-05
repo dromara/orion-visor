@@ -32,16 +32,15 @@
       <icon-copy class="copy-left" @click="copy(record.originLogInfo, '已复制')" />
       <span v-html="replaceHtmlTag(record.logInfo)" />
     </template>
-    <!-- 操作地址 -->
+    <!-- 留痕地址 -->
     <template #address="{ record }">
       <span class="operator-location" :title="record.location">
         {{ record.location }}
       </span>
       <br>
-      <span class="copy-left" title="复制" @click="copy(record.address)">
-        <icon-copy />
-      </span>
-      <span class="operator-address" :title="record.address">
+      <span class="operator-address text-copy"
+            :title="record.address"
+            @click="copy(record.address)">
         {{ record.address }}
       </span>
     </template>

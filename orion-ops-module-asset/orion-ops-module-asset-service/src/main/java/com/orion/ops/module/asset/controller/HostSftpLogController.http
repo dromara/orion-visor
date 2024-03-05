@@ -1,5 +1,5 @@
 ### 分页查询 SFTP 操作日志
-POST {{baseUrl}}/asset/sftp-log/query
+POST {{baseUrl}}/asset/host-sftp-log/query
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -7,6 +7,11 @@ Authorization: {{token}}
   "page": 1,
   "limit": 10
 }
+
+
+### 删除 SFTP 操作日志
+DELETE {{baseUrl}}/asset/host-sftp-log/delete?idList=1,2,3
+Authorization: {{token}}
 
 
 ###

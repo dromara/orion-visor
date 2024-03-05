@@ -12,6 +12,11 @@ const HOST_AUDIT: AppRouteRecordRaw =
         path: '/host-audit/connect-log',
         component: () => import('@/views/host-audit/connect-log/index.vue'),
       },
+      {
+        name: 'hostAuditSftpLog',
+        path: '/host-audit/sftp-log',
+        component: () => import('@/views/host-audit/sftp-log/index.vue'),
+      },
     ],
   };
 

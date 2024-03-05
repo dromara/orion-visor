@@ -4,6 +4,8 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.asset.entity.request.host.HostSftpLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.HostSftpLogVO;
 
+import java.util.List;
+
 /**
  * SFTP 操作日志 服务类
  *
@@ -19,6 +21,14 @@ public interface HostSftpLogService {
      * @param request request
      * @return rows
      */
-    DataGrid<HostSftpLogVO> querySftpLogPage(HostSftpLogQueryRequest request);
+    DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request);
+
+    /**
+     * 删除 SFTP 操作日志
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteHostSftpLog(List<Long> idList);
 
 }

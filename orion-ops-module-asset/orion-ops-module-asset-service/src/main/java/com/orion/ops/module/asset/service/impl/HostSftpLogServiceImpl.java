@@ -1,8 +1,12 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.module.asset.convert.HostSftpLogConvert;
 import com.orion.ops.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.ops.module.asset.entity.request.host.HostSftpLogQueryRequest;
@@ -33,7 +37,49 @@ public class HostSftpLogServiceImpl implements HostSftpLogService {
     private OperatorLogApi operatorLogApi;
 
     @Override
-    public DataGrid<HostSftpLogVO> querySftpLogPage(HostSftpLogQueryRequest request) {
+    public DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request) {
+        // 查询
+        OperatorLogQueryDTO query = this.buildQueryInfo(request);
+        DataGrid<OperatorLogDTO> dataGrid = operatorLogApi.getOperatorLogPage(query);
+        // 转换
+        List<HostSftpLogVO> rows = dataGrid.stream()
+                .map(s -> {
+                    JSONObject extra = JSON.parseObject(s.getExtra());
+                    HostSftpLogVO vo = HostSftpLogConvert.MAPPER.to(s);
+                    vo.setHostId(extra.getLong(ExtraFieldConst.HOST_ID));
+                    vo.setHostName(extra.getString(ExtraFieldConst.HOST_NAME));
+                    vo.setHostAddress(extra.getString(ExtraFieldConst.ADDRESS));
+                    vo.setPaths(extra.getString(ExtraFieldConst.PATH).split("\\|"));
+                    vo.setExtra(extra);
+                    return vo;
+                }).collect(Collectors.toList());
+        // 返回
+        DataGrid<HostSftpLogVO> result = new DataGrid<>();
+        result.setRows(rows);
+        result.setPage(dataGrid.getPage());
+        result.setLimit(dataGrid.getLimit());
+        result.setSize(dataGrid.getSize());
+        result.setTotal(dataGrid.getTotal());
+        return result;
+    }
+
+    @Override
+    public Integer deleteHostSftpLog(List<Long> idList) {
+        log.info("HostSftpLogService.deleteSftpLog start {}", JSON.toJSONString(idList));
+        Integer effect = operatorLogApi.deleteOperatorLog(idList);
+        log.info("HostSftpLogService.deleteSftpLog finish {}", effect);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, effect);
+        return effect;
+    }
+
+    /**
+     * 构建查询对象
+     *
+     * @param request request
+     * @return query
+     */
+    private OperatorLogQueryDTO buildQueryInfo(HostSftpLogQueryRequest request) {
         Long hostId = request.getHostId();
         String type = request.getType();
         // 构建参数
@@ -55,19 +101,7 @@ public class HostSftpLogServiceImpl implements HostSftpLogService {
         if (hostId != null) {
             query.setExtra("\"hostId\": " + hostId + ",");
         }
-        // 查询
-        DataGrid<OperatorLogDTO> dataGrid = operatorLogApi.getOperatorLogList(query);
-        // 返回
-        DataGrid<HostSftpLogVO> result = new DataGrid<>();
-        List<HostSftpLogVO> rows = dataGrid.stream()
-                .map(HostSftpLogConvert.MAPPER::to)
-                .collect(Collectors.toList());
-        result.setRows(rows);
-        result.setPage(dataGrid.getPage());
-        result.setLimit(dataGrid.getLimit());
-        result.setSize(dataGrid.getSize());
-        result.setTotal(dataGrid.getTotal());
-        return result;
+        return query;
     }
 
 }

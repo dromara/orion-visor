@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 操作日志服务实现
@@ -29,12 +30,17 @@ public class OperatorLogApiImpl implements OperatorLogApi {
     private OperatorLogDAO operatorLogDAO;
 
     @Override
-    public DataGrid<OperatorLogDTO> getOperatorLogList(OperatorLogQueryDTO request) {
+    public DataGrid<OperatorLogDTO> getOperatorLogPage(OperatorLogQueryDTO request) {
         Valid.valid(request);
         return operatorLogDAO.of()
                 .page(request)
                 .wrapper(this.buildQueryWrapper(request))
                 .dataGrid(OperatorLogProviderConvert.MAPPER::to);
+    }
+
+    @Override
+    public Integer deleteOperatorLog(List<Long> idList) {
+        return operatorLogDAO.deleteBatchIds(idList);
     }
 
     /**

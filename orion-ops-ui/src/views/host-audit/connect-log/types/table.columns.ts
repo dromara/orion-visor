@@ -3,17 +3,10 @@ import { dateFormat } from '@/utils';
 
 const columns = [
   {
-    title: '连接地址',
-    dataIndex: 'address',
-    slotName: 'address',
-    width: 156,
-    align: 'left',
-    ellipsis: true,
-  }, {
     title: '连接用户',
     dataIndex: 'username',
     slotName: 'username',
-    width: 180,
+    width: 140,
     align: 'left',
     ellipsis: true,
   }, {
@@ -34,6 +27,13 @@ const columns = [
     slotName: 'status',
     align: 'left',
     width: 106,
+  }, {
+    title: '留痕地址',
+    dataIndex: 'address',
+    slotName: 'address',
+    width: 156,
+    align: 'left',
+    ellipsis: true,
   }, {
     title: '连接时间',
     dataIndex: 'connectTime',

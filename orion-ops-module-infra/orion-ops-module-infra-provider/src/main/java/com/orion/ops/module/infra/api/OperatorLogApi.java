@@ -4,6 +4,8 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.infra.entity.dto.operator.OperatorLogDTO;
 import com.orion.ops.module.infra.entity.dto.operator.OperatorLogQueryDTO;
 
+import java.util.List;
+
 /**
  * 操作日志服务
  *
@@ -14,11 +16,19 @@ import com.orion.ops.module.infra.entity.dto.operator.OperatorLogQueryDTO;
 public interface OperatorLogApi {
 
     /**
-     * 操作日志服务
+     * 分页查询操作日志
      *
      * @param request request
      * @return rows
      */
-    DataGrid<OperatorLogDTO> getOperatorLogList(OperatorLogQueryDTO request);
+    DataGrid<OperatorLogDTO> getOperatorLogPage(OperatorLogQueryDTO request);
+
+    /**
+     * 删除操作日志
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteOperatorLog(List<Long> idList);
 
 }

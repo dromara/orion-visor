@@ -23,10 +23,11 @@
       <a-descriptions-item label="连接主机">
         <span>({{ record.hostId }}) {{ record.hostName }}</span>
         <br>
-        <span class="copy-left" title="复制" @click="copy(record.hostAddress)">
-          <icon-copy />
+        <span class="host-address text-copy"
+              :title="record.hostAddress"
+              @click="copy(record.hostAddress)">
+          {{ record.hostAddress }}
         </span>
-        <span class="host-address">{{ record.hostAddress }}</span>
       </a-descriptions-item>
       <!-- 连接类型 -->
       <a-descriptions-item label="连接类型">
@@ -36,14 +37,15 @@
       <a-descriptions-item label="连接状态">
         {{ getDictValue(connectStatusKey, record.status) }}
       </a-descriptions-item>
-      <!-- 连接地址 -->
-      <a-descriptions-item label="连接地址">
+      <!-- 留痕地址 -->
+      <a-descriptions-item label="留痕地址">
         <span>{{ record.extra?.location }}</span>
         <br>
-        <span class="copy-left" title="复制" @click="copy(record.extra?.address)">
-          <icon-copy />
+        <span class="connect-address text-copy"
+              :title="record.extra?.address"
+              @click="copy(record.extra?.address)">
+          {{ record.extra?.address }}
         </span>
-        <span class="connect-address">{{ record.extra?.address }}</span>
       </a-descriptions-item>
       <!-- userAgent -->
       <a-descriptions-item label="userAgent">
@@ -63,15 +65,21 @@
       </a-descriptions-item>
       <!-- traceId -->
       <a-descriptions-item label="traceId">
-        {{ record.extra?.traceId }}
+        <span class="text-copy" @click="copy(record.extra?.traceId)">
+          {{ record.extra?.traceId }}
+        </span>
       </a-descriptions-item>
       <!-- channelId -->
       <a-descriptions-item label="channelId">
-        {{ record.extra?.channelId }}
+        <span class="text-copy" @click="copy(record.extra?.channelId)">
+          {{ record.extra?.channelId }}
+        </span>
       </a-descriptions-item>
       <!-- sessionId -->
       <a-descriptions-item label="sessionId">
-        {{ record.extra?.sessionId }}
+        <span class="text-copy" @click="copy(record.extra?.sessionId)">
+          {{ record.extra?.sessionId }}
+        </span>
       </a-descriptions-item>
     </a-descriptions>
   </a-drawer>

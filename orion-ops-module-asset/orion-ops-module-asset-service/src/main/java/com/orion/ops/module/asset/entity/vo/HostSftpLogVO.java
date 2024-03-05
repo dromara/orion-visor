@@ -32,14 +32,20 @@ public class HostSftpLogVO implements Serializable {
     @Schema(description = "用户id")
     private Long userId;
 
-    @Schema(description = "主机id")
-    private Long hostId;
-
     @Schema(description = "用户名")
     private String username;
 
-    @Schema(description = "traceId")
-    private String traceId;
+    @Schema(description = "主机id")
+    private Long hostId;
+
+    @Schema(description = "主机名称")
+    private String hostName;
+
+    @Schema(description = "主机地址")
+    private String hostAddress;
+
+    @Schema(description = "操作文件")
+    private String[] paths;
 
     @Schema(description = "请求ip")
     private String address;
@@ -50,17 +56,8 @@ public class HostSftpLogVO implements Serializable {
     @Schema(description = "userAgent")
     private String userAgent;
 
-    @Schema(description = "风险等级")
-    private String riskLevel;
-
-    @Schema(description = "模块")
-    private String module;
-
     @Schema(description = "操作类型")
     private String type;
-
-    @Schema(description = "日志")
-    private String logInfo;
 
     @Schema(description = "参数")
     private Map<String, Object> extra;
@@ -68,22 +65,7 @@ public class HostSftpLogVO implements Serializable {
     @Schema(description = "操作结果 0失败 1成功")
     private Integer result;
 
-    @Schema(description = "错误信息")
-    private String errorMessage;
-
-    @Schema(description = "返回值")
-    private String returnValue;
-
-    @Schema(description = "操作时间")
-    private Integer duration;
-
     @Schema(description = "开始时间")
     private Date startTime;
-
-    @Schema(description = "结束时间")
-    private Date endTime;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
 
 }

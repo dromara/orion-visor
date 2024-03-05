@@ -21,6 +21,8 @@ public class HostTerminalOperatorType extends InitializingOperatorTypes {
 
     public static final String CONNECT = "host-terminal:connect";
 
+    public static final String DELETE_SFTP_LOG = "host-terminal:delete-sftp-log";
+
     public static final String SFTP_MKDIR = "host-terminal:sftp-mkdir";
 
     public static final String SFTP_TOUCH = "host-terminal:sftp-touch";
@@ -55,6 +57,7 @@ public class HostTerminalOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(L, CONNECT, "连接主机 ${connectType} <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE_SFTP_LOG, "删除 SFTP 操作日志 <sb>${count}</sb> 条"),
                 new OperatorType(L, SFTP_MKDIR, "创建文件夹 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(L, SFTP_TOUCH, "创建文件 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(M, SFTP_MOVE, "移动文件 ${hostName} <sb>${path}</sb> 至 <sb>${target}</sb>"),
