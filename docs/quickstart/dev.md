@@ -39,6 +39,8 @@ orion-ops-pro/orion-ops-launch/src/main/resources/application-prod.yaml
 cd orion-ops-pro
 # 编译
 mvn -U clean install -DskipTests
+# 启动
+com.orion.ops.launch.LaunchApplication
 ```
 
 4. 修改前端配置

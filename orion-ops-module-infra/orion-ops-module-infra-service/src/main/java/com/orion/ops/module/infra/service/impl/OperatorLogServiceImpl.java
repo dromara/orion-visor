@@ -1,9 +1,11 @@
 package com.orion.ops.module.infra.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.infra.convert.OperatorLogConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
@@ -49,6 +51,33 @@ public class OperatorLogServiceImpl implements OperatorLogService {
         return operatorLogDAO.of(wrapper)
                 .page(request)
                 .dataGrid(OperatorLogConvert.MAPPER::to);
+    }
+
+    @Override
+    public Integer deleteOperatorLog(List<Long> idList) {
+        log.info("OperatorLogService.deleteOperatorLog start {}", JSON.toJSONString(idList));
+        int effect = operatorLogDAO.deleteBatchIds(idList);
+        log.info("OperatorLogService.deleteOperatorLog finish {}", effect);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, effect);
+        return effect;
+    }
+
+    @Override
+    public Long getOperatorLogCount(OperatorLogQueryRequest request) {
+        return operatorLogDAO.selectCount(this.buildQueryWrapper(request));
+    }
+
+    @Override
+    public Integer clearOperatorLog(OperatorLogQueryRequest request) {
+        log.info("OperatorLogService.clearOperatorLog start {}", JSON.toJSONString(request));
+        // 删除
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        int effect = operatorLogDAO.delete(wrapper);
+        log.info("OperatorLogService.clearOperatorLog finish {}", effect);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, effect);
+        return effect;
     }
 
     @Override

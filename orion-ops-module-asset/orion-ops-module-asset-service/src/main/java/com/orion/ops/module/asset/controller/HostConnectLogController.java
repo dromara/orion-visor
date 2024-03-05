@@ -1,22 +1,23 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.ops.framework.common.validator.group.Id;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
+import com.orion.ops.module.asset.define.operator.HostConnectLogOperatorType;
 import com.orion.ops.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.HostConnectLogVO;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -53,6 +54,37 @@ public class HostConnectLogController {
     @Operation(summary = "查询用户最近连接的主机")
     public List<Long> getLatestConnectHostId(@RequestBody HostConnectLogQueryRequest request) {
         return hostConnectLogService.getLatestConnectHostId(request);
+    }
+
+    @OperatorLog(HostConnectLogOperatorType.DELETE)
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除主机连接日志")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:delete')")
+    public Integer deleteHostConnectLog(@RequestParam("idList") List<Long> idList) {
+        return hostConnectLogService.deleteHostConnectLog(idList);
+    }
+
+    @PostMapping("/query-count")
+    @Operation(summary = "查询主机连接日志数量")
+    public Long getHostConnectLogCount(@RequestBody HostConnectLogQueryRequest request) {
+        return hostConnectLogService.getHostConnectLogCount(request);
+    }
+
+    @OperatorLog(HostConnectLogOperatorType.CLEAR)
+    @PostMapping("/clear")
+    @Operation(summary = "清空主机连接日志")
+    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:clear')")
+    public Integer clearHostConnectLog(@RequestBody HostConnectLogQueryRequest request) {
+        return hostConnectLogService.clearHostConnectLog(request);
+    }
+
+    @OperatorLog(HostConnectLogOperatorType.FORCE_OFFLINE)
+    @PutMapping("/force-offline")
+    @Operation(summary = "强制断开主机连接")
+    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:force-offline')")
+    public Integer forceOffline(@Validated(Id.class) @RequestBody HostConnectLogQueryRequest request) {
+        return hostConnectLogService.forceOffline(request);
     }
 
 }

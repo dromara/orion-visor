@@ -1,10 +1,10 @@
 <template>
   <query-header :model="formModel"
-                  label-align="left"
-                  :itemOptions="{ [visibleUser ? 5 : 4]: { span: 2 } }"
-                  @submit="submit"
-                  @reset="submit"
-                  @keyup.enter="submit">
+                label-align="left"
+                :itemOptions="{ [visibleUser ? 5 : 4]: { span: 2 } }"
+                @submit="submit"
+                @reset="submit"
+                @keyup.enter="submit">
     <!-- 操作用户 -->
     <a-form-item v-if="visibleUser"
                  field="userId"
@@ -21,7 +21,6 @@
                 :allow-search="true"
                 :filter-option="labelFilter"
                 placeholder="请选择操作模块"
-                @change="m => selectedModule(m as string)"
                 allow-clear />
     </a-form-item>
     <!-- 操作类型 -->
@@ -67,12 +66,12 @@
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest } from '@/api/user/operator-log';
   import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
-  import UserSelector from '@/components/user/user/user-selector.vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
   import { labelFilter } from '@/types/form';
+  import UserSelector from '@/components/user/user/user-selector.vue';
 
   const emits = defineEmits(['submit']);
   const props = defineProps({
@@ -94,8 +93,8 @@
     startTimeRange: undefined,
   });
 
-  // 选择类型
-  const selectedModule = (module: string) => {
+  // 监听类型变化
+  watch(() => formModel.module, (module: string | undefined) => {
     if (!module) {
       // 不选择则重置 options
       typeOptions.value = toOptions(operatorLogTypeKey);
@@ -109,7 +108,7 @@
     if (formModel.type && !formModel.type.startsWith(modulePrefix)) {
       formModel.type = undefined;
     }
-  };
+  });
 
   // 切换页码
   const submit = () => {

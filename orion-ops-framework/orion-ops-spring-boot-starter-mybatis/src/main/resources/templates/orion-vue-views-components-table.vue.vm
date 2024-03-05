@@ -2,10 +2,10 @@
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
-                    label-align="left"
-                    @submit="fetchTableData"
-                    @reset="fetchTableData"
-                    @keyup.enter="() => fetchTableData()">
+                  label-align="left"
+                  @submit="fetchTableData"
+                  @reset="fetchTableData"
+                  @keyup.enter="() => fetchTableData()">
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
       <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
@@ -27,7 +27,9 @@
                        show-time
                        allow-clear />
         #else
-        <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear />
+        <a-input v-model="formModel.${field.propertyName}"
+                 placeholder="请输入${field.comment}"
+                 allow-clear />
         #end
         #end
       </a-form-item>
@@ -48,8 +50,8 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 新增 -->
-          <a-button type="primary"
-                    v-permission="['${package.ModuleName}:${typeHyphen}:create']"
+          <a-button v-permission="['${package.ModuleName}:${typeHyphen}:create']"
+                    type="primary"
                     @click="emits('openAdd')">
             新增
             <template #icon>
@@ -58,9 +60,9 @@
           </a-button>
           #if($vue.enableRowSelection)
           <!-- 删除 -->
-          <a-popconfirm position="br"
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
                         type="warning"
-                        :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
                         @ok="deleteSelectRows">
             <a-button v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
                       type="secondary"
@@ -78,9 +80,7 @@
     </template>
     <!-- table -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
-             label-align="left"
              :loading="loading"
              :columns="columns"
              #if($vue.enableRowSelection)
@@ -104,9 +104,9 @@
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 修改 -->
-          <a-button type="text"
+          <a-button v-permission="['${package.ModuleName}:${typeHyphen}:update']"
+                    type="text"
                     size="mini"
-                    v-permission="['${package.ModuleName}:${typeHyphen}:update']"
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
@@ -184,7 +184,7 @@
       setLoading(true);
       // 调用删除接口
       await batchDelete${vue.featureEntity}(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();

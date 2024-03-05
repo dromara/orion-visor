@@ -28,7 +28,7 @@
 
 <br/>  
 
-当前版本: **1.0.0**  
+当前版本: **1.0.1**  
 github: https://github.com/lijiahangmax/orion-ops-pro  
 gitee: https://gitee.com/lijiahangmax/orion-ops-pro  
 文档: https://lijiahangmax.gitee.io/orion-ops-pro/#/    

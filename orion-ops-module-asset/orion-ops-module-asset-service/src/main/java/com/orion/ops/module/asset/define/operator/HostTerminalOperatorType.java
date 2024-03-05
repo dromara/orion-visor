@@ -1,8 +1,11 @@
 package com.orion.ops.module.asset.define.operator;
 
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.annotation.Module;
 import com.orion.ops.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
+
+import java.util.List;
 
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
@@ -17,6 +20,8 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
 public class HostTerminalOperatorType extends InitializingOperatorTypes {
 
     public static final String CONNECT = "host-terminal:connect";
+
+    public static final String DELETE_SFTP_LOG = "host-terminal:delete-sftp-log";
 
     public static final String SFTP_MKDIR = "host-terminal:sftp-mkdir";
 
@@ -36,10 +41,23 @@ public class HostTerminalOperatorType extends InitializingOperatorTypes {
 
     public static final String SFTP_DOWNLOAD = "host-terminal:sftp-download";
 
+    public static final List<String> SFTP_TYPES = Lists.of(
+            SFTP_MKDIR,
+            SFTP_TOUCH,
+            SFTP_MOVE,
+            SFTP_REMOVE,
+            SFTP_TRUNCATE,
+            SFTP_CHMOD,
+            SFTP_SET_CONTENT,
+            SFTP_UPLOAD,
+            SFTP_DOWNLOAD
+    );
+
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(L, CONNECT, "连接主机 ${connectType} <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE_SFTP_LOG, "删除 SFTP 操作日志 <sb>${count}</sb> 条"),
                 new OperatorType(L, SFTP_MKDIR, "创建文件夹 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(L, SFTP_TOUCH, "创建文件 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(M, SFTP_MOVE, "移动文件 ${hostName} <sb>${path}</sb> 至 <sb>${target}</sb>"),

@@ -2,10 +2,10 @@
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
-                    label-align="left"
-                    @submit="fetchTableData"
-                    @reset="resetForm"
-                    @keyup.enter="() => fetchTableData()">
+                  label-align="left"
+                  @submit="fetchTableData"
+                  @reset="resetForm"
+                  @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
       <a-form-item field="keyId" label="配置项" label-col-flex="50px">
         <dict-key-selector v-model="formModel.keyId"
@@ -46,9 +46,9 @@
             </template>
           </a-button>
           <!-- 删除 -->
-          <a-popconfirm position="br"
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
                         type="warning"
-                        :content="`确认删除选中的${selectedKeys.length}条记录吗?`"
                         @ok="deleteSelectRows">
             <a-button v-permission="['infra:dict-value:delete']"
                       type="secondary"
@@ -65,9 +65,7 @@
     </template>
     <!-- table -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
-             label-align="left"
              :loading="loading"
              :columns="columns"
              v-model:selected-keys="selectedKeys"
@@ -168,7 +166,7 @@
       setLoading(true);
       // 调用删除接口
       await batchDeleteDictValue(selectedKeys.value);
-      Message.success(`成功删除${selectedKeys.value.length}条数据`);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();

@@ -78,6 +78,19 @@ export interface UserSessionOfflineRequest {
 }
 
 /**
+ * 登录日志查询响应
+ */
+export interface LoginHistoryQueryResponse {
+  id: number;
+  address: string;
+  location: string;
+  userAgent: string;
+  result: number;
+  errorMessage: string;
+  createTime: number;
+}
+
+/**
  * 创建用户
  */
 export function createUser(request: UserCreateRequest) {
@@ -159,4 +172,11 @@ export function getUserSessionList(id: number) {
  */
 export function offlineUserSession(request: UserSessionOfflineRequest) {
   return axios.put('/infra/system-user/session/offline', request);
+}
+
+/**
+ * 查询登录日志
+ */
+export function getLoginHistory(username: string) {
+  return axios.get<LoginHistoryQueryResponse[]>('/infra/system-user/login-history', { params: { username } });
 }

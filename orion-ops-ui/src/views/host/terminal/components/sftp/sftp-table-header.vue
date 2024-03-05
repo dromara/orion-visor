@@ -44,8 +44,12 @@
         </a-breadcrumb>
       </div>
     </div>
+    <!-- 已关闭-右侧操作 -->
+    <div v-if="isClose" class="sftp-table-header-right">
+      <span class="close-message">{{ closeMessage }}</span>
+    </div>
     <!-- 路径编辑模式-右侧操作 -->
-    <a-space v-if="pathEditable" class="sftp-table-header-right">
+    <a-space v-else-if="pathEditable" class="sftp-table-header-right">
       <!-- 进入 -->
       <a-tooltip position="top"
                  :mini="true"
@@ -185,9 +189,11 @@
   import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
 
   const props = defineProps<{
+    isClose: boolean;
+    closeMessage: string | undefined;
     currentPath: string;
-    session: ISftpSession | undefined,
-    selectedFiles: Array<string>
+    session: ISftpSession | undefined;
+    selectedFiles: Array<string>;
   }>();
 
   const emits = defineEmits(['update:selectedFiles', 'loadFile', 'download']);
@@ -320,6 +326,14 @@
     .sftp-path-wrapper {
       padding: 0 6px 1px 6px;
     }
+  }
+
+  .close-message {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 16px;
+    color: rgb(var(--red-6));
   }
 
   .header-action-icon {

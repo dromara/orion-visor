@@ -66,8 +66,9 @@
                         position="left"
                         type="warning"
                         @ok="doRefreshCache">
-            <a-button type="primary" status="warning"
-                      v-permission="['infra:system-menu:management:refresh-cache']">
+            <a-button v-permission="['infra:system-menu:management:refresh-cache']"
+                      type="primary"
+                      status="warning">
               刷新缓存
               <template #icon>
                 <icon-sync />
@@ -83,7 +84,6 @@
     <a-table row-key="id"
              class="table-wrapper-16"
              ref="tableRef"
-             label-align="left"
              :loading="fetchLoading"
              :pagination="false"
              :columns="columns"
@@ -162,9 +162,10 @@
                         position="left"
                         type="warning"
                         @ok="doDeleteMenu(record)">
-            <a-button type="text" size="mini"
-                      status="danger"
-                      v-permission="['infra:system-menu:delete']">
+            <a-button v-permission="['infra:system-menu:delete']"
+                      type="text"
+                      size="mini"
+                      status="danger">
               删除
             </a-button>
           </a-popconfirm>

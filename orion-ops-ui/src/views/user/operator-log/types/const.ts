@@ -1,9 +1,30 @@
+import type { OperatorLogQueryResponse } from '@/api/user/operator-log';
+import { pick } from 'lodash';
+import { dateFormat } from '@/utils';
+
 // 结果状态
 export const ResultStatus = {
   // 失败
   FAILED: 0,
   // 成功
   SUCCESS: 1,
+};
+
+// 获取日志详情
+export const getLogDetail = (record: OperatorLogQueryResponse): Record<string, any> => {
+  try {
+    const detail = Object.assign({} as Record<string, any>,
+      pick(record, 'traceId', 'address', 'location',
+        'userAgent', 'errorMessage'));
+    detail.duration = `${record.duration} ms`;
+    detail.startTime = dateFormat(new Date(record.startTime));
+    detail.endTime = dateFormat(new Date(record.endTime));
+    detail.extra = JSON.parse(record?.extra);
+    detail.returnValue = JSON.parse(record?.returnValue);
+    return detail;
+  } catch (e) {
+    return record;
+  }
 };
 
 // 操作日志模块 字典项

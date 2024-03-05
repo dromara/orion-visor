@@ -1,6 +1,6 @@
 import type { DataGrid } from '@/types/global';
-import type { LoginHistoryQueryResponse, OperatorLogQueryRequest, OperatorLogQueryResponse } from './operator-log';
-import type { UserQueryResponse, UserSessionOfflineRequest, UserSessionQueryResponse, UserUpdateRequest } from './user';
+import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from './operator-log';
+import type { LoginHistoryQueryResponse, UserQueryResponse, UserSessionOfflineRequest, UserSessionQueryResponse, UserUpdateRequest } from './user';
 import axios from 'axios';
 
 /**

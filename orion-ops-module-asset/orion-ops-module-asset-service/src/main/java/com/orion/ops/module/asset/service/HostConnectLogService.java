@@ -8,6 +8,7 @@ import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -40,8 +41,10 @@ public interface HostConnectLogService {
      *
      * @param token  token
      * @param status status
+     * @param extra  extra
+     * @return effect
      */
-    void updateStatusByToken(String token, HostConnectStatusEnum status);
+    Integer updateStatusByToken(String token, HostConnectStatusEnum status, Map<String, Object> extra);
 
     /**
      * 查询用户最近连接的主机
@@ -59,5 +62,37 @@ public interface HostConnectLogService {
      * @return hostId
      */
     Future<List<Long>> getLatestConnectHostIdAsync(HostConnectTypeEnum type, Long userId);
+
+    /**
+     * 删除主机连接日志
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteHostConnectLog(List<Long> idList);
+
+    /**
+     * 获取主机连接日志数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getHostConnectLogCount(HostConnectLogQueryRequest request);
+
+    /**
+     * 清空主机连接日志
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer clearHostConnectLog(HostConnectLogQueryRequest request);
+
+    /**
+     * 强制断开主机连接
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer forceOffline(HostConnectLogQueryRequest request);
 
 }

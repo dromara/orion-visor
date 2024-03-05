@@ -14,9 +14,4 @@ Authorization: {{token}}
   "endTime": ""
 }
 
-### 查询登录日志
-GET {{baseUrl}}/infra/operator-log/login-history?username=admin
-Content-Type: application/json
-Authorization: {{token}}
-
 ###

@@ -2,7 +2,6 @@ package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.lang.utils.collect.Maps;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
@@ -54,7 +53,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
                         .build());
         // 保存操作日志
         Map<String, Object> extra = Maps.newMap();
-        extra.put(OperatorLogs.PATH, String.join(Const.COMMA, paths));
+        extra.put(OperatorLogs.PATH, payload.getPath());
         this.saveOperatorLog(payload, channel,
                 extra, HostTerminalOperatorType.SFTP_REMOVE,
                 startTime, ex);

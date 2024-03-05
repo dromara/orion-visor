@@ -230,6 +230,20 @@ body {
   margin-bottom: 16px;
 }
 
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-copy {
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: rgb(var(--arcoblue-6))
+  }
+}
+
 .copy-left, .copy-right {
   color: rgb(var(--arcoblue-6));
   cursor: pointer;

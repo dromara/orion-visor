@@ -118,6 +118,21 @@ logging:
   level:
     com.orion.ops.launch.controller.BootstrapController: INFO
 
+# 应用配置
+app:
+  authentication:
+    # 是否允许多端登录
+    allow-multi-device: true
+    # 是否允许凭证续签
+    allow-refresh: true
+    # 凭证续签最大次数
+    max-refresh-count: 3
+    # 登录失败锁定次数
+    login-failed-lock-count: 5
+    # 登录失败锁定时间 (分)
+    login-failed-lock-time: 30
+
+# orion framework config
 orion:
   # 版本
   version: @revision@
@@ -151,7 +166,6 @@ orion:
       asset:
         group: "asset - 资产模块"
         path: "asset"
-
   logging:
     # 全局日志打印
     printer:

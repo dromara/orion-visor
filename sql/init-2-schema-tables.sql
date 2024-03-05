@@ -1,5 +1,3 @@
--- replace regexp 'AUTO_INCREMENT = .*' to 'AUTO_INCREMENT = 1' --
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -67,30 +65,6 @@ CREATE TABLE `command_snippet_group`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '命令片段分组'
-  ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for command_template
--- ----------------------------
-DROP TABLE IF EXISTS `command_template`;
-CREATE TABLE `command_template`
-(
-    `id`             bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
-    `command`        text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '命令',
-    `timeout`        int(0)                                                       NULL DEFAULT 0 COMMENT '超时时间ms 0不超时',
-    `parameter`      json                                                         NULL COMMENT '参数',
-    `prepare_render` tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否使用脚本渲染 0不使用 1使用',
-    `create_time`    datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`    datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
-    `creator`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `updater`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `deleted`        tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '命令模板'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -438,7 +412,8 @@ CREATE TABLE `operator_log`
     `create_time`   datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `deleted`       tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `idx_user_id` (`user_id`) USING BTREE
+    INDEX `idx_user_id` (`user_id`) USING BTREE,
+    INDEX `idx_type` (`type`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4

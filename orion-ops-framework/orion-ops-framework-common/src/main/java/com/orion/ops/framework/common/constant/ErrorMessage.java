@@ -85,4 +85,8 @@ public interface ErrorMessage {
 
     String FILE_ABSENT = "文件不存在";
 
+    String LOG_ABSENT = "日志不存在";
+
+    String ILLEGAL_STATUS = "当前状态不支持此操作";
+
 }

@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.entity.vo;
 
+import com.orion.ops.module.asset.entity.dto.HostConnectLogExtraDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,9 +47,6 @@ public class HostConnectLogVO implements Serializable {
     @Schema(description = "类型")
     private String type;
 
-    @Schema(description = "token")
-    private String token;
-
     @Schema(description = "状态")
     private String status;
 
@@ -59,18 +57,6 @@ public class HostConnectLogVO implements Serializable {
     private Date endTime;
 
     @Schema(description = "额外信息")
-    private String extraInfo;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
+    private HostConnectLogExtraDTO extra;
 
 }

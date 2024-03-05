@@ -81,9 +81,9 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   }
 
   // 处理关闭消息
-  processClose({ sessionId, msg }: OutputPayload): void {
+  processClose({ sessionId, msg, forceClose }: OutputPayload): void {
     const session = this.sessionManager.getSession(sessionId);
-    // 无需处理 (直接关闭 tab )
+    // 无需处理 (直接关闭 tab)
     if (!session) {
       return;
     }
@@ -98,6 +98,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     } else if (session instanceof SftpSession) {
       // sftp 设置状态
       session.connected = false;
+      session.resolver?.onClose(forceClose, msg);
     }
   }
 

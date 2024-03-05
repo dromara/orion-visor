@@ -47,4 +47,12 @@ public interface FieldConst {
 
     String MOD = "mod";
 
+    String COUNT = "count";
+
+    String LOCATION = "location";
+
+    String USER_AGENT = "userAgent";
+
+    String ERROR_MESSAGE = "errorMessage";
+
 }

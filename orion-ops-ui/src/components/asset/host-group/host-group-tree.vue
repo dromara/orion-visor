@@ -58,10 +58,11 @@
                         position="left"
                         type="warning"
                         @ok="deleteNode(node.key)">
-          <span v-permission="['asset:host-group:delete']"
-                class="tree-icon" title="删除">
-            <icon-delete />
-          </span>
+            <span v-permission="['asset:host-group:delete']"
+                  class="tree-icon"
+                  title="删除">
+              <icon-delete />
+            </span>
           </a-popconfirm>
           <!-- 新增 -->
           <span v-permission="['asset:host-group:create']"

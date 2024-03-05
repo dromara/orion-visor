@@ -2,10 +2,10 @@
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
-                    label-align="left"
-                    @submit="fetchTableData"
-                    @reset="fetchTableData"
-                    @keyup.enter="() => fetchTableData()">
+                  label-align="left"
+                  @submit="fetchTableData"
+                  @reset="fetchTableData"
+                  @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
       <a-form-item field="keyName" label="配置项" label-col-flex="50px">
         <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
@@ -43,8 +43,9 @@
                         position="left"
                         type="warning"
                         @ok="doRefreshCache">
-            <a-button type="primary" status="warning"
-                      v-permission="['infra:dict-key:management:refresh-cache']">
+            <a-button v-permission="['infra:dict-key:management:refresh-cache']"
+                      type="primary"
+                      status="warning">
               刷新缓存
               <template #icon>
                 <icon-sync />
@@ -56,9 +57,7 @@
     </template>
     <!-- table -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
-             label-align="left"
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"

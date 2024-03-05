@@ -24,6 +24,11 @@ public enum HostConnectStatusEnum {
      */
     FAILED,
 
+    /**
+     * 强制下线
+     */
+    FORCE_OFFLINE,
+
     ;
 
     public static HostConnectStatusEnum of(String type) {

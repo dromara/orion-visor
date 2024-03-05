@@ -35,7 +35,9 @@
                          placeholder="请选择${field.comment}"
                          show-time />
           #else
-          <a-input v-model="formModel.${field.propertyName}" placeholder="请输入${field.comment}" allow-clear/>
+          <a-input v-model="formModel.${field.propertyName}"
+                   placeholder="请输入${field.comment}"
+                   allow-clear/>
           #end
           #end
         </a-form-item>

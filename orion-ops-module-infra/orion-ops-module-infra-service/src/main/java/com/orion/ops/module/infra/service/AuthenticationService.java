@@ -16,16 +16,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AuthenticationService {
 
-    // TODO 配置化
-    // 允许多端登录
-    boolean allowMultiDevice = true;
-    // 允许凭证续签
-    boolean allowRefresh = true;
-    // 凭证续签最大次数
-    int maxRefreshCount = 3;
-    // 失败锁定次数
-    int maxFailedLoginCount = 5;
-
     /**
      * 登录
      *

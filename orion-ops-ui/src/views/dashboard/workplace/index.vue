@@ -14,9 +14,8 @@
                 title="操作日志"
                 :header-style="{ paddingBottom: '0' }"
                 :body-style="{ padding: '8px 20px 8px 20px' }">
-          <operator-log-table :visible-user="false"
-                              :visible-handle="false"
-                              :current="true" />
+          <operator-log-simple-table :current="true"
+                                     :handle-column="false" />
         </a-card>
       </div>
       <a-grid class="right-side"
@@ -39,7 +38,7 @@
   import Banner from './components/banner.vue';
   import QuickOperation from './components/quick-operation.vue';
   import Docs from './components/docs.vue';
-  import OperatorLogTable from '@/views/user/operator-log/components/operator-log-table.vue';
+  import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
 </script>
 
 <script lang="ts">

@@ -1,7 +1,15 @@
 // 主机连接类型
 export const HostConnectType = {
   SSH: 'SSH',
-  SFTP: 'SFTP'
+  SFTP: 'SFTP',
+};
+
+// 主机连接状态
+export const HostConnectStatus = {
+  CONNECTING: 'CONNECTING',
+  COMPLETE: 'COMPLETE',
+  FAILED: 'FAILED',
+  FORCE_OFFLINE: 'FORCE_OFFLINE',
 };
 
 // 主机连接状态 字典项

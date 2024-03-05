@@ -2,10 +2,10 @@
   <!-- 搜索 -->
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
-                    label-align="left"
-                    @submit="fetchTableData"
-                    @reset="fetchTableData"
-                    @keyup.enter="() => fetchTableData()">
+                  label-align="left"
+                  @submit="fetchTableData"
+                  @reset="fetchTableData"
+                  @keyup.enter="() => fetchTableData()">
       <!-- id -->
       <a-form-item field="id" label="主机id" label-col-flex="50px">
         <a-input-number v-model="formModel.id"
@@ -91,9 +91,7 @@
     </template>
     <!-- table -->
     <a-table row-key="id"
-             class="table-wrapper-8"
              ref="tableRef"
-             label-align="left"
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"

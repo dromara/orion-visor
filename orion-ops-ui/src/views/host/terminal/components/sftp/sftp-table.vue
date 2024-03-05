@@ -2,7 +2,6 @@
   <a-table row-key="path"
            ref="tableRef"
            class="sftp-table"
-           label-align="left"
            :columns="columns"
            v-model:selected-keys="selectedKeys"
            :row-selection="rowSelection"

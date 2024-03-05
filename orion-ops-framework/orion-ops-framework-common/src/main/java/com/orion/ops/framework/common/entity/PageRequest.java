@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Range;
  * @since 2023/7/12 23:14
  */
 @Data
+@Schema(description = "公共页码请求")
 public class PageRequest implements IPageRequest {
 
     @Range(min = 1, max = 10000, groups = Page.class)

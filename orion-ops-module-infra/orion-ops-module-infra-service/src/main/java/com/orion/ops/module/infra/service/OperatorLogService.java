@@ -33,6 +33,30 @@ public interface OperatorLogService {
     DataGrid<OperatorLogVO> getOperatorLogPage(OperatorLogQueryRequest request);
 
     /**
+     * 删除操作日志
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteOperatorLog(List<Long> idList);
+
+    /**
+     * 查询操作日志数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getOperatorLogCount(OperatorLogQueryRequest request);
+
+    /**
+     * 清空操作日志
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer clearOperatorLog(OperatorLogQueryRequest request);
+
+    /**
      * 查询用户登录日志
      *
      * @param username username
