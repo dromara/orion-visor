@@ -43,7 +43,7 @@ public enum HostConfigTypeEnum implements GenericsDataDefinition {
             return null;
         }
         for (HostConfigTypeEnum value : values()) {
-            if (value.type.equals(type)) {
+            if (value.type.equalsIgnoreCase(type)) {
                 return value;
             }
         }

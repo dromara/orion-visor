@@ -9,14 +9,18 @@ package com.orion.ops.module.asset.handler.host.terminal.constant;
  */
 public interface TerminalMessage {
 
-    String CLOSED_CONNECTION = "closed connection...";
+    String CONFIG_DISABLED = "SSH configuration has been disabled.";
 
-    String AUTHENTICATION_FAILURE = "authentication failure...";
+    String AUTHENTICATION_FAILURE = "authentication failed. please check the configuration.";
 
-    String UNREACHABLE = "remote server unreachable...";
+    String SERVER_UNREACHABLE = "remote server unreachable. please check the configuration.";
 
-    String CONNECTION_TIMEOUT = "connection timeout...";
+    String CONNECTION_FAILED = "connection failed.";
 
-    String FORCED_OFFLINE = "forced offline...";
+    String CONNECTION_TIMEOUT = "connection timeout.";
+
+    String CONNECTION_CLOSED = "connection closed.";
+
+    String FORCED_OFFLINE = "forced offline.";
 
 }

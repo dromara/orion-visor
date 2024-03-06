@@ -30,9 +30,10 @@ public interface AssetAuthorizedDataService {
      * 查询用户已授权的主机主机
      *
      * @param userId userId
+     * @param type   type
      * @return group
      */
-    AuthorizedHostWrapperVO getUserAuthorizedHostGroup(Long userId);
+    AuthorizedHostWrapperVO getUserAuthorizedHost(Long userId, String type);
 
     /**
      * 获取用户已授权的主机id 不查询角色

@@ -1,8 +1,10 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.framework.common.enums.EnableStatus;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
@@ -21,10 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -65,6 +64,10 @@ public class HostConfigServiceImpl implements HostConfigService {
         HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type.getType());
         if (config == null) {
             return null;
+        }
+        // 检查配置状态
+        if (!BooleanBit.toBoolean(config.getStatus())) {
+            throw Exceptions.disabled();
         }
         return type.parse(config.getConfig());
     }
@@ -145,6 +148,7 @@ public class HostConfigServiceImpl implements HostConfigService {
             update.setId(config.getId());
             update.setStatus(status);
             update.setVersion(version);
+            update.setUpdateTime(new Date());
             int effect = hostConfigDAO.updateById(update);
             Valid.version(effect);
             return update.getVersion();
@@ -165,6 +169,20 @@ public class HostConfigServiceImpl implements HostConfigService {
                 .map(s -> this.getDefaultConfig(hostId, s))
                 .collect(Collectors.toList());
         hostConfigDAO.insertBatch(configs);
+    }
+
+    @Override
+    public List<Long> getEnabledConfigHostId(String type, List<Long> hostIdList) {
+        return hostConfigDAO.of()
+                .createValidateWrapper()
+                .select(HostConfigDO::getHostId)
+                .eq(HostConfigDO::getType, type)
+                .eq(HostConfigDO::getStatus, BooleanBit.TRUE.getValue())
+                .in(HostConfigDO::getHostId, hostIdList)
+                .then()
+                .stream()
+                .map(HostConfigDO::getHostId)
+                .collect(Collectors.toList());
     }
 
     /**

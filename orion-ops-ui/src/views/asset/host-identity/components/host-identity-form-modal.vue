@@ -45,7 +45,9 @@
                     unchecked-text="使用原密码" />
         </a-form-item>
         <!-- 秘钥id -->
-        <a-form-item field="keyId" label="主机秘钥">
+        <a-form-item field="keyId"
+                     label="主机秘钥"
+                     extra="密码和秘钥二选一 优先使用秘钥">
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
       </a-form>

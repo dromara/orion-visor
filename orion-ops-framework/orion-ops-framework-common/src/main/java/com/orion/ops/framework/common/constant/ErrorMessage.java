@@ -75,8 +75,6 @@ public interface ErrorMessage {
 
     String SESSION_ABSENT = "会话不存在";
 
-    String CONNECT_ERROR = "连接失败";
-
     String PATH_NOT_NORMALIZE = "路径不合法";
 
     String OPERATE_ERROR = "操作失败";

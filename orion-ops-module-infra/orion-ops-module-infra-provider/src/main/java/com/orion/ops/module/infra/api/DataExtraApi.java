@@ -102,6 +102,16 @@ public interface DataExtraApi {
     Future<Map<Long, String>> getExtraItemValuesByCacheAsync(Long userId, DataExtraTypeEnum type, String item);
 
     /**
+     * 异步查询额外配置项 (查询缓存)
+     *
+     * @param userId userId
+     * @param type   type
+     * @param items  items
+     * @return value
+     */
+    Future<List<Map<Long, String>>> getExtraItemsValuesByCacheAsync(Long userId, DataExtraTypeEnum type, List<String> items);
+
+    /**
      * 查询额外配置
      *
      * @param dto  dto

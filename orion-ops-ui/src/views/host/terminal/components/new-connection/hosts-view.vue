@@ -10,7 +10,7 @@
     <!-- 列表视图 -->
     <host-list-view v-if="NewConnectionType.LIST === newConnectionType"
                     :hostList="hostList"
-                    empty-value="无授权主机!" />
+                    empty-value="无授权主机/主机未启用 SSH 配置!" />
     <!-- 我的收藏 -->
     <host-list-view v-if="NewConnectionType.FAVORITE === newConnectionType"
                     class="list-view-container"

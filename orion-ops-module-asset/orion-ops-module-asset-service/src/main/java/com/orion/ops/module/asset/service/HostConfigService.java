@@ -66,4 +66,13 @@ public interface HostConfigService {
      */
     void initHostConfig(Long hostId);
 
+    /**
+     * 获取启用配置的 hostId
+     *
+     * @param type       type
+     * @param hostIdList hostIdList
+     * @return hostId
+     */
+    List<Long> getEnabledConfigHostId(String type, List<Long> hostIdList);
+
 }

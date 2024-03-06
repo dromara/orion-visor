@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -40,8 +41,8 @@ public class AssetAuthorizedDataServiceController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/current-host")
     @Operation(summary = "查询当前用户已授权的主机")
-    public AuthorizedHostWrapperVO getCurrentAuthorizedHostGroup() {
-        return assetAuthorizedDataService.getUserAuthorizedHostGroup(SecurityUtils.getLoginUserId());
+    public AuthorizedHostWrapperVO getCurrentAuthorizedHost(@RequestParam("type") String type) {
+        return assetAuthorizedDataService.getUserAuthorizedHost(SecurityUtils.getLoginUserId(), type);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

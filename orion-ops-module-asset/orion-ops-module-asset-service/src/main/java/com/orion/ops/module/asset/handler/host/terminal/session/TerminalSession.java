@@ -56,7 +56,7 @@ public abstract class TerminalSession implements ITerminalSession {
                 .type(OutputTypeEnum.CLOSE.getType())
                 .sessionId(this.sessionId)
                 .forceClose(BooleanBit.of(this.forceOffline).getValue())
-                .msg(this.forceOffline ? TerminalMessage.FORCED_OFFLINE : TerminalMessage.CLOSED_CONNECTION)
+                .msg(this.forceOffline ? TerminalMessage.FORCED_OFFLINE : TerminalMessage.CONNECTION_CLOSED)
                 .build();
         WebSockets.sendText(channel, OutputTypeEnum.CLOSE.format(resp));
     }

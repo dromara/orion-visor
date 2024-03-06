@@ -56,6 +56,9 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     private HostService hostService;
 
     @Resource
+    private HostConfigService hostConfigService;
+
+    @Resource
     private HostKeyService hostKeyService;
 
     @Resource
@@ -88,10 +91,10 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     }
 
     @Override
-    public AuthorizedHostWrapperVO getUserAuthorizedHostGroup(Long userId) {
+    public AuthorizedHostWrapperVO getUserAuthorizedHost(Long userId, String type) {
         if (systemUserApi.isAdminUser(userId)) {
             // 管理员查询所有
-            return this.buildUserAuthorizedHostGroup(userId, null);
+            return this.buildUserAuthorizedHost(userId, null, type);
         } else {
             // 其他用户 查询授权的数据
             List<Long> authorizedIdList = dataPermissionApi.getUserAuthorizedRelIdList(DataPermissionTypeEnum.HOST_GROUP, userId);
@@ -102,7 +105,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                         .hostList(Lists.empty())
                         .build();
             }
-            return this.buildUserAuthorizedHostGroup(userId, authorizedIdList);
+            return this.buildUserAuthorizedHost(userId, authorizedIdList, type);
         }
     }
 
@@ -173,24 +176,27 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
      *
      * @param userId                userId
      * @param authorizedGroupIdList authorizedGroupIdList
+     * @param type                  type
      * @return tree
      */
     @SneakyThrows
-    private AuthorizedHostWrapperVO buildUserAuthorizedHostGroup(Long userId, List<Long> authorizedGroupIdList) {
+    private AuthorizedHostWrapperVO buildUserAuthorizedHost(Long userId, List<Long> authorizedGroupIdList, String type) {
         final boolean allData = Lists.isEmpty(authorizedGroupIdList);
         AuthorizedHostWrapperVO wrapper = new AuthorizedHostWrapperVO();
         // 查询我的收藏
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
         // 查询最近连接的主机
-        Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.SSH, userId);
-        // 查询别名
-        Future<Map<Long, String>> dataAliasResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId, DataExtraTypeEnum.HOST, DataExtraItems.ALIAS);
-        // 查询颜色
-        Future<Map<Long, String>> dataColorResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId, DataExtraTypeEnum.HOST, DataExtraItems.COLOR);
+        Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.of(type), userId);
+        // 查询主机拓展信息
+        Future<List<Map<Long, String>>> hostExtraResult = dataExtraApi.getExtraItemsValuesByCacheAsync(userId,
+                DataExtraTypeEnum.HOST,
+                Lists.of(DataExtraItems.ALIAS, DataExtraItems.COLOR));
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用
         Map<Long, Set<Long>> dataGroupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);
+        // 查询配置启用的主机
+        List<Long> enabledConfigHostId = this.getEnabledConfigHostId(allData, dataGroupRel, type);
         // 过滤已经授权的分组
         if (!allData) {
             // 构建已授权的分组
@@ -209,15 +215,45 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         wrapper.setHostList(this.getAuthorizedHostList(allData,
                 dataGroup,
                 dataGroupRel,
-                authorizedGroupIdList));
+                authorizedGroupIdList,
+                enabledConfigHostId));
         // 设置主机拓展信息
         this.getAuthorizedHostExtra(wrapper.getHostList(),
                 favoriteResult.get(),
-                dataAliasResult.get(),
-                dataColorResult.get());
+                hostExtraResult.get());
         // 设置最近连接的主机
         wrapper.setLatestHosts(new LinkedHashSet<>(latestConnectHostIdList.get()));
         return wrapper;
+    }
+
+    /**
+     * 获取已启用配置的 hostId
+     *
+     * @param allData      allData
+     * @param dataGroupRel dataGroupRel
+     * @param type         type
+     * @return enabledHostIdList
+     */
+    private List<Long> getEnabledConfigHostId(boolean allData,
+                                              Map<Long, Set<Long>> dataGroupRel,
+                                              String type) {
+        List<Long> hostIdList = null;
+        if (!allData) {
+            // 非全部数据从分组映射中获取
+            hostIdList = dataGroupRel.values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
+            if (hostIdList.isEmpty()) {
+                return Lists.empty();
+            }
+        }
+        // 查询启用配置的主机
+        List<Long> enabledConfigHostId = hostConfigService.getEnabledConfigHostId(type, hostIdList);
+        // 从分组引用中移除
+        dataGroupRel.forEach((k, v) -> v.removeIf(s -> !enabledConfigHostId.contains(s)));
+        return enabledConfigHostId;
     }
 
     /**
@@ -265,14 +301,19 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
      * @param dataGroup             dataGroup
      * @param dataGroupRel          dataGroupRel
      * @param authorizedGroupIdList authorizedGroupIdList
+     * @param enabledConfigHostId   enabledConfigHostId
      * @return hosts
      */
     private List<HostVO> getAuthorizedHostList(boolean allData,
                                                List<DataGroupDTO> dataGroup,
                                                Map<Long, Set<Long>> dataGroupRel,
-                                               List<Long> authorizedGroupIdList) {
+                                               List<Long> authorizedGroupIdList,
+                                               List<Long> enabledConfigHostId) {
         // 查询主机列表
-        List<HostVO> hosts = hostService.getHostListByCache();
+        List<HostVO> hosts = hostService.getHostListByCache()
+                .stream()
+                .filter(s -> enabledConfigHostId.contains(s.getId()))
+                .collect(Collectors.toList());
         // 全部数据直接返回
         if (allData) {
             return hosts;
@@ -296,15 +337,13 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     /**
      * 设置授权主机的额外参数
      *
-     * @param hosts    hosts
-     * @param favorite favorite
-     * @param aliasMap aliasMap
-     * @param colorMap colorMap
+     * @param hosts     hosts
+     * @param favorite  favorite
+     * @param extraList extraList
      */
     private void getAuthorizedHostExtra(List<HostVO> hosts,
                                         List<Long> favorite,
-                                        Map<Long, String> aliasMap,
-                                        Map<Long, String> colorMap) {
+                                        List<Map<Long, String>> extraList) {
         if (Lists.isEmpty(hosts)) {
             return;
         }
@@ -321,6 +360,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
             hosts.get(i).setTags(tags.get(i));
         }
         // 设置主机别名
+        Map<Long, String> aliasMap = extraList.get(0);
         if (!Maps.isEmpty(aliasMap)) {
             hosts.forEach(s -> {
                 String alias = aliasMap.get(s.getId());
@@ -330,6 +370,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
             });
         }
         // 设置主机颜色
+        Map<Long, String> colorMap = extraList.get(1);
         if (!Maps.isEmpty(colorMap)) {
             hosts.forEach(s -> {
                 HostColorExtraModel color = JSON.parseObject(colorMap.get(s.getId()), HostColorExtraModel.class);

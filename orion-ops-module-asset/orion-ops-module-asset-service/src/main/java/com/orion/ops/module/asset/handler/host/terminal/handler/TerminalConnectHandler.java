@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
 import com.orion.lang.exception.AuthenticationException;
-import com.orion.lang.exception.ConnectionRuntimeException;
 import com.orion.lang.exception.TimeoutException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.Exceptions;
@@ -151,9 +150,6 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         if (Exceptions.isCausedBy(e, TimeoutException.class)) {
             // 连接超时
             return TerminalMessage.CONNECTION_TIMEOUT;
-        } else if (Exceptions.isCausedBy(e, ConnectionRuntimeException.class)) {
-            // 无法连接
-            return TerminalMessage.UNREACHABLE;
         } else if (Exceptions.isCausedBy(e, AuthenticationException.class)) {
             // 认证失败
             return TerminalMessage.AUTHENTICATION_FAILURE;
@@ -162,7 +158,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             return e.getMessage();
         } else {
             // 其他错误
-            return TerminalMessage.UNREACHABLE;
+            return TerminalMessage.SERVER_UNREACHABLE;
         }
     }
 
