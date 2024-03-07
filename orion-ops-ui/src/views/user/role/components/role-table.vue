@@ -121,7 +121,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userRoleTable'
+    name: 'roleTable'
   };
 </script>
 

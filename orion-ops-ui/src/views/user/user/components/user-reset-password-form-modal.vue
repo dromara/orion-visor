@@ -38,7 +38,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userUserResetPasswordFormModal'
+    name: 'userResetPasswordFormModal'
   };
 </script>
 

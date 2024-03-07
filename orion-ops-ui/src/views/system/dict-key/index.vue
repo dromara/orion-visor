@@ -16,7 +16,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictKey'
+    name: 'dictKey'
   };
 </script>
 

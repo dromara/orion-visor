@@ -2,16 +2,16 @@ import type { AppRouteRecordRaw } from '../types';
 import { DEFAULT_LAYOUT } from '../base';
 
 const USER: AppRouteRecordRaw = {
-  name: 'user',
+  name: 'userModule',
   component: DEFAULT_LAYOUT,
   children: [
     {
-      name: 'userRole',
+      name: 'role',
       path: '/role',
       component: () => import('@/views/user/role/index.vue'),
     },
     {
-      name: 'userUser',
+      name: 'user',
       path: '/user',
       component: () => import('@/views/user/user/index.vue'),
     },
@@ -21,7 +21,7 @@ const USER: AppRouteRecordRaw = {
       component: () => import('@/views/user/info/index.vue'),
     },
     {
-      name: 'userOperatorLog',
+      name: 'operatorLog',
       path: '/operator-log',
       component: () => import('@/views/user/operator-log/index.vue'),
     },

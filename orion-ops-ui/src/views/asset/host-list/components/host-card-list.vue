@@ -166,7 +166,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostCardList'
+    name: 'hostCardList'
   };
 </script>
 

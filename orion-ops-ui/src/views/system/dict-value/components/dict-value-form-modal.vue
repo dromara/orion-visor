@@ -81,7 +81,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictValueFormModal'
+    name: 'dictValueFormModal'
   };
 </script>
 

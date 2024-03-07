@@ -15,7 +15,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TerminalDisplaySetting'
+    name: 'terminalDisplaySetting'
   };
 </script>
 

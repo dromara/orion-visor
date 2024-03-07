@@ -6,7 +6,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userOperatorLog'
+    name: 'operatorLog'
   };
 </script>
 

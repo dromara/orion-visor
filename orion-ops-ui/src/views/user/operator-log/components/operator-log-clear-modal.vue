@@ -73,7 +73,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userOperatorLogClearModal'
+    name: 'operatorLogClearModal'
   };
 </script>
 

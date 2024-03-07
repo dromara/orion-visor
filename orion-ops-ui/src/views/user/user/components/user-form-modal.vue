@@ -49,7 +49,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userUserFormModal'
+    name: 'userFormModal'
   };
 </script>
 

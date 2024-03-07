@@ -87,7 +87,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetAuditConnectLogDetailDrawer'
+    name: 'connectLogDetailDrawer'
   };
 </script>
 

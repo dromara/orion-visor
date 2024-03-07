@@ -151,7 +151,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userUserTable'
+    name: 'userTable'
   };
 </script>
 

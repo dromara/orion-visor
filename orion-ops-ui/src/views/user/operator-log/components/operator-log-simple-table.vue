@@ -62,7 +62,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userOperatorLogSimpleTable'
+    name: 'operatorLogSimpleTable'
   };
 </script>
 

@@ -181,7 +181,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetAuditConnectLogTable'
+    name: 'connectLogTable'
   };
 </script>
 

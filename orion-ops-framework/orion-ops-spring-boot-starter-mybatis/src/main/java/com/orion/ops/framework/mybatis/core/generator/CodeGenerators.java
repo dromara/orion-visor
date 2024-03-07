@@ -45,11 +45,11 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("command_snippet", "命令片段", "command")
+                Template.create("exec_template", "执行模板", "exec")
                         .disableUnitTest()
-                        .cache("command:snippet:group:{}", "命令片段 ${userId}")
+                        .cache("exec:template:list", "执行模板列表")
                         .expire(1, TimeUnit.DAYS)
-                        .vue("asset", "command-snippet")
+                        .vue("exec", "exec-template")
                         .enableDrawerForm()
                         .build(),
         };

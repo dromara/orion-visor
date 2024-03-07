@@ -88,7 +88,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictKeyFormModal'
+    name: 'dictKeyFormModal'
   };
 </script>
 

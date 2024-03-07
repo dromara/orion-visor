@@ -166,7 +166,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetAuditSftpLogTable'
+    name: 'sftpLogTable'
   };
 </script>
 

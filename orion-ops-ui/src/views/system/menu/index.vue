@@ -13,7 +13,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemMenu'
+    name: 'menu'
   };
 </script>
 

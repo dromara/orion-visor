@@ -2,11 +2,11 @@ import type { AppRouteRecordRaw } from '../types';
 import { FULL_LAYOUT } from '../base';
 
 const HOST: AppRouteRecordRaw = {
-  name: 'host',
+  name: 'hostModule',
   component: FULL_LAYOUT,
   children: [
     {
-      name: 'hostTerminal',
+      name: 'terminal',
       path: '/terminal',
       component: () => import('@/views/host/terminal/index.vue'),
       meta: {

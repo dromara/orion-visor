@@ -27,7 +27,7 @@
 
 <script lang="ts">
   export default {
-    name: 'hostTerminal'
+    name: 'terminal'
   };
 </script>
 

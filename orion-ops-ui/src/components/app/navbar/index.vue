@@ -31,7 +31,7 @@
           <a-button class="nav-btn"
                     type="outline"
                     shape="circle"
-                    @click="openNewRoute('hostTerminal')">
+                    @click="openNewRoute('terminal')">
             <template #icon>
               <icon-code-square />
             </template>

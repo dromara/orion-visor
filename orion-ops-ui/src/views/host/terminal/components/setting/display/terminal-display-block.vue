@@ -92,7 +92,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TerminalDisplayBlock'
+    name: 'terminalDisplayBlock'
   };
 </script>
 

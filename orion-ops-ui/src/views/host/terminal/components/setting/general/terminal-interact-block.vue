@@ -78,7 +78,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TerminalInteractBlock'
+    name: 'terminalInteractBlock'
   };
 </script>
 
