@@ -63,13 +63,13 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/host.form.rules';
+  import formRules from '../types/form.rules';
   import { createHost, getHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import { pick } from 'lodash';
+  import { tagColor } from '@/views/asset/host-list/types/const';
   import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import HostGroupTreeSelector from '@/components/asset/host-group/host-group-tree-selector.vue';
-  import { tagColor } from '@/views/asset/host-list/types/const';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

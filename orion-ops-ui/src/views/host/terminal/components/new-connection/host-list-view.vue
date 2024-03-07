@@ -27,55 +27,55 @@
             <span class="host-item-left-name">
               <!-- 名称文本 -->
               <template v-if="!item.editable">
-                  <!-- 文本 -->
-                  <a-tooltip position="top"
-                             :mini="true"
-                             content-class="terminal-tooltip-content"
-                             arrow-class="terminal-tooltip-content"
-                             :content="item.alias || `${item.name} (${item.code})`">
-                    <span class="host-item-text host-item-left-name-text">
-                      <template v-if="item.alias">
-                        {{ item.alias }}
-                      </template>
-                      <template v-else>
-                        {{ `${item.name} (${item.code})` }}
-                      </template>
-                    </span>
-                  </a-tooltip>
+                <!-- 文本 -->
+                <a-tooltip position="top"
+                           :mini="true"
+                           content-class="terminal-tooltip-content"
+                           arrow-class="terminal-tooltip-content"
+                           :content="item.alias || `${item.name} (${item.code})`">
+                  <span class="host-item-text host-item-left-name-text">
+                    <template v-if="item.alias">
+                      {{ item.alias }}
+                    </template>
+                    <template v-else>
+                      {{ `${item.name} (${item.code})` }}
+                    </template>
+                  </span>
+                </a-tooltip>
                 <!-- 修改别名 -->
-                  <a-tooltip position="top"
-                             :mini="true"
-                             :auto-fix-position="false"
-                             content-class="terminal-tooltip-content"
-                             arrow-class="terminal-tooltip-content"
-                             content="修改别名">
-                    <icon-edit class="host-item-left-name-edit"
-                               @click="clickEditAlias(item)" />
-                  </a-tooltip>
-                </template>
+                <a-tooltip position="top"
+                           :mini="true"
+                           :auto-fix-position="false"
+                           content-class="terminal-tooltip-content"
+                           arrow-class="terminal-tooltip-content"
+                           content="修改别名">
+                  <icon-edit class="host-item-left-name-edit"
+                             @click="clickEditAlias(item)" />
+                </a-tooltip>
+              </template>
               <!-- 名称输入框 -->
               <template v-else>
-                  <a-input v-model="item.alias"
-                           ref="aliasNameInput"
-                           class="host-item-left-name-input"
-                           :max-length="32"
-                           :disabled="item.loading"
-                           size="mini"
-                           :placeholder="item.name"
-                           @blur="saveAlias(item)"
-                           @pressEnter="saveAlias(item)"
-                           @change="saveAlias(item)">
-                    <template #suffix>
-                      <!-- 加载中 -->
-                      <icon-loading v-if="item.loading" />
-                      <!-- 保存 -->
-                      <icon-check v-else
-                                  class="pointer"
-                                  title="保存"
-                                  @click="saveAlias(item)" />
-                    </template>
-                  </a-input>
-                </template>
+                <a-input v-model="item.alias"
+                         ref="aliasNameInput"
+                         class="host-item-left-name-input"
+                         :max-length="32"
+                         :disabled="item.loading"
+                         size="mini"
+                         :placeholder="item.name"
+                         @blur="saveAlias(item)"
+                         @pressEnter="saveAlias(item)"
+                         @change="saveAlias(item)">
+                  <template #suffix>
+                    <!-- 加载中 -->
+                    <icon-loading v-if="item.loading" />
+                    <!-- 保存 -->
+                    <icon-check v-else
+                                class="pointer"
+                                title="保存"
+                                @click="saveAlias(item)" />
+                  </template>
+                </a-input>
+              </template>
             </span>
           </div>
           <!-- 中间ip -->

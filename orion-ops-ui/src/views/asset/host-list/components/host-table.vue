@@ -112,7 +112,9 @@
       </template>
       <!-- 标签 -->
       <template #tags="{ record }">
-        <a-space v-if="record.tags">
+        <a-space v-if="record.tags"
+                 style="margin-bottom: -8px;"
+                 :wrap="true">
           <a-tag v-for="tag in record.tags"
                  :key="tag.id"
                  :color="dataColor(tag.name, tagColor)">
@@ -166,14 +168,14 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
-  import columns from '../types/host.table.columns';
   import { tagColor } from '../types/const';
   import { usePagination } from '@/types/table';
+  import useLoading from '@/hooks/loading';
   import useCopy from '@/hooks/copy';
+  import columns from '../types/table.columns';
   import { dataColor } from '@/utils';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);

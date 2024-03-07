@@ -176,13 +176,13 @@
   import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
-  import fieldConfig from '../types/host.card.fields';
+  import fieldConfig from '../types/card.fields';
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '../types/const';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import useCopy from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 

@@ -17,8 +17,8 @@
                          placeholder="别名/名称/编码/IP @标签"
                          :allow-clear="true"
                          :data="filterOptions"
-                         :filter-option="searchFilter">
-          <template #option="{ data: { raw: { label, isTag} } }">
+                         :filter-option="tagLabelFilter">
+          <template #option="{ data: { raw: { label, isTag } } }">
             <!-- tag -->
             <a-tag v-if="isTag" :color="dataColor(label, tagColor)">
               {{ label }}
@@ -72,7 +72,9 @@
   import { useDictStore, useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { dataColor } from '@/utils';
+  import { tagLabelFilter } from '@/types/form';
   import { tagColor } from '@/views/asset/host-list/types/const';
+  import { getAuthorizedHostOptions } from '@/types/options';
   import HostsView from './hosts-view.vue';
 
   const { toRadioOptions } = useDictStore();
@@ -82,39 +84,10 @@
   const filterValue = ref('');
   const filterOptions = ref<Array<SelectOptionData>>([]);
 
-  // 过滤输入
-  const searchFilter = (searchValue: string, option: SelectOptionData) => {
-    if (searchValue.startsWith('@')) {
-      // tag 过滤
-      return option.isTag && (option.label as string).toLowerCase().startsWith(searchValue.substring(1, searchValue.length).toLowerCase());
-    } else {
-      // 文本过滤
-      return !option.isTag && (option.label as string).toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
-    }
-  };
-
   // 初始化过滤器项
-  const initFilterOptions = () => {
-    // 添加 tags
-    const tagNames = hosts.hostList?.map(s => s.tags)
-      .filter(s => s?.length)
-      .flat(1)
-      .sort((o1, o2) => o1.id - o2.id)
-      .map(s => s.name);
-    [...new Set(tagNames)].map(value => {
-      return { label: value, value: `@${value}`, isTag: true };
-    }).forEach(s => filterOptions.value.push(s));
-    // 添加主机信息
-    const hostMeta = hosts.hostList?.map(s => {
-      return [s.name, s.code, s.address, s.alias];
-    }).filter(Boolean).flat(1);
-    [...new Set(hostMeta)].map(value => {
-      return { label: value, value };
-    }).forEach(s => filterOptions.value.push(s));
-  };
-
-  // 初始化过滤器项
-  onBeforeMount(initFilterOptions);
+  onBeforeMount(() => {
+    filterOptions.value = getAuthorizedHostOptions(hosts.hostList);
+  });
 
 </script>
 

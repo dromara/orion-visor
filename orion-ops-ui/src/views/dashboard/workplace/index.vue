@@ -31,7 +31,6 @@
         </a-grid-item>
       </a-grid>
     </div>
-    <authorized-host-modal />
   </div>
 </template>
 
@@ -40,7 +39,6 @@
   import QuickOperation from './components/quick-operation.vue';
   import Docs from './components/docs.vue';
   import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
-  import AuthorizedHostModal from '@/components/asset/authorized-host-modal/index.vue';
 </script>
 
 <script lang="ts">

@@ -9,10 +9,12 @@
              :columns="hostKeyColumns"
              v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
+             row-class="pointer"
              :sticky-header="true"
              :data="hostKeys"
              :pagination="false"
-             :bordered="false" />
+             :bordered="false"
+             @row-click="clickRow" />
   </grant-layout>
 </template>
 
@@ -23,6 +25,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
   import { ref, onMounted } from 'vue';
@@ -68,6 +71,16 @@
     } catch (e) {
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 点击行
+  const clickRow = ({ id }: TableData) => {
+    const index = selectedKeys.value.indexOf(id);
+    if (index === -1) {
+      selectedKeys.value.push(id);
+    } else {
+      selectedKeys.value.splice(index, 1);
     }
   };
 
