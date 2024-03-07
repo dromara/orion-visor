@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const $vue.moduleConst: AppRouteRecordRaw = {
   name: '${vue.moduleEntityFirstLower}Module',
+  path: '/${vue.moduleEntityFirstLower}-module',
   component: DEFAULT_LAYOUT,
   children: [
     {

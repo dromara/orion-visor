@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const ASSET_AUDIT: AppRouteRecordRaw = {
   name: 'assetAuditModule',
+  path: '/asset-audit-module',
   component: DEFAULT_LAYOUT,
   children: [
     {

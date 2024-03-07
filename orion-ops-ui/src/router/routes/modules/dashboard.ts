@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const DASHBOARD: AppRouteRecordRaw = {
   name: 'dashboard',
+  path: '/dashboard',
   component: DEFAULT_LAYOUT,
   children: [
     {

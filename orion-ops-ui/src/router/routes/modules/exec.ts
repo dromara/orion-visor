@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const EXEC: AppRouteRecordRaw = {
   name: 'execModule',
+  path: '/exec-module',
   component: DEFAULT_LAYOUT,
   children: [
     {

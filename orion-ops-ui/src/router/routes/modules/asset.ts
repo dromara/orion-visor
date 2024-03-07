@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const ASSET: AppRouteRecordRaw = {
   name: 'assetModule',
+  path: '/asset-module',
   component: DEFAULT_LAYOUT,
   children: [
     {

@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const SYSTEM: AppRouteRecordRaw = {
   name: 'systemModule',
+  path: '/system-module',
   component: DEFAULT_LAYOUT,
   children: [
     {

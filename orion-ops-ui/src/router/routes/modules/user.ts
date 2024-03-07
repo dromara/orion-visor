@@ -3,6 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const USER: AppRouteRecordRaw = {
   name: 'userModule',
+  path: '/user-module',
   component: DEFAULT_LAYOUT,
   children: [
     {

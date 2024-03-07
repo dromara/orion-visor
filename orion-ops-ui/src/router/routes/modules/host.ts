@@ -3,6 +3,7 @@ import { FULL_LAYOUT } from '../base';
 
 const HOST: AppRouteRecordRaw = {
   name: 'hostModule',
+  path: '/host-module',
   component: FULL_LAYOUT,
   children: [
     {
