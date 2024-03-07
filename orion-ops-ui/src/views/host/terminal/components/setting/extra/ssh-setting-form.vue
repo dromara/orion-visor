@@ -2,7 +2,6 @@
   <a-form :model="formModel"
           ref="formRef"
           label-align="right"
-          :style="{ width: '460px' }"
           :label-col-props="{ span: 6 }"
           :wrapper-col-props="{ span: 18 }"
           :rules="{}">
@@ -49,8 +48,8 @@
   import { getHostExtraItem } from '@/api/asset/host-extra';
   import { ExtraSshAuthType, extraSshAuthTypeKey } from '../../../types/terminal.const';
   import { useDictStore } from '@/store';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
-  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
+  import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 
   const props = defineProps<{
     hostId: number,

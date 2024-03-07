@@ -146,8 +146,8 @@
   import { useDictStore } from '@/store';
   import { EnabledStatus } from '@/types/const';
   import { HostConfigType } from '../../../types/const';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
-  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
+  import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 
   const { loading, setLoading } = useLoading();
   const { toRadioOptions } = useDictStore();

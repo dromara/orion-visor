@@ -21,7 +21,7 @@
     </div>
     <!-- 顶部菜单 -->
     <div class="center-side">
-      <Menu v-if="topMenu" />
+      <menu-tree v-if="topMenu" />
     </div>
     <!-- 右侧操作 -->
     <ul class="right-side">
@@ -214,8 +214,8 @@
   import { preferenceTipsKey } from './const';
   import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
   import { openWindow } from '@/utils';
-  import Menu from '@/components/system/menu/tree/index.vue';
-  import UpdatePasswordModal from '@/components/user/user/update-password-modal.vue';
+  import MenuTree from '@/components/system/menu/tree/index.vue';
+  import UpdatePasswordModal from '@/components/user/user/update-password-modal/index.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
 
   const tipsStore = useTipsStore();

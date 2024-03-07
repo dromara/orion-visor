@@ -24,13 +24,13 @@
 </script>
 
 <script lang="ts" setup>
-  import DictValueTable from './components/dict-value-table.vue';
-  import DictValueFormModal from './components/dict-value-form-modal.vue';
-  import HistoryValueModal from '@/components/meta/history/history-value-modal.vue';
   import { ref, onUnmounted } from 'vue';
   import { historyType } from './types/const';
   import { useCacheStore } from '@/store';
   import { rollbackDictValue } from '@/api/system/dict-value';
+  import DictValueTable from './components/dict-value-table.vue';
+  import DictValueFormModal from './components/dict-value-form-modal.vue';
+  import HistoryValueModal from '@/components/meta/history/modal/index.vue';
 
   const table = ref();
   const modal = ref();

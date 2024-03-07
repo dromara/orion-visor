@@ -346,7 +346,7 @@ public class CodeGenerator implements Executable {
                 // api 文件
                 new String[]{"/templates/orion-vue-api.ts.vm", "${feature}.ts", "vue/api/${module}"},
                 // router 文件
-                new String[]{"/templates/orion-vue-router.ts.vm", "${module}.${feature}.ts", "vue/router/routes/modules"},
+                new String[]{"/templates/orion-vue-router.ts.vm", "${feature}.ts", "vue/router/routes/modules"},
                 // views index.ts 文件
                 new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${module}/${feature}"},
                 // form-modal.vue 文件

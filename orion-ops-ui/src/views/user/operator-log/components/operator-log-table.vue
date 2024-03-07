@@ -143,7 +143,7 @@
   import { Message } from '@arco-design/web-vue';
   import OperatorLogQueryHeader from './operator-log-query-header.vue';
   import OperatorLogClearModal from './operator-log-clear-modal.vue';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();

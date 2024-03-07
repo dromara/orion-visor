@@ -73,7 +73,7 @@
   import useCopy from '@/hooks/copy';
   import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
   import IconActions from '../layout/icon-actions.vue';
-  import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
+  import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import SshSearchModal from './ssh-search-modal.vue';
   import SshContextMenu from './ssh-context-menu.vue';
 

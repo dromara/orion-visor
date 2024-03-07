@@ -17,7 +17,7 @@
                       :hide-trigger="true"
                       @collapse="setCollapsed">
         <div class="menu-wrapper">
-          <Menu />
+          <menu-tree />
         </div>
       </a-layout-sider>
       <!-- 顶部菜单栏 -->
@@ -29,7 +29,7 @@
                 mask-closable
                 :closable="false"
                 @cancel="drawerCancel">
-        <Menu style="padding: 12px 16px;" />
+        <menu-tree style="padding: 12px 16px;" />
       </a-drawer>
       <!-- body -->
       <a-layout class="layout-content" :style="paddingStyle">
@@ -57,13 +57,13 @@
   import { computed, onMounted, provide, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useAppStore, useUserStore } from '@/store';
-  import Menu from '@/components/system/menu/tree/index.vue';
+  import useResponsive from '@/hooks/responsive';
+  import { toggleDrawerMenuKey } from '@/types/symbol';
+  import PageLayout from './page-layout.vue';
+  import MenuTree from '@/components/system/menu/tree/index.vue';
   import NavBar from '@/components/app/navbar/index.vue';
   import Footer from '@/components/app/footer/index.vue';
   import TabBar from '@/components/app/tab-bar/index.vue';
-  import useResponsive from '@/hooks/responsive';
-  import PageLayout from './page-layout.vue';
-  import { toggleDrawerMenuKey } from '@/types/symbol';
 
   const isInit = ref(false);
   const appStore = useAppStore();

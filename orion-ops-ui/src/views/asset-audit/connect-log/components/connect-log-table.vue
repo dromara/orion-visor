@@ -196,8 +196,8 @@
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import useCopy from '@/hooks/copy';
-  import UserSelector from '@/components/user/user/user-selector.vue';
-  import HostSelector from '@/components/asset/host/host-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
+  import HostSelector from '@/components/asset/host/selector/index.vue';
   import ConnectLogClearModal from './connect-log-clear-modal.vue';
   import ConnectLogDetailDrawer from './connect-log-detail-drawer.vue';
 

@@ -148,7 +148,7 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
   import useCopy from '@/hooks/copy';
   import usePermission from '@/hooks/permission';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';

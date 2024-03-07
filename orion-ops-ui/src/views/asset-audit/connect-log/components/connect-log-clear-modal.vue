@@ -78,8 +78,8 @@
   import { getHostConnectLogCount, clearHostConnectLog } from '@/api/asset/host-connect-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
-  import UserSelector from '@/components/user/user/user-selector.vue';
-  import HostSelector from '@/components/asset/host/host-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
+  import HostSelector from '@/components/asset/host/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

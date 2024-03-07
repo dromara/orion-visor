@@ -181,9 +181,9 @@
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import useCopy from '@/hooks/copy';
-  import UserSelector from '@/components/user/user/user-selector.vue';
-  import HostSelector from '@/components/asset/host/host-selector.vue';
   import { permission10toString } from '@/utils/file';
+  import UserSelector from '@/components/user/user/selector/index.vue';
+  import HostSelector from '@/components/asset/host/selector/index.vue';
 
   const tableRenderData = ref<HostSftpLogQueryResponse[]>([]);
   const selectedKeys = ref<number[]>([]);

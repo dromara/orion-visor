@@ -79,7 +79,7 @@
   import { getOperatorLogPage } from '@/api/user/operator-log';
   import { getCurrentUserOperatorLog } from '@/api/user/mine';
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const props = defineProps({
     handleColumn: {

@@ -175,7 +175,7 @@
   import columns from '../types/table.columns';
   import { dataColor } from '@/utils';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
+  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);

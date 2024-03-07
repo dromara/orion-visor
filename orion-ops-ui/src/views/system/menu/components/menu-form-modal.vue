@@ -140,7 +140,7 @@
   import { Message } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
-  import MenuTreeSelector from '@/components/system/menu/selector/menu-tree-selector.vue';
+  import MenuTreeSelector from '@/components/system/menu/tree-selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

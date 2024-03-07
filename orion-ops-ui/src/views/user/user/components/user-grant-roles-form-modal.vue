@@ -49,9 +49,9 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
-  import RoleSelector from '@/components/user/role/role-selector.vue';
   import { useCacheStore } from '@/store';
   import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
+  import RoleSelector from '@/components/user/role/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -22,11 +22,11 @@
 
 <script lang="ts" setup>
   import { ref, onBeforeMount } from 'vue';
-  import DictKeyTable from './components/dict-key-table.vue';
-  import DictKeyFormModal from './components/dict-key-form-modal.vue';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import DictKeyTable from './components/dict-key-table.vue';
+  import DictKeyFormModal from './components/dict-key-form-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const render = ref(false);
   const table = ref();

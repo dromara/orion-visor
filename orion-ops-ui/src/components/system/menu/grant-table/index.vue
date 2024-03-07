@@ -10,10 +10,10 @@
     <tbody>
     <a-checkbox-group v-model="checkedKeys" style="display: contents;">
       <template v-for="parentMenu in menuData" :key="parentMenu.id">
-        <template v-for="(childrenMenu, index) in parentMenu.children" :key="childrenMenu.id">
+        <template v-for="(childrenMenu, i) in parentMenu.children" :key="childrenMenu.id">
           <tr>
             <!-- 父菜单 -->
-            <td v-if="index === 0" :rowspan="parentMenu.children.length">
+            <td v-if="i === 0" :rowspan="parentMenu.children.length">
               <a-checkbox :value="parentMenu.id">
                 {{ parentMenu.name }}
               </a-checkbox>

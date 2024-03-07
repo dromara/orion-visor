@@ -2,9 +2,9 @@
 
 -- 父菜单
 INSERT INTO system_menu
-  (parent_id, name, type, sort, visible, status, cache, component)
+  (parent_id, name, type, sort, visible, status, cache)
 VALUES
-  (0, '${table.comment}管理', 1, 10, 1, 1, 1, '$vue.moduleEntityFirstLower');
+  (0, '${table.comment}管理', 1, 10, 1, 1, 1);
 
 -- 设置临时父菜单id
 SELECT @TMP_PARENT_ID:=LAST_INSERT_ID();
@@ -13,7 +13,7 @@ SELECT @TMP_PARENT_ID:=LAST_INSERT_ID();
 INSERT INTO system_menu
   (parent_id, name, type, sort, visible, status, cache, component)
 VALUES
-  (@TMP_PARENT_ID, '$table.comment', 2, 10, 1, 1, 1, '$vue.moduleEntityFirstLower$vue.featureEntity');
+  (@TMP_PARENT_ID, '$table.comment', 2, 10, 1, 1, 1, '$vue.featureEntityFirstLower');
 
 -- 设置临时子菜单id
 SELECT @TMP_SUB_ID:=LAST_INSERT_ID();

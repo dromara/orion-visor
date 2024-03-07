@@ -182,7 +182,7 @@
   import { tagColor } from '../types/const';
   import useCopy from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
+  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 

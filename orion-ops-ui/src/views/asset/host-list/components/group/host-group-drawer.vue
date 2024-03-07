@@ -72,7 +72,7 @@
   import { Message } from '@arco-design/web-vue';
   import { updateHostGroupRel } from '@/api/asset/host-group';
   import HostTransfer from './host-transfer.vue';
-  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
+  import HostGroupTree from '@/components/asset/host-group/tree/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -8,6 +8,7 @@
   import useMenuTree from './use-menu-tree';
 
   export default defineComponent({
+    name: 'menuTree',
     emit: ['collapse'],
     setup() {
       const appStore = useAppStore();

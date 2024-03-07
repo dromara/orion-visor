@@ -6,7 +6,7 @@ const SYSTEM: AppRouteRecordRaw = {
   component: DEFAULT_LAYOUT,
   children: [
     {
-      name: 'menu',
+      name: 'systemMenu',
       path: '/menu',
       component: () => import('@/views/system/menu/index.vue'),
     },

@@ -88,7 +88,7 @@
   import { useDictStore } from '@/store';
   import { operatorLogModuleKey, operatorLogResultKey, operatorLogTypeKey, operatorRiskLevelKey } from '@/views/user/operator-log/types/const';
   import { labelFilter } from '@/types/form';
-  import UserSelector from '@/components/user/user/user-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const { $state: dictState, toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();

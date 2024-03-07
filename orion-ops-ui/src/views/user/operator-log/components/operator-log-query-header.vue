@@ -71,7 +71,7 @@
   import { useDictStore } from '@/store';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
   import { labelFilter } from '@/types/form';
-  import UserSelector from '@/components/user/user/user-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['submit']);
   const props = defineProps({

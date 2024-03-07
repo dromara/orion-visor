@@ -91,7 +91,7 @@
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
   import { computed, nextTick, onMounted, ref } from 'vue';
-  import { createGroupGroupPrefix, rootId } from './types/const';
+  import { createGroupGroupPrefix, rootId } from '../const';
   import { findNode, findParentNode, moveNode } from '@/utils/tree';
   import { createHostGroup, deleteHostGroup, updateHostGroupName, moveHostGroup } from '@/api/asset/host-group';
   import { isString } from '@/utils/is';

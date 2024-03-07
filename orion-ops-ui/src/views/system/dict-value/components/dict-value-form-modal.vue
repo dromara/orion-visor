@@ -95,9 +95,9 @@
   import { createDictValue, updateDictValue } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import { ValueType, sortStep } from '../../dict-key/types/const';
-  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
   import { DictKeyQueryResponse } from '@/api/system/dict-key';
   import { useCacheStore } from '@/store';
+  import DictKeySelector from '@/components/system/dict-key/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -138,7 +138,7 @@
   import columns from '../types/table.columns';
   import { usePagination, useRowSelection } from '@/types/table';
   import useCopy from '@/hooks/copy';
-  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
+  import DictKeySelector from '@/components/system/dict-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openHistory']);
 

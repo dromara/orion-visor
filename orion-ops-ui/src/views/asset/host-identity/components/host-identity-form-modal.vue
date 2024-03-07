@@ -70,7 +70,7 @@
   import formRules from '../types/form.rules';
   import { createHostIdentity, updateHostIdentity } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
