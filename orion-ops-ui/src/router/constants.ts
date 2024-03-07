@@ -11,7 +11,7 @@ export const NOT_FOUND_ROUTER_NAME = 'notFound';
 
 export const DEFAULT_ROUTE_NAME = 'workplace';
 
-export const DEFAULT_ROUTE_FULL_PATH = '/dashboard/workplace';
+export const DEFAULT_ROUTE_FULL_PATH = '/workplace';
 
 /**
  * 路由白名单

@@ -3,12 +3,11 @@ import { DEFAULT_LAYOUT } from '../base';
 
 const DASHBOARD: AppRouteRecordRaw = {
   name: 'dashboard',
-  path: '/dashboard',
   component: DEFAULT_LAYOUT,
   children: [
     {
       name: 'workplace',
-      path: '/dashboard/workplace',
+      path: '/workplace',
       component: () => import('@/views/dashboard/workplace/index.vue'),
     },
   ],

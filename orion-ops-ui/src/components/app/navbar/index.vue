@@ -25,12 +25,15 @@
     </div>
     <!-- 右侧操作 -->
     <ul class="right-side">
-      <!-- 搜索 -->
-      <li v-if="false">
-        <a-tooltip content="搜索">
-          <a-button class="nav-btn" type="outline" shape="circle">
+      <!-- 主机终端 -->
+      <li v-permission="['asset:host-terminal:access']">
+        <a-tooltip content="主机终端">
+          <a-button class="nav-btn"
+                    type="outline"
+                    shape="circle"
+                    @click="openNewRoute('hostTerminal')">
             <template #icon>
-              <icon-search />
+              <icon-code-square />
             </template>
           </a-button>
         </a-tooltip>
@@ -210,6 +213,7 @@
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
   import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
+  import { openWindow } from '@/utils';
   import Menu from '@/components/system/menu/tree/index.vue';
   import UpdatePasswordModal from '@/components/user/user/update-password-modal.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
@@ -274,6 +278,12 @@
   // 打开语言切换
   const setLocalesVisible = () => {
     triggerMouseEvent(localeRef);
+  };
+
+  // 打开新页面
+  const openNewRoute = (name: string) => {
+    const { href } = router.resolve({ name });
+    openWindow(href);
   };
 
   // 刷新页面
