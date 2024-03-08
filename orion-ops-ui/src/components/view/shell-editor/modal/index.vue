@@ -14,6 +14,7 @@
     <div :style="{ width: '100%', 'height': height }">
       <editor v-model="value"
               language="shell"
+              :suggestions="true"
               :auto-focus="true"
               :theme="dark ? 'vs-dark' : 'vs'" />
     </div>
@@ -27,10 +28,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue';
+  import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
-  import * as monaco from 'monaco-editor';
-  import { language } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js';
 
   const props = defineProps({
     width: {
@@ -70,33 +69,6 @@
   const handleClose = () => {
     setVisible(false);
   };
-
-  // 初始化
-  onMounted(() => {
-    // 代码提示
-    monaco.languages.registerCompletionItemProvider('shell', {
-      provideCompletionItems() {
-        const suggestions: any = [];
-        language.keywords?.forEach((item: any) => {
-          suggestions.push({
-            label: item,
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: item,
-          });
-        });
-        language.builtins?.forEach((item: any) => {
-          suggestions.push({
-            label: item,
-            kind: monaco.languages.CompletionItemKind.Function,
-            insertText: item,
-          });
-        });
-        return {
-          suggestions: [...new Set(suggestions)],
-        };
-      },
-    });
-  });
 
 </script>
 

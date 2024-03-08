@@ -33,8 +33,9 @@
           <editor v-model="formModel.command"
                   containerClass="command-editor"
                   language="shell"
-                  :auto-focus="true"
-                  :theme="preference.theme.dark ? 'vs-dark' : 'vs'" />
+                  theme="vs-dark"
+                  :suggestions="true"
+                  :auto-focus="true" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -55,10 +56,8 @@
   import { createCommandSnippet, updateCommandSnippet } from '@/api/asset/command-snippet';
   import formRules from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
-  import { useTerminalStore } from '@/store';
   import CommandSnippetGroupSelect from './command-snippet-group-select.vue';
 
-  const { preference } = useTerminalStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 

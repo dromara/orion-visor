@@ -10,20 +10,18 @@ const columns = [
     align: 'left',
     fixed: 'left',
   }, {
-    title: '名称',
+    title: '模板名称',
     dataIndex: 'name',
     slotName: 'name',
     align: 'left',
     width: 200,
     ellipsis: true,
-    tooltip: true,
   }, {
-    title: '命令',
+    title: '模板命令',
     dataIndex: 'command',
     slotName: 'command',
     align: 'left',
     ellipsis: true,
-    tooltip: true,
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',
@@ -33,12 +31,6 @@ const columns = [
     render: ({ record }) => {
       return dateFormat(new Date(record.updateTime));
     },
-  }, {
-    title: '修改人',
-    dataIndex: 'updater',
-    slotName: 'updater',
-    width: 90,
-    ellipsis: true,
   }, {
     title: '操作',
     slotName: 'handle',

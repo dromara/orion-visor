@@ -40,7 +40,6 @@ public class ExecTemplateCreateRequest implements Serializable {
     @Schema(description = "超时时间秒 0不超时")
     private Integer timeout;
 
-    @NotBlank
     @Schema(description = "参数")
     private String parameter;
 

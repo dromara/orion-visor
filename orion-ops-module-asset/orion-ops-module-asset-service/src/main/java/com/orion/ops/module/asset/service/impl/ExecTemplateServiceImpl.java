@@ -152,8 +152,8 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     private LambdaQueryWrapper<ExecTemplateDO> buildQueryWrapper(ExecTemplateQueryRequest request) {
         return execTemplateDAO.wrapper()
                 .eq(ExecTemplateDO::getId, request.getId())
-                .eq(ExecTemplateDO::getName, request.getName())
-                .eq(ExecTemplateDO::getCommand, request.getCommand());
+                .like(ExecTemplateDO::getName, request.getName())
+                .like(ExecTemplateDO::getCommand, request.getCommand());
     }
 
 }

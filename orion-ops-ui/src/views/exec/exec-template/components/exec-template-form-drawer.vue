@@ -11,33 +11,77 @@
     <a-spin class="full modal-form" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }"
+              layout="vertical"
               :rules="formRules">
-        <!-- 名称 -->
-        <a-form-item field="name" label="名称">
+        <!-- 模板名称 -->
+        <a-form-item field="name" label="模板名称">
           <a-input v-model="formModel.name"
-                   placeholder="请输入名称"
-                   allow-clear/>
-        </a-form-item>
-        <!-- 命令 -->
-        <a-form-item field="command" label="命令">
-          <a-input v-model="formModel.command"
-                   placeholder="请输入命令"
-                   allow-clear/>
+                   placeholder="请输入模板名称"
+                   allow-clear />
         </a-form-item>
         <!-- 超时时间 -->
-        <a-form-item field="timeout" label="超时时间">
+        <a-form-item field="timeout"
+                     label="超时时间">
           <a-input-number v-model="formModel.timeout"
-                          placeholder="请输入超时时间 秒 0不超时"
-                          hide-button />
+                          placeholder="为0则不超时"
+                          :min="0"
+                          :max="100000"
+                          hide-button>
+            <template #suffix>
+              秒
+            </template>
+          </a-input-number>
         </a-form-item>
-        <!-- 参数 -->
-        <a-form-item field="parameter" label="参数">
-          <a-input v-model="formModel.parameter"
-                   placeholder="请输入参数"
-                   allow-clear/>
+        <!-- 模板命令 -->
+        <a-form-item field="command" label="模板命令">
+          <editor v-model="formModel.command"
+                  containerClass="command-editor"
+                  language="shell"
+                  theme="vs-dark"
+                  :suggestions="false" />
+        </a-form-item>
+        <!-- 命令参数 -->
+        <a-form-item field="parameter"
+                     class="parameter-form-item"
+                     label="命令参数">
+          <!-- label -->
+          <template #label>
+            <div class="parameter-label-wrapper">
+              <span>命令参数</span>
+              <span class="span-blue pointer" @click="addParameter">添加参数</span>
+            </div>
+          </template>
+          <!-- 参数 -->
+          <template v-if="parameter.length">
+            <a-input-group v-for="(item, i) in parameter"
+                           :key="i"
+                           class="parameter-item"
+                           :class="[ i === parameter.length - 1 ? 'parameter-item-last' : '' ]">
+              <a-input class="parameter-item-name"
+                       v-model="item.name"
+                       placeholder="参数名称 (必填)"
+                       allow-clear />
+              <a-input class="parameter-item-default"
+                       v-model="item.default"
+                       placeholder="默认值 (非必填)"
+                       allow-clear />
+              <a-input class="parameter-item-description"
+                       v-model="item.desc"
+                       placeholder="描述 (非必填)"
+                       allow-clear />
+              <span class="parameter-item-close click-icon-wrapper"
+                    title="移除"
+                    @click="removeParameter(i)">
+             <icon-close />
+            </span>
+            </a-input-group>
+          </template>
+          <!-- 无参数 -->
+          <template v-else>
+            <span class="no-parameter">
+              <icon-empty class="mr4" />无参数
+            </span>
+          </template>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -51,14 +95,17 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TemplateParam } from '../types/const';
   import type { ExecTemplateUpdateRequest } from '@/api/exec/exec-template';
-  import { ref } from 'vue';
+  import { onUnmounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import {} from '../types/const';
   import { createExecTemplate, updateExecTemplate } from '@/api/exec/exec-template';
+  import { builtinsParams } from '../types/const';
   import { Message } from '@arco-design/web-vue';
+  import * as monaco from 'monaco-editor';
+  import { language as shellLanguage } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -71,13 +118,15 @@
       id: undefined,
       name: undefined,
       command: undefined,
-      timeout: undefined,
+      timeout: 0,
       parameter: undefined,
     };
   };
 
   const formRef = ref<any>();
   const formModel = ref<ExecTemplateUpdateRequest>({});
+  const parameter = ref<Array<TemplateParam>>([]);
+  const suggestionsDispose = ref();
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -100,9 +149,77 @@
   // 渲染表单
   const renderForm = (record: any) => {
     formModel.value = Object.assign({}, record);
+    if (record.parameter) {
+      parameter.value = JSON.parse(record.parameter);
+    } else {
+      parameter.value = [];
+    }
+    // 注册代码提示
+    registerSuggestions();
   };
 
   defineExpose({ openAdd, openUpdate });
+
+  // 添加参数
+  const addParameter = () => {
+    parameter.value.push({});
+  };
+
+  // 移除参数
+  const removeParameter = (index: number) => {
+    parameter.value.splice(index, 1);
+  };
+
+  // 注册代码提示
+  const registerSuggestions = () => {
+    if (suggestionsDispose.value) {
+      return;
+    }
+    // 代码提示
+    suggestionsDispose.value = monaco.languages.registerCompletionItemProvider('shell', {
+      provideCompletionItems() {
+        const suggestions: any = [];
+        shellLanguage.keywords?.forEach((item: any) => {
+          suggestions.push({
+            label: item,
+            kind: monaco.languages.CompletionItemKind.Keyword,
+            insertText: item
+          });
+        });
+        shellLanguage.builtins?.forEach((item: any) => {
+          suggestions.push({
+            label: item,
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: item,
+          });
+        });
+        // 内置参数提示
+        builtinsParams.forEach(s => {
+          suggestions.push({
+            label: s.name,
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: `@{{ ${s.name} }}`,
+            detail: s.desc || '',
+          });
+        });
+        // 命令参数提示
+        parameter.value.forEach(s => {
+          if (!s.name) {
+            return;
+          }
+          suggestions.push({
+            label: s.name,
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: `@{{ ${s.name} }}`,
+            detail: s.desc || '',
+          });
+        });
+        return {
+          suggestions: [...new Set(suggestions)],
+        };
+      },
+    });
+  };
 
   // 确定
   const handlerOk = async () => {
@@ -112,6 +229,16 @@
       const error = await formRef.value.validate();
       if (error) {
         return false;
+      }
+      // 验证并设置命令参数
+      for (const p of parameter.value) {
+        if (!p.name) {
+          Message.warning('请补全命令参数');
+          return false;
+        }
+      }
+      if (parameter.value.length) {
+        formModel.value.parameter = JSON.stringify(parameter.value);
       }
       if (isAddHandle.value) {
         // 新增
@@ -141,10 +268,91 @@
   // 清空
   const handlerClear = () => {
     setLoading(false);
+    // 卸载代码提示
+    suggestionsDispose.value?.dispose();
+    suggestionsDispose.value = undefined;
   };
+
+  // 卸载关闭
+  onUnmounted(handlerClear);
 
 </script>
 
 <style lang="less" scoped>
+  .parameter-form-item {
+    user-select: none;
+
+    :deep(.arco-form-item-label) {
+      width: 100%;
+    }
+
+    .parameter-label-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    :deep(.arco-form-item-content) {
+      flex-direction: column;
+    }
+
+    .parameter-item-last {
+      margin-bottom: 0 !important;
+    }
+
+    .parameter-item {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+
+      & > span {
+        border-radius: 2px;
+        border-right-color: transparent;
+      }
+
+      &-name {
+        width: 29%;
+      }
+
+      &-default {
+        width: 29%;
+      }
+
+      &-description {
+        width: calc(39% - 44px);
+      }
+
+      &-close {
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        background: var(--color-fill-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: var(--color-fill-3);
+        }
+      }
+    }
+
+    .no-parameter {
+      background: var(--color-fill-2);
+      width: 100%;
+      height: 32px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-2);
+    }
+  }
+
+  .command-editor {
+    width: 100%;
+    height: 44vh;
+  }
 
 </style>

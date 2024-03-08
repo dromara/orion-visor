@@ -4,7 +4,7 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 /**
  * 主题
  */
-export type Theme = 'vs' | 'vs-dark'
+export type Theme = 'vs' | 'vs-dark' | 'hc-light' | 'hc-black'
 
 /**
  * 折叠方式

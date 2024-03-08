@@ -13,16 +13,16 @@
                         allow-clear
                         hide-button />
       </a-form-item>
-      <!-- 名称 -->
-      <a-form-item field="name" label="名称" label-col-flex="50px">
+      <!-- 模板名称 -->
+      <a-form-item field="name" label="模板名称" label-col-flex="50px">
         <a-input v-model="formModel.name"
-                 placeholder="请输入名称"
+                 placeholder="请输入模板名称"
                  allow-clear />
       </a-form-item>
-      <!-- 命令 -->
-      <a-form-item field="command" label="命令" label-col-flex="50px">
+      <!-- 模板命令 -->
+      <a-form-item field="command" label="模板命令" label-col-flex="50px">
         <a-input v-model="formModel.command"
-                 placeholder="请输入命令"
+                 placeholder="请输入模板命令"
                  allow-clear />
       </a-form-item>
     </query-header>
@@ -62,6 +62,17 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 模板名称 -->
+      <template #name="{ record }">
+        <span class="span-blue">{{ record.name }}</span>
+      </template>
+      <!-- 模板命令 -->
+      <template #command="{ record }">
+        <span class="copy-left" @click="copy(record.command, '已复制')">
+          <icon-copy />
+        </span>
+        <span :title="record.command">{{ record.command }}</span>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -105,6 +116,7 @@
   import columns from '../types/table.columns';
   import {} from '../types/const';
   import { usePagination } from '@/types/table';
+  import useCopy from '@/hooks/copy';
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
@@ -112,6 +124,7 @@
 
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
+  const { copy } = useCopy();
 
   const formModel = reactive<ExecTemplateQueryRequest>({
     id: undefined,
