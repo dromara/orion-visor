@@ -74,6 +74,8 @@
   import { useDictStore } from '@/store';
   #end
 
+  const emits = defineEmits(['added', 'updated']);
+
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
@@ -82,6 +84,8 @@
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
+  const formRef = ref<any>();
+  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
 
   const defaultForm = (): ${vue.featureEntity}UpdateRequest => {
     return {
@@ -90,11 +94,6 @@
     #end
     };
   };
-
-  const formRef = ref<any>();
-  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
-
-  const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
   const openAdd = () => {

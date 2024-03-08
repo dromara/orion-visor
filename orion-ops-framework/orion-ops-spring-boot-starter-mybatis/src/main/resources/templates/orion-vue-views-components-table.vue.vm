@@ -157,11 +157,6 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
-  #if($vue.enableRowSelection)
-  const selectedKeys = ref<number[]>([]);
-  #end
-  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
-
   const pagination = usePagination();
   #if($vue.enableRowSelection)
   const rowSelection = useRowSelection();
@@ -171,6 +166,10 @@
   const { toOptions, getDictValue } = useDictStore();
   #end
 
+  #if($vue.enableRowSelection)
+  const selectedKeys = ref<number[]>([]);
+  #end
+  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})
     ${field.propertyName}: undefined,

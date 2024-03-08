@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 #end
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -154,6 +155,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 转换
         return list.stream()
                 .map(${type}Convert.MAPPER::to)
+                .sorted(Comparator.comparing(${type}VO::getId).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -276,7 +278,8 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
                         #foreach($field in ${table.fields})
                         .eq(${type}DO::get${field.capitalName}, searchValue)#if($foreach.hasNext).or()#end
                         #end
-                );
+                )
+                .orderByDesc(${type}DO::getId);
     }
 
 }

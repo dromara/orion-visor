@@ -37,3 +37,38 @@
 > SFTP
 
 * 预览: 默认只能预览 2MB 以内的普通文件, 这个大小可以在前端 env 文件中修改 `VITE_SFTP_PREVIEW_MB`
+
+> 终端面板
+
+⭐ 双击终端标签可快速复制会话
+
+### 执行模板
+
+用来维护批量执行的命令模板, 支持动态参数, 使用 `@{{ xxx }}` 来替换命令参数。
+
+* 新增: 新增执行模板
+* 执行: 使用此命令模板批量执行主机命令
+* 修改: 修改执行模板
+* 删除: 删除执行模板
+
+> 内置参数
+
+| 参数              | 描述                       |
+|:----------------|:-------------------------|
+| hostId          | 执行主机id                   | 
+| hostName        | 执行主机名称                   |
+| hostCode        | 执行主机编码                   |
+| hostAddress     | 执行主机地址                   |
+| userId          | 执行用户id                   |
+| username        | 执行用户名                    |
+| execId          | 执行记录id                   |
+| execHostId      | 执行主机记录id                 |
+| uuid            | 生成任务维度 uuid              |
+| uuidShort       | 生成任务维度 uuid 无 '-'        |
+| hostUuid        | 生成机器维度 uuid              |
+| hostUuidShort   | 生成机器维度 uuid 无 '-'        |
+| timestampMillis | 时间戳毫秒                    |
+| timestamp       | 时间戳                      |
+| date            | 执行时间 yyyy-MM-dd          |
+| datetime        | 执行时间 yyyy-MM-dd HH:mm:ss |
+

@@ -134,8 +134,6 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
-  const list = ref<${vue.featureEntity}QueryResponse[]>([]);
-
   const cardColLayout = useColLayout();
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
@@ -143,6 +141,7 @@
   const { toOptions, getDictValue } = useDictStore();
   #end
 
+  const list = ref<${vue.featureEntity}QueryResponse[]>([]);
   const formRef = ref();
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     searchValue: undefined,

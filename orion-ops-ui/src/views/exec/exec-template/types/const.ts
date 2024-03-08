@@ -9,39 +9,51 @@ export interface TemplateParam {
 export const builtinsParams: Array<TemplateParam> = [
   {
     name: 'hostId',
-    desc: '主机id'
+    desc: '执行主机id'
   }, {
     name: 'hostName',
-    desc: '主机名称'
+    desc: '执行主机名称'
   }, {
     name: 'hostCode',
-    desc: '主机编码'
+    desc: '执行主机编码'
+  }, {
+    name: 'hostAddress',
+    desc: '执行主机地址'
   }, {
     name: 'userId',
     desc: '执行用户id'
   }, {
     name: 'username',
-    desc: '执行用户名称'
+    desc: '执行用户名'
   }, {
     name: 'execId',
-    desc: '执行id'
+    desc: '执行记录id'
+  }, {
+    name: 'execHostId',
+    desc: '执行主机记录id'
   }, {
     name: 'uuid',
-    desc: 'uuid'
+    desc: '生成任务维度 uuid'
   }, {
     name: 'uuidShort',
-    desc: 'uuid 无 \'-\''
+    desc: '生成任务维度 uuid 无 \'-\''
   }, {
-    name: 'timeMillis',
+    name: 'hostUuid',
+    desc: '生成机器维度 uuid'
+  }, {
+    name: 'hostUuidShort',
+    desc: '生成机器维度 uuid 无 \'-\''
+  }, {
+    name: 'timestampMillis',
     desc: '时间戳毫秒'
   }, {
     name: 'timestamp',
     desc: '时间戳'
   }, {
     name: 'date',
-    desc: '时间 yyyy-MM-dd'
+    desc: '执行时间 yyyy-MM-dd'
   }, {
     name: 'datetime',
-    desc: '时间 yyyy-MM-dd HH:mm:ss'
+    desc: '执行时间 yyyy-MM-dd HH:mm:ss'
   },
 ];

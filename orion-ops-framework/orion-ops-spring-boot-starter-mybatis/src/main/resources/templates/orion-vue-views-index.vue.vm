@@ -62,6 +62,13 @@
   #else
   import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
   #end
+  #if($vue.enableCardView)
+
+  const appStore = useAppStore();
+
+  // FIXME 这里需要修改一下字段名称 并且在 appStore 定义该字段
+  const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
+  #end
 
   const render = ref(false);
   const table = ref();
@@ -72,12 +79,6 @@
   const drawer = ref();
   #else
   const modal = ref();
-  #end
-  #if($vue.enableCardView)
-  const appStore = useAppStore();
-
-  // FIXME 这里需要修改一下字段名称 并且在 appStore 定义该字段
-  const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
   #end
 
   // 添加回调

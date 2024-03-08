@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +100,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         // 转换
         return list.stream()
                 .map(ExecTemplateConvert.MAPPER::to)
+                .sorted(Comparator.comparing(ExecTemplateVO::getId).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -153,7 +155,8 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         return execTemplateDAO.wrapper()
                 .eq(ExecTemplateDO::getId, request.getId())
                 .like(ExecTemplateDO::getName, request.getName())
-                .like(ExecTemplateDO::getCommand, request.getCommand());
+                .like(ExecTemplateDO::getCommand, request.getCommand())
+                .orderByDesc(ExecTemplateDO::getId);
     }
 
 }
