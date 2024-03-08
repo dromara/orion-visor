@@ -40,7 +40,6 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :style="{ width: '320px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               @keyup.enter="() => fetchCardData()">

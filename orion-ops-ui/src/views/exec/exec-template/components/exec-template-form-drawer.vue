@@ -1,19 +1,18 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            :width="430"
+            :width="470"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full" :loading="loading">
+    <a-spin class="full modal-form" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '380px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 名称 -->
@@ -28,10 +27,10 @@
                    placeholder="请输入命令"
                    allow-clear/>
         </a-form-item>
-        <!-- 超时时间秒 0不超时 -->
-        <a-form-item field="timeout" label="超时时间秒 0不超时">
+        <!-- 超时时间 -->
+        <a-form-item field="timeout" label="超时时间">
           <a-input-number v-model="formModel.timeout"
-                          placeholder="请输入超时时间秒 0不超时"
+                          placeholder="请输入超时时间 秒 0不超时"
                           hide-button />
         </a-form-item>
         <!-- 参数 -->

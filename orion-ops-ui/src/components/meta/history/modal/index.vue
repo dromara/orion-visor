@@ -1,6 +1,5 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
            title-align="start"
            :title="title"
            :width="960"

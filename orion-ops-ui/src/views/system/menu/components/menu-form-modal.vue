@@ -16,9 +16,8 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
               :label-col-props="{ span: 7 }"
-              :wrapper-col-props="{ span: 17 }"
+              :wrapper-col-props="{ span: 16 }"
               :rules="formRules">
         <!-- 上级菜单 -->
         <a-form-item field="parentId" label="上级菜单">

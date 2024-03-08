@@ -15,9 +15,8 @@
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
               label-align="right"
-              :style="{ width: '460px' }"
               :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 19 }">
+              :wrapper-col-props="{ span: 18 }">
         <!-- 连接用户 -->
         <a-form-item field="userId" label="连接用户">
           <user-selector v-model="formModel.userId"

@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 名称 -->
@@ -31,7 +30,6 @@
         <!-- 用户密码 -->
         <a-form-item field="password"
                      label="用户密码"
-                     style="justify-content: space-between;"
                      :rules="passwordRules">
           <a-input-password v-model="formModel.password"
                             :disabled="!isAddHandle && !formModel.useNewPassword"
@@ -182,8 +180,10 @@
 </script>
 
 <style lang="less" scoped>
+  @switch-width: 94px;
+
   .password-input {
-    width: 240px;
+    width: calc(100% - @switch-width);
   }
 
   .password-input-full {
@@ -191,6 +191,7 @@
   }
 
   .password-switch {
+    width: @switch-width;
     margin-left: 16px;
   }
 </style>

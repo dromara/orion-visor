@@ -17,8 +17,7 @@
               ref="formRef"
               label-align="right"
               :rules="rules"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }">
         <!-- 密码 -->
         <a-form-item field="beforePassword" label="原始密码">

@@ -63,14 +63,16 @@
                 </a-badge>
               </div>
               <template #content>
-                <!-- 过滤表单 -->
-                <slot name="filterContent" />
-                <!-- 操作按钮 -->
-                <div class="filter-bottom-container">
-                  <a-space>
-                    <a-button size="mini" @click="filterReset">重置</a-button>
-                    <a-button size="mini" type="primary" @click="filterSearch">过滤</a-button>
-                  </a-space>
+                <div class="card-filter-container">
+                  <!-- 过滤表单 -->
+                  <slot name="filterContent" />
+                  <!-- 操作按钮 -->
+                  <div class="card-filter-footer">
+                    <a-space>
+                      <a-button size="mini" @click="filterReset">重置</a-button>
+                      <a-button size="mini" type="primary" @click="filterSearch">过滤</a-button>
+                    </a-space>
+                  </div>
                 </div>
               </template>
             </a-popover>

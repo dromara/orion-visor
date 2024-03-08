@@ -15,7 +15,7 @@ export const command = [{
 
 export const timeout = [{
   required: true,
-  message: '请输入超时时间秒 0不超时'
+  message: '请输入超时时间 秒 0不超时'
 }] as FieldRule[];
 
 export const parameter = [{

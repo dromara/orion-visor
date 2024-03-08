@@ -120,8 +120,15 @@
       <!-- 操作按钮 -->
       <div class="config-button-group">
         <a-space>
-          <a-button @click="resetConfig">重置</a-button>
-          <a-button type="primary" @click="saveConfig">保存</a-button>
+          <a-button size="small"
+                    @click="resetConfig">
+            重置
+          </a-button>
+          <a-button type="primary"
+                    size="small"
+                    @click="saveConfig">
+            保存
+          </a-button>
         </a-space>
       </div>
     </a-spin>
