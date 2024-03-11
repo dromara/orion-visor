@@ -87,4 +87,6 @@ public interface ErrorMessage {
 
     String ILLEGAL_STATUS = "当前状态不支持此操作";
 
+    String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";
+
 }

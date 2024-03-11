@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 执行模板 缓存对象
@@ -40,17 +39,5 @@ public class ExecTemplateCacheDTO implements LongCacheIdModel, Serializable {
 
     @Schema(description = "参数")
     private String parameter;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
 
 }

@@ -4,6 +4,7 @@ import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -23,16 +24,19 @@ import java.util.List;
 @Schema(name = "ExecRequest", description = "批量执行 请求对象")
 public class ExecRequest extends PageRequest {
 
+    @Schema(description = "执行模板id")
+    private Long templateId;
+
+    @NotBlank
     @Size(max = 128)
     @Schema(description = "执行描述")
     private String desc;
 
-    @Schema(description = "执行模板id")
-    private Long templateId;
-
+    @NotBlank
     @Schema(description = "执行命令")
     private String command;
 
+    @NotBlank
     @Schema(description = "执行参数")
     private String parameter;
 

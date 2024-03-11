@@ -11,6 +11,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.HostGroupConvert;
 import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
 import com.orion.ops.module.asset.entity.vo.*;
+import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.extra.model.HostColorExtraModel;
 import com.orion.ops.module.asset.service.*;
@@ -87,6 +88,20 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         } else {
             // 查询角色数据
             return dataPermissionApi.getRelIdListByRoleId(type, roleId);
+        }
+    }
+
+    @Override
+    public List<Long> getUserAuthorizedHostId(Long userId, HostConfigTypeEnum type) {
+        final boolean allData = systemUserApi.isAdminUser(userId);
+        if (allData) {
+            // 管理员查询所有
+            return this.getEnabledConfigHostId(true, Maps.empty(), type.name());
+        } else {
+            // 其他用户 查询授权的数据
+            Map<Long, Set<Long>> dataGroupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);
+            // 查询配置启用的主机
+            return this.getEnabledConfigHostId(false, dataGroupRel, type.name());
         }
     }
 

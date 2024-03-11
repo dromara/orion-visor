@@ -4,6 +4,7 @@ import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryR
 import com.orion.ops.module.asset.entity.vo.AuthorizedHostWrapperVO;
 import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
 import com.orion.ops.module.asset.entity.vo.HostKeyVO;
+import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 
 import java.util.List;
@@ -27,7 +28,16 @@ public interface AssetAuthorizedDataService {
     List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request);
 
     /**
-     * 查询用户已授权的主机主机
+     * 查询用户已授权的主机
+     *
+     * @param userId userId
+     * @param type   type
+     * @return hostId
+     */
+    List<Long> getUserAuthorizedHostId(Long userId, HostConfigTypeEnum type);
+
+    /**
+     * 查询用户已授权的主机
      *
      * @param userId userId
      * @param type   type

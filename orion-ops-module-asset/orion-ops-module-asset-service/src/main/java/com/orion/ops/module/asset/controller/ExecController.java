@@ -4,6 +4,7 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecRequest;
+import com.orion.ops.module.asset.entity.vo.ExecVO;
 import com.orion.ops.module.asset.service.ExecService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,8 +41,8 @@ public class ExecController {
     @PostMapping("/start")
     @Operation(summary = "批量执行")
     @PreAuthorize("@ss.hasPermission('asset:exec:start')")
-    public void startExecCommand(@RequestBody ExecRequest request) {
-        execService.startExecCommand(request);
+    public ExecVO startExecCommand(@RequestBody ExecRequest request) {
+        return execService.startExecCommand(request);
     }
 
 }

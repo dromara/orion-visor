@@ -185,7 +185,7 @@ orion:
     local:
       primary: true
       enabled: true
-      timestamp-prefix: true
+      timestamp-prefix: false
       storage-path: ${user.home}
       base-path: /orion/storage/orion-ops-pro
   security:

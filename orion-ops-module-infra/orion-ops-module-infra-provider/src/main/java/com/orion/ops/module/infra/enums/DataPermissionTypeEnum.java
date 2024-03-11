@@ -17,7 +17,7 @@ public enum DataPermissionTypeEnum {
     /**
      * 主机分组
      */
-    HOST_GROUP(true, "主机"),
+    HOST_GROUP(true, "主机分组"),
 
     /**
      * 主机秘钥
