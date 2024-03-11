@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 执行日志 服务实现类
+ * 批量执行日志 服务实现类
  *
  * @author Jiahang Li
  * @version 1.0.1

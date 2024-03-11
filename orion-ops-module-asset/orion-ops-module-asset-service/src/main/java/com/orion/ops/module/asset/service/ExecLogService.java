@@ -7,7 +7,7 @@ import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import java.util.List;
 
 /**
- * 执行日志 服务类
+ * 批量执行日志 服务类
  *
  * @author Jiahang Li
  * @version 1.0.1
@@ -16,7 +16,7 @@ import java.util.List;
 public interface ExecLogService {
 
     /**
-     * 查询执行日志
+     * 查询批量执行日志
      *
      * @param id id
      * @return row
@@ -24,7 +24,7 @@ public interface ExecLogService {
     ExecLogVO getExecLogById(Long id);
 
     /**
-     * 分页查询执行日志
+     * 分页查询批量执行日志
      *
      * @param request request
      * @return rows
@@ -40,7 +40,7 @@ public interface ExecLogService {
     Integer deleteExecLogById(Long id);
 
     /**
-     * 批量删除执行日志
+     * 批量删除批量执行日志
      *
      * @param idList idList
      * @return effect

@@ -45,9 +45,9 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("exec_log", "执行日志", "exec")
+                Template.create("exec_host_log", "批量执行主机日志", "exec")
                         .disableUnitTest()
-                        .vue("exec", "exec-log")
+                        .vue("exec", "exec-log-exec")
                         .enableDrawerForm()
                         .build(),
         };

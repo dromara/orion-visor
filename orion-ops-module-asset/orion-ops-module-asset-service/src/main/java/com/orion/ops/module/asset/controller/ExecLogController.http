@@ -1,67 +1,9 @@
-### 创建执行日志
-POST {{baseUrl}}/asset/exec-log/create
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "userId": "",
-  "source": "",
-  "sourceId": "",
-  "desc": "",
-  "command": "",
-  "status": "",
-  "startTime": "",
-  "finishTime": ""
-}
-
-
-### 更新执行日志
-PUT {{baseUrl}}/asset/exec-log/update
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "userId": "",
-  "source": "",
-  "sourceId": "",
-  "desc": "",
-  "command": "",
-  "status": "",
-  "startTime": "",
-  "finishTime": ""
-}
-
-
-### 查询执行日志
+### 查询批量执行日志
 GET {{baseUrl}}/asset/exec-log/get?id=1
 Authorization: {{token}}
 
 
-### 批量查询执行日志
-GET {{baseUrl}}/asset/exec-log/batch-get?idList=1,2,3
-Authorization: {{token}}
-
-
-### 查询全部执行日志
-POST {{baseUrl}}/asset/exec-log/list
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "userId": "",
-  "source": "",
-  "sourceId": "",
-  "desc": "",
-  "command": "",
-  "status": "",
-  "startTime": "",
-  "finishTime": ""
-}
-
-
-### 分页查询执行日志
+### 分页查询批量执行日志
 POST {{baseUrl}}/asset/exec-log/query
 Content-Type: application/json
 Authorization: {{token}}
@@ -75,18 +17,16 @@ Authorization: {{token}}
   "sourceId": "",
   "desc": "",
   "command": "",
-  "status": "",
-  "startTime": "",
-  "finishTime": ""
+  "status": ""
 }
 
 
-### 删除执行日志
+### 删除批量执行日志
 DELETE {{baseUrl}}/asset/exec-log/delete?id=1
 Authorization: {{token}}
 
 
-### 批量删除执行日志
+### 批量删除批量执行日志
 DELETE {{baseUrl}}/asset/exec-log/batch-delete?idList=1,2,3
 Authorization: {{token}}
 

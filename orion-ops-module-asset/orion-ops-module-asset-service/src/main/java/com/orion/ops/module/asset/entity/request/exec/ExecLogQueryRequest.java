@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
- * 执行日志 查询请求对象
+ * 批量执行日志 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.1
@@ -20,7 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "ExecLogQueryRequest", description = "执行日志 查询请求对象")
+@Schema(name = "ExecLogQueryRequest", description = "批量执行日志 查询请求对象")
 public class ExecLogQueryRequest extends PageRequest {
 
     @Schema(description = "id")

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 执行日志 视图响应对象
+ * 批量执行日志 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.1
@@ -20,7 +20,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecLogVO", description = "执行日志 视图响应对象")
+@Schema(name = "ExecLogVO", description = "批量执行日志 视图响应对象")
 public class ExecLogVO implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * 执行日志 内部对象转换器
+ * 批量执行日志 内部对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.1

@@ -1,0 +1,5 @@
+### 批量执行
+POST {{baseUrl}}/asset/exec/start
+Authorization: {{token}}
+
+###

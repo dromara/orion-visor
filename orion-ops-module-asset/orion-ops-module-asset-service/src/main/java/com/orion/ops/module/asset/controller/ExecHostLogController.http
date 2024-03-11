@@ -1,0 +1,32 @@
+### 分页查询批量执行主机日志
+POST {{baseUrl}}/asset/exec-host-log/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "logId": "",
+  "hostId": "",
+  "hostName": "",
+  "status": "",
+  "command": "",
+  "parameter": "",
+  "exitStatus": "",
+  "logPath": "",
+  "startTime": "",
+  "finishTime": ""
+}
+
+
+### 删除批量执行主机日志
+DELETE {{baseUrl}}/asset/exec-host-log/delete?id=1
+Authorization: {{token}}
+
+
+### 批量删除批量执行主机日志
+DELETE {{baseUrl}}/asset/exec-host-log/batch-delete?idList=1,2,3
+Authorization: {{token}}
+
+###
