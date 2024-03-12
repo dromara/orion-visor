@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.entity.request.exec;
 
-import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -10,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
- * 批量执行 请求对象
+ * 批量执行命令 请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,9 +19,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@Schema(name = "ExecRequest", description = "批量执行 请求对象")
-public class ExecRequest extends PageRequest {
+@Schema(name = "ExecCommandRequest", description = "批量执行命令 请求对象")
+public class ExecCommandRequest {
 
     @Schema(description = "执行模板id")
     private Long templateId;

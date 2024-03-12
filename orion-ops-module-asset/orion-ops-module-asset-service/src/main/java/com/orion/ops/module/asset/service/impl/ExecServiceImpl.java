@@ -22,7 +22,8 @@ import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
-import com.orion.ops.module.asset.entity.request.exec.ExecRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.vo.ExecVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
@@ -75,7 +76,7 @@ public class ExecServiceImpl implements ExecService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ExecVO startExecCommand(ExecRequest request) {
+    public ExecVO execCommand(ExecCommandRequest request) {
         log.info("ExecService.startExecCommand start params: {}", JSON.toJSONString(request));
         LoginUser user = Objects.requireNonNull(SecurityUtils.getLoginUser());
         Long userId = user.getId();
@@ -139,6 +140,11 @@ public class ExecServiceImpl implements ExecService {
                 .id(execId)
                 .hostIdRel(hostIdRel)
                 .build();
+    }
+
+    @Override
+    public void interruptCommand(ExecInterruptRequest request) {
+
     }
 
     /**

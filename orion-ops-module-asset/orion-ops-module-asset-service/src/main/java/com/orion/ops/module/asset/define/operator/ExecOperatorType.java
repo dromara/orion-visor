@@ -17,15 +17,21 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
 @Module("asset:exec")
 public class ExecOperatorType extends InitializingOperatorTypes {
 
-    public static final String START = "exec:start";
+    public static final String EXEC_COMMAND = "exec:exec-command";
+
+    public static final String INTERRUPT_COMMAND = "exec:interrupt-command";
 
     public static final String DELETE_LOG = "exec:delete-log";
+
+    public static final String CLEAR_LOG = "exec:clear-log";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(M, START, "批量执行主机命令"),
-                new OperatorType(H, DELETE_LOG, "删除批量执行日志"),
+                new OperatorType(M, EXEC_COMMAND, "执行主机命令"),
+                new OperatorType(M, INTERRUPT_COMMAND, "中断执行命令"),
+                new OperatorType(H, DELETE_LOG, "删除执行日志 ${count} 条"),
+                new OperatorType(H, CLEAR_LOG, "清理执行日志 ${count} 条"),
         };
     }
 

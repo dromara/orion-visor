@@ -1,5 +1,5 @@
-### 批量执行
-POST {{baseUrl}}/asset/exec/start
+### 批量执行命令
+POST {{baseUrl}}/asset/exec/exec-command
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -9,6 +9,16 @@ Authorization: {{token}}
   "command": "echo @{{ hostAddress }}\nsleep 10\necho @{{ str }}",
   "parameter": "{\"str\":\"end\"}",
   "hostIdList": [1,7]
+}
+
+
+### 中断执行命令
+POST {{baseUrl}}/asset/exec/interrupt-command
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "logId": 7
 }
 
 
