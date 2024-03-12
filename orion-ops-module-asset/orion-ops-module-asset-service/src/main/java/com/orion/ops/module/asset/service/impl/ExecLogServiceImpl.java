@@ -1,13 +1,16 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.ExecLogConvert;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
+import com.orion.ops.module.asset.entity.domain.HostConnectLogDO;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import com.orion.ops.module.asset.service.ExecLogService;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 批量执行日志 服务实现类
@@ -51,6 +55,11 @@ public class ExecLogServiceImpl implements ExecLogService {
     }
 
     @Override
+    public Long queryExecLogCount(ExecLogQueryRequest request) {
+        return execLogDAO.selectCount(this.buildQueryWrapper(request));
+    }
+
+    @Override
     public Integer deleteExecLogById(Long id) {
         log.info("ExecLogService-deleteExecLogById id: {}", id);
         // 检查数据是否存在
@@ -67,6 +76,29 @@ public class ExecLogServiceImpl implements ExecLogService {
         log.info("ExecLogService-deleteExecLogByIdList idList: {}", idList);
         int effect = execLogDAO.deleteBatchIds(idList);
         log.info("ExecLogService-deleteExecLogByIdList effect: {}", effect);
+        return effect;
+    }
+
+    @Override
+    public Integer clearExecLog(ExecLogQueryRequest request) {
+        log.info("ExecLogService.clearExecLog start {}", JSON.toJSONString(request));
+        // 查询
+        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
+                .select(ExecLogDO::getId);
+        List<Long> idList = execLogDAO.selectList(wrapper)
+                .stream()
+                .map(ExecLogDO::getId)
+                .collect(Collectors.toList());
+        int effect = 0;
+        if (!idList.isEmpty()) {
+            // 删除
+            effect = execLogDAO.delete(wrapper);
+
+            // TODO
+        }
+        log.info("ExecLogService.clearExecLog finish {}", effect);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, effect);
         return effect;
     }
 

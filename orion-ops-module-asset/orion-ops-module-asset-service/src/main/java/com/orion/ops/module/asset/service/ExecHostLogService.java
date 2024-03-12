@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.service;
 
-import com.orion.ops.module.asset.entity.request.exec.ExecHostLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 
 import java.util.List;
@@ -17,10 +16,18 @@ public interface ExecHostLogService {
     /**
      * 查询全部批量执行主机日志
      *
-     * @param request request
+     * @param logId logId
      * @return rows
      */
-    List<ExecHostLogVO> getExecHostLogList(ExecHostLogQueryRequest request);
+    List<ExecHostLogVO> getExecHostLogList(Long logId);
+
+    /**
+     * 删除批量执行主机日志
+     *
+     * @param logIdList logIdList
+     * @return effect
+     */
+    Integer deleteExecHostLogByLogId(List<Long> logIdList);
 
     /**
      * 删除批量执行主机日志
@@ -29,13 +36,5 @@ public interface ExecHostLogService {
      * @return effect
      */
     Integer deleteExecHostLogById(Long id);
-
-    /**
-     * 批量删除批量执行主机日志
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteExecHostLogByIdList(List<Long> idList);
 
 }

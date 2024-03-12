@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.convert;
 
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
-import com.orion.ops.module.asset.entity.request.exec.ExecHostLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -19,8 +18,6 @@ import java.util.List;
 public interface ExecHostLogConvert {
 
     ExecHostLogConvert MAPPER = Mappers.getMapper(ExecHostLogConvert.class);
-
-    ExecHostLogDO to(ExecHostLogQueryRequest request);
 
     ExecHostLogVO to(ExecHostLogDO domain);
 

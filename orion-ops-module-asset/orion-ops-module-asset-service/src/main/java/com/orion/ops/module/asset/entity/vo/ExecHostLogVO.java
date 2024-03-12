@@ -61,16 +61,4 @@ public class ExecHostLogVO implements Serializable {
     @Schema(description = "执行结束时间")
     private Date finishTime;
 
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
-
 }

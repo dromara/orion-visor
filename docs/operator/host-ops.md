@@ -55,14 +55,13 @@
 
 | 参数              | 描述                       |
 |:----------------|:-------------------------|
+| execId          | 执行记录id                   |
 | hostId          | 执行主机id                   | 
 | hostName        | 执行主机名称                   |
 | hostCode        | 执行主机编码                   |
 | hostAddress     | 执行主机地址                   |
 | userId          | 执行用户id                   |
 | username        | 执行用户名                    |
-| execId          | 执行记录id                   |
-| execHostId      | 执行主机记录id                 |
 | uuid            | 生成任务维度 uuid              |
 | uuidShort       | 生成任务维度 uuid 无 '-'        |
 | hostUuid        | 生成机器维度 uuid              |

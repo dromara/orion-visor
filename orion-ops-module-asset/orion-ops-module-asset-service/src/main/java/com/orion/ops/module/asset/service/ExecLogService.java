@@ -32,6 +32,14 @@ public interface ExecLogService {
     DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request);
 
     /**
+     * 查询批量执行日志数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long queryExecLogCount(ExecLogQueryRequest request);
+
+    /**
      * 删除执行日志
      *
      * @param id id
@@ -46,5 +54,13 @@ public interface ExecLogService {
      * @return effect
      */
     Integer deleteExecLogByIdList(List<Long> idList);
+
+    /**
+     * 清理执行日志
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer clearExecLog(ExecLogQueryRequest request);
 
 }
