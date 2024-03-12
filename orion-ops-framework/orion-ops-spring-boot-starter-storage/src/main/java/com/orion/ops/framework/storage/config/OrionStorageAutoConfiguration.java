@@ -48,4 +48,13 @@ public class OrionStorageAutoConfiguration {
         return new LocalFileClient(config.getLocal());
     }
 
+    /**
+     * @return 日志文件客户端
+     */
+    @Bean
+    @ConditionalOnProperty(value = "orion.storage.logs.enabled", havingValue = "true")
+    public FileClient logsFileClient() {
+        return new LocalFileClient(config.getLogs());
+    }
+
 }

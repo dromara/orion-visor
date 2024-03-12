@@ -9,6 +9,7 @@ import com.orion.lang.utils.json.matcher.NoMatchStrategy;
 import com.orion.lang.utils.json.matcher.ReplacementFormatter;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.lang.utils.time.Dates;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
@@ -81,7 +82,7 @@ public class ExecServiceImpl implements ExecService {
         ExecLogDO execLog = ExecLogDO.builder()
                 .userId(userId)
                 .source(ExecSourceEnum.BATCH.name())
-                .desc(request.getDesc())
+                .desc(Strings.ifBlank(request.getDesc(), Strings.retain(command, 60) + Const.OMIT))
                 .command(command)
                 .status(ExecStatusEnum.COMPLETED.name())
                 .build();
@@ -124,7 +125,7 @@ public class ExecServiceImpl implements ExecService {
      * @return logPath
      */
     private String buildLogPath(Long logId, Long hostId) {
-        return "/logs/exec/" + logId + "/" + hostId + ".log";
+        return "/exec/" + logId + "/" + hostId + ".log";
     }
 
     /**

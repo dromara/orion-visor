@@ -20,4 +20,9 @@ public class StorageConfig {
      */
     private LocalFileClientConfig local;
 
+    /**
+     * 日志文件客户端 配置
+     */
+    private LocalFileClientConfig logs;
+
 }

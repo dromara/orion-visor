@@ -31,11 +31,15 @@ public class FileClientConfig {
     /**
      * 是否拼接时间作为文件夹
      */
-    protected boolean dateDirectory = true;
+    protected boolean dateDirectory;
 
     /**
      * 时间文件夹格式
      */
-    protected String datePattern = Dates.YMD;
+    protected String datePattern;
+
+    public FileClientConfig() {
+        this.datePattern = Dates.YMD;
+    }
 
 }

@@ -4,6 +4,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.file.FileClient;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 文件客户端工具
@@ -85,8 +86,6 @@ public class FileClientUtils {
         return delegate.upload(path, in, autoClose, overrideIfExist);
     }
 
-    // TODO getOutputStream
-
     /**
      * 检查文件是否存在
      *
@@ -128,6 +127,29 @@ public class FileClientUtils {
      */
     public static InputStream getContentInputStream(String path) throws Exception {
         return delegate.getContentInputStream(path);
+    }
+
+    /**
+     * 获取文件输出流
+     *
+     * @param path path
+     * @return stream
+     * @throws Exception Exception
+     */
+    public static OutputStream getContentOutputStream(String path) throws Exception {
+        return delegate.getContentOutputStream(path);
+    }
+
+    /**
+     * 获取文件输出流
+     *
+     * @param path   path
+     * @param append append
+     * @return stream
+     * @throws Exception Exception
+     */
+    public static OutputStream getContentOutputStream(String path, boolean append) throws Exception {
+        return delegate.getContentOutputStream(path, append);
     }
 
     public static void setDelegate(FileClient delegate) {

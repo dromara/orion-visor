@@ -6,6 +6,7 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.storage.core.client.AbstractFileClient;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 本地文件客户端
@@ -21,6 +22,16 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
     }
 
     @Override
+    public InputStream getContentInputStream(String path) throws Exception {
+        return Files1.openInputStreamFast(this.getAbsolutePath(path));
+    }
+
+    @Override
+    public OutputStream getContentOutputStream(String path, boolean append) throws Exception {
+        return Files1.openOutputStreamFast(this.getAbsolutePath(path), append);
+    }
+
+    @Override
     protected String doUpload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) {
         // 获取返回文件路径
         String returnPath = this.getReturnPath(path);
@@ -33,11 +44,6 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
         // 上传文件
         FileWriters.writeFast(absolutePath, in, autoClose);
         return returnPath;
-    }
-
-    @Override
-    protected InputStream doDownload(String path) throws Exception {
-        return Files1.openInputStreamFast(this.getAbsolutePath(path));
     }
 
     @Override

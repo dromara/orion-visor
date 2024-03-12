@@ -27,7 +27,6 @@ public class ExecRequest extends PageRequest {
     @Schema(description = "执行模板id")
     private Long templateId;
 
-    @NotBlank
     @Size(max = 128)
     @Schema(description = "执行描述")
     private String desc;
