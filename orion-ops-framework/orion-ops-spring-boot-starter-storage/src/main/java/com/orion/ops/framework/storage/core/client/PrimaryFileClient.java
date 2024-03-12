@@ -72,6 +72,16 @@ public class PrimaryFileClient implements FileClient {
         return delegate.getContentOutputStream(path, append);
     }
 
+    @Override
+    public String getReturnPath(String path) {
+        return delegate.getReturnPath(path);
+    }
+
+    @Override
+    public String getAbsolutePath(String returnPath) {
+        return delegate.getAbsolutePath(returnPath);
+    }
+
     public static void setDelegate(FileClient delegate) {
         if (PrimaryFileClient.delegate != null) {
             // unmodified

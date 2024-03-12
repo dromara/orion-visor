@@ -1,5 +1,15 @@
 ### 批量执行
 POST {{baseUrl}}/asset/exec/start
+Content-Type: application/json
 Authorization: {{token}}
+
+{
+  "description": 1,
+  "timeout": 10,
+  "command": "echo @{{ hostAddress }}\nsleep 10\necho @{{ str }}",
+  "parameter": "{\"str\":\"end\"}",
+  "hostIdList": [1,7]
+}
+
 
 ###

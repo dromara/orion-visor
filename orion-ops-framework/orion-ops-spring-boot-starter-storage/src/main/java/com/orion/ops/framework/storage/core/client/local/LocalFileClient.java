@@ -57,13 +57,13 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
     }
 
     @Override
-    protected String getReturnPath(String path) {
+    public String getReturnPath(String path) {
         // 拼接公共路径
         return Files1.getPath(config.getBasePath() + Const.SLASH + this.getFilePath(path));
     }
 
     @Override
-    protected String getAbsolutePath(String returnPath) {
+    public String getAbsolutePath(String returnPath) {
         // 拼接存储路径
         return Files1.getPath(config.getStoragePath() + Const.SLASH + returnPath);
     }

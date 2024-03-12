@@ -64,6 +64,10 @@ public class ExecHostLogDO extends BaseDO {
     @TableField("log_path")
     private String logPath;
 
+    @Schema(description = "错误信息")
+    @TableField("error_message")
+    private String errorMessage;
+
     @Schema(description = "执行开始时间")
     @TableField("start_time")
     private Date startTime;

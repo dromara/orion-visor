@@ -1,11 +1,13 @@
 package com.orion.ops.module.asset.entity.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.*;
-import java.math.*;
+import java.util.Date;
 
 /**
  * 批量执行主机日志 视图响应对象
@@ -49,6 +51,9 @@ public class ExecHostLogVO implements Serializable {
 
     @Schema(description = "日志路径")
     private String logPath;
+
+    @Schema(description = "错误信息")
+    private String errorMessage;
 
     @Schema(description = "执行开始时间")
     private Date startTime;

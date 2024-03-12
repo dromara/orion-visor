@@ -152,6 +152,26 @@ public class FileClientUtils {
         return delegate.getContentOutputStream(path, append);
     }
 
+    /**
+     * 获取返回路径 用于客户端返回
+     *
+     * @param path path
+     * @return returnPath
+     */
+    public static String getReturnPath(String path) {
+        return delegate.getReturnPath(path);
+    }
+
+    /**
+     * 获取实际存储路径 用于服务端的存储
+     *
+     * @param returnPath returnPath
+     * @return absolutePath
+     */
+    public static String getAbsolutePath(String returnPath) {
+        return delegate.getAbsolutePath(returnPath);
+    }
+
     public static void setDelegate(FileClient delegate) {
         if (FileClientUtils.delegate != null) {
             // unmodified

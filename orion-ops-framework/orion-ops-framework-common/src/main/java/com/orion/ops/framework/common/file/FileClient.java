@@ -120,4 +120,20 @@ public interface FileClient {
      */
     OutputStream getContentOutputStream(String path, boolean append) throws Exception;
 
+    /**
+     * 获取返回路径 用于客户端返回
+     *
+     * @param path path
+     * @return returnPath
+     */
+    String getReturnPath(String path);
+
+    /**
+     * 获取实际存储路径 用于服务端的存储
+     *
+     * @param returnPath returnPath
+     * @return absolutePath
+     */
+    String getAbsolutePath(String returnPath);
+
 }

@@ -31,7 +31,7 @@ public abstract class TerminalSession implements ITerminalSession {
     @Getter
     protected final TerminalConfig config;
 
-    protected volatile boolean close;
+    protected volatile boolean closed;
 
     protected volatile boolean forceOffline;
 
@@ -50,7 +50,7 @@ public abstract class TerminalSession implements ITerminalSession {
      * 发送关闭消息
      */
     protected void sendCloseMessage() {
-        log.info("TerminalSession close {}, forClose: {}, forceOffline: {}", sessionId, this.close, this.forceOffline);
+        log.info("TerminalSession close {}, forClose: {}, forceOffline: {}", sessionId, this.closed, this.forceOffline);
         // 发送关闭信息
         TerminalCloseResponse resp = TerminalCloseResponse.builder()
                 .type(OutputTypeEnum.CLOSE.getType())
@@ -86,10 +86,10 @@ public abstract class TerminalSession implements ITerminalSession {
      * @return close
      */
     private boolean checkAndClose() {
-        if (close) {
+        if (closed) {
             return false;
         }
-        this.close = true;
+        this.closed = true;
         // 释放资源
         try {
             this.releaseResource();

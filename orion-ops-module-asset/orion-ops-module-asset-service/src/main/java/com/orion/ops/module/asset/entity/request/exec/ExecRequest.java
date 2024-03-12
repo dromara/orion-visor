@@ -29,7 +29,11 @@ public class ExecRequest extends PageRequest {
 
     @Size(max = 128)
     @Schema(description = "执行描述")
-    private String desc;
+    private String description;
+
+    @NonNull
+    @Schema(description = "超时时间")
+    private Integer timeout;
 
     @NotBlank
     @Schema(description = "执行命令")

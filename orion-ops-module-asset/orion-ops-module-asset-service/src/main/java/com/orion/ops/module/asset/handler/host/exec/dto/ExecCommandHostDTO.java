@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.entity.dto;
+package com.orion.ops.module.asset.handler.host.exec.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecStartHostDTO", description = "批量执行启动主机对象")
-public class ExecStartHostDTO {
+@Schema(name = "ExecCommandHostDTO", description = "批量执行启动主机对象")
+public class ExecCommandHostDTO {
 
     @Schema(description = "hostLogId")
     private Long hostLogId;
@@ -31,5 +31,8 @@ public class ExecStartHostDTO {
 
     @Schema(description = "执行命令")
     private String command;
+
+    @Schema(description = "超时时间")
+    private Integer timeout;
 
 }

@@ -13,9 +13,10 @@ Authorization: {{token}}
   "limit": 10,
   "id": "",
   "userId": "",
+  "username": "",
   "source": "",
   "sourceId": "",
-  "desc": "",
+  "description": "",
   "command": "",
   "status": ""
 }

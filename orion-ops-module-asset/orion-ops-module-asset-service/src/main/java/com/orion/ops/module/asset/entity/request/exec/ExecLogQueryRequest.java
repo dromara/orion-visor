@@ -29,6 +29,9 @@ public class ExecLogQueryRequest extends PageRequest {
     @Schema(description = "执行用户id")
     private Long userId;
 
+    @Schema(description = "执行用户名")
+    private String username;
+
     @Size(max = 12)
     @Schema(description = "执行来源")
     private String source;
@@ -38,7 +41,7 @@ public class ExecLogQueryRequest extends PageRequest {
 
     @Size(max = 128)
     @Schema(description = "执行描述")
-    private String desc;
+    private String description;
 
     @Schema(description = "执行命令")
     private String command;

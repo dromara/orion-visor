@@ -81,22 +81,6 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
     protected abstract String doUpload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) throws Exception;
 
     /**
-     * 获取返回路径 用于客户端返回
-     *
-     * @param path path
-     * @return returnPath
-     */
-    protected abstract String getReturnPath(String path);
-
-    /**
-     * 获取实际存储路径 用于服务端的存储
-     *
-     * @param returnPath returnPath
-     * @return absolutePath
-     */
-    protected abstract String getAbsolutePath(String returnPath);
-
-    /**
      * 获取文件路径 拼接前缀
      *
      * @param path 路径

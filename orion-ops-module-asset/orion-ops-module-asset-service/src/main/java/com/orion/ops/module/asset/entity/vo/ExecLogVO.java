@@ -31,6 +31,9 @@ public class ExecLogVO implements Serializable {
     @Schema(description = "执行用户id")
     private Long userId;
 
+    @Schema(description = "执行用户名")
+    private String username;
+
     @Schema(description = "执行来源")
     private String source;
 
@@ -38,10 +41,13 @@ public class ExecLogVO implements Serializable {
     private Long sourceId;
 
     @Schema(description = "执行描述")
-    private String desc;
+    private String description;
 
     @Schema(description = "执行命令")
     private String command;
+
+    @Schema(description = "超时时间")
+    private Integer timeout;
 
     @Schema(description = "执行状态")
     private String status;

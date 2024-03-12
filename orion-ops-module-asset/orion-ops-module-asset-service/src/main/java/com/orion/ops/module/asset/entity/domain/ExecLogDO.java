@@ -36,6 +36,10 @@ public class ExecLogDO extends BaseDO {
     @TableField("user_id")
     private Long userId;
 
+    @Schema(description = "执行用户名")
+    @TableField("username")
+    private String username;
+
     @Schema(description = "执行来源")
     @TableField("source")
     private String source;
@@ -45,12 +49,16 @@ public class ExecLogDO extends BaseDO {
     private Long sourceId;
 
     @Schema(description = "执行描述")
-    @TableField("desc")
-    private String desc;
+    @TableField("description")
+    private String description;
 
     @Schema(description = "执行命令")
     @TableField("command")
     private String command;
+
+    @Schema(description = "超时时间")
+    @TableField("timeout")
+    private Integer timeout;
 
     @Schema(description = "执行状态")
     @TableField("status")

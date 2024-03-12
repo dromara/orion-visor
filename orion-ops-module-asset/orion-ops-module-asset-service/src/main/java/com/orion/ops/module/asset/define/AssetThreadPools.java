@@ -16,6 +16,18 @@ import java.util.concurrent.ThreadPoolExecutor;
 public interface AssetThreadPools {
 
     /**
+     * 超时检查线程池
+     */
+    ThreadPoolExecutor TIMEOUT_CHECK = ExecutorBuilder.create()
+            .namedThreadFactory("timeout-check-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
+    /**
      * terminal 标准输出线程池
      */
     ThreadPoolExecutor TERMINAL_STDOUT = ExecutorBuilder.create()
@@ -32,6 +44,30 @@ public interface AssetThreadPools {
      */
     ThreadPoolExecutor TERMINAL_OPERATOR = ExecutorBuilder.create()
             .namedThreadFactory("terminal-operator-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
+    /**
+     * 批量执行任务线程池
+     */
+    ThreadPoolExecutor EXEC_TASK = ExecutorBuilder.create()
+            .namedThreadFactory("exec-task-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
+    /**
+     * 批量执行主机命令线程池
+     */
+    ThreadPoolExecutor EXEC_HOST = ExecutorBuilder.create()
+            .namedThreadFactory("exec-host-")
             .corePoolSize(1)
             .maxPoolSize(Integer.MAX_VALUE)
             .keepAliveTime(Const.MS_S_60)

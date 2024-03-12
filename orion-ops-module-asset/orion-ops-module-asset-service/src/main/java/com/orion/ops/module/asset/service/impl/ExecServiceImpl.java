@@ -9,8 +9,10 @@ import com.orion.lang.utils.json.matcher.NoMatchStrategy;
 import com.orion.lang.utils.json.matcher.ReplacementFormatter;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.lang.utils.time.Dates;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -26,6 +28,9 @@ import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.handler.host.exec.ExecTaskExecutors;
+import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandDTO;
+import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +57,9 @@ public class ExecServiceImpl implements ExecService {
 
     private static final ReplacementFormatter FORMATTER = ReplacementFormatters.create("@{{ ", " }}")
             .noMatchStrategy(NoMatchStrategy.EMPTY);
+
+    @Resource
+    private FileClient logsFileClient;
 
     @Resource
     private ExecLogDAO execLogDAO;
@@ -81,10 +89,12 @@ public class ExecServiceImpl implements ExecService {
         // 插入日志
         ExecLogDO execLog = ExecLogDO.builder()
                 .userId(userId)
+                .username(user.getUsername())
                 .source(ExecSourceEnum.BATCH.name())
-                .desc(Strings.ifBlank(request.getDesc(), Strings.retain(command, 60) + Const.OMIT))
+                .description(Strings.ifBlank(request.getDescription(), Strings.retain(command, 60) + Const.OMIT))
                 .command(command)
-                .status(ExecStatusEnum.COMPLETED.name())
+                .timeout(request.getTimeout())
+                .status(ExecStatusEnum.WAITING.name())
                 .build();
         execLogDAO.insert(execLog);
         Long execId = execLog.getId();
@@ -105,9 +115,23 @@ public class ExecServiceImpl implements ExecService {
                             .build();
                 }).collect(Collectors.toList());
         execHostLogDAO.insertBatch(execHostLogs);
-        // TODO 开始执行
-
-
+        // 开始执行
+        ExecCommandDTO exec = ExecCommandDTO.builder()
+                .logId(execId)
+                .timeout(request.getTimeout())
+                .hosts(execHostLogs.stream()
+                        .map(s -> ExecCommandHostDTO.builder()
+                                .hostId(s.getHostId())
+                                .hostLogId(s.getId())
+                                .command(s.getCommand())
+                                .timeout(request.getTimeout())
+                                .logPath(s.getLogPath())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+        ExecTaskExecutors.start(exec);
+        // 操作日志
+        OperatorLogs.add(OperatorLogs.ID, execId);
         // 返回
         Map<String, Long> hostIdRel = execHostLogs.stream()
                 .collect(Collectors.toMap(s -> String.valueOf(s.getHostId()), ExecHostLogDO::getId));
@@ -125,7 +149,8 @@ public class ExecServiceImpl implements ExecService {
      * @return logPath
      */
     private String buildLogPath(Long logId, Long hostId) {
-        return "/exec/" + logId + "/" + hostId + ".log";
+        String logFile = "/exec/" + logId + "/" + hostId + ".log";
+        return logsFileClient.getReturnPath(logFile);
     }
 
     /**
