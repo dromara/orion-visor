@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import { useAppStore } from '@/store';
 import { isNumber } from '@/utils/is';
 import { TablePageSizeOptions } from '@/types/const';
+import { TableExpandable } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 创建列表分页
@@ -28,6 +29,17 @@ export const useRowSelection = (ext?: TableRowSelection): TableRowSelection => {
     type: 'checkbox',
     showCheckedAll: true,
     onlyCurrent: true,
+    ...ext
+  });
+};
+
+/**
+ * 创建表格展开
+ */
+export const useExpandable = (ext?: TableExpandable): TableExpandable => {
+  return reactive({
+    width: 50,
+    fixed: true,
     ...ext
   });
 };

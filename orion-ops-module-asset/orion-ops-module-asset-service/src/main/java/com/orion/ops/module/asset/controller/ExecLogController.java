@@ -67,7 +67,7 @@ public class ExecLogController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/list")
+    @GetMapping("/host-list")
     @Operation(summary = "查询全部执行主机日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
     public List<ExecHostLogVO> getExecHostLogList(@RequestParam("logId") Long logId) {

@@ -11,6 +11,16 @@ const EXEC: AppRouteRecordRaw = {
       path: '/exec-template',
       component: () => import('@/views/exec/exec-template/index.vue'),
     },
+    {
+      name: 'execLog',
+      path: '/exec-log',
+      component: () => import('@/views/exec/exec-log/index.vue'),
+    },
+    {
+      name: 'execHostLog',
+      path: '/exec-host-log',
+      component: () => import('@/views/exec/exec-host-log/index.vue'),
+    },
   ],
 };
 

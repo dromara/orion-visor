@@ -49,9 +49,6 @@ public class ExecHostLogVO implements Serializable {
     @Schema(description = "退出码")
     private Integer exitStatus;
 
-    @Schema(description = "日志路径")
-    private String logPath;
-
     @Schema(description = "错误信息")
     private String errorMessage;
 

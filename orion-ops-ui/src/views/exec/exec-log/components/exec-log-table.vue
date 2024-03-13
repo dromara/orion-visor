@@ -3,37 +3,49 @@
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
                   label-align="left"
+                  :itemOptions="{ 5: { span: 2 } }"
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      #foreach($field in ${table.fields})
-      <!-- $field.comment -->
-      <a-form-item field="${field.propertyName}" label="${field.comment}">
-        #if(${dictMap.containsKey(${field.propertyName})})
-        <a-select v-model="formModel.${field.propertyName}"
-                  :options="toOptions($dictMap.get(${field.propertyName}).keyField)"
-                  placeholder="请选择${field.comment}"
-                  allow-clear />
-        #else
-        #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
-        <a-input-number v-model="formModel.${field.propertyName}"
-                        placeholder="请输入${field.comment}"
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
                         allow-clear
                         hide-button />
-        #elseif("$field.propertyType" == "Date")
-        <a-date-picker v-model="formModel.${field.propertyName}"
-                       style="width: 100%"
-                       placeholder="请选择${field.comment}"
-                       show-time
-                       allow-clear />
-        #else
-        <a-input v-model="formModel.${field.propertyName}"
-                 placeholder="请输入${field.comment}"
-                 allow-clear />
-        #end
-        #end
       </a-form-item>
-      #end
+      <!-- 执行用户 -->
+      <a-form-item field="userId" label="执行用户">
+        <user-selector v-model="formModel.userId"
+                       placeholder="请选择执行用户"
+                       allow-clear />
+      </a-form-item>
+      <!-- 执行描述 -->
+      <a-form-item field="description" label="执行描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入执行描述"
+                 allow-clear />
+      </a-form-item>
+      <!-- 执行命令 -->
+      <a-form-item field="command" label="执行命令">
+        <a-input v-model="formModel.command"
+                 placeholder="请输入执行命令"
+                 allow-clear />
+      </a-form-item>
+      <!-- 执行状态 -->
+      <a-form-item field="status" label="执行状态">
+        <a-select v-model="formModel.status"
+                  :options="toOptions(execStatusKey)"
+                  placeholder="请选择执行状态"
+                  allow-clear />
+      </a-form-item>
+      <!-- 执行时间 -->
+      <a-form-item field="startTimeRange" label="执行时间">
+        <a-range-picker v-model="formModel.startTimeRange"
+                        :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
+                        show-time
+                        format="YYYY-MM-DD HH:mm:ss" />
+      </a-form-item>
     </query-header>
   </a-card>
   <!-- 表格 -->
@@ -43,28 +55,18 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          ${table.comment}列表
+          执行记录列表
         </div>
       </div>
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
-          <!-- 新增 -->
-          <a-button v-permission="['${package.ModuleName}:${typeHyphen}:create']"
-                    type="primary"
-                    @click="emits('openAdd')">
-            新增
-            <template #icon>
-              <icon-plus />
-            </template>
-          </a-button>
-          #if($vue.enableRowSelection)
           <!-- 删除 -->
           <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
-            <a-button v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+            <a-button v-permission="['asset:exec-log:delete']"
                       type="secondary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -74,7 +76,6 @@
               </template>
             </a-button>
           </a-popconfirm>
-          #end
         </a-space>
       </div>
     </template>
@@ -83,39 +84,44 @@
              ref="tableRef"
              :loading="loading"
              :columns="columns"
-             #if($vue.enableRowSelection)
              v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
-             #end
+             :expandable="expandable"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
-      #foreach($field in ${table.fields})
-      #if(${dictMap.containsKey(${field.propertyName})})
-      <!-- $field.comment -->
-      <template #${field.propertyName}="{ record }">
-        {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}) }}
+             @page-size-change="(size) => fetchTableData(1, size)"
+             @expand="loadHostExecData">
+      <!-- 展开表格 -->
+      <template #expand-row="{ record }">
+        <exec-host-log-table :row="record" />
       </template>
-      #end
-      #end
+      <!-- 执行状态 -->
+      <template #status="{ record }">
+        <a-tag :color="getDictValue(execStatusKey, record.status, 'color')">
+          {{ getDictValue(execStatusKey, record.status) }}
+        </a-tag>
+      </template>
+      <!-- 执行时间 -->
+      <template #startTime="{ record }">
+        <span class="start-time">
+          {{ (record.startTime && dateFormat(new Date(record.startTime))) || '-' }}
+        </span>
+        <br>
+        <span class="exec-duration usn">
+          持续时间: {{ formatDuration(record.startTime, record.finishTime) || '-' }}
+        </span>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 修改 -->
-          <a-button v-permission="['${package.ModuleName}:${typeHyphen}:update']"
-                    type="text"
-                    size="mini"
-                    @click="emits('openUpdate', record)">
-            修改
-          </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+            <a-button v-permission="['asset:exec-log:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -130,59 +136,47 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.featureEntityFirstLower}Table'
+    name: 'execLogTable'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
+  import type { ExecLogQueryRequest, ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { batchDelete${vue.featureEntity}, delete${vue.featureEntity}, get${vue.featureEntity}Page } from '@/api/${vue.module}/${vue.feature}';
+  import { batchDeleteExecLog, deleteExecLog, getExecHostLogList, getExecLogPage } from '@/api/exec/exec-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  #if($dictMap.entrySet().size() > 0)
-  import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
-  #else
-  import {} from '../types/const';
-  #end
-  #if($vue.enableRowSelection)
-  import { usePagination, useRowSelection } from '@/types/table';
-  #else
-  import { usePagination } from '@/types/table';
-  #end
-  #if($dictMap.entrySet().size() > 0)
+  import { execStatusKey } from '../types/const';
+  import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
-  #end
-
-  const emits = defineEmits(['openAdd', 'openUpdate']);
+  import { dateFormat, formatDuration } from '@/utils';
+  import UserSelector from '@/components/user/user/selector/index.vue';
+  import ExecHostLogTable from './exec-host-log-table.vue';
 
   const pagination = usePagination();
-  #if($vue.enableRowSelection)
   const rowSelection = useRowSelection();
-  #end
+  const expandable = useExpandable();
   const { loading, setLoading } = useLoading();
-  #if($dictMap.entrySet().size() > 0)
   const { toOptions, getDictValue } = useDictStore();
-  #end
 
-  #if($vue.enableRowSelection)
   const selectedKeys = ref<number[]>([]);
-  #end
-  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
-  const formModel = reactive<${vue.featureEntity}QueryRequest>({
-    #foreach($field in ${table.fields})
-    ${field.propertyName}: undefined,
-    #end
+  const tableRenderData = ref<ExecLogQueryResponse[]>([]);
+  const formModel = reactive<ExecLogQueryRequest>({
+    id: undefined,
+    userId: undefined,
+    description: undefined,
+    command: undefined,
+    status: undefined,
+    startTimeRange: undefined,
   });
 
-  #if($vue.enableRowSelection)
   // 删除选中行
   const deleteSelectRows = async () => {
     try {
       setLoading(true);
       // 调用删除接口
-      await batchDelete${vue.featureEntity}(selectedKeys.value);
+      await batchDeleteExecLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
@@ -193,7 +187,6 @@
     }
   };
 
-  #end
   // 删除当前行
   const deleteRow = async ({ id }: {
     id: number
@@ -201,7 +194,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await delete${vue.featureEntity}(id);
+      await deleteExecLog(id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();
@@ -211,32 +204,26 @@
     }
   };
 
-  // 添加后回调
-  const addedCallback = () => {
-    fetchTableData();
+  // 加载主机数据
+  const loadHostExecData = async (key: number, record: ExecLogQueryResponse) => {
+    if (record.hosts) {
+      return;
+    }
+    // 加载数据
+    const { data } = await getExecHostLogList(record.id);
+    record.hosts = data;
   };
-
-  // 更新后回调
-  const updatedCallback = () => {
-    fetchTableData();
-  };
-
-  defineExpose({
-    addedCallback, updatedCallback
-  });
 
   // 加载数据
-  const doFetchTableData = async (request: ${vue.featureEntity}QueryRequest) => {
+  const doFetchTableData = async (request: ExecLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await get${vue.featureEntity}Page(request);
+      const { data } = await getExecLogPage(request);
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
-      #if($vue.enableRowSelection)
       selectedKeys.value = [];
-      #end
     } catch (e) {
     } finally {
       setLoading(false);
@@ -255,5 +242,18 @@
 </script>
 
 <style lang="less" scoped>
+  .start-time {
+    color: var(--color-text-2);
+  }
+
+  .exec-duration {
+    display: flex;
+    margin-top: 4px;
+    color: var(--color-text-3);
+  }
+
+  :deep(.arco-table-cell-fixed-expand) {
+    width: 100% !important;
+  }
 
 </style>
