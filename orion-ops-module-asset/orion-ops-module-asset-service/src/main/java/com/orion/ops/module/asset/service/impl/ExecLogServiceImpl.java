@@ -49,15 +49,6 @@ public class ExecLogServiceImpl implements ExecLogService {
     private ExecHostLogService execHostLogService;
 
     @Override
-    public ExecLogVO getExecLogById(Long id) {
-        // 查询
-        ExecLogDO record = execLogDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 转换
-        return ExecLogConvert.MAPPER.to(record);
-    }
-
-    @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
         // 条件
         LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request);

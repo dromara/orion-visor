@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            title-align="start"
            :width="width"
-           :body-style="{padding: '16px 8px'}"
+           :body-style="{ padding: '8px' }"
            :top="80"
            :title="title"
            :align-center="false"
@@ -16,7 +16,8 @@
               language="shell"
               :suggestions="true"
               :auto-focus="true"
-              :theme="dark ? 'vs-dark' : 'vs'" />
+              :theme="dark ? 'vs-dark' : 'vs'"
+              :readonly="readonly" />
     </div>
   </a-modal>
 </template>
@@ -44,6 +45,10 @@
       type: Boolean,
       default: true
     },
+    readonly: {
+      type: Boolean,
+      default: false
+    }
   });
 
   const { visible, setVisible } = useVisible();

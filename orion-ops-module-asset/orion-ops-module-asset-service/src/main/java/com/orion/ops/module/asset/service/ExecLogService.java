@@ -17,14 +17,6 @@ import java.util.List;
 public interface ExecLogService {
 
     /**
-     * 查询批量执行日志
-     *
-     * @param id id
-     * @return row
-     */
-    ExecLogVO getExecLogById(Long id);
-
-    /**
      * 分页查询批量执行日志
      *
      * @param request request

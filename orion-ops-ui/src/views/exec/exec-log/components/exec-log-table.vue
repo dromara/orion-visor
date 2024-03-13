@@ -95,7 +95,15 @@
              @expand="loadHostExecData">
       <!-- 展开表格 -->
       <template #expand-row="{ record }">
-        <exec-host-log-table :row="record" />
+        <exec-host-log-table :row="record"
+                             @view-command="s => emits('viewCommand', s)"
+                             @view-params="s => emits('viewParams', s)" />
+      </template>
+      <!-- 执行命令 -->
+      <template #command="{ record }">
+        <span :title="record.command">
+          {{ record.command }}
+        </span>
       </template>
       <!-- 执行状态 -->
       <template #status="{ record }">
@@ -105,17 +113,55 @@
       </template>
       <!-- 执行时间 -->
       <template #startTime="{ record }">
-        <span class="start-time">
+        <span class="table-cell-value">
           {{ (record.startTime && dateFormat(new Date(record.startTime))) || '-' }}
         </span>
         <br>
-        <span class="exec-duration usn">
+        <span class="table-cell-sub-value usn" style="font-size: 12px;">
           持续时间: {{ formatDuration(record.startTime, record.finishTime) || '-' }}
         </span>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <!-- 重新执行 -->
+          <a-popconfirm content="确定要重新执行吗?"
+                        position="left"
+                        type="warning"
+                        @ok="deleteRow(record)">
+            <a-button v-permission="['asset:exec:exec-command']"
+                      type="text"
+                      size="mini">
+              重新执行
+            </a-button>
+          </a-popconfirm>
+          <!-- 命令 -->
+          <a-button v-permission="['asset:exec:interrupt-exec']"
+                    type="text"
+                    size="mini"
+                    @click="emits('viewCommand', record.command)">
+            命令
+          </a-button>
+          <!-- 日志 -->
+          <a-button v-permission="['asset:exec:interrupt-exec']"
+                    type="text"
+                    size="mini"
+                    @click="emits('viewLog', record.id)">
+            日志
+          </a-button>
+          <!-- 中断 -->
+          <a-popconfirm content="确定要中断执行吗?"
+                        position="left"
+                        type="warning"
+                        @ok="interruptedExec(record)">
+            <a-button v-permission="['asset:exec:interrupt-exec']"
+                      type="text"
+                      size="mini"
+                      status="danger"
+                      :disabled="record.status !== execStatus.WAITING && record.status !== execStatus.RUNNING">
+              中断
+            </a-button>
+          </a-popconfirm>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -147,12 +193,17 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { execStatusKey } from '../types/const';
+  import { execStatus, execStatusKey } from '../types/const';
   import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
+  import { interruptExec } from '@/api/exec/exec';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import ExecHostLogTable from './exec-host-log-table.vue';
+
+  const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog']);
+
+  // TODO 日志 清理 轮询状态 ctrl日志 ctrl重新执行
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
@@ -160,6 +211,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
+  const tableRef = ref();
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecLogQueryResponse[]>([]);
   const formModel = reactive<ExecLogQueryRequest>({
@@ -204,6 +256,22 @@
     }
   };
 
+  // 中断执行
+  const interruptedExec = async (record: ExecLogQueryResponse) => {
+    try {
+      setLoading(true);
+      // 调用中断接口
+      await interruptExec({
+        logId: record.id
+      });
+      Message.success('已中断');
+      record.status = execStatus.COMPLETED;
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 加载主机数据
   const loadHostExecData = async (key: number, record: ExecLogQueryResponse) => {
     if (record.hosts) {
@@ -224,6 +292,7 @@
       pagination.current = request.page;
       pagination.pageSize = request.limit;
       selectedKeys.value = [];
+      tableRef.value.expandAll(false);
     } catch (e) {
     } finally {
       setLoading(false);
@@ -242,16 +311,6 @@
 </script>
 
 <style lang="less" scoped>
-  .start-time {
-    color: var(--color-text-2);
-  }
-
-  .exec-duration {
-    display: flex;
-    margin-top: 4px;
-    color: var(--color-text-3);
-  }
-
   :deep(.arco-table-cell-fixed-expand) {
     width: 100% !important;
   }

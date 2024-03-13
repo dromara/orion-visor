@@ -104,11 +104,11 @@
       </template>
       <!-- 连接主机 -->
       <template #hostName="{ record }">
-        <span class="host-name" :title="record.hostName">
+        <span class="table-cell-value" :title="record.hostName">
           {{ record.hostName }}
         </span>
         <br>
-        <span class="host-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.hostAddress"
               @click="copy(record.hostAddress)">
           {{ record.hostAddress }}
@@ -123,11 +123,11 @@
       </template>
       <!-- 留痕地址 -->
       <template #address="{ record }">
-        <span class="connect-location" :title="record.extra?.location">
+        <span class="table-cell-value" :title="record.extra?.location">
           {{ record.extra?.location }}
         </span>
         <br>
-        <span class="connect-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.extra?.address"
               @click="copy(record.extra?.address)">
           {{ record.extra?.address }}
@@ -306,13 +306,4 @@
 </script>
 
 <style lang="less" scoped>
-  .host-name, .connect-location {
-    color: var(--color-text-2);
-  }
-
-  .host-address, .connect-address {
-    margin-top: 4px;
-    display: inline-block;
-    color: var(--color-text-3);
-  }
 </style>

@@ -91,11 +91,11 @@
       </template>
       <!-- 操作主机 -->
       <template #hostName="{ record }">
-        <span class="host-name" :title="record.hostName">
+        <span class="table-cell-value" :title="record.hostName">
           {{ record.hostName }}
         </span>
         <br>
-        <span class="host-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.hostAddress"
               @click="copy(record.hostAddress)">
           {{ record.hostAddress }}
@@ -115,11 +115,11 @@
             {{ path }}
           </span>
           <!-- 移动目标路径 -->
-          <span class="sub-text" v-if="SftpOperatorType.SFTP_MOVE === record.type">
+          <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_MOVE === record.type">
             移动到 {{ record.extra?.target }}
           </span>
           <!-- 提权信息 -->
-          <span class="sub-text" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
+          <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
             提权 {{ record.extra?.mod }} {{ permission10toString(record.extra?.mod as number) }}
           </span>
         </div>
@@ -132,11 +132,11 @@
       </template>
       <!-- 留痕地址 -->
       <template #address="{ record }">
-        <span class="operator-location" :title="record.location">
+        <span class="table-cell-value" :title="record.location">
           {{ record.location }}
         </span>
         <br>
-        <span class="operator-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.address"
               @click="copy(record.address)">
           {{ record.address }}
@@ -263,16 +263,6 @@
 </script>
 
 <style lang="less" scoped>
-  .host-name, .operator-location {
-    color: var(--color-text-2);
-  }
-
-  .host-address, .operator-address, .sub-text {
-    margin-top: 4px;
-    display: inline-block;
-    color: var(--color-text-3);
-  }
-
   .paths-wrapper {
     display: flex;
     flex-direction: column;

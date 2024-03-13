@@ -2,14 +2,11 @@ package com.orion.ops.module.asset.entity.request.exec;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.orion.ops.framework.common.entity.PageRequest;
-import com.orion.ops.framework.common.validator.group.Batch;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 批量执行日志 查询请求对象
@@ -28,10 +25,6 @@ public class ExecLogQueryRequest extends PageRequest {
 
     @Schema(description = "id")
     private Long id;
-
-    @NotEmpty(groups = Batch.class)
-    @Schema(description = "id")
-    private List<Long> idList;
 
     @Schema(description = "执行用户id")
     private Long userId;

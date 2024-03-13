@@ -9,7 +9,7 @@ const columns = [
     align: 'left',
     fixed: 'left',
   }, {
-    title: '描述',
+    title: '执行描述',
     dataIndex: 'description',
     slotName: 'description',
     align: 'left',
@@ -22,7 +22,6 @@ const columns = [
     slotName: 'command',
     align: 'left',
     ellipsis: true,
-    tooltip: true,
   }, {
     title: '执行用户',
     dataIndex: 'username',
@@ -41,11 +40,11 @@ const columns = [
     dataIndex: 'startTime',
     slotName: 'startTime',
     align: 'left',
-    width: 180,
+    width: 190,
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 130,
+    width: 288,
     align: 'center',
     fixed: 'right',
   },

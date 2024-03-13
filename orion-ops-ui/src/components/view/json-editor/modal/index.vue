@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            title-align="start"
            :width="width"
-           :body-style="{padding: '16px 8px'}"
+           :body-style="{ padding: '16px 8px' }"
            :top="80"
            :title="title"
            :align-center="false"
@@ -12,7 +12,7 @@
            :footer="false"
            @close="handleClose">
     <div :style="{ width: '100%', 'height': height }">
-      <editor v-model="value" readonly />
+      <editor v-model="value" :readonly="readonly" />
     </div>
   </a-modal>
 </template>
@@ -36,6 +36,10 @@
     height: {
       type: String,
       default: 'calc(100vh - 240px)'
+    },
+    readonly: {
+      type: Boolean,
+      default: true
     }
   });
 

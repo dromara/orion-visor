@@ -24,7 +24,8 @@ import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
-import com.orion.ops.module.asset.entity.vo.ExecVO;
+import com.orion.ops.module.asset.entity.vo.ExecCommandHostVO;
+import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
@@ -82,7 +83,7 @@ public class ExecServiceImpl implements ExecService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ExecVO execCommand(ExecCommandRequest request) {
+    public ExecCommandVO execCommand(ExecCommandRequest request) {
         log.info("ExecService.startExecCommand start params: {}", JSON.toJSONString(request));
         LoginUser user = Objects.requireNonNull(SecurityUtils.getLoginUser());
         Long userId = user.getId();
@@ -141,11 +142,15 @@ public class ExecServiceImpl implements ExecService {
         // 操作日志
         OperatorLogs.add(OperatorLogs.ID, execId);
         // 返回
-        Map<String, Long> hostIdRel = execHostLogs.stream()
-                .collect(Collectors.toMap(s -> String.valueOf(s.getHostId()), ExecHostLogDO::getId));
-        return ExecVO.builder()
+        List<ExecCommandHostVO> hostResult = execHostLogs.stream()
+                .map(s -> ExecCommandHostVO.builder()
+                        .id(s.getId())
+                        .hostId(s.getHostId())
+                        .build())
+                .collect(Collectors.toList());
+        return ExecCommandVO.builder()
                 .id(execId)
-                .hostIdRel(hostIdRel)
+                .hosts(hostResult)
                 .build();
     }
 

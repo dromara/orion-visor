@@ -1,7 +1,7 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
-import com.orion.ops.module.asset.entity.vo.ExecVO;
+import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
 
 /**
  * 批量执行服务
@@ -18,7 +18,7 @@ public interface ExecService {
      * @param request request
      * @return result
      */
-    ExecVO execCommand(ExecCommandRequest request);
+    ExecCommandVO execCommand(ExecCommandRequest request);
 
     /**
      * 中断命令执行

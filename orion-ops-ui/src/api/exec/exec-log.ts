@@ -55,10 +55,11 @@ export interface ExecHostLogQueryResponse extends TableData {
 }
 
 /**
- * 查询执行记录
+ * 执行状态查询响应
  */
-export function getExecLog(id: number) {
-  return axios.get<ExecLogQueryResponse>('/asset/exec-log/get', { params: { id } });
+export interface ExecStatusResponse {
+  logList: Array<ExecLogQueryResponse>;
+  hostList: Array<ExecHostLogQueryResponse>;
 }
 
 /**
@@ -73,6 +74,18 @@ export function getExecLogPage(request: ExecLogQueryRequest) {
  */
 export function getExecHostLogList(logId: number) {
   return axios.get<Array<ExecHostLogQueryResponse>>('/asset/exec-log/host-list', { params: { logId } });
+}
+
+/**
+ * 查询命令执行状态
+ */
+export function getExecLogStatus(idList: Array<number>) {
+  return axios.get<ExecStatusResponse>('/asset/exec-log/status', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
 
 /**
@@ -92,4 +105,25 @@ export function batchDeleteExecLog(idList: Array<number>) {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }
   });
+}
+
+/**
+ * 删除主机执行记录
+ */
+export function deleteExecHostLog(id: number) {
+  return axios.delete('/asset/exec-log/delete-host', { params: { id } });
+}
+
+/**
+ * 查询操作日志数量
+ */
+export function getExecLogCount(request: ExecLogQueryRequest) {
+  return axios.post<number>('/asset/exec-log/query-count', request);
+}
+
+/**
+ * 清空操作日志
+ */
+export function clearExecLog(request: ExecLogQueryRequest) {
+  return axios.post<number>('/asset/exec-log/clear', request);
 }

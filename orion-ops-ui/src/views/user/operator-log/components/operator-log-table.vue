@@ -81,11 +81,11 @@
       </template>
       <!-- 留痕地址 -->
       <template #address="{ record }">
-        <span class="operator-location" :title="record.location">
+        <span class="table-cell-value" :title="record.location">
           {{ record.location }}
         </span>
         <br>
-        <span class="operator-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.address"
               @click="copy(record.address)">
           {{ record.address }}
@@ -231,13 +231,4 @@
 </script>
 
 <style lang="less" scoped>
-  .operator-location {
-    color: var(--color-text-2);
-  }
-
-  .operator-address {
-    margin-top: 4px;
-    display: inline-block;
-    color: var(--color-text-3);
-  }
 </style>

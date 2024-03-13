@@ -2,7 +2,6 @@ package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
-import com.orion.ops.framework.common.validator.group.Batch;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -49,15 +48,6 @@ public class ExecLogController {
     private ExecHostLogService execHostLogService;
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/get")
-    @Operation(summary = "查询执行日志")
-    @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
-    public ExecLogVO getExecLog(@RequestParam("id") Long id) {
-        return execLogService.getExecLogById(id);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询执行日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
@@ -76,10 +66,11 @@ public class ExecLogController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/status")
-    @Operation(summary = "查询执行日志状态")
+    @Operation(summary = "查询命令执行状态")
+    @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
-    public ExecLogStatusVO getExecLogStatus(@Validated(Batch.class) @RequestBody ExecLogQueryRequest request) {
-        return execLogService.getExecLogStatus(request.getIdList());
+    public ExecLogStatusVO getExecLogStatus(@RequestParam("idList") List<Long> idList) {
+        return execLogService.getExecLogStatus(idList);
     }
 
     @OperatorLog(ExecOperatorType.DELETE_LOG)

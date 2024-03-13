@@ -1,11 +1,15 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <exec-log-table />
-    <!-- 添加修改模态框 -->
-    <!--    <exec-log-form-modal ref="modal"-->
-    <!--                   @added="modalAddCallback"-->
-    <!--                   @updated="modalUpdateCallback" />-->
+    <exec-log-table @view-command="viewCommand"
+                    @view-params="viewParams" />
+    <!-- json 模态框 -->
+    <json-editor-modal ref="jsonModal"
+                       :esc-to-close="true" />
+    <!-- shell 模态框 -->
+    <shell-editor-modal ref="shellModal"
+                        :footer="false"
+                        :esc-to-close="true" />
   </div>
 </template>
 
@@ -20,19 +24,21 @@
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import ExecLogTable from './components/exec-log-table.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
+  import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
 
   const render = ref(false);
-  const table = ref();
-  const modal = ref();
+  const jsonModal = ref();
+  const shellModal = ref();
 
-  // 添加回调
-  const modalAddCallback = () => {
-    table.value.addedCallback();
+  // 查看命令
+  const viewCommand = (data: string) => {
+    shellModal.value.open(data, '命令');
   };
 
-  // 修改回调
-  const modalUpdateCallback = () => {
-    table.value.updatedCallback();
+  // 查看参数
+  const viewParams = (data: string) => {
+    jsonModal.value.open(JSON.parse(data));
   };
 
   onBeforeMount(async () => {

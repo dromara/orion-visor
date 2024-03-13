@@ -7,17 +7,14 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
-import com.orion.ops.module.asset.entity.vo.ExecVO;
+import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
 import com.orion.ops.module.asset.service.ExecService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -44,12 +41,12 @@ public class ExecController {
     @PostMapping("/exec-command")
     @Operation(summary = "批量执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")
-    public ExecVO execCommand(@RequestBody ExecCommandRequest request) {
+    public ExecCommandVO execCommand(@RequestBody ExecCommandRequest request) {
         return execService.execCommand(request);
     }
 
     @OperatorLog(ExecOperatorType.INTERRUPT_EXEC)
-    @PostMapping("/interrupt")
+    @PutMapping("/interrupt")
     @Operation(summary = "中断执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:interrupt-exec')")
     public HttpWrapper<?> interruptExec(@RequestBody ExecInterruptRequest request) {
@@ -59,8 +56,8 @@ public class ExecController {
     }
 
     @OperatorLog(ExecOperatorType.INTERRUPT_HOST)
-    @PostMapping("/interrupt-host")
-    @Operation(summary = "中断执行命令")
+    @PutMapping("/interrupt-host")
+    @Operation(summary = "中断执行主机命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:interrupt-exec')")
     public HttpWrapper<?> interruptHostExec(@RequestBody ExecInterruptRequest request) {
         Long hostLogId = Valid.notNull(request.getHostLogId());
@@ -69,5 +66,7 @@ public class ExecController {
     }
 
     // TODO tail log
+    // TODO 重新执行
+    // TODO 删除时 中断
 
 }
