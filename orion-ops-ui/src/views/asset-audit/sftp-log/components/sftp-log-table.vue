@@ -8,35 +8,34 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 操作用户 -->
-      <a-form-item field="userId" label="操作用户" label-col-flex="50px">
+      <a-form-item field="userId" label="操作用户">
         <user-selector v-model="formModel.userId"
                        placeholder="请选择用户"
                        allow-clear />
       </a-form-item>
       <!-- 操作主机 -->
-      <a-form-item field="hostId" label="操作主机" label-col-flex="50px">
+      <a-form-item field="hostId" label="操作主机">
         <host-selector v-model="formModel.hostId"
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>
       <!-- 操作类型 -->
-      <a-form-item field="type" label="操作类型" label-col-flex="50px">
+      <a-form-item field="type" label="操作类型">
         <a-select v-model="formModel.type"
                   placeholder="请选择类型"
                   :options="toOptions(sftpOperatorTypeKey)"
                   allow-clear />
       </a-form-item>
       <!-- 执行结果 -->
-      <a-form-item field="result" label="执行结果" label-col-flex="50px">
+      <a-form-item field="result" label="执行结果">
         <a-select v-model="formModel.result"
                   placeholder="请选择执行结果"
                   :options="toOptions(sftpOperatorResultKey)"
                   allow-clear />
       </a-form-item>
       <!-- 开始时间 -->
-      <a-form-item field="startTimeRange" label="开始时间" label-col-flex="50px">
+      <a-form-item field="startTimeRange" label="开始时间">
         <a-range-picker v-model="formModel.startTimeRange"
-                        style="width: 100%"
                         :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                         show-time
                         format="YYYY-MM-DD HH:mm:ss" />

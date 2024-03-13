@@ -7,18 +7,18 @@
                   @reset="resetForm"
                   @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
-      <a-form-item field="keyId" label="配置项" label-col-flex="50px">
+      <a-form-item field="keyId" label="配置项">
         <dict-key-selector v-model="formModel.keyId"
                            @change="changeKey"
                            allow-create
                            allow-clear />
       </a-form-item>
       <!-- 配置值 -->
-      <a-form-item field="value" label="配置值" label-col-flex="50px">
+      <a-form-item field="value" label="配置值">
         <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
       </a-form-item>
       <!-- 配置描述 -->
-      <a-form-item field="label" label="配置描述" label-col-flex="50px">
+      <a-form-item field="label" label="配置描述">
         <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
       </a-form-item>
     </query-header>

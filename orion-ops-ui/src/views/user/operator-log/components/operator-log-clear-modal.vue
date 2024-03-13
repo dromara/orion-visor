@@ -18,9 +18,7 @@
               :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }">
         <!-- 操作用户 -->
-        <a-form-item field="userId"
-                     label="操作用户"
-        >
+        <a-form-item field="userId" label="操作用户">
           <user-selector v-model="formModel.userId"
                          placeholder="请选择操作用户"
                          allow-clear />
@@ -60,7 +58,6 @@
         <!-- 执行时间 -->
         <a-form-item field="startTimeRange" label="执行时间">
           <a-range-picker v-model="formModel.startTimeRange"
-                          style="width: 100%"
                           :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                           show-time
                           format="YYYY-MM-DD HH:mm:ss" />

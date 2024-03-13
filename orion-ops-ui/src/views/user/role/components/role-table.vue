@@ -7,15 +7,19 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 角色名称 -->
-      <a-form-item field="name" label="角色名称" label-col-flex="50px">
-        <a-input v-model="formModel.name" placeholder="请输入角色名称" allow-clear />
+      <a-form-item field="name" label="角色名称">
+        <a-input v-model="formModel.name"
+                 placeholder="请输入角色名称"
+                 allow-clear />
       </a-form-item>
       <!-- 角色编码 -->
-      <a-form-item field="code" label="角色编码" label-col-flex="50px">
-        <a-input v-model="formModel.code" placeholder="请输入角色编码" allow-clear />
+      <a-form-item field="code" label="角色编码">
+        <a-input v-model="formModel.code"
+                 placeholder="请输入角色编码"
+                 allow-clear />
       </a-form-item>
       <!-- 角色状态 -->
-      <a-form-item field="status" label="角色状态" label-col-flex="50px">
+      <a-form-item field="status" label="角色状态">
         <a-select v-model="formModel.status"
                   placeholder="请选择角色状态"
                   :options="toOptions(roleStatusKey)"

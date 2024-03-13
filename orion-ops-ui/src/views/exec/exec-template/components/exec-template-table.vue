@@ -7,20 +7,20 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="50px">
+      <a-form-item field="id" label="id">
         <a-input-number v-model="formModel.id"
                         placeholder="请输入id"
                         allow-clear
                         hide-button />
       </a-form-item>
       <!-- 模板名称 -->
-      <a-form-item field="name" label="模板名称" label-col-flex="50px">
+      <a-form-item field="name" label="模板名称">
         <a-input v-model="formModel.name"
                  placeholder="请输入模板名称"
                  allow-clear />
       </a-form-item>
       <!-- 模板命令 -->
-      <a-form-item field="command" label="模板命令" label-col-flex="50px">
+      <a-form-item field="command" label="模板命令">
         <a-input v-model="formModel.command"
                  placeholder="请输入模板命令"
                  allow-clear />

@@ -8,39 +8,38 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 连接用户 -->
-      <a-form-item field="userId" label="连接用户" label-col-flex="50px">
+      <a-form-item field="userId" label="连接用户">
         <user-selector v-model="formModel.userId"
                        placeholder="请选择用户"
                        allow-clear />
       </a-form-item>
       <!-- 连接主机 -->
-      <a-form-item field="hostId" label="连接主机" label-col-flex="50px">
+      <a-form-item field="hostId" label="连接主机">
         <host-selector v-model="formModel.hostId"
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>
       <!-- 主机地址 -->
-      <a-form-item field="hostAddress" label="主机地址" label-col-flex="50px">
+      <a-form-item field="hostAddress" label="主机地址">
         <a-input v-model="formModel.hostAddress" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
       <!-- 状态 -->
-      <a-form-item field="status" label="状态" label-col-flex="50px">
+      <a-form-item field="status" label="状态">
         <a-select v-model="formModel.status"
                   placeholder="请选择状态"
                   :options="toOptions(connectStatusKey)"
                   allow-clear />
       </a-form-item>
       <!-- 类型 -->
-      <a-form-item field="type" label="类型" label-col-flex="50px">
+      <a-form-item field="type" label="类型">
         <a-select v-model="formModel.type"
                   placeholder="请选择类型"
                   :options="toOptions(connectTypeKey)"
                   allow-clear />
       </a-form-item>
       <!-- 开始时间 -->
-      <a-form-item field="startTimeRange" label="开始时间" label-col-flex="50px">
+      <a-form-item field="startTimeRange" label="开始时间">
         <a-range-picker v-model="formModel.startTimeRange"
-                        style="width: 100%"
                         :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                         show-time
                         format="YYYY-MM-DD HH:mm:ss" />

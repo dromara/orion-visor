@@ -99,6 +99,31 @@ export function formatSecond(second: number, p = 'HH:mm') {
 }
 
 /**
+ * 格式化持续时间
+ * @param start
+ * @param end
+ */
+export function formatDuration(start: number, end?: number): string {
+  if (!end) {
+    return '';
+  }
+  const duration = (end - start) / 1000;
+  const minutes = Math.floor(duration / 60);
+  const seconds = Math.floor(duration % 60);
+  let result = '';
+  if (minutes > 0) {
+    result += `${minutes}min`;
+    if (seconds > 0) {
+      result += ' ';
+    }
+  }
+  if (seconds > 0) {
+    result += `${seconds}s`;
+  }
+  return result;
+}
+
+/**
  * 格式化数字为 ,分割
  */
 export function formatNumber(value: number = 0) {
@@ -163,7 +188,7 @@ export const resetObject = (obj: any, ignore: string[] = []) => {
 export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
   return Object.keys(obj)
     .filter(s => !ignore.includes(s))
-    .reduce(function (acc, curr) {
+    .reduce(function(acc, curr) {
       const currVal = obj[curr];
       return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
     }, 0);
@@ -196,7 +221,7 @@ export function detectZoom() {
  * 获取唯一的 UUID
  */
 export function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);

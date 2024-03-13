@@ -52,7 +52,6 @@
         <!-- 开始时间 -->
         <a-form-item field="startTimeRange" label="开始时间">
           <a-range-picker v-model="formModel.startTimeRange"
-                          style="width: 100%"
                           :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                           show-time
                           format="YYYY-MM-DD HH:mm:ss" />

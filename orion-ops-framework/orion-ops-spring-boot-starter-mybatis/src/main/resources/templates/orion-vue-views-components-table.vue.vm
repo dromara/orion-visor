@@ -8,7 +8,7 @@
                   @keyup.enter="() => fetchTableData()">
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
-      <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
+      <a-form-item field="${field.propertyName}" label="${field.comment}">
         #if(${dictMap.containsKey(${field.propertyName})})
         <a-select v-model="formModel.${field.propertyName}"
                   :options="toOptions($dictMap.get(${field.propertyName}).keyField)"
@@ -96,7 +96,7 @@
       #if(${dictMap.containsKey(${field.propertyName})})
       <!-- $field.comment -->
       <template #${field.propertyName}="{ record }">
-        {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}}) }}
+        {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}) }}
       </template>
       #end
       #end

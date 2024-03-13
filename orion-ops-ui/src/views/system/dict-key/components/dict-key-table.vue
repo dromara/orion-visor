@@ -7,12 +7,16 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
-      <a-form-item field="keyName" label="配置项" label-col-flex="50px">
-        <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
+      <a-form-item field="keyName" label="配置项">
+        <a-input v-model="formModel.keyName"
+                 placeholder="请输入配置项"
+                 allow-clear />
       </a-form-item>
       <!-- 配置描述 -->
-      <a-form-item field="description" label="配置描述" label-col-flex="50px">
-        <a-input v-model="formModel.description" placeholder="请输入配置描述" allow-clear />
+      <a-form-item field="description" label="配置描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入配置描述"
+                 allow-clear />
       </a-form-item>
     </query-header>
   </a-card>

@@ -7,14 +7,14 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="30px">
+      <a-form-item field="id" label="id">
         <a-input-number v-model="formModel.id"
                         placeholder="请输入id"
                         allow-clear
                         hide-button />
       </a-form-item>
       <!-- 名称 -->
-      <a-form-item field="name" label="名称" label-col-flex="30px">
+      <a-form-item field="name" label="名称">
         <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
     </query-header>

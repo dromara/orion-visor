@@ -8,7 +8,7 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.M;
 
 /**
- * 批量执行 操作日志类型
+ * 批量执行 操作记录类型
  *
  * @author Jiahang Li
  * @version 1.0.1
@@ -35,9 +35,9 @@ public class ExecOperatorType extends InitializingOperatorTypes {
                 new OperatorType(M, EXEC_COMMAND, "执行主机命令"),
                 new OperatorType(M, INTERRUPT_EXEC, "中断执行命令"),
                 new OperatorType(M, INTERRUPT_HOST, "中断主机执行命令 ${logId} ${hostName}"),
-                new OperatorType(H, DELETE_HOST_LOG, "删除主机执行日志 ${logId} ${hostName}"),
-                new OperatorType(H, DELETE_LOG, "删除执行日志 ${count} 条"),
-                new OperatorType(H, CLEAR_LOG, "清理执行日志 ${count} 条"),
+                new OperatorType(H, DELETE_HOST_LOG, "删除主机执行记录 ${logId} ${hostName}"),
+                new OperatorType(H, DELETE_LOG, "删除执行记录 ${count} 条"),
+                new OperatorType(H, CLEAR_LOG, "清理执行记录 ${count} 条"),
         };
     }
 

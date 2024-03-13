@@ -72,7 +72,10 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 查询执行状态
         List<ExecLogVO> logList = execLogDAO.of()
                 .createWrapper()
-                .select(ExecLogDO::getId, ExecLogDO::getStatus, ExecLogDO::getFinishTime)
+                .select(ExecLogDO::getId,
+                        ExecLogDO::getStatus,
+                        ExecLogDO::getStartTime,
+                        ExecLogDO::getFinishTime)
                 .in(ExecLogDO::getId, idList)
                 .then()
                 .list(ExecLogConvert.MAPPER::to);
@@ -81,6 +84,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .createWrapper()
                 .select(ExecHostLogDO::getId,
                         ExecHostLogDO::getStatus,
+                        ExecHostLogDO::getStartTime,
                         ExecHostLogDO::getFinishTime,
                         ExecHostLogDO::getExitStatus,
                         ExecHostLogDO::getErrorMessage)
@@ -167,8 +171,8 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .eq(ExecLogDO::getUsername, request.getUsername())
                 .eq(ExecLogDO::getSource, request.getSource())
                 .eq(ExecLogDO::getSourceId, request.getSourceId())
-                .eq(ExecLogDO::getDescription, request.getDescription())
-                .eq(ExecLogDO::getCommand, request.getCommand())
+                .like(ExecLogDO::getDescription, request.getDescription())
+                .like(ExecLogDO::getCommand, request.getCommand())
                 .eq(ExecLogDO::getStatus, request.getStatus())
                 .ge(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
