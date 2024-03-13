@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
+import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 
 import java.util.List;
@@ -30,6 +31,14 @@ public interface ExecLogService {
      * @return rows
      */
     DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request);
+
+    /**
+     * 获取执行日志状态
+     *
+     * @param idList idList
+     * @return status
+     */
+    ExecLogStatusVO getExecLogStatus(List<Long> idList);
 
     /**
      * 查询批量执行日志数量

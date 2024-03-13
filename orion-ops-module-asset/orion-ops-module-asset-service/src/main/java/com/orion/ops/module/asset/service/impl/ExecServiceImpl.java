@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
@@ -23,7 +24,6 @@ import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.vo.ExecVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
@@ -32,6 +32,9 @@ import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.handler.host.exec.ExecTaskExecutors;
 import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandDTO;
 import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
+import com.orion.ops.module.asset.handler.host.exec.handler.IExecCommandHandler;
+import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecService;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +77,9 @@ public class ExecServiceImpl implements ExecService {
     @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
+    @Resource
+    private ExecManager execManager;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ExecVO execCommand(ExecCommandRequest request) {
@@ -85,6 +91,7 @@ public class ExecServiceImpl implements ExecService {
         // 检查主机权限
         List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId, HostConfigTypeEnum.SSH);
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
+        log.info("ExecService.startExecCommand host hostList: {}", hostIdList);
         Valid.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);
         List<HostDO> hosts = hostDAO.selectBatchIds(hostIdList);
         // 插入日志
@@ -100,7 +107,7 @@ public class ExecServiceImpl implements ExecService {
         execLogDAO.insert(execLog);
         Long execId = execLog.getId();
         // 获取内置参数
-        Map<String, Object> builtinsParams = getBaseBuiltinsParams(user, execId, request.getParameter());
+        Map<String, Object> builtinsParams = this.getBaseBuiltinsParams(user, execId, request.getParameter());
         // 设置主机日志
         List<ExecHostLogDO> execHostLogs = hosts.stream()
                 .map(s -> {
@@ -143,8 +150,99 @@ public class ExecServiceImpl implements ExecService {
     }
 
     @Override
-    public void interruptCommand(ExecInterruptRequest request) {
+    @Transactional(rollbackFor = Exception.class)
+    public void interruptExec(Long logId) {
+        log.info("ExecService.interruptExec start logId: {}", logId);
+        // 获取执行记录
+        ExecLogDO execLog = execLogDAO.selectById(logId);
+        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        // 检查状态
+        if (!ExecStatusEnum.of(execLog.getStatus()).isCloseable()) {
+            return;
+        }
+        // 中断执行
+        IExecTaskHandler task = execManager.getTask(logId);
+        if (task != null) {
+            log.info("ExecService.interruptExec interrupted logId: {}", logId);
+            // 中断
+            task.interrupted();
+        } else {
+            log.info("ExecService.interruptExec updateStatus start logId: {}", logId);
+            // 不存在则直接修改状态
+            ExecLogDO updateExec = new ExecLogDO();
+            updateExec.setId(logId);
+            updateExec.setStatus(ExecStatusEnum.COMPLETED.name());
+            updateExec.setFinishTime(new Date());
+            int effect = execLogDAO.updateById(updateExec);
+            // 更新主机状态
+            ExecHostLogDO updateHost = new ExecHostLogDO();
+            updateHost.setStatus(ExecHostStatusEnum.INTERRUPTED.name());
+            updateHost.setFinishTime(new Date());
+            LambdaQueryWrapper<ExecHostLogDO> updateHostWrapper = execHostLogDAO.lambda()
+                    .eq(ExecHostLogDO::getLogId, logId)
+                    .in(ExecHostLogDO::getStatus, ExecHostStatusEnum.CLOSEABLE_STATUS);
+            effect += execHostLogDAO.update(updateHost, updateHostWrapper);
+            log.info("ExecService.interruptExec updateStatus finish logId: {}, effect: {}", logId, effect);
+        }
+    }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void interruptHostExec(Long hostLogId) {
+        log.info("ExecService.interruptHostExec start hostLogId: {}", hostLogId);
+        // 获取执行记录
+        ExecHostLogDO hostLog = execHostLogDAO.selectById(hostLogId);
+        Valid.notNull(hostLog, ErrorMessage.DATA_ABSENT);
+        Long logId = hostLog.getLogId();
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.LOG_ID, logId);
+        OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
+        // 检查状态
+        if (!ExecHostStatusEnum.of(hostLog.getStatus()).isCloseable()) {
+            return;
+        }
+        // 中断执行
+        IExecTaskHandler task = execManager.getTask(logId);
+        if (task != null) {
+            log.info("ExecService.interruptHostExec interrupted logId: {}, hostLogId: {}", logId, hostLogId);
+            IExecCommandHandler handler = task.getHandlers()
+                    .stream()
+                    .filter(s -> s.getHostId().equals(hostLog.getHostId()))
+                    .findFirst()
+                    .orElse(null);
+            // 中断
+            if (handler != null) {
+                handler.interrupted();
+            }
+        } else {
+            log.info("ExecService.interruptHostExec updateStatus start logId: {}, hostLogId: {}", logId, hostLogId);
+            // 不存在则直接修改状态
+            ExecHostLogDO updateHost = new ExecHostLogDO();
+            updateHost.setId(hostLogId);
+            updateHost.setStatus(ExecHostStatusEnum.INTERRUPTED.name());
+            updateHost.setFinishTime(new Date());
+            int effect = execHostLogDAO.updateById(updateHost);
+            // 查询执行状态
+            ExecLogDO execLog = execLogDAO.selectById(logId);
+            if (ExecStatusEnum.of(execLog.getStatus()).isCloseable()) {
+                // 状态可修改则需要检查其他主机任务是否已经完成
+                Long closeableCount = execHostLogDAO.of()
+                        .createWrapper()
+                        .eq(ExecHostLogDO::getLogId, logId)
+                        .in(ExecHostLogDO::getStatus, ExecHostStatusEnum.CLOSEABLE_STATUS)
+                        .then()
+                        .count();
+                if (closeableCount == 0) {
+                    // 修改任务状态
+                    ExecLogDO updateExec = new ExecLogDO();
+                    updateExec.setId(logId);
+                    updateExec.setStatus(ExecStatusEnum.COMPLETED.name());
+                    updateExec.setFinishTime(new Date());
+                    effect += execLogDAO.updateById(updateExec);
+                }
+            }
+            log.info("ExecService.interruptHostExec updateStatus finish logId: {}, hostLogId: {}, effect: {}", logId, hostLogId, effect);
+        }
     }
 
     /**

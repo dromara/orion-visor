@@ -19,7 +19,11 @@ public class ExecOperatorType extends InitializingOperatorTypes {
 
     public static final String EXEC_COMMAND = "exec:exec-command";
 
-    public static final String INTERRUPT_COMMAND = "exec:interrupt-command";
+    public static final String INTERRUPT_EXEC = "exec:interrupt-exec";
+
+    public static final String INTERRUPT_HOST = "exec:interrupt-host";
+
+    public static final String DELETE_HOST_LOG = "exec:delete-host-log";
 
     public static final String DELETE_LOG = "exec:delete-log";
 
@@ -29,7 +33,9 @@ public class ExecOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(M, EXEC_COMMAND, "执行主机命令"),
-                new OperatorType(M, INTERRUPT_COMMAND, "中断执行命令"),
+                new OperatorType(M, INTERRUPT_EXEC, "中断执行命令"),
+                new OperatorType(M, INTERRUPT_HOST, "中断主机执行命令 ${logId} ${hostName}"),
+                new OperatorType(H, DELETE_HOST_LOG, "删除主机执行日志 ${logId} ${hostName}"),
                 new OperatorType(H, DELETE_LOG, "删除执行日志 ${count} 条"),
                 new OperatorType(H, CLEAR_LOG, "清理执行日志 ${count} 条"),
         };

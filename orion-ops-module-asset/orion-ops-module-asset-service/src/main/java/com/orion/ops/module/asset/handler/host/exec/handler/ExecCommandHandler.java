@@ -15,6 +15,7 @@ import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.spring.SpringHolder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -39,9 +40,12 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     private final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
 
-    private final ExecCommandHostDTO command;
+    private final ExecCommandHostDTO execHostCommand;
 
     private final TimeoutChecker timeoutChecker;
+
+    @Getter
+    private ExecHostStatusEnum status;
 
     private SessionStore sessionStore;
 
@@ -53,38 +57,43 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     private volatile boolean interrupted;
 
-    public ExecCommandHandler(ExecCommandHostDTO command, TimeoutChecker timeoutChecker) {
-        this.command = command;
+    public ExecCommandHandler(ExecCommandHostDTO execHostCommand, TimeoutChecker timeoutChecker) {
+        this.status = ExecHostStatusEnum.WAITING;
+        this.execHostCommand = execHostCommand;
         this.timeoutChecker = timeoutChecker;
     }
 
     @Override
     public void run() {
-        Long id = command.getHostLogId();
-        log.info("ExecCommandHandler run start id: {}, info: {}", id, JSON.toJSONString(command));
+        Long id = execHostCommand.getHostLogId();
+        Exception ex = null;
+        log.info("ExecCommandHandler run start id: {}, info: {}", id, JSON.toJSONString(execHostCommand));
+        // 更新状态
+        this.updateStatus(ExecHostStatusEnum.RUNNING, null);
         try {
-            // 更新状态
-            this.updateStatus(ExecHostStatusEnum.RUNNING, null);
             // 执行命令
             this.execCommand();
-            if (executor.isTimeout()) {
-                // 更新状态
-                this.updateStatus(ExecHostStatusEnum.FAILED, new TimeoutException());
-            } else {
-                // 更新状态
-                this.updateStatus(ExecHostStatusEnum.COMPLETED, null);
-            }
             log.info("ExecCommandHandler run complete id: {}", id);
         } catch (Exception e) {
             log.error("ExecCommandHandler run error id: {}", id, e);
-            // TODO
-            if (this.interrupted) {
-                this.updateStatus(ExecHostStatusEnum.INTERRUPTED, null);
-            } else {
-                this.updateStatus(ExecHostStatusEnum.FAILED, e);
-            }
+            ex = e;
         } finally {
             Streams.close(this);
+        }
+        // 执行回调
+        if (this.interrupted) {
+            // TODO 测试
+            // 中断执行
+            this.updateStatus(ExecHostStatusEnum.INTERRUPTED, null);
+        } else if (ex != null) {
+            // 执行失败
+            this.updateStatus(ExecHostStatusEnum.FAILED, ex);
+        } else if (executor.isTimeout()) {
+            // 更新执行超时
+            this.updateStatus(ExecHostStatusEnum.FAILED, new TimeoutException());
+        } else {
+            // 更新执行完成
+            this.updateStatus(ExecHostStatusEnum.COMPLETED, null);
         }
     }
 
@@ -95,13 +104,12 @@ public class ExecCommandHandler implements IExecCommandHandler {
      */
     private void execCommand() throws Exception {
         // 打开日志流
-        this.logOutputStream = fileClient.getContentOutputStream(command.getLogPath());
+        this.logOutputStream = fileClient.getContentOutputStream(execHostCommand.getLogPath());
         // 打开会话
-        this.sessionStore = hostTerminalService.openSessionStore(command.getHostId());
-        this.executor = sessionStore.getCommandExecutor(Strings.replaceCRLF(command.getCommand()));
-        // TODO 超时
+        this.sessionStore = hostTerminalService.openSessionStore(execHostCommand.getHostId());
+        this.executor = sessionStore.getCommandExecutor(Strings.replaceCRLF(execHostCommand.getCommand()));
         // 执行命令
-        executor.timeout(command.getTimeout(), TimeUnit.SECONDS, timeoutChecker);
+        executor.timeout(execHostCommand.getTimeout(), TimeUnit.SECONDS, timeoutChecker);
         executor.merge();
         executor.transfer(logOutputStream);
         executor.connect();
@@ -115,9 +123,10 @@ public class ExecCommandHandler implements IExecCommandHandler {
      * @param ex     ex
      */
     private void updateStatus(ExecHostStatusEnum status, Exception ex) {
-        Long id = command.getHostLogId();
+        this.status = status;
+        Long id = execHostCommand.getHostLogId();
         String statusName = status.name();
-        log.info("ExecCommandHandler.updateStatus id: {}, status: {}", id, statusName);
+        log.info("ExecCommandHandler.updateStatus start id: {}, status: {}", id, statusName);
         ExecHostLogDO update = new ExecHostLogDO();
         update.setId(id);
         update.setStatus(statusName);
@@ -136,7 +145,8 @@ public class ExecCommandHandler implements IExecCommandHandler {
             // 中断
             update.setFinishTime(new Date());
         }
-        execHostLogDAO.updateById(update);
+        int effect = execHostLogDAO.updateById(update);
+        log.info("ExecCommandHandler.updateStatus finish id: {}, effect: {}", id, effect);
     }
 
     @Override
@@ -146,12 +156,28 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     @Override
     public void interrupted() {
+        log.info("ExecCommandHandler.interrupted id: {}, interrupted: {}, closed: {}",
+                execHostCommand.getHostLogId(), interrupted, closed);
         if (this.interrupted || this.closed) {
             return;
         }
         // 关闭
         this.interrupted = true;
         this.close();
+    }
+
+    @Override
+    public void close() {
+        log.info("ExecCommandHandler.closed id: {}, closed: {}",
+                execHostCommand.getHostLogId(), closed);
+        if (this.closed) {
+            return;
+        }
+        this.closed = true;
+        Streams.close(executor);
+        Streams.close(sessionStore);
+        Streams.close(logOutputStream);
+        // TODO 关闭日志
     }
 
     /**
@@ -175,15 +201,8 @@ public class ExecCommandHandler implements IExecCommandHandler {
     }
 
     @Override
-    public void close() {
-        if (this.closed) {
-            return;
-        }
-        this.closed = true;
-        Streams.close(executor);
-        Streams.close(sessionStore);
-        Streams.close(logOutputStream);
-        // TODO 关闭日志
+    public Long getHostId() {
+        return execHostCommand.getHostId();
     }
 
 }

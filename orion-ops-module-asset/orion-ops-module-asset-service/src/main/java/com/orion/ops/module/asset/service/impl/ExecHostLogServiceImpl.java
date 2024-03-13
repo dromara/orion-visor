@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.ExecHostLogConvert;
@@ -67,6 +68,9 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
         // 删除
         int effect = execHostLogDAO.deleteById(id);
         log.info("ExecHostLogService-deleteExecHostLogById id: {}, effect: {}", id, effect);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.LOG_ID, record.getLogId());
+        OperatorLogs.add(OperatorLogs.HOST_NAME, record.getHostName());
         return effect;
     }
 

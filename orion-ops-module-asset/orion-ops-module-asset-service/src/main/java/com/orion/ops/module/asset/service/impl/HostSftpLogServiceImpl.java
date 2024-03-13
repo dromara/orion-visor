@@ -54,12 +54,9 @@ public class HostSftpLogServiceImpl implements HostSftpLogService {
                     return vo;
                 }).collect(Collectors.toList());
         // 返回
-        DataGrid<HostSftpLogVO> result = new DataGrid<>();
-        result.setRows(rows);
+        DataGrid<HostSftpLogVO> result = new DataGrid<>(rows, dataGrid.getTotal());
         result.setPage(dataGrid.getPage());
         result.setLimit(dataGrid.getLimit());
-        result.setSize(dataGrid.getSize());
-        result.setTotal(dataGrid.getTotal());
         return result;
     }
 

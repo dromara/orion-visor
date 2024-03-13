@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.ops.framework.common.validator.group.Batch;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -9,7 +10,9 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
+import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
+import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.service.ExecHostLogService;
 import com.orion.ops.module.asset.service.ExecLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,6 +62,7 @@ public class ExecLogController {
     @Operation(summary = "分页查询执行日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
     public DataGrid<ExecLogVO> getExecLogPage(@Validated(Page.class) @RequestBody ExecLogQueryRequest request) {
+        request.setSource(ExecSourceEnum.BATCH.name());
         return execLogService.getExecLogPage(request);
     }
 
@@ -68,6 +72,14 @@ public class ExecLogController {
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
     public List<ExecHostLogVO> getExecHostLogList(@RequestParam("logId") Long logId) {
         return execHostLogService.getExecHostLogList(logId);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/status")
+    @Operation(summary = "查询执行日志状态")
+    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
+    public ExecLogStatusVO getExecLogStatus(@Validated(Batch.class) @RequestBody ExecLogQueryRequest request) {
+        return execLogService.getExecLogStatus(request.getIdList());
     }
 
     @OperatorLog(ExecOperatorType.DELETE_LOG)
@@ -88,12 +100,30 @@ public class ExecLogController {
         return execLogService.deleteExecLogByIdList(idList);
     }
 
+    @OperatorLog(ExecOperatorType.DELETE_HOST_LOG)
     @DeleteMapping("/delete-host")
     @Operation(summary = "删除执行主机日志")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:exec-log:delete')")
     public Integer deleteExecHostLog(@RequestParam("id") Long id) {
         return execHostLogService.deleteExecHostLogById(id);
+    }
+
+    @PostMapping("/query-count")
+    @Operation(summary = "查询执行日志数量")
+    @PreAuthorize("@ss.hasPermission('asset:exec-log:management:clear')")
+    public Long getExecLogCount(@RequestBody ExecLogQueryRequest request) {
+        request.setSource(ExecSourceEnum.BATCH.name());
+        return execLogService.queryExecLogCount(request);
+    }
+
+    @OperatorLog(ExecOperatorType.CLEAR_LOG)
+    @PostMapping("/clear")
+    @Operation(summary = "清空执行日志")
+    @PreAuthorize("@ss.hasPermission('asset:exec-log:management:clear')")
+    public Integer clearExecLog(@RequestBody ExecLogQueryRequest request) {
+        request.setSource(ExecSourceEnum.BATCH.name());
+        return execLogService.clearExecLog(request);
     }
 
 }

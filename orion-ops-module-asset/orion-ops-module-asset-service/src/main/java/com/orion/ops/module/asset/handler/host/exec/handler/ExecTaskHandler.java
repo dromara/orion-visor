@@ -11,7 +11,9 @@ import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
 import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandDTO;
 import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
+import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
 import com.orion.spring.SpringHolder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -30,29 +32,31 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private static final ExecLogDAO execLogDAO = SpringHolder.getBean(ExecLogDAO.class);
 
-    private final ExecCommandDTO command;
+    private static final ExecManager execManager = SpringHolder.getBean(ExecManager.class);
+
+    private final ExecCommandDTO execCommand;
 
     private TimeoutChecker timeoutChecker;
 
-    private List<ExecCommandHandler> handlers;
+    @Getter
+    private List<IExecCommandHandler> handlers;
 
-    public ExecTaskHandler(ExecCommandDTO command) {
-        this.command = command;
+    public ExecTaskHandler(ExecCommandDTO execCommand) {
+        this.execCommand = execCommand;
         this.handlers = Lists.newList();
     }
 
-    // TODO manager
-
     @Override
     public void run() {
-        Long id = command.getLogId();
+        Long id = execCommand.getLogId();
+        // 添加任务
+        execManager.addTask(id, this);
         log.info("ExecTaskHandler.run start id: {}", id);
+        // 更新状态
+        this.updateStatus(ExecStatusEnum.RUNNING);
         try {
-            // TODO 添加
-            // 更新状态
-            this.updateStatus(ExecStatusEnum.RUNNING);
             // 执行命令
-            this.runHostCommand(command.getHosts());
+            this.runHostCommand(execCommand.getHosts());
             // 更新状态-执行完成
             log.info("ExecTaskHandler.run completed id: {}", id);
             this.updateStatus(ExecStatusEnum.COMPLETED);
@@ -60,10 +64,18 @@ public class ExecTaskHandler implements IExecTaskHandler {
             // 更新状态-执行失败
             this.updateStatus(ExecStatusEnum.FAILED);
             log.error("ExecTaskHandler.run error id: {}", id, e);
-            // TODO 移除
         } finally {
-            this.close();
+            // 释放资源
+            Streams.close(this);
+            // 移除任务
+            execManager.removeTask(id);
         }
+    }
+
+    @Override
+    public void interrupted() {
+        log.info("ExecTaskHandler-interrupted id: {}", execCommand.getLogId());
+        handlers.forEach(IExecCommandHandler::interrupted);
     }
 
     /**
@@ -74,7 +86,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
      */
     private void runHostCommand(List<ExecCommandHostDTO> hosts) throws Exception {
         // 超时检查
-        if (command.getTimeout() != 0) {
+        if (execCommand.getTimeout() != 0) {
             this.timeoutChecker = TimeoutChecker.create(Const.MS_S_1);
             AssetThreadPools.TIMEOUT_CHECK.execute(this.timeoutChecker);
         }
@@ -90,11 +102,15 @@ public class ExecTaskHandler implements IExecTaskHandler {
         }
     }
 
-
-    private Integer updateStatus(ExecStatusEnum status) {
-        Long id = command.getLogId();
+    /**
+     * 更新状态
+     *
+     * @param status status
+     */
+    private void updateStatus(ExecStatusEnum status) {
+        Long id = execCommand.getLogId();
         String statusName = status.name();
-        log.info("ExecTaskHandler-updateStatus id: {}, status: {}", id, statusName);
+        log.info("ExecTaskHandler-updateStatus start id: {}, status: {}", id, statusName);
         ExecLogDO update = new ExecLogDO();
         update.setId(id);
         update.setStatus(statusName);
@@ -108,13 +124,16 @@ public class ExecTaskHandler implements IExecTaskHandler {
             // 执行失败
             update.setFinishTime(new Date());
         }
-        return execLogDAO.updateById(update);
+        int effect = execLogDAO.updateById(update);
+        log.info("ExecTaskHandler-updateStatus finish id: {}, effect: {}", id, effect);
     }
 
     @Override
     public void close() {
+        log.info("ExecTaskHandler-close id: {}", execCommand.getLogId());
         Streams.close(timeoutChecker);
         this.handlers.forEach(Streams::close);
+        // TODO 关闭日志
     }
 
 }

@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
@@ -47,15 +48,26 @@ public class ExecController {
         return execService.execCommand(request);
     }
 
-    @OperatorLog(ExecOperatorType.INTERRUPT_COMMAND)
-    @PostMapping("/interrupt-command")
+    @OperatorLog(ExecOperatorType.INTERRUPT_EXEC)
+    @PostMapping("/interrupt")
     @Operation(summary = "中断执行命令")
-    @PreAuthorize("@ss.hasPermission('asset:exec:interrupt-command')")
-    public HttpWrapper<?> interruptCommand(@RequestBody ExecInterruptRequest request) {
-        execService.interruptCommand(request);
+    @PreAuthorize("@ss.hasPermission('asset:exec:interrupt-exec')")
+    public HttpWrapper<?> interruptExec(@RequestBody ExecInterruptRequest request) {
+        Long logId = Valid.notNull(request.getLogId());
+        execService.interruptExec(logId);
         return HttpWrapper.ok();
     }
 
-    // log
+    @OperatorLog(ExecOperatorType.INTERRUPT_HOST)
+    @PostMapping("/interrupt-host")
+    @Operation(summary = "中断执行命令")
+    @PreAuthorize("@ss.hasPermission('asset:exec:interrupt-exec')")
+    public HttpWrapper<?> interruptHostExec(@RequestBody ExecInterruptRequest request) {
+        Long hostLogId = Valid.notNull(request.getHostLogId());
+        execService.interruptHostExec(hostLogId);
+        return HttpWrapper.ok();
+    }
+
+    // TODO tail log
 
 }

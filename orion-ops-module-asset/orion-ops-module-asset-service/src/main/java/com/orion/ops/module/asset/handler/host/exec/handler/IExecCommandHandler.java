@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.handler.host.exec.handler;
 
 import com.orion.lang.able.SafeCloseable;
+import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 
 /**
  * 命令执行器定义
@@ -22,5 +23,19 @@ public interface IExecCommandHandler extends Runnable, SafeCloseable {
      * 中断执行
      */
     void interrupted();
+
+    /**
+     * 获取当前状态
+     *
+     * @return status
+     */
+    ExecHostStatusEnum getStatus();
+
+    /**
+     * 获取主机 id
+     *
+     * @return hostId
+     */
+    Long getHostId();
 
 }

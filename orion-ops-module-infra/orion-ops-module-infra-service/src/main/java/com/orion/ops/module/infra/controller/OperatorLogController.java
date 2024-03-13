@@ -59,6 +59,7 @@ public class OperatorLogController {
 
     @PostMapping("/query-count")
     @Operation(summary = "查询操作日志数量")
+    @PreAuthorize("@ss.hasPermission('infra:operator-log:clear')")
     public Long getOperatorLogCount(@RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.getOperatorLogCount(request);
     }

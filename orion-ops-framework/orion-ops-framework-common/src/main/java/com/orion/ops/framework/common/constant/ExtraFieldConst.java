@@ -41,4 +41,6 @@ public interface ExtraFieldConst extends FieldConst {
 
     String HOST_NAME = "hostName";
 
+    String LOG_ID = "logId";
+
 }

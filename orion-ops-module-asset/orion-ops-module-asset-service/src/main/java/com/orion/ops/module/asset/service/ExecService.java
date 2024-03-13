@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.vo.ExecVO;
 
 /**
@@ -24,8 +23,15 @@ public interface ExecService {
     /**
      * 中断命令执行
      *
-     * @param request request
+     * @param logId logId
      */
-    void interruptCommand(ExecInterruptRequest request);
+    void interruptExec(Long logId);
+
+    /**
+     * 中断命令执行
+     *
+     * @param hostLogId hostLogId
+     */
+    void interruptHostExec(Long hostLogId);
 
 }
