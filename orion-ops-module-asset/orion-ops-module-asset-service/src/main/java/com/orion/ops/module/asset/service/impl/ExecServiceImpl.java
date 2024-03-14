@@ -102,6 +102,7 @@ public class ExecServiceImpl implements ExecService {
                 .source(ExecSourceEnum.BATCH.name())
                 .description(Strings.ifBlank(request.getDescription(), Strings.retain(command, 60) + Const.OMIT))
                 .command(command)
+                .parameterSchema(request.getParameterSchema())
                 .timeout(request.getTimeout())
                 .status(ExecStatusEnum.WAITING.name())
                 .build();
@@ -159,6 +160,7 @@ public class ExecServiceImpl implements ExecService {
                 .timeout(execLog.getTimeout())
                 .command(execLog.getCommand())
                 .parameter(hostLogs.get(0).getParameter())
+                .parameterSchema(execLog.getParameterSchema())
                 .hostIdList(hostIdList)
                 .build();
         return this.execCommand(request);

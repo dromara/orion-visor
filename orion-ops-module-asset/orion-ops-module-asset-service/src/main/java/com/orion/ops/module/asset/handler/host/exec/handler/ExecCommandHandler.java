@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.handler.host.exec.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.exception.AuthenticationException;
+import com.orion.lang.exception.ConnectionRuntimeException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.utils.Strings;
@@ -82,7 +83,6 @@ public class ExecCommandHandler implements IExecCommandHandler {
         }
         // 执行回调
         if (this.interrupted) {
-            // TODO 测试
             // 中断执行
             this.updateStatus(ExecHostStatusEnum.INTERRUPTED, null);
         } else if (ex != null) {
@@ -192,6 +192,8 @@ public class ExecCommandHandler implements IExecCommandHandler {
             message = "执行超时";
         } else if (ex instanceof InvalidArgumentException) {
             message = ex.getMessage();
+        } else if (ex instanceof ConnectionRuntimeException) {
+            message = "连接失败";
         } else if (ex instanceof AuthenticationException) {
             message = "认证失败";
         } else {

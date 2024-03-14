@@ -38,6 +38,10 @@ public class ExecCommandRequest {
     @Schema(description = "执行参数")
     private String parameter;
 
+    @NotBlank
+    @Schema(description = "参数 schema")
+    private String parameterSchema;
+
     @NotEmpty
     @Schema(description = "执行主机")
     private List<Long> hostIdList;

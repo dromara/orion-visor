@@ -11,6 +11,7 @@
         <result column="source_id" property="sourceId"/>
         <result column="description" property="description"/>
         <result column="command" property="command"/>
+        <result column="parameter_schema" property="parameterSchema"/>
         <result column="timeout" property="timeout"/>
         <result column="status" property="status"/>
         <result column="start_time" property="startTime"/>
@@ -24,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, username, source, source_id, description, command, timeout, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
+        id, user_id, username, source, source_id, description, command, parameter_schema, timeout, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

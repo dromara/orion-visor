@@ -1,5 +1,7 @@
 <template>
-  <div>123</div>
+  <div class="layout-container">
+
+  </div>
 </template>
 
 <script lang="ts">

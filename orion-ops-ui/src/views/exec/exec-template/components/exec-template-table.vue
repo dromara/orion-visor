@@ -79,7 +79,8 @@
           <a-button v-permission="['asset:exec:exec-command']"
                     type="text"
                     size="mini"
-                    @click="emits('openExec', record)">
+                    title="ctrl + 鼠标左键新页面打开"
+                    @click="openExec($event, record)">
             执行
           </a-button>
           <!-- 修改 -->
@@ -120,7 +121,6 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import {} from '../types/const';
   import { usePagination } from '@/types/table';
   import useCopy from '@/hooks/copy';
 
@@ -136,6 +136,15 @@
     name: undefined,
     command: undefined,
   });
+
+  // 打开执行
+  const openExec = (e: any, record: ExecTemplateQueryResponse) => {
+    if (e.ctrlKey) {
+      // TODO 新页面打开
+    } else {
+      emits('openExec', record);
+    }
+  };
 
   // 删除当前行
   const deleteRow = async ({ id }: {

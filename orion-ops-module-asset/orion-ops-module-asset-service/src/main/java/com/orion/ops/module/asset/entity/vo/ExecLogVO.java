@@ -40,6 +40,9 @@ public class ExecLogVO implements Serializable {
     @Schema(description = "执行命令")
     private String command;
 
+    @Schema(description = "参数 schema")
+    private String parameterSchema;
+
     @Schema(description = "超时时间")
     private Integer timeout;
 

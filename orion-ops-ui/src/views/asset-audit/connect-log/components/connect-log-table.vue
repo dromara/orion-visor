@@ -19,16 +19,16 @@
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>
-      <!-- 主机地址 -->
-      <a-form-item field="hostAddress" label="主机地址">
-        <a-input v-model="formModel.hostAddress" placeholder="请输入主机地址" allow-clear />
-      </a-form-item>
       <!-- 状态 -->
       <a-form-item field="status" label="状态">
         <a-select v-model="formModel.status"
                   placeholder="请选择状态"
                   :options="toOptions(connectStatusKey)"
                   allow-clear />
+      </a-form-item>
+      <!-- 主机地址 -->
+      <a-form-item field="hostAddress" label="主机地址">
+        <a-input v-model="formModel.hostAddress" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
       <!-- 类型 -->
       <a-form-item field="type" label="类型">

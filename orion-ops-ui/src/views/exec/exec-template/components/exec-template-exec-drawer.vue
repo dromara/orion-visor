@@ -44,10 +44,11 @@
             </template>
           </a-input-number>
         </a-form-item>
-        <!-- 模板命令 -->
+        <!-- 执行命令 -->
         <a-form-item field="command"
-                     label="模板命令"
-                     :wrapper-col-props="{ span: 24 }">
+                     label="执行命令"
+                     :wrapper-col-props="{ span: 24 }"
+                     :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
           <exec-editor v-model="formModel.command"
                        containerClass="command-editor"
                        theme="vs-dark"
@@ -72,7 +73,7 @@
                      :field="item.name as string"
                      :label="item.name"
                      required>
-          <a-input v-model="parameterFormModel[item.name]"
+          <a-input v-model="parameterFormModel[item.name as string]"
                    :placeholder="item.desc"
                    allow-clear />
         </a-form-item>
@@ -101,7 +102,7 @@
   import { Message } from '@arco-design/web-vue';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
-  import { execCommand } from '@/api/exec/exec';
+  import { batchExecCommand } from '@/api/exec/exec';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -166,7 +167,8 @@
       if (error) {
         return false;
       }
-      await execCommand({
+      // 执行命令
+      await batchExecCommand({
         ...formModel.value,
         parameter: JSON.stringify(parameterFormModel.value),
         parameterSchema: JSON.stringify(parameterSchema.value),

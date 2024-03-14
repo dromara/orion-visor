@@ -48,10 +48,11 @@
         // 内置参数提示
         builtinsParams.forEach(s => {
           suggestions.push({
-            label: s.name,
-            kind: monaco.languages.CompletionItemKind.Function,
+            label: '_' + s.name,
+            kind: monaco.languages.CompletionItemKind.Variable,
             insertText: `@{{ ${s.name} }}`,
             detail: s.desc || '',
+            documentation: s.desc || '',
           });
         });
         // 命令参数提示
@@ -60,10 +61,11 @@
             return;
           }
           suggestions.push({
-            label: s.name,
-            kind: monaco.languages.CompletionItemKind.Function,
+            label: '_' + s.name,
+            kind: monaco.languages.CompletionItemKind.Field,
             insertText: `@{{ ${s.name} }}`,
             detail: s.desc || '',
+            documentation: s.desc || '',
           });
         });
         return {

@@ -7,29 +7,10 @@
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      <!-- id -->
-      <a-form-item field="id" label="id">
-        <a-input-number v-model="formModel.id"
-                        placeholder="请输入id"
-                        allow-clear
-                        hide-button />
-      </a-form-item>
-      <!-- 执行用户 -->
-      <a-form-item field="userId" label="执行用户">
-        <user-selector v-model="formModel.userId"
-                       placeholder="请选择执行用户"
-                       allow-clear />
-      </a-form-item>
       <!-- 执行描述 -->
       <a-form-item field="description" label="执行描述">
         <a-input v-model="formModel.description"
                  placeholder="请输入执行描述"
-                 allow-clear />
-      </a-form-item>
-      <!-- 执行命令 -->
-      <a-form-item field="command" label="执行命令">
-        <a-input v-model="formModel.command"
-                 placeholder="请输入执行命令"
                  allow-clear />
       </a-form-item>
       <!-- 执行状态 -->
@@ -38,6 +19,25 @@
                   :options="toOptions(execStatusKey)"
                   placeholder="请选择执行状态"
                   allow-clear />
+      </a-form-item>
+      <!-- 执行用户 -->
+      <a-form-item field="userId" label="执行用户">
+        <user-selector v-model="formModel.userId"
+                       placeholder="请选择执行用户"
+                       allow-clear />
+      </a-form-item>
+      <!-- 执行命令 -->
+      <a-form-item field="command" label="执行命令">
+        <a-input v-model="formModel.command"
+                 placeholder="请输入执行命令"
+                 allow-clear />
+      </a-form-item>
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
+                        allow-clear
+                        hide-button />
       </a-form-item>
       <!-- 执行时间 -->
       <a-form-item field="startTimeRange" label="执行时间">
@@ -204,6 +204,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { ExecLogQueryRequest, ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { reactive, ref, onMounted, onUnmounted } from 'vue';
   import { batchDeleteExecLog, deleteExecLog, getExecHostLogList, getExecLogPage, getExecLogStatus } from '@/api/exec/exec-log';
@@ -312,7 +313,7 @@
   };
 
   // 加载主机数据
-  const loadHostExecData = async (key: number, record: ExecLogQueryResponse) => {
+  const loadHostExecData = async (key: number | string, record: TableData) => {
     if (record.hosts) {
       return;
     }

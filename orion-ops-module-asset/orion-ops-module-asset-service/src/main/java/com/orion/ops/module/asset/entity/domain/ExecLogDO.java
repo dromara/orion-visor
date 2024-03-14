@@ -56,6 +56,10 @@ public class ExecLogDO extends BaseDO {
     @TableField("command")
     private String command;
 
+    @Schema(description = "参数 schema")
+    @TableField("parameter_schema")
+    private String parameterSchema;
+
     @Schema(description = "超时时间")
     @TableField("timeout")
     private Integer timeout;

@@ -1,5 +1,15 @@
 ⚡ 注意: 应用不支持跨版本升级, 可以进行多次升级
 
+## v1.0.2
+
+> sql 脚本
+
+```sql
+ALTER TABLE `host_connect_log` 
+MODIFY COLUMN `start_time` datetime(3) NULL DEFAULT NULL COMMENT '开始时间' AFTER `token`,
+MODIFY COLUMN `end_time` datetime(3) NULL DEFAULT NULL COMMENT '结束时间' AFTER `start_time`;
+```
+
 ## v1.0.1
 
 > sql 脚本

@@ -2,7 +2,8 @@
  <img style="margin-right: 8px;" src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8c687ef1-5711-4a93-9db0-79c010af7902.png" width="32px" height="32px"/> orion-ops-pro 是什么
 </h1>
 
-`orion-ops-pro` 一款开箱即用的一站式智能运维平台, 提供了资产管理、资产授权、Web终端、WebSftp、角色管理、系统管理等功能。致力于简化运维团队的治理工作。它是根据 `orion-ops`
+`orion-ops-pro` 一款开箱即用的一站式智能运维管理平台,
+提供了资产管理、资产授权、Web终端、WebSftp、角色管理、系统管理等功能。致力于简化运维团队的治理工作。它是根据 `orion-ops`
 的产品思路完全重构的一套系统, 重新设计了架构并优化交互逻辑, 操作更快捷友好。
 
 <p style="text-align: left">
@@ -32,11 +33,12 @@
 github: https://github.com/lijiahangmax/orion-ops-pro  
 gitee: https://gitee.com/lijiahangmax/orion-ops-pro  
 文档: https://lijiahangmax.gitee.io/orion-ops-pro/#/    
-demo: http://101.43.254.243:1081/#/
+demo: http://101.43.254.243:1081/
 
 演示账号: `admin`    
 演示密码: `admin`  
-留个小星星再走吧⭐
+⭐ 体验后可以点一下 `star` 这对我很重要  
+📞 合作/功能定制请联系底部 备注: '定制'
 
 ## 特性
 
@@ -46,9 +48,8 @@ demo: http://101.43.254.243:1081/#/
 * 权限控制: 全面管理用户角色, 支持动态菜单配置和强制下线等功能。
 * 在线终端: 提供便捷的在线 Web 终端服务, 支持快捷命令、自定义快捷键和主题风格。
 * 文件管理: 实现远程主机大文件的批量上传、下载和在线编辑等操作。
+* 批量操作: 支持远程主机批量执行 shell 命令。
 * 可扩展性: 前后端代码规范统一、代码质量高、健壮且易于阅读和扩展。
-
-[comment]: <> (  FIXME * 批量操作: 支持远程主机批量执行命令 以及 批量执行上传文件)
 
 [comment]: <> (  FIXME * 调度任务: 维护 cron 表达式, 定时执行主机命令)
 
@@ -112,7 +113,8 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
   <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/4f1c4e77-8e36-45a3-8be6-9da5387bb96e.jpg" alt="wx" width="298px" height="398px"/>  
 </div>
 
-📧 微信添加备注: ops
+📧 咨询问题微信备注: ops  
+📧 合作/功能定制备注: 合作
 
 ## 支持一下
 

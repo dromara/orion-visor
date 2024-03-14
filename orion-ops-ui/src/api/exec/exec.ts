@@ -33,9 +33,9 @@ export interface ExecCommandResponse {
 }
 
 /**
- * 执行命令
+ * 批量执行命令
  */
-export function execCommand(request: ExecCommandRequest) {
+export function batchExecCommand(request: ExecCommandRequest) {
   return axios.post<ExecCommandResponse>('/asset/exec/exec-command', request);
 }
 
