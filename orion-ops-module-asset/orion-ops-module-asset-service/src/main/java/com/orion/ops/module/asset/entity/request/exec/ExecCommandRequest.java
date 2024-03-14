@@ -22,9 +22,6 @@ import java.util.List;
 @Schema(name = "ExecCommandRequest", description = "批量执行命令 请求对象")
 public class ExecCommandRequest {
 
-    @Schema(description = "执行模板id")
-    private Long templateId;
-
     @Size(max = 128)
     @Schema(description = "执行描述")
     private String description;

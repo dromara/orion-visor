@@ -7,9 +7,9 @@ const EXEC: AppRouteRecordRaw = {
   component: DEFAULT_LAYOUT,
   children: [
     {
-      name: 'execTemplate',
-      path: '/exec-template',
-      component: () => import('@/views/exec/exec-template/index.vue'),
+      name: 'execCommand',
+      path: '/exec-command',
+      component: () => import('@/views/exec/exec-command/index.vue'),
     },
     {
       name: 'execLog',
@@ -17,9 +17,9 @@ const EXEC: AppRouteRecordRaw = {
       component: () => import('@/views/exec/exec-log/index.vue'),
     },
     {
-      name: 'execHostLog',
-      path: '/exec-host-log',
-      component: () => import('@/views/exec/exec-host-log/index.vue'),
+      name: 'execTemplate',
+      path: '/exec-template',
+      component: () => import('@/views/exec/exec-template/index.vue'),
     },
   ],
 };

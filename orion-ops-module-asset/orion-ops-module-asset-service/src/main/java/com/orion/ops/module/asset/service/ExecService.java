@@ -21,6 +21,14 @@ public interface ExecService {
     ExecCommandVO execCommand(ExecCommandRequest request);
 
     /**
+     * 重新执行命令
+     *
+     * @param id id
+     * @return result
+     */
+    ExecCommandVO reExecCommand(Long id);
+
+    /**
      * 中断命令执行
      *
      * @param logId logId

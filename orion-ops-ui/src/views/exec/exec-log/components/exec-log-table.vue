@@ -61,8 +61,26 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
+          <!-- 执行命令 -->
+          <a-button v-permission="['asset:exec:exec-command']"
+                    type="primary"
+                    @click="$router.push({ name: 'execCommand' })">
+            执行命令
+            <template #icon>
+              <icon-thunderbolt />
+            </template>
+          </a-button>
+          <!-- 清空 -->
+          <a-button v-permission="['infra:exec-log:clear']"
+                    status="danger"
+                    @click="openClear">
+            清空
+            <template #icon>
+              <icon-close />
+            </template>
+          </a-button>
           <!-- 删除 -->
-          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗? 删除后会中断执行!`"
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
@@ -128,7 +146,7 @@
           <a-popconfirm content="确定要重新执行吗?"
                         position="left"
                         type="warning"
-                        @ok="deleteRow(record)">
+                        @ok="doReExecCommand(record)">
             <a-button v-permission="['asset:exec:exec-command']"
                       type="text"
                       size="mini">
@@ -136,14 +154,13 @@
             </a-button>
           </a-popconfirm>
           <!-- 命令 -->
-          <a-button v-permission="['asset:exec:interrupt-exec']"
-                    type="text"
+          <a-button type="text"
                     size="mini"
                     @click="emits('viewCommand', record.command)">
             命令
           </a-button>
           <!-- 日志 -->
-          <a-button v-permission="['asset:exec:interrupt-exec']"
+          <a-button v-permission="['asset:exec:exec-command']"
                     type="text"
                     size="mini"
                     @click="emits('viewLog', record.id)">
@@ -153,7 +170,7 @@
           <a-popconfirm content="确定要中断执行吗?"
                         position="left"
                         type="warning"
-                        @ok="interruptedExec(record)">
+                        @ok="doInterruptExec(record)">
             <a-button v-permission="['asset:exec:interrupt-exec']"
                       type="text"
                       size="mini"
@@ -163,7 +180,7 @@
             </a-button>
           </a-popconfirm>
           <!-- 删除 -->
-          <a-popconfirm content="确认删除这条记录吗?"
+          <a-popconfirm content="确认删除这条记录吗, 删除后会中断执行?"
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
@@ -188,8 +205,8 @@
 
 <script lang="ts" setup>
   import type { ExecLogQueryRequest, ExecLogQueryResponse } from '@/api/exec/exec-log';
-  import { reactive, ref, onMounted } from 'vue';
-  import { batchDeleteExecLog, deleteExecLog, getExecHostLogList, getExecLogPage } from '@/api/exec/exec-log';
+  import { reactive, ref, onMounted, onUnmounted } from 'vue';
+  import { batchDeleteExecLog, deleteExecLog, getExecHostLogList, getExecLogPage, getExecLogStatus } from '@/api/exec/exec-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
@@ -197,13 +214,13 @@
   import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
-  import { interruptExec } from '@/api/exec/exec';
+  import { interruptExec, reExecCommand } from '@/api/exec/exec';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import ExecHostLogTable from './exec-host-log-table.vue';
 
-  const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog']);
+  const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
-  // TODO 日志 清理 轮询状态 ctrl日志 ctrl重新执行
+  // TODO 日志 清理 ctrl日志 ctrl重新执行
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
@@ -211,6 +228,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
+  const intervalId = ref();
   const tableRef = ref();
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecLogQueryResponse[]>([]);
@@ -222,6 +240,11 @@
     status: undefined,
     startTimeRange: undefined,
   });
+
+  // 打开清理
+  const openClear = () => {
+    emits('openClear', { ...formModel, id: undefined });
+  };
 
   // 删除选中行
   const deleteSelectRows = async () => {
@@ -256,8 +279,24 @@
     }
   };
 
+  // 重新执行命令
+  const doReExecCommand = async (record: ExecLogQueryResponse) => {
+    try {
+      setLoading(true);
+      // 调用中断接口
+      await reExecCommand({
+        logId: record.id
+      });
+      Message.success('已重新执行');
+      fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 中断执行
-  const interruptedExec = async (record: ExecLogQueryResponse) => {
+  const doInterruptExec = async (record: ExecLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用中断接口
@@ -282,6 +321,43 @@
     record.hosts = data;
   };
 
+  // 加载状态
+  const fetchTaskStatus = async () => {
+    const unCompleteIdList = tableRenderData.value
+      .filter(s => s.status === execStatus.WAITING || s.status === execStatus.RUNNING)
+      .map(s => s.id);
+    if (!unCompleteIdList.length) {
+      return;
+    }
+    // 加载未完成的状态
+    const { data: { logList, hostList } } = await getExecLogStatus(unCompleteIdList);
+    // 设置任务状态
+    logList.forEach(s => {
+      const tableRow = tableRenderData.value.find(r => r.id === s.id);
+      if (!tableRow) {
+        return;
+      }
+      tableRow.status = s.status;
+      tableRow.startTime = s.startTime;
+      tableRow.finishTime = s.finishTime;
+    });
+    // 设置主机状态
+    hostList.forEach(s => {
+      const host = tableRenderData.value
+        .find(r => r.id === s.logId)
+        ?.hosts
+        ?.find(r => r.id === s.id);
+      if (!host) {
+        return;
+      }
+      host.status = s.status;
+      host.startTime = s.startTime;
+      host.finishTime = s.finishTime;
+      host.exitStatus = s.exitStatus;
+      host.errorMessage = s.errorMessage;
+    });
+  };
+
   // 加载数据
   const doFetchTableData = async (request: ExecLogQueryRequest) => {
     try {
@@ -304,8 +380,20 @@
     doFetchTableData({ page, limit, ...form });
   };
 
+  defineExpose({
+    fetchTableData
+  });
+
   onMounted(() => {
+    // 加载数据
     fetchTableData();
+    // 注册状态轮询
+    intervalId.value = setInterval(fetchTaskStatus, 10000);
+  });
+
+  onUnmounted(() => {
+    // 卸载状态轮询
+    clearInterval(intervalId.value);
   });
 
 </script>

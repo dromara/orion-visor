@@ -11,7 +11,6 @@
     <a-spin class="full modal-form" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              layout="vertical"
               :rules="formRules">
         <!-- 模板名称 -->
         <a-form-item field="name" label="模板名称">
@@ -33,17 +32,20 @@
           </a-input-number>
         </a-form-item>
         <!-- 模板命令 -->
-        <a-form-item field="command" label="模板命令">
-          <editor v-model="formModel.command"
-                  containerClass="command-editor"
-                  language="shell"
-                  theme="vs-dark"
-                  :suggestions="false" />
+        <a-form-item field="command"
+                     label="模板命令"
+                     :wrapper-col-props="{ span: 24 }">
+          <exec-editor v-model="formModel.command"
+                       containerClass="command-editor"
+                       theme="vs-dark"
+                       :parameter="parameter" />
         </a-form-item>
         <!-- 命令参数 -->
         <a-form-item field="parameter"
                      class="parameter-form-item"
-                     label="命令参数">
+                     label="命令参数"
+                     :label-col-props="{ span: 24 }"
+                     :wrapper-col-props="{ span: 24 }">
           <!-- label -->
           <template #label>
             <div class="parameter-label-wrapper">
@@ -72,8 +74,8 @@
               <span class="parameter-item-close click-icon-wrapper"
                     title="移除"
                     @click="removeParameter(i)">
-             <icon-close />
-            </span>
+               <icon-close />
+              </span>
             </a-input-group>
           </template>
           <!-- 无参数 -->
@@ -95,17 +97,15 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TemplateParam } from '../types/const';
+  import type { TemplateParam } from '@/components/view/exec-editor/const';
   import type { ExecTemplateUpdateRequest } from '@/api/exec/exec-template';
   import { onUnmounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
   import { createExecTemplate, updateExecTemplate } from '@/api/exec/exec-template';
-  import { builtinsParams } from '../types/const';
   import { Message } from '@arco-design/web-vue';
-  import * as monaco from 'monaco-editor';
-  import { language as shellLanguage } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js';
+  import ExecEditor from '@/components/view/exec-editor/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -126,7 +126,6 @@
   const formRef = ref<any>();
   const formModel = ref<ExecTemplateUpdateRequest>({});
   const parameter = ref<Array<TemplateParam>>([]);
-  const suggestionsDispose = ref();
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -154,8 +153,6 @@
     } else {
       parameter.value = [];
     }
-    // 注册代码提示
-    registerSuggestions();
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -168,57 +165,6 @@
   // 移除参数
   const removeParameter = (index: number) => {
     parameter.value.splice(index, 1);
-  };
-
-  // 注册代码提示
-  const registerSuggestions = () => {
-    if (suggestionsDispose.value) {
-      return;
-    }
-    // 代码提示
-    suggestionsDispose.value = monaco.languages.registerCompletionItemProvider('shell', {
-      provideCompletionItems() {
-        const suggestions: any = [];
-        shellLanguage.keywords?.forEach((item: any) => {
-          suggestions.push({
-            label: item,
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: item
-          });
-        });
-        shellLanguage.builtins?.forEach((item: any) => {
-          suggestions.push({
-            label: item,
-            kind: monaco.languages.CompletionItemKind.Function,
-            insertText: item,
-          });
-        });
-        // 内置参数提示
-        builtinsParams.forEach(s => {
-          suggestions.push({
-            label: s.name,
-            kind: monaco.languages.CompletionItemKind.Function,
-            insertText: `@{{ ${s.name} }}`,
-            detail: s.desc || '',
-          });
-        });
-        // 命令参数提示
-        parameter.value.forEach(s => {
-          if (!s.name) {
-            return;
-          }
-          suggestions.push({
-            label: s.name,
-            kind: monaco.languages.CompletionItemKind.Function,
-            insertText: `@{{ ${s.name} }}`,
-            detail: s.desc || '',
-          });
-        });
-        return {
-          suggestions: [...new Set(suggestions)],
-        };
-      },
-    });
   };
 
   // 确定
@@ -268,9 +214,6 @@
   // 清空
   const handlerClear = () => {
     setLoading(false);
-    // 卸载代码提示
-    suggestionsDispose.value?.dispose();
-    suggestionsDispose.value = undefined;
   };
 
   // 卸载关闭
@@ -352,7 +295,7 @@
 
   .command-editor {
     width: 100%;
-    height: 44vh;
+    height: 50vh;
   }
 
 </style>

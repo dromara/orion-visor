@@ -4,11 +4,12 @@ import axios from 'axios';
  * 执行命令请求
  */
 export interface ExecCommandRequest {
-  templateId?: number;
+  logId?: number;
   description?: string;
   timeout?: number;
   command?: string;
   parameter?: string;
+  parameterSchema?: string;
   hostIdList?: number[];
 }
 
@@ -36,6 +37,13 @@ export interface ExecCommandResponse {
  */
 export function execCommand(request: ExecCommandRequest) {
   return axios.post<ExecCommandResponse>('/asset/exec/exec-command', request);
+}
+
+/**
+ * 重新执行命令
+ */
+export function reExecCommand(request: ExecCommandRequest) {
+  return axios.post<ExecCommandResponse>('/asset/exec/re-exec-command', request);
 }
 
 /**

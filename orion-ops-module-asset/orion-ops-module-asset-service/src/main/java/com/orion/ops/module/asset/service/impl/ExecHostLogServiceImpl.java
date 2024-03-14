@@ -9,6 +9,9 @@ import com.orion.ops.module.asset.convert.ExecHostLogConvert;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
+import com.orion.ops.module.asset.handler.host.exec.handler.IExecCommandHandler;
+import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
 import com.orion.ops.module.asset.service.ExecHostLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 批量执行主机日志 服务实现类
@@ -30,6 +34,9 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
 
     @Resource
     private ExecHostLogDAO execHostLogDAO;
+
+    @Resource
+    private ExecManager execManager;
 
     @Override
     public List<ExecHostLogVO> getExecHostLogList(Long logId) {
@@ -65,6 +72,14 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
         // 检查数据是否存在
         ExecHostLogDO record = execHostLogDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 中断
+        Optional.ofNullable(record.getLogId())
+                .map(execManager::getTask)
+                .map(IExecTaskHandler::getHandlers)
+                .flatMap(s -> s.stream()
+                        .filter(h -> h.getHostId().equals(record.getHostId()))
+                        .findFirst())
+                .ifPresent(IExecCommandHandler::interrupted);
         // 删除
         int effect = execHostLogDAO.deleteById(id);
         log.info("ExecHostLogService-deleteExecHostLogById id: {}, effect: {}", id, effect);

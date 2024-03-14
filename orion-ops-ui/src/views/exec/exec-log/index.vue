@@ -1,8 +1,13 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <exec-log-table @view-command="viewCommand"
-                    @view-params="viewParams" />
+    <exec-log-table ref="tableRef"
+                    @view-command="viewCommand"
+                    @view-params="viewParams"
+                    @open-clear="openClearModal" />
+    <!-- 清理模态框 -->
+    <exec-log-clear-modal ref="clearModal"
+                          @clear="clearCallback" />
     <!-- json 模态框 -->
     <json-editor-modal ref="jsonModal"
                        :esc-to-close="true" />
@@ -24,12 +29,20 @@
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import ExecLogTable from './components/exec-log-table.vue';
+  import ExecLogClearModal from './components/exec-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
 
   const render = ref(false);
+  const tableRef = ref();
+  const clearModal = ref();
   const jsonModal = ref();
   const shellModal = ref();
+
+  // 打开清理模态框
+  const openClearModal = (e: any) => {
+    clearModal.value.open(e);
+  };
 
   // 查看命令
   const viewCommand = (data: string) => {
@@ -39,6 +52,11 @@
   // 查看参数
   const viewParams = (data: string) => {
     jsonModal.value.open(JSON.parse(data));
+  };
+
+  // 清理回调
+  const clearCallback = () => {
+    tableRef.value.fetchTableData();
   };
 
   onBeforeMount(async () => {

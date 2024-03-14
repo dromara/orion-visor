@@ -1,16 +1,18 @@
 import type { FieldRule } from '@arco-design/web-vue';
 
-export const name = [{
+export const description = [{
+  maxLength: 128,
+  message: '执行描述长度不能大于128位'
+}] as FieldRule[];
+
+export const hostIdList = [{
   required: true,
-  message: '请输入模板名称'
-}, {
-  maxLength: 64,
-  message: '模板名称长度不能大于64位'
+  message: '请选择执行主机'
 }] as FieldRule[];
 
 export const command = [{
   required: true,
-  message: '请输入模板命令'
+  message: '请输入执行命令'
 }] as FieldRule[];
 
 export const timeout = [{
@@ -24,7 +26,8 @@ export const timeout = [{
 }] as FieldRule[];
 
 export default {
-  name,
+  description,
+  hostIdList,
   command,
   timeout,
 } as Record<string, FieldRule | FieldRule[]>;

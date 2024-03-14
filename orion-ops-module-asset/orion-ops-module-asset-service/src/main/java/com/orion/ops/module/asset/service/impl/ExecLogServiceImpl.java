@@ -18,6 +18,8 @@ import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
+import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
 import com.orion.ops.module.asset.service.ExecHostLogService;
 import com.orion.ops.module.asset.service.ExecLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +50,9 @@ public class ExecLogServiceImpl implements ExecLogService {
 
     @Resource
     private ExecHostLogService execHostLogService;
+
+    @Resource
+    private ExecManager execManager;
 
     @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
@@ -74,6 +80,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         List<ExecHostLogVO> hostList = execHostLogDAO.of()
                 .createWrapper()
                 .select(ExecHostLogDO::getId,
+                        ExecHostLogDO::getLogId,
                         ExecHostLogDO::getStatus,
                         ExecHostLogDO::getStartTime,
                         ExecHostLogDO::getFinishTime,
@@ -101,6 +108,8 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 检查数据是否存在
         ExecLogDO record = execLogDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 中断命令执行
+        this.interruptedTask(Lists.singleton(id));
         // 删除执行日志
         int effect = execLogDAO.deleteById(id);
         // 删除主机日志
@@ -115,6 +124,8 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Transactional(rollbackFor = Exception.class)
     public Integer deleteExecLogByIdList(List<Long> idList) {
         log.info("ExecLogService-deleteExecLogByIdList idList: {}", idList);
+        // 中断命令执行
+        this.interruptedTask(idList);
         // 删除执行日志
         int effect = execLogDAO.deleteBatchIds(idList);
         // 删除主机日志
@@ -138,6 +149,8 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .collect(Collectors.toList());
         int effect = 0;
         if (!idList.isEmpty()) {
+            // 中断命令执行
+            this.interruptedTask(idList);
             // 删除执行日志
             effect = execLogDAO.delete(wrapper);
             // 删除主机日志
@@ -168,6 +181,18 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .ge(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
                 .orderByDesc(ExecLogDO::getId);
+    }
+
+    /**
+     * 中断任务
+     *
+     * @param idList idList
+     */
+    private void interruptedTask(List<Long> idList) {
+        idList.stream()
+                .map(execManager::getTask)
+                .filter(Objects::nonNull)
+                .forEach(IExecTaskHandler::interrupted);
     }
 
 }

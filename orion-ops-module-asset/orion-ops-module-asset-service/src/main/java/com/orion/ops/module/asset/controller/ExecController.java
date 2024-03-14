@@ -7,6 +7,7 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
+import com.orion.ops.module.asset.entity.request.exec.ReExecCommandRequest;
 import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
 import com.orion.ops.module.asset.service.ExecService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +42,16 @@ public class ExecController {
     @PostMapping("/exec-command")
     @Operation(summary = "批量执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")
-    public ExecCommandVO execCommand(@RequestBody ExecCommandRequest request) {
+    public ExecCommandVO execCommand(@Validated @RequestBody ExecCommandRequest request) {
         return execService.execCommand(request);
+    }
+
+    @OperatorLog(ExecOperatorType.EXEC_COMMAND)
+    @PostMapping("/re-exec-command")
+    @Operation(summary = "重新执行命令")
+    @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")
+    public ExecCommandVO reExecCommand(@Validated @RequestBody ReExecCommandRequest request) {
+        return execService.reExecCommand(request.getLogId());
     }
 
     @OperatorLog(ExecOperatorType.INTERRUPT_EXEC)
@@ -66,7 +75,6 @@ public class ExecController {
     }
 
     // TODO tail log
-    // TODO 重新执行
-    // TODO 删除时 中断
+    // TODO parameterSchema 存储
 
 }

@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
 public class ExecServiceImpl implements ExecService {
 
     private static final ReplacementFormatter FORMATTER = ReplacementFormatters.create("@{{ ", " }}")
-            .noMatchStrategy(NoMatchStrategy.EMPTY);
+            .noMatchStrategy(NoMatchStrategy.KEEP);
 
     @Resource
     private FileClient logsFileClient;
@@ -124,23 +124,10 @@ public class ExecServiceImpl implements ExecService {
                             .build();
                 }).collect(Collectors.toList());
         execHostLogDAO.insertBatch(execHostLogs);
-        // 开始执行
-        ExecCommandDTO exec = ExecCommandDTO.builder()
-                .logId(execId)
-                .timeout(request.getTimeout())
-                .hosts(execHostLogs.stream()
-                        .map(s -> ExecCommandHostDTO.builder()
-                                .hostId(s.getHostId())
-                                .hostLogId(s.getId())
-                                .command(s.getCommand())
-                                .timeout(request.getTimeout())
-                                .logPath(s.getLogPath())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
-        ExecTaskExecutors.start(exec);
         // 操作日志
         OperatorLogs.add(OperatorLogs.ID, execId);
+        // 开始执行
+        this.startExec(execLog, execHostLogs);
         // 返回
         List<ExecCommandHostVO> hostResult = execHostLogs.stream()
                 .map(s -> ExecCommandHostVO.builder()
@@ -152,6 +139,29 @@ public class ExecServiceImpl implements ExecService {
                 .id(execId)
                 .hosts(hostResult)
                 .build();
+    }
+
+    @Override
+    public ExecCommandVO reExecCommand(Long logId) {
+        log.info("ExecService.reExecCommand start logId: {}", logId);
+        // 获取执行记录
+        ExecLogDO execLog = execLogDAO.selectById(logId);
+        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        // 获取执行主机
+        List<ExecHostLogDO> hostLogs = execHostLogDAO.selectByLogId(logId);
+        Valid.notEmpty(hostLogs, ErrorMessage.DATA_ABSENT);
+        List<Long> hostIdList = hostLogs.stream()
+                .map(ExecHostLogDO::getHostId)
+                .collect(Collectors.toList());
+        // 调用执行方法
+        ExecCommandRequest request = ExecCommandRequest.builder()
+                .description(execLog.getDescription())
+                .timeout(execLog.getTimeout())
+                .command(execLog.getCommand())
+                .parameter(hostLogs.get(0).getParameter())
+                .hostIdList(hostIdList)
+                .build();
+        return this.execCommand(request);
     }
 
     @Override
@@ -248,6 +258,29 @@ public class ExecServiceImpl implements ExecService {
             }
             log.info("ExecService.interruptHostExec updateStatus finish logId: {}, hostLogId: {}, effect: {}", logId, hostLogId, effect);
         }
+    }
+
+    /**
+     * 开始执行命令
+     *
+     * @param execLog      execLog
+     * @param execHostLogs hostLogs
+     */
+    private void startExec(ExecLogDO execLog, List<ExecHostLogDO> execHostLogs) {
+        ExecCommandDTO exec = ExecCommandDTO.builder()
+                .logId(execLog.getId())
+                .timeout(execLog.getTimeout())
+                .hosts(execHostLogs.stream()
+                        .map(s -> ExecCommandHostDTO.builder()
+                                .hostId(s.getHostId())
+                                .hostLogId(s.getId())
+                                .command(s.getCommand())
+                                .timeout(execLog.getTimeout())
+                                .logPath(s.getLogPath())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+        ExecTaskExecutors.start(exec);
     }
 
     /**

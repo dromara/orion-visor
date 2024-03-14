@@ -76,6 +76,12 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <a-button v-permission="['asset:exec:exec-command']"
+                    type="text"
+                    size="mini"
+                    @click="emits('openExec', record)">
+            执行
+          </a-button>
           <!-- 修改 -->
           <a-button v-permission="['asset:exec-template:update']"
                     type="text"
@@ -118,14 +124,13 @@
   import { usePagination } from '@/types/table';
   import useCopy from '@/hooks/copy';
 
-  const emits = defineEmits(['openAdd', 'openUpdate']);
-
-  const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openExec']);
 
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
   const { copy } = useCopy();
 
+  const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);
   const formModel = reactive<ExecTemplateQueryRequest>({
     id: undefined,
     name: undefined,

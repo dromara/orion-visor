@@ -58,7 +58,7 @@
           日志
         </a-button>
         <!-- 中断 -->
-        <a-popconfirm content="确认要中断命令吗?"
+        <a-popconfirm content="确认要中断命令吗, 删除后会中断执行?"
                       position="left"
                       type="warning"
                       @ok="interruptedHost(record)">

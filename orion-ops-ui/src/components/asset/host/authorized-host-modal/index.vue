@@ -121,7 +121,7 @@
   });
 
   // 打开
-  const open = async (hostIdList: Array<number>) => {
+  const open = async (hostIdList: Array<number> = []) => {
     setVisible(true);
     // 加载主机列表
     await fetchHosts();
