@@ -100,9 +100,9 @@
   import useVisible from '@/hooks/visible';
   import formRules from '../../exec-command/types/form.rules';
   import { Message } from '@arco-design/web-vue';
+  import { batchExecCommand } from '@/api/exec/exec';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
-  import { batchExecCommand } from '@/api/exec/exec';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
