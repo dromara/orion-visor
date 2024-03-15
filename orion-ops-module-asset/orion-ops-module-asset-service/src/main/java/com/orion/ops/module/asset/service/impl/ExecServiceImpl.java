@@ -1,10 +1,11 @@
 package com.orion.ops.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.function.Functions;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.json.matcher.NoMatchStrategy;
 import com.orion.lang.utils.json.matcher.ReplacementFormatter;
@@ -23,6 +24,7 @@ import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.ExecParameterSchemaDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.vo.ExecCommandHostVO;
 import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
@@ -109,7 +111,7 @@ public class ExecServiceImpl implements ExecService {
         execLogDAO.insert(execLog);
         Long execId = execLog.getId();
         // 获取内置参数
-        Map<String, Object> builtinsParams = this.getBaseBuiltinsParams(user, execId, request.getParameter());
+        Map<String, Object> builtinsParams = this.getBaseBuiltinsParams(user, execId, request.getParameterSchema());
         // 设置主机日志
         List<ExecHostLogDO> execHostLogs = hosts.stream()
                 .map(s -> {
@@ -159,7 +161,6 @@ public class ExecServiceImpl implements ExecService {
                 .description(execLog.getDescription())
                 .timeout(execLog.getTimeout())
                 .command(execLog.getCommand())
-                .parameter(hostLogs.get(0).getParameter())
                 .parameterSchema(execLog.getParameterSchema())
                 .hostIdList(hostIdList)
                 .build();
@@ -298,19 +299,37 @@ public class ExecServiceImpl implements ExecService {
     }
 
     /**
-     * 获取基础内置参数
+     * 提取参数
      *
-     * @param user   user
-     * @param execId execId
+     * @param parameterSchema parameterSchema
      * @return params
      */
-    private Map<String, Object> getBaseBuiltinsParams(LoginUser user, Long execId, String inputParam) {
+    private Map<String, Object> extraSchemaParams(String parameterSchema) {
+        List<ExecParameterSchemaDTO> schemaList = JSON.parseArray(parameterSchema, ExecParameterSchemaDTO.class);
+        if (Lists.isEmpty(schemaList)) {
+            return Maps.newMap();
+        }
+        // 解析参数
+        return schemaList.stream()
+                .collect(Collectors.toMap(ExecParameterSchemaDTO::getName,
+                        ExecParameterSchemaDTO::getValue,
+                        Functions.right()));
+    }
+
+    /**
+     * 获取基础内置参数
+     *
+     * @param user            user
+     * @param execId          execId
+     * @param parameterSchema parameterSchema
+     * @return params
+     */
+    private Map<String, Object> getBaseBuiltinsParams(LoginUser user, Long execId, String parameterSchema) {
         String uuid = UUIds.random();
         Date date = new Date();
         // 输入参数
-        JSONObject inputParams = JSON.parseObject(inputParam);
-        // 内置参数
-        Map<String, Object> params = Maps.newMap(inputParams);
+        Map<String, Object> params = this.extraSchemaParams(parameterSchema);
+        // 添加内置参数
         params.put("userId", user.getId());
         params.put("username", user.getId());
         params.put("execId", execId);

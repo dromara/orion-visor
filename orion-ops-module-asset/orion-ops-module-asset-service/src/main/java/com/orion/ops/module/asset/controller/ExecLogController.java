@@ -5,6 +5,7 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
@@ -71,6 +72,16 @@ public class ExecLogController {
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
     public ExecLogStatusVO getExecLogStatus(@RequestParam("idList") List<Long> idList) {
         return execLogService.getExecLogStatus(idList);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/history")
+    @Operation(summary = "查询执行历史")
+    @PreAuthorize("@ss.hasAnyPermission('asset:exec-log:query', 'asset:exec:exec-command')")
+    public List<ExecLogVO> getExecLogHistory(@Validated(Page.class) ExecLogQueryRequest request) {
+        request.setSource(ExecSourceEnum.BATCH.name());
+        request.setUserId(SecurityUtils.getLoginUserId());
+        return execLogService.getExecHistory(request);
     }
 
     @OperatorLog(ExecOperatorType.DELETE_LOG)

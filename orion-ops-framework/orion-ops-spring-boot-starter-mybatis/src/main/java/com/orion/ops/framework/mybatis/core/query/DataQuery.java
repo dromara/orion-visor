@@ -106,6 +106,10 @@ public class DataQuery<T> {
         return then;
     }
 
+    public DataQuery<T> limit(IPageRequest page) {
+        return this.last(Pager.of(page).getSql());
+    }
+
     public DataQuery<T> limit(int limit) {
         return this.last(Const.LIMIT + Const.SPACE + limit);
     }

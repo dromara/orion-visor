@@ -25,6 +25,14 @@ public interface ExecLogService {
     DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request);
 
     /**
+     * 获取执行历史
+     *
+     * @param request request
+     * @return history
+     */
+    List<ExecLogVO> getExecHistory(ExecLogQueryRequest request);
+
+    /**
      * 获取执行日志状态
      *
      * @param idList idList

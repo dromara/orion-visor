@@ -132,7 +132,7 @@
       parameterSchema.value = JSON.parse(record.parameter);
       const params = {} as any;
       for (let param of parameterSchema.value) {
-        params[param.name as keyof any] = param.default;
+        params[param.name as keyof any] = param.defaultValue;
       }
       parameterFormModel.value = params;
 
@@ -167,10 +167,13 @@
       if (error) {
         return false;
       }
+      // 设置 schema
+      for (let ps of parameterSchema.value) {
+        ps.value = parameterFormModel.value[ps.name as string];
+      }
       // 执行命令
       await batchExecCommand({
         ...formModel.value,
-        parameter: JSON.stringify(parameterFormModel.value),
         parameterSchema: JSON.stringify(parameterSchema.value),
       });
       Message.success('已开始执行');

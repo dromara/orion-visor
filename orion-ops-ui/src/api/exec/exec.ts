@@ -8,7 +8,6 @@ export interface ExecCommandRequest {
   description?: string;
   timeout?: number;
   command?: string;
-  parameter?: string;
   parameterSchema?: string;
   hostIdList?: number[];
 }

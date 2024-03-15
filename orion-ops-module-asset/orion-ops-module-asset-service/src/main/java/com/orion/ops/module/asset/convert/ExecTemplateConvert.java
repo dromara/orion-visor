@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.convert;
 
 import com.orion.ops.module.asset.entity.domain.ExecTemplateDO;
-import com.orion.ops.module.asset.entity.dto.ExecTemplateCacheDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateCreateRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.ExecTemplateVO;
@@ -25,9 +24,5 @@ public interface ExecTemplateConvert {
     ExecTemplateDO to(ExecTemplateUpdateRequest request);
 
     ExecTemplateVO to(ExecTemplateDO domain);
-
-    ExecTemplateVO to(ExecTemplateCacheDTO cache);
-
-    ExecTemplateCacheDTO toCache(ExecTemplateDO domain);
 
 }

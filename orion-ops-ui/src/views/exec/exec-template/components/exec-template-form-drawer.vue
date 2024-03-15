@@ -65,7 +65,7 @@
                        placeholder="参数名称 (必填)"
                        allow-clear />
               <a-input class="parameter-item-default"
-                       v-model="item.default"
+                       v-model="item.defaultValue"
                        placeholder="默认值 (非必填)"
                        allow-clear />
               <a-input class="parameter-item-description"

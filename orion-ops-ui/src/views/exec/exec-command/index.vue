@@ -1,6 +1,7 @@
 <template>
-  <div class="layout-container">
-
+  <div class="layout-container full">
+    <!-- 执行面板 -->
+    <exec-panel />
   </div>
 </template>
 
@@ -11,6 +12,7 @@
 </script>
 
 <script lang="ts" setup>
+  import ExecPanel from './components/exec-panel.vue';
 
 </script>
 

@@ -65,13 +65,6 @@ export function getExecTemplate(id: number) {
 }
 
 /**
- * 查询全部执行模板
- */
-export function getExecTemplateList() {
-  return axios.get<Array<ExecTemplateQueryResponse>>('/asset/exec-template/list');
-}
-
-/**
  * 分页查询执行模板
  */
 export function getExecTemplatePage(request: ExecTemplateQueryRequest) {

@@ -1,8 +1,9 @@
 // 模板参数
 export interface TemplateParam {
   name?: string;
-  default?: string;
   desc?: string;
+  defaultValue?: any;
+  value?: any;
 }
 
 // 内置参数

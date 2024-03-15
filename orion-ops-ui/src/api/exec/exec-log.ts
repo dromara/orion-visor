@@ -28,6 +28,7 @@ export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraRespon
   status: string;
   startTime: number;
   finishTime: number;
+  hostIdList: Array<number>;
 }
 
 /**
@@ -86,6 +87,13 @@ export function getExecLogStatus(idList: Array<number>) {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }
   });
+}
+
+/**
+ * 查询历史执行记录
+ */
+export function getExecLogHistory(limit: number) {
+  return axios.get<Array<ExecLogQueryResponse>>('/asset/exec-log/history', { params: { page: 1, limit } });
 }
 
 /**

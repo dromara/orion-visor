@@ -21,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 执行模板 api
@@ -65,14 +64,6 @@ public class ExecTemplateController {
     @PreAuthorize("@ss.hasPermission('asset:exec-template:query')")
     public ExecTemplateVO getExecTemplate(@RequestParam("id") Long id) {
         return execTemplateService.getExecTemplateById(id);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/list")
-    @Operation(summary = "查询全部执行模板")
-    @PreAuthorize("@ss.hasPermission('asset:exec-template:query')")
-    public List<ExecTemplateVO> getExecTemplateList() {
-        return execTemplateService.getExecTemplateListByCache();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

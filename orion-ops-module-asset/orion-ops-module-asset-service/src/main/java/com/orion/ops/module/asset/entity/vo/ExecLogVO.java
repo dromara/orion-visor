@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 批量执行日志 视图响应对象
@@ -54,5 +55,8 @@ public class ExecLogVO implements Serializable {
 
     @Schema(description = "执行完成时间")
     private Date finishTime;
+
+    @Schema(description = "执行主机id")
+    private List<Long> hostIdList;
 
 }

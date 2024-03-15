@@ -5,13 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.framework.redis.core.utils.RedisMaps;
-import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.asset.convert.ExecTemplateConvert;
 import com.orion.ops.module.asset.dao.ExecTemplateDAO;
-import com.orion.ops.module.asset.define.cache.ExecTemplateCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.ExecTemplateDO;
-import com.orion.ops.module.asset.entity.dto.ExecTemplateCacheDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateCreateRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
@@ -21,9 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 执行模板 服务实现类
@@ -50,8 +43,6 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         int effect = execTemplateDAO.insert(record);
         Long id = record.getId();
         log.info("ExecTemplateService-createExecTemplate id: {}, effect: {}", id, effect);
-        // 删除缓存
-        RedisMaps.delete(ExecTemplateCacheKeyDefine.EXEC_TEMPLATE);
         return id;
     }
 
@@ -69,8 +60,6 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         // 更新
         int effect = execTemplateDAO.updateById(updateRecord);
         log.info("ExecTemplateService-updateExecTemplateById effect: {}", effect);
-        // 删除缓存
-        RedisMaps.delete(ExecTemplateCacheKeyDefine.EXEC_TEMPLATE);
         return effect;
     }
 
@@ -81,27 +70,6 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         return ExecTemplateConvert.MAPPER.to(record);
-    }
-
-    @Override
-    public List<ExecTemplateVO> getExecTemplateListByCache() {
-        // 查询缓存
-        List<ExecTemplateCacheDTO> list = RedisMaps.valuesJson(ExecTemplateCacheKeyDefine.EXEC_TEMPLATE);
-        if (list.isEmpty()) {
-            // 查询数据库
-            list = execTemplateDAO.of().list(ExecTemplateConvert.MAPPER::toCache);
-            // 设置屏障 防止穿透
-            CacheBarriers.checkBarrier(list, ExecTemplateCacheDTO::new);
-            // 设置缓存
-            RedisMaps.putAllJson(ExecTemplateCacheKeyDefine.EXEC_TEMPLATE, s -> s.getId().toString(), list);
-        }
-        // 删除屏障
-        CacheBarriers.removeBarrier(list);
-        // 转换
-        return list.stream()
-                .map(ExecTemplateConvert.MAPPER::to)
-                .sorted(Comparator.comparing(ExecTemplateVO::getId).reversed())
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -123,8 +91,6 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         // 删除
         int effect = execTemplateDAO.deleteById(id);
         log.info("ExecTemplateService-deleteExecTemplateById id: {}, effect: {}", id, effect);
-        // 删除缓存
-        RedisMaps.delete(ExecTemplateCacheKeyDefine.EXEC_TEMPLATE, id);
         return effect;
     }
 

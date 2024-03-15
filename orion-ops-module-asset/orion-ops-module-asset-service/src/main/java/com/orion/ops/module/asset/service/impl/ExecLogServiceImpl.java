@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,41 @@ public class ExecLogServiceImpl implements ExecLogService {
         return execLogDAO.of(wrapper)
                 .page(request)
                 .dataGrid(ExecLogConvert.MAPPER::to);
+    }
+
+    @Override
+    public List<ExecLogVO> getExecHistory(ExecLogQueryRequest request) {
+        // 查询执行记录
+        List<ExecLogVO> logs = execLogDAO.of()
+                .createWrapper()
+                .eq(ExecLogDO::getSource, request.getSource())
+                .eq(ExecLogDO::getUserId, request.getUserId())
+                .groupBy(ExecLogDO::getDescription)
+                .orderByDesc(ExecLogDO::getId)
+                .then()
+                .limit(request)
+                .list(ExecLogConvert.MAPPER::to);
+        if (logs.isEmpty()) {
+            return logs;
+        }
+        List<Long> logIdList = logs.stream()
+                .map(ExecLogVO::getId)
+                .collect(Collectors.toList());
+        // 设置执行主机id
+        Map<Long, List<Long>> hostIdRel = execHostLogDAO.of()
+                .createWrapper()
+                .in(ExecHostLogDO::getLogId, logIdList)
+                .then()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        ExecHostLogDO::getLogId,
+                        Collectors.mapping(
+                                ExecHostLogDO::getHostId,
+                                Collectors.toList()
+                        )
+                ));
+        logs.forEach(s -> s.setHostIdList(hostIdRel.get(s.getId())));
+        return logs;
     }
 
     @Override
