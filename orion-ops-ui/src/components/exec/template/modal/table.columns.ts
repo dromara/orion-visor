@@ -1,5 +1,4 @@
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
-import { dateFormat } from '@/utils';
 
 const columns = [
   {
@@ -14,7 +13,7 @@ const columns = [
     dataIndex: 'name',
     slotName: 'name',
     align: 'left',
-    width: 200,
+    width: 250,
     ellipsis: true,
   }, {
     title: '模板命令',
@@ -22,15 +21,6 @@ const columns = [
     slotName: 'command',
     align: 'left',
     ellipsis: true,
-  }, {
-    title: '修改时间',
-    dataIndex: 'updateTime',
-    slotName: 'updateTime',
-    align: 'center',
-    width: 180,
-    render: ({ record }) => {
-      return dateFormat(new Date(record.updateTime));
-    },
   }, {
     title: '操作',
     slotName: 'handle',

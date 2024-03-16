@@ -24,6 +24,7 @@ export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraRespon
   username: string;
   description: string;
   command: string;
+  parameterSchema: string;
   timeout: number;
   status: string;
   startTime: number;
