@@ -70,10 +70,10 @@
   import type { ISshSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
-  import IconActions from '../layout/icon-actions.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
+  import IconActions from '../layout/icon-actions.vue';
   import SshSearchModal from './ssh-search-modal.vue';
   import SshContextMenu from './ssh-context-menu.vue';
 
@@ -81,7 +81,6 @@
     tab: TerminalTabItem
   }>();
 
-  const { copy } = useCopy();
   const { getDictValue } = useDictStore();
   const { preference, sessionManager } = useTerminalStore();
 

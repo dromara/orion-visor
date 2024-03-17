@@ -143,19 +143,17 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
+  import useLoading from '@/hooks/loading';
+  import usePermission from '@/hooks/permission';
+  import { copy } from '@/hooks/copy';
   import { usePagination } from '@/types/table';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
-  import useCopy from '@/hooks/copy';
-  import usePermission from '@/hooks/permission';
-  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
 
-  const { copy } = useCopy();
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();

@@ -177,8 +177,7 @@
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '../types/const';
-  import useCopy from '@/hooks/copy';
-  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { copy } from '@/hooks/copy';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
@@ -187,7 +186,6 @@
 
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
 
   const formRef = ref();

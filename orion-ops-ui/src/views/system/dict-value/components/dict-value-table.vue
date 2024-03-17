@@ -137,7 +137,7 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination, useRowSelection } from '@/types/table';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import DictKeySelector from '@/components/system/dict-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openHistory']);
@@ -145,7 +145,6 @@
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<DictValueQueryResponse[]>([]);
 
-  const { copy } = useCopy();
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();

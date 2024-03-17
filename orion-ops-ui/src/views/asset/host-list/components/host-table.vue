@@ -105,10 +105,11 @@
       </template>
       <!-- 地址 -->
       <template #address="{ record }">
-        <span class="copy-left" @click="copy(record.address)" title="复制">
-          <icon-copy />
+        <span class="span-blue text-copy"
+              title="复制"
+              @click="copy(record.address)">
+          {{ record.address }}
         </span>
-        <span class="span-blue">{{ record.address }}</span>
       </template>
       <!-- 标签 -->
       <template #tags="{ record }">
@@ -171,18 +172,15 @@
   import { tagColor } from '../types/const';
   import { usePagination } from '@/types/table';
   import useLoading from '@/hooks/loading';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import columns from '../types/table.columns';
   import { dataColor } from '@/utils';
-  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
-
-  const { copy } = useCopy();
 
   const pagination = usePagination();
 

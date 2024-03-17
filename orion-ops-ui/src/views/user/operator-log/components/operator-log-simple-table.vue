@@ -72,7 +72,7 @@
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, dictKeys } from '../types/const';
   import columns from '../types/table.columns';
   import { getLogDetail } from '../types/const';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
   import { usePagination } from '@/types/table';
   import { useDictStore } from '@/store';
@@ -101,7 +101,6 @@
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const jsonView = ref();
   const tableColumns = ref();

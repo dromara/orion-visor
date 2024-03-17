@@ -14,33 +14,33 @@
           <span class="snippet-item-title-name">
             {{ item.name }}
           </span>
-        <!-- 操作 -->
-        <div class="snippet-item-title-actions">
-          <a-space>
-            <!-- 粘贴 -->
-            <a-tag class="pointer usn"
-                   size="small"
-                   :checkable="true"
-                   :checked="true"
-                   @click.stop.prevent="paste">
-              <template #icon>
-                <icon-paste />
-              </template>
-              粘贴
-            </a-tag>
-            <!-- 执行 -->
-            <a-tag class="pointer usn"
-                   size="small"
-                   :checkable="true"
-                   :checked="true"
-                   @click.stop="exec">
-              <template #icon>
-                <icon-thunderbolt />
-              </template>
-              执行
-            </a-tag>
-          </a-space>
-        </div>
+          <!-- 操作 -->
+          <div class="snippet-item-title-actions">
+            <a-space>
+              <!-- 粘贴 -->
+              <a-tag class="pointer usn"
+                     size="small"
+                     :checkable="true"
+                     :checked="true"
+                     @click.stop.prevent="paste">
+                <template #icon>
+                  <icon-paste />
+                </template>
+                粘贴
+              </a-tag>
+              <!-- 执行 -->
+              <a-tag class="pointer usn"
+                     size="small"
+                     :checkable="true"
+                     :checked="true"
+                     @click.stop="exec">
+                <template #icon>
+                  <icon-thunderbolt />
+                </template>
+                执行
+              </a-tag>
+            </a-space>
+          </div>
         </div>
         <!-- 命令 -->
         <span class="snippet-item-command"
@@ -116,7 +116,7 @@
   import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { inject } from 'vue';
   import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
 
@@ -124,7 +124,6 @@
     item: CommandSnippetQueryResponse
   }>();
 
-  const { copy } = useCopy();
   const { getAndCheckCurrentSshSession } = useTerminalStore();
 
   let clickCount = 0;
@@ -169,7 +168,7 @@
 
   // 复制命令
   const copyCommand = () => {
-    copy(props.item.command, false);
+    copy(props.item.command, '已复制');
   };
 
   // 粘贴

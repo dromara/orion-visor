@@ -38,14 +38,18 @@
                :bordered="false">
         <!-- 修改前 -->
         <template #beforeValue="{ record }">
-          <span class="copy-left" title="复制" @click="copy(record.beforeValue)">
+          <span class="copy-left"
+                title="复制"
+                @click="copy(record.beforeValue, '已复制')">
             <icon-copy />
           </span>
           <span>{{ record.beforeValue }}</span>
         </template>
         <!-- 修改后 -->
         <template #afterValue="{ record }">
-          <span class="copy-left" title="复制" @click="copy(record.afterValue)">
+          <span class="copy-left"
+                title="复制"
+                @click="copy(record.afterValue, '已复制')">
             <icon-copy />
           </span>
           <span>{{ record.afterValue }}</span>
@@ -82,7 +86,7 @@
   import useVisible from '@/hooks/visible';
   import { getHistoryValuePage } from '@/api/meta/history-value';
   import { usePagination } from '@/types/table';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import columns from './table.columns';
   import { Message } from '@arco-design/web-vue';
 
@@ -92,7 +96,6 @@
   });
   const emits = defineEmits(['updated']);
 
-  const { copy } = useCopy();
   const pagination = usePagination();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

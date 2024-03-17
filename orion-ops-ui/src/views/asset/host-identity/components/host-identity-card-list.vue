@@ -151,15 +151,13 @@
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message, Modal } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
-  import useCopy from '@/hooks/copy';
-  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { copy } from '@/hooks/copy';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const list = ref<HostIdentityQueryResponse[]>([]);
 
-  const { copy } = useCopy();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();

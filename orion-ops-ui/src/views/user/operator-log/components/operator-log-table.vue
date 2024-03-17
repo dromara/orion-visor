@@ -134,7 +134,7 @@
   import { ref, onMounted } from 'vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, getLogDetail } from '../types/const';
   import columns from '../types/table.columns';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
   import { usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
@@ -149,7 +149,6 @@
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const clearModal = ref();
   const jsonView = ref();

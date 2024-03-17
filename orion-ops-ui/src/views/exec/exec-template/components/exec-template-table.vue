@@ -122,13 +122,12 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openExec']);
 
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
-  const { copy } = useCopy();
 
   const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);
   const formModel = reactive<ExecTemplateQueryRequest>({

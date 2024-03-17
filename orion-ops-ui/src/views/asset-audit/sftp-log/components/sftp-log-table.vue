@@ -179,7 +179,7 @@
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { permission10toString } from '@/utils/file';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
@@ -191,7 +191,6 @@
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const formModel = reactive<HostSftpLogQueryRequest>({
     userId: undefined,

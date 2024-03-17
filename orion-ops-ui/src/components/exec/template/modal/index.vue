@@ -92,7 +92,7 @@
   import { usePagination } from '@/types/table';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import columns from './table.columns';
   import { getExecTemplatePage } from '@/api/exec/exec-template';
 
@@ -100,7 +100,6 @@
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
-  const { copy } = useCopy();
   const pagination = usePagination();
 
   const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);

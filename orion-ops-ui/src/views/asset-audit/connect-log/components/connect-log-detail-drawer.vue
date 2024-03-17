@@ -99,10 +99,9 @@
   import { connectStatusKey, connectTypeKey } from '../types/const';
   import { useDictStore } from '@/store';
   import { dateFormat } from '@/utils';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
 
   const { getDictValue } = useDictStore();
-  const { copy } = useCopy();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 

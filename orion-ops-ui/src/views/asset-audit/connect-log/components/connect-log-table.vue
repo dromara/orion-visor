@@ -194,7 +194,7 @@
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
   import ConnectLogClearModal from './connect-log-clear-modal.vue';
@@ -209,7 +209,6 @@
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const formModel = reactive<HostConnectLogQueryRequest>({
     userId: undefined,
