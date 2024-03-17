@@ -65,6 +65,8 @@ public class ExecServiceImpl implements ExecService {
     private static final ReplacementFormatter FORMATTER = ReplacementFormatters.create("@{{ ", " }}")
             .noMatchStrategy(NoMatchStrategy.KEEP);
 
+    private static final int DESC_OMIT = 60;
+
     @Resource
     private FileClient logsFileClient;
 
@@ -102,7 +104,13 @@ public class ExecServiceImpl implements ExecService {
                 .userId(userId)
                 .username(user.getUsername())
                 .source(ExecSourceEnum.BATCH.name())
-                .description(Strings.ifBlank(request.getDescription(), Strings.retain(command, 60) + Const.OMIT))
+                .description(Strings.ifBlank(request.getDescription(), () -> {
+                    if (command.length() < DESC_OMIT + 3) {
+                        return command;
+                    } else {
+                        return command.substring(0, DESC_OMIT) + Const.OMIT;
+                    }
+                }))
                 .command(command)
                 .parameterSchema(request.getParameterSchema())
                 .timeout(request.getTimeout())
@@ -120,6 +128,7 @@ public class ExecServiceImpl implements ExecService {
                             .logId(execId)
                             .hostId(s.getId())
                             .hostName(s.getName())
+                            .hostAddress(s.getAddress())
                             .status(ExecHostStatusEnum.WAITING.name())
                             .command(FORMATTER.format(command, parameter))
                             .parameter(parameter)
@@ -136,6 +145,9 @@ public class ExecServiceImpl implements ExecService {
                 .map(s -> ExecCommandHostVO.builder()
                         .id(s.getId())
                         .hostId(s.getHostId())
+                        .hostName(s.getHostName())
+                        .hostAddress(s.getHostAddress())
+                        .status(s.getStatus())
                         .build())
                 .collect(Collectors.toList());
         return ExecCommandVO.builder()

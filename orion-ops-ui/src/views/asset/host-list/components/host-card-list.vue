@@ -88,15 +88,13 @@
     </template>
     <!-- 编码 -->
     <template #code="{ record }">
-      <a-tag>{{ record.code }}</a-tag>
+      {{ record.code }}
     </template>
     <!-- 地址 -->
     <template #address="{ record }">
-      <a-tooltip content="点击复制">
-        <span class="pointer span-blue" @click="copy(record.address)">
-          <icon-copy /> {{ record.address }}
-        </span>
-      </a-tooltip>
+      <span class="span-blue text-copy" @click="copy(record.address)">
+        {{ record.address }}
+      </span>
     </template>
     <!-- 标签 -->
     <template #tags="{ record }">

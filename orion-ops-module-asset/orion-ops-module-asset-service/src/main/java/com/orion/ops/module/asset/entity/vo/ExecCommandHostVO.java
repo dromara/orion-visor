@@ -28,4 +28,13 @@ public class ExecCommandHostVO implements Serializable {
     @Schema(description = "hostId")
     private Long hostId;
 
+    @Schema(description = "主机名称")
+    private String hostName;
+
+    @Schema(description = "主机地址")
+    private String hostAddress;
+
+    @Schema(description = "执行状态")
+    private String status;
+
 }

@@ -11,8 +11,14 @@
            :bordered="false">
     <!-- 执行主机 -->
     <template #hostName="{ record }">
-      <span class="span-blue">
+      <span class="table-cell-value span-blue">
         {{ record.hostName }}
+      </span>
+      <br>
+      <span class="table-cell-sub-value usn text-copy"
+            style="font-size: 12px;"
+            @click="copy(record.hostAddress)">
+        {{ record.hostAddress }}
       </span>
     </template>
     <!-- 错误信息 -->
@@ -104,6 +110,7 @@
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
   import { interruptHostExec } from '@/api/exec/exec';
+  import { copy } from '@/hooks/copy';
 
   const props = defineProps<{
     row: ExecLogQueryResponse;

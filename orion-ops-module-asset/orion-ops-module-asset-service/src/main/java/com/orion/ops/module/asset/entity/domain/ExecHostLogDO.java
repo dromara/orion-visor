@@ -44,6 +44,10 @@ public class ExecHostLogDO extends BaseDO {
     @TableField("host_name")
     private String hostName;
 
+    @Schema(description = "主机地址")
+    @TableField("host_address")
+    private String hostAddress;
+
     @Schema(description = "执行状态")
     @TableField("status")
     private String status;

@@ -77,6 +77,7 @@
     </exec-panel-editor>
     <!-- 执行历史 -->
     <exec-panel-history class="exec-history-container"
+                        ref="historyRef"
                         @selected="setWithExecLog" />
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
@@ -106,16 +107,18 @@
   import ExecPanelHistory from './exec-panel-history.vue';
   import ExecPanelEditor from './exec-panel-editor.vue';
 
+  const emits = defineEmits(['submit']);
+
   const defaultForm = (): ExecCommandRequest => {
     return {
-      timeout: 0,
-      command: ''
+      command: '',
     };
   };
 
   const { loading, setLoading } = useLoading();
 
   const hostModal = ref<any>();
+  const historyRef = ref<any>();
   const formRef = ref<any>();
   const parameterFormRef = ref<any>();
   const formModel = ref<ExecCommandRequest>({ ...defaultForm() });
@@ -186,11 +189,15 @@
         ps.value = parameterFormModel.value[ps.name as string];
       }
       // 执行命令
-      const { data } = await batchExecCommand({
+      const request = {
         ...formModel.value,
         parameterSchema: JSON.stringify(parameterSchema.value),
-      });
-      // TODO log history
+      };
+      const { data } = await batchExecCommand(request);
+      // 设置历史命令
+      historyRef.value.add(request);
+      Message.success('已开始执行');
+      emits('submit', data);
     } catch (e) {
       return false;
     } finally {
@@ -224,6 +231,7 @@
 
     .exec-command-container {
       width: calc(100% - @command-gap);
+      margin: 0 16px;
     }
 
     .exec-history-container {
@@ -239,30 +247,13 @@
     }
   }
 
-  :deep(.exec-header) {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    height: 28px;
-    margin-bottom: 4px;
-
-    h3, > span {
-      margin: 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    h3 {
-      color: var(--color-text-1);
-    }
-  }
-
   .exec-form-container {
     .selected-host {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: var(--color-text-2);
 
       &-count {
         font-size: 16px;

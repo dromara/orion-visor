@@ -25,10 +25,22 @@ export interface ExecInterruptRequest {
  */
 export interface ExecCommandResponse {
   id: number;
-  hosts: {
-    id: number;
-    hostId: number;
-  };
+  hosts: Array<ExecCommandHostResponse>;
+}
+
+/**
+ * 执行命令主机响应
+ */
+export interface ExecCommandHostResponse {
+  id: number;
+  hostId: number;
+  hostName: string;
+  hostAddress: string;
+  status: string;
+  exitStatus: number;
+  errorMessage: string;
+  startTime: number;
+  finishTime: number;
 }
 
 /**

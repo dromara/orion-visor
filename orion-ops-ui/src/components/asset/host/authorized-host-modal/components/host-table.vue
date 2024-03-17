@@ -18,7 +18,7 @@
     </template>
     <!-- 名称 -->
     <template #name="{ record }">
-      {{ record.alias || `${record.name} (${record.code})` }}
+      {{ record.name }}
     </template>
     <!-- 编码 -->
     <template #code="{ record }">

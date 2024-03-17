@@ -1,7 +1,7 @@
 <template>
-  <div class="exec-form-container">
+  <div class="container">
     <!-- 表头 -->
-    <div class="exec-header">
+    <div class="panel-header">
       <h3>执行参数</h3>
       <!-- 操作 -->
       <a-button-group size="small">

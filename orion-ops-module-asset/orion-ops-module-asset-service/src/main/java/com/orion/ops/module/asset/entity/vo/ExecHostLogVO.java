@@ -37,6 +37,9 @@ public class ExecHostLogVO implements Serializable {
     @Schema(description = "主机名称")
     private String hostName;
 
+    @Schema(description = "主机地址")
+    private String hostAddress;
+
     @Schema(description = "执行状态")
     private String status;
 

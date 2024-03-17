@@ -6,6 +6,13 @@
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
+                        allow-clear
+                        hide-button />
+      </a-form-item>
       <!-- 配置项 -->
       <a-form-item field="keyName" label="配置项">
         <a-input v-model="formModel.keyName"
@@ -140,13 +147,13 @@
 <script lang="ts" setup>
   import type { DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
   import { reactive, ref, onMounted } from 'vue';
-  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
+  import { deleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
   import { dictValueTypeKey } from '../types/const';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { getDictValueList } from '@/api/system/dict-value';
 
@@ -154,7 +161,6 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const pagination = usePagination();
-  const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
   const cacheStore = useCacheStore();

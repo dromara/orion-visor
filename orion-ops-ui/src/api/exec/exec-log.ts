@@ -47,6 +47,7 @@ export interface ExecHostLogQueryResponse extends TableData {
   logId: number;
   hostId: number;
   hostName: string;
+  hostAddress: string;
   status: string;
   command: string;
   parameter: string;

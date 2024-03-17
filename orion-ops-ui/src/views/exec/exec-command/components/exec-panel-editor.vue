@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 表头 -->
-    <div class="exec-header">
+    <div class="panel-header">
       <h3>执行命令</h3>
       <span class="span-blue usn pointer" @click="openTemplate">从模板中选择</span>
     </div>

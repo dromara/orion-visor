@@ -8,6 +8,7 @@
         <result column="log_id" property="logId"/>
         <result column="host_id" property="hostId"/>
         <result column="host_name" property="hostName"/>
+        <result column="host_address" property="hostAddress"/>
         <result column="status" property="status"/>
         <result column="command" property="command"/>
         <result column="parameter" property="parameter"/>
@@ -25,7 +26,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, log_id, host_id, host_name, status, command, parameter, exit_status, log_path, error_message, start_time, finish_time, create_time, update_time, creator, updater, deleted
+        id, log_id, host_id, host_name, host_address, status, command, parameter, exit_status, log_path, error_message, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

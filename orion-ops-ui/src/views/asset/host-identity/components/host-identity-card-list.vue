@@ -70,11 +70,9 @@
     </template>
     <!-- 用户名 -->
     <template #username="{ record }">
-      <a-tooltip content="点击复制">
-        <span class="pointer span-blue" @click="copy(record.username)">
-          <icon-copy /> {{ record.username }}
-        </span>
-      </a-tooltip>
+      <span class="span-blue text-copy" @click="copy(record.username)">
+        {{ record.username }}
+      </span>
     </template>
     <!-- 秘钥名称 -->
     <template #keyId="{ record }">

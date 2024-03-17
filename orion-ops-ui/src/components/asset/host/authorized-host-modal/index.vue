@@ -145,6 +145,8 @@
       // 加载主机列表
       const { data } = await getCurrentAuthorizedHost('ssh');
       hosts.value = data;
+      // 禁用别名
+      data.hostList.forEach(s => s.alias = undefined as unknown as string);
       // 设置主机搜索选项
       filterOptions.value = getAuthorizedHostOptions(data.hostList);
     } catch (e) {
@@ -171,7 +173,6 @@
         : list.filter(item => {
           return (item.name as string)?.toLowerCase().indexOf(filterVal) > -1
             || (item.code as string)?.toLowerCase().indexOf(filterVal) > -1
-            || (item.alias as string)?.toLowerCase().indexOf(filterVal) > -1
             || (item.address as string)?.toLowerCase().indexOf(filterVal) > -1;
         });
     }
