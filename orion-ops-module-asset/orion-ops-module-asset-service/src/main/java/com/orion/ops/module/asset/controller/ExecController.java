@@ -7,6 +7,7 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.request.exec.ReExecCommandRequest;
 import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
 import com.orion.ops.module.asset.service.ExecService;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 批量执行
@@ -74,6 +76,19 @@ public class ExecController {
         return HttpWrapper.ok();
     }
 
-    // TODO tail log
+    @PostMapping("/tail-log")
+    @Operation(summary = "查看批量执行日志")
+    @PreAuthorize("@ss.hasAnyPermission('asset:exec:exec-command', 'asset:exec-log:query')")
+    public String getExecLogTailToken(@Validated @RequestBody ExecLogTailRequest request) {
+        return execService.getExecLogTailToken(request);
+    }
+
+    @OperatorLog(ExecOperatorType.DOWNLOAD_HOST_LOG)
+    @GetMapping("/download-log")
+    @Operation(summary = "下载执行日志文件")
+    @PreAuthorize("@ss.hasAnyPermission('asset:exec:exec-command', 'asset:exec-log:query')")
+    public void downloadLogFile(@RequestParam("id") Long id, HttpServletResponse response) {
+        execService.downloadLogFile(id, response);
+    }
 
 }

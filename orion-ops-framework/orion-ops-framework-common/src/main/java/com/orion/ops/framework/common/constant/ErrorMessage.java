@@ -89,4 +89,6 @@ public interface ErrorMessage {
 
     String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";
 
+    String FILE_READ_ERROR = "文件读取失败";
+
 }

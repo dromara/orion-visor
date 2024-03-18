@@ -2,11 +2,13 @@ package com.orion.ops.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.function.Functions;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.json.matcher.NoMatchStrategy;
 import com.orion.lang.utils.json.matcher.ReplacementFormatter;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
@@ -17,15 +19,20 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.dao.HostDAO;
+import com.orion.ops.module.asset.define.cache.ExecCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.ExecHostLogTailDTO;
+import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
 import com.orion.ops.module.asset.entity.dto.ExecParameterSchemaDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecCommandHostVO;
 import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
@@ -40,11 +47,14 @@ import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
 import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecService;
+import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -275,6 +285,92 @@ public class ExecServiceImpl implements ExecService {
         }
     }
 
+    @Override
+    public String getExecLogTailToken(ExecLogTailRequest request) {
+        Long execId = request.getExecId();
+        List<Long> execHostIdList = request.getExecHostIdList();
+        log.info("ExecService.getExecLogTailToken start execId: {}, execHostIdList: {}", execId, execHostIdList);
+        // 查询执行日志
+        ExecLogDO execLog = execLogDAO.selectById(execId);
+        Valid.notNull(execLog, ErrorMessage.LOG_ABSENT);
+        // 查询主机日志
+        List<ExecHostLogDO> hostLogs;
+        if (execHostIdList == null) {
+            hostLogs = execHostLogDAO.selectByLogId(execId);
+        } else {
+            hostLogs = execHostLogDAO.of()
+                    .createWrapper()
+                    .eq(ExecHostLogDO::getLogId, execId)
+                    .in(ExecHostLogDO::getId, execHostIdList)
+                    .then()
+                    .list();
+        }
+        Valid.notEmpty(hostLogs, ErrorMessage.LOG_ABSENT);
+        // 生成缓存
+        String token = UUIds.random19();
+        String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
+        ExecLogTailDTO cache = ExecLogTailDTO.builder()
+                .token(token)
+                .id(execId)
+                .userId(SecurityUtils.getLoginUserId())
+                .hosts(hostLogs.stream()
+                        .map(s -> ExecHostLogTailDTO.builder()
+                                .id(s.getId())
+                                .hostId(s.getHostId())
+                                .path(s.getLogPath())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+        // 设置缓存
+        RedisStrings.setJson(cacheKey, ExecCacheKeyDefine.EXEC_TAIL, cache);
+        log.info("ExecService.getExecLogTailToken finish token: {}, execId: {}, execHostIdList: {}", token, execId, execHostIdList);
+        return token;
+    }
+
+    @Override
+    public ExecLogTailDTO getExecLogTailInfo(String token) {
+        String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
+        // 获取缓存
+        ExecLogTailDTO tail = RedisStrings.getJson(cacheKey, ExecCacheKeyDefine.EXEC_TAIL);
+        if (tail != null) {
+            // 删除缓存
+            RedisStrings.delete(cacheKey);
+        }
+        return tail;
+    }
+
+    @Override
+    public void downloadLogFile(Long id, HttpServletResponse response) {
+        log.info("ExecService.downloadLogFile id: {}", id);
+        try {
+            // 获取主机执行日志
+            ExecHostLogDO hostLog = execHostLogDAO.selectById(id);
+            Valid.notNull(hostLog, ErrorMessage.LOG_ABSENT);
+            String logPath = hostLog.getLogPath();
+            Valid.notNull(logPath, ErrorMessage.LOG_ABSENT);
+            // 设置日志参数
+            OperatorLogs.add(OperatorLogs.LOG_ID, hostLog.getLogId());
+            OperatorLogs.add(OperatorLogs.HOST_ID, hostLog.getHostId());
+            OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
+            // 获取日志
+            InputStream in = logsFileClient.getContentInputStream(logPath);
+            // 返回
+            Servlets.transfer(response, in, Files1.getFileName(logPath));
+        } catch (Exception e) {
+            log.error("ExecService.downloadLogFile error id: {}", id, e);
+            String errorMessage = ErrorMessage.FILE_READ_ERROR;
+            if (e instanceof InvalidArgumentException) {
+                errorMessage = e.getMessage();
+            }
+            // 响应错误信息
+            try {
+                Servlets.transfer(response, Strings.bytes(errorMessage), Const.ERROR_LOG);
+            } catch (Exception ex) {
+                log.error("ExecService.downloadLogFile transfer-error id: {}", id, ex);
+            }
+        }
+    }
+
     /**
      * 开始执行命令
      *
@@ -306,7 +402,7 @@ public class ExecServiceImpl implements ExecService {
      * @return logPath
      */
     private String buildLogPath(Long logId, Long hostId) {
-        String logFile = "/exec/" + logId + "/" + hostId + ".log";
+        String logFile = "/exec/" + logId + "/" + logId + "_" + hostId + ".log";
         return logsFileClient.getReturnPath(logFile);
     }
 
