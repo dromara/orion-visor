@@ -178,6 +178,7 @@
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);

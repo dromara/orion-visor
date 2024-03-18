@@ -168,7 +168,7 @@
     if (filterVal) {
       list = filterVal.startsWith('@')
         // tag 过滤
-        ? list.filter(item => item.tags.some(tag => (tag.name as string).toLowerCase().startsWith(filterVal.substring(1, filterVal.length))))
+        ? list.filter(item => item.tags.some(tag => tag.name?.toLowerCase().startsWith(filterVal.substring(1, filterVal.length))))
         // 名称/编码/地址 过滤
         : list.filter(item => {
           return (item.name as string)?.toLowerCase().indexOf(filterVal) > -1

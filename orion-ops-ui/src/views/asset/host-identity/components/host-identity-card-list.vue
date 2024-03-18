@@ -152,6 +152,7 @@
   import { Message, Modal } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);

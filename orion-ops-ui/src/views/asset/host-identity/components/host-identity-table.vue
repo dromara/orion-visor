@@ -148,6 +148,7 @@
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
   import { usePagination } from '@/types/table';
+  import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);

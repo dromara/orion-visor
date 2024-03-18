@@ -23,7 +23,7 @@ export default defineStore('tabBar', {
     addTab(tag: TagProps, ignoreCache: boolean) {
       this.tagList.push(tag);
       if (!ignoreCache) {
-        this.cacheTabList.add(tag.name as string);
+        this.cacheTabList.add(tag.name);
       }
     },
 
@@ -49,8 +49,8 @@ export default defineStore('tabBar', {
       this.cacheTabList.clear();
       // 要先判断 ignoreCache
       this.tagList.filter((el) => !el.ignoreCache)
-      .map((el) => el.name)
-      .forEach((x) => this.cacheTabList.add(x));
+        .map((el) => el.name)
+        .forEach((x) => this.cacheTabList.add(x));
     },
 
     // 重设 tab
