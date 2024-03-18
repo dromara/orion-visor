@@ -18,8 +18,8 @@ import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
-import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
-import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.ops.module.asset.service.ExecHostLogService;
 import com.orion.ops.module.asset.service.ExecLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     private ExecHostLogService execHostLogService;
 
     @Resource
-    private ExecManager execManager;
+    private ExecTaskManager execTaskManager;
 
     @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
@@ -226,7 +226,7 @@ public class ExecLogServiceImpl implements ExecLogService {
      */
     private void interruptedTask(List<Long> idList) {
         idList.stream()
-                .map(execManager::getTask)
+                .map(execTaskManager::getTask)
                 .filter(Objects::nonNull)
                 .forEach(IExecTaskHandler::interrupted);
     }

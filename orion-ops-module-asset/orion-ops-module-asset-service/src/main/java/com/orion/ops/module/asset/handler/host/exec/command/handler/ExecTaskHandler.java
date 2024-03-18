@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.handler.host.exec.handler;
+package com.orion.ops.module.asset.handler.host.exec.command.handler;
 
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.utils.Threads;
@@ -9,9 +9,9 @@ import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
-import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandDTO;
-import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
-import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
+import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
+import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
+import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private static final ExecLogDAO execLogDAO = SpringHolder.getBean(ExecLogDAO.class);
 
-    private static final ExecManager execManager = SpringHolder.getBean(ExecManager.class);
+    private static final ExecTaskManager EXEC_TASK_MANAGER = SpringHolder.getBean(ExecTaskManager.class);
 
     private final ExecCommandDTO execCommand;
 
@@ -50,7 +50,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
     public void run() {
         Long id = execCommand.getLogId();
         // 添加任务
-        execManager.addTask(id, this);
+        EXEC_TASK_MANAGER.addTask(id, this);
         log.info("ExecTaskHandler.run start id: {}", id);
         // 更新状态
         this.updateStatus(ExecStatusEnum.RUNNING);
@@ -68,7 +68,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
             // 释放资源
             Streams.close(this);
             // 移除任务
-            execManager.removeTask(id);
+            EXEC_TASK_MANAGER.removeTask(id);
         }
     }
 

@@ -39,12 +39,12 @@ import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
-import com.orion.ops.module.asset.handler.host.exec.ExecTaskExecutors;
-import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandDTO;
-import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
-import com.orion.ops.module.asset.handler.host.exec.handler.IExecCommandHandler;
-import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
-import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
+import com.orion.ops.module.asset.handler.host.exec.command.ExecTaskExecutors;
+import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
+import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecCommandHandler;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecService;
 import com.orion.web.servlet.web.Servlets;
@@ -93,7 +93,7 @@ public class ExecServiceImpl implements ExecService {
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @Resource
-    private ExecManager execManager;
+    private ExecTaskManager execTaskManager;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -201,7 +201,7 @@ public class ExecServiceImpl implements ExecService {
             return;
         }
         // 中断执行
-        IExecTaskHandler task = execManager.getTask(logId);
+        IExecTaskHandler task = execTaskManager.getTask(logId);
         if (task != null) {
             log.info("ExecService.interruptExec interrupted logId: {}", logId);
             // 中断
@@ -242,7 +242,7 @@ public class ExecServiceImpl implements ExecService {
             return;
         }
         // 中断执行
-        IExecTaskHandler task = execManager.getTask(logId);
+        IExecTaskHandler task = execTaskManager.getTask(logId);
         if (task != null) {
             log.info("ExecService.interruptHostExec interrupted logId: {}, hostLogId: {}", logId, hostLogId);
             IExecCommandHandler handler = task.getHandlers()

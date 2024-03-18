@@ -9,9 +9,9 @@ import com.orion.ops.module.asset.convert.ExecHostLogConvert;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
-import com.orion.ops.module.asset.handler.host.exec.handler.IExecCommandHandler;
-import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
-import com.orion.ops.module.asset.handler.host.exec.manager.ExecManager;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecCommandHandler;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.ops.module.asset.service.ExecHostLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
     private ExecHostLogDAO execHostLogDAO;
 
     @Resource
-    private ExecManager execManager;
+    private ExecTaskManager execTaskManager;
 
     @Override
     public List<ExecHostLogVO> getExecHostLogList(Long logId) {
@@ -74,7 +74,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 中断
         Optional.ofNullable(record.getLogId())
-                .map(execManager::getTask)
+                .map(execTaskManager::getTask)
                 .map(IExecTaskHandler::getHandlers)
                 .flatMap(s -> s.stream()
                         .filter(h -> h.getHostId().equals(record.getHostId()))

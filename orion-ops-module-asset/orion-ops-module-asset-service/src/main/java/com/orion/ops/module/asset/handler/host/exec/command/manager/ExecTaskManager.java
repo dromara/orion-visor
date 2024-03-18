@@ -1,6 +1,6 @@
-package com.orion.ops.module.asset.handler.host.exec.manager;
+package com.orion.ops.module.asset.handler.host.exec.command.manager;
 
-import com.orion.ops.module.asset.handler.host.exec.handler.IExecTaskHandler;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2024/3/13 11:20
  */
 @Component
-public class ExecManager {
+public class ExecTaskManager {
 
     private final ConcurrentHashMap<Long, IExecTaskHandler> execTasks = new ConcurrentHashMap<>();
 

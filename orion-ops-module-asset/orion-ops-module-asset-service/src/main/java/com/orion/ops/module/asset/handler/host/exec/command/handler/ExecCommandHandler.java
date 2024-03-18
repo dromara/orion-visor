@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.handler.host.exec.handler;
+package com.orion.ops.module.asset.handler.host.exec.command.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.exception.AuthenticationException;
@@ -13,7 +13,7 @@ import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
-import com.orion.ops.module.asset.handler.host.exec.dto.ExecCommandHostDTO;
+import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;

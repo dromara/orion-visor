@@ -29,6 +29,8 @@ public interface FieldConst {
 
     String STATUS = "status";
 
+    String INFO = "info";
+
     String REL_ID = "relId";
 
     String BEFORE = "before";
