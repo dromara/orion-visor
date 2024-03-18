@@ -2,7 +2,7 @@
   <div class="log-panel-container">
     <!-- 执行主机 -->
     <log-panel-host class="host-container"
-                    :current="currentHostId"
+                    :current="currentHostExecId"
                     :hosts="command.hosts"
                     @selected="selectedHost"
                     @back="back" />
@@ -26,7 +26,7 @@
 
   const emits = defineEmits(['back']);
 
-  const currentHostId = ref(1);
+  const currentHostExecId = ref(1);
   const command = ref<ExecCommandResponse>({
     id: 50,
     hosts: [{
@@ -65,7 +65,7 @@
   // 打开
   const open = (record: ExecCommandResponse) => {
     command.value = record;
-    currentHostId.value = record.hosts[0].hostId;
+    currentHostExecId.value = record.hosts[0].id;
     // 打开日志
     openLog();
   };
@@ -79,7 +79,7 @@
 
   // 选中主机
   const selectedHost = (hostId: number) => {
-    currentHostId.value = hostId;
+    currentHostExecId.value = hostId;
   };
 
   // 返回

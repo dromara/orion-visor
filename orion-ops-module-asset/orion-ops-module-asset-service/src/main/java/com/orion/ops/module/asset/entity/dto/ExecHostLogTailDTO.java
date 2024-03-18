@@ -31,4 +31,7 @@ public class ExecHostLogTailDTO implements Serializable {
     @Schema(description = "文件路径")
     private String path;
 
+    @Schema(description = "输出编码")
+    private String charset;
+
 }

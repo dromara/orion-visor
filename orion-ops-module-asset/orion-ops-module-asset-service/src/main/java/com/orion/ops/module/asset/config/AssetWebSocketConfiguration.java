@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.config;
 
-import com.orion.ops.module.asset.handler.host.exec.log.handler.ExecLogTailHandler;
+import com.orion.ops.module.asset.handler.host.exec.log.ExecLogTailHandler;
 import com.orion.ops.module.asset.handler.host.terminal.TerminalMessageDispatcher;
 import com.orion.ops.module.asset.handler.host.transfer.TransferMessageDispatcher;
 import com.orion.ops.module.asset.interceptor.ExecLogTailInterceptor;

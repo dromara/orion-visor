@@ -22,7 +22,7 @@ public interface HostConfigService {
      *
      * @param hostId hostId
      * @param type   type
-     * @return 配置
+     * @return config
      */
     HostConfigVO getHostConfig(Long hostId, String type);
 
@@ -31,7 +31,7 @@ public interface HostConfigService {
      *
      * @param hostId hostId
      * @param type   type
-     * @return 配置
+     * @return config
      */
     <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type);
 
@@ -39,9 +39,18 @@ public interface HostConfigService {
      * 获取配置
      *
      * @param hostId hostId
-     * @return 配置
+     * @return config
      */
     List<HostConfigVO> getHostConfigList(Long hostId);
+
+    /**
+     * 获取配置
+     *
+     * @param hostIdList hostIdList
+     * @param type       type
+     * @return config
+     */
+    List<HostConfigVO> getHostConfigList(List<Long> hostIdList, String type);
 
     /**
      * 更新配置

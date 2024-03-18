@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.function.Functions;
 import com.orion.lang.id.UUIds;
+import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
@@ -16,6 +17,7 @@ import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.constant.FieldConst;
 import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
@@ -35,6 +37,7 @@ import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecCommandHostVO;
 import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
+import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
@@ -47,6 +50,7 @@ import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHan
 import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecService;
+import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,10 +59,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -91,6 +93,9 @@ public class ExecServiceImpl implements ExecService {
 
     @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
+
+    @Resource
+    private HostConfigService hostConfigService;
 
     @Resource
     private ExecTaskManager execTaskManager;
@@ -167,6 +172,7 @@ public class ExecServiceImpl implements ExecService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ExecCommandVO reExecCommand(Long logId) {
         log.info("ExecService.reExecCommand start logId: {}", logId);
         // 获取执行记录
@@ -288,24 +294,31 @@ public class ExecServiceImpl implements ExecService {
     @Override
     public String getExecLogTailToken(ExecLogTailRequest request) {
         Long execId = request.getExecId();
-        List<Long> execHostIdList = request.getExecHostIdList();
-        log.info("ExecService.getExecLogTailToken start execId: {}, execHostIdList: {}", execId, execHostIdList);
+        List<Long> hostExecIdList = request.getHostExecIdList();
+        log.info("ExecService.getExecLogTailToken start execId: {}, hostExecIdList: {}", execId, hostExecIdList);
         // 查询执行日志
         ExecLogDO execLog = execLogDAO.selectById(execId);
         Valid.notNull(execLog, ErrorMessage.LOG_ABSENT);
         // 查询主机日志
         List<ExecHostLogDO> hostLogs;
-        if (execHostIdList == null) {
+        if (hostExecIdList == null) {
             hostLogs = execHostLogDAO.selectByLogId(execId);
         } else {
             hostLogs = execHostLogDAO.of()
                     .createWrapper()
                     .eq(ExecHostLogDO::getLogId, execId)
-                    .in(ExecHostLogDO::getId, execHostIdList)
+                    .in(ExecHostLogDO::getId, hostExecIdList)
                     .then()
                     .list();
         }
         Valid.notEmpty(hostLogs, ErrorMessage.LOG_ABSENT);
+        // 获取编码集
+        List<Long> hostIdList = hostLogs.stream()
+                .map(ExecHostLogDO::getHostId)
+                .collect(Collectors.toList());
+        Map<Long, HostConfigVO> configMap = hostConfigService.getHostConfigList(hostIdList, HostConfigTypeEnum.SSH.getType())
+                .stream()
+                .collect(Collectors.toMap(HostConfigVO::getId, Function.identity()));
         // 生成缓存
         String token = UUIds.random19();
         String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
@@ -318,12 +331,17 @@ public class ExecServiceImpl implements ExecService {
                                 .id(s.getId())
                                 .hostId(s.getHostId())
                                 .path(s.getLogPath())
+                                .charset(Optional.ofNullable(configMap.get(s.getHostId()))
+                                        .map(HostConfigVO::getConfig)
+                                        .map(c -> c.get(FieldConst.CHARSET))
+                                        .map(Objects1::toString)
+                                        .orElse(Const.UTF_8))
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
         // 设置缓存
         RedisStrings.setJson(cacheKey, ExecCacheKeyDefine.EXEC_TAIL, cache);
-        log.info("ExecService.getExecLogTailToken finish token: {}, execId: {}, execHostIdList: {}", token, execId, execHostIdList);
+        log.info("ExecService.getExecLogTailToken finish token: {}, execId: {}, hostExecIdList: {}", token, execId, hostExecIdList);
         return token;
     }
 

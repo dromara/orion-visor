@@ -16,6 +16,7 @@ export interface HostConfigRequest {
  */
 export interface HostConfigQueryResponse {
   id: number;
+  hostId: number;
   type: string;
   version: number;
   status: number;

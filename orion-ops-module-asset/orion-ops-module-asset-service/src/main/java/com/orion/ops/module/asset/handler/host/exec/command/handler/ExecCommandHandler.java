@@ -14,6 +14,7 @@ import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
+import com.orion.ops.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
@@ -36,6 +37,8 @@ import java.util.concurrent.TimeoutException;
 public class ExecCommandHandler implements IExecCommandHandler {
 
     private final FileClient fileClient = SpringHolder.getBean("logsFileClient");
+
+    private final ExecLogManager execLogManager = SpringHolder.getBean(ExecLogManager.class);
 
     private final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
 
@@ -177,7 +180,9 @@ public class ExecCommandHandler implements IExecCommandHandler {
         Streams.close(executor);
         Streams.close(sessionStore);
         Streams.close(logOutputStream);
-        // TODO 关闭日志
+        // TODO TEST 异步关闭日志
+        execLogManager.asyncCloseTailFile(execHostCommand.getLogPath());
+
     }
 
     /**

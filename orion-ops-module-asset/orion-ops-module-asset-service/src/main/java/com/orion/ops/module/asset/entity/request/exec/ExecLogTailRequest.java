@@ -28,6 +28,6 @@ public class ExecLogTailRequest {
     private Long execId;
 
     @Schema(description = "执行主机id")
-    private List<Long> execHostIdList;
+    private List<Long> hostExecIdList;
 
 }

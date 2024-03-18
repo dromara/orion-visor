@@ -133,7 +133,6 @@ public class ExecTaskHandler implements IExecTaskHandler {
         log.info("ExecTaskHandler-close id: {}", execCommand.getLogId());
         Streams.close(timeoutChecker);
         this.handlers.forEach(Streams::close);
-        // TODO 关闭日志
     }
 
 }

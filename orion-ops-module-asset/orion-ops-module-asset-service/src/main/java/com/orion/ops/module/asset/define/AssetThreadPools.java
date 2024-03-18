@@ -75,4 +75,16 @@ public interface AssetThreadPools {
             .allowCoreThreadTimeout(true)
             .build();
 
+    /**
+     * 批量执行日志查看线程池
+     */
+    ThreadPoolExecutor EXEC_LOG = ExecutorBuilder.create()
+            .namedThreadFactory("exec-log-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
 }

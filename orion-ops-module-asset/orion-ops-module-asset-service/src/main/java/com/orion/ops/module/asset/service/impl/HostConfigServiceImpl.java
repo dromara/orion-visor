@@ -58,7 +58,6 @@ public class HostConfigServiceImpl implements HostConfigService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type) {
         // 查询配置
         HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type.getType());
@@ -76,20 +75,19 @@ public class HostConfigServiceImpl implements HostConfigService {
     public List<HostConfigVO> getHostConfigList(Long hostId) {
         // 查询
         List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostId(hostId);
+        return configs.stream()
+                .map(this::convertHostConfig)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HostConfigVO> getHostConfigList(List<Long> hostIdList, String type) {
+        // 查询
+        List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostIdList(hostIdList, type);
         // 返回
         return configs.stream()
-                .map(s -> {
-                    // 获取配置
-                    HostConfigTypeEnum type = HostConfigTypeEnum.of(s.getType());
-                    if (type == null) {
-                        return null;
-                    }
-                    // 转为视图
-                    HostConfigVO vo = HostConfigConvert.MAPPER.to(s);
-                    Map<String, Object> config = type.getStrategyBean().toView(s.getConfig());
-                    vo.setConfig(config);
-                    return vo;
-                })
+                .map(this::convertHostConfig)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -217,6 +215,25 @@ public class HostConfigServiceImpl implements HostConfigService {
         insert.setConfig(type.getStrategyBean().getDefault().serial());
         insert.setVersion(Const.DEFAULT_VERSION);
         return insert;
+    }
+
+    /**
+     * 转化配置
+     *
+     * @param row row
+     * @return config
+     */
+    private HostConfigVO convertHostConfig(HostConfigDO row) {
+        // 获取配置
+        HostConfigTypeEnum type = HostConfigTypeEnum.of(row.getType());
+        if (type == null) {
+            return null;
+        }
+        // 转为视图
+        HostConfigVO vo = HostConfigConvert.MAPPER.to(row);
+        Map<String, Object> config = type.getStrategyBean().toView(row.getConfig());
+        vo.setConfig(config);
+        return vo;
     }
 
 }

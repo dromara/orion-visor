@@ -41,6 +41,8 @@ public interface FieldConst {
 
     String TARGET = "target";
 
+    String CHARSET = "charset";
+
     String TOKEN = "token";
 
     String PATH = "path";

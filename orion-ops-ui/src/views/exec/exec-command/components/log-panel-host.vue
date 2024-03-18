@@ -14,8 +14,8 @@
       <div v-for="item in hosts"
            :key="item.id"
            class="exec-host-item"
-           :class="[ current === item.hostId ? 'exec-host-item-selected' : '' ]"
-           @click="emits('selected', item.hostId)">
+           :class="[ current === item.id ? 'exec-host-item-selected' : '' ]"
+           @click="emits('selected', item.id)">
         <!-- 主机名称 -->
         <div class="exec-host-item-name">
           <span class="host-name">{{ item.hostName }}</span>

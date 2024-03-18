@@ -25,6 +25,9 @@ public class HostConfigVO {
     @Schema(description = "id")
     private Long id;
 
+    @Schema(description = "hostId")
+    private Long hostId;
+
     @Schema(description = "version")
     private Integer version;
 
