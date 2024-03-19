@@ -56,7 +56,6 @@ public class ExecLogTracker implements IExecLogTracker {
             // 开始监听文件
             tracker.run();
             // 监听完成回调
-            // TODO test
             this.close = true;
         } catch (Exception e) {
             log.error("exec log tracker error path: {}", absolutePath, e);
@@ -80,7 +79,6 @@ public class ExecLogTracker implements IExecLogTracker {
 
     @Override
     public void close() {
-        // TODO test
         log.info("ExecLogTracker.close path: {}", absolutePath);
         if (close) {
             return;

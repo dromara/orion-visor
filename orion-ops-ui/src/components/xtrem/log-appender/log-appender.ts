@@ -2,17 +2,19 @@ import type { ExecTailRequest } from '@/api/exec/exec';
 import { getExecLogTailToken } from '@/api/exec/exec';
 import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender.const';
 import { AppenderOption } from './appender.const';
-import { Terminal } from 'xterm';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
 import { createWebSocket } from '@/utils';
+import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { CanvasAddon } from 'xterm-addon-canvas';
+import { useDebounceFn } from '@vueuse/core';
+import { addEventListen, removeEventListen } from '@/utils/event';
 
-// todo ping
-// todo SEARCH addon
+// todo SEARCH addon setfixed
 // todo font-size totop copy tobottom selectall clear
+// todo 批量执行的 warn
 
 // 执行日志 appender 实现
 export default class LogAppender implements ILogAppender {
@@ -21,13 +23,16 @@ export default class LogAppender implements ILogAppender {
 
   private client?: WebSocket;
 
-  private appenderRel: Record<string, LogAppenderConf>;
+  private readonly appenderRel: Record<string, LogAppenderConf>;
 
   private keepAliveTask?: number;
+
+  private readonly fitFn: () => {};
 
   constructor(config: ExecTailRequest) {
     this.config = config;
     this.appenderRel = {};
+    this.fitFn = useDebounceFn(this.fit).bind(this);
   }
 
   // 初始化
@@ -56,6 +61,8 @@ export default class LogAppender implements ILogAppender {
         addons
       };
     }
+    // 注册自适应事件
+    addEventListen(window, 'resize', this.fitFn);
   }
 
   // 初始化插件
@@ -114,12 +121,15 @@ export default class LogAppender implements ILogAppender {
 
   // 关闭 view
   closeView(): void {
+    // 关闭 terminal
     Object.values(this.appenderRel).forEach(s => {
       s.terminal?.dispose();
       if (s.addons) {
         Object.values(s.addons).forEach(s => s.dispose());
       }
     });
+    // 移除自适应事件
+    removeEventListen(window, 'resize', this.fitFn);
   }
 
   // 关闭

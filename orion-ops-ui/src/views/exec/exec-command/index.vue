@@ -76,7 +76,7 @@
           hostId: 4,
           hostName: 'main-44',
           hostAddress: '192.412.53.2',
-          status: 'FAILED'
+          status: 'TIMEOUT'
         },]
     } as ExecCommandResponse);
   });

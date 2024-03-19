@@ -6,6 +6,7 @@ import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.entity.dto.ExecHostLogTailDTO;
 import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
+import com.orion.ops.module.asset.handler.host.exec.log.constant.LogConst;
 import com.orion.ops.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import com.orion.ops.module.asset.handler.host.exec.log.tracker.ExecLogTracker;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,11 @@ public class ExecLogTailHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        String payload = message.getPayload();
+        // ping
+        if (LogConst.PING_PAYLOAD.equals(payload)) {
+            WebSockets.sendText(session, LogConst.PONG_PAYLOAD);
+        }
     }
 
     @Override
@@ -68,15 +74,11 @@ public class ExecLogTailHandler extends AbstractWebSocketHandler {
         log.info("ExecLogTailHandler-afterConnectionClosed id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
         // 关闭会话
         ExecLogTailDTO info = WebSockets.getAttr(session, ExtraFieldConst.INFO);
-        // 移除追踪器 TODO TEST
+        // 移除追踪器
         for (ExecHostLogTailDTO host : info.getHosts()) {
             execLogManager.removeTracker(this.getTrackerId(id, info, host));
         }
     }
-
-    // TODO ws://127.0.0.1:9200/orion/keep-alive/exec/log/ive0btemHxmEY0HyTm5
-    // todo 首页元数据加载
-    // todo 批量执行的 warn
 
     /**
      * 获取追踪器 id

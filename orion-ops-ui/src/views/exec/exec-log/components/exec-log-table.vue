@@ -221,7 +221,7 @@
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
-  // TODO 日志 清理 ctrl日志 ctrl重新执行
+  // TODO 日志 ctrl日志 ctrl重新执行
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();

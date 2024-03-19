@@ -39,6 +39,11 @@ public enum ExecHostStatusEnum {
     FAILED(false),
 
     /**
+     * 执行超时
+     */
+    TIMEOUT(false),
+
+    /**
      * 中断执行
      */
     INTERRUPTED(false),

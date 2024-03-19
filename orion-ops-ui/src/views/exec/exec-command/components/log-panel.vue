@@ -27,6 +27,7 @@
   import { execStatus } from '@/views/exec/exec-log/types/const';
   import LogPanelHost from './log-panel-host.vue';
   import LogPanelView from './log-panel-view.vue';
+  import { useDictStore } from '@/store';
 
   const emits = defineEmits(['back']);
 
@@ -65,7 +66,7 @@
       if (hostStatus) {
         host.status = hostStatus.status;
         host.startTime = hostStatus.startTime;
-        host.finishTime = hostStatus.finishTime;
+        host.finishTime = hostStatus.finishTime || Date.now();
         host.exitStatus = hostStatus.exitStatus;
         host.errorMessage = hostStatus.errorMessage;
       }
@@ -116,7 +117,6 @@
 
   .host-container, .log-container {
     height: 100%;
-    padding: 16px;
     border-radius: 4px;
     position: relative;
     background: var(--color-bg-2);
@@ -124,6 +124,7 @@
 
   .host-container {
     width: @host-width;
+    padding: 16px;
     margin-right: 16px;
   }
 

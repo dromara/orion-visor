@@ -6,7 +6,35 @@
          class="log-view">
       <!-- 面板头部 -->
       <div class="log-header">
-        header
+        <!-- 左侧信息 -->
+        <div class="log-header-left">
+          <a-space :size="12">
+            <!-- 状态 -->
+            <a-tag :color="getDictValue(execHostStatusKey, host.status, 'color')">
+              {{ getDictValue(execHostStatusKey, host.status) }}
+            </a-tag>
+            <!-- exitStatus -->
+            <a-tag v-if="host.exitStatus || host.exitStatus === 0"
+                   :color="host.exitStatus === 0 ? 'arcoblue' : 'orangered'"
+                   title="exit status">
+              <template #icon>
+                <icon-check v-if="host.exitStatus === 0" />
+                <icon-exclamation v-else />
+              </template>
+              <span class="tag-value">{{ host.exitStatus }}</span>
+            </a-tag>
+            <!-- 持续时间 -->
+            <a-tag color="arcoblue" title="持续时间">
+              <template #icon>
+                <icon-loading v-if="host.status === execHostStatus.WAITING || host.status === execHostStatus.RUNNING" />
+                <icon-clock-circle v-else />
+              </template>
+              <span class="tag-value">{{ formatDuration(host.startTime, host.finishTime) || '0s' }}</span>
+            </a-tag>
+          </a-space>
+        </div>
+        <!-- 右侧操作 -->
+        <div class="log-header-right">TODO</div>
       </div>
       <!-- 日志面板 -->
       <div class="log-wrapper">
@@ -25,16 +53,21 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { ExecCommandResponse, ExecCommandHostResponse } from '@/api/exec/exec';
-  import type { LogDomRef, ILogAppender } from '@/components/view/log-appender/appender.const';
+  import type { ExecCommandResponse } from '@/api/exec/exec';
+  import type { LogDomRef, ILogAppender } from '@/components/xtrem/log-appender/appender.const';
   import { nextTick, ref } from 'vue';
-  import LogAppender from '@/components/view/log-appender/log-appender';
+  import { formatDuration } from '@/utils';
+  import { execHostStatus, execHostStatusKey } from '@/views/exec/exec-log/types/const';
+  import { useDictStore } from '@/store';
+  import LogAppender from '@/components/xtrem/log-appender/log-appender';
   import 'xterm/css/xterm.css';
 
   const props = defineProps<{
     current: number;
     command: ExecCommandResponse;
   }>();
+
+  const { getDictValue } = useDictStore();
 
   const logRefs = ref<Array<LogDomRef>>([]);
   const appender = ref<ILogAppender>();
@@ -80,7 +113,25 @@
   .log-header {
     width: 100%;
     height: @header-height;
-    background: green;
+    padding: 8px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-bg-1);
+    color: var(--color-text-1);
+
+    :deep(.arco-tag-icon) {
+      font-size: 14px;
+    }
+
+    .tag-value {
+      font-weight: 600;
+    }
+
+    &-right {
+
+    }
   }
 
   .log-wrapper {

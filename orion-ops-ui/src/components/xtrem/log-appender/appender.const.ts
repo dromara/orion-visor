@@ -8,7 +8,7 @@ import { CanvasAddon } from 'xterm-addon-canvas';
 export const AppenderOption: ITerminalOptions = {
   theme: {
     foreground: '#FFFFFF',
-    background: '#212529',
+    background: '#202020',
     selectionBackground: '#B5D5FF',
   },
   rightClickSelectsWord: true,
@@ -46,9 +46,6 @@ export interface LogAddons extends Record<string, IDisposable> {
 export interface ILogAppender {
   // 初始化
   init(refs: Array<LogDomRef>): Promise<void>;
-
-  // 自适应
-  fit(): void;
 
   // 关闭 client
   closeClient(): void;

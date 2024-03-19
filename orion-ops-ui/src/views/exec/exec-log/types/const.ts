@@ -24,6 +24,8 @@ export const execHostStatus = {
   COMPLETED: 'COMPLETED',
   // 执行失败
   FAILED: 'FAILED',
+  // 执行超时
+  TIMEOUT: 'TIMEOUT',
   // 已中断
   INTERRUPTED: 'INTERRUPTED',
 };

@@ -9,6 +9,10 @@ package com.orion.ops.module.asset.handler.host.exec.log.constant;
  */
 public interface LogConst {
 
+    String PING_PAYLOAD = "p";
+
+    String PONG_PAYLOAD = "p";
+
     String SEPARATOR = "|";
 
     int TRACKER_OFFSET_LINE = 200;

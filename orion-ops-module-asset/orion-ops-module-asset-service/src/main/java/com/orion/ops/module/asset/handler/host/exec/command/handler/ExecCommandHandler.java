@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * 命令执行器
@@ -93,7 +92,7 @@ public class ExecCommandHandler implements IExecCommandHandler {
             this.updateStatus(ExecHostStatusEnum.FAILED, ex);
         } else if (executor.isTimeout()) {
             // 更新执行超时
-            this.updateStatus(ExecHostStatusEnum.FAILED, new TimeoutException());
+            this.updateStatus(ExecHostStatusEnum.TIMEOUT, null);
         } else {
             // 更新执行完成
             this.updateStatus(ExecHostStatusEnum.COMPLETED, null);
@@ -144,6 +143,9 @@ public class ExecCommandHandler implements IExecCommandHandler {
             // 失败
             update.setFinishTime(new Date());
             update.setErrorMessage(this.getErrorMessage(ex));
+        } else if (ExecHostStatusEnum.TIMEOUT.equals(status)) {
+            // 超时
+            update.setFinishTime(new Date());
         } else if (ExecHostStatusEnum.INTERRUPTED.equals(status)) {
             // 中断
             update.setFinishTime(new Date());
@@ -151,8 +153,6 @@ public class ExecCommandHandler implements IExecCommandHandler {
         int effect = execHostLogDAO.updateById(update);
         log.info("ExecCommandHandler.updateStatus finish id: {}, effect: {}", id, effect);
     }
-
-    // TODO timeout
 
     @Override
     public void write(String msg) {
@@ -182,9 +182,7 @@ public class ExecCommandHandler implements IExecCommandHandler {
         Streams.close(executor);
         Streams.close(sessionStore);
         Streams.close(logOutputStream);
-        // TODO TEST 异步关闭日志
         execLogManager.asyncCloseTailFile(execHostCommand.getLogPath());
-
     }
 
     /**
@@ -195,9 +193,7 @@ public class ExecCommandHandler implements IExecCommandHandler {
      */
     private String getErrorMessage(Exception ex) {
         String message;
-        if (ex instanceof TimeoutException) {
-            message = "执行超时";
-        } else if (ex instanceof InvalidArgumentException) {
+        if (ex instanceof InvalidArgumentException) {
             message = ex.getMessage();
         } else if (ex instanceof ConnectionRuntimeException) {
             message = "连接失败";

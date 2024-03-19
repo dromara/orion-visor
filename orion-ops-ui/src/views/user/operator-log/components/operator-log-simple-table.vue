@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from '@/api/user/operator-log';
-  import { ref, onMounted, onBeforeMount } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, dictKeys } from '../types/const';
   import columns from '../types/table.columns';
   import { getLogDetail } from '../types/const';
@@ -146,14 +146,12 @@
     fetchTableData
   });
 
-  // 加载字典值
-  onBeforeMount(async () => {
+  // 初始化
+  onMounted(async () => {
+    // 加载字典值
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
-  });
-
-  // 初始化
-  onMounted(() => {
+    // 设置表格列
     let cols = columns.map(s => {
       return { ...s };
     }).filter(s => s.dataIndex !== 'username');
@@ -168,6 +166,7 @@
       cols = cols.filter(s => s.dataIndex !== 'handle');
     }
     tableColumns.value = cols;
+    // 加载数据
     fetchTableData();
   });
 
