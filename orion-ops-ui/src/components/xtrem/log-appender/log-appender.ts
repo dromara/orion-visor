@@ -1,7 +1,7 @@
 import type { ExecTailRequest } from '@/api/exec/exec';
 import { getExecLogTailToken } from '@/api/exec/exec';
 import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender.const';
-import { AppenderOption } from './appender.const';
+import { AppenderOptions } from './appender.const';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
 import { createWebSocket } from '@/utils';
@@ -48,7 +48,7 @@ export default class LogAppender implements ILogAppender {
     // 打开 log-view
     for (let logDomRef of logDomRefs) {
       // 初始化 terminal
-      const terminal = new Terminal(AppenderOption);
+      const terminal = new Terminal(AppenderOptions);
       // 初始化插件
       const addons = this.initAddons(terminal);
       // 打开终端
@@ -105,6 +105,7 @@ export default class LogAppender implements ILogAppender {
   // 自适应
   fit(): void {
     Object.values(this.appenderRel).forEach(s => {
+      console.log(s);
       s.addons?.fit?.fit();
     });
   }

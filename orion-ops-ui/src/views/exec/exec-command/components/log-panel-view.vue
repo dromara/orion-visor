@@ -55,7 +55,7 @@
   import type { VNodeRef } from 'vue';
   import type { ExecCommandResponse } from '@/api/exec/exec';
   import type { LogDomRef, ILogAppender } from '@/components/xtrem/log-appender/appender.const';
-  import { nextTick, ref } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
   import { formatDuration } from '@/utils';
   import { execHostStatus, execHostStatusKey } from '@/views/exec/exec-log/types/const';
   import { useDictStore } from '@/store';
@@ -71,6 +71,13 @@
 
   const logRefs = ref<Array<LogDomRef>>([]);
   const appender = ref<ILogAppender>();
+
+  // 切换标签自适应
+  watch(() => props.current, () => {
+    nextTick(() => {
+      appender.value?.fit();
+    });
+  });
 
   // 打开
   const open = () => {
@@ -138,7 +145,7 @@
     width: 100%;
     height: calc(100% - @header-height);
     position: relative;
-    background: #212529;
+    background: #202020;
     padding: 4px 0 0 4px;
 
     .log-appender {

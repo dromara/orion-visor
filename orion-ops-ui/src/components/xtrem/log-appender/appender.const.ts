@@ -1,16 +1,18 @@
-import type { IDisposable, ITerminalOptions } from 'xterm';
+import type { IDisposable, ITerminalOptions, ITerminalInitOnlyOptions } from 'xterm';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { CanvasAddon } from 'xterm-addon-canvas';
 
 // appender 配置
-export const AppenderOption: ITerminalOptions = {
+export const AppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
   theme: {
     foreground: '#FFFFFF',
     background: '#202020',
     selectionBackground: '#B5D5FF',
   },
+  cols: 30,
+  rows: 8,
   rightClickSelectsWord: true,
   disableStdin: true,
   cursorStyle: 'bar',
@@ -46,6 +48,9 @@ export interface LogAddons extends Record<string, IDisposable> {
 export interface ILogAppender {
   // 初始化
   init(refs: Array<LogDomRef>): Promise<void>;
+
+  // 自适应
+  fit(): void;
 
   // 关闭 client
   closeClient(): void;
