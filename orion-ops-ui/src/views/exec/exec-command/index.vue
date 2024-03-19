@@ -18,14 +18,14 @@
 
 <script lang="ts" setup>
   import type { ExecCommandResponse } from '@/api/exec/exec';
-  import { onMounted, ref } from 'vue';
+  import { nextTick, onMounted, ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
   import { dictKeys } from '@/views/exec/exec-log/types/const';
   import ExecPanel from './components/exec-panel.vue';
   import LogPanel from './components/log-panel.vue';
 
-  const { visible: logVisible, setVisible: setLogVisible } = useVisible(true);
+  const { visible: logVisible, setVisible: setLogVisible } = useVisible();
   const { loadKeys } = useDictStore();
 
   const log = ref();
@@ -33,12 +33,52 @@
   // 打开日志
   const openLog = (record: ExecCommandResponse) => {
     setLogVisible(true);
-    log.value.open(record);
+    nextTick(() => {
+      log.value.open(record);
+    });
   };
 
   // 加载字典值
   onMounted(async () => {
     await loadKeys(dictKeys);
+  });
+
+  onMounted(() => {
+    openLog({
+      id: 65,
+      hosts: [
+        {
+          id: 103,
+          hostId: 5,
+          hostName: 'main-55',
+          hostAddress: '192.412.53.2',
+          status: 'INTERRUPTED'
+        }, {
+          id: 76,
+          hostId: 1,
+          hostName: 'main-11',
+          hostAddress: '192.412.53.2',
+          status: 'WAITING'
+        }, {
+          id: 77,
+          hostId: 2,
+          hostName: 'main-22',
+          hostAddress: '192.412.53.2',
+          status: 'RUNNING'
+        }, {
+          id: 78,
+          hostId: 3,
+          hostName: 'main-33',
+          hostAddress: '192.412.53.2',
+          status: 'COMPLETED'
+        }, {
+          id: 79,
+          hostId: 4,
+          hostName: 'main-44',
+          hostAddress: '192.412.53.2',
+          status: 'FAILED'
+        },]
+    } as ExecCommandResponse);
   });
 
 </script>

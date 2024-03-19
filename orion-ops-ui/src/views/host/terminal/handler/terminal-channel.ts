@@ -2,7 +2,7 @@ import type { InputPayload, ITerminalChannel, ITerminalOutputProcessor, ITermina
 import { OutputProtocol } from '../types/terminal.protocol';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
-import { sleep } from '@/utils';
+import { createWebSocket } from '@/utils';
 import { webSocketBaseUrl } from '@/utils/env';
 import TerminalOutputProcessor from './terminal-output-processor';
 
@@ -22,22 +22,15 @@ export default class TerminalChannel implements ITerminalChannel {
     // 获取 access
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
-    this.client = new WebSocket(`${webSocketBaseUrl}/host/terminal/${accessToken}`);
+    this.client = await createWebSocket(`${webSocketBaseUrl}/host/terminal/${accessToken}`);
     this.client.onerror = event => {
       Message.error('无法连接至服务器');
-      console.error('error', event);
+      console.error('terminal error', event);
     };
     this.client.onclose = event => {
-      console.warn('close', event);
+      console.warn('terminal close', event);
     };
     this.client.onmessage = this.handlerMessage.bind(this);
-    // 等待会话连接
-    for (let i = 0; i < 100; i++) {
-      await sleep(50);
-      if (this.client.readyState !== WebSocket.CONNECTING) {
-        break;
-      }
-    }
   }
 
   // 是否已连接

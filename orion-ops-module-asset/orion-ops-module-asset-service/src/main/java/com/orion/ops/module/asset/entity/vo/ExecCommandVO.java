@@ -26,6 +26,9 @@ public class ExecCommandVO implements Serializable {
     @Schema(description = "id")
     private Long id;
 
+    @Schema(description = "执行状态")
+    private String status;
+
     @Schema(description = "主机 id 映射")
     private List<ExecCommandHostVO> hosts;
 

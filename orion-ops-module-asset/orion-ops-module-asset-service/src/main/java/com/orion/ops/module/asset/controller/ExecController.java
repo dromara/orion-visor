@@ -77,7 +77,7 @@ public class ExecController {
     }
 
     @PostMapping("/tail-log")
-    @Operation(summary = "查看批量执行日志")
+    @Operation(summary = "查看执行日志")
     @PreAuthorize("@ss.hasAnyPermission('asset:exec:exec-command', 'asset:exec-log:query')")
     public String getExecLogTailToken(@Validated @RequestBody ExecLogTailRequest request) {
         return execService.getExecLogTailToken(request);
@@ -85,9 +85,9 @@ public class ExecController {
 
     @OperatorLog(ExecOperatorType.DOWNLOAD_HOST_LOG)
     @GetMapping("/download-log")
-    @Operation(summary = "下载执行日志文件")
+    @Operation(summary = "下载执行日志")
     @PreAuthorize("@ss.hasAnyPermission('asset:exec:exec-command', 'asset:exec-log:query')")
-    public void downloadLogFile(@RequestParam("id") Long id, HttpServletResponse response) {
+    public void downloadExecLogFile(@RequestParam("id") Long id, HttpServletResponse response) {
         execService.downloadLogFile(id, response);
     }
 

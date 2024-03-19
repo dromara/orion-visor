@@ -8,7 +8,7 @@ Authorization: {{token}}
   "timeout": 10,
   "command": "echo 这是日志@{{ hostAddress }}\nsleep 1\necho @{{ hostName }}",
   "parameterSchema": "[]",
-  "hostIdList": [1,7]
+  "hostIdList": [1]
 }
 
 

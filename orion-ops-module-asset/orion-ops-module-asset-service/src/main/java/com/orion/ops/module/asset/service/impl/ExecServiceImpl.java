@@ -167,6 +167,7 @@ public class ExecServiceImpl implements ExecService {
                 .collect(Collectors.toList());
         return ExecCommandVO.builder()
                 .id(execId)
+                .status(execLog.getStatus())
                 .hosts(hostResult)
                 .build();
     }

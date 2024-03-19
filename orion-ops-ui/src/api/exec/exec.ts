@@ -9,7 +9,7 @@ export interface ExecCommandRequest {
   timeout?: number;
   command?: string;
   parameterSchema?: string;
-  hostIdList?: number[];
+  hostIdList?: Array<number>;
 }
 
 /**
@@ -21,10 +21,21 @@ export interface ExecInterruptRequest {
 }
 
 /**
+ * 中断命令请求
+ */
+export interface ExecTailRequest {
+  execId?: number;
+  hostExecIdList?: Array<number>;
+}
+
+/**
  * 执行命令响应
  */
 export interface ExecCommandResponse {
   id: number;
+  status: string;
+  startTime: number;
+  finishTime: number;
   hosts: Array<ExecCommandHostResponse>;
 }
 
@@ -69,4 +80,18 @@ export function interruptExec(request: ExecInterruptRequest) {
  */
 export function interruptHostExec(request: ExecInterruptRequest) {
   return axios.put('/asset/exec/interrupt-host', request);
+}
+
+/**
+ * 查看执行日志
+ */
+export function getExecLogTailToken(request: ExecTailRequest) {
+  return axios.post<string>('/asset/exec/tail-log', request);
+}
+
+/**
+ * 下载执行日志文件
+ */
+export function downloadExecLogFile(id: number) {
+  return axios.get<Blob>('/asset/exec/download-log', { unwrap: true, params: { id } });
 }

@@ -152,6 +152,8 @@ public class ExecCommandHandler implements IExecCommandHandler {
         log.info("ExecCommandHandler.updateStatus finish id: {}, effect: {}", id, effect);
     }
 
+    // TODO timeout
+
     @Override
     public void write(String msg) {
         this.executor.write(msg);
