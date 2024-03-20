@@ -33,6 +33,7 @@ export interface LogDomRef {
 export interface LogAppenderConf {
   id: number;
   el: HTMLElement;
+  fixed: boolean;
   terminal: Terminal;
   addons: LogAddons;
 }
@@ -49,8 +50,38 @@ export interface ILogAppender {
   // 初始化
   init(refs: Array<LogDomRef>): Promise<void>;
 
-  // 自适应
-  fit(): void;
+  // 设置当前元素
+  setCurrent(id: number): void;
+
+  // 查找关键字
+  find(word: string, next: boolean, options: any): void;
+
+  // 聚焦
+  focus(): void;
+
+  // 设置固定
+  setFixed(fixed: boolean): void;
+
+  // 去顶部
+  toTop(): void;
+
+  // 去底部
+  toBottom(): void;
+
+  // 添加字体大小
+  addFontSize(addSize: number): void;
+
+  // 复制
+  copy(): void;
+
+  // 复制全部
+  copyAll(): void;
+
+  // 选中全部
+  selectAll(): void;
+
+  // 清空
+  clear(): void;
 
   // 关闭 client
   closeClient(): void;

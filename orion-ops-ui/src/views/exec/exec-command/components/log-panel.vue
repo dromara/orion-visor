@@ -138,9 +138,10 @@
   @host-real-width: @host-width + 16px;
 
   .log-panel-container {
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 32px);
+    height: calc(100% - 32px);
     display: flex;
+    position: absolute;
   }
 
   .host-container, .log-container {

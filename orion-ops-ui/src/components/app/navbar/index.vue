@@ -332,6 +332,7 @@
     display: flex;
     align-items: center;
     padding-left: 20px;
+    color: var(--color-text-1);
 
     &-logo {
       width: 32px;

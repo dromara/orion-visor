@@ -1,38 +1,38 @@
-import type { ExecTailRequest } from '@/api/exec/exec';
-import { getExecLogTailToken } from '@/api/exec/exec';
 import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender.const';
+import type { ExecTailRequest } from '@/api/exec/exec';
 import { AppenderOptions } from './appender.const';
+import { getExecLogTailToken } from '@/api/exec/exec';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
 import { createWebSocket } from '@/utils';
+import { useDebounceFn } from '@vueuse/core';
+import { addEventListen, removeEventListen } from '@/utils/event';
+import { copy as copyText } from '@/hooks/copy';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { CanvasAddon } from 'xterm-addon-canvas';
-import { useDebounceFn } from '@vueuse/core';
-import { addEventListen, removeEventListen } from '@/utils/event';
-
-// todo SEARCH addon setfixed
-// todo font-size totop copy tobottom selectall clear
-// todo 批量执行的 warn
 
 // 执行日志 appender 实现
 export default class LogAppender implements ILogAppender {
 
-  private config: ExecTailRequest;
+  private current: LogAppenderConf;
 
   private client?: WebSocket;
+
+  private readonly config: ExecTailRequest;
 
   private readonly appenderRel: Record<string, LogAppenderConf>;
 
   private keepAliveTask?: number;
 
-  private readonly fitFn: () => {};
+  private readonly fitAllFn: () => {};
 
   constructor(config: ExecTailRequest) {
+    this.current = undefined as unknown as LogAppenderConf;
     this.config = config;
     this.appenderRel = {};
-    this.fitFn = useDebounceFn(this.fit).bind(this);
+    this.fitAllFn = useDebounceFn(this.fitAll).bind(this);
   }
 
   // 初始化
@@ -49,6 +49,8 @@ export default class LogAppender implements ILogAppender {
     for (let logDomRef of logDomRefs) {
       // 初始化 terminal
       const terminal = new Terminal(AppenderOptions);
+      // 初始化快捷键
+      this.initCustomKey(terminal);
       // 初始化插件
       const addons = this.initAddons(terminal);
       // 打开终端
@@ -57,12 +59,46 @@ export default class LogAppender implements ILogAppender {
       addons.fit.fit();
       this.appenderRel[logDomRef.id] = {
         ...logDomRef,
+        fixed: false,
         terminal,
         addons
       };
     }
+    // 设置当前对象
+    this.current = this.appenderRel[logDomRefs[0].id];
     // 注册自适应事件
-    addEventListen(window, 'resize', this.fitFn);
+    addEventListen(window, 'resize', this.fitAllFn);
+  }
+
+  // 初始化快捷键操作
+  initCustomKey(terminal: Terminal) {
+    terminal.attachCustomKeyEventHandler((e: KeyboardEvent) => {
+      if (e.type !== 'keydown') {
+        return true;
+      }
+      if (e.ctrlKey && e.code === 'KeyC') {
+        // 复制
+        e.preventDefault();
+        this.copy();
+        return false;
+      } else if (e.ctrlKey && e.code === 'KeyL') {
+        // 清空
+        e.preventDefault();
+        this.clear();
+        return false;
+      } else if (e.ctrlKey && e.code === 'KeyA') {
+        // 全选
+        e.preventDefault();
+        this.selectAll();
+        return false;
+      } else if (e.ctrlKey && e.code === 'KeyF') {
+        // 搜索
+        e.preventDefault();
+        // TODO open search
+        return false;
+      }
+      return true;
+    });
   }
 
   // 初始化插件
@@ -102,10 +138,92 @@ export default class LogAppender implements ILogAppender {
     }, 15000);
   }
 
-  // 自适应
-  fit(): void {
+  // 设置当前元素
+  setCurrent(id: number): void {
+    const rel = this.appenderRel[id];
+    if (!rel) {
+      return;
+    }
+    this.current = rel;
+    // 自适应
+    rel.addons.fit.fit();
+    // 非固定跳转到最底部
+    if (!rel.fixed) {
+      rel.terminal.scrollToBottom();
+    }
+    this.focus();
+  }
+
+  // 查找关键字
+  find(word: string, next: boolean, options: any) {
+    if (next) {
+      this.current.addons.search.findNext(word, options);
+    } else {
+      this.current.addons.search.findPrevious(word, options);
+    }
+  }
+
+  // 设置固定
+  setFixed(fixed: boolean): void {
+    this.current.fixed = fixed;
+    this.focus();
+  }
+
+  // 去顶部
+  toTop(): void {
+    this.current.terminal.scrollToTop();
+    this.focus();
+  }
+
+  // 去底部
+  toBottom(): void {
+    this.current.terminal.scrollToBottom();
+    this.focus();
+  }
+
+  // 添加字体大小
+  addFontSize(addSize: number): void {
+    this.current.terminal.options['fontSize'] = this.current.terminal.options['fontSize'] as number + addSize;
+    this.current.addons.fit.fit();
+    this.focus();
+  }
+
+  // 复制
+  copy(): void {
+    copyText(this.current.terminal.getSelection(), '已复制');
+    this.focus();
+  }
+
+  // 复制全部
+  copyAll(): void {
+    this.selectAll();
+    this.copy();
+    this.current.terminal.clearSelection();
+    this.focus();
+  }
+
+  // 选中全部
+  selectAll(): void {
+    this.current.terminal.selectAll();
+    this.focus();
+  }
+
+  // 清空
+  clear(): void {
+    this.current.terminal.clear();
+    this.current.terminal.clearSelection();
+    this.focus();
+  }
+
+  // 聚焦
+  focus(): void {
+    this.current.terminal.focus();
+  }
+
+  // 自适应全部
+  fitAll(): void {
     Object.values(this.appenderRel).forEach(s => {
-      s.addons?.fit?.fit();
+      s.addons.fit.fit();
     });
   }
 
@@ -129,7 +247,7 @@ export default class LogAppender implements ILogAppender {
       }
     });
     // 移除自适应事件
-    removeEventListen(window, 'resize', this.fitFn);
+    removeEventListen(window, 'resize', this.fitAllFn);
   }
 
   // 关闭

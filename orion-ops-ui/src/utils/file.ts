@@ -87,7 +87,7 @@ export function getParentPath(path: string) {
 /**
  * 下载文件
  */
-export function downloadFile(res: any, fileName: string) {
+export function downloadFile(res: any, fileName: string = '') {
   const blob = new Blob([res.data]);
   const tempLink = document.createElement('a');
   const blobURL = window.URL.createObjectURL(blob);

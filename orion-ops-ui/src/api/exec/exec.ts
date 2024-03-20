@@ -93,5 +93,5 @@ export function getExecLogTailToken(request: ExecTailRequest) {
  * 下载执行日志文件
  */
 export function downloadExecLogFile(id: number) {
-  return axios.get<Blob>('/asset/exec/download-log', { unwrap: true, params: { id } });
+  return axios.get('/asset/exec/download-log', { unwrap: true, params: { id } });
 }

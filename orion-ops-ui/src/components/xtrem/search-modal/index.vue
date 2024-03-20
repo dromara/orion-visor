@@ -53,7 +53,7 @@
 
 <script lang="ts">
   export default {
-    name: 'sshSearchModal'
+    name: 'xtermSearchModal'
   };
 </script>
 
@@ -130,26 +130,26 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--search-bg);
+    background: var(--bg);
     transition: background-color .2s;
 
     &:focus-within, &:hover {
-      background: var(--search-bg-focus);
+      background: var(--bg-focus);
 
       .search-input {
-        color: var(--search-color-text-focus);
+        color: var(--color-text-focus);
       }
 
       .icon-wrapper {
-        color: var(--search-color-text-focus);
+        color: var(--color-text-focus);
         transition: background-color .2s;
 
         &:hover {
-          background: var(--search-bg-icon-hover-focus);
+          background: var(--bg-icon-hover-focus);
         }
 
         &.selected {
-          background: var(--search-bg-icon-selected-focus);
+          background: var(--bg-icon-selected-focus);
         }
       }
     }
@@ -163,7 +163,7 @@
     outline: none;
     height: 18px;
     font-size: 12px;
-    color: var(--search-color-text);
+    color: var(--color-text);
   }
 
   .word-option {
@@ -183,18 +183,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--search-color-text);
+      color: var(--color-text);
 
       &:not(:first-child) {
         margin-left: 2px;
       }
 
       &:hover {
-        background: var(--search-bg-icon-hover);
+        background: var(--bg-icon-hover);
       }
 
       &.selected {
-        background: var(--search-bg-icon-selected);
+        background: var(--bg-icon-selected);
       }
     }
   }
