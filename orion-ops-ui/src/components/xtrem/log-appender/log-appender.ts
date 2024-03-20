@@ -105,7 +105,6 @@ export default class LogAppender implements ILogAppender {
   // 自适应
   fit(): void {
     Object.values(this.appenderRel).forEach(s => {
-      console.log(s);
       s.addons?.fit?.fit();
     });
   }

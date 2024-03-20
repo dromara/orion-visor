@@ -1,8 +1,8 @@
 import type { IDisposable, ITerminalOptions, ITerminalInitOnlyOptions } from 'xterm';
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
-import { SearchAddon } from 'xterm-addon-search';
-import { CanvasAddon } from 'xterm-addon-canvas';
+import type { Terminal } from 'xterm';
+import type { FitAddon } from 'xterm-addon-fit';
+import type { SearchAddon } from 'xterm-addon-search';
+import type { CanvasAddon } from 'xterm-addon-canvas';
 
 // appender 配置
 export const AppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {

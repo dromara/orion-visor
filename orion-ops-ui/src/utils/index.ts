@@ -109,7 +109,7 @@ export function formatDuration(start: number, end?: number): string {
   }
   const duration = (end - start) / 1000;
   if (duration < 1) {
-    return `${duration.toFixed(1)}s`;
+    return `${Number.parseFloat(duration.toFixed(1))}s`;
   }
   const minutes = Math.floor(duration / 60);
   const seconds = Math.floor(duration % 60);

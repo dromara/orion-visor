@@ -24,16 +24,16 @@
   import type { ExecCommandResponse } from '@/api/exec/exec';
   import { onUnmounted, ref, nextTick } from 'vue';
   import { getExecLogStatus } from '@/api/exec/exec-log';
-  import { execStatus } from '@/views/exec/exec-log/types/const';
+  import { execHostStatus, execStatus } from '@/views/exec/exec-log/types/const';
   import LogPanelHost from './log-panel-host.vue';
   import LogPanelView from './log-panel-view.vue';
-  import { useDictStore } from '@/store';
 
   const emits = defineEmits(['back']);
 
   const logContainer = ref();
   const currentHostExecId = ref();
-  const intervalId = ref();
+  const statusIntervalId = ref();
+  const finishIntervalId = ref();
   const command = ref<ExecCommandResponse>();
 
   // 打开
@@ -41,7 +41,9 @@
     command.value = record;
     currentHostExecId.value = record.hosts[0].id;
     // 注册状态轮询
-    intervalId.value = setInterval(fetchTaskStatus, 5000);
+    statusIntervalId.value = setInterval(fetchTaskStatus, 5000);
+    // 注册完成时间轮询
+    finishIntervalId.value = setInterval(setTaskFinishTime, 1000);
     // 打开日志
     nextTick(() => {
       logContainer.value?.open();
@@ -66,7 +68,7 @@
       if (hostStatus) {
         host.status = hostStatus.status;
         host.startTime = hostStatus.startTime;
-        host.finishTime = hostStatus.finishTime || Date.now();
+        host.finishTime = hostStatus.finishTime;
         host.exitStatus = hostStatus.exitStatus;
         host.errorMessage = hostStatus.errorMessage;
       }
@@ -76,6 +78,24 @@
       command.value.status === execStatus.FAILED) {
       closeClient();
     }
+  };
+
+  // 设置完成时间
+  const setTaskFinishTime = () => {
+    const hosts = command.value?.hosts;
+    if (!hosts) {
+      return;
+    }
+    hosts.forEach(s => {
+      // 未完成自动设置完成时间为当前时间 用于展示使用时间
+      if (s.status === execHostStatus.WAITING ||
+        s.status === execHostStatus.RUNNING) {
+        if (!s.startTime) {
+          s.startTime = Date.now();
+        }
+        s.finishTime = Date.now();
+      }
+    });
   };
 
   defineExpose({ open });
@@ -89,16 +109,24 @@
   const closeClient = () => {
     // 关闭日志
     logContainer.value?.closeClient();
-    // 关闭状态轮询
-    clearInterval(intervalId.value);
+    // 清理轮询
+    clearAllInterval();
   };
 
   // 清理并且关闭
   const closeAll = () => {
     // 关闭日志
     logContainer.value?.closeAll();
+    // 清理轮询
+    clearAllInterval();
+  };
+
+  // 清理轮询
+  const clearAllInterval = () => {
     // 关闭状态轮询
-    clearInterval(intervalId.value);
+    clearInterval(statusIntervalId.value);
+    // 关闭使用时间轮询
+    clearInterval(finishIntervalId.value);
   };
 
   onUnmounted(closeAll);
