@@ -1,6 +1,6 @@
-import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender.const';
+import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './const';
 import type { ExecTailRequest } from '@/api/exec/exec';
-import { AppenderOptions } from './appender.const';
+import { AppenderOptions } from './const';
 import { getExecLogTailToken } from '@/api/exec/exec';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';

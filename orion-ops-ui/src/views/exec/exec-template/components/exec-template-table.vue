@@ -79,8 +79,7 @@
           <a-button v-permission="['asset:exec:exec-command']"
                     type="text"
                     size="mini"
-                    title="ctrl + 鼠标左键新页面打开"
-                    @click="openExec($event, record)">
+                    @click="emits('openExec', record)">
             执行
           </a-button>
           <!-- 修改 -->
@@ -135,15 +134,6 @@
     name: undefined,
     command: undefined,
   });
-
-  // 打开执行
-  const openExec = (e: any, record: ExecTemplateQueryResponse) => {
-    if (e.ctrlKey) {
-      // TODO 新页面打开
-    } else {
-      emits('openExec', record);
-    }
-  };
 
   // 删除当前行
   const deleteRow = async ({ id }: {

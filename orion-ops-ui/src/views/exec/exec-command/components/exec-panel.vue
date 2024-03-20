@@ -220,10 +220,11 @@
   @command-gap: @form-width + @history-width + 32px;
 
   .exec-container {
+    width: calc(100% - 32px);
+    height: calc(100% - 32px);
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    height: 100%;
+    position: absolute;
 
     .exec-form-container {
       width: @form-width;

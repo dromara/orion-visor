@@ -58,10 +58,11 @@
                   @click="emits('viewParams', record.parameter)">
           参数
         </a-button>
-        <!-- 日志 -->
+        <!-- 下载 -->
         <a-button type="text"
-                  size="mini">
-          日志
+                  size="mini"
+                  @click="downloadLogFile(record.id)">
+          下载
         </a-button>
         <!-- 中断 -->
         <a-popconfirm content="确认要中断命令吗, 删除后会中断执行?"
@@ -109,8 +110,9 @@
   import { useDictStore } from '@/store';
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
-  import { interruptHostExec } from '@/api/exec/exec';
+  import { downloadExecLogFile, interruptHostExec } from '@/api/exec/exec';
   import { copy } from '@/hooks/copy';
+  import { downloadFile } from '@/utils/file';
 
   const props = defineProps<{
     row: ExecLogQueryResponse;
@@ -121,6 +123,12 @@
   const expandable = useExpandable({ width: 90 });
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
+
+  // 下载文件
+  const downloadLogFile = async (id: number) => {
+    const data = await downloadExecLogFile(id);
+    downloadFile(data);
+  };
 
   // 中断执行
   const interruptedHost = async (record: ExecHostLogQueryResponse) => {

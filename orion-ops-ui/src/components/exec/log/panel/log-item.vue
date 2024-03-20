@@ -155,15 +155,15 @@
 
 <script lang="ts">
   export default {
-    name: 'logPanelAppender'
+    name: 'logItem'
   };
 </script>
 
 <script lang="ts" setup>
   import type { ExecCommandHostResponse } from '@/api/exec/exec';
-  import type { ILogAppender } from '@/components/xtrem/log-appender/appender.const';
+  import type { ILogAppender } from './const';
   import { ref } from 'vue';
-  import { execHostStatus, execHostStatusKey } from '@/views/exec/exec-log/types/const';
+  import { execHostStatus, execHostStatusKey } from './const';
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
   import { downloadExecLogFile } from '@/api/exec/exec';

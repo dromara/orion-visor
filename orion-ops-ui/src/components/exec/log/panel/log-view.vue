@@ -1,30 +1,30 @@
 <template>
   <div class="container">
     <template v-if="appender">
-      <log-panel-appender class="log-view"
-                          v-show="current === host.id"
-                          v-for="host in command.hosts"
-                          :key="host.id"
-                          :ref="addRef as unknown as VNodeRef"
-                          :host="host"
-                          :appender="appender as ILogAppender" />
+      <log-item class="log-item"
+                v-show="current === host.id"
+                v-for="host in command.hosts"
+                :key="host.id"
+                :ref="addRef as unknown as VNodeRef"
+                :host="host"
+                :appender="appender as ILogAppender" />
     </template>
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'logPanelView'
+    name: 'logView'
   };
 </script>
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
   import type { ExecCommandResponse } from '@/api/exec/exec';
-  import type { LogDomRef, ILogAppender } from '@/components/xtrem/log-appender/appender.const';
+  import type { LogDomRef, ILogAppender } from './const';
   import { nextTick, onBeforeMount, ref, watch } from 'vue';
-  import LogAppender from '@/components/xtrem/log-appender/log-appender';
-  import LogPanelAppender from './log-panel-appender.vue';
+  import LogAppender from './log-appender';
+  import LogItem from './log-item.vue';
 
   const props = defineProps<{
     current: number;
@@ -88,7 +88,7 @@
 </script>
 
 <style lang="less" scoped>
-  .log-view {
+  .log-item {
     width: 100%;
     height: 100%;
     position: relative;

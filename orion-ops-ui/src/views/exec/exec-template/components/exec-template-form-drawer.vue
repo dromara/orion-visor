@@ -184,9 +184,7 @@
           return false;
         }
       }
-      if (parameter.value.length) {
-        formModel.value.parameter = JSON.stringify(parameter.value);
-      }
+      formModel.value.parameter = JSON.stringify(parameter.value);
       if (isAddHandle.value) {
         // 新增
         await createExecTemplate(formModel.value);

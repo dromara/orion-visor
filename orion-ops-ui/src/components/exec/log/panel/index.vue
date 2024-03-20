@@ -1,22 +1,23 @@
 <template>
   <div class="log-panel-container" v-if="command">
     <!-- 执行主机 -->
-    <log-panel-host class="host-container"
-                    :current="currentHostExecId"
-                    :hosts="command.hosts"
-                    @selected="selectedHost"
-                    @back="emits('back')" />
+    <exec-host class="exec-host-container"
+               :visibleBack="visibleBack"
+               :current="currentHostExecId"
+               :hosts="command.hosts"
+               @selected="selectedHost"
+               @back="emits('back')" />
     <!-- 日志容器 -->
-    <log-panel-view ref="logView"
-                    class="log-container"
-                    :current="currentHostExecId"
-                    :command="command" />
+    <log-view ref="logView"
+              class="log-view-container"
+              :current="currentHostExecId"
+              :command="command" />
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'logPanel'
+    name: 'execLogPanel'
   };
 </script>
 
@@ -24,9 +25,13 @@
   import type { ExecCommandResponse } from '@/api/exec/exec';
   import { onUnmounted, ref, nextTick } from 'vue';
   import { getExecLogStatus } from '@/api/exec/exec-log';
-  import { execHostStatus, execStatus } from '@/views/exec/exec-log/types/const';
-  import LogPanelHost from './log-panel-host.vue';
-  import LogPanelView from './log-panel-view.vue';
+  import { execHostStatus, execStatus } from './const';
+  import ExecHost from './exec-host.vue';
+  import LogView from './log-view.vue';
+
+  const props = defineProps<{
+    visibleBack: boolean
+  }>();
 
   const emits = defineEmits(['back']);
 
@@ -146,20 +151,20 @@
     position: absolute;
   }
 
-  .host-container, .log-container {
+  .exec-host-container, .log-view-container {
     height: 100%;
     border-radius: 4px;
     position: relative;
     background: var(--color-bg-2);
   }
 
-  .host-container {
+  .exec-host-container {
     width: @host-width;
     padding: 16px;
     margin-right: 16px;
   }
 
-  .log-container {
+  .log-view-container {
     width: calc(100% - @host-real-width);
   }
 

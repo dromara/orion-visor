@@ -5,7 +5,9 @@
     <div class="panel-header">
       <h3>执行主机</h3>
       <!-- 操作 -->
-      <a-button size="small" @click="emits('back')">
+      <a-button v-if="visibleBack"
+                size="small"
+                @click="emits('back')">
         返回
       </a-button>
     </div>
@@ -34,16 +36,17 @@
 
 <script lang="ts">
   export default {
-    name: 'logPanelHost'
+    name: 'execHost'
   };
 </script>
 
 <script lang="ts" setup>
   import type { ExecCommandHostResponse } from '@/api/exec/exec';
   import { useDictStore } from '@/store';
-  import { execHostStatusKey } from '@/views/exec/exec-log/types/const';
+  import { execHostStatusKey } from './const';
 
   const props = defineProps<{
+    visibleBack: boolean;
     current: number;
     hosts: Array<ExecCommandHostResponse>;
   }>();
