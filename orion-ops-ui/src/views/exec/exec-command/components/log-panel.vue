@@ -7,7 +7,7 @@
                     @selected="selectedHost"
                     @back="emits('back')" />
     <!-- 日志容器 -->
-    <log-panel-view ref="logContainer"
+    <log-panel-view ref="logView"
                     class="log-container"
                     :current="currentHostExecId"
                     :command="command" />
@@ -30,7 +30,7 @@
 
   const emits = defineEmits(['back']);
 
-  const logContainer = ref();
+  const logView = ref();
   const currentHostExecId = ref();
   const statusIntervalId = ref();
   const finishIntervalId = ref();
@@ -46,7 +46,7 @@
     finishIntervalId.value = setInterval(setTaskFinishTime, 1000);
     // 打开日志
     nextTick(() => {
-      logContainer.value?.open();
+      logView.value?.open();
     });
   };
 
@@ -68,7 +68,9 @@
       if (hostStatus) {
         host.status = hostStatus.status;
         host.startTime = hostStatus.startTime;
-        host.finishTime = hostStatus.finishTime;
+        if (hostStatus.finishTime) {
+          host.finishTime = hostStatus.finishTime;
+        }
         host.exitStatus = hostStatus.exitStatus;
         host.errorMessage = hostStatus.errorMessage;
       }
@@ -108,7 +110,7 @@
   // 关闭连接
   const closeClient = () => {
     // 关闭日志
-    logContainer.value?.closeClient();
+    logView.value?.closeClient();
     // 清理轮询
     clearAllInterval();
   };
@@ -116,7 +118,7 @@
   // 清理并且关闭
   const closeAll = () => {
     // 关闭日志
-    logContainer.value?.closeAll();
+    logView.value?.closeAll();
     // 清理轮询
     clearAllInterval();
   };

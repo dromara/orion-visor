@@ -4,11 +4,11 @@ import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
+import com.orion.ops.module.asset.handler.host.exec.command.TimeOutCheckerFix;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
@@ -32,7 +32,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private static final ExecLogDAO execLogDAO = SpringHolder.getBean(ExecLogDAO.class);
 
-    private static final ExecTaskManager EXEC_TASK_MANAGER = SpringHolder.getBean(ExecTaskManager.class);
+    private static final ExecTaskManager execTaskManager = SpringHolder.getBean(ExecTaskManager.class);
 
     private final ExecCommandDTO execCommand;
 
@@ -50,7 +50,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
     public void run() {
         Long id = execCommand.getLogId();
         // 添加任务
-        EXEC_TASK_MANAGER.addTask(id, this);
+        execTaskManager.addTask(id, this);
         log.info("ExecTaskHandler.run start id: {}", id);
         // 更新状态
         this.updateStatus(ExecStatusEnum.RUNNING);
@@ -68,7 +68,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
             // 释放资源
             Streams.close(this);
             // 移除任务
-            EXEC_TASK_MANAGER.removeTask(id);
+            execTaskManager.removeTask(id);
         }
     }
 
@@ -87,7 +87,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
     private void runHostCommand(List<ExecCommandHostDTO> hosts) throws Exception {
         // 超时检查
         if (execCommand.getTimeout() != 0) {
-            this.timeoutChecker = TimeoutChecker.create(Const.MS_S_1);
+            this.timeoutChecker = new TimeOutCheckerFix();
             AssetThreadPools.TIMEOUT_CHECK.execute(this.timeoutChecker);
         }
         if (hosts.size() == 1) {

@@ -59,7 +59,6 @@ export default class LogAppender implements ILogAppender {
       addons.fit.fit();
       this.appenderRel[logDomRef.id] = {
         ...logDomRef,
-        fixed: false,
         terminal,
         addons
       };
@@ -94,7 +93,7 @@ export default class LogAppender implements ILogAppender {
       } else if (e.ctrlKey && e.code === 'KeyF') {
         // 搜索
         e.preventDefault();
-        // TODO open search
+        this.current.openSearch();
         return false;
       }
       return true;
@@ -147,11 +146,12 @@ export default class LogAppender implements ILogAppender {
     this.current = rel;
     // 自适应
     rel.addons.fit.fit();
-    // 非固定跳转到最底部
-    if (!rel.fixed) {
-      rel.terminal.scrollToBottom();
-    }
     this.focus();
+  }
+
+  // 打开搜索
+  openSearch() {
+    this.current.openSearch();
   }
 
   // 查找关键字
@@ -161,12 +161,6 @@ export default class LogAppender implements ILogAppender {
     } else {
       this.current.addons.search.findPrevious(word, options);
     }
-  }
-
-  // 设置固定
-  setFixed(fixed: boolean): void {
-    this.current.fixed = fixed;
-    this.focus();
   }
 
   // 去顶部

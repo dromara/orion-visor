@@ -27,13 +27,14 @@ export const AppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
 export interface LogDomRef {
   id: number;
   el: HTMLElement;
+  openSearch: () => {};
 }
 
 // appender 配置
 export interface LogAppenderConf {
   id: number;
   el: HTMLElement;
-  fixed: boolean;
+  openSearch: () => {};
   terminal: Terminal;
   addons: LogAddons;
 }
@@ -53,14 +54,17 @@ export interface ILogAppender {
   // 设置当前元素
   setCurrent(id: number): void;
 
+  // 打开搜索
+  openSearch(): void;
+
   // 查找关键字
   find(word: string, next: boolean, options: any): void;
 
   // 聚焦
   focus(): void;
 
-  // 设置固定
-  setFixed(fixed: boolean): void;
+  // 自适应
+  fitAll(): void;
 
   // 去顶部
   toTop(): void;
