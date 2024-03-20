@@ -58,6 +58,14 @@ public class ExecLogController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get")
+    @Operation(summary = "查询执行日志")
+    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
+    public ExecLogVO getExecLog(@RequestParam("id") Long id) {
+        return execLogService.getExecLog(id, ExecSourceEnum.BATCH.name());
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/host-list")
     @Operation(summary = "查询全部执行主机日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")

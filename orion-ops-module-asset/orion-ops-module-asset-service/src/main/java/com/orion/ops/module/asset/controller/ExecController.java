@@ -9,7 +9,7 @@ import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.request.exec.ReExecCommandRequest;
-import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
+import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import com.orion.ops.module.asset.service.ExecService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,7 +44,7 @@ public class ExecController {
     @PostMapping("/exec-command")
     @Operation(summary = "批量执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")
-    public ExecCommandVO execCommand(@Validated @RequestBody ExecCommandRequest request) {
+    public ExecLogVO execCommand(@Validated @RequestBody ExecCommandRequest request) {
         return execService.execCommand(request);
     }
 
@@ -52,7 +52,7 @@ public class ExecController {
     @PostMapping("/re-exec-command")
     @Operation(summary = "重新执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")
-    public ExecCommandVO reExecCommand(@Validated @RequestBody ReExecCommandRequest request) {
+    public ExecLogVO reExecCommand(@Validated @RequestBody ReExecCommandRequest request) {
         return execService.reExecCommand(request.getLogId());
     }
 

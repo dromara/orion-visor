@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { ExecCommandResponse } from '@/api/exec/exec';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { LogDomRef, ILogAppender } from './const';
   import { nextTick, onBeforeMount, ref, watch } from 'vue';
   import LogAppender from './log-appender';
@@ -28,7 +28,7 @@
 
   const props = defineProps<{
     current: number;
-    command: ExecCommandResponse;
+    command: ExecLogQueryResponse;
   }>();
 
   const logRefs = ref<Array<LogDomRef>>([]);

@@ -23,6 +23,8 @@ import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.ops.module.asset.convert.ExecHostLogConvert;
+import com.orion.ops.module.asset.convert.ExecLogConvert;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.dao.HostDAO;
@@ -35,8 +37,8 @@ import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
 import com.orion.ops.module.asset.entity.dto.ExecParameterSchemaDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
-import com.orion.ops.module.asset.entity.vo.ExecCommandHostVO;
-import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
+import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
+import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
@@ -102,7 +104,7 @@ public class ExecServiceImpl implements ExecService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ExecCommandVO execCommand(ExecCommandRequest request) {
+    public ExecLogVO execCommand(ExecCommandRequest request) {
         log.info("ExecService.startExecCommand start params: {}", JSON.toJSONString(request));
         LoginUser user = Objects.requireNonNull(SecurityUtils.getLoginUser());
         Long userId = user.getId();
@@ -156,25 +158,15 @@ public class ExecServiceImpl implements ExecService {
         // 开始执行
         this.startExec(execLog, execHostLogs);
         // 返回
-        List<ExecCommandHostVO> hostResult = execHostLogs.stream()
-                .map(s -> ExecCommandHostVO.builder()
-                        .id(s.getId())
-                        .hostId(s.getHostId())
-                        .hostName(s.getHostName())
-                        .hostAddress(s.getHostAddress())
-                        .status(s.getStatus())
-                        .build())
-                .collect(Collectors.toList());
-        return ExecCommandVO.builder()
-                .id(execId)
-                .status(execLog.getStatus())
-                .hosts(hostResult)
-                .build();
+        ExecLogVO result = ExecLogConvert.MAPPER.to(execLog);
+        List<ExecHostLogVO> resultHosts = ExecHostLogConvert.MAPPER.to(execHostLogs);
+        result.setHosts(resultHosts);
+        return result;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ExecCommandVO reExecCommand(Long logId) {
+    public ExecLogVO reExecCommand(Long logId) {
         log.info("ExecService.reExecCommand start logId: {}", logId);
         // 获取执行记录
         ExecLogDO execLog = execLogDAO.selectById(logId);

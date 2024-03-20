@@ -59,4 +59,7 @@ public class ExecLogVO implements Serializable {
     @Schema(description = "执行主机id")
     private List<Long> hostIdList;
 
+    @Schema(description = "执行主机")
+    private List<ExecHostLogVO> hosts;
+
 }

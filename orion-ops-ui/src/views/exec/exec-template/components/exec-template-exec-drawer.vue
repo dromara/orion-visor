@@ -79,9 +79,6 @@
         </a-form-item>
       </a-form>
     </a-spin>
-    <!-- 主机模态框 -->
-    <authorized-host-modal ref="hostModal"
-                           @selected="setSelectedHost" />
   </a-drawer>
 </template>
 
@@ -102,14 +99,14 @@
   import { Message } from '@arco-design/web-vue';
   import { batchExecCommand } from '@/api/exec/exec';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
-  import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
+
+  const emits = defineEmits(['openHost']);
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
   const formRef = ref<any>();
   const parameterFormRef = ref<any>();
-  const hostModal = ref<any>();
   const formModel = ref<ExecCommandRequest>({});
   const parameterFormModel = ref<Record<string, any>>({});
   const parameterSchema = ref<Array<TemplateParam>>([]);
@@ -142,16 +139,16 @@
     }
   };
 
-  defineExpose({ open });
-
-  // 打开选择主机
-  const openSelectHost = () => {
-    hostModal.value.open(formModel.value.hostIdList);
-  };
-
   // 设置选中主机
   const setSelectedHost = (hosts: Array<number>) => {
     formModel.value.hostIdList = hosts;
+  };
+
+  defineExpose({ open, setSelectedHost });
+
+  // 打开选择主机
+  const openSelectHost = () => {
+    emits('openHost', formModel.value.hostIdList);
   };
 
   // 确定

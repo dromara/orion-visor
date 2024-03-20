@@ -66,6 +66,24 @@ public class ExecLogServiceImpl implements ExecLogService {
     }
 
     @Override
+    public ExecLogVO getExecLog(Long id, String source) {
+        // 查询执行日志
+        ExecLogDO row = execLogDAO.of()
+                .createValidateWrapper()
+                .eq(ExecLogDO::getId, id)
+                .eq(ExecLogDO::getSource, source)
+                .then()
+                .getOne();
+        Valid.notNull(row, ErrorMessage.LOG_ABSENT);
+        // 查询执行主机
+        List<ExecHostLogDO> hosts = execHostLogDAO.selectByLogId(id);
+        // 返回
+        ExecLogVO vo = ExecLogConvert.MAPPER.to(row);
+        vo.setHosts(ExecHostLogConvert.MAPPER.to(hosts));
+        return vo;
+    }
+
+    @Override
     public List<ExecLogVO> getExecHistory(ExecLogQueryRequest request) {
         // 查询执行记录
         List<ExecLogVO> logs = execLogDAO.of()

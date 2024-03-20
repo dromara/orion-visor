@@ -1,3 +1,4 @@
+import type { ExecLogQueryResponse } from './exec-log';
 import axios from 'axios';
 
 /**
@@ -29,43 +30,17 @@ export interface ExecTailRequest {
 }
 
 /**
- * 执行命令响应
- */
-export interface ExecCommandResponse {
-  id: number;
-  status: string;
-  startTime: number;
-  finishTime: number;
-  hosts: Array<ExecCommandHostResponse>;
-}
-
-/**
- * 执行命令主机响应
- */
-export interface ExecCommandHostResponse {
-  id: number;
-  hostId: number;
-  hostName: string;
-  hostAddress: string;
-  status: string;
-  exitStatus: number;
-  errorMessage: string;
-  startTime: number;
-  finishTime: number;
-}
-
-/**
  * 批量执行命令
  */
 export function batchExecCommand(request: ExecCommandRequest) {
-  return axios.post<ExecCommandResponse>('/asset/exec/exec-command', request);
+  return axios.post<ExecLogQueryResponse>('/asset/exec/exec-command', request);
 }
 
 /**
  * 重新执行命令
  */
 export function reExecCommand(request: ExecCommandRequest) {
-  return axios.post<ExecCommandResponse>('/asset/exec/re-exec-command', request);
+  return axios.post<ExecLogQueryResponse>('/asset/exec/re-exec-command', request);
 }
 
 /**

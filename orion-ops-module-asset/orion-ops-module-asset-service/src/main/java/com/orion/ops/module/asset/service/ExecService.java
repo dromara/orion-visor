@@ -3,7 +3,7 @@ package com.orion.ops.module.asset.service;
 import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
-import com.orion.ops.module.asset.entity.vo.ExecCommandVO;
+import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,7 +22,7 @@ public interface ExecService {
      * @param request request
      * @return result
      */
-    ExecCommandVO execCommand(ExecCommandRequest request);
+    ExecLogVO execCommand(ExecCommandRequest request);
 
     /**
      * 重新执行命令
@@ -30,7 +30,7 @@ public interface ExecService {
      * @param id id
      * @return result
      */
-    ExecCommandVO reExecCommand(Long id);
+    ExecLogVO reExecCommand(Long id);
 
     /**
      * 中断命令执行

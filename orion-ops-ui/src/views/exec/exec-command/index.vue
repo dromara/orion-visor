@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandResponse } from '@/api/exec/exec';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { nextTick, onMounted, ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
@@ -32,7 +32,7 @@
   const log = ref();
 
   // 打开日志
-  const openLog = (record: ExecCommandResponse) => {
+  const openLog = (record: ExecLogQueryResponse) => {
     setLogVisible(true);
     nextTick(() => {
       log.value.open(record);

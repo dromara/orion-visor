@@ -2,15 +2,19 @@
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <exec-template-table ref="table"
-                         @open-exec="e => execModal.open(e)"
+                         @open-exec="(e) => execModal.open(e)"
                          @openAdd="() => drawer.openAdd()"
                          @openUpdate="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <exec-template-form-drawer ref="drawer"
                                @added="modalAddCallback"
                                @updated="modalUpdateCallback" />
+    <!-- 主机模态框 -->
+    <authorized-host-modal ref="hostModal"
+                           @selected="(e) => execModal.setSelectedHost(e)" />
     <!-- 执行模态框 -->
-    <exec-template-exec-drawer ref="execModal" />
+    <exec-template-exec-drawer ref="execModal"
+                               @open-host="(e) => hostModal.open(e)" />
   </div>
 </template>
 
@@ -25,10 +29,15 @@
   import ExecTemplateTable from './components/exec-template-table.vue';
   import ExecTemplateFormDrawer from './components/exec-template-form-drawer.vue';
   import ExecTemplateExecDrawer from './components/exec-template-exec-drawer.vue';
+  import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
+
+  // TODO TEST 选择主机
+  // TODO openAdd openUpdate 脊柱
 
   const render = ref(false);
   const table = ref();
   const drawer = ref();
+  const hostModal = ref();
   const execModal = ref();
 
   // 添加回调

@@ -25,6 +25,15 @@ public interface ExecLogService {
     DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request);
 
     /**
+     * 获取执行日志
+     *
+     * @param id     id
+     * @param source source
+     * @return row
+     */
+    ExecLogVO getExecLog(Long id, String source);
+
+    /**
      * 获取执行历史
      *
      * @param request request

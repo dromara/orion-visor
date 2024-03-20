@@ -160,7 +160,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandHostResponse } from '@/api/exec/exec';
+  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import type { ILogAppender } from './const';
   import { ref } from 'vue';
   import { execHostStatus, execHostStatusKey } from './const';
@@ -172,7 +172,7 @@
   import 'xterm/css/xterm.css';
 
   const props = defineProps<{
-    host: ExecCommandHostResponse;
+    host: ExecHostLogQueryResponse;
     appender: ILogAppender
   }>();
 

@@ -163,7 +163,7 @@
           <a-button v-permission="['asset:exec:exec-command']"
                     type="text"
                     size="mini"
-                    @click="emits('viewLog', record.id)">
+                    @click="() => emits('viewLog', record.id, $event.ctrlKey)">
             日志
           </a-button>
           <!-- 中断 -->
@@ -220,8 +220,6 @@
   import ExecHostLogTable from './exec-host-log-table.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
-
-  // TODO 日志 ctrl日志
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();

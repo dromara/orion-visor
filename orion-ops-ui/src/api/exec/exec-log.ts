@@ -30,6 +30,7 @@ export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraRespon
   startTime: number;
   finishTime: number;
   hostIdList: Array<number>;
+  hosts: Array<ExecHostLogQueryResponse>;
 }
 
 /**
@@ -70,6 +71,13 @@ export interface ExecStatusResponse {
  */
 export function getExecLogPage(request: ExecLogQueryRequest) {
   return axios.post<DataGrid<ExecLogQueryResponse>>('/asset/exec-log/query', request);
+}
+
+/**
+ * 查询执行记录
+ */
+export function getExecLog(id: number) {
+  return axios.get<ExecLogQueryResponse>('/asset/exec-log/query', { params: { id } });
 }
 
 /**

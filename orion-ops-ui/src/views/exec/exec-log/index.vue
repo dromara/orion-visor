@@ -4,10 +4,13 @@
     <exec-log-table ref="tableRef"
                     @view-command="viewCommand"
                     @view-params="viewParams"
+                    @view-log="viewLog"
                     @open-clear="openClearModal" />
     <!-- 清理模态框 -->
     <exec-log-clear-modal ref="clearModal"
                           @clear="clearCallback" />
+    <!-- 执行日志模态框 -->
+    <exec-log-panel-modal ref="logModal" />
     <!-- json 模态框 -->
     <json-editor-modal ref="jsonModal"
                        :esc-to-close="true" />
@@ -32,9 +35,11 @@
   import ExecLogClearModal from './components/exec-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
+  import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
 
   const render = ref(false);
   const tableRef = ref();
+  const logModal = ref();
   const clearModal = ref();
   const jsonModal = ref();
   const shellModal = ref();
@@ -52,6 +57,15 @@
   // 查看参数
   const viewParams = (data: string) => {
     jsonModal.value.open(JSON.parse(data));
+  };
+
+  // 查看日志
+  const viewLog = (id: number, newWindow: boolean) => {
+    if (newWindow) {
+      // TODO openLog
+    } else {
+      logModal.value.open(id);
+    }
   };
 
   // 清理回调

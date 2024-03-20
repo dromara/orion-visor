@@ -22,7 +22,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandResponse } from '@/api/exec/exec';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { onUnmounted, ref, nextTick } from 'vue';
   import { getExecLogStatus } from '@/api/exec/exec-log';
   import { execHostStatus, execStatus } from './const';
@@ -39,16 +39,20 @@
   const currentHostExecId = ref();
   const statusIntervalId = ref();
   const finishIntervalId = ref();
-  const command = ref<ExecCommandResponse>();
+  const command = ref<ExecLogQueryResponse>();
 
   // 打开
-  const open = (record: ExecCommandResponse) => {
+  const open = (record: ExecLogQueryResponse) => {
     command.value = record;
     currentHostExecId.value = record.hosts[0].id;
-    // 注册状态轮询
-    statusIntervalId.value = setInterval(fetchTaskStatus, 5000);
-    // 注册完成时间轮询
-    finishIntervalId.value = setInterval(setTaskFinishTime, 1000);
+    // 定时查询执行状态
+    if (record.status === execStatus.WAITING ||
+      record.status === execStatus.RUNNING) {
+      // 注册状态轮询
+      statusIntervalId.value = setInterval(fetchTaskStatus, 5000);
+      // 注册完成时间轮询
+      finishIntervalId.value = setInterval(setTaskFinishTime, 1000);
+    }
     // 打开日志
     nextTick(() => {
       logView.value?.open();
