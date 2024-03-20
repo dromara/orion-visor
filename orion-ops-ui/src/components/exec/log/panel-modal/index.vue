@@ -3,17 +3,21 @@
            title-align="start"
            title="执行日志"
            width="94%"
-           :top="80"
-           :body-style="{ padding: '0' }"
+           :top="40"
+           :body-style="{ padding: '0', height: 'calc(100vh - 140px)', overflow: 'hidden' }"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
            :unmount-on-close="true"
            :footer="false"
            @close="handleClose">
-    <a-spin class="modal-body" :loading="loading">
-      <!-- 日志面板 -->
-      <exec-log-panel ref="log" :visible-back="false" />
+    <a-spin v-if="visible"
+            class="modal-body"
+            :loading="loading">
+      <div class="panel-wrapper">
+        <!-- 日志面板 -->
+        <exec-log-panel ref="log" :visible-back="false" />
+      </div>
     </a-spin>
   </a-modal>
 </template>
@@ -36,7 +40,7 @@
 
   const log = ref();
 
-  // TODO 测试卸载
+  // TODO 卸载
 
   // 打开
   const open = async (id: number) => {
@@ -46,15 +50,17 @@
       // 获取执行日志
       const { data } = await getExecLog(id);
       // 打开日志
-      nextTick(() => {
+      await nextTick(() => {
         log.value.open(data);
       });
     } catch (e) {
-    } finally {
       setVisible(false);
+    } finally {
       setLoading(false);
     }
   };
+
+  defineExpose({ open });
 
   // 关闭回调
   const handleClose = () => {
@@ -65,6 +71,7 @@
   const handleClear = () => {
     setLoading(false);
     setVisible(false);
+    console.log('clear');
   };
 
 </script>
@@ -72,6 +79,39 @@
 <style lang="less" scoped>
   .modal-body {
     width: 100%;
-    height: calc(100vh - 140px);
+    height: 100%;
+    position: relative;
+    padding: 0 12px 12px 12px;
   }
+
+  .panel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  :deep(.exec-host-container) {
+    padding: 0;
+
+    .host-header {
+      height: 38px;
+      margin: 0;
+
+      h3 {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .exec-host-items {
+      width: 100%;
+      height: calc(100% - 38px);
+    }
+  }
+
+  :deep(.log-header) {
+    padding: 0;
+  }
+
 </style>

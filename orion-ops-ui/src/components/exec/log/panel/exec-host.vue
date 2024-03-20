@@ -2,7 +2,7 @@
   <!-- 执行主机 -->
   <div class="container">
     <!-- 表头 -->
-    <div class="panel-header">
+    <div class="host-header">
       <h3>执行主机</h3>
       <!-- 操作 -->
       <a-button v-if="visibleBack"
@@ -12,7 +12,7 @@
       </a-button>
     </div>
     <!-- 主机列表 -->
-    <div class="exec-host-container">
+    <div class="exec-host-items">
       <div v-for="item in hosts"
            :key="item.id"
            class="exec-host-item"
@@ -57,8 +57,27 @@
 </script>
 
 <style lang="less" scoped>
-  .exec-host-container {
-    margin-top: 4px;
+
+  .host-header {
+    width: 100%;
+    height: 28px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    h3, > span {
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    h3 {
+      color: var(--color-text-1);
+    }
+  }
+
+  .exec-host-items {
     position: absolute;
     width: calc(100% - 32px);
     height: calc(100% - 68px);

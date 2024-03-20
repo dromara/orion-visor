@@ -77,7 +77,7 @@ export function getExecLogPage(request: ExecLogQueryRequest) {
  * 查询执行记录
  */
 export function getExecLog(id: number) {
-  return axios.get<ExecLogQueryResponse>('/asset/exec-log/query', { params: { id } });
+  return axios.get<ExecLogQueryResponse>('/asset/exec-log/get', { params: { id } });
 }
 
 /**

@@ -112,6 +112,7 @@
   const defaultForm = (): ExecCommandRequest => {
     return {
       command: '',
+      timeout: 0,
     };
   };
 
@@ -220,8 +221,8 @@
   @command-gap: @form-width + @history-width + 32px;
 
   .exec-container {
-    width: calc(100% - 32px);
-    height: calc(100% - 32px);
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     position: absolute;
@@ -262,6 +263,25 @@
         display: inline-block;
         margin: 0 6px;
       }
+    }
+  }
+
+  :deep(.panel-header) {
+    width: 100%;
+    height: 28px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    h3, > span {
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    h3 {
+      color: var(--color-text-1);
     }
   }
 

@@ -163,7 +163,7 @@
           <a-button v-permission="['asset:exec:exec-command']"
                     type="text"
                     size="mini"
-                    @click="() => emits('viewLog', record.id, $event.ctrlKey)">
+                    @click="(e) => emits('viewLog', record.id, e.ctrlKey)">
             日志
           </a-button>
           <!-- 中断 -->

@@ -211,7 +211,7 @@
 </script>
 
 <style lang="less" scoped>
-  @header-height: 40px;
+  @header-height: 38px;
 
   .log-header {
     width: 100%;

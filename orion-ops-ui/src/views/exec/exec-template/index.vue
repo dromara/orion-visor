@@ -31,9 +31,6 @@
   import ExecTemplateExecDrawer from './components/exec-template-exec-drawer.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
 
-  // TODO TEST 选择主机
-  // TODO openAdd openUpdate 脊柱
-
   const render = ref(false);
   const table = ref();
   const drawer = ref();

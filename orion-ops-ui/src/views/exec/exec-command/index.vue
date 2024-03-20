@@ -1,13 +1,15 @@
 <template>
   <div class="layout-container full">
     <!-- 执行面板 -->
-    <exec-panel v-show="!logVisible"
-                @submit="openLog" />
+    <div v-show="!logVisible" class="panel-wrapper">
+      <exec-panel @submit="openLog" />
+    </div>
     <!-- 执行日志 -->
-    <exec-log-panel v-if="logVisible"
-                    ref="log"
-                    :visibleBack="true"
-                    @back="setLogVisible(false)" />
+    <div v-if="logVisible" class="panel-wrapper">
+      <exec-log-panel ref="log"
+                      :visibleBack="true"
+                      @back="setLogVisible(false)" />
+    </div>
   </div>
 </template>
 
@@ -48,23 +50,10 @@
 
 <style lang="less" scoped>
 
-  :deep(.panel-header) {
+  .panel-wrapper {
     width: 100%;
-    height: 28px;
-    margin-bottom: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    h3, > span {
-      margin: 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    h3 {
-      color: var(--color-text-1);
-    }
+    height: 100%;
+    position: relative;
   }
 
 </style>

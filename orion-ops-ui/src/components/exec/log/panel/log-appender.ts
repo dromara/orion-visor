@@ -235,10 +235,10 @@ export default class LogAppender implements ILogAppender {
   closeView(): void {
     // 关闭 terminal
     Object.values(this.appenderRel).forEach(s => {
-      s.terminal?.dispose();
       if (s.addons) {
         Object.values(s.addons).forEach(s => s.dispose());
       }
+      s.terminal?.dispose();
     });
     // 移除自适应事件
     removeEventListen(window, 'resize', this.fitAllFn);
@@ -246,8 +246,14 @@ export default class LogAppender implements ILogAppender {
 
   // 关闭
   close(): void {
-    this.closeClient();
-    this.closeView();
+    try {
+      this.closeClient();
+      this.closeView();
+    } catch (ex) {
+      // TODO
+      console.log('errr');
+      console.error(ex);
+    }
   }
 
   // 处理消息

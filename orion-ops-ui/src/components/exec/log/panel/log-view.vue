@@ -1,14 +1,12 @@
 <template>
   <div class="container">
-    <template v-if="appender">
-      <log-item class="log-item"
-                v-show="current === host.id"
-                v-for="host in command.hosts"
-                :key="host.id"
-                :ref="addRef as unknown as VNodeRef"
-                :host="host"
-                :appender="appender as ILogAppender" />
-    </template>
+    <log-item class="log-item"
+              v-show="current === host.id"
+              v-for="host in hosts"
+              :key="host.id"
+              :ref="addRef as unknown as VNodeRef"
+              :host="host"
+              :appender="appender" />
   </div>
 </template>
 
@@ -20,25 +18,24 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import type { LogDomRef, ILogAppender } from './const';
-  import { nextTick, onBeforeMount, ref, watch } from 'vue';
-  import LogAppender from './log-appender';
+  import { nextTick, ref, watch } from 'vue';
   import LogItem from './log-item.vue';
 
   const props = defineProps<{
     current: number;
-    command: ExecLogQueryResponse;
+    hosts: Array<ExecHostLogQueryResponse>;
+    appender: ILogAppender;
   }>();
 
   const logRefs = ref<Array<LogDomRef>>([]);
-  const appender = ref<ILogAppender>();
 
   // 切换标签
   watch(() => props.current, (val) => {
     nextTick(() => {
       setTimeout(() => {
-        appender.value?.setCurrent(val);
+        props.appender?.setCurrent(val);
       }, 50);
     });
   });
@@ -46,26 +43,16 @@
   // 打开
   const open = () => {
     nextTick(async () => {
-      if (appender.value) {
+      // TODO
+      console.log(props.appender);
+      if (props.appender) {
         // 初始化
-        await appender.value.init(logRefs.value);
+        await props.appender.init(logRefs.value);
       }
     });
   };
 
-  // 关闭客户端
-  const closeClient = () => {
-    appender.value?.closeClient();
-  };
-
-  // 关闭全部
-  const closeAll = () => {
-    appender.value?.close();
-    logRefs.value = [];
-    appender.value = undefined;
-  };
-
-  defineExpose({ open, closeClient, closeAll });
+  defineExpose({ open });
 
   // 添加 ref
   const addRef = (ref: any) => {
@@ -80,10 +67,6 @@
       });
     });
   };
-
-  onBeforeMount(() => {
-    appender.value = new LogAppender({ execId: props.command.id });
-  });
 
 </script>
 

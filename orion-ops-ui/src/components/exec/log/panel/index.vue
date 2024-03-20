@@ -1,17 +1,18 @@
 <template>
-  <div class="log-panel-container" v-if="command">
+  <div class="log-panel-container" v-if="execLog && appender">
     <!-- 执行主机 -->
     <exec-host class="exec-host-container"
                :visibleBack="visibleBack"
                :current="currentHostExecId"
-               :hosts="command.hosts"
+               :hosts="execLog.hosts"
                @selected="selectedHost"
                @back="emits('back')" />
     <!-- 日志容器 -->
-    <log-view ref="logView"
+    <log-view ref="logViewRef"
               class="log-view-container"
               :current="currentHostExecId"
-              :command="command" />
+              :hosts="execLog.hosts"
+              :appender="appender" />
   </div>
 </template>
 
@@ -23,11 +24,13 @@
 
 <script lang="ts" setup>
   import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ILogAppender } from './const';
   import { onUnmounted, ref, nextTick } from 'vue';
   import { getExecLogStatus } from '@/api/exec/exec-log';
   import { execHostStatus, execStatus } from './const';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
+  import LogAppender from '@/components/exec/log/panel/log-appender';
 
   const props = defineProps<{
     visibleBack: boolean
@@ -35,15 +38,17 @@
 
   const emits = defineEmits(['back']);
 
-  const logView = ref();
+  const logViewRef = ref();
   const currentHostExecId = ref();
   const statusIntervalId = ref();
   const finishIntervalId = ref();
-  const command = ref<ExecLogQueryResponse>();
+  const execLog = ref<ExecLogQueryResponse>();
+  const appender = ref<ILogAppender>();
 
   // 打开
   const open = (record: ExecLogQueryResponse) => {
-    command.value = record;
+    appender.value = new LogAppender({ execId: record.id });
+    execLog.value = record;
     currentHostExecId.value = record.hosts[0].id;
     // 定时查询执行状态
     if (record.status === execStatus.WAITING ||
@@ -55,24 +60,24 @@
     }
     // 打开日志
     nextTick(() => {
-      logView.value?.open();
+      logViewRef.value?.open();
     });
   };
 
   // 加载状态
   const fetchTaskStatus = async () => {
-    if (!command.value) {
+    if (!execLog.value) {
       return;
     }
     // 加载状态
-    const { data: { logList, hostList } } = await getExecLogStatus([command.value.id]);
+    const { data: { logList, hostList } } = await getExecLogStatus([execLog.value.id]);
     if (logList.length) {
-      command.value.status = logList[0].status;
-      command.value.startTime = logList[0].startTime;
-      command.value.finishTime = logList[0].finishTime;
+      execLog.value.status = logList[0].status;
+      execLog.value.startTime = logList[0].startTime;
+      execLog.value.finishTime = logList[0].finishTime;
     }
     // 设置主机状态
-    for (let host of command.value.hosts) {
+    for (let host of execLog.value.hosts) {
       const hostStatus = hostList.find(s => s.id === host.id);
       if (hostStatus) {
         host.status = hostStatus.status;
@@ -85,15 +90,15 @@
       }
     }
     // 已完成跳过
-    if (command.value.status === execStatus.COMPLETED ||
-      command.value.status === execStatus.FAILED) {
+    if (execLog.value.status === execStatus.COMPLETED ||
+      execLog.value.status === execStatus.FAILED) {
       closeClient();
     }
   };
 
   // 设置完成时间
   const setTaskFinishTime = () => {
-    const hosts = command.value?.hosts;
+    const hosts = execLog.value?.hosts;
     if (!hosts) {
       return;
     }
@@ -118,18 +123,20 @@
 
   // 关闭连接
   const closeClient = () => {
-    // 关闭日志
-    logView.value?.closeClient();
     // 清理轮询
     clearAllInterval();
+    // 关闭 client
+    appender.value?.closeClient();
   };
 
   // 清理并且关闭
   const closeAll = () => {
-    // 关闭日志
-    logView.value?.closeAll();
+    // TODO
+    console.log('closeAll');
     // 清理轮询
     clearAllInterval();
+    // 关闭 appender
+    appender.value?.close();
   };
 
   // 清理轮询
