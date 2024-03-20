@@ -23,7 +23,7 @@
                    :max-length="32"
                    :disabled="node.loading"
                    @blur="saveNode(node)"
-                   @pressEnter="saveNode(node)"
+                   @press-enter="saveNode(node)"
                    @change="saveNode(node)">
             <template #suffix>
               <!-- 加载中 -->

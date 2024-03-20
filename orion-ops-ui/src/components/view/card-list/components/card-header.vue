@@ -48,8 +48,8 @@
                        :placeholder="searchInputPlaceholder as string"
                        size="small"
                        allow-clear
-                       @input="e => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
-                       @change="e => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @input="(e) => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @change="(e) => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
                        @keyup.enter="bubblesEmitter(HeaderEmitter.SEARCH)" />
             </div>
             <!-- 过滤条件 -->

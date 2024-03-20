@@ -4,18 +4,18 @@
     <!-- 列表-表格 -->
     <${vue.feature}-table v-if="renderTable"
                   ref="table"
-                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     <!-- 列表-卡片 -->
     <${vue.feature}-card-list v-else
                   ref="card"
-                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #else
     <!-- 列表-表格 -->
     <${vue.feature}-table ref="table"
-                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #end
     #if($vue.enableDrawerForm)
     <!-- 添加修改模态框 -->

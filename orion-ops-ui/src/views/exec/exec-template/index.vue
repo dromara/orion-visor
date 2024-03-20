@@ -3,8 +3,8 @@
     <!-- 列表-表格 -->
     <exec-template-table ref="table"
                          @open-exec="(e) => execModal.open(e)"
-                         @openAdd="() => drawer.openAdd()"
-                         @openUpdate="(e) => drawer.openUpdate(e)" />
+                         @open-add="() => drawer.openAdd()"
+                         @open-update="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <exec-template-form-drawer ref="drawer"
                                @added="modalAddCallback"

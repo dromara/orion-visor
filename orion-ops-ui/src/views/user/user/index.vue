@@ -2,10 +2,10 @@
   <div class="layout-container" v-if="render">
     <!-- 表格 -->
     <user-table ref="table"
-                @openAdd="() => modal.openAdd()"
-                @openUpdate="(e) => modal.openUpdate(e)"
-                @openResetPassword="(e) => resetModal.open(e)"
-                @openGrantRole="(e) => grantRoleModal.open(e)" />
+                @open-add="() => modal.openAdd()"
+                @open-update="(e) => modal.openUpdate(e)"
+                @open-reset-password="(e) => resetModal.open(e)"
+                @open-grant-role="(e) => grantRoleModal.open(e)" />
     <!-- 添加修改模态框 -->
     <user-form-modal ref="modal"
                      @added="() => table.addedCallback()"

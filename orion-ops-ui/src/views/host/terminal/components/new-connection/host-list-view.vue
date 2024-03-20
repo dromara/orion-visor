@@ -63,7 +63,7 @@
                          size="mini"
                          :placeholder="item.name"
                          @blur="saveAlias(item)"
-                         @pressEnter="saveAlias(item)"
+                         @press-enter="saveAlias(item)"
                          @change="saveAlias(item)">
                   <template #suffix>
                     <!-- 加载中 -->

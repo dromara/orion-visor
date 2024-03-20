@@ -3,15 +3,15 @@
     <!-- 列表-表格 -->
     <host-identity-table v-if="renderTable"
                          ref="table"
-                         @openAdd="() => modal.openAdd()"
-                         @openUpdate="(e) => modal.openUpdate(e)"
-                         @openKeyView="(e) => keyDrawer.openView(e) " />
+                         @open-add="() => modal.openAdd()"
+                         @open-update="(e) => modal.openUpdate(e)"
+                         @open-key-view="(e) => keyDrawer.openView(e) " />
     <!-- 列表-卡片 -->
     <host-identity-card-list v-else
                              ref="card"
-                             @openAdd="() => modal.openAdd()"
-                             @openUpdate="(e) => modal.openUpdate(e)"
-                             @openKeyView="(e) => keyDrawer.openView(e) " />
+                             @open-add="() => modal.openAdd()"
+                             @open-update="(e) => modal.openUpdate(e)"
+                             @open-key-view="(e) => keyDrawer.openView(e) " />
     <!-- 添加修改模态框 -->
     <host-identity-form-modal ref="modal"
                               @added="modalAddCallback"

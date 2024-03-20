@@ -2,9 +2,9 @@
   <div class="layout-container">
     <!-- 列表-表格 -->
     <dict-value-table ref="table"
-                      @openAdd="() => modal.openAdd()"
-                      @openUpdate="(e) => modal.openUpdate(e)"
-                      @openHistory="(e) => history.open(e.id, e.label)" />
+                      @open-add="() => modal.openAdd()"
+                      @open-update="(e) => modal.openUpdate(e)"
+                      @open-history="(e) => history.open(e.id, e.label)" />
     <!-- 添加修改模态框 -->
     <dict-value-form-modal ref="modal"
                            @added="modalAddCallback"

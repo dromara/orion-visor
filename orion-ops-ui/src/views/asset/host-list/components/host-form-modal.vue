@@ -44,7 +44,7 @@
                               type="HOST"
                               :tagColor="tagColor"
                               placeholder="请选择主机标签"
-                              @onLimited="onLimitedTag" />
+                              @on-limited="onLimitedTag" />
         </a-form-item>
       </a-form>
     </a-spin>

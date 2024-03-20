@@ -21,7 +21,7 @@
                    :ref="setAutoFocus as unknown as VNodeRef"
                    :model-value="filterValue[0]"
                    @input="(value) => setFilterValue([value])"
-                   @pressEnter="handleFilterConfirm" />
+                   @press-enter="handleFilterConfirm" />
           <!-- 按钮 -->
           <div class="name-filter-footer">
             <a-button size="small" @click="handleFilterConfirm">过滤</a-button>

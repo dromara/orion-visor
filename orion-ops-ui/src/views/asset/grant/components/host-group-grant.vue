@@ -10,7 +10,7 @@
                      :editable="false"
                      :loading="loading"
                      @loading="setLoading"
-                     @select-node="e => selectedGroup = e"
+                     @select-node="(e) => selectedGroup = e"
                      @update:checked-keys="updateCheckedGroups" />
     <!-- 主机列表 -->
     <host-list class="group-main-hosts sticky-list" :group="selectedGroup" />

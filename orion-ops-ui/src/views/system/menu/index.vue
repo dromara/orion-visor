@@ -2,8 +2,8 @@
   <div class="layout-container" v-if="render">
     <!-- 表格 -->
     <menu-table ref="table"
-                @openAdd="(e) => modal.openAdd(e)"
-                @openUpdate="(e) => modal.openUpdate(e)" />
+                @open-add="(e) => modal.openAdd(e)"
+                @open-update="(e) => modal.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <menu-form-modal ref="modal"
                      @added="() => table.addedCallback()"

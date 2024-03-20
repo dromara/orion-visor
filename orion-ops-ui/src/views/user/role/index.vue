@@ -2,9 +2,9 @@
   <div class="layout-container" v-if="render">
     <!-- 表格 -->
     <role-table ref="table"
-                @openAdd="() => modal.openAdd()"
-                @openUpdate="(e) => modal.openUpdate(e)"
-                @openGrant="(e) => grantModal.open(e)" />
+                @open-add="() => modal.openAdd()"
+                @open-update="(e) => modal.openUpdate(e)"
+                @open-grant="(e) => grantModal.open(e)" />
     <!-- 添加修改模态框 -->
     <role-form-modal ref="modal"
                      @added="() => table.addedCallback()"
