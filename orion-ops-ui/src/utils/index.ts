@@ -191,7 +191,7 @@ export const resetObject = (obj: any, ignore: string[] = []) => {
 export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
   return Object.keys(obj)
     .filter(s => !ignore.includes(s))
-    .reduce(function(acc, curr) {
+    .reduce(function (acc, curr) {
       const currVal = obj[curr];
       return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
     }, 0);
@@ -204,13 +204,13 @@ export const createWebSocket = async (url: string) => {
   return new Promise<WebSocket>((resolve, reject) => {
     const socket = new WebSocket(url);
 
-    socket.addEventListener('open', () => {
+    socket.onopen = () => {
       resolve(socket);
-    });
+    };
 
-    socket.addEventListener('error', (error) => {
-      reject(error);
-    });
+    socket.onerror = e => {
+      reject(e);
+    };
   });
 };
 
@@ -241,7 +241,7 @@ export function detectZoom() {
  * 获取唯一的 UUID
  */
 export function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 | 0;
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);

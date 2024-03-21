@@ -3,7 +3,11 @@
     <!-- 表头 -->
     <div class="panel-header">
       <h3>执行命令</h3>
-      <span class="span-blue usn pointer" @click="openTemplate">从模板中选择</span>
+      <span v-permission="['asset:exec-template:query']"
+            class="span-blue usn pointer"
+            @click="openTemplate">
+        从模板中选择
+      </span>
     </div>
     <!-- 命令编辑器 -->
     <div class="editor-wrapper">

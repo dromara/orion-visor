@@ -35,11 +35,11 @@ public class ExecOperatorType extends InitializingOperatorTypes {
         return new OperatorType[]{
                 new OperatorType(M, EXEC_COMMAND, "执行主机命令"),
                 new OperatorType(M, INTERRUPT_EXEC, "中断执行命令"),
-                new OperatorType(M, INTERRUPT_HOST, "中断主机执行命令 ${logId} ${hostName}"),
-                new OperatorType(H, DELETE_LOG, "删除执行记录 ${count} 条"),
-                new OperatorType(H, CLEAR_LOG, "清理执行记录 ${count} 条"),
-                new OperatorType(H, DELETE_HOST_LOG, "删除主机执行记录 ${logId} ${hostName}"),
-                new OperatorType(L, DOWNLOAD_HOST_LOG, "下载主机执行日志 ${logId} ${hostName}"),
+                new OperatorType(M, INTERRUPT_HOST, "中断主机执行命令 <sb>${logId}</sb> <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE_LOG, "删除执行记录 <sb>${count}</sb> 条"),
+                new OperatorType(H, CLEAR_LOG, "清理执行记录 <sb>${count}</sb> 条"),
+                new OperatorType(H, DELETE_HOST_LOG, "删除主机执行记录 <sb>${logId}</sb> <sb>${hostName}</sb>"),
+                new OperatorType(L, DOWNLOAD_HOST_LOG, "下载主机执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
         };
     }
 

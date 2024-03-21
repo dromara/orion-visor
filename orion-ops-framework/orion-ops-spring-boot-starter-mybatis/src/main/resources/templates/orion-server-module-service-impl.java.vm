@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * $!{table.comment} 服务实现类
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 @Slf4j

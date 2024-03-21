@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecOperatorType;
@@ -40,7 +41,7 @@ public class ExecController {
     @Resource
     private ExecService execService;
 
-    @OperatorLog(ExecOperatorType.EXEC_COMMAND)
+    @OperatorLog(value = ExecOperatorType.EXEC_COMMAND, ret = ReturnType.IGNORE)
     @PostMapping("/exec-command")
     @Operation(summary = "批量执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")
@@ -48,7 +49,7 @@ public class ExecController {
         return execService.execCommand(request);
     }
 
-    @OperatorLog(ExecOperatorType.EXEC_COMMAND)
+    @OperatorLog(value = ExecOperatorType.EXEC_COMMAND, ret = ReturnType.IGNORE)
     @PostMapping("/re-exec-command")
     @Operation(summary = "重新执行命令")
     @PreAuthorize("@ss.hasPermission('asset:exec:exec-command')")

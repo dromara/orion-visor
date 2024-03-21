@@ -32,7 +32,7 @@ import java.util.List;
  * $!{table.comment} api
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 @Tag(name = "${package.ModuleName} - $!{table.comment}服务")

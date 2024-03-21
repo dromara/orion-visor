@@ -12,7 +12,7 @@ import java.math.*;
  * $!{table.comment} 缓存对象
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 @Data

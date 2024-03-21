@@ -124,11 +124,13 @@ export default class LogAppender implements ILogAppender {
     // 获取 token
     const { data } = await getExecLogTailToken(this.config);
     // 打开会话
-    this.client = await createWebSocket(`${webSocketBaseUrl}/exec/log/${data}`);
-    this.client.onerror = event => {
+    try {
+      this.client = await createWebSocket(`${webSocketBaseUrl}/exec/log/${data}`);
+    } catch (e) {
       Message.error('连接失败');
-      console.error('log error', event);
-    };
+      console.error('log error', e);
+      return;
+    }
     this.client.onclose = event => {
       console.warn('log close', event);
     };

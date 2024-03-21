@@ -11,7 +11,7 @@ import java.math.*;
  * $!{table.comment} 视图响应对象
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 @Data

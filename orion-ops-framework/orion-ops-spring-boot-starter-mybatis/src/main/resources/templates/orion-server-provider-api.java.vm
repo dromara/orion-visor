@@ -10,7 +10,7 @@ import java.util.List;
  * $!{table.comment} 对外服务类
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 public interface ${type}Api {

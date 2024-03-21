@@ -65,12 +65,15 @@
           <!-- 颜色 -->
           <template v-else-if="ValueType.COLOR === type">
             <a-input v-model="extraValue[name]"
+                     class="item-color-input"
                      :placeholder="`请输入 ${name}`"
                      allow-clear
                      hide-button />
-            <span class="item-extra-block" :style="{
-              background: extraValue[name] === '#' ? undefined : (extraValue[name] || undefined)
-            }" />
+            <div class="item-color-block-wrapper">
+              <span class="item-color-block" :style="{
+                background: extraValue[name] === '#' ? undefined : (extraValue[name] || undefined)
+              }" />
+            </div>
           </template>
         </a-form-item>
       </a-form>
@@ -223,12 +226,22 @@
 </script>
 
 <style lang="less" scoped>
-  .item-extra-block {
-    width: 38px;
+  .item-color-input {
+    width: calc(100% - 40px);
+  }
+
+  .item-color-block-wrapper {
+    width: 32px;
     height: 32px;
+    padding: 4px;
     margin-left: 8px;
     border-radius: 4px;
     background: var(--color-fill-2);
+  }
+
+  .item-color-block {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

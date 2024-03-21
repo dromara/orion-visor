@@ -13,7 +13,7 @@ import java.util.List;
  * $!{table.comment} 服务类
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 public interface ${table.serviceName} {

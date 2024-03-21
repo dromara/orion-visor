@@ -22,11 +22,13 @@ export default class TerminalChannel implements ITerminalChannel {
     // 获取 access
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
-    this.client = await createWebSocket(`${webSocketBaseUrl}/host/terminal/${accessToken}`);
-    this.client.onerror = event => {
+    try {
+      this.client = await createWebSocket(`${webSocketBaseUrl}/host/terminal/${accessToken}`);
+    } catch (e) {
       Message.error('无法连接至服务器');
-      console.error('terminal error', event);
-    };
+      console.error('terminal error', e);
+      throw e;
+    }
     this.client.onclose = event => {
       console.warn('terminal close', event);
     };
