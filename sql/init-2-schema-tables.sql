@@ -218,6 +218,93 @@ CREATE TABLE `dict_value`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for exec_host_log
+-- ----------------------------
+DROP TABLE IF EXISTS `exec_host_log`;
+CREATE TABLE `exec_host_log`
+(
+    `id`            bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `log_id`        bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行日志id',
+    `host_id`       bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
+    `host_name`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机名称',
+    `host_address`  varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
+    `status`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行状态',
+    `command`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
+    `parameter`     json                                                          NULL COMMENT '执行参数',
+    `exit_status`   int(0)                                                        NULL DEFAULT NULL COMMENT '退出码',
+    `log_path`      varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志路径',
+    `error_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '错误信息',
+    `start_time`    datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行开始时间',
+    `finish_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行结束时间',
+    `create_time`   datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`   datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`       tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_log_id` (`log_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '批量执行主机日志'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for exec_log
+-- ----------------------------
+DROP TABLE IF EXISTS `exec_log`;
+CREATE TABLE `exec_log`
+(
+    `id`               bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`          bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行用户id',
+    `username`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '执行用户名',
+    `source`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行来源',
+    `source_id`        bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行来源id',
+    `description`      varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '执行描述',
+    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
+    `parameter_schema` json                                                          NULL COMMENT '参数 schema',
+    `timeout`          int(0)                                                        NULL DEFAULT NULL COMMENT '超时时间',
+    `status`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行状态',
+    `start_time`       datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行开始时间',
+    `finish_time`      datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行完成时间',
+    `create_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`          tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user_id` (`user_id`) USING BTREE,
+    INDEX `idx_source` (`source`, `source_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '批量执行日志'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for exec_template
+-- ----------------------------
+DROP TABLE IF EXISTS `exec_template`;
+CREATE TABLE `exec_template`
+(
+    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
+    `command`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '命令',
+    `timeout`     int(0)                                                       NULL DEFAULT 0 COMMENT '超时时间秒 0不超时',
+    `parameter`   json                                                         NULL COMMENT '参数',
+    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '执行模板'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for favorite
 -- ----------------------------
 DROP TABLE IF EXISTS `favorite`;
@@ -323,8 +410,8 @@ CREATE TABLE `host_connect_log`
     `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '类型',
     `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '状态',
     `token`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT 'token',
-    `start_time`   datetime(0)                                                   NULL DEFAULT NULL COMMENT '开始时间',
-    `end_time`     datetime(0)                                                   NULL DEFAULT NULL COMMENT '结束时间',
+    `start_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time`     datetime(3)                                                   NULL DEFAULT NULL COMMENT '结束时间',
     `extra_info`   json                                                          NULL COMMENT '额外信息',
     `create_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
