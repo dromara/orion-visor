@@ -1,8 +1,8 @@
 import type { IDisposable, ITerminalInitOnlyOptions, ITerminalOptions, Terminal } from 'xterm';
 import type { FitAddon } from 'xterm-addon-fit';
 import type { SearchAddon } from 'xterm-addon-search';
-import type { CanvasAddon } from 'xterm-addon-canvas';
 import type { WebLinksAddon } from 'xterm-addon-web-links';
+import type { WebglAddon } from 'xterm-addon-webgl';
 
 // appender 配置
 export const AppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
@@ -42,7 +42,7 @@ export interface LogAppenderConf {
 // appender 插件
 export interface LogAddons extends Record<string, IDisposable> {
   fit: FitAddon;
-  canvas: CanvasAddon;
+  webgl: WebglAddon;
   search: SearchAddon;
   weblink: WebLinksAddon;
 }

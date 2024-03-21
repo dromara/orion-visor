@@ -11,8 +11,8 @@ import { copy as copyText } from '@/hooks/copy';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
-import { CanvasAddon } from 'xterm-addon-canvas';
 import { WebLinksAddon } from 'xterm-addon-web-links';
+import { WebglAddon } from 'xterm-addon-webgl';
 
 // 执行日志 appender 实现
 export default class LogAppender implements ILogAppender {
@@ -76,25 +76,47 @@ export default class LogAppender implements ILogAppender {
       if (e.type !== 'keydown') {
         return true;
       }
-      if (e.ctrlKey && e.code === 'KeyC') {
-        // 复制
+      if (e.code === 'Enter') {
+        // 新起一行
         e.preventDefault();
-        this.copy();
-        return false;
-      } else if (e.ctrlKey && e.code === 'KeyL') {
-        // 清空
+        terminal.write('\r\n');
+      } else if (e.code === 'ArrowUp') {
         e.preventDefault();
-        this.clear();
-        return false;
+        if (e.ctrlKey) {
+          // 上移一页
+          terminal.scrollPages(-1);
+        } else {
+          // 上移
+          terminal.scrollLines(-1);
+        }
+      } else if (e.code === 'ArrowDown') {
+        e.preventDefault();
+        if (e.ctrlKey) {
+          // 下移一页
+          terminal.scrollPages(1);
+        } else {
+          // 下移
+          terminal.scrollLines(1);
+        }
       } else if (e.ctrlKey && e.code === 'KeyA') {
         // 全选
         e.preventDefault();
         this.selectAll();
         return false;
+      } else if (e.ctrlKey && e.code === 'KeyC') {
+        // 复制
+        e.preventDefault();
+        this.copy();
+        return false;
       } else if (e.ctrlKey && e.code === 'KeyF') {
         // 搜索
         e.preventDefault();
         this.current.openSearch();
+        return false;
+      } else if (e.ctrlKey && e.code === 'KeyL') {
+        // 清空
+        e.preventDefault();
+        this.clear();
         return false;
       }
       return true;
@@ -105,16 +127,16 @@ export default class LogAppender implements ILogAppender {
   initAddons(terminal: Terminal): LogAddons {
     const fit = new FitAddon();
     const search = new SearchAddon();
-    const canvas = new CanvasAddon();
+    const webgl = new WebglAddon();
     const weblink = new WebLinksAddon();
     terminal.loadAddon(fit);
     terminal.loadAddon(search);
-    terminal.loadAddon(canvas);
+    terminal.loadAddon(webgl);
     terminal.loadAddon(weblink);
     return {
       fit,
       search,
-      canvas,
+      webgl,
       weblink
     };
   }

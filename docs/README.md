@@ -2,8 +2,9 @@
  <img style="margin-right: 8px;" src="./assert/logo.svg" width="32px" height="32px"/> orion-ops-pro 是什么
 </h1>
 
-`orion-ops-pro` 是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、Web终端、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。它是基于 `orion-ops`
-的产品思路进行重构，技术架构升级，并优化了交互逻辑，让操作更快捷友好。
+`orion-ops-pro`
+是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、Web终端、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。它是基于 `orion-ops`
+的产品思路进行重构，技术架构升级，并优化了交互逻辑，让操作更快捷更友好。
 
 <p style="text-align: left">
     <a target="_blank" style="text-decoration: none" href="https://app.codacy.com/gh/lijiahangmax/orion-ops-pro/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
@@ -90,6 +91,12 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 ![终端设置](./assert/img/terminal_setting.png "终端设置")
 ![sftp](./assert/img/terminal_sftp.png "sftp")
 ![传输列表](./assert/img/terminal_transfer.png "传输列表")
+
+> 批量执行
+
+![批量执行](./assert/img/batch_exec.png "批量执行")
+![执行日志](./assert/img/batch_exec_log.png "执行日志")
+![执行记录](./assert/img/batch_exec_record.png "执行记录")
 
 > 用户管理
 
