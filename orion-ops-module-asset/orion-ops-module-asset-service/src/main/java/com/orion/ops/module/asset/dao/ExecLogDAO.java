@@ -3,6 +3,9 @@ package com.orion.ops.module.asset.dao;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 批量执行日志 Mapper 接口
@@ -13,5 +16,17 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ExecLogDAO extends IMapper<ExecLogDO> {
+
+    /**
+     * 获取执行历史
+     *
+     * @param source source
+     * @param userId userId
+     * @param limit  limit
+     * @return rows
+     */
+    List<ExecLogDO> getExecHistory(@Param("source") String source,
+                                   @Param("userId") Long userId,
+                                   @Param("limit") Integer limit);
 
 }

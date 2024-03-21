@@ -8,7 +8,7 @@
         <a-link target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a-link>
         <a-link target="_blank" href="https://lijiahangmax.gitee.io/orion-ops-pro">文档</a-link>
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE">License</a-link>
-        <span title="当前版本">v{{ version }}</span>
+        <a-link target="_blank" :href="`https://github.com/lijiahangmax/orion-ops-pro/releases/tag/v${version}`">v{{ version }} 开源版</a-link>
       </a-space>
       <span class="copyright">
           Copyright<icon-copyright /> 2024 Li Jiahang All rights reserved.

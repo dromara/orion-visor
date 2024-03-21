@@ -28,4 +28,17 @@
         id, user_id, username, source, source_id, description, command, parameter_schema, timeout, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <select id="getExecHistory" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        , max(id) max_id
+        FROM exec_log
+        WHERE deleted = 0
+        AND source = #{source}
+        AND user_id = #{userId}
+        GROUP BY description
+        ORDER BY max_id DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>

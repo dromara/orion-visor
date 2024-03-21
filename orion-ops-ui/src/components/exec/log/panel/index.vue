@@ -25,12 +25,13 @@
 <script lang="ts" setup>
   import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ILogAppender } from './const';
-  import { onUnmounted, ref, nextTick } from 'vue';
+  import { onUnmounted, ref, nextTick, onMounted } from 'vue';
   import { getExecLogStatus } from '@/api/exec/exec-log';
-  import { execHostStatus, execStatus } from './const';
+  import { dictKeys, execHostStatus, execStatus } from './const';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
   import LogAppender from '@/components/exec/log/panel/log-appender';
+  import { useDictStore } from '@/store';
 
   const props = defineProps<{
     visibleBack: boolean
@@ -145,12 +146,18 @@
     clearInterval(finishIntervalId.value);
   };
 
+  // 加载字典值
+  onMounted(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+  });
+
   onUnmounted(closeAll);
 
 </script>
 
 <style lang="less" scoped>
-  @host-width: 420px;
+  @host-width: 380px;
   @host-real-width: @host-width + 16px;
 
   .log-panel-container {

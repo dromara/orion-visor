@@ -7,7 +7,14 @@
         展示最近 {{ historyCount }} 条执行记录
       </span>
     </div>
-    <div v-if="!historyLogs.length" class="flex-center mt16">
+    <!-- 加载中 -->
+    <a-skeleton v-if="loading" :animation="true">
+      <a-skeleton-line :rows="4"
+                       :line-height="40"
+                       :line-spacing="8" />
+    </a-skeleton>
+    <!-- 无数据 -->
+    <div v-else-if="!historyLogs.length" class="flex-center mt16">
       <a-empty description="无执行记录" />
     </div>
     <!-- 执行记录 -->
@@ -41,8 +48,11 @@
   import { onMounted, ref } from 'vue';
   import { getExecLogHistory } from '@/api/exec/exec-log';
   import { historyCount } from '../types/const';
+  import useLoading from '@/hooks/loading';
 
   const emits = defineEmits(['selected']);
+
+  const { loading, setLoading } = useLoading(true);
 
   const historyLogs = ref<Array<ExecLogQueryResponse>>([]);
 
@@ -76,8 +86,14 @@
 
   // 加载执行记录
   const fetchExecHistory = async () => {
-    const { data } = await getExecLogHistory(historyCount);
-    historyLogs.value = data;
+    setLoading(true);
+    try {
+      const { data } = await getExecLogHistory(historyCount);
+      historyLogs.value = data;
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 加载执行记录

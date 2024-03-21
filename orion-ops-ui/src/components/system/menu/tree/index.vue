@@ -5,6 +5,7 @@
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/utils/route-listener';
   import { openWindow, regexUrl } from '@/utils';
+  import { openNewRoute } from '@/router';
   import useMenuTree from './use-menu-tree';
 
   export default defineComponent({
@@ -39,10 +40,9 @@
         const { hideInMenu, activeMenu, newWindow } = item.meta as RouteMeta;
         // 新页面打开
         if (newWindow || e.ctrlKey) {
-          const { href } = router.resolve({
+          openNewRoute({
             name: item.name,
           });
-          openWindow(href);
           return;
         }
         // 设置 selectedKey

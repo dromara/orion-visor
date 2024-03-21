@@ -163,6 +163,7 @@
           <a-button v-permission="['asset:exec:exec-command']"
                     type="text"
                     size="mini"
+                    title="ctrl + 左键新页面打开"
                     @click="(e) => emits('viewLog', record.id, e.ctrlKey)">
             日志
           </a-button>

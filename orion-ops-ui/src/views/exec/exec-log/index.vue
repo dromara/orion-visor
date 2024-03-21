@@ -36,6 +36,10 @@
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
+  import { useRouter } from 'vue-router';
+  import { openNewRoute } from '@/router';
+
+  const router = useRouter();
 
   const render = ref(false);
   const tableRef = ref();
@@ -62,7 +66,13 @@
   // 查看日志
   const viewLog = (id: number, newWindow: boolean) => {
     if (newWindow) {
-      // TODO openLog
+      // 跳转新页面
+      openNewRoute({
+        name: 'execLogView',
+        query: {
+          id
+        }
+      });
     } else {
       logModal.value.open(id);
     }

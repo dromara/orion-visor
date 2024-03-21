@@ -70,7 +70,7 @@
 
   // 加载字典值
   onBeforeMount(async () => {
-    await dictStore.loadKeys([...dictKeys]);
+    await dictStore.loadKeys(dictKeys);
   });
 
   // 加载主机信息

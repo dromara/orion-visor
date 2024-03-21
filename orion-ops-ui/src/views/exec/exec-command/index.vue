@@ -29,7 +29,6 @@
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
   const { visible: logVisible, setVisible: setLogVisible } = useVisible();
-  const { loadKeys } = useDictStore();
 
   const log = ref();
 
@@ -43,7 +42,8 @@
 
   // 加载字典值
   onMounted(async () => {
-    await loadKeys(dictKeys);
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
   });
 
 </script>

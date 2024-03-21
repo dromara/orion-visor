@@ -17,6 +17,13 @@
               label-align="right"
               :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }">
+        <!-- 开始时间 -->
+        <a-form-item field="startTimeRange" label="开始时间">
+          <a-range-picker v-model="formModel.startTimeRange"
+                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
+                          show-time
+                          format="YYYY-MM-DD HH:mm:ss" />
+        </a-form-item>
         <!-- 连接用户 -->
         <a-form-item field="userId" label="连接用户">
           <user-selector v-model="formModel.userId"
@@ -48,13 +55,6 @@
                     placeholder="请选择类型"
                     :options="toOptions(connectTypeKey)"
                     allow-clear />
-        </a-form-item>
-        <!-- 开始时间 -->
-        <a-form-item field="startTimeRange" label="开始时间">
-          <a-range-picker v-model="formModel.startTimeRange"
-                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
-                          show-time
-                          format="YYYY-MM-DD HH:mm:ss" />
         </a-form-item>
       </a-form>
     </a-spin>

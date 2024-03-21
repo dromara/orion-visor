@@ -241,7 +241,7 @@
 
   // 加载字典值
   onMounted(async () => {
-    await loadKeys([...dictKeys]);
+    await loadKeys(dictKeys);
   });
 
 </script>

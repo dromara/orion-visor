@@ -86,24 +86,18 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public List<ExecLogVO> getExecHistory(ExecLogQueryRequest request) {
         // 查询执行记录
-        List<ExecLogVO> logs = execLogDAO.of()
-                .createWrapper()
-                .eq(ExecLogDO::getSource, request.getSource())
-                .eq(ExecLogDO::getUserId, request.getUserId())
-                .groupBy(ExecLogDO::getDescription)
-                .orderByDesc(ExecLogDO::getId)
-                .then()
-                .limit(request)
-                .list(ExecLogConvert.MAPPER::to);
-        if (logs.isEmpty()) {
-            return logs;
+        List<ExecLogDO> rows = execLogDAO.getExecHistory(request.getSource(), request.getUserId(), request.getLimit());
+        if (rows.isEmpty()) {
+            return Lists.empty();
         }
+        List<ExecLogVO> logs = ExecLogConvert.MAPPER.to(rows);
         List<Long> logIdList = logs.stream()
                 .map(ExecLogVO::getId)
                 .collect(Collectors.toList());
         // 设置执行主机id
         Map<Long, List<Long>> hostIdRel = execHostLogDAO.of()
                 .createWrapper()
+                .select(ExecHostLogDO::getId, ExecHostLogDO::getLogId, ExecHostLogDO::getHostId)
                 .in(ExecHostLogDO::getLogId, logIdList)
                 .then()
                 .stream()

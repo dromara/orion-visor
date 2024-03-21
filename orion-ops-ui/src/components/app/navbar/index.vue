@@ -31,7 +31,7 @@
           <a-button class="nav-btn"
                     type="outline"
                     shape="circle"
-                    @click="openNewRoute('terminal')">
+                    @click="openNewRoute({ name: 'terminal' })">
             <template #icon>
               <icon-code-square />
             </template>
@@ -213,10 +213,10 @@
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
   import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
-  import { openWindow } from '@/utils';
+  import { openNewRoute } from '@/router';
   import MenuTree from '@/components/system/menu/tree/index.vue';
-  import UpdatePasswordModal from '@/components/user/user/update-password-modal/index.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
+  import UpdatePasswordModal from '@/components/user/user/update-password-modal/index.vue';
 
   const tipsStore = useTipsStore();
   const appStore = useAppStore();
@@ -278,12 +278,6 @@
   // 打开语言切换
   const setLocalesVisible = () => {
     triggerMouseEvent(localeRef);
-  };
-
-  // 打开新页面
-  const openNewRoute = (name: string) => {
-    const { href } = router.resolve({ name });
-    openWindow(href);
   };
 
   // 刷新页面

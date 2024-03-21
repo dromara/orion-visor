@@ -18,6 +18,13 @@
               label-align="right"
               :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }">
+        <!-- 执行时间 -->
+        <a-form-item field="startTimeRange" label="执行时间">
+          <a-range-picker v-model="formModel.startTimeRange"
+                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
+                          show-time
+                          format="YYYY-MM-DD HH:mm:ss" />
+        </a-form-item>
         <!-- 执行用户 -->
         <a-form-item field="userId" label="执行用户">
           <user-selector v-model="formModel.userId"
@@ -41,13 +48,6 @@
           <a-select v-model="formModel.status"
                     :options="toOptions(execStatusKey)"
                     placeholder="请选择执行状态" />
-        </a-form-item>
-        <!-- 执行时间 -->
-        <a-form-item field="startTimeRange" label="执行时间">
-          <a-range-picker v-model="formModel.startTimeRange"
-                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
-                          show-time
-                          format="YYYY-MM-DD HH:mm:ss" />
         </a-form-item>
       </a-form>
     </a-spin>
