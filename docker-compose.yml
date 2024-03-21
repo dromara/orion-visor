@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   orion-ops-pro:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro:1.0.1
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro:1.0.2
     ports:
       - 1081:80
     environment:

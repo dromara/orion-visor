@@ -34,7 +34,7 @@
     .flat(1)
     .filter(s => s.meta)
     .map(s => s as RouteRecordNormalized)
-    .slice(0, 12);
+    .slice(0, 15);
 
   // 打开路由
   const openRoute = (e: any, route: RouteRecordNormalized) => {
