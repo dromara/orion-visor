@@ -43,7 +43,7 @@
 <style lang="less" scoped>
   .editor-wrapper {
     width: 100%;
-    height: calc(100% - 66px);
+    height: calc(100% - 56px);
     position: relative;
   }
 

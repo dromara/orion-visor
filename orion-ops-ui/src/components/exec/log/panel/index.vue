@@ -131,8 +131,6 @@
 
   // 清理并且关闭
   const closeAll = () => {
-    // TODO
-    console.log('closeAll');
     // 清理轮询
     clearAllInterval();
     // 关闭 appender
@@ -156,8 +154,8 @@
   @host-real-width: @host-width + 16px;
 
   .log-panel-container {
-    width: calc(100% - 32px);
-    height: calc(100% - 32px);
+    width: 100%;
+    height: 100%;
     display: flex;
     position: absolute;
   }

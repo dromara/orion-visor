@@ -43,8 +43,6 @@
   // 打开
   const open = () => {
     nextTick(async () => {
-      // TODO
-      console.log(props.appender);
       if (props.appender) {
         // 初始化
         await props.appender.init(logRefs.value);

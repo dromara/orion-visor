@@ -2,6 +2,7 @@ import type { IDisposable, ITerminalInitOnlyOptions, ITerminalOptions, Terminal 
 import type { FitAddon } from 'xterm-addon-fit';
 import type { SearchAddon } from 'xterm-addon-search';
 import type { CanvasAddon } from 'xterm-addon-canvas';
+import type { WebLinksAddon } from 'xterm-addon-web-links';
 
 // appender 配置
 export const AppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
@@ -43,6 +44,7 @@ export interface LogAddons extends Record<string, IDisposable> {
   fit: FitAddon;
   canvas: CanvasAddon;
   search: SearchAddon;
+  weblink: WebLinksAddon;
 }
 
 // 执行日志 appender 定义

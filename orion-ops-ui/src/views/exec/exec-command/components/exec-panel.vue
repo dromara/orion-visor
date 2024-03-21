@@ -216,7 +216,7 @@
 </script>
 
 <style lang="less" scoped>
-  @form-width: 420px;
+  @form-width: 380px;
   @history-width: 320px;
   @command-gap: @form-width + @history-width + 32px;
 

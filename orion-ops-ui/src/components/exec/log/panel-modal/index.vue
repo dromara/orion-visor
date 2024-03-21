@@ -3,8 +3,8 @@
            title-align="start"
            title="执行日志"
            width="94%"
-           :top="40"
-           :body-style="{ padding: '0', height: 'calc(100vh - 140px)', overflow: 'hidden' }"
+           :top="44"
+           :body-style="{ padding: '0', height: 'calc(100vh - 138px)', overflow: 'hidden' }"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -40,8 +40,6 @@
 
   const log = ref();
 
-  // TODO 卸载
-
   // 打开
   const open = async (id: number) => {
     setVisible(true);
@@ -51,7 +49,9 @@
       const { data } = await getExecLog(id);
       // 打开日志
       await nextTick(() => {
-        log.value.open(data);
+        setTimeout(() => {
+          log.value.open(data);
+        }, 50);
       });
     } catch (e) {
       setVisible(false);
@@ -71,7 +71,6 @@
   const handleClear = () => {
     setLoading(false);
     setVisible(false);
-    console.log('clear');
   };
 
 </script>

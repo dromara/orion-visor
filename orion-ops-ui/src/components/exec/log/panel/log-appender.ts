@@ -1,6 +1,6 @@
 import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './const';
-import type { ExecTailRequest } from '@/api/exec/exec';
 import { AppenderOptions } from './const';
+import type { ExecTailRequest } from '@/api/exec/exec';
 import { getExecLogTailToken } from '@/api/exec/exec';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
@@ -12,6 +12,7 @@ import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { CanvasAddon } from 'xterm-addon-canvas';
+import { WebLinksAddon } from 'xterm-addon-web-links';
 
 // 执行日志 appender 实现
 export default class LogAppender implements ILogAppender {
@@ -105,13 +106,16 @@ export default class LogAppender implements ILogAppender {
     const fit = new FitAddon();
     const search = new SearchAddon();
     const canvas = new CanvasAddon();
+    const weblink = new WebLinksAddon();
     terminal.loadAddon(fit);
     terminal.loadAddon(search);
     terminal.loadAddon(canvas);
+    terminal.loadAddon(weblink);
     return {
       fit,
       search,
-      canvas
+      canvas,
+      weblink
     };
   }
 
@@ -223,37 +227,40 @@ export default class LogAppender implements ILogAppender {
 
   // 关闭 client
   closeClient(): void {
-    // 关闭 ws
-    if (this.client && this.client.readyState === WebSocket.OPEN) {
-      this.client.close();
+    try {
+      // 清理持久化
+      clearInterval(this.keepAliveTask);
+      // 关闭 ws
+      if (this.client && this.client.readyState === WebSocket.OPEN) {
+        this.client.close();
+      }
+    } catch (e) {
     }
-    // 清理持久化
-    clearInterval(this.keepAliveTask);
   }
 
   // 关闭 view
   closeView(): void {
-    // 关闭 terminal
-    Object.values(this.appenderRel).forEach(s => {
-      if (s.addons) {
-        Object.values(s.addons).forEach(s => s.dispose());
-      }
-      s.terminal?.dispose();
-    });
     // 移除自适应事件
     removeEventListen(window, 'resize', this.fitAllFn);
+    // 关闭 terminal
+    Object.values(this.appenderRel).forEach(s => {
+      try {
+        // 卸载插件
+        Object.values(s.addons)
+          .filter(Boolean)
+          .forEach(s => s.dispose());
+        // 卸载终端
+        s.terminal?.dispose();
+      } catch (e) {
+        // 卸载可能会报错
+      }
+    });
   }
 
   // 关闭
   close(): void {
-    try {
-      this.closeClient();
-      this.closeView();
-    } catch (ex) {
-      // TODO
-      console.log('errr');
-      console.error(ex);
-    }
+    this.closeClient();
+    this.closeView();
   }
 
   // 处理消息

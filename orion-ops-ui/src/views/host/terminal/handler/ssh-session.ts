@@ -176,7 +176,9 @@ export default class SshSession implements ISshSession {
     }
     // 加载插件
     for (const addon of Object.values(this.addons)) {
-      this.inst.loadAddon(addon);
+      if (addon) {
+        this.inst.loadAddon(addon);
+      }
     }
   }
 
@@ -244,6 +246,7 @@ export default class SshSession implements ISshSession {
       // 卸载终端
       this.inst.dispose();
     } catch (e) {
+      // 卸载可能会报错
     }
   }
 
