@@ -80,24 +80,22 @@ export default class LogAppender implements ILogAppender {
         // 新起一行
         e.preventDefault();
         terminal.write('\r\n');
+      } else if (e.code === 'Home') {
+        // 上移一页
+        e.preventDefault();
+        terminal.scrollPages(-1);
       } else if (e.code === 'ArrowUp') {
+        // 上移
         e.preventDefault();
-        if (e.ctrlKey) {
-          // 上移一页
-          terminal.scrollPages(-1);
-        } else {
-          // 上移
-          terminal.scrollLines(-1);
-        }
+        terminal.scrollLines(-1);
+      } else if (e.code === 'End') {
+        // 下移一页
+        e.preventDefault();
+        terminal.scrollPages(1);
       } else if (e.code === 'ArrowDown') {
+        // 下移
         e.preventDefault();
-        if (e.ctrlKey) {
-          // 下移一页
-          terminal.scrollPages(1);
-        } else {
-          // 下移
-          terminal.scrollLines(1);
-        }
+        terminal.scrollLines(1);
       } else if (e.ctrlKey && e.code === 'KeyA') {
         // 全选
         e.preventDefault();

@@ -29,7 +29,7 @@
     ]
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.55.0",
+    "@arco-design/web-vue": "^2.53.3",
     "@dangojs/a-query-header": "^0.0.31",
     "@sanqi377/arco-vue-icon-picker": "^1.0.7",
     "@vueuse/core": "^9.3.0",

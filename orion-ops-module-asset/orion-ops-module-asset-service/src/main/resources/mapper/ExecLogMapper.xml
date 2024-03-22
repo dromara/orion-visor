@@ -31,7 +31,9 @@
     <select id="getExecHistory" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        , max(id) max_id
+        FROM exec_log e
+        RIGHT JOIN (
+        SELECT MAX(id) AS max_id
         FROM exec_log
         WHERE deleted = 0
         AND source = #{source}
@@ -39,6 +41,7 @@
         GROUP BY description
         ORDER BY max_id DESC
         LIMIT #{limit}
+        ) sub ON e.id = sub.max_id
     </select>
 
 </mapper>
