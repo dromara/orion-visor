@@ -7,22 +7,22 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="50px">
+      <a-form-item field="id" label="id">
         <a-input-number v-model="formModel.id"
                         placeholder="请输入id"
                         allow-clear
                         hide-button />
       </a-form-item>
       <!-- 名称 -->
-      <a-form-item field="name" label="名称" label-col-flex="50px">
+      <a-form-item field="name" label="名称">
         <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
       <!-- 用户名 -->
-      <a-form-item field="username" label="用户名" label-col-flex="50px">
+      <a-form-item field="username" label="用户名">
         <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
       </a-form-item>
       <!-- 主机秘钥 -->
-      <a-form-item field="keyId" label="主机秘钥" label-col-flex="50px">
+      <a-form-item field="keyId" label="主机秘钥">
         <host-key-selector v-model="formModel.keyId" allow-clear />
       </a-form-item>
     </query-header>
@@ -82,11 +82,9 @@
              :bordered="false">
       <!-- 用户名 -->
       <template #username="{ record }">
-        <a-tooltip content="点击复制">
-          <span class="pointer span-blue" @click="copy(record.username)">
-            <icon-copy /> {{ record.username }}
-          </span>
-        </a-tooltip>
+        <span class="span-blue text-copy" @click="copy(record.username)">
+          {{ record.username }}
+        </span>
       </template>
       <!-- 秘钥名称 -->
       <template #keyId="{ record }">
@@ -136,7 +134,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostIdentityTable'
+    name: 'hostIdentityTable'
   };
 </script>
 
@@ -145,19 +143,18 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { usePagination } from '@/types/table';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
-  import useCopy from '@/hooks/copy';
+  import useLoading from '@/hooks/loading';
   import usePermission from '@/hooks/permission';
+  import { copy } from '@/hooks/copy';
+  import { usePagination } from '@/types/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
 
-  const { copy } = useCopy();
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();

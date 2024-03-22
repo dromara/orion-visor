@@ -40,7 +40,6 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :style="{ width: '320px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               @keyup.enter="() => fetchCardData()">
@@ -71,11 +70,9 @@
     </template>
     <!-- 用户名 -->
     <template #username="{ record }">
-      <a-tooltip content="点击复制">
-        <span class="pointer span-blue" @click="copy(record.username)">
-          <icon-copy /> {{ record.username }}
-        </span>
-      </a-tooltip>
+      <span class="span-blue text-copy" @click="copy(record.username)">
+        {{ record.username }}
+      </span>
     </template>
     <!-- 秘钥名称 -->
     <template #keyId="{ record }">
@@ -140,7 +137,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostIdentityCardList'
+    name: 'hostIdentityCardList'
   };
 </script>
 
@@ -154,15 +151,14 @@
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message, Modal } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
-  import useCopy from '@/hooks/copy';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import { copy } from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const list = ref<HostIdentityQueryResponse[]>([]);
 
-  const { copy } = useCopy();
   const cardColLayout = useColLayout();
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();

@@ -22,7 +22,6 @@ export default function setupPermissionGuard(router: Router) {
     if (access && to.meta.locale === undefined && menuStore.menuFetched) {
       to.meta = to.matched[to.matched.length - 1].meta;
     }
-
     if (access) {
       // 正常跳转
       next();

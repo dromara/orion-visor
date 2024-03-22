@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 名称 -->
@@ -31,7 +30,6 @@
         <!-- 用户密码 -->
         <a-form-item field="password"
                      label="用户密码"
-                     style="justify-content: space-between;"
                      :rules="passwordRules">
           <a-input-password v-model="formModel.password"
                             :disabled="!isAddHandle && !formModel.useNewPassword"
@@ -45,7 +43,9 @@
                     unchecked-text="使用原密码" />
         </a-form-item>
         <!-- 秘钥id -->
-        <a-form-item field="keyId" label="主机秘钥">
+        <a-form-item field="keyId"
+                     label="主机秘钥"
+                     extra="密码和秘钥二选一 优先使用秘钥">
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
       </a-form>
@@ -55,7 +55,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostIdentityFormModal'
+    name: 'hostIdentityFormModal'
   };
 </script>
 
@@ -68,7 +68,7 @@
   import formRules from '../types/form.rules';
   import { createHostIdentity, updateHostIdentity } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -180,8 +180,10 @@
 </script>
 
 <style lang="less" scoped>
+  @switch-width: 94px;
+
   .password-input {
-    width: 240px;
+    width: calc(100% - @switch-width);
   }
 
   .password-input-full {
@@ -189,6 +191,7 @@
   }
 
   .password-switch {
+    width: @switch-width;
     margin-left: 16px;
   }
 </style>

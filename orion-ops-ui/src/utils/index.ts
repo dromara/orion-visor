@@ -99,6 +99,34 @@ export function formatSecond(second: number, p = 'HH:mm') {
 }
 
 /**
+ * 格式化持续时间
+ * @param start
+ * @param end
+ */
+export function formatDuration(start: number, end?: number): string {
+  if (!end) {
+    return '';
+  }
+  const duration = (end - start) / 1000;
+  if (duration < 1) {
+    return `${Number.parseFloat(duration.toFixed(1))}s`;
+  }
+  const minutes = Math.floor(duration / 60);
+  const seconds = Math.floor(duration % 60);
+  let result = '';
+  if (minutes > 0) {
+    result += `${minutes}min`;
+    if (seconds > 0) {
+      result += ' ';
+    }
+  }
+  if (seconds > 0) {
+    result += `${seconds}s`;
+  }
+  return result;
+}
+
+/**
  * 格式化数字为 ,分割
  */
 export function formatNumber(value: number = 0) {
@@ -167,6 +195,23 @@ export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
       const currVal = obj[curr];
       return acc + ~~(currVal !== undefined && currVal !== null && currVal?.length !== 0 && currVal !== '');
     }, 0);
+};
+
+/**
+ * 创建 websocket
+ */
+export const createWebSocket = async (url: string) => {
+  return new Promise<WebSocket>((resolve, reject) => {
+    const socket = new WebSocket(url);
+
+    socket.onopen = () => {
+      resolve(socket);
+    };
+
+    socket.onerror = e => {
+      reject(e);
+    };
+  });
 };
 
 /**

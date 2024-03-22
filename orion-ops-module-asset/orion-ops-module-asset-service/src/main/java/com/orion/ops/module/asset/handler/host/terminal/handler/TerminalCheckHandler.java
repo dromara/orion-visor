@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.handler.host.terminal.handler;
 
+import com.orion.lang.exception.DisabledException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Maps;
@@ -17,6 +18,7 @@ import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
+import com.orion.ops.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.ops.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
 import com.orion.ops.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
@@ -82,9 +84,12 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         } catch (InvalidArgumentException e) {
             ex = e;
-            log.error("TerminalCheckHandler-handle error userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
+            log.error("TerminalCheckHandler-handle start error userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
+        } catch (DisabledException e) {
+            ex = Exceptions.runtime(TerminalMessage.CONFIG_DISABLED);
+            log.error("TerminalCheckHandler-handle disabled error userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         } catch (Exception e) {
-            ex = Exceptions.runtime(ErrorMessage.CONNECT_ERROR);
+            ex = Exceptions.runtime(TerminalMessage.CONNECTION_FAILED);
             log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志

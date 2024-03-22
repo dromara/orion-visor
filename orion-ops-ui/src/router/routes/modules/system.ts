@@ -2,23 +2,23 @@ import type { AppRouteRecordRaw } from '../types';
 import { DEFAULT_LAYOUT } from '../base';
 
 const SYSTEM: AppRouteRecordRaw = {
-  name: 'system',
-  path: '/system',
+  name: 'systemModule',
+  path: '/system-module',
   component: DEFAULT_LAYOUT,
   children: [
     {
       name: 'systemMenu',
-      path: '/system/menu',
+      path: '/menu',
       component: () => import('@/views/system/menu/index.vue'),
     },
     {
-      name: 'systemDictKey',
-      path: '/system/dict-key',
+      name: 'dictKey',
+      path: '/dict-key',
       component: () => import('@/views/system/dict-key/index.vue'),
     },
     {
-      name: 'systemDictValue',
-      path: '/system/dict-value',
+      name: 'dictValue',
+      path: '/dict-value',
       component: () => import('@/views/system/dict-value/index.vue'),
     },
   ],

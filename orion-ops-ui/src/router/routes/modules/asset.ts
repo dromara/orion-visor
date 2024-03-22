@@ -2,25 +2,25 @@ import type { AppRouteRecordRaw } from '../types';
 import { DEFAULT_LAYOUT } from '../base';
 
 const ASSET: AppRouteRecordRaw = {
-  name: 'asset',
-  path: '/asset',
+  name: 'assetModule',
+  path: '/asset-module',
   component: DEFAULT_LAYOUT,
   children: [
     {
-      name: 'assetHostList',
-      path: '/asset/host-list',
+      name: 'hostList',
+      path: '/host-list',
       component: () => import('@/views/asset/host-list/index.vue'),
     }, {
-      name: 'assetHostKey',
-      path: '/asset/host-key',
+      name: 'hostKey',
+      path: '/host-key',
       component: () => import('@/views/asset/host-key/index.vue'),
     }, {
-      name: 'assetHostIdentity',
-      path: '/asset/host-identity',
+      name: 'hostIdentity',
+      path: '/host-identity',
       component: () => import('@/views/asset/host-identity/index.vue'),
     }, {
       name: 'assetGrant',
-      path: '/asset/grant',
+      path: '/asset-grant',
       component: () => import('@/views/asset/grant/index.vue'),
     },
   ],

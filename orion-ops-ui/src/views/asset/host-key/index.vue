@@ -3,15 +3,15 @@
     <!-- 列表-表格 -->
     <host-key-table v-if="renderTable"
                     ref="table"
-                    @openView="(e) => drawer.openView(e)"
-                    @openAdd="() => drawer.openAdd()"
-                    @openUpdate="(e) => drawer.openUpdate(e)" />
+                    @open-view="(e) => drawer.openView(e)"
+                    @open-add="() => drawer.openAdd()"
+                    @open-update="(e) => drawer.openUpdate(e)" />
     <!-- 列表-卡片 -->
     <host-key-card-list v-else
                         ref="card"
-                        @openView="(e) => drawer.openView(e)"
-                        @openAdd="() => drawer.openAdd()"
-                        @openUpdate="(e) => drawer.openUpdate(e)" />
+                        @open-view="(e) => drawer.openView(e)"
+                        @open-add="() => drawer.openAdd()"
+                        @open-update="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <host-key-form-drawer ref="drawer"
                           @added="modalAddCallback"
@@ -21,7 +21,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostKey'
+    name: 'hostKey'
   };
 </script>
 

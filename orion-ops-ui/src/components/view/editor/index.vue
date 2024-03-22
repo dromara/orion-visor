@@ -22,6 +22,7 @@
   import { createDefaultOptions } from './core';
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import { useAppStore } from '@/store';
+  import shellSuggestions from './languages/shell-suggestions';
 
   const appStore = useAppStore();
 
@@ -51,6 +52,10 @@
       type: String,
       default: 'json',
     },
+    suggestions: {
+      type: Boolean,
+      default: false,
+    },
     containerClass: String,
     containerStyle: Object as PropType<CSSProperties>,
     theme: {
@@ -67,6 +72,7 @@
 
   const editorContainer = ref();
   let editor: any;
+  let completionItemProvider: any;
 
   // 初始化
   const init = () => {
@@ -80,6 +86,8 @@
     };
     // 创建编辑器
     editor = monaco.editor.create(editorContainer.value, options);
+    // 注册代码提示
+    registerSuggestions();
     // 自动聚焦
     if (props.autoFocus) {
       editor.focus();
@@ -141,7 +149,20 @@
     if (editor) {
       monaco.editor.setModelLanguage(editor?.getModel(), v as string);
     }
+    // 注册代码提示
+    registerSuggestions();
   });
+
+  // 注册代码提示
+  const registerSuggestions = () => {
+    if (!props.suggestions) {
+      return;
+    }
+    if (props.language === 'shell') {
+      completionItemProvider?.dispose();
+      completionItemProvider = monaco.languages.registerCompletionItemProvider(props.language, shellSuggestions);
+    }
+  };
 
   // 初始化
   onMounted(init);
@@ -150,6 +171,8 @@
   onBeforeUnmount(() => {
     editor?.dispose();
     editor = undefined;
+    completionItemProvider?.dispose();
+    completionItemProvider = undefined;
   });
 
 </script>

@@ -21,16 +21,19 @@
     </div>
     <!-- 顶部菜单 -->
     <div class="center-side">
-      <Menu v-if="topMenu" />
+      <menu-tree v-if="topMenu" />
     </div>
     <!-- 右侧操作 -->
     <ul class="right-side">
-      <!-- 搜索 -->
-      <li v-if="false">
-        <a-tooltip content="搜索">
-          <a-button class="nav-btn" type="outline" shape="circle">
+      <!-- 主机终端 -->
+      <li v-permission="['asset:host-terminal:access']">
+        <a-tooltip content="主机终端">
+          <a-button class="nav-btn"
+                    type="outline"
+                    shape="circle"
+                    @click="openNewRoute({ name: 'terminal' })">
             <template #icon>
-              <icon-search />
+              <icon-code-square />
             </template>
           </a-button>
         </a-tooltip>
@@ -210,9 +213,10 @@
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
   import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
-  import Menu from '@/components/system/menu/tree/index.vue';
-  import UpdatePasswordModal from '@/components/user/user/update-password-modal.vue';
+  import { openNewRoute } from '@/router';
+  import MenuTree from '@/components/system/menu/tree/index.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
+  import UpdatePasswordModal from '@/components/user/user/update-password-modal/index.vue';
 
   const tipsStore = useTipsStore();
   const appStore = useAppStore();
@@ -322,6 +326,7 @@
     display: flex;
     align-items: center;
     padding-left: 20px;
+    color: var(--color-text-1);
 
     &-logo {
       width: 32px;

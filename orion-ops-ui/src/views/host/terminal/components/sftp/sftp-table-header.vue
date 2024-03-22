@@ -46,7 +46,7 @@
     </div>
     <!-- 已关闭-右侧操作 -->
     <div v-if="isClose" class="sftp-table-header-right">
-      <span class="close-message">{{ closeMessage }}</span>
+      <span class="close-message" :title="closeMessage">{{ closeMessage }}</span>
     </div>
     <!-- 路径编辑模式-右侧操作 -->
     <a-space v-else-if="pathEditable" class="sftp-table-header-right">

@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 角色名称 -->
@@ -35,7 +34,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userRoleFormModal'
+    name: 'roleFormModal'
   };
 </script>
 

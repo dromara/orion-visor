@@ -120,8 +120,15 @@
       <!-- 操作按钮 -->
       <div class="config-button-group">
         <a-space>
-          <a-button @click="resetConfig">重置</a-button>
-          <a-button type="primary" @click="saveConfig">保存</a-button>
+          <a-button size="small"
+                    @click="resetConfig">
+            重置
+          </a-button>
+          <a-button type="primary"
+                    size="small"
+                    @click="saveConfig">
+            保存
+          </a-button>
         </a-space>
       </div>
     </a-spin>
@@ -146,8 +153,8 @@
   import { useDictStore } from '@/store';
   import { EnabledStatus } from '@/types/const';
   import { HostConfigType } from '../../../types/const';
-  import HostKeySelector from '@/components/asset/host-key/host-key-selector.vue';
-  import HostIdentitySelector from '@/components/asset/host-identity/host-identity-selector.vue';
+  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
+  import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 
   const { loading, setLoading } = useLoading();
   const { toRadioOptions } = useDictStore();
@@ -260,7 +267,7 @@
       setLoading(false);
       Message.success('修改成功');
       // 回调 props
-      emits('submitted', { ...props.content, config: { ...formModel.value } });
+      emits('submitted', { ...props.content, ...config, config: { ...formModel.value } });
     } catch (e) {
     } finally {
       setLoading(false);

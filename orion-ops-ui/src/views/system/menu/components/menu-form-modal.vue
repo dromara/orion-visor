@@ -16,9 +16,8 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
               :label-col-props="{ span: 7 }"
-              :wrapper-col-props="{ span: 17 }"
+              :wrapper-col-props="{ span: 16 }"
               :rules="formRules">
         <!-- 上级菜单 -->
         <a-form-item field="parentId" label="上级菜单">
@@ -140,7 +139,7 @@
   import { Message } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import IconPicker from '@sanqi377/arco-vue-icon-picker';
-  import MenuTreeSelector from '@/components/system/menu/selector/menu-tree-selector.vue';
+  import MenuTreeSelector from '@/components/system/menu/tree-selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

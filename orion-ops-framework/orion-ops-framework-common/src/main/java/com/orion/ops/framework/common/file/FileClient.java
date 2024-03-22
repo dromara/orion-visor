@@ -1,6 +1,7 @@
 package com.orion.ops.framework.common.file;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 文件客户端
@@ -65,8 +66,6 @@ public interface FileClient {
      */
     String upload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) throws Exception;
 
-    // TODO getOutputStream
-
     /**
      * 检查文件是否存在
      *
@@ -101,5 +100,40 @@ public interface FileClient {
      * @throws Exception Exception
      */
     InputStream getContentInputStream(String path) throws Exception;
+
+    /**
+     * 获取文件输出流
+     *
+     * @param path path
+     * @return stream
+     * @throws Exception Exception
+     */
+    OutputStream getContentOutputStream(String path) throws Exception;
+
+    /**
+     * 获取文件输出流
+     *
+     * @param path   path
+     * @param append append
+     * @return stream
+     * @throws Exception Exception
+     */
+    OutputStream getContentOutputStream(String path, boolean append) throws Exception;
+
+    /**
+     * 获取返回路径 用于客户端返回
+     *
+     * @param path path
+     * @return returnPath
+     */
+    String getReturnPath(String path);
+
+    /**
+     * 获取实际存储路径 用于服务端的存储
+     *
+     * @param returnPath returnPath
+     * @return absolutePath
+     */
+    String getAbsolutePath(String returnPath);
 
 }

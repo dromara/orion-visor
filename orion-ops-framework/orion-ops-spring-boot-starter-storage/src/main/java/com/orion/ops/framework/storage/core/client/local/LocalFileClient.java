@@ -6,6 +6,7 @@ import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.storage.core.client.AbstractFileClient;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 本地文件客户端
@@ -18,6 +19,16 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
 
     public LocalFileClient(LocalFileClientConfig config) {
         super(config);
+    }
+
+    @Override
+    public InputStream getContentInputStream(String path) throws Exception {
+        return Files1.openInputStreamFast(this.getAbsolutePath(path));
+    }
+
+    @Override
+    public OutputStream getContentOutputStream(String path, boolean append) throws Exception {
+        return Files1.openOutputStreamFast(this.getAbsolutePath(path), append);
     }
 
     @Override
@@ -36,11 +47,6 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
     }
 
     @Override
-    protected InputStream doDownload(String path) throws Exception {
-        return Files1.openInputStreamFast(this.getAbsolutePath(path));
-    }
-
-    @Override
     public boolean isExists(String path) {
         return Files1.isFile(this.getAbsolutePath(path));
     }
@@ -51,13 +57,13 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
     }
 
     @Override
-    protected String getReturnPath(String path) {
+    public String getReturnPath(String path) {
         // 拼接公共路径
         return Files1.getPath(config.getBasePath() + Const.SLASH + this.getFilePath(path));
     }
 
     @Override
-    protected String getAbsolutePath(String returnPath) {
+    public String getAbsolutePath(String returnPath) {
         // 拼接存储路径
         return Files1.getPath(config.getStoragePath() + Const.SLASH + returnPath);
     }

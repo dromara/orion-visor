@@ -8,7 +8,7 @@ const DASHBOARD: AppRouteRecordRaw = {
   children: [
     {
       name: 'workplace',
-      path: '/dashboard/workplace',
+      path: '/workplace',
       component: () => import('@/views/dashboard/workplace/index.vue'),
     },
   ],

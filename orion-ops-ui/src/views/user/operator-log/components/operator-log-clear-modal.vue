@@ -15,13 +15,17 @@
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
               label-align="right"
-              :style="{ width: '460px' }"
               :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 19 }">
+              :wrapper-col-props="{ span: 18 }">
+        <!-- 执行时间 -->
+        <a-form-item field="startTimeRange" label="执行时间">
+          <a-range-picker v-model="formModel.startTimeRange"
+                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
+                          show-time
+                          format="YYYY-MM-DD HH:mm:ss" />
+        </a-form-item>
         <!-- 操作用户 -->
-        <a-form-item field="userId"
-                     label="操作用户"
-        >
+        <a-form-item field="userId" label="操作用户">
           <user-selector v-model="formModel.userId"
                          placeholder="请选择操作用户"
                          allow-clear />
@@ -58,14 +62,6 @@
                     placeholder="请选择执行结果"
                     allow-clear />
         </a-form-item>
-        <!-- 执行时间 -->
-        <a-form-item field="startTimeRange" label="执行时间">
-          <a-range-picker v-model="formModel.startTimeRange"
-                          style="width: 100%"
-                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
-                          show-time
-                          format="YYYY-MM-DD HH:mm:ss" />
-        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -73,7 +69,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userOperatorLogClearModal'
+    name: 'operatorLogClearModal'
   };
 </script>
 
@@ -88,7 +84,7 @@
   import { useDictStore } from '@/store';
   import { operatorLogModuleKey, operatorLogResultKey, operatorLogTypeKey, operatorRiskLevelKey } from '@/views/user/operator-log/types/const';
   import { labelFilter } from '@/types/form';
-  import UserSelector from '@/components/user/user/user-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const { $state: dictState, toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();

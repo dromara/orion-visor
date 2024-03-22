@@ -10,7 +10,7 @@
                      :editable="false"
                      :loading="loading"
                      @loading="setLoading"
-                     @select-node="e => selectedGroup = e"
+                     @select-node="(e) => selectedGroup = e"
                      @update:checked-keys="updateCheckedGroups" />
     <!-- 主机列表 -->
     <host-list class="group-main-hosts sticky-list" :group="selectedGroup" />
@@ -30,7 +30,7 @@
   import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
   import { Message } from '@arco-design/web-vue';
-  import HostGroupTree from '@/components/asset/host-group/host-group-tree.vue';
+  import HostGroupTree from '@/components/asset/host-group/tree/index.vue';
   import HostList from './host-list.vue';
   import GrantLayout from './grant-layout.vue';
 

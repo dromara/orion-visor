@@ -1,0 +1,34 @@
+### 查询批量执行日志
+GET {{baseUrl}}/asset/exec-log/get?id=1
+Authorization: {{token}}
+
+
+### 分页查询批量执行日志
+POST {{baseUrl}}/asset/exec-log/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "userId": "",
+  "username": "",
+  "source": "",
+  "sourceId": "",
+  "description": "",
+  "command": "",
+  "status": ""
+}
+
+
+### 删除批量执行日志
+DELETE {{baseUrl}}/asset/exec-log/delete?id=1
+Authorization: {{token}}
+
+
+### 批量删除批量执行日志
+DELETE {{baseUrl}}/asset/exec-log/batch-delete?idList=1,2,3
+Authorization: {{token}}
+
+###

@@ -1,7 +1,9 @@
 package com.orion.ops.module.asset.config;
 
-import com.orion.ops.module.asset.handler.host.transfer.TransferMessageDispatcher;
+import com.orion.ops.module.asset.handler.host.exec.log.ExecLogTailHandler;
 import com.orion.ops.module.asset.handler.host.terminal.TerminalMessageDispatcher;
+import com.orion.ops.module.asset.handler.host.transfer.TransferMessageDispatcher;
+import com.orion.ops.module.asset.interceptor.ExecLogTailInterceptor;
 import com.orion.ops.module.asset.interceptor.TerminalAccessInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +29,16 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
     private TerminalAccessInterceptor terminalAccessInterceptor;
 
     @Resource
+    private ExecLogTailInterceptor execLogTailInterceptor;
+
+    @Resource
     private TerminalMessageDispatcher terminalMessageDispatcher;
 
     @Resource
     private TransferMessageDispatcher transferMessageDispatcher;
+
+    @Resource
+    private ExecLogTailHandler execLogTailHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -41,6 +49,10 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
         // 文件传输
         registry.addHandler(transferMessageDispatcher, prefix + "/host/transfer/{accessToken}")
                 .addInterceptors(terminalAccessInterceptor)
+                .setAllowedOrigins("*");
+        // 执行日志
+        registry.addHandler(execLogTailHandler, prefix + "/exec/log/{token}")
+                .addInterceptors(execLogTailInterceptor)
                 .setAllowedOrigins("*");
     }
 

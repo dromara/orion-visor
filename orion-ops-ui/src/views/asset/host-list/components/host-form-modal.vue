@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 主机名称 -->
@@ -45,7 +44,7 @@
                               type="HOST"
                               :tagColor="tagColor"
                               placeholder="请选择主机标签"
-                              @onLimited="onLimitedTag" />
+                              @on-limited="onLimitedTag" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -54,7 +53,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostFormModal'
+    name: 'hostFormModal'
   };
 </script>
 
@@ -63,13 +62,13 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/host.form.rules';
+  import formRules from '../types/form.rules';
   import { createHost, getHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import { pick } from 'lodash';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
-  import HostGroupTreeSelector from '@/components/asset/host-group/host-group-tree-selector.vue';
   import { tagColor } from '@/views/asset/host-list/types/const';
+  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
+  import HostGroupTreeSelector from '@/components/asset/host-group/tree-selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

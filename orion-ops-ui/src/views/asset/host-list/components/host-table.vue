@@ -7,26 +7,26 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- id -->
-      <a-form-item field="id" label="主机id" label-col-flex="50px">
+      <a-form-item field="id" label="主机id">
         <a-input-number v-model="formModel.id"
                         placeholder="请输入主机id"
                         allow-clear
                         hide-button />
       </a-form-item>
       <!-- 主机名称 -->
-      <a-form-item field="name" label="主机名称" label-col-flex="50px">
+      <a-form-item field="name" label="主机名称">
         <a-input v-model="formModel.name" placeholder="请输入主机名称" allow-clear />
       </a-form-item>
       <!-- 主机编码 -->
-      <a-form-item field="code" label="主机编码" label-col-flex="50px">
+      <a-form-item field="code" label="主机编码">
         <a-input v-model="formModel.code" placeholder="请输入主机编码" allow-clear />
       </a-form-item>
       <!-- 主机地址 -->
-      <a-form-item field="address" label="主机地址" label-col-flex="50px">
+      <a-form-item field="address" label="主机地址">
         <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
       <!-- 主机标签 -->
-      <a-form-item field="tags" label="主机标签" label-col-flex="50px">
+      <a-form-item field="tags" label="主机标签">
         <tag-multi-selector v-model="formModel.tags"
                             ref="tagSelector"
                             :allowCreate="false"
@@ -105,14 +105,17 @@
       </template>
       <!-- 地址 -->
       <template #address="{ record }">
-        <span class="copy-left" @click="copy(record.address)" title="复制">
-          <icon-copy />
+        <span class="span-blue text-copy"
+              title="复制"
+              @click="copy(record.address)">
+          {{ record.address }}
         </span>
-        <span class="span-blue">{{ record.address }}</span>
       </template>
       <!-- 标签 -->
       <template #tags="{ record }">
-        <a-space v-if="record.tags">
+        <a-space v-if="record.tags"
+                 style="margin-bottom: -8px;"
+                 :wrap="true">
           <a-tag v-for="tag in record.tags"
                  :key="tag.id"
                  :color="dataColor(tag.name, tagColor)">
@@ -157,7 +160,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostTable'
+    name: 'hostTable'
   };
 </script>
 
@@ -166,21 +169,19 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
-  import columns from '../types/host.table.columns';
   import { tagColor } from '../types/const';
   import { usePagination } from '@/types/table';
-  import useCopy from '@/hooks/copy';
+  import useLoading from '@/hooks/loading';
+  import { copy } from '@/hooks/copy';
+  import columns from '../types/table.columns';
   import { dataColor } from '@/utils';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const tagSelector = ref();
   const tableRenderData = ref<HostQueryResponse[]>([]);
   const { loading, setLoading } = useLoading();
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
-
-  const { copy } = useCopy();
 
   const pagination = usePagination();
 

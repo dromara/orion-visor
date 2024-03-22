@@ -34,11 +34,11 @@
     </template>
     <!-- 留痕地址 -->
     <template #address="{ record }">
-      <span class="operator-location" :title="record.location">
+      <span class="table-cell-value" :title="record.location">
         {{ record.location }}
       </span>
       <br>
-      <span class="operator-address text-copy"
+      <span class="table-cell-sub-value text-copy"
             :title="record.address"
             @click="copy(record.address)">
         {{ record.address }}
@@ -62,24 +62,24 @@
 
 <script lang="ts">
   export default {
-    name: 'userOperatorLogSimpleTable'
+    name: 'operatorLogSimpleTable'
   };
 </script>
 
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from '@/api/user/operator-log';
-  import { ref, onMounted, onBeforeMount } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, dictKeys } from '../types/const';
   import columns from '../types/table.columns';
   import { getLogDetail } from '../types/const';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
   import { usePagination } from '@/types/table';
   import { useDictStore } from '@/store';
   import { getOperatorLogPage } from '@/api/user/operator-log';
   import { getCurrentUserOperatorLog } from '@/api/user/mine';
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const props = defineProps({
     handleColumn: {
@@ -101,7 +101,6 @@
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const jsonView = ref();
   const tableColumns = ref();
@@ -147,14 +146,12 @@
     fetchTableData
   });
 
-  // 加载字典值
-  onBeforeMount(async () => {
+  // 初始化
+  onMounted(async () => {
+    // 加载字典值
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
-  });
-
-  // 初始化
-  onMounted(() => {
+    // 设置表格列
     let cols = columns.map(s => {
       return { ...s };
     }).filter(s => s.dataIndex !== 'username');
@@ -169,19 +166,11 @@
       cols = cols.filter(s => s.dataIndex !== 'handle');
     }
     tableColumns.value = cols;
+    // 加载数据
     fetchTableData();
   });
 
 </script>
 
 <style lang="less" scoped>
-  .operator-location {
-    color: var(--color-text-2);
-  }
-
-  .operator-address {
-    margin-top: 4px;
-    display: inline-block;
-    color: var(--color-text-3);
-  }
 </style>

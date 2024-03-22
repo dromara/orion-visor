@@ -47,6 +47,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         });
       } else {
         // 未成功提示错误信息
+        session.resolver?.onClose('0', msg);
         Message.error(msg || '建立 SFTP 失败');
       }
     }
@@ -75,6 +76,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         session.connect();
       } else {
         // 未成功提示错误信息
+        session.resolver?.onClose('0', msg);
         Message.error(msg || '打开 SFTP 失败');
       }
     }

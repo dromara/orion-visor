@@ -75,8 +75,6 @@ public interface ErrorMessage {
 
     String SESSION_ABSENT = "会话不存在";
 
-    String CONNECT_ERROR = "连接失败";
-
     String PATH_NOT_NORMALIZE = "路径不合法";
 
     String OPERATE_ERROR = "操作失败";
@@ -88,5 +86,9 @@ public interface ErrorMessage {
     String LOG_ABSENT = "日志不存在";
 
     String ILLEGAL_STATUS = "当前状态不支持此操作";
+
+    String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";
+
+    String FILE_READ_ERROR = "文件读取失败";
 
 }

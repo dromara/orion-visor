@@ -8,14 +8,13 @@
     <!-- 操作用户 -->
     <a-form-item v-if="visibleUser"
                  field="userId"
-                 label="操作用户"
-                 label-col-flex="50px">
+                 label="操作用户">
       <user-selector v-model="formModel.userId"
                      placeholder="请选择操作用户"
                      allow-clear />
     </a-form-item>
     <!-- 操作模块 -->
-    <a-form-item field="module" label="操作模块" label-col-flex="50px">
+    <a-form-item field="module" label="操作模块">
       <a-select v-model="formModel.module"
                 :options="toOptions(operatorLogModuleKey)"
                 :allow-search="true"
@@ -24,7 +23,7 @@
                 allow-clear />
     </a-form-item>
     <!-- 操作类型 -->
-    <a-form-item field="type" label="操作类型" label-col-flex="50px">
+    <a-form-item field="type" label="操作类型">
       <a-select v-model="formModel.type"
                 :options="typeOptions"
                 :allow-search="true"
@@ -33,23 +32,22 @@
                 allow-clear />
     </a-form-item>
     <!-- 风险等级 -->
-    <a-form-item field="riskLevel" label="风险等级" label-col-flex="50px">
+    <a-form-item field="riskLevel" label="风险等级">
       <a-select v-model="formModel.riskLevel"
                 :options="toOptions(operatorRiskLevelKey)"
                 placeholder="请选择风险等级"
                 allow-clear />
     </a-form-item>
     <!-- 执行结果 -->
-    <a-form-item field="result" label="执行结果" label-col-flex="50px">
+    <a-form-item field="result" label="执行结果">
       <a-select v-model="formModel.result"
                 :options="toOptions(operatorLogResultKey)"
                 placeholder="请选择执行结果"
                 allow-clear />
     </a-form-item>
     <!-- 执行时间 -->
-    <a-form-item field="startTimeRange" label="执行时间" label-col-flex="50px">
+    <a-form-item field="startTimeRange" label="执行时间">
       <a-range-picker v-model="formModel.startTimeRange"
-                      style="width: 100%"
                       :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                       show-time
                       format="YYYY-MM-DD HH:mm:ss" />
@@ -71,7 +69,7 @@
   import { useDictStore } from '@/store';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
   import { labelFilter } from '@/types/form';
-  import UserSelector from '@/components/user/user/user-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['submit']);
   const props = defineProps({

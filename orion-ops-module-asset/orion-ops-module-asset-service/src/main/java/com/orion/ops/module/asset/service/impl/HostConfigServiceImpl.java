@@ -1,8 +1,10 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.enums.BooleanBit;
 import com.orion.ops.framework.common.enums.EnableStatus;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
@@ -21,10 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,12 +58,15 @@ public class HostConfigServiceImpl implements HostConfigService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type) {
         // 查询配置
         HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type.getType());
         if (config == null) {
             return null;
+        }
+        // 检查配置状态
+        if (!BooleanBit.toBoolean(config.getStatus())) {
+            throw Exceptions.disabled();
         }
         return type.parse(config.getConfig());
     }
@@ -73,20 +75,19 @@ public class HostConfigServiceImpl implements HostConfigService {
     public List<HostConfigVO> getHostConfigList(Long hostId) {
         // 查询
         List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostId(hostId);
+        return configs.stream()
+                .map(this::convertHostConfig)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HostConfigVO> getHostConfigList(List<Long> hostIdList, String type) {
+        // 查询
+        List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostIdList(hostIdList, type);
         // 返回
         return configs.stream()
-                .map(s -> {
-                    // 获取配置
-                    HostConfigTypeEnum type = HostConfigTypeEnum.of(s.getType());
-                    if (type == null) {
-                        return null;
-                    }
-                    // 转为视图
-                    HostConfigVO vo = HostConfigConvert.MAPPER.to(s);
-                    Map<String, Object> config = type.getStrategyBean().toView(s.getConfig());
-                    vo.setConfig(config);
-                    return vo;
-                })
+                .map(this::convertHostConfig)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -145,6 +146,7 @@ public class HostConfigServiceImpl implements HostConfigService {
             update.setId(config.getId());
             update.setStatus(status);
             update.setVersion(version);
+            update.setUpdateTime(new Date());
             int effect = hostConfigDAO.updateById(update);
             Valid.version(effect);
             return update.getVersion();
@@ -165,6 +167,20 @@ public class HostConfigServiceImpl implements HostConfigService {
                 .map(s -> this.getDefaultConfig(hostId, s))
                 .collect(Collectors.toList());
         hostConfigDAO.insertBatch(configs);
+    }
+
+    @Override
+    public List<Long> getEnabledConfigHostId(String type, List<Long> hostIdList) {
+        return hostConfigDAO.of()
+                .createValidateWrapper()
+                .select(HostConfigDO::getHostId)
+                .eq(HostConfigDO::getType, type)
+                .eq(HostConfigDO::getStatus, BooleanBit.TRUE.getValue())
+                .in(HostConfigDO::getHostId, hostIdList)
+                .then()
+                .stream()
+                .map(HostConfigDO::getHostId)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -199,6 +215,25 @@ public class HostConfigServiceImpl implements HostConfigService {
         insert.setConfig(type.getStrategyBean().getDefault().serial());
         insert.setVersion(Const.DEFAULT_VERSION);
         return insert;
+    }
+
+    /**
+     * 转化配置
+     *
+     * @param row row
+     * @return config
+     */
+    private HostConfigVO convertHostConfig(HostConfigDO row) {
+        // 获取配置
+        HostConfigTypeEnum type = HostConfigTypeEnum.of(row.getType());
+        if (type == null) {
+            return null;
+        }
+        // 转为视图
+        HostConfigVO vo = HostConfigConvert.MAPPER.to(row);
+        Map<String, Object> config = type.getStrategyBean().toView(row.getConfig());
+        vo.setConfig(config);
+        return vo;
     }
 
 }

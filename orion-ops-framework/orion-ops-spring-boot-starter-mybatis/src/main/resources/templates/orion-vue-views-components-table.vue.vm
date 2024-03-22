@@ -8,7 +8,7 @@
                   @keyup.enter="() => fetchTableData()">
       #foreach($field in ${table.fields})
       <!-- $field.comment -->
-      <a-form-item field="${field.propertyName}" label="${field.comment}" label-col-flex="50px">
+      <a-form-item field="${field.propertyName}" label="${field.comment}">
         #if(${dictMap.containsKey(${field.propertyName})})
         <a-select v-model="formModel.${field.propertyName}"
                   :options="toOptions($dictMap.get(${field.propertyName}).keyField)"
@@ -89,14 +89,14 @@
              #end
              :data="tableRenderData"
              :pagination="pagination"
+             :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
-             :bordered="false">
+             @page-size-change="(size) => fetchTableData(1, size)">
       #foreach($field in ${table.fields})
       #if(${dictMap.containsKey(${field.propertyName})})
       <!-- $field.comment -->
       <template #${field.propertyName}="{ record }">
-        {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}}) }}
+        {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}) }}
       </template>
       #end
       #end
@@ -130,7 +130,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}Table'
+    name: '${vue.featureEntityFirstLower}Table'
   };
 </script>
 
@@ -157,11 +157,6 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
-  #if($vue.enableRowSelection)
-  const selectedKeys = ref<number[]>([]);
-  #end
-  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
-
   const pagination = usePagination();
   #if($vue.enableRowSelection)
   const rowSelection = useRowSelection();
@@ -171,6 +166,10 @@
   const { toOptions, getDictValue } = useDictStore();
   #end
 
+  #if($vue.enableRowSelection)
+  const selectedKeys = ref<number[]>([]);
+  #end
+  const tableRenderData = ref<${vue.featureEntity}QueryResponse[]>([]);
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     #foreach($field in ${table.fields})
     ${field.propertyName}: undefined,

@@ -15,7 +15,7 @@ import java.math.*;
  * $!{table.comment} 导出对象
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 @Data

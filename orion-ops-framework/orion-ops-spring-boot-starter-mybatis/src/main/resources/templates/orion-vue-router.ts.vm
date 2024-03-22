@@ -2,13 +2,13 @@ import type { AppRouteRecordRaw } from '../types';
 import { DEFAULT_LAYOUT } from '../base';
 
 const $vue.moduleConst: AppRouteRecordRaw = {
-  name: '$vue.moduleEntityFirstLower',
-  path: '/$vue.module',
+  name: '${vue.moduleEntityFirstLower}Module',
+  path: '/${vue.moduleEntityFirstLower}-module',
   component: DEFAULT_LAYOUT,
   children: [
     {
-      name: '$vue.moduleEntityFirstLower$vue.featureEntity',
-      path: '/$vue.module/$vue.feature',
+      name: '$vue.featureEntityFirstLower',
+      path: '/$vue.feature',
       component: () => import('@/views/$vue.module/$vue.feature/index.vue'),
     },
   ],

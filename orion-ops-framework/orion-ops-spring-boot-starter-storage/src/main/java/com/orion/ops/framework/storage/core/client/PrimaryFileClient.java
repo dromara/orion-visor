@@ -4,6 +4,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.common.file.FileClient;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 默认文件客户端
@@ -59,6 +60,26 @@ public class PrimaryFileClient implements FileClient {
     @Override
     public InputStream getContentInputStream(String path) throws Exception {
         return delegate.getContentInputStream(path);
+    }
+
+    @Override
+    public OutputStream getContentOutputStream(String path) throws Exception {
+        return delegate.getContentOutputStream(path);
+    }
+
+    @Override
+    public OutputStream getContentOutputStream(String path, boolean append) throws Exception {
+        return delegate.getContentOutputStream(path, append);
+    }
+
+    @Override
+    public String getReturnPath(String path) {
+        return delegate.getReturnPath(path);
+    }
+
+    @Override
+    public String getAbsolutePath(String returnPath) {
+        return delegate.getAbsolutePath(returnPath);
     }
 
     public static void setDelegate(FileClient delegate) {

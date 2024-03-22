@@ -103,6 +103,13 @@ public class DataExtraApiImpl implements DataExtraApi {
     }
 
     @Override
+    public Future<List<Map<Long, String>>> getExtraItemsValuesByCacheAsync(Long userId, DataExtraTypeEnum type, List<String> items) {
+        Valid.allNotNull(userId, type);
+        Valid.notEmpty(items);
+        return CompletableFuture.completedFuture(dataExtraService.getExtraItemsValuesByCache(userId, type.name(), items));
+    }
+
+    @Override
     public DataExtraDTO getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
         Valid.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);

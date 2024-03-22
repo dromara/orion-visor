@@ -22,15 +22,6 @@ const columns = [
     dataIndex: 'keyId',
     slotName: 'keyId',
   }, {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    slotName: 'createTime',
-    align: 'center',
-    width: 180,
-    render: ({ record }) => {
-      return dateFormat(new Date(record.createTime));
-    },
-  }, {
     title: '修改时间',
     dataIndex: 'updateTime',
     slotName: 'updateTime',

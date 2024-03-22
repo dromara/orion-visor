@@ -185,9 +185,17 @@ orion:
     local:
       primary: true
       enabled: true
-      timestamp-prefix: true
+      timestamp-prefix: false
+      date-directory: false
       storage-path: ${user.home}
-      base-path: /orion/storage/orion-ops-pro
+      base-path: /orion/orion-ops-pro/storage
+    # 日志文件存储
+    logs:
+      enabled: true
+      timestamp-prefix: false
+      date-directory: false
+      storage-path: ${user.home}
+      base-path: /orion/orion-ops-pro/logs
   security:
     password-encoder-length: 4
     # 匿名接口

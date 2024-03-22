@@ -190,10 +190,10 @@
 
   // 关闭回调
   const onClose = (forceClose: string, msg: string) => {
-    console.log(forceClose);
-    console.log(msg);
     closed.value = true;
     closeMessage.value = msg;
+    setTableLoading(false);
+    setEditorLoading(false);
   };
 
   // 接收列表回调

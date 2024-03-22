@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         #foreach($field in ${table.fields})
@@ -54,7 +53,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}FormModal'
+    name: '${vue.featureEntityFirstLower}FormModal'
   };
 </script>
 
@@ -75,6 +74,8 @@
   import { useDictStore } from '@/store';
   #end
 
+  const emits = defineEmits(['added', 'updated']);
+
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
@@ -83,6 +84,8 @@
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
+  const formRef = ref<any>();
+  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
 
   const defaultForm = (): ${vue.featureEntity}UpdateRequest => {
     return {
@@ -91,11 +94,6 @@
     #end
     };
   };
-
-  const formRef = ref<any>();
-  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
-
-  const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
   const openAdd = () => {

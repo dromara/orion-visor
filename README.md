@@ -2,8 +2,8 @@
  <img style="margin-right: 8px;" src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8c687ef1-5711-4a93-9db0-79c010af7902.png" width="32px" height="32px"/> orion-ops-pro 是什么
 </h1>
 
-`orion-ops-pro` 一款开箱即用的一站式智能运维平台, 提供了资产管理、资产授权、Web终端、WebSftp、角色管理、系统管理等功能。致力于简化运维团队的治理工作。它是根据 `orion-ops`
-的产品思路完全重构的一套系统, 重新设计了架构并优化交互逻辑, 操作更快捷友好。
+`orion-ops-pro` 是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、Web终端、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。它是基于 `orion-ops`
+的产品思路进行重构，技术架构升级，并优化了交互逻辑，让操作更快捷更友好。
 
 <p style="text-align: left">
     <a target="_blank" style="text-decoration: none" href="https://app.codacy.com/gh/lijiahangmax/orion-ops-pro/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
@@ -28,31 +28,30 @@
 
 <br/>  
 
-当前版本: **1.0.1**  
+当前版本: **1.0.2**  
 github: https://github.com/lijiahangmax/orion-ops-pro  
 gitee: https://gitee.com/lijiahangmax/orion-ops-pro  
 文档: https://lijiahangmax.gitee.io/orion-ops-pro/#/    
-demo: http://101.43.254.243:1081/#/
+demo: http://101.43.254.243:1081/
 
 演示账号: `admin`    
 演示密码: `admin`  
-留个小星星再走吧⭐
+⭐ 体验后可以点一下 `star` 这对我很重要  
+📞 合作/功能定制请联系底部 备注: '定制'
 
 ## 特性
 
 * 易用便捷: 极简配置, 开箱即用, 支持 Docker 部署方式。
-* 资产管理: 支持灵活配置主机分组, 统一管理主机、秘钥和身份。
-* 资产授权: 可将资产数据授权给指定角色和用户。
+* 资产管理: 支持灵活配置主机分组, 实现对主机、秘钥和身份的统一管理。
+* 资产授权: 可将资产数据授权给指定角色和用户, 确保数据安全性。
 * 权限控制: 全面管理用户角色, 支持动态菜单配置和强制下线等功能。
 * 在线终端: 提供便捷的在线 Web 终端服务, 支持快捷命令、自定义快捷键和主题风格。
 * 文件管理: 实现远程主机大文件的批量上传、下载和在线编辑等操作。
-* 可扩展性: 前后端代码规范统一, 代码质量高、健壮且易于阅读和扩展。
-
-[comment]: <> (  FIXME * 批量操作: 支持远程主机批量执行命令 以及 批量执行上传文件)
+* 批量操作: 支持远程主机批量执行 shell 命令。
+* 操作日志: 记录用户操作日志，确保操作可追溯, 提高系统安全性。
+* 可扩展性: 前后端代码规范统一、代码质量高、健壮且易于阅读和扩展。
 
 [comment]: <> (  FIXME * 调度任务: 维护 cron 表达式, 定时执行主机命令)
-
-[comment]: <> (  FIXME * 功能强大: 命令批量执行, 任务定时调度, 远程日志查看, 操作日志全记录等)
 
 ## 快速开始
 
@@ -78,32 +77,38 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 
 > 工作台
 
-![工作台](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/69328bb3-8a8d-47ca-8a5b-d16c56be704b.png "工作台")
+![工作台](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/13d79a89-aadf-4100-8bb3-afb03758001f.png "工作台")
 
 > 资产管理
 
-![主机列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8ca59a20-09b6-48e5-b511-c01319d963df.png "主机列表")
-![资产授权](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/a6e48de3-5145-4c48-a6a2-b99208cb1ae1.png "资产授权")
+![主机列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/d9954335-9afa-4579-b040-a1c3006cb1f0.png "主机列表")
+![资产授权](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/ffbdd0e2-4811-4776-a96c-7b5d9b4f3e89.png "资产授权")
 
 > 主机终端
 
-![主机终端](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/7264f870-45c7-4037-9179-6473d254c231.png "主机终端")
-![命令片段](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/0803bb07-3776-4de3-bd4a-02931fab7ca7.png "命令片段")
-![主题设置](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/89f75025-b0d4-4ccf-b1a7-de311c576ab4.png "主题设置")
-![终端设置](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/b6d2da7a-5aaf-4790-b4e9-d8e8428e2122.png "终端设置")
-![sftp](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/9c096d5e-3a1c-40e3-b047-1e8725f27726.png "sftp")
-![传输列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/cebee39c-d5f6-4d82-b4b8-f2734c9a49bf.png "传输列表")
+![主机终端](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/de6ae2bb-3d9a-44d6-b530-664febee7dbc.png "主机终端")
+![命令片段](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0a2a8077-fb47-4c87-8327-9d6b93ecc552.png "命令片段")
+![主题设置](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/20741d51-af62-40f0-bd6f-6e954d9b0398.png "主题设置")
+![终端设置](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/a3bf32bc-26b5-4ec7-b429-54c17ccd136b.png "终端设置")
+![sftp](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0ae07072-1740-4f84-aaf7-c18a8074ce61.png "sftp")
+![传输列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/ccf880a4-c393-4a35-9f35-fe7572256edd.png "传输列表")
+
+> 批量执行
+
+![批量执行](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0a222b64-d2c1-481c-99b8-c3a0616d2fab.png "批量执行")
+![执行日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/06d02d38-70ef-43c2-950c-9f8c73a105ba.png "执行日志")
+![执行记录](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0e474cc2-f7cf-49bc-be3c-f6445783ad7c.png "执行记录")
 
 > 用户管理
 
-![用户列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/b9ca5bb6-f88a-43e6-888f-b7259df02521.png "用户列表")  
-![个人中心](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/6a4985c6-e828-4eb3-96b2-b1ca48df7579.png "个人中心")
-![操作日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/304c6e12-755e-4ce7-8d37-051676ff6fe9.png "操作日志")
+![用户列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0d5f26e0-de4e-4342-800c-30a0d5d3078e.png "用户列表")  
+![个人中心](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/ed1e5e02-f854-44ee-bb37-ea6e45526457.png "个人中心")
+![操作日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/ba6f1526-da00-4a3d-a550-470a6b3d2803.png "操作日志")
 
 > 系统管理
 
-![系统菜单](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/89dcd816-7f76-4bed-be4c-79a412dbeba4.png "系统菜单")  
-![分配菜单](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/ac5ca3da-6874-4655-b192-b88bad6cfa06.png "分配菜单")
+![系统菜单](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/5087cd35-6a65-4338-bc87-c81969cdb947.png "系统菜单")  
+![分配菜单](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/5a7804ed-179c-4d25-820f-af2af1aabbba.png "分配菜单")
 
 ## 联系我
 
@@ -112,7 +117,8 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
   <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/4f1c4e77-8e36-45a3-8be6-9da5387bb96e.jpg" alt="wx" width="298px" height="398px"/>  
 </div>
 
-📧 微信添加备注: ops
+📧 咨询问题微信备注: ops  
+📧 合作/功能定制备注: 合作
 
 ## 支持一下
 

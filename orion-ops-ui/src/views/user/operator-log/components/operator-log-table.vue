@@ -81,11 +81,11 @@
       </template>
       <!-- 留痕地址 -->
       <template #address="{ record }">
-        <span class="operator-location" :title="record.location">
+        <span class="table-cell-value" :title="record.location">
           {{ record.location }}
         </span>
         <br>
-        <span class="operator-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.address"
               @click="copy(record.address)">
           {{ record.address }}
@@ -125,7 +125,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userOperatorLogTable'
+    name: 'operatorLogTable'
   };
 </script>
 
@@ -134,7 +134,7 @@
   import { ref, onMounted } from 'vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, getLogDetail } from '../types/const';
   import columns from '../types/table.columns';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
   import { usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
@@ -143,13 +143,12 @@
   import { Message } from '@arco-design/web-vue';
   import OperatorLogQueryHeader from './operator-log-query-header.vue';
   import OperatorLogClearModal from './operator-log-clear-modal.vue';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const clearModal = ref();
   const jsonView = ref();
@@ -231,13 +230,4 @@
 </script>
 
 <style lang="less" scoped>
-  .operator-location {
-    color: var(--color-text-2);
-  }
-
-  .operator-address {
-    margin-top: 4px;
-    display: inline-block;
-    color: var(--color-text-3);
-  }
 </style>

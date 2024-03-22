@@ -1,7 +1,5 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
-           :body-style="{'padding-bottom': '24px'}"
            title-align="start"
            :title="title"
            :top="80"
@@ -17,8 +15,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         <!-- 配置项 -->
@@ -41,16 +38,16 @@
                      :key="index"
                      :field="`extra${index + 1}`"
                      :label="`额外参数 ${index + 1}`">
-          <a-input-group>
+          <a-input-group style="width: 100%;">
             <!-- 参数类型 -->
             <a-select v-model="schema.type"
                       :options="toOptions(dictValueTypeKey)"
                       placeholder="类型"
-                      :style="{ width: '110px' }" />
+                      :style="{ width: '35%' }" />
             <!-- 参数值 -->
             <a-input v-model="schema.name"
                      placeholder="参数名称"
-                     :style="{ width: '196px' }" />
+                     :style="{ width: '65%' }" />
           </a-input-group>
           <!-- 操作按钮 -->
           <div class="extra-action">
@@ -88,7 +85,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictKeyFormModal'
+    name: 'dictKeyFormModal'
   };
 </script>
 
@@ -250,13 +247,17 @@
 </script>
 
 <style lang="less" scoped>
+
   .minus-icon-wrapper {
+    width: 32px;
+    height: 32px;
     margin-left: 8px;
     font-size: 18px;
     padding: 6px;
   }
 
   .param-addition {
+    margin-right: 20px;
     justify-content: flex-end;
     cursor: pointer;
     user-select: none;

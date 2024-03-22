@@ -17,7 +17,7 @@
     <!-- 主机列表 -->
     <host-list-view class="host-list"
                     :hostList="hostList"
-                    empty-value="当前分组内无授权主机!" />
+                    empty-value="当前分组内无授权主机/主机未启用 SSH 配置!" />
   </div>
 </template>
 

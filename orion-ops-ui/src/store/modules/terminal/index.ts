@@ -128,7 +128,7 @@ export default defineStore('terminal', {
       if (this.hosts.hostList?.length) {
         return;
       }
-      const { data } = await getCurrentAuthorizedHost();
+      const { data } = await getCurrentAuthorizedHost('ssh');
       Object.keys(data).forEach(k => {
         this.hosts[k as keyof AuthorizedHostQueryResponse] = data[k as keyof AuthorizedHostQueryResponse] as any;
       });

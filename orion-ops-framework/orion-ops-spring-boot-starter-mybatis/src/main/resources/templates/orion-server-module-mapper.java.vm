@@ -11,7 +11,7 @@ import ${mapperAnnotationClass.name};
  * $!{table.comment} Mapper 接口
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 #if(${mapperAnnotationClass})

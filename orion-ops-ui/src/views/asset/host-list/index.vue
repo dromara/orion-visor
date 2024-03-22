@@ -3,17 +3,17 @@
     <!-- 列表-表格 -->
     <host-table v-if="renderTable"
                 ref="table"
-                @openHostGroup="() => hostGroup.open()"
-                @openAdd="() => modal.openAdd()"
-                @openUpdate="(e) => modal.openUpdate(e.id)"
-                @openUpdateConfig="(e) => hostConfig.open(e)" />
+                @open-host-group="() => hostGroup.open()"
+                @open-add="() => modal.openAdd()"
+                @open-update="(e) => modal.openUpdate(e.id)"
+                @open-update-config="(e) => hostConfig.open(e)" />
     <!-- 列表-卡片 -->
     <host-card-list v-else
                     ref="card"
-                    @openHostGroup="() => hostGroup.open()"
-                    @openAdd="() => modal.openAdd()"
-                    @openUpdate="(e) => modal.openUpdate(e.id)"
-                    @openUpdateConfig="(e) => hostConfig.open(e)" />
+                    @open-host-group="() => hostGroup.open()"
+                    @open-add="() => modal.openAdd()"
+                    @open-update="(e) => modal.openUpdate(e.id)"
+                    @open-update-config="(e) => hostConfig.open(e)" />
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
                      @added="modalAddCallback"
@@ -27,7 +27,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostList'
+    name: 'hostList'
   };
 </script>
 

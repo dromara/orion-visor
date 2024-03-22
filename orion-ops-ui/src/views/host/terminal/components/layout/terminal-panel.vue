@@ -21,8 +21,9 @@
                   :key="tab.key">
         <!-- 标题 -->
         <template #title>
-          <span class="tab-title-wrapper"
-                :style="{ 'border-bottom': `2px ${tab.color || 'transparent'} solid` }">
+          <span class="tab-title-wrapper usn"
+                :style="{ 'border-bottom': `2px ${tab.color || 'transparent'} solid` }"
+                @dblclick="copySession(tab, index)">
             <span class="tab-title-icon">
               <component :is="tab.icon" />
             </span>
@@ -59,7 +60,7 @@
 
   const emits = defineEmits(['close', 'openNewConnect']);
 
-  const { sessionManager } = useTerminalStore();
+  const { sessionManager, copySession } = useTerminalStore();
 
   // 监听 tab 切换
   watch(() => props.panel.active, (active, before) => {

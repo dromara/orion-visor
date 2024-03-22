@@ -7,33 +7,33 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- id -->
-      <a-form-item field="id" label="id" label-col-flex="50px">
+      <a-form-item field="id" label="id">
         <a-input-number v-model="formModel.id"
                         placeholder="请输入id"
                         allow-clear
                         hide-button />
       </a-form-item>
       <!-- 用户名 -->
-      <a-form-item field="username" label="用户名" label-col-flex="50px">
+      <a-form-item field="username" label="用户名">
         <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
       </a-form-item>
       <!-- 花名 -->
-      <a-form-item field="nickname" label="花名" label-col-flex="50px">
+      <a-form-item field="nickname" label="花名">
         <a-input v-model="formModel.nickname" placeholder="请输入花名" allow-clear />
       </a-form-item>
       <!-- 用户状态 -->
-      <a-form-item field="status" label="用户状态" label-col-flex="50px">
+      <a-form-item field="status" label="用户状态">
         <a-select v-model="formModel.status"
                   :options="toOptions(userStatusKey)"
                   placeholder="请选择用户状态"
                   allow-clear />
       </a-form-item>
       <!-- 手机号 -->
-      <a-form-item field="mobile" label="手机号" label-col-flex="50px">
+      <a-form-item field="mobile" label="手机号">
         <a-input v-model="formModel.mobile" placeholder="请输入手机号" allow-clear />
       </a-form-item>
       <!-- 邮箱 -->
-      <a-form-item field="email" label="邮箱" label-col-flex="50px">
+      <a-form-item field="email" label="邮箱">
         <a-input v-model="formModel.email" placeholder="请输入邮箱" allow-clear />
       </a-form-item>
     </query-header>
@@ -151,7 +151,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userUserTable'
+    name: 'userTable'
   };
 </script>
 

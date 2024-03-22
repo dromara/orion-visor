@@ -27,7 +27,7 @@
 
 <script lang="ts">
   export default {
-    name: 'hostTerminal'
+    name: 'terminal'
   };
 </script>
 
@@ -70,7 +70,7 @@
 
   // 加载字典值
   onBeforeMount(async () => {
-    await dictStore.loadKeys([...dictKeys]);
+    await dictStore.loadKeys(dictKeys);
   });
 
   // 加载主机信息

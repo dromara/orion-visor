@@ -97,7 +97,7 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         // http 注释标识
         objectMap.put("httpComment", "###");
         // 版本
-        objectMap.put("since", OrionOpsProConst.VERSION);
+        objectMap.put("version", OrionOpsProConst.VERSION);
         // api 注释
         Map<String, String> apiComment = new HashMap<>(12);
         String comment = tableInfo.getComment();

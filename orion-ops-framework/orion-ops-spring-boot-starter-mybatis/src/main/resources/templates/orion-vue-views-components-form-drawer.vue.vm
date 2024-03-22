@@ -1,19 +1,18 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            :width="430"
+            :width="470"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full" :loading="loading">
+    <a-spin class="full modal-form" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '380px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }"
               :rules="formRules">
         #foreach($field in ${table.fields})
@@ -37,7 +36,7 @@
           #else
           <a-input v-model="formModel.${field.propertyName}"
                    placeholder="请输入${field.comment}"
-                   allow-clear/>
+                   allow-clear />
           #end
           #end
         </a-form-item>
@@ -50,7 +49,7 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}FormDrawer'
+    name: '${vue.featureEntityFirstLower}FormDrawer'
   };
 </script>
 
@@ -71,6 +70,8 @@
   import { useDictStore } from '@/store';
   #end
 
+  const emits = defineEmits(['added', 'updated']);
+
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
@@ -79,6 +80,8 @@
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
+  const formRef = ref<any>();
+  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
 
   const defaultForm = (): ${vue.featureEntity}UpdateRequest => {
     return {
@@ -87,11 +90,6 @@
     #end
     };
   };
-
-  const formRef = ref<any>();
-  const formModel = ref<${vue.featureEntity}UpdateRequest>({});
-
-  const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
   const openAdd = () => {

@@ -41,7 +41,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TerminalActionBarBlock'
+    name: 'terminalActionBarBlock'
   };
 </script>
 

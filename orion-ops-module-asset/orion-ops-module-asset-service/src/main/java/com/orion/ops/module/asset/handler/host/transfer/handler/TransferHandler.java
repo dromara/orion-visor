@@ -135,6 +135,7 @@ public class TransferHandler implements ITransferHandler {
 
     @Override
     public void close() {
+        log.info("TransferHandler.close channelId: {}", channel.getId());
         sessions.values().forEach(Streams::close);
     }
 

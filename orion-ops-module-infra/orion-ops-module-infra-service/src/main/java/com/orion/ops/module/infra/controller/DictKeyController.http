@@ -7,7 +7,7 @@ Authorization: {{token}}
   "key": "",
   "valueType": "",
   "extraSchema": "",
-  "desc": ""
+  "description": ""
 }
 
 
@@ -21,7 +21,7 @@ Authorization: {{token}}
   "key": "",
   "valueType": "",
   "extraSchema": "",
-  "desc": ""
+  "description": ""
 }
 
 

@@ -1,0 +1,60 @@
+### 创建执行模板
+POST {{baseUrl}}/asset/exec-template/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "",
+  "command": "",
+  "timeout": "",
+  "parameter": ""
+}
+
+
+### 更新执行模板
+PUT {{baseUrl}}/asset/exec-template/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "command": "",
+  "timeout": "",
+  "parameter": ""
+}
+
+
+### 查询执行模板
+GET {{baseUrl}}/asset/exec-template/get?id=1
+Authorization: {{token}}
+
+
+### 查询全部执行模板
+GET {{baseUrl}}/asset/exec-template/list
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### 分页查询执行模板
+POST {{baseUrl}}/asset/exec-template/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "name": "",
+  "command": "",
+  "timeout": "",
+  "parameter": ""
+}
+
+
+### 删除执行模板
+DELETE {{baseUrl}}/asset/exec-template/delete?id=1
+Authorization: {{token}}
+
+
+###

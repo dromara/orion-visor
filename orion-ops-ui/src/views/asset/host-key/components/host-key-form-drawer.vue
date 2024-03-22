@@ -8,14 +8,13 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="form-wrapper" :loading="loading">
+    <a-spin class="full modal-form" :loading="loading">
       <a-alert class="keygen-alert">
         请使用 ssh-keygen -m PEM -t rsa 生成秘钥
       </a-alert>
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '420px' }"
               :label-col-props="{ span: 4 }"
               :wrapper-col-props="{ span: 20 }"
               :rules="formRules">
@@ -61,7 +60,6 @@
         <a-form-item v-if="!isViewHandler"
                      field="password"
                      label="密码"
-                     style="justify-content: space-between;"
                      :rules="passwordRules">
           <a-input-password v-model="formModel.password"
                             :disabled="!isAddHandle && !formModel.useNewPassword"
@@ -82,7 +80,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostKeyFormDrawer'
+    name: 'hostKeyFormDrawer'
   };
 </script>
 
@@ -234,6 +232,8 @@
 </script>
 
 <style lang="less" scoped>
+  @switch-width: 94px;
+
   .form-wrapper {
     width: 100%;
     padding: 12px 12px 0 12px;
@@ -241,11 +241,11 @@
 
   .keygen-alert {
     margin: 0 0 12px 16px;
-    width: calc(100% - 42px);
+    width: 408px;
   }
 
   .password-input {
-    width: 240px;
+    width: calc(100% - @switch-width);
   }
 
   .password-input-full {
@@ -253,6 +253,7 @@
   }
 
   .password-switch {
+    width: @switch-width;
     margin-left: 16px;
   }
 </style>

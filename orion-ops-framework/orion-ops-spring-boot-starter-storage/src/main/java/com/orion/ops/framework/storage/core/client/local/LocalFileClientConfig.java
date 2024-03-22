@@ -20,13 +20,18 @@ public class LocalFileClientConfig extends FileClientConfig {
      * <p>
      * 无需 / 结尾
      */
-    private String storagePath = "";
+    private String storagePath;
 
     /**
      * 基础路径
      * <p>
      * 无需 / 结尾
      */
-    private String basePath = "";
+    private String basePath;
+
+    public LocalFileClientConfig() {
+        this.storagePath = "";
+        this.basePath = "";
+    }
 
 }

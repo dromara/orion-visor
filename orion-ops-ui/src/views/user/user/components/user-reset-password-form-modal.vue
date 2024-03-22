@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
@@ -38,7 +37,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userUserResetPasswordFormModal'
+    name: 'userResetPasswordFormModal'
   };
 </script>
 

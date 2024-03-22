@@ -52,11 +52,13 @@ public interface HostConfigDAO extends IMapper<HostConfigDO> {
      * 通过 hostId 批量查询主机配置
      *
      * @param hostIdList hostIdList
+     * @param type       type
      * @return rows
      */
-    default List<HostConfigDO> getHostConfigByHostIdList(List<Long> hostIdList) {
+    default List<HostConfigDO> getHostConfigByHostIdList(List<Long> hostIdList, String type) {
         // 条件
-        LambdaQueryWrapper<HostConfigDO> wrapper = this.lambda()
+        LambdaQueryWrapper<HostConfigDO> wrapper = this.wrapper()
+                .eq(HostConfigDO::getType, type)
                 .in(HostConfigDO::getHostId, hostIdList);
         // 查询
         return this.of(wrapper).list();

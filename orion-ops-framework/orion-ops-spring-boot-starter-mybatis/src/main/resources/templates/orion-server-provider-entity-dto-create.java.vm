@@ -17,7 +17,7 @@ import java.math.*;
  * $!{table.comment} 创建请求业务对象
  *
  * @author ${author}
- * @version ${since}
+ * @version ${version}
  * @since ${date}
  */
 @Data

@@ -31,4 +31,6 @@ public interface Const extends com.orion.lang.constant.Const, FieldConst, CnCons
 
     Integer DEFAULT_VERSION = 1;
 
+    String ERROR_LOG = "error.log";
+
 }

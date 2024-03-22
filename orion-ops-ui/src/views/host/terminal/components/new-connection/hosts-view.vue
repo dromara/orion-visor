@@ -8,19 +8,9 @@
                      :host-list="hostList"
                      :filter-value="filterValue" />
     <!-- 列表视图 -->
-    <host-list-view v-if="NewConnectionType.LIST === newConnectionType"
-                    :hostList="hostList"
-                    empty-value="无授权主机!" />
-    <!-- 我的收藏 -->
-    <host-list-view v-if="NewConnectionType.FAVORITE === newConnectionType"
-                    class="list-view-container"
-                    :hostList="hostList"
-                    empty-value="无收藏记录, 快去点击主机右侧的⭐进行收藏吧!" />
-    <!-- 最近连接 -->
-    <host-list-view v-if="NewConnectionType.LATEST === newConnectionType"
-                    class="list-view-container"
-                    :hostList="hostList"
-                    empty-value="暂无连接记录, 快去体验吧!" />
+    <host-list-view v-else
+                    :host-list="hostList"
+                    :empty-value="emptyMessage" />
     <!-- 主机设置模态框 -->
     <host-setting-modal ref="settingModal" />
   </div>
@@ -33,7 +23,7 @@
 </script>
 
 <script lang="ts" setup>
-  import { onMounted, provide, ref, watch } from 'vue';
+  import { computed, onMounted, provide, ref, watch } from 'vue';
   import { NewConnectionType, openSettingModalKey } from '../../types/terminal.const';
   import { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import { HostQueryResponse } from '@/api/asset/host';
@@ -56,6 +46,20 @@
   );
   const settingModal = ref();
 
+  const emptyMessage = computed(() => {
+    if (props.newConnectionType === NewConnectionType.LIST) {
+      // 列表
+      return '无授权主机/主机未启用 SSH 配置!';
+    } else if (props.newConnectionType === NewConnectionType.FAVORITE) {
+      // 收藏
+      return '无收藏记录, 快去点击主机右侧的⭐进行收藏吧!';
+    } else if (props.newConnectionType === NewConnectionType.LATEST) {
+      // 最近连接
+      return '暂无连接记录, 快去体验吧!';
+    }
+    return '';
+  });
+
   // 暴露打开 ssh 配置模态框
   provide(openSettingModalKey, (record: any) => {
     settingModal.value?.open(record);
@@ -69,7 +73,7 @@
     if (filterVal) {
       list = filterVal.startsWith('@')
         // tag 过滤
-        ? list.filter(item => item.tags.some(tag => (tag.name as string).toLowerCase().startsWith(filterVal.substring(1, filterVal.length))))
+        ? list.filter(item => item.tags.some(tag => tag.name?.toLowerCase().startsWith(filterVal.substring(1, filterVal.length))))
         // 名称/编码/地址 过滤
         : list.filter(item => {
           return (item.name as string)?.toLowerCase().indexOf(filterVal) > -1

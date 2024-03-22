@@ -9,10 +9,12 @@
              :columns="hostIdentityColumns"
              v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
+             row-class="pointer"
              :sticky-header="true"
              :data="hostIdentities"
              :pagination="false"
-             :bordered="false">
+             :bordered="false"
+             @row-click="clickRow">
       <!-- 秘钥名称 -->
       <template #keyId="{ record }">
         <a-tag color="arcoblue" v-if="record.keyId">
@@ -25,11 +27,12 @@
 
 <script lang="ts">
   export default {
-    name: 'hostGroupGrant'
+    name: 'hostIdentityGrant'
   };
 </script>
 
 <script lang="ts" setup>
+  import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import type { HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
@@ -78,6 +81,16 @@
     } catch (e) {
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 点击行
+  const clickRow = ({ id }: TableData) => {
+    const index = selectedKeys.value.indexOf(id);
+    if (index === -1) {
+      selectedKeys.value.push(id);
+    } else {
+      selectedKeys.value.splice(index, 1);
     }
   };
 

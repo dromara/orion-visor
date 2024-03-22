@@ -15,9 +15,15 @@
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
               label-align="right"
-              :style="{ width: '460px' }"
               :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 19 }">
+              :wrapper-col-props="{ span: 18 }">
+        <!-- 开始时间 -->
+        <a-form-item field="startTimeRange" label="开始时间">
+          <a-range-picker v-model="formModel.startTimeRange"
+                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
+                          show-time
+                          format="YYYY-MM-DD HH:mm:ss" />
+        </a-form-item>
         <!-- 连接用户 -->
         <a-form-item field="userId" label="连接用户">
           <user-selector v-model="formModel.userId"
@@ -50,14 +56,6 @@
                     :options="toOptions(connectTypeKey)"
                     allow-clear />
         </a-form-item>
-        <!-- 开始时间 -->
-        <a-form-item field="startTimeRange" label="开始时间">
-          <a-range-picker v-model="formModel.startTimeRange"
-                          style="width: 100%"
-                          :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
-                          show-time
-                          format="YYYY-MM-DD HH:mm:ss" />
-        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -65,7 +63,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetAuditConnectLogClearModal'
+    name: 'connectLogClearModal'
   };
 </script>
 
@@ -78,8 +76,8 @@
   import { getHostConnectLogCount, clearHostConnectLog } from '@/api/asset/host-connect-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
-  import UserSelector from '@/components/user/user/user-selector.vue';
-  import HostSelector from '@/components/asset/host/host-selector.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
+  import HostSelector from '@/components/asset/host/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

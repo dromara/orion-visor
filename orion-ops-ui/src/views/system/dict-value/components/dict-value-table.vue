@@ -7,18 +7,18 @@
                   @reset="resetForm"
                   @keyup.enter="() => fetchTableData()">
       <!-- 配置项 -->
-      <a-form-item field="keyId" label="配置项" label-col-flex="50px">
+      <a-form-item field="keyId" label="配置项">
         <dict-key-selector v-model="formModel.keyId"
                            @change="changeKey"
                            allow-create
                            allow-clear />
       </a-form-item>
       <!-- 配置值 -->
-      <a-form-item field="value" label="配置值" label-col-flex="50px">
+      <a-form-item field="value" label="配置值">
         <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
       </a-form-item>
       <!-- 配置描述 -->
-      <a-form-item field="label" label="配置描述" label-col-flex="50px">
+      <a-form-item field="label" label="配置描述">
         <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
       </a-form-item>
     </query-header>
@@ -125,7 +125,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictValueTable'
+    name: 'dictValueTable'
   };
 </script>
 
@@ -137,15 +137,14 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination, useRowSelection } from '@/types/table';
-  import useCopy from '@/hooks/copy';
-  import DictKeySelector from '@/components/system/dict-key/dict-key-selector.vue';
+  import { copy } from '@/hooks/copy';
+  import DictKeySelector from '@/components/system/dict-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openHistory']);
 
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<DictValueQueryResponse[]>([]);
 
-  const { copy } = useCopy();
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();

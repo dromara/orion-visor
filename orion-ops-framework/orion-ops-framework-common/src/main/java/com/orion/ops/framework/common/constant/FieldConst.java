@@ -29,6 +29,8 @@ public interface FieldConst {
 
     String STATUS = "status";
 
+    String INFO = "info";
+
     String REL_ID = "relId";
 
     String BEFORE = "before";
@@ -38,6 +40,8 @@ public interface FieldConst {
     String SOURCE = "source";
 
     String TARGET = "target";
+
+    String CHARSET = "charset";
 
     String TOKEN = "token";
 

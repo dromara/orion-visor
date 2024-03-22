@@ -8,35 +8,34 @@
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
       <!-- 操作用户 -->
-      <a-form-item field="userId" label="操作用户" label-col-flex="50px">
+      <a-form-item field="userId" label="操作用户">
         <user-selector v-model="formModel.userId"
                        placeholder="请选择用户"
                        allow-clear />
       </a-form-item>
       <!-- 操作主机 -->
-      <a-form-item field="hostId" label="操作主机" label-col-flex="50px">
+      <a-form-item field="hostId" label="操作主机">
         <host-selector v-model="formModel.hostId"
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>
       <!-- 操作类型 -->
-      <a-form-item field="type" label="操作类型" label-col-flex="50px">
+      <a-form-item field="type" label="操作类型">
         <a-select v-model="formModel.type"
                   placeholder="请选择类型"
                   :options="toOptions(sftpOperatorTypeKey)"
                   allow-clear />
       </a-form-item>
       <!-- 执行结果 -->
-      <a-form-item field="result" label="执行结果" label-col-flex="50px">
+      <a-form-item field="result" label="执行结果">
         <a-select v-model="formModel.result"
                   placeholder="请选择执行结果"
                   :options="toOptions(sftpOperatorResultKey)"
                   allow-clear />
       </a-form-item>
       <!-- 开始时间 -->
-      <a-form-item field="startTimeRange" label="开始时间" label-col-flex="50px">
+      <a-form-item field="startTimeRange" label="开始时间">
         <a-range-picker v-model="formModel.startTimeRange"
-                        style="width: 100%"
                         :time-picker-props="{ defaultValue: ['00:00:00', '23:59:59'] }"
                         show-time
                         format="YYYY-MM-DD HH:mm:ss" />
@@ -92,11 +91,11 @@
       </template>
       <!-- 操作主机 -->
       <template #hostName="{ record }">
-        <span class="host-name" :title="record.hostName">
+        <span class="table-cell-value" :title="record.hostName">
           {{ record.hostName }}
         </span>
         <br>
-        <span class="host-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.hostAddress"
               @click="copy(record.hostAddress)">
           {{ record.hostAddress }}
@@ -116,11 +115,11 @@
             {{ path }}
           </span>
           <!-- 移动目标路径 -->
-          <span class="sub-text" v-if="SftpOperatorType.SFTP_MOVE === record.type">
+          <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_MOVE === record.type">
             移动到 {{ record.extra?.target }}
           </span>
           <!-- 提权信息 -->
-          <span class="sub-text" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
+          <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
             提权 {{ record.extra?.mod }} {{ permission10toString(record.extra?.mod as number) }}
           </span>
         </div>
@@ -133,11 +132,11 @@
       </template>
       <!-- 留痕地址 -->
       <template #address="{ record }">
-        <span class="operator-location" :title="record.location">
+        <span class="table-cell-value" :title="record.location">
           {{ record.location }}
         </span>
         <br>
-        <span class="operator-address text-copy"
+        <span class="table-cell-sub-value text-copy"
               :title="record.address"
               @click="copy(record.address)">
           {{ record.address }}
@@ -166,7 +165,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetAuditSftpLogTable'
+    name: 'sftpLogTable'
   };
 </script>
 
@@ -180,10 +179,10 @@
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
-  import useCopy from '@/hooks/copy';
-  import UserSelector from '@/components/user/user/user-selector.vue';
-  import HostSelector from '@/components/asset/host/host-selector.vue';
+  import { copy } from '@/hooks/copy';
   import { permission10toString } from '@/utils/file';
+  import UserSelector from '@/components/user/user/selector/index.vue';
+  import HostSelector from '@/components/asset/host/selector/index.vue';
 
   const tableRenderData = ref<HostSftpLogQueryResponse[]>([]);
   const selectedKeys = ref<number[]>([]);
@@ -192,7 +191,6 @@
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
-  const { copy } = useCopy();
 
   const formModel = reactive<HostSftpLogQueryRequest>({
     userId: undefined,
@@ -264,16 +262,6 @@
 </script>
 
 <style lang="less" scoped>
-  .host-name, .operator-location {
-    color: var(--color-text-2);
-  }
-
-  .host-address, .operator-address, .sub-text {
-    margin-top: 4px;
-    display: inline-block;
-    color: var(--color-text-3);
-  }
-
   .paths-wrapper {
     display: flex;
     flex-direction: column;

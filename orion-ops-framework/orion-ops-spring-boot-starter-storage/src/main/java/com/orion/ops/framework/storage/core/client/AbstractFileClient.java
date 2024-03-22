@@ -8,6 +8,7 @@ import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.utils.FileClientUtils;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 /**
@@ -57,14 +58,14 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
 
     @Override
     public byte[] getContent(String path) throws Exception {
-        try (InputStream in = this.doDownload(path)) {
+        try (InputStream in = this.getContentInputStream(path)) {
             return Streams.toByteArray(in);
         }
     }
 
     @Override
-    public InputStream getContentInputStream(String path) throws Exception {
-        return this.doDownload(path);
+    public OutputStream getContentOutputStream(String path) throws Exception {
+        return this.getContentOutputStream(path, false);
     }
 
     /**
@@ -78,31 +79,6 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
      * @throws Exception Exception
      */
     protected abstract String doUpload(String path, InputStream in, boolean autoClose, boolean overrideIfExist) throws Exception;
-
-    /**
-     * 执行下载操作
-     *
-     * @param path path
-     * @return stream
-     * @throws Exception Exception
-     */
-    protected abstract InputStream doDownload(String path) throws Exception;
-
-    /**
-     * 获取返回路径 用于客户端返回
-     *
-     * @param path path
-     * @return returnPath
-     */
-    protected abstract String getReturnPath(String path);
-
-    /**
-     * 获取实际存储路径 用于服务端的存储
-     *
-     * @param returnPath returnPath
-     * @return absolutePath
-     */
-    protected abstract String getAbsolutePath(String returnPath);
 
     /**
      * 获取文件路径 拼接前缀

@@ -64,7 +64,7 @@
   import { getRoleMenuId, grantRoleMenu } from '@/api/user/role';
   import { Message } from '@arco-design/web-vue';
   import { quickGrantMenuOperator } from '../types/const';
-  import MenuGrantTable from '@/components/system/menu/grant/menu-grant-table.vue';
+  import MenuGrantTable from '@/components/system/menu/grant-table/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

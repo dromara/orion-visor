@@ -2,9 +2,9 @@
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <dict-key-table ref="table"
-                    @openAdd="() => modal.openAdd()"
-                    @openUpdate="(e) => modal.openUpdate(e)"
-                    @openView="(v, t) => view.open(v, t)" />
+                    @open-add="() => modal.openAdd()"
+                    @open-update="(e) => modal.openUpdate(e)"
+                    @open-view="(v, t) => view.open(v, t)" />
     <!-- 添加修改模态框 -->
     <dict-key-form-modal ref="modal"
                          @added="modalAddCallback"
@@ -16,17 +16,17 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictKey'
+    name: 'dictKey'
   };
 </script>
 
 <script lang="ts" setup>
   import { ref, onBeforeMount } from 'vue';
-  import DictKeyTable from './components/dict-key-table.vue';
-  import DictKeyFormModal from './components/dict-key-form-modal.vue';
-  import JsonEditorModal from '@/components/view/json-editor/json-editor-modal.vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import DictKeyTable from './components/dict-key-table.vue';
+  import DictKeyFormModal from './components/dict-key-form-modal.vue';
+  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const render = ref(false);
   const table = ref();

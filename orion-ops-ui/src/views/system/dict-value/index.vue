@@ -2,9 +2,9 @@
   <div class="layout-container">
     <!-- 列表-表格 -->
     <dict-value-table ref="table"
-                      @openAdd="() => modal.openAdd()"
-                      @openUpdate="(e) => modal.openUpdate(e)"
-                      @openHistory="(e) => history.open(e.id, e.label)" />
+                      @open-add="() => modal.openAdd()"
+                      @open-update="(e) => modal.openUpdate(e)"
+                      @open-history="(e) => history.open(e.id, e.label)" />
     <!-- 添加修改模态框 -->
     <dict-value-form-modal ref="modal"
                            @added="modalAddCallback"
@@ -19,18 +19,18 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictValue'
+    name: 'dictValue'
   };
 </script>
 
 <script lang="ts" setup>
-  import DictValueTable from './components/dict-value-table.vue';
-  import DictValueFormModal from './components/dict-value-form-modal.vue';
-  import HistoryValueModal from '@/components/meta/history/history-value-modal.vue';
   import { ref, onUnmounted } from 'vue';
   import { historyType } from './types/const';
   import { useCacheStore } from '@/store';
   import { rollbackDictValue } from '@/api/system/dict-value';
+  import DictValueTable from './components/dict-value-table.vue';
+  import DictValueFormModal from './components/dict-value-form-modal.vue';
+  import HistoryValueModal from '@/components/meta/history/modal/index.vue';
 
   const table = ref();
   const modal = ref();

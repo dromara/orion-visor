@@ -3,7 +3,7 @@ import { ISftpTransferDownloader, SftpFile, TransferOperatorResponse } from '../
 import { TransferReceiverType, TransferStatus, TransferType } from '../types/terminal.const';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken } from '@/api/asset/host-terminal';
-import { nextId } from '@/utils';
+import { createWebSocket, nextId } from '@/utils';
 import { webSocketBaseUrl } from '@/utils/env';
 import SftpTransferUploader from './sftp-transfer-uploader';
 import SftpTransferDownloader from './sftp-transfer-downloader';
@@ -98,11 +98,12 @@ export default class SftpTransferManager implements ISftpTransferManager {
     // 获取 access
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
-    this.client = new WebSocket(`${webSocketBaseUrl}/host/transfer/${accessToken}`);
-    this.client.onerror = event => {
+    try {
+      this.client = await createWebSocket(`${webSocketBaseUrl}/host/transfer/${accessToken}`);
+    } catch (e) {
       // 打开失败将传输列表置为失效
       Message.error('会话打开失败');
-      console.error('error', event);
+      console.error('transfer error', e);
       // 将等待中和传输中任务修改为失败状态
       this.transferList.filter(s => {
         return s.status === TransferStatus.WAITING
@@ -110,17 +111,18 @@ export default class SftpTransferManager implements ISftpTransferManager {
       }).forEach(s => {
         s.status = TransferStatus.ERROR;
       });
-    };
+      // 关闭会话重置 run
+      this.run = false;
+      return;
+    }
     this.client.onclose = event => {
       // 关闭会话重置 run
       this.run = false;
-      console.warn('close', event);
-    };
-    this.client.onopen = () => {
-      // 打开后自动传输下一个任务
-      this.transferNextItem();
+      console.warn('transfer close', event);
     };
     this.client.onmessage = this.resolveMessage.bind(this);
+    // 打开后自动传输下一个任务
+    this.transferNextItem();
   }
 
   // 传输下一条任务

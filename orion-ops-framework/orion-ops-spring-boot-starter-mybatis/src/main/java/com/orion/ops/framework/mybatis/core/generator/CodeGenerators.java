@@ -10,7 +10,6 @@ import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import com.orion.ops.framework.mybatis.core.generator.template.Template;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 代码生成器
@@ -45,12 +44,28 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("command_snippet", "命令片段", "command")
+                Template.create("exec_log", "执行记录", "exec")
                         .disableUnitTest()
-                        .cache("command:snippet:group:{}", "命令片段 ${userId}")
-                        .expire(1, TimeUnit.DAYS)
-                        .vue("asset", "command-snippet")
-                        .enableDrawerForm()
+                        .vue("exec", "exec-log")
+                        .enableRowSelection()
+                        .dict("execLogStatus", "status")
+                        .keyName("execStatus")
+                        .field("execStatus")
+                        .fields("WAITING", "RUNNING", "COMPLETED", "FAILED")
+                        .labels("等待中", "运行中", "执行完成", "执行失败")
+                        .color("gray", "green", "arcoblue", "red")
+                        .valueUseFields()
+                        .build(),
+                Template.create("exec_host_log", "主机执行记录", "exec")
+                        .disableUnitTest()
+                        .vue("exec", "exec-host-log")
+                        .dict("execHostLogStatus", "status")
+                        .keyName("execHostStatus")
+                        .field("execHostStatus")
+                        .fields("WAITING", "RUNNING", "COMPLETED", "FAILED", "INTERRUPTED")
+                        .labels("等待中", "运行中", "执行完成", "执行失败", "已中断")
+                        .color("gray", "green", "arcoblue", "red", "purple")
+                        .valueUseFields()
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

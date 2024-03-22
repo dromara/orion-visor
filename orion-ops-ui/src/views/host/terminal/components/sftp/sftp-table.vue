@@ -21,7 +21,7 @@
                    :ref="setAutoFocus as unknown as VNodeRef"
                    :model-value="filterValue[0]"
                    @input="(value) => setFilterValue([value])"
-                   @pressEnter="handleFilterConfirm" />
+                   @press-enter="handleFilterConfirm" />
           <!-- 按钮 -->
           <div class="name-filter-footer">
             <a-button size="small" @click="handleFilterConfirm">过滤</a-button>
@@ -32,15 +32,16 @@
     </template>
     <!-- 文件名称 -->
     <template #fileName="{ record }">
-      <span :title="record.name"
-            class="pointer"
-            @click="clickFilename(record)">
+      <span :title="record.name">
         <!-- 文件图标 -->
         <span class="file-name-icon" :title="formatFileType(record.attr).label">
           <component :is="formatFileType(record.attr).icon" />
         </span>
         <!-- 文件名称 -->
-        <span>{{ record.name }}</span>
+        <span :class="[ record.isDir ? 'pointer' : 'text-copy']"
+              @click="clickFilename(record)">
+          {{ record.name }}
+        </span>
       </span>
     </template>
     <!-- 文件大小 -->
@@ -147,7 +148,7 @@
   import { useRowSelection } from '@/types/table';
   import { dateFormat } from '@/utils';
   import { setAutoFocus } from '@/utils/dom';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import columns from './types/table.columns';
   import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/terminal.const';
 
@@ -166,7 +167,6 @@
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
 
   const rowSelection = useRowSelection({ width: 40 });
-  const { copy } = useCopy();
 
   // 切换页面自动清空过滤
   watch(() => props.list, () => {

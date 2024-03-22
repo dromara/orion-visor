@@ -17,8 +17,8 @@ export interface AuthorizedHostQueryResponse {
 /**
  * 查询当前用户已授权的主机
  */
-export function getCurrentAuthorizedHost() {
-  return axios.get<AuthorizedHostQueryResponse>('/asset/authorized-data/current-host');
+export function getCurrentAuthorizedHost(type: string) {
+  return axios.get<AuthorizedHostQueryResponse>('/asset/authorized-data/current-host', { params: { type } });
 }
 
 /**

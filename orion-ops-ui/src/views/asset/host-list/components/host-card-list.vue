@@ -49,7 +49,6 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :style="{ width: '320px' }"
               :label-col-props="{ span: 6 }"
               :wrapper-col-props="{ span: 18 }"
               @keyup.enter="() => fetchCardData()">
@@ -89,15 +88,13 @@
     </template>
     <!-- 编码 -->
     <template #code="{ record }">
-      <a-tag>{{ record.code }}</a-tag>
+      {{ record.code }}
     </template>
     <!-- 地址 -->
     <template #address="{ record }">
-      <a-tooltip content="点击复制">
-        <span class="pointer span-blue" @click="copy(record.address)">
-          <icon-copy /> {{ record.address }}
-        </span>
-      </a-tooltip>
+      <span class="span-blue text-copy" @click="copy(record.address)">
+        {{ record.address }}
+      </span>
     </template>
     <!-- 标签 -->
     <template #tags="{ record }">
@@ -166,7 +163,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostCardList'
+    name: 'hostCardList'
   };
 </script>
 
@@ -176,13 +173,13 @@
   import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
-  import fieldConfig from '../types/host.card.fields';
+  import fieldConfig from '../types/card.fields';
   import { deleteHost, getHostPage } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor } from '../types/const';
-  import TagMultiSelector from '@/components/meta/tag/tag-multi-selector.vue';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
@@ -190,7 +187,6 @@
 
   const cardColLayout = useColLayout();
   const pagination = usePagination();
-  const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
 
   const formRef = ref();

@@ -6,13 +6,24 @@
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
+                        allow-clear
+                        hide-button />
+      </a-form-item>
       <!-- 配置项 -->
-      <a-form-item field="keyName" label="配置项" label-col-flex="50px">
-        <a-input v-model="formModel.keyName" placeholder="请输入配置项" allow-clear />
+      <a-form-item field="keyName" label="配置项">
+        <a-input v-model="formModel.keyName"
+                 placeholder="请输入配置项"
+                 allow-clear />
       </a-form-item>
       <!-- 配置描述 -->
-      <a-form-item field="description" label="配置描述" label-col-flex="50px">
-        <a-input v-model="formModel.description" placeholder="请输入配置描述" allow-clear />
+      <a-form-item field="description" label="配置描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入配置描述"
+                 allow-clear />
       </a-form-item>
     </query-header>
   </a-card>
@@ -67,10 +78,7 @@
              :bordered="false">
       <!-- 配置项 -->
       <template #keyName="{ record }">
-        <span class="copy-left" title="复制" @click="copy(record.keyName)">
-          <icon-copy />
-        </span>
-        <span>{{ record.keyName }}</span>
+        <span class="text-copy" @click="copy(record.keyName)">{{ record.keyName }}</span>
       </template>
       <!-- 配置值类型 -->
       <template #valueType="{ record }">
@@ -129,20 +137,20 @@
 
 <script lang="ts">
   export default {
-    name: 'systemDictKeyTable'
+    name: 'dictKeyTable'
   };
 </script>
 
 <script lang="ts" setup>
   import type { DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
   import { reactive, ref, onMounted } from 'vue';
-  import { batchDeleteDictKey, deleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
+  import { deleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { usePagination } from '@/types/table';
   import { dictValueTypeKey } from '../types/const';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { getDictValueList } from '@/api/system/dict-value';
 
@@ -150,7 +158,6 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const pagination = usePagination();
-  const { copy } = useCopy();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
   const cacheStore = useCacheStore();

@@ -23,8 +23,8 @@
 <script lang="ts" setup>
   import type { RouteRecordNormalized } from 'vue-router';
   import { useRouter } from 'vue-router';
-  import { openWindow } from '@/utils';
   import { useMenuStore } from '@/store';
+  import { openNewRoute } from '@/router';
 
   const router = useRouter();
   const { appMenus } = useMenuStore();
@@ -34,16 +34,15 @@
     .flat(1)
     .filter(s => s.meta)
     .map(s => s as RouteRecordNormalized)
-    .slice(0, 12);
+    .slice(0, 15);
 
   // 打开路由
   const openRoute = (e: any, route: RouteRecordNormalized) => {
     // 新页面打开
     if (route.meta.newWindow || e.ctrlKey) {
-      const { href } = router.resolve({
+      openNewRoute({
         name: route.name as string,
       });
-      openWindow(href);
       return;
     }
     // 触发跳转

@@ -59,7 +59,7 @@
       defaultVal: appStore.topMenu,
     },
     {
-      name: '底部',
+      name: '底部页脚',
       key: 'footer',
       defaultVal: appStore.footer
     },

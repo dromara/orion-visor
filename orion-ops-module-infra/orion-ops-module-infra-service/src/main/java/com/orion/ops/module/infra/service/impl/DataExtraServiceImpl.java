@@ -171,6 +171,13 @@ public class DataExtraServiceImpl implements DataExtraService {
     }
 
     @Override
+    public List<Map<Long, String>> getExtraItemsValuesByCache(Long userId, String type, List<String> items) {
+        return items.stream()
+                .map(s -> this.getExtraItemValuesByCache(userId, type, s))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public DataExtraDO getExtraItem(DataExtraQueryRequest request) {
         return dataExtraDAO.of()
                 .wrapper(this.buildWrapper(request))

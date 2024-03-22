@@ -44,9 +44,10 @@
         <!-- 终端实例 -->
         <div class="ssh-inst" ref="terminalRef" />
         <!-- 搜索模态框 -->
-        <ssh-search-modal ref="searchModal"
-                          @find="findWords"
-                          @close="focus" />
+        <xterm-search-modal ref="searchModal"
+                            class="search-modal"
+                            @find="findWords"
+                            @close="focus" />
       </div>
     </ssh-context-menu>
     <!-- 命令编辑器 -->
@@ -70,18 +71,17 @@
   import type { ISshSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import useCopy from '@/hooks/copy';
+  import { copy } from '@/hooks/copy';
   import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
+  import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import IconActions from '../layout/icon-actions.vue';
-  import ShellEditorModal from '@/components/view/shell-editor/shell-editor-modal.vue';
-  import SshSearchModal from './ssh-search-modal.vue';
   import SshContextMenu from './ssh-context-menu.vue';
+  import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
 
   const props = defineProps<{
     tab: TerminalTabItem
   }>();
 
-  const { copy } = useCopy();
   const { getDictValue } = useDictStore();
   const { preference, sessionManager } = useTerminalStore();
 
@@ -250,6 +250,17 @@
         display: none;
       }
     }
+  }
+
+  .search-modal {
+    --bg-focus: var(--search-bg-focus);
+    --bg: var(--search-bg);
+    --color-text: var(--search-color-text);
+    --color-text-focus: var(--search-color-text-focus);
+    --bg-icon-hover: var(--search-bg-icon-hover);
+    --bg-icon-hover-focus: var(--search-bg-icon-hover-focus);
+    --bg-icon-selected: var(--search-bg-icon-selected);
+    --bg-icon-selected-focus: var(--search-bg-icon-selected-focus);
   }
 
 </style>

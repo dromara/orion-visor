@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :style="{ width: '460px' }"
-              :label-col-props="{ span: 6 }"
+              :label-col-props="{ span: 5 }"
               :wrapper-col-props="{ span: 18 }">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
@@ -39,7 +38,7 @@
 
 <script lang="ts">
   export default {
-    name: 'userUserGrantRolesFormModal'
+    name: 'userGrantRolesFormModal'
   };
 </script>
 
@@ -49,9 +48,9 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
-  import RoleSelector from '@/components/user/role/role-selector.vue';
   import { useCacheStore } from '@/store';
   import { getUserRoleIdList, grantUserRole } from '@/api/user/user';
+  import RoleSelector from '@/components/user/role/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

@@ -4,18 +4,18 @@
     <!-- 列表-表格 -->
     <${vue.feature}-table v-if="renderTable"
                   ref="table"
-                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     <!-- 列表-卡片 -->
     <${vue.feature}-card-list v-else
                   ref="card"
-                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #else
     <!-- 列表-表格 -->
     <${vue.feature}-table ref="table"
-                  @openAdd="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @openUpdate="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
+                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #end
     #if($vue.enableDrawerForm)
     <!-- 添加修改模态框 -->
@@ -33,20 +33,11 @@
 
 <script lang="ts">
   export default {
-    name: '${vue.moduleEntityFirstLower}${vue.featureEntity}'
+    name: '${vue.featureEntityFirstLower}'
   };
 </script>
 
 <script lang="ts" setup>
-  #if($vue.enableCardView)
-  import ${vue.featureEntity}CardList from './components/${vue.feature}-card-list.vue';
-  #end
-  import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
-  #if($vue.enableDrawerForm)
-  import ${vue.featureEntity}FormDrawer from './components/${vue.feature}-form-drawer.vue';
-  #else
-  import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
-  #end
   #if($vue.enableCardView)
   import { computed, ref, onBeforeMount } from 'vue';
   #if($dictMap.entrySet().size() > 0)
@@ -62,6 +53,22 @@
   import { dictKeys } from './types/const';
   #end
   #end
+  #if($vue.enableCardView)
+  import ${vue.featureEntity}CardList from './components/${vue.feature}-card-list.vue';
+  #end
+  import ${vue.featureEntity}Table from './components/${vue.feature}-table.vue';
+  #if($vue.enableDrawerForm)
+  import ${vue.featureEntity}FormDrawer from './components/${vue.feature}-form-drawer.vue';
+  #else
+  import ${vue.featureEntity}FormModal from './components/${vue.feature}-form-modal.vue';
+  #end
+  #if($vue.enableCardView)
+
+  const appStore = useAppStore();
+
+  // FIXME 这里需要修改一下字段名称 并且在 appStore 定义该字段
+  const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
+  #end
 
   const render = ref(false);
   const table = ref();
@@ -72,12 +79,6 @@
   const drawer = ref();
   #else
   const modal = ref();
-  #end
-  #if($vue.enableCardView)
-  const appStore = useAppStore();
-
-  // FIXME 这里需要修改一下字段名称 并且在 appStore 定义该字段
-  const renderTable = computed(() => appStore.${vue.featureEntityFirstLower}View === 'table');
   #end
 
   // 添加回调

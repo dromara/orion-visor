@@ -58,7 +58,7 @@
       setVisible(true);
       // 加载字典值
       const dictStore = useDictStore();
-      await dictStore.loadKeys([...sshDictKeys]);
+      await dictStore.loadKeys(sshDictKeys);
       // 加载配置
       const { data } = await getHostConfigList(record.value.id);
       data.forEach(s => {

@@ -94,7 +94,7 @@
 
 <script lang="ts">
   export default {
-    name: 'assetHostKeyCardList'
+    name: 'hostKeyCardList'
   };
 </script>
 
