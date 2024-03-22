@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteRecordNormalized, RouteRecordRaw } from 'vue-router';
 import { useMenuStore, useUserStore } from '@/store';
-import { STATUS_ROUTER_LIST, WHITE_ROUTER_LIST } from '@/router/constants';
+import { DEFAULT_ROUTER, STATUS_ROUTER_LIST, WHITE_ROUTER_LIST } from '@/router/constants';
 import { AdminRoleCode } from '@/types/const';
 
 export default function usePermission() {
@@ -16,7 +16,7 @@ export default function usePermission() {
         return false;
       }
       // 检查路由是否存在于授权路由中
-      const menuConfig = [...menuStore.appMenus, ...WHITE_ROUTER_LIST, ...STATUS_ROUTER_LIST];
+      const menuConfig = [...menuStore.appMenus, ...WHITE_ROUTER_LIST, ...STATUS_ROUTER_LIST, DEFAULT_ROUTER];
       let exist = false;
       while (menuConfig.length && !exist) {
         const element = menuConfig.shift();
@@ -44,7 +44,7 @@ export default function usePermission() {
     hasAnyPermission(permission: string[]) {
       return userStore.permission?.includes('*') ||
         permission.map(s => userStore.permission?.includes(s))
-        .filter(Boolean).length > 0;
+          .filter(Boolean).length > 0;
     },
 
     /**
@@ -61,7 +61,7 @@ export default function usePermission() {
     hasAnyRole(role: string[]) {
       return userStore.roles?.includes(AdminRoleCode) ||
         role.map(s => userStore.roles?.includes(s))
-        .filter(Boolean).length > 0;
+          .filter(Boolean).length > 0;
     }
   };
 }
