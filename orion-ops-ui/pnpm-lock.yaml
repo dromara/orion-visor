@@ -11,11 +11,11 @@ overrides:
 
 dependencies:
   '@arco-design/web-vue':
-    specifier: ^2.53.3
-    version: 2.53.3(vue@3.3.11)
+    specifier: ^2.55.0
+    version: 2.55.0(vue@3.3.11)
   '@dangojs/a-query-header':
     specifier: ^0.0.31
-    version: 0.0.31(@arco-design/web-vue@2.53.3)(@dangojs/digitforce-ui-utils@0.0.9)(lodash@4.17.21)(vue@3.3.11)
+    version: 0.0.31(@arco-design/web-vue@2.55.0)(@dangojs/digitforce-ui-utils@0.0.9)(lodash@4.17.21)(vue@3.3.11)
   '@sanqi377/arco-vue-icon-picker':
     specifier: ^1.0.7
     version: 1.0.7(vue@3.3.11)
@@ -254,8 +254,8 @@ packages:
       color: 3.2.1
     dev: false
 
-  /@arco-design/web-vue@2.53.3(vue@3.3.11):
-    resolution: {integrity: sha512-/9tMP2GrcGWPGcfRQcLMFMxRBm7s6jjFkCpXXnOpvMAIMe80+gzqjVS2dmgCv2a1FpvB9fy5ot7+evJ5zrsQiw==}
+  /@arco-design/web-vue@2.55.0(vue@3.3.11):
+    resolution: {integrity: sha512-aMfg9dHiDsiJsxU2Mpa0V4WKjtdAdETBBrrVEHj1E7rJYF+PmrfZcSgIvAJSbdJZC/euqSCHyYOQezi3esSzxA==}
     peerDependencies:
       vue: ^3.1.0
     dependencies:
@@ -750,7 +750,7 @@ packages:
       postcss-selector-parser: 6.0.13
     dev: true
 
-  /@dangojs/a-query-header@0.0.31(@arco-design/web-vue@2.53.3)(@dangojs/digitforce-ui-utils@0.0.9)(lodash@4.17.21)(vue@3.3.11):
+  /@dangojs/a-query-header@0.0.31(@arco-design/web-vue@2.55.0)(@dangojs/digitforce-ui-utils@0.0.9)(lodash@4.17.21)(vue@3.3.11):
     resolution: {integrity: sha512-hXLAU8oIQ1ULDY+qXKoKstqo3/m4HTjXcxNaFbPatTVMHwox4tBAIc5Nox1crvlWkNagUyk7PpnQuzLH73j9AQ==}
     peerDependencies:
       '@arco-design/web-vue': ^2.47.1
@@ -758,7 +758,7 @@ packages:
       lodash: ^4.17.21
       vue: ^3.3.2
     dependencies:
-      '@arco-design/web-vue': 2.53.3(vue@3.3.11)
+      '@arco-design/web-vue': 2.55.0(vue@3.3.11)
       '@dangojs/digitforce-ui-utils': 0.0.9(typescript@4.9.5)
       lodash: 4.17.21
       vue: 3.3.11(typescript@4.9.5)

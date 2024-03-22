@@ -2,9 +2,9 @@
   <a-layout class="layout" :class="{ mobile: appStore.hideMenu }">
     <!-- tab bar -->
     <div v-if="navbar" class="layout-navbar">
-      <NavBar />
+      <nav-bar />
     </div>
-    <a-layout>
+    <a-layout style="flex-direction: row;">
       <!-- 左侧菜单栏 -->
       <a-layout-sider v-if="renderMenu"
                       v-show="!hideMenu"
@@ -17,7 +17,7 @@
                       :hide-trigger="true"
                       @collapse="setCollapsed">
         <div class="menu-wrapper">
-          <menu-tree />
+          <system-menu-tree />
         </div>
       </a-layout-sider>
       <!-- 顶部菜单栏 -->
@@ -29,12 +29,12 @@
                 mask-closable
                 :closable="false"
                 @cancel="drawerCancel">
-        <menu-tree style="padding: 12px 16px;" />
+        <system-menu-tree style="padding: 12px 16px;" />
       </a-drawer>
       <!-- body -->
       <a-layout class="layout-content" :style="paddingStyle">
         <!-- 页签 -->
-        <TabBar v-if="appStore.tabBar" />
+        <tab-bar v-if="appStore.tabBar" />
         <!-- 页面 -->
         <a-layout-content style="height: 100%; width: 100%;">
           <!-- 水印 -->
@@ -43,11 +43,11 @@
                        :z-index="9999"
                        style="width: 100%; height: 100%;"
                        :content="userStore.username || ''">
-            <PageLayout />
+            <page-layout />
           </a-watermark>
         </a-layout-content>
         <!-- 页脚 -->
-        <Footer v-if="visibleFooter" />
+        <footer v-if="visibleFooter" />
       </a-layout>
     </a-layout>
   </a-layout>
@@ -60,17 +60,18 @@
   import useResponsive from '@/hooks/responsive';
   import { toggleDrawerMenuKey } from '@/types/symbol';
   import PageLayout from './page-layout.vue';
-  import MenuTree from '@/components/system/menu/tree/index.vue';
   import NavBar from '@/components/app/navbar/index.vue';
   import Footer from '@/components/app/footer/index.vue';
   import TabBar from '@/components/app/tab-bar/index.vue';
+  import SystemMenuTree from '@/components/system/menu/tree/index.vue';
 
-  const isInit = ref(false);
   const appStore = useAppStore();
   const userStore = useUserStore();
   const router = useRouter();
   const route = useRoute();
   useResponsive(true);
+
+  const isInit = ref(false);
   const navbarHeight = `60px`;
   const navbar = computed(() => appStore.navbar);
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
