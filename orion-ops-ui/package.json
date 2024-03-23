@@ -1,7 +1,7 @@
 {
   "name": "orion-ops-pro-ui",
   "description": "Orion Ops Pro for Vue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "author": "Jiahang Li",
   "license": "Apache 2.0",

@@ -16,17 +16,18 @@ const preventKeys: Array<ShortcutKey> = [
     altKey: false,
     shiftKey: true,
     code: 'KeyC'
-  }, {
-    ctrlKey: true,
-    altKey: false,
-    shiftKey: true,
-    code: 'KeyV'
-  }, {
-    ctrlKey: false,
-    altKey: false,
-    shiftKey: true,
-    code: 'Insert'
-  },
+  }
+  // , {
+  //   ctrlKey: true,
+  //   altKey: false,
+  //   shiftKey: true,
+  //   code: 'KeyV'
+  // }, {
+  //   ctrlKey: false,
+  //   altKey: false,
+  //   shiftKey: true,
+  //   code: 'Insert'
+  // },
 ];
 
 const { copy: copyValue, readText } = useCopy();
