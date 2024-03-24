@@ -41,7 +41,7 @@
                     v-model="formModel.copyAutoTrim" />
         </block-setting-item>
         <!-- 粘贴去除空格 -->
-        <block-setting-item label="粘贴去除空格" desc="粘贴文本前自动删除尾部空格 如: 命令输入框, 命令编辑器, 右键粘贴, 粘贴按钮, 右键菜单粘贴, 自定义粘贴快捷键">
+        <block-setting-item label="粘贴去除空格" desc="粘贴文本前自动删除尾部空格 如: 命令输入框, 命令编辑器, 右键粘贴, 粘贴按钮, 右键菜单粘贴, 自定义粘贴快捷键 (内置粘贴快捷键因浏览器限制不会去除)">
           <a-switch type="round"
                     v-model="formModel.pasteAutoTrim" />
         </block-setting-item>

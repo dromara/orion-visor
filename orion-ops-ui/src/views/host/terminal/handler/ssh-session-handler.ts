@@ -16,18 +16,22 @@ const preventKeys: Array<ShortcutKey> = [
     altKey: false,
     shiftKey: true,
     code: 'KeyC'
-  }
-  // , {
-  //   ctrlKey: true,
-  //   altKey: false,
-  //   shiftKey: true,
-  //   code: 'KeyV'
-  // }, {
-  //   ctrlKey: false,
-  //   altKey: false,
-  //   shiftKey: true,
-  //   code: 'Insert'
-  // },
+  },
+];
+
+// 内置快捷键
+const builtinKeys: Array<ShortcutKey> = [
+  {
+    ctrlKey: true,
+    altKey: false,
+    shiftKey: true,
+    code: 'KeyV'
+  }, {
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: true,
+    code: 'Insert'
+  },
 ];
 
 const { copy: copyValue, readText } = useCopy();
@@ -50,17 +54,24 @@ export default class SshSessionHandler implements ISshSessionHandler {
     this.session = session;
     this.inst = session.inst;
     this.domRef = domRef;
-    const { preference, tabManager } = useTerminalStore();
+    const { preference } = useTerminalStore();
     this.interactSetting = preference.interactSetting;
     this.shortcutKeys = preference.shortcutSetting.keys;
   }
 
   // 检测是否忽略默认行为
   checkPreventDefault(e: KeyboardEvent): boolean {
-    if (e.type !== 'keydown') {
-      return false;
-    }
     return !!preventKeys.find(key => {
+      return key.code === e.code
+        && key.altKey === e.altKey
+        && key.shiftKey === e.shiftKey
+        && key.ctrlKey === e.ctrlKey;
+    });
+  }
+
+  // 检测是否为内置快捷键
+  checkIsBuiltin(e: KeyboardEvent): boolean {
+    return !!builtinKeys.find(key => {
       return key.code === e.code
         && key.altKey === e.altKey
         && key.shiftKey === e.shiftKey

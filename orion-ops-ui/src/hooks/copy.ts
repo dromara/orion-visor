@@ -29,7 +29,7 @@ export const readText = () => {
       try {
         const success = document.execCommand('paste');
         if (!success) {
-          Message.error('当前浏览器无法读取剪切板内容');
+          Message.error('当前环境无法读取剪切板内容');
         }
         resolve(textarea.value);
       } catch (error) {
@@ -53,7 +53,10 @@ export const copyToClipboard = async (value: string) => {
     document.body.appendChild(textarea);
     textarea.select();
     try {
-      document.execCommand('copy');
+      const success = document.execCommand('copy');
+      if (!success) {
+        Message.error('当前环境无法复制到剪切板');
+      }
     } catch (error) {
       throw error;
     } finally {

@@ -212,6 +212,8 @@ export const TerminalShortcutKeys = {
   CHANGE_TO_PREV_SESSION: 'changeToPrevSession',
   // 切换至后一个会话
   CHANGE_TO_NEXT_SESSION: 'changeToNextSession',
+  // 粘贴
+  PASTE: 'paste',
 };
 
 // 终端操作快捷键
@@ -257,7 +259,7 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
     content: '复制',
     type: TerminalShortcutType.TERMINAL
   }, {
-    item: 'paste',
+    item: TerminalShortcutKeys.PASTE,
     content: '粘贴',
     type: TerminalShortcutType.TERMINAL
   }, {

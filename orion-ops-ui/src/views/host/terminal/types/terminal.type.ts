@@ -267,6 +267,8 @@ export interface ISshSession extends ITerminalSession {
 export interface ISshSessionHandler {
   // 检测是否忽略默认行为
   checkPreventDefault: (e: KeyboardEvent) => boolean;
+  // 检测是否为内置快捷键
+  checkIsBuiltin: (e: KeyboardEvent) => boolean;
   // 启用状态
   enabledStatus: (option: string) => boolean;
   // 调用处理方法

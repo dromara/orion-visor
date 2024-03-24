@@ -26,7 +26,7 @@
             <!-- 启用-未修改 -->
             <span v-else-if="item.enabled">{{ item.shortcutKey }}</span>
             <!-- 禁用 -->
-            <span v-else />
+            <span v-else class="disabled-key">已禁用</span>
           </div>
           <!-- 操作 -->
           <a-space class="shortcut-actions-container">
@@ -52,6 +52,13 @@
               <icon-settings />
             </div>
           </a-space>
+          <!-- 描述 -->
+          <div class="shortcut-desc">
+            <!-- 粘贴描述 -->
+            <template v-if="item.item === TerminalShortcutKeys.PASTE">
+              Ctrl + Shift + V, Shift + Insert 为浏览器内置快捷键, 不受环境影响
+            </template>
+          </div>
         </div>
       </template>
     </div>
@@ -68,6 +75,7 @@
   import type { TerminalShortcutKeyEditable } from '@/store/modules/terminal/types';
   import type { VNodeRef } from 'vue';
   import { setAutoFocus } from '@/utils/dom';
+  import { TerminalShortcutKeys } from '../../../types/terminal.const';
 
   defineProps<{
     title: string;
@@ -116,6 +124,10 @@
         .shortcut-actions-container {
           display: flex;
         }
+
+        .shortcut-desc {
+          display: none;
+        }
       }
 
       .shortcut-name {
@@ -132,6 +144,11 @@
       }
     }
 
+    .shortcut-desc {
+      display: flex;
+      font-size: 12px;
+    }
+
     .shortcut-actions-container {
       display: none;
 
@@ -143,6 +160,10 @@
           background: var(--color-neutral-4);
         }
       }
+    }
+
+    .disabled-key {
+      color: var(--color-neutral-6);
     }
   }
 
