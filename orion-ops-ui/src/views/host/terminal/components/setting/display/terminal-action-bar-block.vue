@@ -12,7 +12,7 @@
     <a-alert v-if="!isSecureEnvironment"
              type="warning"
              class="mb16">
-      当前环境非 HTTPS 环境, 因浏览器安全策略限制, '粘贴' 功能无法使用
+      当前环境非 HTTPS 环境, 因浏览器安全策略限制, 自定义 '粘贴' 功能无法使用
     </a-alert>
     <!-- 内容区域 -->
     <div class="terminal-setting-body block-body setting-body">
