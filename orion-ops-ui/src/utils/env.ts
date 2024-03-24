@@ -1,5 +1,10 @@
 const debug = import.meta.env.MODE !== 'production';
 
+// 当前环境是否为安全环境
+export const isSecureEnvironment = (() => {
+  return window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+})();
+
 // http base url
 export const httpBaseUrl = (() => {
   const configBase = import.meta.env.VITE_API_BASE_URL;

@@ -8,6 +8,12 @@
     </div>
     <!-- 提示 -->
     <a-alert class="mb16">修改后会立刻保存, 刷新页面后生效</a-alert>
+    <!-- 非安全环境提示 -->
+    <a-alert v-if="!isSecureEnvironment"
+             type="warning"
+             class="mb16">
+      当前环境非 HTTPS 环境, 因浏览器安全策略限制, '粘贴' 功能无法使用
+    </a-alert>
     <!-- 内容区域 -->
     <div class="terminal-setting-body setting-body">
       <a-row class="mb16" align="stretch" :gutter="16">
@@ -40,22 +46,28 @@
           <a-switch type="round"
                     v-model="formModel.copyAutoTrim" />
         </block-setting-item>
-        <!-- 粘贴去除空格 -->
-        <block-setting-item label="粘贴去除空格" desc="粘贴文本前自动删除尾部空格 如: 命令输入框, 命令编辑器, 右键粘贴, 粘贴按钮, 右键菜单粘贴, 自定义粘贴快捷键 (内置粘贴快捷键因浏览器限制不会去除)">
-          <a-switch type="round"
-                    v-model="formModel.pasteAutoTrim" />
-        </block-setting-item>
-      </a-row>
-      <a-row class="mb16" align="stretch" :gutter="16">
-        <!-- 右键粘贴 -->
-        <block-setting-item label="右键粘贴" desc="右键自动粘贴, 启用后需要关闭右键菜单 (若开启了右键选中词条, 有选中的文本时, 右键粘贴无效)">
-          <a-switch type="round"
-                    v-model="formModel.rightClickPaste" />
-        </block-setting-item>
         <!-- 启用右键菜单 -->
         <block-setting-item label="启用右键菜单" desc="右键终端将打开自定义菜单, 启用后需要关闭右键粘贴">
           <a-switch type="round"
                     v-model="formModel.enableRightClickMenu" />
+        </block-setting-item>
+
+      </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 右键粘贴 -->
+        <block-setting-item label="右键粘贴"
+                            desc="启用右键自动粘贴需要关闭右键菜单. 如果启用右键选中词条且选中有文本时, 右键粘贴无效. 因浏览器安全策略限制, 此功能需要在 HTTPS 环境下使用">
+          <a-switch type="round"
+                    v-model="formModel.rightClickPaste" />
+        </block-setting-item>
+        <!-- 粘贴去除空格 -->
+        <block-setting-item label="粘贴去除空格"
+                            desc="粘贴文本前自动删除尾部空格 如: 命令输入框, 命令编辑器, 右键粘贴, 粘贴按钮, 右键菜单粘贴, 自定义粘贴快捷键. 默认粘贴快捷键无法去除空格">
+          <a-switch type="round"
+                    v-model="formModel.pasteAutoTrim" />
+          <template #desc>
+
+          </template>
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
@@ -87,6 +99,7 @@
   import { ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import { isSecureEnvironment } from '@/utils/env';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { preference, updateTerminalPreference } = useTerminalStore();

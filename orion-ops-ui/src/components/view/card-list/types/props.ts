@@ -4,7 +4,7 @@ import type { CardFieldConfig, CardPosition, CardRecord, ColResponsiveValue, Han
 
 // 卡片属性
 export interface CardProps {
-  key?: string;
+  rowKey?: string;
   pagination?: PaginationProps | boolean;
   loading?: boolean;
   fieldConfig?: CardFieldConfig;

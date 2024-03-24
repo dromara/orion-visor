@@ -8,6 +8,12 @@
     </div>
     <!-- 提示 -->
     <a-alert class="mb16">修改后会立刻保存, 重新打开终端后生效 (无需刷新页面)</a-alert>
+    <!-- 非安全环境提示 -->
+    <a-alert v-if="!isSecureEnvironment"
+             type="warning"
+             class="mb16">
+      当前环境非 HTTPS 环境, 因浏览器安全策略限制, '粘贴' 功能无法使用
+    </a-alert>
     <!-- 内容区域 -->
     <div class="terminal-setting-body block-body setting-body">
       <!-- 功能项 -->
@@ -84,6 +90,7 @@
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { ActionBarItems } from '../../../types/terminal.const';
+  import { isSecureEnvironment } from '@/utils/env';
 
   const { preference, updateTerminalPreference } = useTerminalStore();
 

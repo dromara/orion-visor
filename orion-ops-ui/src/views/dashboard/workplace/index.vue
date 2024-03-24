@@ -4,7 +4,7 @@
     <div class="top-side">
       <!-- 提示 -->
       <div class="panel">
-        <Banner />
+        <banner />
       </div>
     </div>
     <div class="row-wrapper">

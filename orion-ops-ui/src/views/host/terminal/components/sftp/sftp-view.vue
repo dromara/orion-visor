@@ -170,11 +170,11 @@
 
   // 连接成功回调
   const connectCallback = () => {
-    loadFiles(undefined);
+    loadFiles('~');
   };
 
   // 加载文件列表
-  const loadFiles = (path: string | undefined) => {
+  const loadFiles = (path: string) => {
     setTableLoading(true);
     session.value?.list(path);
   };

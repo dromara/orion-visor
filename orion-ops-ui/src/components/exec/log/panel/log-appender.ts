@@ -272,7 +272,9 @@ export default class LogAppender implements ILogAppender {
           .filter(Boolean)
           .forEach(s => s.dispose());
         // 卸载终端
-        s.terminal?.dispose();
+        setTimeout(() => {
+          s.terminal?.dispose();
+        }, 300);
       } catch (e) {
         // 卸载可能会报错
       }

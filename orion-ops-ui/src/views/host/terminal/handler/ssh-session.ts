@@ -248,7 +248,9 @@ export default class SshSession implements ISshSession {
         .filter(Boolean)
         .forEach(s => s.dispose());
       // 卸载终端
-      this.inst.dispose();
+      setTimeout(() => {
+        this.inst.dispose();
+      }, 300);
     } catch (e) {
       // 卸载可能会报错
     }

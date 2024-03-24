@@ -13,7 +13,12 @@
       </div>
       <!-- 描述 -->
       <div class="block-form-item-desc">
-        {{ desc }}
+        <template v-if="desc">
+          {{ desc }}
+        </template>
+        <template v-else>
+          <slot name="desc" />
+        </template>
       </div>
     </div>
   </a-col>
@@ -29,13 +34,14 @@
 
   defineProps<{
     label: string,
-    desc: string,
+    desc?: string,
   }>();
 
 </script>
 
 <style lang="less" scoped>
   .block-form-item-wrapper {
+    width: 458px;
     height: 100%;
     min-height: 64px;
     border-radius: 4px;

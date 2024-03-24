@@ -47,7 +47,7 @@
           </a-watermark>
         </a-layout-content>
         <!-- 页脚 -->
-        <footer v-if="visibleFooter" />
+        <app-footer v-if="visibleFooter" />
       </a-layout>
     </a-layout>
   </a-layout>
@@ -61,8 +61,8 @@
   import { toggleDrawerMenuKey } from '@/types/symbol';
   import PageLayout from './page-layout.vue';
   import NavBar from '@/components/app/navbar/index.vue';
-  import Footer from '@/components/app/footer/index.vue';
   import TabBar from '@/components/app/tab-bar/index.vue';
+  import AppFooter from '@/components/app/app-footer/index.vue';
   import SystemMenuTree from '@/components/system/menu/tree/index.vue';
 
   const appStore = useAppStore();

@@ -324,7 +324,7 @@ export interface ISftpSession extends ITerminalSession {
   // 设置显示隐藏文件
   setShowHiddenFile: (show: boolean) => void;
   // 查询文件列表
-  list: (path: string | undefined) => void;
+  list: (path: string) => void;
   // 创建文件夹
   mkdir: (path: string) => void;
   // 创建文件
