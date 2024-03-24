@@ -74,7 +74,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                         new TerminalPreferenceModel.ShortcutKeysModel("changeToNextSession", true, false, true, "BracketRight", true),
                         // 终端快捷键
                         new TerminalPreferenceModel.ShortcutKeysModel("copy", true, true, false, "KeyC", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("paste", true, true, false, "KeyV", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("paste", true, true, false, "Insert", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("toTop", true, true, false, "ArrowUp", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("toBottom", true, true, false, "ArrowDown", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("selectAll", true, true, false, "KeyA", true),
@@ -94,7 +94,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .selectAll(false)
                 .search(true)
                 .copy(true)
-                .paste(true)
+                .paste(false)
                 .interrupt(false)
                 .enter(false)
                 .fontSizePlus(false)
@@ -112,7 +112,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .theme(new JSONObject())
                 .displaySetting(JSONObject.parseObject(defaultDisplaySetting))
                 .actionBarSetting(JSONObject.parseObject(actionBarSetting))
-                .rightMenuSetting(Lists.of("copy", "paste", "checkAll", "search", "clear"))
+                .rightMenuSetting(Lists.of("selectAll", "copy", "fontSizePlus", "fontSizeSubtract", "search", "clear"))
                 .interactSetting(JSONObject.parseObject(defaultInteractSetting))
                 .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))
                 .sessionSetting(JSONObject.parseObject(defaultSessionSetting))

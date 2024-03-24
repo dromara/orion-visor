@@ -1,9 +1,9 @@
 import type { PaginationProps, TableRowSelection } from '@arco-design/web-vue';
+import type { TableExpandable } from '@arco-design/web-vue/es/table/interface';
 import { reactive } from 'vue';
 import { useAppStore } from '@/store';
 import { isNumber } from '@/utils/is';
 import { TablePageSizeOptions } from '@/types/const';
-import { TableExpandable } from '@arco-design/web-vue/es/table/interface';
 
 /**
  * 创建列表分页

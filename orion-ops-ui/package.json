@@ -1,12 +1,13 @@
 {
   "name": "orion-ops-pro-ui",
   "description": "Orion Ops Pro for Vue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "author": "Jiahang Li",
   "license": "Apache 2.0",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts",
+    "dev:host": "vite --config ./config/vite.config.dev.ts --host",
     "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
     "report": "cross-env REPORT=true npm run build",
     "preview": "npm run build && vite preview --host",
@@ -29,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.53.3",
+    "@arco-design/web-vue": "^2.55.0",
     "@dangojs/a-query-header": "^0.0.31",
     "@sanqi377/arco-vue-icon-picker": "^1.0.7",
     "@vueuse/core": "^9.3.0",

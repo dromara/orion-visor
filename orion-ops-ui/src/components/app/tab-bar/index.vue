@@ -4,7 +4,7 @@
       <div class="tab-bar-box">
         <div class="tab-bar-scroll">
           <div class="tags-wrap">
-            <TabItem v-for="(tag, index) in tagList"
+            <tab-item v-for="(tag, index) in tagList"
                      :key="tag.fullPath"
                      :index="index"
                      :item-data="tag" />

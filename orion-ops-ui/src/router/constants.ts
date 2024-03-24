@@ -14,6 +14,11 @@ export const DEFAULT_ROUTE_NAME = 'workplace';
 export const DEFAULT_ROUTE_FULL_PATH = '/workplace';
 
 /**
+ * 默认路由
+ */
+export const DEFAULT_ROUTER = { name: DEFAULT_ROUTE_NAME, children: [] };
+
+/**
  * 路由白名单
  */
 export const WHITE_ROUTER_LIST = [

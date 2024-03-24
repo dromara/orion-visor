@@ -85,6 +85,10 @@ export default class SshSession implements ISshSession {
       if (e.type !== 'keydown') {
         return true;
       }
+      // 检测是否为内置快捷键
+      if (this.handler.checkIsBuiltin(e)) {
+        return true;
+      }
       // 检测是否阻止默认行为
       if (this.handler.checkPreventDefault(e)) {
         e.preventDefault();
@@ -244,7 +248,9 @@ export default class SshSession implements ISshSession {
         .filter(Boolean)
         .forEach(s => s.dispose());
       // 卸载终端
-      this.inst.dispose();
+      setTimeout(() => {
+        this.inst.dispose();
+      }, 300);
     } catch (e) {
       // 卸载可能会报错
     }

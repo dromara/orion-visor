@@ -26,6 +26,8 @@ import java.util.List;
 @Component
 public class SftpListHandler extends AbstractTerminalHandler<SftpListRequest> {
 
+    private static final String HOME_PATH = "~";
+
     @Override
     public void handle(WebSocketSession channel, SftpListRequest payload) {
         // 获取会话
@@ -37,7 +39,7 @@ public class SftpListHandler extends AbstractTerminalHandler<SftpListRequest> {
         List<SftpFileVO> list = Lists.empty();
         try {
             // 空目录则直接获取 home 目录
-            if (Strings.isBlank(path)) {
+            if (HOME_PATH.equals(path)) {
                 path = session.getHome();
             }
             // 文件列表

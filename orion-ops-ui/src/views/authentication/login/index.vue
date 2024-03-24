@@ -8,16 +8,16 @@
       <div class="logo-text">Orion Ops Pro</div>
     </div>
     <!-- 左侧 banner -->
-    <LoginBanner />
+    <login-banner />
     <!-- 主体部分 -->
     <div class="content">
       <div class="content-inner">
         <!-- 登录表单 -->
-        <LoginForm />
+        <login-form />
       </div>
       <!-- 页脚 -->
       <div class="footer">
-        <Footer />
+        <app-footer />
       </div>
     </div>
   </div>
@@ -26,9 +26,9 @@
 <script lang="ts" setup>
   import { Notification } from '@arco-design/web-vue';
   import { reLoginTipsKey } from '@/types/symbol';
-  import Footer from '@/components/app/footer/index.vue';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
+  import AppFooter from '@/components/app/app-footer/index.vue';
 
   // 登录提示
   const tips = window.sessionStorage.getItem(reLoginTipsKey);

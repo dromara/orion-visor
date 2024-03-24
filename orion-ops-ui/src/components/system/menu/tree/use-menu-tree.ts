@@ -8,8 +8,10 @@ export default function useMenuTree() {
   const appRoute = computed(() => {
     return menuStore.appMenus;
   });
-  const menuTree = computed(() => {
+  const menuTree = computed<RouteRecordNormalized[]>(() => {
     const copyRouter = cloneDeep(appRoute.value) as RouteRecordNormalized[];
+
+    // 排序
     copyRouter.sort((a: RouteRecordNormalized, b: RouteRecordNormalized) => {
       return (a.meta.order || 0) - (b.meta.order || 0);
     });

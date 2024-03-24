@@ -1,5 +1,13 @@
 ⚡ 注意: 应用不支持跨版本升级, 可以进行多次升级
 
+## v1.0.3
+
+> sql 脚本
+
+```sql
+DELETE FROM preference WHERE type = 'TERMINAL';
+```
+
 ## v1.0.2
 
 > sql 脚本

@@ -29,7 +29,7 @@
         </a-col>
         <!-- 数据卡片 -->
         <a-col v-for="(item, index) in list"
-               :key="item[key]"
+               :key="item[rowKey]"
                v-bind="cardLayoutCols"
                :class="{ 'disabled-col': item.disabled === true }">
           <!-- 右键菜单 -->
@@ -41,12 +41,18 @@
                        @emitter="dispatchEmitter">
               <!-- 自定义插槽 -->
               <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]>
-                <slot :name="slot" :record="item" :index="index" :key="item[key]" />
+                <slot :name="slot"
+                      :record="item"
+                      :index="index"
+                      :rowKey="item[rowKey]" />
               </template>
             </card-item>
             <!-- 右键菜单 -->
             <template v-if="contextMenu" #content>
-              <slot name="contextMenu" :record="item" :index="index" :key="item[key]" />
+              <slot name="contextMenu"
+                    :record="item"
+                    :index="index"
+                    :rowKey="item[rowKey]" />
             </template>
           </a-dropdown>
         </a-col>
@@ -82,7 +88,7 @@
   import useEmitter from '@/hooks/emitter';
 
   const props = withDefaults(defineProps<CardProps>(), {
-    key: 'id',
+    rowKey: 'id',
     pagination: false,
     loading: false,
     cardHeight: '100%',

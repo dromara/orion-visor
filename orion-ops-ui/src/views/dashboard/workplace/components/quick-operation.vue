@@ -34,6 +34,7 @@
     .flat(1)
     .filter(s => s.meta)
     .map(s => s as RouteRecordNormalized)
+    .filter(s => s.meta.hideInMenu !== true)
     .slice(0, 15);
 
   // 打开路由

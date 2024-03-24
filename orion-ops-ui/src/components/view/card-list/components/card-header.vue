@@ -10,11 +10,11 @@
         <div class="pagination-wrapper">
           <a-pagination v-if="pagination"
                         size="mini"
-                        v-model:current="(pagination as PaginationProps).current"
-                        v-model:page-size="(pagination as PaginationProps).pageSize"
+                        v-model:current="(pagination as any).current"
+                        v-model:page-size="(pagination as any).pageSize"
                         v-bind="pagination as any"
                         :auto-adjust="false"
-                        @change="page => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, page, (pagination as PaginationProps).pageSize)"
+                        @change="page => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, page, (pagination as any).pageSize)"
                         @page-size-change="limit => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, 1, limit)" />
         </div>
       </div>
@@ -104,7 +104,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PaginationProps } from '@arco-design/web-vue';
   import type { CardProps } from '../types/props';
   import { ref, computed } from 'vue';
   import { useAppStore } from '@/store';
