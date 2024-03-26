@@ -10,8 +10,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * 调度器配置
- * <p>
- * TODO 后面业务扩展需要加上quartz的配置
  *
  * @author Jiahang Li
  * @version 1.0.0

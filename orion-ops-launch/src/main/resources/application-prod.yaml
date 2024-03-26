@@ -20,9 +20,7 @@ spring:
   redis:
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}
-    database: 0
     password: ${REDIS_PASSWORD:Data@123456}
-    timeout: 3000
 
 springdoc:
   api-docs:
