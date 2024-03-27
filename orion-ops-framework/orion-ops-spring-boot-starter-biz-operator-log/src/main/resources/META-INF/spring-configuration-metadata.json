@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.operator-log",
-      "type": "com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig",
-      "sourceType": "com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig"
+      "type": "com.orion.ops.framework.biz.operator.log.configuration.config.OperatorLogConfig",
+      "sourceType": "com.orion.ops.framework.biz.operator.log.configuration.config.OperatorLogConfig"
     }
   ],
   "properties": [

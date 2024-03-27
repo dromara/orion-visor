@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.websocket",
-      "type": "com.orion.ops.framework.websocket.config.WebSocketConfig",
-      "sourceType": "com.orion.ops.framework.websocket.config.WebSocketConfig"
+      "type": "com.orion.ops.framework.websocket.configuration.config.WebSocketConfig",
+      "sourceType": "com.orion.ops.framework.websocket.configuration.config.WebSocketConfig"
     }
   ],
   "properties": [

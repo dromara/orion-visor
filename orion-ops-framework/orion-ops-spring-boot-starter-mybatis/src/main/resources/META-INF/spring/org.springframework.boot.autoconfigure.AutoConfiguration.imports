@@ -1,1 +1,1 @@
-com.orion.ops.framework.mybatis.config.OrionMybatisAutoConfiguration
+com.orion.ops.framework.mybatis.configuration.OrionMybatisAutoConfiguration

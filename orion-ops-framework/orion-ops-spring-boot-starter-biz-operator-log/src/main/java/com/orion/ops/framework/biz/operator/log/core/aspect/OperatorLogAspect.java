@@ -6,7 +6,7 @@ import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
 import com.orion.ops.framework.biz.operator.log.core.annotation.IgnoreParameter;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
-import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
+import com.orion.ops.framework.biz.operator.log.configuration.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.factory.OperatorTypeHolder;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;

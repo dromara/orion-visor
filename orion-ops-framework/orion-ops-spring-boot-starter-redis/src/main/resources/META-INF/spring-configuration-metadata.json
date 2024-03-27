@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "spring.redisson",
-      "type": "com.orion.ops.framework.redis.core.config.RedissonConfig",
-      "sourceType": "com.orion.ops.framework.redis.core.config.RedissonConfig"
+      "type": "com.orion.ops.framework.redis.configuration.config.RedissonConfig",
+      "sourceType": "com.orion.ops.framework.redis.configuration.config.RedissonConfig"
     }
   ],
   "properties": [

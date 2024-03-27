@@ -2,13 +2,13 @@
   "groups": [
     {
       "name": "orion.security",
-      "type": "com.orion.ops.framework.security.config.SecurityConfig",
-      "sourceType": "com.orion.ops.framework.security.config.SecurityConfig"
+      "type": "com.orion.ops.framework.security.configuration.config.SecurityConfig",
+      "sourceType": "com.orion.ops.framework.security.configuration.config.SecurityConfig"
     },
     {
       "name": "orion.crypto",
-      "type": "com.orion.ops.framework.security.config.CryptoConfig",
-      "sourceType": "com.orion.ops.framework.security.config.CryptoConfig"
+      "type": "com.orion.ops.framework.security.configuration.config.CryptoConfig",
+      "sourceType": "com.orion.ops.framework.security.configuration.config.CryptoConfig"
     },
     {
       "name": "orion.crypto.aes",

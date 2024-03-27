@@ -11,7 +11,7 @@ import com.orion.ops.framework.common.json.filter.FieldIgnoreFilter;
 import com.orion.ops.framework.common.meta.TraceIdHolder;
 import com.orion.ops.framework.common.security.SecurityHolder;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
-import com.orion.ops.framework.log.core.config.LogPrinterConfig;
+import com.orion.ops.framework.log.configuration.config.LogPrinterConfig;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.validation.BindingResult;

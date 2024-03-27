@@ -4,7 +4,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.common.utils.SwaggerUtils;
-import com.orion.ops.framework.log.core.config.LogPrinterConfig;
+import com.orion.ops.framework.log.configuration.config.LogPrinterConfig;
 import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
