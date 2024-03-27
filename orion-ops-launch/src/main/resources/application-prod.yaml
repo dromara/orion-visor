@@ -21,6 +21,9 @@ spring:
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:Data@123456}
+  redisson:
+    threads: 4
+    netty-threads: 4
 
 springdoc:
   api-docs:

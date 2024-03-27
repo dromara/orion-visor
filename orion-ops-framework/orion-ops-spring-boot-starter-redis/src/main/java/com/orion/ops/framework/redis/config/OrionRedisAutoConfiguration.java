@@ -1,9 +1,12 @@
 package com.orion.ops.framework.redis.config;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
+import com.orion.ops.framework.redis.core.config.RedissonConfig;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,6 +23,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 @Lazy(value = false)
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_REDIS)
+@EnableConfigurationProperties(RedissonConfig.class)
 public class OrionRedisAutoConfiguration {
 
     /**
@@ -38,6 +42,18 @@ public class OrionRedisAutoConfiguration {
         // 将其设置到 RedisUtils
         RedisUtils.setRedisTemplate(redisTemplate);
         return redisTemplate;
+    }
+
+    /**
+     * @param redissonConfig config
+     * @return redisson 自定义配置
+     */
+    @Bean
+    public RedissonAutoConfigurationCustomizer redissonConfigurationCustomizer(RedissonConfig redissonConfig) {
+        return config -> {
+            config.setThreads(redissonConfig.getThreads());
+            config.setNettyThreads(redissonConfig.getNettyThreads());
+        };
     }
 
 }

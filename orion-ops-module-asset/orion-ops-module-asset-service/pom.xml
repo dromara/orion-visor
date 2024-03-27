@@ -88,6 +88,12 @@
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-storage</artifactId>
         </dependency>
+
+        <!-- job -->
+        <dependency>
+            <groupId>com.orion.ops</groupId>
+            <artifactId>orion-ops-spring-boot-starter-job</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -18,6 +18,11 @@
       "description": "swagger 项目描述."
     },
     {
+      "name": "orion.swagger.author",
+      "type": "java.lang.String",
+      "description": "swagger 项目作者."
+    },
+    {
       "name": "orion.swagger.version",
       "type": "java.lang.String",
       "description": "swagger 项目版本."

@@ -91,6 +91,7 @@ spring:
             class: org.quartz.simpl.SimpleThreadPool
             threadCount: 10
             threadPriority: 5
+            threadNamePrefix: quartz-
             threadsInheritContextClassLoaderOfInitializingThread: true
   boot:
     admin:

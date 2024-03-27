@@ -10,7 +10,10 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: lijiahang
+    password: Data@123456
+  redisson:
+    threads: 2
+    netty-threads: 2
 
 mybatis-plus:
   configuration:

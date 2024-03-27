@@ -1,0 +1,21 @@
+{
+  "groups": [
+    {
+      "name": "spring.redisson",
+      "type": "com.orion.ops.framework.redis.core.config.RedissonConfig",
+      "sourceType": "com.orion.ops.framework.redis.core.config.RedissonConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.redisson.threads",
+      "type": "java.lang.Integer",
+      "description": "任务线程数."
+    },
+    {
+      "name": "spring.redisson.netty-threads",
+      "type": "java.lang.Integer",
+      "description": "netty 线程数."
+    }
+  ]
+}
