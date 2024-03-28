@@ -1,0 +1,69 @@
+### 创建计划执行任务主机
+POST {{baseUrl}}/asset/exec-job-host/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "jobId": "",
+  "hostId": ""
+}
+
+
+### 更新计划执行任务主机
+PUT {{baseUrl}}/asset/exec-job-host/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "jobId": "",
+  "hostId": ""
+}
+
+
+### 查询计划执行任务主机
+GET {{baseUrl}}/asset/exec-job-host/get?id=1
+Authorization: {{token}}
+
+
+### 批量查询计划执行任务主机
+GET {{baseUrl}}/asset/exec-job-host/batch-get?idList=1,2,3
+Authorization: {{token}}
+
+
+### 查询全部计划执行任务主机
+POST {{baseUrl}}/asset/exec-job-host/list
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "jobId": "",
+  "hostId": ""
+}
+
+
+### 分页查询计划执行任务主机
+POST {{baseUrl}}/asset/exec-job-host/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "jobId": "",
+  "hostId": ""
+}
+
+
+### 删除计划执行任务主机
+DELETE {{baseUrl}}/asset/exec-job-host/delete?id=1
+Authorization: {{token}}
+
+
+### 批量删除计划执行任务主机
+DELETE {{baseUrl}}/asset/exec-job-host/batch-delete?idList=1,2,3
+Authorization: {{token}}
+
+###

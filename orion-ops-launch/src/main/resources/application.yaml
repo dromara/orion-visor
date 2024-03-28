@@ -55,7 +55,7 @@ spring:
             multi-statement-allow: true
   redis:
     database: 0
-    connect-timeout: 3000
+    connect-timeout: 5000
     timeout: 3000
   cache:
     type: REDIS

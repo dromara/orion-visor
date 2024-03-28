@@ -169,10 +169,10 @@
 
   // 卸载
   onBeforeUnmount(() => {
-    editor?.dispose();
-    editor = undefined;
     completionItemProvider?.dispose();
     completionItemProvider = undefined;
+    editor?.dispose();
+    editor = undefined;
   });
 
 </script>
