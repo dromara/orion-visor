@@ -1,6 +1,7 @@
 package com.orion.ops.framework.job.configuration;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
+import com.orion.ops.framework.job.core.utils.QuartzUtils;
 import org.quartz.Scheduler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -48,7 +49,11 @@ public class OrionQuartzAutoConfiguration {
      */
     @Bean(initMethod = "start")
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) {
-        return schedulerFactoryBean.getScheduler();
+        // 获取 scheduler
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        // 将其设置到 QuartzUtils
+        QuartzUtils.setScheduler(scheduler);
+        return scheduler;
     }
 
 }

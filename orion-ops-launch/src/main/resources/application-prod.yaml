@@ -24,6 +24,12 @@ spring:
   redisson:
     threads: 4
     netty-threads: 4
+  quartz:
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 10
 
 springdoc:
   api-docs:
