@@ -1,5 +1,17 @@
 ⚡ 注意: 应用不支持跨版本升级, 可以进行多次升级
 
+## v1.0.4
+
+> sql 脚本
+
+```sql
+ALTER TABLE `exec_template` 
+CHANGE COLUMN `parameter` `parameter_schema` json NULL COMMENT '参数定义' AFTER `timeout`;
+
+ALTER TABLE `exec_log` 
+ADD COLUMN `exec_seq` int(0) NULL DEFAULT 0 COMMENT '执行序列' AFTER `description`;
+```
+
 ## v1.0.3
 
 > sql 脚本
