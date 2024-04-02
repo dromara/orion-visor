@@ -10,6 +10,7 @@ import com.orion.ops.module.asset.define.operator.ExecJobOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecJobCreateRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecJobQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateStatusRequest;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 import com.orion.ops.module.asset.service.ExecJobService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 计划执行任务 api
@@ -38,6 +38,13 @@ import java.util.List;
 @RequestMapping("/asset/exec-job")
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecJobController {
+
+
+    // TODO EXEC_seq
+    // todo 测试一下添加失败 操作日志是怎么
+    // TODO 操作日志 菜单
+    // TODO 手动执行
+    // TODO NEXT time
 
     @Resource
     private ExecJobService execJobService;
@@ -58,6 +65,14 @@ public class ExecJobController {
         return execJobService.updateExecJobById(request);
     }
 
+    @OperatorLog(ExecJobOperatorType.UPDATE_STATUS)
+    @PutMapping("/update-status")
+    @Operation(summary = "更新计划执行任务状态")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job:update-status')")
+    public Integer updateExecJobStatus(@Validated @RequestBody ExecJobUpdateStatusRequest request) {
+        return execJobService.updateExecJobStatus(request);
+    }
+
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "查询计划执行任务")
@@ -65,23 +80,6 @@ public class ExecJobController {
     @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
     public ExecJobVO getExecJob(@RequestParam("id") Long id) {
         return execJobService.getExecJobById(id);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/batch-get")
-    @Operation(summary = "批量查询计划执行任务")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
-    public List<ExecJobVO> getExecJobBatch(@RequestParam("idList") List<Long> idList) {
-        return execJobService.getExecJobByIdList(idList);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list")
-    @Operation(summary = "查询全部计划执行任务")
-    @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
-    public List<ExecJobVO> getExecJobList(@Validated @RequestBody ExecJobQueryRequest request) {
-        return execJobService.getExecJobList(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -99,15 +97,6 @@ public class ExecJobController {
     @PreAuthorize("@ss.hasPermission('asset:exec-job:delete')")
     public Integer deleteExecJob(@RequestParam("id") Long id) {
         return execJobService.deleteExecJobById(id);
-    }
-
-    @OperatorLog(ExecJobOperatorType.DELETE)
-    @DeleteMapping("/batch-delete")
-    @Operation(summary = "批量删除计划执行任务")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-job:delete')")
-    public Integer batchDeleteExecJob(@RequestParam("idList") List<Long> idList) {
-        return execJobService.deleteExecJobByIdList(idList);
     }
 
 }

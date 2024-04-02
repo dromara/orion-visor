@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.define.operator;
+ package com.orion.ops.module.asset.define.operator;
 
 import com.orion.ops.framework.biz.operator.log.core.annotation.Module;
 import com.orion.ops.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
@@ -20,14 +20,20 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
 
     public static final String UPDATE = "exec-job:update";
 
+    public static final String UPDATE_STATUS = "exec-job:update-status";
+
+    public static final String EXEC = "exec-job:exec";
+
     public static final String DELETE = "exec-job:delete";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CREATE, "创建计划执行任务"),
-                new OperatorType(M, UPDATE, "更新计划执行任务"),
-                new OperatorType(H, DELETE, "删除计划执行任务"),
+                new OperatorType(L, CREATE, "创建计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, EXEC, "手动执行计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE, "更新计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "更新计划任务状态 <sb>${name}</sb> <sb>${statusName}</sb>"),
+                new OperatorType(H, DELETE, "删除计划任务 <sb>${name}</sb>"),
         };
     }
 

@@ -5,6 +5,8 @@ import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.ExecJobHostDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 计划执行任务主机 Mapper 接口
  *
@@ -16,16 +18,42 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ExecJobHostDAO extends IMapper<ExecJobHostDO> {
 
     /**
-     * 获取查询条件
+     * 通过 hostId 获取 jobId
      *
-     * @param entity entity
-     * @return 查询条件
+     * @param jobId jobId
+     * @return hostId
      */
-    default LambdaQueryWrapper<ExecJobHostDO> queryCondition(ExecJobHostDO entity) {
-        return this.wrapper()
-                .eq(ExecJobHostDO::getId, entity.getId())
-                .eq(ExecJobHostDO::getJobId, entity.getJobId())
-                .eq(ExecJobHostDO::getHostId, entity.getHostId());
+    default List<Long> selectHostIdByJobId(Long jobId) {
+        return this.of()
+                .createWrapper()
+                .select(ExecJobHostDO::getHostId)
+                .eq(ExecJobHostDO::getJobId, jobId)
+                .then()
+                .list(ExecJobHostDO::getHostId);
+    }
+
+    /**
+     * 通过 jobId 删除
+     *
+     * @param jobId jobId
+     * @return effect
+     */
+    default Integer deleteByJobId(Long jobId) {
+        LambdaQueryWrapper<ExecJobHostDO> wrapper = this.wrapper()
+                .eq(ExecJobHostDO::getJobId, jobId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 hostId 删除
+     *
+     * @param hostId hostId
+     * @return effect
+     */
+    default Integer deleteByHostId(Long hostId) {
+        LambdaQueryWrapper<ExecJobHostDO> wrapper = this.wrapper()
+                .eq(ExecJobHostDO::getHostId, hostId);
+        return this.delete(wrapper);
     }
 
 }

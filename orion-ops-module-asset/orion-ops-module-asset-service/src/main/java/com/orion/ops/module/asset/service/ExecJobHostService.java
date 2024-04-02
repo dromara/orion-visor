@@ -1,11 +1,5 @@
 package com.orion.ops.module.asset.service;
 
-import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobHostCreateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobHostQueryRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobHostUpdateRequest;
-import com.orion.ops.module.asset.entity.vo.ExecJobHostVO;
-
 import java.util.List;
 
 /**
@@ -18,92 +12,35 @@ import java.util.List;
 public interface ExecJobHostService {
 
     /**
-     * 创建计划执行任务主机
+     * 设置任务主机
      *
-     * @param request request
-     * @return id
+     * @param jobId      jobId
+     * @param hostIdList hostIdList
      */
-    Long createExecJobHost(ExecJobHostCreateRequest request);
+    void setHostIdByJobId(Long jobId, List<Long> hostIdList);
 
     /**
-     * 更新计划执行任务主机
+     * 通过 hostId 获取 jobId
      *
-     * @param request request
+     * @param jobId jobId
+     * @return hostId
+     */
+    List<Long> getHostIdByJobId(Long jobId);
+
+    /**
+     * 通过 jobId 删除
+     *
+     * @param jobId jobId
      * @return effect
      */
-    Integer updateExecJobHostById(ExecJobHostUpdateRequest request);
+    Integer deleteByJobId(Long jobId);
 
     /**
-     * 根据条件更新计划执行任务主机
+     * 通过 hostId 删除
      *
-     * @param query  query
-     * @param update update
+     * @param hostId hostId
      * @return effect
      */
-    Integer updateExecJobHost(ExecJobHostQueryRequest query, ExecJobHostUpdateRequest update);
-
-    /**
-     * 查询计划执行任务主机
-     *
-     * @param id id
-     * @return row
-     */
-    ExecJobHostVO getExecJobHostById(Long id);
-
-    /**
-     * 批量查询计划执行任务主机
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<ExecJobHostVO> getExecJobHostByIdList(List<Long> idList);
-
-    /**
-     * 查询全部计划执行任务主机
-     *
-     * @param request request
-     * @return rows
-     */
-    List<ExecJobHostVO> getExecJobHostList(ExecJobHostQueryRequest request);
-
-    /**
-     * 查询计划执行任务主机数量
-     *
-     * @param request request
-     * @return count
-     */
-    Long getExecJobHostCount(ExecJobHostQueryRequest request);
-
-    /**
-     * 分页查询计划执行任务主机
-     *
-     * @param request request
-     * @return rows
-     */
-    DataGrid<ExecJobHostVO> getExecJobHostPage(ExecJobHostQueryRequest request);
-
-    /**
-     * 删除计划执行任务主机
-     *
-     * @param id id
-     * @return effect
-     */
-    Integer deleteExecJobHostById(Long id);
-
-    /**
-     * 批量删除计划执行任务主机
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteExecJobHostByIdList(List<Long> idList);
-
-    /**
-     * 根据条件删除计划执行任务主机
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer deleteExecJobHost(ExecJobHostQueryRequest request);
+    Integer deleteByHostId(Long hostId);
 
 }

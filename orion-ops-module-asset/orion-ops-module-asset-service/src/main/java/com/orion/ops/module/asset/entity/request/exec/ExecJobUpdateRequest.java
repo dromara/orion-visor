@@ -7,9 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 计划执行任务 更新请求对象
@@ -53,12 +55,8 @@ public class ExecJobUpdateRequest implements Serializable {
     @Schema(description = "命令参数")
     private String parameterSchema;
 
-    @NotNull
-    @Schema(description = "启用状态 0禁用 1启用")
-    private Integer status;
-
-    @NotNull
-    @Schema(description = "最近执行id")
-    private Long recentLogId;
+    @NotEmpty
+    @Schema(description = "执行主机")
+    private List<Long> hostIdList;
 
 }

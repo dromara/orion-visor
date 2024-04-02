@@ -21,9 +21,6 @@ import javax.validation.constraints.Size;
 @Schema(name = "ExecJobQueryRequest", description = "计划执行任务 查询请求对象")
 public class ExecJobQueryRequest extends PageRequest {
 
-    @Schema(description = "搜索")
-    private String searchValue;
-
     @Schema(description = "id")
     private Long id;
 
@@ -31,23 +28,10 @@ public class ExecJobQueryRequest extends PageRequest {
     @Schema(description = "任务名称")
     private String name;
 
-    @Size(max = 512)
-    @Schema(description = "cron 表达式")
-    private String expression;
-
-    @Schema(description = "超时时间")
-    private Integer timeout;
-
     @Schema(description = "执行命令")
     private String command;
 
-    @Schema(description = "命令参数")
-    private String parameterSchema;
-
     @Schema(description = "启用状态 0禁用 1启用")
     private Integer status;
-
-    @Schema(description = "最近执行id")
-    private Long recentLogId;
 
 }

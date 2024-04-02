@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 计划执行任务主机 更新请求对象
+ * 计划执行任务 更新状态请求对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -20,8 +20,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobHostUpdateRequest", description = "计划执行任务主机 更新请求对象")
-public class ExecJobHostUpdateRequest implements Serializable {
+@Schema(name = "ExecJobUpdateStatusRequest", description = "计划执行任务 更新状态请求对象")
+public class ExecJobUpdateStatusRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,11 +30,7 @@ public class ExecJobHostUpdateRequest implements Serializable {
     private Long id;
 
     @NotNull
-    @Schema(description = "任务id")
-    private Long jobId;
-
-    @NotNull
-    @Schema(description = "主机id")
-    private Long hostId;
+    @Schema(description = "启用状态 0禁用 1启用")
+    private Integer status;
 
 }

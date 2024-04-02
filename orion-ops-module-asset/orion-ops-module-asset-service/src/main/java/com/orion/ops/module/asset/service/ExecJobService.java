@@ -4,9 +4,8 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.asset.entity.request.exec.ExecJobCreateRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecJobQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateStatusRequest;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
-
-import java.util.List;
 
 /**
  * 计划执行任务 服务类
@@ -34,13 +33,12 @@ public interface ExecJobService {
     Integer updateExecJobById(ExecJobUpdateRequest request);
 
     /**
-     * 根据条件更新计划执行任务
+     * 更新计划执行任务状态
      *
-     * @param query  query
-     * @param update update
+     * @param request request
      * @return effect
      */
-    Integer updateExecJob(ExecJobQueryRequest query, ExecJobUpdateRequest update);
+    Integer updateExecJobStatus(ExecJobUpdateStatusRequest request);
 
     /**
      * 查询计划执行任务
@@ -49,30 +47,6 @@ public interface ExecJobService {
      * @return row
      */
     ExecJobVO getExecJobById(Long id);
-
-    /**
-     * 批量查询计划执行任务
-     *
-     * @param idList idList
-     * @return rows
-     */
-    List<ExecJobVO> getExecJobByIdList(List<Long> idList);
-
-    /**
-     * 查询全部计划执行任务
-     *
-     * @param request request
-     * @return rows
-     */
-    List<ExecJobVO> getExecJobList(ExecJobQueryRequest request);
-
-    /**
-     * 查询计划执行任务数量
-     *
-     * @param request request
-     * @return count
-     */
-    Long getExecJobCount(ExecJobQueryRequest request);
 
     /**
      * 分页查询计划执行任务
@@ -89,21 +63,5 @@ public interface ExecJobService {
      * @return effect
      */
     Integer deleteExecJobById(Long id);
-
-    /**
-     * 批量删除计划执行任务
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteExecJobByIdList(List<Long> idList);
-
-    /**
-     * 根据条件删除计划执行任务
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer deleteExecJob(ExecJobQueryRequest request);
 
 }
