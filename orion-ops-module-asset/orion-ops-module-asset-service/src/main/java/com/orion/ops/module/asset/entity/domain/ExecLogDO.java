@@ -52,6 +52,10 @@ public class ExecLogDO extends BaseDO {
     @TableField("description")
     private String description;
 
+    @Schema(description = "执行序列")
+    @TableField("exec_seq")
+    private Integer execSeq;
+
     @Schema(description = "执行命令")
     @TableField("command")
     private String command;

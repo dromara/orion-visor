@@ -31,6 +31,9 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "任务名称")
     private String name;
 
+    @Schema(description = "执行序列")
+    private Integer execSeq;
+
     @Schema(description = "cron 表达式")
     private String expression;
 

@@ -44,7 +44,7 @@ public class ExecTemplateUpdateRequest implements Serializable {
     @Schema(description = "超时时间秒 0不超时")
     private Integer timeout;
 
-    @Schema(description = "参数")
-    private String parameter;
+    @Schema(description = "参数定义")
+    private String parameterSchema;
 
 }

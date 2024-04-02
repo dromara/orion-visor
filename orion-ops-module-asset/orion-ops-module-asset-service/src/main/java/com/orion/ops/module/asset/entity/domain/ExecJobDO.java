@@ -34,6 +34,10 @@ public class ExecJobDO extends BaseDO {
     @TableField("name")
     private String name;
 
+    @Schema(description = "执行序列")
+    @TableField("exec_seq")
+    private Integer execSeq;
+
     @Schema(description = "cron 表达式")
     @TableField("expression")
     private String expression;

@@ -120,7 +120,7 @@
       name: undefined,
       command: undefined,
       timeout: 0,
-      parameter: undefined,
+      parameterSchema: undefined,
     };
   };
 
@@ -149,8 +149,8 @@
   // 渲染表单
   const renderForm = (record: any) => {
     formModel.value = Object.assign({}, record);
-    if (record.parameter) {
-      parameter.value = JSON.parse(record.parameter);
+    if (record.parameterSchema) {
+      parameter.value = JSON.parse(record.parameterSchema);
     } else {
       parameter.value = [];
     }
@@ -184,7 +184,7 @@
           return false;
         }
       }
-      formModel.value.parameter = JSON.stringify(parameter.value);
+      formModel.value.parameterSchema = JSON.stringify(parameter.value);
       if (isAddHandle.value) {
         // 新增
         await createExecTemplate(formModel.value);

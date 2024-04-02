@@ -144,8 +144,15 @@
       description: record.name,
       timeout: record.timeout,
     };
-    parameterSchema.value = record.parameter ? JSON.parse(record.parameter) : [];
-    parameterFormModel.value = {};
+    parameterSchema.value = record.parameterSchema ? JSON.parse(record.parameterSchema) : [];
+    if (parameterSchema.value.length) {
+      parameterFormModel.value = parameterSchema.value.reduce((acc, cur) => ({
+        ...acc,
+        [cur.name as string]: cur.value
+      }), {});
+    } else {
+      parameterFormModel.value = {};
+    }
   };
 
   // 从执行日志设置

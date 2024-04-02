@@ -125,8 +125,8 @@
       command: record.command,
       hostIdList: []
     };
-    if (record.parameter) {
-      parameterSchema.value = JSON.parse(record.parameter);
+    if (record.parameterSchema) {
+      parameterSchema.value = JSON.parse(record.parameterSchema);
       const params = {} as any;
       for (let param of parameterSchema.value) {
         params[param.name as keyof any] = param.defaultValue;

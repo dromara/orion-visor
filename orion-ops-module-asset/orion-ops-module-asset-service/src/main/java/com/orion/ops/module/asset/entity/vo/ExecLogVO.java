@@ -38,6 +38,9 @@ public class ExecLogVO implements Serializable {
     @Schema(description = "执行描述")
     private String description;
 
+    @Schema(description = "执行序列")
+    private Integer execSeq;
+
     @Schema(description = "执行命令")
     private String command;
 

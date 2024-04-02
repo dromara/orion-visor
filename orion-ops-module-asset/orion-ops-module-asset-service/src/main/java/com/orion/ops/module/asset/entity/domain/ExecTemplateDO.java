@@ -42,8 +42,8 @@ public class ExecTemplateDO extends BaseDO {
     @TableField("timeout")
     private Integer timeout;
 
-    @Schema(description = "参数")
-    @TableField("parameter")
-    private String parameter;
+    @Schema(description = "参数定义")
+    @TableField("parameter_schema")
+    private String parameterSchema;
 
 }

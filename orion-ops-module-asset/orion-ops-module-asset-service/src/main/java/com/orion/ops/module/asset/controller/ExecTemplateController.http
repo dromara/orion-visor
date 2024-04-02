@@ -7,7 +7,7 @@ Authorization: {{token}}
   "name": "",
   "command": "",
   "timeout": "",
-  "parameter": ""
+  "parameterSchema": ""
 }
 
 
@@ -21,7 +21,7 @@ Authorization: {{token}}
   "name": "",
   "command": "",
   "timeout": "",
-  "parameter": ""
+  "parameterSchema": ""
 }
 
 
@@ -48,7 +48,7 @@ Authorization: {{token}}
   "name": "",
   "command": "",
   "timeout": "",
-  "parameter": ""
+  "parameterSchema": ""
 }
 
 

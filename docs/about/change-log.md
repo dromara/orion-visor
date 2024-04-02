@@ -1,5 +1,16 @@
 > 版本号严格遵循 Semver 规范。
 
+## v1.0.4
+
+`2024-04-` `release`
+
+* 🐞 修复 批量执行选择模板后默认参数未自动设置
+* 🌈 新增 定时执行模块
+* 🔨 修改 redisson 配置
+* 🔨 规范 orion-ops-framework 配置
+
+[如何升级](/about/update.md?id=_v103)
+
 ## v1.0.3
 
 `2024-03-25` `release`
@@ -10,12 +21,12 @@
 * 🐞 修复 工作台页面快捷操作面板会展示隐藏的菜单
 * 🐞 修复 主机终端无法粘贴 (浏览器安全策略)
 * 🐞 修复 卡片列表组件控制台 warn 提示
-* 🐞 修复 关闭终端时控制台提示 handleResize 错误信息 
+* 🐞 修复 关闭终端时控制台提示 handleResize 错误信息
 * 🔨 修改 系统菜单渲染逻辑 (移除 JSX 构建时不会提示 JSX.IntrinsicElements)
 
 [如何升级](/about/update.md?id=_v103)
 
-## v1.0.3
+## v1.0.2
 
 `2024-03-22` `release`
 
