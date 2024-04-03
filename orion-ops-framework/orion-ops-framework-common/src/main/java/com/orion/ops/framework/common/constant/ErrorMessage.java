@@ -13,6 +13,8 @@ public interface ErrorMessage {
 
     String PARAM_MISSING = "参数不能为空";
 
+    String PARAM_ERROR = "参数错误";
+
     String ID_MISSING = "id 不能为空";
 
     String INVALID_PARAM = "参数验证失败";
@@ -90,5 +92,7 @@ public interface ErrorMessage {
     String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";
 
     String FILE_READ_ERROR = "文件读取失败";
+
+    String PLEASE_CHECK_HOST_SSH = "请检查主机 {} 是否存在/权限/SSH配置";
 
 }

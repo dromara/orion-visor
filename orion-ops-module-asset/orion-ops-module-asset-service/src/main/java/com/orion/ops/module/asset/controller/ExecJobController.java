@@ -39,13 +39,6 @@ import javax.annotation.Resource;
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecJobController {
 
-
-    // TODO EXEC_seq
-    // todo 测试一下添加失败 操作日志是怎么
-    // TODO 操作日志 菜单
-    // TODO 手动执行
-    // TODO NEXT time
-
     @Resource
     private ExecJobService execJobService;
 

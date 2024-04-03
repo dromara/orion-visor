@@ -4,13 +4,12 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "name": "",
-  "expression": "",
-  "timeout": "",
-  "command": "",
-  "parameterSchema": "",
-  "status": "",
-  "recentLogId": ""
+  "name": "测试 1",
+  "expression": "0 */3 * * * ?",
+  "timeout": "0",
+  "command": "echo 123",
+  "parameterSchema": "[]",
+  "hostIdList": [1]
 }
 
 
@@ -20,42 +19,32 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
+  "id": 5,
+  "name": "测试 1",
+  "expression": "0 */1 * * * ?",
+  "timeout": "0",
+  "command": "echo 123",
+  "parameterSchema": "[]",
+  "hostIdList": [
+    1
+  ]
+}
+
+
+### 更新计划执行任务状态
+PUT {{baseUrl}}/asset/exec-job/update-status
+Content-Type: application/json
+Authorization: {{token}}
+
+{
   "id": "",
-  "name": "",
-  "expression": "",
-  "timeout": "",
-  "command": "",
-  "parameterSchema": "",
-  "status": "",
-  "recentLogId": ""
+  "status": ""
 }
 
 
 ### 查询计划执行任务
 GET {{baseUrl}}/asset/exec-job/get?id=1
 Authorization: {{token}}
-
-
-### 批量查询计划执行任务
-GET {{baseUrl}}/asset/exec-job/batch-get?idList=1,2,3
-Authorization: {{token}}
-
-
-### 查询全部计划执行任务
-POST {{baseUrl}}/asset/exec-job/list
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": "",
-  "name": "",
-  "expression": "",
-  "timeout": "",
-  "command": "",
-  "parameterSchema": "",
-  "status": "",
-  "recentLogId": ""
-}
 
 
 ### 分页查询计划执行任务
@@ -68,12 +57,8 @@ Authorization: {{token}}
   "limit": 10,
   "id": "",
   "name": "",
-  "expression": "",
-  "timeout": "",
   "command": "",
-  "parameterSchema": "",
-  "status": "",
-  "recentLogId": ""
+  "status": ""
 }
 
 
@@ -81,9 +66,5 @@ Authorization: {{token}}
 DELETE {{baseUrl}}/asset/exec-job/delete?id=1
 Authorization: {{token}}
 
-
-### 批量删除计划执行任务
-DELETE {{baseUrl}}/asset/exec-job/batch-delete?idList=1,2,3
-Authorization: {{token}}
 
 ###

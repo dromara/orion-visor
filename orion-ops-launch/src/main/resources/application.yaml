@@ -68,7 +68,7 @@ spring:
     job-store-type: JDBC
     overwrite-existing-jobs: false
     jdbc:
-      initialize-schema: ALWAYS
+      initialize-schema: NEVER
     properties:
       org:
         quartz:
