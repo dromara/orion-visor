@@ -36,9 +36,9 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: Number
-  });
+  const props = defineProps<Partial<{
+    modelValue: number;
+  }>>();
 
   const emits = defineEmits(['update:modelValue', 'change']);
 

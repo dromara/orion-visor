@@ -10,17 +10,15 @@
 </template>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
   import { useRoute } from 'vue-router';
 
-  defineProps({
-    items: {
-      type: Array as PropType<string[]>,
-      default() {
-        return useRoute().matched
-          .map(s => s.meta?.locale)
-          .filter(Boolean) || [];
-      },
+  const props = withDefaults(defineProps<{
+    items?: Array<string>;
+  }>(), {
+    items: () => {
+      return useRoute().matched
+        .map(s => s.meta?.locale as string)
+        .filter(Boolean) || [];
     },
   });
 </script>

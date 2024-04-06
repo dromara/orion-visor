@@ -50,9 +50,8 @@
 
 <script lang="ts" setup>
   import type { TagProps } from '@/store/modules/tab-bar/types';
-  import type { PropType } from 'vue';
   import { computed } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { useTabBarStore } from '@/store';
   import { DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from '@/router/constants';
 
@@ -65,18 +64,10 @@
     all = 'all',
   }
 
-  const props = defineProps({
-    itemData: {
-      type: Object as PropType<TagProps>,
-      default: () => {
-        return {};
-      }
-    },
-    index: {
-      type: Number,
-      default: 0,
-    },
-  });
+  const props = defineProps<{
+    index: number;
+    itemData: TagProps;
+  }>();
 
   const router = useRouter();
   const route = useRoute();

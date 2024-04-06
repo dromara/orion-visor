@@ -159,10 +159,10 @@
   const { loading, setLoading } = useLoading();
   const { toRadioOptions } = useDictStore();
 
-  const props = defineProps({
-    content: Object,
-    hostId: Number,
-  });
+  const props = defineProps<{
+    content: any;
+    hostId: number;
+  }>();
 
   const emits = defineEmits(['submitted']);
 

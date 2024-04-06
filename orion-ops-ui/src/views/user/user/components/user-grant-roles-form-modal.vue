@@ -64,6 +64,7 @@
   const open = (record: any) => {
     renderForm(record);
     setVisible(true);
+    // 加载用户角色
     loadRoles();
   };
 

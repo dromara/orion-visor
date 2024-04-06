@@ -5,9 +5,14 @@
 `2024-04-` `release`
 
 * 🐞 修复 批量执行选择模板后默认参数未自动设置
+* 🐞 修复 主机列表卡片视图重置条件后 tag 消失
+* 🐞 修复 主机分组授权页面刷新不显示 loading
+* 🐞 修复 面包屑组件路径显示不全的问题
+* 🩰 修改 主机终端亮色模式配色
 * 🌈 新增 定时执行模块
 * 🔨 修改 redisson 配置
-* 🔨 规范 orion-ops-framework 配置
+* 🔨 优化 orion-ops-framework 配置规范化
+* 🔨 优化 前端 props 命名规范化
 
 [如何升级](/about/update.md?id=_v103)
 

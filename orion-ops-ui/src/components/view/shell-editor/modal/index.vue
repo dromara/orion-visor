@@ -32,23 +32,16 @@
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
 
-  const props = defineProps({
-    width: {
-      type: [String, Number],
-      default: '60%'
-    },
-    height: {
-      type: String,
-      default: 'calc(100vh - 280px)'
-    },
-    dark: {
-      type: Boolean,
-      default: true
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    }
+  const props = withDefaults(defineProps<Partial<{
+    width: string | number;
+    height: string;
+    dark: boolean;
+    readonly: boolean;
+  }>>(), {
+    width: '60%',
+    height: 'calc(100vh - 280px)',
+    dark: true,
+    readonly: false,
   });
 
   const { visible, setVisible } = useVisible();

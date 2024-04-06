@@ -33,16 +33,15 @@
 
 <script lang="ts" setup>
   import type { UserQueryResponse } from '@/api/user/user';
-  import type { PropType } from 'vue';
   import { ref, onBeforeMount } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from '@/views/user/operator-log/types/const';
   import OperatorLogQueryHeader from '@/views/user/operator-log/components/operator-log-query-header.vue';
   import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
 
-  const props = defineProps({
-    user: Object as PropType<UserQueryResponse>,
-  });
+  const props = defineProps<{
+    user?: UserQueryResponse;
+  }>();
 
   const cacheStore = useCacheStore();
 

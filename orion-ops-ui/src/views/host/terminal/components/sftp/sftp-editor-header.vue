@@ -3,18 +3,19 @@
   <div class="sftp-editor-header">
     <!-- 左侧操作 -->
     <div class="sftp-editor-header-left">
-      <div class="sftp-path-container">
-        <!-- 当前路径 -->
-        <a-tooltip position="top"
-                   :mini="true"
-                   :overlay-inverse="true"
-                   :auto-fix-position="false"
-                   content-class="terminal-tooltip-content"
-                   arrow-class="terminal-tooltip-content"
-                   :content="path">
+      <a-tooltip position="top"
+                 :mini="true"
+                 :overlay-inverse="true"
+                 :auto-fix-position="false"
+                 content-class="terminal-tooltip-content"
+                 arrow-class="terminal-tooltip-content"
+                 content="点击复制">
+        <a-tag class="sftp-path-container pointer"
+               color="green"
+               @click="copy(path, '已复制')">
           <span>{{ name }}</span>
-        </a-tooltip>
-      </div>
+        </a-tag>
+      </a-tooltip>
     </div>
     <!-- 右侧操作 -->
     <a-space class="sftp-editor-header-right">
@@ -56,6 +57,7 @@
 
 <script lang="ts" setup>
   import type { ISftpSession } from '../../types/terminal.type';
+  import { copy } from '@/hooks/copy';
 
   const props = defineProps<{
     name: string;
@@ -92,24 +94,6 @@
     &-right {
       width: @actions-width;
       justify-content: flex-end;
-    }
-  }
-
-  .sftp-path-container {
-    width: 100%;
-    height: @action-size;
-    background: var(--color-fill-2);
-    border-radius: 2px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-
-    span {
-      font-size: 14px;
-      line-height: 1.2;
-      text-overflow: ellipsis;
-      overflow: hidden;
     }
   }
 

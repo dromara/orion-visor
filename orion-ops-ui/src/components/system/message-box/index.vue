@@ -8,7 +8,7 @@
         <a-result v-if="!renderList.length" status="404">
           <template #subtitle>暂无内容</template>
         </a-result>
-        <List :render-list="renderList"
+        <list :render-list="renderList"
               :unread-count="unreadCount"
               @item-click="handleItemClick" />
       </a-tab-pane>
@@ -35,6 +35,7 @@
   }
 
   const { loading, setLoading } = useLoading(true);
+
   const messageType = ref('message');
   const messageData = reactive<{
     renderList: MessageRecord[];

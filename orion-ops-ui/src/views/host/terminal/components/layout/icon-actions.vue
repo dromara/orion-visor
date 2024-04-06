@@ -33,14 +33,13 @@
 
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.type';
-  import type { PropType } from 'vue';
 
-  defineProps({
-    actions: Array as PropType<Array<SidebarAction>>,
-    position: String,
-    wrapperClass: String,
-    iconClass: String,
-  });
+  defineProps<Partial<{
+    actions: Array<SidebarAction>;
+    position: string;
+    wrapperClass: string;
+    iconClass: string;
+  }>>();
 
 </script>
 

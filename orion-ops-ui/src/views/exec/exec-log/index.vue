@@ -31,13 +31,13 @@
   import { ref, onBeforeMount } from 'vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import { useRouter } from 'vue-router';
+  import { openNewRoute } from '@/router';
   import ExecLogTable from './components/exec-log-table.vue';
   import ExecLogClearModal from './components/exec-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
-  import { useRouter } from 'vue-router';
-  import { openNewRoute } from '@/router';
 
   const router = useRouter();
 

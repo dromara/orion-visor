@@ -23,7 +23,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { TagCreateRequest } from '@/api/meta/tag';
   import { ref, computed, onBeforeMount } from 'vue';
@@ -32,16 +31,15 @@
   import { createTag } from '@/api/meta/tag';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: Array as PropType<Array<number>>,
-    placeholder: String,
-    limit: Number,
-    type: String,
-    allowCreate: Boolean,
-    tagColor: {
-      type: Array as PropType<Array<string>>,
-      default: () => []
-    },
+  const props = withDefaults(defineProps<Partial<{
+    modelValue: Array<number>;
+    placeholder: string;
+    limit: number;
+    type: string;
+    allowCreate: boolean;
+    tagColor: Array<string>;
+  }>>(), {
+    tagColor: () => []
   });
 
   const emits = defineEmits(['update:modelValue', 'onLimited']);

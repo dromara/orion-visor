@@ -19,12 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
   import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
   import type { SelectOption } from '@arco-design/web-vue/es/select/interface';
   import { useAppStore } from '@/store';
-  import FormWrapper from './form-wrapper.vue';
   import { updatePreference } from '@/api/user/preference';
+  import FormWrapper from './form-wrapper.vue';
 
   interface OptionsProps {
     name: string;
@@ -36,13 +35,10 @@
     margin?: string;
   }
 
-  defineProps({
-    title: String,
-    options: {
-      type: Array as PropType<OptionsProps[]>,
-      default: () => []
-    },
-  });
+  defineProps<Partial<{
+    title: string;
+    options: Array<OptionsProps>;
+  }>>();
 
   const appStore = useAppStore();
 

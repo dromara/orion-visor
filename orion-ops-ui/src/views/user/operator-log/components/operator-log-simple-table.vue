@@ -81,21 +81,14 @@
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
-  const props = defineProps({
-    handleColumn: {
-      type: Boolean,
-      default: true
+  const props = withDefaults(defineProps<Partial<{
+    handleColumn: boolean;
+    current: boolean;
+    baseParams: object;
+  }>>(), {
+    baseParams: () => {
+      return {};
     },
-    current: {
-      type: Boolean,
-      default: false
-    },
-    baseParams: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
   });
 
   const pagination = usePagination();

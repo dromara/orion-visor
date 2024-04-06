@@ -7,7 +7,7 @@
     <!-- 表头 -->
     <template #header>
       <span class="hosts-header-title">组内数据</span>
-      <span class="span-blue">{{ props.group?.title }}</span>
+      <span class="span-blue">{{ group?.title }}</span>
     </template>
     <!-- 空数据 -->
     <template #empty>
@@ -35,20 +35,14 @@
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
   import type { HostQueryResponse } from '@/api/asset/host';
-  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useCacheStore } from '@/store';
   import { ref, watch } from 'vue';
   import { getHostGroupRelList } from '@/api/asset/host-group';
 
-  const props = defineProps({
-    group: {
-      type: Object as PropType<TreeNodeData>,
-      default: () => {
-        return {};
-      }
-    }
-  });
+  const props = defineProps<Partial<{
+    group: TreeNodeData;
+  }>>();
 
   const cacheStore = useCacheStore();
   const { loading, setLoading } = useLoading();

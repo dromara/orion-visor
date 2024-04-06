@@ -72,11 +72,10 @@
   import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['submit']);
-  const props = defineProps({
-    visibleUser: {
-      type: Boolean,
-      default: true
-    }
+  const props = withDefaults(defineProps<Partial<{
+    visibleUser: boolean;
+  }>>(), {
+    visibleUser: true,
   });
 
   const { loading, setLoading } = useLoading();

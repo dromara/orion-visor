@@ -68,7 +68,6 @@
 <script lang="ts" setup>
   import type { UserQueryResponse } from '@/api/user/user';
   import type { UserSessionQueryResponse } from '@/api/user/user';
-  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { ref, onBeforeMount } from 'vue';
   import { getCurrentUserSessionList, offlineCurrentUserSession } from '@/api/user/mine';
@@ -78,9 +77,9 @@
   import usePermission from '@/hooks/permission';
   import { getUserSessionList, offlineUserSession } from '@/api/user/user';
 
-  const props = defineProps({
-    user: Object as PropType<UserQueryResponse>,
-  });
+  const props = defineProps<{
+    user?: UserQueryResponse;
+  }>();
 
   const list = ref<UserSessionQueryResponse[]>([]);
 

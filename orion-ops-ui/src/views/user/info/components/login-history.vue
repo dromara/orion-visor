@@ -60,7 +60,6 @@
 
 <script lang="ts" setup>
   import type { UserQueryResponse, LoginHistoryQueryResponse } from '@/api/user/user';
-  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { ref, onBeforeMount } from 'vue';
   import { ResultStatus } from '../types/const';
@@ -69,9 +68,9 @@
   import { dateFormat } from '@/utils';
   import { isMobile } from '@/utils/is';
 
-  const props = defineProps({
-    user: Object as PropType<UserQueryResponse>,
-  });
+  const props = defineProps<{
+    user?: UserQueryResponse;
+  }>();
 
   const list = ref<LoginHistoryQueryResponse[]>([]);
 

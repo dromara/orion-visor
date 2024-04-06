@@ -73,6 +73,13 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 用户名 -->
+      <template #username="{ record }">
+        <span class="span-blue text-copy"
+              @click="copy(record.username)">
+          {{ record.username }}`
+        </span>
+      </template>
       <!-- 状态 -->
       <template #status="{ record }">
         <span class="circle" :style="{
@@ -166,6 +173,7 @@
   import { usePagination } from '@/types/table';
   import { useDictStore, useUserStore } from '@/store';
   import { useRouter } from 'vue-router';
+  import { copy } from '@/hooks/copy';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 

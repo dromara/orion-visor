@@ -22,12 +22,11 @@
   import { labelFilter } from '@/types/form';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: Number,
-    allowCreate: {
-      type: Boolean,
-      default: false
-    }
+  const props = withDefaults(defineProps<Partial<{
+    modelValue: number;
+    allowCreate: boolean;
+  }>>(), {
+    allowCreate: false,
   });
 
   const emits = defineEmits(['update:modelValue', 'change']);

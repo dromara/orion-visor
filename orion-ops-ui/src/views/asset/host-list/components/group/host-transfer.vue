@@ -53,22 +53,17 @@
 <script lang="ts" setup>
   import type { TransferItem } from '@arco-design/web-vue/es/transfer/interface';
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import type { PropType } from 'vue';
   import { onMounted, ref, watch, computed } from 'vue';
   import { useCacheStore } from '@/store';
   import { getHostGroupRelList } from '@/api/asset/host-group';
 
-  const props = defineProps({
-    modelValue: {
-      type: Array<string>,
-      default: () => []
+  const props = withDefaults(defineProps<Partial<{
+    modelValue: Array<string>;
+    group: TreeNodeData;
+  }>>(), {
+    group: () => {
+      return {};
     },
-    group: {
-      type: Object as PropType<TreeNodeData>,
-      default: () => {
-        return {};
-      }
-    }
   });
 
   const emits = defineEmits(['loading', 'update:modelValue']);

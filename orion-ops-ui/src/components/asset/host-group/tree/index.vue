@@ -4,11 +4,11 @@
     <a-tree v-if="treeData.length"
             ref="tree"
             class="tree-container block-tree"
+            v-model:checked-keys="checkedKeys"
             :blockNode="true"
             :draggable="editable"
             :data="treeData"
             :checkable="checkable"
-            v-model:checked-keys="checkedKeys"
             :check-strictly="true"
             @drop="moveGroup">
       <!-- 标题 -->
@@ -39,7 +39,7 @@
         <!-- 名称 -->
         <span v-else
               class="node-title-wrapper"
-              @click="() => emits('selectNode', node)">
+              @click="() => emits('selectedNode', node)">
         {{ node.title }}
       </span>
       </template>
@@ -97,22 +97,13 @@
   import { isString } from '@/utils/is';
   import { useCacheStore } from '@/store';
 
-  const props = defineProps({
-    loading: Boolean,
-    editable: {
-      type: Boolean,
-      default: true
-    },
-    checkable: {
-      type: Boolean,
-      default: false
-    },
-    checkedKeys: {
-      type: Array<Number>,
-      default: () => []
-    }
-  });
-  const emits = defineEmits(['loading', 'selectNode', 'update:checkedKeys']);
+  const props = defineProps<Partial<{
+    loading: boolean;
+    editable: boolean;
+    checkable: boolean;
+    checkedKeys: Array<number>;
+  }>>();
+  const emits = defineEmits(['setLoading', 'selectedNode', 'update:checkedKeys']);
 
   const cacheStore = useCacheStore();
 
@@ -148,7 +139,7 @@
   // 删除节点
   const deleteNode = async (key: number) => {
     try {
-      emits('loading', true);
+      emits('setLoading', true);
       // 删除
       await deleteHostGroup(key);
       // 页面删除
@@ -168,7 +159,7 @@
       }
     } catch (e) {
     } finally {
-      emits('loading', false);
+      emits('setLoading', false);
     }
   };
 
@@ -287,7 +278,7 @@
       dropPosition: number
     }) => {
     try {
-      emits('loading', true);
+      emits('setLoading', true);
       // 移动
       await moveHostGroup({
         id: dragNode.key as number,
@@ -298,25 +289,25 @@
       moveNode(treeData.value, dragNode, dropNode, dropPosition);
     } catch (e) {
     } finally {
-      emits('loading', false);
+      emits('setLoading', false);
     }
   };
 
   // 加载数据
   const fetchTreeData = async (force = false) => {
     try {
+      emits('setLoading', true);
       const groups = await cacheStore.loadHostGroups(force);
-      emits('loading', true);
       treeData.value = groups || [];
     } catch (e) {
     } finally {
-      emits('loading', false);
+      emits('setLoading', false);
     }
     // 未选择则选择首个
     if (!tree.value?.getSelectedNodes()?.length && treeData.value.length) {
       await nextTick(() => {
         tree.value?.selectNode(treeData.value[0].key);
-        emits('selectNode', treeData.value[0]);
+        emits('selectedNode', treeData.value[0]);
       });
     }
   };
