@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.orion.ops.module.asset.entity.domain.ExecJobDO">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
+        <result column="exec_seq" property="execSeq"/>
         <result column="expression" property="expression"/>
         <result column="timeout" property="timeout"/>
         <result column="command" property="command"/>
@@ -21,7 +22,13 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, expression, timeout, command, parameter_schema, status, recent_log_id, create_time, update_time, creator, updater, deleted
+        id, name, exec_seq, expression, timeout, command, parameter_schema, status, recent_log_id, create_time, update_time, creator, updater, deleted
     </sql>
+
+    <update id="incrExecSeq">
+        UPDATE exec_job
+        SET exec_seq = exec_seq + 1
+        WHERE id = #{id}
+    </update>
 
 </mapper>

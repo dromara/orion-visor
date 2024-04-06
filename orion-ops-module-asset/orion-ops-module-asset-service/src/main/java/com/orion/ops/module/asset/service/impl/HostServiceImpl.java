@@ -21,6 +21,7 @@ import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostVO;
+import com.orion.ops.module.asset.service.ExecJobHostService;
 import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
 import com.orion.ops.module.infra.api.DataExtraApi;
@@ -65,6 +66,9 @@ public class HostServiceImpl implements HostService {
 
     @Resource
     private HostConfigService hostConfigService;
+
+    @Resource
+    private ExecJobHostService execJobHostService;
 
     @Resource
     private TagRelApi tagRelApi;
@@ -210,8 +214,11 @@ public class HostServiceImpl implements HostService {
     @Override
     @Async("asyncExecutor")
     public void deleteHostRelByIdAsync(Long id) {
-        // 删除配置
+        log.info("HostService-deleteHostRelByIdAsync id: {}", id);
+        // 删除主机配置
         hostConfigDAO.deleteByHostId(id);
+        // 删除计划执行任务主机
+        execJobHostService.deleteByHostId(id);
         // 删除分组
         dataGroupRelApi.deleteByRelId(DataGroupTypeEnum.HOST, id);
         // 删除 tag 引用

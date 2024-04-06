@@ -1,9 +1,10 @@
 package com.orion.ops.framework.job.core.utils;
 
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.ops.framework.common.constant.FieldConst;
 import org.quartz.*;
-import org.quartz.spi.MutableTrigger;
 
 import java.util.Map;
 
@@ -16,6 +17,10 @@ import java.util.Map;
  */
 public class QuartzUtils {
 
+    private static final String JOB_PREFIX = "Job_";
+
+    private static final String TRIGGER_PREFIX = "Trigger_";
+
     private static Scheduler scheduler;
 
     private QuartzUtils() {
@@ -24,39 +29,48 @@ public class QuartzUtils {
     /**
      * 添加任务
      *
-     * @param name     name
-     * @param group    group
+     * @param type     type
+     * @param key      key
      * @param cron     cron
+     * @param desc     desc
      * @param jobClass jobClass
      */
-    public static void addJob(String name, String group,
-                              String cron, Class<? extends Job> jobClass) {
-        QuartzUtils.addJob(name, group,
-                cron, jobClass,
-                Maps.empty());
+    public static void addJob(String type, Object key,
+                              String cron, String desc,
+                              Class<? extends Job> jobClass) {
+        QuartzUtils.addJob(type, key,
+                cron, desc,
+                jobClass, Maps.newMap());
     }
 
     /**
      * 添加任务
      *
-     * @param name     name
-     * @param group    group
+     * @param type     type
+     * @param key      key
      * @param cron     cron
+     * @param desc     desc
      * @param jobClass jobClass
      * @param params   params
      */
-    public static void addJob(String name, String group,
-                              String cron, Class<? extends Job> jobClass,
-                              Map<Object, Object> params) {
+    public static void addJob(String type, Object key,
+                              String cron, String desc,
+                              Class<? extends Job> jobClass,
+                              Map<String, Object> params) {
+        params.put(FieldConst.KEY, key);
         // 生成 job
         JobDetail jobDetail = JobBuilder.newJob(jobClass)
-                .withIdentity(name, group)
+                .withDescription(desc)
+                .withIdentity(getJobKey(type, key))
                 .usingJobData(new JobDataMap(params))
                 .storeDurably()
                 .build();
         // 生成触发器
-        MutableTrigger trigger = CronScheduleBuilder.cronSchedule(cron)
-                .withMisfireHandlingInstructionDoNothing()
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity(getTriggerKey(type, key))
+                .withSchedule(CronScheduleBuilder
+                        .cronSchedule(cron)
+                        .withMisfireHandlingInstructionIgnoreMisfires())
                 .build();
         QuartzUtils.addJob(jobDetail, trigger);
     }
@@ -71,64 +85,98 @@ public class QuartzUtils {
         try {
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (Exception e) {
-            throw Exceptions.task();
+            throw Exceptions.task(e);
         }
     }
 
     /**
      * 删除任务
      *
-     * @param name  name
-     * @param group group
+     * @param type type
+     * @param key  key
      */
-    public static void deleteJob(String name, String group) {
+    public static void deleteJob(String type, Object key) {
         try {
-            scheduler.deleteJob(new JobKey(name, group));
+            scheduler.deleteJob(getJobKey(type, key));
         } catch (Exception e) {
-            throw Exceptions.task();
+            throw Exceptions.task(e);
         }
     }
 
     /**
      * 暂停任务
      *
-     * @param name  name
-     * @param group group
+     * @param type type
+     * @param key  key
      */
-    public static void pauseJob(String name, String group) {
+    public static void pauseJob(String type, Object key) {
         try {
-            scheduler.pauseJob(new JobKey(name, group));
+            scheduler.pauseJob(getJobKey(type, key));
         } catch (Exception e) {
-            throw Exceptions.task();
+            throw Exceptions.task(e);
         }
     }
 
     /**
      * 恢复任务
      *
-     * @param name  name
-     * @param group group
+     * @param type type
+     * @param key  key
      */
-    public static void resumeJob(String name, String group) {
+    public static void resumeJob(String type, Object key) {
         try {
-            scheduler.resumeJob(new JobKey(name, group));
+            scheduler.resumeJob(getJobKey(type, key));
         } catch (Exception e) {
-            throw Exceptions.task();
+            throw Exceptions.task(e);
         }
     }
 
     /**
      * 立即执行任务
      *
-     * @param name  name
-     * @param group group
+     * @param type type
+     * @param key  key
      */
-    public static void triggerJob(String name, String group) {
+    public static void triggerJob(String type, Object key) {
+        triggerJob(type, key, Maps.newMap());
+    }
+
+    /**
+     * 立即执行任务
+     *
+     * @param type   type
+     * @param key    key
+     * @param params params
+     */
+    public static void triggerJob(String type, Object key, Map<String, Object> params) {
         try {
-            scheduler.triggerJob(new JobKey(name, group));
+            params.put(FieldConst.KEY, key);
+            scheduler.triggerJob(getJobKey(type, key), new JobDataMap(params));
         } catch (Exception e) {
-            throw Exceptions.task();
+            throw Exceptions.task(e);
         }
+    }
+
+    /**
+     * 获取 jobKey
+     *
+     * @param type type
+     * @param key  key
+     * @return jobKey
+     */
+    private static JobKey getJobKey(String type, Object key) {
+        return new JobKey(JOB_PREFIX + type + "_" + Objects1.toString(key), JOB_PREFIX + type);
+    }
+
+    /**
+     * 获取 triggerKey
+     *
+     * @param type type
+     * @param key  key
+     * @return triggerKey
+     */
+    private static TriggerKey getTriggerKey(String type, Object key) {
+        return new TriggerKey(TRIGGER_PREFIX + type + "_" + Objects1.toString(key), TRIGGER_PREFIX + type);
     }
 
     /**

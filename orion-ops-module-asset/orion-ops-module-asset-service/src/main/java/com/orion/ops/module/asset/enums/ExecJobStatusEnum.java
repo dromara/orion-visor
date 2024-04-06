@@ -17,16 +17,18 @@ public enum ExecJobStatusEnum {
     /**
      * 停用
      */
-    DISABLED(0),
+    DISABLED(0, "停用"),
 
     /**
      * 启用
      */
-    ENABLED(1),
+    ENABLED(1, "启用"),
 
     ;
 
     private final Integer status;
+
+    private final String statusName;
 
     public static ExecJobStatusEnum of(Integer status) {
         if (status == null) {

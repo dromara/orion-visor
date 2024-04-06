@@ -34,4 +34,7 @@ public class ExecJobQueryRequest extends PageRequest {
     @Schema(description = "启用状态 0禁用 1启用")
     private Integer status;
 
+    @Schema(description = "是否查询最近执行任务")
+    private Boolean queryRecentLog;
+
 }

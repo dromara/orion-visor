@@ -57,6 +57,14 @@ public interface ExecJobService {
     DataGrid<ExecJobVO> getExecJobPage(ExecJobQueryRequest request);
 
     /**
+     * 获取下一个执行序列
+     *
+     * @param id id
+     * @return seq
+     */
+    Integer getNextExecSeq(Long id);
+
+    /**
      * 删除计划执行任务
      *
      * @param id id

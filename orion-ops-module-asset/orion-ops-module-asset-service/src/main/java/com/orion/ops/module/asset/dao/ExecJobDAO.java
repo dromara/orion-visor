@@ -1,9 +1,9 @@
 package com.orion.ops.module.asset.dao;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.asset.entity.domain.ExecJobDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 计划执行任务 Mapper 接口
@@ -16,21 +16,10 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ExecJobDAO extends IMapper<ExecJobDO> {
 
     /**
-     * 获取查询条件
+     * 自增 exec_seq
      *
-     * @param entity entity
-     * @return 查询条件
+     * @param id id
      */
-    default LambdaQueryWrapper<ExecJobDO> queryCondition(ExecJobDO entity) {
-        return this.wrapper()
-                .eq(ExecJobDO::getId, entity.getId())
-                .eq(ExecJobDO::getName, entity.getName())
-                .eq(ExecJobDO::getExpression, entity.getExpression())
-                .eq(ExecJobDO::getTimeout, entity.getTimeout())
-                .eq(ExecJobDO::getCommand, entity.getCommand())
-                .eq(ExecJobDO::getParameterSchema, entity.getParameterSchema())
-                .eq(ExecJobDO::getStatus, entity.getStatus())
-                .eq(ExecJobDO::getRecentLogId, entity.getRecentLogId());
-    }
+    void incrExecSeq(@Param("id") Long id);
 
 }

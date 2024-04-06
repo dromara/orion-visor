@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 计划执行任务 视图响应对象
@@ -31,9 +32,6 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "任务名称")
     private String name;
 
-    @Schema(description = "执行序列")
-    private Integer execSeq;
-
     @Schema(description = "cron 表达式")
     private String expression;
 
@@ -52,16 +50,19 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "最近执行id")
     private Long recentLogId;
 
+    @Schema(description = "最近执行状态")
+    private String recentExecStatus;
+
+    @Schema(description = "最近执行时间")
+    private Date recentExecTime;
+
     @Schema(description = "创建时间")
     private Date createTime;
 
     @Schema(description = "修改时间")
     private Date updateTime;
 
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
+    @Schema(description = "执行主机")
+    private List<Long> hostIdList;
 
 }

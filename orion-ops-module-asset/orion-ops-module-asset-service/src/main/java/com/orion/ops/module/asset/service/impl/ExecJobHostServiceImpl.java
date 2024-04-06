@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.service.impl;
 
-import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.module.asset.dao.ExecJobHostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecJobHostDO;
 import com.orion.ops.module.asset.service.ExecJobHostService;
@@ -30,16 +29,14 @@ public class ExecJobHostServiceImpl implements ExecJobHostService {
         log.info("ExecJobHostService.setHostIdByJobId jobId: {}, hostIdList: {}", jobId, hostIdList);
         // 删除
         execJobHostDAO.deleteByJobId(jobId);
-        // 如果不为空则重新插入
-        if (!Lists.isEmpty(hostIdList)) {
-            List<ExecJobHostDO> rows = hostIdList.stream()
-                    .map(s -> ExecJobHostDO.builder()
-                            .hostId(s)
-                            .jobId(jobId)
-                            .build())
-                    .collect(Collectors.toList());
-            execJobHostDAO.insertBatch(rows);
-        }
+        // 重新插入
+        List<ExecJobHostDO> rows = hostIdList.stream()
+                .map(s -> ExecJobHostDO.builder()
+                        .hostId(s)
+                        .jobId(jobId)
+                        .build())
+                .collect(Collectors.toList());
+        execJobHostDAO.insertBatch(rows);
     }
 
     @Override
