@@ -10,7 +10,7 @@
         <result column="source" property="source"/>
         <result column="source_id" property="sourceId"/>
         <result column="description" property="description"/>
-        <result column="exec_seq" property="exec_seq"/>
+        <result column="exec_seq" property="execSeq"/>
         <result column="command" property="command"/>
         <result column="parameter_schema" property="parameterSchema"/>
         <result column="timeout" property="timeout"/>

@@ -243,15 +243,9 @@ public class GlobalExceptionHandler {
         return ErrorCode.INTERNAL_SERVER_ERROR.wrapper();
     }
 
-    @ExceptionHandler(value = ParseRuntimeException.class)
-    public HttpWrapper<?> parseRuntimeExceptionHandler(ParseRuntimeException ex) {
-        log.error("parseRuntimeExceptionHandler", ex);
-        return ErrorCode.PARSE_ERROR.wrapper();
-    }
-
     @ExceptionHandler(value = CodeArgumentException.class)
     public HttpWrapper<?> codeArgumentExceptionHandler(CodeArgumentException ex) {
-        return HttpWrapper.error(ex.getCode(), ex.getMessage());
+        return HttpWrapper.of(ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(value = HttpWrapperException.class)

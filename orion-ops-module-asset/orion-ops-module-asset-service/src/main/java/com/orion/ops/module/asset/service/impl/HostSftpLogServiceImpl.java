@@ -38,7 +38,6 @@ public class HostSftpLogServiceImpl implements HostSftpLogService {
     public DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request) {
         // 查询
         OperatorLogQueryDTO query = this.buildQueryInfo(request);
-        // TODO TEST
         // 转换
         return operatorLogApi.getOperatorLogPage(query)
                 .map(s -> {

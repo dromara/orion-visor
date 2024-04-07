@@ -2,6 +2,7 @@ package com.orion.ops.module.asset.handler.host.exec.command.handler;
 
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.support.timeout.TimeoutCheckers;
+import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
@@ -36,7 +37,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private final ExecCommandDTO execCommand;
 
-    private TimeoutChecker timeoutChecker;
+    private TimeoutChecker<TimeoutEndpoint> timeoutChecker;
 
     @Getter
     private List<IExecCommandHandler> handlers;
