@@ -243,11 +243,10 @@ public class GlobalExceptionHandler {
         return ErrorCode.INTERNAL_SERVER_ERROR.wrapper();
     }
 
-    // TODO kit
-    @ExceptionHandler(value = ParseCronException.class)
-    public HttpWrapper<?> parseCronExceptionHandler(ParseCronException ex) {
-        log.error("parseCronExceptionHandler", ex);
-        return ErrorCode.EXPRESSION_ERROR.wrapper();
+    @ExceptionHandler(value = ParseRuntimeException.class)
+    public HttpWrapper<?> parseRuntimeExceptionHandler(ParseRuntimeException ex) {
+        log.error("parseRuntimeExceptionHandler", ex);
+        return ErrorCode.PARSE_ERROR.wrapper();
     }
 
     @ExceptionHandler(value = CodeArgumentException.class)

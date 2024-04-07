@@ -74,7 +74,7 @@ public enum ErrorCode implements CodeInfo {
 
     DECRYPT_ERROR(908, "数据解密异常"),
 
-    EXPRESSION_ERROR(909, "表达式错误"),
+    PARSE_ERROR(909, "解析失败"),
 
     TASK_EXECUTE_ERROR(910, "任务执行异常"),
 
