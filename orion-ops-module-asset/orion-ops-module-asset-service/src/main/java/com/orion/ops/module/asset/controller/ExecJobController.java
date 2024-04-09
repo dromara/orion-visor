@@ -1,16 +1,14 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecJobOperatorType;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobCreateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobQueryRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateStatusRequest;
+import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 import com.orion.ops.module.asset.service.ExecJobService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -90,6 +88,15 @@ public class ExecJobController {
     @PreAuthorize("@ss.hasPermission('asset:exec-job:delete')")
     public Integer deleteExecJob(@RequestParam("id") Long id) {
         return execJobService.deleteExecJobById(id);
+    }
+
+    @OperatorLog(ExecJobOperatorType.TRIGGER)
+    @PostMapping("/trigger")
+    @Operation(summary = "手动触发计划任务")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job:trigger')")
+    public HttpWrapper<?> triggerExecJob(@Validated @RequestBody ExecJobTriggerRequest request) {
+        execJobService.triggerExecJob(request);
+        return HttpWrapper.ok();
     }
 
 }

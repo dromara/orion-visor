@@ -1,10 +1,7 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobCreateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobQueryRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateStatusRequest;
+import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 
 /**
@@ -71,5 +68,12 @@ public interface ExecJobService {
      * @return effect
      */
     Integer deleteExecJobById(Long id);
+
+    /**
+     * 手动触发任务
+     *
+     * @param request request
+     */
+    void triggerExecJob(ExecJobTriggerRequest request);
 
 }

@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
+import com.orion.ops.module.asset.entity.request.exec.ExecCommandExecRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
@@ -25,12 +26,20 @@ public interface ExecService {
     ExecLogVO execCommand(ExecCommandRequest request);
 
     /**
-     * 重新执行命令
+     * 批量执行命令
      *
-     * @param id id
+     * @param request request
      * @return result
      */
-    ExecLogVO reExecCommand(Long id);
+    ExecLogVO execCommandWithSource(ExecCommandExecRequest request);
+
+    /**
+     * 重新执行命令
+     *
+     * @param logId logId
+     * @return result
+     */
+    ExecLogVO reExecCommand(Long logId);
 
     /**
      * 中断命令执行

@@ -22,7 +22,7 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
 
     public static final String UPDATE_STATUS = "exec-job:update-status";
 
-    public static final String EXEC = "exec-job:exec";
+    public static final String TRIGGER = "exec-job:trigger";
 
     public static final String DELETE = "exec-job:delete";
 
@@ -32,7 +32,7 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, CREATE, "创建计划任务 <sb>${name}</sb>"),
                 new OperatorType(M, UPDATE, "更新计划任务 <sb>${before}</sb>"),
                 new OperatorType(M, UPDATE_STATUS, "<sb>${statusName}</sb>计划任务 <sb>${name}</sb>"),
-                new OperatorType(M, EXEC, "手动执行计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, TRIGGER, "手动触发计划任务 <sb>${name}</sb>"),
                 new OperatorType(H, DELETE, "删除计划任务 <sb>${name}</sb>"),
         };
     }

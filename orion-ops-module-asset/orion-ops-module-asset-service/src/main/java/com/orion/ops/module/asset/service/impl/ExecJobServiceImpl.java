@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.time.Dates;
 import com.orion.lang.utils.time.cron.Cron;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.framework.common.constant.FieldConst;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.job.core.utils.QuartzUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -18,19 +16,16 @@ import com.orion.ops.module.asset.dao.ExecJobDAO;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecJobDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobCreateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobQueryRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecJobUpdateStatusRequest;
+import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 import com.orion.ops.module.asset.enums.ExecJobStatusEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecJobHostService;
 import com.orion.ops.module.asset.service.ExecJobService;
+import com.orion.ops.module.asset.service.ExecService;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,8 +50,11 @@ public class ExecJobServiceImpl implements ExecJobService {
     // TODO 测试 SSH 禁用后是什么样子的
     // TODO 操作日志 菜单
     // TODO 执行日志抽象
-    // TODO 任务分组
     // TODO 手动执行 测试 quartz
+
+    // 内置参数         params.put("source", request.getSource());
+    //         params.put("sourceId", request.getSourceId());
+    //         params.put("seq", request.getExecSeq());
 
     private static final String QUARTZ_TYPE = "Exec";
 
@@ -64,10 +62,13 @@ public class ExecJobServiceImpl implements ExecJobService {
     private ExecJobDAO execJobDAO;
 
     @Resource
+    private ExecLogDAO execLogDAO;
+
+    @Resource
     private ExecJobHostService execJobHostService;
 
     @Resource
-    private ExecLogDAO execLogDAO;
+    private ExecService execService;
 
     @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
@@ -228,6 +229,12 @@ public class ExecJobServiceImpl implements ExecJobService {
         return effect;
     }
 
+    @Override
+    public void triggerExecJob(ExecJobTriggerRequest request) {
+
+
+    }
+
     /**
      * 检查对象是否存在
      *
@@ -273,10 +280,9 @@ public class ExecJobServiceImpl implements ExecJobService {
         if (delete) {
             QuartzUtils.deleteJob(QUARTZ_TYPE, id);
         }
-        // FIXME
         // 启动 quartz job
         if (add) {
-            QuartzUtils.addJob(QUARTZ_TYPE, id, record.getExpression(), record.getName(), TestJob.class);
+            QuartzUtils.addJob(QUARTZ_TYPE, id, record.getExpression(), record.getName(), ExecCommandJob.class);
         }
     }
 
@@ -290,17 +296,6 @@ public class ExecJobServiceImpl implements ExecJobService {
         List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
-        }
-    }
-
-    // FIXME
-    static class TestJob implements Job {
-
-        @Override
-        public void execute(JobExecutionContext context) {
-            System.out.println("----------------------");
-            System.out.println(Dates.current());
-            System.out.println(context.getMergedJobDataMap().getLong(FieldConst.KEY));
         }
     }
 

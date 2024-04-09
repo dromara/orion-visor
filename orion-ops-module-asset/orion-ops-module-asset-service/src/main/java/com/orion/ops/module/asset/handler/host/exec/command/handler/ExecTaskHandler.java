@@ -88,7 +88,6 @@ public class ExecTaskHandler implements IExecTaskHandler {
     private void runHostCommand(List<ExecCommandHostDTO> hosts) throws Exception {
         // 超时检查
         if (execCommand.getTimeout() != 0) {
-            // TODO test
             this.timeoutChecker = TimeoutCheckers.create();
             AssetThreadPools.TIMEOUT_CHECK.execute(this.timeoutChecker);
         }

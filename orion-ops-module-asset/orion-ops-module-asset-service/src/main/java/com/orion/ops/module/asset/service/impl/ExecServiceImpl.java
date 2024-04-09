@@ -23,6 +23,7 @@ import com.orion.ops.framework.common.security.LoginUser;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.ops.module.asset.convert.ExecConvert;
 import com.orion.ops.module.asset.convert.ExecHostLogConvert;
 import com.orion.ops.module.asset.convert.ExecLogConvert;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
@@ -35,6 +36,7 @@ import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.dto.ExecHostLogTailDTO;
 import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
 import com.orion.ops.module.asset.entity.dto.ExecParameterSchemaDTO;
+import com.orion.ops.module.asset.entity.request.exec.ExecCommandExecRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
@@ -115,12 +117,27 @@ public class ExecServiceImpl implements ExecService {
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
         log.info("ExecService.startExecCommand host hostList: {}", hostIdList);
         Valid.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);
+        // 执行命令
+        ExecCommandExecRequest execRequest = ExecConvert.MAPPER.to(request);
+        execRequest.setUserId(userId);
+        execRequest.setUsername(user.getUsername());
+        execRequest.setSource(ExecSourceEnum.BATCH.name());
+        return this.execCommandWithSource(execRequest);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ExecLogVO execCommandWithSource(ExecCommandExecRequest request) {
+        String command = request.getCommand();
+        List<Long> hostIdList = request.getHostIdList();
         List<HostDO> hosts = hostDAO.selectBatchIds(hostIdList);
         // 插入日志
         ExecLogDO execLog = ExecLogDO.builder()
-                .userId(userId)
-                .username(user.getUsername())
-                .source(ExecSourceEnum.BATCH.name())
+                .userId(request.getUserId())
+                .username(request.getUsername())
+                .source(request.getSource())
+                .sourceId(request.getSourceId())
+                .execSeq(request.getExecSeq())
                 .description(Strings.ifBlank(request.getDescription(), () -> {
                     if (command.length() < DESC_OMIT + 3) {
                         return command;
@@ -136,7 +153,7 @@ public class ExecServiceImpl implements ExecService {
         execLogDAO.insert(execLog);
         Long execId = execLog.getId();
         // 获取内置参数
-        Map<String, Object> builtinsParams = this.getBaseBuiltinsParams(user, execId, request.getParameterSchema());
+        Map<String, Object> builtinsParams = this.getBaseBuiltinsParams(execId, request);
         // 设置主机日志
         List<ExecHostLogDO> execHostLogs = hosts.stream()
                 .map(s -> {
@@ -154,7 +171,7 @@ public class ExecServiceImpl implements ExecService {
                 }).collect(Collectors.toList());
         execHostLogDAO.insertBatch(execHostLogs);
         // 操作日志
-        OperatorLogs.add(OperatorLogs.ID, execId);
+        OperatorLogs.add(OperatorLogs.LOG_ID, execId);
         // 开始执行
         this.startExec(execLog, execHostLogs);
         // 返回
@@ -406,51 +423,23 @@ public class ExecServiceImpl implements ExecService {
     }
 
     /**
-     * 构建日志路径
-     *
-     * @param logId  logId
-     * @param hostId hostId
-     * @return logPath
-     */
-    private String buildLogPath(Long logId, Long hostId) {
-        String logFile = "/exec/" + logId + "/" + logId + "_" + hostId + ".log";
-        return logsFileClient.getReturnPath(logFile);
-    }
-
-    /**
-     * 提取参数
-     *
-     * @param parameterSchema parameterSchema
-     * @return params
-     */
-    private Map<String, Object> extraSchemaParams(String parameterSchema) {
-        List<ExecParameterSchemaDTO> schemaList = JSON.parseArray(parameterSchema, ExecParameterSchemaDTO.class);
-        if (Lists.isEmpty(schemaList)) {
-            return Maps.newMap();
-        }
-        // 解析参数
-        return schemaList.stream()
-                .collect(Collectors.toMap(ExecParameterSchemaDTO::getName,
-                        ExecParameterSchemaDTO::getValue,
-                        Functions.right()));
-    }
-
-    /**
      * 获取基础内置参数
      *
-     * @param user            user
-     * @param execId          execId
-     * @param parameterSchema parameterSchema
+     * @param execId  execId
+     * @param request request
      * @return params
      */
-    private Map<String, Object> getBaseBuiltinsParams(LoginUser user, Long execId, String parameterSchema) {
+    private Map<String, Object> getBaseBuiltinsParams(Long execId, ExecCommandExecRequest request) {
         String uuid = UUIds.random();
         Date date = new Date();
         // 输入参数
-        Map<String, Object> params = this.extraSchemaParams(parameterSchema);
+        Map<String, Object> params = this.extraSchemaParams(request.getParameterSchema());
         // 添加内置参数
-        params.put("userId", user.getId());
-        params.put("username", user.getId());
+        params.put("userId", request.getUserId());
+        params.put("username", request.getUsername());
+        params.put("source", request.getSource());
+        params.put("sourceId", request.getSourceId());
+        params.put("seq", request.getExecSeq());
         params.put("execId", execId);
         params.put("uuid", uuid);
         params.put("uuidShort", uuid.replace("-", Strings.EMPTY));
@@ -478,6 +467,36 @@ public class ExecServiceImpl implements ExecService {
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         return params;
+    }
+
+    /**
+     * 提取参数
+     *
+     * @param parameterSchema parameterSchema
+     * @return params
+     */
+    private Map<String, Object> extraSchemaParams(String parameterSchema) {
+        List<ExecParameterSchemaDTO> schemaList = JSON.parseArray(parameterSchema, ExecParameterSchemaDTO.class);
+        if (Lists.isEmpty(schemaList)) {
+            return Maps.newMap();
+        }
+        // 解析参数
+        return schemaList.stream()
+                .collect(Collectors.toMap(ExecParameterSchemaDTO::getName,
+                        ExecParameterSchemaDTO::getValue,
+                        Functions.right()));
+    }
+
+    /**
+     * 构建日志路径
+     *
+     * @param logId  logId
+     * @param hostId hostId
+     * @return logPath
+     */
+    private String buildLogPath(Long logId, Long hostId) {
+        String logFile = "/exec/" + logId + "/" + logId + "_" + hostId + ".log";
+        return logsFileClient.getReturnPath(logFile);
     }
 
 }
