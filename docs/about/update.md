@@ -5,11 +5,28 @@
 > sql 脚本
 
 ```sql
+-- 修改字段
 ALTER TABLE `exec_template` 
 CHANGE COLUMN `parameter` `parameter_schema` json NULL COMMENT '参数定义' AFTER `timeout`;
-
 ALTER TABLE `exec_log` 
 ADD COLUMN `exec_seq` int(0) NULL DEFAULT 0 COMMENT '执行序列' AFTER `description`;
+-- 字典值修改
+UPDATE dict_value SET value = 'asset:exec-command' WHERE value = 'asset:exec';
+UPDATE dict_value SET value = 'exec-command:exec' WHERE value = 'exec:exec-command';
+UPDATE dict_value SET value = 'exec-command:interrupt-exec' WHERE value = 'exec:interrupt-exec';
+UPDATE dict_value SET value = 'exec-command:interrupt-host' WHERE value = 'exec:interrupt-host';
+UPDATE dict_value SET value = 'exec-command-log:delete' WHERE value = 'exec:delete-log';
+UPDATE dict_value SET value = 'exec-command-log:clear' WHERE value = 'exec:clear-log';
+UPDATE dict_value SET value = 'exec-command-log:delete-host' WHERE value = 'exec:delete-host-log';
+UPDATE dict_value SET value = 'exec-command-log:download' WHERE value = 'exec:download-host-log';
+-- 操作日志修改
+UPDATE operator_log SET module = 'asset:exec-command', type = 'exec-command:exec' WHERE type = 'exec:exec-command';
+UPDATE operator_log SET module = 'asset:exec-command', type = 'exec-command:interrupt-exec' WHERE type = 'exec:interrupt-exec';
+UPDATE operator_log SET module = 'asset:exec-command', type = 'exec-command:interrupt-host' WHERE type = 'exec:interrupt-host';
+UPDATE operator_log SET module = 'asset:exec-command-log', type = 'exec-command-log:delete' WHERE type = 'exec:delete-log';
+UPDATE operator_log SET module = 'asset:exec-command-log', type = 'exec-command-log:clear' WHERE type = 'exec:clear-log';
+UPDATE operator_log SET module = 'asset:exec-command-log', type = 'exec-command-log:delete-host' WHERE type = 'exec:delete-host-log';
+UPDATE operator_log SET module = 'asset:exec-command-log', type = 'exec-command-log:download' WHERE type = 'exec:download-host-log';
 ```
 
 ## v1.0.3

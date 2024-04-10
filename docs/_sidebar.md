@@ -10,6 +10,7 @@
 * 操作手册
     * [资产管理](operator/asset.md)
     * [主机运维](operator/host-ops.md)
+    * [命令执行](operator/exec.md)
     * [运维审计](operator/asset-audit.md)
     * [用户管理](operator/user.md)
     * [系统管理](operator/system.md)
