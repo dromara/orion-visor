@@ -50,15 +50,6 @@ import java.util.stream.Collectors;
 @Service
 public class ExecJobServiceImpl implements ExecJobService {
 
-    // TODO 测试 SSH 禁用后是什么样子的
-    // TODO 操作日志 菜单
-    // TODO 执行日志抽象
-    // TODO 测试 quartz
-
-    // 内置参数         params.put("source", request.getSource());
-    //         params.put("sourceId", request.getSourceId());
-    //         params.put("seq", request.getExecSeq());
-
     private static final String QUARTZ_TYPE = "Exec";
 
     @Resource

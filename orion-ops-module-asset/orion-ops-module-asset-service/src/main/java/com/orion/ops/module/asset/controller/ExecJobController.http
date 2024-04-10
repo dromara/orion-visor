@@ -37,8 +37,8 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "id": "",
-  "status": ""
+  "id": 5,
+  "status": 0
 }
 
 

@@ -44,17 +44,18 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("exec_job", "计划执行任务", "exec")
+                Template.create("exec_job", "计划任务", "exec")
                         .disableUnitTest()
                         .vue("exec", "exec-job")
                         .enableDrawerForm()
                         .dict("execJobStatus", "status")
+                        .comment("计划任务状态")
                         .field("execJobStatus")
                         .fields("DISABLED", "ENABLED")
                         .labels("禁用", "启用")
                         .values(0, 1)
                         .build(),
-                Template.create("exec_job_host", "计划执行任务主机", "exec")
+                Template.create("exec_job_host", "计划任务主机", "exec")
                         .disableUnitTest()
                         .vue("exec", "exec-job-host")
                         .build(),
