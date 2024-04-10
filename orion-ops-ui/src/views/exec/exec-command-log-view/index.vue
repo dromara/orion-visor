@@ -8,7 +8,7 @@
 
 <script lang="ts">
   export default {
-    name: 'execExecLogView'
+    name: 'execCommandLogView'
   };
 </script>
 

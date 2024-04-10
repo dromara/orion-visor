@@ -25,7 +25,7 @@
 
 <script lang="ts">
   export default {
-    name: 'execPanelEditor'
+    name: 'execCommandPanelEditor'
   };
 </script>
 

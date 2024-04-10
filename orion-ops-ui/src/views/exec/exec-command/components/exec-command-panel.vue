@@ -2,10 +2,10 @@
   <!-- 命令执行 -->
   <a-spin class="exec-container" :loading="loading">
     <!-- 执行参数 -->
-    <exec-panel-form class="exec-form-container"
-                     :schema-count="parameterSchema.length"
-                     @exec="execCommand"
-                     @reset="resetForm">
+    <exec-command-panel-form class="exec-form-container"
+                             :schema-count="parameterSchema.length"
+                             @exec="execCommand"
+                             @reset="resetForm">
       <!-- 命令表单 -->
       <template #form>
         <a-form :model="formModel"
@@ -67,18 +67,18 @@
           </a-form-item>
         </a-form>
       </template>
-    </exec-panel-form>
+    </exec-command-panel-form>
     <!-- 执行命令 -->
-    <exec-panel-editor class="exec-command-container"
-                       @selected="setWithTemplate">
+    <exec-command-panel-editor class="exec-command-container"
+                               @selected="setWithTemplate">
       <exec-editor v-model="formModel.command"
                    theme="vs-dark"
                    :parameter="parameterSchema" />
-    </exec-panel-editor>
+    </exec-command-panel-editor>
     <!-- 执行历史 -->
-    <exec-panel-history class="exec-history-container"
-                        ref="historyRef"
-                        @selected="setWithExecLog" />
+    <exec-command-panel-history class="exec-history-container"
+                                ref="historyRef"
+                                @selected="setWithExecLog" />
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
                            @selected="setSelectedHost" />
@@ -92,20 +92,20 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandRequest } from '@/api/exec/exec';
+  import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import type { TemplateParam } from '@/components/view/exec-editor/const';
   import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
-  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
   import { ref } from 'vue';
   import formRules from '../types/form.rules';
   import useLoading from '@/hooks/loading';
-  import { batchExecCommand } from '@/api/exec/exec';
+  import { batchExecCommand } from '@/api/exec/exec-command';
   import { Message } from '@arco-design/web-vue';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
-  import ExecPanelForm from './exec-panel-form.vue';
-  import ExecPanelHistory from './exec-panel-history.vue';
-  import ExecPanelEditor from './exec-panel-editor.vue';
+  import ExecCommandPanelForm from './exec-command-panel-form.vue';
+  import ExecCommandPanelHistory from './exec-command-panel-history.vue';
+  import ExecCommandPanelEditor from './exec-command-panel-editor.vue';
 
   const emits = defineEmits(['submit']);
 
@@ -156,7 +156,7 @@
   };
 
   // 从执行日志设置
-  const setWithExecLog = (record: ExecLogQueryResponse) => {
+  const setWithExecLog = (record: ExecCommandLogQueryResponse) => {
     formModel.value = {
       ...formModel.value,
       command: record.command,

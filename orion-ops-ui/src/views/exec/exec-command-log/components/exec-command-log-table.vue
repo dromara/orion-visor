@@ -113,9 +113,9 @@
              @expand="loadHostExecData">
       <!-- 展开表格 -->
       <template #expand-row="{ record }">
-        <exec-host-log-table :row="record"
-                             @view-command="s => emits('viewCommand', s)"
-                             @view-params="s => emits('viewParams', s)" />
+        <exec-command-host-log-table :row="record"
+                                     @view-command="s => emits('viewCommand', s)"
+                                     @view-params="s => emits('viewParams', s)" />
       </template>
       <!-- 执行命令 -->
       <template #command="{ record }">
@@ -171,7 +171,7 @@
           <a-popconfirm content="确定要中断执行吗?"
                         position="left"
                         type="warning"
-                        @ok="doInterruptExec(record)">
+                        @ok="doInterruptExecCommand(record)">
             <a-button v-permission="['asset:exec:interrupt-exec']"
                       type="text"
                       size="mini"
@@ -200,15 +200,21 @@
 
 <script lang="ts">
   export default {
-    name: 'execLogTable'
+    name: 'execCommandLogTable'
   };
 </script>
 
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { ExecLogQueryRequest, ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandLogQueryRequest, ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
   import { reactive, ref, onMounted, onUnmounted } from 'vue';
-  import { batchDeleteExecLog, deleteExecLog, getExecHostLogList, getExecLogPage, getExecLogStatus } from '@/api/exec/exec-log';
+  import {
+    batchDeleteExecCommandLog,
+    deleteExecCommandLog,
+    getExecCommandHostLogList,
+    getExecCommandLogPage,
+    getExecCommandLogStatus
+  } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
@@ -216,9 +222,9 @@
   import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
-  import { interruptExec, reExecCommand } from '@/api/exec/exec';
+  import { reExecCommand, interruptExecCommand } from '@/api/exec/exec-command';
   import UserSelector from '@/components/user/user/selector/index.vue';
-  import ExecHostLogTable from './exec-host-log-table.vue';
+  import ExecCommandHostLogTable from './exec-command-host-log-table.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
@@ -231,8 +237,8 @@
   const intervalId = ref();
   const tableRef = ref();
   const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<ExecLogQueryResponse[]>([]);
-  const formModel = reactive<ExecLogQueryRequest>({
+  const tableRenderData = ref<ExecCommandLogQueryResponse[]>([]);
+  const formModel = reactive<ExecCommandLogQueryRequest>({
     id: undefined,
     userId: undefined,
     description: undefined,
@@ -251,7 +257,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await batchDeleteExecLog(selectedKeys.value);
+      await batchDeleteExecCommandLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
@@ -269,7 +275,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecLog(id);
+      await deleteExecCommandLog(id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();
@@ -280,7 +286,7 @@
   };
 
   // 重新执行命令
-  const doReExecCommand = async (record: ExecLogQueryResponse) => {
+  const doReExecCommand = async (record: ExecCommandLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用中断接口
@@ -296,11 +302,11 @@
   };
 
   // 中断执行
-  const doInterruptExec = async (record: ExecLogQueryResponse) => {
+  const doInterruptExecCommand = async (record: ExecCommandLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用中断接口
-      await interruptExec({
+      await interruptExecCommand({
         logId: record.id
       });
       Message.success('已中断');
@@ -317,7 +323,7 @@
       return;
     }
     // 加载数据
-    const { data } = await getExecHostLogList(record.id);
+    const { data } = await getExecCommandHostLogList(record.id);
     record.hosts = data;
   };
 
@@ -330,7 +336,7 @@
       return;
     }
     // 加载未完成的状态
-    const { data: { logList, hostList } } = await getExecLogStatus(unCompleteIdList);
+    const { data: { logList, hostList } } = await getExecCommandLogStatus(unCompleteIdList);
     // 设置任务状态
     logList.forEach(s => {
       const tableRow = tableRenderData.value.find(r => r.id === s.id);
@@ -359,10 +365,10 @@
   };
 
   // 加载数据
-  const doFetchTableData = async (request: ExecLogQueryRequest) => {
+  const doFetchTableData = async (request: ExecCommandLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getExecLogPage(request);
+      const { data } = await getExecCommandLogPage(request);
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

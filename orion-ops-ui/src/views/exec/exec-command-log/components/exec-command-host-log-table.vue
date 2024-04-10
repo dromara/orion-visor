@@ -96,13 +96,13 @@
 
 <script lang="ts">
   export default {
-    name: 'execHostLogTable'
+    name: 'execCommandHostLogTable'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
-  import { deleteExecHostLog } from '@/api/exec/exec-log';
+  import type { ExecCommandLogQueryResponse, ExecCommandHostLogQueryResponse } from '@/api/exec/exec-command-log';
+  import { deleteExecCommandHostLog } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/host-table.columns';
@@ -110,12 +110,13 @@
   import { useDictStore } from '@/store';
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
-  import { downloadExecLogFile, interruptHostExec } from '@/api/exec/exec';
+  import { downloadExecLogFile } from '@/api/exec/exec';
+  import { interruptHostExecCommand } from '@/api/exec/exec-command';
   import { copy } from '@/hooks/copy';
   import { downloadFile } from '@/utils/file';
 
   const props = defineProps<{
-    row: ExecLogQueryResponse;
+    row: ExecCommandLogQueryResponse;
   }>();
 
   const emits = defineEmits(['viewCommand', 'viewParams']);
@@ -131,11 +132,11 @@
   };
 
   // 中断执行
-  const interruptedHost = async (record: ExecHostLogQueryResponse) => {
+  const interruptedHost = async (record: ExecCommandHostLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用中断接口
-      await interruptHostExec({
+      await interruptHostExecCommand({
         hostLogId: record.id
       });
       Message.success('已中断');
@@ -153,7 +154,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecHostLog(id);
+      await deleteExecCommandHostLog(id);
       Message.success('删除成功');
     } catch (e) {
     } finally {

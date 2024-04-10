@@ -38,15 +38,15 @@
 
 <script lang="ts">
   export default {
-    name: 'execPanelHistory'
+    name: 'execCommandPanelHistory'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
-  import type { ExecCommandRequest } from '@/api/exec/exec';
+  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
+  import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import { onMounted, ref } from 'vue';
-  import { getExecLogHistory } from '@/api/exec/exec-log';
+  import { getExecCommandLogHistory } from '@/api/exec/exec-command-log';
   import { historyCount } from '../types/const';
   import useLoading from '@/hooks/loading';
 
@@ -54,7 +54,7 @@
 
   const { loading, setLoading } = useLoading(true);
 
-  const historyLogs = ref<Array<ExecLogQueryResponse>>([]);
+  const historyLogs = ref<Array<ExecCommandLogQueryResponse>>([]);
 
   // 添加
   const add = (record: ExecCommandRequest) => {
@@ -67,7 +67,7 @@
         parameterSchema: record.parameterSchema,
         timeout: record.timeout,
         hostIdList: record.hostIdList
-      } as ExecLogQueryResponse);
+      } as ExecCommandLogQueryResponse);
     } else {
       // 存在
       const his = historyLogs.value[index];
@@ -78,7 +78,7 @@
         parameterSchema: record.parameterSchema,
         timeout: record.timeout,
         hostIdList: record.hostIdList
-      } as ExecLogQueryResponse);
+      } as ExecCommandLogQueryResponse);
     }
   };
 
@@ -88,7 +88,7 @@
   const fetchExecHistory = async () => {
     setLoading(true);
     try {
-      const { data } = await getExecLogHistory(historyCount);
+      const { data } = await getExecCommandLogHistory(historyCount);
       historyLogs.value = data;
     } catch (e) {
     } finally {

@@ -2,7 +2,7 @@
   <div class="layout-container full">
     <!-- 执行面板 -->
     <div v-show="!logVisible" class="panel-wrapper">
-      <exec-panel @submit="openLog" />
+      <exec-command-panel @submit="openLog" />
     </div>
     <!-- 执行日志 -->
     <div v-if="logVisible" class="panel-wrapper">
@@ -20,12 +20,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
   import { nextTick, onMounted, ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
-  import { dictKeys } from '@/views/exec/exec-log/types/const';
-  import ExecPanel from './components/exec-panel.vue';
+  import { dictKeys } from '@/views/exec/exec-command-log/types/const';
+  import ExecCommandPanel from './components/exec-command-panel.vue';
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
   const { visible: logVisible, setVisible: setLogVisible } = useVisible();
@@ -33,7 +33,7 @@
   const log = ref();
 
   // 打开日志
-  const openLog = (record: ExecLogQueryResponse) => {
+  const openLog = (record: ExecCommandLogQueryResponse) => {
     setLogVisible(true);
     nextTick(() => {
       log.value.open(record);

@@ -13,7 +13,7 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
  * @version 1.0.1
  * @since 2024-3-11 11:31
  */
-@Module("asset:exec-command-log")
+@Module("asset:exec-command")
 public class ExecCommandOperatorType extends InitializingOperatorTypes {
 
     public static final String EXEC = "exec-command:exec";

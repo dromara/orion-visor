@@ -1,14 +1,14 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <exec-log-table ref="tableRef"
-                    @view-command="viewCommand"
-                    @view-params="viewParams"
-                    @view-log="viewLog"
-                    @open-clear="openClearModal" />
+    <exec-command-log-table ref="tableRef"
+                            @view-command="viewCommand"
+                            @view-params="viewParams"
+                            @view-log="viewLog"
+                            @open-clear="openClearModal" />
     <!-- 清理模态框 -->
-    <exec-log-clear-modal ref="clearModal"
-                          @clear="clearCallback" />
+    <exec-command-log-clear-modal ref="clearModal"
+                                  @clear="clearCallback" />
     <!-- 执行日志模态框 -->
     <exec-log-panel-modal ref="logModal" />
     <!-- json 模态框 -->
@@ -23,7 +23,7 @@
 
 <script lang="ts">
   export default {
-    name: 'execLog'
+    name: 'execCommandLog'
   };
 </script>
 
@@ -33,8 +33,8 @@
   import { dictKeys } from './types/const';
   import { useRouter } from 'vue-router';
   import { openNewRoute } from '@/router';
-  import ExecLogTable from './components/exec-log-table.vue';
-  import ExecLogClearModal from './components/exec-log-clear-modal.vue';
+  import ExecCommandLogTable from './components/exec-command-log-table.vue';
+  import ExecCommandLogClearModal from './components/exec-command-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
@@ -68,7 +68,7 @@
     if (newWindow) {
       // 跳转新页面
       openNewRoute({
-        name: 'execLogView',
+        name: 'execCommandLogView',
         query: {
           id
         }

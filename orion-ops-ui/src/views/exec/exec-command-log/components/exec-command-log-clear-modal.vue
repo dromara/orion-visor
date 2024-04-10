@@ -56,17 +56,17 @@
 
 <script lang="ts">
   export default {
-    name: 'execLogClearModal'
+    name: 'execCommandLogClearModal'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ExecLogQueryRequest } from '@/api/exec/exec-log';
+  import type { ExecCommandLogQueryRequest } from '@/api/exec/exec-command-log';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { execStatusKey } from '../types/const';
-  import { getExecLogCount, clearExecLog } from '@/api/exec/exec-log';
+  import { getExecCommandLogCount, clearExecCommandLog } from '@/api/exec/exec-command-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import UserSelector from '@/components/user/user/selector/index.vue';
@@ -78,9 +78,9 @@
   const { toOptions } = useDictStore();
 
   const formRef = ref<any>();
-  const formModel = ref<ExecLogQueryRequest>({});
+  const formModel = ref<ExecCommandLogQueryRequest>({});
 
-  const defaultForm = (): ExecLogQueryRequest => {
+  const defaultForm = (): ExecCommandLogQueryRequest => {
     return {
       id: undefined,
       userId: undefined,
@@ -108,7 +108,7 @@
     setLoading(true);
     try {
       // 获取总数量
-      const { data } = await getExecLogCount(formModel.value);
+      const { data } = await getExecCommandLogCount(formModel.value);
       if (data) {
         // 清空
         doClear(data);
@@ -132,7 +132,7 @@
         setLoading(true);
         try {
           // 调用删除
-          await clearExecLog(formModel.value);
+          await clearExecCommandLog(formModel.value);
           emits('clear');
           // 清空
           setVisible(false);

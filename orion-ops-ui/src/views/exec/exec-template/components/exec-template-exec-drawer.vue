@@ -91,13 +91,13 @@
 <script lang="ts" setup>
   import type { TemplateParam } from '@/components/view/exec-editor/const';
   import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
-  import type { ExecCommandRequest } from '@/api/exec/exec';
+  import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import { onUnmounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../../exec-command/types/form.rules';
   import { Message } from '@arco-design/web-vue';
-  import { batchExecCommand } from '@/api/exec/exec';
+  import { batchExecCommand } from '@/api/exec/exec-command';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
   const emits = defineEmits(['openHost']);
