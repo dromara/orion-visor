@@ -7,8 +7,9 @@ import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.define.operator.ExecOperatorType;
+import com.orion.ops.module.asset.define.operator.ExecCommandLogOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
@@ -24,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -38,9 +40,11 @@ import java.util.List;
 @Validated
 @RestWrapper
 @RestController
-@RequestMapping("/asset/exec-log")
+@RequestMapping("/asset/exec-command-log")
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
-public class ExecLogController {
+public class ExecCommandLogController {
+
+    private static final String SOURCE = ExecSourceEnum.BATCH.name();
 
     @Resource
     private ExecLogService execLogService;
@@ -51,25 +55,25 @@ public class ExecLogController {
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询执行日志")
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
-    public DataGrid<ExecLogVO> getExecLogPage(@Validated(Page.class) @RequestBody ExecLogQueryRequest request) {
-        request.setSource(ExecSourceEnum.BATCH.name());
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:query')")
+    public DataGrid<ExecLogVO> getExecCommandLogPage(@Validated(Page.class) @RequestBody ExecLogQueryRequest request) {
+        request.setSource(SOURCE);
         return execLogService.getExecLogPage(request);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "查询执行日志")
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
-    public ExecLogVO getExecLog(@RequestParam("id") Long id) {
-        return execLogService.getExecLog(id, ExecSourceEnum.BATCH.name());
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:query')")
+    public ExecLogVO getExecCommandLog(@RequestParam("id") Long id) {
+        return execLogService.getExecLog(id, SOURCE);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/host-list")
     @Operation(summary = "查询全部执行主机日志")
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
-    public List<ExecHostLogVO> getExecHostLogList(@RequestParam("logId") Long logId) {
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:query')")
+    public List<ExecHostLogVO> getExecCommandHostLogList(@RequestParam("logId") Long logId) {
         return execHostLogService.getExecHostLogList(logId);
     }
 
@@ -77,63 +81,79 @@ public class ExecLogController {
     @GetMapping("/status")
     @Operation(summary = "查询命令执行状态")
     @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:query')")
-    public ExecLogStatusVO getExecLogStatus(@RequestParam("idList") List<Long> idList) {
-        return execLogService.getExecLogStatus(idList);
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:query')")
+    public ExecLogStatusVO getExecCommandLogStatus(@RequestParam("idList") List<Long> idList) {
+        return execLogService.getExecLogStatus(idList, SOURCE);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/history")
     @Operation(summary = "查询执行历史")
-    @PreAuthorize("@ss.hasAnyPermission('asset:exec-log:query', 'asset:exec:exec-command')")
-    public List<ExecLogVO> getExecLogHistory(@Validated(Page.class) ExecLogQueryRequest request) {
-        request.setSource(ExecSourceEnum.BATCH.name());
+    @PreAuthorize("@ss.hasAnyPermission('asset:exec-command-log:query', 'asset:exec-command:exec')")
+    public List<ExecLogVO> getExecCommandLogHistory(@Validated(Page.class) ExecLogQueryRequest request) {
+        request.setSource(SOURCE);
         request.setUserId(SecurityUtils.getLoginUserId());
         return execLogService.getExecHistory(request);
     }
 
-    @OperatorLog(ExecOperatorType.DELETE_LOG)
+    @OperatorLog(ExecCommandLogOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除执行日志")
     @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:delete')")
-    public Integer deleteExecLog(@RequestParam("id") Long id) {
-        return execLogService.deleteExecLogById(id);
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:delete')")
+    public Integer deleteExecCommandLog(@RequestParam("id") Long id) {
+        return execLogService.deleteExecLogById(id, SOURCE);
     }
 
-    @OperatorLog(ExecOperatorType.DELETE_LOG)
+    @OperatorLog(ExecCommandLogOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
     @Operation(summary = "删除执行日志")
     @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:delete')")
-    public Integer batchDeleteExecLog(@RequestParam("idList") List<Long> idList) {
-        return execLogService.deleteExecLogByIdList(idList);
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:delete')")
+    public Integer batchDeleteExecCommandLog(@RequestParam("idList") List<Long> idList) {
+        return execLogService.deleteExecLogByIdList(idList, SOURCE);
     }
 
-    @OperatorLog(ExecOperatorType.DELETE_HOST_LOG)
+    @OperatorLog(ExecCommandLogOperatorType.DELETE_HOST)
     @DeleteMapping("/delete-host")
     @Operation(summary = "删除执行主机日志")
     @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:delete')")
-    public Integer deleteExecHostLog(@RequestParam("id") Long id) {
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:delete')")
+    public Integer deleteExecCommandHostLog(@RequestParam("id") Long id) {
         return execHostLogService.deleteExecHostLogById(id);
     }
 
     @PostMapping("/query-count")
     @Operation(summary = "查询执行日志数量")
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:management:clear')")
-    public Long getExecLogCount(@RequestBody ExecLogQueryRequest request) {
-        request.setSource(ExecSourceEnum.BATCH.name());
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:management:clear')")
+    public Long getExecCommandLogCount(@RequestBody ExecLogQueryRequest request) {
+        request.setSource(SOURCE);
         return execLogService.queryExecLogCount(request);
     }
 
-    @OperatorLog(ExecOperatorType.CLEAR_LOG)
+    @OperatorLog(ExecCommandLogOperatorType.CLEAR)
     @PostMapping("/clear")
     @Operation(summary = "清空执行日志")
-    @PreAuthorize("@ss.hasPermission('asset:exec-log:management:clear')")
-    public Integer clearExecLog(@RequestBody ExecLogQueryRequest request) {
-        request.setSource(ExecSourceEnum.BATCH.name());
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:management:clear')")
+    public Integer clearExecCommandLog(@RequestBody ExecLogQueryRequest request) {
+        request.setSource(SOURCE);
         return execLogService.clearExecLog(request);
+    }
+
+    @PostMapping("/tail")
+    @Operation(summary = "查看执行日志")
+    @PreAuthorize("@ss.hasAnyPermission('asset:exec-command-log:query', 'asset:exec-command:exec')")
+    public String getExecCommandLogTailToken(@Validated @RequestBody ExecLogTailRequest request) {
+        request.setSource(SOURCE);
+        return execLogService.getExecLogTailToken(request);
+    }
+
+    @OperatorLog(ExecCommandLogOperatorType.DOWNLOAD)
+    @GetMapping("/download")
+    @Operation(summary = "下载执行日志")
+    @PreAuthorize("@ss.hasAnyPermission('asset:exec-command-log:query', 'asset:exec-command:exec')")
+    public void downloadExecCommandLogFile(@RequestParam("id") Long id, HttpServletResponse response) {
+        execLogService.downloadLogFile(id, SOURCE, response);
     }
 
 }

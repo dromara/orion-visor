@@ -13,9 +13,9 @@ const EXEC: AppRouteRecordRaw[] = [
         component: () => import('@/views/exec/exec-command/index.vue'),
       },
       {
-        name: 'execLog',
-        path: '/exec-log',
-        component: () => import('@/views/exec/exec-log/index.vue'),
+        name: 'execCommandLog',
+        path: '/exec-command-log',
+        component: () => import('@/views/exec/exec-command-log/index.vue'),
       },
       {
         name: 'execTemplate',

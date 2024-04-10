@@ -26,7 +26,7 @@ import com.orion.ops.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecJobHostService;
 import com.orion.ops.module.asset.service.ExecJobService;
-import com.orion.ops.module.asset.service.ExecService;
+import com.orion.ops.module.asset.service.ExecCommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +62,7 @@ public class ExecJobServiceImpl implements ExecJobService {
     private ExecJobHostService execJobHostService;
 
     @Resource
-    private ExecService execService;
+    private ExecCommandService execCommandService;
 
     @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
@@ -271,7 +271,7 @@ public class ExecJobServiceImpl implements ExecJobService {
                 .parameterSchema(job.getParameterSchema())
                 .hostIdList(hostIdList)
                 .build();
-        ExecLogVO execResult = execService.execCommandWithSource(exec);
+        ExecLogVO execResult = execCommandService.execCommandWithSource(exec);
         // 更新最近执行的任务id
         ExecJobDO updateRecent = new ExecJobDO();
         updateRecent.setId(id);

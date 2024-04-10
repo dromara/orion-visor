@@ -67,6 +67,7 @@ public class HostConnectLogController {
 
     @PostMapping("/query-count")
     @Operation(summary = "查询主机连接日志数量")
+    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:clear')")
     public Long getHostConnectLogCount(@RequestBody HostConnectLogQueryRequest request) {
         return hostConnectLogService.getHostConnectLogCount(request);
     }

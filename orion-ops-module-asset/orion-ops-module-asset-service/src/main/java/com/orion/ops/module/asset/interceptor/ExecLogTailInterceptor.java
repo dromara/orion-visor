@@ -3,7 +3,7 @@ package com.orion.ops.module.asset.interceptor;
 import com.orion.lang.utils.Urls;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
-import com.orion.ops.module.asset.service.ExecService;
+import com.orion.ops.module.asset.service.ExecLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class ExecLogTailInterceptor implements HandshakeInterceptor {
 
     @Resource
-    private ExecService execService;
+    private ExecLogService execLogService;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
@@ -34,7 +34,7 @@ public class ExecLogTailInterceptor implements HandshakeInterceptor {
         String token = Urls.getUrlSource(request.getURI().getPath());
         log.info("ExecLogTailInterceptor-beforeHandshake start token: {}", token);
         // 获取日志数据
-        ExecLogTailDTO info = execService.getExecLogTailInfo(token);
+        ExecLogTailDTO info = execLogService.getExecLogTailInfo(token);
         if (info == null) {
             log.error("ExecLogTailInterceptor-beforeHandshake absent token: {}", token);
             return false;

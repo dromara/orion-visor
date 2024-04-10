@@ -3,33 +3,55 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Objects1;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.io.Files1;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
+import com.orion.ops.framework.common.constant.FieldConst;
+import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.redis.core.utils.RedisStrings;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.ExecHostLogConvert;
 import com.orion.ops.module.asset.convert.ExecLogConvert;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
+import com.orion.ops.module.asset.define.cache.ExecCacheKeyDefine;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
+import com.orion.ops.module.asset.entity.dto.ExecHostLogTailDTO;
+import com.orion.ops.module.asset.entity.dto.ExecLogTailDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
+import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
+import com.orion.ops.module.asset.entity.vo.HostConfigVO;
+import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
+import com.orion.ops.module.asset.enums.ExecStatusEnum;
+import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecCommandHandler;
 import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
 import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.ops.module.asset.service.ExecHostLogService;
 import com.orion.ops.module.asset.service.ExecLogService;
+import com.orion.ops.module.asset.service.HostConfigService;
+import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +77,12 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Resource
     private ExecTaskManager execTaskManager;
 
+    @Resource
+    private HostConfigService hostConfigService;
+
+    @Resource
+    private FileClient logsFileClient;
+
     @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
         // 条件
@@ -68,12 +96,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public ExecLogVO getExecLog(Long id, String source) {
         // 查询执行日志
-        ExecLogDO row = execLogDAO.of()
-                .createValidateWrapper()
-                .eq(ExecLogDO::getId, id)
-                .eq(ExecLogDO::getSource, source)
-                .then()
-                .getOne();
+        ExecLogDO row = execLogDAO.selectByIdSource(id, source);
         Valid.notNull(row, ErrorMessage.LOG_ABSENT);
         // 查询执行主机
         List<ExecHostLogDO> hosts = execHostLogDAO.selectByLogId(id);
@@ -113,7 +136,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     }
 
     @Override
-    public ExecLogStatusVO getExecLogStatus(List<Long> idList) {
+    public ExecLogStatusVO getExecLogStatus(List<Long> idList, String source) {
         // 查询执行状态
         List<ExecLogVO> logList = execLogDAO.of()
                 .createWrapper()
@@ -122,6 +145,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                         ExecLogDO::getStartTime,
                         ExecLogDO::getFinishTime)
                 .in(ExecLogDO::getId, idList)
+                .eq(ExecLogDO::getSource, source)
                 .then()
                 .list(ExecLogConvert.MAPPER::to);
         // 查询主机状态
@@ -145,16 +169,11 @@ public class ExecLogServiceImpl implements ExecLogService {
     }
 
     @Override
-    public Long queryExecLogCount(ExecLogQueryRequest request) {
-        return execLogDAO.selectCount(this.buildQueryWrapper(request));
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteExecLogById(Long id) {
+    public Integer deleteExecLogById(Long id, String source) {
         log.info("ExecLogService-deleteExecLogById id: {}", id);
         // 检查数据是否存在
-        ExecLogDO record = execLogDAO.selectById(id);
+        ExecLogDO record = execLogDAO.selectByIdSource(id, source);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 中断命令执行
         this.interruptedTask(Lists.singleton(id));
@@ -170,8 +189,16 @@ public class ExecLogServiceImpl implements ExecLogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteExecLogByIdList(List<Long> idList) {
+    public Integer deleteExecLogByIdList(List<Long> idList, String source) {
         log.info("ExecLogService-deleteExecLogByIdList idList: {}", idList);
+        int count = execLogDAO.of()
+                .createWrapper()
+                .in(ExecLogDO::getId, idList)
+                .eq(ExecLogDO::getSource, source)
+                .then()
+                .count()
+                .intValue();
+        Valid.isTrue(idList.size() == count, ErrorMessage.DATA_MODIFIED);
         // 中断命令执行
         this.interruptedTask(idList);
         // 删除执行日志
@@ -182,6 +209,11 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.COUNT, effect);
         return effect;
+    }
+
+    @Override
+    public Long queryExecLogCount(ExecLogQueryRequest request) {
+        return execLogDAO.selectCount(this.buildQueryWrapper(request));
     }
 
     @Override
@@ -208,6 +240,204 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.COUNT, effect);
         return effect;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void interruptExec(Long logId, String source) {
+        log.info("ExecLogService.interruptExec start logId: {}, source: {}", logId, source);
+        // 获取执行记录
+        ExecLogDO execLog = execLogDAO.selectByIdSource(logId, source);
+        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        // 检查状态
+        if (!ExecStatusEnum.of(execLog.getStatus()).isCloseable()) {
+            return;
+        }
+        // 中断执行
+        IExecTaskHandler task = execTaskManager.getTask(logId);
+        if (task != null) {
+            log.info("ExecLogService.interruptExec interrupted logId: {}", logId);
+            // 中断
+            task.interrupted();
+        } else {
+            log.info("ExecLogService.interruptExec updateStatus start logId: {}", logId);
+            // 不存在则直接修改状态
+            ExecLogDO updateExec = new ExecLogDO();
+            updateExec.setId(logId);
+            updateExec.setStatus(ExecStatusEnum.COMPLETED.name());
+            updateExec.setFinishTime(new Date());
+            int effect = execLogDAO.updateById(updateExec);
+            // 更新主机状态
+            ExecHostLogDO updateHost = new ExecHostLogDO();
+            updateHost.setStatus(ExecHostStatusEnum.INTERRUPTED.name());
+            updateHost.setFinishTime(new Date());
+            LambdaQueryWrapper<ExecHostLogDO> updateHostWrapper = execHostLogDAO.lambda()
+                    .eq(ExecHostLogDO::getLogId, logId)
+                    .in(ExecHostLogDO::getStatus, ExecHostStatusEnum.CLOSEABLE_STATUS);
+            effect += execHostLogDAO.update(updateHost, updateHostWrapper);
+            log.info("ExecLogService.interruptExec updateStatus finish logId: {}, effect: {}", logId, effect);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void interruptHostExec(Long hostLogId, String source) {
+        log.info("ExecLogService.interruptHostExec start hostLogId: {}, source: {}", hostLogId, source);
+        // 获取执行记录
+        ExecHostLogDO hostLog = execHostLogDAO.selectById(hostLogId);
+        Valid.notNull(hostLog, ErrorMessage.DATA_ABSENT);
+        Long logId = hostLog.getLogId();
+        ExecLogDO execLog = execLogDAO.selectByIdSource(logId, source);
+        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.LOG_ID, logId);
+        OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
+        // 检查状态
+        if (!ExecHostStatusEnum.of(hostLog.getStatus()).isCloseable()) {
+            return;
+        }
+        // 中断执行
+        IExecTaskHandler task = execTaskManager.getTask(logId);
+        if (task != null) {
+            log.info("ExecLogService.interruptHostExec interrupted logId: {}, hostLogId: {}", logId, hostLogId);
+            IExecCommandHandler handler = task.getHandlers()
+                    .stream()
+                    .filter(s -> s.getHostId().equals(hostLog.getHostId()))
+                    .findFirst()
+                    .orElse(null);
+            // 中断
+            if (handler != null) {
+                handler.interrupted();
+            }
+        } else {
+            log.info("ExecLogService.interruptHostExec updateStatus start logId: {}, hostLogId: {}", logId, hostLogId);
+            // 不存在则直接修改状态
+            ExecHostLogDO updateHost = new ExecHostLogDO();
+            updateHost.setId(hostLogId);
+            updateHost.setStatus(ExecHostStatusEnum.INTERRUPTED.name());
+            updateHost.setFinishTime(new Date());
+            int effect = execHostLogDAO.updateById(updateHost);
+            // 检查是否可关闭
+            if (ExecStatusEnum.of(execLog.getStatus()).isCloseable()) {
+                // 状态可修改则需要检查其他主机任务是否已经完成
+                Long closeableCount = execHostLogDAO.of()
+                        .createWrapper()
+                        .eq(ExecHostLogDO::getLogId, logId)
+                        .in(ExecHostLogDO::getStatus, ExecHostStatusEnum.CLOSEABLE_STATUS)
+                        .then()
+                        .count();
+                if (closeableCount == 0) {
+                    // 修改任务状态
+                    ExecLogDO updateExec = new ExecLogDO();
+                    updateExec.setId(logId);
+                    updateExec.setStatus(ExecStatusEnum.COMPLETED.name());
+                    updateExec.setFinishTime(new Date());
+                    effect += execLogDAO.updateById(updateExec);
+                }
+            }
+            log.info("ExecLogService.interruptHostExec updateStatus finish logId: {}, hostLogId: {}, effect: {}", logId, hostLogId, effect);
+        }
+    }
+
+    @Override
+    public String getExecLogTailToken(ExecLogTailRequest request) {
+        String source = request.getSource();
+        Long execId = request.getExecId();
+        List<Long> hostExecIdList = request.getHostExecIdList();
+        log.info("ExecLogService.getExecLogTailToken start execId: {}, hostExecIdList: {}", execId, hostExecIdList);
+        // 查询执行日志
+        ExecLogDO execLog = execLogDAO.selectByIdSource(execId, source);
+        Valid.notNull(execLog, ErrorMessage.LOG_ABSENT);
+        // 查询主机日志
+        List<ExecHostLogDO> hostLogs;
+        if (hostExecIdList == null) {
+            hostLogs = execHostLogDAO.selectByLogId(execId);
+        } else {
+            hostLogs = execHostLogDAO.of()
+                    .createWrapper()
+                    .eq(ExecHostLogDO::getLogId, execId)
+                    .in(ExecHostLogDO::getId, hostExecIdList)
+                    .then()
+                    .list();
+        }
+        Valid.notEmpty(hostLogs, ErrorMessage.LOG_ABSENT);
+        // 获取编码集
+        List<Long> hostIdList = hostLogs.stream()
+                .map(ExecHostLogDO::getHostId)
+                .collect(Collectors.toList());
+        Map<Long, HostConfigVO> configMap = hostConfigService.getHostConfigList(hostIdList, HostConfigTypeEnum.SSH.getType())
+                .stream()
+                .collect(Collectors.toMap(HostConfigVO::getId, Function.identity()));
+        // 生成缓存
+        String token = UUIds.random19();
+        String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
+        ExecLogTailDTO cache = ExecLogTailDTO.builder()
+                .token(token)
+                .id(execId)
+                .userId(SecurityUtils.getLoginUserId())
+                .hosts(hostLogs.stream()
+                        .map(s -> ExecHostLogTailDTO.builder()
+                                .id(s.getId())
+                                .hostId(s.getHostId())
+                                .path(s.getLogPath())
+                                .charset(Optional.ofNullable(configMap.get(s.getHostId()))
+                                        .map(HostConfigVO::getConfig)
+                                        .map(c -> c.get(FieldConst.CHARSET))
+                                        .map(Objects1::toString)
+                                        .orElse(Const.UTF_8))
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+        // 设置缓存
+        RedisStrings.setJson(cacheKey, ExecCacheKeyDefine.EXEC_TAIL, cache);
+        log.info("ExecLogService.getExecLogTailToken finish token: {}, execId: {}, hostExecIdList: {}", token, execId, hostExecIdList);
+        return token;
+    }
+
+    @Override
+    public ExecLogTailDTO getExecLogTailInfo(String token) {
+        String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
+        // 获取缓存
+        ExecLogTailDTO tail = RedisStrings.getJson(cacheKey, ExecCacheKeyDefine.EXEC_TAIL);
+        if (tail != null) {
+            // 删除缓存
+            RedisStrings.delete(cacheKey);
+        }
+        return tail;
+    }
+
+    @Override
+    public void downloadLogFile(Long id, String source, HttpServletResponse response) {
+        log.info("ExecLogService.downloadLogFile id: {}, source: {}", id, source);
+        try {
+            // 获取主机执行日志
+            ExecHostLogDO hostLog = execHostLogDAO.selectById(id);
+            Valid.notNull(hostLog, ErrorMessage.LOG_ABSENT);
+            String logPath = hostLog.getLogPath();
+            Valid.notNull(logPath, ErrorMessage.LOG_ABSENT);
+            ExecLogDO execLog = execLogDAO.selectByIdSource(hostLog.getLogId(), source);
+            Valid.notNull(execLog, ErrorMessage.LOG_ABSENT);
+            // 设置日志参数
+            OperatorLogs.add(OperatorLogs.LOG_ID, hostLog.getLogId());
+            OperatorLogs.add(OperatorLogs.HOST_ID, hostLog.getHostId());
+            OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
+            // 获取日志
+            InputStream in = logsFileClient.getContentInputStream(logPath);
+            // 返回
+            Servlets.transfer(response, in, Files1.getFileName(logPath));
+        } catch (Exception e) {
+            log.error("ExecLogService.downloadLogFile error id: {}", id, e);
+            String errorMessage = ErrorMessage.FILE_READ_ERROR;
+            if (e instanceof InvalidArgumentException) {
+                errorMessage = e.getMessage();
+            }
+            // 响应错误信息
+            try {
+                Servlets.transfer(response, Strings.bytes(errorMessage), Const.ERROR_LOG);
+            } catch (Exception ex) {
+                log.error("ExecLogService.downloadLogFile transfer-error id: {}", id, ex);
+            }
+        }
     }
 
     /**
