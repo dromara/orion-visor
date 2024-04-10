@@ -14,6 +14,11 @@ public enum ExecSourceEnum {
      */
     BATCH,
 
+    /**
+     * 计划任务
+     */
+    JOB,
+
     ;
 
 }

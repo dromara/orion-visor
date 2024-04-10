@@ -95,7 +95,7 @@ public class ExecJobController {
     @Operation(summary = "手动触发计划任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:trigger')")
     public HttpWrapper<?> triggerExecJob(@Validated @RequestBody ExecJobTriggerRequest request) {
-        execJobService.triggerExecJob(request);
+        execJobService.manualTriggerExecJob(request.getId());
         return HttpWrapper.ok();
     }
 

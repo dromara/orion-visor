@@ -47,7 +47,7 @@ public class OrionQuartzAutoConfiguration {
      * @param schedulerFactoryBean 调度器工厂
      * @return 调度器
      */
-    @Bean(initMethod = "start")
+    @Bean
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) {
         // 获取 scheduler
         Scheduler scheduler = schedulerFactoryBean.getScheduler();

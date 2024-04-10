@@ -1,6 +1,6 @@
 package com.orion.ops.framework.banner.configuration;
 
-import com.orion.ops.framework.banner.core.BannerApplicationRunner;
+import com.orion.ops.framework.banner.core.runner.BannerApplicationRunner;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;

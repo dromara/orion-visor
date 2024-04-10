@@ -72,6 +72,13 @@ public interface ExecJobService {
     /**
      * 手动触发任务
      *
+     * @param id id
+     */
+    void manualTriggerExecJob(Long id);
+
+    /**
+     * 触发任务
+     *
      * @param request request
      */
     void triggerExecJob(ExecJobTriggerRequest request);

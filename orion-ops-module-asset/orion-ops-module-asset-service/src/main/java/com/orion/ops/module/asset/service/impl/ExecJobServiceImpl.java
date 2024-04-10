@@ -18,7 +18,9 @@ import com.orion.ops.module.asset.entity.domain.ExecJobDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
+import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import com.orion.ops.module.asset.enums.ExecJobStatusEnum;
+import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
@@ -33,6 +35,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,7 +53,7 @@ public class ExecJobServiceImpl implements ExecJobService {
     // TODO 测试 SSH 禁用后是什么样子的
     // TODO 操作日志 菜单
     // TODO 执行日志抽象
-    // TODO 手动执行 测试 quartz
+    // TODO 测试 quartz
 
     // 内置参数         params.put("source", request.getSource());
     //         params.put("sourceId", request.getSourceId());
@@ -230,9 +233,59 @@ public class ExecJobServiceImpl implements ExecJobService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void manualTriggerExecJob(Long id) {
+        log.info("ExecJobService.manualTriggerExecJob start id: {}", id);
+        ExecJobTriggerRequest request = new ExecJobTriggerRequest();
+        request.setId(id);
+        // 设置执行用户
+        Optional.ofNullable(SecurityUtils.getLoginUser())
+                .ifPresent(s -> {
+                    request.setUserId(s.getId());
+                    request.setUsername(s.getUsername());
+                });
+        // 触发任务
+        this.triggerExecJob(request);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void triggerExecJob(ExecJobTriggerRequest request) {
-
-
+        Long id = request.getId();
+        // 查询任务
+        ExecJobDO job = execJobDAO.selectById(id);
+        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
+        // 查询任务主机
+        List<Long> hostIdList = execJobHostService.getHostIdByJobId(id);
+        if (hostIdList.isEmpty()) {
+            log.info("ExecJobService.triggerExecJob host empty id: {}", id);
+            return;
+        }
+        // 获取执行序列
+        Integer execSeq = this.getNextExecSeq(id);
+        // 设置执行参数
+        OperatorLogs.add(OperatorLogs.ID, id);
+        OperatorLogs.add(OperatorLogs.NAME, job.getName());
+        OperatorLogs.add(OperatorLogs.SEQ, execSeq);
+        // 执行命令
+        ExecCommandExecRequest exec = ExecCommandExecRequest.builder()
+                .userId(request.getUserId())
+                .username(request.getUsername())
+                .source(ExecSourceEnum.JOB.name())
+                .sourceId(id)
+                .execSeq(execSeq)
+                .description(job.getName())
+                .timeout(job.getTimeout())
+                .command(job.getCommand())
+                .parameterSchema(job.getParameterSchema())
+                .hostIdList(hostIdList)
+                .build();
+        ExecLogVO execResult = execService.execCommandWithSource(exec);
+        // 更新最近执行的任务id
+        ExecJobDO updateRecent = new ExecJobDO();
+        updateRecent.setId(id);
+        updateRecent.setRecentLogId(execResult.getId());
+        execJobDAO.updateById(updateRecent);
     }
 
     /**

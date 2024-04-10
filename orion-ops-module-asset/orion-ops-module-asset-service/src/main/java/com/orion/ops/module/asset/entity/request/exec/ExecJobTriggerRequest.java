@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobCreateRequest", description = "计划执行任务 手动触发请求对象")
+@Schema(name = "ExecJobTriggerRequest", description = "计划执行任务 手动触发请求对象")
 public class ExecJobTriggerRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,5 +28,11 @@ public class ExecJobTriggerRequest implements Serializable {
     @NotNull
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "执行用户 id")
+    private Long userId;
+
+    @Schema(description = "执行用户名")
+    private String username;
 
 }

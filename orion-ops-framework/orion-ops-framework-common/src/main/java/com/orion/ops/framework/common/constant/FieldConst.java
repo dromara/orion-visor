@@ -45,6 +45,8 @@ public interface FieldConst {
 
     String TOKEN = "token";
 
+    String SEQ = "seq";
+
     String PATH = "path";
 
     String ADDRESS = "address";
