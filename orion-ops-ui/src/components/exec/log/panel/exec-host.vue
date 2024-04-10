@@ -41,14 +41,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandHostLogQueryResponse } from '@/api/exec/exec-command-log';
   import { useDictStore } from '@/store';
   import { execHostStatusKey } from './const';
 
   const props = defineProps<{
     visibleBack: boolean;
     current: number;
-    hosts: Array<ExecHostLogQueryResponse>;
+    hosts: Array<ExecCommandHostLogQueryResponse>;
   }>();
   const emits = defineEmits(['back', 'selected']);
 

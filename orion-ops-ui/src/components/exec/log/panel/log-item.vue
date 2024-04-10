@@ -160,19 +160,19 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandHostLogQueryResponse } from '@/api/exec/exec-command-log';
   import type { ILogAppender } from './const';
   import { ref } from 'vue';
   import { execHostStatus, execHostStatusKey } from './const';
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
-  import { downloadExecLogFile } from '@/api/exec/exec';
+  import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';
   import { downloadFile } from '@/utils/file';
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
   import 'xterm/css/xterm.css';
 
   const props = defineProps<{
-    host: ExecHostLogQueryResponse;
+    host: ExecCommandHostLogQueryResponse;
     appender: ILogAppender
   }>();
 
@@ -204,7 +204,7 @@
 
   // 下载文件
   const downloadLogFile = async (id: number) => {
-    const data = await downloadExecLogFile(id);
+    const data = await downloadExecCommandLogFile(id);
     downloadFile(data);
   };
 

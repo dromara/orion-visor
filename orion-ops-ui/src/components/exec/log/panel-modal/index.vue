@@ -32,7 +32,7 @@
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { nextTick, ref } from 'vue';
-  import { getExecLog } from '@/api/exec/exec-log';
+  import { getExecCommandLog } from '@/api/exec/exec-command-log';
   import ExecLogPanel from '../panel/index.vue';
 
   const { visible, setVisible } = useVisible();
@@ -46,7 +46,7 @@
     setLoading(true);
     try {
       // 获取执行日志
-      const { data } = await getExecLog(id);
+      const { data } = await getExecCommandLog(id);
       // 打开日志
       await nextTick(() => {
         setTimeout(() => {

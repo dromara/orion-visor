@@ -18,14 +18,14 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandHostLogQueryResponse } from '@/api/exec/exec-command-log';
   import type { LogDomRef, ILogAppender } from './const';
   import { nextTick, ref, watch } from 'vue';
   import LogItem from './log-item.vue';
 
   const props = defineProps<{
     current: number;
-    hosts: Array<ExecHostLogQueryResponse>;
+    hosts: Array<ExecCommandHostLogQueryResponse>;
     appender: ILogAppender;
   }>();
 

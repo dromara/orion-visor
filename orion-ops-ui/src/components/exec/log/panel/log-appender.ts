@@ -1,7 +1,7 @@
 import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './const';
 import { AppenderOptions } from './const';
-import type { ExecTailRequest } from '@/api/exec/exec';
-import { getExecLogTailToken } from '@/api/exec/exec';
+import type { ExecCommandLogTailRequest } from '@/api/exec/exec-command-log';
+import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
 import { createWebSocket } from '@/utils';
@@ -21,7 +21,7 @@ export default class LogAppender implements ILogAppender {
 
   private client?: WebSocket;
 
-  private readonly config: ExecTailRequest;
+  private readonly config: ExecCommandLogTailRequest;
 
   private readonly appenderRel: Record<string, LogAppenderConf>;
 
@@ -29,7 +29,7 @@ export default class LogAppender implements ILogAppender {
 
   private readonly fitAllFn: () => {};
 
-  constructor(config: ExecTailRequest) {
+  constructor(config: ExecCommandLogTailRequest) {
     this.current = undefined as unknown as LogAppenderConf;
     this.config = config;
     this.appenderRel = {};
@@ -142,7 +142,7 @@ export default class LogAppender implements ILogAppender {
   // 初始化 client
   async openClient() {
     // 获取 token
-    const { data } = await getExecLogTailToken(this.config);
+    const { data } = await getExecCommandLogTailToken(this.config);
     // 打开会话
     try {
       this.client = await createWebSocket(`${webSocketBaseUrl}/exec/log/${data}`);

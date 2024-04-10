@@ -110,8 +110,8 @@
   import { useDictStore } from '@/store';
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
-  import { downloadExecLogFile } from '@/api/exec/exec';
   import { interruptHostExecCommand } from '@/api/exec/exec-command';
+  import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';
   import { copy } from '@/hooks/copy';
   import { downloadFile } from '@/utils/file';
 
@@ -127,7 +127,7 @@
 
   // 下载文件
   const downloadLogFile = async (id: number) => {
-    const data = await downloadExecLogFile(id);
+    const data = await downloadExecCommandLogFile(id);
     downloadFile(data);
   };
 

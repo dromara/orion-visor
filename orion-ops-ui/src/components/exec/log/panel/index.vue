@@ -23,10 +23,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
   import type { ILogAppender } from './const';
   import { onUnmounted, ref, nextTick, onMounted } from 'vue';
-  import { getExecLogStatus } from '@/api/exec/exec-log';
+  import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
   import { dictKeys, execHostStatus, execStatus } from './const';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
@@ -43,11 +43,11 @@
   const currentHostExecId = ref();
   const statusIntervalId = ref();
   const finishIntervalId = ref();
-  const execLog = ref<ExecLogQueryResponse>();
+  const execLog = ref<ExecCommandLogQueryResponse>();
   const appender = ref<ILogAppender>();
 
   // 打开
-  const open = (record: ExecLogQueryResponse) => {
+  const open = (record: ExecCommandLogQueryResponse) => {
     appender.value = new LogAppender({ execId: record.id });
     execLog.value = record;
     currentHostExecId.value = record.hosts[0].id;
@@ -71,7 +71,7 @@
       return;
     }
     // 加载状态
-    const { data: { logList, hostList } } = await getExecLogStatus([execLog.value.id]);
+    const { data: { logList, hostList } } = await getExecCommandLogStatus([execLog.value.id]);
     if (logList.length) {
       execLog.value.status = logList[0].status;
       execLog.value.startTime = logList[0].startTime;
