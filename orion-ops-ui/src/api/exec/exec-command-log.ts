@@ -4,7 +4,7 @@ import axios from 'axios';
 import qs from 'query-string';
 
 /**
- * 执行记录查询请求
+ * 批量执行日志查询请求
  */
 export interface ExecCommandLogQueryRequest extends Pagination {
   id?: number;
@@ -16,7 +16,7 @@ export interface ExecCommandLogQueryRequest extends Pagination {
 }
 
 /**
- * 执行记录查询响应
+ * 批量执行日志查询响应
  */
 export interface ExecCommandLogQueryResponse extends TableData, ExecCommandLogQueryExtraResponse {
   id: number;
@@ -34,14 +34,14 @@ export interface ExecCommandLogQueryResponse extends TableData, ExecCommandLogQu
 }
 
 /**
- * 执行记录查询响应 拓展
+ * 批量执行日志查询响应 拓展
  */
 export interface ExecCommandLogQueryExtraResponse {
   hosts: Array<ExecCommandHostLogQueryResponse>;
 }
 
 /**
- * 主机执行记录查询响应
+ * 主机批量执行日志查询响应
  */
 export interface ExecCommandHostLogQueryResponse extends TableData {
   id: number;
@@ -59,7 +59,7 @@ export interface ExecCommandHostLogQueryResponse extends TableData {
 }
 
 /**
- * 执行状态查询响应
+ * 批量执行状态查询响应
  */
 export interface ExecCommandLogStatusResponse {
   logList: Array<ExecCommandLogQueryResponse>;
@@ -67,7 +67,7 @@ export interface ExecCommandLogStatusResponse {
 }
 
 /**
- * 中断命令请求
+ * 批量执行日志 tail 请求
  */
 export interface ExecCommandLogTailRequest {
   execId?: number;
@@ -75,21 +75,21 @@ export interface ExecCommandLogTailRequest {
 }
 
 /**
- * 分页查询执行记录
+ * 分页查询批量执行日志
  */
 export function getExecCommandLogPage(request: ExecCommandLogQueryRequest) {
   return axios.post<DataGrid<ExecCommandLogQueryResponse>>('/asset/exec-command-log/query', request);
 }
 
 /**
- * 查询执行记录
+ * 查询批量执行日志
  */
 export function getExecCommandLog(id: number) {
   return axios.get<ExecCommandLogQueryResponse>('/asset/exec-command-log/get', { params: { id } });
 }
 
 /**
- * 查询主机执行记录
+ * 查询主机批量执行日志
  */
 export function getExecCommandHostLogList(logId: number) {
   return axios.get<Array<ExecCommandHostLogQueryResponse>>('/asset/exec-command-log/host-list', { params: { logId } });
@@ -108,21 +108,21 @@ export function getExecCommandLogStatus(idList: Array<number>) {
 }
 
 /**
- * 查询历史执行记录
+ * 查询历史批量执行日志
  */
 export function getExecCommandLogHistory(limit: number) {
   return axios.get<Array<ExecCommandLogQueryResponse>>('/asset/exec-command-log/history', { params: { page: 1, limit } });
 }
 
 /**
- * 删除执行记录
+ * 删除批量执行日志
  */
 export function deleteExecCommandLog(id: number) {
   return axios.delete('/asset/exec-command-log/delete', { params: { id } });
 }
 
 /**
- * 批量删除执行记录
+ * 批量删除批量执行日志
  */
 export function batchDeleteExecCommandLog(idList: Array<number>) {
   return axios.delete('/asset/exec-command-log/batch-delete', {
@@ -134,35 +134,35 @@ export function batchDeleteExecCommandLog(idList: Array<number>) {
 }
 
 /**
- * 删除主机执行记录
+ * 删除主机批量执行日志
  */
 export function deleteExecCommandHostLog(id: number) {
   return axios.delete('/asset/exec-command-log/delete-host', { params: { id } });
 }
 
 /**
- * 查询操作日志数量
+ * 查询批量执行日志数量
  */
 export function getExecCommandLogCount(request: ExecCommandLogQueryRequest) {
   return axios.post<number>('/asset/exec-command-log/query-count', request);
 }
 
 /**
- * 清空操作日志
+ * 清空批量执行日志
  */
 export function clearExecCommandLog(request: ExecCommandLogQueryRequest) {
   return axios.post<number>('/asset/exec-command-log/clear', request);
 }
 
 /**
- * 查看执行日志
+ * 查看批量执行日志
  */
 export function getExecCommandLogTailToken(request: ExecCommandLogTailRequest) {
   return axios.post<string>('/asset/exec-command-log/tail', request);
 }
 
 /**
- * 下载执行日志文件
+ * 下载批量执行日志文件
  */
 export function downloadExecCommandLogFile(id: number) {
   return axios.get('/asset/exec-command-log/download', { unwrap: true, params: { id } });

@@ -13,7 +13,7 @@ const columns = [
     title: '操作模块',
     dataIndex: 'module',
     slotName: 'module',
-    width: 214,
+    width: 234,
   }, {
     title: '风险等级',
     dataIndex: 'riskLevel',

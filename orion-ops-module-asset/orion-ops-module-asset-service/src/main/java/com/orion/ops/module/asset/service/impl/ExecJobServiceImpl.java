@@ -12,10 +12,13 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.job.core.utils.QuartzUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.ExecJobConvert;
+import com.orion.ops.module.asset.convert.HostConvert;
 import com.orion.ops.module.asset.dao.ExecJobDAO;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
+import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecJobDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
+import com.orion.ops.module.asset.entity.domain.HostDO;
 import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
@@ -24,9 +27,9 @@ import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
+import com.orion.ops.module.asset.service.ExecCommandService;
 import com.orion.ops.module.asset.service.ExecJobHostService;
 import com.orion.ops.module.asset.service.ExecJobService;
-import com.orion.ops.module.asset.service.ExecCommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +62,9 @@ public class ExecJobServiceImpl implements ExecJobService {
     private ExecLogDAO execLogDAO;
 
     @Resource
+    private HostDAO hostDAO;
+
+    @Resource
     private ExecJobHostService execJobHostService;
 
     @Resource
@@ -80,7 +86,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         // 查询主机是否有权限
         this.checkHostPermission(request.getHostIdList());
         // 插入任务
-        record.setStatus(ExecJobStatusEnum.ENABLED.getStatus());
+        record.setStatus(ExecJobStatusEnum.DISABLED.getStatus());
         int effect = execJobDAO.insert(record);
         Long id = record.getId();
         // 设置任务主机
@@ -152,6 +158,9 @@ public class ExecJobServiceImpl implements ExecJobService {
         // 查询任务主机
         List<Long> hostIdList = execJobHostService.getHostIdByJobId(id);
         vo.setHostIdList(hostIdList);
+        // 查询主机列表
+        List<HostDO> hostList = hostDAO.selectBatchIds(hostIdList);
+        vo.setHostList(HostConvert.MAPPER.toList(hostList));
         return vo;
     }
 
@@ -175,6 +184,7 @@ public class ExecJobServiceImpl implements ExecJobService {
             List<ExecLogDO> logList = execLogDAO.selectBatchIds(logIdList);
             Map<Long, ExecLogDO> logMap = logList.stream()
                     .collect(Collectors.toMap(ExecLogDO::getId, Function.identity()));
+            // 设置任务状态
             dataGrid.forEach(s -> {
                 Long logId = s.getRecentLogId();
                 if (logId == null) {
@@ -184,8 +194,8 @@ public class ExecJobServiceImpl implements ExecJobService {
                 if (execLog == null) {
                     return;
                 }
-                s.setRecentExecTime(execLog.getStartTime());
-                s.setRecentExecStatus(execLog.getStatus());
+                s.setRecentLogTime(execLog.getStartTime());
+                s.setRecentLogStatus(execLog.getStatus());
             });
         }
         return dataGrid;
@@ -305,8 +315,8 @@ public class ExecJobServiceImpl implements ExecJobService {
     private LambdaQueryWrapper<ExecJobDO> buildQueryWrapper(ExecJobQueryRequest request) {
         return execJobDAO.wrapper()
                 .eq(ExecJobDO::getId, request.getId())
-                .eq(ExecJobDO::getName, request.getName())
-                .eq(ExecJobDO::getCommand, request.getCommand())
+                .like(ExecJobDO::getName, request.getName())
+                .like(ExecJobDO::getCommand, request.getCommand())
                 .eq(ExecJobDO::getStatus, request.getStatus())
                 .orderByDesc(ExecJobDO::getId);
     }

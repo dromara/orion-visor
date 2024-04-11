@@ -44,17 +44,17 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "命令参数")
     private String parameterSchema;
 
-    @Schema(description = "启用状态 0禁用 1启用")
+    @Schema(description = "任务状态")
     private Integer status;
 
     @Schema(description = "最近执行id")
     private Long recentLogId;
 
     @Schema(description = "最近执行状态")
-    private String recentExecStatus;
+    private String recentLogStatus;
 
     @Schema(description = "最近执行时间")
-    private Date recentExecTime;
+    private Date recentLogTime;
 
     @Schema(description = "创建时间")
     private Date createTime;
@@ -64,5 +64,8 @@ public class ExecJobVO implements Serializable {
 
     @Schema(description = "执行主机")
     private List<Long> hostIdList;
+
+    @Schema(description = "执行主机")
+    private List<HostVO> hostList;
 
 }

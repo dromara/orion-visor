@@ -92,7 +92,7 @@ public class ExecJobController {
 
     @OperatorLog(ExecJobOperatorType.TRIGGER)
     @PostMapping("/trigger")
-    @Operation(summary = "手动触发计划任务")
+    @Operation(summary = "手动触发计划执行任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:trigger')")
     public HttpWrapper<?> triggerExecJob(@Validated @RequestBody ExecJobTriggerRequest request) {
         execJobService.manualTriggerExecJob(request.getId());

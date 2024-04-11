@@ -55,7 +55,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          执行记录列表
+          批量执行日志列表
         </div>
       </div>
       <!-- 右侧操作 -->

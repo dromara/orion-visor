@@ -31,7 +31,7 @@ public class ExecJobQueryRequest extends PageRequest {
     @Schema(description = "执行命令")
     private String command;
 
-    @Schema(description = "启用状态 0禁用 1启用")
+    @Schema(description = "任务状态")
     private Integer status;
 
     @Schema(description = "是否查询最近执行任务")

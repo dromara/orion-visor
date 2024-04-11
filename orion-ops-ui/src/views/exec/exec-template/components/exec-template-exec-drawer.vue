@@ -47,6 +47,7 @@
         <!-- 执行命令 -->
         <a-form-item field="command"
                      label="执行命令"
+                     :hide-label="true"
                      :wrapper-col-props="{ span: 24 }"
                      :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
           <exec-editor v-model="formModel.command"

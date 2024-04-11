@@ -10,7 +10,7 @@
                   type="round"
                   :checked-value="1"
                   :unchecked-value="0"
-                  :beforeChange="s => updateStatus(s as number)" />
+                  :before-change="s => updateStatus(s as number)" />
       </div>
     </template>
     <a-spin v-show="config.status" :loading="loading" class="config-form-wrapper">
@@ -223,7 +223,7 @@
   }] as FieldRule[];
 
   // 修改状态
-  const updateStatus = (e: number) => {
+  const updateStatus = async (e: number) => {
     setLoading(true);
     return updateHostConfigStatus({
       hostId: props?.hostId,

@@ -9,6 +9,8 @@ import com.orion.ops.module.asset.entity.vo.HostVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * 主机 内部对象转换器
  *
@@ -32,5 +34,7 @@ public interface HostConvert {
     HostVO to(HostCacheDTO cache);
 
     HostCacheDTO toCache(HostDO domain);
+
+    List<HostVO> toList(List<HostDO> domain);
 
 }

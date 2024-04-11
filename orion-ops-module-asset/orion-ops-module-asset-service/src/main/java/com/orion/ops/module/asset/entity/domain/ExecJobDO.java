@@ -54,7 +54,7 @@ public class ExecJobDO extends BaseDO {
     @TableField("parameter_schema")
     private String parameterSchema;
 
-    @Schema(description = "启用状态 0禁用 1启用")
+    @Schema(description = "任务状态")
     @TableField("status")
     private Integer status;
 

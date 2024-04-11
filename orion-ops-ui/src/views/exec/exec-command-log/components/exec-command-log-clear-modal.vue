@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            body-class="modal-form"
            title-align="start"
-           title="清空执行记录"
+           title="清空批量执行日志"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"

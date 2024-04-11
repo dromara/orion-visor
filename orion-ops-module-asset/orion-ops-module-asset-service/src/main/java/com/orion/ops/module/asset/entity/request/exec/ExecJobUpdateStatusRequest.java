@@ -30,7 +30,7 @@ public class ExecJobUpdateStatusRequest implements Serializable {
     private Long id;
 
     @NotNull
-    @Schema(description = "启用状态 0禁用 1启用")
+    @Schema(description = "任务状态")
     private Integer status;
 
 }

@@ -62,7 +62,7 @@
           }
           suggestions.push({
             label: triggerPrefix + s.name,
-            kind: monaco.languages.CompletionItemKind.Field,
+            kind: monaco.languages.CompletionItemKind.Variable,
             insertText: templatePrefix + s.name + templateSuffix,
             detail: s.desc || '',
             documentation: s.desc || '',

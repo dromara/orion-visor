@@ -29,7 +29,7 @@ public class ExecCommandLogOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(H, DELETE, "删除批量执行日志 <sb>${count}</sb> 条"),
-                new OperatorType(H, DELETE_HOST, "删除批量主机执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE_HOST, "删除批量执行主机日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
                 new OperatorType(H, CLEAR, "清理批量执行日志 <sb>${count}</sb> 条"),
                 new OperatorType(L, DOWNLOAD, "下载主机执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
         };

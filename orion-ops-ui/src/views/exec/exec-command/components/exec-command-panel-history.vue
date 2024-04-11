@@ -17,7 +17,7 @@
     <div v-else-if="!historyLogs.length" class="flex-center mt16">
       <a-empty description="无执行记录" />
     </div>
-    <!-- 执行记录 -->
+    <!-- 批量执行日志 -->
     <div v-else class="exec-history-rows">
       <div v-for="record in historyLogs"
            :key="record.id"
@@ -84,7 +84,7 @@
 
   defineExpose({ add });
 
-  // 加载执行记录
+  // 加载批量执行日志
   const fetchExecHistory = async () => {
     setLoading(true);
     try {
@@ -96,7 +96,7 @@
     }
   };
 
-  // 加载执行记录
+  // 加载批量执行日志
   onMounted(fetchExecHistory);
 
 </script>
