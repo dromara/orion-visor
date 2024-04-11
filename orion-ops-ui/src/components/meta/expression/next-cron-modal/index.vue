@@ -61,7 +61,6 @@
         // 表达式正确
         next.value = data.next;
         setVisible(true);
-
       } else {
         // 表达式错误
         setVisible(false);

@@ -38,9 +38,9 @@ const columns = [
     align: 'center',
     width: 112,
   }, {
-    title: '最近任务状态',
-    dataIndex: 'recentLogStatus',
-    slotName: 'recentLogStatus',
+    title: '最近任务',
+    dataIndex: 'recentLog',
+    slotName: 'recentLog',
     align: 'left',
     width: 184,
   }, {

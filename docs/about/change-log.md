@@ -15,7 +15,7 @@
 * 🔨 优化 orion-ops-framework 配置规范化
 * 🔨 优化 前端 props 命名规范化
 
-[如何升级](/about/update.md?id=_v103)
+[如何升级](/about/update.md?id=_v104)
 
 ## v1.0.3
 

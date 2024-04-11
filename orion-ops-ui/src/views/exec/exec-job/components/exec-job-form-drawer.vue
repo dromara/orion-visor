@@ -249,7 +249,7 @@
 
   .command-editor {
     width: 100%;
-    height: 48vh;
+    height: calc(100vh - 318px);
   }
 
 </style>

@@ -1,70 +1,73 @@
 <template>
   <a-drawer v-model:visible="visible"
-            :title="title"
-            :width="470"
+            title="计划执行任务详情"
+            width="50%"
             :mask-closable="false"
             :unmount-on-close="true"
-            :ok-button-props="{ disabled: loading }"
-            :cancel-button-props="{ disabled: loading }"
-            :on-before-ok="handlerOk"
+            ok-text="关闭"
+            :hide-cancel="true"
             @cancel="handleClose">
-    <a-spin class="full modal-form" :loading="loading">
-      <a-form :model="formModel"
-              ref="formRef"
-              label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }"
-              :rules="formRules">
-        <!-- 任务名称 -->
-        <a-form-item field="name" label="任务名称">
-          <a-input v-model="formModel.name"
-                   placeholder="请输入任务名称"
-                   allow-clear />
-        </a-form-item>
-        <!-- 执行序列 -->
-        <a-form-item field="execSeq" label="执行序列">
-          <a-input-number v-model="formModel.execSeq"
-                          placeholder="请输入执行序列"
-                          hide-button />
-        </a-form-item>
-        <!-- cron 表达式 -->
-        <a-form-item field="expression" label="cron 表达式">
-          <a-input v-model="formModel.expression"
-                   placeholder="请输入cron 表达式"
-                   allow-clear />
-        </a-form-item>
-        <!-- 超时时间 -->
-        <a-form-item field="timeout" label="超时时间">
-          <a-input-number v-model="formModel.timeout"
-                          placeholder="请输入超时时间"
-                          hide-button />
-        </a-form-item>
-        <!-- 执行命令 -->
-        <a-form-item field="command" label="执行命令">
-          <a-input v-model="formModel.command"
-                   placeholder="请输入执行命令"
-                   allow-clear />
-        </a-form-item>
-        <!-- 命令参数 -->
-        <a-form-item field="parameterSchema" label="命令参数">
-          <a-input v-model="formModel.parameterSchema"
-                   placeholder="请输入命令参数"
-                   allow-clear />
-        </a-form-item>
-        <!-- 任务状态 -->
-        <a-form-item field="status" label="任务状态">
-          <a-select v-model="formModel.status"
-                    :options="toOptions(execJobStatusKey)"
-                    placeholder="任务状态" />
-        </a-form-item>
-        <!-- 最近执行id -->
-        <a-form-item field="recentLogId" label="最近执行id">
-          <a-input-number v-model="formModel.recentLogId"
-                          placeholder="请输入最近执行id"
-                          hide-button />
-        </a-form-item>
-      </a-form>
-    </a-spin>
+    <a-descriptions class="detail-container"
+                    size="large"
+                    table-layout="fixed"
+                    :label-style="{ width: '90px' }"
+                    :column="2">
+      <!-- 任务id -->
+      <a-descriptions-item label="任务id">
+        <span class="text-copy"
+              title="复制"
+              @click="copy(record.id+'')">
+          {{ record.id }}
+        </span>
+      </a-descriptions-item>
+      <!-- 任务名称 -->
+      <a-descriptions-item label="任务名称">
+        {{ record.name }}
+      </a-descriptions-item>
+      <!-- cron -->
+      <a-descriptions-item label="cron">
+        <span class="text-copy"
+              title="复制"
+              @click="copy(record.expression)">
+         {{ record.expression }}
+        </span>
+      </a-descriptions-item>
+      <!-- 超时时间 -->
+      <a-descriptions-item label="超时时间">
+        {{ record.timeout }} 秒
+      </a-descriptions-item>
+      <!-- 任务状态 -->
+      <a-descriptions-item label="任务状态">
+        <a-tag :color="getDictValue(execJobStatusKey, record.status, 'color')">
+          {{ getDictValue(execJobStatusKey, record.status) }}
+        </a-tag>
+      </a-descriptions-item>
+      <!-- 修改时间 -->
+      <a-descriptions-item label="修改时间">
+        {{ dateFormat(new Date(record.updateTime)) }}
+      </a-descriptions-item>
+      <!-- 执行主机 -->
+      <a-descriptions-item :span="3">
+        <template #label>
+          <span class="host-label">执行主机</span>
+        </template>
+        <a-space wrap>
+          <a-tag v-for="host in record.hostList"
+                 :key="host.id">
+            {{ host.name }}
+          </a-tag>
+        </a-space>
+      </a-descriptions-item>
+      <!-- 执行命令 -->
+      <a-descriptions-item label="执行命令" :span="3">
+        <editor v-model="record.command"
+                language="shell"
+                theme="vs-dark"
+                container-class="command-editor"
+                :readonly="true"
+                :suggestions="false" />
+      </a-descriptions-item>
+    </a-descriptions>
   </a-drawer>
 </template>
 
@@ -75,92 +78,37 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecJobUpdateRequest } from '@/api/exec/exec-job';
+  import type { ExecJobQueryResponse } from '@/api/exec/exec-job';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from '../types/form.rules';
-  import { execJobStatusKey } from '../types/const';
-  import { createExecJob, updateExecJob } from '@/api/exec/exec-job';
-  import { Message } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
+  import { dateFormat } from '@/utils';
+  import { copy } from '@/hooks/copy';
+  import { getExecJob } from '@/api/exec/exec-job';
+  import { execJobStatusKey } from '@/views/exec/exec-job/types/const';
 
-  const emits = defineEmits(['added', 'updated']);
-
+  const { getDictValue, toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
-  const { toOptions } = useDictStore();
 
-  const title = ref<string>();
-  const isAddHandle = ref<boolean>(true);
-  const formRef = ref<any>();
-  const formModel = ref<ExecJobUpdateRequest>({});
+  const record = ref<ExecJobQueryResponse>({} as ExecJobQueryResponse);
 
-  const defaultForm = (): ExecJobUpdateRequest => {
-    return {
-      id: undefined,
-      name: undefined,
-      execSeq: undefined,
-      expression: undefined,
-      timeout: undefined,
-      command: undefined,
-      parameterSchema: undefined,
-      status: undefined,
-      recentLogId: undefined,
-    };
-  };
-
-  // 打开新增
-  const openAdd = () => {
-    title.value = '添加计划执行';
-    isAddHandle.value = true;
-    renderForm({ ...defaultForm() });
-    setVisible(true);
-  };
-
-  // 打开修改
-  const openUpdate = (record: any) => {
-    title.value = '修改计划执行';
-    isAddHandle.value = false;
-    renderForm({ ...defaultForm(), ...record });
-    setVisible(true);
-  };
-
-  // 渲染表单
-  const renderForm = (record: any) => {
-    formModel.value = Object.assign({}, record);
-  };
-
-  defineExpose({ openAdd, openUpdate });
-
-  // 确定
-  const handlerOk = async () => {
-    setLoading(true);
+  // 打开
+  const open = async (id: any) => {
+    // 查询计划任务
     try {
-      // 验证参数
-      const error = await formRef.value.validate();
-      if (error) {
-        return false;
-      }
-      if (isAddHandle.value) {
-        // 新增
-        await createExecJob(formModel.value);
-        Message.success('创建成功');
-        emits('added');
-      } else {
-        // 修改
-        await updateExecJob(formModel.value);
-        Message.success('修改成功');
-        emits('updated');
-      }
-      // 清空
-      handlerClear();
+      setLoading(true);
+      const { data } = await getExecJob(id);
+      record.value = data;
+      setVisible(true);
     } catch (e) {
-      return false;
     } finally {
       setLoading(false);
     }
   };
+
+  defineExpose({ open });
 
   // 关闭
   const handleClose = () => {
@@ -175,5 +123,20 @@
 </script>
 
 <style lang="less" scoped>
+  .detail-container {
+    padding: 24px;
+  }
 
+  :deep(.arco-descriptions-item-value) {
+    color: var(--color-text-1);
+  }
+
+  .host-label {
+    margin-top: -8px;
+    display: block;
+  }
+
+  .command-editor {
+    height: calc(100vh - 378px);
+  }
 </style>
