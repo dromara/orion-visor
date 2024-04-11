@@ -59,7 +59,7 @@ public class OperatorLogController {
 
     @PostMapping("/query-count")
     @Operation(summary = "查询操作日志数量")
-    @PreAuthorize("@ss.hasPermission('infra:operator-log:clear')")
+    @PreAuthorize("@ss.hasPermission('infra:operator-log:management:clear')")
     public Long getOperatorLogCount(@RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.getOperatorLogCount(request);
     }
@@ -67,7 +67,7 @@ public class OperatorLogController {
     @OperatorLog(OperatorLogOperatorType.CLEAR)
     @PostMapping("/clear")
     @Operation(summary = "清空操作日志")
-    @PreAuthorize("@ss.hasPermission('infra:operator-log:clear')")
+    @PreAuthorize("@ss.hasPermission('infra:operator-log:management:clear')")
     public Integer clearOperatorLog(@RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.clearOperatorLog(request);
     }

@@ -62,7 +62,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 执行命令 -->
-          <a-button v-permission="['asset:exec:exec-command']"
+          <a-button v-permission="['asset:exec-command:exec']"
                     type="primary"
                     @click="$router.push({ name: 'execCommand' })">
             执行命令
@@ -71,7 +71,7 @@
             </template>
           </a-button>
           <!-- 清空 -->
-          <a-button v-permission="['infra:exec-log:clear']"
+          <a-button v-permission="['asset:exec-command-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -84,7 +84,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
-            <a-button v-permission="['asset:exec-log:delete']"
+            <a-button v-permission="['asset:exec-command-log:delete']"
                       type="secondary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -110,12 +110,13 @@
              :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
-             @expand="loadHostExecData">
+             @expand="loadExecHost">
       <!-- 展开表格 -->
       <template #expand-row="{ record }">
         <exec-command-host-log-table :row="record"
                                      @view-command="s => emits('viewCommand', s)"
-                                     @view-params="s => emits('viewParams', s)" />
+                                     @view-params="s => emits('viewParams', s)"
+                                     @refresh-host="refreshExecHost" />
       </template>
       <!-- 执行命令 -->
       <template #command="{ record }">
@@ -147,7 +148,7 @@
                         position="left"
                         type="warning"
                         @ok="doReExecCommand(record)">
-            <a-button v-permission="['asset:exec:exec-command']"
+            <a-button v-permission="['asset:exec-command:exec']"
                       type="text"
                       size="mini">
               重新执行
@@ -160,7 +161,7 @@
             命令
           </a-button>
           <!-- 日志 -->
-          <a-button v-permission="['asset:exec:exec-command']"
+          <a-button v-permission="['asset:exec-command:exec']"
                     type="text"
                     size="mini"
                     title="ctrl + 左键新页面打开"
@@ -172,7 +173,7 @@
                         position="left"
                         type="warning"
                         @ok="doInterruptExecCommand(record)">
-            <a-button v-permission="['asset:exec:interrupt-exec']"
+            <a-button v-permission="['asset:exec-command:interrupt']"
                       type="text"
                       size="mini"
                       status="danger"
@@ -185,7 +186,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:exec-log:delete']"
+            <a-button v-permission="['asset:exec-command-log:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -317,9 +318,22 @@
     }
   };
 
+  // 刷新执行主机
+  const refreshExecHost = (id: number) => {
+    // 获取到执行主机
+    const exec = tableRenderData.value.find(s => s.id === id);
+    if (!exec) {
+      return;
+    }
+    // 加载数据
+    getExecCommandHostLogList(id).then(s => {
+      exec.hosts = s.data;
+    });
+  };
+
   // 加载主机数据
-  const loadHostExecData = async (key: number | string, record: TableData) => {
-    if (record.hosts) {
+  const loadExecHost = async (key: number | string, record: TableData) => {
+    if (record.hosts?.length) {
       return;
     }
     // 加载数据

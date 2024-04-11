@@ -18,7 +18,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 清空 -->
-          <a-button v-permission="['infra:operator-log:clear']"
+          <a-button v-permission="['infra:operator-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空

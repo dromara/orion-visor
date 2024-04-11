@@ -69,7 +69,7 @@
                       position="left"
                       type="warning"
                       @ok="interruptedHost(record)">
-          <a-button v-permission="['asset:exec:interrupt-exec']"
+          <a-button v-permission="['asset:exec-command:interrupt']"
                     type="text"
                     size="mini"
                     status="danger"
@@ -82,7 +82,7 @@
                       position="left"
                       type="warning"
                       @ok="deleteRow(record)">
-          <a-button v-permission="['asset:exec-log:delete']"
+          <a-button v-permission="['asset:exec-command-log:delete']"
                     type="text"
                     size="mini"
                     status="danger">
@@ -119,7 +119,7 @@
     row: ExecCommandLogQueryResponse;
   }>();
 
-  const emits = defineEmits(['viewCommand', 'viewParams']);
+  const emits = defineEmits(['viewCommand', 'viewParams', 'refreshHost']);
 
   const expandable = useExpandable({ width: 90 });
   const { loading, setLoading } = useLoading();
@@ -148,14 +148,16 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
+  const deleteRow = async ({ id, logId }: {
+    id: number,
+    logId: number
   }) => {
     try {
       setLoading(true);
       // 调用删除接口
       await deleteExecCommandHostLog(id);
       Message.success('删除成功');
+      emits('refreshHost', logId);
     } catch (e) {
     } finally {
       setLoading(false);
