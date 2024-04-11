@@ -7,7 +7,7 @@ import lombok.*;
 import javax.validation.constraints.Size;
 
 /**
- * 计划执行任务 查询请求对象
+ * 计划任务 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "ExecJobQueryRequest", description = "计划执行任务 查询请求对象")
+@Schema(name = "ExecJobQueryRequest", description = "计划任务 查询请求对象")
 public class ExecJobQueryRequest extends PageRequest {
 
     @Schema(description = "id")

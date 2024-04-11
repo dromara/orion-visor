@@ -1,9 +1,9 @@
-### 查询计划执行任务日志
+### 查询计划任务日志
 GET {{baseUrl}}/asset/exec-job-log/get?id=1
 Authorization: {{token}}
 
 
-### 分页查询计划执行任务日志
+### 分页查询计划任务日志
 POST {{baseUrl}}/asset/exec-job-log/query
 Content-Type: application/json
 Authorization: {{token}}
@@ -20,12 +20,12 @@ Authorization: {{token}}
 }
 
 
-### 删除计划执行任务日志
+### 删除计划任务日志
 DELETE {{baseUrl}}/asset/exec-job-log/delete?id=1
 Authorization: {{token}}
 
 
-### 批量删除计划执行任务日志
+### 批量删除计划任务日志
 DELETE {{baseUrl}}/asset/exec-job-log/batch-delete?idList=1,2,3
 Authorization: {{token}}
 

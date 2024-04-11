@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 计划执行任务 手动触发请求对象
+ * 计划任务 手动触发请求对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobTriggerRequest", description = "计划执行任务 手动触发请求对象")
+@Schema(name = "ExecJobTriggerRequest", description = "计划任务 手动触发请求对象")
 public class ExecJobTriggerRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;

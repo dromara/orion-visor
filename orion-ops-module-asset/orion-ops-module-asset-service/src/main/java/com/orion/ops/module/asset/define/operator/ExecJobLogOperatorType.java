@@ -8,7 +8,7 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.L;
 
 /**
- * 计划执行日志 操作记录类型
+ * 计划任务执行日志 操作记录类型
  *
  * @author Jiahang Li
  * @version 1.0.1
@@ -28,10 +28,10 @@ public class ExecJobLogOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(H, DELETE, "删除计划执行日志 <sb>${count}</sb> 条"),
-                new OperatorType(H, DELETE_HOST, "删除计划执行主机日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
-                new OperatorType(H, CLEAR, "清理计划执行日志 <sb>${count}</sb> 条"),
-                new OperatorType(L, DOWNLOAD, "下载主机执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE, "删除计划任务执行日志 <sb>${count}</sb> 条"),
+                new OperatorType(H, DELETE_HOST, "删除计划任务执行主机日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
+                new OperatorType(H, CLEAR, "清理计划任务执行日志 <sb>${count}</sb> 条"),
+                new OperatorType(L, DOWNLOAD, "下载计划任务执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
         };
     }
 

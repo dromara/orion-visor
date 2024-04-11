@@ -7,7 +7,7 @@ import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
- * 计划执行任务 操作日志类型
+ * 计划任务 操作日志类型
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -29,11 +29,11 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CREATE, "创建计划执行任务 <sb>${name}</sb>"),
-                new OperatorType(M, UPDATE, "更新计划执行任务 <sb>${before}</sb>"),
-                new OperatorType(M, UPDATE_STATUS, "<sb>${statusName}</sb>计划执行任务 <sb>${name}</sb>"),
-                new OperatorType(M, TRIGGER, "手动触发计划执行任务 <sb>${name}</sb>"),
-                new OperatorType(H, DELETE, "删除计划执行任务 <sb>${name}</sb>"),
+                new OperatorType(L, CREATE, "创建计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE, "更新计划任务 <sb>${before}</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "<sb>${statusName}</sb>计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, TRIGGER, "手动触发计划任务 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除计划任务 <sb>${name}</sb>"),
         };
     }
 

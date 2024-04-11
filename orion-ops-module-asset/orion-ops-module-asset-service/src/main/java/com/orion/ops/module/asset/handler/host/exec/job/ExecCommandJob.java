@@ -11,7 +11,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 /**
- * 计划执行命令任务
+ * 计划命令任务
  *
  * @author Jiahang Li
  * @version 1.0.0

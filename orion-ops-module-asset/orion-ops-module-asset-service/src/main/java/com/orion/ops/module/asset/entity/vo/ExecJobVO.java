@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 计划执行任务 视图响应对象
+ * 计划任务 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobVO", description = "计划执行任务 视图响应对象")
+@Schema(name = "ExecJobVO", description = "计划任务 视图响应对象")
 public class ExecJobVO implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
- * 计划执行任务主机 实体对象
+ * 计划任务主机 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -21,7 +21,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "exec_job_host", autoResultMap = true)
-@Schema(name = "ExecJobHostDO", description = "计划执行任务主机 实体对象")
+@Schema(name = "ExecJobHostDO", description = "计划任务主机 实体对象")
 public class ExecJobHostDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;

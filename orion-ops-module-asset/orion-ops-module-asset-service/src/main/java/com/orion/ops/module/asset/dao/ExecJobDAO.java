@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * 计划执行任务 Mapper 接口
+ * 计划任务 Mapper 接口
  *
  * @author Jiahang Li
  * @version 1.0.3

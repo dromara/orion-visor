@@ -43,7 +43,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 计划执行任务 服务实现类
+ * 计划任务 服务实现类
  *
  * @author Jiahang Li
  * @version 1.0.3

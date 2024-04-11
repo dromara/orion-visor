@@ -5,7 +5,7 @@ import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 
 /**
- * 计划执行任务 服务类
+ * 计划任务 服务类
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -14,7 +14,7 @@ import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 public interface ExecJobService {
 
     /**
-     * 创建计划执行任务
+     * 创建计划任务
      *
      * @param request request
      * @return id
@@ -22,7 +22,7 @@ public interface ExecJobService {
     Long createExecJob(ExecJobCreateRequest request);
 
     /**
-     * 更新计划执行任务
+     * 更新计划任务
      *
      * @param request request
      * @return effect
@@ -30,7 +30,7 @@ public interface ExecJobService {
     Integer updateExecJobById(ExecJobUpdateRequest request);
 
     /**
-     * 更新计划执行任务状态
+     * 更新计划任务状态
      *
      * @param request request
      * @return effect
@@ -38,7 +38,7 @@ public interface ExecJobService {
     Integer updateExecJobStatus(ExecJobUpdateStatusRequest request);
 
     /**
-     * 查询计划执行任务
+     * 查询计划任务
      *
      * @param id id
      * @return row
@@ -46,7 +46,7 @@ public interface ExecJobService {
     ExecJobVO getExecJobById(Long id);
 
     /**
-     * 分页查询计划执行任务
+     * 分页查询计划任务
      *
      * @param request request
      * @return rows
@@ -62,7 +62,7 @@ public interface ExecJobService {
     Integer getNextExecSeq(Long id);
 
     /**
-     * 删除计划执行任务
+     * 删除计划任务
      *
      * @param id id
      * @return effect

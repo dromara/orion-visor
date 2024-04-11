@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
- * 计划执行任务 api
+ * 计划任务 api
  *
  * @author Jiahang Li
  * @version 1.0.3
  * @since 2024-3-28 12:03
  */
-@Tag(name = "asset - 计划执行任务服务")
+@Tag(name = "asset - 计划任务服务")
 @Slf4j
 @Validated
 @RestWrapper
@@ -42,7 +42,7 @@ public class ExecJobController {
 
     @OperatorLog(ExecJobOperatorType.CREATE)
     @PostMapping("/create")
-    @Operation(summary = "创建计划执行任务")
+    @Operation(summary = "创建计划任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:create')")
     public Long createExecJob(@Validated @RequestBody ExecJobCreateRequest request) {
         return execJobService.createExecJob(request);
@@ -50,7 +50,7 @@ public class ExecJobController {
 
     @OperatorLog(ExecJobOperatorType.UPDATE)
     @PutMapping("/update")
-    @Operation(summary = "更新计划执行任务")
+    @Operation(summary = "更新计划任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:update')")
     public Integer updateExecJob(@Validated @RequestBody ExecJobUpdateRequest request) {
         return execJobService.updateExecJobById(request);
@@ -58,7 +58,7 @@ public class ExecJobController {
 
     @OperatorLog(ExecJobOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
-    @Operation(summary = "更新计划执行任务状态")
+    @Operation(summary = "更新计划任务状态")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:update-status')")
     public Integer updateExecJobStatus(@Validated @RequestBody ExecJobUpdateStatusRequest request) {
         return execJobService.updateExecJobStatus(request);
@@ -66,7 +66,7 @@ public class ExecJobController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
-    @Operation(summary = "查询计划执行任务")
+    @Operation(summary = "查询计划任务")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
     public ExecJobVO getExecJob(@RequestParam("id") Long id) {
@@ -75,7 +75,7 @@ public class ExecJobController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
-    @Operation(summary = "分页查询计划执行任务")
+    @Operation(summary = "分页查询计划任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
     public DataGrid<ExecJobVO> getExecJobPage(@Validated(Page.class) @RequestBody ExecJobQueryRequest request) {
         return execJobService.getExecJobPage(request);
@@ -83,7 +83,7 @@ public class ExecJobController {
 
     @OperatorLog(ExecJobOperatorType.DELETE)
     @DeleteMapping("/delete")
-    @Operation(summary = "删除计划执行任务")
+    @Operation(summary = "删除计划任务")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:exec-job:delete')")
     public Integer deleteExecJob(@RequestParam("id") Long id) {
@@ -92,7 +92,7 @@ public class ExecJobController {
 
     @OperatorLog(ExecJobOperatorType.TRIGGER)
     @PostMapping("/trigger")
-    @Operation(summary = "手动触发计划执行任务")
+    @Operation(summary = "手动触发计划任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:trigger')")
     public HttpWrapper<?> triggerExecJob(@Validated @RequestBody ExecJobTriggerRequest request) {
         execJobService.manualTriggerExecJob(request.getId());

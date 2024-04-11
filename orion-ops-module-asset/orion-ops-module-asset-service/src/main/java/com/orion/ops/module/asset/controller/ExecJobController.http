@@ -1,4 +1,4 @@
-### 创建计划执行任务
+### 创建计划任务
 POST {{baseUrl}}/asset/exec-job/create
 Content-Type: application/json
 Authorization: {{token}}
@@ -13,7 +13,7 @@ Authorization: {{token}}
 }
 
 
-### 更新计划执行任务
+### 更新计划任务
 PUT {{baseUrl}}/asset/exec-job/update
 Content-Type: application/json
 Authorization: {{token}}
@@ -31,7 +31,7 @@ Authorization: {{token}}
 }
 
 
-### 更新计划执行任务状态
+### 更新计划任务状态
 PUT {{baseUrl}}/asset/exec-job/update-status
 Content-Type: application/json
 Authorization: {{token}}
@@ -42,12 +42,12 @@ Authorization: {{token}}
 }
 
 
-### 查询计划执行任务
+### 查询计划任务
 GET {{baseUrl}}/asset/exec-job/get?id=1
 Authorization: {{token}}
 
 
-### 分页查询计划执行任务
+### 分页查询计划任务
 POST {{baseUrl}}/asset/exec-job/query
 Content-Type: application/json
 Authorization: {{token}}
@@ -62,7 +62,7 @@ Authorization: {{token}}
 }
 
 
-### 删除计划执行任务
+### 删除计划任务
 DELETE {{baseUrl}}/asset/exec-job/delete?id=1
 Authorization: {{token}}
 

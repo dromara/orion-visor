@@ -28,13 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 计划执行任务日志 api
+ * 计划任务日志 api
  *
  * @author Jiahang Li
  * @version 1.0.1
  * @since 2024-3-11 11:31
  */
-@Tag(name = "asset - 计划执行任务日志服务")
+@Tag(name = "asset - 计划任务日志服务")
 @Slf4j
 @Validated
 @RestWrapper
@@ -53,7 +53,7 @@ public class ExecJobLogController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
-    @Operation(summary = "分页查询计划执行任务日志")
+    @Operation(summary = "分页查询计划任务日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public DataGrid<ExecLogVO> getExecJobLogPage(@Validated(Page.class) @RequestBody ExecLogQueryRequest request) {
         request.setSource(SOURCE);
@@ -62,7 +62,7 @@ public class ExecJobLogController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
-    @Operation(summary = "查询计划执行任务日志")
+    @Operation(summary = "查询计划任务日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public ExecLogVO getExecJobLog(@RequestParam("id") Long id) {
         return execLogService.getExecLog(id, SOURCE);
@@ -87,7 +87,7 @@ public class ExecJobLogController {
 
     @OperatorLog(ExecJobLogOperatorType.DELETE)
     @DeleteMapping("/delete")
-    @Operation(summary = "删除计划执行任务日志")
+    @Operation(summary = "删除计划任务日志")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:delete')")
     public Integer deleteExecJobLog(@RequestParam("id") Long id) {
@@ -96,7 +96,7 @@ public class ExecJobLogController {
 
     @OperatorLog(ExecJobLogOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
-    @Operation(summary = "删除计划执行任务日志")
+    @Operation(summary = "删除计划任务日志")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:delete')")
     public Integer batchDeleteExecJobLog(@RequestParam("idList") List<Long> idList) {
@@ -113,7 +113,7 @@ public class ExecJobLogController {
     }
 
     @PostMapping("/query-count")
-    @Operation(summary = "查询计划执行任务日志数量")
+    @Operation(summary = "查询计划任务日志数量")
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:management:clear')")
     public Long getExecJobLogCount(@RequestBody ExecLogQueryRequest request) {
         request.setSource(SOURCE);
@@ -122,7 +122,7 @@ public class ExecJobLogController {
 
     @OperatorLog(ExecJobLogOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空计划执行任务日志")
+    @Operation(summary = "清空计划任务日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:management:clear')")
     public Integer clearExecJobLog(@RequestBody ExecLogQueryRequest request) {
         request.setSource(SOURCE);
@@ -130,8 +130,8 @@ public class ExecJobLogController {
     }
 
     @PostMapping("/tail")
-    @Operation(summary = "查看计划执行任务日志")
-    @PreAuthorize("@ss.hasAnyPermission('asset:exec-job-log:query', 'asset:exec-job:exec')")
+    @Operation(summary = "查看计划任务日志")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public String getExecJobLogTailToken(@Validated @RequestBody ExecLogTailRequest request) {
         request.setSource(SOURCE);
         return execLogService.getExecLogTailToken(request);
@@ -139,8 +139,8 @@ public class ExecJobLogController {
 
     @OperatorLog(ExecJobLogOperatorType.DOWNLOAD)
     @GetMapping("/download")
-    @Operation(summary = "下载计划执行任务日志")
-    @PreAuthorize("@ss.hasAnyPermission('asset:exec-job-log:query', 'asset:exec-job:exec')")
+    @Operation(summary = "下载计划任务日志")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public void downloadExecJobLogFile(@RequestParam("id") Long id, HttpServletResponse response) {
         execLogService.downloadLogFile(id, SOURCE, response);
     }

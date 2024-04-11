@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * 计划执行任务 内部对象转换器
+ * 计划任务 内部对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.3

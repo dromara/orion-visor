@@ -217,7 +217,7 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-deleteHostRelByIdAsync id: {}", id);
         // 删除主机配置
         hostConfigDAO.deleteByHostId(id);
-        // 删除计划执行任务主机
+        // 删除计划任务主机
         execJobHostService.deleteByHostId(id);
         // 删除分组
         dataGroupRelApi.deleteByRelId(DataGroupTypeEnum.HOST, id);

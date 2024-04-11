@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 计划执行任务主机 视图响应对象
+ * 计划任务主机 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -20,7 +20,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobHostVO", description = "计划执行任务主机 视图响应对象")
+@Schema(name = "ExecJobHostVO", description = "计划任务主机 视图响应对象")
 public class ExecJobHostVO implements Serializable {
 
     private static final long serialVersionUID = 1L;

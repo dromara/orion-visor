@@ -3,7 +3,7 @@ import type { TemplateParam } from '@/components/view/exec-editor/const';
 // cron 下次执行次数
 export const CronNextTimes = 5;
 
-// 计划执行状态
+// 计划任务状态
 export const ExecJobStatus = {
   // 禁用
   DISABLED: 0,
@@ -22,7 +22,7 @@ export const jobBuiltinsParams: Array<TemplateParam> = [
   },
 ];
 
-// 计划执行状态 字典项
+// 计划任务状态 字典项
 export const execJobStatusKey = 'execJobStatus';
 
 // 执行状态 字典项

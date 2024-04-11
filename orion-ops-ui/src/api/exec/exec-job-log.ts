@@ -4,7 +4,7 @@ import axios from 'axios';
 import qs from 'query-string';
 
 /**
- * 计划执行日志查询请求
+ * 计划任务日志查询请求
  */
 export interface ExecJobLogQueryRequest extends Pagination {
   id?: number;
@@ -16,7 +16,7 @@ export interface ExecJobLogQueryRequest extends Pagination {
 }
 
 /**
- * 计划执行日志查询响应
+ * 计划任务日志查询响应
  */
 export interface ExecJobLogQueryResponse extends TableData, ExecJobLogQueryExtraResponse {
   id: number;
@@ -34,14 +34,14 @@ export interface ExecJobLogQueryResponse extends TableData, ExecJobLogQueryExtra
 }
 
 /**
- * 计划执行日志查询响应 拓展
+ * 计划任务日志查询响应 拓展
  */
 export interface ExecJobLogQueryExtraResponse {
   hosts: Array<ExecJobHostLogQueryResponse>;
 }
 
 /**
- * 主机计划执行日志查询响应
+ * 主机计划任务日志查询响应
  */
 export interface ExecJobHostLogQueryResponse extends TableData {
   id: number;
@@ -59,7 +59,7 @@ export interface ExecJobHostLogQueryResponse extends TableData {
 }
 
 /**
- * 计划执行状态查询响应
+ * 计划任务状态查询响应
  */
 export interface ExecJobLogStatusResponse {
   logList: Array<ExecJobLogQueryResponse>;
@@ -67,7 +67,7 @@ export interface ExecJobLogStatusResponse {
 }
 
 /**
- * 计划执行日志 tail 请求
+ * 计划任务日志 tail 请求
  */
 export interface ExecJobLogTailRequest {
   execId?: number;
@@ -75,21 +75,21 @@ export interface ExecJobLogTailRequest {
 }
 
 /**
- * 分页查询计划执行日志
+ * 分页查询计划任务日志
  */
 export function getExecJobLogPage(request: ExecJobLogQueryRequest) {
   return axios.post<DataGrid<ExecJobLogQueryResponse>>('/asset/exec-job-log/query', request);
 }
 
 /**
- * 查询计划执行日志
+ * 查询计划任务日志
  */
 export function getExecJobLog(id: number) {
   return axios.get<ExecJobLogQueryResponse>('/asset/exec-job-log/get', { params: { id } });
 }
 
 /**
- * 查询主机计划执行日志
+ * 查询主机计划任务日志
  */
 export function getExecJobHostLogList(logId: number) {
   return axios.get<Array<ExecJobHostLogQueryResponse>>('/asset/exec-job-log/host-list', { params: { logId } });
@@ -108,14 +108,14 @@ export function getExecJobLogStatus(idList: Array<number>) {
 }
 
 /**
- * 删除计划执行日志
+ * 删除计划任务日志
  */
 export function deleteExecJobLog(id: number) {
   return axios.delete('/asset/exec-job-log/delete', { params: { id } });
 }
 
 /**
- * 批量删除计划执行日志
+ * 批量删除计划任务日志
  */
 export function batchDeleteExecJobLog(idList: Array<number>) {
   return axios.delete('/asset/exec-job-log/batch-delete', {
@@ -127,35 +127,35 @@ export function batchDeleteExecJobLog(idList: Array<number>) {
 }
 
 /**
- * 删除主机计划执行日志
+ * 删除主机计划任务日志
  */
 export function deleteExecJobHostLog(id: number) {
   return axios.delete('/asset/exec-job-log/delete-host', { params: { id } });
 }
 
 /**
- * 查询计划执行日志数量
+ * 查询计划任务日志数量
  */
 export function getExecJobLogCount(request: ExecJobLogQueryRequest) {
   return axios.post<number>('/asset/exec-job-log/query-count', request);
 }
 
 /**
- * 清空计划执行日志
+ * 清空计划任务日志
  */
 export function clearExecJobLog(request: ExecJobLogQueryRequest) {
   return axios.post<number>('/asset/exec-job-log/clear', request);
 }
 
 /**
- * 查看计划执行日志
+ * 查看计划任务日志
  */
 export function getExecJobLogTailToken(request: ExecJobLogTailRequest) {
   return axios.post<string>('/asset/exec-job-log/tail', request);
 }
 
 /**
- * 下载计划执行日志文件
+ * 下载计划任务日志文件
  */
 export function downloadExecJobLogFile(id: number) {
   return axios.get('/asset/exec-job-log/download', { unwrap: true, params: { id } });

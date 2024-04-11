@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 计划执行任务 更新请求对象
+ * 计划任务 更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -24,7 +24,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobUpdateRequest", description = "计划执行任务 更新请求对象")
+@Schema(name = "ExecJobUpdateRequest", description = "计划任务 更新请求对象")
 public class ExecJobUpdateRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;

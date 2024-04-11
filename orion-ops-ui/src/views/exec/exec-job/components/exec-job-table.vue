@@ -41,7 +41,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          计划执行列表
+          计划任务列表
         </div>
       </div>
       <!-- 右侧操作 -->

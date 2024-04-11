@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 计划执行任务主机 服务实现类
+ * 计划任务主机 服务实现类
  *
  * @author Jiahang Li
  * @version 1.0.3
