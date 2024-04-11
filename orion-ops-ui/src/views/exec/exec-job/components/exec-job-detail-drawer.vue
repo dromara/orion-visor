@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
-            title="计划执行任务详情"
-            width="50%"
+            title="计划任务详情"
+            width="60%"
             :mask-closable="false"
             :unmount-on-close="true"
             ok-text="关闭"
@@ -124,7 +124,7 @@
 
 <style lang="less" scoped>
   .detail-container {
-    padding: 24px;
+    padding: 24px 8px 24px 24px;
   }
 
   :deep(.arco-descriptions-item-value) {

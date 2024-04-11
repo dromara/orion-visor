@@ -221,6 +221,8 @@
       setLoading(true);
       await refreshCache();
       Message.success('刷新成功 页面缓存刷新后生效');
+      // 加载字典数据
+      fetchTableData();
     } catch (e) {
     } finally {
       setLoading(false);

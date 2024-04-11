@@ -296,6 +296,8 @@
       setFetchLoading(true);
       await refreshCache();
       Message.success('刷新成功 页面缓存刷新后生效');
+      // 加载菜单数据
+      await loadMenuData(true);
     } catch (e) {
     } finally {
       setFetchLoading(false);

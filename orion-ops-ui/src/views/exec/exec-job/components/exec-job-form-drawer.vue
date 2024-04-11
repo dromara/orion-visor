@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            width="70%"
+            width="60%"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -11,7 +11,8 @@
     <a-spin class="full spin-wrapper" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              layout="vertical"
+              label-align="left"
+              :auto-label-width="true"
               :rules="formRules">
         <a-row :gutter="16">
           <!-- 任务名称 -->
@@ -74,7 +75,7 @@
                          :wrapper-col-props="{ span: 24 }"
                          :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
               <exec-editor v-model="formModel.command"
-                           containerClass="command-editor"
+                           container-class="command-editor"
                            theme="vs-dark"
                            :parameter="jobBuiltinsParams" />
             </a-form-item>
@@ -128,7 +129,7 @@
 
   // 打开新增
   const openAdd = () => {
-    title.value = '添加计划执行';
+    title.value = '添加计划任务';
     isAddHandle.value = true;
     renderForm({ ...defaultForm() });
     setVisible(true);
@@ -136,7 +137,7 @@
 
   // 打开修改
   const openUpdate = async (id: any) => {
-    title.value = '修改计划执行';
+    title.value = '修改计划任务';
     isAddHandle.value = false;
     renderForm({});
     setVisible(true);
@@ -229,6 +230,7 @@
     width: 100%;
     height: 32px;
     padding: 0 8px;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -249,7 +251,7 @@
 
   .command-editor {
     width: 100%;
-    height: calc(100vh - 318px);
+    height: calc(100vh - 264px);
   }
 
 </style>

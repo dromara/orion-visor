@@ -259,10 +259,15 @@
   .exec-form-container {
     .selected-host {
       width: 100%;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 2px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: var(--color-text-2);
+      background: var(--color-fill-2);
+      transition: all 0.3s;
 
       &-count {
         font-size: 16px;
@@ -270,13 +275,17 @@
         display: inline-block;
         margin: 0 6px;
       }
+
+      &:hover {
+        background: var(--color-fill-3);
+      }
     }
   }
 
   :deep(.panel-header) {
     width: 100%;
     height: 28px;
-    margin-bottom: 4px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;

@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="执行命令"
-            :width="470"
+            width="60%"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -12,49 +12,61 @@
       <!-- 命令表单 -->
       <a-form :model="formModel"
               ref="formRef"
+              label-align="left"
+              :auto-label-width="true"
               :rules="formRules">
-        <!-- 执行主机 -->
-        <a-form-item field="hostIdList" label="执行主机">
-          <div class="selected-host">
-            <!-- 已选择数量 -->
-            <span class="usn" v-if="formModel.hostIdList?.length">
-              已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
-            </span>
-            <span class="usn pointer span-blue" @click="openSelectHost">
-              {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
-            </span>
-          </div>
-        </a-form-item>
-        <!-- 执行描述 -->
-        <a-form-item field="description" label="执行描述">
-          <a-input v-model="formModel.description"
-                   placeholder="请输入执行描述"
-                   allow-clear />
-        </a-form-item>
-        <!-- 超时时间 -->
-        <a-form-item field="timeout"
-                     label="超时时间">
-          <a-input-number v-model="formModel.timeout"
-                          placeholder="为0则不超时"
-                          :min="0"
-                          :max="100000"
-                          hide-button>
-            <template #suffix>
-              秒
-            </template>
-          </a-input-number>
-        </a-form-item>
-        <!-- 执行命令 -->
-        <a-form-item field="command"
-                     label="执行命令"
-                     :hide-label="true"
-                     :wrapper-col-props="{ span: 24 }"
-                     :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
-          <exec-editor v-model="formModel.command"
-                       containerClass="command-editor"
-                       theme="vs-dark"
-                       :parameter="parameterSchema" />
-        </a-form-item>
+        <a-row :gutter="16">
+          <!-- 执行描述 -->
+          <a-col :span="10">
+            <a-form-item field="description" label="执行描述">
+              <a-input v-model="formModel.description"
+                       placeholder="请输入执行描述"
+                       allow-clear />
+            </a-form-item>
+          </a-col>
+          <!-- 执行主机 -->
+          <a-col :span="7">
+            <a-form-item field="hostIdList" label="执行主机">
+              <div class="selected-host">
+                <!-- 已选择数量 -->
+                <span class="usn" v-if="formModel.hostIdList?.length">
+                  已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
+                </span>
+                <span class="usn pointer span-blue" @click="openSelectHost">
+                  {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
+                </span>
+              </div>
+            </a-form-item>
+          </a-col>
+          <!-- 超时时间 -->
+          <a-col :span="7">
+            <a-form-item field="timeout"
+                         label="超时时间">
+              <a-input-number v-model="formModel.timeout"
+                              placeholder="为0则不超时"
+                              :min="0"
+                              :max="100000"
+                              hide-button>
+                <template #suffix>
+                  秒
+                </template>
+              </a-input-number>
+            </a-form-item>
+          </a-col>
+          <!-- 执行命令 -->
+          <a-col :span="24">
+            <a-form-item field="command"
+                         label="执行命令"
+                         :hide-label="true"
+                         :wrapper-col-props="{ span: 24 }"
+                         :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
+              <exec-editor v-model="formModel.command"
+                           container-class="command-editor"
+                           theme="vs-dark"
+                           :parameter="parameterSchema" />
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
       <!-- 命令参数 -->
       <a-divider v-if="parameterSchema.length"
@@ -66,18 +78,21 @@
       <a-form v-if="parameterSchema.length"
               :model="parameterFormModel"
               ref="parameterFormRef"
-              label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }">
-        <a-form-item v-for="item in parameterSchema"
-                     :key="item.name"
-                     :field="item.name as string"
-                     :label="item.name"
-                     required>
-          <a-input v-model="parameterFormModel[item.name as string]"
-                   :placeholder="item.desc"
-                   allow-clear />
-        </a-form-item>
+              label-align="left"
+              :auto-label-width="true">
+        <a-row :gutter="16">
+          <a-col v-for="item in parameterSchema"
+                 :key="item.name"
+                 :span="12">
+            <a-form-item :field="item.name as string"
+                         :label="item.name"
+                         required>
+              <a-input v-model="parameterFormModel[item.name as string]"
+                       :placeholder="item.desc"
+                       allow-clear />
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-spin>
   </a-drawer>
@@ -206,9 +221,14 @@
 
   .selected-host {
     width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: var(--color-fill-2);
+    transition: all 0.3s;
 
     &-count {
       font-size: 16px;
@@ -216,11 +236,15 @@
       display: inline-block;
       margin: 0 6px;
     }
+
+    &:hover {
+      background: var(--color-fill-3);
+    }
   }
 
   .command-editor {
     width: 100%;
-    height: 44vh;
+    height: 65vh;
   }
 
 </style>
