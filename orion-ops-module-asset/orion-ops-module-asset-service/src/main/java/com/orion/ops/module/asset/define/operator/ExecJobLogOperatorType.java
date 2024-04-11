@@ -8,29 +8,29 @@ import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLe
 import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.L;
 
 /**
- * 批量执行日志 操作记录类型
+ * 计划任务日志 操作记录类型
  *
  * @author Jiahang Li
  * @version 1.0.1
  * @since 2024-3-11 11:31
  */
-@Module("asset:exec-command-log")
-public class ExecCommandLogOperatorType extends InitializingOperatorTypes {
+@Module("asset:exec-job-log")
+public class ExecJobLogOperatorType extends InitializingOperatorTypes {
 
-    public static final String DELETE = "exec-command-log:delete";
+    public static final String DELETE = "exec-job-log:delete";
 
-    public static final String DELETE_HOST = "exec-command-log:delete-host";
+    public static final String DELETE_HOST = "exec-job-log:delete-host";
 
-    public static final String CLEAR = "exec-command-log:clear";
+    public static final String CLEAR = "exec-job-log:clear";
 
-    public static final String DOWNLOAD = "exec-command-log:download";
+    public static final String DOWNLOAD = "exec-job-log:download";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(H, DELETE, "删除批量执行日志 <sb>${count}</sb> 条"),
+                new OperatorType(H, DELETE, "删除计划任务日志 <sb>${count}</sb> 条"),
                 new OperatorType(H, DELETE_HOST, "删除批量主机执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
-                new OperatorType(H, CLEAR, "清理批量执行日志 <sb>${count}</sb> 条"),
+                new OperatorType(H, CLEAR, "清理计划任务日志 <sb>${count}</sb> 条"),
                 new OperatorType(L, DOWNLOAD, "下载主机执行日志 <sb>${logId}</sb> <sb>${hostName}</sb>"),
         };
     }

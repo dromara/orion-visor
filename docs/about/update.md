@@ -15,10 +15,10 @@ UPDATE dict_value SET value = 'asset:exec-command' WHERE value = 'asset:exec';
 UPDATE dict_value SET value = 'exec-command:exec' WHERE value = 'exec:exec-command';
 UPDATE dict_value SET value = 'exec-command:interrupt-exec' WHERE value = 'exec:interrupt-exec';
 UPDATE dict_value SET value = 'exec-command:interrupt-host' WHERE value = 'exec:interrupt-host';
-UPDATE dict_value SET value = 'exec-command-log:delete' WHERE value = 'exec:delete-log';
-UPDATE dict_value SET value = 'exec-command-log:clear' WHERE value = 'exec:clear-log';
-UPDATE dict_value SET value = 'exec-command-log:delete-host' WHERE value = 'exec:delete-host-log';
-UPDATE dict_value SET value = 'exec-command-log:download' WHERE value = 'exec:download-host-log';
+UPDATE dict_value SET value = 'exec-command-log:delete', label = '删除批量执行日志', sort = '10'  WHERE value = 'exec:delete-log';
+UPDATE dict_value SET value = 'exec-command-log:clear', label = '清理批量执行日志', sort = '20' WHERE value = 'exec:clear-log';
+UPDATE dict_value SET value = 'exec-command-log:delete-host', label = '删除主机执行记录', sort = '30' WHERE value = 'exec:delete-host-log';
+UPDATE dict_value SET value = 'exec-command-log:download', label = '下载批量执行日志', sort = '40' WHERE value = 'exec:download-host-log';
 -- 操作日志修改
 UPDATE operator_log SET module = 'asset:exec-command', type = 'exec-command:exec' WHERE type = 'exec:exec-command';
 UPDATE operator_log SET module = 'asset:exec-command', type = 'exec-command:interrupt-exec' WHERE type = 'exec:interrupt-exec';

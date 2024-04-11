@@ -42,7 +42,7 @@ public class HistoryValueController {
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询历史归档")
-    @PreAuthorize("@ss.hasPermission('infra:history-value:query')")
+    @PreAuthorize("@ss.hasAnyPermission('infra:dict-value:update')")
     public DataGrid<HistoryValueVO> getHistoryValuePage(@Validated(Page.class) @RequestBody HistoryValueQueryRequest request) {
         return historyValueService.getHistoryValuePage(request);
     }
