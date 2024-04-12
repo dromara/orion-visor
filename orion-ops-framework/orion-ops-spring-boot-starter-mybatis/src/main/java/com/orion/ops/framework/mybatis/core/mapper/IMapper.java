@@ -3,11 +3,9 @@ package com.orion.ops.framework.mybatis.core.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import com.orion.ops.framework.mybatis.core.query.CacheQuery;
 import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.mybatis.core.query.DataQuery;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -54,25 +52,6 @@ public interface IMapper<T> extends BaseMapper<T> {
      */
     default DataQuery<T> of(LambdaQueryWrapper<T> wrapper) {
         return DataQuery.of(this, wrapper);
-    }
-
-    /**
-     * 获取 CacheQuery 对象
-     *
-     * @return CacheQuery
-     */
-    default CacheQuery<T> cache() {
-        return CacheQuery.of(this);
-    }
-
-    /**
-     * 获取 CacheQuery 对象
-     *
-     * @param id id
-     * @return CacheQuery
-     */
-    default CacheQuery<T> cache(Serializable id) {
-        return CacheQuery.of(this, id);
     }
 
     /**

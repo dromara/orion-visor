@@ -13,6 +13,4 @@ public interface FilterOrderConst {
 
     int CORS_FILTER = Integer.MIN_VALUE + 2000;
 
-    int MYBATIS_CACHE_CLEAR_FILTER = Integer.MIN_VALUE + 100000;
-
 }

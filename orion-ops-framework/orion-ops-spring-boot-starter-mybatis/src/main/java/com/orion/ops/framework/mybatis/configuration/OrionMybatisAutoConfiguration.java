@@ -4,17 +4,13 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
-import com.orion.ops.framework.common.constant.FilterOrderConst;
-import com.orion.ops.framework.common.web.filter.FilterCreator;
 import com.orion.ops.framework.common.security.SecurityHolder;
-import com.orion.ops.framework.mybatis.core.cache.CacheClearFilter;
 import com.orion.ops.framework.mybatis.core.handler.FieldFillHandler;
 import com.orion.ops.framework.mybatis.core.utils.DomainFillUtils;
 import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -49,14 +45,6 @@ public class OrionMybatisAutoConfiguration {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return interceptor;
-    }
-
-    /**
-     * @return mybatis 缓存清理过滤器
-     */
-    @Bean
-    public FilterRegistrationBean<CacheClearFilter> rowCacheClearFilterBean() {
-        return FilterCreator.create(new CacheClearFilter(), FilterOrderConst.MYBATIS_CACHE_CLEAR_FILTER);
     }
 
 }
