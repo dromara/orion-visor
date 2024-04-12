@@ -165,6 +165,15 @@ public class ExecJobServiceImpl implements ExecJobService {
     }
 
     @Override
+    public List<ExecJobVO> getExecJobList() {
+        return execJobDAO.of()
+                .createWrapper()
+                .select(ExecJobDO::getId, ExecJobDO::getName)
+                .then()
+                .list(ExecJobConvert.MAPPER::to);
+    }
+
+    @Override
     public DataGrid<ExecJobVO> getExecJobPage(ExecJobQueryRequest request) {
         // 条件
         LambdaQueryWrapper<ExecJobDO> wrapper = this.buildQueryWrapper(request);

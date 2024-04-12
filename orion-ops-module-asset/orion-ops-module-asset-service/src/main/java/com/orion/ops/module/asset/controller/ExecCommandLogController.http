@@ -40,9 +40,19 @@ Authorization: {{token}}
 }
 
 
-### 下载执行日志文件
+### 下载批量执行日志文件
 GET {{baseUrl}}/asset/exec-command-log/download?id=83
 Authorization: {{token}}
+
+
+### 中断批量执行命令
+POST {{baseUrl}}/asset/exec-command-log/interrupt
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "logId": 7
+}
 
 
 ###

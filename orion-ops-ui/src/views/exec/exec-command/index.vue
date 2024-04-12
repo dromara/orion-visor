@@ -20,11 +20,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { nextTick, onMounted, ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
-  import { dictKeys } from '@/views/exec/exec-command-log/types/const';
+  import { dictKeys } from '@/components/exec/log/const';
   import ExecCommandPanel from './components/exec-command-panel.vue';
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
@@ -33,7 +33,7 @@
   const log = ref();
 
   // 打开日志
-  const openLog = (record: ExecCommandLogQueryResponse) => {
+  const openLog = (record: ExecLogQueryResponse) => {
     setLogVisible(true);
     nextTick(() => {
       log.value.open(record);

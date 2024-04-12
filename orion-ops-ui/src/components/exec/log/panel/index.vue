@@ -23,15 +23,15 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
-  import type { ILogAppender } from './const';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ILogAppender } from './appender-const';
   import { onUnmounted, ref, nextTick, onMounted } from 'vue';
   import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
-  import { dictKeys, execHostStatus, execStatus } from './const';
+  import { dictKeys, execHostStatus, execStatus } from '../const';
+  import { useDictStore } from '@/store';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
   import LogAppender from '@/components/exec/log/panel/log-appender';
-  import { useDictStore } from '@/store';
 
   const props = defineProps<{
     visibleBack: boolean
@@ -43,11 +43,11 @@
   const currentHostExecId = ref();
   const statusIntervalId = ref();
   const finishIntervalId = ref();
-  const execLog = ref<ExecCommandLogQueryResponse>();
+  const execLog = ref<ExecLogQueryResponse>();
   const appender = ref<ILogAppender>();
 
   // 打开
-  const open = (record: ExecCommandLogQueryResponse) => {
+  const open = (record: ExecLogQueryResponse) => {
     appender.value = new LogAppender({ execId: record.id });
     execLog.value = record;
     currentHostExecId.value = record.hosts[0].id;

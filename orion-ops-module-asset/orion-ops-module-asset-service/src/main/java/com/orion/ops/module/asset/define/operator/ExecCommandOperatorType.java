@@ -18,16 +18,10 @@ public class ExecCommandOperatorType extends InitializingOperatorTypes {
 
     public static final String EXEC = "exec-command:exec";
 
-    public static final String INTERRUPT_EXEC = "exec-command:interrupt-exec";
-
-    public static final String INTERRUPT_HOST = "exec-command:interrupt-host";
-
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(M, EXEC, "执行主机命令"),
-                new OperatorType(M, INTERRUPT_EXEC, "中断执行命令"),
-                new OperatorType(M, INTERRUPT_HOST, "中断主机执行命令 <sb>${logId}</sb> <sb>${hostName}</sb>"),
         };
     }
 

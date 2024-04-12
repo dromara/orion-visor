@@ -4,6 +4,8 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 
+import java.util.List;
+
 /**
  * 计划任务 服务类
  *
@@ -44,6 +46,13 @@ public interface ExecJobService {
      * @return row
      */
     ExecJobVO getExecJobById(Long id);
+
+    /**
+     * 查询全部计划任务
+     *
+     * @return rows
+     */
+    List<ExecJobVO> getExecJobList();
 
     /**
      * 分页查询计划任务

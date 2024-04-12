@@ -1,4 +1,4 @@
-import type { ExecCommandLogQueryResponse } from './exec-command-log';
+import type { ExecLogQueryResponse } from './exec-log';
 import axios from 'axios';
 
 /**
@@ -14,37 +14,15 @@ export interface ExecCommandRequest {
 }
 
 /**
- * 中断命令请求
- */
-export interface ExecCommandInterruptRequest {
-  logId?: number;
-  hostLogId?: number;
-}
-
-/**
  * 批量执行命令
  */
 export function batchExecCommand(request: ExecCommandRequest) {
-  return axios.post<ExecCommandLogQueryResponse>('/asset/exec-command/exec', request);
+  return axios.post<ExecLogQueryResponse>('/asset/exec-command/exec', request);
 }
 
 /**
  * 重新执行命令
  */
 export function reExecCommand(request: ExecCommandRequest) {
-  return axios.post<ExecCommandLogQueryResponse>('/asset/exec-command/re-exec', request);
-}
-
-/**
- * 中断执行命令
- */
-export function interruptExecCommand(request: ExecCommandInterruptRequest) {
-  return axios.put('/asset/exec-command/interrupt', request);
-}
-
-/**
- * 中断执行主机命令
- */
-export function interruptHostExecCommand(request: ExecCommandInterruptRequest) {
-  return axios.put('/asset/exec-command/interrupt-host', request);
+  return axios.post<ExecLogQueryResponse>('/asset/exec-command/re-exec', request);
 }

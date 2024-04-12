@@ -90,6 +90,13 @@ export function getExecJob(id: number) {
 }
 
 /**
+ * 查询全部计划任务
+ */
+export function getExecJobList() {
+  return axios.get<Array<ExecJobQueryResponse>>('/asset/exec-job/list');
+}
+
+/**
  * 分页查询计划任务
  */
 export function getExecJobPage(request: ExecJobQueryRequest) {

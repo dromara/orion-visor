@@ -1,24 +1,22 @@
 package com.orion.ops.module.asset.controller;
 
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
-import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecCommandOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
-import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.request.exec.ReExecCommandRequest;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
-import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.service.ExecCommandService;
-import com.orion.ops.module.asset.service.ExecLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -38,13 +36,8 @@ import javax.annotation.Resource;
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecCommandController {
 
-    private static final String SOURCE = ExecSourceEnum.BATCH.name();
-
     @Resource
     private ExecCommandService execCommandService;
-
-    @Resource
-    private ExecLogService execLogService;
 
     @OperatorLog(value = ExecCommandOperatorType.EXEC, ret = ReturnType.IGNORE)
     @PostMapping("/exec")
@@ -60,26 +53,6 @@ public class ExecCommandController {
     @PreAuthorize("@ss.hasPermission('asset:exec-command:exec')")
     public ExecLogVO reExecCommand(@Validated @RequestBody ReExecCommandRequest request) {
         return execCommandService.reExecCommand(request.getLogId());
-    }
-
-    @OperatorLog(ExecCommandOperatorType.INTERRUPT_EXEC)
-    @PutMapping("/interrupt")
-    @Operation(summary = "中断执行命令")
-    @PreAuthorize("@ss.hasPermission('asset:exec-command:interrupt')")
-    public HttpWrapper<?> interruptExecCommand(@RequestBody ExecInterruptRequest request) {
-        Long logId = Valid.notNull(request.getLogId());
-        execLogService.interruptExec(logId, SOURCE);
-        return HttpWrapper.ok();
-    }
-
-    @OperatorLog(ExecCommandOperatorType.INTERRUPT_HOST)
-    @PutMapping("/interrupt-host")
-    @Operation(summary = "中断执行主机命令")
-    @PreAuthorize("@ss.hasPermission('asset:exec-command:interrupt')")
-    public HttpWrapper<?> interruptHostExecCommand(@RequestBody ExecInterruptRequest request) {
-        Long hostLogId = Valid.notNull(request.getHostLogId());
-        execLogService.interruptHostExec(hostLogId, SOURCE);
-        return HttpWrapper.ok();
     }
 
 }

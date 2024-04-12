@@ -58,9 +58,9 @@
              :bordered="false">
       <!-- 操作模块 -->
       <template #module="{ record }">
-        {{ getDictValue(operatorLogModuleKey, record.module) }}
+        <span>{{ getDictValue(operatorLogModuleKey, record.module) }}</span>
         <icon-oblique-line />
-        {{ getDictValue(operatorLogTypeKey, record.type) }}
+        <span>{{ getDictValue(operatorLogTypeKey, record.type) }}</span>
       </template>
       <!-- 风险等级 -->
       <template #riskLevel="{ record }">

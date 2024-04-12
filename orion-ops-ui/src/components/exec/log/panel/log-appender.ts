@@ -1,6 +1,6 @@
-import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './const';
-import { AppenderOptions } from './const';
-import type { ExecCommandLogTailRequest } from '@/api/exec/exec-command-log';
+import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender-const';
+import { LogAppenderOptions } from './appender-const';
+import type { ExecLogTailRequest } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
@@ -21,7 +21,7 @@ export default class LogAppender implements ILogAppender {
 
   private client?: WebSocket;
 
-  private readonly config: ExecCommandLogTailRequest;
+  private readonly config: ExecLogTailRequest;
 
   private readonly appenderRel: Record<string, LogAppenderConf>;
 
@@ -29,7 +29,7 @@ export default class LogAppender implements ILogAppender {
 
   private readonly fitAllFn: () => {};
 
-  constructor(config: ExecCommandLogTailRequest) {
+  constructor(config: ExecLogTailRequest) {
     this.current = undefined as unknown as LogAppenderConf;
     this.config = config;
     this.appenderRel = {};
@@ -49,7 +49,7 @@ export default class LogAppender implements ILogAppender {
     // 打开 log-view
     for (let logDomRef of logDomRefs) {
       // 初始化 terminal
-      const terminal = new Terminal(AppenderOptions);
+      const terminal = new Terminal(LogAppenderOptions);
       // 初始化快捷键
       this.initCustomKey(terminal);
       // 初始化插件

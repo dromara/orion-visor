@@ -96,10 +96,10 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import type { TemplateParam } from '@/components/view/exec-editor/const';
-  import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
-  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
   import { ref } from 'vue';
   import formRules from '../types/form.rules';
   import useLoading from '@/hooks/loading';
@@ -162,7 +162,7 @@
   };
 
   // 从执行日志设置
-  const setWithExecLog = (record: ExecCommandLogQueryResponse) => {
+  const setWithExecLog = (record: ExecLogQueryResponse) => {
     formModel.value = {
       ...formModel.value,
       command: record.command,

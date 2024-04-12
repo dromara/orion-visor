@@ -160,10 +160,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandHostLogQueryResponse } from '@/api/exec/exec-command-log';
-  import type { ILogAppender } from './const';
+  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ILogAppender } from './appender-const';
   import { ref } from 'vue';
-  import { execHostStatus, execHostStatusKey } from './const';
+  import { execHostStatus, execHostStatusKey } from '../const';
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
   import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';
@@ -172,7 +172,7 @@
   import 'xterm/css/xterm.css';
 
   const props = defineProps<{
-    host: ExecCommandHostLogQueryResponse;
+    host: ExecHostLogQueryResponse;
     appender: ILogAppender
   }>();
 

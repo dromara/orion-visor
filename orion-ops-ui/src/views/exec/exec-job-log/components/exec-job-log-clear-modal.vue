@@ -56,7 +56,7 @@
 
 <script lang="ts">
   export default {
-    name: 'execCommandLogClearModal'
+    name: 'execJobLogClearModal'
   };
 </script>
 
@@ -66,7 +66,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { execStatusKey } from '@/components/exec/log/const';
-  import { getExecCommandLogCount, clearExecCommandLog } from '@/api/exec/exec-command-log';
+  import { getExecJobLogCount, clearExecJobLog } from '@/api/exec/exec-job-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import UserSelector from '@/components/user/user/selector/index.vue';
@@ -108,7 +108,7 @@
     setLoading(true);
     try {
       // 获取总数量
-      const { data } = await getExecCommandLogCount(formModel.value);
+      const { data } = await getExecJobLogCount(formModel.value);
       if (data) {
         // 清空
         doClear(data);
@@ -132,7 +132,7 @@
         setLoading(true);
         try {
           // 调用删除
-          await clearExecCommandLog(formModel.value);
+          await clearExecJobLog(formModel.value);
           emits('clear');
           // 清空
           setVisible(false);
