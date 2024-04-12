@@ -69,11 +69,20 @@
           </a-col>
           <!-- 执行命令 -->
           <a-col :span="24">
-            <a-form-item field="command"
+            <a-form-item class="command-item"
+                         field="command"
                          label="执行命令"
                          :hide-label="true"
                          :wrapper-col-props="{ span: 24 }"
                          :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
+              <template #extra>
+                <span v-permission="['asset:exec-template:query']"
+                      class="span-blue usn pointer"
+                      @click="emits('openTemplate')">
+                  从模板中选择
+                </span>
+              </template>
+              <!-- 命令框 -->
               <exec-editor v-model="formModel.command"
                            container-class="command-editor"
                            theme="vs-dark"
@@ -94,6 +103,7 @@
 
 <script lang="ts" setup>
   import type { ExecJobUpdateRequest } from '@/api/exec/exec-job';
+  import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
   import { onUnmounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
@@ -104,7 +114,7 @@
   import { useDictStore } from '@/store';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
-  const emits = defineEmits(['added', 'updated', 'openHost', 'testCron']);
+  const emits = defineEmits(['added', 'updated', 'openHost', 'openTemplate', 'testCron']);
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -170,7 +180,13 @@
     formModel.value.hostIdList = hosts;
   };
 
-  defineExpose({ openAdd, openUpdate, setSelectedHost });
+  // 通过模板设置
+  const setWithTemplate = (template: ExecTemplateQueryResponse) => {
+    formModel.value.command = template.command;
+    formModel.value.timeout = template.timeout;
+  };
+
+  defineExpose({ openAdd, openUpdate, setSelectedHost, setWithTemplate });
 
   // 打开选择主机
   const openSelectHost = () => {
@@ -246,6 +262,14 @@
 
     &:hover {
       background: var(--color-fill-3);
+    }
+  }
+
+  .command-item {
+    :deep(.arco-form-item-extra) {
+      margin-top: -18px;
+      width: 100%;
+      text-align: end;
     }
   }
 

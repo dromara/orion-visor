@@ -11,11 +11,15 @@
                           @added="modalAddCallback"
                           @updated="modalUpdateCallback"
                           @open-host="(e) => hostModal.open(e)"
+                          @open-template="() => templateModal.open()"
                           @test-cron="openNextCron" />
-    <!-- 详情模态框 -->
+    <!-- 任务详情模态框 -->
     <exec-job-detail-drawer ref="detail" />
     <!-- cron 执行时间模态框 -->
     <next-cron-modal ref="nextCron" />
+    <!-- 执行模板模态框 -->
+    <exec-template-modal ref="templateModal"
+                         @selected="(e) => drawer.setWithTemplate(e)" />
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
                            @selected="(e) => drawer.setSelectedHost(e)" />
@@ -37,12 +41,14 @@
   import ExecJobDetailDrawer from './components/exec-job-detail-drawer.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
   import NextCronModal from '@/components/meta/expression/next-cron-modal/index.vue';
+  import ExecTemplateModal from '@/components/exec/template/modal/index.vue';
 
   const render = ref(false);
   const table = ref();
   const drawer = ref();
   const detail = ref();
   const nextCron = ref();
+  const templateModal = ref();
   const hostModal = ref();
 
   // 添加回调
