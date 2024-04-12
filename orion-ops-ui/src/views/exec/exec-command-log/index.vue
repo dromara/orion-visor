@@ -10,7 +10,8 @@
     <exec-command-log-clear-modal ref="clearModal"
                                   @clear="clearCallback" />
     <!-- 执行日志模态框 -->
-    <exec-log-panel-modal ref="logModal" />
+    <exec-log-panel-modal ref="logModal"
+                          type="BATCH" />
     <!-- json 模态框 -->
     <json-editor-modal ref="jsonModal"
                        :esc-to-close="true" />

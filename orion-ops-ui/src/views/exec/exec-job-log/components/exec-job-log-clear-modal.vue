@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            body-class="modal-form"
            title-align="start"
-           title="清空批量执行日志"
+           title="清空计划任务日志"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -25,17 +25,12 @@
                           show-time
                           format="YYYY-MM-DD HH:mm:ss" />
         </a-form-item>
-        <!-- 执行用户 -->
-        <a-form-item field="userId" label="执行用户">
-          <user-selector v-model="formModel.userId"
-                         placeholder="请选择执行用户"
-                         allow-clear />
-        </a-form-item>
-        <!-- 执行描述 -->
-        <a-form-item field="description" label="执行描述">
-          <a-input v-model="formModel.description"
-                   placeholder="请输入执行描述"
-                   allow-clear />
+        <!-- 计划任务 -->
+        <a-form-item field="sourceId" label="计划任务">
+          <exec-job-selector v-model:model-value="formModel.sourceId"
+                             v-model:name="formModel.description"
+                             allow-create
+                             allow-clear />
         </a-form-item>
         <!-- 执行命令 -->
         <a-form-item field="command" label="执行命令">
@@ -69,7 +64,7 @@
   import { getExecJobLogCount, clearExecJobLog } from '@/api/exec/exec-job-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
-  import UserSelector from '@/components/user/user/selector/index.vue';
+  import ExecJobSelector from '@/components/exec/job/selector/index.vue';
 
   const emits = defineEmits(['clear']);
 
@@ -83,7 +78,7 @@
   const defaultForm = (): ExecLogQueryRequest => {
     return {
       id: undefined,
-      userId: undefined,
+      sourceId: undefined,
       description: undefined,
       command: undefined,
       status: undefined,
@@ -103,6 +98,7 @@
   };
 
   defineExpose({ open });
+
   // 确定
   const handlerOk = async () => {
     setLoading(true);

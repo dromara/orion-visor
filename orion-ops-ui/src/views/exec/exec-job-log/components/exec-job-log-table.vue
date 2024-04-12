@@ -3,14 +3,14 @@
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
                   label-align="left"
-                  :itemOptions="{ 5: { span: 2 } }"
+                  :itemOptions="{ 4: { span: 2 } }"
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      <!-- 执行描述 -->
-      <a-form-item field="description" label="执行描述">
+      <!-- 任务名称 -->
+      <a-form-item field="description" label="任务名称">
         <a-input v-model="formModel.description"
-                 placeholder="请输入执行描述"
+                 placeholder="请输入任务名称"
                  allow-clear />
       </a-form-item>
       <!-- 执行状态 -->
@@ -19,12 +19,6 @@
                   :options="toOptions(execStatusKey)"
                   placeholder="请选择执行状态"
                   allow-clear />
-      </a-form-item>
-      <!-- 执行用户 -->
-      <a-form-item field="userId" label="执行用户">
-        <user-selector v-model="formModel.userId"
-                       placeholder="请选择执行用户"
-                       allow-clear />
       </a-form-item>
       <!-- 执行命令 -->
       <a-form-item field="command" label="执行命令">
@@ -212,8 +206,7 @@
   import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
-  // import { interruptExecJob } from '@/api/exec/exec-job';
-  import UserSelector from '@/components/user/user/selector/index.vue';
+  import { interruptExecJob } from '@/api/exec/exec-job-log';
   import ExecJobHostLogTable from './exec-job-host-log-table.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
@@ -230,7 +223,6 @@
   const tableRenderData = ref<ExecLogQueryResponse[]>([]);
   const formModel = reactive<ExecLogQueryRequest>({
     id: undefined,
-    userId: undefined,
     description: undefined,
     command: undefined,
     status: undefined,
@@ -239,7 +231,7 @@
 
   // 打开清理
   const openClear = () => {
-    emits('openClear', { ...formModel, id: undefined });
+    emits('openClear', { ...formModel, id: undefined, description: undefined });
   };
 
   // 删除选中行
@@ -281,9 +273,9 @@
     try {
       setLoading(true);
       // 调用中断接口
-      // await interruptExecJob({
-      //   logId: record.id
-      // });
+      await interruptExecJob({
+        logId: record.id
+      });
       Message.success('已中断');
       record.status = execStatus.COMPLETED;
     } catch (e) {

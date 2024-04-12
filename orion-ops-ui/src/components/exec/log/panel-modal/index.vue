@@ -16,7 +16,9 @@
             :loading="loading">
       <div class="panel-wrapper">
         <!-- 日志面板 -->
-        <exec-log-panel ref="log" :visible-back="false" />
+        <exec-log-panel ref="log"
+                        :type="type"
+                        :visible-back="false" />
       </div>
     </a-spin>
   </a-modal>
@@ -29,11 +31,17 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ExecType } from '../const';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { nextTick, ref } from 'vue';
   import { getExecCommandLog } from '@/api/exec/exec-command-log';
+  import { getExecJobLog } from '@/api/exec/exec-job-log';
   import ExecLogPanel from '../panel/index.vue';
+
+  const props = defineProps<{
+    type: ExecType;
+  }>();
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -46,7 +54,15 @@
     setLoading(true);
     try {
       // 获取执行日志
-      const { data } = await getExecCommandLog(id);
+      let detailGetter;
+      if (props.type === 'BATCH') {
+        // 批量执行日志
+        detailGetter = getExecCommandLog(id);
+      } else {
+        // 计划任务日志
+        detailGetter = getExecJobLog(id);
+      }
+      const { data } = await detailGetter;
       // 打开日志
       await nextTick(() => {
         setTimeout(() => {

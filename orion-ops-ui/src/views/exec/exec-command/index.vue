@@ -7,6 +7,7 @@
     <!-- 执行日志 -->
     <div v-if="logVisible" class="panel-wrapper">
       <exec-log-panel ref="log"
+                      type="BATCH"
                       :visibleBack="true"
                       @back="setLogVisible(false)" />
     </div>

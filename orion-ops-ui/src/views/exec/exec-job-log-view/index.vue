@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="wrapper">
-      <exec-log-panel ref="log" :visible-back="false" />
+      <exec-log-panel ref="log"
+                      type="JOB"
+                      :visible-back="false" />
     </div>
   </div>
 </template>

@@ -4,6 +4,10 @@
     <div class="log-header">
       <!-- 左侧信息 -->
       <a-space class="log-header-left" :size="12">
+        <!-- 执行序列 -->
+        <a-tag v-if="execLog.execSeq" color="green">
+          #{{ execLog.execSeq }}
+        </a-tag>
         <!-- 状态 -->
         <a-tag :color="getDictValue(execHostStatusKey, host.status, 'color')">
           {{ getDictValue(execHostStatusKey, host.status) }}
@@ -160,20 +164,24 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import type { ILogAppender } from './appender-const';
+  import type { ExecType } from '../const';
   import { ref } from 'vue';
   import { execHostStatus, execHostStatusKey } from '../const';
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
   import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';
+  import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';
   import { downloadFile } from '@/utils/file';
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
   import 'xterm/css/xterm.css';
 
   const props = defineProps<{
+    type: ExecType;
+    execLog: ExecLogQueryResponse;
     host: ExecHostLogQueryResponse;
-    appender: ILogAppender
+    appender: ILogAppender;
   }>();
 
   const { getDictValue } = useDictStore();
@@ -204,7 +212,17 @@
 
   // 下载文件
   const downloadLogFile = async (id: number) => {
-    const data = await downloadExecCommandLogFile(id);
+    // 获取日志文件
+    let fileGetter;
+    if (props.type === 'BATCH') {
+      // 下载批量执行日志
+      fileGetter = downloadExecCommandLogFile(id);
+    } else {
+      // 下载计划任务日志
+      fileGetter = downloadExecJobLogFile(id);
+    }
+    // 瞎子啊
+    const data = await fileGetter;
     downloadFile(data);
   };
 

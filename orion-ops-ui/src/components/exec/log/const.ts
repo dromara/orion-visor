@@ -1,3 +1,6 @@
+// 执行类型
+export type ExecType = 'BATCH' | 'JOB';
+
 // 批量执行状态
 export const execStatus = {
   // 等待中

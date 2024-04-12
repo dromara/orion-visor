@@ -103,17 +103,17 @@
 <script lang="ts" setup>
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import { deleteExecJobHostLog } from '@/api/exec/exec-job-log';
-  import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
-  import columns from '../../exec-command-log/types/host-table.columns';
+  import { interruptHostExecJob } from '@/api/exec/exec-job-log';
   import { execHostStatusKey, execHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
+  import useLoading from '@/hooks/loading';
+  import columns from '../../exec-command-log/types/host-table.columns';
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
-  // import { interruptHostExecJob } from '@/api/exec/exec-job';
   import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';
   import { copy } from '@/hooks/copy';
   import { downloadFile } from '@/utils/file';
+  import { Message } from '@arco-design/web-vue';
 
   const props = defineProps<{
     row: ExecLogQueryResponse;
@@ -136,9 +136,9 @@
     try {
       setLoading(true);
       // 调用中断接口
-      // await interruptHostExecJob({
-      //   hostLogId: record.id
-      // });
+      await interruptHostExecJob({
+        hostLogId: record.id
+      });
       Message.success('已中断');
       record.status = execHostStatus.INTERRUPTED;
     } catch (e) {
