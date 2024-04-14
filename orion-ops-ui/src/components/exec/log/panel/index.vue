@@ -10,8 +10,9 @@
     <!-- 日志容器 -->
     <log-view ref="logViewRef"
               class="log-view-container"
+              :type="type"
               :current="currentHostExecId"
-              :hosts="execLog.hosts"
+              :exec-log="execLog"
               :appender="appender" />
   </div>
 </template>
@@ -23,18 +24,21 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
-  import type { ILogAppender } from './const';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ILogAppender } from './appender-const';
+  import type { ExecType } from '../const';
   import { onUnmounted, ref, nextTick, onMounted } from 'vue';
   import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
-  import { dictKeys, execHostStatus, execStatus } from './const';
+  import { getExecJobLogStatus } from '@/api/exec/exec-job-log';
+  import { dictKeys, execHostStatus, execStatus } from '../const';
+  import { useDictStore } from '@/store';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
-  import LogAppender from '@/components/exec/log/panel/log-appender';
-  import { useDictStore } from '@/store';
+  import LogAppender from './log-appender';
 
   const props = defineProps<{
-    visibleBack: boolean
+    visibleBack: boolean;
+    type: ExecType;
   }>();
 
   const emits = defineEmits(['back']);
@@ -43,12 +47,12 @@
   const currentHostExecId = ref();
   const statusIntervalId = ref();
   const finishIntervalId = ref();
-  const execLog = ref<ExecCommandLogQueryResponse>();
+  const execLog = ref<ExecLogQueryResponse>();
   const appender = ref<ILogAppender>();
 
   // 打开
-  const open = (record: ExecCommandLogQueryResponse) => {
-    appender.value = new LogAppender({ execId: record.id });
+  const open = (record: ExecLogQueryResponse) => {
+    appender.value = new LogAppender(props.type, { execId: record.id });
     execLog.value = record;
     currentHostExecId.value = record.hosts[0].id;
     // 定时查询执行状态
@@ -71,7 +75,15 @@
       return;
     }
     // 加载状态
-    const { data: { logList, hostList } } = await getExecCommandLogStatus([execLog.value.id]);
+    let statusGetter;
+    if (props.type === 'BATCH') {
+      // 批量执行日志状态
+      statusGetter = getExecCommandLogStatus([execLog.value.id]);
+    } else {
+      // 计划任务日志状态
+      statusGetter = getExecJobLogStatus([execLog.value.id]);
+    }
+    const { data: { logList, hostList } } = await statusGetter;
     if (logList.length) {
       execLog.value.status = logList[0].status;
       execLog.value.startTime = logList[0].startTime;

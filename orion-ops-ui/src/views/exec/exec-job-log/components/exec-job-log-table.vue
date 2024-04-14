@@ -3,14 +3,14 @@
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
                   label-align="left"
-                  :itemOptions="{ 5: { span: 2 } }"
+                  :itemOptions="{ 4: { span: 2 } }"
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      <!-- 执行描述 -->
-      <a-form-item field="description" label="执行描述">
+      <!-- 任务名称 -->
+      <a-form-item field="description" label="任务名称">
         <a-input v-model="formModel.description"
-                 placeholder="请输入执行描述"
+                 placeholder="请输入任务名称"
                  allow-clear />
       </a-form-item>
       <!-- 执行状态 -->
@@ -19,12 +19,6 @@
                   :options="toOptions(execStatusKey)"
                   placeholder="请选择执行状态"
                   allow-clear />
-      </a-form-item>
-      <!-- 执行用户 -->
-      <a-form-item field="userId" label="执行用户">
-        <user-selector v-model="formModel.userId"
-                       placeholder="请选择执行用户"
-                       allow-clear />
       </a-form-item>
       <!-- 执行命令 -->
       <a-form-item field="command" label="执行命令">
@@ -55,23 +49,14 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          批量执行日志列表
+          计划任务日志列表
         </div>
       </div>
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
-          <!-- 执行命令 -->
-          <a-button v-permission="['asset:exec-command:exec']"
-                    type="primary"
-                    @click="$router.push({ name: 'execCommand' })">
-            执行命令
-            <template #icon>
-              <icon-thunderbolt />
-            </template>
-          </a-button>
           <!-- 清空 -->
-          <a-button v-permission="['asset:exec-command-log:management:clear']"
+          <a-button v-permission="['asset:exec-job-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -84,7 +69,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
-            <a-button v-permission="['asset:exec-command-log:delete']"
+            <a-button v-permission="['asset:exec-job-log:delete']"
                       type="secondary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -113,10 +98,19 @@
              @expand="loadExecHost">
       <!-- 展开表格 -->
       <template #expand-row="{ record }">
-        <exec-command-host-log-table :row="record"
-                                     @view-command="s => emits('viewCommand', s)"
-                                     @view-params="s => emits('viewParams', s)"
-                                     @refresh-host="refreshExecHost" />
+        <exec-job-host-log-table :row="record"
+                                 @view-command="s => emits('viewCommand', s)"
+                                 @view-params="s => emits('viewParams', s)"
+                                 @refresh-host="refreshExecHost" />
+      </template>
+      <!-- 任务名称 -->
+      <template #description="{ record }">
+        <span class="span-blue mr4 usn">
+          #{{ record.execSeq }}
+        </span>
+        <span :title="record.description">
+          {{ record.description }}
+        </span>
       </template>
       <!-- 执行命令 -->
       <template #command="{ record }">
@@ -143,17 +137,6 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 重新执行 -->
-          <a-popconfirm content="确定要重新执行吗?"
-                        position="left"
-                        type="warning"
-                        @ok="doReExecCommand(record)">
-            <a-button v-permission="['asset:exec-command:exec']"
-                      type="text"
-                      size="mini">
-              重新执行
-            </a-button>
-          </a-popconfirm>
           <!-- 命令 -->
           <a-button type="text"
                     size="mini"
@@ -161,7 +144,7 @@
             命令
           </a-button>
           <!-- 日志 -->
-          <a-button v-permission="['asset:exec-command-log:query', 'asset:exec-command:exec']"
+          <a-button v-permission="['asset:exec-job-log:query']"
                     type="text"
                     size="mini"
                     title="ctrl + 左键新页面打开"
@@ -172,8 +155,8 @@
           <a-popconfirm content="确定要中断执行吗?"
                         position="left"
                         type="warning"
-                        @ok="doInterruptExecCommand(record)">
-            <a-button v-permission="['asset:exec-command-log:interrupt']"
+                        @ok="doInterruptExecJob(record)">
+            <a-button v-permission="['asset:exec-job-log:interrupt']"
                       type="text"
                       size="mini"
                       status="danger"
@@ -186,7 +169,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:exec-command-log:delete']"
+            <a-button v-permission="['asset:exec-job-log:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -201,21 +184,21 @@
 
 <script lang="ts">
   export default {
-    name: 'execCommandLogTable'
+    name: 'execJobLogTable'
   };
 </script>
 
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { ExecLogQueryResponse,ExecLogQueryRequest } from '@/api/exec/exec-log';
+  import type { ExecLogQueryRequest, ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { reactive, ref, onMounted, onUnmounted } from 'vue';
   import {
-    batchDeleteExecCommandLog,
-    deleteExecCommandLog,
-    getExecCommandHostLogList,
-    getExecCommandLogPage,
-    getExecCommandLogStatus
-  } from '@/api/exec/exec-command-log';
+    batchDeleteExecJobLog,
+    deleteExecJobLog,
+    getExecJobHostLogList,
+    getExecJobLogPage,
+    getExecJobLogStatus
+  } from '@/api/exec/exec-job-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
@@ -223,10 +206,8 @@
   import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
-  import { reExecCommand } from '@/api/exec/exec-command';
-  import { interruptExecCommand } from '@/api/exec/exec-command-log';
-  import UserSelector from '@/components/user/user/selector/index.vue';
-  import ExecCommandHostLogTable from './exec-command-host-log-table.vue';
+  import { interruptExecJob } from '@/api/exec/exec-job-log';
+  import ExecJobHostLogTable from './exec-job-host-log-table.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
@@ -240,9 +221,8 @@
   const tableRef = ref();
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecLogQueryResponse[]>([]);
-  const formModel = reactive<ExecLogQueryResponse>({
+  const formModel = reactive<ExecLogQueryRequest>({
     id: undefined,
-    userId: undefined,
     description: undefined,
     command: undefined,
     status: undefined,
@@ -251,7 +231,7 @@
 
   // 打开清理
   const openClear = () => {
-    emits('openClear', { ...formModel, id: undefined });
+    emits('openClear', { ...formModel, id: undefined, description: undefined });
   };
 
   // 删除选中行
@@ -259,7 +239,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await batchDeleteExecCommandLog(selectedKeys.value);
+      await batchDeleteExecJobLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
@@ -277,7 +257,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecCommandLog(id);
+      await deleteExecJobLog(id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();
@@ -287,28 +267,13 @@
     }
   };
 
-  // 重新执行命令
-  const doReExecCommand = async (record: ExecLogQueryResponse) => {
-    try {
-      setLoading(true);
-      // 调用中断接口
-      await reExecCommand({
-        logId: record.id
-      });
-      Message.success('已重新执行');
-      fetchTableData();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 中断执行
-  const doInterruptExecCommand = async (record: ExecLogQueryResponse) => {
+  const doInterruptExecJob = async (record: ExecLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用中断接口
-      await interruptExecCommand({
+      await interruptExecJob({
         logId: record.id
       });
       Message.success('已中断');
@@ -327,7 +292,7 @@
       return;
     }
     // 加载数据
-    getExecCommandHostLogList(id).then(s => {
+    getExecJobHostLogList(id).then(s => {
       exec.hosts = s.data;
     });
   };
@@ -338,7 +303,7 @@
       return;
     }
     // 加载数据
-    const { data } = await getExecCommandHostLogList(record.id);
+    const { data } = await getExecJobHostLogList(record.id);
     record.hosts = data;
   };
 
@@ -351,7 +316,7 @@
       return;
     }
     // 加载未完成的状态
-    const { data: { logList, hostList } } = await getExecCommandLogStatus(unCompleteIdList);
+    const { data: { logList, hostList } } = await getExecJobLogStatus(unCompleteIdList);
     // 设置任务状态
     logList.forEach(s => {
       const tableRow = tableRenderData.value.find(r => r.id === s.id);
@@ -383,7 +348,7 @@
   const doFetchTableData = async (request: ExecLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getExecCommandLogPage(request);
+      const { data } = await getExecJobLogPage(request);
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

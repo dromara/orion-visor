@@ -43,7 +43,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import { onMounted, ref } from 'vue';
   import { getExecCommandLogHistory } from '@/api/exec/exec-command-log';
@@ -54,7 +54,7 @@
 
   const { loading, setLoading } = useLoading(true);
 
-  const historyLogs = ref<Array<ExecCommandLogQueryResponse>>([]);
+  const historyLogs = ref<Array<ExecLogQueryResponse>>([]);
 
   // 添加
   const add = (record: ExecCommandRequest) => {
@@ -67,7 +67,7 @@
         parameterSchema: record.parameterSchema,
         timeout: record.timeout,
         hostIdList: record.hostIdList
-      } as ExecCommandLogQueryResponse);
+      } as ExecLogQueryResponse);
     } else {
       // 存在
       const his = historyLogs.value[index];
@@ -78,7 +78,7 @@
         parameterSchema: record.parameterSchema,
         timeout: record.timeout,
         hostIdList: record.hostIdList
-      } as ExecCommandLogQueryResponse);
+      } as ExecLogQueryResponse);
     }
   };
 

@@ -10,6 +10,7 @@
       <template #form>
         <a-form :model="formModel"
                 ref="formRef"
+                class="form-wrapper"
                 label-align="right"
                 :rules="formRules">
           <!-- 执行主机 -->
@@ -70,7 +71,7 @@
     </exec-command-panel-form>
     <!-- 执行命令 -->
     <exec-command-panel-editor class="exec-command-container"
-                               @selected="setWithTemplate">
+                               @open-template="() => templateModal.open()">
       <exec-editor v-model="formModel.command"
                    theme="vs-dark"
                    :parameter="parameterSchema" />
@@ -79,6 +80,9 @@
     <exec-command-panel-history class="exec-history-container"
                                 ref="historyRef"
                                 @selected="setWithExecLog" />
+    <!-- 命令模板模态框 -->
+    <exec-template-modal ref="templateModal"
+                         @selected="setWithTemplate" />
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
                            @selected="setSelectedHost" />
@@ -92,10 +96,10 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import type { TemplateParam } from '@/components/view/exec-editor/const';
-  import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
-  import type { ExecCommandLogQueryResponse } from '@/api/exec/exec-command-log';
   import { ref } from 'vue';
   import formRules from '../types/form.rules';
   import useLoading from '@/hooks/loading';
@@ -106,6 +110,7 @@
   import ExecCommandPanelForm from './exec-command-panel-form.vue';
   import ExecCommandPanelHistory from './exec-command-panel-history.vue';
   import ExecCommandPanelEditor from './exec-command-panel-editor.vue';
+  import ExecTemplateModal from '@/components/exec/template/modal/index.vue';
 
   const emits = defineEmits(['submit']);
 
@@ -121,6 +126,7 @@
   const hostModal = ref<any>();
   const historyRef = ref<any>();
   const formRef = ref<any>();
+  const templateModal = ref<any>();
   const parameterFormRef = ref<any>();
   const formModel = ref<ExecCommandRequest>({ ...defaultForm() });
   const parameterFormModel = ref<Record<string, any>>({});
@@ -156,7 +162,7 @@
   };
 
   // 从执行日志设置
-  const setWithExecLog = (record: ExecCommandLogQueryResponse) => {
+  const setWithExecLog = (record: ExecLogQueryResponse) => {
     formModel.value = {
       ...formModel.value,
       command: record.command,
@@ -257,6 +263,11 @@
   }
 
   .exec-form-container {
+
+    .form-wrapper {
+      margin-top: 8px;
+    }
+
     .selected-host {
       width: 100%;
       height: 32px;
@@ -285,7 +296,7 @@
   :deep(.panel-header) {
     width: 100%;
     height: 28px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;

@@ -1,13 +1,17 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.ExecCommandLogOperatorType;
+import com.orion.ops.module.asset.define.operator.ExecCommandOperatorType;
+import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
@@ -154,6 +158,26 @@ public class ExecCommandLogController {
     @PreAuthorize("@ss.hasAnyPermission('asset:exec-command-log:query', 'asset:exec-command:exec')")
     public void downloadExecCommandLogFile(@RequestParam("id") Long id, HttpServletResponse response) {
         execLogService.downloadLogFile(id, SOURCE, response);
+    }
+
+    @OperatorLog(ExecCommandLogOperatorType.INTERRUPT)
+    @PutMapping("/interrupt")
+    @Operation(summary = "中断批量执行命令")
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:interrupt')")
+    public HttpWrapper<?> interruptExecCommand(@RequestBody ExecInterruptRequest request) {
+        Long logId = Valid.notNull(request.getLogId());
+        execLogService.interruptExec(logId, SOURCE);
+        return HttpWrapper.ok();
+    }
+
+    @OperatorLog(ExecCommandLogOperatorType.INTERRUPT_HOST)
+    @PutMapping("/interrupt-host")
+    @Operation(summary = "中断批量执行主机命令")
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:interrupt')")
+    public HttpWrapper<?> interruptHostExecCommand(@RequestBody ExecInterruptRequest request) {
+        Long hostLogId = Valid.notNull(request.getHostLogId());
+        execLogService.interruptHostExec(hostLogId, SOURCE);
+        return HttpWrapper.ok();
     }
 
 }

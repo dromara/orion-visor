@@ -30,7 +30,7 @@ DELETE {{baseUrl}}/asset/exec-job-log/batch-delete?idList=1,2,3
 Authorization: {{token}}
 
 
-### 查看执行日志
+### 查看计划任务日志
 POST {{baseUrl}}/asset/exec-job-log/tail
 Content-Type: application/json
 Authorization: {{token}}
@@ -40,9 +40,18 @@ Authorization: {{token}}
 }
 
 
-### 下载执行日志文件
+### 下载计划任务日志文件
 GET {{baseUrl}}/asset/exec-job-log/download?id=83
 Authorization: {{token}}
 
+
+### 中断计划任务命令
+POST {{baseUrl}}/asset/exec-command-log/interrupt
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "logId": 7
+}
 
 ###

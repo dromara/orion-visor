@@ -88,6 +88,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { DictKeyQueryResponse } from '@/api/system/dict-key';
   import type { DictValueUpdateRequest } from '@/api/system/dict-value';
   import type { ExtraParamType } from '../../dict-key/types/const';
   import { ref } from 'vue';
@@ -97,7 +98,6 @@
   import { createDictValue, updateDictValue } from '@/api/system/dict-value';
   import { Message } from '@arco-design/web-vue';
   import { ValueType, sortStep } from '../../dict-key/types/const';
-  import { DictKeyQueryResponse } from '@/api/system/dict-key';
   import { useCacheStore } from '@/store';
   import DictKeySelector from '@/components/system/dict-key/selector/index.vue';
 

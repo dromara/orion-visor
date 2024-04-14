@@ -20,14 +20,5 @@ Authorization: {{token}}
   "logId": 1
 }
 
-### 中断执行命令
-POST {{baseUrl}}/asset/exec-command/interrupt
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "logId": 7
-}
-
 
 ###

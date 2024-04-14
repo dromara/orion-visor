@@ -5,7 +5,7 @@
       <h3>执行命令</h3>
       <span v-permission="['asset:exec-template:query']"
             class="span-blue usn pointer"
-            @click="openTemplate">
+            @click="emits('openTemplate')">
         从模板中选择
       </span>
     </div>
@@ -17,9 +17,6 @@
     <div v-pre class="editor-help">
       使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量
     </div>
-    <!-- 命令模板模态框 -->
-    <exec-template-modal ref="templateModal"
-                         @selected="s => emits('selected', s)" />
   </div>
 </template>
 
@@ -30,17 +27,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
-  import ExecTemplateModal from '@/components/exec/template/modal/index.vue';
 
-  const emits = defineEmits(['selected']);
-
-  const templateModal = ref<any>();
-
-  // 打开模板
-  const openTemplate = () => {
-    templateModal.value.open();
-  };
+  const emits = defineEmits(['openTemplate']);
 
 </script>
 

@@ -1,7 +1,9 @@
-import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './const';
-import { AppenderOptions } from './const';
-import type { ExecCommandLogTailRequest } from '@/api/exec/exec-command-log';
+import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender-const';
+import { LogAppenderOptions } from './appender-const';
+import type { ExecType } from '../const';
+import type { ExecLogTailRequest } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
+import { getExecJobLogTailToken } from '@/api/exec/exec-job-log';
 import { webSocketBaseUrl } from '@/utils/env';
 import { Message } from '@arco-design/web-vue';
 import { createWebSocket } from '@/utils';
@@ -21,7 +23,7 @@ export default class LogAppender implements ILogAppender {
 
   private client?: WebSocket;
 
-  private readonly config: ExecCommandLogTailRequest;
+  private readonly config: ExecLogTailRequest;
 
   private readonly appenderRel: Record<string, LogAppenderConf>;
 
@@ -29,8 +31,11 @@ export default class LogAppender implements ILogAppender {
 
   private readonly fitAllFn: () => {};
 
-  constructor(config: ExecCommandLogTailRequest) {
+  private readonly type: ExecType;
+
+  constructor(type: ExecType, config: ExecLogTailRequest) {
     this.current = undefined as unknown as LogAppenderConf;
+    this.type = type;
     this.config = config;
     this.appenderRel = {};
     this.fitAllFn = useDebounceFn(this.fitAll).bind(this);
@@ -49,7 +54,7 @@ export default class LogAppender implements ILogAppender {
     // 打开 log-view
     for (let logDomRef of logDomRefs) {
       // 初始化 terminal
-      const terminal = new Terminal(AppenderOptions);
+      const terminal = new Terminal(LogAppenderOptions);
       // 初始化快捷键
       this.initCustomKey(terminal);
       // 初始化插件
@@ -141,8 +146,16 @@ export default class LogAppender implements ILogAppender {
 
   // 初始化 client
   async openClient() {
+    let tokenMaker;
     // 获取 token
-    const { data } = await getExecCommandLogTailToken(this.config);
+    if (this.type === 'BATCH') {
+      // 获取批量执行日志 token
+      tokenMaker = getExecCommandLogTailToken(this.config);
+    } else {
+      // 获取计划任务日志 token
+      tokenMaker = getExecJobLogTailToken(this.config);
+    }
+    const { data } = await tokenMaker;
     // 打开会话
     try {
       this.client = await createWebSocket(`${webSocketBaseUrl}/exec/log/${data}`);

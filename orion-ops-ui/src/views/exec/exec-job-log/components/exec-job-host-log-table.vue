@@ -69,7 +69,7 @@
                       position="left"
                       type="warning"
                       @ok="interruptedHost(record)">
-          <a-button v-permission="['asset:exec-command-log:interrupt']"
+          <a-button v-permission="['asset:exec-job-log:interrupt']"
                     type="text"
                     size="mini"
                     status="danger"
@@ -82,7 +82,7 @@
                       position="left"
                       type="warning"
                       @ok="deleteRow(record)">
-          <a-button v-permission="['asset:exec-command-log:delete']"
+          <a-button v-permission="['asset:exec-job-log:delete']"
                     type="text"
                     size="mini"
                     status="danger">
@@ -96,23 +96,24 @@
 
 <script lang="ts">
   export default {
-    name: 'execCommandHostLogTable'
+    name: 'execJobHostLogTable'
   };
 </script>
 
 <script lang="ts" setup>
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
-  import { deleteExecCommandHostLog } from '@/api/exec/exec-command-log';
-  import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
-  import columns from '../types/host-table.columns';
+  import { deleteExecJobHostLog } from '@/api/exec/exec-job-log';
+  import { interruptHostExecJob } from '@/api/exec/exec-job-log';
   import { execHostStatusKey, execHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
+  import useLoading from '@/hooks/loading';
+  import columns from '../../exec-command-log/types/host-table.columns';
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
-  import { downloadExecCommandLogFile, interruptHostExecCommand } from '@/api/exec/exec-command-log';
+  import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';
   import { copy } from '@/hooks/copy';
   import { downloadFile } from '@/utils/file';
+  import { Message } from '@arco-design/web-vue';
 
   const props = defineProps<{
     row: ExecLogQueryResponse;
@@ -126,7 +127,7 @@
 
   // 下载文件
   const downloadLogFile = async (id: number) => {
-    const data = await downloadExecCommandLogFile(id);
+    const data = await downloadExecJobLogFile(id);
     downloadFile(data);
   };
 
@@ -135,7 +136,7 @@
     try {
       setLoading(true);
       // 调用中断接口
-      await interruptHostExecCommand({
+      await interruptHostExecJob({
         hostLogId: record.id
       });
       Message.success('已中断');
@@ -154,7 +155,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecCommandHostLog(id);
+      await deleteExecJobHostLog(id);
       Message.success('删除成功');
       emits('refreshHost', logId);
     } catch (e) {

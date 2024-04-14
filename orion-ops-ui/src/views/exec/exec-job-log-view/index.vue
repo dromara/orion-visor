@@ -2,7 +2,7 @@
   <div class="container">
     <div class="wrapper">
       <exec-log-panel ref="log"
-                      type="BATCH"
+                      type="JOB"
                       :visible-back="false" />
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
   export default {
-    name: 'execCommandLogView'
+    name: 'execJobLogView'
   };
 </script>
 

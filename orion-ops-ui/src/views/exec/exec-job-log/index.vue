@@ -1,17 +1,17 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <exec-command-log-table ref="tableRef"
-                            @view-command="viewCommand"
-                            @view-params="viewParams"
-                            @view-log="viewLog"
-                            @open-clear="openClearModal" />
+    <exec-job-log-table ref="tableRef"
+                        @view-command="viewCommand"
+                        @view-params="viewParams"
+                        @view-log="viewLog"
+                        @open-clear="openClearModal" />
     <!-- 清理模态框 -->
-    <exec-command-log-clear-modal ref="clearModal"
-                                  @clear="clearCallback" />
+    <exec-job-log-clear-modal ref="clearModal"
+                              @clear="clearCallback" />
     <!-- 执行日志模态框 -->
     <exec-log-panel-modal ref="logModal"
-                          type="BATCH" />
+                          type="JOB" />
     <!-- json 模态框 -->
     <json-editor-modal ref="jsonModal"
                        :esc-to-close="true" />
@@ -24,7 +24,7 @@
 
 <script lang="ts">
   export default {
-    name: 'execCommandLog'
+    name: 'execJobLog'
   };
 </script>
 
@@ -34,8 +34,8 @@
   import { dictKeys } from '@/components/exec/log/const';
   import { useRouter } from 'vue-router';
   import { openNewRoute } from '@/router';
-  import ExecCommandLogTable from './components/exec-command-log-table.vue';
-  import ExecCommandLogClearModal from './components/exec-command-log-clear-modal.vue';
+  import ExecJobLogTable from './components/exec-job-log-table.vue';
+  import ExecJobLogClearModal from './components/exec-job-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
@@ -69,7 +69,7 @@
     if (newWindow) {
       // 跳转新页面
       openNewRoute({
-        name: 'execCommandLogView',
+        name: 'execJobLogView',
         query: {
           id
         }

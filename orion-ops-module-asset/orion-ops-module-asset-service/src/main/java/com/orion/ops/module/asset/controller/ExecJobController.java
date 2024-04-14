@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 计划任务 api
@@ -71,6 +72,14 @@ public class ExecJobController {
     @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
     public ExecJobVO getExecJob(@RequestParam("id") Long id) {
         return execJobService.getExecJobById(id);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/list")
+    @Operation(summary = "查询全部计划任务")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
+    public List<ExecJobVO> getExecJobList() {
+        return execJobService.getExecJobList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

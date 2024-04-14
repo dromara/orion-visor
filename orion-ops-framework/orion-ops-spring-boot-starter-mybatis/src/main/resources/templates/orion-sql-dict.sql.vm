@@ -7,20 +7,18 @@ SELECT @MODULE_KEY_ID:= id FROM dict_key WHERE key_name = 'operatorLogModule' AN
 SELECT @MODULE_KEY_MAX_SORT:= IFNULL(MAX(sort), 0) FROM dict_value where key_id = @MODULE_KEY_ID AND deleted = 0;
 -- 类型 key id
 SELECT @TYPE_KEY_ID:= id FROM dict_key WHERE key_name = 'operatorLogType' AND deleted = 0;
--- 类型 key 排序
-SELECT @TYPE_KEY_MAX_SORT:= IFNULL(MAX(sort), 0) FROM dict_value WHERE key_id = @TYPE_KEY_ID AND deleted = 0;
 -- 插入类型
 INSERT INTO dict_value
   (`key_id`, `key_name`, `value`, `label`, `extra`, `sort`, `create_time`, `update_time`, `creator`, `updater`, `deleted`)
 VALUES
   (@MODULE_KEY_ID, 'operatorLogModule', '${package.ModuleName}:${typeHyphen}', '$!{table.comment}', '{}', @MODULE_KEY_MAX_SORT + 10, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:create', '创建$!{table.comment}', '{}', @TYPE_KEY_MAX_SORT + 10, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:update', '更新$!{table.comment}', '{}', @TYPE_KEY_MAX_SORT + 20, now(), now(), '1', '1', 0),
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:create', '创建$!{table.comment}', '{}', 10, now(), now(), '1', '1', 0),
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:update', '更新$!{table.comment}', '{}', 20, now(), now(), '1', '1', 0),
   #if($meta.enableExport)
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', @TYPE_KEY_MAX_SORT + 30, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:export', '导出$!{table.comment}', '{}', @TYPE_KEY_MAX_SORT + 40, now(), now(), '1', '1', 0);
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', 30, now(), now(), '1', '1', 0),
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:export', '导出$!{table.comment}', '{}', 40, now(), now(), '1', '1', 0);
   #else
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', @TYPE_KEY_MAX_SORT + 30, now(), now(), '1', '1', 0);
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', 30, now(), now(), '1', '1', 0);
   #end
 #end
 

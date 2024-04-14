@@ -13,12 +13,14 @@ import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
+import { getExecJobList } from '@/api/exec/exec-job';
 
 export type CacheType = 'users' | 'menus' | 'roles'
   | 'hosts' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
   | 'dictKeys'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | 'commandSnippetGroups'
+  | 'execJob'
   | string
 
 export default defineStore('cache', {
@@ -116,6 +118,11 @@ export default defineStore('cache', {
     // 获取命令片段分组
     async loadCommandSnippetGroups(force = false) {
       return await this.load('commandSnippetGroups', getCommandSnippetGroupList, force);
+    },
+
+    // 获取执行计划列表
+    async loadExecJobs(force = false) {
+      return await this.load('execJob', getExecJobList, force);
     },
 
   }
