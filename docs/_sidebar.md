@@ -1,7 +1,6 @@
 * 关于
     * [Roadmap](about/roadmap.md)
     * [更新日志](about/change-log.md)
-    * [如何升级](about/update.md)
 * 快速开始
     * [docker安装](quickstart/docker-install.md)
     * [普通安装](quickstart/install.md)
