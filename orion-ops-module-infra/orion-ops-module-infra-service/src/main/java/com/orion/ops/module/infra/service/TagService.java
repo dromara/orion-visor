@@ -46,4 +46,9 @@ public interface TagService {
      */
     Integer deleteTagByIdList(List<Long> idList);
 
+    /**
+     * 清理未使用的 tag
+     */
+    void clearUnusedTag();
+
 }

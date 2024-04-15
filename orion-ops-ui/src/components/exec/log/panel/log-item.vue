@@ -23,7 +23,9 @@
           <span class="tag-value">{{ host.exitStatus }}</span>
         </a-tag>
         <!-- 持续时间 -->
-        <a-tag color="arcoblue" title="持续时间">
+        <a-tag v-if="host.startTime"
+               color="arcoblue"
+               title="持续时间">
           <template #icon>
             <icon-loading v-if="host.status === execHostStatus.WAITING || host.status === execHostStatus.RUNNING" />
             <icon-clock-circle v-else />
