@@ -207,7 +207,7 @@
 
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { ExecLogQueryResponse,ExecLogQueryRequest } from '@/api/exec/exec-log';
+  import type { ExecLogQueryResponse, ExecLogQueryRequest } from '@/api/exec/exec-log';
   import { reactive, ref, onMounted, onUnmounted } from 'vue';
   import {
     batchDeleteExecCommandLog,
@@ -240,7 +240,7 @@
   const tableRef = ref();
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecLogQueryResponse[]>([]);
-  const formModel = reactive<ExecLogQueryResponse>({
+  const formModel = reactive<ExecLogQueryRequest>({
     id: undefined,
     userId: undefined,
     description: undefined,
