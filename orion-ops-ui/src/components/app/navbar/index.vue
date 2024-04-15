@@ -146,7 +146,7 @@
            </span>
             <div class="tips-buttons">
               <a-button size="mini" class="mr8" @click="closePreferenceTip(false)">关闭</a-button>
-              <a-button size="mini" type="primary" @click="closePreferenceTip(true)">不在提醒</a-button>
+              <a-button size="mini" type="primary" @click="closePreferenceTip(true)">我知道了</a-button>
             </div>
           </template>
           <a-tooltip content="偏好设置">

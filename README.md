@@ -97,6 +97,12 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 ![执行日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/06d02d38-70ef-43c2-950c-9f8c73a105ba.png "执行日志")
 ![执行记录](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0e474cc2-f7cf-49bc-be3c-f6445783ad7c.png "执行记录")
 
+> 计划任务
+
+![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
+![计划任务编辑](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/03176f22-0e21-4a07-8511-7b08211594d6.png "计划任务编辑")
+![计划任务日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/1528c6a2-4813-4c3c-aa7b-f13a979065ba.png "计划任务日志")
+
 > 用户管理
 
 ![用户列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0d5f26e0-de4e-4342-800c-30a0d5d3078e.png "用户列表")  

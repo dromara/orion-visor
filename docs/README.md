@@ -97,6 +97,12 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 ![执行日志](./assert/img/batch_exec_log.png "执行日志")
 ![执行记录](./assert/img/batch_exec_record.png "执行记录")
 
+> 计划任务
+
+![计划任务](./assert/img/exec_job.png "计划任务")
+![计划任务编辑](./assert/img/exec_job_edit.png "计划任务编辑")
+![计划任务日志](./assert/img/exec_job_log.png "计划任务日志")
+
 > 用户管理
 
 ![用户列表](./assert/img/user_list.png "用户列表")  
