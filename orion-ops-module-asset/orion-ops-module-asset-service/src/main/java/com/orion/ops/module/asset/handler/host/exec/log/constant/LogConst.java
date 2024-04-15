@@ -15,10 +15,4 @@ public interface LogConst {
 
     String SEPARATOR = "|";
 
-    int TRACKER_OFFSET_LINE = 200;
-
-    int TRACKER_DELAY_MS = 200;
-
-    int TRACKER_WAIT_TIMES = 100;
-
 }

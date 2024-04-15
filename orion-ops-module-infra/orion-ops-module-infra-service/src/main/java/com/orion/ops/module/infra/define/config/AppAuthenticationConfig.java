@@ -1,4 +1,4 @@
-package com.orion.ops.module.infra.config;
+package com.orion.ops.module.infra.define.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "app.authentication",
-      "type": "com.orion.ops.module.infra.config.AppAuthenticationConfig",
-      "sourceType": "com.orion.ops.module.infra.config.AppAuthenticationConfig"
+      "type": "com.orion.ops.module.infra.define.config.AppAuthenticationConfig",
+      "sourceType": "com.orion.ops.module.infra.define.config.AppAuthenticationConfig"
     }
   ],
   "properties": [

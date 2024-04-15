@@ -5,8 +5,10 @@ import com.orion.ext.tail.delay.DelayTrackerListener;
 import com.orion.ext.tail.mode.FileNotFoundMode;
 import com.orion.ext.tail.mode.FileOffsetMode;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
+import com.orion.ops.module.asset.define.config.AppTrackerConfig;
 import com.orion.ops.module.asset.entity.dto.ExecHostLogTailDTO;
 import com.orion.ops.module.asset.handler.host.exec.log.constant.LogConst;
+import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,6 +22,8 @@ import org.springframework.web.socket.WebSocketSession;
  */
 @Slf4j
 public class ExecLogTracker implements IExecLogTracker {
+
+    private static final AppTrackerConfig TRACKER_CONFIG = SpringHolder.getBean(AppTrackerConfig.class);
 
     private final WebSocketSession session;
 
@@ -50,9 +54,9 @@ public class ExecLogTracker implements IExecLogTracker {
         try {
             this.tracker = new DelayTrackerListener(absolutePath, this);
             tracker.charset(config.getCharset());
-            tracker.delayMillis(LogConst.TRACKER_DELAY_MS);
-            tracker.offset(FileOffsetMode.LINE, LogConst.TRACKER_OFFSET_LINE);
-            tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, LogConst.TRACKER_WAIT_TIMES);
+            tracker.delayMillis(TRACKER_CONFIG.getDelay());
+            tracker.offset(FileOffsetMode.LINE, TRACKER_CONFIG.getOffset());
+            tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, TRACKER_CONFIG.getWaitTimes());
             // 开始监听文件
             tracker.run();
         } catch (Exception e) {
