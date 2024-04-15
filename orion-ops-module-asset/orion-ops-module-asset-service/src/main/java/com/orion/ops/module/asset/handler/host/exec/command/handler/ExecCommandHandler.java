@@ -179,9 +179,9 @@ public class ExecCommandHandler implements IExecCommandHandler {
             return;
         }
         this.closed = true;
+        Streams.close(logOutputStream);
         Streams.close(executor);
         Streams.close(sessionStore);
-        Streams.close(logOutputStream);
         execLogManager.asyncCloseTailFile(execHostCommand.getLogPath());
     }
 

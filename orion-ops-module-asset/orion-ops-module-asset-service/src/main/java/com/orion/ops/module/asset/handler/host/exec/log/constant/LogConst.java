@@ -19,6 +19,6 @@ public interface LogConst {
 
     int TRACKER_DELAY_MS = 200;
 
-    int TRACKER_WAIT_TIMES = 10;
+    int TRACKER_WAIT_TIMES = 100;
 
 }
