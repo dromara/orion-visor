@@ -55,10 +55,11 @@ public class ExecLogTracker implements IExecLogTracker {
             tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, LogConst.TRACKER_WAIT_TIMES);
             // 开始监听文件
             tracker.run();
-            // 监听完成回调
-            this.close = true;
         } catch (Exception e) {
             log.error("exec log tracker error path: {}", absolutePath, e);
+        } finally {
+            // 释放资源
+            this.close();
         }
     }
 

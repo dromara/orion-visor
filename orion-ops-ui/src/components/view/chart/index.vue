@@ -6,13 +6,13 @@
 </template>
 
 <script lang="ts" setup>
-  import type { ECBasicOption } from 'echarts/types/src/util/types';
+  import type { EChartsOption } from 'echarts';
   import { computed, nextTick, ref } from 'vue';
   import { useAppStore } from '@/store';
   import VCharts from 'vue-echarts';
 
   const props = withDefaults(defineProps<{
-    options: ECBasicOption,
+    options: EChartsOption,
     autoResize: boolean,
     width: string,
     height: string,

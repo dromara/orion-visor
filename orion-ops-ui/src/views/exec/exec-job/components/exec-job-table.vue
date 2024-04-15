@@ -109,8 +109,7 @@
       </template>
       <!-- 最近任务 -->
       <template #recentLog="{ record }">
-        <!-- 最近任务 -->
-        <div class="flex-center" v-if="record.recentLogId">
+        <div class="flex-center" v-if="record.recentLogId && record.recentLogStatus">
           <!-- 执行状态 -->
           <a-tag class="mr8" :color="getDictValue(execStatusKey, record.recentLogStatus, 'color')">
             {{ getDictValue(execStatusKey, record.recentLogStatus) }}

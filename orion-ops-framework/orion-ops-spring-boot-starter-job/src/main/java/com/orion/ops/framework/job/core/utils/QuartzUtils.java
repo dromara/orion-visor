@@ -70,7 +70,10 @@ public class QuartzUtils {
                 .withIdentity(getTriggerKey(type, key))
                 .withSchedule(CronScheduleBuilder
                         .cronSchedule(cron)
-                        .withMisfireHandlingInstructionIgnoreMisfires())
+                        // 补偿一次
+                        // .withMisfireHandlingInstructionFireAndProceed()
+                        // 不补偿
+                        .withMisfireHandlingInstructionDoNothing())
                 .build();
         QuartzUtils.addJob(jobDetail, trigger);
     }
