@@ -7,7 +7,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
-import com.orion.ops.framework.biz.operator.log.core.config.OperatorLogConfig;
+import com.orion.ops.framework.biz.operator.log.configuration.config.OperatorLogConfig;
 import com.orion.ops.framework.biz.operator.log.core.enums.ReturnType;
 import com.orion.ops.framework.biz.operator.log.core.factory.OperatorTypeHolder;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;

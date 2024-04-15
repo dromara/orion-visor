@@ -21,17 +21,16 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
   import type { TabRouterItem } from './types';
   import usePermission from '@/hooks/permission';
-  import { onMounted, } from 'vue';
+  import { onMounted } from 'vue';
 
   const permission = usePermission();
 
-  const props = defineProps({
-    items: Array as PropType<Array<TabRouterItem>>,
-    modelValue: [String, Number]
-  });
+  const props = defineProps<Partial<{
+    items: Array<TabRouterItem>;
+    modelValue: string | number;
+  }>>();
 
   const emits = defineEmits(['update:modelValue', 'change']);
 
@@ -80,7 +79,7 @@
     height: 32px;
     margin: 12px 12px 0 12px;
     align-items: center;
-    padding: 5px 16px;
+    padding: 6px 18px;
     cursor: pointer;
     border-radius: 32px;
     font-size: 14px;
@@ -96,7 +95,7 @@
     }
 
     &:hover {
-      background: var(--color-fill-3);
+      background: var(--color-fill-2);
     }
   }
 

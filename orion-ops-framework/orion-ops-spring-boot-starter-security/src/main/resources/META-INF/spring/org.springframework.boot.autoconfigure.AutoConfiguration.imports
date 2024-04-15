@@ -1,2 +1,2 @@
-com.orion.ops.framework.security.config.OrionSecurityAutoConfiguration
-com.orion.ops.framework.security.config.OrionCryptoAutoConfiguration
+com.orion.ops.framework.security.configuration.OrionSecurityAutoConfiguration
+com.orion.ops.framework.security.configuration.OrionCryptoAutoConfiguration

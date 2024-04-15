@@ -53,6 +53,10 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  redis:
+    database: 0
+    connect-timeout: 5000
+    timeout: 3000
   cache:
     type: REDIS
     redis:
@@ -60,6 +64,34 @@ spring:
   output:
     ansi:
       enabled: DETECT
+  quartz:
+    job-store-type: JDBC
+    overwrite-existing-jobs: false
+    jdbc:
+      initialize-schema: NEVER
+    properties:
+      org:
+        quartz:
+          scheduler:
+            # 实例 ID
+            instanceId: AUTO
+            instanceName: quartzScheduler
+          jobStore:
+            # 持久化配置
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            useProperties: false
+            tablePrefix: QRTZ_
+            misfireThreshold: 60000
+            clusterCheckinInterval: 5000
+            # 打开群集功能
+            isClustered: false
+          #连接池
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
   boot:
     admin:
       context-path: /admin
@@ -108,7 +140,7 @@ logging:
   logback:
     rollingpolicy:
       clean-history-on-start: false
-      file-name-pattern: ${logging.file.path}/rolling/orion-ops-rolling-%d{yyyy-MM-dd}.%i.gz
+      file-name-pattern: ${logging.file.path}/rolling/rolling-%d{yyyy-MM-dd}.%i.gz
       max-history: 30
       max-file-size: 16MB
       total-size-cap: 0B
@@ -152,6 +184,7 @@ orion:
     session-idle-timeout: 1800000
   swagger:
     # swagger 配置
+    author: lijiahang
     title: orion-ops-pro 运维平台
     description: 一站式运维服务平台
     version: ${orion.version}

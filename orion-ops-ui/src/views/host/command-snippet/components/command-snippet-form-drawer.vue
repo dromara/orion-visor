@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
+            width="40%"
             :title="title"
-            :width="388"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -11,10 +11,8 @@
     <a-spin class="full form-container" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              label-align="right"
-              layout="vertical"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
+              label-align="left"
+              :auto-label-width="true"
               :rules="formRules">
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
@@ -29,9 +27,9 @@
         <!-- 代码片段 -->
         <a-form-item field="command"
                      label="代码片段"
-                     style="margin: 0;">
+                     :hide-label="true">
           <editor v-model="formModel.command"
-                  containerClass="command-editor"
+                  container-class="command-editor"
                   language="shell"
                   theme="vs-dark"
                   :suggestions="true"
@@ -145,11 +143,11 @@
 
 <style lang="less" scoped>
   .form-container {
-    padding: 12px;
+    padding: 16px;
   }
 
   .command-editor {
-    height: calc(100vh - 330px);
+    height: calc(100vh - 262px);
   }
 
 </style>

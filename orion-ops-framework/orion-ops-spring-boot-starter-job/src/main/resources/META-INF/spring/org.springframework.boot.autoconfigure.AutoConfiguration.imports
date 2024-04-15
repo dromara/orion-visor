@@ -1,1 +1,2 @@
-com.orion.ops.framework.job.config.OrionSchedulerAutoConfiguration
+com.orion.ops.framework.job.configuration.OrionSchedulerAutoConfiguration
+com.orion.ops.framework.job.configuration.OrionQuartzAutoConfiguration

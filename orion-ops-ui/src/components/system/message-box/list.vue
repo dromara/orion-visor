@@ -1,13 +1,11 @@
 <template>
   <a-list :bordered="false">
-    <a-list-item
-      v-for="item in renderList"
-      :key="item.id"
-      action-layout="vertical"
-      :style="{
-        opacity: item.status ? 0.5 : 1,
-      }"
-    >
+    <a-list-item v-for="item in renderList"
+                 :key="item.id"
+                 action-layout="vertical"
+                 :style="{
+                   opacity: item.status ? 0.5 : 1,
+                 }">
       <template #extra>
         <a-tag v-if="item.messageType === 0" color="gray">未开始</a-tag>
         <a-tag v-else-if="item.messageType === 1" color="green">已开通</a-tag>
@@ -65,19 +63,15 @@
 </template>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
-  import type { MessageRecord, MessageListType } from '@/api/system/message';
+  import type { MessageListType, MessageRecord } from '@/api/system/message';
 
-  const props = defineProps({
-    renderList: {
-      type: Array as PropType<MessageListType>,
-      required: true,
-    },
-    unreadCount: {
-      type: Number,
-      default: 0,
-    },
+  const props = withDefaults(defineProps<{
+    renderList: MessageListType;
+    unreadCount?: number;
+  }>(), {
+    unreadCount: 0,
   });
+
   const emit = defineEmits(['itemClick']);
   const allRead = () => {
     emit('itemClick', [...props.renderList]);

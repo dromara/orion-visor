@@ -9,7 +9,7 @@ export interface ExecTemplateCreateRequest {
   name?: string;
   command?: string;
   timeout?: number;
-  parameter?: string;
+  parameterSchema?: string;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface ExecTemplateQueryResponse extends TableData {
   name: string;
   command: string;
   timeout: number;
-  parameter: string;
+  parameterSchema: string;
   createTime: number;
   updateTime: number;
   creator: string;

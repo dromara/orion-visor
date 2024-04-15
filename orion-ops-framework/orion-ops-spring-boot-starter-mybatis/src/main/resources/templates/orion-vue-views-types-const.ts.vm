@@ -1,8 +1,6 @@
 #if($dictMap.entrySet().size() > 0)
 #foreach($enumEntity in $dictMap.entrySet())
-/**
- * $enumEntity.value.comment
- */
+// $enumEntity.value.comment
 // FIXME 检查这里的类型
 export const $enumEntity.value.field = {
 #set($count = $enumEntity.value.fields.size() - 1)
@@ -10,7 +8,7 @@ export const $enumEntity.value.field = {
   // $enumEntity.value.labels.get($index)
   $enumEntity.value.fields.get($index): '$enumEntity.value.values.get($index)',
 #end
-}
+};
 
 #end
 #foreach($enumEntity in $dictMap.entrySet())

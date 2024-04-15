@@ -13,14 +13,12 @@ import com.orion.ops.module.asset.entity.request.host.HostSftpLogQueryRequest;
 import com.orion.ops.module.asset.entity.vo.HostSftpLogVO;
 import com.orion.ops.module.asset.service.HostSftpLogService;
 import com.orion.ops.module.infra.api.OperatorLogApi;
-import com.orion.ops.module.infra.entity.dto.operator.OperatorLogDTO;
 import com.orion.ops.module.infra.entity.dto.operator.OperatorLogQueryDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * SFTP 操作日志 服务实现类
@@ -40,9 +38,8 @@ public class HostSftpLogServiceImpl implements HostSftpLogService {
     public DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request) {
         // 查询
         OperatorLogQueryDTO query = this.buildQueryInfo(request);
-        DataGrid<OperatorLogDTO> dataGrid = operatorLogApi.getOperatorLogPage(query);
         // 转换
-        List<HostSftpLogVO> rows = dataGrid.stream()
+        return operatorLogApi.getOperatorLogPage(query)
                 .map(s -> {
                     JSONObject extra = JSON.parseObject(s.getExtra());
                     HostSftpLogVO vo = HostSftpLogConvert.MAPPER.to(s);
@@ -52,13 +49,7 @@ public class HostSftpLogServiceImpl implements HostSftpLogService {
                     vo.setPaths(extra.getString(ExtraFieldConst.PATH).split("\\|"));
                     vo.setExtra(extra);
                     return vo;
-                }).collect(Collectors.toList());
-        // 返回
-        // TODO KIT
-        DataGrid<HostSftpLogVO> result = new DataGrid<>(rows, dataGrid.getTotal());
-        result.setPage(dataGrid.getPage());
-        result.setLimit(dataGrid.getLimit());
-        return result;
+                });
     }
 
     @Override

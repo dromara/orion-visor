@@ -1,6 +1,8 @@
 package com.orion.ops.module.asset.handler.host.exec.command.handler;
 
 import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.support.timeout.TimeoutCheckers;
+import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
@@ -8,7 +10,6 @@ import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
-import com.orion.ops.module.asset.handler.host.exec.command.TimeOutCheckerFix;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 命令执行任务
@@ -36,10 +36,10 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private final ExecCommandDTO execCommand;
 
-    private TimeoutChecker timeoutChecker;
+    private TimeoutChecker<TimeoutEndpoint> timeoutChecker;
 
     @Getter
-    private List<IExecCommandHandler> handlers;
+    private final List<IExecCommandHandler> handlers;
 
     public ExecTaskHandler(ExecCommandDTO execCommand) {
         this.execCommand = execCommand;
@@ -87,16 +87,18 @@ public class ExecTaskHandler implements IExecTaskHandler {
     private void runHostCommand(List<ExecCommandHostDTO> hosts) throws Exception {
         // 超时检查
         if (execCommand.getTimeout() != 0) {
-            this.timeoutChecker = new TimeOutCheckerFix();
+            this.timeoutChecker = TimeoutCheckers.create();
             AssetThreadPools.TIMEOUT_CHECK.execute(this.timeoutChecker);
         }
         if (hosts.size() == 1) {
             // 单个主机直接执行
-            new ExecCommandHandler(hosts.get(0), timeoutChecker).run();
+            ExecCommandHandler handler = new ExecCommandHandler(hosts.get(0), timeoutChecker);
+            handlers.add(handler);
+            handler.run();
         } else {
-            this.handlers = hosts.stream()
+            hosts.stream()
                     .map(s -> new ExecCommandHandler(s, timeoutChecker))
-                    .collect(Collectors.toList());
+                    .forEach(handlers::add);
             // 多个主机异步阻塞执行
             Threads.blockRun(handlers, AssetThreadPools.EXEC_HOST);
         }

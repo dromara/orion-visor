@@ -103,7 +103,9 @@
       </template>
       <!-- 操作类型 -->
       <template #type="{ record }">
-        {{ getDictValue(sftpOperatorTypeKey, record.type) }}
+        <a-tag color="arcoblue">
+          {{ getDictValue(sftpOperatorTypeKey, record.type) }}
+        </a-tag>
       </template>
       <!-- 操作文件 -->
       <template #paths="{ record }">

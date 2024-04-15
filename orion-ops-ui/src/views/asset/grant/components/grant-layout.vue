@@ -1,11 +1,13 @@
 <template>
   <a-spin :loading="loading" class="grant-container">
     <!-- 角色列表 -->
-    <router-roles v-if="type === GrantType.ROLE" outer-class="router-wrapper"
+    <router-roles v-if="type === GrantType.ROLE"
+                  outer-class="router-wrapper"
                   v-model="subjectId"
                   @change="fetchAuthorizedData" />
     <!-- 角色列表 -->
-    <router-users v-else-if="type === GrantType.USER" outer-class="router-wrapper"
+    <router-users v-else-if="type === GrantType.USER"
+                  outer-class="router-wrapper"
                   v-model="subjectId"
                   @change="fetchAuthorizedData" />
     <!-- 数据列表 -->
@@ -60,10 +62,10 @@
   import RouterRoles from './router-roles.vue';
   import RouterUsers from './router-users.vue';
 
-  const props = defineProps({
-    type: String,
-    loading: Boolean,
-  });
+  const props = defineProps<{
+    type: string;
+    loading: boolean;
+  }>();
   const emits = defineEmits(['fetch', 'grant']);
 
   const subjectId = ref();

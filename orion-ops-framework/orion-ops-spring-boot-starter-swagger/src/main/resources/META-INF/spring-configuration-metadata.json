@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.swagger",
-      "type": "com.orion.ops.framework.swagger.config.SwaggerConfig",
-      "sourceType": "com.orion.ops.framework.swagger.config.SwaggerConfig"
+      "type": "com.orion.ops.framework.swagger.configuration.config.SwaggerConfig",
+      "sourceType": "com.orion.ops.framework.swagger.configuration.config.SwaggerConfig"
     }
   ],
   "properties": [
@@ -16,6 +16,11 @@
       "name": "orion.swagger.description",
       "type": "java.lang.String",
       "description": "swagger 项目描述."
+    },
+    {
+      "name": "orion.swagger.author",
+      "type": "java.lang.String",
+      "description": "swagger 项目作者."
     },
     {
       "name": "orion.swagger.version",

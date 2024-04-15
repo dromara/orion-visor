@@ -18,7 +18,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 清空 -->
-          <a-button v-permission="['infra:operator-log:clear']"
+          <a-button v-permission="['infra:operator-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -58,9 +58,9 @@
              :bordered="false">
       <!-- 操作模块 -->
       <template #module="{ record }">
-        {{ getDictValue(operatorLogModuleKey, record.module) }}
+        <span>{{ getDictValue(operatorLogModuleKey, record.module) }}</span>
         <icon-oblique-line />
-        {{ getDictValue(operatorLogTypeKey, record.type) }}
+        <span>{{ getDictValue(operatorLogTypeKey, record.type) }}</span>
       </template>
       <!-- 风险等级 -->
       <template #riskLevel="{ record }">

@@ -31,6 +31,10 @@ public interface Const extends com.orion.lang.constant.Const, FieldConst, CnCons
 
     Integer DEFAULT_VERSION = 1;
 
+    Long SYSTEM_USER_ID = 0L;
+
+    String SYSTEM_USERNAME = "system";
+
     String ERROR_LOG = "error.log";
 
 }

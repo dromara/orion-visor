@@ -1,0 +1,11 @@
+### 获取 cron 下次执行时间
+POST {{baseUrl}}/infra/expression/cron-next
+Content-Type: application/json
+
+{
+  "expression": "5 */3 * * * ?",
+  "times": 2
+}
+
+
+###

@@ -11,9 +11,9 @@
            :bordered="false">
     <!-- 操作模块 -->
     <template #module="{ record }">
-      {{ getDictValue(operatorLogModuleKey, record.module) }}
+      <span>{{ getDictValue(operatorLogModuleKey, record.module) }}</span>
       <icon-oblique-line />
-      {{ getDictValue(operatorLogTypeKey, record.type) }}
+      <span>{{ getDictValue(operatorLogTypeKey, record.type) }}</span>
     </template>
     <!-- 风险等级 -->
     <template #riskLevel="{ record }">
@@ -81,21 +81,14 @@
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
-  const props = defineProps({
-    handleColumn: {
-      type: Boolean,
-      default: true
+  const props = withDefaults(defineProps<Partial<{
+    handleColumn: boolean;
+    current: boolean;
+    baseParams: object;
+  }>>(), {
+    baseParams: () => {
+      return {};
     },
-    current: {
-      type: Boolean,
-      default: false
-    },
-    baseParams: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
   });
 
   const pagination = usePagination();

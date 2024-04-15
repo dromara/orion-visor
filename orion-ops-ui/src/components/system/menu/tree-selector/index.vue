@@ -22,10 +22,10 @@
   import { titleFilter } from '@/types/form';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: Number,
-    disabled: Boolean,
-  });
+  const props = defineProps<{
+    modelValue: number;
+    disabled: boolean;
+  }>();
 
   const emits = defineEmits(['update:modelValue']);
 

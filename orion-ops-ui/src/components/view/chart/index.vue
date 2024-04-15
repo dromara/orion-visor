@@ -1,47 +1,44 @@
 <template>
-  <VCharts
-    v-if="renderChart"
-    :option="options"
-    :autoresize="autoResize"
-    :style="{ width, height }"
-  />
+  <v-charts v-if="renderChart"
+            :option="options"
+            :autoresize="autoResize"
+            :style="{ width, height }" />
 </template>
 
 <script lang="ts" setup>
-  import { ref, nextTick } from 'vue';
+  import type { EChartsOption } from 'echarts';
+  import { computed, nextTick, ref } from 'vue';
+  import { useAppStore } from '@/store';
   import VCharts from 'vue-echarts';
-  // import { useAppStore } from '@/store';
 
-  defineProps({
-    options: {
-      type: Object,
-      default() {
-        return {};
-      },
+  const props = withDefaults(defineProps<{
+    options: EChartsOption,
+    autoResize: boolean,
+    width: string,
+    height: string,
+  }>(), {
+    options: () => {
+      return {};
     },
-    autoResize: {
-      type: Boolean,
-      default: true,
-    },
-    width: {
-      type: String,
-      default: '100%',
-    },
-    height: {
-      type: String,
-      default: '100%',
-    },
+    autoResize: true,
+    width: '100%',
+    height: '100%',
   });
-  // const appStore = useAppStore();
-  // const theme = computed(() => {
-  //   if (appStore.theme === 'dark') return 'dark';
-  //   return '';
-  // });
+
+  const appStore = useAppStore();
+
+  // 监听暗色模式
+  const theme = computed(() => {
+    if (appStore.theme === 'dark') return 'dark';
+    return '';
+  });
+
   const renderChart = ref(false);
-  // wait container expand
+
   nextTick(() => {
     renderChart.value = true;
   });
+
 </script>
 
 <style lang="less" scoped>

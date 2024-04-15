@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.async.executor",
-      "type": "com.orion.ops.framework.common.config.AsyncExecutorConfig",
-      "sourceType": "com.orion.ops.framework.common.config.AsyncExecutorConfig"
+      "type": "com.orion.ops.framework.common.configuration.config.AsyncExecutorConfig",
+      "sourceType": "com.orion.ops.framework.common.configuration.config.AsyncExecutorConfig"
     }
   ],
   "properties": [

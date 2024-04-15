@@ -5,13 +5,12 @@
                 @grant="doGrant">
     <!-- 分组 -->
     <host-group-tree outer-class="group-main-tree"
+                     v-model:checked-keys="checkedGroups"
                      :checkable="true"
-                     :checked-keys="checkedGroups"
                      :editable="false"
                      :loading="loading"
-                     @loading="setLoading"
-                     @select-node="(e) => selectedGroup = e"
-                     @update:checked-keys="updateCheckedGroups" />
+                     @set-loading="setLoading"
+                     @selected-node="(e) => selectedGroup = e" />
     <!-- 主机列表 -->
     <host-list class="group-main-hosts sticky-list" :group="selectedGroup" />
   </grant-layout>
@@ -34,20 +33,15 @@
   import HostList from './host-list.vue';
   import GrantLayout from './grant-layout.vue';
 
-  const props = defineProps({
-    type: String,
-  });
+  const props = defineProps<{
+    type: string;
+  }>();
 
   const { loading, setLoading } = useLoading();
 
   const authorizedGroups = ref<Array<number>>([]);
   const checkedGroups = ref<Array<number>>([]);
   const selectedGroup = ref<TreeNodeData>({});
-
-  // 选择分组
-  const updateCheckedGroups = (e: Array<number>) => {
-    checkedGroups.value = e;
-  };
 
   // 获取授权列表
   const fetchAuthorizedGroup = async (request: AssetAuthorizedDataQueryRequest) => {

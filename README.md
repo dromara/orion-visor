@@ -2,7 +2,8 @@
  <img style="margin-right: 8px;" src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8c687ef1-5711-4a93-9db0-79c010af7902.png" width="32px" height="32px"/> orion-ops-pro 是什么
 </h1>
 
-`orion-ops-pro` 是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、Web终端、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。它是基于 `orion-ops`
+`orion-ops-pro`
+是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、计划任务、Web终端、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。它是基于 `orion-ops`
 的产品思路进行重构，技术架构升级，并优化了交互逻辑，让操作更快捷更友好。
 
 <p style="text-align: left">
@@ -28,7 +29,7 @@
 
 <br/>  
 
-当前版本: **1.0.3**  
+当前版本: **1.0.4**  
 github: https://github.com/lijiahangmax/orion-ops-pro  
 gitee: https://gitee.com/lijiahangmax/orion-ops-pro  
 文档: https://lijiahangmax.gitee.io/orion-ops-pro/#/    
@@ -48,10 +49,9 @@ demo: http://101.43.254.243:1081/
 * 在线终端: 提供便捷的在线 Web 终端服务, 支持快捷命令、自定义快捷键和主题风格。
 * 文件管理: 实现远程主机大文件的批量上传、下载和在线编辑等操作。
 * 批量操作: 支持远程主机批量执行 shell 命令。
+* 计划任务: 支持配置 cron 表达式, 定时执行主机 shell 命令。
 * 操作日志: 记录用户操作日志，确保操作可追溯, 提高系统安全性。
 * 可扩展性: 前后端代码规范统一、代码质量高、健壮且易于阅读和扩展。
-
-[comment]: <> (  FIXME * 调度任务: 维护 cron 表达式, 定时执行主机命令)
 
 ## 快速开始
 
@@ -70,8 +70,6 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 * Redis
 * Vue3
 * Arco Design
-
-[//]: # ( fixme 免责声明 &#40;注意事项&#41; &#40;在使用平台之前, 请确保您已经了解并同意相关的使用协议和隐私政策。&#41; &#40;为了数据安全, 请定期备份数据和配置, 以防意外丢失或损坏。&#41;)
 
 ## 功能预览
 
@@ -99,6 +97,12 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 ![执行日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/06d02d38-70ef-43c2-950c-9f8c73a105ba.png "执行日志")
 ![执行记录](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0e474cc2-f7cf-49bc-be3c-f6445783ad7c.png "执行记录")
 
+> 计划任务
+
+![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
+![计划任务编辑](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/03176f22-0e21-4a07-8511-7b08211594d6.png "计划任务编辑")
+![计划任务日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/1528c6a2-4813-4c3c-aa7b-f13a979065ba.png "计划任务日志")
+
 > 用户管理
 
 ![用户列表](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0d5f26e0-de4e-4342-800c-30a0d5d3078e.png "用户列表")  
@@ -125,6 +129,10 @@ roadmap: https://lijiahangmax.gitee.io/orion-ops-pro/#/about/roadmap
 <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8063cf87-9de9-4df2-8009-d5dea6d69861.jpg" alt="收款码" width="540px"/>  
 
 🎁 为了项目能健康持续的发展, 我期望获得相应的资金支持, 你们的支持是我不断更新前进的动力!
+
+## 免责声明
+
+在使用本项目之前, 请确保您已经了解并同意相关的使用协议和隐私政策。[免责声明](https://github.com/lijiahangmax/orion-ops-pro/blob/main/DISCLAIMER.md)
 
 ## License
 

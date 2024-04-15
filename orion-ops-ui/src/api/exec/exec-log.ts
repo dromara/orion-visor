@@ -1,14 +1,13 @@
-import type { DataGrid, Pagination } from '@/types/global';
+import type { Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
-import axios from 'axios';
-import qs from 'query-string';
 
 /**
- * 执行记录查询请求
+ * 执行日志查询请求
  */
 export interface ExecLogQueryRequest extends Pagination {
   id?: number;
   userId?: number;
+  sourceId?: number;
   description?: string;
   command?: string;
   status?: string;
@@ -16,13 +15,14 @@ export interface ExecLogQueryRequest extends Pagination {
 }
 
 /**
- * 执行记录查询响应
+ * 执行日志查询响应
  */
 export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraResponse {
   id: number;
   userId: number;
   username: string;
   description: string;
+  execSeq: number;
   command: string;
   parameterSchema: string;
   timeout: number;
@@ -34,14 +34,14 @@ export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraRespon
 }
 
 /**
- * 执行记录查询响应 拓展
+ * 执行日志查询响应 拓展
  */
 export interface ExecLogQueryExtraResponse {
   hosts: Array<ExecHostLogQueryResponse>;
 }
 
 /**
- * 主机执行记录查询响应
+ * 主机执行日志查询响应
  */
 export interface ExecHostLogQueryResponse extends TableData {
   id: number;
@@ -61,87 +61,23 @@ export interface ExecHostLogQueryResponse extends TableData {
 /**
  * 执行状态查询响应
  */
-export interface ExecStatusResponse {
+export interface ExecLogStatusResponse {
   logList: Array<ExecLogQueryResponse>;
   hostList: Array<ExecHostLogQueryResponse>;
 }
 
 /**
- * 分页查询执行记录
+ * 执行日志 tail 请求
  */
-export function getExecLogPage(request: ExecLogQueryRequest) {
-  return axios.post<DataGrid<ExecLogQueryResponse>>('/asset/exec-log/query', request);
+export interface ExecLogTailRequest {
+  execId?: number;
+  hostExecIdList?: Array<number>;
 }
 
 /**
- * 查询执行记录
+ * 执行中断命令请求
  */
-export function getExecLog(id: number) {
-  return axios.get<ExecLogQueryResponse>('/asset/exec-log/get', { params: { id } });
-}
-
-/**
- * 查询主机执行记录
- */
-export function getExecHostLogList(logId: number) {
-  return axios.get<Array<ExecHostLogQueryResponse>>('/asset/exec-log/host-list', { params: { logId } });
-}
-
-/**
- * 查询命令执行状态
- */
-export function getExecLogStatus(idList: Array<number>) {
-  return axios.get<ExecStatusResponse>('/asset/exec-log/status', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
-}
-
-/**
- * 查询历史执行记录
- */
-export function getExecLogHistory(limit: number) {
-  return axios.get<Array<ExecLogQueryResponse>>('/asset/exec-log/history', { params: { page: 1, limit } });
-}
-
-/**
- * 删除执行记录
- */
-export function deleteExecLog(id: number) {
-  return axios.delete('/asset/exec-log/delete', { params: { id } });
-}
-
-/**
- * 批量删除执行记录
- */
-export function batchDeleteExecLog(idList: Array<number>) {
-  return axios.delete('/asset/exec-log/batch-delete', {
-    params: { idList },
-    paramsSerializer: params => {
-      return qs.stringify(params, { arrayFormat: 'comma' });
-    }
-  });
-}
-
-/**
- * 删除主机执行记录
- */
-export function deleteExecHostLog(id: number) {
-  return axios.delete('/asset/exec-log/delete-host', { params: { id } });
-}
-
-/**
- * 查询操作日志数量
- */
-export function getExecLogCount(request: ExecLogQueryRequest) {
-  return axios.post<number>('/asset/exec-log/query-count', request);
-}
-
-/**
- * 清空操作日志
- */
-export function clearExecLog(request: ExecLogQueryRequest) {
-  return axios.post<number>('/asset/exec-log/clear', request);
+export interface ExecLogInterruptRequest {
+  logId?: number;
+  hostLogId?: number;
 }

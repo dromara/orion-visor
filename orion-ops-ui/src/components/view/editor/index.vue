@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
   import type { Theme, Options } from './core';
-  import type { CSSProperties, PropType } from 'vue';
+  import type { CSSProperties } from 'vue';
   import * as monaco from 'monaco-editor';
   import { createDefaultOptions } from './core';
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
@@ -28,46 +28,29 @@
 
   const emits = defineEmits(['update:modelValue', 'change', 'editor-mounted']);
 
-  const props = defineProps({
-    modelValue: {
-      type: String,
+  const props = withDefaults(defineProps<Partial<{
+    modelValue: string;
+    width: string;
+    height: string;
+    readonly: boolean;
+    autoFocus: boolean;
+    language: string;
+    suggestions: boolean;
+    containerClass: string;
+    containerStyle: CSSProperties;
+    theme: Theme | boolean;
+    options: Options;
+  }>>(), {
+    width: '100%',
+    height: '100%',
+    readonly: false,
+    autoFocus: false,
+    language: 'json',
+    suggestions: false,
+    theme: true,
+    options: () => {
+      return {};
     },
-    width: {
-      type: String,
-      default: '100%'
-    },
-    height: {
-      type: String,
-      default: '100%'
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    },
-    autoFocus: {
-      type: Boolean,
-      default: false
-    },
-    language: {
-      type: String,
-      default: 'json',
-    },
-    suggestions: {
-      type: Boolean,
-      default: false,
-    },
-    containerClass: String,
-    containerStyle: Object as PropType<CSSProperties>,
-    theme: {
-      type: [String, Boolean] as PropType<Theme | boolean>,
-      default: true,
-    },
-    options: {
-      type: Object as PropType<Options>,
-      default: () => {
-        return {};
-      }
-    }
   });
 
   const editorContainer = ref();
@@ -169,10 +152,10 @@
 
   // 卸载
   onBeforeUnmount(() => {
-    editor?.dispose();
-    editor = undefined;
     completionItemProvider?.dispose();
     completionItemProvider = undefined;
+    editor?.dispose();
+    editor = undefined;
   });
 
 </script>

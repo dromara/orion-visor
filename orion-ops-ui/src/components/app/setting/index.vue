@@ -16,11 +16,11 @@
             @cancel="() => setVisible(false)">
     <div class="preference-containers">
       <!-- 布局设置 -->
-      <Block :options="layoutOpts" title="布局设置" />
+      <block :options="layoutOpts" title="布局设置" />
       <!-- 数据设置 -->
-      <Block :options="dataOpts" title="数据设置" />
+      <block :options="dataOpts" title="数据设置" />
       <!-- 页面视图 -->
-      <Block :options="viewsOpts" title="页面视图" />
+      <block :options="viewsOpts" title="页面视图" />
     </div>
   </a-drawer>
 </template>
@@ -28,9 +28,9 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { useAppStore } from '@/store';
-  import Block from './block.vue';
   import useVisible from '@/hooks/visible';
   import { CardPageSizeOptions, TablePageSizeOptions } from '@/types/const';
+  import Block from './block.vue';
 
   const appStore = useAppStore();
   const { visible, setVisible } = useVisible();

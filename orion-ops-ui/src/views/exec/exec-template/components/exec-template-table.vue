@@ -76,7 +76,7 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <a-button v-permission="['asset:exec:exec-command']"
+          <a-button v-permission="['asset:exec-command:exec']"
                     type="text"
                     size="mini"
                     @click="emits('openExec', record)">

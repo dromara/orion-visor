@@ -1,7 +1,6 @@
 * 关于
     * [Roadmap](about/roadmap.md)
     * [更新日志](about/change-log.md)
-    * [如何升级](about/update.md)
 * 快速开始
     * [docker安装](quickstart/docker-install.md)
     * [普通安装](quickstart/install.md)
@@ -10,6 +9,7 @@
 * 操作手册
     * [资产管理](operator/asset.md)
     * [主机运维](operator/host-ops.md)
+    * [命令执行](operator/exec.md)
     * [运维审计](operator/asset-audit.md)
     * [用户管理](operator/user.md)
     * [系统管理](operator/system.md)

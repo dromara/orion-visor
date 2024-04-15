@@ -2,10 +2,12 @@
   <div class="container">
     <log-item class="log-item"
               v-show="current === host.id"
-              v-for="host in hosts"
+              v-for="host in execLog.hosts"
               :key="host.id"
               :ref="addRef as unknown as VNodeRef"
+              :type="type"
               :host="host"
+              :exec-log="execLog"
               :appender="appender" />
   </div>
 </template>
@@ -18,15 +20,17 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
-  import type { LogDomRef, ILogAppender } from './const';
+  import type { LogDomRef, ILogAppender } from './appender-const';
+  import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
+  import type { ExecType } from '../const';
   import { nextTick, ref, watch } from 'vue';
   import LogItem from './log-item.vue';
 
   const props = defineProps<{
     current: number;
-    hosts: Array<ExecHostLogQueryResponse>;
+    execLog: ExecLogQueryResponse;
     appender: ILogAppender;
+    type: ExecType;
   }>();
 
   const logRefs = ref<Array<LogDomRef>>([]);

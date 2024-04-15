@@ -101,15 +101,11 @@
   import { dateFormat } from '@/utils';
   import { copy } from '@/hooks/copy';
 
-  const { getDictValue } = useDictStore();
+  const { getDictValue, toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
   const record = ref<HostConnectLogQueryResponse>({} as HostConnectLogQueryResponse);
-
-  const emits = defineEmits(['clear']);
-
-  const { toOptions } = useDictStore();
 
   // 打开
   const open = (s: any) => {

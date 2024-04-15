@@ -37,8 +37,8 @@ public class ExecTemplateVO implements Serializable {
     @Schema(description = "超时时间秒 0不超时")
     private Integer timeout;
 
-    @Schema(description = "参数")
-    private String parameter;
+    @Schema(description = "参数定义")
+    private String parameterSchema;
 
     @Schema(description = "创建时间")
     private Date createTime;

@@ -74,21 +74,19 @@ public enum ErrorCode implements CodeInfo {
 
     DECRYPT_ERROR(908, "数据解密异常"),
 
-    EXPRESSION_ERROR(909, "表达式错误"),
+    TASK_EXECUTE_ERROR(909, "任务执行异常"),
 
-    TASK_EXECUTE_ERROR(910, "任务执行异常"),
+    CONNECT_ERROR(910, "建立连接失败"),
 
-    CONNECT_ERROR(911, "建立连接失败"),
+    INTERRUPT_ERROR(911, "操作中断"),
 
-    INTERRUPT_ERROR(912, "操作中断"),
+    UNSAFE_OPERATOR(912, "不安全的操作"),
 
-    UNSAFE_OPERATOR(913, "不安全的操作"),
+    VCS_OPETATOR_ERROR(913, "仓库操作执行失败"),
 
-    VCS_OPETATOR_ERROR(914, "仓库操作执行失败"),
+    DIABLED_ERROR(914, "数据已被禁用"),
 
-    DIABLED_ERROR(915, "数据已被禁用"),
-
-    UNSUPPOETED(916, "不支持此操作"),
+    UNSUPPOETED(915, "不支持此操作"),
 
     ;
 

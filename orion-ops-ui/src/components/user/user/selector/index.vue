@@ -16,16 +16,17 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PropType } from 'vue';
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { computed, ref, onMounted } from 'vue';
   import { useCacheStore } from '@/store';
   import { labelFilter } from '@/types/form';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: [Number, Array] as PropType<number | Array<number>>,
-    multiple: Boolean,
+  const props = withDefaults(defineProps<Partial<{
+    modelValue: number | Array<number>;
+    multiple: boolean;
+  }>>(), {
+    multiple: false,
   });
 
   const emits = defineEmits(['update:modelValue']);

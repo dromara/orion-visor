@@ -90,10 +90,10 @@
   import columns from './table.columns';
   import { Message } from '@arco-design/web-vue';
 
-  const props = defineProps({
-    type: String,
-    rollback: Function
-  });
+  const props = defineProps<{
+    type: string;
+    rollback: Function;
+  }>();
   const emits = defineEmits(['updated']);
 
   const pagination = usePagination();

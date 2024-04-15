@@ -43,7 +43,7 @@
 <script lang="ts" setup>
   import type { ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import { useDictStore } from '@/store';
-  import { execHostStatusKey } from './const';
+  import { execHostStatusKey } from '../const';
 
   const props = defineProps<{
     visibleBack: boolean;

@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
+            width="60%"
             :title="title"
-            :width="470"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -11,81 +11,90 @@
     <a-spin class="full modal-form" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
+              label-align="left"
+              :auto-label-width="true"
               :rules="formRules">
-        <!-- 模板名称 -->
-        <a-form-item field="name" label="模板名称">
-          <a-input v-model="formModel.name"
-                   placeholder="请输入模板名称"
-                   allow-clear />
-        </a-form-item>
-        <!-- 超时时间 -->
-        <a-form-item field="timeout"
-                     label="超时时间">
-          <a-input-number v-model="formModel.timeout"
-                          placeholder="为0则不超时"
-                          :min="0"
-                          :max="100000"
-                          hide-button>
-            <template #suffix>
-              秒
-            </template>
-          </a-input-number>
-        </a-form-item>
-        <!-- 模板命令 -->
-        <a-form-item field="command"
-                     label="模板命令"
-                     :wrapper-col-props="{ span: 24 }"
-                     :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
-          <exec-editor v-model="formModel.command"
-                       containerClass="command-editor"
-                       theme="vs-dark"
-                       :parameter="parameter" />
-        </a-form-item>
-        <!-- 命令参数 -->
-        <a-form-item field="parameter"
-                     class="parameter-form-item"
-                     label="命令参数"
-                     :label-col-props="{ span: 24 }"
-                     :wrapper-col-props="{ span: 24 }">
-          <!-- label -->
-          <template #label>
-            <div class="parameter-label-wrapper">
-              <span>命令参数</span>
-              <span class="span-blue pointer" @click="addParameter">添加参数</span>
-            </div>
-          </template>
-          <!-- 参数 -->
-          <template v-if="parameter.length">
-            <a-input-group v-for="(item, i) in parameter"
-                           :key="i"
-                           class="parameter-item"
-                           :class="[ i === parameter.length - 1 ? 'parameter-item-last' : '' ]">
-              <a-input class="parameter-item-name"
-                       v-model="item.name"
-                       placeholder="参数名称 (必填)"
+        <a-row :gutter="16">
+          <!-- 模板名称 -->
+          <a-col :span="14">
+            <a-form-item field="name" label="模板名称">
+              <a-input v-model="formModel.name"
+                       placeholder="请输入模板名称"
                        allow-clear />
-              <a-input class="parameter-item-default"
-                       v-model="item.defaultValue"
-                       placeholder="默认值 (非必填)"
-                       allow-clear />
-              <a-input class="parameter-item-description"
-                       v-model="item.desc"
-                       placeholder="描述 (非必填)"
-                       allow-clear />
-              <span class="parameter-item-close click-icon-wrapper"
-                    title="移除"
-                    @click="removeParameter(i)">
-               <icon-close />
-              </span>
-            </a-input-group>
-          </template>
-          <!-- 无参数 -->
-          <template v-else>
-            <span class="no-parameter">
-              <icon-empty class="mr4" />无参数
-            </span>
-          </template>
-        </a-form-item>
+            </a-form-item>
+          </a-col>
+          <!-- 超时时间 -->
+          <a-col :span="10">
+            <a-form-item field="timeout" label="超时时间">
+              <a-input-number v-model="formModel.timeout"
+                              placeholder="为0则不超时"
+                              :min="0"
+                              :max="100000"
+                              hide-button>
+                <template #suffix>
+                  秒
+                </template>
+              </a-input-number>
+            </a-form-item>
+          </a-col>
+          <!-- 模板命令 -->
+          <a-col :span="24">
+            <a-form-item field="command"
+                         label="模板命令"
+                         :hide-label="true"
+                         :wrapper-col-props="{ span: 24 }"
+                         :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
+              <exec-editor v-model="formModel.command"
+                           container-class="command-editor"
+                           theme="vs-dark"
+                           :parameter="parameter" />
+            </a-form-item>
+          </a-col>
+          <!-- 命令参数 -->
+          <a-col :span="24">
+            <a-form-item field="parameter"
+                         class="parameter-form-item"
+                         label="命令参数"
+                         :label-col-props="{ span: 24 }"
+                         :wrapper-col-props="{ span: 24 }">
+              <!-- label -->
+              <template #label>
+                <span class="span-blue pointer" @click="addParameter">添加参数</span>
+              </template>
+              <!-- 参数 -->
+              <template v-if="parameter.length">
+                <a-input-group v-for="(item, i) in parameter"
+                               :key="i"
+                               class="parameter-item"
+                               :class="[ i === parameter.length - 1 ? 'parameter-item-last' : '' ]">
+                  <a-input class="parameter-item-name"
+                           v-model="item.name"
+                           placeholder="参数名称 (必填)"
+                           allow-clear />
+                  <a-input class="parameter-item-default"
+                           v-model="item.defaultValue"
+                           placeholder="默认值 (非必填)"
+                           allow-clear />
+                  <a-input class="parameter-item-description"
+                           v-model="item.desc"
+                           placeholder="描述 (非必填)"
+                           allow-clear />
+                  <span class="parameter-item-close click-icon-wrapper"
+                        title="移除"
+                        @click="removeParameter(i)">
+                   <icon-close />
+                  </span>
+                </a-input-group>
+              </template>
+              <!-- 无参数 -->
+              <template v-else>
+                <span class="no-parameter">
+                  <icon-empty class="mr4" />无参数
+                </span>
+              </template>
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-spin>
   </a-drawer>
@@ -120,7 +129,7 @@
       name: undefined,
       command: undefined,
       timeout: 0,
-      parameter: undefined,
+      parameterSchema: undefined,
     };
   };
 
@@ -149,8 +158,8 @@
   // 渲染表单
   const renderForm = (record: any) => {
     formModel.value = Object.assign({}, record);
-    if (record.parameter) {
-      parameter.value = JSON.parse(record.parameter);
+    if (record.parameterSchema) {
+      parameter.value = JSON.parse(record.parameterSchema);
     } else {
       parameter.value = [];
     }
@@ -184,7 +193,7 @@
           return false;
         }
       }
-      formModel.value.parameter = JSON.stringify(parameter.value);
+      formModel.value.parameterSchema = JSON.stringify(parameter.value);
       if (isAddHandle.value) {
         // 新增
         await createExecTemplate(formModel.value);
@@ -223,16 +232,7 @@
 <style lang="less" scoped>
   .parameter-form-item {
     user-select: none;
-
-    :deep(.arco-form-item-label) {
-      width: 100%;
-    }
-
-    .parameter-label-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    margin-top: 4px;
 
     :deep(.arco-form-item-content) {
       flex-direction: column;
@@ -243,6 +243,7 @@
     }
 
     .parameter-item {
+      width: 100%;
       margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
@@ -294,7 +295,7 @@
 
   .command-editor {
     width: 100%;
-    height: 50vh;
+    height: 65vh;
   }
 
 </style>

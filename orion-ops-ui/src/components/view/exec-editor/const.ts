@@ -1,3 +1,12 @@
+// 触发提示前缀
+export const triggerPrefix = '_';
+
+// 触发提示前缀
+export const templatePrefix = '@{{ ';
+
+// 触发提示后缀
+export const templateSuffix = ' }}';
+
 // 模板参数
 export interface TemplateParam {
   name?: string;

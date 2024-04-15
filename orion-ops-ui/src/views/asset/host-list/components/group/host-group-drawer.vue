@@ -42,8 +42,8 @@
           <host-group-tree outer-class="tree-card-main"
                            ref="tree"
                            :loading="loading"
-                           @loading="setLoading"
-                           @select-node="selectGroup" />
+                           @set-loading="setLoading"
+                           @selected-node="selectGroup" />
         </div>
         <!-- 身体部分 -->
         <a-spin class="simple-card transfer-body"

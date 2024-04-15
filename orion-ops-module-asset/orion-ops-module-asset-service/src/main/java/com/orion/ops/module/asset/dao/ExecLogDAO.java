@@ -18,6 +18,22 @@ import java.util.List;
 public interface ExecLogDAO extends IMapper<ExecLogDO> {
 
     /**
+     * 通过 id 和 source 查询
+     *
+     * @param id     id
+     * @param source source
+     * @return log
+     */
+    default ExecLogDO selectByIdSource(Long id, String source) {
+        return this.of()
+                .createWrapper()
+                .eq(ExecLogDO::getId, id)
+                .eq(ExecLogDO::getSource, source)
+                .then()
+                .getOne();
+    }
+
+    /**
      * 获取执行历史
      *
      * @param source source

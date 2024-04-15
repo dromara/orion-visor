@@ -23,6 +23,9 @@ import java.util.List;
 @Schema(name = "ExecLogTailRequest", description = "执行日志查看 请求对象")
 public class ExecLogTailRequest {
 
+    @Schema(description = "执行来源")
+    private String source;
+
     @NotNull
     @Schema(description = "执行id")
     private Long execId;

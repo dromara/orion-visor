@@ -18,9 +18,11 @@
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: Number,
-    authorized: Boolean
+  const props = withDefaults(defineProps<Partial<{
+    modelValue: number;
+    authorized: boolean;
+  }>>(), {
+    authorized: false
   });
 
   const emits = defineEmits(['update:modelValue']);

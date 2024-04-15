@@ -244,7 +244,7 @@
 
   // 重置条件
   const reset = () => {
-    resetObject(formModel, ['extra']);
+    resetObject(formModel, ['queryTag']);
     fetchCardData();
   };
 

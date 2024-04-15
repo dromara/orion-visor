@@ -49,7 +49,6 @@
 
 <script lang="ts" setup>
   import type { UserUpdateRequest, UserQueryResponse } from '@/api/user/user';
-  import type { PropType } from 'vue';
   import useLoading from '@/hooks/loading';
   import { ref, onMounted } from 'vue';
   import formRules from '../../user/types/form.rules';
@@ -59,9 +58,9 @@
   import { Message } from '@arco-design/web-vue';
   import { updateUser } from '@/api/user/user';
 
-  const props = defineProps({
-    user: Object as PropType<UserQueryResponse>,
-  });
+  const props = defineProps<{
+    user?: UserQueryResponse;
+  }>();
 
   const userStore = useUserStore();
   const { loading, setLoading } = useLoading();

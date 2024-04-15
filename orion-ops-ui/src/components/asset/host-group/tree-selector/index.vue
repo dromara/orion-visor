@@ -17,14 +17,13 @@
 
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import type { PropType } from 'vue';
   import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps({
-    modelValue: Array as PropType<Array<Number>>,
-  });
+  const props = defineProps<Partial<{
+    modelValue: Array<number>;
+  }>>();
 
   const emits = defineEmits(['update:modelValue']);
 

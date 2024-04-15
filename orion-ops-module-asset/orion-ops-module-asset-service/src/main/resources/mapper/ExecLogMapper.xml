@@ -10,6 +10,7 @@
         <result column="source" property="source"/>
         <result column="source_id" property="sourceId"/>
         <result column="description" property="description"/>
+        <result column="exec_seq" property="execSeq"/>
         <result column="command" property="command"/>
         <result column="parameter_schema" property="parameterSchema"/>
         <result column="timeout" property="timeout"/>
@@ -25,7 +26,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, username, source, source_id, description, command, parameter_schema, timeout, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
+        id, user_id, username, source, source_id, description, exec_seq, command, parameter_schema, timeout, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
     <select id="getExecHistory" resultMap="BaseResultMap">

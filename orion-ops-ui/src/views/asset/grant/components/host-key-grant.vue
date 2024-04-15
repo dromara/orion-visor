@@ -37,9 +37,10 @@
   import { hostKeyColumns } from '../types/table.columns';
   import GrantLayout from './grant-layout.vue';
 
-  const props = defineProps({
-    type: String,
-  });
+  const props = defineProps<{
+    type: string;
+  }>();
+
   const cacheStore = useCacheStore();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();

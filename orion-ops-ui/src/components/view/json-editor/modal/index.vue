@@ -28,19 +28,14 @@
   import useVisible from '@/hooks/visible';
   import { isString } from '@/utils/is';
 
-  const props = defineProps({
-    width: {
-      type: [String, Number],
-      default: '60%'
-    },
-    height: {
-      type: String,
-      default: 'calc(100vh - 240px)'
-    },
-    readonly: {
-      type: Boolean,
-      default: true
-    }
+  const props = withDefaults(defineProps<Partial<{
+    width: string | number;
+    height: string;
+    readonly: boolean;
+  }>>(), {
+    width: '60%',
+    height: 'calc(100vh - 240px)',
+    readonly: true,
   });
 
   const { visible, setVisible } = useVisible();

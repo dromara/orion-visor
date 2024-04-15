@@ -9,12 +9,12 @@
     <exec-template-form-drawer ref="drawer"
                                @added="modalAddCallback"
                                @updated="modalUpdateCallback" />
-    <!-- 主机模态框 -->
-    <authorized-host-modal ref="hostModal"
-                           @selected="(e) => execModal.setSelectedHost(e)" />
     <!-- 执行模态框 -->
     <exec-template-exec-drawer ref="execModal"
                                @open-host="(e) => hostModal.open(e)" />
+    <!-- 主机模态框 -->
+    <authorized-host-modal ref="hostModal"
+                           @selected="(e) => execModal.setSelectedHost(e)" />
   </div>
 </template>
 

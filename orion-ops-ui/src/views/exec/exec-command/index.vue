@@ -2,11 +2,12 @@
   <div class="layout-container full">
     <!-- 执行面板 -->
     <div v-show="!logVisible" class="panel-wrapper">
-      <exec-panel @submit="openLog" />
+      <exec-command-panel @submit="openLog" />
     </div>
     <!-- 执行日志 -->
     <div v-if="logVisible" class="panel-wrapper">
       <exec-log-panel ref="log"
+                      type="BATCH"
                       :visibleBack="true"
                       @back="setLogVisible(false)" />
     </div>
@@ -24,8 +25,8 @@
   import { nextTick, onMounted, ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
-  import { dictKeys } from '@/views/exec/exec-log/types/const';
-  import ExecPanel from './components/exec-panel.vue';
+  import { dictKeys } from '@/components/exec/log/const';
+  import ExecCommandPanel from './components/exec-command-panel.vue';
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
   const { visible: logVisible, setVisible: setLogVisible } = useVisible();

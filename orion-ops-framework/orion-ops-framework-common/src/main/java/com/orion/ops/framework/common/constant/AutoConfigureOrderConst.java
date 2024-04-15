@@ -25,19 +25,21 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_LOG = Integer.MIN_VALUE + 1500;
 
-    int FRAMEWORK_JOB = Integer.MIN_VALUE + 1600;
+    int FRAMEWORK_SWAGGER = Integer.MIN_VALUE + 1600;
 
-    int FRAMEWORK_SWAGGER = Integer.MIN_VALUE + 1700;
+    int FRAMEWORK_DATASOURCE = Integer.MIN_VALUE + 1700;
 
-    int FRAMEWORK_DATASOURCE = Integer.MIN_VALUE + 1800;
+    int FRAMEWORK_MYBATIS = Integer.MIN_VALUE + 1800;
 
-    int FRAMEWORK_MYBATIS = Integer.MIN_VALUE + 1900;
+    int FRAMEWORK_REDIS = Integer.MIN_VALUE + 1900;
 
-    int FRAMEWORK_REDIS = Integer.MIN_VALUE + 2000;
+    int FRAMEWORK_REDIS_CACHE = Integer.MIN_VALUE + 1950;
 
-    int FRAMEWORK_REDIS_CACHE = Integer.MIN_VALUE + 2050;
+    int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2000;
 
-    int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2100;
+    int FRAMEWORK_JOB = Integer.MIN_VALUE + 2100;
+
+    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2150;
 
     int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2200;
 

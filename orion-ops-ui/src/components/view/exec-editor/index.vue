@@ -12,7 +12,7 @@
 <script lang="ts" setup>
   import type { TemplateParam } from './const';
   import { onMounted, onUnmounted, ref } from 'vue';
-  import { builtinsParams } from './const';
+  import { builtinsParams, templatePrefix, templateSuffix, triggerPrefix } from './const';
   import * as monaco from 'monaco-editor';
   import { language } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js';
 
@@ -48,9 +48,9 @@
         // 内置参数提示
         builtinsParams.forEach(s => {
           suggestions.push({
-            label: '_' + s.name,
+            label: triggerPrefix + s.name,
             kind: monaco.languages.CompletionItemKind.Variable,
-            insertText: `@{{ ${s.name} }}`,
+            insertText: templatePrefix + s.name + templateSuffix,
             detail: s.desc || '',
             documentation: s.desc || '',
           });
@@ -61,9 +61,9 @@
             return;
           }
           suggestions.push({
-            label: '_' + s.name,
-            kind: monaco.languages.CompletionItemKind.Field,
-            insertText: `@{{ ${s.name} }}`,
+            label: triggerPrefix + s.name,
+            kind: monaco.languages.CompletionItemKind.Variable,
+            insertText: templatePrefix + s.name + templateSuffix,
             detail: s.desc || '',
             documentation: s.desc || '',
           });

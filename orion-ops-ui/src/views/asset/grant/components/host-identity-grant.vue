@@ -45,9 +45,9 @@
   import { useRowSelection } from '@/types/table';
   import GrantLayout from './grant-layout.vue';
 
-  const props = defineProps({
-    type: String,
-  });
+  const props = defineProps<{
+    type: string;
+  }>();
 
   const cacheStore = useCacheStore();
   const rowSelection = useRowSelection();

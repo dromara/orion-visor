@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.logging.printer",
-      "type": "com.orion.ops.framework.log.core.config.LogPrinterConfig",
-      "sourceType": "com.orion.ops.framework.log.core.config.LogPrinterConfig"
+      "type": "com.orion.ops.framework.log.configuration.config.LogPrinterConfig",
+      "sourceType": "com.orion.ops.framework.log.configuration.config.LogPrinterConfig"
     }
   ],
   "properties": [

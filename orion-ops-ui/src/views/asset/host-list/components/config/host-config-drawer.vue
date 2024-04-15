@@ -31,14 +31,14 @@
 
 <script lang="ts" setup>
   import type { HostConfigWrapper } from '../../types/const';
-  import { HostSshConfig } from './ssh/types/const';
+  import type { HostSshConfig } from './ssh/types/const';
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import { getHostConfigList } from '@/api/asset/host-config';
   import { useCacheStore, useDictStore } from '@/store';
-  import { dictKeys as sshDictKeys } from './ssh/types/const';
+  import { dictKeys } from './ssh/types/const';
   import SshConfigForm from './ssh/ssh-config-form.vue';
 
   const { visible, setVisible } = useVisible();
@@ -58,7 +58,7 @@
       setVisible(true);
       // 加载字典值
       const dictStore = useDictStore();
-      await dictStore.loadKeys(sshDictKeys);
+      await dictStore.loadKeys(dictKeys);
       // 加载配置
       const { data } = await getHostConfigList(record.value.id);
       data.forEach(s => {
