@@ -8,8 +8,8 @@
         <a-switch v-model="config.status"
                   :disabled="loading"
                   type="round"
-                  :checked-value="1"
-                  :unchecked-value="0"
+                  :checked-value="EnabledStatus.ENABLED"
+                  :unchecked-value="EnabledStatus.DISABLED"
                   :before-change="s => updateStatus(s as number)" />
       </div>
     </template>
@@ -18,14 +18,20 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
+              :auto-label-width="true"
               :rules="rules">
+        <!-- 系统类型 -->
+        <a-form-item field="osType"
+                     label="系统类型"
+                     :hide-asterisk="true">
+          <a-select v-model="formModel.osType"
+                    :options="toOptions(sshOsTypeKey)"
+                    placeholder="请选择系统类型" />
+        </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username"
                      label="用户名"
                      :rules="usernameRules"
-                     label-col-flex="60px"
                      :help="SshAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
           <a-input v-model="formModel.username"
                    :disabled="SshAuthType.IDENTITY === formModel.authType"
@@ -34,8 +40,7 @@
         <!-- SSH 端口 -->
         <a-form-item field="port"
                      label="SSH端口"
-                     :hide-asterisk="true"
-                     label-col-flex="60px">
+                     :hide-asterisk="true">
           <a-input-number v-model="formModel.port"
                           placeholder="请输入SSH端口"
                           hide-button />
@@ -43,8 +48,7 @@
         <!-- 验证方式 -->
         <a-form-item field="authType"
                      label="验证方式"
-                     :hide-asterisk="true"
-                     label-col-flex="60px">
+                     :hide-asterisk="true">
           <a-radio-group type="button"
                          class="auth-type-group usn"
                          v-model="formModel.authType"
@@ -54,8 +58,7 @@
         <a-form-item v-if="SshAuthType.PASSWORD === formModel.authType"
                      field="password"
                      label="主机密码"
-                     :rules="passwordRules"
-                     label-col-flex="60px">
+                     :rules="passwordRules">
           <a-input-password v-model="formModel.password"
                             :disabled="!formModel.useNewPassword && formModel.hasPassword"
                             placeholder="主机密码" />
@@ -70,23 +73,20 @@
         <a-form-item v-if="SshAuthType.KEY === formModel.authType"
                      field="keyId"
                      label="主机秘钥"
-                     :hide-asterisk="true"
-                     label-col-flex="60px">
+                     :hide-asterisk="true">
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
         <!-- 主机身份 -->
         <a-form-item v-if="SshAuthType.IDENTITY === formModel.authType"
                      field="identityId"
                      label="主机身份"
-                     :hide-asterisk="true"
-                     label-col-flex="60px">
+                     :hide-asterisk="true">
           <host-identity-selector v-model="formModel.identityId" />
         </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="connectTimeout"
                      label="连接超时时间"
-                     :hide-asterisk="true"
-                     label-col-flex="86px">
+                     :hide-asterisk="true">
           <a-input-number v-model="formModel.connectTimeout"
                           placeholder="请输入连接超时时间"
                           hide-button>
@@ -98,22 +98,19 @@
         <!-- SSH输出编码 -->
         <a-form-item field="charset"
                      label="SSH输出编码"
-                     :hide-asterisk="true"
-                     label-col-flex="86px">
+                     :hide-asterisk="true">
           <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
         </a-form-item>
         <!-- 文件名称编码 -->
         <a-form-item field="fileNameCharset"
                      label="文件名称编码"
-                     :hide-asterisk="true"
-                     label-col-flex="86px">
+                     :hide-asterisk="true">
           <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
         </a-form-item>
         <!-- 文件内容编码 -->
         <a-form-item field="fileContentCharset"
                      label="文件内容编码"
-                     :hide-asterisk="true"
-                     label-col-flex="86px">
+                     :hide-asterisk="true">
           <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
         </a-form-item>
       </a-form>
@@ -146,7 +143,7 @@
   import type { HostSshConfig } from './types/const';
   import { reactive, ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host-config';
-  import { sshAuthTypeKey, SshAuthType } from './types/const';
+  import { sshAuthTypeKey, sshOsTypeKey, SshAuthType, SshOsType } from './types/const';
   import rules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -157,7 +154,7 @@
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 
   const { loading, setLoading } = useLoading();
-  const { toRadioOptions } = useDictStore();
+  const { toOptions, toRadioOptions } = useDictStore();
 
   const props = defineProps<{
     content: any;
@@ -173,6 +170,7 @@
 
   const formRef = ref();
   const formModel = ref<HostSshConfig>({
+    osType: SshOsType.LINUX,
     username: undefined,
     port: undefined,
     password: undefined,

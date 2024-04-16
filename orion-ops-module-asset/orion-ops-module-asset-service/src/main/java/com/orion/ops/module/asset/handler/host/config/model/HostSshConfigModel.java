@@ -38,7 +38,13 @@ public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordActi
 
     @NotBlank
     @Size(max = 12)
+    @Schema(description = "认证方式")
     private String authType;
+
+    @NotBlank
+    @Size(max = 12)
+    @Schema(description = "系统类型")
+    private String osType;
 
     @Schema(description = "密码")
     private String password;

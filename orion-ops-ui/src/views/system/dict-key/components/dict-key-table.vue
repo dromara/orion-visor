@@ -78,7 +78,7 @@
              :bordered="false">
       <!-- 配置项 -->
       <template #keyName="{ record }">
-        <span class="text-copy" @click="copy(record.keyName)">{{ record.keyName }}</span>
+        <span class="text-copy span-blue" @click="copy(record.keyName)">{{ record.keyName }}</span>
       </template>
       <!-- 配置值类型 -->
       <template #valueType="{ record }">

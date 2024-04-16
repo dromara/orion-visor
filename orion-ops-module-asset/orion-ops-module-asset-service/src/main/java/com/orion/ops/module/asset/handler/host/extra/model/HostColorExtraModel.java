@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Schema(name = "HostExtraSshModel", description = "主机拓展信息 - color 模型")
 public class HostColorExtraModel implements GenericsDataModel {
 
-    @Schema(description = "颜色")
+    @Schema(description = "标签 tab 颜色")
     private String color;
 
 }

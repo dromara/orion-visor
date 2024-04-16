@@ -12,6 +12,7 @@ import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
+import com.orion.ops.module.asset.enums.HostSshOsTypeEnum;
 import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
                 .port(SSH_PORT)
                 .username(USERNAME)
                 .authType(HostSshAuthTypeEnum.PASSWORD.name())
+                .osType(HostSshOsTypeEnum.LINUX.name())
                 .connectTimeout(Const.MS_S_10)
                 .charset(Const.UTF_8)
                 .fileNameCharset(Const.UTF_8)
@@ -56,6 +58,8 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
     public void preValid(HostSshConfigModel model) {
         // 验证认证类型
         Valid.valid(HostSshAuthTypeEnum::of, model.getAuthType());
+        // 验证系统版本
+        Valid.valid(HostSshOsTypeEnum::of, model.getOsType());
         // 验证编码格式
         this.validCharset(model.getCharset());
         this.validCharset(model.getFileNameCharset());

@@ -7,17 +7,18 @@
         <a-form :model="formModel"
                 ref="formRef"
                 label-align="left"
+                :auto-label-width="true"
                 @keyup.enter="loadMenuData">
           <a-row :gutter="32">
             <!-- 菜单名称 -->
             <a-col :span="12">
-              <a-form-item field="name" label="菜单名称" label-col-flex="60px">
+              <a-form-item field="name" label="菜单名称">
                 <a-input v-model="formModel.name" placeholder="请输入菜单名称" allow-clear />
               </a-form-item>
             </a-col>
             <!-- 菜单状态 -->
             <a-col :span="12">
-              <a-form-item field="status" label="菜单状态" label-col-flex="60px">
+              <a-form-item field="status" label="菜单状态">
                 <a-select v-model="formModel.status"
                           :options="toOptions(menuStatusKey)"
                           placeholder="请选择菜单状态"
