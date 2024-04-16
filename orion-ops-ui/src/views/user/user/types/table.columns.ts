@@ -34,11 +34,11 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
-    title: '状态',
+    title: '用户状态',
     dataIndex: 'status',
     slotName: 'status',
     align: 'center',
-    width: 84
+    width: 128,
   }, {
     title: '最后登录时间',
     dataIndex: 'lastLoginTime',
@@ -51,7 +51,7 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 340,
+    width: 298,
     align: 'center',
     fixed: 'right',
   },

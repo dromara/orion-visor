@@ -165,7 +165,6 @@ INSERT INTO `dict_value` VALUES (15, 8, 'dictValueType', 'BOOLEAN', '布尔值',
 INSERT INTO `dict_value` VALUES (16, 8, 'dictValueType', 'COLOR', '颜色', '{\"color\": \"magenta\"}', 50, '2023-10-27 01:55:05', '2023-10-27 01:56:39', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (17, 9, 'systemUserStatus', '0', '停用', '{\"color\": \"orange\"}', 10, '2023-10-27 12:13:08', '2023-10-27 12:13:08', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (18, 9, 'systemUserStatus', '1', '启用', '{\"color\": \"blue\"}', 20, '2023-10-27 12:13:17', '2023-10-27 12:13:17', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (19, 9, 'systemUserStatus', '2', '锁定', '{\"color\": \"orange\"}', 30, '2023-10-27 12:13:24', '2023-10-27 12:13:24', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (20, 10, 'systemRoleStatus', '0', '停用', '{\"color\": \"orange\", \"status\": \"danger\"}', 10, '2023-10-27 12:33:45', '2023-10-27 12:33:45', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (21, 10, 'systemRoleStatus', '1', '启用', '{\"color\": \"blue\", \"status\": \"default\"}', 20, '2023-10-27 12:33:56', '2023-10-31 01:23:23', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (22, 11, 'hostSshAuthType', 'PASSWORD', '密码验证', '{}', 10, '2023-10-27 14:29:28', '2023-12-25 15:40:47', '1', '1', 0);

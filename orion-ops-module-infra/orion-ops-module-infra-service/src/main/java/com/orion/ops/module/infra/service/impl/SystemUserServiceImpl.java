@@ -130,11 +130,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (id.equals(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
         }
-        // 检查状态
         UserStatusEnum status = Valid.valid(UserStatusEnum::of, request.getStatus());
-        if (!status.equals(UserStatusEnum.DISABLED) && !status.equals(UserStatusEnum.ENABLED)) {
-            throw ErrorCode.BAD_REQUEST.exception();
-        }
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
@@ -146,8 +142,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 更新用户
         int effect = systemUserDAO.updateById(updateRecord);
         log.info("SystemUserService-updateUserStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
-        // 如果之前是锁定则删除登录失败次数缓存
-        if (UserStatusEnum.LOCKED.getStatus().equals(record.getStatus())) {
+        // 改为启用则删除登录失败次数缓存
+        if (UserStatusEnum.ENABLED.equals(status)) {
             RedisUtils.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         }
         // 更新用户缓存中的 status

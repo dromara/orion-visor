@@ -18,11 +18,11 @@ const columns = [
     dataIndex: 'code',
     slotName: 'code',
   }, {
-    title: '状态',
+    title: '角色状态',
     dataIndex: 'status',
     slotName: 'status',
     align: 'center',
-    width: 84,
+    width: 128,
   }, {
     title: '创建时间',
     dataIndex: 'createTime',
@@ -35,7 +35,7 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 240,
+    width: 198,
     align: 'center',
     fixed: 'right',
   },

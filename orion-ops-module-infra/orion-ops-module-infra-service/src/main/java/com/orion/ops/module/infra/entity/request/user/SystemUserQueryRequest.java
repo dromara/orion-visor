@@ -40,7 +40,7 @@ public class SystemUserQueryRequest extends PageRequest {
     @Schema(description = "邮箱")
     private String email;
 
-    @Schema(description = "用户状态 0停用 1启用 2锁定")
+    @Schema(description = "用户状态 0停用 1启用")
     private Integer status;
 
 }

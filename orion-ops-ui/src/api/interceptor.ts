@@ -46,7 +46,7 @@ axios.interceptors.response.use(
       return res;
     }
     // 异常判断
-    if ([401, 700, 701, 702, 703].includes(code)) {
+    if ([401, 700, 701, 702].includes(code)) {
       // 提示
       Message.error({
         content: res.msg || 'Error',

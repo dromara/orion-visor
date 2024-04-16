@@ -77,37 +77,32 @@
       <template #username="{ record }">
         <span class="span-blue text-copy"
               @click="copy(record.username)">
-          {{ record.username }}`
+          {{ record.username }}
         </span>
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
-        <span class="circle" :style="{
-          background: getDictValue(userStatusKey, record.status, 'color')
-        }" />
-        {{ getDictValue(userStatusKey, record.status) }}
+        <!-- 有修改权限 -->
+        <a-switch v-if="hasPermission('infra:system-user:update-status')"
+                  type="round"
+                  v-model="record.status"
+                  :disabled="record.id === userStore.id"
+                  :checked-text="getDictValue(userStatusKey, UserStatus.ENABLED)"
+                  :unchecked-text="getDictValue(userStatusKey, UserStatus.DISABLED)"
+                  :checked-value="UserStatus.ENABLED"
+                  :unchecked-value="UserStatus.DISABLED"
+                  :before-change="(s) => updateStatus(record.id, s as number)" />
+        <!-- 无修改权限 -->
+        <span v-else>
+          <span class="circle" :style="{
+            background: getDictValue(userStatusKey, record.status, 'color')
+          }" />
+          {{ getDictValue(userStatusKey, record.status) }}
+        </span>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 启用/停用 -->
-          <a-popconfirm :content="`确定要${UserStatus.ENABLED === record.status
-                        ? getDictValue(userStatusKey, UserStatus.DISABLED)
-                        : getDictValue(userStatusKey, UserStatus.ENABLED)}当前用户?`"
-                        position="left"
-                        type="warning"
-                        @ok="updateStatus(record)">
-            <a-button v-permission="['infra:system-user:update-status']"
-                      type="text"
-                      size="mini"
-                      :disabled="record.id === userStore.id">
-              {{
-                UserStatus.ENABLED === record.status
-                  ? getDictValue(userStatusKey, UserStatus.DISABLED)
-                  : getDictValue(userStatusKey, UserStatus.ENABLED)
-              }}
-            </a-button>
-          </a-popconfirm>
           <!-- 修改 -->
           <a-button type="text"
                     size="mini"
@@ -167,12 +162,13 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteUser, getUserPage, updateUserStatus } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { userStatusKey, UserStatus } from '../types/const';
+  import useLoading from '@/hooks/loading';
   import { usePagination } from '@/types/table';
-  import { useDictStore, useUserStore } from '@/store';
+  import usePermission from '@/hooks/permission';
   import { useRouter } from 'vue-router';
+  import { useDictStore, useUserStore } from '@/store';
   import { copy } from '@/hooks/copy';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
@@ -180,8 +176,9 @@
   const tableRenderData = ref<UserQueryResponse[]>([]);
 
   const pagination = usePagination();
+  const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
-  const { toOptions, getDictValue, getDict } = useDictStore();
+  const { toOptions, getDictValue } = useDictStore();
 
   const formModel = reactive<UserQueryRequest>({
     id: undefined,
@@ -216,23 +213,12 @@
   };
 
   // 更新状态
-  const updateStatus = async (record: any) => {
-    try {
-      setLoading(true);
-      // 更新状态
-      const newStatus = UserStatus.ENABLED === record.status
-        ? getDict(userStatusKey, UserStatus.DISABLED)
-        : getDict(userStatusKey, UserStatus.ENABLED);
-      await updateUserStatus({
-        id: record.id,
-        status: newStatus.value as number
-      });
-      Message.success(`${newStatus.label}成功`);
-      record.status = newStatus.value;
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
+  const updateStatus = (id: number, status: number) => {
+    return updateUserStatus({
+      id, status
+    }).then(() => {
+      Message.success('已' + getDictValue(userStatusKey, status, 'label'));
+    });
   };
 
   // 打开详情

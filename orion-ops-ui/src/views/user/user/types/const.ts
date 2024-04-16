@@ -4,8 +4,6 @@ export const UserStatus = {
   DISABLED: 0,
   // 启用
   ENABLED: 1,
-  // 锁定
-  LOCKED: 2,
 };
 
 // 菜单配置值类型 字典项

@@ -32,7 +32,7 @@ public enum LoginTokenStatusEnum {
         @Override
         public RuntimeException toException(LoginTokenDTO token) {
             LoginTokenIdentityDTO override = token.getOverride();
-            return ErrorCode.OTHER_DEVICE_LOGIN.exception(
+            return ErrorCode.USER_OTHER_DEVICE_LOGIN.exception(
                     Dates.format(new Date(override.getLoginTime()), Dates.MD_HM),
                     override.getAddress(),
                     override.getLocation());
@@ -47,7 +47,7 @@ public enum LoginTokenStatusEnum {
         @Override
         public RuntimeException toException(LoginTokenDTO token) {
             LoginTokenIdentityDTO override = token.getOverride();
-            return ErrorCode.SESSION_OFFLINE.exception(
+            return ErrorCode.USER_OFFLINE.exception(
                     Dates.format(new Date(override.getLoginTime()), Dates.MD_HM),
                     override.getAddress(),
                     override.getLocation());

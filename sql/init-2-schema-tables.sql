@@ -669,7 +669,7 @@ CREATE TABLE `system_user`
     `avatar`          varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像地址',
     `mobile`          varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '手机号',
     `email`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '邮箱',
-    `status`          tinyint(0)                                                    NULL DEFAULT 1 COMMENT '用户状态 0停用 1启用 2锁定',
+    `status`          tinyint(0)                                                    NULL DEFAULT 1 COMMENT '用户状态 0停用 1启用',
     `last_login_time` datetime(0)                                                   NULL DEFAULT NULL COMMENT '最后登录时间',
     `create_time`     datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`     datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
