@@ -48,7 +48,7 @@
                   <span>{{ getFileSize(item.totalSize) }}</span>
                   <!-- 进度百分比 -->
                   <span class="ml8" v-if="item.status === TransferStatus.TRANSFERRING">
-                    {{ (item.currentSize / item.totalSize * 100).toFixed(2) }}%
+                    {{ item.progress }}%
                   </span>
                 </span>
                 <!-- 目标目录 -->

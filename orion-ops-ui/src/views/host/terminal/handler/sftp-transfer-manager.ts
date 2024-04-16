@@ -15,6 +15,8 @@ export default class SftpTransferManager implements ISftpTransferManager {
 
   private run: boolean;
 
+  private progressId?: number;
+
   private currentItem?: SftpTransferItem;
 
   private currentUploader?: ISftpTransferUploader;
@@ -39,6 +41,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
         name: s.webkitRelativePath || s.name,
         currentSize: 0,
         totalSize: s.size,
+        progress: 0,
         status: TransferStatus.WAITING,
         parentPath: parentPath,
         file: s
@@ -63,6 +66,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
         parentPath: currentPath,
         currentSize: 0,
         totalSize: s.size,
+        progress: 0,
         status: TransferStatus.WAITING,
       };
     }) as Array<SftpTransferItem>;
@@ -111,18 +115,28 @@ export default class SftpTransferManager implements ISftpTransferManager {
       }).forEach(s => {
         s.status = TransferStatus.ERROR;
       });
-      // 关闭会话重置 run
-      this.run = false;
+      // 关闭会话
+      this.close();
       return;
     }
+    // 关闭会话
     this.client.onclose = event => {
-      // 关闭会话重置 run
-      this.run = false;
       console.warn('transfer close', event);
+      this.close();
     };
+    // 处理消息
     this.client.onmessage = this.resolveMessage.bind(this);
+    // 计算传输进度
+    this.progressId = setInterval(this.calcProgress.bind(this), 500);
     // 打开后自动传输下一个任务
     this.transferNextItem();
+  }
+
+  // 计算传输进度
+  private calcProgress() {
+    this.transferList.forEach(item => {
+      item.progress = (item.currentSize / item.totalSize * 100).toFixed(2);
+    });
   }
 
   // 传输下一条任务
@@ -245,6 +259,14 @@ export default class SftpTransferManager implements ISftpTransferManager {
     this.currentDownloader?.downloadError(msg);
     // 开始下一个传输任务
     this.transferNextItem();
+  }
+
+  // 关闭 释放资源
+  private close() {
+    // 重置 run
+    this.run = false;
+    // 关闭传输进度
+    clearInterval(this.progressId);
   }
 
 }

@@ -441,6 +441,7 @@ export interface SftpTransferItem {
   parentPath: string;
   currentSize: number,
   totalSize: number;
+  progress: number | string;
   status: string;
   errorMessage?: string;
   file: File;
