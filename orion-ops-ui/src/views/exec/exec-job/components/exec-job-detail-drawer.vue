@@ -42,6 +42,14 @@
           {{ getDictValue(execJobStatusKey, record.status) }}
         </a-tag>
       </a-descriptions-item>
+      <!-- 脚本执行 -->
+      <a-descriptions-item label="脚本执行">
+        {{ record.scriptExec === EnabledStatus.ENABLED ? '是' : '否' }}
+      </a-descriptions-item>
+      <!-- 创建时间 -->
+      <a-descriptions-item label="创建时间">
+        {{ dateFormat(new Date(record.createTime)) }}
+      </a-descriptions-item>
       <!-- 修改时间 -->
       <a-descriptions-item label="修改时间">
         {{ dateFormat(new Date(record.updateTime)) }}
@@ -86,7 +94,8 @@
   import { dateFormat } from '@/utils';
   import { copy } from '@/hooks/copy';
   import { getExecJob } from '@/api/exec/exec-job';
-  import { execJobStatusKey } from '@/views/exec/exec-job/types/const';
+  import { EnabledStatus } from '@/types/const';
+  import { execJobStatusKey } from '../types/const';
 
   const { getDictValue, toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();

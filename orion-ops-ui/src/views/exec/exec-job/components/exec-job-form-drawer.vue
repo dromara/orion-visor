@@ -11,12 +11,12 @@
     <a-spin class="full spin-wrapper" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              label-align="left"
+              label-align="right"
               :auto-label-width="true"
               :rules="formRules">
         <a-row :gutter="16">
           <!-- 任务名称 -->
-          <a-col :span="14">
+          <a-col :span="13">
             <a-form-item field="name" label="任务名称">
               <a-input v-model="formModel.name"
                        placeholder="请输入任务名称"
@@ -24,7 +24,7 @@
             </a-form-item>
           </a-col>
           <!-- 执行主机 -->
-          <a-col :span="10">
+          <a-col :span="11">
             <a-form-item field="hostIdList" label="执行主机">
               <div class="selected-host">
                 <!-- 已选择数量 -->
@@ -38,7 +38,7 @@
             </a-form-item>
           </a-col>
           <!-- cron -->
-          <a-col :span="14">
+          <a-col :span="13">
             <a-form-item field="expression" label="cron">
               <a-input v-model="formModel.expression"
                        placeholder="请输入 cron 表达式"
@@ -54,7 +54,7 @@
             </a-form-item>
           </a-col>
           <!-- 超时时间 -->
-          <a-col :span="10">
+          <a-col :span="6">
             <a-form-item field="timeout" label="超时时间">
               <a-input-number v-model="formModel.timeout"
                               placeholder="为0则不超时"
@@ -65,6 +65,22 @@
                   秒
                 </template>
               </a-input-number>
+            </a-form-item>
+          </a-col>
+          <!-- 脚本执行 -->
+          <a-col :span="5">
+            <a-form-item field="scriptExec" label="脚本执行">
+              <div class="flex-center">
+                <a-switch v-model="formModel.scriptExec"
+                          type="round"
+                          :checked-value="EnabledStatus.ENABLED"
+                          :unchecked-value="EnabledStatus.DISABLED" />
+                <div class="question-right ml8">
+                  <a-tooltip position="tr" content="启用后会将命令写入脚本文件 传输到主机后执行">
+                    <icon-question-circle />
+                  </a-tooltip>
+                </div>
+              </div>
             </a-form-item>
           </a-col>
           <!-- 执行命令 -->
@@ -111,6 +127,7 @@
   import { jobBuiltinsParams } from '../types/const';
   import { createExecJob, getExecJob, updateExecJob } from '@/api/exec/exec-job';
   import { Message } from '@arco-design/web-vue';
+  import { EnabledStatus } from '@/types/const';
   import { useDictStore } from '@/store';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
@@ -131,6 +148,7 @@
       name: undefined,
       expression: undefined,
       timeout: 0,
+      scriptExec: EnabledStatus.DISABLED,
       command: undefined,
       parameterSchema: '[]',
       hostIdList: []
@@ -169,6 +187,7 @@
       name: record.name,
       expression: record.expression,
       timeout: record.timeout,
+      scriptExec: record.scriptExec,
       command: record.command,
       parameterSchema: record.parameterSchema,
       hostIdList: record.hostIdList,

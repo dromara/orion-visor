@@ -286,6 +286,7 @@ public class ExecJobServiceImpl implements ExecJobService {
                 .execSeq(execSeq)
                 .description(job.getName())
                 .timeout(job.getTimeout())
+                .scriptExec(job.getScriptExec())
                 .command(job.getCommand())
                 .parameterSchema(job.getParameterSchema())
                 .hostIdList(hostIdList)

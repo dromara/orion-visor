@@ -82,13 +82,14 @@ public class ExecCommandServiceImpl implements ExecCommandService {
     @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
+    // TODO 新增 修改 时候先检查 scriptExec, 然后测试一下
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ExecLogVO execCommand(ExecCommandRequest request) {
         log.info("ExecService.startExecCommand start params: {}", JSON.toJSONString(request));
         LoginUser user = Objects.requireNonNull(SecurityUtils.getLoginUser());
         Long userId = user.getId();
-        String command = request.getCommand();
         List<Long> hostIdList = request.getHostIdList();
         // 检查主机权限
         List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId, HostConfigTypeEnum.SSH);
@@ -126,6 +127,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                 .command(command)
                 .parameterSchema(request.getParameterSchema())
                 .timeout(request.getTimeout())
+                .scriptExec(request.getScriptExec())
                 .status(ExecStatusEnum.WAITING.name())
                 .build();
         execLogDAO.insert(execLog);
@@ -145,6 +147,8 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                             .command(FORMATTER.format(command, parameter))
                             .parameter(parameter)
                             .logPath(this.buildLogPath(execId, s.getId()))
+                            // FIXME 测试 添加用户名
+                            // .scriptPath()
                             .build();
                 }).collect(Collectors.toList());
         execHostLogDAO.insertBatch(execHostLogs);
@@ -176,6 +180,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         ExecCommandRequest request = ExecCommandRequest.builder()
                 .description(execLog.getDescription())
                 .timeout(execLog.getTimeout())
+                .scriptExec(execLog.getScriptExec())
                 .command(execLog.getCommand())
                 .parameterSchema(execLog.getParameterSchema())
                 .hostIdList(hostIdList)
@@ -193,6 +198,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         ExecCommandDTO exec = ExecCommandDTO.builder()
                 .logId(execLog.getId())
                 .timeout(execLog.getTimeout())
+                .scriptExec(execLog.getScriptExec())
                 .hosts(execHostLogs.stream()
                         .map(s -> ExecCommandHostDTO.builder()
                                 .hostId(s.getHostId())
@@ -200,6 +206,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                                 .command(s.getCommand())
                                 .timeout(execLog.getTimeout())
                                 .logPath(s.getLogPath())
+                                .scriptPath(s.getScriptPath())
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
@@ -231,6 +238,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         params.put("timestamp", date.getTime() / Dates.SECOND_STAMP);
         params.put("date", Dates.format(date, Dates.YMD));
         params.put("datetime", Dates.format(date, Dates.YMD_HMS));
+        // TODO script Exec
         return params;
     }
 
@@ -250,6 +258,8 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         params.put("hostAddress", host.getAddress());
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
+        // TODO host username
+        // TODO scriptPath
         return params;
     }
 

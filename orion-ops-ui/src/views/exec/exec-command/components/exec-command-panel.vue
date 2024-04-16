@@ -12,11 +12,10 @@
                 ref="formRef"
                 class="form-wrapper"
                 label-align="right"
+                :auto-label-width="true"
                 :rules="formRules">
           <!-- 执行主机 -->
-          <a-form-item field="hostIdList"
-                       label="执行主机"
-                       label-col-flex="72px">
+          <a-form-item field="hostIdList" label="执行主机">
             <div class="selected-host">
               <!-- 已选择数量 -->
               <span class="usn" v-if="formModel.hostIdList?.length">
@@ -28,17 +27,13 @@
             </div>
           </a-form-item>
           <!-- 执行描述 -->
-          <a-form-item field="description"
-                       label="执行描述"
-                       label-col-flex="72px">
+          <a-form-item field="description" label="执行描述">
             <a-input v-model="formModel.description"
                      placeholder="请输入执行描述"
                      allow-clear />
           </a-form-item>
           <!-- 超时时间 -->
-          <a-form-item field="timeout"
-                       label="超时时间"
-                       label-col-flex="72px">
+          <a-form-item field="timeout" label="超时时间">
             <a-input-number v-model="formModel.timeout"
                             placeholder="为0则不超时"
                             :min="0"
@@ -48,6 +43,20 @@
                 秒
               </template>
             </a-input-number>
+          </a-form-item>
+          <!-- 脚本执行 -->
+          <a-form-item field="scriptExec" label="脚本执行">
+            <div class="flex-center">
+              <a-switch v-model="formModel.scriptExec"
+                        type="round"
+                        :checked-value="EnabledStatus.ENABLED"
+                        :unchecked-value="EnabledStatus.DISABLED" />
+              <div class="question-right ml8">
+                <a-tooltip content="启用后会将命令写入脚本文件 传输到主机后执行">
+                  <icon-question-circle />
+                </a-tooltip>
+              </div>
+            </div>
           </a-form-item>
         </a-form>
       </template>
@@ -60,7 +69,6 @@
                        :key="item.name"
                        :field="item.name as string"
                        :label="item.name"
-                       label-col-flex="72px"
                        required>
             <a-input v-model="parameterFormModel[item.name as string]"
                      :placeholder="item.desc"
@@ -104,6 +112,7 @@
   import formRules from '../types/form.rules';
   import useLoading from '@/hooks/loading';
   import { batchExecCommand } from '@/api/exec/exec-command';
+  import { EnabledStatus } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
@@ -116,8 +125,12 @@
 
   const defaultForm = (): ExecCommandRequest => {
     return {
+      description: '',
       command: '',
       timeout: 0,
+      scriptExec: EnabledStatus.DISABLED,
+      parameterSchema: '[]',
+      hostIdList: [],
     };
   };
 
@@ -149,6 +162,7 @@
       command: record.command,
       description: record.name,
       timeout: record.timeout,
+      scriptExec: record.scriptExec,
     };
     parameterSchema.value = record.parameterSchema ? JSON.parse(record.parameterSchema) : [];
     if (parameterSchema.value.length) {
@@ -168,6 +182,7 @@
       command: record.command,
       description: record.description,
       timeout: record.timeout,
+      scriptExec: record.scriptExec,
       hostIdList: record.hostIdList
     };
     parameterSchema.value = record.parameterSchema ? JSON.parse(record.parameterSchema) : [];

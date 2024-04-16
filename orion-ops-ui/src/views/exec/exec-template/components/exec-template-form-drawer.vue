@@ -11,12 +11,12 @@
     <a-spin class="full modal-form" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              label-align="left"
+              label-align="right"
               :auto-label-width="true"
               :rules="formRules">
         <a-row :gutter="16">
           <!-- 模板名称 -->
-          <a-col :span="14">
+          <a-col :span="12">
             <a-form-item field="name" label="模板名称">
               <a-input v-model="formModel.name"
                        placeholder="请输入模板名称"
@@ -24,7 +24,7 @@
             </a-form-item>
           </a-col>
           <!-- 超时时间 -->
-          <a-col :span="10">
+          <a-col :span="7">
             <a-form-item field="timeout" label="超时时间">
               <a-input-number v-model="formModel.timeout"
                               placeholder="为0则不超时"
@@ -35,6 +35,22 @@
                   秒
                 </template>
               </a-input-number>
+            </a-form-item>
+          </a-col>
+          <!-- 脚本执行 -->
+          <a-col :span="5">
+            <a-form-item field="scriptExec" label="脚本执行">
+              <div class="flex-center">
+                <a-switch v-model="formModel.scriptExec"
+                          type="round"
+                          :checked-value="EnabledStatus.ENABLED"
+                          :unchecked-value="EnabledStatus.DISABLED" />
+                <div class="question-right ml8">
+                  <a-tooltip position="tr" content="启用后会将命令写入脚本文件 传输到主机后执行">
+                    <icon-question-circle />
+                  </a-tooltip>
+                </div>
+              </div>
             </a-form-item>
           </a-col>
           <!-- 模板命令 -->
@@ -115,6 +131,7 @@
   import formRules from '../types/form.rules';
   import { createExecTemplate, updateExecTemplate } from '@/api/exec/exec-template';
   import { Message } from '@arco-design/web-vue';
+  import { EnabledStatus } from '@/types/const';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
   const { visible, setVisible } = useVisible();
@@ -129,6 +146,7 @@
       name: undefined,
       command: undefined,
       timeout: 0,
+      scriptExec: EnabledStatus.DISABLED,
       parameterSchema: undefined,
     };
   };

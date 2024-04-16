@@ -30,6 +30,10 @@ public class ExecCommandRequest {
     @Schema(description = "超时时间")
     private Integer timeout;
 
+    @NonNull
+    @Schema(description = "是否使用脚本执行")
+    private Integer scriptExec;
+
     @NotBlank
     @Schema(description = "执行命令")
     private String command;

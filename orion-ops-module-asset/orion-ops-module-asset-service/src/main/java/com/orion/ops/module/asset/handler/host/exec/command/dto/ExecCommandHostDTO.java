@@ -29,6 +29,9 @@ public class ExecCommandHostDTO {
     @Schema(description = "日志文件路径")
     private String logPath;
 
+    @Schema(description = "脚本路径")
+    private String scriptPath;
+
     @Schema(description = "执行命令")
     private String command;
 

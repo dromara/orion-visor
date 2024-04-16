@@ -1,10 +1,7 @@
 package com.orion.ops.module.asset.entity.request.exec;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -42,6 +39,10 @@ public class ExecJobCreateRequest implements Serializable {
     @NotNull
     @Schema(description = "超时时间")
     private Integer timeout;
+
+    @NonNull
+    @Schema(description = "是否使用脚本执行")
+    private Integer scriptExec;
 
     @NotBlank
     @Schema(description = "执行命令")

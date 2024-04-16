@@ -9,6 +9,7 @@
         <result column="exec_seq" property="execSeq"/>
         <result column="expression" property="expression"/>
         <result column="timeout" property="timeout"/>
+        <result column="script_exec" property="scriptExec"/>
         <result column="command" property="command"/>
         <result column="parameter_schema" property="parameterSchema"/>
         <result column="status" property="status"/>
@@ -22,7 +23,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, exec_seq, expression, timeout, command, parameter_schema, status, recent_log_id, create_time, update_time, creator, updater, deleted
+        id, name, exec_seq, expression, timeout, script_exec, command, parameter_schema, status, recent_log_id, create_time, update_time, creator, updater, deleted
     </sql>
 
     <update id="incrExecSeq">

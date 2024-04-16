@@ -8,6 +8,7 @@
         <result column="name" property="name"/>
         <result column="command" property="command"/>
         <result column="timeout" property="timeout"/>
+        <result column="script_exec" property="scriptExec"/>
         <result column="parameter_schema" property="parameterSchema"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, command, timeout, parameter_schema, create_time, update_time, creator, updater, deleted
+        id, name, command, timeout, script_exec,parameter_schema, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

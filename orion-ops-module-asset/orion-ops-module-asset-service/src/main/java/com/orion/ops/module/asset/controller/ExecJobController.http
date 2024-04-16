@@ -6,7 +6,8 @@ Authorization: {{token}}
 {
   "name": "测试 1",
   "expression": "0 */3 * * * ?",
-  "timeout": "0",
+  "timeout": 0,
+  "scriptExec": 0,
   "command": "echo 123",
   "parameterSchema": "[]",
   "hostIdList": [1]
@@ -22,7 +23,8 @@ Authorization: {{token}}
   "id": 5,
   "name": "测试 1",
   "expression": "0 */10 * * * ?",
-  "timeout": "0",
+  "timeout": 0,
+  "scriptExec": 0,
   "command": "echo 123",
   "parameterSchema": "[]",
   "hostIdList": [
