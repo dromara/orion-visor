@@ -1,5 +1,6 @@
 package com.orion.ops.module.asset.service.impl;
 
+import com.orion.lang.function.Functions;
 import com.orion.lang.utils.Exceptions;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
@@ -90,6 +91,18 @@ public class HostConfigServiceImpl implements HostConfigService {
                 .map(this::convertHostConfig)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> hostIdList, HostConfigTypeEnum type) {
+        // 查询
+        List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostIdList(hostIdList, type.getType());
+        // 返回
+        return configs.stream()
+                .collect(Collectors.toMap(
+                        HostConfigDO::getHostId,
+                        s -> type.parse(s.getConfig()),
+                        Functions.right()));
     }
 
     @Override

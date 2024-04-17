@@ -29,7 +29,7 @@ public class ExecCommandDTO {
     private Integer timeout;
 
     @Schema(description = "是否使用脚本执行")
-    private Integer scriptExec;
+    private Boolean scriptExec;
 
     @Schema(description = "主机")
     private List<ExecCommandHostDTO> hosts;

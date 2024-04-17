@@ -18,6 +18,18 @@ export interface TemplateParam {
 // 内置参数
 export const builtinsParams: Array<TemplateParam> = [
   {
+    name: 'source',
+    desc: '执行来源'
+  }, {
+    name: 'userId',
+    desc: '执行用户id'
+  }, {
+    name: 'username',
+    desc: '执行用户名'
+  }, {
+    name: 'execId',
+    desc: '执行记录id'
+  }, {
     name: 'hostId',
     desc: '执行主机id'
   }, {
@@ -30,14 +42,23 @@ export const builtinsParams: Array<TemplateParam> = [
     name: 'hostAddress',
     desc: '执行主机地址'
   }, {
-    name: 'userId',
-    desc: '执行用户id'
+    name: 'hostUsername',
+    desc: '执行主机用户名'
   }, {
-    name: 'username',
-    desc: '执行用户名'
+    name: 'osType',
+    desc: '执行主机系统版本'
   }, {
-    name: 'execId',
-    desc: '执行记录id'
+    name: 'port',
+    desc: 'SSH 端口'
+  }, {
+    name: 'charset',
+    desc: 'SSH 编码集'
+  }, {
+    name: 'scriptExec',
+    desc: '是否使用脚本执行'
+  }, {
+    name: 'scriptPath',
+    desc: '脚本文件路径'
   }, {
     name: 'uuid',
     desc: '生成任务维度 uuid'

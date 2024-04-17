@@ -25,6 +25,7 @@ import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import com.orion.ops.module.asset.enums.ExecJobStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.enums.ScriptExecEnum;
 import com.orion.ops.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecCommandService;
@@ -79,6 +80,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-createExecJob request: {}", JSON.toJSONString(request));
         // 验证表达式是否正确
         Cron.of(request.getExpression());
+        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 转换
         ExecJobDO record = ExecJobConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -104,6 +106,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-updateExecJobById id: {}, request: {}", id, JSON.toJSONString(request));
         // 验证表达式是否正确
         Cron.of(request.getExpression());
+        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 查询
         ExecJobDO record = execJobDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);

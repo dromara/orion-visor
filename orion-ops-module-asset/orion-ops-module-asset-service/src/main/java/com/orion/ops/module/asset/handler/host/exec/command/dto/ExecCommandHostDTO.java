@@ -35,7 +35,13 @@ public class ExecCommandHostDTO {
     @Schema(description = "执行命令")
     private String command;
 
-    @Schema(description = "超时时间")
-    private Integer timeout;
+    @Schema(description = "命令编码")
+    private String charset;
+
+    @Schema(description = "文件名称编码")
+    private String fileNameCharset;
+
+    @Schema(description = "文件内容编码")
+    private String fileContentCharset;
 
 }

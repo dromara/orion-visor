@@ -7,6 +7,7 @@ import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主机配置 服务类
@@ -31,6 +32,7 @@ public interface HostConfigService {
      *
      * @param hostId hostId
      * @param type   type
+     * @param <T>    T
      * @return config
      */
     <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type);
@@ -51,6 +53,16 @@ public interface HostConfigService {
      * @return config
      */
     List<HostConfigVO> getHostConfigList(List<Long> hostIdList, String type);
+
+    /**
+     * 获取配置
+     *
+     * @param hostIdList hostIdList
+     * @param type       type
+     * @param <T>        T
+     * @return config
+     */
+    <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> hostIdList, HostConfigTypeEnum type);
 
     /**
      * 更新配置

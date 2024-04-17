@@ -84,7 +84,7 @@ public class ExecLogTracker implements IExecLogTracker {
 
     @Override
     public void close() {
-        log.info("ExecLogTracker.close path: {}", absolutePath);
+        log.info("ExecLogTracker.close path: {}, closed: {}", absolutePath, close);
         if (close) {
             return;
         }

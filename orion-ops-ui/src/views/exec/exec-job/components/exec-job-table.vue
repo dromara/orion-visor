@@ -115,7 +115,7 @@
             {{ getDictValue(execStatusKey, record.recentLogStatus) }}
           </a-tag>
           <!-- 执行时间 -->
-          {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm') }}
+          {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm:ss') }}
         </div>
         <!-- 无任务 -->
         <div v-else class="mx8">-</div>
