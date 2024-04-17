@@ -57,6 +57,8 @@
     // 定时查询执行状态
     if (record.status === execStatus.WAITING ||
       record.status === execStatus.RUNNING) {
+      // 等待一秒后先查询一下状态
+      setTimeout(fetchTaskStatus, 1000);
       // 注册状态轮询
       statusIntervalId.value = setInterval(fetchTaskStatus, 5000);
     }
@@ -92,8 +94,8 @@
       if (hostStatus) {
         host.status = hostStatus.status;
         host.startTime = hostStatus.startTime;
-        // 使用时间
-        host.finishTime = host.finishTime || Date.now();
+        // 结束时间绑定了使用时间 如果未完成则使用当前时间
+        host.finishTime = hostStatus.finishTime || Date.now();
         host.exitStatus = hostStatus.exitStatus;
         host.errorMessage = hostStatus.errorMessage;
       }

@@ -7,6 +7,7 @@ import axios from 'axios';
  */
 export interface HostIdentityCreateRequest {
   name?: string;
+  type?: string;
   username?: string;
   password?: string;
   keyId?: number;
@@ -27,6 +28,7 @@ export interface HostIdentityQueryRequest extends Pagination {
   searchValue?: string;
   id?: number;
   name?: string;
+  type?: string;
   username?: string;
   keyId?: number;
 }
@@ -37,6 +39,7 @@ export interface HostIdentityQueryRequest extends Pagination {
 export interface HostIdentityQueryResponse extends TableData {
   id: number;
   name: string;
+  type: string;
   username: string;
   password: string;
   keyId: number;

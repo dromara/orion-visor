@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            :width="470"
+            :width="520"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading || isViewHandler }"
@@ -241,7 +241,7 @@
 
   .keygen-alert {
     margin: 0 0 12px 16px;
-    width: 408px;
+    width: calc(100% - 16px);
   }
 
   .password-input {

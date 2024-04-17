@@ -73,3 +73,9 @@ export const GrantTabs = [
     component: HostIdentityGrant
   },
 ];
+
+// 身份类型 字典项
+export const identityTypeKey = 'hostIdentityType';
+
+// 加载的字典值
+export const dictKeys = [identityTypeKey];

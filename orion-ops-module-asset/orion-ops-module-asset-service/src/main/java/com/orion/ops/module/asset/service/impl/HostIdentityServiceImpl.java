@@ -25,6 +25,7 @@ import com.orion.ops.module.asset.entity.request.host.HostIdentityCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostIdentityUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostIdentityVO;
+import com.orion.ops.module.asset.enums.HostIdentityTypeEnum;
 import com.orion.ops.module.asset.service.HostIdentityService;
 import com.orion.ops.module.infra.api.DataExtraApi;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     public Long createHostIdentity(HostIdentityCreateRequest request) {
         log.info("HostIdentityService-createHostIdentity request: {}", JSON.toJSONString(request));
         // 检查秘钥是否存在
-        this.checkKeyIdPresent(request.getKeyId());
+        this.checkCreateParams(request);
         // 转换
         HostIdentityDO record = HostIdentityConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -85,19 +86,25 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     @Override
     public Integer updateHostIdentityById(HostIdentityUpdateRequest request) {
         log.info("HostIdentityService-updateHostIdentityById request: {}", JSON.toJSONString(request));
-        // 查询
+        // 验证参数
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        HostIdentityTypeEnum type = Valid.valid(HostIdentityTypeEnum::of, request.getType());
+        if (HostIdentityTypeEnum.KEY.equals(type)) {
+            // 秘钥认证
+            this.checkKeyId(request.getKeyId());
+        }
+        // 查询主机身份
         HostIdentityDO record = hostIdentityDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 检查秘钥是否存在
-        this.checkKeyIdPresent(request.getKeyId());
         // 转换
         HostIdentityDO updateRecord = HostIdentityConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostIdentityPresent(updateRecord);
-        // 设置密码
-        String newPassword = PasswordModifier.getEncryptNewPassword(request);
-        updateRecord.setPassword(newPassword);
+        if (HostIdentityTypeEnum.PASSWORD.equals(type)) {
+            // 设置密码
+            String newPassword = PasswordModifier.getEncryptNewPassword(request);
+            updateRecord.setPassword(newPassword);
+        }
         // 更新
         LambdaUpdateWrapper<HostIdentityDO> wrapper = Wrappers.<HostIdentityDO>lambdaUpdate()
                 .set(HostIdentityDO::getKeyId, request.getKeyId())
@@ -105,10 +112,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         int effect = hostIdentityDAO.update(updateRecord, wrapper);
         log.info("HostIdentityService-updateHostIdentityById effect: {}", effect);
         // 删除缓存
-        if (!record.getName().equals(updateRecord.getName()) ||
-                !record.getUsername().equals(updateRecord.getUsername())) {
-            RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY);
-        }
+        RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY);
         return effect;
     }
 
@@ -155,6 +159,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         }
         // 设置秘钥名称
         List<Long> keyIdList = dataGrid.stream()
+                .filter(s -> HostIdentityTypeEnum.KEY.name().equals(s.getType()))
                 .map(HostIdentityVO::getKeyId)
                 .filter(Objects::nonNull)
                 .distinct()
@@ -212,14 +217,28 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     }
 
     /**
-     * 检查秘钥是否存在
+     * 检查创建参数
+     *
+     * @param request request
+     */
+    private void checkCreateParams(HostIdentityCreateRequest request) {
+        HostIdentityTypeEnum type = Valid.valid(HostIdentityTypeEnum::of, request.getType());
+        if (HostIdentityTypeEnum.PASSWORD.equals(type)) {
+            // 密码认证
+            Valid.notBlank(request.getPassword(), ErrorMessage.PARAM_MISSING);
+        } else if (HostIdentityTypeEnum.KEY.equals(type)) {
+            // 秘钥认证
+            this.checkKeyId(request.getKeyId());
+        }
+    }
+
+    /**
+     * 检查 keyId 是否存在
      *
      * @param keyId keyId
      */
-    private void checkKeyIdPresent(Long keyId) {
-        if (keyId == null) {
-            return;
-        }
+    private void checkKeyId(Long keyId) {
+        Valid.notNull(keyId, ErrorMessage.PARAM_MISSING);
         Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
     }
 
@@ -234,6 +253,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         return hostIdentityDAO.wrapper()
                 .eq(HostIdentityDO::getId, request.getId())
                 .like(HostIdentityDO::getName, request.getName())
+                .eq(HostIdentityDO::getType, request.getType())
                 .like(HostIdentityDO::getUsername, request.getUsername())
                 .eq(HostIdentityDO::getKeyId, request.getKeyId())
                 .and(Strings.isNotEmpty(searchValue), c -> c

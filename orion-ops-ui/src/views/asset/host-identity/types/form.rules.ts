@@ -8,6 +8,16 @@ export const name = [{
   message: '名称长度不能大于64位'
 }] as FieldRule[];
 
+export const type = [{
+  required: true,
+  message: '请选择类型'
+}] as FieldRule[];
+
+export const keyId = [{
+  required: true,
+  message: '请选择秘钥'
+}] as FieldRule[];
+
 export const username = [{
   required: true,
   message: '请输入用户名'
@@ -18,5 +28,7 @@ export const username = [{
 
 export default {
   name,
+  type,
+  keyId,
   username,
 } as Record<string, FieldRule | FieldRule[]>;

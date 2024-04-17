@@ -107,7 +107,7 @@
           {{ getDictValue(execJobStatusKey, record.status) }}
         </a-tag>
       </template>
-      <!-- 最近任务 -->
+      <!-- 最近执行 -->
       <template #recentLog="{ record }">
         <div class="flex-center" v-if="record.recentLogId && record.recentLogStatus">
           <!-- 执行状态 -->

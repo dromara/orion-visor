@@ -243,52 +243,62 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     private HostTerminalConnectDTO getHostConnectInfo(HostDO host,
                                                       HostSshConfigModel config,
                                                       HostSshExtraModel extra) {
-        // 获取认证方式
-        HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
-        HostExtraSshAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
-                .map(HostSshExtraModel::getAuthType)
-                .map(HostExtraSshAuthTypeEnum::of)
-                .orElse(HostExtraSshAuthTypeEnum.DEFAULT);
-        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-            // 自定义秘钥
-            authType = HostSshAuthTypeEnum.KEY;
-            config.setKeyId(extra.getKeyId());
-            if (extra.getUsername() != null) {
-                config.setUsername(extra.getUsername());
-            }
-        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
-            // 自定义身份
-            authType = HostSshAuthTypeEnum.IDENTITY;
-            config.setIdentityId(extra.getIdentityId());
-        }
-        Long keyId = null;
         // 填充认证信息
         HostTerminalConnectDTO conn = new HostTerminalConnectDTO();
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setPort(config.getPort());
+        conn.setTimeout(config.getConnectTimeout());
         conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());
         conn.setFileContentCharset(config.getFileContentCharset());
-        conn.setTimeout(config.getConnectTimeout());
-        conn.setUsername(config.getUsername());
-        // 填充身份信息
-        if (HostSshAuthTypeEnum.PASSWORD.equals(authType)) {
-            conn.setPassword(config.getPassword());
-        } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
-            // 秘钥认证
-            keyId = config.getKeyId();
-        } else if (HostSshAuthTypeEnum.IDENTITY.equals(authType)) {
+
+        // 获取自定义认证方式
+        HostExtraSshAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
+                .map(HostSshExtraModel::getAuthType)
+                .map(HostExtraSshAuthTypeEnum::of)
+                .orElse(null);
+        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
+            // 自定义秘钥
+            config.setAuthType(HostSshAuthTypeEnum.KEY.name());
+            config.setKeyId(extra.getKeyId());
+            if (extra.getUsername() != null) {
+                config.setUsername(extra.getUsername());
+            }
+        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+            // 自定义身份
+            config.setAuthType(HostSshAuthTypeEnum.IDENTITY.name());
+            config.setIdentityId(extra.getIdentityId());
+        }
+
+        // 身份认证
+        HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
+        if (HostSshAuthTypeEnum.IDENTITY.equals(authType)) {
             // 身份认证
             HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
             Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
-            keyId = identity.getKeyId();
-            conn.setUsername(identity.getUsername());
-            conn.setPassword(identity.getPassword());
+            config.setUsername(identity.getUsername());
+            HostIdentityTypeEnum identityType = HostIdentityTypeEnum.of(identity.getType());
+            if (HostIdentityTypeEnum.PASSWORD.equals(identityType)) {
+                // 密码类型
+                authType = HostSshAuthTypeEnum.PASSWORD;
+                config.setPassword(identity.getPassword());
+            } else if (HostIdentityTypeEnum.KEY.equals(identityType)) {
+                // 秘钥类型
+                authType = HostSshAuthTypeEnum.KEY;
+                config.setKeyId(identity.getKeyId());
+            }
         }
-        // 设置秘钥信息
-        if (keyId != null) {
+
+        // 填充认证信息
+        conn.setUsername(config.getUsername());
+        if (HostSshAuthTypeEnum.PASSWORD.equals(authType)) {
+            // 密码认证
+            conn.setPassword(config.getPassword());
+        } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
+            // 秘钥认证
+            Long keyId = config.getKeyId();
             HostKeyDO key = hostKeyDAO.selectById(keyId);
             Valid.notNull(key, ErrorMessage.KEY_ABSENT);
             conn.setKeyId(keyId);
@@ -296,7 +306,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             conn.setPrivateKey(key.getPrivateKey());
             conn.setPrivateKeyPassword(key.getPassword());
         }
-        // 连接
         return conn;
     }
 

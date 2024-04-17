@@ -23,12 +23,20 @@
         <a-form-item field="name" label="名称">
           <a-input v-model="formModel.name" placeholder="请输入名称" />
         </a-form-item>
+        <!-- 类型 -->
+        <a-form-item field="type" label="类型">
+          <a-radio-group v-model="formModel.type"
+                         type="button"
+                         class="usn"
+                         :options="toRadioOptions(identityTypeKey)" />
+        </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
           <a-input v-model="formModel.username" placeholder="请输入用户名" />
         </a-form-item>
         <!-- 用户密码 -->
-        <a-form-item field="password"
+        <a-form-item v-if="formModel.type === IdentityType.PASSWORD"
+                     field="password"
                      label="用户密码"
                      :rules="passwordRules">
           <a-input-password v-model="formModel.password"
@@ -42,10 +50,10 @@
                     checked-text="使用新密码"
                     unchecked-text="使用原密码" />
         </a-form-item>
-        <!-- 秘钥id -->
-        <a-form-item field="keyId"
-                     label="主机秘钥"
-                     extra="密码和秘钥二选一 优先使用秘钥">
+        <!-- 主机秘钥 -->
+        <a-form-item v-if="formModel.type === IdentityType.KEY"
+                     field="keyId"
+                     label="主机秘钥">
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
       </a-form>
@@ -68,8 +76,11 @@
   import formRules from '../types/form.rules';
   import { createHostIdentity, updateHostIdentity } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
+  import { IdentityType, identityTypeKey } from '../types/const';
+  import { useDictStore } from '@/store';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
+  const { toRadioOptions, getDictValue } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
@@ -79,6 +90,7 @@
   const defaultForm = (): HostIdentityUpdateRequest => {
     return {
       id: undefined,
+      type: IdentityType.PASSWORD,
       name: undefined,
       username: undefined,
       password: undefined,
@@ -139,15 +151,6 @@
         return false;
       }
       if (isAddHandle.value) {
-        if (!formModel.value.password && !formModel.value.keyId) {
-          formRef.value.setFields({
-            password: {
-              status: 'error',
-              message: '创建时密码和秘钥不能同时为空'
-            }
-          });
-          return false;
-        }
         // 新增
         await createHostIdentity(formModel.value);
         Message.success('创建成功');

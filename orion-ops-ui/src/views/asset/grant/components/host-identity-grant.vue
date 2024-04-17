@@ -15,11 +15,24 @@
              :pagination="false"
              :bordered="false"
              @row-click="clickRow">
+      <!-- 类型 -->
+      <template #type="{ record }">
+        <a-tag :color="getDictValue(identityTypeKey, record.type, 'color')">
+          {{ getDictValue(identityTypeKey, record.type) }}
+        </a-tag>
+      </template>
       <!-- 秘钥名称 -->
       <template #keyId="{ record }">
-        <a-tag color="arcoblue" v-if="record.keyId">
-          {{ hostKeys.find(s => s.id === record.keyId)?.name }}
-        </a-tag>
+        <!-- 有秘钥 -->
+        <template v-if="record.keyId && record.type === 'KEY'">
+          <a-tag color="arcoblue" v-if="record.keyId">
+            {{ hostKeys.find(s => s.id === record.keyId)?.name }}
+          </a-tag>
+        </template>
+        <!-- 无秘钥 -->
+        <template v-else>
+          <span>-</span>
+        </template>
       </template>
     </a-table>
   </grant-layout>
@@ -38,11 +51,12 @@
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
-  import { Message } from '@arco-design/web-vue';
-  import { hostIdentityColumns } from '../types/table.columns';
-  import { useCacheStore } from '@/store';
   import { useRowSelection } from '@/types/table';
+  import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { hostIdentityColumns } from '../types/table.columns';
+  import { identityTypeKey } from '../types/const';
+  import { Message } from '@arco-design/web-vue';
   import GrantLayout from './grant-layout.vue';
 
   const props = defineProps<{
@@ -51,6 +65,7 @@
 
   const cacheStore = useCacheStore();
   const rowSelection = useRowSelection();
+  const { getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
 
   const selectedKeys = ref<Array<number>>([]);

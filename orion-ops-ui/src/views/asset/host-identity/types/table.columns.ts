@@ -13,6 +13,13 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     slotName: 'name',
+    ellipsis: true,
+    tooltip: true
+  }, {
+    title: '类型',
+    dataIndex: 'type',
+    slotName: 'type',
+    width: 138,
   }, {
     title: '用户名',
     dataIndex: 'username',
