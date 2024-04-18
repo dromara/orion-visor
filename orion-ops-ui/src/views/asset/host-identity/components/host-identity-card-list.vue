@@ -40,8 +40,7 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
+              :auto-label-width="true"
               @keyup.enter="() => fetchCardData()">
         <!-- id -->
         <a-form-item field="id" label="id">
@@ -65,8 +64,8 @@
         <a-form-item field="username" label="用户名">
           <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
         </a-form-item>
-        <!-- 主机秘钥 -->
-        <a-form-item field="keyId" label="主机秘钥">
+        <!-- 秘钥 -->
+        <a-form-item field="keyId" label="秘钥">
           <host-key-selector v-model="formModel.keyId" allow-clear />
         </a-form-item>
       </a-form>

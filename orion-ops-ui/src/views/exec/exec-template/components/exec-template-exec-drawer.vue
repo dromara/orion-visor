@@ -8,7 +8,7 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full spin-wrapper" :loading="loading">
+    <a-spin class="full modal-form-small" :loading="loading">
       <!-- 命令表单 -->
       <a-form :model="formModel"
               ref="formRef"
@@ -18,16 +18,19 @@
         <a-row :gutter="16">
           <!-- 执行描述 -->
           <a-col :span="16">
-            <a-form-item field="description" label="执行描述">
+            <a-form-item field="description"
+                         label="执行描述"
+                         :hide-asterisk="true">
               <a-input v-model="formModel.description"
                        placeholder="请输入执行描述"
                        allow-clear />
             </a-form-item>
           </a-col>
           <!-- 超时时间 -->
-          <a-col :span="7">
+          <a-col :span="8">
             <a-form-item field="timeout"
-                         label="超时时间">
+                         label="超时时间"
+                         :hide-asterisk="true">
               <a-input-number v-model="formModel.timeout"
                               placeholder="为0则不超时"
                               :min="0"
@@ -41,7 +44,9 @@
           </a-col>
           <!-- 执行主机 -->
           <a-col :span="16">
-            <a-form-item field="hostIdList" label="执行主机">
+            <a-form-item field="hostIdList"
+                         label="执行主机"
+                         :hide-asterisk="true">
               <div class="selected-host">
                 <!-- 已选择数量 -->
                 <span class="usn" v-if="formModel.hostIdList?.length">
@@ -55,7 +60,9 @@
           </a-col>
           <!-- 脚本执行 -->
           <a-col :span="8">
-            <a-form-item field="scriptExec" label="脚本执行">
+            <a-form-item field="scriptExec"
+                         label="脚本执行"
+                         :hide-asterisk="true">
               <div class="flex-center">
                 <a-switch v-model="formModel.scriptExec"
                           type="round"
@@ -74,7 +81,6 @@
             <a-form-item field="command"
                          label="执行命令"
                          :hide-label="true"
-                         :wrapper-col-props="{ span: 24 }"
                          :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
               <exec-editor v-model="formModel.command"
                            container-class="command-editor"
@@ -233,9 +239,6 @@
 </script>
 
 <style lang="less" scoped>
-  .spin-wrapper {
-    padding: 16px 20px;
-  }
 
   .selected-host {
     width: 100%;
@@ -262,7 +265,7 @@
 
   .command-editor {
     width: 100%;
-    height: 65vh;
+    height: 62vh;
   }
 
 </style>

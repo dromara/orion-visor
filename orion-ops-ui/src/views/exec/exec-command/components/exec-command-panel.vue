@@ -14,50 +14,64 @@
                 label-align="right"
                 :auto-label-width="true"
                 :rules="formRules">
-          <!-- 执行主机 -->
-          <a-form-item field="hostIdList" label="执行主机">
-            <div class="selected-host">
-              <!-- 已选择数量 -->
-              <span class="usn" v-if="formModel.hostIdList?.length">
+          <a-row :gutter="16">
+            <!-- 执行主机 -->
+            <a-col :span="24">
+              <a-form-item field="hostIdList" label="执行主机">
+                <div class="selected-host">
+                  <!-- 已选择数量 -->
+                  <span class="usn" v-if="formModel.hostIdList?.length">
                 已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
               </span>
-              <span class="usn pointer span-blue" @click="openSelectHost">
+                  <span class="usn pointer span-blue" @click="openSelectHost">
                 {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
               </span>
-            </div>
-          </a-form-item>
-          <!-- 执行描述 -->
-          <a-form-item field="description" label="执行描述">
-            <a-input v-model="formModel.description"
-                     placeholder="请输入执行描述"
-                     allow-clear />
-          </a-form-item>
-          <!-- 超时时间 -->
-          <a-form-item field="timeout" label="超时时间">
-            <a-input-number v-model="formModel.timeout"
-                            placeholder="为0则不超时"
-                            :min="0"
-                            :max="100000"
-                            hide-button>
-              <template #suffix>
-                秒
-              </template>
-            </a-input-number>
-          </a-form-item>
-          <!-- 脚本执行 -->
-          <a-form-item field="scriptExec" label="脚本执行">
-            <div class="flex-center">
-              <a-switch v-model="formModel.scriptExec"
-                        type="round"
-                        :checked-value="EnabledStatus.ENABLED"
-                        :unchecked-value="EnabledStatus.DISABLED" />
-              <div class="question-right ml8">
-                <a-tooltip content="启用后会将命令写入脚本文件 传输到主机后执行">
-                  <icon-question-circle />
-                </a-tooltip>
-              </div>
-            </div>
-          </a-form-item>
+                </div>
+              </a-form-item>
+            </a-col>
+            <!-- 执行描述 -->
+            <a-col :span="24">
+              <a-form-item field="description" label="执行描述">
+                <a-input v-model="formModel.description"
+                         placeholder="请输入执行描述"
+                         allow-clear />
+              </a-form-item>
+            </a-col>
+            <!-- 超时时间 -->
+            <a-col :span="14">
+              <a-form-item field="timeout"
+                           label="超时时间"
+                           :hide-asterisk="true">
+                <a-input-number v-model="formModel.timeout"
+                                placeholder="为0则不超时"
+                                :min="0"
+                                :max="100000"
+                                hide-button>
+                  <template #suffix>
+                    秒
+                  </template>
+                </a-input-number>
+              </a-form-item>
+            </a-col>
+            <!-- 脚本执行 -->
+            <a-col :span="10">
+              <a-form-item field="scriptExec"
+                           label="脚本执行"
+                           :hide-asterisk="true">
+                <div class="flex-center">
+                  <a-switch v-model="formModel.scriptExec"
+                            type="round"
+                            :checked-value="EnabledStatus.ENABLED"
+                            :unchecked-value="EnabledStatus.DISABLED" />
+                  <div class="question-right ml8">
+                    <a-tooltip content="启用后会将命令写入脚本文件 传输到主机后执行">
+                      <icon-question-circle />
+                    </a-tooltip>
+                  </div>
+                </div>
+              </a-form-item>
+            </a-col>
+          </a-row>
         </a-form>
       </template>
       <!-- 参数表单 -->

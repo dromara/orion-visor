@@ -8,7 +8,7 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full modal-form" :loading="loading">
+    <a-spin class="full modal-form-small" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
@@ -17,15 +17,19 @@
         <a-row :gutter="16">
           <!-- 模板名称 -->
           <a-col :span="12">
-            <a-form-item field="name" label="模板名称">
+            <a-form-item field="name"
+                         label="模板名称"
+                         :hide-asterisk="true">
               <a-input v-model="formModel.name"
                        placeholder="请输入模板名称"
                        allow-clear />
             </a-form-item>
           </a-col>
           <!-- 超时时间 -->
-          <a-col :span="7">
-            <a-form-item field="timeout" label="超时时间">
+          <a-col :span="6">
+            <a-form-item field="timeout"
+                         label="超时时间"
+                         :hide-asterisk="true">
               <a-input-number v-model="formModel.timeout"
                               placeholder="为0则不超时"
                               :min="0"
@@ -38,8 +42,10 @@
             </a-form-item>
           </a-col>
           <!-- 脚本执行 -->
-          <a-col :span="5">
-            <a-form-item field="scriptExec" label="脚本执行">
+          <a-col :span="6">
+            <a-form-item field="scriptExec"
+                         label="脚本执行"
+                         :hide-asterisk="true">
               <div class="flex-center">
                 <a-switch v-model="formModel.scriptExec"
                           type="round"
@@ -58,7 +64,6 @@
             <a-form-item field="command"
                          label="模板命令"
                          :hide-label="true"
-                         :wrapper-col-props="{ span: 24 }"
                          :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
               <exec-editor v-model="formModel.command"
                            container-class="command-editor"
@@ -70,9 +75,7 @@
           <a-col :span="24">
             <a-form-item field="parameter"
                          class="parameter-form-item"
-                         label="命令参数"
-                         :label-col-props="{ span: 24 }"
-                         :wrapper-col-props="{ span: 24 }">
+                         label="命令参数">
               <!-- label -->
               <template #label>
                 <span class="span-blue pointer" @click="addParameter">添加参数</span>
@@ -313,7 +316,7 @@
 
   .command-editor {
     width: 100%;
-    height: 65vh;
+    height: 62vh;
   }
 
 </style>

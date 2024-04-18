@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            title="清空操作日志"
            :align-center="false"
@@ -15,8 +15,7 @@
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
               label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }">
+              :auto-label-width="true">
         <!-- 执行时间 -->
         <a-form-item field="startTimeRange" label="执行时间">
           <a-range-picker v-model="formModel.startTimeRange"
