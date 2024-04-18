@@ -10,8 +10,8 @@
            :pagination="false"
            :bordered="false"
            :loading="loading"
-           @cell-mouse-enter="setOperable"
-           @cell-mouse-leave="unsetOperable">
+           @cell-mouse-enter="setRowOperable"
+           @cell-mouse-leave="unsetRowOperable">
     <!-- 文件搜索框 -->
     <template #nameFilter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
       <div class="name-filter">
@@ -155,9 +155,10 @@
   const previewSize = import.meta.env.VITE_SFTP_PREVIEW_MB;
 
   const props = defineProps<{
-    session: ISftpSession | undefined;
+    session?: ISftpSession;
     list: Array<SftpFile>;
     loading: boolean;
+    closed: boolean;
     selectedFiles: Array<string>;
   }>();
 
@@ -185,14 +186,14 @@
   const editRowName = ref<string>('');
   const tableRef = ref();
 
-  // 设置可操作状态
-  const setOperable = (record: TableData) => {
+  // 设置行可操作状态
+  const setRowOperable = (record: TableData) => {
     editRowName.value = record.name;
     record.hover = true;
   };
 
-  // 设置不可操作状态
-  const unsetOperable = (record: TableData) => {
+  // 设置行不可操作状态
+  const unsetRowOperable = (record: TableData) => {
     setTimeout(() => {
       // 等待后如果还是当前行 但是未被选中则代表已经被失焦
       if (record.name === editRowName.value && !record.hover) {
@@ -212,6 +213,10 @@
   // 点击文件名称
   const clickFilename = (record: TableData) => {
     if (record.isDir) {
+      // 检查是否断开
+      if (props.closed) {
+        return;
+      }
       // 进入文件夹
       emits('loadFile', record.path);
     } else {
@@ -221,27 +226,47 @@
 
   // 编辑文件
   const editFile = (record: TableData) => {
+    // 检查是否断开
+    if (props.closed) {
+      return;
+    }
     emits('editFile', record.name, record.path);
     props.session?.getContent(record.path);
   };
 
   // 删除文件
   const deleteFile = (path: string) => {
+    // 检查是否断开
+    if (props.closed) {
+      return;
+    }
     props.session?.remove([path]);
   };
 
   // 下载文件
   const downloadFile = (path: string) => {
+    // 检查是否断开
+    if (props.closed) {
+      return;
+    }
     emits('download', [path]);
   };
 
   // 移动文件
   const moveFile = (path: string) => {
+    // 检查是否断开
+    if (props.closed) {
+      return;
+    }
     openSftpMoveModal(props.session?.sessionId as string, path);
   };
 
   // 文件提权
   const chmodFile = (path: string, permission: number) => {
+    // 检查是否断开
+    if (props.closed) {
+      return;
+    }
     openSftpChmodModal(props.session?.sessionId as string, path, permission);
   };
 

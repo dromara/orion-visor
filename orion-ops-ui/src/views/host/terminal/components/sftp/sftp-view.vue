@@ -12,7 +12,7 @@
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
                              v-model:selected-files="selectFiles"
-                             :is-close="closed"
+                             :closed="closed"
                              :close-message="closeMessage"
                              :current-path="currentPath"
                              :session="session"
@@ -22,6 +22,7 @@
           <sftp-table class="sftp-table-wrapper"
                       v-model:selected-files="selectFiles"
                       :session="session"
+                      :closed="closed"
                       :list="fileList"
                       :loading="tableLoading"
                       @load-file="loadFiles"
@@ -36,7 +37,6 @@
           <sftp-editor-header class="sftp-editor-header"
                               :name="editorFileName"
                               :path="editorFilePath"
-                              :session="session"
                               @save="editorSave"
                               @close="closeEditor" />
           <!-- 编辑器 -->

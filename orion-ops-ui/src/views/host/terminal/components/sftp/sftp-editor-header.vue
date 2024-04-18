@@ -11,7 +11,7 @@
                  arrow-class="terminal-tooltip-content"
                  content="点击复制">
         <a-tag class="sftp-path-container pointer"
-               color="green"
+               color="arcoblue"
                @click="copy(path, '已复制')">
           <span>{{ name }}</span>
         </a-tag>
@@ -56,13 +56,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession } from '../../types/terminal.type';
   import { copy } from '@/hooks/copy';
 
   const props = defineProps<{
     name: string;
     path: string;
-    session: ISftpSession | undefined,
   }>();
 
   const emits = defineEmits(['save', 'close']);

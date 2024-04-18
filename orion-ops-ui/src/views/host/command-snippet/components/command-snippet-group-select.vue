@@ -21,9 +21,9 @@
   import useLoading from '@/hooks/loading';
   import { createCommandSnippetGroup } from '@/api/asset/command-snippet-group';
 
-  const props = defineProps<{
-    modelValue: number | undefined
-  }>();
+  const props = defineProps<Partial<{
+    modelValue: number;
+  }>>();
 
   const emits = defineEmits(['update:modelValue']);
 
