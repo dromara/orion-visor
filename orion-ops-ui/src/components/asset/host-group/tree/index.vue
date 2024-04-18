@@ -2,15 +2,17 @@
   <a-scrollbar>
     <!-- 分组树 -->
     <a-tree v-if="treeData.length"
+            v-model:checked-keys="checkedKeys"
             ref="tree"
             class="tree-container block-tree"
-            v-model:checked-keys="checkedKeys"
+            :class="[ editable ? 'editable-tree' : '' ]"
             :blockNode="true"
-            :draggable="editable"
             :data="treeData"
+            :draggable="editable"
             :checkable="checkable"
             :check-strictly="true"
-            @drop="moveGroup">
+            @drop="moveGroup"
+            @select="(s) => emits('onSelected', s)">
       <!-- 标题 -->
       <template #title="node">
         <!-- 修改名称输入框 -->
@@ -40,8 +42,8 @@
         <span v-else
               class="node-title-wrapper"
               @click="() => emits('selectedNode', node)">
-        {{ node.title }}
-      </span>
+          {{ node.title }}
+        </span>
       </template>
       <!-- 操作图标 -->
       <template #drag-icon="{ node }">
@@ -51,8 +53,8 @@
                 class="tree-icon"
                 title="重命名"
                 @click="rename(node.title, node.key)">
-          <icon-edit />
-        </span>
+            <icon-edit />
+          </span>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -69,8 +71,8 @@
                 class="tree-icon"
                 title="新增"
                 @click="addChildren(node)">
-          <icon-plus />
-        </span>
+            <icon-plus />
+          </span>
         </a-space>
       </template>
     </a-tree>
@@ -97,13 +99,16 @@
   import { isString } from '@/utils/is';
   import { useCacheStore } from '@/store';
 
-  const props = defineProps<Partial<{
+  const props = withDefaults(defineProps<Partial<{
     loading: boolean;
     editable: boolean;
     checkable: boolean;
     checkedKeys: Array<number>;
-  }>>();
-  const emits = defineEmits(['setLoading', 'selectedNode', 'update:checkedKeys']);
+  }>>(), {
+    editable: false,
+    checkable: false,
+  });
+  const emits = defineEmits(['setLoading', 'onSelected', 'selectedNode', 'update:checkedKeys']);
 
   const cacheStore = useCacheStore();
 
@@ -331,6 +336,29 @@
     width: max-content;
     user-select: none;
     overflow: hidden;
+
+    :deep(.arco-tree-node-title) {
+      padding: 0;
+    }
+
+    .node-title-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+    }
+
+    .tree-icon {
+      font-size: 12px;
+      color: rgb(var(--primary-6));
+    }
+  }
+
+  .editable-tree {
+    :deep(.arco-tree-node-title) {
+      padding: 0 80px 0 0;
+    }
   }
 
   .empty-container {
@@ -340,23 +368,6 @@
     height: 100%;
     padding-top: 25px;
     color: var(--color-text-3);
-  }
-
-  :deep(.arco-tree-node-title) {
-    padding: 0 80px 0 0;
-  }
-
-  .node-title-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 8px;
-  }
-
-  .tree-icon {
-    font-size: 12px;
-    color: rgb(var(--primary-6));
   }
 
 </style>

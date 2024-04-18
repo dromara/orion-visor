@@ -79,7 +79,7 @@
   import SftpUploadModal from './sftp-upload-modal.vue';
 
   const props = defineProps<{
-    tab: TerminalTabItem
+    tab: TerminalTabItem;
   }>();
 
   const { preference, sessionManager, transferManager } = useTerminalStore();

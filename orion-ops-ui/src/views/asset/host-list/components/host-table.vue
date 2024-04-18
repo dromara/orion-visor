@@ -29,7 +29,6 @@
       <a-form-item field="tags" label="主机标签">
         <tag-multi-selector v-model="formModel.tags"
                             ref="tagSelector"
-                            :allowCreate="false"
                             :limit="0"
                             type="HOST"
                             :tagColor="tagColor"

@@ -39,7 +39,8 @@
     allowCreate: boolean;
     tagColor: Array<string>;
   }>>(), {
-    tagColor: () => []
+    allowCreate: false,
+    tagColor: () => [],
   });
 
   const emits = defineEmits(['update:modelValue', 'onLimited']);

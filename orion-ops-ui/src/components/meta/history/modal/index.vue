@@ -4,7 +4,7 @@
            :title="title"
            :width="960"
            :top="80"
-           :body-style="{padding: '0 8px'}"
+           :body-style="{ padding: '0 8px' }"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"

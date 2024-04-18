@@ -19,7 +19,7 @@
   import useLoading from '@/hooks/loading';
 
   const props = defineProps<Partial<{
-    modelValue: number
+    modelValue: number;
   }>>();
 
   const emits = defineEmits(['update:modelValue']);

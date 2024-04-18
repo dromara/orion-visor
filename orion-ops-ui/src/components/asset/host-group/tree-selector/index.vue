@@ -5,8 +5,7 @@
                  :loading="loading"
                  placeholder="请选择主机分组"
                  :allow-clear="true"
-                 :allow-search="true">
-  </a-tree-select>
+                 :allow-search="true" />
 </template>
 
 <script lang="ts">

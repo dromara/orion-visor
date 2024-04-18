@@ -121,7 +121,7 @@
   import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
 
   const props = defineProps<{
-    item: CommandSnippetQueryResponse
+    item: CommandSnippetQueryResponse;
   }>();
 
   const { getAndCheckCurrentSshSession } = useTerminalStore();

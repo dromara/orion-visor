@@ -49,8 +49,8 @@
 
 <script lang="ts" setup>
   import type { UserUpdateRequest, UserQueryResponse } from '@/api/user/user';
-  import useLoading from '@/hooks/loading';
   import { ref, onMounted } from 'vue';
+  import useLoading from '@/hooks/loading';
   import formRules from '../../user/types/form.rules';
   import { useUserStore } from '@/store';
   import { getCurrentUser, updateCurrentUser } from '@/api/user/mine';

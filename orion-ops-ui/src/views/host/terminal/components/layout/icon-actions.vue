@@ -10,7 +10,7 @@
                :content="action.content">
       <div v-if="action.visible !== false"
            class="terminal-sidebar-icon-wrapper"
-           :class="[wrapperClass]">
+           :class="[ wrapperClass ]">
         <div class="terminal-sidebar-icon"
              :class="[
                iconClass,

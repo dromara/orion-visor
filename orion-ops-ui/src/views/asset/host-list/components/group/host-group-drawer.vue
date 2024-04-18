@@ -42,6 +42,7 @@
           <host-group-tree outer-class="tree-card-main"
                            ref="tree"
                            :loading="loading"
+                           :editable="true"
                            @set-loading="setLoading"
                            @selected-node="selectGroup" />
         </div>

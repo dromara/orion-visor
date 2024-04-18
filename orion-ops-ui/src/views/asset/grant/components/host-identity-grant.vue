@@ -2,7 +2,9 @@
   <grant-layout :type="type"
                 :loading="loading"
                 @fetch="fetchAuthorizedData"
-                @grant="doGrant">
+                @grant="doGrant"
+                @select-all="selectAll"
+                @reverse="reverseSelect">
     <!-- 主机身份表格 -->
     <a-table row-key="id"
              class="host-identity-main-table"
@@ -102,6 +104,17 @@
     await fetchAuthorizedData(request);
   };
 
+  // 全选
+  const selectAll = () => {
+    selectedKeys.value = hostIdentities.value.map(s => s.id);
+  };
+
+  // 反选
+  const reverseSelect = () => {
+    selectedKeys.value = hostIdentities.value.map(s => s.id)
+      .filter(s => !selectedKeys.value.includes(s));
+  };
+
   // 点击行
   const clickRow = ({ id }: TableData) => {
     const index = selectedKeys.value.indexOf(id);
@@ -112,7 +125,7 @@
     }
   };
 
-  // 初始化数据
+  // 初始化身份数据
   onMounted(async () => {
     setLoading(true);
     try {
@@ -124,7 +137,7 @@
     }
   });
 
-  // 初始化数据
+  // 初始化秘钥数据
   onMounted(async () => {
     // 加载主机秘钥
     hostKeys.value = await cacheStore.loadHostKeys();

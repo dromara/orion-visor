@@ -31,7 +31,7 @@
   import CommandSnippetListItem from './command-snippet-list-item.vue';
 
   defineProps<{
-    snippet: CommandSnippetWrapperResponse
+    snippet: CommandSnippetWrapperResponse;
   }>();
 
   // 计算总量

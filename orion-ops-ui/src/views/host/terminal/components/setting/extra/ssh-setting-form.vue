@@ -3,8 +3,7 @@
           ref="formRef"
           label-align="right"
           :label-col-props="{ span: 6 }"
-          :wrapper-col-props="{ span: 18 }"
-          :rules="{}">
+          :wrapper-col-props="{ span: 18 }">
     <!-- 验证方式 -->
     <a-form-item field="authType" label="验证方式">
       <a-radio-group type="button"

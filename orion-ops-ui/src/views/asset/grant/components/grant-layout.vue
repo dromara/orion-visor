@@ -27,15 +27,30 @@
             </template>
           </span>
         </a-alert>
-        <!-- 授权 -->
-        <a-button class="grant-button"
-                  type="primary"
-                  @click="doGrant">
-          授权
-          <template #icon>
-            <icon-safe />
-          </template>
-        </a-button>
+        <!-- 操作按钮 -->
+        <a-space>
+          <!-- 全选 -->
+          <a-button @click="emits('selectAll')">
+            全选
+            <template #icon>
+              <icon-select-all />
+            </template>
+          </a-button>
+          <!-- 反选 -->
+          <a-button @click="emits('reverse')">
+            反选
+            <template #icon>
+              <icon-list />
+            </template>
+          </a-button>
+          <!-- 授权 -->
+          <a-button type="primary" @click="doGrant">
+            授权
+            <template #icon>
+              <icon-safe />
+            </template>
+          </a-button>
+        </a-space>
       </div>
       <!-- 主体部分 -->
       <div class="data-main">
@@ -63,7 +78,7 @@
     type: string;
     loading: boolean;
   }>();
-  const emits = defineEmits(['fetch', 'grant']);
+  const emits = defineEmits(['fetch', 'grant', 'selectAll', 'reverse']);
 
   const subjectId = ref();
   const currentSubject = ref();
@@ -115,15 +130,12 @@
 
         .alert-wrapper {
           padding: 4px 16px;
+          margin-right: 12px;
 
           .alert-message {
             display: block;
             height: 22px;
           }
-        }
-
-        .grant-button {
-          margin-left: 16px;
         }
       }
 

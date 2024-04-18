@@ -79,7 +79,7 @@
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
 
   const props = defineProps<{
-    tab: TerminalTabItem
+    tab: TerminalTabItem;
   }>();
 
   const { getDictValue } = useDictStore();

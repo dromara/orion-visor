@@ -60,8 +60,8 @@
 
 <script lang="ts" setup>
   import type { UserQueryResponse, LoginHistoryQueryResponse } from '@/api/user/user';
-  import useLoading from '@/hooks/loading';
   import { ref, onBeforeMount } from 'vue';
+  import useLoading from '@/hooks/loading';
   import { ResultStatus } from '../types/const';
   import { getCurrentLoginHistory } from '@/api/user/mine';
   import { getLoginHistory } from '@/api/user/user';

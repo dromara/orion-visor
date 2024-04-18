@@ -2,7 +2,9 @@
   <grant-layout :type="type"
                 :loading="loading"
                 @fetch="fetchAuthorizedData"
-                @grant="doGrant">
+                @grant="doGrant"
+                @select-all="selectAll"
+                @reverse="reverseSelect">
     <!-- 主机秘钥表格 -->
     <a-table row-key="id"
              class="host-key-main-table"
@@ -76,6 +78,17 @@
     }
     // 查询数据
     await fetchAuthorizedData(request);
+  };
+
+  // 全选
+  const selectAll = () => {
+    selectedKeys.value = hostKeys.value.map(s => s.id);
+  };
+
+  // 反选
+  const reverseSelect = () => {
+    selectedKeys.value = hostKeys.value.map(s => s.id)
+      .filter(s => !selectedKeys.value.includes(s));
   };
 
   // 点击行
