@@ -1,11 +1,11 @@
 <template>
   <grant-layout :type="type"
                 :loading="loading"
-                @fetch="fetchAuthorizedGroup"
+                @fetch="fetchAuthorizedData"
                 @grant="doGrant">
     <!-- 分组 -->
-    <host-group-tree outer-class="group-main-tree"
-                     v-model:checked-keys="checkedGroups"
+    <host-group-tree v-model:checked-keys="checkedGroups"
+                     outer-class="group-main-tree"
                      :checkable="true"
                      :editable="false"
                      :loading="loading"
@@ -44,7 +44,7 @@
   const selectedGroup = ref<TreeNodeData>({});
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (request: AssetAuthorizedDataQueryRequest) => {
+  const fetchAuthorizedData = async (request: AssetAuthorizedDataQueryRequest) => {
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostGroup(request);
@@ -60,6 +60,7 @@
   const doGrant = async (request: AssetDataGrantRequest) => {
     setLoading(true);
     try {
+      // 执行授权
       await grantHostGroup({
         ...request,
         idList: checkedGroups.value
@@ -69,6 +70,8 @@
     } finally {
       setLoading(false);
     }
+    // 查询数据
+    await fetchAuthorizedData(request);
   };
 
 </script>

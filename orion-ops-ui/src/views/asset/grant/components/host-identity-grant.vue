@@ -1,7 +1,7 @@
 <template>
   <grant-layout :type="type"
                 :loading="loading"
-                @fetch="fetchAuthorizedGroup"
+                @fetch="fetchAuthorizedData"
                 @grant="doGrant">
     <!-- 主机身份表格 -->
     <a-table row-key="id"
@@ -73,7 +73,7 @@
   const hostKeys = ref<Array<HostKeyQueryResponse>>([]);
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (request: AssetAuthorizedDataQueryRequest) => {
+  const fetchAuthorizedData = async (request: AssetAuthorizedDataQueryRequest) => {
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostIdentity(request);
@@ -88,6 +88,7 @@
   const doGrant = async (request: AssetDataGrantRequest) => {
     setLoading(true);
     try {
+      // 执行授权
       await grantHostIdentity({
         ...request,
         idList: selectedKeys.value
@@ -97,6 +98,8 @@
     } finally {
       setLoading(false);
     }
+    // 查询数据
+    await fetchAuthorizedData(request);
   };
 
   // 点击行

@@ -31,8 +31,6 @@ import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostExtraService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.ops.module.infra.api.DataPermissionApi;
-import com.orion.ops.module.infra.api.SystemUserApi;
-import com.orion.ops.module.infra.entity.dto.user.SystemUserDTO;
 import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -75,9 +73,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Resource
     private DataPermissionApi dataPermissionApi;
-
-    @Resource
-    private SystemUserApi systemUserApi;
 
     @Override
     public JSONArray getTerminalThemes() {
@@ -129,35 +124,28 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host, HostConnectTypeEnum type) {
         Long hostId = host.getId();
         log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
-        // 查询用户
-        SystemUserDTO user = systemUserApi.getUserById(userId);
-        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        // 验证主机是否有权限
+        List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
+        Valid.isTrue(hostIdList.contains(hostId),
+                ErrorMessage.ANY_NO_PERMISSION,
+                DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
         // 查询主机配置
         HostSshConfigModel config = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostSshExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.SSH);
-        // 非管理员检查权限
-        if (!systemUserApi.isAdminUser(userId)) {
-            // 验证主机是否有权限
-            List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
-            Valid.isTrue(hostIdList.contains(hostId),
-                    ErrorMessage.ANY_NO_PERMISSION,
-                    DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
-            // 检查额外配置权限
-            if (extra != null) {
-                HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
-                if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-                    // 验证主机秘钥是否有权限
-                    Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
-                            ErrorMessage.ANY_NO_PERMISSION,
-                            DataPermissionTypeEnum.HOST_KEY.getPermissionName());
-                } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
-                    // 验证主机身份是否有权限
-                    Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, extra.getIdentityId()),
-                            ErrorMessage.ANY_NO_PERMISSION,
-                            DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
-                }
+        if (extra != null) {
+            HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
+            if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
+                // 验证主机秘钥是否有权限
+                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
+                        ErrorMessage.ANY_NO_PERMISSION,
+                        DataPermissionTypeEnum.HOST_KEY.getPermissionName());
+            } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+                // 验证主机身份是否有权限
+                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, extra.getIdentityId()),
+                        ErrorMessage.ANY_NO_PERMISSION,
+                        DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
             }
         }
         // 获取连接配置

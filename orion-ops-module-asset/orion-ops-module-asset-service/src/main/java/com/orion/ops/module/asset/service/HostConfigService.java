@@ -28,7 +28,7 @@ public interface HostConfigService {
     HostConfigVO getHostConfig(Long hostId, String type);
 
     /**
-     * 获取配置
+     * 获取配置 配置未启用会报错
      *
      * @param hostId hostId
      * @param type   type

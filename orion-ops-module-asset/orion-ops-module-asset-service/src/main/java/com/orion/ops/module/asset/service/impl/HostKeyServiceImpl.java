@@ -24,6 +24,8 @@ import com.orion.ops.module.asset.entity.request.host.HostKeyUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostKeyVO;
 import com.orion.ops.module.asset.service.HostKeyService;
 import com.orion.ops.module.infra.api.DataExtraApi;
+import com.orion.ops.module.infra.api.DataPermissionApi;
+import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,9 @@ public class HostKeyServiceImpl implements HostKeyService {
 
     @Resource
     private DataExtraApi dataExtraApi;
+
+    @Resource
+    private DataPermissionApi dataPermissionApi;
 
     @Override
     public Long createHostKey(HostKeyCreateRequest request) {
@@ -179,6 +184,8 @@ public class HostKeyServiceImpl implements HostKeyService {
         hostConfigDAO.setKeyIdWithNull(id);
         // 删除主机秘钥额外配置
         dataExtraApi.deleteHostKeyExtra(id);
+        // 删除数据权限
+        dataPermissionApi.deleteByRelId(DataPermissionTypeEnum.HOST_KEY, id);
         // 删除缓存
         RedisMaps.delete(HostCacheKeyDefine.HOST_KEY.getKey(), record.getId());
         log.info("HostKeyService-deleteHostKeyById effect: {}", effect);

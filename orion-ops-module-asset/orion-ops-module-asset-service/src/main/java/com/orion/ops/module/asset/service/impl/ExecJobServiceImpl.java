@@ -360,7 +360,7 @@ public class ExecJobServiceImpl implements ExecJobService {
      */
     private void checkHostPermission(List<Long> hostIdList) {
         // 查询有权限的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }
