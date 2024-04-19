@@ -84,8 +84,7 @@ spring:
             tablePrefix: QRTZ_
             misfireThreshold: 60000
             clusterCheckinInterval: 5000
-            # 打开群集功能
-            isClustered: false
+            isClustered: true
           #连接池
           threadPool:
             class: org.quartz.simpl.SimpleThreadPool

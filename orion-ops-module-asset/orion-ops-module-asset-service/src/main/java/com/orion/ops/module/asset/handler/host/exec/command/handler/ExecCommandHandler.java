@@ -146,11 +146,18 @@ public class ExecCommandHandler implements IExecCommandHandler {
             // 打开 sftp
             sftpExecutor = sessionStore.getSftpExecutor(execHostCommand.getFileNameCharset());
             sftpExecutor.connect();
-            // 上传文件
+            // 必须要以 / 开头
+            String scriptPath = execHostCommand.getScriptPath();
+            if (!scriptPath.startsWith("/")) {
+                scriptPath = "/" + scriptPath;
+            }
+            // 创建文件
+            sftpExecutor.touch(scriptPath);
+            // 写入命令
             byte[] command = Strings.replaceCRLF(execHostCommand.getCommand()).getBytes(execHostCommand.getFileContentCharset());
-            sftpExecutor.write(execHostCommand.getScriptPath(), command);
+            sftpExecutor.write(scriptPath, command);
             // 修改权限
-            sftpExecutor.changeMode(execHostCommand.getScriptPath(), 777);
+            sftpExecutor.changeMode(scriptPath, 777);
         } catch (Exception e) {
             throw Exceptions.sftp(e);
         } finally {

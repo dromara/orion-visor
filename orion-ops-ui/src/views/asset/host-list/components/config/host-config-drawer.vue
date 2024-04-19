@@ -1,6 +1,6 @@
 <template>
   <a-drawer v-model:visible="visible"
-            :width="420"
+            :width="460"
             :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"

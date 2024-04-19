@@ -56,7 +56,7 @@ public class TransferMessageDispatcher extends AbstractWebSocketHandler {
         String id = session.getId();
         log.info("TransferMessageHandler-afterConnectionClosed id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
         // 关闭会话
-        Streams.close(handlers.get(id));
+        Streams.close(handlers.remove(id));
     }
 
 }
