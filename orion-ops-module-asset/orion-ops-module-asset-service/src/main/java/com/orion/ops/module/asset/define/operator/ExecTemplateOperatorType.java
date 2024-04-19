@@ -25,9 +25,9 @@ public class ExecTemplateOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CREATE, "创建执行模板 ${name}"),
-                new OperatorType(M, UPDATE, "更新执行模板 ${name}"),
-                new OperatorType(H, DELETE, "删除执行模板 ${name}"),
+                new OperatorType(L, CREATE, "创建执行模板 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE, "更新执行模板 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除执行模板 <sb>${name}</sb>"),
         };
     }
 

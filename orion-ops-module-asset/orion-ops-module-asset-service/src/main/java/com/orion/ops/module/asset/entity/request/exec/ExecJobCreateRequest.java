@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.entity.request.exec;
 
+import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
+import com.orion.ops.framework.desensitize.core.annotation.DesensitizeObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -21,6 +23,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DesensitizeObject
 @Schema(name = "ExecJobCreateRequest", description = "计划任务 创建请求对象")
 public class ExecJobCreateRequest implements Serializable {
 
@@ -45,6 +48,7 @@ public class ExecJobCreateRequest implements Serializable {
     private Integer scriptExec;
 
     @NotBlank
+    @Desensitize(toEmpty = true)
     @Schema(description = "执行命令")
     private String command;
 

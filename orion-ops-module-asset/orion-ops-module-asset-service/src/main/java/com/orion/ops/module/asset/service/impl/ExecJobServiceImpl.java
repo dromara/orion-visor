@@ -19,6 +19,7 @@ import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecJobDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.ExecCommandExecDTO;
 import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
@@ -281,7 +282,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         OperatorLogs.add(OperatorLogs.NAME, job.getName());
         OperatorLogs.add(OperatorLogs.SEQ, execSeq);
         // 执行命令
-        ExecCommandExecRequest exec = ExecCommandExecRequest.builder()
+        ExecCommandExecDTO exec = ExecCommandExecDTO.builder()
                 .userId(request.getUserId())
                 .username(request.getUsername())
                 .source(ExecSourceEnum.JOB.name())

@@ -5,7 +5,7 @@
       <!-- 左侧信息 -->
       <a-space class="log-header-left" :size="12">
         <!-- 执行序列 -->
-        <a-tag v-if="execLog.execSeq" color="green">
+        <a-tag v-if="execLog.execSeq" color="purple">
           #{{ execLog.execSeq }}
         </a-tag>
         <!-- 状态 -->

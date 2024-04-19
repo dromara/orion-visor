@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.entity.request.exec;
 
+import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
+import com.orion.ops.framework.desensitize.core.annotation.DesensitizeObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DesensitizeObject
 @Schema(name = "ExecTemplateUpdateRequest", description = "执行模板 更新请求对象")
 public class ExecTemplateUpdateRequest implements Serializable {
 
@@ -38,6 +41,7 @@ public class ExecTemplateUpdateRequest implements Serializable {
 
     @NotBlank
     @Schema(description = "命令")
+    @Desensitize(toEmpty = true)
     private String command;
 
     @NotNull

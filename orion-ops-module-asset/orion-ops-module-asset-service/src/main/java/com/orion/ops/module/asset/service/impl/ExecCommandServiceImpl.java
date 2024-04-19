@@ -28,8 +28,8 @@ import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.ExecCommandExecDTO;
 import com.orion.ops.module.asset.entity.dto.ExecParameterSchemaDTO;
-import com.orion.ops.module.asset.entity.request.exec.ExecCommandExecRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
@@ -99,7 +99,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         log.info("ExecService.startExecCommand host hostList: {}", hostIdList);
         Valid.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);
         // 执行命令
-        ExecCommandExecRequest execRequest = ExecConvert.MAPPER.to(request);
+        ExecCommandExecDTO execRequest = ExecConvert.MAPPER.to(request);
         execRequest.setUserId(userId);
         execRequest.setUsername(user.getUsername());
         execRequest.setSource(ExecSourceEnum.BATCH.name());
@@ -108,7 +108,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ExecLogVO execCommandWithSource(ExecCommandExecRequest request) {
+    public ExecLogVO execCommandWithSource(ExecCommandExecDTO request) {
         String command = request.getCommand();
         List<Long> hostIdList = request.getHostIdList();
         // 查询主机信息
@@ -258,7 +258,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
      * @param request request
      * @return params
      */
-    private Map<String, Object> getBaseBuiltinsParams(Long execId, ExecCommandExecRequest request) {
+    private Map<String, Object> getBaseBuiltinsParams(Long execId, ExecCommandExecDTO request) {
         String uuid = UUIds.random();
         Date date = new Date();
         // 输入参数

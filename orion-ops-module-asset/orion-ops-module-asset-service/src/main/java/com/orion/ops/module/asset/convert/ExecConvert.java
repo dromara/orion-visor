@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.convert;
 
-import com.orion.ops.module.asset.entity.request.exec.ExecCommandExecRequest;
+import com.orion.ops.module.asset.entity.dto.ExecCommandExecDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -17,6 +17,6 @@ public interface ExecConvert {
 
     ExecConvert MAPPER = Mappers.getMapper(ExecConvert.class);
 
-    ExecCommandExecRequest to(ExecCommandRequest request);
+    ExecCommandExecDTO to(ExecCommandRequest request);
 
 }
