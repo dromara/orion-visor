@@ -1,8 +1,6 @@
 package com.orion.ops.module.asset.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.lang.function.Functions;
-import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.collect.Sets;
@@ -14,10 +12,10 @@ import com.orion.ops.module.asset.entity.request.asset.AssetAuthorizedDataQueryR
 import com.orion.ops.module.asset.entity.vo.*;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
-import com.orion.ops.module.asset.handler.host.extra.model.HostColorExtraModel;
+import com.orion.ops.module.asset.enums.HostExtraItemEnum;
+import com.orion.ops.module.asset.handler.host.extra.model.HostLabelExtraModel;
 import com.orion.ops.module.asset.service.*;
 import com.orion.ops.module.infra.api.*;
-import com.orion.ops.module.infra.constant.DataExtraItems;
 import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
 import com.orion.ops.module.infra.enums.*;
@@ -138,9 +136,9 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 查询最近连接的主机
         Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.of(type), userId);
         // 查询主机拓展信息
-        Future<List<Map<Long, String>>> hostExtraResult = dataExtraApi.getExtraItemsValuesByCacheAsync(userId,
+        Future<Map<Long, String>> labelExtraResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId,
                 DataExtraTypeEnum.HOST,
-                Lists.of(DataExtraItems.ALIAS, DataExtraItems.COLOR));
+                HostExtraItemEnum.LABEL.getItem());
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用
@@ -156,7 +154,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 设置主机拓展信息
         this.getAuthorizedHostExtra(wrapper.getHostList(),
                 favoriteResult.get(),
-                hostExtraResult.get());
+                labelExtraResult.get());
         // 设置最近连接的主机
         wrapper.setLatestHosts(new LinkedHashSet<>(latestConnectHostIdList.get()));
         return wrapper;
@@ -262,13 +260,13 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     /**
      * 设置授权主机的额外参数
      *
-     * @param hosts     hosts
-     * @param favorite  favorite
-     * @param extraList extraList
+     * @param hosts      hosts
+     * @param favorite   favorite
+     * @param labelExtra labelExtra
      */
     private void getAuthorizedHostExtra(List<HostVO> hosts,
                                         List<Long> favorite,
-                                        List<Map<Long, String>> extraList) {
+                                        Map<Long, String> labelExtra) {
         if (Lists.isEmpty(hosts)) {
             return;
         }
@@ -284,25 +282,18 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         for (int i = 0; i < hosts.size(); i++) {
             hosts.get(i).setTags(tags.get(i));
         }
-        // 设置主机别名
-        Map<Long, String> aliasMap = extraList.get(0);
-        if (!Maps.isEmpty(aliasMap)) {
-            hosts.forEach(s -> {
-                String alias = aliasMap.get(s.getId());
-                if (alias != null) {
-                    s.setAlias(Refs.unrefToString(alias));
-                }
-            });
-        }
-        // 设置主机颜色
-        Map<Long, String> colorMap = extraList.get(1);
-        if (!Maps.isEmpty(colorMap)) {
-            hosts.forEach(s -> {
-                HostColorExtraModel color = JSON.parseObject(colorMap.get(s.getId()), HostColorExtraModel.class);
-                if (color != null) {
-                    s.setColor(color.getColor());
-                }
-            });
+        // 这种主机标签信息
+        for (HostVO host : hosts) {
+            String extra = labelExtra.get(host.getId());
+            if (extra == null) {
+                continue;
+            }
+            HostLabelExtraModel label = HostExtraItemEnum.LABEL.parse(extra);
+            if (label == null) {
+                continue;
+            }
+            host.setAlias(label.getAlias());
+            host.setColor(label.getColor());
         }
     }
 

@@ -3,7 +3,6 @@ package com.orion.ops.module.asset.controller;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.entity.request.host.HostAliasUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraUpdateRequest;
 import com.orion.ops.module.asset.service.HostExtraService;
@@ -35,12 +34,6 @@ public class HostExtraController {
 
     @Resource
     private HostExtraService hostExtraService;
-
-    @PutMapping("/update-alias")
-    @Operation(summary = "修改主机别名")
-    public Integer updateHostAlias(@Validated @RequestBody HostAliasUpdateRequest request) {
-        return hostExtraService.updateHostAlias(request);
-    }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")

@@ -59,7 +59,7 @@ export interface ShortcutKeyItem {
   type: number;
 }
 
-// ssh 额外配置
+// SSH 额外配置
 export interface SshExtraSettingModel {
   authType?: string;
   username?: string;
@@ -67,9 +67,10 @@ export interface SshExtraSettingModel {
   identityId?: number;
 }
 
-// 颜色 额外配置
-export interface ColorExtraSettingModel {
-  color: string;
+// 标签额外配置
+export interface LabelExtraSettingModel {
+  alias?: string;
+  color?: string;
 }
 
 // session tab

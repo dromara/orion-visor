@@ -136,8 +136,7 @@ public class DataExtraServiceImpl implements DataExtraService {
                 .stream()
                 .collect(Collectors.toMap(DataExtraDO::getRelId,
                         DataExtraDO::getValue,
-                        Functions.right())
-                );
+                        Functions.right()));
     }
 
     @Override

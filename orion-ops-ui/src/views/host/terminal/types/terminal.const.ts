@@ -45,7 +45,7 @@ export const NewConnectionType = {
 // 主机额外配置项
 export const ExtraSettingItems = {
   SSH: 'ssh',
-  COLOR: 'color'
+  LABEL: 'label',
 };
 
 // 主机额外配置 ssh 认证方式

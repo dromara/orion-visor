@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.service;
 
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.ops.module.asset.entity.request.host.HostAliasUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraUpdateRequest;
 import com.orion.ops.module.asset.enums.HostExtraItemEnum;
@@ -16,14 +15,6 @@ import java.util.Map;
  * @since 2023/12/20 12:04
  */
 public interface HostExtraService {
-
-    /**
-     * 修改主机别名
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer updateHostAlias(HostAliasUpdateRequest request);
 
     /**
      * 获取主机额外配置

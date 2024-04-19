@@ -25,11 +25,11 @@
                             :host-id="hostId as number"
                             :item="ExtraSettingItems.SSH" />
         </a-tab-pane>
-        <!-- 标签颜色 -->
-        <a-tab-pane :key="ExtraSettingItems.COLOR" title="标签颜色">
-          <color-setting-form ref="colorForm"
+        <!-- 标签配置 -->
+        <a-tab-pane :key="ExtraSettingItems.LABEL" title="标签配置">
+          <label-setting-form ref="labelForm"
                               :host-id="hostId as number"
-                              :item="ExtraSettingItems.COLOR" />
+                              :item="ExtraSettingItems.LABEL" />
         </a-tab-pane>
       </a-tabs>
     </a-spin>
@@ -51,7 +51,7 @@
   import { updateHostExtra } from '@/api/asset/host-extra';
   import { Message } from '@arco-design/web-vue';
   import SshSettingForm from './ssh-setting-form.vue';
-  import ColorSettingForm from './color-setting-form.vue';
+  import LabelSettingForm from './label-setting-form.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -60,7 +60,7 @@
   const title = ref<string>();
   const hostId = ref<number>();
   const sshForm = ref();
-  const colorForm = ref();
+  const labelForm = ref();
 
   // 打开配置
   const open = (record: HostQueryResponse) => {
@@ -79,9 +79,9 @@
       if (activeItem.value === ExtraSettingItems.SSH) {
         // SSH 配置
         value = await sshForm.value.getValue();
-      } else if (activeItem.value === ExtraSettingItems.COLOR) {
-        // 颜色配置
-        value = await colorForm.value.getValue();
+      } else if (activeItem.value === ExtraSettingItems.LABEL) {
+        // 标签配置
+        value = await labelForm.value.getValue();
       }
       if (!value) {
         return false;

@@ -184,13 +184,13 @@
   import useFavorite from '@/hooks/favorite';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
-  import { updateHostAlias } from '@/api/asset/host-extra';
-  import { openSettingModalKey, PanelSessionType } from '../../types/terminal.const';
+  import { updateHostExtra } from '@/api/asset/host-extra';
+  import { openSettingModalKey, PanelSessionType, ExtraSettingItems } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
-    hostList: Array<HostQueryResponse>,
-    emptyValue: string
+    hostList: Array<HostQueryResponse>;
+    emptyValue: string;
   }>();
 
   const { openSession } = useTerminalStore();
@@ -218,9 +218,10 @@
     }
     try {
       // 修改别名
-      await updateHostAlias({
-        id: item.id,
-        name: item.alias || ''
+      await updateHostExtra({
+        hostId: item.id,
+        item: ExtraSettingItems.LABEL,
+        extra: JSON.stringify({ alias: item.alias })
       });
       item.editable = false;
     } catch (e) {
