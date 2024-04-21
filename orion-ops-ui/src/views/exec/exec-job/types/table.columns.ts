@@ -38,11 +38,15 @@ const columns = [
     align: 'center',
     width: 112,
   }, {
-    title: '最近任务',
+    title: '最近执行',
     dataIndex: 'recentLog',
     slotName: 'recentLog',
     align: 'left',
-    width: 184,
+    headerCellStyle: {
+      display: 'flex',
+      justifyContent: 'center'
+    },
+    width: 200,
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',

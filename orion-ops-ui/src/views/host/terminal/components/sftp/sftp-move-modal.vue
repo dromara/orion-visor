@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            title="移动文件"
            :align-center="false"
@@ -10,8 +10,7 @@
     <a-form :model="formModel"
             ref="formRef"
             label-align="right"
-            :label-col-props="{ span: 5 }"
-            :wrapper-col-props="{ span: 18 }">
+            :auto-label-width="true">
       <!-- 原始路径 -->
       <a-form-item field="path"
                    disabled

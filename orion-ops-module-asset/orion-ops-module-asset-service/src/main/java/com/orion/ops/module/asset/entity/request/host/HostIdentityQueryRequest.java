@@ -31,6 +31,10 @@ public class HostIdentityQueryRequest extends PageRequest {
     @Schema(description = "名称")
     private String name;
 
+    @Size(max = 12)
+    @Schema(description = "类型")
+    private String type;
+
     @Size(max = 128)
     @Schema(description = "用户名")
     private String username;

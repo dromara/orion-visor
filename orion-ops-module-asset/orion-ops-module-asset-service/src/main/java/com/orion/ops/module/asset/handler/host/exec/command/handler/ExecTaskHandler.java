@@ -56,7 +56,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
         this.updateStatus(ExecStatusEnum.RUNNING);
         try {
             // 执行命令
-            this.runHostCommand(execCommand.getHosts());
+            this.runHostCommand();
             // 更新状态-执行完成
             log.info("ExecTaskHandler.run completed id: {}", id);
             this.updateStatus(ExecStatusEnum.COMPLETED);
@@ -81,23 +81,24 @@ public class ExecTaskHandler implements IExecTaskHandler {
     /**
      * 执行主机命令
      *
-     * @param hosts hosts
      * @throws Exception Exception
      */
-    private void runHostCommand(List<ExecCommandHostDTO> hosts) throws Exception {
+    private void runHostCommand() throws Exception {
         // 超时检查
         if (execCommand.getTimeout() != 0) {
             this.timeoutChecker = TimeoutCheckers.create();
             AssetThreadPools.TIMEOUT_CHECK.execute(this.timeoutChecker);
         }
+        // 执行命令
+        List<ExecCommandHostDTO> hosts = execCommand.getHosts();
         if (hosts.size() == 1) {
             // 单个主机直接执行
-            ExecCommandHandler handler = new ExecCommandHandler(hosts.get(0), timeoutChecker);
+            ExecCommandHandler handler = new ExecCommandHandler(execCommand, hosts.get(0), timeoutChecker);
             handlers.add(handler);
             handler.run();
         } else {
             hosts.stream()
-                    .map(s -> new ExecCommandHandler(s, timeoutChecker))
+                    .map(s -> new ExecCommandHandler(execCommand, s, timeoutChecker))
                     .forEach(handlers::add);
             // 多个主机异步阻塞执行
             Threads.blockRun(handlers, AssetThreadPools.EXEC_HOST);

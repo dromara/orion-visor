@@ -40,8 +40,7 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
+              :auto-label-width="true"
               @keyup.enter="() => fetchCardData()">
         <!-- id -->
         <a-form-item field="id" label="id">
@@ -54,12 +53,19 @@
         <a-form-item field="name" label="名称">
           <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
         </a-form-item>
+        <!-- 类型 -->
+        <a-form-item field="type" label="类型">
+          <a-select v-model="formModel.type"
+                    placeholder="请选择类型"
+                    :options="toOptions(identityTypeKey)"
+                    allow-clear />
+        </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
           <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
         </a-form-item>
-        <!-- 主机秘钥 -->
-        <a-form-item field="keyId" label="主机秘钥">
+        <!-- 秘钥 -->
+        <a-form-item field="keyId" label="秘钥">
           <host-key-selector v-model="formModel.keyId" allow-clear />
         </a-form-item>
       </a-form>
@@ -67,6 +73,12 @@
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
+    </template>
+    <!-- 类型 -->
+    <template #type="{ record }">
+      <a-tag :color="getDictValue(identityTypeKey, record.type, 'color')">
+        {{ getDictValue(identityTypeKey, record.type) }}
+      </a-tag>
     </template>
     <!-- 用户名 -->
     <template #username="{ record }">
@@ -76,13 +88,14 @@
     </template>
     <!-- 秘钥名称 -->
     <template #keyId="{ record }">
-      <template v-if="record.keyId">
+      <!-- 有秘钥 -->
+      <template v-if="record.keyId && record.type === IdentityType.KEY">
         <!-- 可查看详情 -->
         <a-tooltip v-if="hasAnyPermission(['asset:host-key:detail', 'asset:host-key:update'])"
                    content="点击查看详情">
           <a-tag :checked="true"
                  checkable
-                 @click="emits('openKeyView',{id: record.keyId})">
+                 @click="emits('openKeyView', { id: record.keyId })">
             {{ record.keyName }}
           </a-tag>
         </a-tooltip>
@@ -90,6 +103,10 @@
         <a-tag v-else>
           {{ record.keyName }}
         </a-tag>
+      </template>
+      <!-- 无秘钥 -->
+      <template v-else>
+        <span>-</span>
       </template>
     </template>
     <!-- 拓展操作 -->
@@ -151,8 +168,10 @@
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message, Modal } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
+  import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { IdentityType, identityTypeKey } from '../types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
@@ -161,6 +180,7 @@
 
   const cardColLayout = useColLayout();
   const pagination = usePagination();
+  const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();
 
@@ -168,6 +188,7 @@
   const formModel = reactive<HostIdentityQueryRequest>({
     searchValue: undefined,
     id: undefined,
+    type: undefined,
     name: undefined,
     username: undefined,
     keyId: undefined,

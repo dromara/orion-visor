@@ -68,27 +68,27 @@
       </template>
       <!-- 状态 -->
       <template #status="{ record }">
-        <span class="circle" :style="{
-          background: getDictValue(roleStatusKey, record.status, 'color')
-        }" />
-        {{ getDictValue(roleStatusKey, record.status) }}
+        <!-- 有修改权限 -->
+        <a-switch v-if="hasPermission('infra:system-role:update-status')"
+                  type="round"
+                  v-model="record.status"
+                  :disabled="record.code === AdminRoleCode"
+                  :checked-text="getDictValue(roleStatusKey, RoleStatus.ENABLED)"
+                  :unchecked-text="getDictValue(roleStatusKey, RoleStatus.DISABLED)"
+                  :checked-value="RoleStatus.ENABLED"
+                  :unchecked-value="RoleStatus.DISABLED"
+                  :before-change="(s) => updateStatus(record.id, s as number)" />
+        <!-- 无修改权限 -->
+        <span v-else>
+          <span class="circle" :style="{
+            background: getDictValue(roleStatusKey, record.status, 'color')
+          }" />
+          {{ getDictValue(roleStatusKey, record.status) }}
+        </span>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 修改状态 -->
-          <a-popconfirm :content="`确定要${toggleDictValue(roleStatusKey, record.status, 'label')}当前角色吗?`"
-                        position="left"
-                        type="warning"
-                        @ok="toggleRoleStatus(record)">
-            <a-button v-permission="['infra:system-role:delete']"
-                      :disabled="record.code === AdminRoleCode"
-                      :status="toggleDictValue(roleStatusKey, record.status, 'status')"
-                      type="text"
-                      size="mini">
-              {{ toggleDictValue(roleStatusKey, record.status, 'label') }}
-            </a-button>
-          </a-popconfirm>
           <!-- 分配菜单 -->
           <a-button v-permission="['infra:system-role:grant-menu']"
                     :disabled="record.code === AdminRoleCode"
@@ -136,8 +136,9 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { roleStatusKey } from '../types/const';
+  import { RoleStatus, roleStatusKey } from '../types/const';
   import { usePagination } from '@/types/table';
+  import usePermission from '@/hooks/permission';
   import { useDictStore } from '@/store';
   import { AdminRoleCode } from '@/types/const';
 
@@ -146,8 +147,9 @@
   const tableRenderData = ref<RoleQueryResponse[]>([]);
 
   const pagination = usePagination();
+  const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
-  const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
+  const { toOptions, getDictValue } = useDictStore();
 
   const formModel = reactive<RoleQueryRequest>({
     id: undefined,
@@ -156,23 +158,13 @@
     status: undefined,
   });
 
-  // 修改状态
-  const toggleRoleStatus = async (record: any) => {
-    try {
-      setLoading(true);
-      const toggleStatus = toggleDict(roleStatusKey, record.status);
-      // 调用修改接口
-      await updateRoleStatus({
-        id: record.id,
-        status: toggleStatus.value as number
-      });
-      Message.success(`${toggleStatus.label}成功`);
-      // 修改行状态
-      record.status = toggleStatus.value;
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
+  // 更新状态
+  const updateStatus = (id: number, status: number) => {
+    return updateRoleStatus({
+      id, status
+    }).then(() => {
+      Message.success('已' + getDictValue(roleStatusKey, status, 'label'));
+    });
   };
 
   // 删除当前行

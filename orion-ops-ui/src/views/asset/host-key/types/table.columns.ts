@@ -13,11 +13,14 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     slotName: 'name',
+    ellipsis: true,
+    tooltip: true
   }, {
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
     align: 'center',
+    width: 198,
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
     },
@@ -26,6 +29,7 @@ const columns = [
     dataIndex: 'updateTime',
     slotName: 'updateTime',
     align: 'center',
+    width: 198,
     render: ({ record }) => {
       return dateFormat(new Date(record.updateTime));
     },

@@ -36,7 +36,7 @@
   import { useTerminalStore } from '@/store';
 
   defineProps<{
-    session: ISshSession | undefined
+    session?: ISshSession;
   }>();
 
   const emits = defineEmits(['click']);

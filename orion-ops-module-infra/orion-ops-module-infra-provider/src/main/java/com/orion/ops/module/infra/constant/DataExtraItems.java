@@ -9,8 +9,4 @@ package com.orion.ops.module.infra.constant;
  */
 public interface DataExtraItems {
 
-    String ALIAS = "alias";
-
-    String COLOR = "color";
-
 }

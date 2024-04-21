@@ -107,7 +107,7 @@
           {{ getDictValue(execJobStatusKey, record.status) }}
         </a-tag>
       </template>
-      <!-- 最近任务 -->
+      <!-- 最近执行 -->
       <template #recentLog="{ record }">
         <div class="flex-center" v-if="record.recentLogId && record.recentLogStatus">
           <!-- 执行状态 -->
@@ -115,7 +115,7 @@
             {{ getDictValue(execStatusKey, record.recentLogStatus) }}
           </a-tag>
           <!-- 执行时间 -->
-          {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm') }}
+          {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm:ss') }}
         </div>
         <!-- 无任务 -->
         <div v-else class="mx8">-</div>

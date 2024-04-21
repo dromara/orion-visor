@@ -6,6 +6,7 @@ Authorization: {{token}}
 {
   "description": 1,
   "timeout": 10,
+  "scriptExec": 0,
   "command": "echo 这是日志@{{ hostAddress }}\nsleep 1\necho @{{ hostName }}",
   "parameterSchema": "[]",
   "hostIdList": [1]

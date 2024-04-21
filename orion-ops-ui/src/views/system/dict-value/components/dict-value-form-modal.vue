@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            :title="title"
            :top="80"
@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }"
+              :auto-label-width="true"
               :rules="formRules">
         <!-- 配置项 -->
         <a-form-item v-if="visible"
@@ -245,5 +244,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 2px;
   }
 </style>

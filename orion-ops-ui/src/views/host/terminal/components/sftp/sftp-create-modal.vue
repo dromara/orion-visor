@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            :title="touch ? '创建文件' : '创建文件夹'"
            :align-center="false"
@@ -10,15 +10,14 @@
     <a-form :model="formModel"
             ref="formRef"
             label-align="right"
-            :label-col-props="{ span: 5 }"
-            :wrapper-col-props="{ span: 18 }">
-      <!-- 文件路径 -->
+            :auto-label-width="true">
+      <!-- 路径 -->
       <a-form-item field="path"
-                   label="文件路径"
-                   :rules="[{ required: true, message: '请输入文件路径' }]">
+                   :label="`${touch ? '文件' : '文件夹'}路径`"
+                   :rules="[{ required: true, message: `请输入${touch ? '文件' : '文件夹'}路径` }]">
         <a-input ref="pathRef"
                  v-model="formModel.path"
-                 placeholder="请输入文件路径" />
+                 :placeholder="`请输入${touch ? '文件' : '文件夹'}路径`" />
       </a-form-item>
     </a-form>
   </a-modal>

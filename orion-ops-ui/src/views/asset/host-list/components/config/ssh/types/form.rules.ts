@@ -1,5 +1,10 @@
 import type { FieldRule } from '@arco-design/web-vue';
 
+export const osType = [{
+  required: true,
+  message: '请选择系统类型'
+}] as FieldRule[];
+
 export const port = [{
   required: true,
   message: '请输入SSH端口'
@@ -60,6 +65,7 @@ export const fileContentCharset = [{
 }] as FieldRule[];
 
 export default {
+  osType,
   port,
   authType,
   keyId,

@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            title="分配角色"
            :top="120"
@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }">
+              :auto-label-width="true">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
           <a-input v-model="updateUser.username" :disabled="true" />

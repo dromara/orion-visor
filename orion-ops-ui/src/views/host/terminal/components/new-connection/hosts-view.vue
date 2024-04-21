@@ -23,18 +23,18 @@
 </script>
 
 <script lang="ts" setup>
+  import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
+  import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, onMounted, provide, ref, watch } from 'vue';
   import { NewConnectionType, openSettingModalKey } from '../../types/terminal.const';
-  import { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
-  import { HostQueryResponse } from '@/api/asset/host';
   import HostGroupView from './host-group-view.vue';
   import HostListView from './host-list-view.vue';
   import HostSettingModal from '../setting/extra/host-setting-modal.vue';
 
   const props = defineProps<{
-    hosts: AuthorizedHostQueryResponse,
-    filterValue: string,
-    newConnectionType: string
+    hosts: AuthorizedHostQueryResponse;
+    filterValue: string;
+    newConnectionType: string;
   }>();
 
   const hostList = ref<Array<HostQueryResponse>>([]);

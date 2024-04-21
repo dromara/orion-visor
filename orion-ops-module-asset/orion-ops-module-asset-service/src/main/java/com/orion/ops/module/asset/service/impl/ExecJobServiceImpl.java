@@ -19,12 +19,14 @@ import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.entity.domain.ExecJobDO;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.entity.domain.HostDO;
+import com.orion.ops.module.asset.entity.dto.ExecCommandExecDTO;
 import com.orion.ops.module.asset.entity.request.exec.*;
 import com.orion.ops.module.asset.entity.vo.ExecJobVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 import com.orion.ops.module.asset.enums.ExecJobStatusEnum;
 import com.orion.ops.module.asset.enums.ExecSourceEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.enums.ScriptExecEnum;
 import com.orion.ops.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecCommandService;
@@ -79,6 +81,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-createExecJob request: {}", JSON.toJSONString(request));
         // 验证表达式是否正确
         Cron.of(request.getExpression());
+        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 转换
         ExecJobDO record = ExecJobConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -104,6 +107,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-updateExecJobById id: {}, request: {}", id, JSON.toJSONString(request));
         // 验证表达式是否正确
         Cron.of(request.getExpression());
+        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 查询
         ExecJobDO record = execJobDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
@@ -278,7 +282,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         OperatorLogs.add(OperatorLogs.NAME, job.getName());
         OperatorLogs.add(OperatorLogs.SEQ, execSeq);
         // 执行命令
-        ExecCommandExecRequest exec = ExecCommandExecRequest.builder()
+        ExecCommandExecDTO exec = ExecCommandExecDTO.builder()
                 .userId(request.getUserId())
                 .username(request.getUsername())
                 .source(ExecSourceEnum.JOB.name())
@@ -286,6 +290,7 @@ public class ExecJobServiceImpl implements ExecJobService {
                 .execSeq(execSeq)
                 .description(job.getName())
                 .timeout(job.getTimeout())
+                .scriptExec(job.getScriptExec())
                 .command(job.getCommand())
                 .parameterSchema(job.getParameterSchema())
                 .hostIdList(hostIdList)
@@ -356,7 +361,7 @@ public class ExecJobServiceImpl implements ExecJobService {
      */
     private void checkHostPermission(List<Long> hostIdList) {
         // 查询有权限的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }

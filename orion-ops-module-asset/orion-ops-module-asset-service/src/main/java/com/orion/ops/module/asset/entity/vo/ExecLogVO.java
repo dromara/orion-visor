@@ -50,6 +50,9 @@ public class ExecLogVO implements Serializable {
     @Schema(description = "超时时间")
     private Integer timeout;
 
+    @Schema(description = "是否使用脚本执行")
+    private Integer scriptExec;
+
     @Schema(description = "执行状态")
     private String status;
 

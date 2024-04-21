@@ -66,7 +66,8 @@ public class AssetDataGrantServiceImpl implements AssetDataGrantService {
         List<Long> idList = request.getIdList();
         if (!Lists.isEmpty(idList)) {
             List<DataGroupDTO> groupList = dataGroupApi.getByIdList(idList);
-            Valid.eq(groupList.size(), idList.size(), ErrorMessage.DATA_MODIFIED);
+            idList.clear();
+            idList.addAll(Lists.map(groupList, DataGroupDTO::getId));
         }
         // 数据授权
         SpringHolder.getBean(AssetDataGrantService.class)
@@ -82,7 +83,8 @@ public class AssetDataGrantServiceImpl implements AssetDataGrantService {
         List<Long> idList = request.getIdList();
         if (!Lists.isEmpty(idList)) {
             List<HostKeyDO> keys = hostKeyDAO.selectBatchIds(idList);
-            Valid.eq(keys.size(), idList.size(), ErrorMessage.DATA_MODIFIED);
+            idList.clear();
+            idList.addAll(Lists.map(keys, HostKeyDO::getId));
         }
         // 数据授权
         SpringHolder.getBean(AssetDataGrantService.class)
@@ -98,7 +100,8 @@ public class AssetDataGrantServiceImpl implements AssetDataGrantService {
         List<Long> idList = request.getIdList();
         if (!Lists.isEmpty(idList)) {
             List<HostIdentityDO> identities = hostIdentityDAO.selectBatchIds(idList);
-            Valid.eq(identities.size(), idList.size(), ErrorMessage.DATA_MODIFIED);
+            idList.clear();
+            idList.addAll(Lists.map(identities, HostIdentityDO::getId));
         }
         // 数据授权
         SpringHolder.getBean(AssetDataGrantService.class)

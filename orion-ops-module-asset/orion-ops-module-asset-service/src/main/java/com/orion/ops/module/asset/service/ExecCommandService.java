@@ -1,6 +1,6 @@
 package com.orion.ops.module.asset.service;
 
-import com.orion.ops.module.asset.entity.request.exec.ExecCommandExecRequest;
+import com.orion.ops.module.asset.entity.dto.ExecCommandExecDTO;
 import com.orion.ops.module.asset.entity.request.exec.ExecCommandRequest;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
 
@@ -27,7 +27,7 @@ public interface ExecCommandService {
      * @param request request
      * @return result
      */
-    ExecLogVO execCommandWithSource(ExecCommandExecRequest request);
+    ExecLogVO execCommandWithSource(ExecCommandExecDTO request);
 
     /**
      * 重新执行命令

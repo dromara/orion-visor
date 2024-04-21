@@ -3,6 +3,9 @@ package com.orion.ops.module.infra.dao;
 import com.orion.ops.framework.mybatis.core.mapper.IMapper;
 import com.orion.ops.module.infra.entity.domain.TagDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 标签枚举 Mapper 接口
@@ -13,5 +16,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface TagDAO extends IMapper<TagDO> {
+
+    /**
+     * 获取未使用的标签
+     *
+     * @param days days
+     * @return tagId
+     */
+    List<TagDO> selectUnusedTag(@Param("days") Integer days);
 
 }

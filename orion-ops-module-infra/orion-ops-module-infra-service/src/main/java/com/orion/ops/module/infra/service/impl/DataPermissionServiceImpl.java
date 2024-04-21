@@ -198,7 +198,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                         .collect(Collectors.toList());
         List<Long> userIdList = mapper.apply(DataPermissionDO::getUserId);
         List<Long> roleIdList = mapper.apply(DataPermissionDO::getRoleId);
-        this.deleteCache(userIdList, roleIdList);
+        this.deleteCache(type, userIdList, roleIdList);
         return effect;
     }
 
@@ -208,7 +208,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         // 删除
         int effect = dataPermissionDAO.delete(wrapper);
         // 删除缓存
-        this.deleteCache(Lists.singleton(userId), null);
+        this.deleteCache(null, Lists.singleton(userId), null);
         return effect;
     }
 
@@ -218,7 +218,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         // 删除
         int effect = dataPermissionDAO.delete(wrapper);
         // 删除缓存
-        this.deleteCache(null, Lists.singleton(roleId));
+        this.deleteCache(null, null, Lists.singleton(roleId));
         return effect;
     }
 
@@ -277,10 +277,11 @@ public class DataPermissionServiceImpl implements DataPermissionService {
     /**
      * 删除缓存
      *
+     * @param type       type
      * @param userIdList userIdList
      * @param roleIdList roleIdList
      */
-    private void deleteCache(List<Long> userIdList, List<Long> roleIdList) {
+    private void deleteCache(String type, List<Long> userIdList, List<Long> roleIdList) {
         Set<Long> deleteUserIdList = new HashSet<>(4);
         if (!Lists.isEmpty(userIdList)) {
             deleteUserIdList.addAll(userIdList);
@@ -293,12 +294,21 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         if (deleteUserIdList.isEmpty()) {
             return;
         }
+        // 删除的类型
+        List<String> types;
+        if (type == null) {
+            types = Arrays.stream(DataPermissionTypeEnum.values())
+                    .map(Enum::name)
+                    .collect(Collectors.toList());
+        } else {
+            types = Lists.singleton(type);
+        }
         // 删除缓存
         List<String> keys = new ArrayList<>();
-        for (DataPermissionTypeEnum type : DataPermissionTypeEnum.values()) {
-            userIdList.stream()
+        for (String value : types) {
+            deleteUserIdList.stream()
                     .filter(Objects::nonNull)
-                    .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type.name(), s))
+                    .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(value, s))
                     .forEach(keys::add);
         }
         RedisLists.delete(keys);

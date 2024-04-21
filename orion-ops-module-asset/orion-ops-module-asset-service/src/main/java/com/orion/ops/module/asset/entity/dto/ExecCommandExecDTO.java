@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.entity.request.exec;
+package com.orion.ops.module.asset.entity.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -19,8 +19,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecCommandExecRequest", description = "批量执行命令 请求对象")
-public class ExecCommandExecRequest {
+@Schema(name = "ExecCommandExecDTO", description = "批量执行命令对象")
+public class ExecCommandExecDTO {
 
     @Schema(description = "执行用户id")
     private Long userId;
@@ -42,6 +42,9 @@ public class ExecCommandExecRequest {
 
     @Schema(description = "超时时间")
     private Integer timeout;
+
+    @Schema(description = "是否使用脚本执行")
+    private Integer scriptExec;
 
     @Schema(description = "执行命令")
     private String command;

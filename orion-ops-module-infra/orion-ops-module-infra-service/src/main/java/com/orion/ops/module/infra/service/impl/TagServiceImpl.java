@@ -32,6 +32,11 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
 
+    /**
+     * 未使用的天数
+     */
+    private static final Integer UN_USED_DAYS = 3;
+
     @Resource
     private TagDAO tagDAO;
 
@@ -111,6 +116,29 @@ public class TagServiceImpl implements TagService {
             RedisLists.removeJson(cacheKey, TagConvert.MAPPER.toCache(tag));
         }
         return effect;
+    }
+
+    @Override
+    public void clearUnusedTag() {
+        // 查询
+        List<TagDO> tagList = tagDAO.selectUnusedTag(UN_USED_DAYS);
+        if (tagList.isEmpty()) {
+            log.info("TagService.clearUnusedTag isEmpty");
+            return;
+        }
+        // 删除数据
+        List<Long> tagIdList = tagList.stream()
+                .map(TagDO::getId)
+                .collect(Collectors.toList());
+        int effect = tagDAO.deleteBatchIds(tagIdList);
+        log.info("TagService.clearUnusedTag deleted count: {}, deleted: {}, tags: {}", tagIdList.size(), effect, tagIdList);
+        // 删除缓存
+        List<String> cacheKeys = tagList.stream()
+                .map(TagDO::getType)
+                .distinct()
+                .map(TagCacheKeyDefine.TAG_NAME::format)
+                .collect(Collectors.toList());
+        RedisLists.delete(cacheKeys);
     }
 
 }

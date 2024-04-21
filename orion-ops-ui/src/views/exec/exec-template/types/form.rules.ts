@@ -23,8 +23,14 @@ export const timeout = [{
   message: '超时时间需要在 0 - 100000 之间'
 }] as FieldRule[];
 
+export const scriptExec = [{
+  required: true,
+  message: '请选择是否使用脚本执行'
+}] as FieldRule[];
+
 export default {
   name,
   command,
   timeout,
+  scriptExec,
 } as Record<string, FieldRule | FieldRule[]>;

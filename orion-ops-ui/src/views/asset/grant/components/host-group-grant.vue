@@ -1,16 +1,20 @@
 <template>
   <grant-layout :type="type"
                 :loading="loading"
-                @fetch="fetchAuthorizedGroup"
-                @grant="doGrant">
+                @fetch="fetchAuthorizedData"
+                @grant="doGrant"
+                @select-all="selectAll"
+                @reverse="reverseSelect">
     <!-- 分组 -->
-    <host-group-tree outer-class="group-main-tree"
-                     v-model:checked-keys="checkedGroups"
+    <host-group-tree v-model:checked-keys="checkedGroups"
+                     ref="tree"
+                     outer-class="group-main-tree"
                      :checkable="true"
                      :editable="false"
                      :loading="loading"
                      @set-loading="setLoading"
-                     @selected-node="(e) => selectedGroup = e" />
+                     @selected-node="(e) => selectedGroup = e"
+                     @on-selected="clickGroup" />
     <!-- 主机列表 -->
     <host-list class="group-main-hosts sticky-list" :group="selectedGroup" />
   </grant-layout>
@@ -28,6 +32,8 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
+  import { useCacheStore } from '@/store';
+  import { flatNodeKeys } from '@/utils/tree';
   import { Message } from '@arco-design/web-vue';
   import HostGroupTree from '@/components/asset/host-group/tree/index.vue';
   import HostList from './host-list.vue';
@@ -37,14 +43,29 @@
     type: string;
   }>();
 
+  const cacheStore = useCacheStore();
   const { loading, setLoading } = useLoading();
 
+  const tree = ref();
   const authorizedGroups = ref<Array<number>>([]);
   const checkedGroups = ref<Array<number>>([]);
   const selectedGroup = ref<TreeNodeData>({});
 
+  // 点击分组
+  const clickGroup = (groups: Array<number>) => {
+    if (groups && groups.length) {
+      const group = groups[0];
+      const index = checkedGroups.value.findIndex((s) => s === group);
+      if (index === -1) {
+        checkedGroups.value.push(group);
+      } else {
+        checkedGroups.value.splice(index, 1);
+      }
+    }
+  };
+
   // 获取授权列表
-  const fetchAuthorizedGroup = async (request: AssetAuthorizedDataQueryRequest) => {
+  const fetchAuthorizedData = async (request: AssetAuthorizedDataQueryRequest) => {
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostGroup(request);
@@ -60,6 +81,7 @@
   const doGrant = async (request: AssetDataGrantRequest) => {
     setLoading(true);
     try {
+      // 执行授权
       await grantHostGroup({
         ...request,
         idList: checkedGroups.value
@@ -69,6 +91,26 @@
     } finally {
       setLoading(false);
     }
+    // 查询数据
+    await fetchAuthorizedData(request);
+  };
+
+  // 全选
+  const selectAll = async () => {
+    // 从缓存中查询全部分组
+    const groups = await cacheStore.loadHostGroups();
+    const groupKeys: number[] = [];
+    flatNodeKeys(groups, groupKeys);
+    checkedGroups.value = groupKeys;
+  };
+
+  // 反选
+  const reverseSelect = async () => {
+    // 从缓存中查询全部分组
+    const groups = await cacheStore.loadHostGroups();
+    const groupKeys: number[] = [];
+    flatNodeKeys(groups, groupKeys);
+    checkedGroups.value = groupKeys.filter(s => !checkedGroups.value.includes(s));
   };
 
 </script>

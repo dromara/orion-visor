@@ -12,6 +12,7 @@ import com.orion.ops.module.asset.entity.request.exec.ExecTemplateCreateRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.ExecTemplateVO;
+import com.orion.ops.module.asset.enums.ScriptExecEnum;
 import com.orion.ops.module.asset.service.ExecTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     @Override
     public Long createExecTemplate(ExecTemplateCreateRequest request) {
         log.info("ExecTemplateService-createExecTemplate request: {}", JSON.toJSONString(request));
+        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 转换
         ExecTemplateDO record = ExecTemplateConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -49,6 +51,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     @Override
     public Integer updateExecTemplateById(ExecTemplateUpdateRequest request) {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         log.info("ExecTemplateService-updateExecTemplateById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         ExecTemplateDO record = execTemplateDAO.selectById(id);

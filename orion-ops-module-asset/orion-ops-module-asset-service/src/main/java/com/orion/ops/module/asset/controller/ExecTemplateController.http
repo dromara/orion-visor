@@ -6,7 +6,8 @@ Authorization: {{token}}
 {
   "name": "",
   "command": "",
-  "timeout": "",
+  "timeout": 0,
+  "scriptExec": 0,
   "parameterSchema": ""
 }
 
@@ -20,7 +21,8 @@ Authorization: {{token}}
   "id": "",
   "name": "",
   "command": "",
-  "timeout": "",
+  "timeout": 0,
+  "scriptExec": 0,
   "parameterSchema": ""
 }
 
@@ -47,7 +49,8 @@ Authorization: {{token}}
   "id": "",
   "name": "",
   "command": "",
-  "timeout": "",
+  "timeout": 0,
+  "scriptExec": 0,
   "parameterSchema": ""
 }
 

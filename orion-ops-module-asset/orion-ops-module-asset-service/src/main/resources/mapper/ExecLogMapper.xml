@@ -14,6 +14,7 @@
         <result column="command" property="command"/>
         <result column="parameter_schema" property="parameterSchema"/>
         <result column="timeout" property="timeout"/>
+        <result column="script_exec" property="scriptExec"/>
         <result column="status" property="status"/>
         <result column="start_time" property="startTime"/>
         <result column="finish_time" property="finishTime"/>
@@ -26,7 +27,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, username, source, source_id, description, exec_seq, command, parameter_schema, timeout, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
+        id, user_id, username, source, source_id, description, exec_seq, command, parameter_schema, timeout, script_exec, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
     <select id="getExecHistory" resultMap="BaseResultMap">

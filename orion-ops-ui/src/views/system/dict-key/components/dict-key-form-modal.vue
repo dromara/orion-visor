@@ -1,5 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
+           body-class="modal-form-large"
            title-align="start"
            :title="title"
            :top="80"
@@ -15,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }"
+              :auto-label-width="true"
               :rules="formRules">
         <!-- 配置项 -->
         <a-form-item field="keyName" label="配置项">
@@ -257,7 +257,7 @@
   }
 
   .param-addition {
-    margin-right: 20px;
+    margin-bottom: 20px;
     justify-content: flex-end;
     cursor: pointer;
     user-select: none;

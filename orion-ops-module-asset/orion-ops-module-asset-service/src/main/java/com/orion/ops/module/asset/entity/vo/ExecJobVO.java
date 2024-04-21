@@ -38,6 +38,9 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "超时时间")
     private Integer timeout;
 
+    @Schema(description = "是否使用脚本执行")
+    private Integer scriptExec;
+
     @Schema(description = "执行命令")
     private String command;
 

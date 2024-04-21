@@ -25,11 +25,6 @@ public enum UserStatusEnum {
      */
     ENABLED(1),
 
-    /**
-     * 2 锁定
-     */
-    LOCKED(2),
-
     ;
 
     private final Integer status;
@@ -55,9 +50,6 @@ public enum UserStatusEnum {
         if (UserStatusEnum.DISABLED.getStatus().equals(status)) {
             // 禁用状态
             throw ErrorCode.USER_DISABLED.exception();
-        } else if (UserStatusEnum.LOCKED.getStatus().equals(status)) {
-            // 锁定状态
-            throw ErrorCode.USER_LOCKED.exception();
         }
     }
 

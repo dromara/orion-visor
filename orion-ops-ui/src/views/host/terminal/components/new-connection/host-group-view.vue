@@ -28,9 +28,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { HostQueryResponse } from '@/api/asset/host';
+  import type { HostGroupQueryResponse } from '@/api/asset/host-group';
   import { computed } from 'vue';
-  import { HostQueryResponse } from '@/api/asset/host';
-  import { HostGroupQueryResponse } from '@/api/asset/host-group';
   import HostListView from './host-list-view.vue';
 
   const props = defineProps<{

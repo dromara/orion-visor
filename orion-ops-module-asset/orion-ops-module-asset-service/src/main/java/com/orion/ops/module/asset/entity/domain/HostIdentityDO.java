@@ -31,6 +31,10 @@ public class HostIdentityDO extends BaseDO {
     @TableField("name")
     private String name;
 
+    @Schema(description = "类型")
+    @TableField("type")
+    private String type;
+
     @Schema(description = "用户名")
     @TableField("username")
     private String username;

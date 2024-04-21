@@ -9,7 +9,6 @@ import com.orion.ops.module.asset.dao.HostKeyDAO;
 import com.orion.ops.module.asset.enums.HostExtraSshAuthTypeEnum;
 import com.orion.ops.module.asset.handler.host.extra.model.HostSshExtraModel;
 import com.orion.ops.module.infra.api.DataPermissionApi;
-import com.orion.ops.module.infra.api.SystemUserApi;
 import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +29,6 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
 
     @Resource
     private HostIdentityDAO hostIdentityDAO;
-
-    @Resource
-    private SystemUserApi systemUserApi;
 
     @Resource
     private DataPermissionApi dataPermissionApi;
@@ -68,21 +64,18 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
         if (identityId != null) {
             Valid.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
         }
-        // 非管理员验证权限
         Long userId = SecurityUtils.getLoginUserId();
-        if (!systemUserApi.isAdminUser(userId)) {
-            // 验证主机秘钥是否有权限
-            if (keyId != null) {
-                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
-                        ErrorMessage.ANY_NO_PERMISSION,
-                        DataPermissionTypeEnum.HOST_KEY.getPermissionName());
-            }
-            // 验证主机身份是否有权限
-            if (identityId != null) {
-                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
-                        ErrorMessage.ANY_NO_PERMISSION,
-                        DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
-            }
+        // 验证主机秘钥是否有权限
+        if (keyId != null) {
+            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
+                    ErrorMessage.ANY_NO_PERMISSION,
+                    DataPermissionTypeEnum.HOST_KEY.getPermissionName());
+        }
+        // 验证主机身份是否有权限
+        if (identityId != null) {
+            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
+                    ErrorMessage.ANY_NO_PERMISSION,
+                    DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
         }
     }
 

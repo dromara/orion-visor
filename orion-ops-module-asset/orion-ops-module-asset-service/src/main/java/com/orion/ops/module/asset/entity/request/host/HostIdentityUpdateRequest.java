@@ -35,6 +35,11 @@ public class HostIdentityUpdateRequest implements UpdatePasswordAction {
     private String name;
 
     @NotBlank
+    @Size(max = 12)
+    @Schema(description = "类型")
+    private String type;
+
+    @NotBlank
     @Size(max = 128)
     @Schema(description = "用户名")
     private String username;

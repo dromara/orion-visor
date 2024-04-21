@@ -16,7 +16,7 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.infra.config.AppAuthenticationConfig;
+import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
@@ -242,22 +242,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
         Long failedLoginCount = redisTemplate.opsForValue().increment(failedCountKey);
         RedisUtils.setExpire(failedCountKey, appAuthenticationConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
-        // // 锁定用户
-        // if (failedLoginCount >= appAuthenticationConfig.getLoginFailedLockCount()) {
-        //     // 更新用户表
-        //     SystemUserDO updateUser = new SystemUserDO();
-        //     updateUser.setId(user.getId());
-        //     updateUser.setStatus(UserStatusEnum.LOCKED.getStatus());
-        //     systemUserDAO.updateById(updateUser);
-        //     // 修改缓存状态
-        //     String userInfoKey = UserCacheKeyDefine.USER_INFO.format(user.getId());
-        //     String userInfoCache = redisTemplate.opsForValue().get(userInfoKey);
-        //     if (userInfoCache != null) {
-        //         LoginUser loginUser = JSON.parseObject(userInfoCache, LoginUser.class);
-        //         loginUser.setStatus(UserStatusEnum.LOCKED.getStatus());
-        //         RedisStrings.setJson(userInfoKey, UserCacheKeyDefine.USER_INFO, loginUser);
-        //     }
-        // }
         return false;
     }
 

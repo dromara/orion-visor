@@ -68,14 +68,14 @@
 <script lang="ts" setup>
   import type { UserQueryResponse } from '@/api/user/user';
   import type { UserSessionQueryResponse } from '@/api/user/user';
-  import useLoading from '@/hooks/loading';
   import { ref, onBeforeMount } from 'vue';
+  import { getUserSessionList, offlineUserSession } from '@/api/user/user';
   import { getCurrentUserSessionList, offlineCurrentUserSession } from '@/api/user/mine';
   import { dateFormat } from '@/utils';
   import { isMobile } from '@/utils/is';
-  import { Message } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
   import usePermission from '@/hooks/permission';
-  import { getUserSessionList, offlineUserSession } from '@/api/user/user';
+  import { Message } from '@arco-design/web-vue';
 
   const props = defineProps<{
     user?: UserQueryResponse;

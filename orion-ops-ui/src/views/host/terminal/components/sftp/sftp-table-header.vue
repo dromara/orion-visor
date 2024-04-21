@@ -45,8 +45,12 @@
       </div>
     </div>
     <!-- 已关闭-右侧操作 -->
-    <div v-if="isClose" class="sftp-table-header-right">
-      <span class="close-message" :title="closeMessage">{{ closeMessage }}</span>
+    <div v-if="closed" class="sftp-table-header-right">
+      <a-tag class="close-message"
+             color="red"
+             :title="closeMessage">
+        已断开: {{ closeMessage }}
+      </a-tag>
     </div>
     <!-- 路径编辑模式-右侧操作 -->
     <a-space v-else-if="pathEditable" class="sftp-table-header-right">
@@ -189,10 +193,10 @@
   import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
 
   const props = defineProps<{
-    isClose: boolean;
-    closeMessage: string | undefined;
+    closed: boolean;
+    closeMessage?: string;
     currentPath: string;
-    session: ISftpSession | undefined;
+    session?: ISftpSession;
     selectedFiles: Array<string>;
   }>();
 
@@ -224,6 +228,10 @@
 
   // 设置命令编辑模式
   const setPathEditable = (editable: boolean) => {
+    // 检查是否断开
+    if (editable && props.closed) {
+      return;
+    }
     pathEditable.value = editable;
     pathInput.value = editable ? props.currentPath : '';
     // 自动聚焦
@@ -242,6 +250,10 @@
 
   // 加载文件列表
   const loadFileList = (path: string = props.currentPath) => {
+    // 检查是否断开
+    if (props.closed) {
+      return;
+    }
     emits('loadFile', path);
   };
 
@@ -332,8 +344,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    padding-left: 16px;
-    color: rgb(var(--red-6));
+    margin-left: 16px;
   }
 
   .header-action-icon {

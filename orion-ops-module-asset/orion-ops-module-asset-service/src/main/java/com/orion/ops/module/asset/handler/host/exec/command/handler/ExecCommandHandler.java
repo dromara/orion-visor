@@ -3,16 +3,21 @@ package com.orion.ops.module.asset.handler.host.exec.command.handler;
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.exception.AuthenticationException;
 import com.orion.lang.exception.ConnectionRuntimeException;
+import com.orion.lang.exception.SftpException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.utils.Booleans;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
+import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.net.host.ssh.command.CommandExecutor;
 import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
+import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import com.orion.ops.module.asset.service.HostTerminalService;
@@ -43,6 +48,8 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     private final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
 
+    private final ExecCommandDTO execCommand;
+
     private final ExecCommandHostDTO execHostCommand;
 
     private final TimeoutChecker timeoutChecker;
@@ -60,8 +67,11 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     private volatile boolean interrupted;
 
-    public ExecCommandHandler(ExecCommandHostDTO execHostCommand, TimeoutChecker timeoutChecker) {
+    public ExecCommandHandler(ExecCommandDTO execCommand,
+                              ExecCommandHostDTO execHostCommand,
+                              TimeoutChecker timeoutChecker) {
         this.status = ExecHostStatusEnum.WAITING;
+        this.execCommand = execCommand;
         this.execHostCommand = execHostCommand;
         this.timeoutChecker = timeoutChecker;
     }
@@ -109,13 +119,50 @@ public class ExecCommandHandler implements IExecCommandHandler {
         this.logOutputStream = fileClient.getContentOutputStream(execHostCommand.getLogPath());
         // 打开会话
         this.sessionStore = hostTerminalService.openSessionStore(execHostCommand.getHostId());
-        this.executor = sessionStore.getCommandExecutor(Strings.replaceCRLF(execHostCommand.getCommand()));
+        if (Booleans.isTrue(execCommand.getScriptExec())) {
+            // 上传脚本文件
+            this.uploadScriptFile();
+            // 执行脚本文件
+            this.executor = sessionStore.getCommandExecutor(execHostCommand.getScriptPath());
+        } else {
+            // 执行命令
+            byte[] command = Strings.replaceCRLF(execHostCommand.getCommand()).getBytes(execHostCommand.getCharset());
+            this.executor = sessionStore.getCommandExecutor(command);
+        }
         // 执行命令
-        executor.timeout(execHostCommand.getTimeout(), TimeUnit.SECONDS, timeoutChecker);
+        executor.timeout(execCommand.getTimeout(), TimeUnit.SECONDS, timeoutChecker);
         executor.merge();
         executor.transfer(logOutputStream);
         executor.connect();
         executor.exec();
+    }
+
+    /**
+     * 上传脚本文件
+     */
+    private void uploadScriptFile() {
+        SftpExecutor sftpExecutor = null;
+        try {
+            // 打开 sftp
+            sftpExecutor = sessionStore.getSftpExecutor(execHostCommand.getFileNameCharset());
+            sftpExecutor.connect();
+            // 必须要以 / 开头
+            String scriptPath = execHostCommand.getScriptPath();
+            if (!scriptPath.startsWith("/")) {
+                scriptPath = "/" + scriptPath;
+            }
+            // 创建文件
+            sftpExecutor.touch(scriptPath);
+            // 写入命令
+            byte[] command = Strings.replaceCRLF(execHostCommand.getCommand()).getBytes(execHostCommand.getFileContentCharset());
+            sftpExecutor.write(scriptPath, command);
+            // 修改权限
+            sftpExecutor.changeMode(scriptPath, 777);
+        } catch (Exception e) {
+            throw Exceptions.sftp(e);
+        } finally {
+            Streams.close(sftpExecutor);
+        }
     }
 
     /**
@@ -199,6 +246,8 @@ public class ExecCommandHandler implements IExecCommandHandler {
             message = "连接失败";
         } else if (ex instanceof AuthenticationException) {
             message = "认证失败";
+        } else if (ex instanceof SftpException) {
+            message = "脚本上传失败";
         } else {
             message = "执行失败";
         }

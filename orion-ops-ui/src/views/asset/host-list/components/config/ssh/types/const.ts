@@ -1,5 +1,6 @@
 // 主机 SSH 配置
 export interface HostSshConfig {
+  osType?: string;
   port?: number;
   username?: string;
   password?: string;
@@ -14,7 +15,7 @@ export interface HostSshConfig {
   hasPassword?: boolean;
 }
 
-// 主机 ssh 验证方式
+// 主机验证方式
 export const SshAuthType = {
   // 密码验证
   PASSWORD: 'PASSWORD',
@@ -24,8 +25,17 @@ export const SshAuthType = {
   IDENTITY: 'IDENTITY'
 };
 
+// 主机系统版本
+export const SshOsType = {
+  LINUX: 'LINUX',
+  WINDOWS: 'WINDOWS',
+};
+
 // 主机验证方式 字典项
 export const sshAuthTypeKey = 'hostSshAuthType';
 
+// 主机系统类型 字典项
+export const sshOsTypeKey = 'hostSshOsType';
+
 // 加载的字典值
-export const dictKeys = [sshAuthTypeKey];
+export const dictKeys = [sshAuthTypeKey, sshOsTypeKey];

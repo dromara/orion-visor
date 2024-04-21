@@ -1,8 +1,10 @@
 <template>
   <grant-layout :type="type"
                 :loading="loading"
-                @fetch="fetchAuthorizedGroup"
-                @grant="doGrant">
+                @fetch="fetchAuthorizedData"
+                @grant="doGrant"
+                @select-all="selectAll"
+                @reverse="reverseSelect">
     <!-- 主机秘钥表格 -->
     <a-table row-key="id"
              class="host-key-main-table"
@@ -49,7 +51,7 @@
   const hostKeys = ref<Array<HostKeyQueryResponse>>([]);
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (request: AssetAuthorizedDataQueryRequest) => {
+  const fetchAuthorizedData = async (request: AssetAuthorizedDataQueryRequest) => {
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostKey(request);
@@ -64,6 +66,7 @@
   const doGrant = async (request: AssetDataGrantRequest) => {
     setLoading(true);
     try {
+      // 执行授权
       await grantHostKey({
         ...request,
         idList: selectedKeys.value
@@ -73,6 +76,19 @@
     } finally {
       setLoading(false);
     }
+    // 查询数据
+    await fetchAuthorizedData(request);
+  };
+
+  // 全选
+  const selectAll = () => {
+    selectedKeys.value = hostKeys.value.map(s => s.id);
+  };
+
+  // 反选
+  const reverseSelect = () => {
+    selectedKeys.value = hostKeys.value.map(s => s.id)
+      .filter(s => !selectedKeys.value.includes(s));
   };
 
   // 点击行

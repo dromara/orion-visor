@@ -28,13 +28,21 @@ public interface AssetAuthorizedDataService {
     List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request);
 
     /**
-     * 查询用户已授权的主机
+     * 获取用户已授权的主机id 查询角色
+     *
+     * @param userId userId
+     * @return hostId
+     */
+    List<Long> getUserAuthorizedHostId(Long userId);
+
+    /**
+     * 获取用户已授权&配置已启用的主机id 查询角色
      *
      * @param userId userId
      * @param type   type
      * @return hostId
      */
-    List<Long> getUserAuthorizedHostId(Long userId, HostConfigTypeEnum type);
+    List<Long> getUserAuthorizedHostIdWithEnabledConfig(Long userId, HostConfigTypeEnum type);
 
     /**
      * 查询用户已授权的主机
@@ -44,14 +52,6 @@ public interface AssetAuthorizedDataService {
      * @return group
      */
     AuthorizedHostWrapperVO getUserAuthorizedHost(Long userId, String type);
-
-    /**
-     * 获取用户已授权的主机id 不查询角色
-     *
-     * @param userId userId
-     * @return hostId
-     */
-    List<Long> getUserAuthorizedHostId(Long userId);
 
     /**
      * 查询用户已授权的主机秘钥

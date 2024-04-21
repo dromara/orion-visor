@@ -1,12 +1,8 @@
 <template>
   <div ref="editorContainer"
        class="editor-wrapper"
-       :class="[
-         !!containerClass ? containerClass : ''
-       ]"
-       :style="{
-          ...containerStyle
-       }" />
+       :class="[ !!containerClass ? containerClass : '' ]"
+       :style="{ ...containerStyle }" />
 </template>
 
 <script lang="ts">

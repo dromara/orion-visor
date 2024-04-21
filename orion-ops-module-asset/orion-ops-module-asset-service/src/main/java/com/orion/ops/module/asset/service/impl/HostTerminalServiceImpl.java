@@ -31,8 +31,6 @@ import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostExtraService;
 import com.orion.ops.module.asset.service.HostTerminalService;
 import com.orion.ops.module.infra.api.DataPermissionApi;
-import com.orion.ops.module.infra.api.SystemUserApi;
-import com.orion.ops.module.infra.entity.dto.user.SystemUserDTO;
 import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -75,9 +73,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Resource
     private DataPermissionApi dataPermissionApi;
-
-    @Resource
-    private SystemUserApi systemUserApi;
 
     @Override
     public JSONArray getTerminalThemes() {
@@ -129,35 +124,28 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host, HostConnectTypeEnum type) {
         Long hostId = host.getId();
         log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
-        // 查询用户
-        SystemUserDTO user = systemUserApi.getUserById(userId);
-        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        // 验证主机是否有权限
+        List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
+        Valid.isTrue(hostIdList.contains(hostId),
+                ErrorMessage.ANY_NO_PERMISSION,
+                DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
         // 查询主机配置
         HostSshConfigModel config = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostSshExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.SSH);
-        // 非管理员检查权限
-        if (!systemUserApi.isAdminUser(userId)) {
-            // 验证主机是否有权限
-            List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
-            Valid.isTrue(hostIdList.contains(hostId),
-                    ErrorMessage.ANY_NO_PERMISSION,
-                    DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
-            // 检查额外配置权限
-            if (extra != null) {
-                HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
-                if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-                    // 验证主机秘钥是否有权限
-                    Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
-                            ErrorMessage.ANY_NO_PERMISSION,
-                            DataPermissionTypeEnum.HOST_KEY.getPermissionName());
-                } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
-                    // 验证主机身份是否有权限
-                    Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, extra.getIdentityId()),
-                            ErrorMessage.ANY_NO_PERMISSION,
-                            DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
-                }
+        if (extra != null) {
+            HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
+            if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
+                // 验证主机秘钥是否有权限
+                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
+                        ErrorMessage.ANY_NO_PERMISSION,
+                        DataPermissionTypeEnum.HOST_KEY.getPermissionName());
+            } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+                // 验证主机身份是否有权限
+                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, extra.getIdentityId()),
+                        ErrorMessage.ANY_NO_PERMISSION,
+                        DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
             }
         }
         // 获取连接配置
@@ -243,52 +231,62 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     private HostTerminalConnectDTO getHostConnectInfo(HostDO host,
                                                       HostSshConfigModel config,
                                                       HostSshExtraModel extra) {
-        // 获取认证方式
-        HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
-        HostExtraSshAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
-                .map(HostSshExtraModel::getAuthType)
-                .map(HostExtraSshAuthTypeEnum::of)
-                .orElse(HostExtraSshAuthTypeEnum.DEFAULT);
-        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-            // 自定义秘钥
-            authType = HostSshAuthTypeEnum.KEY;
-            config.setKeyId(extra.getKeyId());
-            if (extra.getUsername() != null) {
-                config.setUsername(extra.getUsername());
-            }
-        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
-            // 自定义身份
-            authType = HostSshAuthTypeEnum.IDENTITY;
-            config.setIdentityId(extra.getIdentityId());
-        }
-        Long keyId = null;
         // 填充认证信息
         HostTerminalConnectDTO conn = new HostTerminalConnectDTO();
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setPort(config.getPort());
+        conn.setTimeout(config.getConnectTimeout());
         conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());
         conn.setFileContentCharset(config.getFileContentCharset());
-        conn.setTimeout(config.getConnectTimeout());
-        conn.setUsername(config.getUsername());
-        // 填充身份信息
-        if (HostSshAuthTypeEnum.PASSWORD.equals(authType)) {
-            conn.setPassword(config.getPassword());
-        } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
-            // 秘钥认证
-            keyId = config.getKeyId();
-        } else if (HostSshAuthTypeEnum.IDENTITY.equals(authType)) {
+
+        // 获取自定义认证方式
+        HostExtraSshAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
+                .map(HostSshExtraModel::getAuthType)
+                .map(HostExtraSshAuthTypeEnum::of)
+                .orElse(null);
+        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
+            // 自定义秘钥
+            config.setAuthType(HostSshAuthTypeEnum.KEY.name());
+            config.setKeyId(extra.getKeyId());
+            if (extra.getUsername() != null) {
+                config.setUsername(extra.getUsername());
+            }
+        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+            // 自定义身份
+            config.setAuthType(HostSshAuthTypeEnum.IDENTITY.name());
+            config.setIdentityId(extra.getIdentityId());
+        }
+
+        // 身份认证
+        HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
+        if (HostSshAuthTypeEnum.IDENTITY.equals(authType)) {
             // 身份认证
             HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
             Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
-            keyId = identity.getKeyId();
-            conn.setUsername(identity.getUsername());
-            conn.setPassword(identity.getPassword());
+            config.setUsername(identity.getUsername());
+            HostIdentityTypeEnum identityType = HostIdentityTypeEnum.of(identity.getType());
+            if (HostIdentityTypeEnum.PASSWORD.equals(identityType)) {
+                // 密码类型
+                authType = HostSshAuthTypeEnum.PASSWORD;
+                config.setPassword(identity.getPassword());
+            } else if (HostIdentityTypeEnum.KEY.equals(identityType)) {
+                // 秘钥类型
+                authType = HostSshAuthTypeEnum.KEY;
+                config.setKeyId(identity.getKeyId());
+            }
         }
-        // 设置秘钥信息
-        if (keyId != null) {
+
+        // 填充认证信息
+        conn.setUsername(config.getUsername());
+        if (HostSshAuthTypeEnum.PASSWORD.equals(authType)) {
+            // 密码认证
+            conn.setPassword(config.getPassword());
+        } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
+            // 秘钥认证
+            Long keyId = config.getKeyId();
             HostKeyDO key = hostKeyDAO.selectById(keyId);
             Valid.notNull(key, ErrorMessage.KEY_ABSENT);
             conn.setKeyId(keyId);
@@ -296,7 +294,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             conn.setPrivateKey(key.getPrivateKey());
             conn.setPrivateKeyPassword(key.getPassword());
         }
-        // 连接
         return conn;
     }
 

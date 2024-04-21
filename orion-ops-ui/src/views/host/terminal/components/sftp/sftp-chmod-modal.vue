@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            title="修改权限"
            :align-center="false"
@@ -10,8 +10,7 @@
     <a-form :model="formModel"
             ref="formRef"
             label-align="right"
-            :label-col-props="{ span: 5 }"
-            :wrapper-col-props="{ span: 18 }">
+            :auto-label-width="true">
       <!-- 文件路径 -->
       <a-form-item field="path"
                    disabled
@@ -65,7 +64,7 @@
   });
 
   // 修改预览
-  const updatePreview = (v: number|undefined) => {
+  const updatePreview = (v: number | undefined) => {
     formModel.value.permission = permission10toString(v as number);
   };
 

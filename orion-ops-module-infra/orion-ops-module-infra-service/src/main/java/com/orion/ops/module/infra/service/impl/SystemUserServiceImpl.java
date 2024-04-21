@@ -14,7 +14,7 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.infra.config.AppAuthenticationConfig;
+import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
@@ -130,11 +130,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (id.equals(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
         }
-        // 检查状态
         UserStatusEnum status = Valid.valid(UserStatusEnum::of, request.getStatus());
-        if (!status.equals(UserStatusEnum.DISABLED) && !status.equals(UserStatusEnum.ENABLED)) {
-            throw ErrorCode.BAD_REQUEST.exception();
-        }
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
@@ -146,8 +142,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 更新用户
         int effect = systemUserDAO.updateById(updateRecord);
         log.info("SystemUserService-updateUserStatus effect: {}, updateRecord: {}", effect, JSON.toJSONString(updateRecord));
-        // 如果之前是锁定则删除登录失败次数缓存
-        if (UserStatusEnum.LOCKED.getStatus().equals(record.getStatus())) {
+        // 改为启用则删除登录失败次数缓存
+        if (UserStatusEnum.ENABLED.equals(status)) {
             RedisUtils.delete(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(record.getUsername()));
         }
         // 更新用户缓存中的 status

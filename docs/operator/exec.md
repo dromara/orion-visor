@@ -75,13 +75,19 @@
 | source          | 执行来源 (BATCH/JOB)          |
 | sourceId        | 执行来源id (JOB特有)            |
 | seq             | 执行序列 (JOB特有)              |
+| userId          | 执行用户id                    |
+| username        | 执行用户名                     |
 | execId          | 执行记录id                    |
 | hostId          | 执行主机id                    | 
 | hostName        | 执行主机名称                    |
 | hostCode        | 执行主机编码                    |
 | hostAddress     | 执行主机地址                    |
-| userId          | 执行用户id                    |
-| username        | 执行用户名                     |
+| hostUsername    | 执行主机用户名                   |
+| osType          | 执行主机系统版本                  |
+| port            | SSH 端口                    |
+| charset         | SSH 编码集                   |
+| scriptExec      | 是否使用脚本执行                  |
+| scriptPath      | 脚本文件路径                    |
 | uuid            | 生成任务维度 uuid               |
 | uuidShort       | 生成任务维度 uuid 无 '-'         |
 | hostUuid        | 生成机器维度 uuid               |

@@ -1,5 +1,5 @@
 <template>
-  <div class="terminal-example" ref="terminal"></div>
+  <div class="terminal-example" ref="terminal"/>
 </template>
 
 <script lang="ts">
@@ -14,7 +14,7 @@
   import { onMounted, onUnmounted, ref } from 'vue';
 
   const props = defineProps<{
-    schema: TerminalThemeSchema | Record<string, any>
+    schema: TerminalThemeSchema | Record<string, any>;
   }>();
 
   const terminal = ref();

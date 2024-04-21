@@ -1,20 +1,16 @@
 package com.orion.ops.module.asset.service.impl;
 
 import com.orion.lang.function.Functions;
-import com.orion.lang.utils.Refs;
 import com.orion.lang.utils.collect.Maps;
-import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.ops.framework.common.handler.data.strategy.MapDataStrategy;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.asset.entity.request.host.HostAliasUpdateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostExtraUpdateRequest;
 import com.orion.ops.module.asset.enums.HostExtraItemEnum;
 import com.orion.ops.module.asset.service.HostExtraService;
 import com.orion.ops.module.infra.api.DataExtraApi;
-import com.orion.ops.module.infra.constant.DataExtraItems;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraQueryDTO;
 import com.orion.ops.module.infra.entity.dto.data.DataExtraSetDTO;
@@ -38,17 +34,6 @@ public class HostExtraServiceImpl implements HostExtraService {
 
     @Resource
     private DataExtraApi dataExtraApi;
-
-    @Override
-    public Integer updateHostAlias(HostAliasUpdateRequest request) {
-        DataExtraSetDTO update = DataExtraSetDTO.builder()
-                .userId(SecurityUtils.getLoginUserId())
-                .item(DataExtraItems.ALIAS)
-                .relId(request.getId())
-                .value(Refs.json(request.getName()))
-                .build();
-        return dataExtraApi.setExtraItem(update, DataExtraTypeEnum.HOST);
-    }
 
     @Override
     public Map<String, Object> getHostExtra(Long hostId, String item) {
@@ -110,21 +95,24 @@ public class HostExtraServiceImpl implements HostExtraService {
 
     @Override
     public Integer updateHostExtra(HostExtraUpdateRequest request) {
-        String item = request.getItem();
         Long hostId = request.getHostId();
         Long userId = SecurityUtils.getLoginUserId();
-        HostExtraItemEnum extraItem = Valid.valid(HostExtraItemEnum::of, item);
-        MapDataStrategy<GenericsDataModel> strategy = extraItem.getStrategyBean();
+        HostExtraItemEnum item = Valid.valid(HostExtraItemEnum::of, request.getItem());
+        MapDataStrategy<GenericsDataModel> strategy = item.getStrategyBean();
         // 查询原始配置
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
                 .relId(hostId)
-                .item(item)
+                .item(item.getItem())
                 .build();
         DataExtraDTO beforeExtraItem = dataExtraApi.getExtraItem(query, DataExtraTypeEnum.HOST);
-        Valid.notNull(beforeExtraItem, ErrorMessage.CONFIG_ABSENT);
-        GenericsDataModel newExtra = extraItem.parse(request.getExtra());
-        GenericsDataModel beforeExtra = extraItem.parse(beforeExtraItem.getValue());
+        if (beforeExtraItem == null) {
+            // 初始化并查询
+            this.checkInitItem(item, userId, hostId);
+            beforeExtraItem = dataExtraApi.getExtraItem(query, DataExtraTypeEnum.HOST);
+        }
+        GenericsDataModel newExtra = item.parse(request.getExtra());
+        GenericsDataModel beforeExtra = item.parse(beforeExtraItem.getValue());
         // 更新验证
         strategy.doValidChain(beforeExtra, newExtra);
         // 更新配置
@@ -134,28 +122,42 @@ public class HostExtraServiceImpl implements HostExtraService {
     /**
      * 检查配置项并且转为视图 (不存在则初始化默认值)
      *
-     * @param extraItem  extraItem
+     * @param item       item
      * @param extraValue extraValue
      * @param userId     userId
      * @param hostId     hostId
      * @return viewMap
      */
-    private Map<String, Object> checkItemAndToView(HostExtraItemEnum extraItem, String extraValue, Long userId, Long hostId) {
-        String item = extraItem.getItem();
-        MapDataStrategy<GenericsDataModel> strategy = extraItem.getStrategyBean();
+    private Map<String, Object> checkItemAndToView(HostExtraItemEnum item, String extraValue, Long userId, Long hostId) {
+        MapDataStrategy<GenericsDataModel> strategy = item.getStrategyBean();
         if (extraValue == null) {
             // 初始化默认数据
-            extraValue = strategy.getDefault().serial();
-            // 插入默认值
-            DataExtraSetDTO set = DataExtraSetDTO.builder()
-                    .userId(userId)
-                    .relId(hostId)
-                    .item(item)
-                    .value(extraValue)
-                    .build();
-            dataExtraApi.addExtraItem(set, DataExtraTypeEnum.HOST);
+            extraValue = this.checkInitItem(item, userId, hostId);
         }
         return strategy.toView(extraValue);
+    }
+
+    /**
+     * 检查配置项 不存在则初始化默认值
+     *
+     * @param item   item
+     * @param userId userId
+     * @param hostId hostId
+     * @return defaultValue
+     */
+    private String checkInitItem(HostExtraItemEnum item, Long userId, Long hostId) {
+        MapDataStrategy<GenericsDataModel> strategy = item.getStrategyBean();
+        // 初始化默认数据
+        String extraValue = strategy.getDefault().serial();
+        // 插入默认值
+        DataExtraSetDTO set = DataExtraSetDTO.builder()
+                .userId(userId)
+                .relId(hostId)
+                .item(item.getItem())
+                .value(extraValue)
+                .build();
+        dataExtraApi.addExtraItem(set, DataExtraTypeEnum.HOST);
+        return extraValue;
     }
 
 }

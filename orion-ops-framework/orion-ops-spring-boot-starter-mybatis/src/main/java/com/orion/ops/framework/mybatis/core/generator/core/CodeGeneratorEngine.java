@@ -10,7 +10,7 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
 import com.orion.ops.framework.common.constant.Const;
-import com.orion.ops.framework.common.constant.OrionOpsProConst;
+import com.orion.ops.framework.common.constant.AppConst;
 import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import org.jetbrains.annotations.NotNull;
 
@@ -97,7 +97,7 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         // http 注释标识
         objectMap.put("httpComment", "###");
         // 版本
-        objectMap.put("version", OrionOpsProConst.VERSION);
+        objectMap.put("version", AppConst.VERSION);
         // api 注释
         Map<String, String> apiComment = new HashMap<>(12);
         String comment = tableInfo.getComment();

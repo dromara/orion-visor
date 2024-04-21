@@ -1,5 +1,7 @@
 package com.orion.ops.module.asset.entity.request.exec;
 
+import com.orion.ops.framework.desensitize.core.annotation.Desensitize;
+import com.orion.ops.framework.desensitize.core.annotation.DesensitizeObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -19,6 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DesensitizeObject
 @Schema(name = "ExecCommandRequest", description = "批量执行命令 请求对象")
 public class ExecCommandRequest {
 
@@ -30,7 +33,12 @@ public class ExecCommandRequest {
     @Schema(description = "超时时间")
     private Integer timeout;
 
+    @NonNull
+    @Schema(description = "是否使用脚本执行")
+    private Integer scriptExec;
+
     @NotBlank
+    @Desensitize(toEmpty = true)
     @Schema(description = "执行命令")
     private String command;
 

@@ -68,6 +68,10 @@ public class ExecHostLogDO extends BaseDO {
     @TableField("log_path")
     private String logPath;
 
+    @Schema(description = "脚本路径")
+    @TableField("script_path")
+    private String scriptPath;
+
     @Schema(description = "错误信息")
     @TableField("error_message")
     private String errorMessage;

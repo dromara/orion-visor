@@ -1,8 +1,10 @@
 <template>
   <grant-layout :type="type"
                 :loading="loading"
-                @fetch="fetchAuthorizedGroup"
-                @grant="doGrant">
+                @fetch="fetchAuthorizedData"
+                @grant="doGrant"
+                @select-all="selectAll"
+                @reverse="reverseSelect">
     <!-- 主机身份表格 -->
     <a-table row-key="id"
              class="host-identity-main-table"
@@ -15,11 +17,24 @@
              :pagination="false"
              :bordered="false"
              @row-click="clickRow">
+      <!-- 类型 -->
+      <template #type="{ record }">
+        <a-tag :color="getDictValue(identityTypeKey, record.type, 'color')">
+          {{ getDictValue(identityTypeKey, record.type) }}
+        </a-tag>
+      </template>
       <!-- 秘钥名称 -->
       <template #keyId="{ record }">
-        <a-tag color="arcoblue" v-if="record.keyId">
-          {{ hostKeys.find(s => s.id === record.keyId)?.name }}
-        </a-tag>
+        <!-- 有秘钥 -->
+        <template v-if="record.keyId && record.type === 'KEY'">
+          <a-tag color="arcoblue" v-if="record.keyId">
+            {{ hostKeys.find(s => s.id === record.keyId)?.name }}
+          </a-tag>
+        </template>
+        <!-- 无秘钥 -->
+        <template v-else>
+          <span>-</span>
+        </template>
       </template>
     </a-table>
   </grant-layout>
@@ -38,11 +53,12 @@
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
-  import { Message } from '@arco-design/web-vue';
-  import { hostIdentityColumns } from '../types/table.columns';
-  import { useCacheStore } from '@/store';
   import { useRowSelection } from '@/types/table';
+  import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { hostIdentityColumns } from '../types/table.columns';
+  import { identityTypeKey } from '../types/const';
+  import { Message } from '@arco-design/web-vue';
   import GrantLayout from './grant-layout.vue';
 
   const props = defineProps<{
@@ -51,6 +67,7 @@
 
   const cacheStore = useCacheStore();
   const rowSelection = useRowSelection();
+  const { getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
 
   const selectedKeys = ref<Array<number>>([]);
@@ -58,7 +75,7 @@
   const hostKeys = ref<Array<HostKeyQueryResponse>>([]);
 
   // 获取授权列表
-  const fetchAuthorizedGroup = async (request: AssetAuthorizedDataQueryRequest) => {
+  const fetchAuthorizedData = async (request: AssetAuthorizedDataQueryRequest) => {
     setLoading(true);
     try {
       const { data } = await getAuthorizedHostIdentity(request);
@@ -73,6 +90,7 @@
   const doGrant = async (request: AssetDataGrantRequest) => {
     setLoading(true);
     try {
+      // 执行授权
       await grantHostIdentity({
         ...request,
         idList: selectedKeys.value
@@ -82,6 +100,19 @@
     } finally {
       setLoading(false);
     }
+    // 查询数据
+    await fetchAuthorizedData(request);
+  };
+
+  // 全选
+  const selectAll = () => {
+    selectedKeys.value = hostIdentities.value.map(s => s.id);
+  };
+
+  // 反选
+  const reverseSelect = () => {
+    selectedKeys.value = hostIdentities.value.map(s => s.id)
+      .filter(s => !selectedKeys.value.includes(s));
   };
 
   // 点击行
@@ -94,7 +125,7 @@
     }
   };
 
-  // 初始化数据
+  // 初始化身份数据
   onMounted(async () => {
     setLoading(true);
     try {
@@ -106,7 +137,7 @@
     }
   });
 
-  // 初始化数据
+  // 初始化秘钥数据
   onMounted(async () => {
     // 加载主机秘钥
     hostKeys.value = await cacheStore.loadHostKeys();

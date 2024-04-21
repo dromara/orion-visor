@@ -38,7 +38,7 @@ public enum ErrorCode implements CodeInfo {
 
     PAYLOAD_TOO_LARGE(413, "请求过大"),
 
-    LOCKED(423, "当前已被锁定"),
+    LOCKED(423, "当前操作已被锁定"),
 
     TOO_MANY_REQUESTS(429, "请求过快"),
 
@@ -48,11 +48,9 @@ public enum ErrorCode implements CodeInfo {
 
     USER_DISABLED(700, "当前用户已禁用"),
 
-    USER_LOCKED(701, "当前用户已被锁定"),
+    USER_OTHER_DEVICE_LOGIN(701, "该账号于 {} 已在其他设备登录 {}({})"),
 
-    OTHER_DEVICE_LOGIN(702, "该账号于 {} 已在其他设备登录 {}({})"),
-
-    SESSION_OFFLINE(703, "该账号于 {} 已被强制下线 {}({})"),
+    USER_OFFLINE(702, "该账号于 {} 已被强制下线 {}({})"),
 
     // -------------------- 自定义 - 通用 --------------------
 

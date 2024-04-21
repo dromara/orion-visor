@@ -17,6 +17,13 @@
       <a-form-item field="name" label="名称">
         <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
+      <!-- 类型 -->
+      <a-form-item field="type" label="类型">
+        <a-select v-model="formModel.type"
+                  placeholder="请选择类型"
+                  :options="toOptions(identityTypeKey)"
+                  allow-clear />
+      </a-form-item>
       <!-- 用户名 -->
       <a-form-item field="username" label="用户名">
         <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
@@ -80,6 +87,12 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
+      <!-- 类型 -->
+      <template #type="{ record }">
+        <a-tag :color="getDictValue(identityTypeKey, record.type, 'color')">
+          {{ getDictValue(identityTypeKey, record.type) }}
+        </a-tag>
+      </template>
       <!-- 用户名 -->
       <template #username="{ record }">
         <span class="span-blue text-copy" @click="copy(record.username)">
@@ -88,13 +101,14 @@
       </template>
       <!-- 秘钥名称 -->
       <template #keyId="{ record }">
-        <template v-if="record.keyId">
+        <!-- 有秘钥 -->
+        <template v-if="record.keyId && record.type === IdentityType.KEY">
           <!-- 可查看详情 -->
           <a-tooltip v-if="hasAnyPermission(['asset:host-key:detail', 'asset:host-key:update'])"
                      content="点击查看详情">
             <a-tag :checked="true"
                    checkable
-                   @click="emits('openKeyView',{id: record.keyId})">
+                   @click="emits('openKeyView', { id: record.keyId })">
               {{ record.keyName }}
             </a-tag>
           </a-tooltip>
@@ -102,6 +116,10 @@
           <a-tag v-else>
             {{ record.keyName }}
           </a-tag>
+        </template>
+        <!-- 无秘钥 -->
+        <template v-else>
+          <span>-</span>
         </template>
       </template>
       <!-- 操作 -->
@@ -147,21 +165,24 @@
   import useLoading from '@/hooks/loading';
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
+  import { useDictStore } from '@/store';
   import { usePagination } from '@/types/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { IdentityType, identityTypeKey } from '../types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
-  const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
-
   const pagination = usePagination();
+  const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();
 
+  const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
   const formModel = reactive<HostIdentityQueryRequest>({
     id: undefined,
     name: undefined,
+    type: undefined,
     username: undefined,
     keyId: undefined,
   });

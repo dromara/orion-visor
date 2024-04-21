@@ -1,13 +1,3 @@
-### 修改主机别名
-PUT {{baseUrl}}/asset/host-extra/update-alias
-Content-Type: application/json
-Authorization: {{token}}
-
-{
-  "id": 1,
-  "name": "alias"
-}
-
 ### 获取主机拓展信息
 GET {{baseUrl}}/asset/host-extra/get?hostId=1&item=ssh
 Authorization: {{token}}

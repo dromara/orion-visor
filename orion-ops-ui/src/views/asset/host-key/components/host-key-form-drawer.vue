@@ -1,22 +1,21 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            :width="470"
+            :width="520"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading || isViewHandler }"
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full modal-form" :loading="loading">
+    <a-spin class="full modal-form-small" :loading="loading">
       <a-alert class="keygen-alert">
         请使用 ssh-keygen -m PEM -t rsa 生成秘钥
       </a-alert>
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 4 }"
-              :wrapper-col-props="{ span: 20 }"
+              :auto-label-width="true"
               :rules="formRules">
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
@@ -240,8 +239,8 @@
   }
 
   .keygen-alert {
-    margin: 0 0 12px 16px;
-    width: 408px;
+    margin-bottom: 12px;
+    width: 100%;
   }
 
   .password-input {

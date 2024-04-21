@@ -8,6 +8,7 @@ export interface ExecCommandRequest {
   logId?: number;
   description?: string;
   timeout?: number;
+  scriptExec?: number;
   command?: string;
   parameterSchema?: string;
   hostIdList?: Array<number>;

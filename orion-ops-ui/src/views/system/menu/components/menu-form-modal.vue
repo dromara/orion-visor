@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            :title="title"
            :top="30"
@@ -16,8 +16,7 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 7 }"
-              :wrapper-col-props="{ span: 16 }"
+              :auto-label-width="true"
               :rules="formRules">
         <!-- 上级菜单 -->
         <a-form-item field="parentId" label="上级菜单">

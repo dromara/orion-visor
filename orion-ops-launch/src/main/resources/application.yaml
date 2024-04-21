@@ -84,8 +84,7 @@ spring:
             tablePrefix: QRTZ_
             misfireThreshold: 60000
             clusterCheckinInterval: 5000
-            # 打开群集功能
-            isClustered: false
+            isClustered: true
           #连接池
           threadPool:
             class: org.quartz.simpl.SimpleThreadPool
@@ -152,6 +151,7 @@ logging:
 
 # 应用配置
 app:
+  # 认证配置
   authentication:
     # 是否允许多端登录
     allow-multi-device: true
@@ -163,6 +163,20 @@ app:
     login-failed-lock-count: 5
     # 登录失败锁定时间 (分)
     login-failed-lock-time: 30
+  # tracker 配置
+  tracker:
+    # 加载偏移量 (行)
+    offset: 300
+    # 延迟时间 (ms)
+    delay: 100
+    # 文件未找到等待次数
+    wait-times: 100
+  # sftp 配置
+  sftp:
+    # 上传文件时 文件存在是否备份
+    upload-present-backup: true
+    # 备份文件名称
+    backup-file-name: bk_${fileName}_${timestamp}
 
 # orion framework config
 orion:

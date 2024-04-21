@@ -28,8 +28,9 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, computed, onUnmounted } from 'vue';
-  import { useAppStore, useCacheStore } from '@/store';
+  import { ref, computed, onUnmounted, onBeforeMount } from 'vue';
+  import { useAppStore, useCacheStore, useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
   import HostIdentityCardList from './components/host-identity-card-list.vue';
   import HostIdentityTable from './components/host-identity-table.vue';
   import HostIdentityFormModal from './components/host-identity-form-modal.vue';
@@ -61,6 +62,12 @@
       card.value.updatedCallback();
     }
   };
+
+  // 加载字典值
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+  });
 
   // 卸载时清除 cache
   onUnmounted(() => {

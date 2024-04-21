@@ -10,6 +10,7 @@ export interface ExecJobCreateRequest {
   name?: string;
   expression?: string;
   timeout?: number;
+  scriptExec?: number;
   command?: string;
   parameterSchema?: string;
   hostIdList?: Array<number>;
@@ -49,6 +50,7 @@ export interface ExecJobQueryResponse extends TableData {
   name: string;
   expression: string;
   timeout: number;
+  scriptExec?: number;
   command: string;
   parameterSchema: string;
   status: number;

@@ -20,24 +20,37 @@
             <!-- 角色提示信息 -->
             <template v-if="type === GrantType.ROLE">
               当前选择的角色为 <span class="span-blue mr4">{{ currentSubject.text }}</span>
-              <span class="span-blue ml4" v-if="currentSubject.code === AdminRoleCode">管理员拥有全部权限, 无需配置</span>
             </template>
             <!-- 用户提示信息 -->
             <template v-else-if="type === GrantType.USER">
               当前选择的用户为 <span class="span-blue mr4">{{ currentSubject.text }}</span>
-              <span class="ml4">若当前选择的用户角色包含管理员则无需配置 (管理员拥有全部权限)</span>
             </template>
           </span>
         </a-alert>
-        <!-- 授权 -->
-        <a-button class="grant-button"
-                  type="primary"
-                  @click="doGrant">
-          授权
-          <template #icon>
-            <icon-safe />
-          </template>
-        </a-button>
+        <!-- 操作按钮 -->
+        <a-space>
+          <!-- 全选 -->
+          <a-button @click="emits('selectAll')">
+            全选
+            <template #icon>
+              <icon-select-all />
+            </template>
+          </a-button>
+          <!-- 反选 -->
+          <a-button @click="emits('reverse')">
+            反选
+            <template #icon>
+              <icon-list />
+            </template>
+          </a-button>
+          <!-- 授权 -->
+          <a-button type="primary" @click="doGrant">
+            授权
+            <template #icon>
+              <icon-safe />
+            </template>
+          </a-button>
+        </a-space>
       </div>
       <!-- 主体部分 -->
       <div class="data-main">
@@ -57,7 +70,6 @@
   import type { TabRouterItem } from '@/components/view/tab-router/types';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import { ref } from 'vue';
-  import { AdminRoleCode } from '@/types/const';
   import { GrantType } from '../types/const';
   import RouterRoles from './router-roles.vue';
   import RouterUsers from './router-users.vue';
@@ -66,7 +78,7 @@
     type: string;
     loading: boolean;
   }>();
-  const emits = defineEmits(['fetch', 'grant']);
+  const emits = defineEmits(['fetch', 'grant', 'selectAll', 'reverse']);
 
   const subjectId = ref();
   const currentSubject = ref();
@@ -118,15 +130,12 @@
 
         .alert-wrapper {
           padding: 4px 16px;
+          margin-right: 12px;
 
           .alert-message {
             display: block;
             height: 22px;
           }
-        }
-
-        .grant-button {
-          margin-left: 16px;
         }
       }
 

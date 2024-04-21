@@ -28,7 +28,7 @@ public class SystemUserUpdateStatusRequest implements Serializable {
     private Long id;
 
     @NotNull
-    @Schema(description = "用户状态 0停用 1启用 2锁定")
+    @Schema(description = "用户状态 0停用 1启用")
     private Integer status;
 
 }

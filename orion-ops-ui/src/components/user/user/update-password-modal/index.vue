@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-large"
            title-align="start"
            title="重置密码"
            :top="120"
@@ -17,8 +17,7 @@
               ref="formRef"
               label-align="right"
               :rules="rules"
-              :label-col-props="{ span: 5 }"
-              :wrapper-col-props="{ span: 18 }">
+              :auto-label-width="true">
         <!-- 密码 -->
         <a-form-item field="beforePassword" label="原始密码">
           <a-input-password v-model="formModel.beforePassword" placeholder="请输入原始密码" />

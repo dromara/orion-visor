@@ -27,13 +27,6 @@ export interface HostExtraUpdateRequest {
 }
 
 /**
- * 修改主机别名
- */
-export function updateHostAlias(request: HostAliasUpdateRequest) {
-  return axios.put('/asset/host-extra/update-alias', request);
-}
-
-/**
  * 获取主机拓展信息
  */
 export function getHostExtraItem<T>(params: HostExtraQueryRequest) {

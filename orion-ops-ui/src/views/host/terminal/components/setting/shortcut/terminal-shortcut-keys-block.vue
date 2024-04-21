@@ -80,7 +80,7 @@
   defineProps<{
     title: string;
     type: number;
-    items: Array<TerminalShortcutKeyEditable>
+    items: Array<TerminalShortcutKeyEditable>;
   }>();
 
   const emits = defineEmits(['setEditable', 'clearEditable', 'updateEnabled']);

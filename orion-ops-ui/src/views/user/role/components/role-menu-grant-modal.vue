@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form"
+           body-class="modal-form-small"
            title-align="start"
            title="分配菜单"
            width="80%"

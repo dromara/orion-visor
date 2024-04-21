@@ -19,4 +19,14 @@
         id, name, type, create_time, update_time, creator, updater, deleted
     </sql>
 
+    <select id="selectUnusedTag" resultMap="BaseResultMap">
+        SELECT t.id, t.type
+        FROM tag t
+        LEFT JOIN tag_rel tr ON t.id = tr.tag_id AND tr.deleted = 0
+        WHERE t.create_time <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        AND tr.tag_id IS NULL
+        AND t.deleted = 0
+        GROUP BY t.id
+    </select>
+
 </mapper>

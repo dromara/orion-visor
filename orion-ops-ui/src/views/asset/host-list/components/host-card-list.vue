@@ -49,8 +49,7 @@
               size="small"
               ref="formRef"
               label-align="right"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
+              :auto-label-width="true"
               @keyup.enter="() => fetchCardData()">
         <!-- id -->
         <a-form-item field="id" label="主机id">
@@ -74,7 +73,6 @@
         <!-- 主机标签 -->
         <a-form-item field="tags" label="主机标签">
           <tag-multi-selector v-model="formModel.tags"
-                              :allowCreate="false"
                               :limit="0"
                               type="HOST"
                               :tagColor="tagColor"

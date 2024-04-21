@@ -46,6 +46,10 @@ public class ExecJobDO extends BaseDO {
     @TableField("timeout")
     private Integer timeout;
 
+    @Schema(description = "是否使用脚本执行")
+    @TableField("script_exec")
+    private Integer scriptExec;
+
     @Schema(description = "执行命令")
     @TableField("command")
     private String command;

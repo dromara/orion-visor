@@ -8,24 +8,28 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full spin-wrapper" :loading="loading">
+    <a-spin class="full modal-form-small" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              label-align="left"
+              label-align="right"
               :auto-label-width="true"
               :rules="formRules">
         <a-row :gutter="16">
           <!-- 任务名称 -->
-          <a-col :span="14">
-            <a-form-item field="name" label="任务名称">
+          <a-col :span="13">
+            <a-form-item field="name"
+                         label="任务名称"
+                         :hide-asterisk="true">
               <a-input v-model="formModel.name"
                        placeholder="请输入任务名称"
                        allow-clear />
             </a-form-item>
           </a-col>
           <!-- 执行主机 -->
-          <a-col :span="10">
-            <a-form-item field="hostIdList" label="执行主机">
+          <a-col :span="11">
+            <a-form-item field="hostIdList"
+                         label="执行主机"
+                         :hide-asterisk="true">
               <div class="selected-host">
                 <!-- 已选择数量 -->
                 <span class="usn" v-if="formModel.hostIdList?.length">
@@ -38,8 +42,10 @@
             </a-form-item>
           </a-col>
           <!-- cron -->
-          <a-col :span="14">
-            <a-form-item field="expression" label="cron">
+          <a-col :span="13">
+            <a-form-item field="expression"
+                         label="cron"
+                         :hide-asterisk="true">
               <a-input v-model="formModel.expression"
                        placeholder="请输入 cron 表达式"
                        allow-clear>
@@ -54,8 +60,10 @@
             </a-form-item>
           </a-col>
           <!-- 超时时间 -->
-          <a-col :span="10">
-            <a-form-item field="timeout" label="超时时间">
+          <a-col :span="6">
+            <a-form-item field="timeout"
+                         label="超时时间"
+                         :hide-asterisk="true">
               <a-input-number v-model="formModel.timeout"
                               placeholder="为0则不超时"
                               :min="0"
@@ -67,13 +75,30 @@
               </a-input-number>
             </a-form-item>
           </a-col>
+          <!-- 脚本执行 -->
+          <a-col :span="5">
+            <a-form-item field="scriptExec"
+                         label="脚本执行"
+                         :hide-asterisk="true">
+              <div class="flex-center">
+                <a-switch v-model="formModel.scriptExec"
+                          type="round"
+                          :checked-value="EnabledStatus.ENABLED"
+                          :unchecked-value="EnabledStatus.DISABLED" />
+                <div class="question-right ml8">
+                  <a-tooltip position="tr" content="启用后会将命令写入脚本文件 传输到主机后执行">
+                    <icon-question-circle />
+                  </a-tooltip>
+                </div>
+              </div>
+            </a-form-item>
+          </a-col>
           <!-- 执行命令 -->
           <a-col :span="24">
             <a-form-item class="command-item"
                          field="command"
                          label="执行命令"
                          :hide-label="true"
-                         :wrapper-col-props="{ span: 24 }"
                          :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
               <template #extra>
                 <span v-permission="['asset:exec-template:query']"
@@ -111,6 +136,7 @@
   import { jobBuiltinsParams } from '../types/const';
   import { createExecJob, getExecJob, updateExecJob } from '@/api/exec/exec-job';
   import { Message } from '@arco-design/web-vue';
+  import { EnabledStatus } from '@/types/const';
   import { useDictStore } from '@/store';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
@@ -131,6 +157,7 @@
       name: undefined,
       expression: undefined,
       timeout: 0,
+      scriptExec: EnabledStatus.DISABLED,
       command: undefined,
       parameterSchema: '[]',
       hostIdList: []
@@ -169,6 +196,7 @@
       name: record.name,
       expression: record.expression,
       timeout: record.timeout,
+      scriptExec: record.scriptExec,
       command: record.command,
       parameterSchema: record.parameterSchema,
       hostIdList: record.hostIdList,
@@ -238,9 +266,6 @@
 </script>
 
 <style lang="less" scoped>
-  .spin-wrapper {
-    padding: 16px 20px;
-  }
 
   .selected-host {
     width: 100%;

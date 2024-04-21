@@ -5,7 +5,7 @@
       <!-- 左侧信息 -->
       <a-space class="log-header-left" :size="12">
         <!-- 执行序列 -->
-        <a-tag v-if="execLog.execSeq" color="green">
+        <a-tag v-if="execLog.execSeq" color="purple">
           #{{ execLog.execSeq }}
         </a-tag>
         <!-- 状态 -->
@@ -23,7 +23,9 @@
           <span class="tag-value">{{ host.exitStatus }}</span>
         </a-tag>
         <!-- 持续时间 -->
-        <a-tag color="arcoblue" title="持续时间">
+        <a-tag v-if="host.startTime"
+               color="arcoblue"
+               title="持续时间">
           <template #icon>
             <icon-loading v-if="host.status === execHostStatus.WAITING || host.status === execHostStatus.RUNNING" />
             <icon-clock-circle v-else />

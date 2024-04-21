@@ -13,7 +13,7 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
-import com.orion.ops.framework.common.constant.FieldConst;
+import com.orion.ops.framework.common.constant.PathConst;
 import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
@@ -32,10 +32,10 @@ import com.orion.ops.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.ops.module.asset.entity.vo.ExecHostLogVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.ops.module.asset.entity.vo.ExecLogVO;
-import com.orion.ops.module.asset.entity.vo.HostConfigVO;
 import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecCommandHandler;
 import com.orion.ops.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
 import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
@@ -51,7 +51,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -365,9 +364,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         List<Long> hostIdList = hostLogs.stream()
                 .map(ExecHostLogDO::getHostId)
                 .collect(Collectors.toList());
-        Map<Long, HostConfigVO> configMap = hostConfigService.getHostConfigList(hostIdList, HostConfigTypeEnum.SSH.getType())
-                .stream()
-                .collect(Collectors.toMap(HostConfigVO::getId, Function.identity()));
+        Map<Long, HostSshConfigModel> configMap = hostConfigService.getHostConfigMap(hostIdList, HostConfigTypeEnum.SSH);
         // 生成缓存
         String token = UUIds.random19();
         String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
@@ -381,8 +378,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                                 .hostId(s.getHostId())
                                 .path(s.getLogPath())
                                 .charset(Optional.ofNullable(configMap.get(s.getHostId()))
-                                        .map(HostConfigVO::getConfig)
-                                        .map(c -> c.get(FieldConst.CHARSET))
+                                        .map(HostSshConfigModel::getCharset)
                                         .map(Objects1::toString)
                                         .orElse(Const.UTF_8))
                                 .build())
@@ -433,7 +429,7 @@ public class ExecLogServiceImpl implements ExecLogService {
             }
             // 响应错误信息
             try {
-                Servlets.transfer(response, Strings.bytes(errorMessage), Const.ERROR_LOG);
+                Servlets.transfer(response, Strings.bytes(errorMessage), PathConst.ERROR_LOG);
             } catch (Exception ex) {
                 log.error("ExecLogService.downloadLogFile transfer-error id: {}", id, ex);
             }

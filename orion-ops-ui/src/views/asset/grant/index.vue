@@ -26,8 +26,8 @@
 
 <script lang="ts" setup>
   import { onBeforeMount, onUnmounted, ref } from 'vue';
-  import { useCacheStore } from '@/store';
-  import { GrantTabs } from './types/const';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { GrantTabs, dictKeys } from './types/const';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
@@ -35,9 +35,10 @@
 
   const activeKey = ref();
 
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    cacheStore.reset('users', 'roles', 'hosts', 'hostGroups', 'hostKeys', 'hostIdentities');
+  // 加载字典项
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
   });
 
   // 跳转到指定页
@@ -46,6 +47,11 @@
     if (key) {
       activeKey.value = Number(key);
     }
+  });
+
+  // 卸载时清除 cache
+  onUnmounted(() => {
+    cacheStore.reset('users', 'roles', 'hosts', 'hostGroups', 'hostKeys', 'hostIdentities');
   });
 
 </script>

@@ -30,12 +30,12 @@
 
 <script lang="ts">
   export default {
-    name: 'colorSettingForm'
+    name: 'labelSettingForm'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ColorExtraSettingModel } from '../../../types/terminal.type';
+  import type { LabelExtraSettingModel } from '../../../types/terminal.type';
   import { onMounted, ref } from 'vue';
   import { terminalTabColorKey } from '../../../types/terminal.const';
   import { getHostExtraItem } from '@/api/asset/host-extra';
@@ -48,13 +48,13 @@
 
   const { toOptions } = useDictStore();
 
-  const formModel = ref<ColorExtraSettingModel>({
+  const formModel = ref<LabelExtraSettingModel>({
     color: ''
   });
 
   // 渲染表单
   const renderForm = async () => {
-    const { data } = await getHostExtraItem<ColorExtraSettingModel>({ hostId: props.hostId, item: props.item });
+    const { data } = await getHostExtraItem<LabelExtraSettingModel>({ hostId: props.hostId, item: props.item });
     formModel.value = data;
   };
 
