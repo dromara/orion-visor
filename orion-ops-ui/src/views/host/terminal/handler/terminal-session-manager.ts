@@ -7,6 +7,7 @@ import type {
   TerminalTabItem,
   XtermDomRef
 } from '../types/terminal.type';
+import type { ISshSession } from '../types/terminal.type';
 import { sleep } from '@/utils';
 import { InputProtocol } from '../types/terminal.protocol';
 import { PanelSessionType } from '../types/terminal.const';
@@ -34,8 +35,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   }
 
   // 打开 ssh 会话
-  async openSsh(tab: TerminalTabItem,
-                domRef: XtermDomRef) {
+  async openSsh(tab: TerminalTabItem, domRef: XtermDomRef) {
     const sessionId = tab.key;
     const hostId = tab.hostId as number;
     // 初始化客户端
@@ -59,6 +59,25 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       connectType: PanelSessionType.SSH.type
     });
     return session;
+  }
+
+  // 重新打开 ssh 会话
+  async reOpenSsh(sessionId: string, newSessionId: string): Promise<void> {
+    console.log('sessionId', sessionId, 'newSessionId', newSessionId);
+    // 初始化客户端
+    await this.initChannel();
+    // 获取会话并且重新设置 sessionId
+    const session = this.sessions[sessionId] as ISshSession;
+    session.sessionId = newSessionId;
+    this.sessions[sessionId] = undefined as unknown as ISshSession;
+    this.sessions[newSessionId] = session;
+    console.log('ckckck');
+    // 发送会话初始化请求
+    this.channel.send(InputProtocol.CHECK, {
+      sessionId: newSessionId,
+      hostId: session.hostId,
+      connectType: PanelSessionType.SSH.type
+    });
   }
 
   // 打开 sftp 会话

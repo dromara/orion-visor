@@ -112,6 +112,8 @@ export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem
 
   // 获取当前 tab
   getCurrentTab: () => T | undefined;
+  // 获取 tab
+  getTab: (key: string) => T;
   // 点击 tab
   clickTab: (key: string) => void;
   // 删除 tab
@@ -151,6 +153,8 @@ export interface ITerminalPanelManager<T extends TerminalPanelTabItem = Terminal
 export interface ITerminalSessionManager {
   // 打开 ssh 会话
   openSsh: (tab: TerminalTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
+  // 重新打开 ssh 会话
+  reOpenSsh: (sessionId: string, newSessionId: string) => Promise<void>;
   // 打开 sftp 会话
   openSftp: (tab: TerminalTabItem, resolver: ISftpSessionResolver) => Promise<ISftpSession>;
   // 获取终端会话

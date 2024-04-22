@@ -25,6 +25,11 @@ export default class TerminalTabManager<T extends TerminalTabItem = TerminalTabI
     return this.items.find(s => s.key === this.active);
   }
 
+  // 获取 tab
+  getTab(key: string): T {
+    return this.items.find(s => s.key === key) as T;
+  }
+
   // 点击 tab
   clickTab(key: string): void {
     this.active = key;

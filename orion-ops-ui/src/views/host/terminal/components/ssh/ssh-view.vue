@@ -137,6 +137,7 @@
 
   // 初始化会话
   onMounted(async () => {
+    console.log('onMounted', props.tab.key);
     // 创建终端处理器
     session.value = await sessionManager.openSsh(props.tab, {
       el: terminalRef.value,

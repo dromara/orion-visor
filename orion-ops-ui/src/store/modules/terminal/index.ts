@@ -135,7 +135,7 @@ export default defineStore('terminal', {
     },
 
     // 打开会话
-    openSession(record: HostQueryResponse, session: PanelSessionTab, panelIndex: number = 0) {
+    openSession(record: HostQueryResponse, type: PanelSessionTab, panelIndex: number = 0) {
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([record.id, ...this.hosts.latestHosts])];
       // 切换到终端面板页面
@@ -154,13 +154,29 @@ export default defineStore('terminal', {
       this.panelManager.getPanel(panelIndex).openTab({
         key: nextId(10),
         seq: nextSeq,
-        title: `(${nextSeq})  ${record.alias || record.name}`,
+        title: `(${nextSeq}) ${record.alias || record.name}`,
         hostId: record.id,
         address: record.address,
         color: record.color,
-        icon: session.icon,
-        type: session.type
+        icon: type.icon,
+        type: type.type
       });
+    },
+
+    // 重新打开 terminal 会话
+    async reOpenTerminal(hostId: number, sessionId: string, panelIndex: number = 0) {
+      console.log('rec');
+      // 添加到最近连接
+      this.hosts.latestHosts = [...new Set([hostId, ...this.hosts.latestHosts])];
+      // 切换到终端面板页面
+      this.tabManager.openTab(TerminalTabs.TERMINAL_PANEL);
+      // 获取当前面板并且分配新的 sessionId
+      const panel = this.panelManager.getPanel(panelIndex);
+      const tab = panel.getTab(sessionId);
+      const newSessionId = nextId(10);
+      tab.key = newSessionId;
+      // 重新打开 ssh
+      await this.sessionManager.reOpenSsh(sessionId, newSessionId);
     },
 
     // 复制并且打开会话

@@ -16,7 +16,7 @@
           </span>
         </a-space>
       </template>
-      <!-- 终端面板 -->
+      <!-- 终端面板 FIXME -->
       <a-tab-pane v-for="tab in panel.items"
                   :key="tab.key">
         <!-- 标题 -->
@@ -54,8 +54,8 @@
   import SftpView from '../sftp/sftp-view.vue';
 
   const props = defineProps<{
-    index: number,
-    panel: ITerminalTabManager<TerminalPanelTabItem>,
+    index: number;
+    panel: ITerminalTabManager<TerminalPanelTabItem>;
   }>();
 
   const emits = defineEmits(['close', 'openNewConnect']);

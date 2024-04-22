@@ -85,6 +85,7 @@ export default class SshSession implements ISshSession {
       if (e.type !== 'keydown') {
         return true;
       }
+      console.log(e);
       // 检测是否为内置快捷键
       if (this.handler.checkIsBuiltin(e)) {
         return true;
@@ -93,6 +94,13 @@ export default class SshSession implements ISshSession {
       if (this.handler.checkPreventDefault(e)) {
         e.preventDefault();
       }
+      if (e.key === 'Enter') {
+        console.log("enter start");
+        // TODO 回车 重新连接
+        useTerminalStore().reOpenTerminal(this.hostId, this.sessionId);
+        console.log("enter end");
+      }
+      // 自定义快捷键
       if (preference.shortcutSetting.enabled && preference.shortcutSetting.keys.length) {
         // 获取触发的快捷键
         const shortcutKey = this.handler.getShortcutKey(e);

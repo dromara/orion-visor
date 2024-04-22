@@ -91,7 +91,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     }
     if (session instanceof SshSession) {
       // ssh 拼接关闭消息
-      session.write(`\r\n[91m${msg || ''}[0m`);
+      session.write(`\r\n\r\n[91m${msg || ''}[0m\r\n\r\n`);
       // 设置状态
       session.status = TerminalStatus.CLOSED;
       session.connected = false;
