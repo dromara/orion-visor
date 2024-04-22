@@ -147,6 +147,8 @@ INSERT INTO `dict_key` VALUES (33, 'sftpOperatorType', 'STRING', '[]', 'SFTP 操
 INSERT INTO `dict_key` VALUES (34, 'execStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"STRING\"}]', '批量执行状态', '2024-03-13 15:08:43', '2024-03-13 15:39:46', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (35, 'execHostStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"execColor\", \"type\": \"COLOR\"}]', '主机执行状态', '2024-03-13 15:09:10', '2024-03-17 20:31:07', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (36, 'execJobStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '计划任务状态', '2024-04-10 16:18:07', '2024-04-11 14:25:05', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (37, 'hostIdentityType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机身份类型', '2024-04-16 17:15:31', '2024-04-16 17:15:31', '2', '2', 0);
+INSERT INTO `dict_key` VALUES (38, 'hostSshOsType', 'STRING', '[]', '主机系统类型', '2024-04-16 22:18:59', '2024-04-16 22:30:59', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -362,3 +364,7 @@ INSERT INTO `dict_value` VALUES (266, 2, 'operatorLogType', 'exec-job-log:delete
 INSERT INTO `dict_value` VALUES (267, 2, 'operatorLogType', 'exec-job-log:download', '下载计划任务日志', '{}', 40, '2024-03-18 17:25:44', '2024-04-11 23:38:17', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (268, 2, 'operatorLogType', 'exec-job-log:interrupt', '中断计划任务', '{}', 50, '2024-03-13 15:08:43', '2024-04-12 15:23:51', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (269, 2, 'operatorLogType', 'exec-job-log:interrupt-host', '中断计划任务主机', '{}', 60, '2024-03-13 15:08:43', '2024-04-12 15:23:42', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (270, 37, 'hostIdentityType', 'PASSWORD', '密码', '{\"color\": \"purple\"}', 10, '2024-04-16 17:17:49', '2024-04-16 17:17:49', '2', '2', 0);
+INSERT INTO `dict_value` VALUES (271, 37, 'hostIdentityType', 'KEY', '秘钥', '{\"color\": \"arcoblue\"}', 20, '2024-04-16 17:18:12', '2024-04-16 17:18:12', '2', '2', 0);
+INSERT INTO `dict_value` VALUES (272, 38, 'hostSshOsType', 'LINUX', 'linux', '{}', 10, '2024-04-16 22:19:25', '2024-04-16 22:30:59', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (273, 38, 'hostSshOsType', 'WINDOWS', 'windows', '{}', 20, '2024-04-16 22:19:39', '2024-04-16 22:30:59', '1', '1', 0);
