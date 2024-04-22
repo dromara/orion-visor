@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   orion-ops-pro:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro:1.0.5
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro:1.0.6
     ports:
       - 1081:80
     environment:
@@ -13,6 +13,7 @@ services:
       - SECRET_KEY=uQeacXV8b3isvKLK
     volumes:
       - /data/orion-ops-pro-space/docker-volumes/orion-ops-pro/logs:/root/orion/logs/orion-ops-pro
+      - /data/orion-ops-pro-space/docker-volumes/orion-ops-pro/app:/root/orion/orion-ops-pro
     depends_on:
       - orion-ops-pro-db
       - orion-ops-pro-redis

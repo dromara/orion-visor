@@ -61,7 +61,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         FavoriteDO record = FavoriteConvert.MAPPER.to(request);
         record.setUserId(userId);
         // 插入
-        int effect = favoriteDAO.insert(record);
+        favoriteDAO.insert(record);
         // 删除缓存
         RedisLists.delete(FavoriteCacheKeyDefine.FAVORITE.format(type, userId));
         return record.getId();

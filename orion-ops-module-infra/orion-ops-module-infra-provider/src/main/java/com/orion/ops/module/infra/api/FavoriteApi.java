@@ -30,7 +30,7 @@ public interface FavoriteApi {
      * @param userId userId
      * @return relIdList
      */
-    Future<List<Long>> getFavoriteRelIdListAsync(FavoriteTypeEnum type, java.lang.Long userId);
+    Future<List<Long>> getFavoriteRelIdListAsync(FavoriteTypeEnum type, Long userId);
 
     /**
      * 通过 relId 删除收藏

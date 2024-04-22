@@ -16,11 +16,11 @@ import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.SystemUserDAO;
 import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
+import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.ops.module.infra.entity.dto.LoginTokenIdentityDTO;
@@ -240,7 +240,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         // 刷新登录失败缓存
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
-        Long failedLoginCount = redisTemplate.opsForValue().increment(failedCountKey);
+        redisTemplate.opsForValue().increment(failedCountKey);
         RedisUtils.setExpire(failedCountKey, appAuthenticationConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
         return false;
     }
