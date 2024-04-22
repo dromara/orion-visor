@@ -10,6 +10,7 @@ import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
@@ -405,6 +406,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public void downloadLogFile(Long id, String source, HttpServletResponse response) {
         log.info("ExecLogService.downloadLogFile id: {}, source: {}", id, source);
+        InputStream in = null;
         try {
             // 获取主机执行日志
             ExecHostLogDO hostLog = execHostLogDAO.selectById(id);
@@ -418,11 +420,12 @@ public class ExecLogServiceImpl implements ExecLogService {
             OperatorLogs.add(OperatorLogs.HOST_ID, hostLog.getHostId());
             OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
             // 获取日志
-            InputStream in = logsFileClient.getContentInputStream(logPath);
+            in = logsFileClient.getContentInputStream(logPath);
             // 返回
             Servlets.transfer(response, in, Files1.getFileName(logPath));
         } catch (Exception e) {
             log.error("ExecLogService.downloadLogFile error id: {}", id, e);
+            Streams.close(in);
             String errorMessage = ErrorMessage.FILE_READ_ERROR;
             if (e instanceof InvalidArgumentException) {
                 errorMessage = e.getMessage();
