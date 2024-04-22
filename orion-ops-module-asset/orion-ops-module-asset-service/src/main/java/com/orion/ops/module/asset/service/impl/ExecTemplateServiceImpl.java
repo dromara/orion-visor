@@ -3,9 +3,10 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.utils.Booleans;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
+import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.ExecTemplateConvert;
 import com.orion.ops.module.asset.dao.ExecTemplateDAO;
 import com.orion.ops.module.asset.entity.domain.ExecTemplateDO;
@@ -13,7 +14,9 @@ import com.orion.ops.module.asset.entity.request.exec.ExecTemplateCreateRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.ExecTemplateVO;
+import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.enums.ScriptExecEnum;
+import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
 import com.orion.ops.module.asset.service.ExecTemplateHostService;
 import com.orion.ops.module.asset.service.ExecTemplateService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 执行模板 服务实现类
@@ -41,6 +42,9 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
 
     @Resource
     private ExecTemplateHostService execTemplateHostService;
+
+    @Resource
+    private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @Override
     public Long createExecTemplate(ExecTemplateCreateRequest request) {
@@ -93,27 +97,32 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     }
 
     @Override
+    public ExecTemplateVO getExecTemplateWithAuthorized(Long id) {
+        // 查询模板
+        ExecTemplateDO record = execTemplateDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        // 转换
+        ExecTemplateVO template = ExecTemplateConvert.MAPPER.to(record);
+        // 查询模板主机
+        Set<Long> hostIdList = execTemplateHostService.getHostByTemplateId(id);
+        if (Lists.isEmpty(hostIdList)) {
+            return template;
+        }
+        // 过滤认证的主机
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
+        hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
+        template.setHostIdList(hostIdList);
+        return template;
+    }
+
+    @Override
     public DataGrid<ExecTemplateVO> getExecTemplatePage(ExecTemplateQueryRequest request) {
         // 条件
         LambdaQueryWrapper<ExecTemplateDO> wrapper = this.buildQueryWrapper(request);
         // 查询模板
-        DataGrid<ExecTemplateVO> templates = execTemplateDAO.of(wrapper)
+        return execTemplateDAO.of(wrapper)
                 .page(request)
                 .dataGrid(ExecTemplateConvert.MAPPER::to);
-        if (templates.isEmpty()) {
-            return templates;
-        }
-        // 查询模板主机
-        if (Booleans.isTrue(request.getQueryHost())) {
-            List<Long> idList = templates.stream()
-                    .map(ExecTemplateVO::getId)
-                    .collect(Collectors.toList());
-            Map<Long, Set<Long>> templateHosts = execTemplateHostService.getHostByTemplateIdList(idList);
-            for (ExecTemplateVO template : templates) {
-                template.setHostIdList(templateHosts.get(template.getId()));
-            }
-        }
-        return templates;
     }
 
     @Override

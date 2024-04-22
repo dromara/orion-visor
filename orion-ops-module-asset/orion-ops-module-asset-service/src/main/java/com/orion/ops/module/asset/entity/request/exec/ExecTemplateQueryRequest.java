@@ -31,7 +31,4 @@ public class ExecTemplateQueryRequest extends PageRequest {
     @Schema(description = "命令")
     private String command;
 
-    @Schema(description = "是否查询模板主机")
-    private Boolean queryHost;
-
 }

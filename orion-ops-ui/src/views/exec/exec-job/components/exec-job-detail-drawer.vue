@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="计划任务详情"
-            width="60%"
+            width="66%"
             :mask-closable="false"
             :unmount-on-close="true"
             ok-text="关闭"
@@ -146,6 +146,7 @@
   }
 
   .command-editor {
-    height: calc(100vh - 378px);
+    height: calc(100vh - 384px);
   }
+
 </style>

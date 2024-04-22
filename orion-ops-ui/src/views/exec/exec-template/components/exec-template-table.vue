@@ -79,14 +79,14 @@
           <a-button v-permission="['asset:exec-command:exec']"
                     type="text"
                     size="mini"
-                    @click="emits('openExec', record)">
+                    @click="emits('openExec', record.id)">
             执行
           </a-button>
           <!-- 修改 -->
           <a-button v-permission="['asset:exec-template:update']"
                     type="text"
                     size="mini"
-                    @click="emits('openUpdate', record)">
+                    @click="emits('openUpdate', record.id)">
             修改
           </a-button>
           <!-- 删除 -->

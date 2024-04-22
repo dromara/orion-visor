@@ -1,7 +1,8 @@
 <template>
   <a-drawer v-model:visible="visible"
-            width="60%"
+            width="66%"
             :title="title"
+            :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -16,7 +17,7 @@
               :rules="formRules">
         <a-row :gutter="16">
           <!-- 模板名称 -->
-          <a-col :span="12">
+          <a-col :span="16">
             <a-form-item field="name"
                          label="模板名称"
                          :hide-asterisk="true">
@@ -26,7 +27,7 @@
             </a-form-item>
           </a-col>
           <!-- 超时时间 -->
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-item field="timeout"
                          label="超时时间"
                          :hide-asterisk="true">
@@ -41,8 +42,24 @@
               </a-input-number>
             </a-form-item>
           </a-col>
+          <!-- 默认主机 -->
+          <a-col :span="16">
+            <a-form-item field="hostIdList"
+                         label="默认主机"
+                         :hide-asterisk="true">
+              <div class="selected-host">
+                <!-- 已选择数量 -->
+                <span class="usn" v-if="formModel.hostIdList?.length">
+                  已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
+                </span>
+                <span class="usn pointer span-blue" @click="openSelectHost">
+                  {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
+                </span>
+              </div>
+            </a-form-item>
+          </a-col>
           <!-- 脚本执行 -->
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-item field="scriptExec"
                          label="脚本执行"
                          :hide-asterisk="true">
@@ -132,7 +149,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { createExecTemplate, updateExecTemplate } from '@/api/exec/exec-template';
+  import { createExecTemplate, getExecTemplateWithAuthorized, updateExecTemplate } from '@/api/exec/exec-template';
   import { Message } from '@arco-design/web-vue';
   import { EnabledStatus } from '@/types/const';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
@@ -151,6 +168,7 @@
       timeout: 0,
       scriptExec: EnabledStatus.DISABLED,
       parameterSchema: undefined,
+      hostIdList: [],
     };
   };
 
@@ -158,7 +176,7 @@
   const formModel = ref<ExecTemplateUpdateRequest>({});
   const parameter = ref<Array<TemplateParam>>([]);
 
-  const emits = defineEmits(['added', 'updated']);
+  const emits = defineEmits(['added', 'updated', 'openHost']);
 
   // 打开新增
   const openAdd = () => {
@@ -169,11 +187,20 @@
   };
 
   // 打开修改
-  const openUpdate = (record: any) => {
+  const openUpdate = async (id: number) => {
     title.value = '修改执行模板';
     isAddHandle.value = false;
-    renderForm({ ...defaultForm(), ...record });
+    renderForm({ ...defaultForm() });
     setVisible(true);
+    setLoading(true);
+    try {
+      // 查询模板信息
+      const { data } = await getExecTemplateWithAuthorized(id);
+      renderForm({ ...defaultForm(), ...data });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 渲染表单
@@ -186,7 +213,17 @@
     }
   };
 
-  defineExpose({ openAdd, openUpdate });
+  // 设置选中主机
+  const setSelectedHost = (hosts: Array<number>) => {
+    formModel.value.hostIdList = hosts;
+  };
+
+  defineExpose({ openAdd, openUpdate, setSelectedHost });
+
+  // 打开选择主机
+  const openSelectHost = () => {
+    emits('openHost', formModel.value.hostIdList || []);
+  };
 
   // 添加参数
   const addParameter = () => {
@@ -251,6 +288,30 @@
 </script>
 
 <style lang="less" scoped>
+
+  .selected-host {
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-fill-2);
+    transition: all 0.3s;
+
+    &-count {
+      font-size: 16px;
+      font-weight: 600;
+      display: inline-block;
+      margin: 0 6px;
+    }
+
+    &:hover {
+      background: var(--color-fill-3);
+    }
+  }
+
   .parameter-form-item {
     user-select: none;
     margin-top: 4px;
@@ -316,7 +377,7 @@
 
   .command-editor {
     width: 100%;
-    height: 62vh;
+    height: 55vh;
   }
 
 </style>
