@@ -35,11 +35,12 @@ services:
       - /data/orion-ops-pro-space/docker-volumes/mysql/etc-mysql:/etc/mysql
   orion-ops-pro-redis:
     image: redis:6.0.16-alpine
-    command: redis-server --requirepass Data@123456
+    command: redis-server --appendonly yes --requirepass Data@123456
     ports:
       - 6380:6379
     volumes:
       - /data/orion-ops-pro-space/docker-volumes/redis/data:/data
+      - /data/orion-ops-pro-space/docker-volumes/redis/redis.conf:/usr/local/etc/redis/redis.conf
   orion-ops-pro-adminer:
     image: adminer
     ports:

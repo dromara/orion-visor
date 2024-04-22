@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 执行模板 视图响应对象
@@ -54,5 +55,8 @@ public class ExecTemplateVO implements Serializable {
 
     @Schema(description = "修改人")
     private String updater;
+
+    @Schema(description = "模板主机")
+    private Set<Long> hostIdList;
 
 }

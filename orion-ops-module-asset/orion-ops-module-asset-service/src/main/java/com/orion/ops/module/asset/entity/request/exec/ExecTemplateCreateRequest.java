@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 执行模板 创建请求对象
@@ -50,5 +51,8 @@ public class ExecTemplateCreateRequest implements Serializable {
 
     @Schema(description = "参数定义")
     private String parameterSchema;
+
+    @Schema(description = "模板主机")
+    private List<Long> hostIdList;
 
 }

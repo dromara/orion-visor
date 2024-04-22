@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.Booleans;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.convert.ExecTemplateConvert;
@@ -13,11 +14,16 @@ import com.orion.ops.module.asset.entity.request.exec.ExecTemplateQueryRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.ExecTemplateVO;
 import com.orion.ops.module.asset.enums.ScriptExecEnum;
+import com.orion.ops.module.asset.service.ExecTemplateHostService;
 import com.orion.ops.module.asset.service.ExecTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 执行模板 服务实现类
@@ -33,6 +39,9 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     @Resource
     private ExecTemplateDAO execTemplateDAO;
 
+    @Resource
+    private ExecTemplateHostService execTemplateHostService;
+
     @Override
     public Long createExecTemplate(ExecTemplateCreateRequest request) {
         log.info("ExecTemplateService-createExecTemplate request: {}", JSON.toJSONString(request));
@@ -41,9 +50,11 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         ExecTemplateDO record = ExecTemplateConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkExecTemplatePresent(record);
-        // 插入
+        // 插入模板
         int effect = execTemplateDAO.insert(record);
         Long id = record.getId();
+        // 修改模板主机
+        execTemplateHostService.setTemplateHost(id, request.getHostIdList());
         log.info("ExecTemplateService-createExecTemplate id: {}, effect: {}", id, effect);
         return id;
     }
@@ -60,29 +71,49 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         ExecTemplateDO updateRecord = ExecTemplateConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkExecTemplatePresent(updateRecord);
-        // 更新
+        // 更新模板
         int effect = execTemplateDAO.updateById(updateRecord);
+        // 修改模板主机
+        execTemplateHostService.setTemplateHost(id, request.getHostIdList());
         log.info("ExecTemplateService-updateExecTemplateById effect: {}", effect);
         return effect;
     }
 
     @Override
     public ExecTemplateVO getExecTemplateById(Long id) {
-        // 查询
+        // 查询模板
         ExecTemplateDO record = execTemplateDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
-        return ExecTemplateConvert.MAPPER.to(record);
+        ExecTemplateVO template = ExecTemplateConvert.MAPPER.to(record);
+        // 查询模板主机
+        Set<Long> hosts = execTemplateHostService.getHostByTemplateId(id);
+        template.setHostIdList(hosts);
+        return template;
     }
 
     @Override
     public DataGrid<ExecTemplateVO> getExecTemplatePage(ExecTemplateQueryRequest request) {
         // 条件
         LambdaQueryWrapper<ExecTemplateDO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return execTemplateDAO.of(wrapper)
+        // 查询模板
+        DataGrid<ExecTemplateVO> templates = execTemplateDAO.of(wrapper)
                 .page(request)
                 .dataGrid(ExecTemplateConvert.MAPPER::to);
+        if (templates.isEmpty()) {
+            return templates;
+        }
+        // 查询模板主机
+        if (Booleans.isTrue(request.getQueryHost())) {
+            List<Long> idList = templates.stream()
+                    .map(ExecTemplateVO::getId)
+                    .collect(Collectors.toList());
+            Map<Long, Set<Long>> templateHosts = execTemplateHostService.getHostByTemplateIdList(idList);
+            for (ExecTemplateVO template : templates) {
+                template.setHostIdList(templateHosts.get(template.getId()));
+            }
+        }
+        return templates;
     }
 
     @Override
@@ -91,9 +122,11 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         // 检查数据是否存在
         ExecTemplateDO record = execTemplateDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 删除
+        // 删除模板
         int effect = execTemplateDAO.deleteById(id);
         log.info("ExecTemplateService-deleteExecTemplateById id: {}, effect: {}", id, effect);
+        // 删除模板主机
+        effect += execTemplateHostService.deleteByTemplateId(id);
         return effect;
     }
 
