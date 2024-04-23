@@ -42,4 +42,8 @@ public class DataGroupRelDO extends BaseDO {
     @TableField("type")
     private String type;
 
+    @Schema(description = "用户id")
+    @TableField("user_id")
+    private Long userId;
+
 }

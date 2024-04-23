@@ -1,8 +1,7 @@
 package com.orion.ops.module.infra.api.impl;
 
-import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.Valid;
-import com.orion.ops.module.infra.api.DataGroupRelApi;
+import com.orion.ops.module.infra.api.DataGroupUserRelApi;
 import com.orion.ops.module.infra.convert.DataGroupRelProviderConvert;
 import com.orion.ops.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupRelCacheDTO;
@@ -32,40 +31,34 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class DataGroupRelApiImpl implements DataGroupRelApi {
+public class DataGroupUserRelApiImpl implements DataGroupUserRelApi {
 
     @Resource
     private DataGroupRelService dataGroupRelService;
 
     @Override
-    public void updateGroupRel(Long groupId, List<Long> relIdList) {
-        Valid.notNull(groupId);
-        dataGroupRelService.updateGroupRel(groupId, relIdList);
-    }
-
-    @Override
-    public void updateRelGroup(DataGroupTypeEnum type, List<Long> groupIdList, Long relId) {
+    public void updateGroupRel(DataGroupTypeEnum type, Long userId, List<Long> groupIdList, Long relId) {
         Valid.notNull(relId);
-        dataGroupRelService.updateRelGroup(type.name(), Const.SYSTEM_USER_ID, groupIdList, relId);
+        dataGroupRelService.updateRelGroup(type.name(), userId, groupIdList, relId);
     }
 
     @Override
-    public void addGroupRel(DataGroupTypeEnum type, Long groupId, Long relId) {
+    public void addGroupRel(DataGroupTypeEnum type, Long userId, Long groupId, Long relId) {
         Valid.notNull(groupId);
         Valid.notNull(relId);
-        dataGroupRelService.addGroupRel(type.name(), groupId, Const.SYSTEM_USER_ID, relId);
+        dataGroupRelService.addGroupRel(type.name(), userId, groupId, relId);
     }
 
     @Override
-    public void addGroupRel(DataGroupTypeEnum type, List<DataGroupRelCreateDTO> list) {
+    public void addGroupRel(DataGroupTypeEnum type, Long userId, List<DataGroupRelCreateDTO> list) {
         Valid.valid(list);
         List<DataGroupRelCreateRequest> rows = DataGroupRelProviderConvert.MAPPER.toList(list);
-        dataGroupRelService.addGroupRel(type.name(), Const.SYSTEM_USER_ID, rows);
+        dataGroupRelService.addGroupRel(type.name(), userId, rows);
     }
 
     @Override
-    public Map<Long, Set<Long>> getGroupRelList(DataGroupTypeEnum type) {
-        List<DataGroupRelCacheDTO> rows = dataGroupRelService.getGroupRelListByCache(type.name(), Const.SYSTEM_USER_ID);
+    public Map<Long, Set<Long>> getGroupRelList(DataGroupTypeEnum type, Long userId) {
+        List<DataGroupRelCacheDTO> rows = dataGroupRelService.getGroupRelListByCache(type.name(), userId);
         return rows.stream().collect(
                 Collectors.groupingBy(
                         DataGroupRelCacheDTO::getGroupId,
@@ -74,15 +67,15 @@ public class DataGroupRelApiImpl implements DataGroupRelApi {
     }
 
     @Override
-    public Set<Long> getGroupRelIdByGroupId(DataGroupTypeEnum type, Long groupId) {
+    public Set<Long> getGroupRelIdByGroupId(DataGroupTypeEnum type, Long userId, Long groupId) {
         List<Long> rows = dataGroupRelService.getGroupRelIdListByCache(type.name(), groupId);
         return new HashSet<>(rows);
     }
 
     @Override
     @Async("asyncExecutor")
-    public Future<Set<Long>> getGroupIdByRelIdAsync(DataGroupTypeEnum type, Long relId) {
-        Set<Long> groupIdList = dataGroupRelService.getGroupRelByRelId(type.name(), Const.SYSTEM_USER_ID, relId)
+    public Future<Set<Long>> getGroupIdByRelIdAsync(DataGroupTypeEnum type, Long userId, Long relId) {
+        Set<Long> groupIdList = dataGroupRelService.getGroupRelByRelId(type.name(), userId, relId)
                 .stream()
                 .map(DataGroupRelDO::getGroupId)
                 .collect(Collectors.toSet());
@@ -90,18 +83,18 @@ public class DataGroupRelApiImpl implements DataGroupRelApi {
     }
 
     @Override
-    public Integer deleteByRelId(DataGroupTypeEnum type, Long relId) {
-        return dataGroupRelService.deleteByRelId(type.name(), Const.SYSTEM_USER_ID, relId);
+    public Integer deleteByRelId(DataGroupTypeEnum type, Long userId, Long relId) {
+        return dataGroupRelService.deleteByRelId(type.name(), userId, relId);
     }
 
     @Override
-    public Integer deleteByRelIdList(DataGroupTypeEnum type, List<Long> relIdList) {
-        return dataGroupRelService.deleteByRelIdList(type.name(), Const.SYSTEM_USER_ID, relIdList);
+    public Integer deleteByRelIdList(DataGroupTypeEnum type, Long userId, List<Long> relIdList) {
+        return dataGroupRelService.deleteByRelIdList(type.name(), userId, relIdList);
     }
 
     @Override
-    public Integer deleteByGroupIdList(DataGroupTypeEnum type, List<Long> groupIdList) {
-        return dataGroupRelService.deleteByGroupIdList(type.name(), Const.SYSTEM_USER_ID, groupIdList);
+    public Integer deleteByGroupIdList(DataGroupTypeEnum type, Long userId, List<Long> groupIdList) {
+        return dataGroupRelService.deleteByGroupIdList(type.name(), userId, groupIdList);
     }
 
 }

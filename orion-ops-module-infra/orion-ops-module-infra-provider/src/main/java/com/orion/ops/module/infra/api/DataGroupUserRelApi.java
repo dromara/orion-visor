@@ -9,64 +9,63 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * 数据分组关联 对外服务类
+ * 数据分组用户关联 对外服务类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023-11-7 18:44
  */
-public interface DataGroupRelApi {
-
-    /**
-     * 设置关联
-     *
-     * @param groupId   groupId
-     * @param relIdList relIdList
-     */
-    void updateGroupRel(Long groupId, List<Long> relIdList);
+public interface DataGroupUserRelApi {
 
     /**
      * 设置关联
      *
      * @param type        type
+     * @param userId      userId
      * @param groupIdList groupIdList
      * @param relId       relId
      */
-    void updateRelGroup(DataGroupTypeEnum type, List<Long> groupIdList, Long relId);
+    void updateGroupRel(DataGroupTypeEnum type, Long userId, List<Long> groupIdList, Long relId);
 
     /**
      * 添加关联
      *
+     * @param type    type
+     * @param userId  userId
      * @param groupId groupId
      * @param relId   relId
      */
-    void addGroupRel(DataGroupTypeEnum type, Long groupId, Long relId);
+    void addGroupRel(DataGroupTypeEnum type, Long userId, Long groupId, Long relId);
 
     /**
      * 批量添加关联
      *
-     * @param list list
+     * @param type   type
+     * @param userId userId
+     * @param list   list
      */
-    void addGroupRel(DataGroupTypeEnum type, List<DataGroupRelCreateDTO> list);
+    void addGroupRel(DataGroupTypeEnum type, Long userId, List<DataGroupRelCreateDTO> list);
 
     /**
      * 通过 type 查询 relId 缓存
      * <p>
      * groupId - relId
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
      * @return rows
      */
-    Map<Long, Set<Long>> getGroupRelList(DataGroupTypeEnum type);
+    Map<Long, Set<Long>> getGroupRelList(DataGroupTypeEnum type, Long userId);
 
     /**
      * 通过 groupId 查询 relId 缓存
      *
      * @param type    type
+     * @param userId  userId
      * @param groupId groupId
      * @return relId
      */
-    Set<Long> getGroupRelIdByGroupId(DataGroupTypeEnum type, Long groupId);
+    Set<Long> getGroupRelIdByGroupId(DataGroupTypeEnum type, Long userId, Long groupId);
 
     /**
      * 通过 relId 查询 groupId
@@ -75,33 +74,36 @@ public interface DataGroupRelApi {
      * @param relId relId
      * @return groupId
      */
-    Future<Set<Long>> getGroupIdByRelIdAsync(DataGroupTypeEnum type, Long relId);
+    Future<Set<Long>> getGroupIdByRelIdAsync(DataGroupTypeEnum type, Long userId, Long relId);
 
     /**
      * 删除数据分组关联
      *
-     * @param type  type
-     * @param relId relId
+     * @param type   type
+     * @param userId userId
+     * @param relId  relId
      * @return effect
      */
-    Integer deleteByRelId(DataGroupTypeEnum type, Long relId);
+    Integer deleteByRelId(DataGroupTypeEnum type, Long userId, Long relId);
 
     /**
      * 批量删除数据分组关联
      *
      * @param type      type
+     * @param userId    userId
      * @param relIdList relIdList
      * @return effect
      */
-    Integer deleteByRelIdList(DataGroupTypeEnum type, List<Long> relIdList);
+    Integer deleteByRelIdList(DataGroupTypeEnum type, Long userId, List<Long> relIdList);
 
     /**
      * 批量删除数据分组关联
      *
      * @param type        type
+     * @param userId      userId
      * @param groupIdList groupIdList
      * @return effect
      */
-    Integer deleteByGroupIdList(DataGroupTypeEnum type, List<Long> groupIdList);
+    Integer deleteByGroupIdList(DataGroupTypeEnum type, Long userId, List<Long> groupIdList);
 
 }

@@ -136,6 +136,7 @@
       return;
     }
     node.editable = true;
+    node.originTitle = node.title;
     nextTick(() => {
       renameInput.value?.focus();
     });
@@ -267,10 +268,17 @@
             }
           }
         }
+      } else {
+        // 修改为空则设置为之前的值
+        node.title = node.originTitle;
       }
       node.editable = false;
     }
-    node.modCount = 0;
+    // 重置 modCount
+    setTimeout(() => {
+      node.modCount = 0;
+      node.originTitle = undefined;
+    }, 50);
   };
 
   // 移动分组

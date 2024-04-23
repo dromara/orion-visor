@@ -55,6 +55,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         DataGroupDO group = dataGroupDAO.selectById(groupId);
         Valid.notNull(group, ErrorMessage.GROUP_ABSENT);
         String type = group.getType();
+        Long userId = group.getUserId();
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.GROUP_NAME, group.getName());
         if (Lists.isEmpty(relIdList)) {
@@ -76,15 +77,16 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                 dataGroupRelDAO.deleteBatchIds(deleteIdList);
             }
             // 查询新增的部分
-            List<Long> persetRelIdList = records.stream()
+            List<Long> presentRelIdList = records.stream()
                     .map(DataGroupRelDO::getRelId)
                     .collect(Collectors.toList());
-            relIdList.removeIf(persetRelIdList::contains);
+            relIdList.removeIf(presentRelIdList::contains);
             if (!relIdList.isEmpty()) {
                 List<DataGroupRelDO> insertRecords = relIdList.stream()
                         .map(s -> DataGroupRelDO.builder()
-                                .groupId(groupId)
                                 .type(type)
+                                .userId(userId)
+                                .groupId(groupId)
                                 .relId(s)
                                 .build())
                         .collect(Collectors.toList());
@@ -92,45 +94,46 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
             }
         }
         // 删除缓存
-        this.deleteCache(type, Lists.of(groupId));
+        this.deleteCache(type, userId, Lists.singleton(groupId));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateGroupRel(String type, List<Long> groupIdList, Long relId) {
+    public void updateRelGroup(String type, Long userId, List<Long> groupIdList, Long relId) {
         Valid.notNull(relId);
         // 删除引用
-        this.deleteByRelId(type, relId);
+        this.deleteByRelId(type, userId, relId);
         // 插入引用
         if (!Lists.isEmpty(groupIdList)) {
             List<DataGroupRelDO> relList = groupIdList.stream()
                     .map(s -> DataGroupRelDO.builder()
                             .type(type)
+                            .userId(userId)
                             .groupId(s)
                             .relId(relId)
                             .build())
                     .collect(Collectors.toList());
             dataGroupRelDAO.insertBatch(relList);
             // 删除缓存
-            this.deleteCache(type, groupIdList);
+            this.deleteCache(type, userId, groupIdList);
         }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addGroupRel(Long groupId, Long relId) {
+    public void addGroupRel(String type, Long userId, Long groupId, Long relId) {
         DataGroupRelCreateRequest record = DataGroupRelCreateRequest.builder()
                 .groupId(Valid.notNull(groupId))
                 .relId(Valid.notNull(relId))
                 .build();
         // 插入
         SpringHolder.getBean(DataGroupRelService.class)
-                .addGroupRel(Lists.singleton(record));
+                .addGroupRel(type, userId, Lists.singleton(record));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addGroupRel(List<DataGroupRelCreateRequest> list) {
+    public void addGroupRel(String type, Long userId, List<DataGroupRelCreateRequest> list) {
         if (Lists.isEmpty(list)) {
             return;
         }
@@ -140,7 +143,6 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         // 查询分组信息
         List<DataGroupDO> groups = dataGroupDAO.selectBatchIds(groupMapping.keySet());
         Valid.eq(groups.size(), groupMapping.size(), ErrorMessage.GROUP_ABSENT);
-        String type = groups.get(0).getType();
         // 查询关联是否存在
         groupMapping.forEach((k, v) -> {
             List<Long> relIdList = v.stream()
@@ -167,18 +169,19 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
             v.forEach(s -> records.add(DataGroupRelDO.builder()
                     .groupId(k)
                     .type(type)
+                    .userId(userId)
                     .relId(s.getRelId())
                     .build()));
         });
         // 插入
         dataGroupRelDAO.insertBatch(records);
         // 删除缓存
-        this.deleteCache(type, groupMapping.keySet());
+        this.deleteCache(type, userId, groupMapping.keySet());
     }
 
     @Override
-    public List<DataGroupRelCacheDTO> getGroupRelListByCache(String type) {
-        String key = DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type);
+    public List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long userId) {
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type, userId);
         // 查询缓存
         List<DataGroupRelCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE);
         if (Lists.isEmpty(list)) {
@@ -186,6 +189,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
             list = dataGroupRelDAO.of()
                     .createWrapper()
                     .eq(DataGroupRelDO::getType, type)
+                    .eq(DataGroupRelDO::getUserId, userId)
                     .then()
                     .list(DataGroupRelConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
@@ -224,10 +228,11 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
     }
 
     @Override
-    public List<DataGroupRelDO> getGroupRelByRelId(String type, Long relId) {
+    public List<DataGroupRelDO> getGroupRelByRelId(String type, Long userId, Long relId) {
         return dataGroupRelDAO.of()
                 .createWrapper()
                 .eq(DataGroupRelDO::getType, type)
+                .eq(DataGroupRelDO::getUserId, userId)
                 .eq(DataGroupRelDO::getRelId, relId)
                 .then()
                 .list();
@@ -235,14 +240,14 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteByRelId(String type, Long relId) {
+    public Integer deleteByRelId(String type, Long userId, Long relId) {
         return SpringHolder.getBean(DataGroupRelService.class)
-                .deleteByRelIdList(type, Lists.singleton(relId));
+                .deleteByRelIdList(type, userId, Lists.singleton(relId));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteByRelIdList(String type, List<Long> relIdList) {
+    public Integer deleteByRelIdList(String type, Long userId, List<Long> relIdList) {
         if (Strings.isBlank(type) || Lists.isEmpty(relIdList)) {
             return 0;
         }
@@ -250,6 +255,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         List<DataGroupRelDO> rows = dataGroupRelDAO.of()
                 .createWrapper()
                 .eq(DataGroupRelDO::getType, type)
+                .eq(DataGroupRelDO::getUserId, userId)
                 .in(DataGroupRelDO::getRelId, relIdList)
                 .then()
                 .list();
@@ -268,17 +274,17 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
         // 删除数据库
         int effect = dataGroupRelDAO.deleteBatchIds(idList);
         // 删除缓存
-        this.deleteCache(type, groupIdList);
+        this.deleteCache(type, userId, groupIdList);
         return effect;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer deleteByGroupIdList(String type, List<Long> groupIdList) {
+    public Integer deleteByGroupIdList(String type, Long userId, List<Long> groupIdList) {
         // 删除数据库
         int effect = dataGroupRelDAO.deleteByGroupId(groupIdList);
         // 删除缓存
-        this.deleteCache(type, groupIdList);
+        this.deleteCache(type, userId, groupIdList);
         return effect;
     }
 
@@ -286,11 +292,12 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
      * 删除缓存
      *
      * @param type        type
+     * @param userId      userId
      * @param groupIdList groupIdList
      */
-    private void deleteCache(String type, Collection<Long> groupIdList) {
+    private void deleteCache(String type, Long userId, Collection<Long> groupIdList) {
         // 类型缓存
-        List<String> keyList = Lists.of(DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type));
+        List<String> keyList = Lists.of(DataGroupCacheKeyDefine.DATA_GROUP_REL_TYPE.format(type, userId));
         // 分组缓存
         if (!Lists.isEmpty(groupIdList)) {
             groupIdList.stream()

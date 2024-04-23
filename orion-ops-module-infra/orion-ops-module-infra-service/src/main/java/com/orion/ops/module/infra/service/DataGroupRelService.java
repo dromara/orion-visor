@@ -16,7 +16,7 @@ import java.util.List;
 public interface DataGroupRelService {
 
     /**
-     * 设置关联
+     * 设置分组关联
      *
      * @param groupId   groupId
      * @param relIdList relIdList
@@ -24,13 +24,14 @@ public interface DataGroupRelService {
     void updateGroupRel(Long groupId, List<Long> relIdList);
 
     /**
-     * 设置关联
+     * 设置关联分组
      *
      * @param type        type
+     * @param userId      userId
      * @param groupIdList groupIdList
      * @param relId       relId
      */
-    void updateGroupRel(String type, List<Long> groupIdList, Long relId);
+    void updateRelGroup(String type, Long userId, List<Long> groupIdList, Long relId);
 
     /**
      * 添加关联
@@ -38,22 +39,23 @@ public interface DataGroupRelService {
      * @param groupId groupId
      * @param relId   relId
      */
-    void addGroupRel(Long groupId, Long relId);
+    void addGroupRel(String type, Long userId, Long groupId, Long relId);
 
     /**
      * 添加关联
      *
      * @param list list
      */
-    void addGroupRel(List<DataGroupRelCreateRequest> list);
+    void addGroupRel(String type, Long userId, List<DataGroupRelCreateRequest> list);
 
     /**
      * 通过 type 查询 relId 缓存
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
      * @return rows
      */
-    List<DataGroupRelCacheDTO> getGroupRelListByCache(String type);
+    List<DataGroupRelCacheDTO> getGroupRelListByCache(String type, Long userId);
 
     /**
      * 通过 groupId 查询 relId 缓存
@@ -67,37 +69,41 @@ public interface DataGroupRelService {
     /**
      * 通过 relId 查询 groupRel
      *
-     * @param type  type
-     * @param relId relId
+     * @param type   type
+     * @param userId userId
+     * @param relId  relId
      * @return rows
      */
-    List<DataGroupRelDO> getGroupRelByRelId(String type, Long relId);
+    List<DataGroupRelDO> getGroupRelByRelId(String type, Long userId, Long relId);
 
     /**
      * 删除数据分组关联
      *
-     * @param type  type
-     * @param relId relId
+     * @param type   type
+     * @param userId userId
+     * @param relId  relId
      * @return effect
      */
-    Integer deleteByRelId(String type, Long relId);
+    Integer deleteByRelId(String type, Long userId, Long relId);
 
     /**
      * 批量删除数据分组关联
      *
      * @param type      type
+     * @param userId    userId
      * @param relIdList relIdList
      * @return effect
      */
-    Integer deleteByRelIdList(String type, List<Long> relIdList);
+    Integer deleteByRelIdList(String type, Long userId, List<Long> relIdList);
 
     /**
      * 批量删除数据分组关联
      *
+     * @param userId      userId
      * @param type        type
      * @param groupIdList groupIdList
      * @return effect
      */
-    Integer deleteByGroupIdList(String type, List<Long> groupIdList);
+    Integer deleteByGroupIdList(String type, Long userId, List<Long> groupIdList);
 
 }

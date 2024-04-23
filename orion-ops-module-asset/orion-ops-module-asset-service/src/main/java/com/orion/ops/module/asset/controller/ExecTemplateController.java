@@ -92,6 +92,5 @@ public class ExecTemplateController {
         return execTemplateService.deleteExecTemplateById(id);
     }
 
-
 }
 

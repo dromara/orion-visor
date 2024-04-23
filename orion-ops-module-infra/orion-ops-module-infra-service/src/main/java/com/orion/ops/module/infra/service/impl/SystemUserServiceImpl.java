@@ -14,7 +14,6 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
-import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
@@ -23,6 +22,7 @@ import com.orion.ops.module.infra.dao.SystemUserRoleDAO;
 import com.orion.ops.module.infra.define.RoleDefine;
 import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
+import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
@@ -76,6 +76,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Resource
     private DataExtraService dataExtraService;
+
+    @Resource
+    private DataGroupService dataGroupService;
 
     @Override
     public Long createSystemUser(SystemUserCreateRequest request) {
@@ -253,6 +256,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         dataPermissionService.deleteByUserId(id);
         // 删除用户拓展数据
         dataExtraService.deleteByUserId(id);
+        // 删除分组数据
+        dataGroupService.deleteDataGroupByUserId(id);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.api.impl;
 
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.DataGroupApi;
 import com.orion.ops.module.infra.convert.DataGroupProviderConvert;
@@ -44,6 +45,7 @@ public class DataGroupApiImpl implements DataGroupApi {
         Valid.valid(dto);
         DataGroupCreateRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         request.setType(type.name());
+        request.setUserId(Const.SYSTEM_USER_ID);
         return dataGroupService.createDataGroup(request);
     }
 
@@ -63,13 +65,13 @@ public class DataGroupApiImpl implements DataGroupApi {
 
     @Override
     public List<DataGroupDTO> getDataGroupList(DataGroupTypeEnum type) {
-        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupListByCache(type.name());
+        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupListByCache(type.name(), Const.SYSTEM_USER_ID);
         return DataGroupProviderConvert.MAPPER.toList(rows);
     }
 
     @Override
     public List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type) {
-        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupTreeByCache(type.name());
+        List<DataGroupCacheDTO> rows = dataGroupService.getDataGroupTreeByCache(type.name(), Const.SYSTEM_USER_ID);
         return DataGroupProviderConvert.MAPPER.toList(rows);
     }
 

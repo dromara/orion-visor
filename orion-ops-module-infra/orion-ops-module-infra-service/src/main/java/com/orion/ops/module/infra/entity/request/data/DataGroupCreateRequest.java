@@ -25,6 +25,15 @@ import java.io.Serializable;
 @Schema(name = "DataGroupCreateRequest", description = "数据分组 创建请求对象")
 public class DataGroupCreateRequest implements Serializable {
 
+    @NotBlank
+    @Size(max = 16)
+    @Schema(description = "组类型")
+    private String type;
+
+    @NotNull
+    @Schema(description = "用户id")
+    private Long userId;
+
     @NotNull
     @Schema(description = "父id")
     private Long parentId;
@@ -33,10 +42,5 @@ public class DataGroupCreateRequest implements Serializable {
     @Size(max = 32)
     @Schema(description = "组名称")
     private String name;
-
-    @NotBlank
-    @Size(max = 16)
-    @Schema(description = "组类型")
-    private String type;
 
 }
