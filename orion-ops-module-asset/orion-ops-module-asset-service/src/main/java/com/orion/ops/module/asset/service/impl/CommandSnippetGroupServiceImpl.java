@@ -88,10 +88,10 @@ public class CommandSnippetGroupServiceImpl implements CommandSnippetGroupServic
         Integer effect = dataGroupApi.deleteDataGroupById(id);
         if (Booleans.isTrue(request.getDeleteItem())) {
             // 删除组内数据
-            commandSnippetService.deleteByGroupId(userId, id);
+            effect += commandSnippetService.deleteByGroupId(userId, id);
         } else {
             // 移动到根节点
-            commandSnippetService.setGroupNull(userId, id);
+            effect += commandSnippetService.setGroupNull(userId, id);
         }
         return effect;
     }

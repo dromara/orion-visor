@@ -3,23 +3,23 @@ package com.orion.ops.module.asset.define.cache;
 import com.orion.lang.define.cache.key.CacheKeyBuilder;
 import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
-import com.orion.ops.module.asset.entity.dto.CommandSnippetCacheDTO;
+import com.orion.ops.module.asset.entity.dto.PathBookmarkCacheDTO;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 命令片段缓存 key
+ * 路径标签缓存 key
  *
  * @author Jiahang Li
- * @version 1.0.0
- * @since 2024-1-22 15:28
+ * @version 1.0.6
+ * @since 2024-4-23 23:15
  */
-public interface CommandSnippetCacheKeyDefine {
+public interface PathBookmarkCacheKeyDefine {
 
-    CacheKeyDefine SNIPPET = new CacheKeyBuilder()
-            .key("command:snippet:list:{}")
-            .desc("命令片段列表 ${userId}")
-            .type(CommandSnippetCacheDTO.class)
+    CacheKeyDefine PATH_BOOKMARK = new CacheKeyBuilder()
+            .key("path:bookmark:list:{}")
+            .desc("路径标签列表 ${userId}")
+            .type(PathBookmarkCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(8, TimeUnit.HOURS)
             .build();

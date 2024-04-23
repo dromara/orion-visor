@@ -10,6 +10,7 @@ import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import com.orion.ops.framework.mybatis.core.generator.template.Template;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 代码生成器
@@ -33,7 +34,7 @@ public class CodeGenerators {
                 //         .enableProviderApi()
                 //         .disableUnitTest()
                 //         .cache("dict:keys", "字典配置项")
-                //         .expire(1, TimeUnit.DAYS)
+                //         .expire(8, TimeUnit.HOURS)
                 //         .vue("system", "dict-key")
                 //         .enableRowSelection()
                 //         .enableCardView()
@@ -48,8 +49,10 @@ public class CodeGenerators {
                 //         .disableUnitTest()
                 //         .vue("exec", "exec-template-host")
                 //         .build(),
-                Template.create("path_bookmark", "路径标签", "host")
+                Template.create("path_bookmark", "路径标签", "path")
                         .disableUnitTest()
+                        .cache("path:bookmark:list:{}", "路径标签列表 ${userId}")
+                        .expire(8, TimeUnit.HOURS)
                         .vue("host", "path-bookmark")
                         .build(),
         };

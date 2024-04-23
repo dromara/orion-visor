@@ -1,4 +1,4 @@
-package com.orion.ops.module.asset.entity.request.command;
+package com.orion.ops.module.asset.entity.request.path;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -11,18 +11,18 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 命令片段 创建请求对象
+ * 路径标签 创建请求对象
  *
  * @author Jiahang Li
- * @version 1.0.0
- * @since 2024-1-22 15:28
+ * @version 1.0.6
+ * @since 2024-4-23 23:15
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "CommandSnippetCreateRequest", description = "命令片段 创建请求对象")
-public class CommandSnippetCreateRequest implements Serializable {
+@Schema(name = "PathBookmarkCreateRequest", description = "路径标签 创建请求对象")
+public class PathBookmarkCreateRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,8 @@ public class CommandSnippetCreateRequest implements Serializable {
     private String name;
 
     @NotBlank
-    @Schema(description = "代码片段")
-    private String command;
+    @Size(max = 1024)
+    @Schema(description = "路径")
+    private String path;
 
 }

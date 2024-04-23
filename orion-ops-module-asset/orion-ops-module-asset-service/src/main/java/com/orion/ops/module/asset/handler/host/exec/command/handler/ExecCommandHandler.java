@@ -6,6 +6,7 @@ import com.orion.lang.exception.ConnectionRuntimeException;
 import com.orion.lang.exception.SftpException;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
@@ -52,7 +53,7 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     private final ExecCommandHostDTO execHostCommand;
 
-    private final TimeoutChecker timeoutChecker;
+    private final TimeoutChecker<TimeoutEndpoint> timeoutChecker;
 
     @Getter
     private ExecHostStatusEnum status;
@@ -69,7 +70,7 @@ public class ExecCommandHandler implements IExecCommandHandler {
 
     public ExecCommandHandler(ExecCommandDTO execCommand,
                               ExecCommandHostDTO execHostCommand,
-                              TimeoutChecker timeoutChecker) {
+                              TimeoutChecker<TimeoutEndpoint> timeoutChecker) {
         this.status = ExecHostStatusEnum.WAITING;
         this.execCommand = execCommand;
         this.execHostCommand = execHostCommand;
