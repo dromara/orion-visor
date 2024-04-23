@@ -22,7 +22,7 @@ public interface CommandSnippetCacheKeyDefine {
             .desc("命令片段列表 ${userId}")
             .type(CommandSnippetCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine SNIPPET_GROUP = new CacheKeyBuilder()
@@ -30,7 +30,7 @@ public interface CommandSnippetCacheKeyDefine {
             .desc("命令片段分组 ${userId}")
             .type(CommandSnippetGroupCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

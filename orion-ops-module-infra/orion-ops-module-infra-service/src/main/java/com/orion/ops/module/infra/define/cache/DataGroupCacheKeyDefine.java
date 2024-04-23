@@ -22,7 +22,7 @@ public interface DataGroupCacheKeyDefine {
             .desc("数据分组列表结构 ${type} ${userId}")
             .type(DataGroupCacheDTO.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine DATA_GROUP_TREE = new CacheKeyBuilder()
@@ -30,7 +30,7 @@ public interface DataGroupCacheKeyDefine {
             .desc("数据分组树结构 ${type} ${userId}")
             .type(DataGroupCacheDTO.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine DATA_GROUP_REL_GROUP = new CacheKeyBuilder()
@@ -38,7 +38,7 @@ public interface DataGroupCacheKeyDefine {
             .desc("数据分组数据关联-分组 ${groupId}")
             .type(Long.class)
             .struct(RedisCacheStruct.LIST)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine DATA_GROUP_REL_TYPE = new CacheKeyBuilder()
@@ -46,7 +46,7 @@ public interface DataGroupCacheKeyDefine {
             .desc("数据分组数据关联-类型 ${type} ${userId}")
             .type(DataGroupRelCacheDTO.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

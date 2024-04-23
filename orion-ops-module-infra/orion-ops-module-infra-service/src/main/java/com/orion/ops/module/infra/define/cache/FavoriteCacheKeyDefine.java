@@ -20,7 +20,7 @@ public interface FavoriteCacheKeyDefine {
             .desc("收藏信息 ${type} ${userId}")
             .type(Long.class)
             .struct(RedisCacheStruct.LIST)
-            .timeout(3, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

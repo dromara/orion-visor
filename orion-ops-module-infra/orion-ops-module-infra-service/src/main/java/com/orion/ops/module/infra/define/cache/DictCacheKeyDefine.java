@@ -22,7 +22,7 @@ public interface DictCacheKeyDefine {
             .desc("字典配置项")
             .type(DictKeyCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine DICT_SCHEMA = new CacheKeyBuilder()
@@ -30,7 +30,7 @@ public interface DictCacheKeyDefine {
             .desc("字典配置项 schema ${key}")
             .type(JSONObject.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine DICT_VALUE = new CacheKeyBuilder()
@@ -38,7 +38,7 @@ public interface DictCacheKeyDefine {
             .desc("字典配置值 ${key}")
             .type(JSONObject.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

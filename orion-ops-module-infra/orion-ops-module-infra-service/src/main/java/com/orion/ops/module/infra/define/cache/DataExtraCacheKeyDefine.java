@@ -20,7 +20,7 @@ public interface DataExtraCacheKeyDefine {
             .desc("数据拓展信息 ${userId} ${type} ${item}")
             .type(String.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

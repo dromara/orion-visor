@@ -23,7 +23,7 @@ public interface HostCacheKeyDefine {
             .desc("主机列表")
             .type(HostCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine HOST_KEY = new CacheKeyBuilder()
@@ -31,7 +31,7 @@ public interface HostCacheKeyDefine {
             .desc("主机秘钥列表")
             .type(HostKeyCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine HOST_IDENTITY = new CacheKeyBuilder()
@@ -39,7 +39,7 @@ public interface HostCacheKeyDefine {
             .desc("主机身份列表")
             .type(HostIdentityCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }
