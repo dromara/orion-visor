@@ -1,21 +1,21 @@
-import type { ITerminalPanelManager, TerminalPanelTabItem } from '../types/terminal.type';
-import TerminalTabManager from '../handler/terminal-tab-manager';
+import type { ITerminalPanelManager } from '../types/terminal.type';
+import TerminalPanelTabManager from '../handler/terminal-panel-tab-manager';
 
 // 终端面板管理器实现
-export default class TerminalPanelManager<T extends TerminalPanelTabItem = TerminalPanelTabItem> implements ITerminalPanelManager<T> {
+export default class TerminalPanelManager implements ITerminalPanelManager {
 
   // 当前面板
   active: number;
   // 面板列表
-  panels: Array<TerminalTabManager<T>>;
+  panels: Array<TerminalPanelTabManager>;
 
   constructor() {
     this.active = 0;
-    this.panels = [new TerminalTabManager()];
+    this.panels = [new TerminalPanelTabManager()];
   }
 
   // 获取当前面板
-  getCurrentPanel(): TerminalTabManager<T> {
+  getCurrentPanel(): TerminalPanelTabManager {
     return this.panels[this.active];
   }
 
@@ -25,7 +25,7 @@ export default class TerminalPanelManager<T extends TerminalPanelTabItem = Termi
   };
 
   // 获取面板
-  getPanel(index: number): TerminalTabManager<T> {
+  getPanel(index: number): TerminalPanelTabManager {
     return this.panels[index];
   };
 
@@ -41,7 +41,7 @@ export default class TerminalPanelManager<T extends TerminalPanelTabItem = Termi
       panel.clear();
     }
     this.active = 0;
-    this.panels = [new TerminalTabManager()];
+    this.panels = [new TerminalPanelTabManager()];
   };
 
 }

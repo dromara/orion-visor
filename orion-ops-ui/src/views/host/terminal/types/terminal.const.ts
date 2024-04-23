@@ -34,6 +34,18 @@ export const TerminalTabs = {
   },
 };
 
+// 面板会话 tab 类型
+export const PanelSessionType = {
+  SSH: {
+    type: 'SSH',
+    icon: 'icon-desktop'
+  },
+  SFTP: {
+    type: 'SFTP',
+    icon: 'icon-folder'
+  },
+};
+
 // 新建连接类型
 export const NewConnectionType = {
   GROUP: 'group',
@@ -95,18 +107,6 @@ export const FILE_TYPE = {
     label: '套接字文件',
     icon: 'icon-drive-file'
   }
-};
-
-// 面板会话 tab 类型
-export const PanelSessionType = {
-  SSH: {
-    type: 'SSH',
-    icon: 'icon-desktop'
-  },
-  SFTP: {
-    type: 'SFTP',
-    icon: 'icon-folder'
-  },
 };
 
 // 终端状态

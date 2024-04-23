@@ -16,9 +16,8 @@
           </span>
         </a-space>
       </template>
-      <!-- 终端面板 FIXME -->
-      <a-tab-pane v-for="tab in panel.items"
-                  :key="tab.key">
+      <!-- 终端面板 这里的 key 只能使用 key 字段, 否则重连有问题 -->
+      <a-tab-pane v-for="tab in panel.items" :key="tab.key">
         <!-- 标题 -->
         <template #title>
           <span class="tab-title-wrapper usn"
@@ -64,6 +63,9 @@
 
   // 监听 tab 切换
   watch(() => props.panel.active, (active, before) => {
+    console.log(active);
+    console.log(before);
+    console.log(props.panel);
     // 失焦自动终端
     if (before) {
       const beforeTab = props.panel.items.find(s => s.key === before);
@@ -78,7 +80,7 @@
         sessionManager.getSession<ISshSession>(active)?.focus();
       }
     }
-    // 无终端自动关闭
+    // 无终端自动关闭 FIXME
     if (!props.panel.items.length) {
       close();
     }

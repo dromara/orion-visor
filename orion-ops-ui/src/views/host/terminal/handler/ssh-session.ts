@@ -26,6 +26,8 @@ export default class SshSession implements ISshSession {
 
   public connected: boolean;
 
+  public canReconnect: boolean;
+
   public canWrite: boolean;
 
   public status: number;
@@ -43,6 +45,7 @@ export default class SshSession implements ISshSession {
     this.sessionId = sessionId;
     this.channel = channel;
     this.connected = false;
+    this.canReconnect = false;
     this.canWrite = false;
     this.status = TerminalStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
@@ -85,7 +88,6 @@ export default class SshSession implements ISshSession {
       if (e.type !== 'keydown') {
         return true;
       }
-      console.log(e);
       // 检测是否为内置快捷键
       if (this.handler.checkIsBuiltin(e)) {
         return true;
@@ -94,11 +96,12 @@ export default class SshSession implements ISshSession {
       if (this.handler.checkPreventDefault(e)) {
         e.preventDefault();
       }
-      if (e.key === 'Enter') {
-        console.log("enter start");
-        // TODO 回车 重新连接
-        useTerminalStore().reOpenTerminal(this.hostId, this.sessionId);
-        console.log("enter end");
+      // 重新连接
+      if (!this.connected && this.canReconnect && e.key === 'Enter') {
+        setTimeout(async () => {
+          await useTerminalStore().reOpenSession(this.sessionId);
+        }, 50);
+        return true;
       }
       // 自定义快捷键
       if (preference.shortcutSetting.enabled && preference.shortcutSetting.keys.length) {

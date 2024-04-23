@@ -1,15 +1,15 @@
-import type { ITerminalTabManager, TerminalTabItem } from '../types/terminal.type';
+import type { ITerminalTabManager, TerminalPanelTabItem } from '../types/terminal.type';
 
-// 终端 tab 管理器实现
-export default class TerminalTabManager implements ITerminalTabManager {
+// 终端面板 tab 管理器实现
+export default class TerminalPanelTabManager implements ITerminalTabManager<TerminalPanelTabItem> {
 
   public active: string;
 
-  public items: Array<TerminalTabItem>;
+  public items: Array<TerminalPanelTabItem>;
 
-  constructor(def: TerminalTabItem | undefined = undefined) {
+  constructor(def: TerminalPanelTabItem | undefined = undefined) {
     if (def) {
-      this.active = def.key;
+      this.active = def.sessionId;
       this.items = [def];
     } else {
       this.active = undefined as unknown as string;
@@ -22,40 +22,40 @@ export default class TerminalTabManager implements ITerminalTabManager {
     if (!this.active) {
       return undefined;
     }
-    return this.items.find(s => s.key === this.active);
+    return this.items.find(s => s.sessionId === this.active);
   }
 
   // 获取 tab
-  getTab(key: string): TerminalTabItem {
-    return this.items.find(s => s.key === key) as TerminalTabItem;
+  getTab(sessionId: string): TerminalPanelTabItem {
+    return this.items.find(s => s.sessionId === sessionId) as TerminalPanelTabItem;
   }
 
   // 点击 tab
-  clickTab(key: string): void {
-    this.active = key;
+  clickTab(sessionId: string): void {
+    this.active = sessionId;
   }
 
   // 删除 tab
-  deleteTab(key: string): void {
+  deleteTab(sessionId: string): void {
     // 获取当前 tab
-    const tabIndex = this.items.findIndex(s => s.key === key);
+    const tabIndex = this.items.findIndex(s => s.sessionId === sessionId);
     // 删除 tab
     this.items.splice(tabIndex, 1);
-    if (key === this.active && this.items.length !== 0) {
+    if (sessionId === this.active && this.items.length !== 0) {
       // 切换为前一个 tab
-      this.active = this.items[Math.max(tabIndex - 1, 0)].key;
+      this.active = this.items[Math.max(tabIndex - 1, 0)].sessionId;
     } else {
       this.active = undefined as unknown as string;
     }
   }
 
   // 打开 tab
-  openTab(tab: TerminalTabItem): void {
+  openTab(tab: TerminalPanelTabItem): void {
     // 不存在则创建 tab
-    if (!this.items.find(s => s.key === tab.key)) {
+    if (!this.items.find(s => s.sessionId === tab.sessionId)) {
       this.items.push(tab);
     }
-    this.active = tab.key;
+    this.active = tab.sessionId;
   }
 
   // 切换到前一个 tab
@@ -74,12 +74,12 @@ export default class TerminalTabManager implements ITerminalTabManager {
       return;
     }
     // 切换 tab
-    this.active = this.items[index].key;
+    this.active = this.items[index].sessionId;
   }
 
   // 获取当前索引
   private getCurrentTabIndex(): number {
-    return this.items.findIndex(s => s.key === this.active);
+    return this.items.findIndex(s => s.sessionId === this.active);
   }
 
   // 清空

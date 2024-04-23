@@ -22,6 +22,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   processCheck({ sessionId, result, msg }: OutputPayload): void {
     const success = !!Number.parseInt(result);
     const session = this.sessionManager.getSession(sessionId);
+    session.canReconnect = !success;
     if (session instanceof SshSession) {
       // ssh 会话
       if (success) {
@@ -35,7 +36,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         });
       } else {
         // 未成功展示错误信息
-        session.write(`[91m${msg || ''}[0m`);
+        session.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
         session.status = TerminalStatus.CLOSED;
       }
     } else if (session instanceof SftpSession) {
@@ -47,7 +48,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         });
       } else {
         // 未成功提示错误信息
-        session.resolver?.onClose('0', msg);
+        session.resolver?.onClose(false, msg);
         Message.error(msg || '建立 SFTP 失败');
       }
     }
@@ -57,6 +58,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   processConnect({ sessionId, result, msg }: OutputPayload): void {
     const success = !!Number.parseInt(result);
     const session = this.sessionManager.getSession(sessionId);
+    session.canReconnect = !success;
     if (session instanceof SshSession) {
       // ssh 会话
       if (success) {
@@ -66,7 +68,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         session.connect();
       } else {
         // 未成功展示错误信息
-        session.write(`[91m${msg || ''}[0m`);
+        session.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
         session.status = TerminalStatus.CLOSED;
       }
     } else if (session instanceof SftpSession) {
@@ -76,7 +78,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         session.connect();
       } else {
         // 未成功提示错误信息
-        session.resolver?.onClose('0', msg);
+        session.resolver?.onClose(false, msg);
         Message.error(msg || '打开 SFTP 失败');
       }
     }
@@ -89,18 +91,22 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     if (!session) {
       return;
     }
+    const isForceClose = !!Number.parseInt(forceClose);
+    session.connected = false;
+    session.canReconnect = !isForceClose;
     if (session instanceof SshSession) {
       // ssh 拼接关闭消息
-      session.write(`\r\n\r\n[91m${msg || ''}[0m\r\n\r\n`);
+      session.write(`\r\n\r\n[91m${msg || ''}[0m\r\n`);
+      if (!isForceClose) {
+        session.write('[91m输入回车重新连接...[0m\r\n\r\n');
+      }
       // 设置状态
       session.status = TerminalStatus.CLOSED;
-      session.connected = false;
       // 设置不可写
       session.setCanWrite(false);
     } else if (session instanceof SftpSession) {
       // sftp 设置状态
-      session.connected = false;
-      session.resolver?.onClose(forceClose, msg);
+      session.resolver?.onClose(isForceClose, msg);
     }
   }
 

@@ -42,7 +42,6 @@ export default class TerminalChannel implements ITerminalChannel {
 
   // 发送消息
   send(protocol: Protocol, payload: InputPayload): void {
-    console.log('send', payload);
     // 检查是否连接
     if (!this.isConnected()) {
       return;

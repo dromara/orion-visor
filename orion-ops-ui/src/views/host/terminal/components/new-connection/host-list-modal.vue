@@ -80,7 +80,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PanelSessionTab } from '../../types/terminal.type';
+  import type { PanelSessionTabType } from '../../types/terminal.type';
   import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, ref } from 'vue';
   import { useTerminalStore } from '@/store';
@@ -129,7 +129,7 @@
   defineExpose({ open });
 
   // 打开终端
-  const clickHost = (item: HostQueryResponse, tab: PanelSessionTab) => {
+  const clickHost = (item: HostQueryResponse, tab: PanelSessionTabType) => {
     openSession(item, tab, panelIndex.value);
     setVisible(false);
   };

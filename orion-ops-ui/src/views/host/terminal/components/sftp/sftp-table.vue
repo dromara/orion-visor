@@ -158,7 +158,6 @@
     session?: ISftpSession;
     list: Array<SftpFile>;
     loading: boolean;
-    closed: boolean;
     selectedFiles: Array<string>;
   }>();
 
@@ -214,7 +213,7 @@
   const clickFilename = (record: TableData) => {
     if (record.isDir) {
       // 检查是否断开
-      if (props.closed) {
+      if (!props.session?.connected) {
         return;
       }
       // 进入文件夹
@@ -227,7 +226,7 @@
   // 编辑文件
   const editFile = (record: TableData) => {
     // 检查是否断开
-    if (props.closed) {
+    if (!props.session?.connected) {
       return;
     }
     emits('editFile', record.name, record.path);
@@ -237,7 +236,7 @@
   // 删除文件
   const deleteFile = (path: string) => {
     // 检查是否断开
-    if (props.closed) {
+    if (!props.session?.connected) {
       return;
     }
     props.session?.remove([path]);
@@ -246,7 +245,7 @@
   // 下载文件
   const downloadFile = (path: string) => {
     // 检查是否断开
-    if (props.closed) {
+    if (!props.session?.connected) {
       return;
     }
     emits('download', [path]);
@@ -255,7 +254,7 @@
   // 移动文件
   const moveFile = (path: string) => {
     // 检查是否断开
-    if (props.closed) {
+    if (!props.session?.connected) {
       return;
     }
     openSftpMoveModal(props.session?.sessionId as string, path);
@@ -264,7 +263,7 @@
   // 文件提权
   const chmodFile = (path: string, permission: number) => {
     // 检查是否断开
-    if (props.closed) {
+    if (!props.session?.connected) {
       return;
     }
     openSftpChmodModal(props.session?.sessionId as string, path, permission);

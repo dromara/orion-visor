@@ -8,7 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
-import type { ISshSession, PanelSessionTab, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
+import type { ISshSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -135,7 +135,7 @@ export default defineStore('terminal', {
     },
 
     // 打开会话
-    openSession(record: HostQueryResponse, type: PanelSessionTab, panelIndex: number = 0) {
+    openSession(record: HostQueryResponse, type: PanelSessionTabType, panelIndex: number = 0) {
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([record.id, ...this.hosts.latestHosts])];
       // 切换到终端面板页面
@@ -151,8 +151,10 @@ export default defineStore('terminal', {
         ? Math.max(...seqArr) + 1
         : 1;
       // 打开 tab
+      const sessionId = nextId(10);
       this.panelManager.getPanel(panelIndex).openTab({
-        key: nextId(10),
+        key: sessionId,
+        sessionId,
         seq: nextSeq,
         title: `(${nextSeq}) ${record.alias || record.name}`,
         hostId: record.id,
@@ -163,20 +165,18 @@ export default defineStore('terminal', {
       });
     },
 
-    // 重新打开 terminal 会话
-    async reOpenTerminal(hostId: number, sessionId: string, panelIndex: number = 0) {
-      console.log('rec');
-      // 添加到最近连接
-      this.hosts.latestHosts = [...new Set([hostId, ...this.hosts.latestHosts])];
+    // 重新打开会话
+    async reOpenSession(sessionId: string, panelIndex: number = 0) {
       // 切换到终端面板页面
       this.tabManager.openTab(TerminalTabs.TERMINAL_PANEL);
       // 获取当前面板并且分配新的 sessionId
       const panel = this.panelManager.getPanel(panelIndex);
       const tab = panel.getTab(sessionId);
-      const newSessionId = nextId(10);
-      tab.key = newSessionId;
-      // 重新打开 ssh
-      await this.sessionManager.reOpenSsh(sessionId, newSessionId);
+      const newSessionId = tab.sessionId = nextId(10);
+      // 添加到最近连接
+      this.hosts.latestHosts = [...new Set([tab.hostId, ...this.hosts.latestHosts])];
+      // 重新打开会话
+      await this.sessionManager.reOpenSession(tab.type, sessionId, newSessionId);
     },
 
     // 复制并且打开会话
@@ -220,7 +220,7 @@ export default defineStore('terminal', {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession<ISshSession>(sessionTab.key);
+      return this.sessionManager.getSession<ISshSession>(sessionTab.sessionId);
     },
 
   },
