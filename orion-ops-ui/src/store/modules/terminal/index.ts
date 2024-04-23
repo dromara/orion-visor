@@ -169,9 +169,12 @@ export default defineStore('terminal', {
     async reOpenSession(sessionId: string, panelIndex: number = 0) {
       // 切换到终端面板页面
       this.tabManager.openTab(TerminalTabs.TERMINAL_PANEL);
-      // 获取当前面板并且分配新的 sessionId
+      // 获取当前面板 tab 并且分配新的 sessionId
       const panel = this.panelManager.getPanel(panelIndex);
-      const tab = panel.getTab(sessionId);
+      const tab = panel.items.find(s => s.sessionId === sessionId);
+      if (!tab) {
+        return;
+      }
       const newSessionId = tab.sessionId = nextId(10);
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([tab.hostId, ...this.hosts.latestHosts])];

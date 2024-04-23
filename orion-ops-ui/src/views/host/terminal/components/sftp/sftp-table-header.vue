@@ -53,8 +53,9 @@
              :title="closeMessage">
         已断开: {{ closeMessage }}
       </a-tag>
-      <!-- 重连 FIXME -->
-      <a-tooltip position="top"
+      <!-- 重连 -->
+      <a-tooltip v-if="session?.canReconnect"
+                 position="top"
                  :mini="true"
                  :overlay-inverse="true"
                  :auto-fix-position="false"

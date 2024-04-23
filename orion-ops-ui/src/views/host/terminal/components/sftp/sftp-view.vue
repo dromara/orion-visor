@@ -168,7 +168,6 @@
 
   // 连接成功回调
   const connectCallback = () => {
-    // FIXME TEST
     loadFiles(currentPath.value || '~');
   };
 

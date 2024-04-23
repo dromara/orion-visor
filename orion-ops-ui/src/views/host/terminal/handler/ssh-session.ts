@@ -96,8 +96,11 @@ export default class SshSession implements ISshSession {
       if (this.handler.checkPreventDefault(e)) {
         e.preventDefault();
       }
-      // 重新连接
+      // 检查重新连接
       if (!this.connected && this.canReconnect && e.key === 'Enter') {
+        // 防止重复回车
+        this.canReconnect = false;
+        // 异步作用域重新连接
         setTimeout(async () => {
           await useTerminalStore().reOpenSession(this.sessionId);
         }, 50);

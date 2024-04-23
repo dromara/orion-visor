@@ -1,13 +1,13 @@
 import type { ITerminalTabManager, TerminalTabItem } from '../types/terminal.type';
 
 // 终端 tab 管理器实现
-export default class TerminalTabManager implements ITerminalTabManager {
+export default class TerminalTabManager<T extends TerminalTabItem = TerminalTabItem> implements ITerminalTabManager<T> {
 
   public active: string;
 
-  public items: Array<TerminalTabItem>;
+  public items: Array<T>;
 
-  constructor(def: TerminalTabItem | undefined = undefined) {
+  constructor(def: T | undefined = undefined) {
     if (def) {
       this.active = def.key;
       this.items = [def];
@@ -26,8 +26,8 @@ export default class TerminalTabManager implements ITerminalTabManager {
   }
 
   // 获取 tab
-  getTab(key: string): TerminalTabItem {
-    return this.items.find(s => s.key === key) as TerminalTabItem;
+  getTab(key: string): T {
+    return this.items.find(s => s.key === key) as T;
   }
 
   // 点击 tab
@@ -41,16 +41,18 @@ export default class TerminalTabManager implements ITerminalTabManager {
     const tabIndex = this.items.findIndex(s => s.key === key);
     // 删除 tab
     this.items.splice(tabIndex, 1);
-    if (key === this.active && this.items.length !== 0) {
-      // 切换为前一个 tab
-      this.active = this.items[Math.max(tabIndex - 1, 0)].key;
+    if (this.items.length !== 0) {
+      if (key === this.active) {
+        // 关闭的为当前 tab 切换为前一个 tab
+        this.active = this.items[Math.max(tabIndex - 1, 0)].key;
+      }
     } else {
       this.active = undefined as unknown as string;
     }
   }
 
   // 打开 tab
-  openTab(tab: TerminalTabItem): void {
+  openTab(tab: T): void {
     // 不存在则创建 tab
     if (!this.items.find(s => s.key === tab.key)) {
       this.items.push(tab);

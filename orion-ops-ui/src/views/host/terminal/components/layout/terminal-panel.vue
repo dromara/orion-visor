@@ -63,24 +63,21 @@
 
   // 监听 tab 切换
   watch(() => props.panel.active, (active, before) => {
-    console.log(active);
-    console.log(before);
-    console.log(props.panel);
     // 失焦自动终端
     if (before) {
       const beforeTab = props.panel.items.find(s => s.key === before);
       if (beforeTab && beforeTab?.type === PanelSessionType.SSH.type) {
-        sessionManager.getSession<ISshSession>(before)?.blur();
+        sessionManager.getSession<ISshSession>(beforeTab.sessionId)?.blur();
       }
     }
     // 终端自动聚焦
     if (active) {
       const activeTab = props.panel.items.find(s => s.key === active);
       if (activeTab && activeTab?.type === PanelSessionType.SSH.type) {
-        sessionManager.getSession<ISshSession>(active)?.focus();
+        sessionManager.getSession<ISshSession>(activeTab.sessionId)?.focus();
       }
     }
-    // 无终端自动关闭 FIXME
+    // 无终端自动关闭
     if (!props.panel.items.length) {
       close();
     }

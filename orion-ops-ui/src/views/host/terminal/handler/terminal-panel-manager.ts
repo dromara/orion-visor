@@ -1,5 +1,5 @@
-import type { ITerminalPanelManager } from '../types/terminal.type';
-import TerminalPanelTabManager from '../handler/terminal-panel-tab-manager';
+import type { ITerminalPanelManager, TerminalPanelTabItem } from '../types/terminal.type';
+import TerminalTabManager from '../handler/terminal-tab-manager';
 
 // 终端面板管理器实现
 export default class TerminalPanelManager implements ITerminalPanelManager {
@@ -7,15 +7,15 @@ export default class TerminalPanelManager implements ITerminalPanelManager {
   // 当前面板
   active: number;
   // 面板列表
-  panels: Array<TerminalPanelTabManager>;
+  panels: Array<TerminalTabManager<TerminalPanelTabItem>>;
 
   constructor() {
     this.active = 0;
-    this.panels = [new TerminalPanelTabManager()];
+    this.panels = [new TerminalTabManager()];
   }
 
   // 获取当前面板
-  getCurrentPanel(): TerminalPanelTabManager {
+  getCurrentPanel(): TerminalTabManager<TerminalPanelTabItem> {
     return this.panels[this.active];
   }
 
@@ -25,7 +25,7 @@ export default class TerminalPanelManager implements ITerminalPanelManager {
   };
 
   // 获取面板
-  getPanel(index: number): TerminalPanelTabManager {
+  getPanel(index: number): TerminalTabManager<TerminalPanelTabItem> {
     return this.panels[index];
   };
 
@@ -41,7 +41,7 @@ export default class TerminalPanelManager implements ITerminalPanelManager {
       panel.clear();
     }
     this.active = 0;
-    this.panels = [new TerminalPanelTabManager()];
+    this.panels = [new TerminalTabManager()];
   };
 
 }
