@@ -19,6 +19,11 @@ public enum DataGroupTypeEnum {
      */
     COMMAND_SNIPPET,
 
+    /**
+     * 路径书签
+     */
+    PATH_BOOKMARK,
+
     ;
 
     public static DataGroupTypeEnum of(String type) {

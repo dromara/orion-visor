@@ -1,10 +1,12 @@
 package com.orion.ops.module.asset.convert;
 
 import com.orion.ops.module.asset.entity.domain.CommandSnippetGroupDO;
-import com.orion.ops.module.asset.entity.dto.CommandSnippetGroupCacheDTO;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetGroupCreateRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetGroupUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.CommandSnippetGroupVO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupCreateDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupDTO;
+import com.orion.ops.module.infra.entity.dto.data.DataGroupRenameDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -22,16 +24,12 @@ public interface CommandSnippetGroupConvert {
 
     CommandSnippetGroupConvert MAPPER = Mappers.getMapper(CommandSnippetGroupConvert.class);
 
-    CommandSnippetGroupDO to(CommandSnippetGroupCreateRequest request);
+    DataGroupCreateDTO to(CommandSnippetGroupCreateRequest request);
 
-    CommandSnippetGroupDO to(CommandSnippetGroupUpdateRequest request);
+    DataGroupRenameDTO to(CommandSnippetGroupUpdateRequest request);
 
-    CommandSnippetGroupVO to(CommandSnippetGroupDO domain);
+    CommandSnippetGroupVO to(DataGroupDTO domain);
 
     List<CommandSnippetGroupVO> to(List<CommandSnippetGroupDO> list);
-
-    CommandSnippetGroupVO to(CommandSnippetGroupCacheDTO cache);
-
-    CommandSnippetGroupCacheDTO toCache(CommandSnippetGroupDO domain);
 
 }

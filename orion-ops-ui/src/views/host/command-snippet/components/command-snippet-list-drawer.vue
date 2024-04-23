@@ -14,12 +14,21 @@
     <div class="snippet-container">
       <!-- 命令头部 -->
       <div class="snippet-header">
-        <!-- 创建命令 -->
-        <span class="click-icon-wrapper snippet-header-icon"
-              title="创建命令"
-              @click="openAdd">
+        <!-- 左侧按钮 -->
+        <a-space size="small">
+          <!-- 创建命令 -->
+          <span class="click-icon-wrapper snippet-header-icon"
+                title="创建命令"
+                @click="openAdd">
           <icon-plus />
         </span>
+          <!-- 刷新 -->
+          <span class="click-icon-wrapper snippet-header-icon"
+                title="刷新"
+                @click="fetchData(true)">
+          <icon-refresh />
+        </span>
+        </a-space>
         <!-- 搜索框 -->
         <a-input-search class="snippet-header-input"
                         v-model="filterValue"
@@ -100,8 +109,8 @@
   defineExpose({ open });
 
   // 加载数据
-  const fetchData = async () => {
-    if (snippet.value) {
+  const fetchData = async (force: boolean = false) => {
+    if (snippet.value && !force) {
       return;
     }
     setLoading(true);
@@ -298,7 +307,7 @@
       }
 
       &-input {
-        width: 220px;
+        width: 248px;
         user-select: none;
       }
     }

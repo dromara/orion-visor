@@ -173,10 +173,13 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
                     .relId(s.getRelId())
                     .build()));
         });
-        // 插入
-        dataGroupRelDAO.insertBatch(records);
-        // 删除缓存
-        this.deleteCache(type, userId, groupMapping.keySet());
+        // 不为空则插入
+        if (!records.isEmpty()) {
+            // 插入
+            dataGroupRelDAO.insertBatch(records);
+            // 删除缓存
+            this.deleteCache(type, userId, groupMapping.keySet());
+        }
     }
 
     @Override

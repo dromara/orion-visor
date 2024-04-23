@@ -25,12 +25,4 @@ public interface CommandSnippetCacheKeyDefine {
             .timeout(8, TimeUnit.HOURS)
             .build();
 
-    CacheKeyDefine SNIPPET_GROUP = new CacheKeyBuilder()
-            .key("command:snippet:group:{}")
-            .desc("命令片段分组 ${userId}")
-            .type(CommandSnippetGroupCacheDTO.class)
-            .struct(RedisCacheStruct.HASH)
-            .timeout(8, TimeUnit.HOURS)
-            .build();
-
 }
