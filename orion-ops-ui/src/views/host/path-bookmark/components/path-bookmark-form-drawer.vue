@@ -1,6 +1,6 @@
 <template>
   <a-drawer v-model:visible="visible"
-            width="40%"
+            :width="388"
             :title="title"
             :mask-closable="false"
             :unmount-on-close="true"
@@ -22,18 +22,14 @@
         </a-form-item>
         <!-- 分组 -->
         <a-form-item field="groupId" label="分组">
-          <command-snippet-group-select v-model="formModel.groupId" />
+          <path-bookmark-group-select v-model="formModel.groupId" />
         </a-form-item>
-        <!-- 代码片段 -->
-        <a-form-item field="command"
-                     label="代码片段"
-                     :hide-label="true">
-          <editor v-model="formModel.command"
-                  container-class="command-editor"
-                  language="shell"
-                  theme="vs-dark"
-                  :suggestions="true"
-                  :auto-focus="true" />
+        <!-- 文件路径 -->
+        <a-form-item field="path" label="路径">
+          <a-textarea v-model="formModel.path"
+                      placeholder="文件路径"
+                      :auto-size="{ minRows: 8, maxRows: 8 }"
+                      allow-clear />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -42,19 +38,19 @@
 
 <script lang="ts">
   export default {
-    name: 'commandSnippetFormDrawer'
+    name: 'pathBookmarkFormDrawer'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { CommandSnippetUpdateRequest } from '@/api/asset/command-snippet';
+  import type { PathBookmarkUpdateRequest } from '@/api/asset/path-bookmark';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { createCommandSnippet, updateCommandSnippet } from '@/api/asset/command-snippet';
+  import { createPathBookmark, updatePathBookmark } from '@/api/asset/path-bookmark';
   import formRules from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
-  import CommandSnippetGroupSelect from './command-snippet-group-select.vue';
+  import PathBookmarkGroupSelect from './path-bookmark-group-select.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -62,23 +58,23 @@
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): CommandSnippetUpdateRequest => {
+  const defaultForm = (): PathBookmarkUpdateRequest => {
     return {
       id: undefined,
       groupId: undefined,
       name: undefined,
-      command: undefined,
+      path: undefined,
     };
   };
 
   const formRef = ref<any>();
-  const formModel = ref<CommandSnippetUpdateRequest>({});
+  const formModel = ref<PathBookmarkUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
   const openAdd = () => {
-    title.value = '添加命令片段';
+    title.value = '添加路径标签';
     isAddHandle.value = true;
     renderForm({ ...defaultForm() });
     setVisible(true);
@@ -86,7 +82,7 @@
 
   // 打开修改
   const openUpdate = (record: any) => {
-    title.value = '修改命令片段';
+    title.value = '修改路径标签';
     isAddHandle.value = false;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
@@ -110,13 +106,13 @@
       }
       if (isAddHandle.value) {
         // 新增
-        const { data: id } = await createCommandSnippet(formModel.value);
+        const { data: id } = await createPathBookmark(formModel.value);
         formModel.value.id = id;
         Message.success('创建成功');
         emits('added', formModel.value);
       } else {
         // 修改
-        await updateCommandSnippet(formModel.value);
+        await updatePathBookmark(formModel.value);
         Message.success('修改成功');
         emits('updated', formModel.value);
       }
@@ -144,10 +140,6 @@
 <style lang="less" scoped>
   .form-container {
     padding: 16px;
-  }
-
-  .command-editor {
-    height: calc(100vh - 262px);
   }
 
 </style>

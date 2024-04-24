@@ -8,11 +8,11 @@
         <template #extra>
           {{ calcTotal(group) }} 条
         </template>
-        <!-- snippet -->
+        <!-- 路径 -->
         <template v-for="item in group.items">
-          <command-snippet-list-item v-if="item.visible"
-                                     :key="item.id"
-                                     :item="item" />
+          <path-bookmark-list-item v-if="item.visible"
+                                   :key="item.id"
+                                   :item="item" />
         </template>
       </a-collapse-item>
     </template>
@@ -21,21 +21,21 @@
 
 <script lang="ts">
   export default {
-    name: 'commandSnippetListGroup'
+    name: 'pathBookmarkListGroup'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { CommandSnippetGroupQueryResponse } from '@/api/asset/command-snippet-group';
-  import type { CommandSnippetWrapperResponse } from '@/api/asset/command-snippet';
-  import CommandSnippetListItem from './command-snippet-list-item.vue';
+  import type { PathBookmarkGroupQueryResponse } from '@/api/asset/path-bookmark-group';
+  import type { PathBookmarkWrapperResponse } from '@/api/asset/path-bookmark';
+  import PathBookmarkListItem from './path-bookmark-list-item.vue';
 
   defineProps<{
-    value: CommandSnippetWrapperResponse;
+    value: PathBookmarkWrapperResponse;
   }>();
 
   // 计算总量
-  const calcTotal = (group: CommandSnippetGroupQueryResponse) => {
+  const calcTotal = (group: PathBookmarkGroupQueryResponse) => {
     return group.items.filter(s => s.visible).length;
   };
 

@@ -3,7 +3,7 @@ package com.orion.ops.module.asset.controller;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkCreateRequest;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkUpdateRequest;
-import com.orion.ops.module.asset.entity.vo.PathBookmarkVO;
+import com.orion.ops.module.asset.entity.vo.PathBookmarkWrapperVO;
 import com.orion.ops.module.asset.service.PathBookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 路径标签 api
@@ -48,8 +47,8 @@ public class PathBookmarkController {
 
     @GetMapping("/list")
     @Operation(summary = "查询全部路径标签")
-    public List<PathBookmarkVO> getPathBookmarkList() {
-        return pathBookmarkService.getPathBookmarkList();
+    public PathBookmarkWrapperVO getPathBookmarkList() {
+        return pathBookmarkService.getPathBookmark();
     }
 
     @DeleteMapping("/delete")

@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.service;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkCreateRequest;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.PathBookmarkVO;
+import com.orion.ops.module.asset.entity.vo.PathBookmarkWrapperVO;
 
 import java.util.List;
 
@@ -30,6 +31,13 @@ public interface PathBookmarkService {
      * @return effect
      */
     Integer updatePathBookmarkById(PathBookmarkUpdateRequest request);
+
+    /**
+     * 查询路径标签
+     *
+     * @return rows
+     */
+    PathBookmarkWrapperVO getPathBookmark();
 
     /**
      * 查询全部路径标签

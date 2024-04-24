@@ -16,7 +16,10 @@ import com.orion.ops.module.asset.entity.domain.PathBookmarkDO;
 import com.orion.ops.module.asset.entity.dto.PathBookmarkCacheDTO;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkCreateRequest;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.PathBookmarkGroupVO;
 import com.orion.ops.module.asset.entity.vo.PathBookmarkVO;
+import com.orion.ops.module.asset.entity.vo.PathBookmarkWrapperVO;
+import com.orion.ops.module.asset.service.PathBookmarkGroupService;
 import com.orion.ops.module.asset.service.PathBookmarkService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +44,9 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
 
     @Resource
     private PathBookmarkDAO pathBookmarkDAO;
+
+    @Resource
+    private PathBookmarkGroupService pathBookmarkGroupService;
 
     @Override
     public Long createPathBookmark(PathBookmarkCreateRequest request) {
@@ -81,6 +89,31 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
         // 删除缓存
         RedisMaps.delete(PathBookmarkCacheKeyDefine.PATH_BOOKMARK.format(userId));
         return effect;
+    }
+
+    @Override
+    public PathBookmarkWrapperVO getPathBookmark() {
+        // 查询分组
+        List<PathBookmarkGroupVO> groups = pathBookmarkGroupService.getPathBookmarkGroupList();
+        // 查询命令片段
+        List<PathBookmarkVO> items = this.getPathBookmarkList();
+        // 设置组内数据
+        Map<Long, PathBookmarkGroupVO> groupMap = groups.stream()
+                .collect(Collectors.toMap(PathBookmarkGroupVO::getId, Function.identity()));
+        groupMap.forEach((groupId, group) -> {
+            List<PathBookmarkVO> groupedItems = items.stream()
+                    .filter(s -> groupId.equals(s.getGroupId()))
+                    .collect(Collectors.toList());
+            group.setItems(groupedItems);
+        });
+        // 未分组数据
+        List<PathBookmarkVO> ungroupedItems = items.stream()
+                .filter(s -> s.getGroupId() == null)
+                .collect(Collectors.toList());
+        return PathBookmarkWrapperVO.builder()
+                .groups(groups)
+                .ungroupedItems(ungroupedItems)
+                .build();
     }
 
     @Override

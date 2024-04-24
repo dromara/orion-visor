@@ -8,7 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
-import type { ISshSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
+import type { ISftpSession, ISshSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -224,6 +224,19 @@ export default defineStore('terminal', {
       }
       // 获取会话
       return this.sessionManager.getSession<ISshSession>(sessionTab.sessionId);
+    },
+
+    // 获取当前 sftp 会话
+    getCurrentSftpSession() {
+      // 获取面板会话
+      const sessionTab = this.panelManager
+        .getCurrentPanel()
+        .getCurrentTab();
+      if (!sessionTab || sessionTab.type !== PanelSessionType.SFTP.type) {
+        return;
+      }
+      // 获取会话
+      return this.sessionManager.getSession<ISftpSession>(sessionTab.sessionId);
     },
 
   },

@@ -10,6 +10,8 @@
                   position="left" />
     <!-- 命令片段列表抽屉 -->
     <command-snippet-list-drawer ref="snippetRef" />
+    <!-- 路径书签列表抽屉 -->
+    <path-bookmark-list-drawer ref="pathRef" />
     <!-- 传输列表 -->
     <transfer-drawer ref="transferRef" />
   </div>
@@ -27,19 +29,25 @@
   import { ref } from 'vue';
   import IconActions from './icon-actions.vue';
   import CommandSnippetListDrawer from '../../../command-snippet/components/command-snippet-list-drawer.vue';
+  import PathBookmarkListDrawer from '../../../path-bookmark/components/path-bookmark-list-drawer.vue';
   import TransferDrawer from '@/views/host/terminal/components/transfer/transfer-drawer.vue';
 
   const { getAndCheckCurrentSshSession } = useTerminalStore();
 
   const snippetRef = ref();
+  const pathRef = ref();
   const transferRef = ref();
 
   // 顶部操作
   const topActions = [
     {
-      icon: 'icon-code',
+      icon: 'icon-code-block',
       content: '打开命令片段',
       click: () => snippetRef.value.open()
+    }, {
+      icon: 'icon-bookmark',
+      content: '打开路径书签',
+      click: () => pathRef.value.open()
     }, {
       icon: 'icon-swap',
       content: '文件传输列表',
