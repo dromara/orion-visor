@@ -34,14 +34,11 @@ export interface DictValueRollbackRequest {
  * 字典配置值查询请求
  */
 export interface DictValueQueryRequest extends Pagination {
-  searchValue?: string;
-  id?: number;
   keyId?: number;
   keyName?: string;
   value?: string;
   label?: string;
   extra?: string;
-  sort?: number;
 }
 
 /**

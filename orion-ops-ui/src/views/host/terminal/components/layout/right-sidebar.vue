@@ -24,15 +24,16 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { ISshSession, SidebarAction } from '../../types/terminal.type';
   import { useTerminalStore } from '@/store';
   import { ref } from 'vue';
+  import { PanelSessionType } from '../../types/terminal.const';
   import IconActions from './icon-actions.vue';
-  import CommandSnippetListDrawer from '../../../command-snippet/components/command-snippet-list-drawer.vue';
-  import PathBookmarkListDrawer from '../../../path-bookmark/components/path-bookmark-list-drawer.vue';
+  import CommandSnippetListDrawer from '@/views/host/command-snippet/components/command-snippet-list-drawer.vue';
+  import PathBookmarkListDrawer from '@/views/host/path-bookmark/components/path-bookmark-list-drawer.vue';
   import TransferDrawer from '@/views/host/terminal/components/transfer/transfer-drawer.vue';
 
-  const { getAndCheckCurrentSshSession } = useTerminalStore();
+  const { getCurrentSession } = useTerminalStore();
 
   const snippetRef = ref();
   const pathRef = ref();
@@ -69,7 +70,7 @@
 
   // 终端截屏
   const screenshot = () => {
-    const handler = getAndCheckCurrentSshSession()?.handler;
+    const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
     if (handler && handler.enabledStatus('screenshot')) {
       handler.screenshot();
     }

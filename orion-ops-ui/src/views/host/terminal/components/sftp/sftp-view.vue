@@ -173,7 +173,6 @@
 
   // 加载文件列表
   const loadFiles = (path: string) => {
-    setTableLoading(true);
     session.value?.list(path);
   };
 

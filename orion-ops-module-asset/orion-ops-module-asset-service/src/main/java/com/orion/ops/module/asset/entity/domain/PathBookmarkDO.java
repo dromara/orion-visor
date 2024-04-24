@@ -42,6 +42,10 @@ public class PathBookmarkDO extends BaseDO {
     @TableField("name")
     private String name;
 
+    @Schema(description = "类型")
+    @TableField("type")
+    private String type;
+
     @Schema(description = "路径")
     @TableField("path")
     private String path;

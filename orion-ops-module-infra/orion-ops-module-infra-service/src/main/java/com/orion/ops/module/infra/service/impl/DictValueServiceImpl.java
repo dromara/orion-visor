@@ -374,6 +374,7 @@ public class DictValueServiceImpl implements DictValueService {
                 .like(DictValueDO::getKeyName, request.getKeyName())
                 .like(DictValueDO::getValue, request.getValue())
                 .like(DictValueDO::getLabel, request.getLabel())
+                .like(DictValueDO::getExtra, request.getExtra())
                 .orderByDesc(DictValueDO::getId);
     }
 

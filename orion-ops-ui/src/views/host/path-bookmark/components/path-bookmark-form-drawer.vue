@@ -24,6 +24,13 @@
         <a-form-item field="groupId" label="分组">
           <path-bookmark-group-select v-model="formModel.groupId" />
         </a-form-item>
+        <!-- 类型 -->
+        <a-form-item field="type" label="类型">
+          <a-select v-model="formModel.type"
+                    :options="toOptions(pathBookmarkTypeKey)"
+                    placeholder="请选择类型"
+                    allow-clear />
+        </a-form-item>
         <!-- 文件路径 -->
         <a-form-item field="path" label="路径">
           <a-textarea v-model="formModel.path"
@@ -49,11 +56,14 @@
   import useVisible from '@/hooks/visible';
   import { createPathBookmark, updatePathBookmark } from '@/api/asset/path-bookmark';
   import formRules from '../types/form.rules';
+  import { PathBookmarkType, pathBookmarkTypeKey } from '../types/const';
+  import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import PathBookmarkGroupSelect from './path-bookmark-group-select.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+  const { toOptions } = useDictStore();
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
@@ -63,6 +73,7 @@
       id: undefined,
       groupId: undefined,
       name: undefined,
+      type: PathBookmarkType.DIR,
       path: undefined,
     };
   };

@@ -50,6 +50,7 @@ export default class SftpSession implements ISftpSession {
 
   // 查询文件列表
   list(path: string) {
+    this.resolver.setLoading(true);
     this.channel.send(InputProtocol.SFTP_LIST, {
       sessionId: this.sessionId,
       showHiddenFile: ~~this.showHiddenFile,

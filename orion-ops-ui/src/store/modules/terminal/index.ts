@@ -8,7 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
-import type { ISftpSession, ISshSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
+import type { ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -18,7 +18,7 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
-import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/terminal.const';
+import { TerminalTabs } from '@/views/host/terminal/types/terminal.const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';
@@ -195,8 +195,30 @@ export default defineStore('terminal', {
       }
     },
 
-    // 检查当前是否为终端页面 并且获取当前 ssh 会话
-    getAndCheckCurrentSshSession(tips: boolean = true) {
+    // 获取当前会话类型
+    getCurrentSessionType(tips: boolean = false) {
+      // 获取当前 activeTab
+      const activeTab = this.tabManager.active;
+      if (activeTab !== TerminalTabs.TERMINAL_PANEL.key) {
+        if (tips) {
+          Message.warning('请切换到终端标签页');
+        }
+        return;
+      }
+      // 获取面板会话
+      const type = this.panelManager
+        .getCurrentPanel()
+        .getCurrentTab()
+        ?.type;
+      if (!type && tips) {
+        Message.warning(`请打开 ${type}`);
+        return;
+      }
+      return type;
+    },
+
+    // 获取当前会话
+    getCurrentSession<T extends ITerminalSession>(type: string, tips: boolean = false) {
       // 获取当前 activeTab
       const activeTab = this.tabManager.active;
       if (activeTab !== TerminalTabs.TERMINAL_PANEL.key) {
@@ -206,37 +228,24 @@ export default defineStore('terminal', {
         return;
       }
       // 获取当前会话
-      const session = this.getCurrentSshSession();
+      const session = this._getCurrentSession<T>(type);
       if (!session && tips) {
-        Message.warning('请打开终端');
+        Message.warning(`请打开 ${type}`);
       }
       return session;
     },
 
-    // 获取当前 ssh 会话
-    getCurrentSshSession() {
+    // 获取当前会话
+    _getCurrentSession<T extends ITerminalSession>(type: string): T | undefined {
       // 获取面板会话
       const sessionTab = this.panelManager
         .getCurrentPanel()
         .getCurrentTab();
-      if (!sessionTab || sessionTab.type !== PanelSessionType.SSH.type) {
+      if (!sessionTab || sessionTab.type !== type) {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession<ISshSession>(sessionTab.sessionId);
-    },
-
-    // 获取当前 sftp 会话
-    getCurrentSftpSession() {
-      // 获取面板会话
-      const sessionTab = this.panelManager
-        .getCurrentPanel()
-        .getCurrentTab();
-      if (!sessionTab || sessionTab.type !== PanelSessionType.SFTP.type) {
-        return;
-      }
-      // 获取会话
-      return this.sessionManager.getSession<ISftpSession>(sessionTab.sessionId);
+      return this.sessionManager.getSession<T>(sessionTab.sessionId);
     },
 
   },

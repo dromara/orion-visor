@@ -28,16 +28,16 @@
                 </template>
                 进入
               </a-tag>
-              <!-- 粘贴 -->
+              <!-- 复制 -->
               <a-tag class="pointer usn"
                      size="small"
                      :checkable="true"
                      :checked="true"
-                     @click.stop.prevent="paste">
+                     @click.stop.prevent="copyPath">
                 <template #icon>
-                  <icon-paste />
+                  <icon-copy />
                 </template>
-                粘贴
+                复制
               </a-tag>
             </a-space>
           </div>
@@ -50,12 +50,12 @@
     </div>
     <!-- 右键菜单 -->
     <template #content>
-      <!-- 进入父目录 -->
+      <!-- 进入 -->
       <a-doption @click="changePath">
         <div class="terminal-context-menu-icon">
           <icon-link />
         </div>
-        <div>进入父目录</div>
+        <div>进入</div>
       </a-doption>
       <!-- 复制 -->
       <a-doption @click="copyPath">
@@ -112,19 +112,21 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ISftpSession, ISshSession } from '@/views/host/terminal/types/terminal.type';
   import type { PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
   import { copy } from '@/hooks/copy';
   import { inject } from 'vue';
-  import { openUpdatePathKey, removePathKey } from '../types/const';
   import { getParentPath } from '@/utils/file';
+  import { openUpdatePathKey, PathBookmarkType, removePathKey } from '../types/const';
+  import { PanelSessionType } from '@/views/host/terminal/types/terminal.const';
 
   const props = defineProps<{
     item: PathBookmarkQueryResponse;
   }>();
 
-  const { getAndCheckCurrentSshSession } = useTerminalStore();
+  const { getCurrentSession, getCurrentSessionType } = useTerminalStore();
 
   let clickCount = 0;
 
@@ -138,8 +140,17 @@
   const clickItem = () => {
     if (++clickCount == 2) {
       clickCount = 0;
-      changePath();
+      // 双击
+      const type = getCurrentSessionType(true);
+      if (type === PanelSessionType.SSH.type) {
+        // SSH 粘贴
+        paste();
+      } else if (type === PanelSessionType.SFTP.type) {
+        // SFTP 切换目录
+        listFiles();
+      }
     } else {
+      // 单击展开
       expandItem();
     }
   };
@@ -173,18 +184,37 @@
 
   // 粘贴
   const paste = () => {
-    write(props.item.path);
+    writeCommand(props.item.path);
   };
 
-  // 进入父目录
+  // 切换目录
   const changePath = () => {
-    const parentPath = getParentPath(props.item.path);
-    write( parentPath+ '\r\n');
+    const type = getCurrentSessionType(true);
+    if (type === PanelSessionType.SSH.type) {
+      const path = props.item.type === PathBookmarkType.DIR
+        ? props.item.path
+        : getParentPath(props.item.path);
+      // SSH cd
+      writeCommand('cd ' + path + '\r\n');
+    } else if (type === PanelSessionType.SFTP.type) {
+      // SFTP 切换目录
+      listFiles();
+    }
   };
 
-  // 写入路径
-  const write = (command: string) => {
-    const handler = getAndCheckCurrentSshSession()?.handler;
+  // 查询 sftp 文件列表
+  const listFiles = () => {
+    // 如果非文件夹则查询父文件夹
+    const path = props.item.type === PathBookmarkType.DIR
+      ? props.item.path
+      : getParentPath(props.item.path);
+    // 查询列表
+    getCurrentSession<ISftpSession>(PanelSessionType.SFTP.type, true)?.list(path);
+  };
+
+  // 写入 ssh 命令
+  const writeCommand = (command: string) => {
+    const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
     if (handler && handler.enabledStatus('checkAppendMissing')) {
       handler.checkAppendMissing(command);
     }

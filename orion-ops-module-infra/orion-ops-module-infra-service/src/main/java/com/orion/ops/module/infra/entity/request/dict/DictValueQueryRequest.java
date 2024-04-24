@@ -36,4 +36,7 @@ public class DictValueQueryRequest extends PageRequest {
     @Schema(description = "配置描述")
     private String label;
 
+    @Schema(description = "额外参数")
+    private String extra;
+
 }

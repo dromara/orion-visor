@@ -40,6 +40,11 @@ public class PathBookmarkUpdateRequest implements Serializable {
     private String name;
 
     @NotBlank
+    @Size(max = 4)
+    @Schema(description = "类型")
+    private String type;
+
+    @NotBlank
     @Size(max = 1024)
     @Schema(description = "路径")
     private String path;

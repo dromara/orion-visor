@@ -36,6 +36,9 @@ public class PathBookmarkVO implements Serializable {
     @Schema(description = "名称")
     private String name;
 
+    @Schema(description = "类型")
+    private String type;
+
     @Schema(description = "路径")
     private String path;
 

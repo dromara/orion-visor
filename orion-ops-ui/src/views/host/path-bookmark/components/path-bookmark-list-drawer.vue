@@ -78,20 +78,22 @@
 </script>
 
 <script lang="ts" setup>
+  import { ISshSession } from '@/views/host/terminal/types/terminal.type';
   import type { PathBookmarkWrapperResponse, PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
-  import { ref, provide } from 'vue';
+  import { ref, provide, onMounted } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { deletePathBookmark, getPathBookmarkList } from '@/api/asset/path-bookmark';
-  import { useCacheStore, useTerminalStore } from '@/store';
-  import { openUpdatePathKey, removePathKey } from '../types/const';
+  import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
+  import { PanelSessionType } from '@/views/host/terminal/types/terminal.const';
+  import { dictKeys, openUpdatePathKey, removePathKey } from '../types/const';
   import PathBookmarkListItem from './path-bookmark-list-item.vue';
   import PathBookmarkListGroup from './path-bookmark-list-group.vue';
   import PathBookmarkFormDrawer from './path-bookmark-form-drawer.vue';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
-  const { getCurrentSshSession } = useTerminalStore();
+  const { getCurrentSession } = useTerminalStore();
   const cacheStore = useCacheStore();
 
   const formDrawer = ref();
@@ -274,9 +276,14 @@
 
   // 关闭回调
   const onClose = () => {
-    // 聚焦终端
-    getCurrentSshSession()?.focus();
+    // 关闭时候如果打开的是终端 则聚焦终端
+    getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
   };
+
+  // 加载字典值
+  onMounted(() => {
+    useDictStore().loadKeys(dictKeys);
+  });
 
 </script>
 

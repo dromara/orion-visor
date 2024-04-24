@@ -7,6 +7,7 @@ import axios from 'axios';
 export interface PathBookmarkCreateRequest {
   groupId?: number;
   name?: string;
+  type?: string;
   path?: string;
 }
 
@@ -24,6 +25,7 @@ export interface PathBookmarkQueryResponse extends PathBookmarkQueryResponseExtr
   id: number;
   groupId: number;
   name: string;
+  type: string;
   path: string;
 }
 

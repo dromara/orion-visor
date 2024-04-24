@@ -113,18 +113,20 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ISshSession } from '@/views/host/terminal/types/terminal.type';
   import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
   import { copy } from '@/hooks/copy';
   import { inject } from 'vue';
   import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
+  import { PanelSessionType } from '@/views/host/terminal/types/terminal.const';
 
   const props = defineProps<{
     item: CommandSnippetQueryResponse;
   }>();
 
-  const { getAndCheckCurrentSshSession } = useTerminalStore();
+  const { getCurrentSession } = useTerminalStore();
 
   let clickCount = 0;
 
@@ -137,9 +139,11 @@
   // 点击命令
   const clickItem = () => {
     if (++clickCount == 2) {
+      // 双击执行
       clickCount = 0;
       exec();
     } else {
+      // 单击展开
       expandItem();
     }
   };
@@ -183,7 +187,7 @@
 
   // 写入命令
   const write = (command: string) => {
-    const handler = getAndCheckCurrentSshSession()?.handler;
+    const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
     if (handler && handler.enabledStatus('checkAppendMissing')) {
       handler.checkAppendMissing(command);
     }

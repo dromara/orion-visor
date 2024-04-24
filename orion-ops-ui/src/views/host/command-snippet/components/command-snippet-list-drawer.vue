@@ -78,6 +78,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ISshSession } from '@/views/host/terminal/types/terminal.type';
   import type { CommandSnippetWrapperResponse, CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { ref, provide } from 'vue';
   import useVisible from '@/hooks/visible';
@@ -85,13 +86,14 @@
   import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
   import { useCacheStore, useTerminalStore } from '@/store';
   import { openUpdateSnippetKey, removeSnippetKey } from '../types/const';
+  import { PanelSessionType } from '@/views/host/terminal/types/terminal.const';
   import CommandSnippetListItem from './command-snippet-list-item.vue';
   import CommandSnippetListGroup from './command-snippet-list-group.vue';
   import CommandSnippetFormDrawer from './command-snippet-form-drawer.vue';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
-  const { getCurrentSshSession } = useTerminalStore();
+  const { getCurrentSession } = useTerminalStore();
   const cacheStore = useCacheStore();
 
   const formDrawer = ref();
@@ -274,8 +276,8 @@
 
   // 关闭回调
   const onClose = () => {
-    // 聚焦终端
-    getCurrentSshSession()?.focus();
+    // 关闭时候如果打开的是终端 则聚焦终端
+    getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
   };
 
 </script>

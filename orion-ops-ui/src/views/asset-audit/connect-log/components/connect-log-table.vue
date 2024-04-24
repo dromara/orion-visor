@@ -114,6 +114,12 @@
           {{ record.hostAddress }}
         </span>
       </template>
+      <!-- 类型 -->
+      <template #type="{ record }">
+        <a-tag :color="getDictValue(connectTypeKey, record.type, 'color')">
+          {{ getDictValue(connectTypeKey, record.type) }}
+        </a-tag>
+      </template>
       <!-- 状态 -->
       <template #status="{ record }">
         <span class="circle" :style="{
