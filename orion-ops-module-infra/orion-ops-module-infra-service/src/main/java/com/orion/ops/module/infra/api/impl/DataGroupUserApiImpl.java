@@ -50,4 +50,9 @@ public class DataGroupUserApiImpl implements DataGroupUserApi {
         return DataGroupProviderConvert.MAPPER.toList(rows);
     }
 
+    @Override
+    public Integer deleteDataGroupByIdList(DataGroupTypeEnum type, Long userId, List<Long> idList) {
+        return dataGroupService.deleteDataGroupByIdList(type.name(), userId, idList);
+    }
+
 }

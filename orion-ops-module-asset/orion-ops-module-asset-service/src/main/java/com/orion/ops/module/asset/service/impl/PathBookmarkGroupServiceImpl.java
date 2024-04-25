@@ -7,6 +7,8 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.PathBookmarkGroupConvert;
+import com.orion.ops.module.asset.dao.PathBookmarkDAO;
+import com.orion.ops.module.asset.entity.domain.PathBookmarkDO;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkGroupCreateRequest;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkGroupDeleteRequest;
 import com.orion.ops.module.asset.entity.request.path.PathBookmarkGroupUpdateRequest;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +47,9 @@ public class PathBookmarkGroupServiceImpl implements PathBookmarkGroupService {
 
     @Resource
     private DataGroupUserApi dataGroupUserApi;
+
+    @Resource
+    private PathBookmarkDAO pathBookmarkDAO;
 
     @Resource
     private PathBookmarkService pathBookmarkService;
@@ -94,6 +100,39 @@ public class PathBookmarkGroupServiceImpl implements PathBookmarkGroupService {
             effect += pathBookmarkService.setGroupNull(userId, id);
         }
         return effect;
+    }
+
+    @Override
+    public void clearUnusedGroup() {
+        // 查询全部 groupId
+        Map<Long, List<Long>> userGroupMap = pathBookmarkDAO.of()
+                .createWrapper()
+                .select(PathBookmarkDO::getUserId, PathBookmarkDO::getGroupId)
+                .isNotNull(PathBookmarkDO::getGroupId)
+                .groupBy(PathBookmarkDO::getGroupId)
+                .then()
+                .stream()
+                .collect(Collectors.groupingBy(PathBookmarkDO::getUserId,
+                        Collectors.mapping(PathBookmarkDO::getGroupId, Collectors.toList())));
+        userGroupMap.forEach((k, v) -> {
+            // 查询用户分组
+            List<DataGroupDTO> groups = dataGroupUserApi.getDataGroupList(DataGroupTypeEnum.PATH_BOOKMARK, k);
+            if (groups.isEmpty()) {
+                return;
+            }
+            // 不存在的则移除
+            List<Long> deleteGroupList = groups.stream()
+                    .map(DataGroupDTO::getId)
+                    .filter(s -> !v.contains(s))
+                    .collect(Collectors.toList());
+            if (deleteGroupList.isEmpty()) {
+                return;
+            }
+            log.info("PathBookmarkGroupService.clearUnusedGroup userId: {}, deleteGroupList: {}", k, deleteGroupList);
+            // 删除分组
+            Integer effect = dataGroupUserApi.deleteDataGroupByIdList(DataGroupTypeEnum.PATH_BOOKMARK, k, deleteGroupList);
+            log.info("PathBookmarkGroupService.clearUnusedGroup userId: {}, effect: {}", k, effect);
+        });
     }
 
 }

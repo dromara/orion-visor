@@ -43,4 +43,14 @@ public interface DataGroupUserApi {
      */
     List<DataGroupDTO> getDataGroupTree(DataGroupTypeEnum type, Long userId);
 
+    /**
+     * 删除数据分组
+     *
+     * @param type   type
+     * @param userId userId
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteDataGroupByIdList(DataGroupTypeEnum type, Long userId, List<Long> idList);
+
 }

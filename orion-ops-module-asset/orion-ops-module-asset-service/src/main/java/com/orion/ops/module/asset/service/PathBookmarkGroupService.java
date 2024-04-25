@@ -47,4 +47,9 @@ public interface PathBookmarkGroupService {
      */
     Integer deletePathBookmarkGroup(PathBookmarkGroupDeleteRequest request);
 
+    /**
+     * 清理未使用的分组
+     */
+    void clearUnusedGroup();
+
 }

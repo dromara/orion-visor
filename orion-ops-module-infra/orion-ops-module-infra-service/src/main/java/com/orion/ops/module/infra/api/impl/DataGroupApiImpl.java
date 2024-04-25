@@ -88,4 +88,9 @@ public class DataGroupApiImpl implements DataGroupApi {
         return dataGroupService.deleteDataGroupById(id);
     }
 
+    @Override
+    public Integer deleteDataGroupByIdList(DataGroupTypeEnum type, List<Long> idList) {
+        return dataGroupService.deleteDataGroupByIdList(type.name(), Const.SYSTEM_USER_ID, idList);
+    }
+
 }

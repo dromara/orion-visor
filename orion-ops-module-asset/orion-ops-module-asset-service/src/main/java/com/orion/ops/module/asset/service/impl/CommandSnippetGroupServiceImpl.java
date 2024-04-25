@@ -7,6 +7,8 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.CommandSnippetGroupConvert;
+import com.orion.ops.module.asset.dao.CommandSnippetDAO;
+import com.orion.ops.module.asset.entity.domain.CommandSnippetDO;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetGroupCreateRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetGroupDeleteRequest;
 import com.orion.ops.module.asset.entity.request.command.CommandSnippetGroupUpdateRequest;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +47,9 @@ public class CommandSnippetGroupServiceImpl implements CommandSnippetGroupServic
 
     @Resource
     private DataGroupUserApi dataGroupUserApi;
+
+    @Resource
+    private CommandSnippetDAO commandSnippetDAO;
 
     @Resource
     private CommandSnippetService commandSnippetService;
@@ -94,6 +100,39 @@ public class CommandSnippetGroupServiceImpl implements CommandSnippetGroupServic
             effect += commandSnippetService.setGroupNull(userId, id);
         }
         return effect;
+    }
+
+    @Override
+    public void clearUnusedGroup() {
+        // 查询全部 groupId
+        Map<Long, List<Long>> userGroupMap = commandSnippetDAO.of()
+                .createWrapper()
+                .select(CommandSnippetDO::getUserId, CommandSnippetDO::getGroupId)
+                .isNotNull(CommandSnippetDO::getGroupId)
+                .groupBy(CommandSnippetDO::getGroupId)
+                .then()
+                .stream()
+                .collect(Collectors.groupingBy(CommandSnippetDO::getUserId,
+                        Collectors.mapping(CommandSnippetDO::getGroupId, Collectors.toList())));
+        userGroupMap.forEach((k, v) -> {
+            // 查询用户分组
+            List<DataGroupDTO> groups = dataGroupUserApi.getDataGroupList(DataGroupTypeEnum.COMMAND_SNIPPET, k);
+            if (groups.isEmpty()) {
+                return;
+            }
+            // 不存在的则移除
+            List<Long> deleteGroupList = groups.stream()
+                    .map(DataGroupDTO::getId)
+                    .filter(s -> !v.contains(s))
+                    .collect(Collectors.toList());
+            if (deleteGroupList.isEmpty()) {
+                return;
+            }
+            log.info("CommandSnippetGroupService.clearUnusedGroup userId: {}, deleteGroupList: {}", k, deleteGroupList);
+            // 删除分组
+            Integer effect = dataGroupUserApi.deleteDataGroupByIdList(DataGroupTypeEnum.COMMAND_SNIPPET, k, deleteGroupList);
+            log.info("CommandSnippetGroupService.clearUnusedGroup userId: {}, effect: {}", k, effect);
+        });
     }
 
 }
