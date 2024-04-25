@@ -4,12 +4,11 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.common.file.FileClient;
+import com.orion.ops.framework.redis.core.utils.RedisLocks;
 import com.orion.ops.module.asset.dao.ExecHostLogDAO;
 import com.orion.ops.module.asset.define.config.AppExecLogConfig;
 import com.orion.ops.module.asset.entity.domain.ExecHostLogDO;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -39,9 +38,6 @@ public class ExecLogFileAutoClearTask {
     private AppExecLogConfig appExecLogConfig;
 
     @Resource
-    private RedissonClient redissonClient;
-
-    @Resource
     private FileClient logsFileClient;
 
     @Resource
@@ -50,26 +46,12 @@ public class ExecLogFileAutoClearTask {
     /**
      * 清理
      */
-    // @Scheduled(cron = "0 0 3 * * ?")
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = "0 0 3 * * ?")
     public void clear() {
         log.info("ExecLogFileAutoClearTask.clear start");
-        // 获取锁
-        RLock lock = redissonClient.getLock(LOCK_KEY);
-        // 未获取到直接返回
-        if (!lock.tryLock()) {
-            log.info("ExecLogFileAutoClearTask.clear locked end");
-            return;
-        }
-        try {
-            // 清理
-            this.doClearFile();
-            log.info("ExecLogFileAutoClearTask.clear finish");
-        } catch (Exception e) {
-            log.error("ExecLogFileAutoClearTask.clear error", e);
-        } finally {
-            lock.unlock();
-        }
+        // 获取锁并且执行
+        RedisLocks.tryLock(LOCK_KEY, this::doClearFile);
+        log.info("ExecLogFileAutoClearTask.clear finish");
     }
 
     /**

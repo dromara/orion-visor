@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 public class AppExecLogConfig {
 
     /**
-     * 是否拼接执行状态
+     * 是否拼接 ansi 执行状态日志
      */
-    private Boolean appendStatus;
+    private Boolean appendAnsi;
 
     /**
      * 自动清理执行文件
@@ -32,9 +32,9 @@ public class AppExecLogConfig {
     private Integer keepPeriod;
 
     public AppExecLogConfig() {
-        this.appendStatus = true;
+        this.appendAnsi = true;
         this.autoClear = true;
-        this.keepPeriod = 90;
+        this.keepPeriod = 60;
     }
 
 }

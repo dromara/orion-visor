@@ -19,7 +19,7 @@
 
 > ##### 5. 调度任务、批量执行 的日志文件中如何只保存原始输出?
 
-修改 application.yaml `app.exec-log.append-status` 为 false
+修改 application.yaml `app.exec-log.append-ansi` 为 false
 
 > ##### 6. 为什么使用秘钥认证还是无法连接机器?
 

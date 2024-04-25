@@ -1,9 +1,8 @@
 package com.orion.ops.module.asset.task;
 
+import com.orion.ops.framework.redis.core.utils.RedisLocks;
 import com.orion.ops.module.asset.service.PathBookmarkGroupService;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +25,6 @@ public class PathBookmarkGroupAutoClearTask {
     private static final String LOCK_KEY = "clear:pbg:lock";
 
     @Resource
-    private RedissonClient redissonClient;
-
-    @Resource
     private PathBookmarkGroupService pathBookmarkGroupService;
 
     /**
@@ -37,22 +33,9 @@ public class PathBookmarkGroupAutoClearTask {
     @Scheduled(cron = "0 20 2 * * ?")
     public void clear() {
         log.info("PathBookmarkGroupAutoClearTask.clear start");
-        // 获取锁
-        RLock lock = redissonClient.getLock(LOCK_KEY);
-        // 未获取到直接返回
-        if (!lock.tryLock()) {
-            log.info("PathBookmarkGroupAutoClearTask.clear locked end");
-            return;
-        }
-        try {
-            // 清理
-            pathBookmarkGroupService.clearUnusedGroup();
-            log.info("PathBookmarkGroupAutoClearTask.clear finish");
-        } catch (Exception e) {
-            log.error("PathBookmarkGroupAutoClearTask.clear error", e);
-        } finally {
-            lock.unlock();
-        }
+        // 获取锁并清理
+        RedisLocks.tryLock(LOCK_KEY, pathBookmarkGroupService::clearUnusedGroup);
+        log.info("PathBookmarkGroupAutoClearTask.clear finish");
     }
 
 }
