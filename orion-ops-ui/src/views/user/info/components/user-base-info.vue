@@ -1,5 +1,5 @@
 <template>
-  <a-spin :loading="loading" style="width: 400px;">
+  <a-spin :loading="loading" style="width: 520px;">
     <!-- 头像 -->
     <div class="avatar-container">
       <div class="avatar-wrapper">
@@ -32,6 +32,10 @@
       <!-- 邮箱 -->
       <a-form-item field="email" label="邮箱">
         <a-input v-model="formModel.email" placeholder="请输入邮箱" />
+      </a-form-item>
+      <!-- 角色 -->
+      <a-form-item field="roles" label="角色" disabled>
+        <a-input-tag v-model="roles" placeholder="角色" />
       </a-form-item>
     </a-form>
     <!-- 操作 -->
@@ -68,6 +72,7 @@
   const nickname = ref('');
   const formRef = ref();
   const formModel = ref<UserUpdateRequest>({});
+  const roles = ref<Array<string>>([]);
 
   // 修改用户信息
   const save = async () => {
@@ -103,6 +108,7 @@
         u = data;
       }
       formModel.value = pick(u, 'id', 'username', 'nickname', 'mobile', 'email');
+      roles.value = (u.roles || []).map(s => `${s.name}(${s.code})`);
       nickname.value = u.nickname?.substring(0, 1);
     } catch (e) {
     } finally {

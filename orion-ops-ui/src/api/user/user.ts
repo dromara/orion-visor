@@ -1,5 +1,6 @@
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { RoleQueryResponse } from '@/api/user/role';
 import axios from 'axios';
 
 /**
@@ -55,6 +56,7 @@ export interface UserQueryResponse extends TableData {
   updateTime: number;
   creator: string;
   updater: string;
+  roles: Array<RoleQueryResponse>;
 }
 
 /**

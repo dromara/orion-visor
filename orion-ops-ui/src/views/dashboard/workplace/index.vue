@@ -12,8 +12,7 @@
         <!-- 操作日志 -->
         <a-card class="general-card"
                 title="操作日志"
-                :header-style="{ paddingBottom: '0' }"
-                :body-style="{ padding: '8px 20px 8px 20px' }">
+                :body-style="{ padding: '0 20px 8px 20px' }">
           <operator-log-simple-table :current="true"
                                      :handle-column="false" />
         </a-card>

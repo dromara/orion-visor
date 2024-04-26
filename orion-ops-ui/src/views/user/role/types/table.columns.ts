@@ -13,6 +13,8 @@ const columns = [
     title: '角色名称',
     dataIndex: 'name',
     slotName: 'name',
+    ellipsis: true,
+    tooltip: true,
   }, {
     title: '角色编码',
     dataIndex: 'code',

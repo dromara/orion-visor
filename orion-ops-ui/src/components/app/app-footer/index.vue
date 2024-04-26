@@ -6,7 +6,7 @@
         <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">教程</a-link> -->
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro">github</a-link>
         <a-link target="_blank" href="https://gitee.com/lijiahangmax/orion-ops-pro">gitee</a-link>
-        <a-link target="_blank" href="https://lijiahangmax.gitee.io/orion-ops-pro">文档</a-link>
+        <a-link target="_blank" href="https://lijiahangmax.github.io/orion-ops-pro">文档</a-link>
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE">License</a-link>
         <a-link target="_blank" :href="`https://github.com/lijiahangmax/orion-ops-pro/releases/tag/v${version}`">v{{ version }} 开源版</a-link>
       </a-space>

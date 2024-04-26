@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户 视图响应对象
@@ -60,5 +61,8 @@ public class SystemUserVO implements Serializable {
 
     @Schema(description = "修改人")
     private String updater;
+
+    @Schema(description = "用户角色")
+    private List<SystemRoleVO> roles;
 
 }
