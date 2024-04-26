@@ -132,7 +132,7 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(list, PathBookmarkCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(cacheKey, s -> s.getId().toString(), list);
+            RedisMaps.putAllJson(cacheKey, PathBookmarkCacheKeyDefine.PATH_BOOKMARK, s -> s.getId().toString(), list);
         }
         // 删除屏障
         CacheBarriers.removeBarrier(list);

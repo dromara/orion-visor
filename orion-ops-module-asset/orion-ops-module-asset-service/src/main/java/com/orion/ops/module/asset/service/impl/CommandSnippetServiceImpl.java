@@ -133,7 +133,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(list, CommandSnippetCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(cacheKey, s -> s.getId().toString(), list);
+            RedisMaps.putAllJson(cacheKey, CommandSnippetCacheKeyDefine.SNIPPET, s -> s.getId().toString(), list);
         }
         // 删除屏障
         CacheBarriers.removeBarrier(list);
