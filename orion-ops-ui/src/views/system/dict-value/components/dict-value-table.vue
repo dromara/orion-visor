@@ -154,13 +154,11 @@
   const { loading, setLoading } = useLoading();
 
   const formModel = reactive<DictValueQueryRequest>({
-    id: undefined,
     keyId: undefined,
     keyName: undefined,
     value: undefined,
     label: undefined,
     extra: undefined,
-    sort: undefined,
   });
 
   // 删除选中行
