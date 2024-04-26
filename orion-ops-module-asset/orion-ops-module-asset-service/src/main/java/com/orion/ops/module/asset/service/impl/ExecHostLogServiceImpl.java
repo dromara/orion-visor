@@ -79,7 +79,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
                 .flatMap(s -> s.stream()
                         .filter(h -> h.getHostId().equals(record.getHostId()))
                         .findFirst())
-                .ifPresent(IExecCommandHandler::interrupted);
+                .ifPresent(IExecCommandHandler::interrupt);
         // 删除
         int effect = execHostLogDAO.deleteById(id);
         log.info("ExecHostLogService-deleteExecHostLogById id: {}, effect: {}", id, effect);

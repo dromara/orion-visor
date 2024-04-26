@@ -3,11 +3,13 @@ package com.orion.ops.module.asset.handler.host.exec.command.handler;
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.support.timeout.TimeoutCheckers;
 import com.orion.lang.support.timeout.TimeoutEndpoint;
+import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.define.AssetThreadPools;
+import com.orion.ops.module.asset.define.config.AppExecLogConfig;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
@@ -33,6 +35,8 @@ public class ExecTaskHandler implements IExecTaskHandler {
     private static final ExecLogDAO execLogDAO = SpringHolder.getBean(ExecLogDAO.class);
 
     private static final ExecTaskManager execTaskManager = SpringHolder.getBean(ExecTaskManager.class);
+
+    private static final AppExecLogConfig appExecLogConfig = SpringHolder.getBean(AppExecLogConfig.class);
 
     private final ExecCommandDTO execCommand;
 
@@ -73,9 +77,9 @@ public class ExecTaskHandler implements IExecTaskHandler {
     }
 
     @Override
-    public void interrupted() {
-        log.info("ExecTaskHandler-interrupted id: {}", execCommand.getLogId());
-        handlers.forEach(IExecCommandHandler::interrupted);
+    public void interrupt() {
+        log.info("ExecTaskHandler-interrupt id: {}", execCommand.getLogId());
+        handlers.forEach(IExecCommandHandler::interrupt);
     }
 
     /**
@@ -93,15 +97,31 @@ public class ExecTaskHandler implements IExecTaskHandler {
         List<ExecCommandHostDTO> hosts = execCommand.getHosts();
         if (hosts.size() == 1) {
             // 单个主机直接执行
-            ExecCommandHandler handler = new ExecCommandHandler(execCommand, hosts.get(0), timeoutChecker);
+            IExecCommandHandler handler = this.createCommandHandler(hosts.get(0));
             handlers.add(handler);
             handler.run();
         } else {
             hosts.stream()
-                    .map(s -> new ExecCommandHandler(execCommand, s, timeoutChecker))
+                    .map(this::createCommandHandler)
                     .forEach(handlers::add);
             // 多个主机异步阻塞执行
             Threads.blockRun(handlers, AssetThreadPools.EXEC_HOST);
+        }
+    }
+
+    /**
+     * 创建命令执行器
+     *
+     * @param host host
+     * @return handler
+     */
+    private IExecCommandHandler createCommandHandler(ExecCommandHostDTO host) {
+        if (Booleans.isTrue(appExecLogConfig.getAppendAnsi())) {
+            // ansi 日志
+            return new ExecCommandAnsiHandler(execCommand, host, timeoutChecker);
+        } else {
+            // 原始日志
+            return new ExecCommandOriginHandler(execCommand, host, timeoutChecker);
         }
     }
 

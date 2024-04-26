@@ -176,7 +176,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         ExecLogDO record = execLogDAO.selectByIdSource(id, source);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 中断命令执行
-        this.interruptedTask(Lists.singleton(id));
+        this.interruptTask(Lists.singleton(id));
         // 删除执行日志
         int effect = execLogDAO.deleteById(id);
         // 删除主机日志
@@ -200,7 +200,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .intValue();
         Valid.isTrue(idList.size() == count, ErrorMessage.DATA_MODIFIED);
         // 中断命令执行
-        this.interruptedTask(idList);
+        this.interruptTask(idList);
         // 删除执行日志
         int effect = execLogDAO.deleteBatchIds(idList);
         // 删除主机日志
@@ -230,7 +230,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         int effect = 0;
         if (!idList.isEmpty()) {
             // 中断命令执行
-            this.interruptedTask(idList);
+            this.interruptTask(idList);
             // 删除执行日志
             effect = execLogDAO.delete(wrapper);
             // 删除主机日志
@@ -256,9 +256,9 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 中断执行
         IExecTaskHandler task = execTaskManager.getTask(logId);
         if (task != null) {
-            log.info("ExecLogService.interruptExec interrupted logId: {}", logId);
+            log.info("ExecLogService.interruptExec interrupt logId: {}", logId);
             // 中断
-            task.interrupted();
+            task.interrupt();
         } else {
             log.info("ExecLogService.interruptExec updateStatus start logId: {}", logId);
             // 不存在则直接修改状态
@@ -299,7 +299,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 中断执行
         IExecTaskHandler task = execTaskManager.getTask(logId);
         if (task != null) {
-            log.info("ExecLogService.interruptHostExec interrupted logId: {}, hostLogId: {}", logId, hostLogId);
+            log.info("ExecLogService.interruptHostExec interrupt logId: {}, hostLogId: {}", logId, hostLogId);
             IExecCommandHandler handler = task.getHandlers()
                     .stream()
                     .filter(s -> s.getHostId().equals(hostLog.getHostId()))
@@ -307,7 +307,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                     .orElse(null);
             // 中断
             if (handler != null) {
-                handler.interrupted();
+                handler.interrupt();
             }
         } else {
             log.info("ExecLogService.interruptHostExec updateStatus start logId: {}, hostLogId: {}", logId, hostLogId);
@@ -465,11 +465,11 @@ public class ExecLogServiceImpl implements ExecLogService {
      *
      * @param idList idList
      */
-    private void interruptedTask(List<Long> idList) {
+    private void interruptTask(List<Long> idList) {
         idList.stream()
                 .map(execTaskManager::getTask)
                 .filter(Objects::nonNull)
-                .forEach(IExecTaskHandler::interrupted);
+                .forEach(IExecTaskHandler::interrupt);
     }
 
 }

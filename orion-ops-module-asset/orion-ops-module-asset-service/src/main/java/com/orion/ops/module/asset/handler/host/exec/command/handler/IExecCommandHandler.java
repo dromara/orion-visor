@@ -22,7 +22,7 @@ public interface IExecCommandHandler extends Runnable, SafeCloseable {
     /**
      * 中断执行
      */
-    void interrupted();
+    void interrupt();
 
     /**
      * 获取当前状态

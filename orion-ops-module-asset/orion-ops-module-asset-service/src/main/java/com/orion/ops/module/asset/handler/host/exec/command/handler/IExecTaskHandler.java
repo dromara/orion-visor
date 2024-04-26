@@ -23,6 +23,6 @@ public interface IExecTaskHandler extends Runnable, SafeCloseable {
     /**
      * 中断执行
      */
-    void interrupted();
+    void interrupt();
 
 }

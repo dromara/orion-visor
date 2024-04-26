@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "app.exec-log.auto-clear", havingValue = "true")
+@ConditionalOnProperty(value = "app.exec-log.auto-clear", havingValue = "true", matchIfMissing = true)
 public class ExecLogFileAutoClearTask {
 
     /**
