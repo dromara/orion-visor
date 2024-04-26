@@ -34,6 +34,18 @@ export const TerminalTabs = {
   },
 };
 
+// 面板会话 tab 类型
+export const PanelSessionType = {
+  SSH: {
+    type: 'SSH',
+    icon: 'icon-desktop'
+  },
+  SFTP: {
+    type: 'SFTP',
+    icon: 'icon-folder'
+  },
+};
+
 // 新建连接类型
 export const NewConnectionType = {
   GROUP: 'group',
@@ -95,18 +107,6 @@ export const FILE_TYPE = {
     label: '套接字文件',
     icon: 'icon-drive-file'
   }
-};
-
-// 面板会话 tab 类型
-export const PanelSessionType = {
-  SSH: {
-    type: 'SSH',
-    icon: 'icon-desktop'
-  },
-  SFTP: {
-    type: 'SFTP',
-    icon: 'icon-folder'
-  },
 };
 
 // 终端状态
@@ -202,6 +202,14 @@ export const TerminalShortcutKeys = {
   CLOSE_TAB: 'closeTab',
   // 打开新建连接 tab
   OPEN_NEW_CONNECT_TAB: 'openNewConnectTab',
+  // 打开命令片段
+  OPEN_COMMAND_SNIPPET: 'openCommandSnippet',
+  // 打开书签路径
+  OPEN_PATH_BOOKMARK: 'openPathBookmark',
+  // 打开文件传输列表
+  OPEN_TRANSFER_LIST: 'openTransferList',
+  // 截图
+  SCREENSHOT: 'screenshot',
   // 打开新建连接弹框
   OPEN_NEW_CONNECT_MODAL: 'openNewConnectModal',
   // 复制会话
@@ -233,6 +241,22 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   }, {
     item: TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB,
     content: '打开新建连接 tab',
+    type: TerminalShortcutType.GLOBAL
+  }, {
+    item: TerminalShortcutKeys.OPEN_COMMAND_SNIPPET,
+    content: '打开命令片段',
+    type: TerminalShortcutType.GLOBAL
+  }, {
+    item: TerminalShortcutKeys.OPEN_PATH_BOOKMARK,
+    content: '打开书签路径',
+    type: TerminalShortcutType.GLOBAL
+  }, {
+    item: TerminalShortcutKeys.OPEN_TRANSFER_LIST,
+    content: '打开文件传输列表',
+    type: TerminalShortcutType.GLOBAL
+  }, {
+    item: TerminalShortcutKeys.SCREENSHOT,
+    content: '截图',
     type: TerminalShortcutType.GLOBAL
   }, {
     item: TerminalShortcutKeys.OPEN_NEW_CONNECT_MODAL,

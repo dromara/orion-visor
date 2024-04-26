@@ -117,6 +117,8 @@ INSERT INTO `system_menu` VALUES (186, 184, '查询任务日志', 'asset:exec-jo
 INSERT INTO `system_menu` VALUES (187, 184, '删除任务日志', 'asset:exec-job-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:59', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (189, 184, '清理任务日志', 'asset:exec-job-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:58', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (190, 184, '中断计划任务', 'asset:exec-job-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 00:00:33', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (191, 0, '提交bug', NULL, 1, 1020, 1, 1, 0, 1, 'IconBug', 'https://github.com/lijiahangmax/orion-ops-pro/issues', NULL, '2024-04-26 11:30:18', '2024-04-26 11:30:30', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (192, 0, '点个赞~', NULL, 1, 1030, 1, 1, 0, 1, 'IconThumbUp', 'https://gitee.com/lijiahangmax/orion-ops-pro', NULL, '2024-04-26 11:32:30', '2024-04-26 11:32:30', '1', '1', 0);
 
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', '1', '1', 0);
@@ -138,7 +140,7 @@ INSERT INTO `dict_key` VALUES (23, 'terminalFontWeight', 'STRING', '[]', '终端
 INSERT INTO `dict_key` VALUES (24, 'terminalCursorStyle', 'STRING', '[]', '终端光标样式', '2023-12-11 18:24:47', '2023-12-11 18:26:11', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (25, 'hostNewConnectionType', 'STRING', '[]', '主机新建连接类型', '2023-12-14 17:24:19', '2024-01-31 23:39:19', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (26, 'hostExtraSshAuthType', 'STRING', '[]', '主机额外配置ssh认证方式', '2023-12-25 15:41:22', '2023-12-25 15:41:22', '1', '1', 0);
-INSERT INTO `dict_key` VALUES (27, 'hostConnectType', 'STRING', '[]', '主机连接类型', '2023-12-26 23:23:08', '2023-12-26 23:23:08', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (27, 'hostConnectType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机连接类型', '2023-12-26 23:23:08', '2024-04-24 16:37:48', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (28, 'hostConnectStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机连接状态', '2023-12-26 23:23:51', '2023-12-26 23:28:15', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (29, 'terminalConnectStatus', 'INTEGER', '[{\"name\": \"status\", \"type\": \"STRING\"}]', '终端连接状态', '2024-01-09 00:32:00', '2024-01-09 00:32:16', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (31, 'terminalEmulationType', 'STRING', '[]', '伪终端类型', '2024-01-11 23:35:01', '2024-01-11 23:35:01', '1', '1', 0);
@@ -149,15 +151,16 @@ INSERT INTO `dict_key` VALUES (35, 'execHostStatus', 'STRING', '[{\"name\": \"co
 INSERT INTO `dict_key` VALUES (36, 'execJobStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '计划任务状态', '2024-04-10 16:18:07', '2024-04-11 14:25:05', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (37, 'hostIdentityType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机身份类型', '2024-04-16 17:15:31', '2024-04-16 17:15:31', '2', '2', 0);
 INSERT INTO `dict_key` VALUES (38, 'hostSshOsType', 'STRING', '[]', '主机系统类型', '2024-04-16 22:18:59', '2024-04-16 22:30:59', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (39, 'pathBookmarkType', 'STRING', '[]', '路径标签类型', '2024-04-24 13:43:12', '2024-04-24 13:43:12', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (4, 4, 'systemMenuType', '2', '子菜单', '{}', 20, '2023-10-26 16:44:34', '2023-10-26 16:44:34', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (5, 4, 'systemMenuType', '3', '功能', '{}', 30, '2023-10-26 16:44:45', '2023-10-26 16:44:45', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (6, 5, 'systemMenuStatus', '0', '停用', '{\"color\": \"orange\"}', 10, '2023-10-26 16:47:54', '2023-10-26 16:47:54', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (7, 5, 'systemMenuStatus', '1', '启用', '{\"color\": \"blue\"}', 20, '2023-10-26 17:00:54', '2023-10-26 17:00:54', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (7, 5, 'systemMenuStatus', '1', '启用', '{\"color\": \"arcoblue\"}', 20, '2023-10-26 17:00:54', '2024-04-24 16:35:09', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (8, 6, 'systemMenuVisible', '0', '隐藏', '{\"color\": \"orange\"}', 10, '2023-10-26 17:03:41', '2023-10-26 17:03:41', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (9, 6, 'systemMenuVisible', '1', '显示', '{\"color\": \"blue\"}', 20, '2023-10-27 00:25:30', '2023-10-27 00:25:58', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (9, 6, 'systemMenuVisible', '1', '显示', '{\"color\": \"arcoblue\"}', 20, '2023-10-27 00:25:30', '2024-04-24 16:35:05', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (10, 7, 'systemMenuCache', '0', '不缓存', '{}', 10, '2023-10-27 00:26:15', '2023-10-27 00:26:15', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (11, 7, 'systemMenuCache', '1', '缓存', '{}', 20, '2023-10-27 00:26:25', '2023-10-27 00:26:25', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (12, 8, 'dictValueType', 'STRING', '字符串', '{\"color\": \"arcoblue\"}', 10, '2023-10-27 01:49:18', '2023-12-17 18:45:14', '1', '1', 0);
@@ -166,9 +169,9 @@ INSERT INTO `dict_value` VALUES (14, 8, 'dictValueType', 'DECIMAL', '小数', '{
 INSERT INTO `dict_value` VALUES (15, 8, 'dictValueType', 'BOOLEAN', '布尔值', '{\"color\": \"pinkpurple\"}', 40, '2023-10-27 01:54:54', '2023-10-27 01:54:54', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (16, 8, 'dictValueType', 'COLOR', '颜色', '{\"color\": \"magenta\"}', 50, '2023-10-27 01:55:05', '2023-10-27 01:56:39', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (17, 9, 'systemUserStatus', '0', '停用', '{\"color\": \"orange\"}', 10, '2023-10-27 12:13:08', '2023-10-27 12:13:08', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (18, 9, 'systemUserStatus', '1', '启用', '{\"color\": \"blue\"}', 20, '2023-10-27 12:13:17', '2023-10-27 12:13:17', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (18, 9, 'systemUserStatus', '1', '启用', '{\"color\": \"arcoblue\"}', 20, '2023-10-27 12:13:17', '2024-04-24 16:35:00', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (20, 10, 'systemRoleStatus', '0', '停用', '{\"color\": \"orange\", \"status\": \"danger\"}', 10, '2023-10-27 12:33:45', '2023-10-27 12:33:45', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (21, 10, 'systemRoleStatus', '1', '启用', '{\"color\": \"blue\", \"status\": \"default\"}', 20, '2023-10-27 12:33:56', '2023-10-31 01:23:23', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (21, 10, 'systemRoleStatus', '1', '启用', '{\"color\": \"arcoblue\", \"status\": \"default\"}', 20, '2023-10-27 12:33:56', '2024-04-24 16:34:52', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (22, 11, 'hostSshAuthType', 'PASSWORD', '密码验证', '{}', 10, '2023-10-27 14:29:28', '2023-12-25 15:40:47', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (23, 11, 'hostSshAuthType', 'KEY', '秘钥验证', '{}', 20, '2023-10-27 14:29:35', '2023-12-25 15:40:47', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (24, 11, 'hostSshAuthType', 'IDENTITY', '身份验证', '{}', 30, '2023-10-27 14:29:42', '2023-12-25 15:40:47', '1', '1', 0);
@@ -275,7 +278,7 @@ INSERT INTO `dict_value` VALUES (172, 25, 'hostNewConnectionType', 'latest', '�
 INSERT INTO `dict_value` VALUES (173, 26, 'hostExtraSshAuthType', 'DEFAULT', '主机默认配置', '{}', 10, '2023-12-25 15:48:26', '2023-12-25 15:48:26', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (174, 26, 'hostExtraSshAuthType', 'CUSTOM_KEY', '自定义秘钥', '{}', 20, '2023-12-25 15:48:42', '2023-12-25 16:05:36', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (175, 26, 'hostExtraSshAuthType', 'CUSTOM_IDENTITY', '自定义身份', '{}', 30, '2023-12-25 15:48:52', '2023-12-25 16:05:31', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (176, 27, 'hostConnectType', 'SSH', 'SSH', '{}', 10, '2023-12-26 23:23:18', '2023-12-26 23:23:18', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (176, 27, 'hostConnectType', 'SSH', 'SSH', '{\"color\": \"arcoblue\"}', 10, '2023-12-26 23:23:18', '2024-04-24 16:38:28', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (177, 28, 'hostConnectStatus', 'CONNECTING', '连接中', '{\"color\": \"rgb(var(--green-6))\"}', 10, '2023-12-26 23:29:00', '2023-12-26 23:29:00', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (178, 28, 'hostConnectStatus', 'COMPLETE', '完成', '{\"color\": \"rgb(var(--blue-6))\"}', 20, '2023-12-26 23:29:15', '2023-12-26 23:29:15', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (179, 28, 'hostConnectStatus', 'FAILED', '失败', '{\"color\": \"rgb(var(--red-6))\"}', 30, '2023-12-26 23:29:34', '2023-12-26 23:29:34', '1', '1', 0);
@@ -288,7 +291,7 @@ INSERT INTO `dict_value` VALUES (189, 31, 'terminalEmulationType', 'xterm', 'xte
 INSERT INTO `dict_value` VALUES (190, 31, 'terminalEmulationType', 'xterm-16color', 'xterm-16color', '{}', 20, '2024-01-11 23:35:49', '2024-01-11 23:35:49', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (191, 31, 'terminalEmulationType', 'xterm-256color', 'xterm-256color', '{}', 30, '2024-01-11 23:35:55', '2024-01-11 23:35:55', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (192, 31, 'terminalEmulationType', 'vt100', 'vt100', '{}', 40, '2024-01-11 23:36:00', '2024-01-11 23:36:00', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (193, 27, 'hostConnectType', 'SFTP', 'SFTP', '{}', 20, '2024-02-04 18:23:10', '2024-02-04 18:23:10', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (193, 27, 'hostConnectType', 'SFTP', 'SFTP', '{\"color\": \"purple\"}', 20, '2024-02-04 18:23:10', '2024-04-24 16:38:22', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (194, 2, 'operatorLogType', 'host-terminal:sftp-mkdir', '创建文件夹', '{}', 20, '2024-02-23 17:53:21', '2024-02-23 17:53:21', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (195, 2, 'operatorLogType', 'host-terminal:sftp-touch', '创建文件', '{}', 30, '2024-02-23 17:53:28', '2024-02-23 17:53:28', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (196, 2, 'operatorLogType', 'host-terminal:sftp-move', '移动文件', '{}', 40, '2024-02-23 17:53:39', '2024-02-23 17:53:39', '1', '1', 0);
@@ -368,3 +371,5 @@ INSERT INTO `dict_value` VALUES (270, 37, 'hostIdentityType', 'PASSWORD', '密�
 INSERT INTO `dict_value` VALUES (271, 37, 'hostIdentityType', 'KEY', '秘钥', '{\"color\": \"arcoblue\"}', 20, '2024-04-16 17:18:12', '2024-04-16 17:18:12', '2', '2', 0);
 INSERT INTO `dict_value` VALUES (272, 38, 'hostSshOsType', 'LINUX', 'linux', '{}', 10, '2024-04-16 22:19:25', '2024-04-16 22:30:59', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (273, 38, 'hostSshOsType', 'WINDOWS', 'windows', '{}', 20, '2024-04-16 22:19:39', '2024-04-16 22:30:59', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (274, 39, 'pathBookmarkType', 'FILE', '文件', '{}', 10, '2024-04-24 13:43:28', '2024-04-24 13:43:28', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (275, 39, 'pathBookmarkType', 'DIR', '文件夹', '{}', 20, '2024-04-24 13:43:39', '2024-04-24 13:43:39', '1', '1', 0);

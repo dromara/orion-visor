@@ -13,8 +13,10 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.module.infra.convert.DataGroupConvert;
 import com.orion.ops.module.infra.dao.DataGroupDAO;
+import com.orion.ops.module.infra.dao.DataGroupRelDAO;
 import com.orion.ops.module.infra.define.cache.DataGroupCacheKeyDefine;
 import com.orion.ops.module.infra.entity.domain.DataGroupDO;
+import com.orion.ops.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.ops.module.infra.entity.dto.DataGroupCacheDTO;
 import com.orion.ops.module.infra.entity.request.data.DataGroupCreateRequest;
 import com.orion.ops.module.infra.entity.request.data.DataGroupMoveRequest;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +45,9 @@ public class DataGroupServiceImpl implements DataGroupService {
 
     @Resource
     private DataGroupDAO dataGroupDAO;
+
+    @Resource
+    private DataGroupRelDAO dataGroupRelDAO;
 
     @Resource
     private DataGroupRelService dataGroupRelService;
@@ -61,7 +67,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         Long id = record.getId();
         log.info("DataGroupService-createDataGroup id: {}, effect: {}", id, effect);
         // 删除缓存
-        this.deleteCache(request.getType());
+        this.deleteCache(request.getType(), record.getUserId());
         return id;
     }
 
@@ -85,7 +91,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 更新
         int effect = dataGroupDAO.updateById(updateRecord);
         // 删除缓存
-        this.deleteCache(record.getType());
+        this.deleteCache(record.getType(), record.getUserId());
         return effect;
     }
 
@@ -139,7 +145,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             effect = dataGroupDAO.updateById(update);
         }
         // 删除缓存
-        this.deleteCache(type);
+        this.deleteCache(type, moveRecord.getUserId());
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.SOURCE, moveRecord.getName());
         OperatorLogs.add(OperatorLogs.TARGET, targetRecord.getName());
@@ -148,15 +154,16 @@ public class DataGroupServiceImpl implements DataGroupService {
     }
 
     @Override
-    public List<DataGroupCacheDTO> getDataGroupListByCache(String type) {
+    public List<DataGroupCacheDTO> getDataGroupListByCache(String type, Long userId) {
         // 查询缓存
-        String key = DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type);
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type, userId);
         List<DataGroupCacheDTO> list = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_LIST);
         if (Lists.isEmpty(list)) {
             // 查询数据库
             list = dataGroupDAO.of()
                     .createWrapper()
                     .eq(DataGroupDO::getType, type)
+                    .eq(DataGroupDO::getUserId, userId)
                     .then()
                     .list(DataGroupConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
@@ -170,13 +177,13 @@ public class DataGroupServiceImpl implements DataGroupService {
     }
 
     @Override
-    public List<DataGroupCacheDTO> getDataGroupTreeByCache(String type) {
+    public List<DataGroupCacheDTO> getDataGroupTreeByCache(String type, Long userId) {
         // 查询缓存
-        String key = DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type);
+        String key = DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type, userId);
         List<DataGroupCacheDTO> treeData = RedisStrings.getJsonArray(key, DataGroupCacheKeyDefine.DATA_GROUP_TREE);
         if (Lists.isEmpty(treeData)) {
             // 查询列表缓存
-            List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type);
+            List<DataGroupCacheDTO> rows = this.getDataGroupListByCache(type, userId);
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(rows, DataGroupCacheDTO::new);
             if (!Lists.isEmpty(rows)) {
@@ -210,12 +217,48 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 删除分组
         int effect = dataGroupDAO.deleteBatchIds(deleteIdList);
         // 删除组内数据
-        dataGroupRelService.deleteByGroupIdList(type, deleteIdList);
+        dataGroupRelService.deleteByGroupIdList(type, record.getUserId(), deleteIdList);
         log.info("DataGroupService-deleteDataGroupById id: {}, effect: {}", id, effect);
         // 删除缓存
-        this.deleteCache(type);
+        this.deleteCache(type, record.getUserId());
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.GROUP_NAME, record.getName());
+        return effect;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteDataGroupByIdList(String type, Long userId, List<Long> idList) {
+        log.info("DataGroupService-deleteDataGroupByIdList idList: {}", idList);
+        // 检查数据是否存在
+        List<DataGroupDO> records = dataGroupDAO.selectBatchIds(idList);
+        if (records.isEmpty()) {
+            return 0;
+        }
+        // 查询子级
+        List<Long> deleteIdList = new ArrayList<>(idList);
+        this.flatChildrenId(idList, deleteIdList);
+        // 删除分组
+        int effect = dataGroupDAO.deleteBatchIds(deleteIdList);
+        // 删除组内数据
+        dataGroupRelService.deleteByGroupIdList(type, userId, deleteIdList);
+        log.info("DataGroupService-deleteDataGroupByIdList id: {}, effect: {}", idList, effect);
+        // 删除缓存
+        this.deleteCache(type, userId);
+        return effect;
+    }
+
+    @Override
+    public Integer deleteDataGroupByUserId(Long userId) {
+        // 删除分组
+        LambdaQueryWrapper<DataGroupDO> deleteGroup = dataGroupDAO.wrapper()
+                .eq(DataGroupDO::getUserId, userId);
+        int effect = dataGroupDAO.delete(deleteGroup);
+        // 删除分组引用
+        LambdaQueryWrapper<DataGroupRelDO> deleteRel = dataGroupRelDAO.wrapper()
+                .eq(DataGroupRelDO::getUserId, userId);
+        effect += dataGroupRelDAO.delete(deleteRel);
+        // 不删除缓存 自动过期
         return effect;
     }
 
@@ -252,8 +295,9 @@ public class DataGroupServiceImpl implements DataGroupService {
                 .ne(DataGroupDO::getId, domain.getId())
                 // 用其他字段做重复校验
                 .eq(DataGroupDO::getParentId, domain.getParentId())
-                .eq(DataGroupDO::getName, domain.getName())
-                .eq(DataGroupDO::getType, domain.getType());
+                .eq(DataGroupDO::getType, domain.getType())
+                .eq(DataGroupDO::getUserId, domain.getUserId())
+                .eq(DataGroupDO::getName, domain.getName());
         // 检查是否存在
         boolean present = dataGroupDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
@@ -262,11 +306,12 @@ public class DataGroupServiceImpl implements DataGroupService {
     /**
      * 删除缓存
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
      */
-    private void deleteCache(String type) {
-        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type),
-                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type));
+    private void deleteCache(String type, Long userId) {
+        RedisStrings.delete(DataGroupCacheKeyDefine.DATA_GROUP_LIST.format(type, userId),
+                DataGroupCacheKeyDefine.DATA_GROUP_TREE.format(type, userId));
     }
 
 }

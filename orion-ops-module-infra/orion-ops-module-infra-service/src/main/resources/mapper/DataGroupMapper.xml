@@ -6,8 +6,9 @@
     <resultMap id="BaseResultMap" type="com.orion.ops.module.infra.entity.domain.DataGroupDO">
         <id column="id" property="id"/>
         <result column="parent_id" property="parentId"/>
-        <result column="name" property="name"/>
         <result column="type" property="type"/>
+        <result column="user_id" property="userId"/>
+        <result column="name" property="name"/>
         <result column="sort" property="sort"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, parent_id, name, type, sort, create_time, update_time, creator, updater, deleted
+        id, parent_id, type, user_id, name, sort, create_time, update_time, creator, updater, deleted
     </sql>
 
     <update id="updateSort">

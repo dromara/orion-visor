@@ -25,7 +25,7 @@ const columns = [
     title: '状态',
     dataIndex: 'status',
     slotName: 'status',
-    align: 'left',
+    align: 'center',
     width: 106,
   }, {
     title: '留痕地址',

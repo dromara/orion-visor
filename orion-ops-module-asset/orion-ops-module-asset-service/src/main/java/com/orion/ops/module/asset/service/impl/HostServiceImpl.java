@@ -22,13 +22,13 @@ import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import com.orion.ops.module.asset.service.ExecJobHostService;
+import com.orion.ops.module.asset.service.ExecTemplateHostService;
 import com.orion.ops.module.asset.service.HostConfigService;
 import com.orion.ops.module.asset.service.HostService;
 import com.orion.ops.module.infra.api.DataExtraApi;
 import com.orion.ops.module.infra.api.DataGroupRelApi;
 import com.orion.ops.module.infra.api.FavoriteApi;
 import com.orion.ops.module.infra.api.TagRelApi;
-import com.orion.ops.module.infra.entity.dto.data.DataGroupRelCreateDTO;
 import com.orion.ops.module.infra.entity.dto.tag.TagDTO;
 import com.orion.ops.module.infra.enums.DataExtraTypeEnum;
 import com.orion.ops.module.infra.enums.DataGroupTypeEnum;
@@ -71,6 +71,9 @@ public class HostServiceImpl implements HostService {
     private ExecJobHostService execJobHostService;
 
     @Resource
+    private ExecTemplateHostService execTemplateHostService;
+
+    @Resource
     private TagRelApi tagRelApi;
 
     @Resource
@@ -99,13 +102,7 @@ public class HostServiceImpl implements HostService {
         // 引用分组
         List<Long> groupIdList = request.getGroupIdList();
         if (!Lists.isEmpty(groupIdList)) {
-            List<DataGroupRelCreateDTO> groupRelList = groupIdList.stream()
-                    .map(s -> DataGroupRelCreateDTO.builder()
-                            .groupId(s)
-                            .relId(id)
-                            .build())
-                    .collect(Collectors.toList());
-            dataGroupRelApi.addGroupRel(groupRelList);
+            dataGroupRelApi.updateRelGroup(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
         }
         // 创建配置
         hostConfigService.initHostConfig(id);
@@ -130,7 +127,7 @@ public class HostServiceImpl implements HostService {
         int effect = hostDAO.updateById(updateRecord);
         log.info("HostService-updateHostById effect: {}", effect);
         // 引用分组
-        dataGroupRelApi.updateGroupRel(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
+        dataGroupRelApi.updateRelGroup(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
         // 更新 tag
         tagRelApi.setTagRel(TagTypeEnum.HOST, id, request.getTags());
         // 删除缓存
@@ -219,6 +216,8 @@ public class HostServiceImpl implements HostService {
         hostConfigDAO.deleteByHostId(id);
         // 删除计划任务主机
         execJobHostService.deleteByHostId(id);
+        // 删除执行模板主机
+        execTemplateHostService.deleteByHostId(id);
         // 删除分组
         dataGroupRelApi.deleteByRelId(DataGroupTypeEnum.HOST, id);
         // 删除 tag 引用

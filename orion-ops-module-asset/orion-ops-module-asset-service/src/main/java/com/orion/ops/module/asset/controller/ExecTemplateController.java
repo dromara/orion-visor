@@ -67,6 +67,15 @@ public class ExecTemplateController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-with-authorized")
+    @Operation(summary = "查询执行模板 (查询认证的主机)")
+    @Parameter(name = "id", description = "id", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:exec-template:query')")
+    public ExecTemplateVO getExecTemplateWithAuthorized(@RequestParam("id") Long id) {
+        return execTemplateService.getExecTemplateWithAuthorized(id);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询执行模板")
     @PreAuthorize("@ss.hasPermission('asset:exec-template:query')")
@@ -82,7 +91,6 @@ public class ExecTemplateController {
     public Integer deleteExecTemplate(@RequestParam("id") Long id) {
         return execTemplateService.deleteExecTemplateById(id);
     }
-
 
 }
 

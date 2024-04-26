@@ -26,13 +26,13 @@ public class CommandSnippetCreateRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(description = "分组id")
+    private Long groupId;
+
     @NotBlank
     @Size(max = 64)
     @Schema(description = "名称")
     private String name;
-
-    @Schema(description = "分组id")
-    private Long groupId;
 
     @NotBlank
     @Schema(description = "代码片段")

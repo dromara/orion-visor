@@ -1,0 +1,32 @@
+### 创建路径标签分组
+POST {{baseUrl}}/asset/path-bookmark-group/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": ""
+}
+
+
+### 更新路径标签分组
+PUT {{baseUrl}}/asset/path-bookmark-group/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": ""
+}
+
+
+### 查询全部路径标签分组
+GET {{baseUrl}}/asset/path-bookmark-group/list
+Authorization: {{token}}
+
+
+### 删除路径标签分组
+DELETE {{baseUrl}}/asset/path-bookmark-group/delete?id=1
+Authorization: {{token}}
+
+
+###

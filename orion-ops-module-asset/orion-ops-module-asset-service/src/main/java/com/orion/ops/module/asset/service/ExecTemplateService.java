@@ -40,6 +40,14 @@ public interface ExecTemplateService {
     ExecTemplateVO getExecTemplateById(Long id);
 
     /**
+     * 查询执行模板 (查询认证的主机)
+     *
+     * @param id id
+     * @return row
+     */
+    ExecTemplateVO getExecTemplateWithAuthorized(Long id);
+
+    /**
      * 分页查询执行模板
      *
      * @param request request

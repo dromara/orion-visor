@@ -43,25 +43,45 @@ public interface DataGroupService {
     /**
      * 通过缓存查询数据分组 - 列表
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
      * @return rows
      */
-    List<DataGroupCacheDTO> getDataGroupListByCache(String type);
+    List<DataGroupCacheDTO> getDataGroupListByCache(String type, Long userId);
 
     /**
      * 通过缓存查询数据分组 - 树结构
      *
-     * @param type type
+     * @param type   type
+     * @param userId userId
      * @return rows
      */
-    List<DataGroupCacheDTO> getDataGroupTreeByCache(String type);
+    List<DataGroupCacheDTO> getDataGroupTreeByCache(String type, Long userId);
 
     /**
-     * 删除数据分组
+     * 通过 id 删除数据分组
      *
      * @param id id
      * @return effect
      */
     Integer deleteDataGroupById(Long id);
+
+    /**
+     * 通过 id 删除数据分组
+     *
+     * @param type   type
+     * @param userId userId
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteDataGroupByIdList(String type, Long userId, List<Long> idList);
+
+    /**
+     * 通过 userId 删除数据分组
+     *
+     * @param userId userId
+     * @return effect
+     */
+    Integer deleteDataGroupByUserId(Long userId);
 
 }

@@ -4,7 +4,7 @@ import type {
   ITerminalChannel,
   ITerminalSession,
   ITerminalSessionManager,
-  TerminalTabItem,
+  TerminalPanelTabItem,
   XtermDomRef
 } from '../types/terminal.type';
 import { sleep } from '@/utils';
@@ -34,9 +34,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   }
 
   // 打开 ssh 会话
-  async openSsh(tab: TerminalTabItem,
-                domRef: XtermDomRef) {
-    const sessionId = tab.key;
+  async openSsh(tab: TerminalPanelTabItem, domRef: XtermDomRef) {
+    const sessionId = tab.sessionId;
     const hostId = tab.hostId as number;
     // 初始化客户端
     await this.initChannel();
@@ -62,8 +61,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   }
 
   // 打开 sftp 会话
-  async openSftp(tab: TerminalTabItem, resolver: ISftpSessionResolver): Promise<ISftpSession> {
-    const sessionId = tab.key;
+  async openSftp(tab: TerminalPanelTabItem, resolver: ISftpSessionResolver): Promise<ISftpSession> {
+    const sessionId = tab.sessionId;
     const hostId = tab.hostId as number;
     // 初始化客户端
     await this.initChannel();
@@ -84,6 +83,23 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       connectType: PanelSessionType.SFTP.type
     });
     return session;
+  }
+
+  // 重新打开会话
+  async reOpenSession(type: string, sessionId: string, newSessionId: string): Promise<void> {
+    // 初始化客户端
+    await this.initChannel();
+    // 获取会话并且重新设置 sessionId
+    const session = this.sessions[sessionId] as ITerminalSession;
+    session.sessionId = newSessionId;
+    this.sessions[sessionId] = undefined as unknown as ITerminalSession;
+    this.sessions[newSessionId] = session;
+    // 发送会话初始化请求
+    this.channel.send(InputProtocol.CHECK, {
+      sessionId: newSessionId,
+      hostId: session.hostId,
+      connectType: type,
+    });
   }
 
   // 获取终端会话

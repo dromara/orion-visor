@@ -25,6 +25,11 @@ export default class TerminalTabManager<T extends TerminalTabItem = TerminalTabI
     return this.items.find(s => s.key === this.active);
   }
 
+  // 获取 tab
+  getTab(key: string): T {
+    return this.items.find(s => s.key === key) as T;
+  }
+
   // 点击 tab
   clickTab(key: string): void {
     this.active = key;
@@ -36,9 +41,11 @@ export default class TerminalTabManager<T extends TerminalTabItem = TerminalTabI
     const tabIndex = this.items.findIndex(s => s.key === key);
     // 删除 tab
     this.items.splice(tabIndex, 1);
-    if (key === this.active && this.items.length !== 0) {
-      // 切换为前一个 tab
-      this.active = this.items[Math.max(tabIndex - 1, 0)].key;
+    if (this.items.length !== 0) {
+      if (key === this.active) {
+        // 关闭的为当前 tab 切换为前一个 tab
+        this.active = this.items[Math.max(tabIndex - 1, 0)].key;
+      }
     } else {
       this.active = undefined as unknown as string;
     }

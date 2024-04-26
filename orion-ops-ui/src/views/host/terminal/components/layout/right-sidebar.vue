@@ -8,10 +8,6 @@
     <icon-actions class="bottom-actions"
                   :actions="bottomActions"
                   position="left" />
-    <!-- 命令片段列表抽屉 -->
-    <command-snippet-list-drawer ref="snippetRef" />
-    <!-- 传输列表 -->
-    <transfer-drawer ref="transferRef" />
   </div>
 </template>
 
@@ -23,30 +19,27 @@
 
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/terminal.type';
-  import { useTerminalStore } from '@/store';
-  import { ref } from 'vue';
   import IconActions from './icon-actions.vue';
-  import CommandSnippetListDrawer from '../../../command-snippet/components/command-snippet-list-drawer.vue';
-  import TransferDrawer from '@/views/host/terminal/components/transfer/transfer-drawer.vue';
 
-  const { getAndCheckCurrentSshSession } = useTerminalStore();
-
-  const snippetRef = ref();
-  const transferRef = ref();
+  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'screenshot']);
 
   // 顶部操作
   const topActions = [
     {
-      icon: 'icon-code',
+      icon: 'icon-code-block',
       content: '打开命令片段',
-      click: () => snippetRef.value.open()
+      click: () => emits('openCommandSnippet')
+    }, {
+      icon: 'icon-bookmark',
+      content: '打开路径书签',
+      click: () => emits('openPathBookmark')
     }, {
       icon: 'icon-swap',
       content: '文件传输列表',
       iconStyle: {
         transform: 'rotate(90deg)'
       },
-      click: () => transferRef.value.open()
+      click: () => emits('openTransferList')
     },
   ];
 
@@ -55,17 +48,9 @@
     {
       icon: 'icon-camera',
       content: '截图',
-      click: () => screenshot()
+      click: () => emits('screenshot')
     },
   ];
-
-  // 终端截屏
-  const screenshot = () => {
-    const handler = getAndCheckCurrentSshSession()?.handler;
-    if (handler && handler.enabledStatus('screenshot')) {
-      handler.screenshot();
-    }
-  };
 
 </script>
 

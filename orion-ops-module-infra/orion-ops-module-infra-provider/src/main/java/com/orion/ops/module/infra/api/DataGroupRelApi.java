@@ -32,7 +32,7 @@ public interface DataGroupRelApi {
      * @param groupIdList groupIdList
      * @param relId       relId
      */
-    void updateGroupRel(DataGroupTypeEnum type, List<Long> groupIdList, Long relId);
+    void updateRelGroup(DataGroupTypeEnum type, List<Long> groupIdList, Long relId);
 
     /**
      * 添加关联
@@ -40,14 +40,14 @@ public interface DataGroupRelApi {
      * @param groupId groupId
      * @param relId   relId
      */
-    void addGroupRel(Long groupId, Long relId);
+    void addGroupRel(DataGroupTypeEnum type, Long groupId, Long relId);
 
     /**
      * 批量添加关联
      *
      * @param list list
      */
-    void addGroupRel(List<DataGroupRelCreateDTO> list);
+    void addGroupRel(DataGroupTypeEnum type, List<DataGroupRelCreateDTO> list);
 
     /**
      * 通过 type 查询 relId 缓存

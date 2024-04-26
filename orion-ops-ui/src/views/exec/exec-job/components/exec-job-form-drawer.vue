@@ -1,7 +1,8 @@
 <template>
   <a-drawer v-model:visible="visible"
             :title="title"
-            width="60%"
+            width="66%"
+            :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -135,6 +136,7 @@
   import formRules from '../types/form.rules';
   import { jobBuiltinsParams } from '../types/const';
   import { createExecJob, getExecJob, updateExecJob } from '@/api/exec/exec-job';
+  import { getExecTemplateWithAuthorized } from '@/api/exec/exec-template';
   import { Message } from '@arco-design/web-vue';
   import { EnabledStatus } from '@/types/const';
   import { useDictStore } from '@/store';
@@ -195,9 +197,9 @@
       id: record.id,
       name: record.name,
       expression: record.expression,
+      command: record.command,
       timeout: record.timeout,
       scriptExec: record.scriptExec,
-      command: record.command,
       parameterSchema: record.parameterSchema,
       hostIdList: record.hostIdList,
     };
@@ -209,9 +211,24 @@
   };
 
   // 通过模板设置
-  const setWithTemplate = (template: ExecTemplateQueryResponse) => {
-    formModel.value.command = template.command;
-    formModel.value.timeout = template.timeout;
+  const setWithTemplate = async ({ id }: ExecTemplateQueryResponse) => {
+    setLoading(true);
+    try {
+      // 查询模板信息
+      const { data } = await getExecTemplateWithAuthorized(id);
+      formModel.value = {
+        ...formModel.value,
+        name: data.name,
+        command: data.command,
+        timeout: data.timeout,
+        scriptExec: data.scriptExec,
+        parameterSchema: data.parameterSchema,
+        hostIdList: data.hostIdList,
+      };
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   defineExpose({ openAdd, openUpdate, setSelectedHost, setWithTemplate });

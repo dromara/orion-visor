@@ -11,6 +11,8 @@ export default class SftpSession implements ISftpSession {
 
   public connected: boolean;
 
+  public canReconnect: boolean;
+
   public resolver: ISftpSessionResolver;
 
   private showHiddenFile: boolean;
@@ -24,6 +26,7 @@ export default class SftpSession implements ISftpSession {
     this.sessionId = sessionId;
     this.channel = channel;
     this.connected = false;
+    this.canReconnect = false;
     this.showHiddenFile = false;
     this.resolver = undefined as unknown as ISftpSessionResolver;
   }
@@ -47,6 +50,7 @@ export default class SftpSession implements ISftpSession {
 
   // 查询文件列表
   list(path: string) {
+    this.resolver.setLoading(true);
     this.channel.send(InputProtocol.SFTP_LIST, {
       sessionId: this.sessionId,
       showHiddenFile: ~~this.showHiddenFile,

@@ -23,6 +23,7 @@ public interface UserCacheKeyDefine {
             .desc("用户信息 ${id}")
             .type(LoginUser.class)
             .struct(RedisCacheStruct.STRING)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine USER_LIST = new CacheKeyBuilder()
@@ -30,7 +31,7 @@ public interface UserCacheKeyDefine {
             .desc("用户列表")
             .type(UserInfoDTO.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
     CacheKeyDefine LOGIN_FAILED_COUNT = new CacheKeyBuilder()
@@ -53,7 +54,7 @@ public interface UserCacheKeyDefine {
             .desc("用户刷新 token ${id} ${time}")
             .type(LoginTokenDTO.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(28, TimeUnit.HOURS)
+            .timeout(32, TimeUnit.HOURS)
             .build();
 
 }

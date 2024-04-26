@@ -2,7 +2,10 @@ package com.orion.ops.framework.redis.configuration;
 
 import com.orion.ops.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.ops.framework.redis.configuration.config.RedissonConfig;
+import com.orion.ops.framework.redis.core.lock.RedisLocker;
+import com.orion.ops.framework.redis.core.utils.RedisLocks;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
+import org.redisson.api.RedissonClient;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -54,6 +57,17 @@ public class OrionRedisAutoConfiguration {
             config.setThreads(redissonConfig.getThreads());
             config.setNettyThreads(redissonConfig.getNettyThreads());
         };
+    }
+
+    /**
+     * @param redissonClient redissonClient
+     * @return redis 分布式锁
+     */
+    @Bean
+    public RedisLocker redisLocker(RedissonClient redissonClient) {
+        RedisLocker redisLocker = new RedisLocker(redissonClient);
+        RedisLocks.setRedisLocker(redisLocker);
+        return redisLocker;
     }
 
 }

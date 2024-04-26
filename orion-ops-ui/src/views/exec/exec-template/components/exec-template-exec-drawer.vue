@@ -1,7 +1,8 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="执行命令"
-            width="60%"
+            width="66%"
+            :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"
             :ok-button-props="{ disabled: loading }"
@@ -137,6 +138,7 @@
   import { Message } from '@arco-design/web-vue';
   import { EnabledStatus } from '@/types/const';
   import { batchExecCommand } from '@/api/exec/exec-command';
+  import { getExecTemplateWithAuthorized } from '@/api/exec/exec-template';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
   const emits = defineEmits(['openHost']);
@@ -151,9 +153,18 @@
   const parameterSchema = ref<Array<TemplateParam>>([]);
 
   // 打开
-  const open = (record: ExecTemplateQueryResponse) => {
-    renderForm({ ...record });
+  const open = async (id: number) => {
+    renderForm({} as ExecTemplateQueryResponse);
     setVisible(true);
+    setLoading(true);
+    try {
+      // 查询模板信息
+      const { data } = await getExecTemplateWithAuthorized(id);
+      renderForm(data);
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 渲染表单
@@ -163,7 +174,7 @@
       timeout: record.timeout,
       scriptExec: record.scriptExec,
       command: record.command,
-      hostIdList: []
+      hostIdList: record.hostIdList || [],
     };
     if (record.parameterSchema) {
       parameterSchema.value = JSON.parse(record.parameterSchema);
@@ -172,7 +183,6 @@
         params[param.name as keyof any] = param.defaultValue;
       }
       parameterFormModel.value = params;
-
     } else {
       parameterSchema.value = [];
       parameterFormModel.value = {};

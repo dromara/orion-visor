@@ -14,12 +14,13 @@ import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
 import { getExecJobList } from '@/api/exec/exec-job';
+import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
 
 export type CacheType = 'users' | 'menus' | 'roles'
   | 'hosts' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
   | 'dictKeys'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
-  | 'commandSnippetGroups'
+  | 'commandSnippetGroups' | 'pathBookmarkGroups'
   | 'execJob'
   | string
 
@@ -118,6 +119,11 @@ export default defineStore('cache', {
     // 获取命令片段分组
     async loadCommandSnippetGroups(force = false) {
       return await this.load('commandSnippetGroups', getCommandSnippetGroupList, force);
+    },
+
+    // 获取路径书签分组
+    async loadPathBookmarkGroups(force = false) {
+      return await this.load('pathBookmarkGroups', getPathBookmarkGroupList, force);
     },
 
     // 获取执行计划列表

@@ -177,6 +177,14 @@ app:
     upload-present-backup: true
     # 备份文件名称
     backup-file-name: bk_${fileName}_${timestamp}
+  # 执行日志
+  exec-log:
+    # 是否拼接 ansi 执行状态日志
+    append-ansi: true
+    # 自动清理执行文件
+    auto-clear: true
+    # 保留周期 (天)
+    keep-period: 60
 
 # orion framework config
 orion:

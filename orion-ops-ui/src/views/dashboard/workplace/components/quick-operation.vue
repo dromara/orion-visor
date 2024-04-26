@@ -1,8 +1,7 @@
 <template>
   <a-card class="general-card"
           title="快捷操作"
-          :header-style="{ paddingBottom: '0' }"
-          :body-style="{ padding: '20px 20px 0 20px' }">
+          :body-style="{ padding: '0 20px' }">
     <a-row :gutter="8">
       <a-col v-for="link in links"
              :key="link.meta.locale as string"

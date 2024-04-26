@@ -3,7 +3,7 @@
   <div class="container">
     <!-- 表头 -->
     <div class="host-header">
-      <h3>执行主机</h3>
+      <h3 class="usn">执行主机</h3>
       <!-- 操作 -->
       <a-button v-if="visibleBack"
                 size="small"

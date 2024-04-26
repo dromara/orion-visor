@@ -74,4 +74,13 @@ public interface DataGroupApi {
      */
     Integer deleteDataGroupById(Long id);
 
+    /**
+     * 删除数据分组
+     *
+     * @param type   type
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteDataGroupByIdList(DataGroupTypeEnum type, List<Long> idList);
+
 }

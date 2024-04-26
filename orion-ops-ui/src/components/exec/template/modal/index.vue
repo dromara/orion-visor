@@ -4,7 +4,7 @@
            title="执行模板"
            width="86%"
            :top="80"
-           :body-style="{padding: '0 8px'}"
+           :body-style="{ padding: '0 8px' }"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -93,8 +93,8 @@
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
-  import columns from './table.columns';
   import { getExecTemplatePage } from '@/api/exec/exec-template';
+  import columns from './table.columns';
 
   const emits = defineEmits(['selected']);
 

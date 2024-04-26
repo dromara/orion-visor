@@ -45,12 +45,28 @@
       </div>
     </div>
     <!-- 已关闭-右侧操作 -->
-    <div v-if="closed" class="sftp-table-header-right">
+    <div v-if="session?.connected === false && closeMessage !== undefined"
+         class="sftp-table-header-right">
+      <!-- 错误信息 -->
       <a-tag class="close-message"
              color="red"
              :title="closeMessage">
         已断开: {{ closeMessage }}
       </a-tag>
+      <!-- 重连 -->
+      <a-tooltip v-if="session?.canReconnect"
+                 position="top"
+                 :mini="true"
+                 :overlay-inverse="true"
+                 :auto-fix-position="false"
+                 content-class="terminal-tooltip-content"
+                 arrow-class="terminal-tooltip-content"
+                 content="重连">
+        <span class="click-icon-wrapper header-action-icon ml8"
+              @click="reConnect">
+          <icon-refresh />
+        </span>
+      </a-tooltip>
     </div>
     <!-- 路径编辑模式-右侧操作 -->
     <a-space v-else-if="pathEditable" class="sftp-table-header-right">
@@ -191,16 +207,16 @@
   import { inject, nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
   import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
+  import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
-    closed: boolean;
     closeMessage?: string;
     currentPath: string;
     session?: ISftpSession;
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'download']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'download', 'setLoading']);
 
   const showHiddenFile = ref(false);
   const analysisPaths = ref<Array<PathAnalysis>>([]);
@@ -229,7 +245,7 @@
   // 设置命令编辑模式
   const setPathEditable = (editable: boolean) => {
     // 检查是否断开
-    if (editable && props.closed) {
+    if (editable && !props.session?.connected) {
       return;
     }
     pathEditable.value = editable;
@@ -251,7 +267,7 @@
   // 加载文件列表
   const loadFileList = (path: string = props.currentPath) => {
     // 检查是否断开
-    if (props.closed) {
+    if (!props.session?.connected) {
       return;
     }
     emits('loadFile', path);
@@ -281,6 +297,15 @@
   const deleteSelectFiles = () => {
     if (props.selectedFiles?.length) {
       props.session?.remove(props.selectedFiles);
+    }
+  };
+
+  // 重新连接
+  const reConnect = () => {
+    if (props.session) {
+      emits('setLoading', true);
+      // 重新连接
+      useTerminalStore().reOpenSession(props.session.sessionId);
     }
   };
 

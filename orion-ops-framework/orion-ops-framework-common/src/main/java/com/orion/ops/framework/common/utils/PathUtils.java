@@ -37,7 +37,6 @@ public class PathUtils {
         }
     }
 
-
     /**
      * 获取应用路径
      *

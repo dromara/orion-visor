@@ -11,6 +11,7 @@ export interface ExecTemplateCreateRequest {
   timeout?: number;
   scriptExec?: number;
   parameterSchema?: string;
+  hostIdList?: Array<number>;
 }
 
 /**
@@ -43,6 +44,7 @@ export interface ExecTemplateQueryResponse extends TableData {
   updateTime: number;
   creator: string;
   updater: string;
+  hostIdList?: Array<number>;
 }
 
 /**
@@ -64,6 +66,13 @@ export function updateExecTemplate(request: ExecTemplateUpdateRequest) {
  */
 export function getExecTemplate(id: number) {
   return axios.get<ExecTemplateQueryResponse>('/asset/exec-template/get', { params: { id } });
+}
+
+/**
+ * 查询执行模板
+ */
+export function getExecTemplateWithAuthorized(id: number) {
+  return axios.get<ExecTemplateQueryResponse>('/asset/exec-template/get-with-authorized', { params: { id } });
 }
 
 /**

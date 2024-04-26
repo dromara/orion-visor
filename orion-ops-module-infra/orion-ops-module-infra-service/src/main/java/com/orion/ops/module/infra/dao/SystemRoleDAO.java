@@ -40,4 +40,12 @@ public interface SystemRoleDAO extends IMapper<SystemRoleDO> {
      */
     Long getRoleIdByUserIdAndRoleCode(@Param("userId") Long userId, @Param("code") String code);
 
+    /**
+     * 查询用户角色
+     *
+     * @param userId userId
+     * @return roles
+     */
+    List<SystemRoleDO> selectRoleByUserId(@Param("userId") Long userId);
+
 }

@@ -33,7 +33,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { TerminalTabs, TerminalShortcutKeys } from '../../types/terminal.const';
+  import type { ISshSession } from '../../types/terminal.type';
+  import { TerminalTabs, TerminalShortcutKeys, PanelSessionType } from '../../types/terminal.const';
   import { useTerminalStore } from '@/store';
   import { onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';
@@ -45,17 +46,19 @@
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
   import TerminalPanelsView from '@/views/host/terminal/components/layout/terminal-panels-view.vue';
 
-  const { preference, tabManager, getCurrentSshSession } = useTerminalStore();
+  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'screenshot']);
+
+  const { preference, tabManager, getCurrentSession } = useTerminalStore();
 
   // 监听 tab 切换
   watch(() => tabManager.active, (active, before) => {
     // 失焦 tab
     if (before === TerminalTabs.TERMINAL_PANEL.key) {
-      getCurrentSshSession()?.blur();
+      getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.blur();
     }
     // 聚焦 tab
     if (active === TerminalTabs.TERMINAL_PANEL.key) {
-      getCurrentSshSession()?.focus();
+      getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
     }
     // 修改标题
     document.title = Object.values(TerminalTabs)
@@ -95,6 +98,22 @@
       case TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB:
         // 切换到新建连接 tab
         tabManager.openTab(TerminalTabs.NEW_CONNECTION);
+        break;
+      case TerminalShortcutKeys.OPEN_COMMAND_SNIPPET:
+        // 打开命令片段
+        emits('openCommandSnippet');
+        break;
+      case TerminalShortcutKeys.OPEN_PATH_BOOKMARK:
+        // 打开书签路径
+        emits('openPathBookmark');
+        break;
+      case TerminalShortcutKeys.OPEN_TRANSFER_LIST:
+        // 打开文件传输列表
+        emits('openTransferList');
+        break;
+      case TerminalShortcutKeys.SCREENSHOT:
+        // 截图
+        emits('screenshot');
         break;
       default:
         break;

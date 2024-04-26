@@ -19,10 +19,11 @@ export interface TerminalTabItem {
 
 // 终端面板 tab 元素
 export interface TerminalPanelTabItem extends TerminalTabItem {
+  type: string;
+  sessionId: string;
   seq: number;
   hostId: number;
   address: string;
-  type: string;
   color?: string;
 }
 
@@ -74,7 +75,7 @@ export interface LabelExtraSettingModel {
 }
 
 // session tab
-export interface PanelSessionTab {
+export interface PanelSessionTabType {
   type: string;
   icon: string;
 }
@@ -112,6 +113,8 @@ export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem
 
   // 获取当前 tab
   getCurrentTab: () => T | undefined;
+  // 获取 tab
+  getTab: (key: string) => T;
   // 点击 tab
   clickTab: (key: string) => void;
   // 删除 tab
@@ -129,18 +132,18 @@ export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem
 }
 
 // 终端面板管理器定义
-export interface ITerminalPanelManager<T extends TerminalPanelTabItem = TerminalPanelTabItem> {
+export interface ITerminalPanelManager {
   // 当前面板
   active: number;
   // 面板列表
-  panels: Array<ITerminalTabManager<T>>;
+  panels: Array<ITerminalTabManager<TerminalPanelTabItem>>;
 
   // 获取当前面板
-  getCurrentPanel: () => ITerminalTabManager<T>;
+  getCurrentPanel: () => ITerminalTabManager<TerminalPanelTabItem>;
   // 设置当前面板
   setCurrentPanel: (active: number) => void;
   // 获取面板
-  getPanel: (index: number) => ITerminalTabManager<T>;
+  getPanel: (index: number) => ITerminalTabManager<TerminalPanelTabItem>;
   // 移除面板
   removePanel: (index: number) => void;
   // 重置
@@ -150,9 +153,11 @@ export interface ITerminalPanelManager<T extends TerminalPanelTabItem = Terminal
 // 终端会话管理器定义
 export interface ITerminalSessionManager {
   // 打开 ssh 会话
-  openSsh: (tab: TerminalTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
+  openSsh: (tab: TerminalPanelTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
   // 打开 sftp 会话
-  openSftp: (tab: TerminalTabItem, resolver: ISftpSessionResolver) => Promise<ISftpSession>;
+  openSftp: (tab: TerminalPanelTabItem, resolver: ISftpSessionResolver) => Promise<ISftpSession>;
+  // 重新打开会话
+  reOpenSession: (type: string, sessionId: string, newSessionId: string) => Promise<void>;
   // 获取终端会话
   getSession: <T extends ITerminalSession>(sessionId: string) => T;
   // 关闭终端会话
@@ -228,6 +233,8 @@ export interface ITerminalSession {
   sessionId: string;
   // 是否已连接
   connected: boolean;
+  // 是否可以重新连接
+  canReconnect: boolean;
 
   // 连接
   connect: () => void;
@@ -351,7 +358,7 @@ export interface ISftpSessionResolver {
   // 连接后回调
   connectCallback: () => void;
   // 关闭回调
-  onClose: (forceClose: string, msg: string) => void;
+  onClose: (forceClose: boolean, msg: string) => void;
   // 接受文件列表响应
   resolveList: (result: string, path: string, list: Array<SftpFile>) => void;
   // 接收创建文件夹响应

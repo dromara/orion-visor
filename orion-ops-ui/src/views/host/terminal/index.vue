@@ -15,13 +15,26 @@
         <!-- 主机加载中骨架 -->
         <loading-skeleton v-if="contentLoading" />
         <!-- 终端内容区域 -->
-        <main-content v-else />
+        <main-content v-else
+                      @open-command-snippet="() => snippetRef.open()"
+                      @open-path-bookmark="() => pathRef.open()"
+                      @open-transfer-list="() => transferRef.open()"
+                      @screenshot="screenshot" />
       </main>
       <!-- 右侧操作栏 -->
       <div class="host-terminal-layout-right">
-        <right-sidebar />
+        <right-sidebar @open-command-snippet="() => snippetRef.open()"
+                       @open-path-bookmark="() => pathRef.open()"
+                       @open-transfer-list="() => transferRef.open()"
+                       @screenshot="screenshot" />
       </div>
     </main>
+    <!-- 命令片段列表抽屉 -->
+    <command-snippet-list-drawer ref="snippetRef" />
+    <!-- 路径书签列表抽屉 -->
+    <path-bookmark-list-drawer ref="pathRef" />
+    <!-- 传输列表 -->
+    <transfer-drawer ref="transferRef" />
   </div>
 </template>
 
@@ -32,8 +45,9 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ISshSession } from './types/terminal.type';
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
-  import { dictKeys, TerminalTabs } from './types/terminal.const';
+  import { dictKeys, PanelSessionType, TerminalTabs } from './types/terminal.const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import debug from '@/utils/env';
@@ -42,6 +56,9 @@
   import RightSidebar from './components/layout/right-sidebar.vue';
   import MainContent from './components/layout/main-content.vue';
   import LoadingSkeleton from './components/layout/loading-skeleton.vue';
+  import TransferDrawer from '@/views/host/terminal/components/transfer/transfer-drawer.vue';
+  import CommandSnippetListDrawer from '@/views/host/command-snippet/components/command-snippet-list-drawer.vue';
+  import PathBookmarkListDrawer from '@/views/host/path-bookmark/components/path-bookmark-list-drawer.vue';
   import '@/assets/style/host-terminal-layout.less';
   import 'xterm/css/xterm.css';
 
@@ -52,6 +69,17 @@
 
   const originTitle = document.title;
   const render = ref(false);
+  const snippetRef = ref();
+  const pathRef = ref();
+  const transferRef = ref();
+
+  // 终端截屏
+  const screenshot = () => {
+    const handler = terminalStore.getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
+    if (handler && handler.enabledStatus('screenshot')) {
+      handler.screenshot();
+    }
+  };
 
   // 关闭视口处理
   const handleBeforeUnload = (event: any) => {

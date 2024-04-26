@@ -68,7 +68,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession, TerminalTabItem, SidebarAction } from '../../types/terminal.type';
+  import type { ISshSession, TerminalPanelTabItem, SidebarAction } from '../../types/terminal.type';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { copy } from '@/hooks/copy';
@@ -79,7 +79,7 @@
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
 
   const props = defineProps<{
-    tab: TerminalTabItem;
+    tab: TerminalPanelTabItem;
   }>();
 
   const { getDictValue } = useDictStore();
@@ -147,7 +147,7 @@
 
   // 关闭会话
   onUnmounted(() => {
-    sessionManager.closeSession(props.tab.key);
+    sessionManager.closeSession(props.tab.sessionId);
   });
 
 </script>

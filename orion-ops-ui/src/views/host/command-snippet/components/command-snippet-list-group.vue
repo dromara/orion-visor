@@ -1,6 +1,6 @@
 <template>
   <a-collapse :bordered="false">
-    <template v-for="group in snippet.groups">
+    <template v-for="group in value.groups">
       <a-collapse-item v-if="calcTotal(group) > 0"
                        :key="group.id"
                        :header="group.name">
@@ -21,7 +21,7 @@
 
 <script lang="ts">
   export default {
-    name: 'commandSnippetGroup'
+    name: 'commandSnippetListGroup'
   };
 </script>
 
@@ -31,7 +31,7 @@
   import CommandSnippetListItem from './command-snippet-list-item.vue';
 
   defineProps<{
-    snippet: CommandSnippetWrapperResponse;
+    value: CommandSnippetWrapperResponse;
   }>();
 
   // 计算总量

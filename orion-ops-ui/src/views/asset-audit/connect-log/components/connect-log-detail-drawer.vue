@@ -60,7 +60,7 @@
         {{ dateFormat(new Date(record.startTime)) }}
       </a-descriptions-item>
       <!-- 结束时间 -->
-      <a-descriptions-item label="结束时间">
+      <a-descriptions-item v-if="record.endTime" label="结束时间">
         {{ dateFormat(new Date(record.endTime)) }}
       </a-descriptions-item>
       <!-- traceId -->

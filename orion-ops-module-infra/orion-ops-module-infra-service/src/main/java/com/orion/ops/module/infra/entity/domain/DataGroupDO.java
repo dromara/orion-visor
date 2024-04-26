@@ -42,6 +42,10 @@ public class DataGroupDO extends BaseDO {
     @TableField("type")
     private String type;
 
+    @Schema(description = "用户id")
+    @TableField("user_id")
+    private Long userId;
+
     @Schema(description = "排序")
     @TableField("sort")
     private Integer sort;

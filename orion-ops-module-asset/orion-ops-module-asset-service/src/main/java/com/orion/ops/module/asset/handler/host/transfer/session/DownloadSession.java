@@ -98,7 +98,7 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
 
     @Override
     protected void closeStream() {
-        // 关闭 inputStream 可能会被阻塞 ??..?? 只能关闭 executor
+        // 关闭 inputStream 可能会被阻塞 ???...??? 只能关闭 executor
         Streams.close(this.executor);
         this.executor = null;
         this.inputStream = null;

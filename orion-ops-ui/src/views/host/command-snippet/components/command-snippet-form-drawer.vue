@@ -11,7 +11,7 @@
     <a-spin class="full form-container" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
-              label-align="left"
+              label-align="right"
               :auto-label-width="true"
               :rules="formRules">
         <!-- 名称 -->
@@ -21,7 +21,7 @@
                    allow-clear />
         </a-form-item>
         <!-- 分组 -->
-        <a-form-item field="groupId" label="命令分组">
+        <a-form-item field="groupId" label="分组">
           <command-snippet-group-select v-model="formModel.groupId" />
         </a-form-item>
         <!-- 代码片段 -->

@@ -126,6 +126,7 @@
   import formRules from '../types/form.rules';
   import useLoading from '@/hooks/loading';
   import { batchExecCommand } from '@/api/exec/exec-command';
+  import { getExecTemplateWithAuthorized } from '@/api/exec/exec-template';
   import { EnabledStatus } from '@/types/const';
   import { Message } from '@arco-design/web-vue';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
@@ -170,22 +171,31 @@
   };
 
   // 从执行模板设置
-  const setWithTemplate = (record: ExecTemplateQueryResponse) => {
-    formModel.value = {
-      ...formModel.value,
-      command: record.command,
-      description: record.name,
-      timeout: record.timeout,
-      scriptExec: record.scriptExec,
-    };
-    parameterSchema.value = record.parameterSchema ? JSON.parse(record.parameterSchema) : [];
-    if (parameterSchema.value.length) {
-      parameterFormModel.value = parameterSchema.value.reduce((acc, cur) => ({
-        ...acc,
-        [cur.name as string]: cur.value
-      }), {});
-    } else {
-      parameterFormModel.value = {};
+  const setWithTemplate = async ({ id }: ExecTemplateQueryResponse) => {
+    setLoading(true);
+    try {
+      // 查询模板信息
+      const { data } = await getExecTemplateWithAuthorized(id);
+      formModel.value = {
+        ...formModel.value,
+        description: data.name,
+        command: data.command,
+        timeout: data.timeout,
+        scriptExec: data.scriptExec,
+        hostIdList: data.hostIdList,
+      };
+      parameterSchema.value = data.parameterSchema ? JSON.parse(data.parameterSchema) : [];
+      if (parameterSchema.value.length) {
+        parameterFormModel.value = parameterSchema.value.reduce((acc, cur) => ({
+          ...acc,
+          [cur.name as string]: cur.value
+        }), {});
+      } else {
+        parameterFormModel.value = {};
+      }
+    } catch (e) {
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -16,9 +16,8 @@
           </span>
         </a-space>
       </template>
-      <!-- 终端面板 -->
-      <a-tab-pane v-for="tab in panel.items"
-                  :key="tab.key">
+      <!-- 终端面板 这里的 key 只能使用 key 字段, 否则重连有问题 -->
+      <a-tab-pane v-for="tab in panel.items" :key="tab.key">
         <!-- 标题 -->
         <template #title>
           <span class="tab-title-wrapper usn"
@@ -54,8 +53,8 @@
   import SftpView from '../sftp/sftp-view.vue';
 
   const props = defineProps<{
-    index: number,
-    panel: ITerminalTabManager<TerminalPanelTabItem>,
+    index: number;
+    panel: ITerminalTabManager<TerminalPanelTabItem>;
   }>();
 
   const emits = defineEmits(['close', 'openNewConnect']);
@@ -68,14 +67,14 @@
     if (before) {
       const beforeTab = props.panel.items.find(s => s.key === before);
       if (beforeTab && beforeTab?.type === PanelSessionType.SSH.type) {
-        sessionManager.getSession<ISshSession>(before)?.blur();
+        sessionManager.getSession<ISshSession>(beforeTab.sessionId)?.blur();
       }
     }
     // 终端自动聚焦
     if (active) {
       const activeTab = props.panel.items.find(s => s.key === active);
       if (activeTab && activeTab?.type === PanelSessionType.SSH.type) {
-        sessionManager.getSession<ISshSession>(active)?.focus();
+        sessionManager.getSession<ISshSession>(activeTab.sessionId)?.focus();
       }
     }
     // 无终端自动关闭

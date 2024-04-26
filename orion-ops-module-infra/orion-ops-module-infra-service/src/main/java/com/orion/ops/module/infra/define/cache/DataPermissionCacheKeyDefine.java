@@ -20,7 +20,7 @@ public interface DataPermissionCacheKeyDefine {
             .desc("用户所有数据权限 ${type} ${userId}")
             .type(Long.class)
             .struct(RedisCacheStruct.LIST)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

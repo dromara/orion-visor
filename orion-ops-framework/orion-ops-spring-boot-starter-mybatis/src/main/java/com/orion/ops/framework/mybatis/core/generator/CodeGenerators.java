@@ -10,6 +10,7 @@ import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import com.orion.ops.framework.mybatis.core.generator.template.Template;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 代码生成器
@@ -33,7 +34,7 @@ public class CodeGenerators {
                 //         .enableProviderApi()
                 //         .disableUnitTest()
                 //         .cache("dict:keys", "字典配置项")
-                //         .expire(1, TimeUnit.DAYS)
+                //         .expire(8, TimeUnit.HOURS)
                 //         .vue("system", "dict-key")
                 //         .enableRowSelection()
                 //         .enableCardView()
@@ -44,20 +45,15 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                Template.create("exec_job", "计划任务", "exec")
+                // Template.create("exec_template_host", "执行模板主机", "exec")
+                //         .disableUnitTest()
+                //         .vue("exec", "exec-template-host")
+                //         .build(),
+                Template.create("path_bookmark", "路径标签", "path")
                         .disableUnitTest()
-                        .vue("exec", "exec-job")
-                        .enableDrawerForm()
-                        .dict("execJobStatus", "status")
-                        .comment("计划任务状态")
-                        .field("execJobStatus")
-                        .fields("DISABLED", "ENABLED")
-                        .labels("禁用", "启用")
-                        .values(0, 1)
-                        .build(),
-                Template.create("exec_job_host", "计划任务主机", "exec")
-                        .disableUnitTest()
-                        .vue("exec", "exec-job-host")
+                        .cache("path:bookmark:list:{}", "路径标签列表 ${userId}")
+                        .expire(8, TimeUnit.HOURS)
+                        .vue("host", "path-bookmark")
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

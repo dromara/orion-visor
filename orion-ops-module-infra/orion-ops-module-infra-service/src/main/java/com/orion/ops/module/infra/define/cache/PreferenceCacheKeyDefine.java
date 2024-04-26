@@ -21,7 +21,7 @@ public interface PreferenceCacheKeyDefine {
             .desc("用户偏好 ${userId} ${type}")
             .type(Ref.class)
             .struct(RedisCacheStruct.HASH)
-            .timeout(1, TimeUnit.DAYS)
+            .timeout(8, TimeUnit.HOURS)
             .build();
 
 }

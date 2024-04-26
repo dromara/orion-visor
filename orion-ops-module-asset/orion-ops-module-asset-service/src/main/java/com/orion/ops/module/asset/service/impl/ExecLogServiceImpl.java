@@ -10,6 +10,7 @@ import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
@@ -175,7 +176,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         ExecLogDO record = execLogDAO.selectByIdSource(id, source);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 中断命令执行
-        this.interruptedTask(Lists.singleton(id));
+        this.interruptTask(Lists.singleton(id));
         // 删除执行日志
         int effect = execLogDAO.deleteById(id);
         // 删除主机日志
@@ -199,7 +200,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .intValue();
         Valid.isTrue(idList.size() == count, ErrorMessage.DATA_MODIFIED);
         // 中断命令执行
-        this.interruptedTask(idList);
+        this.interruptTask(idList);
         // 删除执行日志
         int effect = execLogDAO.deleteBatchIds(idList);
         // 删除主机日志
@@ -229,7 +230,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         int effect = 0;
         if (!idList.isEmpty()) {
             // 中断命令执行
-            this.interruptedTask(idList);
+            this.interruptTask(idList);
             // 删除执行日志
             effect = execLogDAO.delete(wrapper);
             // 删除主机日志
@@ -255,9 +256,9 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 中断执行
         IExecTaskHandler task = execTaskManager.getTask(logId);
         if (task != null) {
-            log.info("ExecLogService.interruptExec interrupted logId: {}", logId);
+            log.info("ExecLogService.interruptExec interrupt logId: {}", logId);
             // 中断
-            task.interrupted();
+            task.interrupt();
         } else {
             log.info("ExecLogService.interruptExec updateStatus start logId: {}", logId);
             // 不存在则直接修改状态
@@ -298,7 +299,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 中断执行
         IExecTaskHandler task = execTaskManager.getTask(logId);
         if (task != null) {
-            log.info("ExecLogService.interruptHostExec interrupted logId: {}, hostLogId: {}", logId, hostLogId);
+            log.info("ExecLogService.interruptHostExec interrupt logId: {}, hostLogId: {}", logId, hostLogId);
             IExecCommandHandler handler = task.getHandlers()
                     .stream()
                     .filter(s -> s.getHostId().equals(hostLog.getHostId()))
@@ -306,7 +307,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                     .orElse(null);
             // 中断
             if (handler != null) {
-                handler.interrupted();
+                handler.interrupt();
             }
         } else {
             log.info("ExecLogService.interruptHostExec updateStatus start logId: {}, hostLogId: {}", logId, hostLogId);
@@ -405,6 +406,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public void downloadLogFile(Long id, String source, HttpServletResponse response) {
         log.info("ExecLogService.downloadLogFile id: {}, source: {}", id, source);
+        InputStream in = null;
         try {
             // 获取主机执行日志
             ExecHostLogDO hostLog = execHostLogDAO.selectById(id);
@@ -418,11 +420,12 @@ public class ExecLogServiceImpl implements ExecLogService {
             OperatorLogs.add(OperatorLogs.HOST_ID, hostLog.getHostId());
             OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
             // 获取日志
-            InputStream in = logsFileClient.getContentInputStream(logPath);
+            in = logsFileClient.getContentInputStream(logPath);
             // 返回
             Servlets.transfer(response, in, Files1.getFileName(logPath));
         } catch (Exception e) {
             log.error("ExecLogService.downloadLogFile error id: {}", id, e);
+            Streams.close(in);
             String errorMessage = ErrorMessage.FILE_READ_ERROR;
             if (e instanceof InvalidArgumentException) {
                 errorMessage = e.getMessage();
@@ -462,11 +465,11 @@ public class ExecLogServiceImpl implements ExecLogService {
      *
      * @param idList idList
      */
-    private void interruptedTask(List<Long> idList) {
+    private void interruptTask(List<Long> idList) {
         idList.stream()
                 .map(execTaskManager::getTask)
                 .filter(Objects::nonNull)
-                .forEach(IExecTaskHandler::interrupted);
+                .forEach(IExecTaskHandler::interrupt);
     }
 
 }

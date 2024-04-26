@@ -29,6 +29,11 @@ export default function setupPermissionGuard(router: Router) {
       // 页面不存在
       next({ name: NOT_FOUND_ROUTER_NAME });
     }
+    // 修改页面标题
+    const locale = to.meta?.locale;
+    if (locale) {
+      document.title = locale;
+    }
     NProgress.done();
   });
 }

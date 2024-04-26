@@ -12,17 +12,16 @@
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
                              v-model:selected-files="selectFiles"
-                             :closed="closed"
                              :close-message="closeMessage"
                              :current-path="currentPath"
                              :session="session"
                              @load-file="loadFiles"
-                             @download="downloadFiles" />
+                             @download="downloadFiles"
+                             @set-loading="setTableLoading" />
           <!-- 表格 -->
           <sftp-table class="sftp-table-wrapper"
                       v-model:selected-files="selectFiles"
                       :session="session"
-                      :closed="closed"
                       :list="fileList"
                       :loading="tableLoading"
                       @load-file="loadFiles"
@@ -63,7 +62,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, SftpFile, TerminalTabItem } from '../../types/terminal.type';
+  import type { ISftpSession, SftpFile, TerminalPanelTabItem } from '../../types/terminal.type';
   import { onMounted, onUnmounted, provide, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -79,7 +78,7 @@
   import SftpUploadModal from './sftp-upload-modal.vue';
 
   const props = defineProps<{
-    tab: TerminalTabItem;
+    tab: TerminalPanelTabItem;
   }>();
 
   const { preference, sessionManager, transferManager } = useTerminalStore();
@@ -91,8 +90,7 @@
   const fileList = ref<Array<SftpFile>>([]);
   const selectFiles = ref<Array<string>>([]);
   const splitSize = ref(1);
-  const closed = ref(false);
-  const closeMessage = ref('');
+  const closeMessage = ref<string>();
   const editorView = ref(false);
   const editorRef = ref();
   const editorFileName = ref('');
@@ -170,12 +168,11 @@
 
   // 连接成功回调
   const connectCallback = () => {
-    loadFiles('~');
+    loadFiles(currentPath.value || '~');
   };
 
   // 加载文件列表
   const loadFiles = (path: string) => {
-    setTableLoading(true);
     session.value?.list(path);
   };
 
@@ -189,8 +186,7 @@
   };
 
   // 关闭回调
-  const onClose = (forceClose: string, msg: string) => {
-    closed.value = true;
+  const onClose = (forceClose: boolean, msg: string) => {
     closeMessage.value = msg;
     setTableLoading(false);
     setEditorLoading(false);
@@ -267,7 +263,7 @@
 
   // 关闭会话
   onUnmounted(() => {
-    sessionManager.closeSession(props.tab.key);
+    sessionManager.closeSession(props.tab.sessionId);
   });
 
 </script>

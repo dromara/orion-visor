@@ -25,13 +25,25 @@ public class ExecCommandDTO {
     @Schema(description = "hostId")
     private Long logId;
 
+    @Schema(description = "用户id")
+    private Long userId;
+
+    @Schema(description = "用户名")
+    private String username;
+
+    @Schema(description = "执行描述")
+    private String description;
+
+    @Schema(description = "执行序列")
+    private Integer execSeq;
+
     @Schema(description = "超时时间")
     private Integer timeout;
 
     @Schema(description = "是否使用脚本执行")
     private Boolean scriptExec;
 
-    @Schema(description = "主机")
+    @Schema(description = "执行主机")
     private List<ExecCommandHostDTO> hosts;
 
 }

@@ -47,4 +47,9 @@ public interface CommandSnippetGroupService {
      */
     Integer deleteCommandSnippetGroup(CommandSnippetGroupDeleteRequest request);
 
+    /**
+     * 清理未使用的分组
+     */
+    void clearUnusedGroup();
+
 }

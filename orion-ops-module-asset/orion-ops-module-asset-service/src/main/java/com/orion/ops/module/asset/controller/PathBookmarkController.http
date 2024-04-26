@@ -1,0 +1,34 @@
+### 创建路径标签
+POST {{baseUrl}}/asset/path-bookmark/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "",
+  "path": ""
+}
+
+
+### 更新路径标签
+PUT {{baseUrl}}/asset/path-bookmark/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "path": ""
+}
+
+
+### 查询全部路径标签
+GET {{baseUrl}}/asset/path-bookmark/list
+Authorization: {{token}}
+
+
+### 删除路径标签
+DELETE {{baseUrl}}/asset/path-bookmark/delete?id=1
+Authorization: {{token}}
+
+
+###

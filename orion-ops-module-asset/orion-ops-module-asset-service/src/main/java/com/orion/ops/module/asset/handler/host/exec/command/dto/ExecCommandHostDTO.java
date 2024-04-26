@@ -26,6 +26,12 @@ public class ExecCommandHostDTO {
     @Schema(description = "hostId")
     private Long hostId;
 
+    @Schema(description = "主机名称")
+    private String hostName;
+
+    @Schema(description = "主机地址")
+    private String hostAddress;
+
     @Schema(description = "日志文件路径")
     private String logPath;
 
@@ -34,6 +40,9 @@ public class ExecCommandHostDTO {
 
     @Schema(description = "执行命令")
     private String command;
+
+    @Schema(description = "主机用户")
+    private String username;
 
     @Schema(description = "命令编码")
     private String charset;
