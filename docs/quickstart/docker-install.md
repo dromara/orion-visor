@@ -17,6 +17,15 @@ Dashboard 修改)
 }
  ```
 
+### 拉取代码
+
+```
+# github
+git clone https://github.com/lijiahangmax/orion-ops-pro
+# gitee
+git clone https://gitee.com/lijiahangmax/orion-ops-pro
+```
+
 ### 构建镜像
 
 ```

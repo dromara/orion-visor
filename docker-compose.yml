@@ -6,6 +6,7 @@ services:
       - 1081:80
     environment:
       - MYSQL_HOST=orion-ops-pro-db
+      - MYSQL_PORT=3306
       - MYSQL_USER=orion
       - MYSQL_PASSWORD=Data@123456
       - REDIS_HOST=orion-ops-pro-redis

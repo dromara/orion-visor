@@ -27,7 +27,8 @@ git clone https://gitee.com/lijiahangmax/orion-ops-pro
 # 执行脚本
 orion-ops-pro/sql/init-1-schema-databases.sql
 orion-ops-pro/sql/init-2-schema-tables.sql
-orion-ops-pro/sql/init-3-data.sql
+orion-ops-pro/sql/init-3-schema-quartz.sql
+orion-ops-pro/sql/init-4-data.sql
 ```
 
 3. 构建后端代码
