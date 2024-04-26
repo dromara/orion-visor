@@ -22,6 +22,6 @@ public interface AppConst extends OrionConst {
 
     String GITEE = "https://gitee.com/lijiahangmax/orion-ops-pro";
 
-    String ISSUES = "https://gitee.com/lijiahangmax/orion-ops-pro/issues";
+    String ISSUES = "https://github.com/lijiahangmax/orion-ops-pro/issues";
 
 }

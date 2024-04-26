@@ -46,6 +46,8 @@
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
   import TerminalPanelsView from '@/views/host/terminal/components/layout/terminal-panels-view.vue';
 
+  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'screenshot']);
+
   const { preference, tabManager, getCurrentSession } = useTerminalStore();
 
   // 监听 tab 切换
@@ -96,6 +98,22 @@
       case TerminalShortcutKeys.OPEN_NEW_CONNECT_TAB:
         // 切换到新建连接 tab
         tabManager.openTab(TerminalTabs.NEW_CONNECTION);
+        break;
+      case TerminalShortcutKeys.OPEN_COMMAND_SNIPPET:
+        // 打开命令片段
+        emits('openCommandSnippet');
+        break;
+      case TerminalShortcutKeys.OPEN_PATH_BOOKMARK:
+        // 打开书签路径
+        emits('openPathBookmark');
+        break;
+      case TerminalShortcutKeys.OPEN_TRANSFER_LIST:
+        // 打开文件传输列表
+        emits('openTransferList');
+        break;
+      case TerminalShortcutKeys.SCREENSHOT:
+        // 截图
+        emits('screenshot');
         break;
       default:
         break;

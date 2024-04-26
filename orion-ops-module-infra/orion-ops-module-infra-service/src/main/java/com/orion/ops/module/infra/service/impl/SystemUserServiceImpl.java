@@ -14,6 +14,7 @@ import com.orion.ops.framework.redis.core.utils.RedisStrings;
 import com.orion.ops.framework.redis.core.utils.RedisUtils;
 import com.orion.ops.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
+import com.orion.ops.module.infra.convert.SystemRoleConvert;
 import com.orion.ops.module.infra.convert.SystemUserConvert;
 import com.orion.ops.module.infra.dao.OperatorLogDAO;
 import com.orion.ops.module.infra.dao.SystemRoleDAO;
@@ -23,6 +24,7 @@ import com.orion.ops.module.infra.define.RoleDefine;
 import com.orion.ops.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.ops.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.ops.module.infra.define.config.AppAuthenticationConfig;
+import com.orion.ops.module.infra.entity.domain.SystemRoleDO;
 import com.orion.ops.module.infra.entity.domain.SystemUserDO;
 import com.orion.ops.module.infra.entity.dto.UserInfoDTO;
 import com.orion.ops.module.infra.entity.request.user.*;
@@ -160,11 +162,15 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public SystemUserVO getSystemUserById(Long id) {
-        // 查询
+        // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.USER_ABSENT);
-        // 转换
-        return SystemUserConvert.MAPPER.to(record);
+        // 查询角色
+        List<SystemRoleDO> roles = systemRoleDAO.selectRoleByUserId(id);
+        // 返回
+        SystemUserVO user = SystemUserConvert.MAPPER.to(record);
+        user.setRoles(SystemRoleConvert.MAPPER.to(roles));
+        return user;
     }
 
     @Override
