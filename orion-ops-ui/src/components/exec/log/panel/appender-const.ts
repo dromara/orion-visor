@@ -8,8 +8,8 @@ import type { WebglAddon } from 'xterm-addon-webgl';
 export const LogAppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
   theme: {
     foreground: '#FFFFFF',
-    background: '#202020',
-    selectionBackground: '#B5D5FF',
+    background: '#1C1C1C',
+    selectionBackground: '#444444',
   },
   cols: 30,
   rows: 8,
@@ -18,8 +18,8 @@ export const LogAppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
   cursorStyle: 'bar',
   cursorBlink: false,
   fastScrollModifier: 'alt',
-  fontSize: 14,
-  lineHeight: 1.08,
+  fontSize: 13,
+  lineHeight: 1.12,
   convertEol: true,
 };
 

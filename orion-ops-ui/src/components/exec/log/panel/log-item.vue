@@ -241,7 +241,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--color-bg-1);
+    background: var(--color-bg-2);
     color: var(--color-text-1);
     user-select: none;
 
@@ -264,7 +264,7 @@
     width: 100%;
     height: calc(100% - @header-height);
     position: relative;
-    background: #202020;
+    background: #1C1C1C;
     padding: 4px 0 4px 4px;
 
     .log-appender {
