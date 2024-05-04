@@ -14,18 +14,8 @@ const EXEC: AppRouteRecordRaw[] = [
       },
       {
         name: 'execCommandLog',
-        path: '/exec-command-log',
+        path: '/exec-log',
         component: () => import('@/views/exec/exec-command-log/index.vue'),
-      },
-      {
-        name: 'execJob',
-        path: '/exec-job',
-        component: () => import('@/views/exec/exec-job/index.vue'),
-      },
-      {
-        name: 'execJobLog',
-        path: '/exec-job-log',
-        component: () => import('@/views/exec/exec-job-log/index.vue'),
       },
       {
         name: 'execTemplate',
@@ -41,13 +31,8 @@ const EXEC: AppRouteRecordRaw[] = [
     children: [
       {
         name: 'execCommandLogView',
-        path: '/exec-command-log-view',
+        path: '/exec-log-view',
         component: () => import('@/views/exec/exec-command-log-view/index.vue'),
-      },
-      {
-        name: 'execJobLogView',
-        path: '/exec-job-log-view',
-        component: () => import('@/views/exec/exec-job-log-view/index.vue'),
       },
     ],
   }

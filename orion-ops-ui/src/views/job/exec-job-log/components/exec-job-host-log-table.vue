@@ -107,7 +107,7 @@
   import { execHostStatusKey, execHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import columns from '../../exec-command-log/types/host-table.columns';
+  import columns from '@/views/exec/exec-command-log/types/host-table.columns';
   import { useExpandable } from '@/types/table';
   import { dateFormat, formatDuration } from '@/utils';
   import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';

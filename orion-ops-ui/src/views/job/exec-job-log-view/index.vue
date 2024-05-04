@@ -17,7 +17,7 @@
 <script lang="ts" setup>
   import { onMounted, ref, nextTick } from 'vue';
   import { useRoute } from 'vue-router';
-  import { getExecCommandLog } from '@/api/exec/exec-command-log';
+  import { getExecJobLog } from '@/api/exec/exec-job-log';
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
   const route = useRoute();
@@ -26,7 +26,7 @@
   // 初始化
   const init = async (id: number) => {
     // 获取执行日志
-    const { data } = await getExecCommandLog(id);
+    const { data } = await getExecJobLog(id);
     // 打开日志
     await nextTick(() => {
       setTimeout(() => {
