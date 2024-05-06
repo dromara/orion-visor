@@ -14,7 +14,7 @@
           <a-select style="width: 160px;"
                     v-model="formModel.terminalEmulationType"
                     size="small"
-                    :options="toOptions(terminalEmulationTypeKey)" />
+                    :options="toOptions(emulationTypeKey)" />
         </block-setting-item>
         <!-- 缓冲区行数 -->
         <block-setting-item label="缓冲区行数" desc="保存在缓冲区的行数, 多出的行数会被忽略, 此值越大占用内存的内存会更多">
@@ -42,7 +42,7 @@
   import { ref, watch } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import { terminalEmulationTypeKey } from '../../../types/terminal.const';
+  import { emulationTypeKey } from '../../../types/terminal.const';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions } = useDictStore();

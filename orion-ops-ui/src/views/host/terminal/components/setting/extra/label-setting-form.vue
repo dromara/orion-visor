@@ -14,7 +14,7 @@
         </div>
       </div>
       <!-- 其他颜色 -->
-      <template v-for="color in toOptions(terminalTabColorKey)">
+      <template v-for="color in toOptions(tabColorKey)">
         <div class="color-wrapper"
              :class="[formModel.color === color.value ? 'selected-color' : '']"
              :style="{ '--color': `${color.value}` }"
@@ -37,7 +37,7 @@
 <script lang="ts" setup>
   import type { LabelExtraSettingModel } from '../../../types/terminal.type';
   import { onMounted, ref } from 'vue';
-  import { terminalTabColorKey } from '../../../types/terminal.const';
+  import { tabColorKey } from '../../../types/terminal.const';
   import { getHostExtraItem } from '@/api/asset/host-extra';
   import { useDictStore } from '@/store';
 

@@ -3,7 +3,7 @@
             :width="388"
             :footer="false"
             @close="onClose">
-    <!-- 表头 -->
+    <!-- 标题 -->
     <template #title>
       <span class="path-drawer-title usn">
         路径书签
@@ -32,9 +32,7 @@
         <a-input-search class="path-header-input"
                         v-model="filterValue"
                         placeholder="名称/路径"
-                        allow-clear
-                        @search="filterPath"
-                        @keyup.enter="filterPath" />
+                        allow-clear />
       </div>
       <!-- 加载中 -->
       <a-skeleton v-if="loading"
@@ -73,14 +71,14 @@
 
 <script lang="ts">
   export default {
-    name: 'pathBookmarkListDrawer'
+    name: 'pathBookmarkDrawer'
   };
 </script>
 
 <script lang="ts" setup>
   import { ISshSession } from '@/views/host/terminal/types/terminal.type';
   import type { PathBookmarkWrapperResponse, PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
-  import { ref, provide, onMounted } from 'vue';
+  import { ref, provide, onMounted, watch } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { deletePathBookmark, getPathBookmarkList } from '@/api/asset/path-bookmark';
@@ -142,6 +140,9 @@
         || s.path.toLowerCase().includes(filterValue.value.toLowerCase());
     });
   };
+
+  // 过滤列表
+  watch(filterValue, filterPath);
 
   // 新建
   const openAdd = () => {

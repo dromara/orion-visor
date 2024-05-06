@@ -96,6 +96,16 @@ export default class SftpTransferManager implements ISftpTransferManager {
     this.transferList.splice(index, 1);
   }
 
+  // 取消全部传输
+  cancelAllTransfer(): void {
+    // 从列表中移除非传输中的元素
+    this.transferList.reduceRight((_, value: SftpTransferItem, index: number) => {
+      if (value.status !== TransferStatus.TRANSFERRING) {
+        this.transferList.splice(index, 1);
+      }
+    }, null as any);
+  }
+
   // 打开会话
   private async openClient() {
     this.run = true;

@@ -3,7 +3,7 @@
             :width="388"
             :footer="false"
             @close="onClose">
-    <!-- 表头 -->
+    <!-- 标题 -->
     <template #title>
       <span class="snippet-drawer-title usn">
         命令片段
@@ -32,9 +32,7 @@
         <a-input-search class="snippet-header-input"
                         v-model="filterValue"
                         placeholder="名称/命令"
-                        allow-clear
-                        @search="filterSnippet"
-                        @keyup.enter="filterSnippet" />
+                        allow-clear />
       </div>
       <!-- 加载中 -->
       <a-skeleton v-if="loading"
@@ -73,14 +71,14 @@
 
 <script lang="ts">
   export default {
-    name: 'commandSnippetListDrawer'
+    name: 'commandSnippetDrawer'
   };
 </script>
 
 <script lang="ts" setup>
   import type { ISshSession } from '@/views/host/terminal/types/terminal.type';
   import type { CommandSnippetWrapperResponse, CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
-  import { ref, provide } from 'vue';
+  import { ref, watch, provide } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
@@ -142,6 +140,9 @@
         || s.command.toLowerCase().includes(filterValue.value.toLowerCase());
     });
   };
+
+  // 过滤列表
+  watch(filterValue, filterSnippet);
 
   // 新建
   const openAdd = () => {

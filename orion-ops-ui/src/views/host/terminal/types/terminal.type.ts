@@ -402,6 +402,8 @@ export interface ISftpTransferManager {
   addDownload: (hostId: number, currentPath: string, files: Array<SftpFile>) => void;
   // 取消传输
   cancelTransfer: (fileId: string) => void;
+  // 取消全部传输
+  cancelAllTransfer: () => void;
 }
 
 // sftp 上传器定义

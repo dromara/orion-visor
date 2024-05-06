@@ -83,8 +83,6 @@
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useVisible from '@/hooks/visible';
-  import { TransferStatus, TransferType } from '../../types/terminal.const';
-  import { nextId } from '@/utils';
 
   const { visible, setVisible } = useVisible();
   const { transferManager } = useTerminalStore();

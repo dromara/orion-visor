@@ -1,11 +1,47 @@
 <template>
   <a-drawer v-model:visible="visible"
-            title="文件传输列表"
+            class="transfer-drawer"
             :width="388"
             :unmount-on-close="false"
             :footer="false">
-    <a-spin class="full" :loading="loading">
-      <a-list class="hosts-list-container"
+    <!-- 标题 -->
+    <template #title>
+      <span class="path-drawer-title usn">
+        文件传输列表
+      </span>
+    </template>
+    <a-spin class="full transfer-container" :loading="loading">
+      <!-- 头部操作 -->
+      <div class="transfer-header">
+        <!-- 左侧按钮 -->
+        <a-space size="small">
+          <!-- 清空 -->
+          <span class="click-icon-wrapper transfer-header-icon"
+                title="清空"
+                @click="removeAllTask">
+            <icon-close />
+          </span>
+        </a-space>
+        <!-- 右侧数量 -->
+        <a-space size="small">
+          <a-tag v-for="option in toOptions(transferStatusKey)"
+                 class="pointer"
+                 :color="option.color"
+                 :title="option.label"
+                 :bordered="option.value === filterStatus"
+                 :checked="option.value === filterStatus"
+                 @click="checkFilterStatus(option.value)">
+            <!-- 图标 -->
+            <component :is="option.icon" />
+            <!-- 数量 -->
+            <span class="status-count">
+              {{ transferManager.transferList.filter(s => s.status === option.value).length }}
+            </span>
+          </a-tag>
+        </a-space>
+      </div>
+      <!-- 文件列表 -->
+      <a-list class="transfer-item-container"
               size="small"
               max-height="100%"
               :hoverable="true"
@@ -17,88 +53,8 @@
         </template>
         <!-- 数据 -->
         <template #item="{ item }">
-          <a-list-item class="transfer-item-wrapper">
-            <div class="transfer-item">
-              <!-- 左侧图标 -->
-              <div class="transfer-item-left">
-                <span class="file-icon">
-                  <icon-upload v-if="item.type === TransferType.UPLOAD" />
-                  <icon-download v-else-if="item.type === TransferType.DOWNLOAD" />
-                </span>
-              </div>
-              <!-- 中间信息 -->
-              <div class="transfer-item-center">
-                <!-- 文件名称 -->
-                <a-tooltip position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           :content="item.name">
-                  <span class="file-name">
-                    {{ item.name }}
-                  </span>
-                </a-tooltip>
-                <!-- 传输进度 -->
-                <span class="transfer-progress">
-                  <!-- 当前大小 -->
-                  <span v-if="item.status === TransferStatus.TRANSFERRING">{{ getFileSize(item.currentSize) }}</span>
-                  <span class="mx4" v-if="item.status === TransferStatus.TRANSFERRING">/</span>
-                  <!-- 总大小 -->
-                  <span>{{ getFileSize(item.totalSize) }}</span>
-                  <!-- 进度百分比 -->
-                  <span class="ml8" v-if="item.status === TransferStatus.TRANSFERRING">
-                    {{ item.progress }}%
-                  </span>
-                </span>
-                <!-- 目标目录 -->
-                <a-tooltip v-if="item.parentPath"
-                           position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           :content="item.parentPath">
-                  <span class="target-path">
-                    {{ item.parentPath }}
-                  </span>
-                </a-tooltip>
-                <!-- 错误信息 -->
-                <a-tooltip v-if="item.errorMessage"
-                           position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           :content="item.errorMessage">
-                  <span class="error-message">
-                    {{ item.errorMessage }}
-                  </span>
-                </a-tooltip>
-              </div>
-              <!-- 右侧状态/操作-->
-              <div class="transfer-item-right">
-                <!-- 传输状态 -->
-                <div class="transfer-item-right-progress">
-                  <!-- 等待传输 -->
-                  <icon-clock-circle v-if="item.status === TransferStatus.WAITING" />
-                  <!-- 传输进度 -->
-                  <a-progress v-else
-                              type="circle"
-                              size="mini"
-                              :status="item.status"
-                              :percent="item.currentSize / item.totalSize" />
-                </div>
-                <!-- 传输操作 -->
-                <div class="transfer-item-right-actions">
-                  <!-- 关闭 -->
-                  <span class="close-icon" @click="removeTask(item.fileId)">
-                    <icon-close />
-                 </span>
-                </div>
-              </div>
-            </div>
-          </a-list-item>
+          <!-- 传输 item -->
+          <transfer-item v-show="filterItem(item)" :item="item" />
         </template>
       </a-list>
     </a-spin>
@@ -112,15 +68,20 @@
 </script>
 
 <script lang="ts" setup>
+  import type { SftpTransferItem } from '../../types/terminal.type';
+  import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { useTerminalStore } from '@/store';
-  import { getFileSize } from '@/utils/file';
-  import { TransferStatus, TransferType } from '../../types/terminal.const';
+  import { useDictStore, useTerminalStore } from '@/store';
+  import { transferStatusKey } from '../../types/terminal.const';
+  import TransferItem from './transfer-item.vue';
 
   const { transferManager } = useTerminalStore();
+  const { toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
+
+  const filterStatus = ref<string>();
 
   // 打开
   const open = () => {
@@ -129,9 +90,24 @@
 
   defineExpose({ open });
 
-  // 移除任务
-  const removeTask = (fileId: string) => {
-    transferManager.cancelTransfer(fileId);
+  // 选中过滤状态
+  const checkFilterStatus = (status: string) => {
+    // 相同则设置为空
+    if (status === filterStatus.value) {
+      filterStatus.value = undefined;
+    } else {
+      filterStatus.value = status;
+    }
+  };
+
+  // 过滤传输行
+  const filterItem = (item: SftpTransferItem) => {
+    return !filterStatus.value || item.status === filterStatus.value;
+  };
+
+  // 移除全部任务
+  const removeAllTask = () => {
+    transferManager.cancelAllTransfer();
   };
 
   // 关闭
@@ -146,101 +122,65 @@
 
 </script>
 
-<style lang="less" scoped>
-  @icon-size: 20px;
-  @item-left-width: 42px;
-  @item-right-width: 42px;
-  @item-center-width: 388px - @item-left-width - @item-right-width;
+<style lang="less">
 
-  :deep(.transfer-item-wrapper) {
-    padding: 0 !important;
+  .transfer-drawer {
+    .arco-drawer-body {
+      overflow: hidden;
+      position: relative;
+    }
+  }
+
+</style>
+
+<style lang="less" scoped>
+  @header-height: 48px;
+
+  .transfer-container {
+    position: relative;
+
+    .transfer-header {
+      padding: 8px;
+      width: 100%;
+      height: @header-height;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+      }
+
+      .status-count {
+        display: inline-block;
+        margin-left: 4px;
+        user-select: none;
+      }
+    }
+
+    .transfer-item-container {
+      width: 100%;
+      height: calc(100% - @header-height);
+      position: absolute;
+      top: @header-height;
+      overflow: auto;
+
+      :deep(.arco-list-item) {
+        padding: 0 !important;
+      }
+
+      :deep(.arco-scrollbar) {
+        height: 100%;
+      }
+    }
   }
 
   .list-empty {
     flex-direction: column;
     margin-top: 32px;
-  }
-
-  .transfer-item {
-    min-height: 36px;
-    padding: 8px 0;
-    display: flex;
-    align-items: center;
-
-    &:hover {
-      .transfer-item-right-progress {
-        display: none;
-      }
-
-      .transfer-item-right-actions {
-        display: flex;
-      }
-    }
-
-    &-left {
-      width: @item-left-width;
-      display: flex;
-      justify-content: center;
-
-      .file-icon {
-        color: rgb(var(--arcoblue-6));
-        font-size: 18px;
-      }
-    }
-
-    &-center {
-      width: @item-center-width;
-      display: flex;
-      flex-direction: column;
-
-      .file-name {
-        color: var(--color-content-text-1);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: fit-content;
-        max-width: 100%;
-        white-space: nowrap;
-      }
-
-      .transfer-progress, .target-path, .error-message {
-        padding-top: 4px;
-        font-size: 13px;
-        color: var(--color-neutral-8);
-        width: fit-content;
-      }
-
-      .error-message {
-        color: rgba(var(--red-6));
-      }
-    }
-
-    &-right {
-      width: @item-right-width;
-
-      &-progress {
-        display: flex;
-        justify-content: center;
-      }
-
-      &-actions {
-        display: none;
-        justify-content: center;
-
-        .close-icon {
-          width: @icon-size;
-          height: @icon-size;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-
-          &:hover {
-            background: var(--color-fill-2);
-          }
-        }
-      }
-    }
   }
 
 </style>
