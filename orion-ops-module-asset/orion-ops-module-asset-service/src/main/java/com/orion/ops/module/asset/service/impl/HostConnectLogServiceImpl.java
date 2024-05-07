@@ -113,7 +113,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
 
     @Override
     public Integer updateStatusById(Long id, HostConnectStatusEnum status, Map<String, Object> partial) {
-        log.info("HostConnectLogService-updateStatusByToken start id: {}, status: {}", id, status);
+        log.info("HostConnectLogService-updateStatusById start id: {}, status: {}", id, status);
         // 查询
         HostConnectLogDO record = hostConnectLogDAO.of()
                 .createWrapper()
@@ -122,7 +122,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
                 .then()
                 .getOne();
         if (record == null) {
-            log.info("HostConnectLogService-updateStatusByToken no record id: {}", id);
+            log.info("HostConnectLogService-updateStatusById no record id: {}", id);
             return Const.N_0;
         }
         return this.updateStatus(record, status, partial);

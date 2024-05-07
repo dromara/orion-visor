@@ -34,7 +34,7 @@ public class AppExecLogConfig {
     public AppExecLogConfig() {
         this.appendAnsi = true;
         this.autoClear = true;
-        this.keepPeriod = 60;
+        this.keepPeriod = 30;
     }
 
 }

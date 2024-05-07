@@ -30,7 +30,7 @@
 
 **github:** https://github.com/lijiahangmax/orion-ops-pro  
 **gitee:** https://gitee.com/lijiahangmax/orion-ops-pro  
-**文档:** https://lijiahangmax.gitee.io/orion-ops-pro/#/  
+**文档:** https://lijiahangmax.github.io/orion-ops-pro/#/  
 **demo:** http://101.43.254.243:1081/
 
 演示账号: `admin`    
@@ -53,11 +53,11 @@
 
 ## 快速开始
 
-* [docker安装](https://lijiahangmax.gitee.io/orion-ops-pro/#/quickstart/docker-install)
-* [普通安装](https://lijiahangmax.gitee.io/orion-ops-pro/#/quickstart/install)
-* [更新日志](https://lijiahangmax.gitee.io/orion-ops-pro/#/about/change-log)
-* [操作手册](https://lijiahangmax.gitee.io/orion-ops-pro/#/operator/asset)
-* [常见问题](https://lijiahangmax.gitee.io/orion-ops-pro/#/quickstart/faq)
+* [docker安装](/quickstart/docker-install)
+* [普通安装](/quickstart/install)
+* [更新日志](/about/change-log)
+* [操作手册](/operator/asset)
+* [常见问题](/quickstart/faq)
 
 ## 技术栈
 

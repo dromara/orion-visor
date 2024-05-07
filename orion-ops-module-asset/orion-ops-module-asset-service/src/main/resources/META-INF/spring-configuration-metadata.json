@@ -63,7 +63,7 @@
       "name": "app.exec-log.keep-period",
       "type": "java.lang.Integer",
       "description": "保留周期 (天)",
-      "defaultValue": "60"
+      "defaultValue": "30"
     }
   ]
 }
