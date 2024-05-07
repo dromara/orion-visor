@@ -51,7 +51,7 @@ public class HostConnectLogController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/session")
-    @Operation(summary = "分页查询主机连接会话")
+    @Operation(summary = "查询全部主机连接会话")
     @PreAuthorize("@ss.hasPermission('asset:host-connect-session:management:query')")
     public List<HostConnectLogVO> getHostConnectSessions(@Validated @RequestBody HostConnectLogQueryRequest request) {
         return hostConnectLogService.getHostConnectSessions(request);
@@ -91,7 +91,7 @@ public class HostConnectLogController {
     @OperatorLog(HostConnectLogOperatorType.FORCE_OFFLINE)
     @PutMapping("/force-offline")
     @Operation(summary = "强制断开主机连接")
-    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:force-offline', 'asset:host-connect-session:management:force-offline')")
+    @PreAuthorize("@ss.hasAnyPermission('asset:host-connect-log:management:force-offline', 'asset:host-connect-session:management:force-offline')")
     public Integer forceOffline(@Validated(Id.class) @RequestBody HostConnectLogQueryRequest request) {
         return hostConnectLogService.forceOffline(request);
     }

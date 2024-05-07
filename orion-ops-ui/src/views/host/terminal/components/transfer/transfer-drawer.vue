@@ -26,11 +26,11 @@
         <a-space size="small">
           <a-tag v-for="option in toOptions(transferStatusKey)"
                  class="pointer"
-                 :color="option.color"
+                 :color="option.color as string"
                  :title="option.label"
                  :bordered="option.value === filterStatus"
                  :checked="option.value === filterStatus"
-                 @click="checkFilterStatus(option.value)">
+                 @click="checkFilterStatus(option.value as string)">
             <!-- 图标 -->
             <component :is="option.icon" />
             <!-- 数量 -->

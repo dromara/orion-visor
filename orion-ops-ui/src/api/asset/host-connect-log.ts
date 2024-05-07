@@ -56,6 +56,13 @@ export function getHostConnectLogPage(request: HostConnectLogQueryRequest) {
 }
 
 /**
+ * 查询全部主机连接会话
+ */
+export function getHostConnectSessions(request: HostConnectLogQueryRequest) {
+  return axios.post<Array<HostConnectLogQueryResponse>>('/asset/host-connect-log/session', request);
+}
+
+/**
  * 查询用户最近连接的主机
  */
 export function getLatestConnectHostId(type: string, limit: number) {
