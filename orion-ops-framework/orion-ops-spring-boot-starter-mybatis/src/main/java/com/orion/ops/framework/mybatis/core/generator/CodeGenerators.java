@@ -10,7 +10,6 @@ import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import com.orion.ops.framework.mybatis.core.generator.template.Template;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 代码生成器
@@ -40,6 +39,7 @@ public class CodeGenerators {
                 //         .enableCardView()
                 //         .enableDrawerForm()
                 //         .dict("dictValueType", "value_type")
+                //         .comment("字典值类型")
                 //         .fields("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
                 //         .labels("字符串", "整数", "小数", "布尔值", "颜色")
                 //         .color("blue", "gray", "red", "green", "white")
@@ -49,11 +49,15 @@ public class CodeGenerators {
                 //         .disableUnitTest()
                 //         .vue("exec", "exec-template-host")
                 //         .build(),
-                Template.create("path_bookmark", "路径标签", "path")
+                Template.create("upload_task", "上传任务", "upload")
                         .disableUnitTest()
-                        .cache("path:bookmark:list:{}", "路径标签列表 ${userId}")
-                        .expire(8, TimeUnit.HOURS)
-                        .vue("host", "path-bookmark")
+                        .vue("exec", "batch-upload")
+                        .enableRowSelection()
+                        .dict("uploadTaskStatus", "status")
+                        .comment("上传任务状态")
+                        .fields("PREPARATION", "UPLOADING", "FINISHED", "CANCELED")
+                        .labels("准备中", "上传中", "已完成", "已取消")
+                        .valueUseFields()
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

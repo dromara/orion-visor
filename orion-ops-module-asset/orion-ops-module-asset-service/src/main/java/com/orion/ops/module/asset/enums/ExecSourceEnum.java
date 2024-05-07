@@ -21,4 +21,16 @@ public enum ExecSourceEnum {
 
     ;
 
+    public static ExecSourceEnum of(String source) {
+        if (source == null) {
+            return null;
+        }
+        for (ExecSourceEnum value : values()) {
+            if (value.name().equals(source)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
 }

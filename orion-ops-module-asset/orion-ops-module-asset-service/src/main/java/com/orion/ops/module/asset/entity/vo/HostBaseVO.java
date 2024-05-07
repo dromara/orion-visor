@@ -1,6 +1,5 @@
-package com.orion.ops.module.asset.entity.dto;
+package com.orion.ops.module.asset.entity.vo;
 
-import com.orion.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 主机 缓存对象
+ * 主机基本信息 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,8 +19,10 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostCacheDTO", description = "主机 缓存对象")
-public class HostCacheDTO implements LongCacheIdModel, Serializable {
+@Schema(name = "HostBaseVO", description = "主机基本信息 视图响应对象")
+public class HostBaseVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
     private Long id;

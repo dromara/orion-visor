@@ -40,5 +40,4 @@ public enum HostSshOsTypeEnum {
         return null;
     }
 
-
 }

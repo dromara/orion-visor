@@ -5,6 +5,7 @@ import com.orion.ops.module.asset.entity.dto.HostCacheDTO;
 import com.orion.ops.module.asset.entity.request.host.HostCreateRequest;
 import com.orion.ops.module.asset.entity.request.host.HostQueryRequest;
 import com.orion.ops.module.asset.entity.request.host.HostUpdateRequest;
+import com.orion.ops.module.asset.entity.vo.HostBaseVO;
 import com.orion.ops.module.asset.entity.vo.HostVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -34,6 +35,8 @@ public interface HostConvert {
     HostVO to(HostCacheDTO cache);
 
     HostCacheDTO toCache(HostDO domain);
+
+    HostBaseVO toBase(HostDO domain);
 
     List<HostVO> toList(List<HostDO> domain);
 
