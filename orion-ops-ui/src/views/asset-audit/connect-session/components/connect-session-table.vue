@@ -161,9 +161,11 @@
   const forceOffline = async (record: HostConnectLogQueryResponse) => {
     try {
       setLoading(true);
+      // 下线
       await hostForceOffline({ id: record.id });
-      record.endTime = Date.now();
       Message.success('已下线');
+      // 移除行
+      tableRenderData.value.splice(tableRenderData.value.findIndex(s => s.id === record.id), 1);
     } catch (e) {
     } finally {
       setLoading(false);
