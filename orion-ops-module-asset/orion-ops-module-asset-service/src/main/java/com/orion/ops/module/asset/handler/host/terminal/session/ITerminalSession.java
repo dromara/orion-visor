@@ -43,4 +43,11 @@ public interface ITerminalSession extends SafeCloseable {
      */
     void forceOffline();
 
+    /**
+     * 是否已关闭
+     *
+     * @return closed
+     */
+    boolean isClosed();
+
 }

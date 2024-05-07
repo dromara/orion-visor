@@ -34,7 +34,20 @@ public class TerminalManager {
     }
 
     /**
-     * 关闭会话
+     * 通过 channel 关闭会话
+     *
+     * @param channelId channelId
+     */
+    public void closeSession(String channelId) {
+        // 获取并移除
+        ConcurrentHashMap<String, ITerminalSession> session = channelSessions.remove(channelId);
+        if (!Maps.isEmpty(session)) {
+            session.values().forEach(Streams::close);
+        }
+    }
+
+    /**
+     * 通过 channel + sessionId 关闭会话
      *
      * @param channelId channelId
      * @param sessionId sessionId
@@ -71,16 +84,12 @@ public class TerminalManager {
     }
 
     /**
-     * 关闭全部会话
+     * 获取全部会话
      *
-     * @param channelId channelId
+     * @return session
      */
-    public void closeAll(String channelId) {
-        // 获取并移除
-        ConcurrentHashMap<String, ITerminalSession> session = channelSessions.remove(channelId);
-        if (!Maps.isEmpty(session)) {
-            session.values().forEach(Streams::close);
-        }
+    public MultiConcurrentHashMap<String, String, ITerminalSession> getChannelSessions() {
+        return channelSessions;
     }
 
 }

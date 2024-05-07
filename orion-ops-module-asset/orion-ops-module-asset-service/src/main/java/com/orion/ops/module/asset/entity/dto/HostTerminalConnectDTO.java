@@ -23,6 +23,9 @@ import lombok.NoArgsConstructor;
 @Schema(name = "HostTerminalConnectDTO", description = "主机终端连接参数")
 public class HostTerminalConnectDTO {
 
+    @Schema(description = "logId")
+    private Long logId;
+
     @Schema(description = "连接类型")
     private String connectType;
 

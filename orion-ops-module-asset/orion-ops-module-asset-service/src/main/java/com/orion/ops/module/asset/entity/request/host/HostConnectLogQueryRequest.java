@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 主机连接日志 查询请求对象
@@ -25,6 +26,9 @@ public class HostConnectLogQueryRequest extends PageRequest {
 
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "id")
+    private List<Long> idList;
 
     @Schema(description = "用户id")
     private Long userId;

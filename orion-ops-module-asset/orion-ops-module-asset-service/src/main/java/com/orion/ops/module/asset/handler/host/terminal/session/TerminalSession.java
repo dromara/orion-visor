@@ -31,6 +31,7 @@ public abstract class TerminalSession implements ITerminalSession {
     @Getter
     protected final TerminalConfig config;
 
+    @Getter
     protected volatile boolean closed;
 
     protected volatile boolean forceOffline;
@@ -68,7 +69,7 @@ public abstract class TerminalSession implements ITerminalSession {
         if (this.checkAndClose()) {
             // 修改状态
             SpringHolder.getBean(HostConnectLogService.class)
-                    .updateStatusByToken(sessionId, HostConnectStatusEnum.COMPLETE, null);
+                    .updateStatusById(config.getLogId(), HostConnectStatusEnum.COMPLETE, null);
         }
     }
 

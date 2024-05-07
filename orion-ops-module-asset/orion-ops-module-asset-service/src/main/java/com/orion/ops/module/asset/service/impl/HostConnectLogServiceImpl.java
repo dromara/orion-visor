@@ -6,6 +6,7 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
@@ -19,6 +20,7 @@ import com.orion.ops.module.asset.entity.vo.HostConnectLogVO;
 import com.orion.ops.module.asset.enums.HostConnectStatusEnum;
 import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.terminal.manager.TerminalManager;
+import com.orion.ops.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.ops.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.ops.module.asset.service.HostConnectLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +28,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * 主机连接日志 服务实现类
@@ -50,7 +52,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     private TerminalManager terminalManager;
 
     @Override
-    public void create(HostConnectTypeEnum type, HostConnectLogCreateRequest request) {
+    public Long create(HostConnectTypeEnum type, HostConnectLogCreateRequest request) {
         HostConnectLogDO record = HostConnectLogConvert.MAPPER.to(request);
         record.setType(type.name());
         String status = request.getStatus();
@@ -62,6 +64,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
             record.setEndTime(new Date());
         }
         hostConnectLogDAO.insert(record);
+        return record.getId();
     }
 
     @Override
@@ -79,17 +82,47 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     }
 
     @Override
-    public Integer updateStatusByToken(String token, HostConnectStatusEnum status, Map<String, Object> partial) {
-        log.info("HostConnectLogService-updateStatusByToken start token: {}, status: {}", token, status);
+    public List<HostConnectLogVO> getHostConnectSessions(HostConnectLogQueryRequest request) {
+        // 查询全部
+        List<Long> idList = terminalManager.getChannelSessions()
+                .values()
+                .stream()
+                .map(ConcurrentHashMap::values)
+                .flatMap(Collection::stream)
+                .filter(s -> !s.isClosed())
+                .map(ITerminalSession::getConfig)
+                .filter(Objects::nonNull)
+                .map(TerminalConfig::getLogId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        if (idList.isEmpty()) {
+            return Lists.empty();
+        }
+        // 条件
+        request.setIdList(idList);
+        request.setStatus(HostConnectStatusEnum.CONNECTING.name());
+        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return hostConnectLogDAO.of(wrapper)
+                .list(s -> {
+                    HostConnectLogVO vo = HostConnectLogConvert.MAPPER.to(s);
+                    vo.setExtra(JSON.parseObject(s.getExtraInfo(), HostConnectLogExtraDTO.class));
+                    return vo;
+                });
+    }
+
+    @Override
+    public Integer updateStatusById(Long id, HostConnectStatusEnum status, Map<String, Object> partial) {
+        log.info("HostConnectLogService-updateStatusByToken start id: {}, status: {}", id, status);
         // 查询
         HostConnectLogDO record = hostConnectLogDAO.of()
                 .createWrapper()
-                .eq(HostConnectLogDO::getToken, token)
+                .eq(HostConnectLogDO::getId, id)
                 .orderByDesc(HostConnectLogDO::getId)
                 .then()
                 .getOne();
         if (record == null) {
-            log.info("HostConnectLogService-updateStatusByToken no record token: {}", token);
+            log.info("HostConnectLogService-updateStatusByToken no record id: {}", id);
             return Const.N_0;
         }
         return this.updateStatus(record, status, partial);
@@ -189,6 +222,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     private LambdaQueryWrapper<HostConnectLogDO> buildQueryWrapper(HostConnectLogQueryRequest request) {
         return hostConnectLogDAO.wrapper()
                 .eq(HostConnectLogDO::getId, request.getId())
+                .in(HostConnectLogDO::getId, request.getIdList())
                 .eq(HostConnectLogDO::getUserId, request.getUserId())
                 .eq(HostConnectLogDO::getHostId, request.getHostId())
                 .like(HostConnectLogDO::getHostAddress, request.getHostAddress())

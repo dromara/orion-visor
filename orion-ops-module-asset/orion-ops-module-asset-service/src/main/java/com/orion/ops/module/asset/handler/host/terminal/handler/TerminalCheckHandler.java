@@ -75,10 +75,11 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.info("TerminalCheckHandler-handle unknown host userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
             return;
         }
+        HostTerminalConnectDTO connect = null;
         Exception ex = null;
         try {
             // 获取连接信息
-            HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(userId, host, connectType);
+            connect = hostTerminalService.getTerminalConnectInfo(userId, host, connectType);
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);
             log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
@@ -93,7 +94,10 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
-        this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
+        Long logId = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
+        if (connect != null) {
+            connect.setLogId(logId);
+        }
         // 响应检查结果
         this.send(channel,
                 OutputTypeEnum.CHECK,
@@ -165,8 +169,9 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @param ex          ex
      * @param sessionId   sessionId
      * @param connectType connectType
+     * @return logId
      */
-    private void saveHostLog(WebSocketSession channel,
+    private Long saveHostLog(WebSocketSession channel,
                              Long userId,
                              HostDO host,
                              long startTime,
@@ -206,7 +211,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         extra.put(OperatorLogs.USER_AGENT, logModel.getUserAgent());
         extra.put(OperatorLogs.ERROR_MESSAGE, logModel.getErrorMessage());
         // 记录连接日志
-        hostConnectLogService.create(connectType, connectLog);
+        return hostConnectLogService.create(connectType, connectLog);
     }
 
 }

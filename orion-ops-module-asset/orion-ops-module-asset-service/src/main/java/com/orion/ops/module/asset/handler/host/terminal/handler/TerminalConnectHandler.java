@@ -78,7 +78,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             // 修改连接状态为失败
             Map<String, Object> extra = Maps.newMap(4);
             extra.put(ExtraFieldConst.ERROR_MESSAGE, this.getConnectErrorMessage(e));
-            hostConnectLogService.updateStatusByToken(sessionId, HostConnectStatusEnum.FAILED, extra);
+            hostConnectLogService.updateStatusById(connect.getLogId(), HostConnectStatusEnum.FAILED, extra);
         }
         // 返回连接状态
         this.send(channel,
@@ -108,6 +108,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         try {
             // 连接配置
             TerminalConfig config = TerminalConfig.builder()
+                    .logId(connect.getLogId())
                     .hostId(connect.getHostId())
                     .hostName(connect.getHostName())
                     .address(connect.getHostAddress())
