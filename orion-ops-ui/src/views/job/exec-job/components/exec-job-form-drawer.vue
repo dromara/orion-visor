@@ -128,14 +128,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecJobUpdateRequest } from '@/api/exec/exec-job';
+  import type { ExecJobUpdateRequest } from '@/api/job/exec-job';
   import type { ExecTemplateQueryResponse } from '@/api/exec/exec-template';
   import { onUnmounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
   import { jobBuiltinsParams } from '../types/const';
-  import { createExecJob, getExecJob, updateExecJob } from '@/api/exec/exec-job';
+  import { createExecJob, getExecJob, updateExecJob } from '@/api/job/exec-job';
   import { getExecTemplateWithAuthorized } from '@/api/exec/exec-template';
   import { Message } from '@arco-design/web-vue';
   import { EnabledStatus } from '@/types/const';

@@ -100,7 +100,7 @@ public class FileUploader implements IFileUploader {
     private boolean initSession() {
         log.info("HostFileUploader.initSession start taskId: {}, hostId: {}", taskId, hostId);
         try {
-            // TODO 测试 打开 executor 后 是否会connect, 不需要的话就关闭 executor 然后重新打开
+            // TODO 测试看看有没有问题, 则修改为 打开 executor 后 是否会connect, 不需要的话就关闭 executor 然后重新打开
             // 打开会话
             HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(hostId);
             this.sessionStore = hostTerminalService.openSessionStore(connectInfo);

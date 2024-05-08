@@ -1,5 +1,6 @@
 import type { Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import { createAppWebSocket } from '@/utils/http';
 
 /**
  * 执行日志查询请求
@@ -82,3 +83,10 @@ export interface ExecLogInterruptRequest {
   logId?: number;
   hostLogId?: number;
 }
+
+/**
+ * 打开执行日志 websocket
+ */
+export const openExecLogChannel = (token: string) => {
+  return createAppWebSocket(`/exec/log/${token}`);
+};

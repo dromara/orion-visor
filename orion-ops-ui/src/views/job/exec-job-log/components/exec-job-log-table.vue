@@ -198,7 +198,7 @@
     getExecJobHostLogList,
     getExecJobLogPage,
     getExecJobLogStatus
-  } from '@/api/exec/exec-job-log';
+  } from '@/api/job/exec-job-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
@@ -206,7 +206,7 @@
   import { useExpandable, usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
-  import { interruptExecJob } from '@/api/exec/exec-job-log';
+  import { interruptExecJob } from '@/api/job/exec-job-log';
   import ExecJobHostLogTable from './exec-job-host-log-table.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);

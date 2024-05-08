@@ -18,6 +18,16 @@ const EXEC: AppRouteRecordRaw[] = [
         component: () => import('@/views/exec/exec-command-log/index.vue'),
       },
       {
+        name: 'batchUpload',
+        path: '/batch-upload',
+        component: () => import('@/views/exec/batch-upload/index.vue'),
+      },
+      {
+        name: 'uploadTaskLog',
+        path: '/upload-log',
+        component: () => import('@/views/exec/upload-task-log/index.vue'),
+      },
+      {
         name: 'execTemplate',
         path: '/exec-template',
         component: () => import('@/views/exec/exec-template/index.vue'),

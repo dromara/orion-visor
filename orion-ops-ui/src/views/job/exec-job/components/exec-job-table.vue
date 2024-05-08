@@ -172,9 +172,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecJobQueryRequest, ExecJobQueryResponse } from '@/api/exec/exec-job';
+  import type { ExecJobQueryRequest, ExecJobQueryResponse } from '@/api/job/exec-job';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteExecJob, getExecJobPage, triggerExecJob, updateExecJobStatus } from '@/api/exec/exec-job';
+  import { deleteExecJob, getExecJobPage, triggerExecJob, updateExecJobStatus } from '@/api/job/exec-job';
   import { Message } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
   import useLoading from '@/hooks/loading';

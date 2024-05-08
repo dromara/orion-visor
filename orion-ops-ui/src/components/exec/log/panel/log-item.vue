@@ -174,7 +174,7 @@
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
   import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';
-  import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';
+  import { downloadExecJobLogFile } from '@/api/job/exec-job-log';
   import { downloadFile } from '@/utils/file';
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
   import 'xterm/css/xterm.css';

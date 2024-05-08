@@ -198,23 +198,6 @@ export const objectTruthKeyCount = (obj: any, ignore: string[] = []) => {
 };
 
 /**
- * 创建 websocket
- */
-export const createWebSocket = async (url: string) => {
-  return new Promise<WebSocket>((resolve, reject) => {
-    const socket = new WebSocket(url);
-
-    socket.onopen = () => {
-      resolve(socket);
-    };
-
-    socket.onerror = e => {
-      reject(e);
-    };
-  });
-};
-
-/**
  * 休眠
  */
 export const sleep = (ms: number) => {

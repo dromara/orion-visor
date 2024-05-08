@@ -43,8 +43,6 @@ public class UploadTaskController {
     @Resource
     private UploadTaskService uploadTaskService;
 
-    // TODO 字典颜色 菜单 操作日志
-
     @OperatorLog(UploadTaskOperatorType.UPLOAD)
     @PostMapping("/create")
     @Operation(summary = "创建上传任务")
@@ -106,7 +104,7 @@ public class UploadTaskController {
     }
 
     @PostMapping("/query-count")
-    @Operation(summary = "查询主机连接日志数量")
+    @Operation(summary = "查询上传任务数量")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
     public Long getUploadTaskCount(@RequestBody UploadTaskQueryRequest request) {
         return uploadTaskService.getUploadTaskCount(request);
@@ -114,7 +112,7 @@ public class UploadTaskController {
 
     @OperatorLog(UploadTaskOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空主机连接日志")
+    @Operation(summary = "清空上传任务")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
     public Integer clearUploadTask(@RequestBody UploadTaskQueryRequest request) {
         return uploadTaskService.clearUploadTask(request);

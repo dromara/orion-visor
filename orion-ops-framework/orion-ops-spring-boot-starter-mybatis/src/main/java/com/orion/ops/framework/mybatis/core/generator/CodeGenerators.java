@@ -51,7 +51,7 @@ public class CodeGenerators {
                 //         .build(),
                 Template.create("upload_task", "上传任务", "upload")
                         .disableUnitTest()
-                        .vue("exec", "batch-upload")
+                        .vue("exec", "upload-task")
                         .enableRowSelection()
                         .dict("uploadTaskStatus", "status")
                         .comment("上传任务状态")
@@ -61,7 +61,7 @@ public class CodeGenerators {
                         .build(),
                 Template.create("upload_task_file", "上传任务文件", "upload")
                         .disableUnitTest()
-                        .vue("exec", "batch-upload-file")
+                        .vue("exec", "upload-task-file")
                         .enableRowSelection()
                         .dict("uploadTaskFileStatus", "status")
                         .comment("上传任务文件状态")

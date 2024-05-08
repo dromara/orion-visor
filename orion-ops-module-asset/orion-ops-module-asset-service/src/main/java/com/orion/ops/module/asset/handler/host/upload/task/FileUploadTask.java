@@ -135,6 +135,7 @@ public class FileUploadTask implements IFileUploadTask {
             List<FileUploadFileItemDTO> files = v.stream()
                     .map(s -> FileUploadFileItemDTO.builder()
                             .id(s.getId())
+                            .fileId(s.getFileId())
                             .remotePath(record.getRemotePath() + Const.SLASH + s.getFilePath())
                             .status(UploadTaskFileStatusEnum.WAITING.name())
                             .current(0L)

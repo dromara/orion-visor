@@ -6,7 +6,7 @@ import type {
   ExecLogStatusResponse,
   ExecLogTailRequest,
   ExecLogInterruptRequest
-} from './exec-log';
+} from '../exec/exec-log';
 import axios from 'axios';
 import qs from 'query-string';
 

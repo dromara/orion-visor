@@ -28,7 +28,7 @@ public class UploadTaskOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(M, UPLOAD, "批量上传文件 <sb>${count}</sb>个 (<sb>${name}</sb>)"),
+                new OperatorType(M, UPLOAD, "批量上传文件 <sb>${count}</sb>个 (${name})"),
                 new OperatorType(M, CANCEL, "取消上传文件 <sb>${name}</sb>"),
                 new OperatorType(H, DELETE, "删除上传记录 <sb>${count}</sb>条"),
                 new OperatorType(H, CLEAR, "清理上传记录 <sb>${count}</sb>条"),

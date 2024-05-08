@@ -36,7 +36,7 @@
   import useLoading from '@/hooks/loading';
   import { nextTick, ref } from 'vue';
   import { getExecCommandLog } from '@/api/exec/exec-command-log';
-  import { getExecJobLog } from '@/api/exec/exec-job-log';
+  import { getExecJobLog } from '@/api/job/exec-job-log';
   import ExecLogPanel from '../panel/index.vue';
 
   const props = defineProps<{

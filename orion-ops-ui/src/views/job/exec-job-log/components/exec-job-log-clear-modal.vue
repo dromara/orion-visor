@@ -60,7 +60,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { execStatusKey } from '@/components/exec/log/const';
-  import { getExecJobLogCount, clearExecJobLog } from '@/api/exec/exec-job-log';
+  import { getExecJobLogCount, clearExecJobLog } from '@/api/job/exec-job-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import ExecJobSelector from '@/components/exec/job/selector/index.vue';

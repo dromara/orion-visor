@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createAppWebSocket } from '@/utils/http';
 
 // 终端主题
 export interface TerminalTheme {
@@ -49,3 +50,17 @@ export function getTerminalThemes() {
 export function getTerminalAccessToken() {
   return axios.get<string>('/asset/host-terminal/access');
 }
+
+/**
+ * 打开主机终端 websocket
+ */
+export const openHostTerminalChannel = (accessToken: string) => {
+  return createAppWebSocket(`/host/terminal/${accessToken}`);
+};
+
+/**
+ * 打开主机传输 websocket
+ */
+export const openHostTransferChannel = (accessToken: string) => {
+  return createAppWebSocket(`/host/transfer/${accessToken}`);
+};

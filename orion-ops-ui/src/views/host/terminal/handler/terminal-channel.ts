@@ -1,9 +1,7 @@
 import type { InputPayload, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload, Protocol, } from '../types/terminal.type';
 import { OutputProtocol } from '../types/terminal.protocol';
-import { getTerminalAccessToken } from '@/api/asset/host-terminal';
+import { getTerminalAccessToken, openHostTerminalChannel } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
-import { createWebSocket } from '@/utils';
-import { webSocketBaseUrl } from '@/utils/env';
 import TerminalOutputProcessor from './terminal-output-processor';
 
 // 终端通信处理器 实现
@@ -23,7 +21,7 @@ export default class TerminalChannel implements ITerminalChannel {
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
     try {
-      this.client = await createWebSocket(`${webSocketBaseUrl}/host/terminal/${accessToken}`);
+      this.client = await openHostTerminalChannel(accessToken);
     } catch (e) {
       Message.error('无法连接至服务器');
       console.error('terminal error', e);
