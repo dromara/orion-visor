@@ -42,6 +42,22 @@ public interface UploadTaskService {
     DataGrid<UploadTaskVO> getUploadTaskPage(UploadTaskQueryRequest request);
 
     /**
+     * 获取上传任务数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getUploadTaskCount(UploadTaskQueryRequest request);
+
+    /**
+     * 清理上传任务
+     *
+     * @param request request
+     * @return count
+     */
+    Integer clearUploadTask(UploadTaskQueryRequest request);
+
+    /**
      * 删除上传任务
      *
      * @param id id
@@ -56,5 +72,33 @@ public interface UploadTaskService {
      * @return effect
      */
     Integer deleteUploadTaskByIdList(List<Long> idList);
+
+    /**
+     * 开始上传
+     *
+     * @param id id
+     */
+    void startUploadTask(Long id);
+
+    /**
+     * 取消上传
+     *
+     * @param id id
+     */
+    void cancelUploadTask(Long id);
+
+    /**
+     * 删除上传交换区的文件
+     *
+     * @param id id
+     */
+    void clearUploadSwapFiles(Long id);
+
+    /**
+     * 删除上传交换区的文件
+     *
+     * @param idList idList
+     */
+    void clearUploadSwapFiles(List<Long> idList);
 
 }

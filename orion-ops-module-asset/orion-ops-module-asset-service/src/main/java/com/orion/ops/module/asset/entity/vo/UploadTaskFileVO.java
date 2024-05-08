@@ -8,21 +8,20 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * 上传任务 视图响应对象
+ * 上传任务文件 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.7
- * @since 2024-5-7 22:15
+ * @since 2024-5-8 10:31
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "UploadTaskVO", description = "上传任务 视图响应对象")
-public class UploadTaskVO implements Serializable {
+@Schema(name = "UploadTaskFileVO", description = "上传任务文件 视图响应对象")
+public class UploadTaskFileVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,33 +29,27 @@ public class UploadTaskVO implements Serializable {
     private Long id;
 
     @Schema(description = "用户id")
-    private Long userId;
+    private Long taskId;
 
-    @Schema(description = "用户名")
-    private String username;
+    @Schema(description = "主机id")
+    private Long hostId;
 
-    @Schema(description = "远程路径")
-    private String remotePath;
+    @Schema(description = "文件id")
+    private String fileId;
 
-    @Schema(description = "描述")
-    private String description;
+    @Schema(description = "文件路径")
+    private String filePath;
+
+    @Schema(description = "文件大小")
+    private Long fileSize;
 
     @Schema(description = "状态")
     private String status;
-
-    @Schema(description = "额外信息")
-    private String extraInfo;
 
     @Schema(description = "开始时间")
     private Date startTime;
 
     @Schema(description = "结束时间")
     private Date endTime;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "上传文件")
-    private List<UploadTaskFileVO> files;
 
 }

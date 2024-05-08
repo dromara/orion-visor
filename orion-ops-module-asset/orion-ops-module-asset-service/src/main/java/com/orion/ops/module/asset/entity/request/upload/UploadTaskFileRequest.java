@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -30,7 +31,11 @@ public class UploadTaskFileRequest implements Serializable {
     private String fileId;
 
     @NotBlank
-    @Schema(description = "远程文件地址")
-    private String remotePath;
+    @Schema(description = "文件地址")
+    private String filePath;
+
+    @NotNull
+    @Schema(description = "文件发小")
+    private Long fileSize;
 
 }

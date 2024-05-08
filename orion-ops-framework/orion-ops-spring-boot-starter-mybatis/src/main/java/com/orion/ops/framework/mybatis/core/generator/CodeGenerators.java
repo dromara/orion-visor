@@ -59,6 +59,16 @@ public class CodeGenerators {
                         .labels("准备中", "上传中", "已完成", "已取消")
                         .valueUseFields()
                         .build(),
+                Template.create("upload_task_file", "上传任务文件", "upload")
+                        .disableUnitTest()
+                        .vue("exec", "batch-upload-file")
+                        .enableRowSelection()
+                        .dict("uploadTaskFileStatus", "status")
+                        .comment("上传任务文件状态")
+                        .fields("WAITING", "UPLOADING", "FINISHED", "CANCELED")
+                        .labels("等待中", "上传中", "已完成", "已取消")
+                        .valueUseFields()
+                        .build(),
         };
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-ops-launch/src/main/resources/application-dev.yaml");

@@ -8,7 +8,6 @@ import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
-import com.orion.ops.module.asset.define.operator.ExecCommandLogOperatorType;
 import com.orion.ops.module.asset.define.operator.ExecJobLogOperatorType;
 import com.orion.ops.module.asset.entity.request.exec.ExecInterruptRequest;
 import com.orion.ops.module.asset.entity.request.exec.ExecLogQueryRequest;

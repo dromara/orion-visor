@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
@@ -9,6 +10,7 @@ import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.asset.define.operator.UploadTaskOperatorType;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
+import com.orion.ops.module.asset.entity.request.upload.UploadTaskRequest;
 import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
 import com.orion.ops.module.asset.service.UploadTaskService;
@@ -43,9 +45,6 @@ public class UploadTaskController {
     private UploadTaskService uploadTaskService;
 
     // TODO 字典颜色 菜单 操作日志
-    // TODO start
-    // TODO cancel
-    // todo CLEAR
 
     @OperatorLog(UploadTaskOperatorType.UPLOAD)
     @PostMapping("/create")
@@ -53,6 +52,23 @@ public class UploadTaskController {
     @PreAuthorize("@ss.hasPermission('asset:upload-task:upload')")
     public UploadTaskCreateVO createUploadTask(@Validated @RequestBody UploadTaskCreateRequest request) {
         return uploadTaskService.createUploadTask(request);
+    }
+
+    @PostMapping("/start")
+    @Operation(summary = "开始上传")
+    @PreAuthorize("@ss.hasPermission('asset:upload-task:upload')")
+    public HttpWrapper<?> startUploadTask(@Validated @RequestBody UploadTaskRequest request) {
+        uploadTaskService.startUploadTask(request.getId());
+        return HttpWrapper.ok();
+    }
+
+    @OperatorLog(UploadTaskOperatorType.CANCEL)
+    @PostMapping("/cancel")
+    @Operation(summary = "取消上传")
+    @PreAuthorize("@ss.hasPermission('asset:upload-task:upload')")
+    public HttpWrapper<?> cancelUploadTask(@Validated @RequestBody UploadTaskRequest request) {
+        uploadTaskService.cancelUploadTask(request.getId());
+        return HttpWrapper.ok();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -88,6 +104,21 @@ public class UploadTaskController {
     @PreAuthorize("@ss.hasPermission('asset:upload-task:delete')")
     public Integer batchDeleteUploadTask(@RequestParam("idList") List<Long> idList) {
         return uploadTaskService.deleteUploadTaskByIdList(idList);
+    }
+
+    @PostMapping("/query-count")
+    @Operation(summary = "查询主机连接日志数量")
+    @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
+    public Long getUploadTaskCount(@RequestBody UploadTaskQueryRequest request) {
+        return uploadTaskService.getUploadTaskCount(request);
+    }
+
+    @OperatorLog(UploadTaskOperatorType.CLEAR)
+    @PostMapping("/clear")
+    @Operation(summary = "清空主机连接日志")
+    @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
+    public Integer clearUploadTask(@RequestBody UploadTaskQueryRequest request) {
+        return uploadTaskService.clearUploadTask(request);
     }
 
 }

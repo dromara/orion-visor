@@ -33,12 +33,12 @@ public class UploadTaskQueryRequest extends PageRequest {
     @Schema(description = "描述")
     private String description;
 
+    @Schema(description = "远程路径")
+    private String remotePath;
+
     @Size(max = 16)
     @Schema(description = "状态")
     private String status;
-
-    @Schema(description = "额外信息")
-    private String extraInfo;
 
     @Schema(description = "开始时间-区间")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

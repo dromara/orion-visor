@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
+import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -15,22 +18,30 @@ import com.orion.ops.module.asset.convert.HostConvert;
 import com.orion.ops.module.asset.convert.UploadTaskConvert;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.dao.UploadTaskDAO;
+import com.orion.ops.module.asset.dao.UploadTaskFileDAO;
 import com.orion.ops.module.asset.entity.domain.UploadTaskDO;
+import com.orion.ops.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.ops.module.asset.entity.dto.UploadTaskExtraDTO;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
+import com.orion.ops.module.asset.entity.request.upload.UploadTaskFileRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.ops.module.asset.entity.vo.HostBaseVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
+import com.orion.ops.module.asset.entity.vo.UploadTaskFileVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
+import com.orion.ops.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.ops.module.asset.enums.UploadTaskStatusEnum;
 import com.orion.ops.module.asset.service.AssetAuthorizedDataService;
+import com.orion.ops.module.asset.service.UploadTaskFileService;
 import com.orion.ops.module.asset.service.UploadTaskService;
 import com.orion.ops.module.infra.api.FileUploadApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +67,12 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     private HostDAO hostDAO;
 
     @Resource
+    private UploadTaskFileDAO uploadTaskFileDAO;
+
+    @Resource
+    private UploadTaskFileService uploadTaskFileService;
+
+    @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @Resource
@@ -64,10 +81,12 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     @Resource
     private FileUploadApi fileUploadApi;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public UploadTaskCreateVO createUploadTask(UploadTaskCreateRequest request) {
         LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
         List<Long> hostIdList = request.getHostIdList();
+        List<UploadTaskFileRequest> files = request.getFiles();
         log.info("UploadTaskService-createUploadTask request: {}", JSON.toJSONString(request));
         // 检查主机是否有权限
         this.checkHostPermission(hostIdList);
@@ -87,12 +106,30 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                 .hosts(hosts)
                 .build();
         record.setExtraInfo(JSON.toJSONString(extra));
-        // 插入
+        // 插入任务表
         int effect = uploadTaskDAO.insert(record);
         Long id = record.getId();
+        // 插入任务文件表
+        List<UploadTaskFileDO> uploadFiles = new ArrayList<>();
+        for (Long hostId : hostIdList) {
+            files.stream()
+                    .map(s -> UploadTaskFileDO.builder()
+                            .taskId(id)
+                            .hostId(hostId)
+                            .fileId(s.getFileId())
+                            .filePath(s.getFilePath())
+                            .fileSize(s.getFileSize())
+                            .status(UploadTaskFileStatusEnum.WAITING.name())
+                            .build())
+                    .forEach(uploadFiles::add);
+        }
+        uploadTaskFileDAO.insertBatch(uploadFiles);
         // 设置 uploadToken
         String token = fileUploadApi.createUploadToken(user.getId(), Strings.format(SWAP_ENDPOINT, id));
         log.info("UploadTaskService-createUploadTask id: {}, effect: {}", id, effect);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getDescription());
+        OperatorLogs.add(OperatorLogs.COUNT, files.size());
         return UploadTaskCreateVO.builder()
                 .id(id)
                 .token(token)
@@ -101,11 +138,15 @@ public class UploadTaskServiceImpl implements UploadTaskService {
 
     @Override
     public UploadTaskVO getUploadTaskById(Long id) {
-        // 查询
+        // 查询任务
         UploadTaskDO record = uploadTaskDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 转换
-        return UploadTaskConvert.MAPPER.to(record);
+        // 查询任务文件 TODO PROGRESS
+        List<UploadTaskFileVO> files = uploadTaskFileService.getFileByTaskId(id);
+        // 返回
+        UploadTaskVO task = UploadTaskConvert.MAPPER.to(record);
+        task.setFiles(files);
+        return task;
     }
 
     @Override
@@ -119,23 +160,70 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     }
 
     @Override
-    public Integer deleteUploadTaskById(Long id) {
-        log.info("UploadTaskService-deleteUploadTaskById id: {}", id);
-        // 检查数据是否存在
-        UploadTaskDO record = uploadTaskDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+    public Long getUploadTaskCount(UploadTaskQueryRequest request) {
+        return uploadTaskDAO.selectCount(this.buildQueryWrapper(request));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer clearUploadTask(UploadTaskQueryRequest request) {
+        // 查询id
+        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
+                .select(UploadTaskDO::getId);
+        List<Long> idList = uploadTaskDAO.of(wrapper)
+                .list(UploadTaskDO::getId);
         // 删除
-        int effect = uploadTaskDAO.deleteById(id);
-        log.info("UploadTaskService-deleteUploadTaskById id: {}, effect: {}", id, effect);
+        return this.deleteUploadTaskByIdList(idList);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer deleteUploadTaskById(Long id) {
+        return this.deleteUploadTaskByIdList(Lists.singleton(id));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Integer deleteUploadTaskByIdList(List<Long> idList) {
+        // TODO 暂停 / 删除交换区文件
+        log.info("UploadTaskService-deleteUploadTaskByIdList idList: {}", idList);
+        // 删除任务
+        int effect = uploadTaskDAO.deleteBatchIds(idList);
+        // 删除任务文件
+        uploadTaskFileService.deleteFileByTaskIdList(idList);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, effect);
+        log.info("UploadTaskService-deleteUploadTaskByIdList effect: {}", effect);
         return effect;
     }
 
     @Override
-    public Integer deleteUploadTaskByIdList(List<Long> idList) {
-        log.info("UploadTaskService-deleteUploadTaskByIdList idList: {}", idList);
-        int effect = uploadTaskDAO.deleteBatchIds(idList);
-        log.info("UploadTaskService-deleteUploadTaskByIdList effect: {}", effect);
-        return effect;
+    public void startUploadTask(Long id) {
+
+    }
+
+    @Override
+    public void cancelUploadTask(Long id) {
+
+    }
+
+    @Override
+    public void clearUploadSwapFiles(Long id) {
+        this.clearUploadSwapFiles(Lists.singleton(id));
+    }
+
+    @Override
+    public void clearUploadSwapFiles(List<Long> idList) {
+        // 查询记录
+        List<String> paths = idList.stream()
+                .map(s -> Strings.format(SWAP_ENDPOINT, s))
+                .map(localFileClient::getReturnPath)
+                .map(localFileClient::getAbsolutePath)
+                .collect(Collectors.toList());
+        // TODO test
+        paths.forEach(System.out::println);
+        // 删除文件
+        paths.forEach(Files1::delete);
     }
 
     /**
@@ -148,7 +236,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         return uploadTaskDAO.wrapper()
                 .eq(UploadTaskDO::getId, request.getId())
                 .eq(UploadTaskDO::getUserId, request.getUserId())
-                .eq(UploadTaskDO::getDescription, request.getDescription())
+                .in(UploadTaskDO::getDescription, request.getDescription())
+                .eq(UploadTaskDO::getRemotePath, request.getRemotePath())
                 .eq(UploadTaskDO::getStatus, request.getStatus())
                 .ge(UploadTaskDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(UploadTaskDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
