@@ -4,8 +4,35 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "remotePath": "",
-  "description": ""
+  "remotePath": "/root/batch",
+  "description": "",
+  "hostIdList": [
+    1,
+    7,
+    8
+  ],
+  "files": [
+    {
+      "fileId": "1",
+      "filePath": "qr.txt",
+      "fileSize": 3
+    },
+    {
+      "fileId": "2",
+      "filePath": "dir/key.txt",
+      "fileSize": 3
+    }
+  ]
+}
+
+
+### 开始上传
+POST {{baseUrl}}/asset/upload-task/start
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": 1
 }
 
 

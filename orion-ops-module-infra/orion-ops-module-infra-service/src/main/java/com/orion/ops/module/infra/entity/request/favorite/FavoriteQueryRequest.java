@@ -4,8 +4,6 @@ import com.orion.ops.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.util.List;
-
 /**
  * 收藏 查询请求对象
  *

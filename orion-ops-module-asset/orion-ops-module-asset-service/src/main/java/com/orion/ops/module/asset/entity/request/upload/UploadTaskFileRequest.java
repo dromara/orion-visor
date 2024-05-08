@@ -35,7 +35,7 @@ public class UploadTaskFileRequest implements Serializable {
     private String filePath;
 
     @NotNull
-    @Schema(description = "文件发小")
+    @Schema(description = "文件大小")
     private Long fileSize;
 
 }

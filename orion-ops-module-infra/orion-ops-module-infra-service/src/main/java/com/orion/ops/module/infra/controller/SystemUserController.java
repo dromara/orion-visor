@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
@@ -100,9 +99,9 @@ public class SystemUserController {
     @PutMapping("/reset-password")
     @Operation(summary = "重置用户密码")
     @PreAuthorize("@ss.hasPermission('infra:system-user:management:reset-password')")
-    public HttpWrapper<?> resetUserPassword(@Validated @RequestBody UserResetPasswordRequest request) {
+    public Boolean resetUserPassword(@Validated @RequestBody UserResetPasswordRequest request) {
         systemUserService.resetPassword(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -159,9 +158,9 @@ public class SystemUserController {
     @PutMapping("/session/offline")
     @Operation(summary = "下线用户会话")
     @PreAuthorize("@ss.hasPermission('infra:system-user:management:offline-session')")
-    public HttpWrapper<?> offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
+    public Boolean offlineUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
         systemUserManagementService.offlineUserSession(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

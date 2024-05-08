@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.controller;
 
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -48,9 +47,9 @@ public class AssetDataGrantServiceController {
     @PutMapping("/grant-host-group")
     @Operation(summary = "主机分组授权")
     @PreAuthorize("@ss.hasPermission('asset:host-group:grant')")
-    public HttpWrapper<?> grantHostGroup(@RequestBody AssetDataGrantRequest request) {
+    public Boolean grantHostGroup(@RequestBody AssetDataGrantRequest request) {
         assetDataGrantService.grantHostGroup(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -65,9 +64,9 @@ public class AssetDataGrantServiceController {
     @PutMapping("/grant-host-key")
     @Operation(summary = "主机秘钥授权")
     @PreAuthorize("@ss.hasPermission('asset:host-key:grant')")
-    public HttpWrapper<?> grantHostKey(@RequestBody AssetDataGrantRequest request) {
+    public Boolean grantHostKey(@RequestBody AssetDataGrantRequest request) {
         assetDataGrantService.grantHostKey(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -82,9 +81,9 @@ public class AssetDataGrantServiceController {
     @PutMapping("/grant-host-identity")
     @Operation(summary = "主机身份授权")
     @PreAuthorize("@ss.hasPermission('asset:host-identity:grant')")
-    public HttpWrapper<?> grantHostIdentity(@RequestBody AssetDataGrantRequest request) {
+    public Boolean grantHostIdentity(@RequestBody AssetDataGrantRequest request) {
         assetDataGrantService.grantHostIdentity(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

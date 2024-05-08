@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -41,6 +42,7 @@ public class UploadTaskCreateRequest implements Serializable {
     @Schema(description = "上传主机id")
     private List<Long> hostIdList;
 
+    @Valid
     @NotEmpty
     @Schema(description = "上传文件")
     private List<UploadTaskFileRequest> files;

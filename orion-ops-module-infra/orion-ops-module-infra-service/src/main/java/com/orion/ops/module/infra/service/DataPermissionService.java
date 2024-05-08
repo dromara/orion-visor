@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.service;
 
 import com.orion.ops.module.infra.entity.request.data.DataPermissionUpdateRequest;
-import com.orion.ops.module.infra.enums.DataPermissionTypeEnum;
 
 import java.util.List;
 

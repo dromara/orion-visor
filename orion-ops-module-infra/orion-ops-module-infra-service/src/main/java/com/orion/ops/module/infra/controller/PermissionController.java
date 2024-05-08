@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
@@ -42,9 +41,9 @@ public class PermissionController {
     @PutMapping("/refresh-cache")
     @Operation(summary = "刷新角色权限缓存")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:management:refresh-cache')")
-    public HttpWrapper<?> refreshCache() {
+    public Boolean refreshCache() {
         permissionService.initPermissionCache();
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

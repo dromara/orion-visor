@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
@@ -57,18 +56,18 @@ public class UploadTaskController {
     @PostMapping("/start")
     @Operation(summary = "开始上传")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:upload')")
-    public HttpWrapper<?> startUploadTask(@Validated @RequestBody UploadTaskRequest request) {
+    public Boolean startUploadTask(@Validated @RequestBody UploadTaskRequest request) {
         uploadTaskService.startUploadTask(request.getId());
-        return HttpWrapper.ok();
+        return true;
     }
 
     @OperatorLog(UploadTaskOperatorType.CANCEL)
     @PostMapping("/cancel")
     @Operation(summary = "取消上传")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:upload')")
-    public HttpWrapper<?> cancelUploadTask(@Validated @RequestBody UploadTaskRequest request) {
+    public Boolean cancelUploadTask(@Validated @RequestBody UploadTaskRequest request) {
         uploadTaskService.cancelUploadTask(request.getId());
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

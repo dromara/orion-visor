@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.web.core.annotation.RestWrapper;
 import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
 import com.orion.ops.module.infra.entity.request.preference.PreferenceUpdateRequest;
@@ -43,9 +42,9 @@ public class PreferenceController {
 
     @PutMapping("/update-partial")
     @Operation(summary = "更新用户偏好-部分")
-    public HttpWrapper<?> updatePreferencePartial(@Validated @RequestBody PreferenceUpdatePartialRequest request) {
+    public Boolean updatePreferencePartial(@Validated @RequestBody PreferenceUpdatePartialRequest request) {
         preferenceService.updatePreferencePartial(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @GetMapping("/get")
