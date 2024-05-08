@@ -7,7 +7,6 @@ import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.framework.websocket.core.utils.WebSockets;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.ops.module.asset.enums.HostConnectTypeEnum;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferOperatorType;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.ops.module.asset.handler.host.transfer.model.TransferOperatorRequest;
@@ -107,7 +106,7 @@ public class TransferHandler implements ITransferHandler {
             ITransferHostSession session = sessions.get(sessionKey);
             if (session == null) {
                 // 获取主机信息
-                HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(this.userId, hostId, HostConnectTypeEnum.SFTP);
+                HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(this.userId, hostId);
                 SessionStore sessionStore = hostTerminalService.openSessionStore(connectInfo);
                 // 打开会话并初始化
                 if (TransferOperatorType.UPLOAD.equals(type.getOperator())) {

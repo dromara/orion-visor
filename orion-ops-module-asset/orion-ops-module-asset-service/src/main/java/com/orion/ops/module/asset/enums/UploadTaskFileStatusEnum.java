@@ -25,6 +25,11 @@ public enum UploadTaskFileStatusEnum {
     FINISHED,
 
     /**
+     * 已失败
+     */
+    FAILED,
+
+    /**
      * 已取消
      */
     CANCELED,

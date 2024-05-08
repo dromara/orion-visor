@@ -10,7 +10,9 @@ Authorization: {{token}}
   "scriptExec": 0,
   "command": "echo 123",
   "parameterSchema": "[]",
-  "hostIdList": [1]
+  "hostIdList": [
+    1
+  ]
 }
 
 

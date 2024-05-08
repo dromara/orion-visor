@@ -87,6 +87,8 @@ public interface ErrorMessage {
 
     String LOG_ABSENT = "日志不存在";
 
+    String TASK_ABSENT = "任务不存在";
+
     String ILLEGAL_STATUS = "当前状态不支持此操作";
 
     String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";

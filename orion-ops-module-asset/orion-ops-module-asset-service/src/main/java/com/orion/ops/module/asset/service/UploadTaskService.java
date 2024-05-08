@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface UploadTaskService {
 
+    String SWAP_ENDPOINT = "/upload/swap/{}";
+
     /**
      * 创建上传任务
      *

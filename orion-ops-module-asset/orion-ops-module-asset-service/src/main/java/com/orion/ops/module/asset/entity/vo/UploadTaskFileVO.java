@@ -52,4 +52,7 @@ public class UploadTaskFileVO implements Serializable {
     @Schema(description = "结束时间")
     private Date endTime;
 
+    @Schema(description = "传输进度")
+    private Long current;
+
 }

@@ -40,8 +40,8 @@ public class UploadTaskQueryRequest extends PageRequest {
     @Schema(description = "状态")
     private String status;
 
-    @Schema(description = "开始时间-区间")
+    @Schema(description = "创建时间-区间")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date[] startTimeRange;
+    private Date[] createTimeRange;
 
 }

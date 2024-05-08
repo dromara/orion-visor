@@ -113,15 +113,28 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId, HostConnectTypeEnum type) {
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long hostId) {
+        log.info("HostConnectService.getTerminalConnectInfo-withHost hostId: {}", hostId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        return this.getTerminalConnectInfo(userId, host, type);
+        // 查询主机配置
+        HostSshConfigModel model = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
+        Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
+        // 获取配置
+        return this.getHostConnectInfo(host, model, null);
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host, HostConnectTypeEnum type) {
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
+        // 查询主机
+        HostDO host = hostDAO.selectById(hostId);
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        return this.getTerminalConnectInfo(userId, host);
+    }
+
+    @Override
+    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
         Long hostId = host.getId();
         log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 验证主机是否有权限
@@ -149,22 +162,14 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             }
         }
         // 获取连接配置
-        HostTerminalConnectDTO connectInfo = this.getHostConnectInfo(host, config, extra);
-        connectInfo.setConnectType(type.name());
-        return connectInfo;
+        return this.getHostConnectInfo(host, config, extra);
     }
 
     @Override
     public SessionStore openSessionStore(Long hostId) {
         log.info("HostConnectService.openSessionStore-withHost hostId: {}", hostId);
-        // 查询主机
-        HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        // 查询主机配置
-        HostSshConfigModel model = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
-        Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
         // 获取配置
-        HostTerminalConnectDTO connect = this.getHostConnectInfo(host, model, null);
+        HostTerminalConnectDTO connect = this.getTerminalConnectInfo(hostId);
         // 打开连接
         return this.openSessionStore(connect);
     }

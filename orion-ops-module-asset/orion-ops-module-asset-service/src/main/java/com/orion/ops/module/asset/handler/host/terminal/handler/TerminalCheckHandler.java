@@ -79,7 +79,8 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Exception ex = null;
         try {
             // 获取连接信息
-            connect = hostTerminalService.getTerminalConnectInfo(userId, host, connectType);
+            connect = hostTerminalService.getTerminalConnectInfo(userId, host);
+            connect.setConnectType(connectType.name());
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);
             log.info("TerminalCheckHandler-handle success userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);

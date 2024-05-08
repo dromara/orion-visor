@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 上传任务文件 服务实现类
@@ -29,11 +30,10 @@ public class UploadTaskFileServiceImpl implements UploadTaskFileService {
     @Override
     public List<UploadTaskFileVO> getFileByTaskId(Long taskId) {
         // 查询
-        return uploadTaskFileDAO.of()
-                .createWrapper()
-                .eq(UploadTaskFileDO::getTaskId, taskId)
-                .then()
-                .list(UploadTaskFileConvert.MAPPER::to);
+        return uploadTaskFileDAO.selectByTaskId(taskId)
+                .stream()
+                .map(UploadTaskFileConvert.MAPPER::to)
+                .collect(Collectors.toList());
     }
 
     @Override
