@@ -1,23 +1,11 @@
 <template>
-  <a-modal v-model:visible="visible"
-           top="80px"
-           title-align="start"
-           title="文件上传"
-           ok-text="上传"
-           :body-style="{ padding: '20px' }"
-           :align-center="false"
-           :mask-closable="false"
-           :unmount-on-close="true"
-           :on-before-ok="handlerOk"
-           @cancel="handleClose">
-    <div class="upload-container">
-      <div class="parent-wrapper mb16">
-        <span class="parent-label">上传至文件夹:</span>
-        <a-input class="parent-input"
-                 v-model="parentPath"
-                 placeholder="上传目录" />
-      </div>
-      <a-space>
+  <div class="container">
+    <!-- 表头 -->
+    <div class="panel-header">
+      <h3>文件列表</h3>
+      <!-- 操作 -->
+      <a-button-group size="small">
+        <a-button @click="clear">清空</a-button>
         <!-- 选择文件 -->
         <a-upload v-model:file-list="fileList"
                   :auto-upload="false"
@@ -36,12 +24,16 @@
             <a-button type="primary">选择文件夹</a-button>
           </template>
         </a-upload>
-      </a-space>
-      <!-- 文件列表 -->
-      <a-upload v-if="fileList.length"
-                class="file-list-uploader"
+      </a-button-group>
+    </div>
+    <!-- 文件列表 -->
+    <div v-if="fileList.length" class="files-container">
+      <a-upload class="files-wrapper"
+                :class="['waiting-files-wrapper']"
                 v-model:file-list="fileList"
                 :auto-upload="false"
+                :show-cancel-button="false"
+                :show-remove-button="true"
                 :show-file-list="true">
         <template #upload-button />
         <template #file-name="{ fileItem }">
@@ -49,9 +41,6 @@
             <!-- 文件名称 -->
             <a-tooltip position="left"
                        :mini="true"
-                       :auto-fix-position="false"
-                       content-class="terminal-tooltip-content"
-                       arrow-class="terminal-tooltip-content"
                        :content="fileItem.file.webkitRelativePath || fileItem.file.name">
               <!-- 文件名称 -->
               <span class="file-name text-ellipsis">
@@ -66,65 +55,29 @@
         </template>
       </a-upload>
     </div>
-  </a-modal>
+    <!-- 未选择文件 -->
+    <a-result v-else
+              class="usn"
+              status="404"
+              subtitle="请先点击上方按钮选择文件" />
+  </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'sftpUploadModal'
+    name: 'batchUploadFiles'
   };
 </script>
 
 <script lang="ts" setup>
   import type { FileItem } from '@arco-design/web-vue';
   import { ref } from 'vue';
-  import { useTerminalStore } from '@/store';
-  import { Message } from '@arco-design/web-vue';
-  import useVisible from '@/hooks/visible';
   import { getFileSize } from '@/utils/file';
 
-  const { visible, setVisible } = useVisible();
-  const { transferManager } = useTerminalStore();
-
-  const hostId = ref();
-  const parentPath = ref('');
   const fileList = ref<FileItem[]>([]);
 
-  // 打开
-  const open = (host: number, parent: string) => {
-    hostId.value = host;
-    parentPath.value = parent;
-    setVisible(true);
-  };
-
-  defineExpose({ open });
-
-  // 确定
-  const handlerOk = () => {
-    if (!parentPath.value) {
-      Message.error('请输入上传目录');
-      return false;
-    }
-    if (!fileList.value.length) {
-      return true;
-    }
-    // 添加到上传列表
-    const files = fileList.value.map(s => s.file);
-    transferManager.addUpload(hostId.value, parentPath.value, files);
-    Message.success('已开始上传, 点击右侧传输列表查看进度');
-    // 清空
-    handlerClear();
-    return true;
-  };
-
-  // 关闭
-  const handleClose = () => {
-    handlerClear();
-  };
-
   // 清空
-  const handlerClear = () => {
-    fileList.value = [];
+  const clear = () => {
   };
 
 </script>
@@ -132,39 +85,51 @@
 <style lang="less" scoped>
   @file-size-width: 82px;
 
-  .upload-container {
+  .files-container {
     width: 100%;
+    height: calc(100% - 36px);
+    position: relative;
   }
 
-  .parent-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .parent-label {
-      width: 98px;
+  :deep(.waiting-files-wrapper) {
+    .arco-upload-list {
+      padding: 0 6px 0 0 !important;
     }
 
-    .parent-input {
-      width: 386px;
+    .arco-upload-list-item-name {
+      margin-right: 0 !important;
+    }
+
+    .arco-upload-list-item .arco-upload-progress {
+      display: none;
     }
   }
 
-  .file-list-uploader {
-    margin-top: 24px;
+  :deep(.uploading-files-wrapper) {
+    .arco-upload-list {
+      padding: 0 !important;
+    }
+
+    .arco-upload-list-item-name {
+      margin-right: 10px !important;
+    }
+  }
+
+  .files-wrapper {
+    :deep(.arco-upload-wrapper) {
+      position: absolute;
+      height: 100%;
+      overflow-y: auto;
+    }
 
     :deep(.arco-upload) {
       display: none;
     }
 
     :deep(.arco-upload-list) {
-      max-height: calc(100vh - 386px);
+      max-height: 100%;
+      padding: 0;
       overflow-y: auto;
-      padding: 0 12px 0 0;
-    }
-
-    :deep(.arco-upload-list-item-name) {
-      margin-right: 0 !important;
     }
 
     :deep(.arco-upload-list-item-name-text) {
@@ -173,10 +138,6 @@
 
     :deep(.arco-upload-list-item:first-of-type) {
       margin-top: 0 !important;
-    }
-
-    :deep(.arco-upload-list-item .arco-upload-progress) {
-      display: none;
     }
   }
 

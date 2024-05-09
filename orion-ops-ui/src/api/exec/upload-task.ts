@@ -7,14 +7,19 @@ import qs from 'query-string';
  * 上传任务创建请求
  */
 export interface UploadTaskCreateRequest {
-  userId?: number;
-  username?: string;
   remotePath?: string;
   description?: string;
-  status?: string;
-  extraInfo?: string;
-  startTime?: string;
-  endTime?: string;
+  hostIdList?: Array<number>;
+  files?: Array<UploadTaskFileCreateRequest>;
+}
+
+/**
+ * 上传任务文件创建请求
+ */
+export interface UploadTaskFileCreateRequest {
+  fileId?: string;
+  filePath?: string;
+  fileSize?: number;
 }
 
 /**
