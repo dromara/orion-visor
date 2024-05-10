@@ -56,6 +56,14 @@ public class UploadTaskDO extends BaseDO {
     @TableField("extra_info")
     private String extraInfo;
 
+    @Schema(description = "文件数量")
+    @TableField("file_count")
+    private Integer fileCount;
+
+    @Schema(description = "主机数量")
+    @TableField("host_count")
+    private Integer hostCount;
+
     @Schema(description = "开始时间")
     @TableField("start_time")
     private Date startTime;

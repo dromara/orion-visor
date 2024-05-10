@@ -2,12 +2,12 @@
   <a-spin class="panel-container full" :loading="loading">
     <!-- 上传步骤 -->
     <batch-upload-step class="panel-item first-panel-container"
-                       :status="status" />
+                       :status="taskStatus" />
     <!-- 上传表单 -->
-    <batch-upload-form v-if="status.formPanel"
+    <batch-upload-form v-if="taskStatus.formPanel"
                        class="panel-item center-panel-container"
                        :form-model="formModel"
-                       :status="status"
+                       :status="taskStatus"
                        @upload="doCreateUploadTask"
                        @abort="abortUploadRequest"
                        @open-host="openHostModal"
@@ -16,11 +16,12 @@
     <batch-upload-hosts v-else
                         class="panel-item center-panel-container"
                         v-model:selected-host="selectedHost"
+                        :status="taskStatus"
                         :task="task"
                         @back="backFormPanel"
                         @cancel="doCancelUploadTask" />
     <!-- 文件列表 -->
-    <batch-upload-files v-if="status.formPanel"
+    <batch-upload-files v-if="taskStatus.formPanel"
                         v-model:file-list="fileList"
                         class="panel-item last-panel-container"
                         ref="filesRef"
@@ -51,9 +52,10 @@
   import type { FileItem } from '@arco-design/web-vue';
   import type { UploadTaskCreateRequest, UploadTaskQueryResponse } from '@/api/exec/upload-task';
   import type { UploadTaskStatusType } from '../types/const';
-  import { ref } from 'vue';
-  import { UploadTaskStatus } from '../types/const';
-  import { cancelUploadTask, createUploadTask, startUploadTask, getUploadTask } from '@/api/exec/upload-task';
+  import { onMounted, onUnmounted, ref } from 'vue';
+  import { UploadTaskStepStatus } from '../types/const';
+  import { UploadTaskStatus } from '@/views/exec/upload-task/types/const';
+  import { cancelUploadTask, createUploadTask, startUploadTask, getUploadTask, getUploadTaskStatus } from '@/api/exec/upload-task';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import BatchUploadStep from './batch-upload-step.vue';
@@ -66,24 +68,23 @@
   const defaultForm = (): UploadTaskCreateRequest => {
     return {
       description: '',
-      remotePath: '/root/batch',
-      hostIdList: [1],
+      remotePath: '',
+      hostIdList: [],
       files: []
     };
   };
 
   const { loading, setLoading } = useLoading();
 
+  const pullStatusId = ref();
   const taskId = ref();
   const task = ref<UploadTaskQueryResponse>({} as UploadTaskQueryResponse);
   const selectedHost = ref();
   const formModel = ref<UploadTaskCreateRequest>({ ...defaultForm() });
   const fileList = ref<Array<FileItem>>([]);
-  const status = ref<UploadTaskStatusType>(UploadTaskStatus.WAITING);
+  const taskStatus = ref<UploadTaskStatusType>(UploadTaskStepStatus.WAITING);
   const filesRef = ref();
-  const hostModal = ref<any>();
-
-  // TODO pullstatus
+  const hostModal = ref();
 
   // 设置选中主机
   const setSelectedHost = (hosts: Array<number>) => {
@@ -106,16 +107,16 @@
     }
     // 创建任务
     setLoading(true);
-    status.value = UploadTaskStatus.WAITING;
+    taskStatus.value = UploadTaskStepStatus.WAITING;
     try {
       formModel.value.files = files;
       const { data } = await createUploadTask(formModel.value);
       taskId.value = data.id;
-      status.value = UploadTaskStatus.REQUESTING;
+      taskStatus.value = UploadTaskStepStatus.REQUESTING;
       // 上传文件
       await filesRef.value.startUpload(data.token);
     } catch (e) {
-      status.value = UploadTaskStatus.FAILED;
+      taskStatus.value = UploadTaskStepStatus.FAILED;
     } finally {
       setLoading(false);
     }
@@ -127,7 +128,7 @@
     try {
       // 取消上传
       await cancelUploadTask(taskId.value, false);
-      status.value = UploadTaskStatus.WAITING;
+      taskStatus.value = UploadTaskStepStatus.WAITING;
       Message.success('已取消');
     } catch (e) {
     } finally {
@@ -137,13 +138,13 @@
 
   // 中断上传请求
   const abortUploadRequest = () => {
-    status.value = UploadTaskStatus.WAITING;
+    taskStatus.value = UploadTaskStepStatus.WAITING;
     filesRef.value?.close();
   };
 
   // 上传请求结束
   const uploadRequestEnd = async () => {
-    if (status.value.value === UploadTaskStatus.REQUESTING.value) {
+    if (taskStatus.value.value === UploadTaskStepStatus.REQUESTING.value) {
       // 如果结束后还是请求中则代表请求完毕
       setLoading(true);
       try {
@@ -153,7 +154,7 @@
         const { data } = await getUploadTask(taskId.value);
         task.value = data;
         selectedHost.value = data.hosts[0].id;
-        status.value = UploadTaskStatus.UPLOADING;
+        taskStatus.value = UploadTaskStepStatus.UPLOADING;
       } catch (e) {
         // 设置失败
         await uploadRequestError();
@@ -172,10 +173,45 @@
     try {
       // 开始上传
       await cancelUploadTask(taskId.value, true);
-      status.value = UploadTaskStatus.FAILED;
+      taskStatus.value = UploadTaskStepStatus.FAILED;
     } catch (e) {
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 加载轮询状态
+  const pullTaskStatus = async () => {
+    if (!taskId.value || !task.value) {
+      return;
+    }
+    // 非上传中则不查询
+    if (taskStatus.value.value !== UploadTaskStepStatus.UPLOADING.value) {
+      return;
+    }
+    // 查询状态
+    const { data } = await getUploadTaskStatus([taskId.value], true);
+    if (!data.length) {
+      return;
+    }
+    const taskStatusData = data[0];
+    // 设置任务状态
+    if (taskStatusData.status === UploadTaskStatus.FINISHED) {
+      taskStatus.value = UploadTaskStepStatus.FINISHED;
+    } else if (taskStatusData.status === UploadTaskStatus.CANCELED) {
+      taskStatus.value = UploadTaskStepStatus.FINISHED;
+    } else if (taskStatusData.status === UploadTaskStatus.FAILED) {
+      taskStatus.value = UploadTaskStepStatus.FAILED;
+    }
+    // 设置文件进度
+    for (let host of task.value.hosts) {
+      for (let file of host.files) {
+        const fileStatus = taskStatusData.files.find(s => s.id === file.id);
+        if (fileStatus) {
+          file.status = fileStatus.status;
+          file.current = fileStatus.current;
+        }
+      }
     }
   };
 
@@ -186,7 +222,7 @@
 
   // 返回表单页面
   const backFormPanel = () => {
-    status.value = UploadTaskStatus.WAITING;
+    taskStatus.value = UploadTaskStepStatus.WAITING;
     taskId.value = undefined;
     task.value = undefined as any;
     selectedHost.value = undefined as any;
@@ -201,6 +237,16 @@
   const clearFile = () => {
     fileList.value = [];
   };
+
+  // 设置轮询状态
+  onMounted(() => {
+    pullStatusId.value = setInterval(pullTaskStatus, 5000);
+  });
+
+  // 卸载状态查询
+  onUnmounted(() => {
+    clearInterval(pullStatusId.value);
+  });
 
 </script>
 

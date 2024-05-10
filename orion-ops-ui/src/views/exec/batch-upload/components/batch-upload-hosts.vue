@@ -8,7 +8,8 @@
         <!-- 返回 -->
         <a-button @click="emits('back')">返回</a-button>
         <!-- 取消上传 -->
-        <a-button type="primary"
+        <a-button v-if="status.value === UploadTaskStepStatus.UPLOADING.value"
+                  type="primary"
                   status="warning"
                   @click="emits('cancel')">
           取消上传
@@ -37,14 +38,20 @@
           <!-- 主机状态 -->
           <a-space class="host-item-status" direction="vertical">
             <!-- 未完成 -->
-            <a-tag class="host-item-status-tag" color="#52C41A">
+            <a-tag class="host-item-status-tag"
+                   color="#73D13D"
+                   title="未完成数量"
+                   size="small">
               {{ host.files.length - getFinishCount(host.files) }}
               <template #icon>
                 <icon-clock-circle class="host-item-status-icon" />
               </template>
             </a-tag>
             <!-- 已完成 -->
-            <a-tag class="host-item-status-tag" color="#1890FF">
+            <a-tag class="host-item-status-tag"
+                   color="#40A9FF"
+                   title="已完成数量"
+                   size="small">
               {{ getFinishCount(host.files) }}
               <template #icon>
                 <icon-check-circle class="host-item-status-icon" />
@@ -66,10 +73,13 @@
 <script lang="ts" setup>
   import type { UploadTaskQueryResponse } from '@/api/exec/upload-task';
   import type { UploadTaskFile } from '@/api/exec/upload-task';
-  import { UploadTaskFileStatus } from '../types/const';
+  import type { UploadTaskStatusType } from '../types/const';
+  import { UploadTaskStepStatus } from '../types/const';
+  import { UploadTaskFileStatus } from '@/views/exec/upload-task/types/const';
 
   const emits = defineEmits(['update:selectedHost', 'back', 'cancel']);
   const props = defineProps<{
+    status: UploadTaskStatusType;
     selectedHost: number;
     task: UploadTaskQueryResponse;
   }>();
@@ -126,6 +136,7 @@
 
         &-tag {
           max-width: 64px;
+          width: 100%;
         }
 
         &-icon {

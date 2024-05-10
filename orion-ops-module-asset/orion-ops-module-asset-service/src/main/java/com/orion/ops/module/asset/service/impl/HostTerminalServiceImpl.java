@@ -241,6 +241,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
+        conn.setOsType(config.getOsType());
         conn.setPort(config.getPort());
         conn.setTimeout(config.getConnectTimeout());
         conn.setCharset(config.getCharset());

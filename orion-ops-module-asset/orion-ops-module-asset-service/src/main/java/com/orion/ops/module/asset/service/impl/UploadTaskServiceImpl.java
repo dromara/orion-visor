@@ -112,6 +112,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         record.setUsername(user.getUsername());
         record.setDescription(Strings.def(record.getDescription(), () -> Strings.format(DEFAULT_DESC, Dates.current())));
         record.setStatus(UploadTaskStatusEnum.WAITING.name());
+        record.setFileCount(files.size());
+        record.setHostCount(hostIdList.size());
         UploadTaskExtraDTO extra = UploadTaskExtraDTO.builder()
                 .hostIdList(hostIdList)
                 .hosts(hosts)
@@ -159,7 +161,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 计算传输进度
         this.computeUploadProgress(id, files);
         // 设置任务文件
-        this.setTaskFiles(uploadTask, files);
+        this.setTaskHostFiles(uploadTask, files);
         return uploadTask;
     }
 
@@ -174,40 +176,39 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     }
 
     @Override
-    public List<UploadTaskVO> getUploadTaskStatus(List<Long> idList, Boolean queryFiles) {
+    public List<UploadTaskStatusVO> getUploadTaskStatus(List<Long> idList, Boolean queryFiles) {
         // 查询任务
-        List<UploadTaskVO> tasks = uploadTaskDAO.of()
+        List<UploadTaskStatusVO> tasks = uploadTaskDAO.of()
                 .createWrapper()
                 .select(UploadTaskDO::getId, UploadTaskDO::getStatus,
                         UploadTaskDO::getStartTime, UploadTaskDO::getEndTime)
                 .in(UploadTaskDO::getId, idList)
                 .then()
-                .list(UploadTaskConvert.MAPPER::to);
+                .list(UploadTaskConvert.MAPPER::toStatus);
         if (!Booleans.isTrue(queryFiles)) {
             return tasks;
         }
         // 查询任务文件
-        Map<Long, List<UploadTaskFileVO>> filesMap = uploadTaskFileDAO.of()
+        Map<Long, List<UploadTaskFileVO>> taskFilesMap = uploadTaskFileDAO.of()
                 .createWrapper()
-                .select(UploadTaskFileDO::getId, UploadTaskFileDO::getTaskId,
-                        UploadTaskFileDO::getHostId, UploadTaskFileDO::getStatus,
+                .select(UploadTaskFileDO::getId, UploadTaskFileDO::getTaskId, UploadTaskFileDO::getHostId,
+                        UploadTaskFileDO::getStatus, UploadTaskFileDO::getFileSize,
                         UploadTaskFileDO::getStartTime, UploadTaskFileDO::getEndTime)
                 .in(UploadTaskFileDO::getTaskId, idList)
                 .then()
                 .stream()
                 .map(UploadTaskFileConvert.MAPPER::to)
                 .collect(Collectors.groupingBy(UploadTaskFileVO::getTaskId));
-        for (UploadTaskVO task : tasks) {
+        for (UploadTaskStatusVO task : tasks) {
             Long id = task.getId();
-            List<UploadTaskFileVO> files = filesMap.get(id);
+            List<UploadTaskFileVO> files = taskFilesMap.get(id);
             if (files == null) {
                 files = Lists.empty();
             } else {
                 // 计算进度
                 this.computeUploadProgress(id, files);
-                // 设置任务文件
             }
-            this.setTaskFiles(task, files);
+            task.setFiles(files);
         }
         return tasks;
     }
@@ -311,8 +312,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         return uploadTaskDAO.wrapper()
                 .eq(UploadTaskDO::getId, request.getId())
                 .eq(UploadTaskDO::getUserId, request.getUserId())
-                .in(UploadTaskDO::getDescription, request.getDescription())
-                .eq(UploadTaskDO::getRemotePath, request.getRemotePath())
+                .like(UploadTaskDO::getDescription, request.getDescription())
+                .like(UploadTaskDO::getRemotePath, request.getRemotePath())
                 .eq(UploadTaskDO::getStatus, request.getStatus())
                 .ge(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 0))
                 .le(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 1))
@@ -450,12 +451,12 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     }
 
     /**
-     * 设置任务文件
+     * 设置主机任务文件
      *
      * @param task  task
      * @param files files
      */
-    private void setTaskFiles(UploadTaskVO task, List<UploadTaskFileVO> files) {
+    private void setTaskHostFiles(UploadTaskVO task, List<UploadTaskFileVO> files) {
         Map<Long, List<UploadTaskFileVO>> hostFiles = files.stream()
                 .collect(Collectors.groupingBy(UploadTaskFileVO::getHostId));
         List<UploadTaskHostVO> hosts = JSON.parseObject(task.getExtraInfo(), UploadTaskExtraDTO.class)

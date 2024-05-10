@@ -41,14 +41,10 @@
           <template #file-name="{ fileItem }">
             <div class="file-name-wrapper">
               <!-- 文件名称 -->
-              <a-tooltip position="left"
-                         :mini="true"
-                         :content="fileItem.file.webkitRelativePath || fileItem.file.name">
-                <!-- 文件名称 -->
-                <span class="file-name text-ellipsis">
+              <span class="file-name text-ellipsis"
+                    :title="fileItem.file.webkitRelativePath || fileItem.file.name">
                 {{ fileItem.file.webkitRelativePath || fileItem.file.name }}
               </span>
-              </a-tooltip>
               <!-- 文件大小 -->
               <span class="file-size span-blue">
               {{ getFileSize(fileItem.file.size) }}
@@ -144,7 +140,7 @@
 
   :deep(.waiting-files-wrapper) {
     .arco-upload-list {
-      padding: 0 6px 0 0 !important;
+      padding: 0 12px 0 0 !important;
     }
 
     .arco-upload-list-item-name {
@@ -205,16 +201,18 @@
     justify-content: space-between;
 
     .file-name {
-      color: var(--color-text-1);
-      display: inline-block;
       width: calc(100% - @file-size-width);
+      padding: 2px 0;
+      color: var(--color-text-1);
     }
 
     .file-size {
-      font-size: 13px;
-      display: inline-block;
       width: @file-size-width;
-      text-align: end;
+      display: inline-flex;
+      font-size: 13px;
+      justify-content: flex-end;
+      align-items: center;
+      user-select: none;
     }
   }
 

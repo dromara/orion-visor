@@ -11,6 +11,7 @@ import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskRequest;
 import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
+import com.orion.ops.module.asset.entity.vo.UploadTaskStatusVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
 import com.orion.ops.module.asset.service.UploadTaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,8 +40,6 @@ import java.util.List;
 @RequestMapping("/asset/upload-task")
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class UploadTaskController {
-
-    // TODO 前端日志 测试删除慢吗
 
     @Resource
     private UploadTaskService uploadTaskService;
@@ -92,7 +91,7 @@ public class UploadTaskController {
     @Operation(summary = "查询上传状态")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:upload-task:query')")
-    public List<UploadTaskVO> getUploadTaskStatus(@RequestParam("idList") List<Long> idList, @RequestParam("queryFiles") Boolean queryFiles) {
+    public List<UploadTaskStatusVO> getUploadTaskStatus(@RequestParam("idList") List<Long> idList, @RequestParam("queryFiles") Boolean queryFiles) {
         return uploadTaskService.getUploadTaskStatus(idList, queryFiles);
     }
 

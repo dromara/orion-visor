@@ -53,6 +53,8 @@ export interface UploadTaskQueryResponse extends TableData {
   description: string;
   status: string;
   extraInfo: string;
+  fileCount: number;
+  hostCount: number;
   startTime: number;
   endTime: number;
   createTime: number;
@@ -84,6 +86,17 @@ export interface UploadTaskFile {
   startTime: number;
   endTime: number;
   current: number;
+}
+
+/**
+ * 上传任务状态响应
+ */
+export interface UploadTaskStatusResponse extends TableData {
+  id: number;
+  status: string;
+  startTime: number;
+  endTime: number;
+  files: Array<UploadTaskFile>;
 }
 
 /**
@@ -125,7 +138,7 @@ export function getUploadTaskPage(request: UploadTaskQueryRequest) {
  * 查询上传任务状态
  */
 export function getUploadTaskStatus(idList: Array<number>, queryFiles: boolean) {
-  return axios.get<Array<UploadTaskQueryResponse>>('/asset/upload-task/status', {
+  return axios.get<Array<UploadTaskStatusResponse>>('/asset/upload-task/status', {
     params: { idList, queryFiles },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });

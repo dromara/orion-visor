@@ -6,19 +6,19 @@
       <!-- 操作 -->
       <a-button-group size="mini">
         <!-- 重置 -->
-        <a-button v-if="status.value === UploadTaskStatus.WAITING.value"
+        <a-button v-if="status.value === UploadTaskStepStatus.WAITING.value"
                   @click="emits('clear')">
           重置
         </a-button>
         <!-- 取消上传 -->
-        <a-button v-if="status.value === UploadTaskStatus.REQUESTING.value"
+        <a-button v-if="status.value === UploadTaskStepStatus.REQUESTING.value"
                   type="primary"
                   status="warning"
                   @click="emits('abort')">
           取消上传
         </a-button>
         <!-- 开始上传 -->
-        <a-button v-if="status.value === UploadTaskStatus.WAITING.value"
+        <a-button v-if="status.value === UploadTaskStepStatus.WAITING.value"
                   type="primary"
                   @click="submit">
           开始上传
@@ -39,7 +39,10 @@
                  allow-clear />
       </a-form-item>
       <!-- 上传路径 -->
-      <a-form-item field="remotePath" label="上传路径">
+      <a-form-item field="remotePath"
+                   style="margin-bottom: 4px;"
+                   label="上传路径"
+                   help="${username} 用户名 ${home} 家目录">
         <a-input v-model="formModel.remotePath"
                  placeholder="请输入上传路径"
                  allow-clear />
@@ -71,7 +74,7 @@
   import type { UploadTaskStatusType } from '../types/const';
   import { ref } from 'vue';
   import formRules from '../types/form.rules';
-  import { UploadTaskStatus } from '../types/const';
+  import { UploadTaskStepStatus } from '../types/const';
 
   const emits = defineEmits(['upload', 'openHost', 'abort', 'clear']);
   const props = defineProps<{

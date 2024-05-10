@@ -7,7 +7,7 @@ export interface UploadTaskStatusType {
 }
 
 // 上传任务状态
-export const UploadTaskStatus = {
+export const UploadTaskStepStatus = {
   // 等待中
   WAITING: {
     value: 'WAITING',
@@ -43,20 +43,6 @@ export const UploadTaskStatus = {
     status: 'error',
     formPanel: false,
   },
-};
-
-// 上传任务文件状态
-export const UploadTaskFileStatus = {
-  // 等待中
-  WAITING: 'WAITING',
-  // 上传中
-  UPLOADING: 'UPLOADING',
-  // 已完成
-  FINISHED: 'FINISHED',
-  // 已完成
-  FAILED: 'FAILED',
-  // 已取消
-  CANCELED: 'CANCELED',
 };
 
 // 上传任务状态 字典项

@@ -1,6 +1,7 @@
 package com.orion.ops.module.asset.handler.host.upload.task;
 
 import com.orion.lang.utils.Threads;
+import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.module.asset.dao.UploadTaskDAO;
@@ -136,7 +137,7 @@ public class FileUploadTask implements IFileUploadTask {
                     .map(s -> FileUploadFileItemDTO.builder()
                             .id(s.getId())
                             .fileId(s.getFileId())
-                            .remotePath(record.getRemotePath() + Const.SLASH + s.getFilePath())
+                            .remotePath(Files1.getPath(Const.SLASH + record.getRemotePath() + Const.SLASH + s.getFilePath()))
                             .status(UploadTaskFileStatusEnum.WAITING.name())
                             .current(0L)
                             .build())

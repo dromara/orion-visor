@@ -47,6 +47,12 @@ public class UploadTaskVO implements Serializable {
     @Schema(description = "额外信息")
     private String extraInfo;
 
+    @Schema(description = "文件数量")
+    private Integer fileCount;
+
+    @Schema(description = "主机数量")
+    private Integer hostCount;
+
     @Schema(description = "开始时间")
     private Date startTime;
 

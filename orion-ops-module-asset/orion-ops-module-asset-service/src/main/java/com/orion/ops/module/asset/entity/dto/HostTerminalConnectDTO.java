@@ -38,6 +38,9 @@ public class HostTerminalConnectDTO {
     @Schema(description = "主机地址")
     private String hostAddress;
 
+    @Schema(description = "系统类型")
+    private String osType;
+
     @Schema(description = "端口")
     private Integer port;
 

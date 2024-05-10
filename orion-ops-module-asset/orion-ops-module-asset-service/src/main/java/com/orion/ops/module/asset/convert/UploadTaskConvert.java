@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.convert;
 import com.orion.ops.module.asset.entity.domain.UploadTaskDO;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
+import com.orion.ops.module.asset.entity.vo.UploadTaskStatusVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -27,6 +28,8 @@ public interface UploadTaskConvert {
 
     UploadTaskVO to(UploadTaskDO domain);
 
-    List<UploadTaskVO> to(List<UploadTaskDO> list);
+    List<UploadTaskVO> toList(List<UploadTaskDO> list);
+
+    UploadTaskStatusVO toStatus(UploadTaskDO domain);
 
 }

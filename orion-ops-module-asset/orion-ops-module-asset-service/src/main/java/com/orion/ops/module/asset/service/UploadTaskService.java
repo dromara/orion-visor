@@ -5,6 +5,7 @@ import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskRequest;
 import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
+import com.orion.ops.module.asset.entity.vo.UploadTaskStatusVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public interface UploadTaskService {
      * @param queryFiles queryFiles
      * @return rows
      */
-    List<UploadTaskVO> getUploadTaskStatus(List<Long> idList, Boolean queryFiles);
+    List<UploadTaskStatusVO> getUploadTaskStatus(List<Long> idList, Boolean queryFiles);
 
     /**
      * 获取上传任务数量

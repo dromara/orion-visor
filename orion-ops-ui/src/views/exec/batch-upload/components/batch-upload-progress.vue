@@ -16,12 +16,28 @@
           <div class="file-item-path text-ellipsis" :title="file.filePath">
             {{ file.filePath }}
           </div>
-          <!-- 进度 -->
-          <div class="file-item-progress">
-            <a-progress type="circle"
-                        size="mini"
-                        :status="getDictValue(fileStatusKey, file.status, 'status') as any"
-                        :percent="file.current / file.fileSize" />
+          <!-- 状态 -->
+          <div class="file-item-status">
+            <!-- 文件大小 -->
+            <div class="file-item-size span-blue">
+              <!-- 当前大小 -->
+              <template v-if="file.status === UploadTaskFileStatus.WAITING || file.status === UploadTaskFileStatus.UPLOADING">
+                {{ getFileSize(file.current || 0) }}
+              </template>
+              <!-- 总大小 -->
+              <template v-else>
+                {{ getFileSize(file.fileSize) }}
+              </template>
+            </div>
+            <!-- 进度 -->
+            <a-tooltip position="left"
+                       :content="((file.current || 0) / file.fileSize * 100).toFixed(2) + '%'"
+                       mini>
+              <a-progress type="circle"
+                          size="mini"
+                          :status="getDictValue(fileStatusKey, file.status, 'status') as any"
+                          :percent="(file.current || 0) / file.fileSize" />
+            </a-tooltip>
           </div>
         </div>
       </a-scrollbar>
@@ -38,7 +54,9 @@
 <script lang="ts" setup>
   import type { UploadTaskFile } from '@/api/exec/upload-task';
   import { fileStatusKey } from '../types/const';
+  import { UploadTaskFileStatus } from '@/views/exec/upload-task/types/const';
   import { useDictStore } from '@/store';
+  import { getFileSize } from '@/utils/file';
 
   const emits = defineEmits(['update:selectedHost']);
   const props = defineProps<{
@@ -47,12 +65,11 @@
 
   const { getDictValue } = useDictStore();
 
-
 </script>
 
 <style lang="less" scoped>
   @icon-width: 24px;
-  @progress-width: 24px;
+  @status-width: 102px;
 
   .wrapper {
     width: 100%;
@@ -83,15 +100,24 @@
       }
 
       &-path {
-        width: calc(100% - @icon-width - @progress-width);
+        padding: 2px 0;
+        width: calc(100% - @icon-width - @status-width);
+        display: inline-block;
         font-size: 14px;
         color: var(--color-text-1);
       }
 
-      &-progress {
-        width: @progress-width;
+      &-size {
+        font-size: 12px;
+        margin-right: 12px;
+        user-select: none;
+      }
+
+      &-status {
+        width: @status-width;
         display: flex;
         justify-content: flex-end;
+        align-items: center;
       }
     }
   }
