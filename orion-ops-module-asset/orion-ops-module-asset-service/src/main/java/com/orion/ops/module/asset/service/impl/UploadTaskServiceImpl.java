@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
@@ -27,6 +28,7 @@ import com.orion.ops.module.asset.entity.dto.UploadTaskExtraDTO;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskFileRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
+import com.orion.ops.module.asset.entity.request.upload.UploadTaskRequest;
 import com.orion.ops.module.asset.entity.vo.HostBaseVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskFileVO;
@@ -110,7 +112,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         record.setUserId(user.getId());
         record.setUsername(user.getUsername());
         record.setDescription(Strings.def(record.getDescription(), () -> Strings.format(DEFAULT_DESC, Dates.current())));
-        record.setStatus(UploadTaskStatusEnum.PREPARATION.name());
+        record.setStatus(UploadTaskStatusEnum.WAITING.name());
         UploadTaskExtraDTO extra = UploadTaskExtraDTO.builder()
                 .hostIdList(hostIdList)
                 .hosts(hosts)
@@ -231,7 +233,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询任务
         List<UploadTaskDO> records = uploadTaskDAO.selectBatchIds(idList);
         // 取消任务
-        this.checkCancelTask(records);
+        this.checkCancelTask(records, UploadTaskStatusEnum.CANCELED);
         // 删除任务
         int effect = uploadTaskDAO.deleteBatchIds(idList);
         // 删除任务文件
@@ -248,20 +250,24 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         UploadTaskDO record = uploadTaskDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.TASK_ABSENT);
         // 检查状态
-        Valid.eq(record.getStatus(), UploadTaskStatusEnum.PREPARATION.name(), ErrorMessage.ILLEGAL_STATUS);
+        Valid.eq(record.getStatus(), UploadTaskStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
         // 执行任务
         FileUploadTasks.start(id);
     }
 
     @Override
-    public void cancelUploadTask(Long id) {
+    public void cancelUploadTask(UploadTaskRequest request) {
         // 查询任务
-        UploadTaskDO record = uploadTaskDAO.selectById(id);
+        UploadTaskDO record = uploadTaskDAO.selectById(request.getId());
         Valid.notNull(record, ErrorMessage.TASK_ABSENT);
         // 检查状态
         Valid.isTrue(UploadTaskStatusEnum.of(record.getStatus()).isCancelable(), ErrorMessage.ILLEGAL_STATUS);
         // 取消任务
-        this.checkCancelTask(Lists.singleton(record));
+        if (Booleans.isTrue(request.getFailed())) {
+            this.checkCancelTask(Lists.singleton(record), UploadTaskStatusEnum.FAILED);
+        } else {
+            this.checkCancelTask(Lists.singleton(record), UploadTaskStatusEnum.CANCELED);
+        }
     }
 
     @Override
@@ -318,8 +324,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
      * 检查需要取消的任务
      *
      * @param records records
+     * @param status  status
      */
-    private void checkCancelTask(List<UploadTaskDO> records) {
+    private void checkCancelTask(List<UploadTaskDO> records, UploadTaskStatusEnum status) {
         // 需要取消的记录
         List<UploadTaskDO> cancelableRecords = records.stream()
                 .filter(s -> UploadTaskStatusEnum.of(s.getStatus()).isCancelable())
@@ -341,7 +348,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 更新状态
         if (!updateIdList.isEmpty()) {
             UploadTaskDO update = new UploadTaskDO();
-            update.setStatus(UploadTaskStatusEnum.CANCELED.name());
+            update.setStatus(status.name());
             update.setEndTime(new Date());
             // 更新
             uploadTaskDAO.update(update, Conditions.in(UploadTaskDO::getId, updateIdList));

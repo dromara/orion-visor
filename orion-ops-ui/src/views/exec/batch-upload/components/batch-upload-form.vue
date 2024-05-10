@@ -5,8 +5,24 @@
       <h3>批量上传</h3>
       <!-- 操作 -->
       <a-button-group size="small">
-        <a-button>重置</a-button>
-        <a-button type="primary">上传</a-button>
+        <!-- 重置 -->
+        <a-button v-if="status.value !== UploadTaskStatus.REQUESTING.value"
+                  @click="emits('clear')">
+          重置
+        </a-button>
+        <!-- 取消上传 -->
+        <a-button v-if="status.value === UploadTaskStatus.REQUESTING.value
+                  || status.value === UploadTaskStatus.UPLOADING.value"
+                  @click="emits('cancel')">
+          取消上传
+        </a-button>
+        <!-- 开始上传 -->
+        <a-button v-if="status.value !== UploadTaskStatus.REQUESTING.value
+                  && status.value !== UploadTaskStatus.UPLOADING.value"
+                  type="primary"
+                  @click="submit">
+          开始上传
+        </a-button>
       </a-button-group>
     </div>
     <!-- 表单 -->
@@ -35,7 +51,7 @@
           <span class="usn" v-if="formModel.hostIdList?.length">
             已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
           </span>
-          <span class="usn pointer span-blue" @click="openSelectHost">
+          <span class="usn pointer span-blue" @click="emits('openHost')">
             {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
           </span>
         </div>
@@ -52,28 +68,27 @@
 
 <script lang="ts" setup>
   import type { UploadTaskCreateRequest } from '@/api/exec/upload-task';
+  import type { UploadTaskStatusType } from '../types/const';
   import { ref } from 'vue';
   import formRules from '../types/form.rules';
-  import useLoading from '@/hooks/loading';
+  import { UploadTaskStatus } from '../types/const';
 
-  const defaultForm = (): UploadTaskCreateRequest => {
-    return {
-      description: '',
-      remotePath: '',
-      hostIdList: [],
-      files: []
-    };
-  };
-
-  const { loading, setLoading } = useLoading();
+  const emits = defineEmits(['upload', 'openHost', 'cancel', 'clear']);
+  const props = defineProps<{
+    status: UploadTaskStatusType;
+    formModel: UploadTaskCreateRequest;
+  }>();
 
   const formRef = ref<any>();
-  const formModel = ref<UploadTaskCreateRequest>({ ...defaultForm() });
-  const hostModal = ref<any>();
 
-  // 打开选择主机
-  const openSelectHost = () => {
-    hostModal.value.open(formModel.value.hostIdList);
+  // 提交表单
+  const submit = async () => {
+    // 验证参数
+    let error = await formRef.value.validate();
+    if (error) {
+      return false;
+    }
+    emits('upload');
   };
 
 </script>

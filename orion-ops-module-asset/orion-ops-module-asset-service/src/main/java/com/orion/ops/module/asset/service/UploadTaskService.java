@@ -3,6 +3,7 @@ package com.orion.ops.module.asset.service;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
+import com.orion.ops.module.asset.entity.request.upload.UploadTaskRequest;
 import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
 import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
 
@@ -85,9 +86,9 @@ public interface UploadTaskService {
     /**
      * 取消上传
      *
-     * @param id id
+     * @param request request
      */
-    void cancelUploadTask(Long id);
+    void cancelUploadTask(UploadTaskRequest request);
 
     /**
      * 删除上传交换区的文件

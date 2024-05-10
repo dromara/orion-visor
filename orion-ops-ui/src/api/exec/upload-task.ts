@@ -31,13 +31,6 @@ export interface UploadTaskCreateResponse {
 }
 
 /**
- * 上传任务请求
- */
-export interface UploadTaskRequest {
-  id?: number;
-}
-
-/**
  * 上传任务查询请求
  */
 export interface UploadTaskQueryRequest extends Pagination {
@@ -92,15 +85,15 @@ export function createUploadTask(request: UploadTaskCreateRequest) {
 /**
  * 创建上传任务
  */
-export function startUploadTask(request: UploadTaskRequest) {
-  return axios.post('/asset/upload-task/start', request);
+export function startUploadTask(id: number) {
+  return axios.post('/asset/upload-task/start', { id });
 }
 
 /**
  * 创建上传任务
  */
-export function cancelUploadTask(request: UploadTaskRequest) {
-  return axios.post('/asset/upload-task/cancel', request);
+export function cancelUploadTask(id: number, failed: boolean) {
+  return axios.post('/asset/upload-task/cancel', { id, failed });
 }
 
 /**

@@ -167,8 +167,7 @@
 
 <script lang="ts" setup>
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
-  import type { ILogAppender } from './appender-const';
-  import type { ExecType } from '../const';
+  import type { ExecType, ILogAppender } from '../const';
   import { ref } from 'vue';
   import { execHostStatus, execHostStatusKey } from '../const';
   import { formatDuration } from '@/utils';

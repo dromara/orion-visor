@@ -55,8 +55,8 @@ public class CodeGenerators {
                         .enableRowSelection()
                         .dict("uploadTaskStatus", "status")
                         .comment("上传任务状态")
-                        .fields("PREPARATION", "UPLOADING", "FINISHED", "CANCELED")
-                        .labels("准备中", "上传中", "已完成", "已取消")
+                        .fields("WAITING", "UPLOADING", "FINISHED", "FAILED", "CANCELED")
+                        .labels("等待中", "上传中", "已完成", "已失败", "已取消")
                         .valueUseFields()
                         .build(),
                 Template.create("upload_task_file", "上传任务文件", "upload")
@@ -65,8 +65,8 @@ public class CodeGenerators {
                         .enableRowSelection()
                         .dict("uploadTaskFileStatus", "status")
                         .comment("上传任务文件状态")
-                        .fields("WAITING", "UPLOADING", "FINISHED", "CANCELED")
-                        .labels("等待中", "上传中", "已完成", "已取消")
+                        .fields("WAITING", "UPLOADING", "FINISHED", "FAILED", "CANCELED")
+                        .labels("等待中", "上传中", "已完成", "已失败", "已取消")
                         .valueUseFields()
                         .build(),
         };

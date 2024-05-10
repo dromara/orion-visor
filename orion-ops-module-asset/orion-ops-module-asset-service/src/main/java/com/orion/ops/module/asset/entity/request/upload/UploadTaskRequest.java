@@ -29,4 +29,7 @@ public class UploadTaskRequest implements Serializable {
     @Schema(description = "id")
     private Long id;
 
+    @Schema(description = "是否失败")
+    private Boolean failed;
+
 }

@@ -109,7 +109,7 @@
       return true;
     }
     // 添加到上传列表
-    const files = fileList.value.map(s => s.file);
+    const files = fileList.value.map(s => s.file as File);
     transferManager.addUpload(hostId.value, parentPath.value, files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');
     // 清空
@@ -158,9 +158,10 @@
     }
 
     :deep(.arco-upload-list) {
-      max-height: calc(100vh - 386px);
-      overflow-y: auto;
       padding: 0 12px 0 0;
+      max-height: calc(100vh - 386px);
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     :deep(.arco-upload-list-item-name) {

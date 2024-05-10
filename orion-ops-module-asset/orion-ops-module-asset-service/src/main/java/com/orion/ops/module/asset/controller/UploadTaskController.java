@@ -40,6 +40,11 @@ import java.util.List;
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class UploadTaskController {
 
+    // todo create 返回 host, STATUS
+    // 修改状态元数据
+    // 上船前检查size, size不对则直接cancel
+    // cancel 需要设置子元素为 cancel
+
     @Resource
     private UploadTaskService uploadTaskService;
 
@@ -64,7 +69,7 @@ public class UploadTaskController {
     @Operation(summary = "取消上传")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:upload')")
     public Boolean cancelUploadTask(@Validated @RequestBody UploadTaskRequest request) {
-        uploadTaskService.cancelUploadTask(request.getId());
+        uploadTaskService.cancelUploadTask(request);
         return true;
     }
 

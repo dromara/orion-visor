@@ -107,6 +107,18 @@ public class FileUploadHandler implements IFileUploadHandler {
     }
 
     @Override
+    public void error() {
+        // 释放资源
+        this.close();
+        // 返回上传路径
+        FileUploadResponse resp = FileUploadResponse.builder()
+                .type(FileUploadReceiverType.ERROR.getType())
+                .fileId(this.fileId)
+                .build();
+        this.send(resp);
+    }
+
+    @Override
     public void close() {
         if (closed) {
             return;

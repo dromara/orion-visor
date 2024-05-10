@@ -53,6 +53,9 @@ public class FileUploadMessageDispatcher extends AbstractWebSocketHandler {
         } else if (FileUploadOperatorType.FINISH.equals(type)) {
             // 上传完成
             handler.finish();
+        } else if (FileUploadOperatorType.ERROR.equals(type)) {
+            // 上传失败
+            handler.error();
         }
     }
 

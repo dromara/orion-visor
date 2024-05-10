@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { LogDomRef, ILogAppender } from './appender-const';
+  import type { LogDomRef, ILogAppender } from '../const';
   import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecType } from '../const';
   import { nextTick, ref, watch } from 'vue';

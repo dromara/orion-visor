@@ -25,8 +25,7 @@
 
 <script lang="ts" setup>
   import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
-  import type { ILogAppender } from './appender-const';
-  import type { ExecType } from '../const';
+  import type { ExecType, ILogAppender } from '../const';
   import { onUnmounted, ref, nextTick, onMounted } from 'vue';
   import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
   import { getExecJobLogStatus } from '@/api/job/exec-job-log';

@@ -15,9 +15,9 @@ import lombok.Getter;
 public enum UploadTaskStatusEnum {
 
     /**
-     * 准备中
+     * 等待中
      */
-    PREPARATION(true),
+    WAITING(true),
 
     /**
      * 上传中
@@ -28,6 +28,11 @@ public enum UploadTaskStatusEnum {
      * 已完成
      */
     FINISHED(false),
+
+    /**
+     * 已失败
+     */
+    FAILED(false),
 
     /**
      * 已取消

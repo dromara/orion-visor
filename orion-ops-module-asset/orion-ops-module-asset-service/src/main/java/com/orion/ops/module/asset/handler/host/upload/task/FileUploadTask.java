@@ -68,7 +68,7 @@ public class FileUploadTask implements IFileUploadTask {
             return;
         }
         // 检查任务状态 非准备中则取消执行
-        if (!UploadTaskStatusEnum.PREPARATION.name().equals(record.getStatus())) {
+        if (!UploadTaskStatusEnum.WAITING.name().equals(record.getStatus())) {
             return;
         }
         try {

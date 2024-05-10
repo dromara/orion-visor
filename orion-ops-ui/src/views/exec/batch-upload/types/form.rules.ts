@@ -18,14 +18,8 @@ export const remotePath = [{
   message: '上传路径长度不能大于1024位'
 }] as FieldRule[];
 
-export const files = [{
-  required: true,
-  message: '请选择文件'
-}] as FieldRule[];
-
 export default {
   description,
   hostIdList,
   remotePath,
-  files,
 } as Record<string, FieldRule | FieldRule[]>;

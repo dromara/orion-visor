@@ -24,6 +24,11 @@ public enum FileUploadOperatorType {
      */
     FINISH("finish"),
 
+    /**
+     * 上传失败
+     */
+    ERROR("error"),
+
     ;
 
     private final String type;

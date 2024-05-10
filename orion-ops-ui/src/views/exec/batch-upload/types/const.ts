@@ -1,35 +1,48 @@
+// 上传任务状态定义
+export interface UploadTaskStatusType {
+  value: string,
+  step: number,
+  status: string,
+}
+
 // 上传任务状态
 export const UploadTaskStatus = {
-  // 准备中
-  PREPARATION: 'PREPARATION',
-  // 上传中
-  UPLOADING: 'UPLOADING',
-  // 已完成
-  FINISHED: 'FINISHED',
-  // 已取消
-  CANCELED: 'CANCELED',
-};
-
-// 上传步骤
-export const UploadStep = {
-  // 准备中
-  PREPARATION: 1,
+  // 等待中
+  WAITING: {
+    value: 'WAITING',
+    step: 1,
+    status: 'process',
+  },
   // 请求中
-  REQUESTING: 2,
-  // 分发中
-  UPLOADING: 3,
+  REQUESTING: {
+    value: 'REQUESTING',
+    step: 2,
+    status: 'process',
+  },
+  // 上传中
+  UPLOADING: {
+    value: 'UPLOADING',
+    step: 3,
+    status: 'process',
+  },
   // 已完成
-  FINISHED: 4,
-};
-
-// 上传步骤状态
-export const UploadStepStatus = {
-  // 处理中
-  PROCESS: 'process',
-  // 上传完成
-  FINISH: 'finish',
-  // 上传失败
-  ERROR: 'error',
+  FINISHED: {
+    value: 'FINISHED',
+    step: 4,
+    status: 'finish',
+  },
+  // 已失败
+  FAILED: {
+    value: 'FAILED',
+    step: 4,
+    status: 'error',
+  },
+  // 已取消
+  CANCELED: {
+    value: 'CANCELED',
+    step: 4,
+    status: 'error',
+  },
 };
 
 // 上传任务状态 字典项

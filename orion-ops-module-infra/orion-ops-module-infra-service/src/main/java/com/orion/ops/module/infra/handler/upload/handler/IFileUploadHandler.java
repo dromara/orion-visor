@@ -30,4 +30,9 @@ public interface IFileUploadHandler extends SafeCloseable {
      */
     void finish();
 
+    /**
+     * 上传失败
+     */
+    void error();
+
 }
