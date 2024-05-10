@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 上传任务 视图响应对象
@@ -29,5 +30,8 @@ public class UploadTaskCreateVO implements Serializable {
 
     @Schema(description = "上传 token")
     private String token;
+
+    @Schema(description = "主机")
+    private List<HostBaseVO> hosts;
 
 }

@@ -1,4 +1,5 @@
 import type { DataGrid, Pagination } from '@/types/global';
+import type { HostQueryResponse } from '@/api/asset/host';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 import qs from 'query-string';
@@ -28,6 +29,7 @@ export interface UploadTaskFileCreateRequest {
 export interface UploadTaskCreateResponse {
   id: number;
   token: string;
+  hosts: Array<HostQueryResponse>;
 }
 
 /**
@@ -108,6 +110,18 @@ export function getUploadTask(id: number) {
  */
 export function getUploadTaskPage(request: UploadTaskQueryRequest) {
   return axios.post<DataGrid<UploadTaskQueryResponse>>('/asset/upload-task/query', request);
+}
+
+/**
+ * 查询上传任务状态
+ */
+export function getUploadTaskStatus(idList: Array<number>, queryFiles: boolean) {
+  return axios.get<Array<UploadTaskQueryResponse>>('/asset/upload-task/status', {
+    params: { idList, queryFiles },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
 
 /**

@@ -40,10 +40,7 @@ import java.util.List;
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class UploadTaskController {
 
-    // todo create 返回 host, STATUS
-    // 修改状态元数据
-    // 上船前检查size, size不对则直接cancel
-    // cancel 需要设置子元素为 cancel
+    // TODO 测试空文件上传 0B  取消怎么那么慢 是不是删除也慢 异步cancel   cancel 需要设置子元素为 cancel
 
     @Resource
     private UploadTaskService uploadTaskService;
@@ -79,7 +76,7 @@ public class UploadTaskController {
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:upload-task:query')")
     public UploadTaskVO getUploadTask(@RequestParam("id") Long id) {
-        return uploadTaskService.getUploadTaskById(id);
+        return uploadTaskService.getUploadTask(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -88,6 +85,15 @@ public class UploadTaskController {
     @PreAuthorize("@ss.hasPermission('asset:upload-task:query')")
     public DataGrid<UploadTaskVO> getUploadTaskPage(@Validated(Page.class) @RequestBody UploadTaskQueryRequest request) {
         return uploadTaskService.getUploadTaskPage(request);
+    }
+
+    @IgnoreLog(IgnoreLogMode.ALL)
+    @GetMapping("/status")
+    @Operation(summary = "查询上传状态")
+    @Parameter(name = "id", description = "id", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:upload-task:query')")
+    public List<UploadTaskVO> getUploadTaskStatus(@RequestParam("idList") List<Long> idList, @RequestParam("queryFiles") Boolean queryFiles) {
+        return uploadTaskService.getUploadTaskStatus(idList, queryFiles);
     }
 
     @OperatorLog(UploadTaskOperatorType.DELETE)

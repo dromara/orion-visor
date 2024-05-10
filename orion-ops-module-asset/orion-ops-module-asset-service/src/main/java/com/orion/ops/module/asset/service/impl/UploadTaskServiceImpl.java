@@ -6,11 +6,13 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.ops.framework.common.constant.Const;
 import com.orion.ops.framework.common.constant.ErrorMessage;
 import com.orion.ops.framework.common.file.FileClient;
 import com.orion.ops.framework.common.security.LoginUser;
@@ -19,6 +21,7 @@ import com.orion.ops.framework.mybatis.core.query.Conditions;
 import com.orion.ops.framework.security.core.utils.SecurityUtils;
 import com.orion.ops.module.asset.convert.HostConvert;
 import com.orion.ops.module.asset.convert.UploadTaskConvert;
+import com.orion.ops.module.asset.convert.UploadTaskFileConvert;
 import com.orion.ops.module.asset.dao.HostDAO;
 import com.orion.ops.module.asset.dao.UploadTaskDAO;
 import com.orion.ops.module.asset.dao.UploadTaskFileDAO;
@@ -50,6 +53,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,8 +68,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class UploadTaskServiceImpl implements UploadTaskService {
-
-    // TODO 测试空文件上传 0B
 
     private static final String DEFAULT_DESC = "上传文件 {}";
 
@@ -145,48 +147,19 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         return UploadTaskCreateVO.builder()
                 .id(id)
                 .token(token)
+                .hosts(hosts)
                 .build();
     }
 
     @Override
-    public UploadTaskVO getUploadTaskById(Long id) {
+    public UploadTaskVO getUploadTask(Long id) {
         // 查询任务
         UploadTaskDO record = uploadTaskDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 查询任务文件
         List<UploadTaskFileVO> files = uploadTaskFileService.getFileByTaskId(id);
-        // 获取上传任务进度
-        IFileUploadTask task = fileUploadTaskManager.getTask(id);
-        Map<Long, FileUploadFileItemDTO> fileItemMap;
-        if (task == null) {
-            fileItemMap = Maps.empty();
-        } else {
-            fileItemMap = task.getUploaderList()
-                    .stream()
-                    .map(IFileUploader::getFiles)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toMap(FileUploadFileItemDTO::getId, Function.identity()));
-        }
-        // 设置进度
-        for (UploadTaskFileVO file : files) {
-            String status = file.getStatus();
-            if (UploadTaskFileStatusEnum.WAITING.name().equals(status)) {
-                file.setCurrent(0L);
-            } else if (UploadTaskFileStatusEnum.UPLOADING.name().equals(status)) {
-                // 上传中获取当前值
-                Long current = Optional.ofNullable(file.getId())
-                        .map(fileItemMap::get)
-                        .map(FileUploadFileItemDTO::getCurrent)
-                        .orElse(file.getFileSize());
-                file.setCurrent(current);
-            } else if (UploadTaskFileStatusEnum.FINISHED.name().equals(status)) {
-                file.setCurrent(file.getFileSize());
-            } else if (UploadTaskFileStatusEnum.FAILED.name().equals(status)) {
-                file.setCurrent(0L);
-            } else if (UploadTaskFileStatusEnum.CANCELED.name().equals(status)) {
-                file.setCurrent(0L);
-            }
-        }
+        // 计算传输进度
+        this.computeUploadProgress(id, files);
         // 返回
         UploadTaskVO uploadTask = UploadTaskConvert.MAPPER.to(record);
         uploadTask.setFiles(files);
@@ -201,6 +174,44 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         return uploadTaskDAO.of(wrapper)
                 .page(request)
                 .dataGrid(UploadTaskConvert.MAPPER::to);
+    }
+
+    @Override
+    public List<UploadTaskVO> getUploadTaskStatus(List<Long> idList, Boolean queryFiles) {
+        // 查询任务
+        List<UploadTaskVO> tasks = uploadTaskDAO.of()
+                .createWrapper()
+                .select(UploadTaskDO::getId, UploadTaskDO::getStatus,
+                        UploadTaskDO::getStartTime, UploadTaskDO::getEndTime)
+                .in(UploadTaskDO::getId, idList)
+                .then()
+                .list(UploadTaskConvert.MAPPER::to);
+        if (!Booleans.isTrue(queryFiles)) {
+            return tasks;
+        }
+        // 查询任务文件
+        Map<Long, List<UploadTaskFileVO>> filesMap = uploadTaskFileDAO.of()
+                .createWrapper()
+                .select(UploadTaskFileDO::getId, UploadTaskFileDO::getTaskId,
+                        UploadTaskFileDO::getHostId, UploadTaskFileDO::getStatus,
+                        UploadTaskFileDO::getStartTime, UploadTaskFileDO::getEndTime)
+                .in(UploadTaskFileDO::getTaskId, idList)
+                .then()
+                .stream()
+                .map(UploadTaskFileConvert.MAPPER::to)
+                .collect(Collectors.groupingBy(UploadTaskFileVO::getTaskId));
+        for (UploadTaskVO task : tasks) {
+            Long id = task.getId();
+            List<UploadTaskFileVO> files = filesMap.get(id);
+            if (files == null) {
+                files = Lists.empty();
+            } else {
+                // 计算进度
+                this.computeUploadProgress(id, files);
+            }
+            task.setFiles(files);
+        }
+        return tasks;
     }
 
     @Override
@@ -249,8 +260,10 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询任务
         UploadTaskDO record = uploadTaskDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.TASK_ABSENT);
-        // 检查状态
+        // 检查任务状态
         Valid.eq(record.getStatus(), UploadTaskStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
+        // 检查文件完整性
+        this.checkFileCompleteness(id);
         // 执行任务
         FileUploadTasks.start(id);
     }
@@ -277,6 +290,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
 
     @Override
     public void clearUploadSwapFiles(List<Long> idList) {
+        if (Lists.isEmpty(idList)) {
+            return;
+        }
         // 查询记录
         List<String> paths = idList.stream()
                 .map(s -> Strings.format(SWAP_ENDPOINT, s))
@@ -321,6 +337,33 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     }
 
     /**
+     * 检查文件完整性
+     *
+     * @param id id
+     */
+    private void checkFileCompleteness(Long id) {
+        List<Long> cancelIdList = new ArrayList<>();
+        // 查询任务文件
+        List<UploadTaskFileDO> files = uploadTaskFileDAO.selectByTaskId(id);
+        Map<String, List<UploadTaskFileDO>> fileIdGroups = files.stream()
+                .collect(Collectors.groupingBy(UploadTaskFileDO::getFileId));
+        fileIdGroups.forEach((k, v) -> {
+            // 获取文件实际路径
+            String path = localFileClient.getReturnPath(Strings.format(SWAP_ENDPOINT, id) + Const.SLASH + k);
+            File file = new File(localFileClient.getAbsolutePath(path));
+            // 文件不存在/大小不正确
+            if (!Files1.isFile(file) || file.length() != v.get(0).getFileSize()) {
+                cancelIdList.addAll(Lists.map(v, UploadTaskFileDO::getId));
+            }
+        });
+        if (cancelIdList.isEmpty()) {
+            return;
+        }
+        // 修改任务状态
+        uploadTaskFileDAO.updateStatusByIdList(cancelIdList, UploadTaskFileStatusEnum.CANCELED.name());
+    }
+
+    /**
      * 检查需要取消的任务
      *
      * @param records records
@@ -334,26 +377,79 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         if (cancelableRecords.isEmpty()) {
             return;
         }
-        // 更新状态的 id
+        // 更新状态任务
         List<Long> updateIdList = cancelableRecords.stream()
                 .map(UploadTaskDO::getId)
                 .filter(s -> fileUploadTaskManager.getTask(s) == null)
                 .collect(Collectors.toList());
-        // 取消上传
-        cancelableRecords.stream()
-                .map(UploadTaskDO::getId)
-                .map(fileUploadTaskManager::getTask)
-                .filter(Objects::nonNull)
-                .forEach(IFileUploadTask::cancel);
-        // 更新状态
         if (!updateIdList.isEmpty()) {
-            UploadTaskDO update = new UploadTaskDO();
-            update.setStatus(status.name());
-            update.setEndTime(new Date());
-            // 更新
-            uploadTaskDAO.update(update, Conditions.in(UploadTaskDO::getId, updateIdList));
+            // 更新任务状态
+            UploadTaskDO updateTask = new UploadTaskDO();
+            updateTask.setStatus(status.name());
+            updateTask.setEndTime(new Date());
+            uploadTaskDAO.update(updateTask, Conditions.in(UploadTaskDO::getId, updateIdList));
+            // 更新任务文件状态
+            UploadTaskFileDO uploadFile = new UploadTaskFileDO();
+            uploadFile.setStatus(UploadTaskFileStatusEnum.CANCELED.name());
+            uploadFile.setEndTime(new Date());
+            LambdaQueryWrapper<UploadTaskFileDO> updateFileQuery = uploadTaskFileDAO.wrapper()
+                    .in(UploadTaskFileDO::getId, updateIdList)
+                    .in(UploadTaskFileDO::getStatus,
+                            UploadTaskFileStatusEnum.WAITING.name(),
+                            UploadTaskFileStatusEnum.UPLOADING.name());
+            uploadTaskFileDAO.update(uploadFile, updateFileQuery);
+        }
+        // 异步处理
+        Threads.start(() -> {
             // 删除文件
             this.clearUploadSwapFiles(updateIdList);
+            // 取消上传
+            cancelableRecords.stream()
+                    .map(UploadTaskDO::getId)
+                    .map(fileUploadTaskManager::getTask)
+                    .filter(Objects::nonNull)
+                    .forEach(IFileUploadTask::cancel);
+        });
+    }
+
+    /**
+     * 计算传输进度
+     *
+     * @param id    id
+     * @param files files
+     */
+    private void computeUploadProgress(Long id, List<UploadTaskFileVO> files) {
+        // 获取上传任务进度
+        IFileUploadTask task = fileUploadTaskManager.getTask(id);
+        Map<Long, FileUploadFileItemDTO> fileItemMap;
+        if (task == null) {
+            fileItemMap = Maps.empty();
+        } else {
+            fileItemMap = task.getUploaderList()
+                    .stream()
+                    .map(IFileUploader::getFiles)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toMap(FileUploadFileItemDTO::getId, Function.identity()));
+        }
+        // 设置进度
+        for (UploadTaskFileVO file : files) {
+            String status = file.getStatus();
+            if (UploadTaskFileStatusEnum.WAITING.name().equals(status)) {
+                file.setCurrent(0L);
+            } else if (UploadTaskFileStatusEnum.UPLOADING.name().equals(status)) {
+                // 上传中获取当前值
+                Long current = Optional.ofNullable(file.getId())
+                        .map(fileItemMap::get)
+                        .map(FileUploadFileItemDTO::getCurrent)
+                        .orElse(file.getFileSize());
+                file.setCurrent(current);
+            } else if (UploadTaskFileStatusEnum.FINISHED.name().equals(status)) {
+                file.setCurrent(file.getFileSize());
+            } else if (UploadTaskFileStatusEnum.FAILED.name().equals(status)) {
+                file.setCurrent(0L);
+            } else if (UploadTaskFileStatusEnum.CANCELED.name().equals(status)) {
+                file.setCurrent(0L);
+            }
         }
     }
 

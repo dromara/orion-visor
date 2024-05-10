@@ -34,7 +34,7 @@ public interface UploadTaskService {
      * @param id id
      * @return row
      */
-    UploadTaskVO getUploadTaskById(Long id);
+    UploadTaskVO getUploadTask(Long id);
 
     /**
      * 分页查询上传任务
@@ -43,6 +43,15 @@ public interface UploadTaskService {
      * @return rows
      */
     DataGrid<UploadTaskVO> getUploadTaskPage(UploadTaskQueryRequest request);
+
+    /**
+     * 获取上传任务状态
+     *
+     * @param idList     idList
+     * @param queryFiles queryFiles
+     * @return rows
+     */
+    List<UploadTaskVO> getUploadTaskStatus(List<Long> idList, Boolean queryFiles);
 
     /**
      * 获取上传任务数量

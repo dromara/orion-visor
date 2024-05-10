@@ -127,7 +127,7 @@ public class FileUploadTask implements IFileUploadTask {
      */
     private void createFileUploader() {
         // 查询文件
-        List<UploadTaskFileDO> uploadFiles = uploadTaskFileDAO.selectByTaskId(id);
+        List<UploadTaskFileDO> uploadFiles = uploadTaskFileDAO.selectByTaskId(id, UploadTaskFileStatusEnum.WAITING.name());
         Map<Long, List<UploadTaskFileDO>> hostFileGroup = uploadFiles.stream()
                 .collect(Collectors.groupingBy(UploadTaskFileDO::getHostId));
         hostFileGroup.forEach((k, v) -> {

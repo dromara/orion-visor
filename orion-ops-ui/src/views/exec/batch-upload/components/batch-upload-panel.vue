@@ -58,8 +58,9 @@
   const filesRef = ref();
   const hostModal = ref<any>();
 
-  // TODO pullstatus
-  // TODO 测试 error 情况
+  // TODO pullstatus 按钮显示就可以去掉了吧
+  // host tab
+  // status tab
 
   // 设置选中主机
   const setSelectedHost = (hosts: Array<number>) => {
@@ -147,6 +148,7 @@
   const clear = () => {
     status.value = UploadTaskStatus.WAITING;
     formModel.value = { ...defaultForm() };
+    filesRef.value?.close();
   };
 
 </script>

@@ -29,6 +29,20 @@ public interface UploadTaskFileDAO extends IMapper<UploadTaskFileDO> {
     }
 
     /**
+     * 通过 taskId 查询
+     *
+     * @param taskId taskId
+     * @return files
+     */
+    default List<UploadTaskFileDO> selectByTaskId(Long taskId, String status) {
+        // 条件
+        LambdaQueryWrapper<UploadTaskFileDO> wrapper = this.wrapper()
+                .eq(UploadTaskFileDO::getTaskId, taskId)
+                .eq(UploadTaskFileDO::getStatus, status);
+        return this.selectList(wrapper);
+    }
+
+    /**
      * 通过 taskId hostId 更新状态
      *
      * @param taskId taskId

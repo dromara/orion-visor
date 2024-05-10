@@ -74,7 +74,7 @@
   import type { FileItem } from '@arco-design/web-vue';
   import type { UploadTaskFileCreateRequest } from '@/api/exec/upload-task';
   import type { IFileUploader } from '@/components/system/uploader/const';
-  import { ref } from 'vue';
+  import { onUnmounted, ref } from 'vue';
   import { getFileSize } from '@/utils/file';
   import FileUploader from '@/components/system/uploader/file-uploader';
 
@@ -126,6 +126,11 @@
   };
 
   defineExpose({ getFiles, startUpload, close });
+
+  // 卸载时关闭
+  onUnmounted(() => {
+    uploader.value?.close();
+  });
 
 </script>
 
