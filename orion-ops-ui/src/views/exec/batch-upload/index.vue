@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container upload-container">
     <!-- 上传面板 -->
-    <batch-upload-panel />
+    <upload-panel />
   </div>
 </template>
 
@@ -15,7 +15,7 @@
   import { onMounted } from 'vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
-  import BatchUploadPanel from './components/batch-upload-panel.vue';
+  import UploadPanel from './components/upload-panel.vue';
 
   // 加载字典值
   onMounted(async () => {

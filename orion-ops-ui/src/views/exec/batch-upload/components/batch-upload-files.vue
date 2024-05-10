@@ -4,10 +4,10 @@
     <div class="panel-header">
       <h3>文件列表</h3>
       <!-- 操作 -->
-      <a-button-group size="small" :disabled="startStatus">
+      <a-button-group size="mini" :disabled="startStatus">
         <a-button @click="clear">清空</a-button>
         <!-- 选择文件 -->
-        <a-upload v-model:file-list="fileList"
+        <a-upload v-model:file-list="files"
                   :auto-upload="false"
                   :show-file-list="false"
                   :multiple="true">
@@ -16,7 +16,7 @@
           </template>
         </a-upload>
         <!-- 选择文件夹 -->
-        <a-upload v-model:file-list="fileList"
+        <a-upload v-model:file-list="files"
                   :auto-upload="false"
                   :show-file-list="false"
                   :directory="true">
@@ -27,34 +27,36 @@
       </a-button-group>
     </div>
     <!-- 文件列表 -->
-    <div v-if="fileList.length" class="files-container">
-      <a-upload class="files-wrapper"
-                :class="[ startStatus ? 'uploading-files-wrapper' : 'waiting-files-wrapper' ]"
-                v-model:file-list="fileList"
-                :auto-upload="false"
-                :show-cancel-button="false"
-                :show-retry-button="false"
-                :show-remove-button="!startStatus"
-                :show-file-list="true">
-        <template #upload-button />
-        <template #file-name="{ fileItem }">
-          <div class="file-name-wrapper">
-            <!-- 文件名称 -->
-            <a-tooltip position="left"
-                       :mini="true"
-                       :content="fileItem.file.webkitRelativePath || fileItem.file.name">
+    <div v-if="files.length" class="files-container">
+      <a-scrollbar style="overflow-y: auto; height: 100%;">
+        <a-upload class="files-wrapper"
+                  :class="[ startStatus ? 'uploading-files-wrapper' : 'waiting-files-wrapper' ]"
+                  v-model:file-list="files"
+                  :auto-upload="false"
+                  :show-cancel-button="false"
+                  :show-retry-button="false"
+                  :show-remove-button="!startStatus"
+                  :show-file-list="true">
+          <template #upload-button />
+          <template #file-name="{ fileItem }">
+            <div class="file-name-wrapper">
               <!-- 文件名称 -->
-              <span class="file-name text-ellipsis">
+              <a-tooltip position="left"
+                         :mini="true"
+                         :content="fileItem.file.webkitRelativePath || fileItem.file.name">
+                <!-- 文件名称 -->
+                <span class="file-name text-ellipsis">
                 {{ fileItem.file.webkitRelativePath || fileItem.file.name }}
               </span>
-            </a-tooltip>
-            <!-- 文件大小 -->
-            <span class="file-size span-blue">
+              </a-tooltip>
+              <!-- 文件大小 -->
+              <span class="file-size span-blue">
               {{ getFileSize(fileItem.file.size) }}
             </span>
-          </div>
-        </template>
-      </a-upload>
+            </div>
+          </template>
+        </a-upload>
+      </a-scrollbar>
     </div>
     <!-- 未选择文件 -->
     <a-result v-else
@@ -72,38 +74,35 @@
 
 <script lang="ts" setup>
   import type { FileItem } from '@arco-design/web-vue';
-  import type { UploadTaskFileCreateRequest } from '@/api/exec/upload-task';
   import type { IFileUploader } from '@/components/system/uploader/const';
-  import { onUnmounted, ref } from 'vue';
+  import { computed, onUnmounted, ref } from 'vue';
   import { getFileSize } from '@/utils/file';
   import FileUploader from '@/components/system/uploader/file-uploader';
 
-  const emits = defineEmits(['end', 'error']);
+  const emits = defineEmits(['update:fileList', 'end', 'error', 'clearFile']);
+  const props = defineProps<{
+    fileList: Array<FileItem>;
+  }>();
 
   const startStatus = ref(false);
-  const fileList = ref<FileItem[]>([]);
   const uploader = ref<IFileUploader>();
-
-  // 获取上传的文件
-  const getFiles = (): Array<UploadTaskFileCreateRequest> => {
-    return fileList.value
-      .map(s => {
-        return {
-          fileId: s.uid,
-          filePath: s.file?.webkitRelativePath || s.file?.name,
-          fileSize: s.file?.size,
-        };
-      });
-  };
+  const files = computed<Array<FileItem>>({
+    get() {
+      return props.fileList;
+    },
+    set(e) {
+      emits('update:fileList', e);
+    }
+  });
 
   // 开始上传
   const startUpload = async (token: string) => {
     // 修改状态
     startStatus.value = true;
-    fileList.value.forEach(s => s.status = 'uploading');
+    props.fileList.forEach(s => s.status = 'uploading');
     // 开始上传
     try {
-      uploader.value = new FileUploader(token, fileList.value);
+      uploader.value = new FileUploader(token, props.fileList);
       uploader.value?.setHook(() => {
         emits('end');
       });
@@ -115,8 +114,8 @@
 
   // 清空
   const clear = () => {
-    fileList.value = [];
     startStatus.value = false;
+    emits('clearFile');
   };
 
   // 关闭
@@ -125,7 +124,7 @@
     uploader.value?.close();
   };
 
-  defineExpose({ getFiles, startUpload, close });
+  defineExpose({ startUpload, close });
 
   // 卸载时关闭
   onUnmounted(() => {
@@ -171,7 +170,6 @@
     :deep(.arco-upload-wrapper) {
       position: absolute;
       height: 100%;
-      overflow-y: auto;
     }
 
     :deep(.arco-upload) {
@@ -181,8 +179,6 @@
     :deep(.arco-upload-list) {
       padding: 0;
       max-height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
     }
 
     :deep(.arco-upload-list-item-error) {
@@ -220,6 +216,12 @@
       width: @file-size-width;
       text-align: end;
     }
+  }
+
+  :deep(.arco-scrollbar) {
+    position: absolute;
+    height: 100%;
+    width: 100%;
   }
 
 </style>

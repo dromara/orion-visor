@@ -141,6 +141,9 @@ public class FileUploadTask implements IFileUploadTask {
                             .current(0L)
                             .build())
                     .collect(Collectors.toList());
+            if (files.isEmpty()) {
+                return;
+            }
             // 添加到上传器
             uploaderList.add(new FileUploader(id, k, files));
         });
@@ -150,6 +153,10 @@ public class FileUploadTask implements IFileUploadTask {
      * 执行上传
      */
     private void runUpload() throws Exception {
+        if (uploaderList.isEmpty()) {
+            return;
+        }
+        // 执行
         if (uploaderList.size() == 1) {
             // 单个主机直接执行
             IFileUploader handler = uploaderList.get(0);

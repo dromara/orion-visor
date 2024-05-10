@@ -1,5 +1,4 @@
 import type { DataGrid, Pagination } from '@/types/global';
-import type { HostQueryResponse } from '@/api/asset/host';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 import qs from 'query-string';
@@ -29,7 +28,6 @@ export interface UploadTaskFileCreateRequest {
 export interface UploadTaskCreateResponse {
   id: number;
   token: string;
-  hosts: Array<HostQueryResponse>;
 }
 
 /**
@@ -58,13 +56,24 @@ export interface UploadTaskQueryResponse extends TableData {
   startTime: number;
   endTime: number;
   createTime: number;
-  files: Array<UploadTaskFileQueryResponse>;
+  hosts: Array<UploadTaskHost>;
 }
 
 /**
- * 上传任务文件查询响应
+ * 上传任务主机响应
  */
-export interface UploadTaskFileQueryResponse {
+export interface UploadTaskHost {
+  id: number;
+  code: string;
+  name: string;
+  address: string;
+  files: Array<UploadTaskFile>;
+}
+
+/**
+ * 上传任务文件响应
+ */
+export interface UploadTaskFile {
   id: number;
   taskId: number;
   hostId: number;

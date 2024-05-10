@@ -43,6 +43,9 @@ public class UploadTaskFileVO implements Serializable {
     @Schema(description = "文件大小")
     private Long fileSize;
 
+    @Schema(description = "额外信息")
+    private String extraInfo;
+
     @Schema(description = "状态")
     private String status;
 

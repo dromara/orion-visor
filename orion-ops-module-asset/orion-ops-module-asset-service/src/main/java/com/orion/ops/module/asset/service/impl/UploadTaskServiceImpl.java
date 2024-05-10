@@ -32,10 +32,7 @@ import com.orion.ops.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskFileRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.ops.module.asset.entity.request.upload.UploadTaskRequest;
-import com.orion.ops.module.asset.entity.vo.HostBaseVO;
-import com.orion.ops.module.asset.entity.vo.UploadTaskCreateVO;
-import com.orion.ops.module.asset.entity.vo.UploadTaskFileVO;
-import com.orion.ops.module.asset.entity.vo.UploadTaskVO;
+import com.orion.ops.module.asset.entity.vo.*;
 import com.orion.ops.module.asset.enums.HostConfigTypeEnum;
 import com.orion.ops.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.ops.module.asset.enums.UploadTaskStatusEnum;
@@ -147,7 +144,6 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         return UploadTaskCreateVO.builder()
                 .id(id)
                 .token(token)
-                .hosts(hosts)
                 .build();
     }
 
@@ -158,11 +154,12 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 查询任务文件
         List<UploadTaskFileVO> files = uploadTaskFileService.getFileByTaskId(id);
-        // 计算传输进度
-        this.computeUploadProgress(id, files);
         // 返回
         UploadTaskVO uploadTask = UploadTaskConvert.MAPPER.to(record);
-        uploadTask.setFiles(files);
+        // 计算传输进度
+        this.computeUploadProgress(id, files);
+        // 设置任务文件
+        this.setTaskFiles(uploadTask, files);
         return uploadTask;
     }
 
@@ -208,8 +205,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
             } else {
                 // 计算进度
                 this.computeUploadProgress(id, files);
+                // 设置任务文件
             }
-            task.setFiles(files);
+            this.setTaskFiles(task, files);
         }
         return tasks;
     }
@@ -299,8 +297,6 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                 .map(localFileClient::getReturnPath)
                 .map(localFileClient::getAbsolutePath)
                 .collect(Collectors.toList());
-        // TODO test
-        paths.forEach(System.out::println);
         // 删除文件
         paths.forEach(Files1::delete);
     }
@@ -393,7 +389,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
             uploadFile.setStatus(UploadTaskFileStatusEnum.CANCELED.name());
             uploadFile.setEndTime(new Date());
             LambdaQueryWrapper<UploadTaskFileDO> updateFileQuery = uploadTaskFileDAO.wrapper()
-                    .in(UploadTaskFileDO::getId, updateIdList)
+                    .in(UploadTaskFileDO::getTaskId, updateIdList)
                     .in(UploadTaskFileDO::getStatus,
                             UploadTaskFileStatusEnum.WAITING.name(),
                             UploadTaskFileStatusEnum.UPLOADING.name());
@@ -446,11 +442,34 @@ public class UploadTaskServiceImpl implements UploadTaskService {
             } else if (UploadTaskFileStatusEnum.FINISHED.name().equals(status)) {
                 file.setCurrent(file.getFileSize());
             } else if (UploadTaskFileStatusEnum.FAILED.name().equals(status)) {
-                file.setCurrent(0L);
+                file.setCurrent(file.getFileSize());
             } else if (UploadTaskFileStatusEnum.CANCELED.name().equals(status)) {
-                file.setCurrent(0L);
+                file.setCurrent(file.getFileSize());
             }
         }
+    }
+
+    /**
+     * 设置任务文件
+     *
+     * @param task  task
+     * @param files files
+     */
+    private void setTaskFiles(UploadTaskVO task, List<UploadTaskFileVO> files) {
+        Map<Long, List<UploadTaskFileVO>> hostFiles = files.stream()
+                .collect(Collectors.groupingBy(UploadTaskFileVO::getHostId));
+        List<UploadTaskHostVO> hosts = JSON.parseObject(task.getExtraInfo(), UploadTaskExtraDTO.class)
+                .getHosts()
+                .stream()
+                .map(s -> UploadTaskHostVO.builder()
+                        .id(s.getId())
+                        .code(s.getCode())
+                        .name(s.getName())
+                        .address(s.getAddress())
+                        .files(hostFiles.get(s.getId()))
+                        .build())
+                .collect(Collectors.toList());
+        task.setHosts(hosts);
     }
 
 }

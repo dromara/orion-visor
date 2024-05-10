@@ -56,7 +56,7 @@ public class UploadTaskVO implements Serializable {
     @Schema(description = "创建时间")
     private Date createTime;
 
-    @Schema(description = "上传文件")
-    private List<UploadTaskFileVO> files;
+    @Schema(description = "上传主机及文件")
+    private List<UploadTaskHostVO> hosts;
 
 }

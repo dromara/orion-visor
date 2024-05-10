@@ -141,7 +141,6 @@ public class FileUploader implements IFileUploader {
             int read;
             while ((read = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, read);
-                // todo test
                 file.setCurrent(file.getCurrent() + read);
             }
             outputStream.flush();

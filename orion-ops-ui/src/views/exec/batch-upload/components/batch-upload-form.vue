@@ -4,21 +4,21 @@
     <div class="panel-header">
       <h3>批量上传</h3>
       <!-- 操作 -->
-      <a-button-group size="small">
+      <a-button-group size="mini">
         <!-- 重置 -->
-        <a-button v-if="status.value !== UploadTaskStatus.REQUESTING.value"
+        <a-button v-if="status.value === UploadTaskStatus.WAITING.value"
                   @click="emits('clear')">
           重置
         </a-button>
         <!-- 取消上传 -->
-        <a-button v-if="status.value === UploadTaskStatus.REQUESTING.value
-                  || status.value === UploadTaskStatus.UPLOADING.value"
-                  @click="emits('cancel')">
+        <a-button v-if="status.value === UploadTaskStatus.REQUESTING.value"
+                  type="primary"
+                  status="warning"
+                  @click="emits('abort')">
           取消上传
         </a-button>
         <!-- 开始上传 -->
-        <a-button v-if="status.value !== UploadTaskStatus.REQUESTING.value
-                  && status.value !== UploadTaskStatus.UPLOADING.value"
+        <a-button v-if="status.value === UploadTaskStatus.WAITING.value"
                   type="primary"
                   @click="submit">
           开始上传
@@ -73,7 +73,7 @@
   import formRules from '../types/form.rules';
   import { UploadTaskStatus } from '../types/const';
 
-  const emits = defineEmits(['upload', 'openHost', 'cancel', 'clear']);
+  const emits = defineEmits(['upload', 'openHost', 'abort', 'clear']);
   const props = defineProps<{
     status: UploadTaskStatusType;
     formModel: UploadTaskCreateRequest;

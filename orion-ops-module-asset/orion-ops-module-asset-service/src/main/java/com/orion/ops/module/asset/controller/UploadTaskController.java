@@ -40,7 +40,7 @@ import java.util.List;
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class UploadTaskController {
 
-    // TODO 测试空文件上传 0B  取消怎么那么慢 是不是删除也慢 异步cancel   cancel 需要设置子元素为 cancel
+    // TODO 前端日志 测试删除慢吗
 
     @Resource
     private UploadTaskService uploadTaskService;
