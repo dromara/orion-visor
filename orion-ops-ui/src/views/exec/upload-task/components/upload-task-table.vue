@@ -140,7 +140,7 @@
           <a-button v-permission="['asset:upload-task:query']"
                     type="text"
                     size="mini"
-                    @click="emits('openDetail', record.id)">
+                    @click="$router.push({ name: 'batchUpload', query: { id: record.id } })">
             详情
           </a-button>
           <!-- 取消 -->
@@ -192,7 +192,7 @@
   import { copy } from '@/hooks/copy';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
-  const emits = defineEmits(['openClear', 'openDetail']);
+  const emits = defineEmits(['openClear']);
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();

@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container upload-container">
     <!-- 上传面板 -->
-    <upload-panel />
+    <upload-panel ref="panel" />
   </div>
 </template>
 
@@ -12,15 +12,27 @@
 </script>
 
 <script lang="ts" setup>
-  import { onMounted } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import { useRoute } from 'vue-router';
   import UploadPanel from './components/upload-panel.vue';
+
+  const route = useRoute();
+
+  const panel = ref();
 
   // 加载字典值
   onMounted(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
+  });
+
+  onMounted(async () => {
+    const idParam = route.query.id;
+    if (idParam) {
+      await panel.value?.openLog(Number.parseInt(idParam as string));
+    }
   });
 
 </script>

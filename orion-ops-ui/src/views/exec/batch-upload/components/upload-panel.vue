@@ -86,6 +86,33 @@
   const filesRef = ref();
   const hostModal = ref();
 
+  // 打开日志
+  const openLog = async (id: number) => {
+    setLoading(true);
+    taskId.value = id;
+    taskStatus.value = UploadTaskStepStatus.WAITING;
+    try {
+      // 查询任务
+      const { data } = await getUploadTask(id);
+      task.value = data;
+      selectedHost.value = data.hosts[0].id;
+      // 设置任务状态
+      if (data.status === UploadTaskStatus.FINISHED
+        || data.status === UploadTaskStatus.CANCELED) {
+        taskStatus.value = UploadTaskStepStatus.FINISHED;
+      } else if (data.status === UploadTaskStatus.FAILED) {
+        taskStatus.value = UploadTaskStepStatus.FAILED;
+      } else {
+        taskStatus.value = UploadTaskStepStatus.UPLOADING;
+      }
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  defineExpose({ openLog });
+
   // 设置选中主机
   const setSelectedHost = (hosts: Array<number>) => {
     formModel.value.hostIdList = hosts;
@@ -196,9 +223,8 @@
     }
     const taskStatusData = data[0];
     // 设置任务状态
-    if (taskStatusData.status === UploadTaskStatus.FINISHED) {
-      taskStatus.value = UploadTaskStepStatus.FINISHED;
-    } else if (taskStatusData.status === UploadTaskStatus.CANCELED) {
+    if (taskStatusData.status === UploadTaskStatus.FINISHED
+      || taskStatusData.status === UploadTaskStatus.CANCELED) {
       taskStatus.value = UploadTaskStepStatus.FINISHED;
     } else if (taskStatusData.status === UploadTaskStatus.FAILED) {
       taskStatus.value = UploadTaskStepStatus.FAILED;

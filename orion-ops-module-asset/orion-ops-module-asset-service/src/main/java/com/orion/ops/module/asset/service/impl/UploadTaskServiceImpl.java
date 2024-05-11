@@ -467,7 +467,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                         .code(s.getCode())
                         .name(s.getName())
                         .address(s.getAddress())
-                        .files(hostFiles.get(s.getId()))
+                        .files(hostFiles.getOrDefault(s.getId(), Lists.empty()))
                         .build())
                 .collect(Collectors.toList());
         task.setHosts(hosts);

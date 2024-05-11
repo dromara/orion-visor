@@ -2,8 +2,7 @@
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <upload-task-table ref="table"
-                       @open-clear="(e) => clear.open(e)"
-                       @open-detail="(e) => detail.open(e)" />
+                       @open-clear="(e) => clear.open(e)" />
     <!-- 清理模态框 -->
     <upload-task-clear-modal ref="clear"
                              @clear="clearCallback" />
@@ -25,7 +24,6 @@
 
   const render = ref(false);
   const table = ref();
-  const detail = ref();
   const clear = ref();
 
   // 清理回调
