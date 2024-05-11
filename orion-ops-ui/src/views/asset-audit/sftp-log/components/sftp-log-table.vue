@@ -49,7 +49,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          SFTP 操作日志
+          文件操作日志
         </div>
       </div>
       <!-- 右侧操作 -->

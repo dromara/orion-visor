@@ -42,7 +42,7 @@
       <a-form-item field="remotePath"
                    style="margin-bottom: 4px;"
                    label="上传路径"
-                   help="${username} 用户名 ${home} 家目录">
+                   help="${username} 用户名 ${home} 用户家目录">
         <a-input v-model="formModel.remotePath"
                  placeholder="请输入上传路径"
                  allow-clear />
