@@ -84,10 +84,15 @@
 ![执行日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/06d02d38-70ef-43c2-950c-9f8c73a105ba.png "执行日志")
 ![执行记录](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0e474cc2-f7cf-49bc-be3c-f6445783ad7c.png "执行记录")
 
+> 批量上传
+
+![批量上传任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/12/1e9d0c74-4ef7-4322-ae17-42085b7ba552.png "批量上传任务")
+![批量上传中](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/12/a94a6d96-0969-4205-91fb-4c6f8cf092a8.png "批量上传中")
+
 > 计划任务
 
-![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
 ![计划任务编辑](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/20/b6ba7ec0-011f-48ff-a36e-c8d93bd1f75c.png "计划任务编辑")
+![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
 
 > 用户管理
 

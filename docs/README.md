@@ -84,10 +84,15 @@
 ![执行日志](./assert/img/batch_exec_log.png "执行日志")
 ![执行记录](./assert/img/batch_exec_record.png "执行记录")
 
+> 批量上传
+
+![批量上传任务](./assert/img/batch_upload_form.png "批量上传任务")
+![批量上传中](./assert/img/batch_upload_uploading.png "批量上传中")
+
 > 计划任务
 
-![计划任务](./assert/img/exec_job.png "计划任务")
 ![计划任务编辑](./assert/img/exec_job_edit.png "计划任务编辑")
+![计划任务](./assert/img/exec_job.png "计划任务")
 
 > 用户管理
 
