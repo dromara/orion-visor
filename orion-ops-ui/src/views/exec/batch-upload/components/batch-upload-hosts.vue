@@ -36,27 +36,21 @@
             </div>
           </div>
           <!-- 主机状态 -->
-          <a-space class="host-item-status" direction="vertical">
-            <!-- 未完成 -->
-            <a-tag class="host-item-status-tag"
-                   color="#73D13D"
-                   title="未完成数量"
-                   size="small">
-              {{ host.files.length - getFinishCount(host.files) }}
-              <template #icon>
-                <icon-clock-circle class="host-item-status-icon" />
-              </template>
-            </a-tag>
+          <a-space class="host-item-status"
+                   direction="vertical"
+                   size="mini">
+            <!-- 传输中 -->
+            <span class="host-item-status-text span-green" title="传输中">
+              {{ getStatusCount(host.files, [UploadTaskFileStatus.WAITING, UploadTaskFileStatus.UPLOADING]) }}
+            </span>
             <!-- 已完成 -->
-            <a-tag class="host-item-status-tag"
-                   color="#40A9FF"
-                   title="已完成数量"
-                   size="small">
-              {{ getFinishCount(host.files) }}
-              <template #icon>
-                <icon-check-circle class="host-item-status-icon" />
-              </template>
-            </a-tag>
+            <span class="host-item-status-text span-blue" title="已完成">
+              {{ getStatusCount(host.files, [UploadTaskFileStatus.FINISHED, UploadTaskFileStatus.CANCELED]) }}
+            </span>
+            <!-- 已失败 -->
+            <span class="host-item-status-text span-red" title="已失败">
+              {{ getStatusCount(host.files, [UploadTaskFileStatus.FAILED]) }}
+            </span>
           </a-space>
         </div>
       </a-scrollbar>
@@ -90,10 +84,8 @@
   };
 
   // 获取已完成数量
-  const getFinishCount = (files: Array<UploadTaskFile>) => {
-    return files.filter(s => s.status === UploadTaskFileStatus.FINISHED
-      || s.status === UploadTaskFileStatus.CANCELED
-      || s.status === UploadTaskFileStatus.FAILED).length;
+  const getStatusCount = (files: Array<UploadTaskFile>, status: Array<string>) => {
+    return files.filter(s => status.includes(s.status)).length;
   };
 
 </script>
@@ -124,7 +116,7 @@
       }
 
       &-host {
-        width: calc(100% - 64px);
+        width: calc(100% - 48px);
         display: flex;
         align-items: flex-start;
         flex-direction: column;
@@ -134,13 +126,12 @@
       &-status {
         user-select: none;
 
-        &-tag {
-          max-width: 64px;
+        &-text {
           width: 100%;
-        }
-
-        &-icon {
-          color: #FFFFFF;
+          max-width: 48px;
+          display: inline-flex;
+          justify-content: flex-end;
+          font-weight: 600;
         }
       }
 
