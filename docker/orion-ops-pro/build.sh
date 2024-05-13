@@ -1,5 +1,5 @@
 #/bin/bash
-version=1.0.7
+version=1.0.8
 mv ../../orion-ops-launch/target/orion-ops-launch.jar ./orion-ops-launch.jar
 mv ../../orion-ops-ui/dist ./dist
 docker build -t orion-ops-pro:${version} .
