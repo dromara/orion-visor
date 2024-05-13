@@ -19,9 +19,7 @@ services:
       - orion-ops-pro-db
       - orion-ops-pro-redis
   orion-ops-pro-db:
-    build:
-      context: .
-      dockerfile: docker/mysql/Dockerfile
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro-mysql:1.0.7
     privileged: true
     ports:
       - 3307:3306
