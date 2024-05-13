@@ -53,21 +53,21 @@
                    placeholder="菜单权限 infra:system-menu:query"
                    allow-clear />
         </a-form-item>
-        <!-- 外链地址 -->
-        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
-                     field="path"
-                     label="外链地址"
-                     tooltip="输入组件名称后则不会生效">
-          <a-input v-model="formModel.path"
-                   placeholder="外链地址与组件名称二选一"
-                   allow-clear />
-        </a-form-item>
         <!-- 组件名称 -->
         <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
                      field="component"
                      label="组件名称">
           <a-input v-model="formModel.component"
                    placeholder="路由组件名称"
+                   allow-clear />
+        </a-form-item>
+        <!-- 外链地址 -->
+        <a-form-item v-if="formModel.type !== MenuType.FUNCTION"
+                     field="path"
+                     label="外链地址"
+                     tooltip="输入组件名称后则不会生效">
+          <a-input v-model="formModel.path"
+                   placeholder="组件名称与外链地址二选一"
                    allow-clear />
         </a-form-item>
         <!-- 菜单排序 -->
@@ -212,6 +212,7 @@
       if (error) {
         return false;
       }
+      // 验证父菜单
       if (formModel.value.parentId === 0
         && (formModel.value.type === MenuType.SUB_MENU || formModel.value.type === MenuType.FUNCTION)) {
         formRef.value.setFields({
@@ -222,6 +223,19 @@
         });
         return false;
       }
+      // 验证组件名称
+      if ((formModel.value.type === MenuType.PARENT_MENU || formModel.value.type === MenuType.SUB_MENU)
+        && !formModel.value.component
+        && !formModel.value.path) {
+        formRef.value.setFields({
+          component: {
+            status: 'error',
+            message: '组件名称与外链地址二选一'
+          }
+        });
+        return false;
+      }
+
       if (isAddHandle.value) {
         // 新增
         await createMenu(formModel.value);

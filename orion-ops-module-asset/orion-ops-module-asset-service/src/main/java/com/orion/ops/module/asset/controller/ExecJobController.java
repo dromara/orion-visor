@@ -1,7 +1,6 @@
 package com.orion.ops.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
@@ -103,9 +102,9 @@ public class ExecJobController {
     @PostMapping("/trigger")
     @Operation(summary = "手动触发计划任务")
     @PreAuthorize("@ss.hasPermission('asset:exec-job:trigger')")
-    public HttpWrapper<?> triggerExecJob(@Validated @RequestBody ExecJobTriggerRequest request) {
+    public Boolean triggerExecJob(@Validated @RequestBody ExecJobTriggerRequest request) {
         execJobService.manualTriggerExecJob(request.getId());
-        return HttpWrapper.ok();
+        return true;
     }
 
 }

@@ -167,14 +167,13 @@
 
 <script lang="ts" setup>
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
-  import type { ILogAppender } from './appender-const';
-  import type { ExecType } from '../const';
+  import type { ExecType, ILogAppender } from '../const';
   import { ref } from 'vue';
   import { execHostStatus, execHostStatusKey } from '../const';
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
   import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';
-  import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';
+  import { downloadExecJobLogFile } from '@/api/job/exec-job-log';
   import { downloadFile } from '@/utils/file';
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
   import 'xterm/css/xterm.css';
@@ -241,7 +240,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--color-bg-1);
+    background: var(--color-bg-2);
     color: var(--color-text-1);
     user-select: none;
 
@@ -264,7 +263,7 @@
     width: 100%;
     height: calc(100% - @header-height);
     position: relative;
-    background: #202020;
+    background: #1C1C1C;
     padding: 4px 0 4px 4px;
 
     .log-appender {

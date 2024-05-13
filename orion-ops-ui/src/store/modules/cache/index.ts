@@ -13,7 +13,7 @@ import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
-import { getExecJobList } from '@/api/exec/exec-job';
+import { getExecJobList } from '@/api/job/exec-job';
 import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
 
 export type CacheType = 'users' | 'menus' | 'roles'

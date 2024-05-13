@@ -154,7 +154,7 @@
                         position="left"
                         type="warning"
                         @ok="forceOffline(record)">
-            <a-button v-permission="['asset:host-connect-log:management:force-offline']"
+            <a-button v-permission="['asset:host-connect-log:management:force-offline', 'asset:host-connect-session:management:force-offline']"
                       type="text"
                       size="mini"
                       status="danger">

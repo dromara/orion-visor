@@ -62,10 +62,6 @@
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)"
              :bordered="false">
-      <!-- 模板名称 -->
-      <template #name="{ record }">
-        <span class="span-blue">{{ record.name }}</span>
-      </template>
       <!-- 模板命令 -->
       <template #command="{ record }">
         <span class="copy-left" @click="copy(record.command, '已复制')">

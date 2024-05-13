@@ -22,8 +22,8 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
         String defaultDisplaySetting = TerminalPreferenceModel.DisplaySettingModel
                 .builder()
                 .fontFamily("_")
-                .fontSize(14)
-                .lineHeight(1.00)
+                .fontSize(13)
+                .lineHeight(1.12)
                 .fontWeight("normal")
                 .fontWeightBold("bold")
                 .cursorStyle("bar")

@@ -12,8 +12,8 @@ import com.orion.ops.framework.common.security.PasswordModifier;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.asset.dao.HostIdentityDAO;
 import com.orion.ops.module.asset.dao.HostKeyDAO;
-import com.orion.ops.module.asset.enums.HostSshOsTypeEnum;
 import com.orion.ops.module.asset.enums.HostSshAuthTypeEnum;
+import com.orion.ops.module.asset.enums.HostSshOsTypeEnum;
 import com.orion.ops.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.springframework.stereotype.Component;
 

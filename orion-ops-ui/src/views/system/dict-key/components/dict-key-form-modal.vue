@@ -64,7 +64,7 @@
           <!-- 快捷定义 -->
           <a-tag v-for="definedExtraKey in definedExtraKeys"
                  color="arcoblue"
-                 :title="`添加参数 ${definedExtraKey}`"
+                 :title="`添加参数 ${definedExtraKey.name}`"
                  @click="addExtraParam(definedExtraKey.name, definedExtraKey.type)"
                  checkable
                  checked>
@@ -72,7 +72,7 @@
           </a-tag>
           <!-- 添加参数 -->
           <a-button title="添加参数"
-                    style="width: 180px;"
+                    style="width: 140px;"
                     @click="addExtraParam(undefined,undefined)"
                     long>
             <icon-plus />

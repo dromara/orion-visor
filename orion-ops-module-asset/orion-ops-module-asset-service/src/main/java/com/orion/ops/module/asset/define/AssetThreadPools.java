@@ -87,4 +87,28 @@ public interface AssetThreadPools {
             .allowCoreThreadTimeout(true)
             .build();
 
+    /**
+     * 批量上传任务线程池
+     */
+    ThreadPoolExecutor UPLOAD_TASK = ExecutorBuilder.create()
+            .namedThreadFactory("upload-task-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
+    /**
+     * 批量上传主机线程池
+     */
+    ThreadPoolExecutor UPLOAD_HOST = ExecutorBuilder.create()
+            .namedThreadFactory("upload-host-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
 }

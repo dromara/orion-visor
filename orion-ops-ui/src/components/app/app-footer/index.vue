@@ -11,8 +11,8 @@
         <a-link target="_blank" :href="`https://github.com/lijiahangmax/orion-ops-pro/releases/tag/v${version}`">v{{ version }} 开源版</a-link>
       </a-space>
       <span class="copyright">
-          Copyright<icon-copyright /> 2024 Li Jiahang All rights reserved.
-        </span>
+        Copyright<icon-copyright /> {{ new Date().getFullYear() }} Li Jiahang All rights reserved.
+      </span>
     </a-space>
   </a-layout-footer>
 </template>

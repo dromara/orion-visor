@@ -273,7 +273,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         // 添加内置参数
         params.put("userId", request.getUserId());
         params.put("username", request.getUsername());
-        params.put("source", request.getSourceId());
+        params.put("source", request.getSource());
         params.put("sourceId", request.getSourceId());
         params.put("seq", request.getExecSeq());
         params.put("execId", execId);

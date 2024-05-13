@@ -21,12 +21,13 @@ import java.util.concurrent.Future;
 public interface HostConnectLogService {
 
     /**
-     * 创建
+     * 创建主机连接日志
      *
      * @param type    type
      * @param request request
+     * @return id
      */
-    void create(HostConnectTypeEnum type, HostConnectLogCreateRequest request);
+    Long create(HostConnectTypeEnum type, HostConnectLogCreateRequest request);
 
     /**
      * 分页查询主机连接日志
@@ -37,14 +38,22 @@ public interface HostConnectLogService {
     DataGrid<HostConnectLogVO> getHostConnectLogPage(HostConnectLogQueryRequest request);
 
     /**
+     * 分页查询主机连接会话
+     *
+     * @param request request
+     * @return rows
+     */
+    List<HostConnectLogVO> getHostConnectSessions(HostConnectLogQueryRequest request);
+
+    /**
      * 更新连接状态
      *
-     * @param token  token
+     * @param id     id
      * @param status status
      * @param extra  extra
      * @return effect
      */
-    Integer updateStatusByToken(String token, HostConnectStatusEnum status, Map<String, Object> extra);
+    Integer updateStatusById(Long id, HostConnectStatusEnum status, Map<String, Object> extra);
 
     /**
      * 查询用户最近连接的主机

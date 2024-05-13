@@ -128,7 +128,6 @@ public class SftpSession extends TerminalSession implements ISftpSession {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            // 同关闭 transfer downloader
             // 关闭 inputStream 可能会被阻塞 ???...??? 只能关闭 executor
             Streams.close(this.executor);
             this.connect();

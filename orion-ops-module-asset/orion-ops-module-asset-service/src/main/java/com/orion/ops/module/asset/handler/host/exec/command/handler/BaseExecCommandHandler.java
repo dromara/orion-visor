@@ -42,13 +42,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public abstract class BaseExecCommandHandler implements IExecCommandHandler {
 
-    private final FileClient fileClient = SpringHolder.getBean("logsFileClient");
+    private static final FileClient fileClient = SpringHolder.getBean("logsFileClient");
 
-    private final ExecLogManager execLogManager = SpringHolder.getBean(ExecLogManager.class);
+    private static final ExecLogManager execLogManager = SpringHolder.getBean(ExecLogManager.class);
 
-    private final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
+    private static final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
 
-    private final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
+    private static final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
 
     protected final ExecCommandDTO execCommand;
 

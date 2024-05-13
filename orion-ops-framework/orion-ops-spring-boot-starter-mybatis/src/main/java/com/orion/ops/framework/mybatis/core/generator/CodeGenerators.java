@@ -10,7 +10,6 @@ import com.orion.ops.framework.mybatis.core.generator.template.Table;
 import com.orion.ops.framework.mybatis.core.generator.template.Template;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 代码生成器
@@ -40,6 +39,7 @@ public class CodeGenerators {
                 //         .enableCardView()
                 //         .enableDrawerForm()
                 //         .dict("dictValueType", "value_type")
+                //         .comment("字典值类型")
                 //         .fields("STRING", "INTEGER", "DECIMAL", "BOOLEAN", "COLOR")
                 //         .labels("字符串", "整数", "小数", "布尔值", "颜色")
                 //         .color("blue", "gray", "red", "green", "white")
@@ -49,11 +49,25 @@ public class CodeGenerators {
                 //         .disableUnitTest()
                 //         .vue("exec", "exec-template-host")
                 //         .build(),
-                Template.create("path_bookmark", "路径标签", "path")
+                Template.create("upload_task", "上传任务", "upload")
                         .disableUnitTest()
-                        .cache("path:bookmark:list:{}", "路径标签列表 ${userId}")
-                        .expire(8, TimeUnit.HOURS)
-                        .vue("host", "path-bookmark")
+                        .vue("exec", "upload-task")
+                        .enableRowSelection()
+                        .dict("uploadTaskStatus", "status")
+                        .comment("上传任务状态")
+                        .fields("WAITING", "UPLOADING", "FINISHED", "FAILED", "CANCELED")
+                        .labels("等待中", "上传中", "已完成", "已失败", "已取消")
+                        .valueUseFields()
+                        .build(),
+                Template.create("upload_task_file", "上传任务文件", "upload")
+                        .disableUnitTest()
+                        .vue("exec", "upload-task-file")
+                        .enableRowSelection()
+                        .dict("uploadTaskFileStatus", "status")
+                        .comment("上传任务文件状态")
+                        .fields("WAITING", "UPLOADING", "FINISHED", "FAILED", "CANCELED")
+                        .labels("等待中", "上传中", "已完成", "已失败", "已取消")
+                        .valueUseFields()
                         .build(),
         };
         // jdbc 配置 - 使用配置文件

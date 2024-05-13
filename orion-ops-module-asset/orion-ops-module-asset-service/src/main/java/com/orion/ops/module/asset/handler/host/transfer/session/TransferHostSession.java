@@ -1,20 +1,15 @@
 package com.orion.ops.module.asset.handler.host.transfer.session;
 
-import com.alibaba.fastjson.JSON;
-import com.orion.lang.utils.Booleans;
-import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
-import com.orion.net.host.sftp.SftpFile;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.ops.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.ops.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.ops.module.asset.define.config.AppSftpConfig;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.handler.host.terminal.utils.TerminalUtils;
-import com.orion.ops.module.asset.handler.host.transfer.model.SftpFileBackupParams;
 import com.orion.spring.SpringHolder;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -56,27 +51,6 @@ public abstract class TransferHostSession implements ITransferHostSession {
             if (!this.executor.isConnected()) {
                 executor.connect();
             }
-        }
-    }
-
-    /**
-     * 检查文件是否存在 并且执行响应策略
-     *
-     * @param path path
-     */
-    protected void doCheckFilePresent(String path) {
-        // 重复不备份
-        if (!Booleans.isTrue(SFTP_CONFIG.getUploadPresentBackup())) {
-            return;
-        }
-        // 检查文件是否存在
-        SftpFile file = executor.getFile(path);
-        if (file != null) {
-            // 文件存在则备份
-            SftpFileBackupParams backupParams = new SftpFileBackupParams(file.getName(), System.currentTimeMillis());
-            String target = Strings.format(SFTP_CONFIG.getBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
-            // 移动
-            executor.move(path, target);
         }
     }
 

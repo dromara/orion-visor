@@ -30,9 +30,9 @@
       </div>
     </main>
     <!-- 命令片段列表抽屉 -->
-    <command-snippet-list-drawer ref="snippetRef" />
+    <command-snippet-drawer ref="snippetRef" />
     <!-- 路径书签列表抽屉 -->
-    <path-bookmark-list-drawer ref="pathRef" />
+    <path-bookmark-drawer ref="pathRef" />
     <!-- 传输列表 -->
     <transfer-drawer ref="transferRef" />
   </div>
@@ -57,8 +57,8 @@
   import MainContent from './components/layout/main-content.vue';
   import LoadingSkeleton from './components/layout/loading-skeleton.vue';
   import TransferDrawer from '@/views/host/terminal/components/transfer/transfer-drawer.vue';
-  import CommandSnippetListDrawer from '@/views/host/command-snippet/components/command-snippet-list-drawer.vue';
-  import PathBookmarkListDrawer from '@/views/host/path-bookmark/components/path-bookmark-list-drawer.vue';
+  import CommandSnippetDrawer from '@/views/host/command-snippet/components/command-snippet-drawer.vue';
+  import PathBookmarkDrawer from '@/views/host/path-bookmark/components/path-bookmark-drawer.vue';
   import '@/assets/style/host-terminal-layout.less';
   import 'xterm/css/xterm.css';
 

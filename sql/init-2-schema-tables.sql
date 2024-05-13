@@ -144,7 +144,7 @@ CREATE TABLE `data_permission`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci
+  COLLATE = utf8mb4_general_ci COMMENT = '数据权限表'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -783,6 +783,63 @@ CREATE TABLE `tag_rel`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '标签关联'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for upload_task
+-- ----------------------------
+DROP TABLE IF EXISTS `upload_task`;
+CREATE TABLE `upload_task`
+(
+    `id`          bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`     bigint(0)                                                      NULL DEFAULT NULL COMMENT '用户id',
+    `username`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '用户名',
+    `remote_path` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '远程路径',
+    `description` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '描述',
+    `status`      char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '状态',
+    `file_count`  int(0)                                                         NULL DEFAULT NULL COMMENT '文件数量',
+    `host_count`  int(0)                                                         NULL DEFAULT NULL COMMENT '主机数量',
+    `extra_info`  json                                                           NULL COMMENT '额外信息',
+    `start_time`  datetime(3)                                                    NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time`    datetime(3)                                                    NULL DEFAULT NULL COMMENT '结束时间',
+    `create_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                     NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '上传任务'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for upload_task_file
+-- ----------------------------
+DROP TABLE IF EXISTS `upload_task_file`;
+CREATE TABLE `upload_task_file`
+(
+    `id`          bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `task_id`     bigint(0)                                                      NULL DEFAULT NULL COMMENT '用户id',
+    `host_id`     bigint(0)                                                      NULL DEFAULT NULL COMMENT '主机id',
+    `file_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '文件id',
+    `file_path`   varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件路径',
+    `file_size`   bigint(0)                                                      NULL DEFAULT NULL COMMENT '文件大小',
+    `status`      char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '状态',
+    `start_time`  datetime(3)                                                    NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time`    datetime(3)                                                    NULL DEFAULT NULL COMMENT '结束时间',
+    `create_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                     NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_task_id` (`task_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '上传任务文件'
   ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

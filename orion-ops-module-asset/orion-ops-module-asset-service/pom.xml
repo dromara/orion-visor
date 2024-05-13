@@ -41,7 +41,7 @@
             <artifactId>orion-ops-spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- web-socket -->
+        <!-- websocket -->
         <dependency>
             <groupId>com.orion.ops</groupId>
             <artifactId>orion-ops-spring-boot-starter-websocket</artifactId>

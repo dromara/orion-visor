@@ -26,6 +26,9 @@ export const definedExtraKeys = [
   }, {
     name: 'color',
     type: ValueType.COLOR
+  }, {
+    name: 'icon',
+    type: ValueType.STRING
   }
 ];
 

@@ -184,7 +184,7 @@ app:
     # 自动清理执行文件
     auto-clear: true
     # 保留周期 (天)
-    keep-period: 60
+    keep-period: 30
 
 # orion framework config
 orion:

@@ -1,7 +1,6 @@
 package com.orion.ops.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.common.validator.group.Page;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
@@ -61,9 +60,9 @@ public class MineController {
     @OperatorLog(AuthenticationOperatorType.UPDATE_PASSWORD)
     @Operation(summary = "修改当前用户密码")
     @PutMapping("/update-password")
-    public HttpWrapper<?> updateCurrentUserPassword(@Validated @RequestBody UserUpdatePasswordRequest request) {
+    public Boolean updateCurrentUserPassword(@Validated @RequestBody UserUpdatePasswordRequest request) {
         mineService.updateCurrentUserPassword(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -82,9 +81,9 @@ public class MineController {
 
     @PutMapping("/offline-session")
     @Operation(summary = "下线当前用户会话")
-    public HttpWrapper<?> offlineCurrentUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
+    public Boolean offlineCurrentUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {
         mineService.offlineCurrentUserSession(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

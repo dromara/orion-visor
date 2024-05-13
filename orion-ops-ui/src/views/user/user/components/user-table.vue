@@ -75,8 +75,7 @@
              :bordered="false">
       <!-- 用户名 -->
       <template #username="{ record }">
-        <span class="span-blue text-copy"
-              @click="copy(record.username)">
+        <span class="text-copy" @click="copy(record.username)">
           {{ record.username }}
         </span>
       </template>

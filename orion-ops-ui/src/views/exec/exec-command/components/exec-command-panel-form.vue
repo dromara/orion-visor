@@ -4,7 +4,7 @@
     <div class="panel-header">
       <h3>执行参数</h3>
       <!-- 操作 -->
-      <a-button-group size="small">
+      <a-button-group size="mini">
         <a-button @click="emits('reset')">重置</a-button>
         <a-button type="primary" @click="emits('exec')">执行</a-button>
       </a-button-group>

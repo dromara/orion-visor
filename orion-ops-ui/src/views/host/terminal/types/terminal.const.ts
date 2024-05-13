@@ -320,9 +320,9 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
 // 传输状态
 export const TransferStatus = {
   WAITING: 'waiting',
-  TRANSFERRING: 'normal',
+  TRANSFERRING: 'transferring',
   SUCCESS: 'success',
-  ERROR: 'danger',
+  ERROR: 'error',
 };
 
 // 传输类型
@@ -390,16 +390,19 @@ export const extraSshAuthTypeKey = 'hostExtraSshAuthType';
 export const connectStatusKey = 'terminalConnectStatus';
 
 // 终端类型
-export const terminalEmulationTypeKey = 'terminalEmulationType';
+export const emulationTypeKey = 'terminalEmulationType';
 
 // 终端标签颜色
-export const terminalTabColorKey = 'terminalTabColor';
+export const tabColorKey = 'terminalTabColor';
+
+// SFTP 传输状态
+export const transferStatusKey = 'sftpTransferStatus';
 
 // 加载的字典值
 export const dictKeys = [
   fontFamilyKey, fontSizeKey,
   fontWeightKey, cursorStyleKey,
   newConnectionTypeKey, extraSshAuthTypeKey,
-  connectStatusKey, terminalEmulationTypeKey,
-  terminalTabColorKey
+  connectStatusKey, emulationTypeKey,
+  tabColorKey, transferStatusKey,
 ];

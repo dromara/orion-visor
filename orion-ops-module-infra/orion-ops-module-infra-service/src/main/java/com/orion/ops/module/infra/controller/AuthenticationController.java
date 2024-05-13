@@ -1,6 +1,5 @@
 package com.orion.ops.module.infra.controller;
 
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -52,9 +51,9 @@ public class AuthenticationController {
     @IgnoreLog(IgnoreLogMode.RET)
     @Operation(summary = "登出")
     @GetMapping("/logout")
-    public HttpWrapper<?> logout(HttpServletRequest servletRequest) {
+    public Boolean logout(HttpServletRequest servletRequest) {
         authenticationService.logout(servletRequest);
-        return HttpWrapper.ok();
+        return true;
     }
 
 }

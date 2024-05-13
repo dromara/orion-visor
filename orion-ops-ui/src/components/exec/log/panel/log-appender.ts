@@ -1,12 +1,10 @@
-import type { ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from './appender-const';
-import { LogAppenderOptions } from './appender-const';
-import type { ExecType } from '../const';
+import type { ExecType, ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from '../const';
 import type { ExecLogTailRequest } from '@/api/exec/exec-log';
+import { openExecLogChannel } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
-import { getExecJobLogTailToken } from '@/api/exec/exec-job-log';
-import { webSocketBaseUrl } from '@/utils/env';
+import { getExecJobLogTailToken } from '@/api/job/exec-job-log';
+import { LogAppenderOptions } from '../const';
 import { Message } from '@arco-design/web-vue';
-import { createWebSocket } from '@/utils';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';
 import { copy as copyText } from '@/hooks/copy';
@@ -158,7 +156,7 @@ export default class LogAppender implements ILogAppender {
     const { data } = await tokenMaker;
     // 打开会话
     try {
-      this.client = await createWebSocket(`${webSocketBaseUrl}/exec/log/${data}`);
+      this.client = await openExecLogChannel(data);
     } catch (e) {
       Message.error('连接失败');
       console.error('log error', e);

@@ -2,9 +2,8 @@ import type { ISftpTransferManager, ISftpTransferUploader, SftpTransferItem } fr
 import { ISftpTransferDownloader, SftpFile, TransferOperatorResponse } from '../types/terminal.type';
 import { TransferReceiverType, TransferStatus, TransferType } from '../types/terminal.const';
 import { Message } from '@arco-design/web-vue';
-import { getTerminalAccessToken } from '@/api/asset/host-terminal';
-import { createWebSocket, nextId } from '@/utils';
-import { webSocketBaseUrl } from '@/utils/env';
+import { getTerminalAccessToken, openHostTransferChannel } from '@/api/asset/host-terminal';
+import { nextId } from '@/utils';
 import SftpTransferUploader from './sftp-transfer-uploader';
 import SftpTransferDownloader from './sftp-transfer-downloader';
 
@@ -96,6 +95,16 @@ export default class SftpTransferManager implements ISftpTransferManager {
     this.transferList.splice(index, 1);
   }
 
+  // 取消全部传输
+  cancelAllTransfer(): void {
+    // 从列表中移除非传输中的元素
+    this.transferList.reduceRight((_, value: SftpTransferItem, index: number) => {
+      if (value.status !== TransferStatus.TRANSFERRING) {
+        this.transferList.splice(index, 1);
+      }
+    }, null as any);
+  }
+
   // 打开会话
   private async openClient() {
     this.run = true;
@@ -103,7 +112,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
     try {
-      this.client = await createWebSocket(`${webSocketBaseUrl}/host/transfer/${accessToken}`);
+      this.client = await openHostTransferChannel(accessToken);
     } catch (e) {
       // 打开失败将传输列表置为失效
       Message.error('会话打开失败');

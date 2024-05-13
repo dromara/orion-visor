@@ -12,7 +12,7 @@
            :footer="false"
            @close="handleClose">
     <a-spin v-if="visible"
-            class="modal-body"
+            class="panel-container"
             :loading="loading">
       <div class="panel-wrapper">
         <!-- 日志面板 -->
@@ -36,7 +36,7 @@
   import useLoading from '@/hooks/loading';
   import { nextTick, ref } from 'vue';
   import { getExecCommandLog } from '@/api/exec/exec-command-log';
-  import { getExecJobLog } from '@/api/exec/exec-job-log';
+  import { getExecJobLog } from '@/api/job/exec-job-log';
   import ExecLogPanel from '../panel/index.vue';
 
   const props = defineProps<{
@@ -92,11 +92,12 @@
 </script>
 
 <style lang="less" scoped>
-  .modal-body {
+  .panel-container {
     width: 100%;
     height: 100%;
-    position: relative;
     padding: 0 12px 12px 12px;
+    position: relative;
+    background: var(--color-bg-2);
   }
 
   .panel-wrapper {

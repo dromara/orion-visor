@@ -38,34 +38,31 @@
         </a-upload>
       </a-space>
       <!-- 文件列表 -->
-      <a-upload v-if="fileList.length" class="file-list-uploader"
+      <a-upload v-if="fileList.length"
+                class="file-list-uploader"
                 v-model:file-list="fileList"
                 :auto-upload="false"
                 :show-file-list="true">
         <template #upload-button />
         <template #file-name="{ fileItem }">
-          <!-- 上传文件夹 -->
-          <template v-if="fileItem.file.webkitRelativePath">
-            <a-tooltip position="top"
+          <div class="file-name-wrapper">
+            <!-- 文件名称 -->
+            <a-tooltip position="left"
                        :mini="true"
                        :auto-fix-position="false"
                        content-class="terminal-tooltip-content"
                        arrow-class="terminal-tooltip-content"
-                       :content="fileItem.file.webkitRelativePath">
-              <span>{{ fileItem.file.webkitRelativePath }}</span>
+                       :content="fileItem.file.webkitRelativePath || fileItem.file.name">
+              <!-- 文件名称 -->
+              <span class="file-name text-ellipsis">
+                {{ fileItem.file.webkitRelativePath || fileItem.file.name }}
+              </span>
             </a-tooltip>
-          </template>
-          <!-- 上传文件 -->
-          <template v-else>
-            <a-tooltip position="top"
-                       :mini="true"
-                       :auto-fix-position="false"
-                       content-class="terminal-tooltip-content"
-                       arrow-class="terminal-tooltip-content"
-                       :content="fileItem.file.name">
-              <span>{{ fileItem.file.name }}</span>
-            </a-tooltip>
-          </template>
+            <!-- 文件大小 -->
+            <span class="file-size span-blue">
+              {{ getFileSize(fileItem.file.size) }}
+            </span>
+          </div>
         </template>
       </a-upload>
     </div>
@@ -79,19 +76,19 @@
 </script>
 
 <script lang="ts" setup>
+  import type { FileItem } from '@arco-design/web-vue';
   import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useVisible from '@/hooks/visible';
-  import { TransferStatus, TransferType } from '../../types/terminal.const';
-  import { nextId } from '@/utils';
+  import { getFileSize } from '@/utils/file';
 
   const { visible, setVisible } = useVisible();
   const { transferManager } = useTerminalStore();
 
   const hostId = ref();
   const parentPath = ref('');
-  const fileList = ref<any[]>([]);
+  const fileList = ref<FileItem[]>([]);
 
   // 打开
   const open = (host: number, parent: string) => {
@@ -112,7 +109,7 @@
       return true;
     }
     // 添加到上传列表
-    const files = fileList.value.map(s => s.file);
+    const files = fileList.value.map(s => s.file as File);
     transferManager.addUpload(hostId.value, parentPath.value, files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');
     // 清空
@@ -133,6 +130,8 @@
 </script>
 
 <style lang="less" scoped>
+  @file-size-width: 82px;
+
   .upload-container {
     width: 100%;
   }
@@ -159,9 +158,18 @@
     }
 
     :deep(.arco-upload-list) {
-      max-height: calc(100vh - 386px);
-      overflow-y: auto;
       padding: 0 12px 0 0;
+      max-height: calc(100vh - 386px);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    :deep(.arco-upload-list-item-name) {
+      margin-right: 0 !important;
+    }
+
+    :deep(.arco-upload-list-item-name-text) {
+      width: 100%;
     }
 
     :deep(.arco-upload-list-item:first-of-type) {
@@ -172,4 +180,23 @@
       display: none;
     }
   }
+
+  .file-name-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .file-name {
+      color: var(--color-text-1);
+      display: inline-block;
+      width: calc(100% - @file-size-width);
+    }
+
+    .file-size {
+      font-size: 13px;
+      display: inline-block;
+      width: @file-size-width;
+      text-align: end;
+    }
+  }
+
 </style>

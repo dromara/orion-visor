@@ -21,11 +21,11 @@
                 <div class="selected-host">
                   <!-- 已选择数量 -->
                   <span class="usn" v-if="formModel.hostIdList?.length">
-                已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
-              </span>
+                    已选择<span class="selected-host-count span-blue">{{ formModel.hostIdList?.length }}</span>台主机
+                  </span>
                   <span class="usn pointer span-blue" @click="openSelectHost">
-                {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
-              </span>
+                    {{ formModel.hostIdList?.length ? '重新选择' : '选择主机' }}
+                  </span>
                 </div>
               </a-form-item>
             </a-col>

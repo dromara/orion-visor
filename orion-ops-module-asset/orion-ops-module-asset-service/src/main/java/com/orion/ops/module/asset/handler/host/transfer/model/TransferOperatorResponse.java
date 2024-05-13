@@ -2,9 +2,9 @@ package com.orion.ops.module.asset.handler.host.transfer.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * 文件操作响应 实体对象
@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
  * @since 2024/2/21 22:38
  */
 @Data
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(name = "FileOperatorResponse", description = "文件操作响应 实体对象")

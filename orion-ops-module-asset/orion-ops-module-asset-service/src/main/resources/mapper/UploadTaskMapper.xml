@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orion.ops.module.asset.dao.UploadTaskDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.orion.ops.module.asset.entity.domain.UploadTaskDO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="remote_path" property="remotePath"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="extra_info" property="extraInfo"/>
+        <result column="file_count" property="fileCount"/>
+        <result column="host_count" property="hostCount"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, username, remote_path, description, status, extra_info, file_count, host_count, start_time, end_time, create_time, update_time, creator, updater, deleted
+    </sql>
+
+</mapper>

@@ -20,7 +20,7 @@
         <a-link target="_blank" href="https://lijiahangmax.github.io/orion-ops-pro">操作文档</a-link>
       </a-col>
       <a-col :span="12">
-        <a-link target="_blank" href="https://lijiahangmax.github.io/orion-ops-pro/#/about/change-log">更新文档</a-link>
+        <a-link target="_blank" href="https://lijiahangmax.github.io/orion-ops-pro/#/about/update-log">更新日志</a-link>
       </a-col>
     </a-row>
   </a-card>

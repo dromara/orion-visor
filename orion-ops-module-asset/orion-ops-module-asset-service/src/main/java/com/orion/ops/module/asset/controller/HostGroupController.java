@@ -1,6 +1,5 @@
 package com.orion.ops.module.asset.controller;
 
-import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.ops.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.ops.framework.log.core.annotation.IgnoreLog;
 import com.orion.ops.framework.log.core.enums.IgnoreLogMode;
@@ -96,9 +95,9 @@ public class HostGroupController {
     @PutMapping("/update-rel")
     @Operation(summary = "修改分组内主机")
     @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
-    public HttpWrapper<?> updateHostGroupRel(@Validated @RequestBody HostGroupRelUpdateRequest request) {
+    public Boolean updateHostGroupRel(@Validated @RequestBody HostGroupRelUpdateRequest request) {
         hostGroupService.updateHostGroupRel(request);
-        return HttpWrapper.ok();
+        return true;
     }
 
 }

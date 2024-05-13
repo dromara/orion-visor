@@ -3,7 +3,7 @@
 </h1>
 
 `orion-ops-pro`
-是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、计划任务、WebShell、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。
+是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、批量上传、计划任务、WebShell、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。
 
 <p style="text-align: left">
     <a target="_blank" style="text-decoration: none" href="https://app.codacy.com/gh/lijiahangmax/orion-ops-pro/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
@@ -26,11 +26,11 @@
 	</a>  
 </p>
 
-当前版本: **1.0.6**  
+当前版本: **1.0.7**  
 
 **github:** https://github.com/lijiahangmax/orion-ops-pro  
 **gitee:** https://gitee.com/lijiahangmax/orion-ops-pro  
-**文档:** https://lijiahangmax.gitee.io/orion-ops-pro/#/  
+**文档:** https://lijiahangmax.github.io/orion-ops-pro/#/  
 **demo:** http://101.43.254.243:1081/
 
 演示账号: `admin`    
@@ -47,17 +47,17 @@
 * **权限控制**: 全面管理用户角色, 支持动态菜单配置和强制下线等功能。
 * **在线终端**: 提供便捷的在线 Web 终端服务, 支持快捷命令、自定义快捷键和主题风格。
 * **文件管理**: 实现远程主机大文件的批量上传、下载和在线编辑等操作。
-* **批量操作**: 支持远程主机批量执行主机命令。
+* **批量操作**: 支持远程主机批量执行主机命令、多主机文件分发。
 * **计划任务**: 支持配置 cron 表达式, 定时执行主机命令。
 * **操作审计**: 记录用户操作日志，确保操作可追溯, 提高系统安全性。
 
 ## 快速开始
 
-* [docker安装](https://lijiahangmax.gitee.io/orion-ops-pro/#/quickstart/docker-install)
-* [普通安装](https://lijiahangmax.gitee.io/orion-ops-pro/#/quickstart/install)
-* [更新日志](https://lijiahangmax.gitee.io/orion-ops-pro/#/about/change-log)
-* [操作手册](https://lijiahangmax.gitee.io/orion-ops-pro/#/operator/asset)
-* [常见问题](https://lijiahangmax.gitee.io/orion-ops-pro/#/quickstart/faq)
+* [docker安装](https://lijiahangmax.github.io/orion-ops-pro/#/quickstart/docker-install)
+* [普通安装](https://lijiahangmax.github.io/orion-ops-pro/#/quickstart/install)
+* [更新日志](https://lijiahangmax.github.io/orion-ops-pro/#/about/change-log)
+* [操作手册](https://lijiahangmax.github.io/orion-ops-pro/#/operator/asset)
+* [常见问题](https://lijiahangmax.github.io/orion-ops-pro/#/quickstart/faq)
 
 ## 技术栈
 
@@ -84,10 +84,15 @@
 ![执行日志](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/06d02d38-70ef-43c2-950c-9f8c73a105ba.png "执行日志")
 ![执行记录](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/3/22/0e474cc2-f7cf-49bc-be3c-f6445783ad7c.png "执行记录")
 
+> 批量上传
+
+![批量上传任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/12/1e9d0c74-4ef7-4322-ae17-42085b7ba552.png "批量上传任务")
+![批量上传中](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/12/a94a6d96-0969-4205-91fb-4c6f8cf092a8.png "批量上传中")
+
 > 计划任务
 
-![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
 ![计划任务编辑](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/20/b6ba7ec0-011f-48ff-a36e-c8d93bd1f75c.png "计划任务编辑")
+![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
 
 > 用户管理
 

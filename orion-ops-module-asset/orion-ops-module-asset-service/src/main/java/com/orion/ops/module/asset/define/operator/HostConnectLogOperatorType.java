@@ -4,7 +4,8 @@ import com.orion.ops.framework.biz.operator.log.core.annotation.Module;
 import com.orion.ops.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import com.orion.ops.framework.biz.operator.log.core.model.OperatorType;
 
-import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
+import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.H;
+import static com.orion.ops.framework.biz.operator.log.core.enums.OperatorRiskLevel.M;
 
 /**
  * 主机连接日志 操作日志类型

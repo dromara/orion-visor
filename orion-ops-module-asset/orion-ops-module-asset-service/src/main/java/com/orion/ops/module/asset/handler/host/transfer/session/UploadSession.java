@@ -7,6 +7,7 @@ import com.orion.ops.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.ops.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.ops.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.ops.module.asset.handler.host.transfer.utils.TransferUtils;
+import com.orion.ops.module.asset.utils.SftpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -39,7 +40,7 @@ public class UploadSession extends TransferHostSession implements IUploadSession
             // 检查连接
             this.init();
             // 检查文件是否存在
-            this.doCheckFilePresent(path);
+            SftpUtils.checkUploadFilePresent(SFTP_CONFIG, executor, path);
             // 打开输出流
             this.outputStream = executor.openOutputStream(path);
             // 响应结果
