@@ -3,7 +3,7 @@
 </h1>
 
 `orion-ops-pro`
-是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、计划任务、WebShell、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。
+是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、批量上传、计划任务、WebShell、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。
 
 <p style="text-align: left">
     <a target="_blank" style="text-decoration: none" href="https://app.codacy.com/gh/lijiahangmax/orion-ops-pro/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
@@ -47,7 +47,7 @@
 * **权限控制**: 全面管理用户角色, 支持动态菜单配置和强制下线等功能。
 * **在线终端**: 提供便捷的在线 Web 终端服务, 支持快捷命令、自定义快捷键和主题风格。
 * **文件管理**: 实现远程主机大文件的批量上传、下载和在线编辑等操作。
-* **批量操作**: 支持远程主机批量执行主机命令。
+* **批量操作**: 支持远程主机批量执行主机命令、多主机文件分发。
 * **计划任务**: 支持配置 cron 表达式, 定时执行主机命令。
 * **操作审计**: 记录用户操作日志，确保操作可追溯, 提高系统安全性。
 

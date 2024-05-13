@@ -15,6 +15,8 @@
 
 查看计划任务执行日志
 
+⚡ 如果只需要保存日志的原始输出则需要修改 `application.yaml` `app.exec-log.append-ansi` 为 `false`
+
 * 清空: 清空执行日志
 * 删除: 删除执行日志
 * 命令: 查看执行时的命令
