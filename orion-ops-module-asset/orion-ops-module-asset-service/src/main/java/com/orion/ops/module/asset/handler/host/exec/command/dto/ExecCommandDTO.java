@@ -22,7 +22,7 @@ import java.util.List;
 @Schema(name = "ExecCommandDTO", description = "批量执行启动对象")
 public class ExecCommandDTO {
 
-    @Schema(description = "hostId")
+    @Schema(description = "logId")
     private Long logId;
 
     @Schema(description = "用户id")

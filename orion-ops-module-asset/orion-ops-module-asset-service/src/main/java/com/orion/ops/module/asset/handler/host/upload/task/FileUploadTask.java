@@ -3,10 +3,13 @@ package com.orion.ops.module.asset.handler.host.upload.task;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
+import com.orion.lang.utils.time.Dates;
 import com.orion.ops.framework.common.constant.Const;
+import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.module.asset.dao.UploadTaskDAO;
 import com.orion.ops.module.asset.dao.UploadTaskFileDAO;
 import com.orion.ops.module.asset.define.AssetThreadPools;
+import com.orion.ops.module.asset.define.message.UploadMessageDefine;
 import com.orion.ops.module.asset.entity.domain.UploadTaskDO;
 import com.orion.ops.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.ops.module.asset.enums.UploadTaskFileStatusEnum;
@@ -16,14 +19,13 @@ import com.orion.ops.module.asset.handler.host.upload.manager.FileUploadTaskMana
 import com.orion.ops.module.asset.handler.host.upload.uploader.FileUploader;
 import com.orion.ops.module.asset.handler.host.upload.uploader.IFileUploader;
 import com.orion.ops.module.asset.service.UploadTaskService;
+import com.orion.ops.module.infra.api.SystemMessageApi;
+import com.orion.ops.module.infra.entity.dto.message.SystemMessageDTO;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +43,8 @@ public class FileUploadTask implements IFileUploadTask {
     private static final UploadTaskFileDAO uploadTaskFileDAO = SpringHolder.getBean(UploadTaskFileDAO.class);
 
     private static final UploadTaskService uploadTaskService = SpringHolder.getBean(UploadTaskService.class);
+
+    private static final SystemMessageApi systemMessageApi = SpringHolder.getBean(SystemMessageApi.class);
 
     private static final FileUploadTaskManager fileUploadTaskManager = SpringHolder.getBean(FileUploadTaskManager.class);
 
@@ -91,6 +95,8 @@ public class FileUploadTask implements IFileUploadTask {
             } else {
                 this.updateStatus(UploadTaskStatusEnum.FINISHED);
             }
+            // 检查是否发送消息
+            this.checkSendMessage();
             // 移除任务
             fileUploadTaskManager.removeTask(id);
             // 释放资源
@@ -185,6 +191,35 @@ public class FileUploadTask implements IFileUploadTask {
             update.setEndTime(new Date());
         }
         uploadTaskDAO.updateById(update);
+    }
+
+    /**
+     * 检查是否发送消息
+     */
+    private void checkSendMessage() {
+        if (canceled) {
+            return;
+        }
+        // 检查是否上传失败
+        boolean hasError = uploaderList.stream()
+                .map(IFileUploader::getFiles)
+                .flatMap(Collection::stream)
+                .anyMatch(s -> UploadTaskFileStatusEnum.FAILED.name().equals(s.getStatus()));
+        if (!hasError) {
+            return;
+        }
+        // 参数
+        Map<String, Object> params = new HashMap<>();
+        params.put(ExtraFieldConst.ID, record.getId());
+        params.put(ExtraFieldConst.TIME, Dates.format(record.getCreateTime(), Dates.MD_HM));
+        SystemMessageDTO message = SystemMessageDTO.builder()
+                .receiverId(record.getUserId())
+                .receiverUsername(record.getUsername())
+                .relKey(String.valueOf(record.getId()))
+                .params(params)
+                .build();
+        // 发送
+        systemMessageApi.create(UploadMessageDefine.UPLOAD_FAILED, message);
     }
 
 }

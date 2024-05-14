@@ -3,12 +3,11 @@
            title-align="start"
            :title="record.title"
            :top="80"
-           :width="720"
            :align-center="false"
            :unmount-on-close="true"
            ok-text="删除"
            :hide-cancel="true"
-           :ok-button-props="{ status: 'danger' }"
+           :ok-button-props="{ status: 'danger', size: 'small' }"
            :body-style="{ padding: '20px' }"
            @ok="emits('delete', record)">
     <div class="content" v-html="record.contentHtml" />
@@ -45,5 +44,6 @@
 <style lang="less" scoped>
   .content {
     font-size: 16px;
+    color: var(--color-text-2);
   }
 </style>

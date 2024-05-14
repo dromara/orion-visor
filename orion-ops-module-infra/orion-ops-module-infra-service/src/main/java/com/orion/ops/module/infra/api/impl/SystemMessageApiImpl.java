@@ -1,10 +1,11 @@
 package com.orion.ops.module.infra.api.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.ops.framework.common.utils.Valid;
 import com.orion.ops.module.infra.api.SystemMessageApi;
 import com.orion.ops.module.infra.convert.SystemMessageProviderConvert;
+import com.orion.ops.module.infra.define.SystemMessageDefine;
 import com.orion.ops.module.infra.entity.dto.message.SystemMessageCreateDTO;
+import com.orion.ops.module.infra.entity.dto.message.SystemMessageDTO;
 import com.orion.ops.module.infra.entity.request.message.SystemMessageCreateRequest;
 import com.orion.ops.module.infra.enums.MessageClassifyEnum;
 import com.orion.ops.module.infra.service.SystemMessageService;
@@ -28,12 +29,28 @@ public class SystemMessageApiImpl implements SystemMessageApi {
     private SystemMessageService systemMessageService;
 
     @Override
-    public Long createSystemMessage(MessageClassifyEnum classify, SystemMessageCreateDTO dto) {
-        log.info("SystemMessageApi.createSystemMessage dto: {}", JSON.toJSONString(dto));
+    public Long create(SystemMessageDefine define, SystemMessageDTO dto) {
+        Valid.valid(dto);
+        // 转换
+        SystemMessageCreateRequest request = SystemMessageCreateRequest.builder()
+                .classify(define.getClassify().name())
+                .type(define.getType())
+                .title(define.getTitle())
+                .content(define.formatContent(dto.getParams()))
+                .relKey(dto.getRelKey())
+                .receiverId(dto.getReceiverId())
+                .receiverUsername(dto.getReceiverUsername())
+                .build();
+        // 创建
+        return systemMessageService.createSystemMessage(request);
+    }
+
+    @Override
+    public Long create(MessageClassifyEnum classify, SystemMessageCreateDTO dto) {
+        dto.setClassify(classify.name());
         Valid.valid(dto);
         // 转换
         SystemMessageCreateRequest request = SystemMessageProviderConvert.MAPPER.toRequest(dto);
-        request.setClassify(classify.name());
         // 创建
         return systemMessageService.createSystemMessage(request);
     }

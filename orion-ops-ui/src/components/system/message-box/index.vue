@@ -26,19 +26,19 @@
                       checked-text="未读"
                       unchecked-text="全部"
                       @change="reloadAllMessage" />
-            <!-- 全部已读 -->
-            <a-button class="header-button"
-                      type="text"
-                      size="small"
-                      @click="setAllRead">
-              全部已读
-            </a-button>
             <!-- 清空 -->
             <a-button class="header-button"
                       type="text"
                       size="small"
                       @click="clearAllMessage">
               清空
+            </a-button>
+            <!-- 全部已读 -->
+            <a-button class="header-button"
+                      type="text"
+                      size="small"
+                      @click="setAllRead">
+              全部已读
             </a-button>
           </a-space>
         </template>

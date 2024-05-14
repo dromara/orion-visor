@@ -7,20 +7,29 @@ import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
+import com.orion.lang.utils.time.Dates;
+import com.orion.net.host.ssh.ExitCode;
+import com.orion.ops.framework.common.constant.ExtraFieldConst;
 import com.orion.ops.module.asset.dao.ExecLogDAO;
 import com.orion.ops.module.asset.define.AssetThreadPools;
 import com.orion.ops.module.asset.define.config.AppExecLogConfig;
+import com.orion.ops.module.asset.define.message.ExecMessageDefine;
 import com.orion.ops.module.asset.entity.domain.ExecLogDO;
+import com.orion.ops.module.asset.enums.ExecHostStatusEnum;
 import com.orion.ops.module.asset.enums.ExecStatusEnum;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
 import com.orion.ops.module.asset.handler.host.exec.command.manager.ExecTaskManager;
+import com.orion.ops.module.infra.api.SystemMessageApi;
+import com.orion.ops.module.infra.entity.dto.message.SystemMessageDTO;
 import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 命令执行任务
@@ -38,12 +47,16 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private static final AppExecLogConfig appExecLogConfig = SpringHolder.getBean(AppExecLogConfig.class);
 
+    private static final SystemMessageApi systemMessageApi = SpringHolder.getBean(SystemMessageApi.class);
+
     private final ExecCommandDTO execCommand;
 
     private TimeoutChecker<TimeoutEndpoint> timeoutChecker;
 
     @Getter
     private final List<IExecCommandHandler> handlers;
+
+    private Date startTime;
 
     public ExecTaskHandler(ExecCommandDTO execCommand) {
         this.execCommand = execCommand;
@@ -56,9 +69,9 @@ public class ExecTaskHandler implements IExecTaskHandler {
         // 添加任务
         execTaskManager.addTask(id, this);
         log.info("ExecTaskHandler.run start id: {}", id);
-        // 更新状态
-        this.updateStatus(ExecStatusEnum.RUNNING);
         try {
+            // 更新状态
+            this.updateStatus(ExecStatusEnum.RUNNING);
             // 执行命令
             this.runHostCommand();
             // 更新状态-执行完成
@@ -69,10 +82,12 @@ public class ExecTaskHandler implements IExecTaskHandler {
             this.updateStatus(ExecStatusEnum.FAILED);
             log.error("ExecTaskHandler.run error id: {}", id, e);
         } finally {
-            // 释放资源
-            Streams.close(this);
+            // 检查是否发送消息
+            this.checkSendMessage();
             // 移除任务
             execTaskManager.removeTask(id);
+            // 释放资源
+            this.close();
         }
     }
 
@@ -80,6 +95,13 @@ public class ExecTaskHandler implements IExecTaskHandler {
     public void interrupt() {
         log.info("ExecTaskHandler-interrupt id: {}", execCommand.getLogId());
         handlers.forEach(IExecCommandHandler::interrupt);
+    }
+
+    @Override
+    public void close() {
+        log.info("ExecTaskHandler-close id: {}", execCommand.getLogId());
+        Streams.close(timeoutChecker);
+        this.handlers.forEach(Streams::close);
     }
 
     /**
@@ -139,6 +161,7 @@ public class ExecTaskHandler implements IExecTaskHandler {
         update.setStatus(statusName);
         if (ExecStatusEnum.RUNNING.equals(status)) {
             // 执行中
+            this.startTime = new Date();
             update.setStartTime(new Date());
         } else if (ExecStatusEnum.COMPLETED.equals(status)) {
             // 执行完成
@@ -151,11 +174,30 @@ public class ExecTaskHandler implements IExecTaskHandler {
         log.info("ExecTaskHandler-updateStatus finish id: {}, effect: {}", id, effect);
     }
 
-    @Override
-    public void close() {
-        log.info("ExecTaskHandler-close id: {}", execCommand.getLogId());
-        Streams.close(timeoutChecker);
-        this.handlers.forEach(Streams::close);
+    /**
+     * 检查是否发送消息
+     */
+    private void checkSendMessage() {
+        // 检查是否执行失败/exitCode
+        boolean hasError = handlers.stream().anyMatch(s ->
+                ExecHostStatusEnum.FAILED.equals(s.getStatus())
+                        || ExecHostStatusEnum.TIMEOUT.equals(s.getStatus())
+                        || !ExitCode.isSuccess(s.getExitCode()));
+        if (!hasError) {
+            return;
+        }
+        // 参数
+        Map<String, Object> params = new HashMap<>();
+        params.put(ExtraFieldConst.ID, execCommand.getLogId());
+        params.put(ExtraFieldConst.TIME, Dates.format(this.startTime, Dates.MD_HM));
+        SystemMessageDTO message = SystemMessageDTO.builder()
+                .receiverId(execCommand.getUserId())
+                .receiverUsername(execCommand.getUsername())
+                .relKey(String.valueOf(execCommand.getLogId()))
+                .params(params)
+                .build();
+        // 发送
+        systemMessageApi.create(ExecMessageDefine.EXEC_FAILED, message);
     }
 
 }

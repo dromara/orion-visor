@@ -32,6 +32,13 @@ public interface IExecCommandHandler extends Runnable, SafeCloseable {
     ExecHostStatusEnum getStatus();
 
     /**
+     * 获取退出码
+     *
+     * @return exit code
+     */
+    Integer getExitCode();
+
+    /**
      * 获取主机 id
      *
      * @return hostId

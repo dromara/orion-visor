@@ -10,9 +10,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
- * 系统消息 创建请求业务对象
+ * 系统消息 请求业务对象
  *
  * @author Jiahang Li
  * @version 1.0.8
@@ -22,34 +23,15 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemMessageCreateDTO", description = "系统消息 创建请求业务对象")
-public class SystemMessageCreateDTO implements Serializable {
+@Schema(name = "SystemMessageDTO", description = "系统消息 请求业务对象")
+public class SystemMessageDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @NotBlank
-    @Size(max = 10)
-    @Schema(description = "消息分类")
-    private String classify;
-
-    @NotBlank
-    @Size(max = 32)
-    @Schema(description = "消息类型")
-    private String type;
 
     @NotBlank
     @Size(max = 64)
     @Schema(description = "消息关联")
     private String relKey;
-
-    @NotBlank
-    @Size(max = 128)
-    @Schema(description = "标题")
-    private String title;
-
-    @NotBlank
-    @Schema(description = "消息内容")
-    private String content;
 
     @NotNull
     @Schema(description = "接收人id")
@@ -57,5 +39,8 @@ public class SystemMessageCreateDTO implements Serializable {
 
     @Schema(description = "接收人用户名")
     private String receiverUsername;
+
+    @Schema(description = "参数")
+    private Map<String, Object> params;
 
 }

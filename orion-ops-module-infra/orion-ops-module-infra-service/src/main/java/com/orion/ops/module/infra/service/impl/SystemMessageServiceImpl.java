@@ -1,5 +1,6 @@
 package com.orion.ops.module.infra.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.Booleans;
@@ -44,6 +45,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
 
     @Override
     public Long createSystemMessage(SystemMessageCreateRequest request) {
+        log.info("SystemMessageService.createSystemMessage request: {}", JSON.toJSONString(request));
         // 设置接收人用户名
         if (request.getReceiverUsername() == null) {
             Optional.ofNullable(request.getReceiverId())

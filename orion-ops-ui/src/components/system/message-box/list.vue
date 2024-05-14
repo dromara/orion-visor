@@ -6,7 +6,7 @@
       <!-- 加载中 -->
       <a-skeleton class="skeleton-wrapper" :animation="true">
         <a-skeleton-line :rows="3"
-                         :line-height="86"
+                         :line-height="96"
                          :line-spacing="8" />
       </a-skeleton>
     </div>
@@ -56,17 +56,21 @@
               </a-button>
             </div>
           </div>
-          <!-- 文本 -->
+          <!-- 内容 -->
           <div v-html="message.contentHtml"
-               class="message-item-content text-ellipsis"
+               class="message-item-content"
                :title="message.content" />
+          <!-- 时间 -->
+          <div class="message-item-time">
+            {{ dateFormat(new Date(message.createTime))}}
+          </div>
         </div>
         <!-- 加载中 -->
         <a-skeleton v-if="fetchLoading"
                     class="skeleton-wrapper"
                     :animation="true">
           <a-skeleton-line :rows="3"
-                           :line-height="86"
+                           :line-height="96"
                            :line-spacing="8" />
         </a-skeleton>
         <!-- 加载更多 -->
@@ -92,6 +96,7 @@
   import type { MessageRecordResponse } from '@/api/system/message';
   import { MessageStatus, messageTypeKey } from './const';
   import { useDictStore } from '@/store';
+  import { dateFormat } from '@/utils';
 
   const emits = defineEmits(['load', 'click', 'view', 'delete']);
   const props = defineProps<{
@@ -107,7 +112,6 @@
 
 <style lang="less" scoped>
   @gap: 8px;
-  @message-height: 86px;
   @actions-width: 82px;
 
   .skeleton-wrapper {
@@ -116,7 +120,7 @@
 
   .message-list-container {
     width: 100%;
-    height: 344px;
+    height: 338px;
     display: block;
 
     .message-list-wrapper {
@@ -133,17 +137,17 @@
   }
 
   .message-item {
-    height: @message-height;
-    padding: 16px 20px;
+    padding: 12px 20px;
     border-bottom: 1px solid var(--color-neutral-3);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     font-size: 14px;
-    color: var(--color-text-1);
     cursor: pointer;
+    transition: all .2s;
 
     &-title {
+      height: 22px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -151,9 +155,9 @@
       &-text {
         width: calc(100% - @actions-width - @gap);
         display: block;
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 14px;
         text-overflow: clip;
+        color: var(--color-text-1);
       }
 
       &-status {
@@ -181,9 +185,17 @@
 
     &-content {
       display: block;
-      padding-bottom: 2px;
-      color: var(--color-text-1);
-      text-overflow: clip;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--color-text-2);
+    }
+
+    &-time {
+      height: 18px;
+      margin-top: 4px;
+      display: block;
+      font-size: 12px;
+      color: var(--color-text-2);
     }
   }
 
@@ -201,7 +213,7 @@
   }
 
   .message-item-read {
-    .message-item-title-text, .message-item-title-status, .message-item-content {
+    .message-item-title-text, .message-item-title-status, .message-item-content, .message-item-time {
       opacity: .65;
     }
   }
@@ -210,10 +222,6 @@
     position: absolute;
     height: 100%;
     width: 100%;
-
-    .arco-scrollbar-track-direction-horizontal {
-      display: none;
-    }
   }
 
 </style>

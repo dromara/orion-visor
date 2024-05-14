@@ -99,7 +99,8 @@
                    position="br"
                    :show-arrow="false"
                    :popup-style="{ marginLeft: '198px' }"
-                   :content-style="{ padding: 0, width: '498px' }">
+                   :content-style="{ padding: 0, width: '428px' }"
+                   @hide="pullHasUnreadMessage">
           <div ref="messageRef" class="ref-btn" />
           <template #content>
             <message-box />
@@ -310,10 +311,6 @@
 
   // 获取是否有未读的消息
   const pullHasUnreadMessage = () => {
-    // 有未读的消息直接返回
-    if (messageCount.value) {
-      return;
-    }
     // 查询
     checkHasUnreadMessage().then(({ data }) => {
       messageCount.value = data ? 1 : 0;
