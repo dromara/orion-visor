@@ -1,149 +1,216 @@
 <template>
-  <a-list :bordered="false">
-    <a-list-item v-for="item in renderList"
-                 :key="item.id"
-                 action-layout="vertical"
-                 :style="{
-                   opacity: item.status ? 0.5 : 1,
-                 }">
-      <template #extra>
-        <a-tag v-if="item.messageType === 0" color="gray">未开始</a-tag>
-        <a-tag v-else-if="item.messageType === 1" color="green">已开通</a-tag>
-        <a-tag v-else-if="item.messageType === 2" color="blue">进行中</a-tag>
-        <a-tag v-else-if="item.messageType === 3" color="red">即将到期</a-tag>
-      </template>
-      <div class="item-wrap" @click="onItemClick(item)">
-        <a-list-item-meta>
-          <template v-if="item.avatar" #avatar>
-            <a-avatar shape="circle">
-              <img v-if="item.avatar" :src="item.avatar" />
-              <icon-desktop v-else />
-            </a-avatar>
-          </template>
-          <template #title>
-            <a-space :size="4">
-              <span>{{ item.title }}</span>
-              <a-typography-text type="secondary">
-                {{ item.subTitle }}
-              </a-typography-text>
-            </a-space>
-          </template>
-          <template #description>
-            <div>
-              <a-typography-paragraph :ellipsis="{
-                  rows: 1,
-              }">
-                {{ item.content }}
-              </a-typography-paragraph>
-              <a-typography-text v-if="item.type === 'message'"
-                                 class="time-text">
-                {{ item.time }}
-              </a-typography-text>
-            </div>
-          </template>
-        </a-list-item-meta>
-      </div>
-    </a-list-item>
-    <template #footer>
-      <a-space fill
-               :size="0"
-               :class="{ 'add-border-top': renderList.length < showMax }">
-        <div class="footer-wrap">
-          <a-link @click="allRead">全部已读</a-link>
-        </div>
-        <div class="footer-wrap">
-          <a-link>查看更多</a-link>
-        </div>
-      </a-space>
-    </template>
-    <div v-if="renderList.length && renderList.length < 3"
-         :style="{ height: (showMax - renderList.length) * 86 + 'px' }">
+  <!-- 消息列表 -->
+  <a-spin class="message-list-container" :loading="messageLoading">
+    <!-- 加载中 -->
+    <div v-if="!messageList.length && fetchLoading">
+      <!-- 加载中 -->
+      <a-skeleton class="skeleton-wrapper" :animation="true">
+        <a-skeleton-line :rows="3"
+                         :line-height="86"
+                         :line-spacing="8" />
+      </a-skeleton>
     </div>
-  </a-list>
+    <!-- 无数据 -->
+    <div v-else-if="!messageList.length && !fetchLoading">
+      <a-result status="404">
+        <template #subtitle>暂无内容</template>
+      </a-result>
+    </div>
+    <!-- 消息容器 -->
+    <div v-else class="message-list-wrapper">
+      <a-scrollbar style="overflow-y: auto; height: 100%;">
+        <!-- 消息列表-->
+        <div v-for="message in messageList"
+             class="message-item"
+             :class="[ message.status === MessageStatus.READ ? 'message-item-read' : 'message-item-unread' ]"
+             @click="emits('click', message)">
+          <!-- 标题 -->
+          <div class="message-item-title">
+            <!-- 标题 -->
+            <div class="message-item-title-text text-ellipsis" :title="message.title">
+              {{ message.title }}
+            </div>
+            <!-- tag -->
+            <div class="message-item-title-status">
+              <template v-if="getDictValue(messageTypeKey, message.type, 'tagVisible', false)">
+                <a-tag size="mini" :color="getDictValue(messageTypeKey, message.type, 'tagColor')">
+                  {{ getDictValue(messageTypeKey, message.type, 'tagLabel') }}
+                </a-tag>
+              </template>
+            </div>
+            <!-- 操作 -->
+            <div class="message-item-title-actions">
+              <!-- 查看 -->
+              <a-button class="mr4"
+                        size="mini"
+                        type="text"
+                        @click.stop="emits('view', message)">
+                查看
+              </a-button>
+              <!-- 删除 -->
+              <a-button size="mini"
+                        type="text"
+                        status="danger"
+                        @click.stop="emits('delete', message)">
+                删除
+              </a-button>
+            </div>
+          </div>
+          <!-- 文本 -->
+          <div v-html="message.contentHtml"
+               class="message-item-content text-ellipsis"
+               :title="message.content" />
+        </div>
+        <!-- 加载中 -->
+        <a-skeleton v-if="fetchLoading"
+                    class="skeleton-wrapper"
+                    :animation="true">
+          <a-skeleton-line :rows="3"
+                           :line-height="86"
+                           :line-spacing="8" />
+        </a-skeleton>
+        <!-- 加载更多 -->
+        <div v-if="hasMore" class="load-more-wrapper">
+          <a-button size="small"
+                    :fetchLoading="fetchLoading"
+                    @click="() => emits('load')">
+            加载更多
+          </a-button>
+        </div>
+      </a-scrollbar>
+    </div>
+  </a-spin>
 </template>
 
+<script lang="ts">
+  export default {
+    name: 'messageBoxList'
+  };
+</script>
+
 <script lang="ts" setup>
-  import type { MessageListType, MessageRecord } from '@/api/system/message';
+  import type { MessageRecordResponse } from '@/api/system/message';
+  import { MessageStatus, messageTypeKey } from './const';
+  import { useDictStore } from '@/store';
 
-  const props = withDefaults(defineProps<{
-    renderList: MessageListType;
-    unreadCount?: number;
-  }>(), {
-    unreadCount: 0,
-  });
+  const emits = defineEmits(['load', 'click', 'view', 'delete']);
+  const props = defineProps<{
+    fetchLoading: boolean;
+    messageLoading: boolean;
+    hasMore: boolean;
+    messageList: Array<MessageRecordResponse>;
+  }>();
 
-  const emit = defineEmits(['itemClick']);
-  const allRead = () => {
-    emit('itemClick', [...props.renderList]);
-  };
+  const { getDictValue } = useDictStore();
 
-  const onItemClick = (item: MessageRecord) => {
-    if (!item.status) {
-      emit('itemClick', [item]);
-    }
-  };
-  const showMax = 3;
 </script>
 
 <style lang="less" scoped>
-  :deep(.arco-list) {
-    .arco-list-item {
-      min-height: 86px;
-      border-bottom: 1px solid rgb(var(--gray-3));
+  @gap: 8px;
+  @message-height: 86px;
+  @actions-width: 82px;
+
+  .skeleton-wrapper {
+    padding: 8px 12px 0 12px;
+  }
+
+  .message-list-container {
+    width: 100%;
+    height: 344px;
+    display: block;
+
+    .message-list-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
     }
 
-    .arco-list-item-extra {
-      position: absolute;
-      right: 20px;
+    .load-more-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0;
+    }
+  }
+
+  .message-item {
+    height: @message-height;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--color-neutral-3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 16px;
+    color: var(--color-text-1);
+    cursor: pointer;
+
+    &-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &-text {
+        width: calc(100% - @actions-width - @gap);
+        display: block;
+        font-weight: 600;
+        text-overflow: clip;
+      }
+
+      &-status {
+        width: @actions-width;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+      }
+
+      &-actions {
+        width: @actions-width;
+        display: none;
+        justify-content: flex-end;
+        align-items: flex-end;
+
+        button {
+          padding: 0 6px !important;
+
+          &:hover {
+            background: var(--color-fill-3) !important;
+          }
+        }
+      }
     }
 
-    .arco-list-item-meta-content {
-      flex: 1;
+    &-content {
+      color: var(--color-text-1);
+      text-overflow: clip;
     }
+  }
 
-    .item-wrap {
-      cursor: pointer;
-    }
+  .message-item:hover {
+    background: var(--color-fill-1);
 
-    .time-text {
-      font-size: 12px;
-      color: rgb(var(--gray-6));
-    }
-
-    .arco-empty {
+    .message-item-title-status {
       display: none;
     }
 
-    .arco-list-footer {
-      padding: 0;
-      height: 50px;
-      line-height: 50px;
-      border-top: none;
-
-      .arco-space-item {
-        width: 100%;
-        border-right: 1px solid rgb(var(--gray-3));
-
-        &:last-child {
-          border-right: none;
-        }
-      }
-
-      .add-border-top {
-        border-top: 1px solid rgb(var(--gray-3));
-      }
-    }
-
-    .footer-wrap {
-      text-align: center;
-    }
-
-    .arco-typography {
-      margin-bottom: 0;
-    }
-
-    .add-border {
-      border-top: 1px solid rgb(var(--gray-3));
+    .message-item-title-actions {
+      display: flex;
+      opacity: 1;
     }
   }
+
+  .message-item-read {
+    .message-item-title-text, .message-item-title-status, .message-item-content {
+      opacity: .65;
+    }
+  }
+
+  :deep(.arco-scrollbar) {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    .arco-scrollbar-track-direction-horizontal {
+      display: none;
+    }
+  }
+
 </style>

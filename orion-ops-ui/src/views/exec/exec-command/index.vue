@@ -26,10 +26,13 @@
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
   import { dictKeys } from '@/components/exec/log/const';
+  import { useRoute } from 'vue-router';
+  import { getExecCommandLog } from '@/api/exec/exec-command-log';
   import ExecCommandPanel from './components/exec-command-panel.vue';
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
   const { visible: logVisible, setVisible: setLogVisible } = useVisible();
+  const route = useRoute();
 
   const log = ref();
 
@@ -41,12 +44,30 @@
     });
   };
 
+  // 打开日志
+  const openLogWithId = async (id: number) => {
+    setLogVisible(true);
+    // 查询日志
+    const { data } = await getExecCommandLog(id);
+    openLog(data);
+  };
+
   // 加载字典值
   onMounted(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
   });
 
+  // 跳转日志
+  onMounted(async () => {
+    const idParam = route.query.id;
+    const keyParam = route.query.key;
+    if (idParam) {
+      await openLogWithId(Number.parseInt(idParam as string));
+    } else if (keyParam) {
+      await openLogWithId(Number.parseInt(keyParam as string));
+    }
+  });
 </script>
 
 <style lang="less" scoped>
