@@ -54,7 +54,7 @@ export interface ExecHostLogQueryResponse extends TableData {
   status: string;
   command: string;
   parameter: string;
-  exitStatus: number;
+  exitCode: number;
   errorMessage: string;
   startTime: number;
   finishTime: number;

@@ -10,10 +10,10 @@
               @change="loadClassifyMessage">
         <!-- 消息列表 -->
         <a-tab-pane v-for="item in toOptions(messageClassifyKey)"
-                    :key="item.value">
+                    :key="item.value as string">
           <!-- 标题 -->
           <template #title>
-            <span class="usn">{{ item.label }} ({{ classifyCount[item.value] || 0 }})</span>
+            <span class="usn">{{ item.label }} ({{ classifyCount[item.value as any] || 0 }})</span>
           </template>
           <!-- 消息列表 -->
         </a-tab-pane>
@@ -51,11 +51,7 @@
           :message-list="messageList"
           @load="loadMessage"
           @click="clickMessage"
-          @view="viewMessage"
           @delete="deleteMessage" />
-    <!-- 模态框 -->
-    <modal ref="modalRef"
-           @delete="deleteMessage" />
   </div>
 </template>
 
@@ -78,11 +74,10 @@
   } from '@/api/system/message';
   import useLoading from '@/hooks/loading';
   import { useRouter } from 'vue-router';
+  import { clearHtmlTag, replaceHtmlTag } from '@/utils';
   import { useDictStore } from '@/store';
   import { dictKeys, messageClassifyKey, messageTypeKey, defaultClassify, MESSAGE_CONFIG_KEY, messageLimit, MessageStatus } from './const';
   import List from './list.vue';
-  import Modal from './modal.vue';
-  import { clearHtmlTag, replaceHtmlTag } from '@/utils';
 
   const { loading: fetchLoading, setLoading: setFetchLoading } = useLoading();
   const { loading: messageLoading, setLoading: setMessageLoading } = useLoading();
@@ -94,7 +89,6 @@
   const classifyCount = ref<Record<string, number>>({});
   const messageList = ref<Array<MessageRecordResponse>>([]);
   const hasMore = ref(true);
-  const modalRef = ref();
 
   // 重新加载消息
   const reloadAllMessage = async () => {
@@ -193,26 +187,6 @@
     if (redirectComponent && redirectComponent !== '0') {
       // 跳转组件
       router.push({ name: redirectComponent, query: { key: message.relKey } });
-    } else {
-      // 打开消息模态框
-      modalRef.value.open(message);
-    }
-  };
-
-  // 查看消息
-  const viewMessage = async (message: MessageRecordResponse) => {
-    setMessageLoading(true);
-    try {
-      // 设置为已读
-      if (message.status === MessageStatus.UNREAD) {
-        await updateSystemMessageRead(message.id);
-        message.status = MessageStatus.READ;
-      }
-      // 打开消息模态框
-      modalRef.value.open(message);
-    } catch (ex) {
-    } finally {
-      setMessageLoading(false);
     }
   };
 

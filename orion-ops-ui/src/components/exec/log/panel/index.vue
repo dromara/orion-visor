@@ -95,7 +95,7 @@
         host.startTime = hostStatus.startTime;
         // 结束时间绑定了使用时间 如果未完成则使用当前时间
         host.finishTime = hostStatus.finishTime || Date.now();
-        host.exitStatus = hostStatus.exitStatus;
+        host.exitCode = hostStatus.exitCode;
         host.errorMessage = hostStatus.errorMessage;
       }
     }

@@ -18,12 +18,12 @@ const columns = [
     tooltip: true,
   }, {
     title: '退出码',
-    dataIndex: 'exitStatus',
-    slotName: 'exitStatus',
+    dataIndex: 'exitCode',
+    slotName: 'exitCode',
     align: 'left',
     width: 118,
     render: ({ record }) => {
-      return isNumber(record.exitStatus) ? record.exitStatus : '-';
+      return isNumber(record.exitCode) ? record.exitCode : '-';
     },
   }, {
     title: '执行状态',

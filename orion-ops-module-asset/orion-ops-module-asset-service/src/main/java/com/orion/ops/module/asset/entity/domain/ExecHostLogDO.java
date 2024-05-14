@@ -61,8 +61,8 @@ public class ExecHostLogDO extends BaseDO {
     private String parameter;
 
     @Schema(description = "退出码")
-    @TableField("exit_status")
-    private Integer exitStatus;
+    @TableField("exit_code")
+    private Integer exitCode;
 
     @Schema(description = "日志路径")
     @TableField("log_path")

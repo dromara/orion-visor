@@ -374,7 +374,7 @@
       host.status = s.status;
       host.startTime = s.startTime;
       host.finishTime = s.finishTime;
-      host.exitStatus = s.exitStatus;
+      host.exitCode = s.exitCode;
       host.errorMessage = s.errorMessage;
     });
   };

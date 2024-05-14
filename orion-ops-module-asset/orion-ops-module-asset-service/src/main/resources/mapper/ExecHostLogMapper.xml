@@ -12,7 +12,7 @@
         <result column="status" property="status"/>
         <result column="command" property="command"/>
         <result column="parameter" property="parameter"/>
-        <result column="exit_status" property="exitStatus"/>
+        <result column="exit_code" property="exitCode"/>
         <result column="log_path" property="logPath"/>
         <result column="script_path" property="scriptPath"/>
         <result column="error_message" property="errorMessage"/>
@@ -27,7 +27,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, log_id, host_id, host_name, host_address, status, command, parameter, exit_status, log_path, script_path, error_message, start_time, finish_time, create_time, update_time, creator, updater, deleted
+        id, log_id, host_id, host_name, host_address, status, command, parameter, exit_code, log_path, script_path, error_message, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

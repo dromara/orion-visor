@@ -33,20 +33,13 @@
             <!-- tag -->
             <div class="message-item-title-status">
               <template v-if="getDictValue(messageTypeKey, message.type, 'tagVisible', false)">
-                <a-tag size="mini" :color="getDictValue(messageTypeKey, message.type, 'tagColor')">
+                <a-tag size="small" :color="getDictValue(messageTypeKey, message.type, 'tagColor')">
                   {{ getDictValue(messageTypeKey, message.type, 'tagLabel') }}
                 </a-tag>
               </template>
             </div>
             <!-- 操作 -->
             <div class="message-item-title-actions">
-              <!-- 查看 -->
-              <a-button class="mr4"
-                        size="mini"
-                        type="text"
-                        @click.stop="emits('view', message)">
-                查看
-              </a-button>
               <!-- 删除 -->
               <a-button size="mini"
                         type="text"
@@ -57,12 +50,10 @@
             </div>
           </div>
           <!-- 内容 -->
-          <div v-html="message.contentHtml"
-               class="message-item-content"
-               :title="message.content" />
+          <div v-html="message.contentHtml" class="message-item-content" />
           <!-- 时间 -->
           <div class="message-item-time">
-            {{ dateFormat(new Date(message.createTime))}}
+            {{ dateFormat(new Date(message.createTime)) }}
           </div>
         </div>
         <!-- 加载中 -->
@@ -98,7 +89,7 @@
   import { useDictStore } from '@/store';
   import { dateFormat } from '@/utils';
 
-  const emits = defineEmits(['load', 'click', 'view', 'delete']);
+  const emits = defineEmits(['load', 'click', 'delete']);
   const props = defineProps<{
     fetchLoading: boolean;
     messageLoading: boolean;

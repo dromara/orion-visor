@@ -149,17 +149,17 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
                     .append(Dates.current())
                     .newLine();
         } else {
-            long ms = this.updateRecord.getFinishTime().getTime() - this.updateRecord.getStartTime().getTime();
-            Integer exitStatus = this.updateRecord.getExitStatus();
+            long ms = updateRecord.getFinishTime().getTime() - updateRecord.getStartTime().getTime();
+            Integer exitCode = updateRecord.getExitCode();
             // 执行完成
             appender.append(AnsiForeground.BRIGHT_GREEN, "< 命令执行完成    ")
                     .append(Dates.current())
                     .newLine()
                     .append(AnsiForeground.BRIGHT_BLUE, "exit:     ");
-            if (ExitCode.isSuccess(exitStatus)) {
-                appender.append(AnsiForeground.BRIGHT_GREEN, exitStatus);
+            if (ExitCode.isSuccess(exitCode)) {
+                appender.append(AnsiForeground.BRIGHT_GREEN, exitCode);
             } else {
-                appender.append(AnsiForeground.BRIGHT_RED, exitStatus);
+                appender.append(AnsiForeground.BRIGHT_RED, exitCode);
             }
             appender.newLine()
                     .append(AnsiForeground.BRIGHT_BLUE, "used:     ")
