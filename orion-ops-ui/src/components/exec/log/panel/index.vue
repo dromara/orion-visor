@@ -44,7 +44,7 @@
 
   const logViewRef = ref();
   const currentHostExecId = ref();
-  const statusIntervalId = ref();
+  const pullIntervalId = ref();
   const execLog = ref<ExecLogQueryResponse>();
   const appender = ref<ILogAppender>();
 
@@ -57,9 +57,9 @@
     if (record.status === execStatus.WAITING ||
       record.status === execStatus.RUNNING) {
       // 等待一秒后先查询一下状态
-      setTimeout(fetchTaskStatus, 1000);
+      setTimeout(pullExecStatus, 1000);
       // 注册状态轮询
-      statusIntervalId.value = setInterval(fetchTaskStatus, 5000);
+      pullIntervalId.value = setInterval(pullExecStatus, 5000);
     }
     // 打开日志
     nextTick(() => {
@@ -68,7 +68,7 @@
   };
 
   // 加载状态
-  const fetchTaskStatus = async () => {
+  const pullExecStatus = async () => {
     if (!execLog.value) {
       return;
     }
@@ -150,7 +150,7 @@
   // 清理轮询
   const clearAllInterval = () => {
     // 关闭状态轮询
-    clearInterval(statusIntervalId.value);
+    clearInterval(pullIntervalId.value);
   };
 
   // 加载字典值

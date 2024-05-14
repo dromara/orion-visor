@@ -23,7 +23,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
 
   private sessions: Record<string, ITerminalSession>;
 
-  private keepAliveTask?: any;
+  private keepAliveTaskId?: any;
 
   private readonly dispatchResizeFn: () => {};
 
@@ -136,7 +136,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     // 注册 resize 事件
     addEventListen(window, 'resize', this.dispatchResizeFn);
     // 注册 ping 事件
-    this.keepAliveTask = setInterval(() => {
+    this.keepAliveTaskId = setInterval(() => {
       this.channel.send(InputProtocol.PING, {});
     }, 15000);
   }
@@ -158,10 +158,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       // 关闭 channel
       this.channel.close();
       // 清除 ping 事件
-      if (this.keepAliveTask) {
-        clearInterval(this.keepAliveTask);
-        this.keepAliveTask = undefined;
-      }
+      clearInterval(this.keepAliveTaskId);
       // 移除 resize 事件
       removeEventListen(window, 'resize', this.dispatchResizeFn);
     } catch (e) {

@@ -199,7 +199,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const intervalId = ref();
+  const pullIntervalId = ref();
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<UploadTaskQueryResponse[]>([]);
   const formModel = reactive<UploadTaskQueryRequest>({
@@ -264,7 +264,7 @@
   };
 
   // 加载状态
-  const fetchTaskStatus = async () => {
+  const pullTaskStatus = async () => {
     const unCompleteIdList = tableRenderData.value
       .filter(s => s.status === UploadTaskStatus.WAITING || s.status === UploadTaskStatus.UPLOADING)
       .map(s => s.id);
@@ -311,12 +311,12 @@
     // 加载数据
     fetchTableData();
     // 注册状态轮询
-    intervalId.value = setInterval(fetchTaskStatus, 10000);
+    pullIntervalId.value = setInterval(pullTaskStatus, 10000);
   });
 
   onUnmounted(() => {
     // 卸载状态轮询
-    clearInterval(intervalId.value);
+    clearInterval(pullIntervalId.value);
   });
 
 </script>
