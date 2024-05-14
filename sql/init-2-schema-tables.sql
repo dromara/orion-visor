@@ -211,7 +211,7 @@ CREATE TABLE `exec_host_log`
     `status`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行状态',
     `command`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
     `parameter`     json                                                          NULL COMMENT '执行参数',
-    `exit_status`   int(0)                                                        NULL DEFAULT NULL COMMENT '退出码',
+    `exit_code`     int(0)                                                        NULL DEFAULT NULL COMMENT '退出码',
     `log_path`      varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志路径',
     `script_path`   varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '脚本路径',
     `error_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '错误信息',
@@ -642,6 +642,32 @@ CREATE TABLE `system_menu`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '菜单表'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for system_message
+-- ----------------------------
+DROP TABLE IF EXISTS `system_message`;
+CREATE TABLE `system_message`
+(
+    `id`                bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `classify`          char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '消息分类',
+    `type`              varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '消息类型',
+    `status`            tinyint(0)                                                    NULL DEFAULT NULL COMMENT '消息状态',
+    `rel_key`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '消息关联',
+    `title`             varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
+    `content`           text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '消息内容',
+    `receiver_id`       bigint(0)                                                     NULL DEFAULT NULL COMMENT '接收人id',
+    `receiver_username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '接收人用户名',
+    `create_time`       datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`       datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `deleted`           tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_receiver_classify` (`receiver_id`, `classify`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '系统消息'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
