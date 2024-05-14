@@ -139,18 +139,19 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--color-text-1);
     cursor: pointer;
 
     &-title {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
 
       &-text {
         width: calc(100% - @actions-width - @gap);
         display: block;
+        font-size: 15px;
         font-weight: 600;
         text-overflow: clip;
       }
@@ -179,6 +180,8 @@
     }
 
     &-content {
+      display: block;
+      padding-bottom: 2px;
       color: var(--color-text-1);
       text-overflow: clip;
     }

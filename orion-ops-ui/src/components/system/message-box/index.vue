@@ -25,7 +25,7 @@
                       type="round"
                       checked-text="未读"
                       unchecked-text="全部"
-                      @change="changeMessageStatus" />
+                      @change="reloadAllMessage" />
             <!-- 全部已读 -->
             <a-button class="header-button"
                       type="text"
@@ -67,7 +67,7 @@
 
 <script lang="ts" setup>
   import type { MessageRecordResponse } from '@/api/system/message';
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onUnmounted } from 'vue';
   import {
     clearSystemMessage,
     deleteSystemMessage,
@@ -79,7 +79,7 @@
   import useLoading from '@/hooks/loading';
   import { useRouter } from 'vue-router';
   import { useDictStore } from '@/store';
-  import { dictKeys, messageClassifyKey, messageTypeKey, defaultClassify, messageLimit, MessageStatus } from './const';
+  import { dictKeys, messageClassifyKey, messageTypeKey, defaultClassify, MESSAGE_CONFIG_KEY, messageLimit, MessageStatus } from './const';
   import List from './list.vue';
   import Modal from './modal.vue';
   import { clearHtmlTag, replaceHtmlTag } from '@/utils';
@@ -96,8 +96,8 @@
   const hasMore = ref(true);
   const modalRef = ref();
 
-  // 修改消息状态
-  const changeMessageStatus = async () => {
+  // 重新加载消息
+  const reloadAllMessage = async () => {
     hasMore.value = true;
     messageList.value = [];
     // 查询数量
@@ -179,7 +179,7 @@
       setMessageLoading(false);
     }
     // 查询消息
-    await changeMessageStatus();
+    await reloadAllMessage();
   };
 
   // 点击消息
@@ -239,7 +239,29 @@
   });
 
   // 获取消息
-  onMounted(changeMessageStatus);
+  onMounted(() => {
+    // 获取配置缓存
+    const item = localStorage.getItem(MESSAGE_CONFIG_KEY);
+    if (item) {
+      const config = JSON.parse(item) as Record<string, any>;
+      if (config?.currentClassify) {
+        currentClassify.value = config.currentClassify;
+      }
+      if (config?.queryUnread) {
+        queryUnread.value = config.queryUnread;
+      }
+    }
+    // 查询数据
+    reloadAllMessage();
+  });
+
+  // 设置缓存配置
+  onUnmounted(() => {
+    localStorage.setItem(MESSAGE_CONFIG_KEY, JSON.stringify({
+      currentClassify: currentClassify.value,
+      queryUnread: queryUnread.value,
+    }));
+  });
 
 </script>
 
