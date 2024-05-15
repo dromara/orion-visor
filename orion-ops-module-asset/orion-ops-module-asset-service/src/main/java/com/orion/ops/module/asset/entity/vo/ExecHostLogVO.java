@@ -50,7 +50,7 @@ public class ExecHostLogVO implements Serializable {
     private String parameter;
 
     @Schema(description = "退出码")
-    private Integer exitStatus;
+    private Integer exitCode;
 
     @Schema(description = "错误信息")
     private String errorMessage;

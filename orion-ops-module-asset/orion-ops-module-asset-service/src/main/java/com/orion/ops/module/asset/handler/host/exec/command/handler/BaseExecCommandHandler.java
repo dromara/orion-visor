@@ -67,6 +67,9 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
 
     private CommandExecutor executor;
 
+    @Getter
+    private Integer exitCode;
+
     private volatile boolean closed;
 
     private volatile boolean interrupted;
@@ -227,7 +230,8 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         } else if (ExecHostStatusEnum.COMPLETED.equals(status)) {
             // 完成
             updateRecord.setFinishTime(new Date());
-            updateRecord.setExitStatus(executor.getExitCode());
+            updateRecord.setExitCode(executor.getExitCode());
+            this.exitCode = executor.getExitCode();
         } else if (ExecHostStatusEnum.FAILED.equals(status)) {
             // 失败
             updateRecord.setFinishTime(new Date());

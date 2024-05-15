@@ -14,7 +14,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
 
   private run: boolean;
 
-  private progressId?: number;
+  private progressIntervalId?: number;
 
   private currentItem?: SftpTransferItem;
 
@@ -136,7 +136,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
     // 处理消息
     this.client.onmessage = this.resolveMessage.bind(this);
     // 计算传输进度
-    this.progressId = setInterval(this.calcProgress.bind(this), 500);
+    this.progressIntervalId = setInterval(this.calcProgress.bind(this), 500);
     // 打开后自动传输下一个任务
     this.transferNextItem();
   }
@@ -275,7 +275,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
     // 重置 run
     this.run = false;
     // 关闭传输进度
-    clearInterval(this.progressId);
+    clearInterval(this.progressIntervalId);
   }
 
 }

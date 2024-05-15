@@ -28,10 +28,14 @@
     await dictStore.loadKeys(dictKeys);
   });
 
+  // 跳转日志
   onMounted(async () => {
     const idParam = route.query.id;
+    const keyParam = route.query.key;
     if (idParam) {
       await panel.value?.openLog(Number.parseInt(idParam as string));
+    } else if (keyParam) {
+      await panel.value?.openLog(Number.parseInt(keyParam as string));
     }
   });
 

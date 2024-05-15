@@ -90,7 +90,7 @@ INSERT INTO `system_menu` VALUES (157, 122, '清空操作日志', 'infra:operato
 INSERT INTO `system_menu` VALUES (158, 152, '文件操作日志', NULL, 2, 30, 1, 1, 1, 0, 'IconFile', NULL, 'sftpLog', '2024-03-05 15:30:13', '2024-05-07 11:11:24', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (159, 158, '查询文件操作日志', 'asset:host-sftp-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:02', '2024-04-12 14:49:18', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (160, 158, '删除文件操作日志', 'asset:host-sftp-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:17', '2024-04-12 14:49:21', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (161, 176, '执行模板', NULL, 2, 60, 1, 1, 1, 0, 'IconBookmark', NULL, 'execTemplate', '2024-03-07 18:32:41', '2024-04-28 17:14:30', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (161, 176, '执行模板', NULL, 2, 50, 1, 1, 1, 0, 'IconBookmark', NULL, 'execTemplate', '2024-03-07 18:32:41', '2024-05-14 15:58:51', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (162, 161, '查询执行模板', 'asset:exec-template:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (163, 161, '创建执行模板', 'asset:exec-template:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (164, 161, '修改执行模板', 'asset:exec-template:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
@@ -102,7 +102,6 @@ INSERT INTO `system_menu` VALUES (171, 167, '清理执行日志', 'asset:exec-co
 INSERT INTO `system_menu` VALUES (172, 176, '命令执行', NULL, 2, 10, 1, 1, 1, 0, 'icon-thunderbolt', NULL, 'execCommand', '2024-03-13 15:08:23', '2024-05-08 21:58:24', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (173, 172, '执行命令', 'asset:exec-command:exec', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-10 22:04:32', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (174, 167, '中断批量执行', 'asset:exec-command-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:25:36', '2024-04-12 12:48:36', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (175, 176, '批量执行日志新页面', NULL, 2, 30, 0, 1, 0, 1, '', NULL, 'execCommandLogView', '2024-03-21 14:03:10', '2024-04-11 23:45:08', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (176, 0, '批量执行', NULL, 1, 420, 1, 1, 1, 0, 'icon-relation', NULL, 'execModule', '2024-04-10 16:13:27', '2024-04-28 15:30:31', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (177, 193, '任务列表', NULL, 2, 10, 1, 1, 1, 0, 'IconUnorderedList', NULL, 'execJob', '2024-04-10 16:13:27', '2024-04-28 15:36:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (178, 177, '查询计划任务', 'asset:exec-job:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
@@ -123,8 +122,8 @@ INSERT INTO `system_menu` VALUES (193, 0, '计划任务', NULL, 1, 430, 1, 1, 1,
 INSERT INTO `system_menu` VALUES (194, 152, '在线会话', NULL, 2, 20, 1, 1, 1, 0, 'IconUserGroup', NULL, 'connectSession', '2024-05-07 11:12:17', '2024-05-07 11:12:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (195, 194, '查询在线会话', 'asset:host-connect-session:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:16', '2024-05-07 11:13:16', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (196, 194, '强制断开连接', 'asset:host-connect-session:management:force-offline', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:37', '2024-05-07 11:13:37', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (197, 176, '批量上传', NULL, 2, 40, 1, 1, 1, 0, 'IconUpload', NULL, 'batchUpload', '2024-05-08 22:12:23', '2024-05-08 22:12:23', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (198, 176, '上传任务', NULL, 2, 50, 1, 1, 1, 0, 'IconCloud', NULL, 'uploadTask', '2024-05-08 22:16:05', '2024-05-10 23:09:58', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (197, 176, '批量上传', NULL, 2, 30, 1, 1, 1, 0, 'IconUpload', NULL, 'batchUpload', '2024-05-08 22:12:23', '2024-05-14 15:58:44', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (198, 176, '上传任务', NULL, 2, 40, 1, 1, 1, 0, 'IconCloud', NULL, 'uploadTask', '2024-05-08 22:16:05', '2024-05-14 15:58:46', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (199, 197, '上传文件', 'asset:upload-task:upload', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:19:35', '2024-05-08 22:19:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (200, 198, '查询上传日志', 'asset:upload-task:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:01', '2024-05-08 22:20:01', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (201, 198, '删除上传日志', 'asset:upload-task:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:26', '2024-05-08 22:20:26', '1', '1', 0);
@@ -165,6 +164,8 @@ INSERT INTO `dict_key` VALUES (39, 'pathBookmarkType', 'STRING', '[]', '路径�
 INSERT INTO `dict_key` VALUES (40, 'sftpTransferStatus', 'STRING', '[{\"name\": \"status\", \"type\": \"STRING\"}, {\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"icon\", \"type\": \"STRING\"}]', 'SFTP 传输状态', '2024-05-06 11:54:49', '2024-05-06 11:54:49', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (41, 'uploadTaskStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '上传任务状态', '2024-05-07 22:18:48', '2024-05-08 22:06:23', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (42, 'uploadTaskFileStatus', 'STRING', '[{\"name\": \"status\", \"type\": \"STRING\"}]', '上传任务文件状态', '2024-05-08 10:30:29', '2024-05-10 17:34:13', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (43, 'messageType', 'STRING', '[{\"name\": \"tagLabel\", \"type\": \"STRING\"}, {\"name\": \"tagVisible\", \"type\": \"STRING\"}, {\"name\": \"tagColor\", \"type\": \"STRING\"}, {\"name\": \"redirectComponent\", \"type\": \"STRING\"}]', '消息类型', '2024-05-13 12:07:56', '2024-05-14 14:48:28', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (44, 'messageClassify', 'STRING', '[]', '消息分类', '2024-05-13 15:06:27', '2024-05-13 15:06:27', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -405,3 +406,7 @@ INSERT INTO `dict_value` VALUES (291, 2, 'operatorLogType', 'upload-task:cancel'
 INSERT INTO `dict_value` VALUES (292, 2, 'operatorLogType', 'upload-task:delete', '删除上传记录', '{}', 30, '2024-05-08 22:23:44', '2024-05-08 22:23:44', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (293, 2, 'operatorLogType', 'upload-task:clear', '清理上传记录', '{}', 40, '2024-05-08 22:23:59', '2024-05-08 22:23:59', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (294, 41, 'uploadTaskStatus', 'FAILED', '已失败', '{\"color\": \"red\"}', 40, '2024-05-10 11:29:17', '2024-05-10 11:29:17', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (295, 43, 'messageType', 'EXEC_FAILED', '执行失败', '{\"tagColor\": \"red\", \"tagLabel\": \"部分失败\", \"tagVisible\": \"true\", \"redirectComponent\": \"execCommand\"}', 10, '2024-05-13 12:07:56', '2024-05-14 15:19:19', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (296, 43, 'messageType', 'UPLOAD_FAILED', '上传失败', '{\"tagColor\": \"red\", \"tagLabel\": \"部分失败\", \"tagVisible\": \"true\", \"redirectComponent\": \"batchUpload\"}', 20, '2024-05-13 12:07:56', '2024-05-14 15:11:21', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (297, 44, 'messageClassify', 'NOTICE', '通知', '{}', 10, '2024-05-13 15:06:27', '2024-05-13 15:06:27', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (298, 44, 'messageClassify', 'TODO', '待办', '{}', 20, '2024-05-13 15:06:27', '2024-05-13 15:06:27', '1', '1', 0);

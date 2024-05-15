@@ -12,15 +12,15 @@
         <a-tag :color="getDictValue(execHostStatusKey, host.status, 'color')">
           {{ getDictValue(execHostStatusKey, host.status) }}
         </a-tag>
-        <!-- exitStatus -->
-        <a-tag v-if="host.exitStatus || host.exitStatus === 0"
-               :color="host.exitStatus === 0 ? 'arcoblue' : 'orangered'"
-               title="exit status">
+        <!-- exitCode -->
+        <a-tag v-if="host.exitCode || host.exitCode === 0"
+               :color="host.exitCode === 0 ? 'arcoblue' : 'orangered'"
+               title="exit code">
           <template #icon>
-            <icon-check v-if="host.exitStatus === 0" />
+            <icon-check v-if="host.exitCode === 0" />
             <icon-exclamation v-else />
           </template>
-          <span class="tag-value">{{ host.exitStatus }}</span>
+          <span class="tag-value">{{ host.exitCode }}</span>
         </a-tag>
         <!-- 持续时间 -->
         <a-tag v-if="host.startTime"

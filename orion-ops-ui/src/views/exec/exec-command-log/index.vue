@@ -69,7 +69,7 @@
     if (newWindow) {
       // 跳转新页面
       openNewRoute({
-        name: 'execCommandLogView',
+        name: 'execCommand',
         query: {
           id
         }

@@ -76,7 +76,7 @@
 
   const { loading, setLoading } = useLoading();
 
-  const pullStatusId = ref();
+  const pullIntervalId = ref();
   const taskId = ref();
   const task = ref<UploadTaskQueryResponse>({} as UploadTaskQueryResponse);
   const selectedHost = ref();
@@ -266,12 +266,12 @@
 
   // 设置轮询状态
   onMounted(() => {
-    pullStatusId.value = setInterval(pullTaskStatus, 5000);
+    pullIntervalId.value = setInterval(pullTaskStatus, 5000);
   });
 
   // 卸载状态查询
   onUnmounted(() => {
-    clearInterval(pullStatusId.value);
+    clearInterval(pullIntervalId.value);
   });
 
 </script>

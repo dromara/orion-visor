@@ -14,6 +14,17 @@ import java.util.LinkedHashMap;
  */
 public class DictTemplate extends Template {
 
+    //      // $comment
+    //      export const $field = {
+    //        // labels[0]
+    //        fields[0]: 'values[0]',
+    //        // labels[1]
+    //        fields[0]: 'values[1]',
+    //      };
+    //
+    //      // $comment 字典项
+    //      export const $keyField = '$keyName';
+
     private final DictMeta dictMeta;
 
     public DictTemplate(Table table, String keyName, String variable) {

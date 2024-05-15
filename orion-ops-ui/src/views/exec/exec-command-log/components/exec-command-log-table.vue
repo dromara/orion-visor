@@ -236,7 +236,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const intervalId = ref();
+  const pullIntervalId = ref();
   const tableRef = ref();
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecLogQueryResponse[]>([]);
@@ -343,7 +343,7 @@
   };
 
   // 加载状态
-  const fetchTaskStatus = async () => {
+  const pullExecStatus = async () => {
     const unCompleteIdList = tableRenderData.value
       .filter(s => s.status === execStatus.WAITING || s.status === execStatus.RUNNING)
       .map(s => s.id);
@@ -374,7 +374,7 @@
       host.status = s.status;
       host.startTime = s.startTime;
       host.finishTime = s.finishTime;
-      host.exitStatus = s.exitStatus;
+      host.exitCode = s.exitCode;
       host.errorMessage = s.errorMessage;
     });
   };
@@ -409,12 +409,12 @@
     // 加载数据
     fetchTableData();
     // 注册状态轮询
-    intervalId.value = setInterval(fetchTaskStatus, 10000);
+    pullIntervalId.value = setInterval(pullExecStatus, 10000);
   });
 
   onUnmounted(() => {
     // 卸载状态轮询
-    clearInterval(intervalId.value);
+    clearInterval(pullIntervalId.value);
   });
 
 </script>

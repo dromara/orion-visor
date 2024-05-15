@@ -55,6 +55,10 @@ public interface FieldConst {
 
     String COUNT = "count";
 
+    String DATE = "date";
+
+    String TIME = "time";
+
     String LOCATION = "location";
 
     String USER_AGENT = "userAgent";

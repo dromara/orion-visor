@@ -80,11 +80,11 @@
           </a-button>
         </a-tooltip>
       </li>
-      <!-- 消息列表 -->
-      <li v-if="false">
-        <a-tooltip content="消息通知">
+      <!-- 系统消息 -->
+      <li>
+        <a-tooltip content="系统消息" :show-arrow="false">
           <div class="message-box-trigger">
-            <a-badge :count="9" dot>
+            <a-badge :count="messageCount" dot>
               <a-button class="nav-btn"
                         type="outline"
                         shape="circle"
@@ -95,9 +95,12 @@
           </div>
         </a-tooltip>
         <a-popover trigger="click"
-                   :arrow-style="{ display: 'none' }"
-                   :content-style="{ padding: 0, minWidth: '400px' }"
-                   content-class="message-popover">
+                   content-class="message-popover"
+                   position="br"
+                   :show-arrow="false"
+                   :popup-style="{ marginLeft: '198px' }"
+                   :content-style="{ padding: 0, width: '428px' }"
+                   @hide="pullHasUnreadMessage">
           <div ref="messageRef" class="ref-btn" />
           <template #content>
             <message-box />
@@ -202,7 +205,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, inject, ref } from 'vue';
+  import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import { useRoute, useRouter } from 'vue-router';
@@ -214,6 +217,7 @@
   import { preferenceTipsKey } from './const';
   import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
   import { openNewRoute } from '@/router';
+  import { checkHasUnreadMessage } from '@/api/system/message';
   import SystemMenuTree from '@/components/system/menu/tree/index.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
   import UpdatePasswordModal from '@/components/user/user/update-password-modal/index.vue';
@@ -258,6 +262,9 @@
   const messageRef = ref();
   // 语言
   const localeRef = ref();
+  // 消息数量
+  const messageCount = ref(0);
+  const messageIntervalId = ref();
 
   // 打开应用设置
   const openAppSetting = inject(openAppSettingKey) as () => void;
@@ -302,6 +309,14 @@
     await logout();
   };
 
+  // 获取是否有未读的消息
+  const pullHasUnreadMessage = () => {
+    // 查询
+    checkHasUnreadMessage().then(({ data }) => {
+      messageCount.value = data ? 1 : 0;
+    });
+  };
+
   // 关闭偏好提示
   const closePreferenceTip = (ack: boolean) => {
     tippedPreference.value = false;
@@ -309,6 +324,18 @@
       tipsStore.setTipped(preferenceTipsKey);
     }
   };
+
+  onMounted(() => {
+    // 查询未读消息
+    pullHasUnreadMessage();
+    // 注册未读消息轮询
+    messageIntervalId.value = setInterval(pullHasUnreadMessage, 30000);
+  });
+
+  onUnmounted(() => {
+    // 清理消息轮询
+    clearInterval(messageIntervalId.value);
+  });
 
 </script>
 

@@ -156,7 +156,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                         ExecHostLogDO::getStatus,
                         ExecHostLogDO::getStartTime,
                         ExecHostLogDO::getFinishTime,
-                        ExecHostLogDO::getExitStatus,
+                        ExecHostLogDO::getExitCode,
                         ExecHostLogDO::getErrorMessage)
                 .in(ExecHostLogDO::getLogId, idList)
                 .then()

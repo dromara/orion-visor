@@ -26,7 +26,7 @@ public class CodeGenerators {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "asset";
+        String module = "infra";
         // 生成的表
         Table[] tables = {
                 // Template.create("dict_key", "字典配置项", "dict")
@@ -49,24 +49,22 @@ public class CodeGenerators {
                 //         .disableUnitTest()
                 //         .vue("exec", "exec-template-host")
                 //         .build(),
-                Template.create("upload_task", "上传任务", "upload")
+                Template.create("system_message", "系统消息", "message")
                         .disableUnitTest()
-                        .vue("exec", "upload-task")
-                        .enableRowSelection()
-                        .dict("uploadTaskStatus", "status")
-                        .comment("上传任务状态")
-                        .fields("WAITING", "UPLOADING", "FINISHED", "FAILED", "CANCELED")
-                        .labels("等待中", "上传中", "已完成", "已失败", "已取消")
+                        .enableProviderApi()
+                        .vue("system", "message")
+                        .dict("messageClassify", "classify", "messageClassify")
+                        .comment("消息分类")
+                        .fields("NOTICE", "TODO")
+                        .labels("通知", "待办")
                         .valueUseFields()
-                        .build(),
-                Template.create("upload_task_file", "上传任务文件", "upload")
-                        .disableUnitTest()
-                        .vue("exec", "upload-task-file")
-                        .enableRowSelection()
-                        .dict("uploadTaskFileStatus", "status")
-                        .comment("上传任务文件状态")
-                        .fields("WAITING", "UPLOADING", "FINISHED", "FAILED", "CANCELED")
-                        .labels("等待中", "上传中", "已完成", "已失败", "已取消")
+                        .dict("messageType", "type", "messageType")
+                        .comment("消息类型")
+                        .fields("EXEC_FAILED", "UPLOAD_FAILED")
+                        .labels("执行失败", "上传失败")
+                        .extra("tagLabel", "执行失败", "上传失败")
+                        .extra("tagVisible", true, true)
+                        .extra("tagColor", "red", "red")
                         .valueUseFields()
                         .build(),
         };
