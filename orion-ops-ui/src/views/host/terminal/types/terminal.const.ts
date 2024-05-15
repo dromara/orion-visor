@@ -366,7 +366,7 @@ export const openSftpChmodModalKey = Symbol();
 export const openSftpUploadModalKey = Symbol();
 
 // 字体后缀 兜底
-export const fontFamilySuffix = ',courier-new, courier, monospace';
+export const fontFamilySuffix = ', Courier New, Monaco, courier, monospace';
 
 // 终端字体样式
 export const fontFamilyKey = 'terminalFontFamily';
