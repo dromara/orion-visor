@@ -1,36 +1,36 @@
 <h1 style="display: flex; align-items: center;">
- <img style="margin-right: 8px;" src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8c687ef1-5711-4a93-9db0-79c010af7902.png" width="32px" height="32px"/> orion-ops-pro 是什么
+ <img style="margin-right: 8px;" src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8c687ef1-5711-4a93-9db0-79c010af7902.png" width="32px" height="32px"/> orion-visor 是什么
 </h1>
 
-`orion-ops-pro`
+`orion-visor`
 是一款现代化、高颜值的一站式智能运维管理平台，集资产管理、资产授权、批量执行、批量上传、计划任务、WebShell、WebSftp、角色管理、系统管理等功能于一体，致力于简化运维团队的治理工作。
 
 <p style="text-align: left">
-    <a target="_blank" style="text-decoration: none" href="https://app.codacy.com/gh/lijiahangmax/orion-ops-pro/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+    <a target="_blank" style="text-decoration: none" href="https://app.codacy.com/gh/lijiahangmax/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
         <img src="https://app.codacy.com/project/badge/Grade/49eaab3a9a474af3b87e1d21ffec71c4" alt="quality"/>
     </a>
 	<a target="_blank" style="text-decoration: none" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
 		<img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk8"/>
 	</a>
 	<a target="_blank" style="text-decoration: none" href="https://www.apache.org/licenses/LICENSE-2.0">
-		<img src="https://img.shields.io/github/license/lijiahangmax/orion-ops-pro" alt="License"/>
+		<img src="https://img.shields.io/github/license/lijiahangmax/orion-visor" alt="License"/>
 	</a>
-	<a target="_blank" style="text-decoration: none" href="https://gitee.com/lijiahangmax/orion-ops-pro/stargazers">
-		<img src="https://gitee.com/lijiahangmax/orion-ops-pro/badge/star.svg?theme=dark" alt="star"/>
+	<a target="_blank" style="text-decoration: none" href="https://gitee.com/lijiahangmax/orion-visor/stargazers">
+		<img src="https://gitee.com/lijiahangmax/orion-visor/badge/star.svg?theme=dark" alt="star"/>
 	</a>
-	<a target="_blank" style="text-decoration: none" href="https://gitee.com/lijiahangmax/orion-ops-pro/members">
-		<img src="https://gitee.com/lijiahangmax/orion-ops-pro/badge/fork.svg?theme=dark" alt="fork"/>
+	<a target="_blank" style="text-decoration: none" href="https://gitee.com/lijiahangmax/orion-visor/members">
+		<img src="https://gitee.com/lijiahangmax/orion-visor/badge/fork.svg?theme=dark" alt="fork"/>
 	</a>		
-	<a target="_blank" style="text-decoration: none" href="https://github.com/lijiahangmax/orion-ops-pro">
-		<img src="https://img.shields.io/github/stars/lijiahangmax/orion-ops-pro.svg?style=social" alt="star"/>
+	<a target="_blank" style="text-decoration: none" href="https://github.com/lijiahangmax/orion-visor">
+		<img src="https://img.shields.io/github/stars/lijiahangmax/orion-visor.svg?style=social" alt="star"/>
 	</a>  
 </p>
 
 当前版本: **1.1.0**  
 
-**github:** https://github.com/lijiahangmax/orion-ops-pro  
-**gitee:** https://gitee.com/lijiahangmax/orion-ops-pro  
-**文档:** https://lijiahangmax.github.io/orion-ops-pro/#/  
+**github:** https://github.com/lijiahangmax/orion-visor  
+**gitee:** https://gitee.com/lijiahangmax/orion-visor  
+**文档:** https://lijiahangmax.github.io/orion-visor/#/  
 **demo:** http://101.43.254.243:1081/
 
 演示账号: `admin`    
@@ -53,11 +53,11 @@
 
 ## 快速开始
 
-* [docker安装](https://lijiahangmax.github.io/orion-ops-pro/#/quickstart/docker-install)
-* [普通安装](https://lijiahangmax.github.io/orion-ops-pro/#/quickstart/install)
-* [更新日志](https://lijiahangmax.github.io/orion-ops-pro/#/about/change-log)
-* [操作手册](https://lijiahangmax.github.io/orion-ops-pro/#/operator/asset)
-* [常见问题](https://lijiahangmax.github.io/orion-ops-pro/#/quickstart/faq)
+* [docker安装](https://lijiahangmax.github.io/orion-visor/#/quickstart/docker-install)
+* [普通安装](https://lijiahangmax.github.io/orion-visor/#/quickstart/install)
+* [更新日志](https://lijiahangmax.github.io/orion-visor/#/about/change-log)
+* [操作手册](https://lijiahangmax.github.io/orion-visor/#/operator/asset)
+* [常见问题](https://lijiahangmax.github.io/orion-visor/#/quickstart/faq)
 
 ## 技术栈
 
@@ -106,7 +106,7 @@
   <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/4f1c4e77-8e36-45a3-8be6-9da5387bb96e.jpg" alt="wx" width="298px" height="398px"/>  
 </div>
 
-📧 咨询问题微信备注: ops  
+📧 咨询问题微信备注: git  
 📧 合作/功能定制备注: 合作
 
 ## 支持一下
@@ -117,8 +117,8 @@
 
 ## 免责声明
 
-在使用本项目之前, 请确保您已经了解并同意相关的使用协议和隐私政策。[免责声明](https://github.com/lijiahangmax/orion-ops-pro/blob/main/DISCLAIMER.md)
+在使用本项目之前, 请确保您已经了解并同意相关的使用协议和隐私政策。[免责声明](https://github.com/lijiahangmax/orion-visor/blob/main/DISCLAIMER.md)
 
 ## License
 
-本项目遵循 [Apache-2.0](https://github.com/lijiahangmax/orion-ops-pro/blob/main/LICENSE) 开源许可证。  
+本项目遵循 [Apache-2.0](https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE) 开源许可证。  

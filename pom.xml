@@ -4,21 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.orion.ops</groupId>
-    <artifactId>orion-ops-pro</artifactId>
+    <groupId>com.orion.visor</groupId>
+    <artifactId>orion-visor</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
 
     <description>项目脚手架</description>
-    <url>https://github.com/lijiahangmax/orion-ops-pro</url>
+    <url>https://github.com/lijiahangmax/orion-visor</url>
 
     <modules>
-        <module>orion-ops-dependencies</module>
-        <module>orion-ops-framework</module>
-        <module>orion-ops-launch</module>
-        <module>orion-ops-module-infra</module>
-        <module>orion-ops-module-asset</module>
+        <module>orion-visor-dependencies</module>
+        <module>orion-visor-framework</module>
+        <module>orion-visor-launch</module>
+        <module>orion-visor-module-infra</module>
+        <module>orion-visor-module-asset</module>
     </modules>
 
     <properties>
@@ -37,8 +37,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.orion.ops</groupId>
-                <artifactId>orion-ops-dependencies</artifactId>
+                <groupId>com.orion.visor</groupId>
+                <artifactId>orion-visor-dependencies</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>
                 <scope>import</scope>

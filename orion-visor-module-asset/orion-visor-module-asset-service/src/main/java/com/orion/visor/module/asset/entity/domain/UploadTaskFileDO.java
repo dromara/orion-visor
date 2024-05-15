@@ -1,0 +1,67 @@
+package com.orion.visor.module.asset.entity.domain;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.orion.visor.framework.mybatis.core.domain.BaseDO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+
+import java.util.Date;
+
+/**
+ * 上传任务文件 实体对象
+ *
+ * @author Jiahang Li
+ * @version 1.0.7
+ * @since 2024-5-8 10:31
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@TableName(value = "upload_task_file", autoResultMap = true)
+@Schema(name = "UploadTaskFileDO", description = "上传任务文件 实体对象")
+public class UploadTaskFileDO extends BaseDO {
+
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "id")
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    @Schema(description = "用户id")
+    @TableField("task_id")
+    private Long taskId;
+
+    @Schema(description = "主机id")
+    @TableField("host_id")
+    private Long hostId;
+
+    @Schema(description = "文件id")
+    @TableField("file_id")
+    private String fileId;
+
+    @Schema(description = "文件路径")
+    @TableField("file_path")
+    private String filePath;
+
+    @Schema(description = "文件大小")
+    @TableField("file_size")
+    private Long fileSize;
+
+    @Schema(description = "状态")
+    @TableField("status")
+    private String status;
+
+    @Schema(description = "开始时间")
+    @TableField("start_time")
+    private Date startTime;
+
+    @Schema(description = "结束时间")
+    @TableField("end_time")
+    private Date endTime;
+
+}

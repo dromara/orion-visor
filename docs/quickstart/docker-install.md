@@ -21,16 +21,16 @@ Dashboard 修改)
 
 ```
 # github
-git clone https://github.com/lijiahangmax/orion-ops-pro
+git clone https://github.com/lijiahangmax/orion-visor
 # gitee
-git clone https://gitee.com/lijiahangmax/orion-ops-pro
+git clone https://gitee.com/lijiahangmax/orion-visor
 ```
 
 ### 构建镜像
 
 ```
 # 进入仓库目录
-cd orion-ops-pro
+cd orion-visor
 # 修改 docker-compose.yml (建议修改)
     # MYSQL_USER          mysql 用户名
     # MYSQL_PASSWORD      mysql 用户密码
@@ -51,10 +51,10 @@ docker compose up -d
 
 ```
 访问 adminer: http://localhost:8081
-服务器: orion-ops-pro-db
+服务器: orion-visor-db
 用户名: root
 密码: Data@123456
-数据库: orion-ops-pro
+数据库: orion-visor
 
 点击左侧 SQL命令 输入:
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'Data@123456';

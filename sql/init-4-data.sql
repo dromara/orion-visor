@@ -11,9 +11,9 @@ INSERT INTO `system_user_role` VALUES (1, 1, 1, '2023-07-16 21:15:49', '2023-07-
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2023-09-11 15:27:52', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (5, 0, '用户设置', NULL, 1, 700, 1, 1, 1, 0, 'icon-user', NULL, 'userModule', '2023-07-28 10:55:38', '2024-04-03 00:56:30', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (8, 0, '项目地址 github', NULL, 1, 1000, 1, 1, 1, 0, 'icon-github', 'https://github.com/lijiahangmax/orion-ops-pro', '', '2023-07-28 11:04:59', '2023-10-12 15:21:22', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (8, 0, '项目地址 github', NULL, 1, 1000, 1, 1, 1, 0, 'icon-github', 'https://github.com/lijiahangmax/orion-visor', '', '2023-07-28 11:04:59', '2023-10-12 15:21:22', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (10, 5, '角色管理', NULL, 2, 10, 1, 1, 1, 0, 'IconUserGroup', '', 'role', '2023-07-28 10:55:52', '2024-03-07 19:10:13', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (11, 0, '项目地址 gitee', NULL, 1, 1010, 1, 1, 1, 0, 'icon-gitlab', 'https://gitee.com/lijiahangmax/orion-ops-pro', '', '2023-08-02 18:08:07', '2023-08-11 18:11:34', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (11, 0, '项目地址 gitee', NULL, 1, 1010, 1, 1, 1, 0, 'icon-gitlab', 'https://gitee.com/lijiahangmax/orion-visor', '', '2023-08-02 18:08:07', '2023-08-11 18:11:34', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (12, 0, '系统设置', NULL, 1, 800, 1, 1, 1, 0, 'icon-tool', NULL, 'systemModule', '2023-08-02 18:24:24', '2024-04-03 00:56:17', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (13, 12, '系统菜单', '', 2, 10, 1, 1, 1, 0, 'icon-menu', NULL, 'systemMenu', '2023-08-02 18:29:01', '2024-03-07 22:25:00', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (20, 10, '创建角色', 'infra:system-role:create', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-08-15 16:36:54', '2023-10-27 01:20:46', '1', '1', 0);
@@ -116,8 +116,8 @@ INSERT INTO `system_menu` VALUES (186, 184, '查询任务日志', 'asset:exec-jo
 INSERT INTO `system_menu` VALUES (187, 184, '删除任务日志', 'asset:exec-job-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:59', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (189, 184, '清理任务日志', 'asset:exec-job-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:58', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (190, 184, '中断计划任务', 'asset:exec-job-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 00:00:33', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (191, 0, '提交bug', NULL, 1, 1020, 1, 1, 0, 1, 'IconBug', 'https://github.com/lijiahangmax/orion-ops-pro/issues', NULL, '2024-04-26 11:30:18', '2024-04-26 11:30:30', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (192, 0, '点个赞~', NULL, 1, 1030, 1, 1, 0, 1, 'IconThumbUp', 'https://github.com/lijiahangmax/orion-ops-pro', NULL, '2024-04-26 11:32:30', '2024-05-06 17:33:16', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (191, 0, '提交bug', NULL, 1, 1020, 1, 1, 0, 1, 'IconBug', 'https://github.com/lijiahangmax/orion-visor/issues', NULL, '2024-04-26 11:30:18', '2024-04-26 11:30:30', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (192, 0, '点个赞~', NULL, 1, 1030, 1, 1, 0, 1, 'IconThumbUp', 'https://github.com/lijiahangmax/orion-visor', NULL, '2024-04-26 11:32:30', '2024-05-06 17:33:16', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (193, 0, '计划任务', NULL, 1, 430, 1, 1, 1, 0, 'IconCalendarClock', NULL, 'jobModule', '2024-04-28 15:31:24', '2024-04-28 15:32:56', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (194, 152, '在线会话', NULL, 2, 20, 1, 1, 1, 0, 'IconUserGroup', NULL, 'connectSession', '2024-05-07 11:12:17', '2024-05-07 11:12:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (195, 194, '查询在线会话', 'asset:host-connect-session:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:16', '2024-05-07 11:13:16', '1', '1', 0);

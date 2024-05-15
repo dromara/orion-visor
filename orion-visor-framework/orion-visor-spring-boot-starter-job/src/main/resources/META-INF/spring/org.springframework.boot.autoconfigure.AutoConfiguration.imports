@@ -1,0 +1,2 @@
+com.orion.visor.framework.job.configuration.OrionSchedulerAutoConfiguration
+com.orion.visor.framework.job.configuration.OrionQuartzAutoConfiguration

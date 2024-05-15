@@ -1,7 +1,7 @@
 #/bin/bash
 version=1.1.0
 cp -r ../../sql ./sql
-docker build -t orion-ops-pro-mysql:${version} .
+`docker build -t orion-visor-mysql:${version} .
 rm -rf ./sql
-docker tag orion-ops-pro-mysql:${version} registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro-mysql:${version}
-docker push registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-ops-pro-mysql:${version}
+docker tag orion-visor-mysql:${version} registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:${version}
+docker push registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:${version}

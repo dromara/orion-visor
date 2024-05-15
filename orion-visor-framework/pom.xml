@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.orion.visor</groupId>
+        <artifactId>orion-visor</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>orion-visor-framework</artifactId>
+    <packaging>pom</packaging>
+
+    <description>项目组件包</description>
+    <url>https://github.com/lijiahangmax/orion-visor</url>
+
+    <modules>
+        <module>orion-visor-framework-common</module>
+        <module>orion-visor-spring-boot-starter-web</module>
+        <module>orion-visor-spring-boot-starter-banner</module>
+        <module>orion-visor-spring-boot-starter-swagger</module>
+        <module>orion-visor-spring-boot-starter-datasource</module>
+        <module>orion-visor-spring-boot-starter-mybatis</module>
+        <module>orion-visor-spring-boot-starter-job</module>
+        <module>orion-visor-spring-boot-starter-websocket</module>
+        <module>orion-visor-spring-boot-starter-redis</module>
+        <module>orion-visor-spring-boot-starter-desensitize</module>
+        <module>orion-visor-spring-boot-starter-log</module>
+        <module>orion-visor-spring-boot-starter-storage</module>
+        <module>orion-visor-spring-boot-starter-security</module>
+        <module>orion-visor-spring-boot-starter-monitor</module>
+        <module>orion-visor-spring-boot-starter-test</module>
+        <module>orion-visor-spring-boot-starter-biz-operator-log</module>
+    </modules>
+
+</project>

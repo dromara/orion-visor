@@ -78,29 +78,29 @@
 
 ⚡ 使用 `@{{ xxx }}` 来替换命令参数
 
-| 参数              | 描述                         | 参数示例                                            |
-|:----------------|:---------------------------|-------------------------------------------------|
-| source          | 执行来源 (BATCH/JOB)           | JOB                                             |
-| sourceId        | 执行来源id (JOB特有)             | 6                                               |
-| seq             | 执行序列 (JOB特有)               | 920                                             |
-| userId          | 执行用户id (JOB为0)             | 1                                               |
-| username        | 执行用户名 (JOB为system)         | admin                                           |
-| execId          | 执行记录id                     | 2000                                            |
-| hostId          | 执行主机id                     | 1                                               | 
-| hostName        | 执行主机名称                     | server-127.0.0.1                                |
-| hostCode        | 执行主机编码                     | server                                          |
-| hostAddress     | 执行主机地址                     | 127.0.0.1                                       |
-| hostUsername    | 执行主机用户名                    | root                                            |
-| osType          | 执行主机系统版本                   | LINUX                                           |
-| port            | SSH 端口                     | 22                                              |
-| charset         | SSH 编码集                    | UTF-8                                           |
-| scriptExec      | 是否使用脚本执行 (0否1是)            | 1                                               |
-| scriptPath      | 脚本文件路径                     | /root/orion/orion-ops-pro/script/exec_2000_1.sh |
-| uuid            | 生成任务维度 uuid                | 82b20e52-cea9-455b-a0b4-e4e25654e22b            |
-| uuidShort       | 生成任务维度 uuid 无 '-'          | 82b20e52cea9455ba0b4e4e25654e22b                |
-| hostUuid        | 生成机器维度 uuid                | 2687b09e-1046-4e8d-9cc2-a7e697836b88            |
-| hostUuidShort   | 生成机器维度 uuid 无 '-'          | 2687b09e10464e8d9cc2a7e697836b88                |
-| timestampMillis | 时间戳毫秒                      | 1715173200848                                   |
-| timestamp       | 时间戳                        | 1715173200                                      |
-| date            | 执行时间 `yyyy-MM-dd`          | `2024-01-01`                                    |
-| datetime        | 执行时间 `yyyy-MM-dd HH:mm:ss` | `2024-01-01 21:00:00`                           |
+| 参数              | 描述                         | 参数示例                                          |
+|:----------------|:---------------------------|-----------------------------------------------|
+| source          | 执行来源 (BATCH/JOB)           | JOB                                           |
+| sourceId        | 执行来源id (JOB特有)             | 6                                             |
+| seq             | 执行序列 (JOB特有)               | 920                                           |
+| userId          | 执行用户id (JOB为0)             | 1                                             |
+| username        | 执行用户名 (JOB为system)         | admin                                         |
+| execId          | 执行记录id                     | 2000                                          |
+| hostId          | 执行主机id                     | 1                                             | 
+| hostName        | 执行主机名称                     | server-127.0.0.1                              |
+| hostCode        | 执行主机编码                     | server                                        |
+| hostAddress     | 执行主机地址                     | 127.0.0.1                                     |
+| hostUsername    | 执行主机用户名                    | root                                          |
+| osType          | 执行主机系统版本                   | LINUX                                         |
+| port            | SSH 端口                     | 22                                            |
+| charset         | SSH 编码集                    | UTF-8                                         |
+| scriptExec      | 是否使用脚本执行 (0否1是)            | 1                                             |
+| scriptPath      | 脚本文件路径                     | /root/orion/orion-visor/script/exec_2000_1.sh |
+| uuid            | 生成任务维度 uuid                | 82b20e52-cea9-455b-a0b4-e4e25654e22b          |
+| uuidShort       | 生成任务维度 uuid 无 '-'          | 82b20e52cea9455ba0b4e4e25654e22b              |
+| hostUuid        | 生成机器维度 uuid                | 2687b09e-1046-4e8d-9cc2-a7e697836b88          |
+| hostUuidShort   | 生成机器维度 uuid 无 '-'          | 2687b09e10464e8d9cc2a7e697836b88              |
+| timestampMillis | 时间戳毫秒                      | 1715173200848                                 |
+| timestamp       | 时间戳                        | 1715173200                                    |
+| date            | 执行时间 `yyyy-MM-dd`          | `2024-01-01`                                  |
+| datetime        | 执行时间 `yyyy-MM-dd HH:mm:ss` | `2024-01-01 21:00:00`                         |

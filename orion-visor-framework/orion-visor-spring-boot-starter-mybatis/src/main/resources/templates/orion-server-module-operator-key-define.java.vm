@@ -1,0 +1,41 @@
+package ${currentPackage};
+
+import com.orion.visor.framework.biz.operator.log.core.annotation.Module;
+import com.orion.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
+import com.orion.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static com.orion.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
+
+/**
+ * $!{table.comment} 操作日志类型
+ *
+ * @author ${author}
+ * @version ${version}
+ * @since ${date}
+ */
+@Module("${package.ModuleName}:${typeHyphen}")
+public class ${type}OperatorType extends InitializingOperatorTypes {
+
+    public static final String CREATE = "${typeHyphen}:create";
+
+    public static final String UPDATE = "${typeHyphen}:update";
+
+    public static final String DELETE = "${typeHyphen}:delete";
+    #if($meta.enableExport)
+
+    public static final String EXPORT = "${typeHyphen}:export";
+    #end
+
+    @Override
+    public OperatorType[] types() {
+        return new OperatorType[]{
+                new OperatorType(L, CREATE, "创建$!{table.comment}"),
+                new OperatorType(M, UPDATE, "更新$!{table.comment}"),
+                new OperatorType(H, DELETE, "删除$!{table.comment}"),
+                #if($meta.enableExport)
+                new OperatorType(M, EXPORT, "导出$!{table.comment}"),
+                #end
+        };
+    }
+
+}
