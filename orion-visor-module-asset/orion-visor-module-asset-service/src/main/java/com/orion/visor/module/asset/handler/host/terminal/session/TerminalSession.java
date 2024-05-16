@@ -1,5 +1,6 @@
 package com.orion.visor.module.asset.handler.host.terminal.session;
 
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
@@ -8,7 +9,6 @@ import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.TerminalCloseResponse;
 import com.orion.visor.module.asset.service.HostConnectLogService;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;

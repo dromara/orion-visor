@@ -15,6 +15,7 @@ import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.net.host.ssh.command.CommandExecutor;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
 import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
@@ -23,7 +24,6 @@ import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandDTO
 import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
 import com.orion.visor.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import com.orion.visor.module.asset.service.HostTerminalService;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

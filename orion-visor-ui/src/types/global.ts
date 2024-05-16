@@ -30,7 +30,7 @@ export interface Pagination {
   limit?: number;
 }
 
-export interface NodeData  {
+export interface NodeData {
   [key: string]: any;
 }
 

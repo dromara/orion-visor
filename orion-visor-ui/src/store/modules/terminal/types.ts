@@ -1,4 +1,4 @@
-import type { ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager,ISftpTransferManager } from '@/views/host/terminal/types/terminal.type';
+import type { ISftpTransferManager, ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager } from '@/views/host/terminal/types/terminal.type';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import type { TerminalTheme } from '@/api/asset/host-terminal';
 

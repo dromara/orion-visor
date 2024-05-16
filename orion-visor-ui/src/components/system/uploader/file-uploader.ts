@@ -1,7 +1,7 @@
-import type { IFileUploader, ResponseMessageBody } from './const';
 import type { FileItem } from '@arco-design/web-vue';
-import { openFileUploadChannel } from '@/api/system/upload';
+import type { IFileUploader, ResponseMessageBody } from './const';
 import { UploadOperatorType, UploadReceiverType } from './const';
+import { openFileUploadChannel } from '@/api/system/upload';
 
 // 512 KB
 export const PART_SIZE = 512 * 1024;

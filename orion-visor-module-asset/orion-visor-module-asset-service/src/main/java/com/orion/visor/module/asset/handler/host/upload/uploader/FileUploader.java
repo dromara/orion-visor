@@ -6,6 +6,7 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.utils.PathUtils;
@@ -19,7 +20,6 @@ import com.orion.visor.module.asset.handler.host.upload.dto.FileUploadFileItemDT
 import com.orion.visor.module.asset.service.HostTerminalService;
 import com.orion.visor.module.asset.service.UploadTaskService;
 import com.orion.visor.module.asset.utils.SftpUtils;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

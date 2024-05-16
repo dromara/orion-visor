@@ -1,6 +1,7 @@
 package com.orion.visor.module.asset.service.impl;
 
 import com.orion.lang.utils.collect.Lists;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
@@ -20,7 +21,6 @@ import com.orion.visor.module.infra.entity.dto.data.DataPermissionUpdateDTO;
 import com.orion.visor.module.infra.entity.dto.role.SystemRoleDTO;
 import com.orion.visor.module.infra.entity.dto.user.SystemUserDTO;
 import com.orion.visor.module.infra.enums.DataPermissionTypeEnum;
-import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

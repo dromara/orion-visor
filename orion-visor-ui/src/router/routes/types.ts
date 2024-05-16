@@ -1,4 +1,4 @@
-import type { RouteMeta, NavigationGuard } from 'vue-router';
+import type { NavigationGuard, RouteMeta } from 'vue-router';
 import { defineComponent } from 'vue';
 
 export type Component<T = any> =

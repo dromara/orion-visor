@@ -4,6 +4,7 @@ import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.module.asset.dao.UploadTaskDAO;
@@ -21,7 +22,6 @@ import com.orion.visor.module.asset.handler.host.upload.uploader.IFileUploader;
 import com.orion.visor.module.asset.service.UploadTaskService;
 import com.orion.visor.module.infra.api.SystemMessageApi;
 import com.orion.visor.module.infra.entity.dto.message.SystemMessageDTO;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

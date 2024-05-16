@@ -1,8 +1,8 @@
 package com.orion.visor.module.infra.enums;
 
+import com.orion.spring.SpringHolder;
 import com.orion.visor.module.infra.handler.preference.model.PreferenceModel;
 import com.orion.visor.module.infra.handler.preference.strategy.IPreferenceStrategy;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 
 /**

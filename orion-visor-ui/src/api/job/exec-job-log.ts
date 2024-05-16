@@ -1,11 +1,11 @@
 import type { DataGrid } from '@/types/global';
 import type {
   ExecHostLogQueryResponse,
+  ExecLogInterruptRequest,
   ExecLogQueryRequest,
   ExecLogQueryResponse,
   ExecLogStatusResponse,
-  ExecLogTailRequest,
-  ExecLogInterruptRequest
+  ExecLogTailRequest
 } from '../exec/exec-log';
 import axios from 'axios';
 import qs from 'query-string';

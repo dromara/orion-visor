@@ -3,13 +3,7 @@ import { use } from 'echarts/core';
 import QueryHeader from '@dangojs/a-query-header';
 import { CanvasRenderer } from 'echarts/renderers';
 import { BarChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
-import {
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  DataZoomComponent,
-  GraphicComponent,
-} from 'echarts/components';
+import { DataZoomComponent, GraphicComponent, GridComponent, LegendComponent, TooltipComponent, } from 'echarts/components';
 import Breadcrumb from './app/breadcrumb/index.vue';
 import Chart from './view/chart/index.vue';
 import CardList from './view/card-list/index.vue';

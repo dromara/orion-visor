@@ -1,7 +1,7 @@
 import type { UserState } from './types';
 import type { LoginRequest } from '@/api/user/auth';
-import { defineStore } from 'pinia';
 import { getUserPermission, login as userLogin, logout as userLogout } from '@/api/user/auth';
+import { defineStore } from 'pinia';
 import { clearToken, setToken } from '@/utils/auth';
 import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';

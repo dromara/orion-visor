@@ -1,10 +1,10 @@
 package com.orion.visor.module.asset.handler.host.terminal.enums;
 
 import com.alibaba.fastjson.JSONObject;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.module.asset.handler.host.terminal.handler.*;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.*;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 

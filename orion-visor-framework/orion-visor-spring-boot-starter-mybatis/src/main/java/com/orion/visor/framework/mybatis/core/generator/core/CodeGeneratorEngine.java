@@ -9,8 +9,8 @@ import com.orion.lang.utils.VariableStyles;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.reflect.BeanMap;
 import com.orion.lang.utils.reflect.Fields;
-import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.AppConst;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.mybatis.core.generator.template.Table;
 import org.jetbrains.annotations.NotNull;
 

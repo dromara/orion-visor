@@ -5,9 +5,9 @@
         <div class="tab-bar-scroll">
           <div class="tags-wrap">
             <tab-item v-for="(tag, index) in tagList"
-                     :key="tag.fullPath"
-                     :index="index"
-                     :item-data="tag" />
+                      :key="tag.fullPath"
+                      :index="index"
+                      :item-data="tag" />
           </div>
         </div>
         <div class="tag-bar-operation"></div>

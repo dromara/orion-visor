@@ -2,8 +2,8 @@ package com.orion.visor.framework.biz.operator.log.configuration;
 
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
-import com.orion.visor.framework.biz.operator.log.core.aspect.OperatorLogAspect;
 import com.orion.visor.framework.biz.operator.log.configuration.config.OperatorLogConfig;
+import com.orion.visor.framework.biz.operator.log.core.aspect.OperatorLogAspect;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkServiceDelegate;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogFiller;

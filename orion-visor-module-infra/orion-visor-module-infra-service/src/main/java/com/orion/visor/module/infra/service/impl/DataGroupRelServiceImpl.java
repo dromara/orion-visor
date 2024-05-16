@@ -2,6 +2,7 @@ package com.orion.visor.module.infra.service.impl;
 
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.utils.Valid;
@@ -18,7 +19,6 @@ import com.orion.visor.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.visor.module.infra.entity.dto.DataGroupRelCacheDTO;
 import com.orion.visor.module.infra.entity.request.data.DataGroupRelCreateRequest;
 import com.orion.visor.module.infra.service.DataGroupRelService;
-import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -156,7 +156,7 @@
     }
   }
 
-  .preference-containers{
+  .preference-containers {
     padding: 0 16px;
   }
 

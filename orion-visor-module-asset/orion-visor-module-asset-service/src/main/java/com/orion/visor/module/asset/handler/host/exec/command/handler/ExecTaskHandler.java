@@ -9,6 +9,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
 import com.orion.net.host.ssh.ExitCode;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.module.asset.dao.ExecLogDAO;
 import com.orion.visor.module.asset.define.AssetThreadPools;
@@ -22,7 +23,6 @@ import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandHos
 import com.orion.visor.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import com.orion.visor.module.infra.api.SystemMessageApi;
 import com.orion.visor.module.infra.entity.dto.message.SystemMessageDTO;
-import com.orion.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

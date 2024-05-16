@@ -1,11 +1,11 @@
 package com.orion.visor.module.asset.handler.host.exec.job;
 
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.FieldConst;
 import com.orion.visor.module.asset.entity.request.exec.ExecJobTriggerRequest;
 import com.orion.visor.module.asset.service.ExecJobService;
-import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

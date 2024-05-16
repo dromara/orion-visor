@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.handler.host.transfer.handler;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
@@ -13,7 +14,6 @@ import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperator
 import com.orion.visor.module.asset.handler.host.transfer.session.*;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
 import com.orion.visor.module.asset.service.HostTerminalService;
-import com.orion.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 

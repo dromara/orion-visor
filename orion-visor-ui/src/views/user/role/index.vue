@@ -21,12 +21,12 @@
 </script>
 
 <script lang="ts" setup>
-  import RoleTable from './components/role-table.vue';
-  import RoleFormModal from './components/role-form-modal.vue';
-  import RoleMenuGrantModal from '@/views/user/role/components/role-menu-grant-modal.vue';
   import { ref, onBeforeMount, onUnmounted } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import RoleTable from './components/role-table.vue';
+  import RoleFormModal from './components/role-form-modal.vue';
+  import RoleMenuGrantModal from '@/views/user/role/components/role-menu-grant-modal.vue';
 
   const render = ref();
   const table = ref();

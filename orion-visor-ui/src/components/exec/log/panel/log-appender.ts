@@ -1,9 +1,9 @@
 import type { ExecType, ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from '../const';
+import { LogAppenderOptions } from '../const';
 import type { ExecLogTailRequest } from '@/api/exec/exec-log';
 import { openExecLogChannel } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
 import { getExecJobLogTailToken } from '@/api/job/exec-job-log';
-import { LogAppenderOptions } from '../const';
 import { Message } from '@arco-design/web-vue';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';
