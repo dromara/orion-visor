@@ -69,7 +69,7 @@
 </script>
 
 <style lang="less" scoped>
-  @logo-width: 152px;
+  @logo-width: 148px;
 
   .terminal-header {
     height: 100%;

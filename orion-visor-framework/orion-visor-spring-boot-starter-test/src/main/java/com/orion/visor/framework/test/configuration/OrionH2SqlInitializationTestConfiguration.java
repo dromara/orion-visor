@@ -22,8 +22,8 @@ import javax.sql.DataSource;
  * @version 1.0.0
  * @since 2023/8/23 17:17
  */
+@Lazy(false)
 @Profile("unit-test")
-@Lazy(value = false)
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(AbstractScriptDatabaseInitializer.class)
 @ConditionalOnSingleCandidate(DataSource.class)

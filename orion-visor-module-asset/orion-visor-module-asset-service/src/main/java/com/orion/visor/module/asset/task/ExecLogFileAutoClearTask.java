@@ -4,7 +4,7 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.common.file.FileClient;
-import com.orion.visor.framework.redis.core.utils.RedisLocks;
+import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
 import com.orion.visor.module.asset.define.config.AppExecLogConfig;
 import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
@@ -50,7 +50,7 @@ public class ExecLogFileAutoClearTask {
     public void clear() {
         log.info("ExecLogFileAutoClearTask.clear start");
         // 获取锁并且执行
-        RedisLocks.tryLock(LOCK_KEY, this::doClearFile);
+        LockerUtils.tryLock(LOCK_KEY, this::doClearFile);
         log.info("ExecLogFileAutoClearTask.clear finish");
     }
 

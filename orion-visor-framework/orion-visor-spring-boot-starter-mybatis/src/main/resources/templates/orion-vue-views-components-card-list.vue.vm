@@ -60,7 +60,7 @@
     #if(${dictMap.containsKey(${field.propertyName})})
     <!-- $field.comment -->
     <template #${field.propertyName}="{ record }">
-      {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}}) }}
+      {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}) }}
     </template>
     #end
     #end

@@ -1,6 +1,6 @@
 package com.orion.visor.module.infra.task;
 
-import com.orion.visor.framework.redis.core.utils.RedisLocks;
+import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.infra.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,7 +34,7 @@ public class TagAutoClearTask {
     public void clear() {
         log.info("TagAutoClearTask.clear start");
         // 获取锁并清理
-        RedisLocks.tryLock(LOCK_KEY, tagService::clearUnusedTag);
+        LockerUtils.tryLock(LOCK_KEY, tagService::clearUnusedTag);
         log.info("TagAutoClearTask.clear finish");
     }
 

@@ -21,6 +21,9 @@ spring:
     host: 127.0.0.1
     port: 16379
     database: 0
+  redisson:
+    threads: 2
+    netty-threads: 2
 
 mybatis-plus:
   lazy-initialization: true

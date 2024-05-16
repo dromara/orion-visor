@@ -1,6 +1,6 @@
 package com.orion.visor.module.asset.task;
 
-import com.orion.visor.framework.redis.core.utils.RedisLocks;
+import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.asset.service.PathBookmarkGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,7 +34,7 @@ public class PathBookmarkGroupAutoClearTask {
     public void clear() {
         log.info("PathBookmarkGroupAutoClearTask.clear start");
         // 获取锁并清理
-        RedisLocks.tryLock(LOCK_KEY, pathBookmarkGroupService::clearUnusedGroup);
+        LockerUtils.tryLock(LOCK_KEY, pathBookmarkGroupService::clearUnusedGroup);
         log.info("PathBookmarkGroupAutoClearTask.clear finish");
     }
 

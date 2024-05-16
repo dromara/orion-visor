@@ -24,4 +24,9 @@ public class RedissonConfig {
      */
     private Integer nettyThreads;
 
+    public RedissonConfig() {
+        this.threads = 16;
+        this.nettyThreads = 16;
+    }
+
 }

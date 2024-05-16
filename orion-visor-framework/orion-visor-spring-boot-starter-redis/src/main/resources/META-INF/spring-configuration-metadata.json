@@ -10,12 +10,14 @@
     {
       "name": "spring.redisson.threads",
       "type": "java.lang.Integer",
-      "description": "任务线程数."
+      "description": "任务线程数.",
+      "defaultValue": "16"
     },
     {
       "name": "spring.redisson.netty-threads",
       "type": "java.lang.Integer",
-      "description": "netty 线程数."
+      "description": "netty 线程数.",
+      "defaultValue": "16"
     }
   ]
 }

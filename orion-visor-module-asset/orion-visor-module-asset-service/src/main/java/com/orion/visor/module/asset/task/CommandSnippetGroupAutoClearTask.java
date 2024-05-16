@@ -1,6 +1,6 @@
 package com.orion.visor.module.asset.task;
 
-import com.orion.visor.framework.redis.core.utils.RedisLocks;
+import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.asset.service.CommandSnippetGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,7 +34,7 @@ public class CommandSnippetGroupAutoClearTask {
     public void clear() {
         log.info("CommandSnippetGroupAutoClearTask.clear start");
         // 获取锁并清理
-        RedisLocks.tryLock(LOCK_KEY, commandSnippetGroupService::clearUnusedGroup);
+        LockerUtils.tryLock(LOCK_KEY, commandSnippetGroupService::clearUnusedGroup);
         log.info("CommandSnippetGroupAutoClearTask.clear finish");
     }
 

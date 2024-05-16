@@ -1,14 +1,16 @@
 package com.orion.visor.framework.redis.configuration;
 
 import com.orion.visor.framework.common.constant.AutoConfigureOrderConst;
+import com.orion.visor.framework.common.lock.Locker;
+import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.framework.redis.configuration.config.RedissonConfig;
 import com.orion.visor.framework.redis.core.lock.RedisLocker;
-import com.orion.visor.framework.redis.core.utils.RedisLocks;
 import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import org.redisson.api.RedissonClient;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -23,7 +25,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @version 1.0.0
  * @since 2023/6/28 14:44
  */
-@Lazy(value = false)
+@Lazy(false)
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_REDIS)
 @EnableConfigurationProperties(RedissonConfig.class)
@@ -64,9 +66,10 @@ public class OrionRedisAutoConfiguration {
      * @return redis 分布式锁
      */
     @Bean
-    public RedisLocker redisLocker(RedissonClient redissonClient) {
+    @ConditionalOnMissingBean
+    public Locker redisLocker(RedissonClient redissonClient) {
         RedisLocker redisLocker = new RedisLocker(redissonClient);
-        RedisLocks.setRedisLocker(redisLocker);
+        LockerUtils.setDelegate(redisLocker);
         return redisLocker;
     }
 
