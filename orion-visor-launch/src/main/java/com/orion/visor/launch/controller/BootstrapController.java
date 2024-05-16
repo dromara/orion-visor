@@ -23,7 +23,7 @@ public class BootstrapController {
     @Operation(summary = "健康检测")
     @GetMapping("/health")
     public String health() {
-        return "server ok";
+        return "ok";
     }
 
 }
