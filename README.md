@@ -91,7 +91,7 @@
 
 > 计划任务
 
-![计划任务编辑](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/20/b6ba7ec0-011f-48ff-a36e-c8d93bd1f75c.png "计划任务编辑")
+![计划任务详情](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/20/b6ba7ec0-011f-48ff-a36e-c8d93bd1f75c.png "计划任务详情")
 ![计划任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/4/15/ba5c0635-50c1-4c43-8062-3470ad33830e.png "计划任务")
 
 > 用户管理
@@ -102,9 +102,11 @@
 ## 联系我
 
 <div style="display: flex;">
-  <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/d452cd30-cecd-4236-86f5-5ecbf3eac091.jpg" alt="qq" width="268px" height="398px"/>  
   <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/4f1c4e77-8e36-45a3-8be6-9da5387bb96e.jpg" alt="wx" width="298px" height="398px"/>  
 </div>
+
+![个人微信: ljh1553488](https://img.shields.io/badge/ljh1553488-blue?style=social&label=WX%3A)  
+![QQ群1: 755242157](https://img.shields.io/badge/755242157-blue?style=social&label=QQ%E7%BE%A41%3A%20)
 
 📧 咨询问题微信备注: git  
 📧 合作/功能定制备注: 合作

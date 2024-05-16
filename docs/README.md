@@ -91,20 +91,22 @@
 
 > 计划任务
 
-![计划任务编辑](./assert/img/exec_job_edit.png "计划任务编辑")
+![计划任务详情](./assert/img/exec_job_detail.png "计划任务详情")
 ![计划任务](./assert/img/exec_job.png "计划任务")
 
 > 用户管理
 
-![个人中心](./assert/img/user_info.png "个人中心")
+![个人中心](./assert/img/user_login_session.png "个人中心")
 ![操作日志](./assert/img/user_operator_log.png "操作日志")
 
 ## 联系我
 
 <div style="display: flex;">
-  <img src="./assert/img/qq_group1.jpg" alt="qq" width="268px" height="398px"/>  
   <img src="./assert/img/wx.jpg" alt="wx" width="298px" height="398px"/>  
 </div>
+
+![个人微信: ljh1553488](https://img.shields.io/badge/ljh1553488-blue?style=social&label=WX%3A)  
+![QQ群1: 755242157](https://img.shields.io/badge/755242157-blue?style=social&label=QQ%E7%BE%A41%3A%20)
 
 📧 咨询问题微信备注: git  
 📧 合作/功能定制备注: 合作
