@@ -1,11 +1,11 @@
 version: '3.3'
 services:
-  orion-visor:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor:1.1.0
+  orion-visor-service:
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:1.1.0
     ports:
       - 1081:80
     environment:
-      - MYSQL_HOST=orion-visor-db
+      - MYSQL_HOST=orion-visor-mysql
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=orion_visor
       - MYSQL_USER=orion
@@ -17,9 +17,9 @@ services:
       - /data/orion-visor-space/docker-volumes/orion-visor/logs:/root/orion/logs/orion-visor
       - /data/orion-visor-space/docker-volumes/orion-visor/app:/root/orion/orion-visor
     depends_on:
-      - orion-visor-db
+      - orion-visor-mysql
       - orion-visor-redis
-  orion-visor-db:
+  orion-visor-mysql:
     image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:1.1.0
     privileged: true
     ports:
@@ -34,13 +34,16 @@ services:
       - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
       - /data/orion-visor-space/docker-volumes/mysql/etc-mysql:/etc/mysql
   orion-visor-redis:
-    image: redis:6.0.16-alpine
-    command: redis-server --appendonly yes --requirepass Data@123456
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:1.1.0
+    privileged: true
     ports:
       - 6380:6379
+    environment:
+      - REDIS_PASSWORD=Data@123456
     volumes:
       - /data/orion-visor-space/docker-volumes/redis/data:/data
-      - /data/orion-visor-space/docker-volumes/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - /data/orion-visor-space/docker-volumes/redis/usr-local-etc-redis:/usr/local/etc/redis
+    command: sh -c "redis-server /usr/local/etc/redis/redis.conf --requirepass $${REDIS_PASSWORD}"
   orion-visor-adminer:
     image: adminer
     ports:
