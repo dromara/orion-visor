@@ -11,9 +11,8 @@
 
 * 备份 `volumes` (必要时可以回滚)
 * 进入 `adminer` 执行升级的 `sql` 脚本
-* 进入 `docker-compose.yml` 的相对目录 
-* 执行 `docker compose down` 停止容器
-* 执行 `docker compose up -d` 启动容器
+* 执行 升级的 `bash` 脚本
+* 进入 代码目录执行 `sh docker-upgrade.sh` 进行容器升级 `down` > `pull` > `up -d`
 
 ### v1.1.0
 

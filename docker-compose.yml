@@ -14,8 +14,8 @@ services:
       - REDIS_PASSWORD=Data@123456
       - SECRET_KEY=uQeacXV8b3isvKLK
     volumes:
-      - /data/orion-visor-space/docker-volumes/orion-visor/logs:/root/orion/logs/orion-visor
-      - /data/orion-visor-space/docker-volumes/orion-visor/app:/root/orion/orion-visor
+      - /data/orion-visor-space/docker-volumes/orion-visor-service/logs:/root/orion/logs/orion-visor
+      - /data/orion-visor-space/docker-volumes/orion-visor-service/app:/root/orion/orion-visor
     depends_on:
       - orion-visor-mysql
       - orion-visor-redis
@@ -30,9 +30,9 @@ services:
       - MYSQL_PASSWORD=Data@123456
       - MYSQL_ROOT_PASSWORD=Data@123456
     volumes:
-      - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql:/var/lib/mysql
-      - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
-      - /data/orion-visor-space/docker-volumes/mysql/etc-mysql:/etc/mysql
+      - /data/orion-visor-space/docker-volumes/orion-visor-mysql/var-lib-mysql:/var/lib/mysql
+      - /data/orion-visor-space/docker-volumes/orion-visor-mysql/var-lib-mysql-files:/var/lib/mysql-files
+      - /data/orion-visor-space/docker-volumes/orion-visor-mysql/etc-mysql:/etc/mysql
   orion-visor-redis:
     image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:1.1.0
     privileged: true
@@ -41,8 +41,8 @@ services:
     environment:
       - REDIS_PASSWORD=Data@123456
     volumes:
-      - /data/orion-visor-space/docker-volumes/redis/data:/data
-      - /data/orion-visor-space/docker-volumes/redis/usr-local-etc-redis:/usr/local/etc/redis
+      - /data/orion-visor-space/docker-volumes/orion-visor-redis/data:/data
+      - /data/orion-visor-space/docker-volumes/orion-visor-redis/usr-local-etc-redis:/usr/local/etc/redis
     command: sh -c "redis-server /usr/local/etc/redis/redis.conf --requirepass $${REDIS_PASSWORD}"
   orion-visor-adminer:
     image: adminer

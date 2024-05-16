@@ -51,7 +51,7 @@ docker compose up -d
 
 ```
 访问 adminer: http://localhost:8081
-服务器: orion-visor-db
+服务器: orion-visor-mysql
 用户名: root
 密码: Data@123456
 数据库: orion-visor
