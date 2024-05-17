@@ -1,27 +1,41 @@
 <div align="center"><img src="./assert/logo.svg" alt="logo" width="32" /></div>
-<p style="margin-top: 12px" align="center"><b>高颜值、现代化的智能运维&轻量堡垒机平台。</b></p>
+<p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的智能运维&轻量堡垒机平台。</b></p>
 <p align="center">
-    <a target="_blank" href="https://app.codacy.com/gh/lijiahangmax/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
-        <img src="https://app.codacy.com/project/badge/Grade/49eaab3a9a474af3b87e1d21ffec71c4" alt="quality"/>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://app.codacy.com/gh/lijiahangmax/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+      <img src="https://app.codacy.com/project/badge/Grade/49eaab3a9a474af3b87e1d21ffec71c4" alt="quality" />
     </a>
-	<a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">
-		<img src="https://img.shields.io/github/license/lijiahangmax/orion-visor" alt="License"/>
-	</a>
-	<a target="_blank" href="https://github.com/lijiahangmax/orion-visor/releases">
-		<img src="https://img.shields.io/github/v/release/lijiahangmax/orion-visor" alt="release"/>
-	</a>
-	<a target="_blank" href="https://gitee.com/lijiahangmax/orion-visor/stargazers">
-		<img src="https://gitee.com/lijiahangmax/orion-visor/badge/star.svg?theme=dark" alt="star"/>
-	</a>
-	<a target="_blank" style="display: none;" href="https://gitee.com/lijiahangmax/orion-visor/members">
-		<img src="https://gitee.com/lijiahangmax/orion-visor/badge/fork.svg?theme=dark" alt="fork"/>
-	</a>		
-	<a target="_blank" href="https://github.com/lijiahangmax/orion-visor">
-		<img src="https://img.shields.io/github/stars/lijiahangmax/orion-visor.svg?style=social" alt="star"/>
-	</a>  
-	<a target="_blank" style="display: none;" href="https://github.com/lijiahangmax/orion-visor">
-		<img src="https://img.shields.io/github/forks/lijiahangmax/orion-visor.svg?style=social" alt="star"/>
-	</a>  
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://www.apache.org/licenses/LICENSE-2.0">
+      <img src="https://img.shields.io/github/license/lijiahangmax/orion-visor" alt="License" />
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://github.com/lijiahangmax/orion-visor/releases">
+      <img src="https://img.shields.io/github/v/release/lijiahangmax/orion-visor" alt="release" />
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://gitee.com/lijiahangmax/orion-visor/stargazers">
+      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/star.svg?theme=dark" alt="star" />
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://gitee.com/lijiahangmax/orion-visor/members">
+      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/fork.svg?theme=dark" alt="fork" />
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://github.com/lijiahangmax/orion-visor">
+      <img src="https://img.shields.io/github/stars/lijiahangmax/orion-visor" alt="star" />
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://github.com/lijiahangmax/orion-visor">
+      <img src="https://img.shields.io/github/forks/lijiahangmax/orion-visor" alt="star" />
+    </a>
 </p>
 
 ------------------------------

@@ -1,2 +1,4 @@
 FROM redis:6.0.16-alpine
-COPY ./redis.conf /usr/local/etc/redis/redis.conf
+WORKDIR /data
+COPY ./redis.conf /tmp
+RUN cat /tmp/redis.conf > /usr/local/redis.conf
