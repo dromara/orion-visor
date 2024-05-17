@@ -1,0 +1,11 @@
+${AnsiColor.BRIGHT_GREEN}              _                      _
+${AnsiColor.BRIGHT_GREEN}  ____  _____(_)___  ____     _   __(_)________  _____
+${AnsiColor.BRIGHT_GREEN} / __ \/ ___/ / __ \/ __ \   | | / / / ___/ __ \/ ___/
+${AnsiColor.BRIGHT_GREEN}/ /_/ / /  / / /_/ / / / /   | |/ / (__  ) /_/ / /
+${AnsiColor.BRIGHT_GREEN}\____/_/  /_/\____/_/ /_/    |___/_/____/\____/_/
+
+${AnsiColor.BRIGHT_GREEN}:: Application Name     ${AnsiColor.BLUE}${spring.application.name}
+${AnsiColor.BRIGHT_GREEN}:: Application Version  ${AnsiColor.BLUE}${orion.version}
+${AnsiColor.BRIGHT_GREEN}:: SpringBoot Version   ${AnsiColor.BLUE}${spring-boot.version}
+${AnsiColor.BRIGHT_GREEN}:: Active Profile       ${AnsiColor.BLUE}${spring.profiles.active}
+${AnsiColor.DEFAULT}

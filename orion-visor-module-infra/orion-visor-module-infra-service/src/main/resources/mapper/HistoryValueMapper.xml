@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orion.visor.module.infra.dao.HistoryValueDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.orion.visor.module.infra.entity.domain.HistoryValueDO">
+        <id column="id" property="id"/>
+        <result column="rel_id" property="relId"/>
+        <result column="type" property="type"/>
+        <result column="before_value" property="beforeValue"/>
+        <result column="after_value" property="afterValue"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, rel_id, type, before_value, after_value, create_time, creator, deleted
+    </sql>
+
+</mapper>

@@ -1,0 +1,283 @@
+server:
+  port: 9200
+
+spring:
+  application:
+    name: orion-visor-launch
+  profiles:
+    active: dev
+  main:
+    # 允许循环依赖
+    allow-circular-references: true
+  servlet:
+    # 文件上传相关配置项
+    multipart:
+      # 单个文件大小
+      max-file-size: 16MB
+      # 消息体大小
+      max-request-size: 32MB
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始连接数
+      initial-size: 5
+      # 最小连接池数量
+      min-idle: 5
+      # 最大连接池数量
+      max-active: 20
+      # 配置获取连接等待超时的时间
+      max-wait: 600000
+      # 检测间隔
+      time-between-eviction-runs-millis: 60000
+      # 最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      # 最大生存的时间
+      max-evictable-idle-time-millis: 900000
+      validation-query: SELECT 1
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username:
+        login-password:
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 800
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+  redis:
+    database: 0
+    connect-timeout: 5000
+    timeout: 3000
+  cache:
+    type: REDIS
+    redis:
+      time-to-live: 1h
+  output:
+    ansi:
+      enabled: DETECT
+  quartz:
+    job-store-type: JDBC
+    overwrite-existing-jobs: false
+    jdbc:
+      initialize-schema: NEVER
+    properties:
+      org:
+        quartz:
+          scheduler:
+            # 实例 ID
+            instanceId: AUTO
+            instanceName: quartzScheduler
+          jobStore:
+            # 持久化配置
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            useProperties: false
+            tablePrefix: QRTZ_
+            misfireThreshold: 60000
+            clusterCheckinInterval: 5000
+            isClustered: true
+          #连接池
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+  boot:
+    admin:
+      context-path: /admin
+      client:
+        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
+        instance:
+          service-host-type: IP
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+
+knife4j:
+  enable: true
+  setting:
+    language: ZH_CN
+
+logging:
+  file:
+    path: ${user.home}/orion/logs/orion-visor
+    name: ${logging.file.path}/app.log
+  logback:
+    rollingpolicy:
+      clean-history-on-start: false
+      file-name-pattern: ${logging.file.path}/rolling/rolling-%d{yyyy-MM-dd}.%i.gz
+      max-history: 30
+      max-file-size: 16MB
+      total-size-cap: 0B
+  pattern:
+    console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%6p}) %boldBlue([%X{tid}]) %clr([%22.22t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
+    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%6p} [%X{tid}] [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+  level:
+    com.orion.visor.launch.controller.BootstrapController: INFO
+
+# 应用配置
+app:
+  # 认证配置
+  authentication:
+    # 是否允许多端登录
+    allow-multi-device: true
+    # 是否允许凭证续签
+    allow-refresh: true
+    # 凭证续签最大次数
+    max-refresh-count: 3
+    # 登录失败锁定次数
+    login-failed-lock-count: 5
+    # 登录失败锁定时间 (分)
+    login-failed-lock-time: 30
+  # tracker 配置
+  tracker:
+    # 加载偏移量 (行)
+    offset: 300
+    # 延迟时间 (ms)
+    delay: 100
+    # 文件未找到等待次数
+    wait-times: 100
+  # sftp 配置
+  sftp:
+    # 上传文件时 文件存在是否备份
+    upload-present-backup: true
+    # 备份文件名称
+    backup-file-name: bk_${fileName}_${timestamp}
+  # 执行日志
+  exec-log:
+    # 是否拼接 ansi 执行状态日志
+    append-ansi: true
+    # 自动清理执行文件
+    auto-clear: true
+    # 保留周期 (天)
+    keep-period: 30
+
+# orion framework config
+orion:
+  # 版本
+  version: @revision@
+  api:
+    # 公共 api 前缀
+    prefix: /orion-visor/api
+    # 是否开启跨域
+    cors: true
+  websocket:
+    # 公共 websocket 前缀
+    prefix: /orion-visor/keep-alive
+    # 1MB
+    binary-buffer-size: 1048576
+    # 1MB
+    text-buffer-size: 1048576
+    # 30MIN
+    session-idle-timeout: 1800000
+  swagger:
+    # swagger 配置
+    author: lijiahang
+    title: orion-visor 运维平台
+    description: 一站式运维服务平台
+    version: ${orion.version}
+    url: https://github.com/lijiahangmax/orion-visor
+    email: ljh1553488six@139.com
+    license: Apache-2.0
+    license-url: https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE
+    grouped-api:
+      infra:
+        group: "infra - 基建模块"
+        path: "infra"
+      asset:
+        group: "asset - 资产模块"
+        path: "asset"
+  logging:
+    # 全局日志打印
+    printer:
+      mode: PRETTY
+      expression: 'execution (* com.orion.visor..*.controller..*.*(..))'
+      headers:
+        - user-agent,accept
+        - content-type
+      # 下面引用了 需要注意
+      field:
+        ignore:
+          - password,beforePassword,newPassword,useNewPassword,publicKey,privateKey,token
+          - metrics
+        desensitize:
+  storage:
+    # 本地文件存储
+    local:
+      primary: true
+      enabled: true
+      timestamp-prefix: false
+      date-directory: false
+      storage-path: ${user.home}
+      base-path: /orion/orion-visor/storage
+    # 日志文件存储
+    logs:
+      enabled: true
+      timestamp-prefix: false
+      date-directory: false
+      storage-path: ${user.home}
+      base-path: /orion/orion-visor/logs
+  security:
+    password-encoder-length: 4
+    # 匿名接口
+    permit-url:
+      - ${orion.api.prefix}/server/bootstrap/health
+  crypto:
+    # aes加密器
+    aes:
+      primary: true
+      enabled: true
+      working-mode: ECB
+      padding-mode: PKCS5_PADDING
+      # 加密密钥
+      secret-key: I66AndrKWrwXjtBL
+      use-generator-key: true
+      generator-key-length: 128
+  async:
+    # 线程池配置
+    executor:
+      core-pool-size: 2
+      max-pool-size: 4
+      queue-capacity: 30
+      keep-alive-seconds: 180
+  operator-log:
+    error-message-length: 255
+    user-agent-length: 128
+    ignore:
+      - ${orion.logging.printer.field.ignore[0]}
+      - ${orion.logging.printer.field.ignore[1]}
+    desensitize:

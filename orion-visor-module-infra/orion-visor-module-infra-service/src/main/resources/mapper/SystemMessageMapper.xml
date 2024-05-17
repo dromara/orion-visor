@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orion.visor.module.infra.dao.SystemMessageDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.orion.visor.module.infra.entity.domain.SystemMessageDO">
+        <id column="id" property="id"/>
+        <result column="classify" property="classify"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="rel_key" property="relKey"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="receiver_id" property="receiverId"/>
+        <result column="receiver_username" property="receiverUsername"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <resultMap id="CountResultMap" type="com.orion.visor.module.infra.entity.dto.SystemMessageCountDTO">
+        <result column="classify" property="classify"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, classify, type, status, rel_key, title, content, receiver_id, receiver_username, create_time, update_time, deleted
+    </sql>
+
+    <!-- 查询消息数量 -->
+    <select id="selectSystemMessageCount" resultMap="CountResultMap">
+        SELECT classify, count(1) count
+        FROM system_message
+        WHERE deleted = 0
+        AND receiver_id = #{receiverId}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        GROUP BY classify
+    </select>
+
+</mapper>

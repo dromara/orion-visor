@@ -1,0 +1,228 @@
+<template>
+  <card-list v-model:searchValue="formModel.searchValue"
+             search-input-placeholder="输入搜索值"
+             create-card-position="head"
+             :loading="loading"
+             :fieldConfig="fieldConfig"
+             :list="list"
+             :pagination="pagination"
+             :card-layout-cols="cardColLayout"
+             :filter-count="filterCount"
+             :add-permission="['${package.ModuleName}:${typeHyphen}:create']"
+             @add="emits('openAdd')"
+             @reset="reset"
+             @search="fetchCardData"
+             @page-change="fetchCardData">
+    <!-- 过滤条件 -->
+    <template #filterContent>
+      <a-form :model="formModel"
+              class="card-filter-form"
+              size="small"
+              ref="formRef"
+              label-align="right"
+              :auto-label-width="true"
+              @keyup.enter="() => fetchCardData()">
+        #foreach($field in ${table.fields})
+        <!-- $field.comment -->
+        <a-form-item field="${field.propertyName}" label="${field.comment}">
+          #if(${dictMap.containsKey(${field.propertyName})})
+          <a-select v-model="formModel.${field.propertyName}"
+                    :options="toOptions($dictMap.get(${field.propertyName}).keyField)"
+                    placeholder="请选择${field.comment}"
+                    allow-clear />
+          #else
+          #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
+          <a-input-number v-model="formModel.${field.propertyName}"
+                          placeholder="请输入${field.comment}"
+                          allow-clear
+                          hide-button />
+          #elseif("$field.propertyType" == "Date")
+          <a-date-picker v-model="formModel.${field.propertyName}"
+                         style="width: 100%"
+                         placeholder="请选择${field.comment}"
+                         show-time
+                         allow-clear />
+          #else
+          <a-input v-model="formModel.${field.propertyName}"
+                   placeholder="请输入${field.comment}"
+                   allow-clear />
+          #end
+          #end
+        </a-form-item>
+      #end
+      </a-form>
+    </template>
+    <!-- 标题 -->
+    <template #title="{ record }">
+      {{ record.id }}
+    </template>
+    #foreach($field in ${table.fields})
+    #if(${dictMap.containsKey(${field.propertyName})})
+    <!-- $field.comment -->
+    <template #${field.propertyName}="{ record }">
+      {{ getDictValue($dictMap.get(${field.propertyName}).keyField, record.${field.propertyName}) }}
+    </template>
+    #end
+    #end
+    <!-- 拓展操作 -->
+    <template #extra="{ record }">
+      <a-space>
+        <!-- 更多操作 -->
+        <a-dropdown trigger="hover">
+          <icon-more class="card-extra-icon" />
+          <template #content>
+            <!-- 修改 -->
+            <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
+                       @click="emits('openUpdate', record)">
+              <icon-edit />
+              修改
+            </a-doption>
+            <!-- 删除 -->
+            <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+                       class="span-red"
+                       @click="deleteRow(record.id)">
+              <icon-delete />
+              删除
+            </a-doption>
+          </template>
+        </a-dropdown>
+      </a-space>
+    </template>
+    <!-- 右键菜单 -->
+    <template #contextMenu="{ record }">
+      <!-- 修改 -->
+      <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
+                 @click="emits('openUpdate', record)">
+        <icon-edit />
+        修改
+      </a-doption>
+      <!-- 删除 -->
+      <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
+                 class="span-red"
+                 @click="deleteRow(record.id)">
+        <icon-delete />
+        删除
+      </a-doption>
+    </template>
+  </card-list>
+</template>
+
+<script lang="ts">
+  export default {
+    name: '${vue.featureEntityFirstLower}CardList'
+  };
+</script>
+
+<script lang="ts" setup>
+  import type { ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
+  import { usePagination, useColLayout } from '@/types/card';
+  import { computed, reactive, ref, onMounted } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import { objectTruthKeyCount, resetObject } from '@/utils';
+  import fieldConfig from '../types/card.fields';
+  #if($dictMap.entrySet().size() > 0)
+  import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
+  #else
+  import {} from '../types/const';
+  #end
+  import { delete${vue.featureEntity}, get${vue.featureEntity}Page } from '@/api/${vue.module}/${vue.feature}';
+  import { Message, Modal } from '@arco-design/web-vue';
+  #if($dictMap.entrySet().size() > 0)
+  import { useDictStore } from '@/store';
+  #end
+
+  const emits = defineEmits(['openAdd', 'openUpdate']);
+
+  const cardColLayout = useColLayout();
+  const pagination = usePagination();
+  const { loading, setLoading } = useLoading();
+  #if($dictMap.entrySet().size() > 0)
+  const { toOptions, getDictValue } = useDictStore();
+  #end
+
+  const list = ref<${vue.featureEntity}QueryResponse[]>([]);
+  const formRef = ref();
+  const formModel = reactive<${vue.featureEntity}QueryRequest>({
+    searchValue: undefined,
+    #foreach($field in ${table.fields})
+    ${field.propertyName}: undefined,
+    #end
+  });
+
+  // 条件数量
+  const filterCount = computed(() => {
+    return objectTruthKeyCount(formModel, ['searchValue']);
+  });
+
+  // 删除当前行
+  const deleteRow = (id: number) => {
+    Modal.confirm({
+      title: '删除前确认!',
+      titleAlign: 'start',
+      content: '确定要删除这条记录吗?',
+      okText: '删除',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          // 调用删除接口
+          await delete${vue.featureEntity}(id);
+          Message.success('删除成功');
+          // 重新加载数据
+          fetchCardData();
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+  };
+
+  // 添加后回调
+  const addedCallback = () => {
+    fetchCardData();
+  };
+
+  // 更新后回调
+  const updatedCallback = () => {
+    fetchCardData();
+  };
+
+  defineExpose({
+    addedCallback, updatedCallback
+  });
+
+  // 重置条件
+  const reset = () => {
+    resetObject(formModel);
+    fetchCardData();
+  };
+
+  // 加载数据
+  const doFetchCardData = async (request: ${vue.featureEntity}QueryRequest) => {
+    try {
+      setLoading(true);
+      const { data } = await get${vue.featureEntity}Page(request);
+      list.value = data.rows;
+      pagination.total = data.total;
+      pagination.current = request.page;
+      pagination.pageSize = request.limit;
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 切换页码
+  const fetchCardData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    doFetchCardData({ page, limit, ...form });
+  };
+
+  onMounted(() => {
+    fetchCardData();
+  });
+
+</script>
+
+<style lang="less" scoped>
+
+</style>

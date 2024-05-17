@@ -16,29 +16,29 @@
 
 ```
 # github
-git clone https://github.com/lijiahangmax/orion-ops-pro
+git clone https://github.com/lijiahangmax/orion-visor
 # gitee
-git clone https://gitee.com/lijiahangmax/orion-ops-pro
+git clone https://gitee.com/lijiahangmax/orion-visor
 ```
 
 2. 初始化数据库
 
 ```
 # 执行脚本
-orion-ops-pro/sql/init-1-schema-databases.sql
-orion-ops-pro/sql/init-2-schema-tables.sql
-orion-ops-pro/sql/init-3-schema-quartz.sql
-orion-ops-pro/sql/init-4-data.sql
+orion-visor/sql/init-1-schema-databases.sql
+orion-visor/sql/init-2-schema-tables.sql
+orion-visor/sql/init-3-schema-quartz.sql
+orion-visor/sql/init-4-data.sql
 ```
 
 3. 构建后端代码
 
 ```
 # 修改配置文件 (mysql, redis, secret-key)
-orion-ops-pro/orion-ops-launch/src/main/resources/application-prod.yaml
+orion-visor/orion-visor-launch/src/main/resources/application-prod.yaml
 
 # 进入代码目录
-cd orion-ops-pro
+cd orion-visor
 # 编译
 mvn -U clean install -DskipTests
 ```   
@@ -47,7 +47,7 @@ mvn -U clean install -DskipTests
 
 ```
 # 进入代码目录
-cd orion-ops-pro/orion-ops-ui
+cd orion-visor/orion-visor-ui
 # 下载 pnpm
 npm i -g pnpm
 # 下载依赖
@@ -87,16 +87,16 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    location /orion/api {
-        proxy_pass    http://localhost:9200/orion/api;
+    location /orion-visor/api {
+        proxy_pass    http://localhost:9200/orion-visor/api;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-     location /orion/keep-alive {
-        proxy_pass    http://localhost:9200/orion/keep-alive;
+     location /orion-visor/keep-alive {
+        proxy_pass    http://localhost:9200/orion-visor/keep-alive;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -119,10 +119,10 @@ server {
 ### 部署
 
 ```
-复制 orion-ops-pro/orion-ops-ui/dist 到 /usr/share/nginx/html
-复制 orion-ops-pro/orion-ops-launch/target/orion-ops-launch.jar 到 /data/orion
+复制 orion-visor/orion-visor-ui/dist 到 /usr/share/nginx/html
+复制 orion-visor/orion-visor-launch/target/orion-visor-launch.jar 到 /data/orion
 # 启动后台服务
-nohup java -jar orion-ops-launch.jar --spring.profiles.active=prod 2>&1 &
+nohup java -jar orion-visor-launch.jar --spring.profiles.active=prod 2>&1 &
 # 启动 nginx
 service nginx start
 ```

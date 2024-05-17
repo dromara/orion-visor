@@ -1,0 +1,50 @@
+### 主机分组授权
+PUT {{baseUrl}}/asset/data-grant/grant-host-group
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "idList": [
+    3,
+    5
+  ]
+}
+
+### 获取已授权的主机分组
+GET {{baseUrl}}/asset/data-grant/get-host-group?userId=10
+Authorization: {{token}}
+
+### 主机密钥授权
+PUT {{baseUrl}}/asset/data-grant/grant-host-key
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "idList": [
+    2,
+    3
+  ]
+}
+
+### 获取已授权的主机密钥
+GET {{baseUrl}}/asset/data-grant/get-host-key?userId=10
+Authorization: {{token}}
+
+### 主机身份授权
+PUT {{baseUrl}}/asset/data-grant/grant-host-identity
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userId": 10,
+  "idList": [
+    3,
+    5
+  ]
+}
+
+### 获取已授权的主机身份
+GET {{baseUrl}}/asset/data-grant/get-host-identity?userId=10
+Authorization: {{token}}

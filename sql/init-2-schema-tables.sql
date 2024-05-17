@@ -244,7 +244,7 @@ CREATE TABLE `exec_job`
     `script_exec`      tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否使用脚本执行',
     `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
     `parameter_schema` json                                                          NULL COMMENT '命令参数',
-    `status`           tinyint(0)                                                    NULL DEFAULT 1 COMMENT '任务状态',
+    `status`           tinyint(0)                                                    NULL DEFAULT 0 COMMENT '任务状态',
     `recent_log_id`    bigint(0)                                                     NULL DEFAULT NULL COMMENT '最近执行id',
     `create_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -493,7 +493,7 @@ CREATE TABLE `host_identity`
     `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '类型',
     `username`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名',
     `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户密码',
-    `key_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '秘钥id',
+    `key_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '密钥id',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -526,7 +526,7 @@ CREATE TABLE `host_key`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '主机秘钥'
+  COLLATE = utf8mb4_general_ci COMMENT = '主机密钥'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------

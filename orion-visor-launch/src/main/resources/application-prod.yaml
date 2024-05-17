@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:orion_visor}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
+      username: ${MYSQL_USER:root}
+      password: ${MYSQL_PASSWORD:Data@123456}
+      # 初始连接数
+      initial-size: 5
+      # 最小连接池数量
+      min-idle: 5
+      # 最大连接池数量
+      max-active: 20
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+      filter:
+        stat:
+          enabled: true
+  redis:
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:Data@123456}
+  redisson:
+    threads: 4
+    netty-threads: 4
+  quartz:
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 10
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+knife4j:
+  enable: false
+
+orion:
+  logging:
+    printer:
+      mode: ROW
+  crypto:
+    aes:
+      # 加密密钥
+      secret-key: ${SECRET_KEY:uQeacXV8b3isvKLK}
+  async:
+    executor:
+      core-pool-size: 8
+      max-pool-size: 16
+      queue-capacity: 200
+      keep-alive-seconds: 300

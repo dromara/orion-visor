@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orion.visor.module.asset.dao.ExecLogDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.orion.visor.module.asset.entity.domain.ExecLogDO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="source" property="source"/>
+        <result column="source_id" property="sourceId"/>
+        <result column="description" property="description"/>
+        <result column="exec_seq" property="execSeq"/>
+        <result column="command" property="command"/>
+        <result column="parameter_schema" property="parameterSchema"/>
+        <result column="timeout" property="timeout"/>
+        <result column="script_exec" property="scriptExec"/>
+        <result column="status" property="status"/>
+        <result column="start_time" property="startTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, username, source, source_id, description, exec_seq, command, parameter_schema, timeout, script_exec, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
+    </sql>
+
+    <select id="getExecHistory" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM exec_log e
+        RIGHT JOIN (
+        SELECT MAX(id) AS max_id
+        FROM exec_log
+        WHERE deleted = 0
+        AND source = #{source}
+        AND user_id = #{userId}
+        GROUP BY description
+        ORDER BY max_id DESC
+        LIMIT #{limit}
+        ) sub ON e.id = sub.max_id
+    </select>
+
+</mapper>

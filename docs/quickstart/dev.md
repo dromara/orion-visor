@@ -15,40 +15,40 @@
 
 ```
 # github
-git clone https://github.com/lijiahangmax/orion-ops-pro
+git clone https://github.com/lijiahangmax/orion-visor
 # gitee
-git clone https://gitee.com/lijiahangmax/orion-ops-pro
+git clone https://gitee.com/lijiahangmax/orion-visor
 ```
 
 2. 初始化数据库
 
 ```
 # 执行脚本
-orion-ops-pro/sql/init-1-schema-databases.sql
-orion-ops-pro/sql/init-2-schema-tables.sql
-orion-ops-pro/sql/init-3-schema-quartz.sql
-orion-ops-pro/sql/init-4-data.sql
+orion-visor/sql/init-1-schema-databases.sql
+orion-visor/sql/init-2-schema-tables.sql
+orion-visor/sql/init-3-schema-quartz.sql
+orion-visor/sql/init-4-data.sql
 ```
 
 3. 修改后端配置
 
 ```
 # 修改配置文件 (mysql, redis, secret-key)
-orion-ops-pro/orion-ops-launch/src/main/resources/application-prod.yaml
+orion-visor/orion-visor-launch/src/main/resources/application-prod.yaml
 
 # 进入代码目录
-cd orion-ops-pro
+cd orion-visor
 # 编译
 mvn -U clean install -DskipTests
 # 启动
-com.orion.ops.launch.LaunchApplication
+com.orion.visor.launch.LaunchApplication
 ```
 
 4. 修改前端配置
 
 ```
 # 进入代码目录
-cd orion-ops-pro/orion-ops-ui
+cd orion-visor/orion-visor-ui
 # 下载 pnpm
 npm i -g pnpm
 # 下载依赖

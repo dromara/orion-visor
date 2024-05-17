@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orion.visor.module.infra.dao.TagDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.orion.visor.module.infra.entity.domain.TagDO">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, type, create_time, update_time, creator, updater, deleted
+    </sql>
+
+    <select id="selectUnusedTag" resultMap="BaseResultMap">
+        SELECT t.id, t.type
+        FROM tag t
+        LEFT JOIN tag_rel tr ON t.id = tr.tag_id AND tr.deleted = 0
+        WHERE t.create_time <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        AND tr.tag_id IS NULL
+        AND t.deleted = 0
+        GROUP BY t.id
+    </select>
+
+</mapper>

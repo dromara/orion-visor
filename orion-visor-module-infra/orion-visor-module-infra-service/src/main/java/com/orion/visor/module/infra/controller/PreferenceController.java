@@ -1,0 +1,69 @@
+package com.orion.visor.module.infra.controller;
+
+import com.orion.visor.framework.web.core.annotation.RestWrapper;
+import com.orion.visor.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
+import com.orion.visor.module.infra.entity.request.preference.PreferenceUpdateRequest;
+import com.orion.visor.module.infra.service.PreferenceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 用户偏好 api
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2023-9-27 18:37
+ */
+@Tag(name = "infra - 用户偏好服务")
+@Slf4j
+@Validated
+@RestWrapper
+@RestController
+@RequestMapping("/infra/preference")
+@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
+public class PreferenceController {
+
+    @Resource
+    private PreferenceService preferenceService;
+
+    @PutMapping("/update")
+    @Operation(summary = "更新用户偏好-单个")
+    public Integer updatePreference(@Validated @RequestBody PreferenceUpdateRequest request) {
+        return preferenceService.updatePreference(request);
+    }
+
+    @PutMapping("/update-partial")
+    @Operation(summary = "更新用户偏好-部分")
+    public Boolean updatePreferencePartial(@Validated @RequestBody PreferenceUpdatePartialRequest request) {
+        preferenceService.updatePreferencePartial(request);
+        return true;
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "查询用户偏好")
+    @Parameter(name = "type", description = "type", required = true)
+    @Parameter(name = "items", description = "items")
+    public Map<String, Object> getPreference(@RequestParam("type") String type,
+                                             @RequestParam(name = "items", required = false) List<String> items) {
+        return preferenceService.getPreferenceByType(type, items);
+    }
+
+    @GetMapping("/get-default")
+    @Operation(summary = "查询默认偏好")
+    @Parameter(name = "type", description = "type", required = true)
+    @Parameter(name = "items", description = "items")
+    public Map<String, Object> getDefaultPreference(@RequestParam("type") String type,
+                                                    @RequestParam(name = "items", required = false) List<String> items) {
+        return preferenceService.getDefaultPreferenceByType(type, items);
+    }
+
+}
+

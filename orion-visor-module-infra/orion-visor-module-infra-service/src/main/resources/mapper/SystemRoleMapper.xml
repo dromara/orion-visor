@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orion.visor.module.infra.dao.SystemRoleDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.orion.visor.module.infra.entity.domain.SystemRoleDO">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, code, status, create_time, update_time, creator, updater, deleted
+    </sql>
+
+    <select id="getRoleIdByUserIdAndRoleCode" resultType="java.lang.Long">
+        SELECT role_id
+        FROM system_user_role
+        WHERE user_id = #{userId}
+          AND deleted = 0
+          AND role_id IN (SELECT id FROM system_role WHERE CODE = #{code} AND deleted = 0) LIMIT 1
+    </select>
+
+    <select id="selectRoleByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM system_role
+        WHERE deleted = 0
+        AND id IN (SELECT role_id FROM system_user_role WHERE user_id = #{userId} AND deleted = 0)
+    </select>
+
+</mapper>

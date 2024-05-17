@@ -1,0 +1,66 @@
+### 创建主机密钥
+POST {{baseUrl}}/asset/host-key/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "",
+  "publicKey": "",
+  "privateKey": "",
+  "password": ""
+}
+
+
+### 通过 id 更新主机密钥
+PUT {{baseUrl}}/asset/host-key/update
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "publicKey": "",
+  "privateKey": "",
+  "password": ""
+}
+
+
+### 通过 id 查询主机密钥
+GET {{baseUrl}}/asset/host-key/get?id=1
+Authorization: {{token}}
+
+### 查询主机密钥
+POST {{baseUrl}}/asset/host-key/list
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": "",
+  "name": "",
+  "publicKey": "",
+  "privateKey": "",
+  "password": ""
+}
+
+
+### 分页查询主机密钥
+POST {{baseUrl}}/asset/host-key/query
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "id": "",
+  "name": "",
+  "publicKey": "",
+  "privateKey": "",
+  "password": ""
+}
+
+
+### 通过 id 删除主机密钥
+DELETE {{baseUrl}}/asset/host-key/delete?id=1
+Authorization: {{token}}
+
+###

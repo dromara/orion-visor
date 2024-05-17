@@ -1,0 +1,49 @@
+package ${currentPackage};
+
+import com.orion.lang.define.cache.key.model.LongCacheIdModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.*;
+import java.math.*;
+
+/**
+ * $!{table.comment} 缓存对象
+ *
+ * @author ${author}
+ * @version ${version}
+ * @since ${date}
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "${type}CacheDTO", description = "$!{table.comment} 缓存对象")
+public class ${type}CacheDTO implements LongCacheIdModel, Serializable {
+
+    private static final long serialVersionUID = 1L;
+    #foreach($field in ${table.fields})
+
+    #if("$!field.comment" != "")
+    @Schema(description = "${field.comment}")
+    #end
+    private ${field.propertyType} ${field.propertyName};
+    #end
+
+    @Schema(description = "创建时间")
+    private Date createTime;
+
+    @Schema(description = "修改时间")
+    private Date updateTime;
+
+    @Schema(description = "创建人")
+    private String creator;
+
+    @Schema(description = "修改人")
+    private String updater;
+
+}
