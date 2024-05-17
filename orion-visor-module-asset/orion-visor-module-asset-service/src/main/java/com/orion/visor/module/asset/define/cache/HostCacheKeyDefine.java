@@ -28,7 +28,7 @@ public interface HostCacheKeyDefine {
 
     CacheKeyDefine HOST_KEY = new CacheKeyBuilder()
             .key("host:key:list")
-            .desc("主机秘钥列表")
+            .desc("主机密钥列表")
             .type(HostKeyCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(8, TimeUnit.HOURS)

@@ -26,7 +26,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          秘钥列表
+          密钥列表
         </div>
       </div>
       <!-- 右侧操作 -->

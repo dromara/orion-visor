@@ -46,7 +46,7 @@ public class HostIdentityDO extends BaseDO {
     @TableField("password")
     private String password;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     @TableField("key_id")
     private Long keyId;
 

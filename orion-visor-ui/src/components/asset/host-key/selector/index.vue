@@ -2,7 +2,7 @@
   <a-select v-model:model-value="value"
             :options="optionData"
             :loading="loading"
-            placeholder="请选择主机秘钥"
+            placeholder="请选择主机密钥"
             allow-clear />
 </template>
 

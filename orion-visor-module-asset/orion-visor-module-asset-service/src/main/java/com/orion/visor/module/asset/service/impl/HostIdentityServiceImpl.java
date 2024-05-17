@@ -69,7 +69,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     @Override
     public Long createHostIdentity(HostIdentityCreateRequest request) {
         log.info("HostIdentityService-createHostIdentity request: {}", JSON.toJSONString(request));
-        // 检查秘钥是否存在
+        // 检查密钥是否存在
         this.checkCreateParams(request);
         // 转换
         HostIdentityDO record = HostIdentityConvert.MAPPER.to(request);
@@ -95,7 +95,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         HostIdentityTypeEnum type = Valid.valid(HostIdentityTypeEnum::of, request.getType());
         if (HostIdentityTypeEnum.KEY.equals(type)) {
-            // 秘钥认证
+            // 密钥认证
             this.checkKeyId(request.getKeyId());
         }
         // 查询主机身份
@@ -162,7 +162,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         if (dataGrid.isEmpty()) {
             return dataGrid;
         }
-        // 设置秘钥名称
+        // 设置密钥名称
         List<Long> keyIdList = dataGrid.stream()
                 .filter(s -> HostIdentityTypeEnum.KEY.name().equals(s.getType()))
                 .map(HostIdentityVO::getKeyId)
@@ -170,7 +170,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
                 .distinct()
                 .collect(Collectors.toList());
         if (!keyIdList.isEmpty()) {
-            // 查询秘钥名称
+            // 查询密钥名称
             Map<Long, String> keyNameMap = hostKeyDAO.selectBatchIds(keyIdList)
                     .stream()
                     .collect(Collectors.toMap(HostKeyDO::getId, HostKeyDO::getName));
@@ -234,7 +234,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
             // 密码认证
             Valid.notBlank(request.getPassword(), ErrorMessage.PARAM_MISSING);
         } else if (HostIdentityTypeEnum.KEY.equals(type)) {
-            // 秘钥认证
+            // 密钥认证
             this.checkKeyId(request.getKeyId());
         }
     }

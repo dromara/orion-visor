@@ -47,7 +47,7 @@ public class AssetAuthorizedDataServiceController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/current-host-key")
-    @Operation(summary = "查询当前用户已授权的主机秘钥")
+    @Operation(summary = "查询当前用户已授权的主机密钥")
     public List<HostKeyVO> getCurrentAuthorizedHostKey() {
         return assetAuthorizedDataService.getUserAuthorizedHostKey(SecurityUtils.getLoginUserId());
     }

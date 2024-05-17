@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * 主机秘钥 内部对象转换器
+ * 主机密钥 内部对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.0

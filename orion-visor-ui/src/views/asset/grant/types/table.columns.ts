@@ -1,7 +1,7 @@
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
 import { dateFormat } from '@/utils';
 
-// 主机秘钥列
+// 主机密钥列
 export const hostKeyColumns = [
   {
     title: 'id',
@@ -64,7 +64,7 @@ export const hostIdentityColumns = [
     ellipsis: true,
     tooltip: true
   }, {
-    title: '主机秘钥',
+    title: '主机密钥',
     dataIndex: 'keyId',
     slotName: 'keyId',
   }, {

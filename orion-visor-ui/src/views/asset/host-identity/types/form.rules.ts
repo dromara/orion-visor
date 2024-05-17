@@ -15,7 +15,7 @@ export const type = [{
 
 export const keyId = [{
   required: true,
-  message: '请选择秘钥'
+  message: '请选择密钥'
 }] as FieldRule[];
 
 export const username = [{

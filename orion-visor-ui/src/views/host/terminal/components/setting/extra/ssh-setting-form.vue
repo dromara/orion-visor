@@ -16,11 +16,11 @@
                  label="用户名">
       <a-input v-model="formModel.username" placeholder="请输入用户名" />
     </a-form-item>
-    <!-- 主机秘钥 -->
+    <!-- 主机密钥 -->
     <a-form-item v-if="formModel.authType === ExtraSshAuthType.CUSTOM_KEY"
                  field="keyId"
-                 label="主机秘钥"
-                 :rules="{ required: true, message: '请选择主机秘钥' }">
+                 label="主机密钥"
+                 :rules="{ required: true, message: '请选择主机密钥' }">
       <host-key-selector v-model="formModel.keyId"
                          :authorized="true" />
     </a-form-item>

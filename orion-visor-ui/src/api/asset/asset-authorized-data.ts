@@ -22,7 +22,7 @@ export function getCurrentAuthorizedHost(type: string) {
 }
 
 /**
- * 查询当前用户已授权的主机秘钥
+ * 查询当前用户已授权的主机密钥
  */
 export function getCurrentAuthorizedHostKey() {
   return axios.get<Array<HostKeyQueryResponse>>('/asset/authorized-data/current-host-key');

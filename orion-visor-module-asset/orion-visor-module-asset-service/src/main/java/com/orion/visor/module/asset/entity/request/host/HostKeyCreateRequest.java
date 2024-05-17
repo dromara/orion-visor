@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 主机秘钥 创建请求对象
+ * 主机密钥 创建请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostKeyCreateRequest", description = "主机秘钥 创建请求对象")
+@Schema(name = "HostKeyCreateRequest", description = "主机密钥 创建请求对象")
 public class HostKeyCreateRequest implements Serializable {
 
     @NotBlank

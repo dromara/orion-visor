@@ -52,7 +52,7 @@ public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordActi
     @Schema(description = "身份id")
     private Long identityId;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     private Long keyId;
 
     @NotNull

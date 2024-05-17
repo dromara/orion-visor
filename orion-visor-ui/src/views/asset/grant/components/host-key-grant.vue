@@ -5,7 +5,7 @@
                 @grant="doGrant"
                 @select-all="selectAll"
                 @reverse="reverseSelect">
-    <!-- 主机秘钥表格 -->
+    <!-- 主机密钥表格 -->
     <a-table row-key="id"
              class="host-key-main-table"
              :columns="hostKeyColumns"

@@ -64,8 +64,8 @@
         <a-form-item field="username" label="用户名">
           <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
         </a-form-item>
-        <!-- 秘钥 -->
-        <a-form-item field="keyId" label="秘钥">
+        <!-- 密钥 -->
+        <a-form-item field="keyId" label="密钥">
           <host-key-selector v-model="formModel.keyId" allow-clear />
         </a-form-item>
       </a-form>
@@ -86,9 +86,9 @@
         {{ record.username }}
       </span>
     </template>
-    <!-- 秘钥名称 -->
+    <!-- 密钥名称 -->
     <template #keyId="{ record }">
-      <!-- 有秘钥 -->
+      <!-- 有密钥 -->
       <template v-if="record.keyId && record.type === IdentityType.KEY">
         <!-- 可查看详情 -->
         <a-tooltip v-if="hasAnyPermission(['asset:host-key:detail', 'asset:host-key:update'])"
@@ -104,7 +104,7 @@
           {{ record.keyName }}
         </a-tag>
       </template>
-      <!-- 无秘钥 -->
+      <!-- 无密钥 -->
       <template v-else>
         <span>-</span>
       </template>

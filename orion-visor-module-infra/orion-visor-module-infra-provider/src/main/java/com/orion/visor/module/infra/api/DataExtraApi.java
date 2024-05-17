@@ -139,7 +139,7 @@ public interface DataExtraApi {
     Integer deleteByRelId(DataExtraTypeEnum type, Long relId);
 
     /**
-     * 删除主机秘钥
+     * 删除主机密钥
      *
      * @param keyId keyId
      * @return effect

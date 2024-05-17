@@ -48,7 +48,7 @@ public class HostIdentityUpdateRequest implements UpdatePasswordAction {
     @Schema(description = "用户密码")
     private String password;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     private Long keyId;
 
     @Schema(description = "是否使用新密码")

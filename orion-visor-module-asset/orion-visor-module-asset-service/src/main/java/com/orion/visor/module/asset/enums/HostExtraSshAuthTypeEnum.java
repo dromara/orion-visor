@@ -15,7 +15,7 @@ public enum HostExtraSshAuthTypeEnum {
     DEFAULT,
 
     /**
-     * 自定义秘钥验证
+     * 自定义密钥验证
      */
     CUSTOM_KEY,
 

@@ -46,7 +46,7 @@ orion:
       mode: ROW
   crypto:
     aes:
-      # 加密秘钥
+      # 加密密钥
       secret-key: ${SECRET_KEY:uQeacXV8b3isvKLK}
   async:
     executor:

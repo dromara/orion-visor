@@ -55,18 +55,18 @@
     {
       "name": "orion.crypto.aes.secret-key",
       "type": "java.lang.String",
-      "description": "加密秘钥."
+      "description": "加密密钥."
     },
     {
       "name": "orion.crypto.aes.use-generator-key",
       "type": "java.lang.Boolean",
-      "description": "是否生成秘钥.",
+      "description": "是否生成密钥.",
       "defaultValue": "true"
     },
     {
       "name": "orion.crypto.aes.generator-key-length",
       "type": "java.lang.Integer",
-      "description": "生成的秘钥长度 128 192 256bytes.",
+      "description": "生成的密钥长度 128 192 256bytes.",
       "defaultValue": "128"
     },
     {

@@ -22,7 +22,7 @@ export const authType = [{
 
 export const keyId = [{
   required: true,
-  message: '请选择主机秘钥'
+  message: '请选择主机密钥'
 }] as FieldRule[];
 
 export const identityId = [{

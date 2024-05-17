@@ -2,7 +2,7 @@
 GET {{baseUrl}}/asset/authorized-data/current-host
 Authorization: {{token}}
 
-### 查询当前用户已授权的主机秘钥
+### 查询当前用户已授权的主机密钥
 GET {{baseUrl}}/asset/authorized-data/current-host-key
 Authorization: {{token}}
 

@@ -86,7 +86,7 @@ export default defineStore('cache', {
       return await this.load('hosts', getHostList, force);
     },
 
-    // 获取主机秘钥列表
+    // 获取主机密钥列表
     async loadHostKeys(force = false) {
       return await this.load('hostKeys', getHostKeyList, force);
     },
@@ -106,7 +106,7 @@ export default defineStore('cache', {
       return await this.load(`${type}_Tags`, () => getTagList(type), force);
     },
 
-    // 获取已授权的主机秘钥列表
+    // 获取已授权的主机密钥列表
     async loadAuthorizedHostKeys(force = false) {
       return await this.load('authorizedHostKeys', getCurrentAuthorizedHostKey, force);
     },

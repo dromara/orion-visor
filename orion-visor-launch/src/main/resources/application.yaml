@@ -263,7 +263,7 @@ orion:
       enabled: true
       working-mode: ECB
       padding-mode: PKCS5_PADDING
-      # 加密秘钥
+      # 加密密钥
       secret-key: I66AndrKWrwXjtBL
       use-generator-key: true
       generator-key-length: 128

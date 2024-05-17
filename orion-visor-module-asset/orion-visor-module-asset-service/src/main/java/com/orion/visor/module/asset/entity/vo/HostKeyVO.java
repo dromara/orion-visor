@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 主机秘钥 视图响应对象
+ * 主机密钥 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,7 +20,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostKeyVO", description = "主机秘钥 视图响应对象")
+@Schema(name = "HostKeyVO", description = "主机密钥 视图响应对象")
 public class HostKeyVO implements Serializable {
 
     private static final long serialVersionUID = 1L;

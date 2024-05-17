@@ -43,7 +43,7 @@ public class HostIdentityQueryRequest extends PageRequest {
     @Schema(description = "用户密码")
     private String password;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     private Long keyId;
 
 }

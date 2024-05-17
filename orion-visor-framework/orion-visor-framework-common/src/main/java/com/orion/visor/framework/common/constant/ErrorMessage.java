@@ -23,7 +23,7 @@ public interface ErrorMessage {
 
     String DATA_ABSENT = "数据不存在";
 
-    String KEY_ABSENT = "主机秘钥不存在";
+    String KEY_ABSENT = "主机密钥不存在";
 
     String IDENTITY_ABSENT = "主机身份不存在";
 

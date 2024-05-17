@@ -19,7 +19,7 @@ export interface HostSshConfig {
 export const SshAuthType = {
   // 密码验证
   PASSWORD: 'PASSWORD',
-  // 秘钥验证
+  // 密钥验证
   KEY: 'KEY',
   // 身份验证
   IDENTITY: 'IDENTITY'

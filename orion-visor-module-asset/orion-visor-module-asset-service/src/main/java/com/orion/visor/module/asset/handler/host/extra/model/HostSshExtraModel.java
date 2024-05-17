@@ -27,7 +27,7 @@ public class HostSshExtraModel implements GenericsDataModel {
     @Schema(description = "认证方式")
     private String username;
 
-    @Schema(description = "主机秘钥")
+    @Schema(description = "主机密钥")
     private Long keyId;
 
     @Schema(description = "主机身份")

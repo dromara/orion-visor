@@ -25,7 +25,7 @@ const columns = [
     dataIndex: 'username',
     slotName: 'username',
   }, {
-    title: '主机秘钥',
+    title: '主机密钥',
     dataIndex: 'keyId',
     slotName: 'keyId',
   }, {

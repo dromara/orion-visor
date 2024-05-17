@@ -15,7 +15,7 @@ public enum HostSshAuthTypeEnum {
     PASSWORD,
 
     /**
-     * 秘钥验证
+     * 密钥验证
      */
     KEY,
 

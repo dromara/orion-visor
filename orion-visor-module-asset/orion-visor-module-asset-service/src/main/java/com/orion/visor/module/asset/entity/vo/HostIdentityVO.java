@@ -37,10 +37,10 @@ public class HostIdentityVO implements Serializable {
     @Schema(description = "用户名")
     private String username;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     private Long keyId;
 
-    @Schema(description = "秘钥名称")
+    @Schema(description = "密钥名称")
     private String keyName;
 
     @Schema(description = "创建时间")

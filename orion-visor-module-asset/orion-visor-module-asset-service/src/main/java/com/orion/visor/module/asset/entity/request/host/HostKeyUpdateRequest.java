@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * 主机秘钥 更新请求对象
+ * 主机密钥 更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostKeyUpdateRequest", description = "主机秘钥 更新请求对象")
+@Schema(name = "HostKeyUpdateRequest", description = "主机密钥 更新请求对象")
 public class HostKeyUpdateRequest implements UpdatePasswordAction {
 
     @NotNull

@@ -20,9 +20,9 @@ public enum DataPermissionTypeEnum {
     HOST_GROUP(true, "主机分组"),
 
     /**
-     * 主机秘钥
+     * 主机密钥
      */
-    HOST_KEY(true, "主机秘钥"),
+    HOST_KEY(true, "主机密钥"),
 
     /**
      * 主机身份

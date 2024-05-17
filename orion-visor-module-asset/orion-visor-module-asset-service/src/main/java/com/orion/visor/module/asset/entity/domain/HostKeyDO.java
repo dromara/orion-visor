@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
- * 主机秘钥 实体对象
+ * 主机密钥 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -21,7 +21,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "host_key", autoResultMap = true)
-@Schema(name = "HostKeyDO", description = "主机秘钥 实体对象")
+@Schema(name = "HostKeyDO", description = "主机密钥 实体对象")
 public class HostKeyDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;

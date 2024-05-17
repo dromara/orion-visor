@@ -123,7 +123,7 @@
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
     {
-      name: '主机秘钥',
+      name: '主机密钥',
       key: 'hostKeyView',
       type: 'radio-group',
       margin: '0 0 4px 0',

@@ -54,7 +54,7 @@ public interface AssetAuthorizedDataService {
     AuthorizedHostWrapperVO getUserAuthorizedHost(Long userId, String type);
 
     /**
-     * 查询用户已授权的主机秘钥
+     * 查询用户已授权的主机密钥
      *
      * @param userId userId
      * @return key

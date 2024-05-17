@@ -5,7 +5,7 @@ import com.orion.visor.module.asset.entity.domain.HostKeyDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 主机秘钥 Mapper 接口
+ * 主机密钥 Mapper 接口
  *
  * @author Jiahang Li
  * @version 1.0.0

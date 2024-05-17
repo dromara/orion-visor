@@ -56,7 +56,7 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
         } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(authType)) {
             Valid.notNull(identityId);
         }
-        // 验证主机秘钥是否存在
+        // 验证主机密钥是否存在
         if (keyId != null) {
             Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
         }
@@ -65,7 +65,7 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
             Valid.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
         }
         Long userId = SecurityUtils.getLoginUserId();
-        // 验证主机秘钥是否有权限
+        // 验证主机密钥是否有权限
         if (keyId != null) {
             Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
                     ErrorMessage.ANY_NO_PERMISSION,

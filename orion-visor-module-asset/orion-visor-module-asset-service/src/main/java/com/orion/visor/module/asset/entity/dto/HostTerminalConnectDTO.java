@@ -63,7 +63,7 @@ public class HostTerminalConnectDTO {
     @Schema(description = "密码")
     private String password;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     private Long keyId;
 
     @Desensitize(toEmpty = true)

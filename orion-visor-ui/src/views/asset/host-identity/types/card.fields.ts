@@ -19,7 +19,7 @@ const fieldConfig = {
       slotName: 'username',
       ellipsis: true,
     }, {
-      label: '主机秘钥',
+      label: '主机密钥',
       dataIndex: 'keyId',
       slotName: 'keyId',
       height: '24px',

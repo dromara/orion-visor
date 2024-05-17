@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 主机秘钥缓存
+ * 主机密钥缓存
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostKeyCacheDTO", description = "主机秘钥缓存")
+@Schema(name = "HostKeyCacheDTO", description = "主机密钥缓存")
 public class HostKeyCacheDTO implements LongCacheIdModel, Serializable {
 
     @Schema(description = "id")

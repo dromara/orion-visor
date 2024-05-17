@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 主机秘钥 视图响应对象
+ * 主机密钥 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,7 +22,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostGroupTreeVO", description = "主机秘钥 视图响应对象")
+@Schema(name = "HostGroupTreeVO", description = "主机密钥 视图响应对象")
 public class HostGroupTreeVO implements TreeNode<HostGroupTreeVO>, Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -8,7 +8,7 @@ import static com.orion.visor.framework.biz.operator.log.core.enums.OperatorRisk
 import static com.orion.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.L;
 
 /**
- * 主机秘钥 操作日志类型
+ * 主机密钥 操作日志类型
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -28,10 +28,10 @@ public class HostKeyOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CREATE, "创建主机秘钥 <sb>${name}</sb>"),
-                new OperatorType(L, UPDATE, "修改主机秘钥 <sb>${name}</sb>"),
-                new OperatorType(H, DELETE, "删除主机秘钥 <sb>${name}</sb>"),
-                new OperatorType(H, GRANT, "将主机秘钥权限授予 <sb>${grantType}</sb> <sb>${grantName}</sb>"),
+                new OperatorType(L, CREATE, "创建主机密钥 <sb>${name}</sb>"),
+                new OperatorType(L, UPDATE, "修改主机密钥 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除主机密钥 <sb>${name}</sb>"),
+                new OperatorType(H, GRANT, "将主机密钥权限授予 <sb>${grantType}</sb> <sb>${grantName}</sb>"),
         };
     }
 

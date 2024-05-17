@@ -64,7 +64,7 @@ export const ExtraSettingItems = {
 export const ExtraSshAuthType = {
   // 使用默认认证方式
   DEFAULT: 'DEFAULT',
-  // 自定义秘钥
+  // 自定义密钥
   CUSTOM_KEY: 'CUSTOM_KEY',
   // 自定义身份
   CUSTOM_IDENTITY: 'CUSTOM_IDENTITY',

@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 主机秘钥 服务实现类
+ * 主机密钥 服务实现类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -114,7 +114,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 查询
         HostKeyDO record = hostKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 解密秘钥
+        // 解密密钥
         this.decryptKey(record);
         // 转换
         return HostKeyConvert.MAPPER.to(record);
@@ -124,7 +124,7 @@ public class HostKeyServiceImpl implements HostKeyService {
     public HostKeyDO getHostKey(Long id) {
         HostKeyDO record = hostKeyDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 解密秘钥
+        // 解密密钥
         this.decryptKey(record);
         // 解密密码
         String password = record.getPassword();
@@ -182,7 +182,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         hostIdentityDAO.setKeyWithNull(id);
         // 删除主机配置
         hostConfigDAO.setKeyIdWithNull(id);
-        // 删除主机秘钥额外配置
+        // 删除主机密钥额外配置
         dataExtraApi.deleteHostKeyExtra(id);
         // 删除数据权限
         dataPermissionApi.deleteByRelId(DataPermissionTypeEnum.HOST_KEY, id);

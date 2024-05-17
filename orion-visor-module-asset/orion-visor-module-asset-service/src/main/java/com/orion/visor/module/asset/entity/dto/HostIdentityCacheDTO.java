@@ -35,7 +35,7 @@ public class HostIdentityCacheDTO implements LongCacheIdModel, Serializable {
     @Schema(description = "用户名")
     private String username;
 
-    @Schema(description = "秘钥id")
+    @Schema(description = "密钥id")
     private Long keyId;
 
 }

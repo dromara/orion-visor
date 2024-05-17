@@ -150,7 +150,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         if (extra != null) {
             HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
             if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-                // 验证主机秘钥是否有权限
+                // 验证主机密钥是否有权限
                 Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
                         ErrorMessage.ANY_NO_PERMISSION,
                         DataPermissionTypeEnum.HOST_KEY.getPermissionName());
@@ -183,9 +183,9 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         try {
             SessionHolder sessionHolder = new SessionHolder();
             final boolean useKey = conn.getKeyId() != null;
-            // 使用秘钥认证
+            // 使用密钥认证
             if (useKey) {
-                // 加载秘钥
+                // 加载密钥
                 String publicKey = Optional.ofNullable(conn.getPublicKey())
                         .map(CryptoUtils::decryptAsString)
                         .orElse(null);
@@ -254,7 +254,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
                 .map(HostExtraSshAuthTypeEnum::of)
                 .orElse(null);
         if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-            // 自定义秘钥
+            // 自定义密钥
             config.setAuthType(HostSshAuthTypeEnum.KEY.name());
             config.setKeyId(extra.getKeyId());
             if (extra.getUsername() != null) {
@@ -279,7 +279,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
                 authType = HostSshAuthTypeEnum.PASSWORD;
                 config.setPassword(identity.getPassword());
             } else if (HostIdentityTypeEnum.KEY.equals(identityType)) {
-                // 秘钥类型
+                // 密钥类型
                 authType = HostSshAuthTypeEnum.KEY;
                 config.setKeyId(identity.getKeyId());
             }
@@ -291,7 +291,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             // 密码认证
             conn.setPassword(config.getPassword());
         } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
-            // 秘钥认证
+            // 密钥认证
             Long keyId = config.getKeyId();
             HostKeyDO key = hostKeyDAO.selectById(keyId);
             Valid.notNull(key, ErrorMessage.KEY_ABSENT);

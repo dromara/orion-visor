@@ -64,7 +64,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
         this.validCharset(model.getCharset());
         this.validCharset(model.getFileNameCharset());
         this.validCharset(model.getFileContentCharset());
-        // 检查主机秘钥是否存在
+        // 检查主机密钥是否存在
         Long keyId = model.getKeyId();
         if (keyId != null) {
             Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);

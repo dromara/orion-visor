@@ -62,7 +62,7 @@ public class AssetDataGrantServiceController {
 
     @OperatorLog(HostKeyOperatorType.GRANT)
     @PutMapping("/grant-host-key")
-    @Operation(summary = "主机秘钥授权")
+    @Operation(summary = "主机密钥授权")
     @PreAuthorize("@ss.hasPermission('asset:host-key:grant')")
     public Boolean grantHostKey(@RequestBody AssetDataGrantRequest request) {
         assetDataGrantService.grantHostKey(request);
@@ -71,7 +71,7 @@ public class AssetDataGrantServiceController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get-host-key")
-    @Operation(summary = "获取已授权的主机秘钥")
+    @Operation(summary = "获取已授权的主机密钥")
     @PreAuthorize("@ss.hasPermission('asset:host-key:grant')")
     public List<Long> getAuthorizedHostKey(AssetAuthorizedDataQueryRequest request) {
         return assetAuthorizedDataService.getAuthorizedDataRelId(DataPermissionTypeEnum.HOST_KEY, request);

@@ -7,7 +7,7 @@ import lombok.*;
 import javax.validation.constraints.Size;
 
 /**
- * 主机秘钥 查询请求对象
+ * 主机密钥 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "HostKeyQueryRequest", description = "主机秘钥 查询请求对象")
+@Schema(name = "HostKeyQueryRequest", description = "主机密钥 查询请求对象")
 public class HostKeyQueryRequest extends PageRequest {
 
     @Schema(description = "搜索")

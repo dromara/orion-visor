@@ -40,7 +40,7 @@ public class AesCryptoProcessor extends CryptoProcessor<AesCryptoConfig> {
         this.builder = SymmetricBuilder.aes()
                 .workingMode(config.getWorkingMode())
                 .paddingMode(config.getPaddingMode());
-        // 初始化秘钥
+        // 初始化密钥
         this.initSecretKey();
         // 初始化参数规格
         this.initParamSpec();
@@ -52,10 +52,10 @@ public class AesCryptoProcessor extends CryptoProcessor<AesCryptoConfig> {
     protected void initSecretKey() {
         SecretKey secretKey;
         if (config.isUseGeneratorKey()) {
-            // 生成秘钥
+            // 生成密钥
             secretKey = Keys.generatorKey(config.getSecretKey(), config.getGeneratorKeyLength(), CipherAlgorithm.AES);
         } else {
-            // 获取秘钥
+            // 获取密钥
             secretKey = Keys.getSecretKey(config.getSecretKey(), CipherAlgorithm.AES);
         }
         builder.secretKey(secretKey);

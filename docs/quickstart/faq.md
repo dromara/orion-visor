@@ -21,14 +21,14 @@
 
 修改 `application.yaml` `app.exec-log.append-ansi` 为 `false`
 
-> ##### 6. 为什么使用秘钥认证还是无法连接机器?
+> ##### 6. 为什么使用密钥认证还是无法连接机器?
 
 ```
 # 升级 openssh
 yum update openssh
 sshd -v (我的版本: OpenSSH_7.4p1, OpenSSL 1.0.2k-fips  26 Jan 2017)
 
-# 生成秘钥时添加参数 -m PEM
+# 生成密钥时添加参数 -m PEM
 ssh-keygen -t rsa -m PEM
 chmod 700  ~/.ssh
 chmod 700  ~/.ssh/authorized_keys 

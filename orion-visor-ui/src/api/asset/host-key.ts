@@ -3,7 +3,7 @@ import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 
 /**
- * 主机秘钥创建请求
+ * 主机密钥创建请求
  */
 export interface HostKeyCreateRequest {
   name?: string;
@@ -13,7 +13,7 @@ export interface HostKeyCreateRequest {
 }
 
 /**
- * 主机秘钥更新请求
+ * 主机密钥更新请求
  */
 export interface HostKeyUpdateRequest extends HostKeyCreateRequest {
   id?: number;
@@ -21,7 +21,7 @@ export interface HostKeyUpdateRequest extends HostKeyCreateRequest {
 }
 
 /**
- * 主机秘钥查询请求
+ * 主机密钥查询请求
  */
 export interface HostKeyQueryRequest extends Pagination {
   searchValue?: string;
@@ -32,7 +32,7 @@ export interface HostKeyQueryRequest extends Pagination {
 }
 
 /**
- * 主机秘钥查询响应
+ * 主机密钥查询响应
  */
 export interface HostKeyQueryResponse extends TableData {
   id: number;
@@ -45,42 +45,42 @@ export interface HostKeyQueryResponse extends TableData {
 }
 
 /**
- * 创建主机秘钥
+ * 创建主机密钥
  */
 export function createHostKey(request: HostKeyCreateRequest) {
   return axios.post('/asset/host-key/create', request);
 }
 
 /**
- * 通过 id 更新主机秘钥
+ * 通过 id 更新主机密钥
  */
 export function updateHostKey(request: HostKeyUpdateRequest) {
   return axios.put('/asset/host-key/update', request);
 }
 
 /**
- * 通过 id 查询主机秘钥
+ * 通过 id 查询主机密钥
  */
 export function getHostKey(id: number) {
   return axios.get<HostKeyQueryResponse>('/asset/host-key/get', { params: { id } });
 }
 
 /**
- * 查询主机秘钥
+ * 查询主机密钥
  */
 export function getHostKeyList() {
   return axios.get<Array<HostKeyQueryResponse>>('/asset/host-key/list');
 }
 
 /**
- * 分页查询主机秘钥
+ * 分页查询主机密钥
  */
 export function getHostKeyPage(request: HostKeyQueryRequest) {
   return axios.post<DataGrid<HostKeyQueryResponse>>('/asset/host-key/query', request);
 }
 
 /**
- * 通过 id 删除主机秘钥
+ * 通过 id 删除主机密钥
  */
 export function deleteHostKey(id: number) {
   return axios.delete('/asset/host-key/delete', { params: { id } });

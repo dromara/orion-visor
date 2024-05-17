@@ -32,14 +32,14 @@ export function getAuthorizedHostGroup(params: AssetAuthorizedDataQueryRequest) 
 }
 
 /**
- * 主机秘钥授权
+ * 主机密钥授权
  */
 export function grantHostKey(request: AssetDataGrantRequest) {
   return axios.put('/asset/data-grant/grant-host-key', request);
 }
 
 /**
- * 获取已授权的主机秘钥
+ * 获取已授权的主机密钥
  */
 export function getAuthorizedHostKey(params: AssetAuthorizedDataQueryRequest) {
   return axios.get<Array<number>>('/asset/data-grant/get-host-key', { params });

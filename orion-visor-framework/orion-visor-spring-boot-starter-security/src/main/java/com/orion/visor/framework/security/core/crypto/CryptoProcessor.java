@@ -24,7 +24,7 @@ public abstract class CryptoProcessor<Config extends CryptoConfig> implements Va
     }
 
     /**
-     * 初始化秘钥
+     * 初始化密钥
      */
     protected abstract void initSecretKey();
 

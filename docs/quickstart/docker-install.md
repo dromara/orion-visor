@@ -36,7 +36,7 @@ cd orion-visor
     # MYSQL_PASSWORD      mysql 用户密码
     # MYSQL_ROOT_PASSWORD mysql root 密码
     # REDIS_PASSWORD      redis 密码
-    # SECRET_KEY          加密秘钥
+    # SECRET_KEY          加密密钥
 # 构建
 docker compose build
 ```

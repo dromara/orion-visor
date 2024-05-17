@@ -15,7 +15,7 @@ public enum HostIdentityTypeEnum {
     PASSWORD,
 
     /**
-     * 秘钥
+     * 密钥
      */
     KEY,
 

@@ -10,7 +10,7 @@
             @cancel="handleClose">
     <a-spin class="full modal-form-small" :loading="loading">
       <a-alert class="keygen-alert">
-        请使用 ssh-keygen -m PEM -t rsa 生成秘钥
+        请使用 ssh-keygen -m PEM -t rsa 生成密钥
       </a-alert>
       <a-form :model="formModel"
               ref="formRef"
@@ -119,7 +119,7 @@
 
   // 打开新增
   const openAdd = () => {
-    title.value = '添加主机秘钥';
+    title.value = '添加主机密钥';
     isAddHandle.value = true;
     isViewHandler.value = false;
     renderForm({ ...defaultForm() });
@@ -128,7 +128,7 @@
 
   // 打开修改
   const openUpdate = async (record: any) => {
-    title.value = '修改主机秘钥';
+    title.value = '修改主机密钥';
     isAddHandle.value = false;
     isViewHandler.value = false;
     await render(record.id);
@@ -136,7 +136,7 @@
 
   // 打开查看
   const openView = async (record: any) => {
-    title.value = '主机秘钥';
+    title.value = '主机密钥';
     isAddHandle.value = false;
     isViewHandler.value = true;
     await render(record.id);

@@ -69,10 +69,10 @@
                     checked-text="使用新密码"
                     unchecked-text="使用原密码" />
         </a-form-item>
-        <!-- 主机秘钥 -->
+        <!-- 主机密钥 -->
         <a-form-item v-if="SshAuthType.KEY === formModel.authType"
                      field="keyId"
-                     label="主机秘钥"
+                     label="主机密钥"
                      :hide-asterisk="true">
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>

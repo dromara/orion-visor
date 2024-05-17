@@ -20,7 +20,7 @@ public interface AssetDataGrantService {
     void grantHostGroup(AssetDataGrantRequest request);
 
     /**
-     * 主机秘钥授权
+     * 主机密钥授权
      *
      * @param request request
      */

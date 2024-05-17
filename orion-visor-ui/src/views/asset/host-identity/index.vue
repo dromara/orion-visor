@@ -16,7 +16,7 @@
     <host-identity-form-modal ref="modal"
                               @added="modalAddCallback"
                               @updated="modalUpdateCallback" />
-    <!-- 主机秘钥抽屉 -->
+    <!-- 主机密钥抽屉 -->
     <host-key-form-drawer ref="keyDrawer" />
   </div>
 </template>

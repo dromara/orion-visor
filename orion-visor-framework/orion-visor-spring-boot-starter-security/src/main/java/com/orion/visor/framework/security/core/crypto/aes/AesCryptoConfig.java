@@ -29,17 +29,17 @@ public class AesCryptoConfig extends CryptoConfig {
     private PaddingMode paddingMode = PaddingMode.PKCS5_PADDING;
 
     /**
-     * 加密秘钥
+     * 加密密钥
      */
     private String secretKey;
 
     /**
-     * 是否生成秘钥
+     * 是否生成密钥
      */
     private boolean useGeneratorKey = true;
 
     /**
-     * 生成的秘钥长度 128 192 256bytes
+     * 生成的密钥长度 128 192 256bytes
      */
     private int generatorKeyLength = CryptoConst.AES_KEY_LENGTH;
 

@@ -10,7 +10,7 @@ import com.orion.visor.module.asset.entity.vo.HostKeyVO;
 import java.util.List;
 
 /**
- * 主机秘钥 服务类
+ * 主机密钥 服务类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -19,7 +19,7 @@ import java.util.List;
 public interface HostKeyService {
 
     /**
-     * 创建主机秘钥
+     * 创建主机密钥
      *
      * @param request request
      * @return id
@@ -27,7 +27,7 @@ public interface HostKeyService {
     Long createHostKey(HostKeyCreateRequest request);
 
     /**
-     * 通过 id 更新主机秘钥
+     * 通过 id 更新主机密钥
      *
      * @param request request
      * @return effect
@@ -35,7 +35,7 @@ public interface HostKeyService {
     Integer updateHostKeyById(HostKeyUpdateRequest request);
 
     /**
-     * 通过 id 查询主机秘钥
+     * 通过 id 查询主机密钥
      *
      * @param id id
      * @return row
@@ -43,7 +43,7 @@ public interface HostKeyService {
     HostKeyVO getHostKeyById(Long id);
 
     /**
-     * 通过 id 查询主机秘钥
+     * 通过 id 查询主机密钥
      *
      * @param id id
      * @return row
@@ -51,14 +51,14 @@ public interface HostKeyService {
     HostKeyDO getHostKey(Long id);
 
     /**
-     * 查询主机秘钥
+     * 查询主机密钥
      *
      * @return rows
      */
     List<HostKeyVO> getHostKeyList();
 
     /**
-     * 分页查询主机秘钥
+     * 分页查询主机密钥
      *
      * @param request request
      * @return rows
@@ -66,7 +66,7 @@ public interface HostKeyService {
     DataGrid<HostKeyVO> getHostKeyPage(HostKeyQueryRequest request);
 
     /**
-     * 通过 id 删除主机秘钥
+     * 通过 id 删除主机密钥
      *
      * @param id id
      * @return effect
