@@ -1,4 +1,4 @@
-# orion-visor <small>2.0.0</small>
+# orion-visor <small>2.0.1</small>
 
 > 一款开箱即用的运维平台。
 
