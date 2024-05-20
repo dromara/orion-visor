@@ -46,7 +46,10 @@ public class ExecLogTailHandler extends AbstractWebSocketHandler {
             String trackerId = this.getTrackerId(id, info, host);
             String absolutePath = logsFileClient.getAbsolutePath(host.getPath());
             // 追踪器
-            ExecLogTracker tracker = new ExecLogTracker(trackerId, absolutePath, session, host);
+            ExecLogTracker tracker = new ExecLogTracker(trackerId,
+                    absolutePath,
+                    WebSockets.createSyncSession(session),
+                    host);
             // 执行
             AssetThreadPools.EXEC_LOG.execute(tracker);
             // 添加追踪器
