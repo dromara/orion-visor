@@ -64,6 +64,9 @@ export const YMD_HMS = 'yyyy-MM-dd HH:mm:ss';
  * 格式化时间
  */
 export function dateFormat(date = new Date(), pattern = YMD_HMS) {
+  if (!date) {
+    return '';
+  }
   const o = {
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),

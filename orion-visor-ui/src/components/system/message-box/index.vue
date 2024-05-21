@@ -4,7 +4,7 @@
     <a-spin class="message-classify-container"
             :hide-icon="true"
             :loading="fetchLoading">
-      <a-tabs v-model:activeKey="currentClassify"
+      <a-tabs v-model:active-key="currentClassify"
               type="rounded"
               :hide-content="true"
               @change="loadClassifyMessage">
