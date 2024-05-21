@@ -14,6 +14,10 @@
 * 执行 升级的 `bash` 脚本
 * 进入 代码目录执行 `sh docker-upgrade.sh` 进行容器升级 `down` > `pull` > `up -d`
 
+### v2.0.2
+
+`2024-05-2` `release`
+
 ### v2.0.1
 
 `2024-05-21` `release`
