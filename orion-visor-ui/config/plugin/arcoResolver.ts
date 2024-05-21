@@ -5,7 +5,7 @@ import { ArcoResolver } from 'unplugin-vue-components/resolvers';
  * 按需引入
  * https://github.com/antfu/unplugin-vue-components
  * https://arco.design/vue/docs/start
- * 虽然Pro项目中是全量引入组件，但此插件会默认使用。
+ * 虽然Pro项目中是全量引入组件, 但此插件会默认使用
  */
 export default function configArcoResolverPlugin() {
   const arcoResolverPlugin = Components({

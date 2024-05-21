@@ -3,7 +3,9 @@ package com.orion.visor.framework.websocket.core.utils;
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Threads;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.websocket.core.constant.WsCloseCode;
+import com.orion.visor.framework.websocket.core.session.WebSocketSyncSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -22,6 +24,16 @@ import java.io.IOException;
 public class WebSockets {
 
     private WebSockets() {
+    }
+
+    /**
+     * 创建同步会话
+     *
+     * @param session session
+     * @return session
+     */
+    public static WebSocketSession createSyncSession(WebSocketSession session) {
+        return new WebSocketSyncSession(session);
     }
 
     /**
@@ -58,13 +70,20 @@ public class WebSockets {
             return;
         }
         try {
-            // 发重消息
-            session.sendMessage(new TextMessage(message));
+            if (session instanceof WebSocketSyncSession) {
+                // 发送消息
+                session.sendMessage(new TextMessage(message));
+            } else {
+                synchronized (session) {
+                    // 发送消息
+                    session.sendMessage(new TextMessage(message));
+                }
+            }
         } catch (IllegalStateException e) {
             // 并发异常
             log.error("发送消息失败, 准备进行重试 {}", Exceptions.getDigest(e));
             // 并发重试
-            retrySendText(session, message, 50);
+            retrySendText(session, message, Const.MS_100);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

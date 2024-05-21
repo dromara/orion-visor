@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form-small"
+           modal-class="modal-form-large"
            title-align="start"
            title="分配菜单"
            width="80%"
@@ -15,7 +15,7 @@
            :on-before-ok="handlerOk"
            @close="handleClose">
     <div class="role-menu-wrapper">
-      <a-spin :loading="loading">
+      <a-spin class="full" :loading="loading">
         <a-alert class="usn mb8">
           <span>{{ roleRecord.name }} {{ roleRecord.code }}</span>
           <span class="mx8">-</span>

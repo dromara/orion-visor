@@ -79,7 +79,13 @@ public class ExecLogTracker implements IExecLogTracker {
 
     @Override
     public void read(byte[] bytes, int len, Tracker tracker) {
-        WebSockets.sendText(session, config.getId() + LogConst.SEPARATOR + new String(bytes, 0, len));
+        // 发送消息
+        String message = config.getId() + LogConst.SEPARATOR + new String(bytes, 0, len);
+        try {
+            WebSockets.sendText(session, message);
+        } catch (Exception e) {
+            log.error("ExecLogTracker.send error", e);
+        }
     }
 
     @Override

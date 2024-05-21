@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form-large"
+           modal-class="modal-form-large"
            title-align="start"
            :title="title"
            :top="80"
@@ -52,7 +52,8 @@
         <!-- 主机密钥 -->
         <a-form-item v-if="formModel.type === IdentityType.KEY"
                      field="keyId"
-                     label="主机密钥">
+                     label="主机密钥"
+                     :hide-asterisk="true">
           <host-key-selector v-model="formModel.keyId" />
         </a-form-item>
       </a-form>

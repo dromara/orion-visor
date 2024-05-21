@@ -9,7 +9,7 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full modal-form-small" :loading="loading">
+    <a-spin class="full drawer-form-small" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
@@ -51,7 +51,12 @@
                        placeholder="请输入 cron 表达式"
                        allow-clear>
                 <template #append>
-                  <span class="span-blue pointer usn"
+                  <span class="span-blue usn cron-action-item"
+                        title="生成 cron 表达式"
+                        @click="emits('genCron', formModel.expression)">
+                    生成
+                  </span>
+                  <span class="span-blue usn cron-action-item"
                         title="获取 cron 下次执行时间"
                         @click="emits('testCron', formModel.expression)">
                     测试
@@ -142,7 +147,7 @@
   import { useDictStore } from '@/store';
   import ExecEditor from '@/components/view/exec-editor/index.vue';
 
-  const emits = defineEmits(['added', 'updated', 'openHost', 'openTemplate', 'testCron']);
+  const emits = defineEmits(['added', 'updated', 'openHost', 'openTemplate', 'testCron', 'genCron']);
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -205,6 +210,11 @@
     };
   };
 
+  // 设置表达式
+  const setExpression = (expression: string) => {
+    formModel.value.expression = expression;
+  };
+
   // 设置选中主机
   const setSelectedHost = (hosts: Array<number>) => {
     formModel.value.hostIdList = hosts;
@@ -231,7 +241,7 @@
     }
   };
 
-  defineExpose({ openAdd, openUpdate, setSelectedHost, setWithTemplate });
+  defineExpose({ openAdd, openUpdate, setSelectedHost, setWithTemplate, setExpression });
 
   // 打开选择主机
   const openSelectHost = () => {
@@ -318,6 +328,28 @@
   .command-editor {
     width: 100%;
     height: calc(100vh - 264px);
+  }
+
+  :deep(.arco-input-append) {
+    padding: 0 !important;
+  }
+
+  .cron-action-item {
+    width: 100%;
+    height: 100%;
+    padding: 0 12px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    transition: background-color .2s;
+
+    &:hover {
+      background: var(--color-fill-3);
+    }
+
+    &:first-child {
+      border-right: 1px var(--color-neutral-3) solid;
+    }
   }
 
 </style>

@@ -157,6 +157,7 @@
       await cancelUploadTask(taskId.value, false);
       taskStatus.value = UploadTaskStepStatus.WAITING;
       Message.success('已取消');
+      taskId.value = undefined;
     } catch (e) {
     } finally {
       setLoading(false);
@@ -171,6 +172,8 @@
 
   // 上传请求结束
   const uploadRequestEnd = async () => {
+    // 上传请求结束后重置文件进度
+    resetSelectedFileProgress();
     if (taskStatus.value.value === UploadTaskStepStatus.REQUESTING.value) {
       // 如果结束后还是请求中则代表请求完毕
       setLoading(true);
@@ -196,6 +199,8 @@
 
   // 上传请求失败
   const uploadRequestError = async () => {
+    // 上传请求结束后重置文件进度
+    resetSelectedFileProgress();
     setLoading(true);
     try {
       // 开始上传
@@ -262,6 +267,11 @@
   // 清空文件
   const clearFile = () => {
     fileList.value = [];
+  };
+
+  // 重置选择的文件进度
+  const resetSelectedFileProgress = () => {
+    fileList.value.forEach(s => s.percent = 0);
   };
 
   // 设置轮询状态
