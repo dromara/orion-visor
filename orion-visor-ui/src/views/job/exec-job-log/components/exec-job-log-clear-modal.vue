@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form-large"
+           modal-class="modal-form-large"
            title-align="start"
            title="清空计划任务日志"
            :align-center="false"

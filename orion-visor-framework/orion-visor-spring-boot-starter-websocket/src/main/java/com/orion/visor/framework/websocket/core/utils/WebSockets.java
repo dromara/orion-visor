@@ -70,8 +70,15 @@ public class WebSockets {
             return;
         }
         try {
-            // 发送消息
-            session.sendMessage(new TextMessage(message));
+            if (session instanceof WebSocketSyncSession) {
+                // 发送消息
+                session.sendMessage(new TextMessage(message));
+            } else {
+                synchronized (session) {
+                    // 发送消息
+                    session.sendMessage(new TextMessage(message));
+                }
+            }
         } catch (IllegalStateException e) {
             // 并发异常
             log.error("发送消息失败, 准备进行重试 {}", Exceptions.getDigest(e));

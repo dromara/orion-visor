@@ -3,7 +3,7 @@
            modal-class="modal-form-small"
            title-align="start"
            title="cron 生成器"
-           :top="16"
+           :top="32"
            :width="780"
            :align-center="false"
            :draggable="true"
@@ -11,7 +11,7 @@
            :unmount-on-close="true"
            :body-style="{ padding: '4px 16px 8px 16px' }">
     <!-- cron 输入框 -->
-    <cron-input v-model="cronExpression" />
+    <cron-generator-input v-model="cronExpression" />
     <!-- 页脚-->
     <template #footer>
       <a-button size="small" @click="handlerClose">关闭</a-button>
@@ -26,14 +26,14 @@
 
 <script lang="ts">
   export default {
-    name: 'cronModal'
+    name: 'cronGeneratorModal'
   };
 </script>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
-  import CronInput from '@/components/data/cron/input/index.vue';
+  import CronGeneratorInput from '../generator-input/index.vue';
 
   const { visible, setVisible } = useVisible();
 

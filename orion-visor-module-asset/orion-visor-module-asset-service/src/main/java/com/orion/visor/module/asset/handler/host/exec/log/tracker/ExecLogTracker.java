@@ -5,7 +5,6 @@ import com.orion.ext.tail.delay.DelayTrackerListener;
 import com.orion.ext.tail.mode.FileNotFoundMode;
 import com.orion.ext.tail.mode.FileOffsetMode;
 import com.orion.spring.SpringHolder;
-import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.define.config.AppTrackerConfig;
 import com.orion.visor.module.asset.entity.dto.ExecHostLogTailDTO;
@@ -84,15 +83,8 @@ public class ExecLogTracker implements IExecLogTracker {
         String message = config.getId() + LogConst.SEPARATOR + new String(bytes, 0, len);
         try {
             WebSockets.sendText(session, message);
-            return;
         } catch (Exception e) {
             log.error("ExecLogTracker.send error", e);
-        }
-        // 重试
-        try {
-            WebSockets.retrySendText(session, message, Const.MS_100);
-        } catch (Exception e) {
-            log.error("ExecLogTracker.resend error fk", e);
         }
     }
 

@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form-large"
+           modal-class="modal-form-large"
            title-align="start"
            :title="touch ? '创建文件' : '创建文件夹'"
            :align-center="false"

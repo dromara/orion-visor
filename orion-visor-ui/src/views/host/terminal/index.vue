@@ -165,11 +165,11 @@
     }
 
     &-left {
-      border-right: 1px solid var(--color-bg-content);
+      border-right: 1px var(--color-bg-content) solid;
     }
 
     &-right {
-      border-left: 1px solid var(--color-bg-content);
+      border-left: 1px var(--color-bg-content) solid;
     }
 
     &-content {

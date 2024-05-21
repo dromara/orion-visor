@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model:visible="visible"
-           body-class="modal-form-large"
+           modal-class="modal-form-large"
            title-align="start"
            title="移动文件"
            :align-center="false"

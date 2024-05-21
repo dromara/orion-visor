@@ -94,8 +94,10 @@ public class WebSocketSyncSession implements WebSocketSession {
     }
 
     @Override
-    public synchronized void sendMessage(WebSocketMessage<?> message) throws IOException {
-        this.delegate.sendMessage(message);
+    public void sendMessage(WebSocketMessage<?> message) throws IOException {
+        synchronized (this.delegate) {
+            this.delegate.sendMessage(message);
+        }
     }
 
     @Override

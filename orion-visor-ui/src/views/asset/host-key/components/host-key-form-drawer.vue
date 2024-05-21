@@ -8,7 +8,7 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full modal-form-small" :loading="loading">
+    <a-spin class="full drawer-form-small" :loading="loading">
       <a-alert class="keygen-alert">
         请使用 ssh-keygen -m PEM -t rsa 生成密钥
       </a-alert>

@@ -99,7 +99,7 @@
                        :placeholder="placeholder"
                        @change="onInputCronChange">
                 <template #prepend>
-                  <span class="allow-click">Expression</span>
+                  <span class="allow-click">表达式</span>
                 </template>
                 <template #append>
                   <span class="allow-click span-blue"
@@ -124,7 +124,7 @@
 
 <script lang="ts">
   export default {
-    name: 'cronInput'
+    name: 'cronGeneratorInput'
   };
 </script>
 
