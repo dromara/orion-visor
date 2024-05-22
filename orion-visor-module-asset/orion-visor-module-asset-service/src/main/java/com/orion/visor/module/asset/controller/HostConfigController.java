@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.controller;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
@@ -59,6 +60,7 @@ public class HostConfigController {
         return hostConfigService.getHostConfigList(hostId);
     }
 
+    @PreviewDisableApi
     @OperatorLog(HostOperatorType.UPDATE_CONFIG)
     @PutMapping("/update")
     @Operation(summary = "更新主机配置")
@@ -67,6 +69,7 @@ public class HostConfigController {
         return hostConfigService.updateHostConfig(request);
     }
 
+    @PreviewDisableApi
     @OperatorLog(HostOperatorType.UPDATE_CONFIG_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "更新主机配置状态/动态初始化配置")

@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.controller;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostGroupOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostGroupRelUpdateRequest;
@@ -74,6 +75,7 @@ public class HostGroupController {
         return hostGroupService.moveHostGroup(request);
     }
 
+    @PreviewDisableApi
     @OperatorLog(HostGroupOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除主机分组")

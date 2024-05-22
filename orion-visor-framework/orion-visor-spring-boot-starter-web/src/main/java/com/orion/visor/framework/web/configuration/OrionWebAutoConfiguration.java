@@ -6,6 +6,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.visor.framework.common.constant.AutoConfigureOrderConst;
 import com.orion.visor.framework.common.constant.FilterOrderConst;
 import com.orion.visor.framework.common.web.filter.FilterCreator;
+import com.orion.visor.framework.web.core.aspect.PreviewDisableApiAspect;
 import com.orion.visor.framework.web.core.filter.TraceIdFilter;
 import com.orion.visor.framework.web.core.handler.GlobalExceptionHandler;
 import com.orion.visor.framework.web.core.handler.WrapperResultHandler;
@@ -137,6 +138,15 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean<TraceIdFilter> traceIdFilterBean() {
         return FilterCreator.create(new TraceIdFilter(), FilterOrderConst.TRICE_ID_FILTER);
+    }
+
+    /**
+     * @return 预览模式禁用 api 切面
+     */
+    @Bean
+    @ConditionalOnProperty(value = "orion.preview", havingValue = "true")
+    public PreviewDisableApiAspect previewDisableApiAspect() {
+        return new PreviewDisableApiAspect();
     }
 
 }

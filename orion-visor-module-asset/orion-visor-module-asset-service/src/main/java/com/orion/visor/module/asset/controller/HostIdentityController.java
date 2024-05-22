@@ -5,6 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostIdentityOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostIdentityCreateRequest;
@@ -50,6 +51,7 @@ public class HostIdentityController {
         return hostIdentityService.createHostIdentity(request);
     }
 
+    @PreviewDisableApi
     @OperatorLog(HostIdentityOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新主机身份")
@@ -84,6 +86,7 @@ public class HostIdentityController {
         return hostIdentityService.getHostIdentityPage(request);
     }
 
+    @PreviewDisableApi
     @OperatorLog(HostIdentityOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除主机身份")

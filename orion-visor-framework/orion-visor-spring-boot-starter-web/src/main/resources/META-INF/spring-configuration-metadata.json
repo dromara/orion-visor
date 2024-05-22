@@ -6,6 +6,12 @@
       "description": "项目版本."
     },
     {
+      "name": "orion.preview",
+      "type": "java.lang.Boolean",
+      "description": "是否为预览模式.",
+      "defaultValue": false
+    },
+    {
       "name": "orion.api.prefix",
       "type": "java.lang.String",
       "description": "项目 api 前缀."

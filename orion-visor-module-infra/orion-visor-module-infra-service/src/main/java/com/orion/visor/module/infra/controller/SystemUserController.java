@@ -6,6 +6,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.SystemUserOperatorType;
 import com.orion.visor.module.infra.entity.request.user.*;
@@ -73,6 +74,7 @@ public class SystemUserController {
 
     // TODO 修改头像 最后再说 可有可无的功能 要是有 http 文件需求就写
 
+    @PreviewDisableApi
     @OperatorLog(SystemUserOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "修改用户状态")
@@ -95,6 +97,7 @@ public class SystemUserController {
         }
     }
 
+    @PreviewDisableApi
     @OperatorLog(SystemUserOperatorType.RESET_PASSWORD)
     @PutMapping("/reset-password")
     @Operation(summary = "重置用户密码")
@@ -137,6 +140,7 @@ public class SystemUserController {
         return systemUserService.getSystemUserPage(request);
     }
 
+    @PreviewDisableApi
     @OperatorLog(SystemUserOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除用户")
@@ -154,6 +158,7 @@ public class SystemUserController {
         return systemUserManagementService.getUserSessionList(id);
     }
 
+    @PreviewDisableApi
     @OperatorLog(SystemUserOperatorType.OFFLINE)
     @PutMapping("/session/offline")
     @Operation(summary = "下线用户会话")

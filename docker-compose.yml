@@ -13,6 +13,7 @@ services:
       - REDIS_HOST=orion-visor-redis
       - REDIS_PASSWORD=Data@123456
       - SECRET_KEY=uQeacXV8b3isvKLK
+      - PREVIEW=false
     volumes:
       - /data/orion-visor-space/docker-volumes/orion-visor-service/root-orion:/root/orion
     depends_on:

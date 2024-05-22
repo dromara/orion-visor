@@ -1,10 +1,8 @@
 package com.orion.visor.framework.biz.operator.log.core.aspect;
 
-import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.orion.lang.define.thread.ExecutorBuilder;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
-import com.orion.visor.framework.biz.operator.log.configuration.config.OperatorLogConfig;
 import com.orion.visor.framework.biz.operator.log.core.annotation.IgnoreParameter;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.biz.operator.log.core.factory.OperatorTypeHolder;
@@ -53,21 +51,13 @@ public class OperatorLogAspect {
             .useLinkedBlockingQueue()
             .build();
 
-    private final OperatorLogConfig operatorLogConfig;
-
     private final OperatorLogFrameworkService operatorLogFrameworkService;
-
-    private final SerializeFilter[] serializeFilters;
 
     @Resource
     private SecurityHolder securityHolder;
 
-    public OperatorLogAspect(OperatorLogConfig operatorLogConfig,
-                             OperatorLogFrameworkService operatorLogFrameworkService,
-                             SerializeFilter[] serializeFilters) {
-        this.operatorLogConfig = operatorLogConfig;
+    public OperatorLogAspect(OperatorLogFrameworkService operatorLogFrameworkService) {
         this.operatorLogFrameworkService = operatorLogFrameworkService;
-        this.serializeFilters = serializeFilters;
     }
 
     @Around("@annotation(o)")
