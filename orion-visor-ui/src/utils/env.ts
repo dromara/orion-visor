@@ -5,6 +5,13 @@ export const isSecureEnvironment = (() => {
   return window.location.protocol === 'https:' || window.location.hostname === 'localhost';
 })();
 
+// 当前是否为单应用模式 PWA
+export const isStandaloneMode = (() => (
+  (window.matchMedia('(display-mode: standalone)').matches)
+  || ((window.navigator as any).standalone)
+  || document.referrer.includes('android-app://')
+) === true)();
+
 // http base url
 export const httpBaseUrl = (() => {
   const configBase = import.meta.env.VITE_API_BASE_URL;

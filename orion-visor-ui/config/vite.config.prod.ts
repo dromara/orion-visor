@@ -27,5 +27,5 @@ export default mergeConfig(
       chunkSizeWarningLimit: 2000,
     },
   },
-  baseConfig
+  baseConfig,
 );
