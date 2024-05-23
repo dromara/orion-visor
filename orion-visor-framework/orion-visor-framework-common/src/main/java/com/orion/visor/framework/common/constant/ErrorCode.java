@@ -86,7 +86,7 @@ public enum ErrorCode implements CodeInfo {
 
     UNSUPPOETED(915, "不支持此操作"),
 
-    PREVIEW_DISABLE_API(916, "预览模式不支持此功能"),
+    DEMO_DISABLE_API(916, "演示模式不支持此功能"),
 
     ;
 

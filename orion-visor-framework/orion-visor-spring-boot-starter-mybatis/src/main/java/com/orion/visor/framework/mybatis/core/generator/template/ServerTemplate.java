@@ -27,7 +27,7 @@ public class ServerTemplate extends Template {
         table.bizPackage = bizPackage;
         table.enableUnitTest = true;
         table.enableOperatorLog = true;
-        table.enablePreviewApi = true;
+        table.enableDemoApi = true;
     }
 
     /**
@@ -104,12 +104,12 @@ public class ServerTemplate extends Template {
     }
 
     /**
-     * 是否生成预览 api 注解
+     * 是否生成演示模式 api 注解
      *
      * @return this
      */
-    public ServerTemplate disablePreviewApi() {
-        table.enablePreviewApi = false;
+    public ServerTemplate disableDemoApi() {
+        table.enableDemoApi = false;
         return this;
     }
 

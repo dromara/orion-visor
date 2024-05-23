@@ -5,7 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.visor.module.infra.entity.request.operator.OperatorLogQueryRequest;
@@ -58,7 +58,7 @@ public class MineController {
         return mineService.updateCurrentUser(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(AuthenticationOperatorType.UPDATE_PASSWORD)
     @Operation(summary = "修改当前用户密码")
     @PutMapping("/update-password")
@@ -81,7 +81,7 @@ public class MineController {
         return mineService.getCurrentUserSessionList();
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @PutMapping("/offline-session")
     @Operation(summary = "下线当前用户会话")
     public Boolean offlineCurrentUserSession(@Validated @RequestBody UserSessionOfflineRequest request) {

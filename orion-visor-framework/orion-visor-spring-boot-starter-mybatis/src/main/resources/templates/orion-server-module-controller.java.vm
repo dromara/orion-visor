@@ -6,8 +6,8 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 #end
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
-#if($meta.enablePreviewApi)
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+#if($meta.enableDemoApi)
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 #end
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
@@ -54,8 +54,8 @@ public class ${table.controllerName} {
     @Resource
     private ${type}Service ${typeLower}Service;
 
-    #if($meta.enablePreviewApi)
-    @PreviewDisableApi
+    #if($meta.enableDemoApi)
+    @DemoDisableApi
     #end
     #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.CREATE)
@@ -67,8 +67,8 @@ public class ${table.controllerName} {
         return ${typeLower}Service.create${type}(request);
     }
 
-    #if($meta.enablePreviewApi)
-    @PreviewDisableApi
+    #if($meta.enableDemoApi)
+    @DemoDisableApi
     #end
     #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.UPDATE)
@@ -114,8 +114,8 @@ public class ${table.controllerName} {
         return ${typeLower}Service.get${type}Page(request);
     }
 
-    #if($meta.enablePreviewApi)
-    @PreviewDisableApi
+    #if($meta.enableDemoApi)
+    @DemoDisableApi
     #end
     #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.DELETE)
@@ -128,8 +128,8 @@ public class ${table.controllerName} {
         return ${typeLower}Service.delete${type}ById(id);
     }
 
-    #if($meta.enablePreviewApi)
-    @PreviewDisableApi
+    #if($meta.enableDemoApi)
+    @DemoDisableApi
     #end
     #if($meta.enableOperatorLog)
     @OperatorLog(${type}OperatorType.DELETE)

@@ -190,8 +190,8 @@ app:
 orion:
   # 版本
   version: @revision@
-  # 是否为预览模式
-  preview: false
+  # 是否为演示模式
+  demo: false
   api:
     # 公共 api 前缀
     prefix: /orion-visor/api

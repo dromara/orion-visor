@@ -6,9 +6,9 @@
       "description": "项目版本."
     },
     {
-      "name": "orion.preview",
+      "name": "orion.demo",
       "type": "java.lang.Boolean",
-      "description": "是否为预览模式.",
+      "description": "是否为演示模式.",
       "defaultValue": false
     },
     {

@@ -5,7 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.SystemRoleOperatorType;
 import com.orion.visor.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
@@ -65,7 +65,7 @@ public class SystemRoleController {
         return systemRoleService.updateSystemRoleById(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(SystemRoleOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 更新角色状态")
@@ -107,7 +107,7 @@ public class SystemRoleController {
         return systemRoleMenuService.getRoleMenuIdList(roleId);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(SystemRoleOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除角色")

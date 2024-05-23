@@ -3,7 +3,7 @@ package com.orion.visor.module.asset.controller;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostGroupOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostGroupRelUpdateRequest;
@@ -43,6 +43,7 @@ public class HostGroupController {
     @Resource
     private HostGroupService hostGroupService;
 
+    @DemoDisableApi
     @OperatorLog(HostGroupOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机分组")
@@ -59,6 +60,7 @@ public class HostGroupController {
         return hostGroupService.queryHostGroupTree();
     }
 
+    @DemoDisableApi
     @OperatorLog(HostGroupOperatorType.RENAME)
     @PutMapping("/rename")
     @Operation(summary = "修改名称")
@@ -67,6 +69,7 @@ public class HostGroupController {
         return hostGroupService.updateHostGroupName(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(HostGroupOperatorType.MOVE)
     @PutMapping("/move")
     @Operation(summary = "移动位置")
@@ -75,7 +78,7 @@ public class HostGroupController {
         return hostGroupService.moveHostGroup(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(HostGroupOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除主机分组")
@@ -93,6 +96,7 @@ public class HostGroupController {
         return hostGroupService.queryHostGroupRel(groupId);
     }
 
+    @DemoDisableApi
     @OperatorLog(HostGroupOperatorType.UPDATE_REL)
     @PutMapping("/update-rel")
     @Operation(summary = "修改分组内主机")

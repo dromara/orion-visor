@@ -3,7 +3,7 @@ package com.orion.visor.framework.web.core.annotation;
 import java.lang.annotation.*;
 
 /**
- * 预览禁用 api
+ * 演示模式禁用 api
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface PreviewDisableApi {
+public @interface DemoDisableApi {
 }

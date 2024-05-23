@@ -4,7 +4,7 @@ import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.DictKeyOperatorType;
 import com.orion.visor.module.infra.entity.request.dict.DictKeyCreateRequest;
@@ -42,7 +42,7 @@ public class DictKeyController {
     @Resource
     private DictKeyService dictKeyService;
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictKeyOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建字典配置项")
@@ -51,7 +51,7 @@ public class DictKeyController {
         return dictKeyService.createDictKey(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictKeyOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "更新字典配置项")
@@ -83,7 +83,7 @@ public class DictKeyController {
         return true;
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictKeyOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除字典配置项")
@@ -93,7 +93,7 @@ public class DictKeyController {
         return dictKeyService.deleteDictKeyById(id);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictKeyOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
     @Operation(summary = "批量删除字典配置项")

@@ -6,7 +6,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.DictValueOperatorType;
 import com.orion.visor.module.infra.entity.request.dict.DictValueCreateRequest;
@@ -46,7 +46,7 @@ public class DictValueController {
     @Resource
     private DictValueService dictValueService;
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictValueOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建字典配置值")
@@ -55,7 +55,7 @@ public class DictValueController {
         return dictValueService.createDictValue(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictValueOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "更新字典配置值")
@@ -64,7 +64,7 @@ public class DictValueController {
         return dictValueService.updateDictValueById(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictValueOperatorType.UPDATE)
     @PutMapping("/rollback")
     @Operation(summary = "回滚字典配置值")
@@ -88,7 +88,7 @@ public class DictValueController {
         return dictValueService.getDictValuePage(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictValueOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除字典配置值")
@@ -98,7 +98,7 @@ public class DictValueController {
         return dictValueService.deleteDictValueById(id);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(DictValueOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
     @Operation(summary = "批量删除字典配置值")

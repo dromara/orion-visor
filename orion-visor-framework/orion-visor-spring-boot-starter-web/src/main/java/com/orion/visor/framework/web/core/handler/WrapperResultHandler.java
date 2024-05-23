@@ -3,7 +3,7 @@ package com.orion.visor.framework.web.core.handler;
 import com.orion.lang.constant.StandardContentType;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.define.wrapper.RpcWrapper;
-import com.orion.visor.framework.common.constant.ResponseAdviceOrderConst;
+import com.orion.visor.framework.common.constant.BeanOrderConst;
 import com.orion.visor.framework.web.core.annotation.IgnoreWrapper;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @version 1.0.0
  * @since 2023/6/15 17:38
  */
-@Order(ResponseAdviceOrderConst.WRAPPER)
+@Order(BeanOrderConst.RESPONSE_ADVICE_WRAPPER)
 @ControllerAdvice
 public class WrapperResultHandler implements ResponseBodyAdvice<Object> {
 

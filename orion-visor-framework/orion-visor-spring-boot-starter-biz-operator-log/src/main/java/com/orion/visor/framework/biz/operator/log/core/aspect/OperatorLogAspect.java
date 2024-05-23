@@ -11,6 +11,7 @@ import com.orion.visor.framework.biz.operator.log.core.model.OperatorType;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogFiller;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.BeanOrderConst;
 import com.orion.visor.framework.common.security.LoginUser;
 import com.orion.visor.framework.common.security.SecurityHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -41,6 +43,7 @@ import java.util.concurrent.ExecutorService;
  */
 @Aspect
 @Slf4j
+@Order(BeanOrderConst.OPERATOR_LOG_ASPECT)
 public class OperatorLogAspect {
 
     private static final ExecutorService LOG_SAVER = ExecutorBuilder.create()

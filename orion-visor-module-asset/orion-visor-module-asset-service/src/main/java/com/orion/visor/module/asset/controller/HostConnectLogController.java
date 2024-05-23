@@ -6,7 +6,7 @@ import com.orion.visor.framework.common.validator.group.Id;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.PreviewDisableApi;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostConnectLogOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
@@ -89,7 +89,7 @@ public class HostConnectLogController {
         return hostConnectLogService.clearHostConnectLog(request);
     }
 
-    @PreviewDisableApi
+    @DemoDisableApi
     @OperatorLog(HostConnectLogOperatorType.FORCE_OFFLINE)
     @PutMapping("/force-offline")
     @Operation(summary = "强制断开主机连接")
