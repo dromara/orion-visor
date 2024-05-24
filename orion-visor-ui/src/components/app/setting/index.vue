@@ -21,6 +21,14 @@
       <block :options="dataOpts" title="数据设置" />
       <!-- 页面视图 -->
       <block :options="viewsOpts" title="页面视图" />
+      <!-- 保存为桌面程序 -->
+      <a-button v-if="visibleCreatePwaApp()"
+                class="mb16"
+                type="primary"
+                @click="createPwaApp"
+                long>
+        保存为桌面程序
+      </a-button>
     </div>
   </a-drawer>
 </template>
@@ -30,6 +38,8 @@
   import { useAppStore } from '@/store';
   import useVisible from '@/hooks/visible';
   import { CardPageSizeOptions, TablePageSizeOptions } from '@/types/const';
+  import { Message } from '@arco-design/web-vue';
+  import { isStandaloneMode } from '@/utils/env';
   import Block from './block.vue';
 
   const appStore = useAppStore();
@@ -39,6 +49,7 @@
   const open = () => {
     setVisible(true);
   };
+
   defineExpose({ open });
 
   // 布局设置
@@ -110,7 +121,6 @@
     },
   ]);
 
-
   // 页面视图配置
   const viewsOpts = computed(() => [
     {
@@ -141,6 +151,26 @@
       options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
     },
   ]);
+
+  // 是否展示创建 PWA 应用
+  const visibleCreatePwaApp = () => {
+    return !isStandaloneMode && !!(window as CustomWindow).deferredPrompt;
+  };
+
+  // 创建 PWA 应用
+  const createPwaApp = () => {
+    const win = window as CustomWindow;
+    try {
+      win.deferredPrompt.prompt();
+      win.deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          win.deferredPrompt = null;
+        }
+      });
+    } catch (e) {
+      Message.error('无法安装 PWA 应用');
+    }
+  };
 
 </script>
 

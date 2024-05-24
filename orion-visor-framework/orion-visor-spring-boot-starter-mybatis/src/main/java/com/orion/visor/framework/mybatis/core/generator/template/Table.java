@@ -59,6 +59,11 @@ public class Table {
     protected boolean enableOperatorLog;
 
     /**
+     * 是否生成演示模式 api 注解
+     */
+    protected boolean enableDemoApi;
+
+    /**
      * 缓存的 key
      */
     protected String cacheKey;

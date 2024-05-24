@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
+import configPwaPlugin from './plugin/pwa';
 
 export default defineConfig({
   plugins: [
@@ -11,6 +12,7 @@ export default defineConfig({
     vueJsx(),
     svgLoader({ svgoConfig: {} }),
     configArcoStyleImportPlugin(),
+    configPwaPlugin(),
   ],
   resolve: {
     alias: [

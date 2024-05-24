@@ -86,6 +86,8 @@ public enum ErrorCode implements CodeInfo {
 
     UNSUPPOETED(915, "不支持此操作"),
 
+    DEMO_DISABLE_API(916, "演示模式不支持此功能"),
+
     ;
 
     ErrorCode(int code, String message) {

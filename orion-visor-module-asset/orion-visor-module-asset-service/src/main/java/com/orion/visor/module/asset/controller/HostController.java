@@ -5,6 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostCreateRequest;
@@ -42,6 +43,7 @@ public class HostController {
     @Resource
     private HostService hostService;
 
+    @DemoDisableApi
     @OperatorLog(HostOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建主机")
@@ -50,6 +52,7 @@ public class HostController {
         return hostService.createHost(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(HostOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新主机")
@@ -83,6 +86,7 @@ public class HostController {
         return hostService.getHostPage(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(HostOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除主机")

@@ -8,7 +8,7 @@
         <a-link target="_blank" href="https://gitee.com/lijiahangmax/orion-visor">gitee</a-link>
         <a-link target="_blank" href="https://lijiahangmax.github.io/orion-visor">文档</a-link>
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE">License</a-link>
-        <a-link target="_blank" :href="`https://github.com/lijiahangmax/orion-visor/releases/tag/v${version}`">V{{ version }} 社区版</a-link>
+        <a-link target="_blank" :href="`https://github.com/lijiahangmax/orion-visor/releases/tag/v${version}`">v{{ version }} Community</a-link>
       </a-space>
       <span class="copyright">
         Copyright<icon-copyright /> 2023 - {{ new Date().getFullYear() }} Li Jiahang, All rights reserved.

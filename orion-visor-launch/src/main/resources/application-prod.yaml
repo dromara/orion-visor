@@ -41,6 +41,8 @@ knife4j:
   enable: false
 
 orion:
+  # 是否为演示模式
+  demo: ${DEMO_MODE:false}
   logging:
     printer:
       mode: ROW

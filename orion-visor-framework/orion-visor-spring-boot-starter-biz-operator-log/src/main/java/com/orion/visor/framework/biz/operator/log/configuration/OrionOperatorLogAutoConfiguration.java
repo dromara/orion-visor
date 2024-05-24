@@ -72,7 +72,7 @@ public class OrionOperatorLogAutoConfiguration {
         OperatorLogs.setSerializeFilters(serializeFilters);
         OperatorLogFiller.setSerializeFilters(serializeFilters);
         OperatorLogFiller.setOperatorLogConfig(operatorLogConfig);
-        return new OperatorLogAspect(operatorLogConfig, service, serializeFilters);
+        return new OperatorLogAspect(service);
     }
 
 }

@@ -3,6 +3,7 @@ package com.orion.visor.module.infra.controller;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.SystemMenuOperatorType;
 import com.orion.visor.module.infra.entity.request.menu.SystemMenuCreateRequest;
@@ -41,6 +42,7 @@ public class SystemMenuController {
     @Resource
     private SystemMenuService systemMenuService;
 
+    @DemoDisableApi
     @OperatorLog(SystemMenuOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建菜单")
@@ -49,6 +51,7 @@ public class SystemMenuController {
         return systemMenuService.createSystemMenu(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemMenuOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新菜单")
@@ -57,6 +60,7 @@ public class SystemMenuController {
         return systemMenuService.updateSystemMenuById(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemMenuOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "通过 id 级联更新菜单状态")
@@ -82,6 +86,7 @@ public class SystemMenuController {
         return systemMenuService.getSystemMenuByIdList(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemMenuOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 级联删除菜单")

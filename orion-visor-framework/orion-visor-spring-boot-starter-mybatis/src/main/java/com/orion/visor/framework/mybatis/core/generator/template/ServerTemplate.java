@@ -27,6 +27,7 @@ public class ServerTemplate extends Template {
         table.bizPackage = bizPackage;
         table.enableUnitTest = true;
         table.enableOperatorLog = true;
+        table.enableDemoApi = true;
     }
 
     /**
@@ -99,6 +100,16 @@ public class ServerTemplate extends Template {
      */
     public ServerTemplate disableOperatorLog() {
         table.enableOperatorLog = false;
+        return this;
+    }
+
+    /**
+     * 是否生成演示模式 api 注解
+     *
+     * @return this
+     */
+    public ServerTemplate disableDemoApi() {
+        table.enableDemoApi = false;
         return this;
     }
 

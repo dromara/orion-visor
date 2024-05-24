@@ -5,6 +5,7 @@ import { appRoutes } from './routes';
 import BASE_ROUTERS from './routes/base';
 import createRouteGuard from './guard';
 import { openWindow } from '@/utils';
+import { isStandaloneMode } from '@/utils/env';
 import 'nprogress/nprogress.css';
 
 NProgress.configure({ showSpinner: false });
@@ -27,7 +28,13 @@ createRouteGuard(router);
 // 新页面打开路由
 export const openNewRoute = (route: RouteLocationRaw) => {
   const { href } = router.resolve(route);
-  openWindow(href);
+  if (isStandaloneMode) {
+    // 单应用 PWA 则跳转
+    window.location.href = href;
+  } else {
+    // 浏览器 则直接打开
+    openWindow(href);
+  }
 };
 
 export default router;

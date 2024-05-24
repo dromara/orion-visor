@@ -1,10 +1,8 @@
 package com.orion.visor.framework.biz.operator.log.core.aspect;
 
-import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.orion.lang.define.thread.ExecutorBuilder;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
-import com.orion.visor.framework.biz.operator.log.configuration.config.OperatorLogConfig;
 import com.orion.visor.framework.biz.operator.log.core.annotation.IgnoreParameter;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.biz.operator.log.core.factory.OperatorTypeHolder;
@@ -13,6 +11,7 @@ import com.orion.visor.framework.biz.operator.log.core.model.OperatorType;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogFiller;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.BeanOrderConst;
 import com.orion.visor.framework.common.security.LoginUser;
 import com.orion.visor.framework.common.security.SecurityHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +19,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -43,6 +43,7 @@ import java.util.concurrent.ExecutorService;
  */
 @Aspect
 @Slf4j
+@Order(BeanOrderConst.OPERATOR_LOG_ASPECT)
 public class OperatorLogAspect {
 
     private static final ExecutorService LOG_SAVER = ExecutorBuilder.create()
@@ -53,21 +54,13 @@ public class OperatorLogAspect {
             .useLinkedBlockingQueue()
             .build();
 
-    private final OperatorLogConfig operatorLogConfig;
-
     private final OperatorLogFrameworkService operatorLogFrameworkService;
-
-    private final SerializeFilter[] serializeFilters;
 
     @Resource
     private SecurityHolder securityHolder;
 
-    public OperatorLogAspect(OperatorLogConfig operatorLogConfig,
-                             OperatorLogFrameworkService operatorLogFrameworkService,
-                             SerializeFilter[] serializeFilters) {
-        this.operatorLogConfig = operatorLogConfig;
+    public OperatorLogAspect(OperatorLogFrameworkService operatorLogFrameworkService) {
         this.operatorLogFrameworkService = operatorLogFrameworkService;
-        this.serializeFilters = serializeFilters;
     }
 
     @Around("@annotation(o)")

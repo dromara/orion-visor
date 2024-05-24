@@ -5,7 +5,7 @@
       <img alt="logo"
            class="terminal-header-logo"
            draggable="false"
-           src="@/assets/images/logo.svg?url" />
+           src="@/assets/logo.svg?url" />
       <h5 class="terminal-header-logo-text">Orion Visor</h5>
     </div>
     <!-- 左侧 tabs -->
