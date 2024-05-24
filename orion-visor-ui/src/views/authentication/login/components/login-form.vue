@@ -51,19 +51,17 @@
 
   const router = useRouter();
   const { t } = useI18n();
-  const errorMessage = ref('');
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
+
+  const errorMessage = ref('');
 
   const userInfo = reactive<LoginRequest>({
     username: undefined,
     password: undefined,
   });
 
-  const handleSubmit = async ({
-                                errors,
-                                values,
-                              }: {
+  const handleSubmit = async ({ errors, values }: {
     errors: Record<string, ValidatedError> | undefined;
     values: LoginRequest;
   }) => {

@@ -19,7 +19,8 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
   readonly VITE_WS_BASE_URL: string;
   readonly VITE_APP_VERSION: string;
-  readonly VITE_SFTP_PREVIEW_MB: number;
+  readonly VITE_SFTP_PREVIEW_MB: string;
+  readonly VITE_DEMO_MODE: string;
 }
 
 // editor

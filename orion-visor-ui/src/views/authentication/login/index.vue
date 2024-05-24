@@ -4,7 +4,7 @@
     <div class="logo">
       <img class="logo-img"
            alt="logo"
-           src="@/assets/images/logo.svg?url" />
+           src="@/assets/logo.svg?url" />
       <div class="logo-text">Orion Visor</div>
     </div>
     <!-- 左侧 banner -->

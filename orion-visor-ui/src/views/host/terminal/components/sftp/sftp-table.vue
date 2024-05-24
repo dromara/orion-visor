@@ -152,7 +152,7 @@
   import columns from './types/table.columns';
   import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/terminal.const';
 
-  const previewSize = import.meta.env.VITE_SFTP_PREVIEW_MB;
+  const previewSize = Number.parseInt(import.meta.env.VITE_SFTP_PREVIEW_MB);
 
   const props = defineProps<{
     session?: ISftpSession;

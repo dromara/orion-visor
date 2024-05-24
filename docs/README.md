@@ -59,6 +59,16 @@
 
 ## 快速开始
 
+```bash
+# clone
+git clone https://github.com/lijiahangmax/orion-visor
+cd orion-visor
+# 启动
+docker compose up -d
+```
+
+## 项目文档
+
 * [文档地址](https://lijiahangmax.github.io/orion-visor/#/)
 * [docker安装](/quickstart/docker-install)
 * [普通安装](/quickstart/install)

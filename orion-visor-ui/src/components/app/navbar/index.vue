@@ -7,7 +7,7 @@
         <img class="left-side-logo"
              alt="logo"
              draggable="false"
-             src="@/assets/images/logo.svg?url" />
+             src="@/assets/logo.svg?url" />
         <!-- 标头 -->
         <a-typography-title :heading="5"
                             :style="{ margin: 0, fontSize: '18px', height: '1.4em', overflow: 'hidden' }">

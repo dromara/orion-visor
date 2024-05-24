@@ -1,7 +1,7 @@
 package com.orion.visor.framework.log.configuration;
 
 import com.orion.visor.framework.common.constant.AutoConfigureOrderConst;
-import com.orion.visor.framework.common.constant.InterceptorOrderConst;
+import com.orion.visor.framework.common.constant.BeanOrderConst;
 import com.orion.visor.framework.log.configuration.config.LogPrinterConfig;
 import com.orion.visor.framework.log.core.interceptor.LogPrinterInterceptor;
 import com.orion.visor.framework.log.core.interceptor.PrettyLogPrinterInterceptor;
@@ -59,7 +59,7 @@ public class OrionLogPrinterConfiguration {
         AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
         advisor.setExpression(config.getExpression());
         advisor.setAdvice(logPrinterInterceptor);
-        advisor.setOrder(InterceptorOrderConst.LOG_FILTER);
+        advisor.setOrder(BeanOrderConst.LOG_PRINT_ASPECT);
         return advisor;
     }
 

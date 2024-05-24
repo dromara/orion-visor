@@ -17,11 +17,16 @@ public interface BeanOrderConst {
     /**
      * 演示模式切面
      */
-    int DEMO_DISABLE_API_ASPECT = 20;
+    int DEMO_DISABLE_API_ASPECT = Integer.MIN_VALUE + 10;
+
+    /**
+     * 全局日志打印
+     */
+    int LOG_PRINT_ASPECT = Integer.MIN_VALUE + 20;
 
     /**
      * 操作日志切面
      */
-    int OPERATOR_LOG_ASPECT = 30;
+    int OPERATOR_LOG_ASPECT = Integer.MIN_VALUE + 30;
 
 }
