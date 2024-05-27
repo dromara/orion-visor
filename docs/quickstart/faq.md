@@ -1,3 +1,13 @@
+### 日志文件在哪?
+
+```shell
+# 宿主机
+tail -f -n 200 /data/orion-visor-space/docker-volumes/orion-visor-service/root-orion/logs/orion-visor/app.log
+# 容器内
+tail -f -n 200 /root/orion/logs/orion-visor/app.log
+# 滚动日志 .../logs/orion-visor/rolling/*
+```
+
 ### 数据误删除怎么办?
 
 数据库的数据都采用了逻辑删除, 可以将已删除的数据中的 `deleted` 字段改为 `0`   
