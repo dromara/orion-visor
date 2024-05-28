@@ -1,4 +1,4 @@
-<div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/2/27/8c687ef1-5711-4a93-9db0-79c010af7902.png" alt="logo" width="32" /></div>
+<div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/cec03bbd-0eab-464d-9caf-d0b5a7ffc5a6.png" alt="logo" width="32" /></div>
 <p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的智能运维&轻量堡垒机平台。</b></p>
 <p align="center">
     <a target="_blank"
@@ -43,7 +43,8 @@
 **`orion-visor`** 提供一站式服务器运维解决方案。
 
 * **资产管理**：支持对资产进行分组，实现对主机、密钥和身份的统一管理和授权。
-* **在线终端**：提供在线 Terminal 服务，支持快捷命令、大文件上传、在线编辑等操作。
+* **在线终端**：提供在线终端 SSH 服务，支持快捷命令、自定义快捷键和主题风格。
+* **文件管理**：支持远程主机 SFTP 大文件的批量上传、下载和在线编辑等操作。
 * **批量操作**：支持批量执行主机命令、多主机文件分发等功能。
 * **计划任务**：支持配置 cron 表达式，定时执行主机命令。
 * **安全可靠**：动态配置权限，记录用户操作日志，提供简单的审计功能。
@@ -88,22 +89,22 @@ docker compose up -d
 
 #### 主机终端
 
-![新建连接](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/19288b64-cdb2-4073-8df9-ecd642d4077f.png "新建连接")
-![主机终端](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/41d9deb5-aede-48a5-a6f3-5522cfff9a9f.png "主机终端")
-![sftp](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/366db511-0c1d-4680-9200-4da8f22b028b.png "sftp")
-![主题设置](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/a3e4c2fb-11f5-4387-998e-6f454e336472.png "主题设置")
+![新建连接](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/aa7efb14-f2cc-4a6f-b96b-a47964ed8f79.png "新建连接")
+![主机终端](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/66f121de-69b6-49f6-adc4-701a22d481c4.png "主机终端")
+![sftp](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/f7a0d141-0ee0-484e-8ddb-24cad9ed2c03.png "sftp")
+![主题设置](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/d6f37ab3-62d2-4c5e-a503-e76a1d5ddc8e.png "主题设置")
 
 #### 批量执行
 
-![批量执行](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/99839bab-9f0e-45ea-b03d-a4c992203e95.png "批量执行")
+![批量执行](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/3effc2fc-56a5-498d-8dfb-0f4f3b8a4056.png "批量执行")
 
 #### 批量上传
 
-![批量上传任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/04ccd627-8a46-43a1-acd9-740f75dbf386.png "批量上传任务")
+![批量上传任务](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/98240fa9-4056-4520-9034-290d1aa47d80.png "批量上传任务")
 
 #### 计划任务
 
-![计划任务详情](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/0c4342fc-9fde-4fc1-b886-104a4d22c0b2.png "计划任务详情")
+![计划任务详情](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/d5ee6f04-7b2c-42ba-a3b3-642587f40cce.png "计划任务详情")
 
 ## Star History
 
