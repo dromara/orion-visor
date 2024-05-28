@@ -3,10 +3,13 @@
 <svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:url(#SVGID_1_);}
-	.st1{fill:#3B28CC;}
+	.st0{fill:#FFFFFF;}
+	.st1{fill:url(#SVGID_1_);}
+	.st2{fill:#3B28CC;}
 </style>
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="27.1802" y1="7.7935" x2="15.2269" y2="25.137">
+<path class="st0" d="M23.89,30.59H8.11c-3.7,0-6.7-3-6.7-6.7V8.11c0-3.7,3-6.7,6.7-6.7h15.78c3.7,0,6.7,3,6.7,6.7v15.78
+	C30.59,27.59,27.59,30.59,23.89,30.59z"/>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="22.266" y1="11.4006" x2="15.5667" y2="21.1209">
 	<stop  offset="0" style="stop-color:#ADD7F6"/>
 	<stop  offset="0.2512" style="stop-color:#AAD5F6"/>
 	<stop  offset="0.4195" style="stop-color:#A1CDF7"/>
@@ -16,8 +19,8 @@
 	<stop  offset="0.9279" style="stop-color:#407CFD"/>
 	<stop  offset="1" style="stop-color:#2667FF"/>
 </linearGradient>
-<path class="st0" d="M31.41,4.01h-8.04c-0.27,0-0.51,0.18-0.57,0.44c-0.64,2.56-4.19,15.45-11.86,20.81c0,0,9.5,13.77,21.03-20.47
-	C32.1,4.4,31.81,4.01,31.41,4.01z"/>
-<path class="st1" d="M0.62,3.98h8.02c0.28,0,0.52,0.18,0.59,0.45c0.69,2.58,4.47,15.52,12.14,20.88c0,0-10.88,13.73-21.34-20.54
-	C-0.09,4.37,0.2,3.98,0.62,3.98z"/>
+<path class="st1" d="M24.64,9.28h-4.5c-0.15,0-0.28,0.1-0.32,0.25c-0.36,1.43-2.35,8.66-6.65,11.66c0,0,5.32,7.72,11.79-11.47
+	C25.02,9.5,24.86,9.28,24.64,9.28z"/>
+<path class="st2" d="M7.38,9.26h4.49c0.16,0,0.29,0.1,0.33,0.25c0.39,1.45,2.51,8.7,6.8,11.7c0,0-6.1,7.69-11.96-11.51
+	C6.98,9.48,7.15,9.26,7.38,9.26z"/>
 </svg>

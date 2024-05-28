@@ -37,8 +37,8 @@ const enabled = (): Partial<VitePWAOptions> => {
       description: '一款高颜值、现代化的智能运维&轻量堡垒机平台。',
       theme_color: '#212529',
       icons: [{
-        src: 'logo_150.png',
-        sizes: '150x150',
+        src: 'manifest_logo_267.png',
+        sizes: '267x267',
         type: 'image/png',
       }],
     },
