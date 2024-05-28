@@ -1,5 +1,5 @@
 server:
-  port: 9200
+  port: 1081
 
 spring:
   application:
@@ -208,7 +208,7 @@ orion:
     session-idle-timeout: 1800000
   swagger:
     # swagger 配置
-    author: lijiahang
+    author: Jiahang Li
     title: orion-visor 运维平台
     description: 一站式运维服务平台
     version: ${orion.version}
