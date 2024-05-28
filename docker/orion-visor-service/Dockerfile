@@ -1,6 +1,7 @@
 FROM nginx:alpine
 USER root
-# 时区
+WORKDIR /app
+# 系统时区
 ARG TZ=Asia/Shanghai
 # 切换源
 RUN \
@@ -12,11 +13,14 @@ RUN \
 RUN apk add tzdata && \
   ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
   echo '${TZ}' > /etc/timezone
+# 添加 jdk
 RUN apk add openjdk8
+# 删除原 nginx 配置
 RUN rm -rf /etc/nginx/conf.d/*
-WORKDIR /app
+# 复制包
 COPY ./orion-visor-launch.jar /app/app.jar
 COPY ./dist /usr/share/nginx/html
 COPY ./entrypoint.sh /app/entrypoint.sh
 COPY ./nginx.conf /etc/nginx/conf.d
+# 启动
 ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]
