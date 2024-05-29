@@ -5,10 +5,7 @@ WORKDIR /app
 ARG TZ=Asia/Shanghai
 # 添加包
 RUN \
-  echo "" > /etc/apk/repositories && \
-  echo "https://mirrors.aliyun.com/alpine/v3.8/main" >> /etc/apk/repositories && \
-  echo "https://mirrors.aliyun.com/alpine/v3.8/community" >> /etc/apk/repositories && \
-  echo "https://mirrors.tuna.tsinghua.edu.cn" >> /etc/apk/repositories && \
+  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
   apk update && \
   apk add tzdata && \
   apk add openjdk8

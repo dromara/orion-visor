@@ -9,8 +9,10 @@
     "dev": "vite --config ./config/vite.config.dev.ts",
     "dev:host": "vite --config ./config/vite.config.dev.ts --host",
     "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
+    "build:demo": "cross-env VITE_DEMO_MODE=true npm run build",
     "report": "cross-env REPORT=true npm run build",
     "preview": "npm run build && vite preview --host",
+    "preview:demo": "npm run build:demo && vite preview --host",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
     "lint-staged": "npx lint-staged"
   },
