@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.time.cron.Cron;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
@@ -163,8 +164,12 @@ public class ExecJobServiceImpl implements ExecJobService {
         List<Long> hostIdList = execJobHostService.getHostIdByJobId(id);
         vo.setHostIdList(hostIdList);
         // 查询主机列表
-        List<HostDO> hostList = hostDAO.selectBatchIds(hostIdList);
-        vo.setHostList(HostConvert.MAPPER.toList(hostList));
+        if (!Lists.isEmpty(hostIdList)) {
+            List<HostDO> hostList = hostDAO.selectBatchIds(hostIdList);
+            vo.setHostList(HostConvert.MAPPER.toList(hostList));
+        } else {
+            vo.setHostList(Lists.empty());
+        }
         return vo;
     }
 

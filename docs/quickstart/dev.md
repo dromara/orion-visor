@@ -11,9 +11,7 @@
 ⚡ npm 建议使用淘宝镜像 `npm config set registry https://registry.npmmirror.com/`  
 ⚡ pnpm 建议使用淘宝镜像 `pnpm config set registry https://registry.npmmirror.com/`
 
-### 配置
-
-1. 拉取代码
+### 拉取代码
 
 ```
 # github
@@ -22,7 +20,7 @@ git clone https://github.com/lijiahangmax/orion-visor
 git clone https://gitee.com/lijiahangmax/orion-visor
 ```
 
-2. 初始化数据库
+### 初始化数据库
 
 ```
 # 执行脚本
@@ -32,7 +30,7 @@ orion-visor/sql/init-3-schema-quartz.sql
 orion-visor/sql/init-4-data.sql
 ```
 
-3. 修改后端配置
+### 修改后端配置
 
 ```
 # 修改配置文件 (mysql, redis, secret-key)
@@ -46,9 +44,9 @@ mvn -U clean install -DskipTests
 com.orion.visor.launch.LaunchApplication
 ```
 
-4. 修改前端配置
+### 修改前端配置
 
-```
+```shell
 # 进入代码目录
 cd orion-visor/orion-visor-ui
 # 下载 pnpm

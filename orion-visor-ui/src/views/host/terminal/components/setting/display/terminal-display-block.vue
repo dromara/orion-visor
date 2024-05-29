@@ -25,6 +25,9 @@
               <template #option="{ data }">
                 <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
               </template>
+              <template #label="{ data }">
+                <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
+              </template>
             </a-select>
           </a-form-item>
           <!-- 字体大小 -->

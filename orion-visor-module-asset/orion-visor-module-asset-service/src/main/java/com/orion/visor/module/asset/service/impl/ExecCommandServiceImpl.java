@@ -330,7 +330,16 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         // 解析参数
         return schemaList.stream()
                 .collect(Collectors.toMap(ExecParameterSchemaDTO::getName,
-                        ExecParameterSchemaDTO::getValue,
+                        s -> {
+                            Object value = s.getValue();
+                            if (value == null) {
+                                value = s.getDefaultValue();
+                            }
+                            if (value == null) {
+                                value = Const.EMPTY;
+                            }
+                            return value;
+                        },
                         Functions.right()));
     }
 

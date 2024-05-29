@@ -19,7 +19,7 @@ Dashboard 修改)
 
 ### 拉取代码
 
-```
+```shell
 # github
 git clone https://github.com/lijiahangmax/orion-visor
 # gitee
@@ -41,18 +41,18 @@ cd orion-visor
 
 ### 启动
 
-```
+```shell
 docker compose up -d
 ```
 
-### 连接 mysql (如果需要在 navicat 中连接)
+### 修改加密方式
 
 ```
 访问 adminer: http://localhost:8081
 服务器: orion-visor-mysql
 用户名: root
-密码: Data@123456
-数据库: orion-visor
+密  码: Data@123456
+数据库: orion_visor
 
 点击左侧 SQL命令 输入:
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'Data@123456';
@@ -62,5 +62,5 @@ ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'Data@123456';
 ### 测试访问
 
 在浏览器中输入 http://localhost:1081/ 访问  
-账号: admin  
-密码: admin  
+账号: `admin`  
+密码: `admin`  

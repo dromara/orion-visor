@@ -12,9 +12,7 @@
 ⚡ npm 建议使用淘宝镜像 `npm config set registry https://registry.npmmirror.com/`  
 ⚡ pnpm 建议使用淘宝镜像 `pnpm config set registry https://registry.npmmirror.com/`
 
-### 构建
-
-1. 拉取代码
+### 拉取代码
 
 ```
 # github
@@ -23,7 +21,7 @@ git clone https://github.com/lijiahangmax/orion-visor
 git clone https://gitee.com/lijiahangmax/orion-visor
 ```
 
-2. 初始化数据库
+### 初始化数据库
 
 ```
 # 执行脚本
@@ -33,7 +31,7 @@ orion-visor/sql/init-3-schema-quartz.sql
 orion-visor/sql/init-4-data.sql
 ```
 
-3. 构建后端代码
+### 构建后端代码
 
 ```
 # 修改配置文件 (mysql, redis, secret-key)
@@ -45,7 +43,7 @@ cd orion-visor
 mvn -U clean install -DskipTests
 ```   
 
-4. 构建前端代码
+### 构建前端代码
 
 ```
 # 进入代码目录
@@ -122,7 +120,7 @@ server {
 
 ```
 复制 orion-visor/orion-visor-ui/dist 到 /usr/share/nginx/html
-复制 orion-visor/orion-visor-launch/target/orion-visor-launch.jar 到 /data/orion
+复制 orion-visor/orion-visor-launch/target/orion-visor-launch.jar 到 /data/orion-visor-space
 # 启动后台服务
 nohup java -jar orion-visor-launch.jar --spring.profiles.active=prod 2>&1 &
 # 启动 nginx

@@ -142,8 +142,10 @@
     }
 
     &-desc {
-      color: var(--color-text-2);
       width: calc(100% - 36px);
+      height: 24px;
+      padding-top: 3px;
+      color: var(--color-text-2);
       overflow: hidden;
       white-space: nowrap;
       text-align: end;

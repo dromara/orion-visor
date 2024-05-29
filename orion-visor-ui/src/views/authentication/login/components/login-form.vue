@@ -1,7 +1,14 @@
 <template>
   <div class="login-form-wrapper">
+    <!-- 标题 -->
     <div class="login-form-title usn">{{ $t('login.form.title') }}</div>
+    <!-- 子标题 -->
+    <div v-if="!isDemoMode" class="login-form-sub-title">{{ $t('login.form.sub.title') }}</div>
+    <!-- 演示模式 -->
+    <div v-else class="login-form-sub-title ">演示模式账号: admin/admin</div>
+    <!-- 错误信息 -->
     <div class="login-form-error-msg">{{ errorMessage }}</div>
+    <!-- 登录表单 -->
     <a-form ref="loginForm"
             :model="userInfo"
             class="login-form"
@@ -30,6 +37,7 @@
           </template>
         </a-input-password>
       </a-form-item>
+      <!-- 登录按钮 -->
       <a-space :size="16" direction="vertical">
         <a-button type="primary" html-type="submit" long :loading="loading">
           {{ $t('login.form.login') }}
@@ -48,6 +56,7 @@
   import { useI18n } from 'vue-i18n';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
+  import { isDemoMode } from '@/utils/env';
 
   const router = useRouter();
   const { t } = useI18n();
