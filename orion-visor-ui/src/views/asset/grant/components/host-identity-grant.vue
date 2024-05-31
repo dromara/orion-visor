@@ -6,10 +6,10 @@
                 @select-all="selectAll"
                 @reverse="reverseSelect">
     <!-- 主机身份表格 -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              class="host-identity-main-table"
              :columns="hostIdentityColumns"
-             v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
              row-class="pointer"
              :sticky-header="true"

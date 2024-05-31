@@ -83,11 +83,11 @@
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
-             v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
              :expandable="expandable"
              :data="tableRenderData"

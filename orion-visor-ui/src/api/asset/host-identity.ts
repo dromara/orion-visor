@@ -1,6 +1,7 @@
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
+import qs from 'query-string';
 
 /**
  * 主机身份创建请求
@@ -91,3 +92,14 @@ export function deleteHostIdentity(id: number) {
   return axios.delete('/asset/host-identity/delete', { params: { id } });
 }
 
+/**
+ * 批量删除主机身份
+ */
+export function batchDeleteHostIdentity(idList: Array<number>) {
+  return axios.delete('/asset/host-identity/batch-delete', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
+}

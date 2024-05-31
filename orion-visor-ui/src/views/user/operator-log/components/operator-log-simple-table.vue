@@ -6,9 +6,9 @@
            :columns="tableColumns"
            :data="tableRenderData"
            :pagination="pagination"
+           :bordered="false"
            @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-           @page-size-change="(size) => fetchTableData(1, size)"
-           :bordered="false">
+           @page-size-change="(size) => fetchTableData(1, size)">
     <!-- 操作模块 -->
     <template #module="{ record }">
       <span>{{ getDictValue(operatorLogModuleKey, record.module) }}</span>

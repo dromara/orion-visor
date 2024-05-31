@@ -68,17 +68,17 @@
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
-             v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
+             :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
-             :bordered="false">
+             @page-size-change="(size) => fetchTableData(1, size)">
       <!-- 配置项 -->
       <template #keyName="{record}">
         {{ record.keyName }}<span style="margin: 0 4px;">-</span>{{ record.keyDescription }}

@@ -1,6 +1,7 @@
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
+import qs from 'query-string';
 
 /**
  * 执行模板创建请求
@@ -87,4 +88,16 @@ export function getExecTemplatePage(request: ExecTemplateQueryRequest) {
  */
 export function deleteExecTemplate(id: number) {
   return axios.delete('/asset/exec-template/delete', { params: { id } });
+}
+
+/**
+ * 批量删除执行模板
+ */
+export function batchDeleteExecTemplate(idList: Array<number>) {
+  return axios.delete('/asset/exec-template/batch-delete', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
