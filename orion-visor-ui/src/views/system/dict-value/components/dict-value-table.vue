@@ -55,7 +55,7 @@
                         type="warning"
                         @ok="deleteSelectRows">
             <a-button v-permission="['infra:dict-value:delete']"
-                      type="secondary"
+                      type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
               删除

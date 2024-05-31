@@ -63,6 +63,21 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 删除 -->
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
+                        type="warning"
+                        @ok="deleteSelectRows">
+            <a-button v-permission="['infra:dict-key:delete']"
+                      type="primary"
+                      status="danger"
+                      :disabled="selectedKeys.length === 0">
+              删除
+              <template #icon>
+                <icon-delete />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </div>
     </template>
@@ -71,6 +86,8 @@
              ref="tableRef"
              :loading="loading"
              :columns="columns"
+             v-model:selected-keys="selectedKeys"
+             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
@@ -144,24 +161,26 @@
 <script lang="ts" setup>
   import type { DictKeyQueryRequest, DictKeyQueryResponse } from '@/api/system/dict-key';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
+  import { deleteDictKey, batchDeleteDictKey, getDictKeyPage, refreshCache } from '@/api/system/dict-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { usePagination } from '@/types/table';
+  import { usePagination, useRowSelection } from '@/types/table';
   import { dictValueTypeKey } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { getDictValueList } from '@/api/system/dict-value';
 
-  const tableRenderData = ref<DictKeyQueryResponse[]>([]);
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const pagination = usePagination();
+  const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
   const cacheStore = useCacheStore();
 
+  const selectedKeys = ref<number[]>([]);
+  const tableRenderData = ref<DictKeyQueryResponse[]>([]);
   const formModel = reactive<DictKeyQueryRequest>({
     id: undefined,
     keyName: undefined,
@@ -177,6 +196,23 @@
       // 调用删除接口
       await deleteDictKey(id);
       Message.success('删除成功');
+      cacheStore.reset('dictKeys');
+      // 重新加载数据
+      fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除选中行
+  const deleteSelectRows = async () => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await batchDeleteDictKey(selectedKeys.value);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
+      selectedKeys.value = [];
       cacheStore.reset('dictKeys');
       // 重新加载数据
       fetchTableData();
@@ -238,6 +274,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+      selectedKeys.value = [];
     } catch (e) {
     } finally {
       setLoading(false);

@@ -195,7 +195,7 @@ orion:
   api:
     # 公共 api 前缀
     prefix: /orion-visor/api
-    # 是否开启跨域
+    # 是否允许跨域
     cors: true
   websocket:
     # 公共 websocket 前缀

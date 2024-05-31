@@ -17,10 +17,10 @@
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor/issues">上报 bug</a-link>
       </a-col>
       <a-col :span="12">
-        <a-link target="_blank" href="https://lijiahangmax.github.io/orion-visor">操作文档</a-link>
+        <a-link target="_blank" href="https://lijiahangmax.github.io/open-orion/orion-visor/operator/asset.html">操作手册</a-link>
       </a-col>
       <a-col :span="12">
-        <a-link target="_blank" href="https://lijiahangmax.github.io/orion-visor/#/about/update-log">更新日志</a-link>
+        <a-link target="_blank" href="https://lijiahangmax.github.io/open-orion/orion-visor/update/change-log.html">更新日志</a-link>
       </a-col>
     </a-row>
   </a-card>

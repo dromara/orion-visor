@@ -74,7 +74,7 @@
                         type="warning"
                         @ok="deleteSelectRows">
             <a-button v-permission="['asset:host-connect-log:management:delete']"
-                      type="secondary"
+                      type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
               删除

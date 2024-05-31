@@ -85,7 +85,7 @@
                         type="warning"
                         @ok="deleteSelectRows">
             <a-button v-permission="['asset:exec-command-log:delete']"
-                      type="secondary"
+                      type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
               删除
