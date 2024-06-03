@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
@@ -21,10 +23,12 @@ import com.orion.visor.module.asset.service.ExecTemplateHostService;
 import com.orion.visor.module.asset.service.ExecTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 执行模板 服务实现类
@@ -126,16 +130,28 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteExecTemplateById(Long id) {
-        log.info("ExecTemplateService-deleteExecTemplateById id: {}", id);
+        return this.deleteExecTemplateByIdList(Lists.singleton(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteExecTemplateByIdList(List<Long> idList) {
+        log.info("ExecTemplateService-deleteExecTemplateByIdList idList: {}", idList);
         // 检查数据是否存在
-        ExecTemplateDO record = execTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        List<ExecTemplateDO> recordList = execTemplateDAO.selectBatchIds(idList);
+        Valid.notEmpty(recordList, ErrorMessage.DATA_ABSENT);
+        // 设置日志参数
+        String name = recordList.stream()
+                .map(ExecTemplateDO::getName)
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.NAME, name);
         // 删除模板
-        int effect = execTemplateDAO.deleteById(id);
-        log.info("ExecTemplateService-deleteExecTemplateById id: {}, effect: {}", id, effect);
+        int effect = execTemplateDAO.deleteBatchIds(idList);
+        log.info("ExecTemplateService-deleteExecTemplateByIdList idList: {}, effect: {}", idList, effect);
         // 删除模板主机
-        effect += execTemplateHostService.deleteByTemplateId(id);
+        effect += execTemplateHostService.deleteByTemplateIdList(idList);
         return effect;
     }
 

@@ -250,15 +250,27 @@ public class DataGroupServiceImpl implements DataGroupService {
 
     @Override
     public Integer deleteDataGroupByUserId(Long userId) {
+        if (userId == null) {
+            return 0;
+        }
+        // 删除
+        return this.deleteDataGroupByUserIdList(Lists.singleton(userId));
+    }
+
+    @Override
+    public Integer deleteDataGroupByUserIdList(List<Long> userIdList) {
+        if (Lists.isEmpty(userIdList)) {
+            return 0;
+        }
         // 删除分组
         LambdaQueryWrapper<DataGroupDO> deleteGroup = dataGroupDAO.wrapper()
-                .eq(DataGroupDO::getUserId, userId);
+                .in(DataGroupDO::getUserId, userIdList);
         int effect = dataGroupDAO.delete(deleteGroup);
         // 删除分组引用
         LambdaQueryWrapper<DataGroupRelDO> deleteRel = dataGroupRelDAO.wrapper()
-                .eq(DataGroupRelDO::getUserId, userId);
+                .in(DataGroupRelDO::getUserId, userIdList);
         effect += dataGroupRelDAO.delete(deleteRel);
-        // 不删除缓存 自动过期
+        // 不删除缓存 让其自动过期
         return effect;
     }
 

@@ -134,15 +134,20 @@ public class DataExtraApiImpl implements DataExtraApi {
     }
 
     @Override
-    public int deleteHostKeyExtra(Long keyId) {
-        Valid.notNull(keyId);
-        return dataExtraDAO.deleteHostKey(keyId);
+    public Integer deleteByRelIdList(DataExtraTypeEnum type, List<Long> relIdList) {
+        return dataExtraService.deleteByRelIdList(type.name(), relIdList);
     }
 
     @Override
-    public int deleteHostIdentityExtra(Long identityId) {
-        Valid.notNull(identityId);
-        return dataExtraDAO.deleteHostIdentity(identityId);
+    public int deleteHostKeyExtra(List<Long> keyIdList) {
+        Valid.notEmpty(keyIdList);
+        return dataExtraDAO.deleteHostKey(keyIdList);
+    }
+
+    @Override
+    public int deleteHostIdentityExtra(List<Long> identityIdList) {
+        Valid.notEmpty(identityIdList);
+        return dataExtraDAO.deleteHostIdentity(identityIdList);
     }
 
 }

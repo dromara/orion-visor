@@ -50,8 +50,18 @@ public class ExecJobHostServiceImpl implements ExecJobHostService {
     }
 
     @Override
+    public Integer deleteByJobIdList(List<Long> jobIdList) {
+        return execJobHostDAO.deleteByJobIdList(jobIdList);
+    }
+
+    @Override
     public Integer deleteByHostId(Long hostId) {
         return execJobHostDAO.deleteByHostId(hostId);
+    }
+
+    @Override
+    public Integer deleteByHostIdList(List<Long> hostIdList) {
+        return execJobHostDAO.deleteByHostIdList(hostIdList);
     }
 
 }

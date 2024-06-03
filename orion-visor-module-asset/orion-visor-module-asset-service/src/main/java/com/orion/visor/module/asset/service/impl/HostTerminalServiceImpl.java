@@ -151,11 +151,13 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
             if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
                 // 验证主机密钥是否有权限
+                Valid.notNull(extra.getKeyId(), ErrorMessage.KEY_ABSENT);
                 Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
                         ErrorMessage.ANY_NO_PERMISSION,
                         DataPermissionTypeEnum.HOST_KEY.getPermissionName());
             } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
                 // 验证主机身份是否有权限
+                Valid.notNull(extra.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
                 Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, extra.getIdentityId()),
                         ErrorMessage.ANY_NO_PERMISSION,
                         DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
@@ -270,6 +272,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
         if (HostSshAuthTypeEnum.IDENTITY.equals(authType)) {
             // 身份认证
+            Valid.notNull(config.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
             HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
             Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
             config.setUsername(identity.getUsername());
@@ -293,6 +296,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
             // 密钥认证
             Long keyId = config.getKeyId();
+            Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
             HostKeyDO key = hostKeyDAO.selectById(keyId);
             Valid.notNull(key, ErrorMessage.KEY_ABSENT);
             conn.setKeyId(keyId);

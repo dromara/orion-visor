@@ -36,11 +36,27 @@ public interface ExecJobHostService {
     Integer deleteByJobId(Long jobId);
 
     /**
+     * 通过 jobId 删除
+     *
+     * @param jobIdList jobIdList
+     * @return effect
+     */
+    Integer deleteByJobIdList(List<Long> jobIdList);
+
+    /**
      * 通过 hostId 删除
      *
      * @param hostId hostId
      * @return effect
      */
     Integer deleteByHostId(Long hostId);
+
+    /**
+     * 通过 hostId 删除
+     *
+     * @param hostIdList hostIdList
+     * @return effect
+     */
+    Integer deleteByHostIdList(List<Long> hostIdList);
 
 }

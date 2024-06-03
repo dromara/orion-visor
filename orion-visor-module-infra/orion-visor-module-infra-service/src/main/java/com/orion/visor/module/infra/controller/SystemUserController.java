@@ -150,6 +150,16 @@ public class SystemUserController {
         return systemUserService.deleteSystemUserById(id);
     }
 
+    @DemoDisableApi
+    @OperatorLog(SystemUserOperatorType.DELETE)
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "批量删除用户")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('infra:system-user:delete')")
+    public Integer batchDeleteSystemUser(@RequestParam("idList") List<Long> idList) {
+        return systemUserService.deleteSystemUserByIdList(idList);
+    }
+
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/session/list")
     @Operation(summary = "获取用户会话列表")

@@ -139,19 +139,28 @@ public interface DataExtraApi {
     Integer deleteByRelId(DataExtraTypeEnum type, Long relId);
 
     /**
-     * 删除主机密钥
+     * 通过 relId 删除
      *
-     * @param keyId keyId
+     * @param type      type
+     * @param relIdList relIdList
      * @return effect
      */
-    int deleteHostKeyExtra(Long keyId);
+    Integer deleteByRelIdList(DataExtraTypeEnum type, List<Long> relIdList);
+
+    /**
+     * 删除主机密钥
+     *
+     * @param keyIdList keyIdList
+     * @return effect
+     */
+    int deleteHostKeyExtra(List<Long> keyIdList);
 
     /**
      * 删除主机身份
      *
-     * @param identityId identityId
+     * @param identityIdList identityIdList
      * @return effect
      */
-    int deleteHostIdentityExtra(Long identityId);
+    int deleteHostIdentityExtra(List<Long> identityIdList);
 
 }

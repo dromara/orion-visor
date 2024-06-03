@@ -66,4 +66,11 @@ public interface PreferenceService {
      */
     void deletePreferenceByUserId(Long userId);
 
+    /**
+     * 删除用户偏好
+     *
+     * @param userIdList userIdList
+     */
+    void deletePreferenceByUserIdList(List<Long> userIdList);
+
 }

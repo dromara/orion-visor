@@ -26,30 +26,44 @@
         UPDATE data_extra
         SET value = JSON_REPLACE(value,
                                  "$.keyId", NULL,
-                                 "$.authType", IF(
-                                         JSON_EXTRACT(value, "$.authType") = 'CUSTOM_KEY',
-                                         'DEFAULT',
-                                         JSON_EXTRACT(value, "$.authType")
-                                     ))
+                                 "$.authType",
+                                    REPLACE(
+                                        IF(JSON_EXTRACT(value, "$.authType") = 'CUSTOM_KEY',
+                                           'DEFAULT',
+                                            JSON_EXTRACT(value, "$.authType")
+                                        ),
+                                        '"',
+                                        ''
+                                    )
+                                 )
         WHERE deleted = 0
-          AND type = 'HOST'
-          AND item = 'ssh'
-          AND JSON_CONTAINS(value, JSON_OBJECT('keyId', #{keyId}))
+        AND type = 'HOST'
+        AND item = 'ssh'
+        <foreach collection="keyIdList" item="item" separator="OR" open="AND (" close=")">
+            JSON_CONTAINS(value, JSON_OBJECT('keyId', #{item}))
+        </foreach>
     </delete>
 
     <delete id="deleteHostIdentity">
         UPDATE data_extra
         SET value = JSON_REPLACE(value,
                                  "$.identityId", NULL,
-                                 "$.authType", IF(
-                                         JSON_EXTRACT(value, "$.authType") = 'CUSTOM_IDENTITY',
-                                         'DEFAULT',
-                                         JSON_EXTRACT(value, "$.authType")
-                                     ))
+                                 "$.authType",
+                                    REPLACE(
+                                        IF(JSON_EXTRACT(value, "$.authType") = 'CUSTOM_IDENTITY',
+                                           'DEFAULT',
+                                            JSON_EXTRACT(value, "$.authType")
+                                        ),
+                                        '"',
+                                        ''
+                                    )
+                                 )
         WHERE deleted = 0
-          AND type = 'HOST'
-          AND item = 'ssh'
-          AND JSON_CONTAINS(value, JSON_OBJECT('identityId', #{identityId}))
+        AND type = 'HOST'
+        AND item = 'ssh'
+        <foreach collection="identityIdList" item="item" separator="OR" open="AND (" close=")">
+            JSON_CONTAINS(value, JSON_OBJECT('identityId', #{item}))
+        </foreach>
     </delete>
 
 </mapper>

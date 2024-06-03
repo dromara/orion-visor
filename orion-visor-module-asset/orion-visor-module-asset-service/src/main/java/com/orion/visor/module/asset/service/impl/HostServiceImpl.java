@@ -8,9 +8,11 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisMaps;
+import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.module.asset.convert.HostConvert;
 import com.orion.visor.module.asset.dao.HostConfigDAO;
@@ -191,41 +193,49 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public Integer deleteHostById(Long id) {
-        log.info("HostService-deleteHostById id: {}", id);
+        return this.deleteHostByIdList(Lists.singleton(id));
+    }
+
+    @Override
+    public Integer deleteHostByIdList(List<Long> idList) {
+        log.info("HostService-deleteHostByIdList idList: {}", idList);
         // 查询
-        HostDO record = hostDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        List<HostDO> hosts = hostDAO.selectBatchIds(idList);
+        Valid.notEmpty(hosts, ErrorMessage.HOST_ABSENT);
         // 添加日志参数
-        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        String name = hosts.stream()
+                .map(HostDO::getName)
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.NAME, name);
         // 删除
-        int effect = hostDAO.deleteById(id);
-        log.info("HostService-deleteHostById effect: {}", effect);
+        int effect = hostDAO.deleteBatchIds(hosts);
+        log.info("HostService-deleteHostByIdList effect: {}", effect);
         // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO, id);
+        RedisUtils.delete(HostCacheKeyDefine.HOST_INFO);
         // 删除主机引用
         SpringHolder.getBean(HostService.class)
-                .deleteHostRelByIdAsync(id);
+                .deleteHostRelByIdListAsync(idList);
         return effect;
     }
 
     @Override
     @Async("asyncExecutor")
-    public void deleteHostRelByIdAsync(Long id) {
-        log.info("HostService-deleteHostRelByIdAsync id: {}", id);
+    public void deleteHostRelByIdListAsync(List<Long> idList) {
+        log.info("HostService-deleteHostRelByIdListAsync idList: {}", idList);
         // 删除主机配置
-        hostConfigDAO.deleteByHostId(id);
+        hostConfigDAO.deleteByHostIdList(idList);
         // 删除计划任务主机
-        execJobHostService.deleteByHostId(id);
+        execJobHostService.deleteByHostIdList(idList);
         // 删除执行模板主机
-        execTemplateHostService.deleteByHostId(id);
+        execTemplateHostService.deleteByHostIdList(idList);
         // 删除分组
-        dataGroupRelApi.deleteByRelId(DataGroupTypeEnum.HOST, id);
+        dataGroupRelApi.deleteByRelIdList(DataGroupTypeEnum.HOST, idList);
         // 删除 tag 引用
-        tagRelApi.deleteRelId(TagTypeEnum.HOST, id);
+        tagRelApi.deleteRelIdList(TagTypeEnum.HOST, idList);
         // 删除收藏引用
-        favoriteApi.deleteByRelId(FavoriteTypeEnum.HOST, id);
+        favoriteApi.deleteByRelIdList(FavoriteTypeEnum.HOST, idList);
         // 删除额外配置
-        dataExtraApi.deleteByRelId(DataExtraTypeEnum.HOST, id);
+        dataExtraApi.deleteByRelIdList(DataExtraTypeEnum.HOST, idList);
     }
 
     /**

@@ -46,11 +46,27 @@ public interface ExecTemplateHostService {
     Integer deleteByTemplateId(Long templateId);
 
     /**
+     * 通过 templateId 删除
+     *
+     * @param templateIdList templateIdList
+     * @return effect
+     */
+    Integer deleteByTemplateIdList(List<Long> templateIdList);
+
+    /**
      * 通过 hostId 删除
      *
      * @param hostId hostId
      * @return effect
      */
     Integer deleteByHostId(Long hostId);
+
+    /**
+     * 通过 hostId 删除
+     *
+     * @param hostIdList hostIdList
+     * @return effect
+     */
+    Integer deleteByHostIdList(List<Long> hostIdList);
 
 }

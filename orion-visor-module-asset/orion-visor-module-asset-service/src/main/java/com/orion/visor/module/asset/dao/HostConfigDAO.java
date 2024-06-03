@@ -95,17 +95,17 @@ public interface HostConfigDAO extends IMapper<HostConfigDO> {
     /**
      * 设置 keyId 为 NULL
      *
-     * @param keyId keyId
+     * @param keyIdList keyIdList
      * @return effect
      */
-    int setKeyIdWithNull(@Param("keyId") Long keyId);
+    int setKeyIdWithNull(@Param("keyIdList") List<Long> keyIdList);
 
     /**
      * 设置 identityId 为 NULL
      *
-     * @param identityId identityId
+     * @param identityIdList identityIdList
      * @return effect
      */
-    int setIdentityIdWithNull(@Param("identityId") Long identityId);
+    int setIdentityIdWithNull(@Param("identityIdList") List<Long> identityIdList);
 
 }

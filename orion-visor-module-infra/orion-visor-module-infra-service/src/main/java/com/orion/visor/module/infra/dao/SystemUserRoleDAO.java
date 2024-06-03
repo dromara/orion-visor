@@ -77,6 +77,18 @@ public interface SystemUserRoleDAO extends IMapper<SystemUserRoleDO> {
     }
 
     /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    default int deleteByUserIdList(List<Long> userIdList) {
+        LambdaQueryWrapper<SystemUserRoleDO> wrapper = this.wrapper()
+                .in(SystemUserRoleDO::getUserId, userIdList);
+        return this.delete(wrapper);
+    }
+
+    /**
      * 通过 roleId 删除
      *
      * @param roleId roleId

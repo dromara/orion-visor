@@ -3,9 +3,11 @@ package com.orion.visor.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorCode;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.security.LoginUser;
@@ -38,7 +40,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -212,58 +216,55 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public Integer deleteSystemUserById(Long id) {
-        if (id.equals(SecurityUtils.getLoginUserId())) {
+        return this.deleteSystemUserByIdList(Lists.singleton(id));
+    }
+
+    @Override
+    public Integer deleteSystemUserByIdList(List<Long> idList) {
+        if (idList.contains(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
         }
-        // 查询用户
-        SystemUserDO record = systemUserDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        // 查询用户列表
+        List<SystemUserDO> userList = systemUserDAO.selectBatchIds(idList);
+        Valid.notEmpty(userList, ErrorMessage.USER_ABSENT);
         // 添加日志参数
-        OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
+        idList = userList.stream()
+                .map(SystemUserDO::getId)
+                .collect(Collectors.toList());
+        String username = userList.stream()
+                .map(SystemUserDO::getUsername)
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.USERNAME, username);
         // 删除用户
-        int effect = systemUserDAO.deleteById(id);
-        log.info("SystemUserService-deleteSystemUserById id: {}, effect: {}", id, effect);
-        // 删除用户信息缓存
-        RedisUtils.delete(UserCacheKeyDefine.USER_INFO.format(id));
-        // 删除 token 缓存
-        RedisUtils.scanKeysDelete(
-                // 登录 token
-                UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*"),
-                // 刷新 token
-                UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*")
-        );
+        int effect = systemUserDAO.deleteBatchIds(idList);
+        log.info("SystemUserService-deleteSystemUserByIdList idList: {}, effect: {}", idList, effect);
+        // 删除缓存 其他的缓存自动过期
+        this.deleteUserCacheKey(userList);
         // 异步删除额外信息
-        SpringHolder.getBean(SystemUserService.class).deleteSystemUserRelAsync(id, record.getUsername());
+        SpringHolder.getBean(SystemUserService.class)
+                .deleteSystemUserListRelAsync(idList);
         return effect;
     }
 
     @Override
     @Async("asyncExecutor")
-    public void deleteSystemUserRelAsync(Long id, String username) {
-        log.info("SystemUserService-deleteSystemUserRel id: {}", id);
-        // 删除用户列表缓存
-        RedisMaps.delete(UserCacheKeyDefine.USER_LIST, id);
-        // 删除用户缓存 其他的 key 让其自动过期
-        RedisUtils.delete(
-                // 登录失败次数
-                UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(username),
-                // 用户提示
-                TipsCacheKeyDefine.TIPS.format(id)
-        );
+    public void deleteSystemUserListRelAsync(List<Long> idList) {
+        log.info("SystemUserService-deleteSystemUserListRelAsync idList: {}", idList);
         // 删除角色关联
-        systemUserRoleDAO.deleteByUserId(id);
+        systemUserRoleDAO.deleteByUserIdList(idList);
         // 删除操作日志
-        operatorLogDAO.deleteByUserId(id);
+        operatorLogDAO.deleteByUserIdList(idList);
         // 删除用户收藏
-        favoriteService.deleteFavoriteByUserId(id);
+        favoriteService.deleteFavoriteByUserIdList(idList);
         // 删除用户偏好
-        preferenceService.deletePreferenceByUserId(id);
+        preferenceService.deletePreferenceByUserIdList(idList);
         // 删除用户数据权限
-        dataPermissionService.deleteByUserId(id);
+        dataPermissionService.deleteByUserIdList(idList);
         // 删除用户拓展数据
-        dataExtraService.deleteByUserId(id);
+        dataExtraService.deleteByUserIdList(idList);
         // 删除分组数据
-        dataGroupService.deleteDataGroupByUserId(id);
+        dataGroupService.deleteDataGroupByUserIdList(idList);
+        // TODO snippet
     }
 
     @Override
@@ -325,6 +326,31 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 检查是否存在
         boolean present = systemUserDAO.of(wrapper).present();
         Valid.isFalse(present, ErrorMessage.NICKNAME_PRESENT);
+    }
+
+    /**
+     * 删除主要用户缓存 其他的缓存自动过期
+     *
+     * @param userList
+     */
+    private void deleteUserCacheKey(List<SystemUserDO> userList) {
+        Set<String> deleteKeys = new HashSet<>();
+        // 用户列表缓存
+        deleteKeys.add(UserCacheKeyDefine.USER_LIST.getKey());
+        userList.forEach(s -> {
+            Long id = s.getId();
+            // 用户提示
+            deleteKeys.add(TipsCacheKeyDefine.TIPS.format(id));
+            // 用户信息缓存
+            deleteKeys.add(UserCacheKeyDefine.USER_INFO.format(id));
+            // 登录失败次数
+            deleteKeys.add(UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(s.getUsername()));
+            // 登录 token
+            deleteKeys.addAll(RedisUtils.scanKeys(UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*")));
+            // 刷新 token
+            deleteKeys.addAll(RedisUtils.scanKeys(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*")));
+        });
+        RedisUtils.delete(deleteKeys);
     }
 
 }

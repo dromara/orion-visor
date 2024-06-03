@@ -8,6 +8,7 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.time.cron.Cron;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.job.core.utils.QuartzUtils;
@@ -235,19 +236,30 @@ public class ExecJobServiceImpl implements ExecJobService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer deleteExecJobById(Long id) {
-        log.info("ExecJobService-deleteExecJobById id: {}", id);
+        return this.deleteExecJobByIdList(Lists.singleton(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteExecJobByIdList(List<Long> idList) {
+        log.info("ExecJobService-deleteExecJobByIdList idList: {}", idList);
         // 检查数据是否存在
-        ExecJobDO record = execJobDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        List<ExecJobDO> jobList = execJobDAO.selectBatchIds(idList);
+        Valid.notEmpty(jobList, ErrorMessage.DATA_ABSENT);
         // 删除任务
-        int effect = execJobDAO.deleteById(id);
+        int effect = execJobDAO.deleteBatchIds(idList);
         // 删除任务主机
-        effect += execJobHostService.deleteByJobId(id);
+        effect += execJobHostService.deleteByJobIdList(idList);
         // 设置日志参数
-        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        String name = jobList.stream()
+                .map(ExecJobDO::getName)
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.NAME, name);
         // 设置 quartz 状态
-        this.setQuartzJobStatus(record, true, false);
-        log.info("ExecJobService-deleteExecJobById id: {}, effect: {}", id, effect);
+        for (ExecJobDO job : jobList) {
+            this.setQuartzJobStatus(job, true, false);
+        }
+        log.info("ExecJobService-deleteExecJobByIdList idList: {}, effect: {}", idList, effect);
         return effect;
     }
 

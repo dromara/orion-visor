@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 执行模板 api
@@ -90,6 +91,15 @@ public class ExecTemplateController {
     @PreAuthorize("@ss.hasPermission('asset:exec-template:delete')")
     public Integer deleteExecTemplate(@RequestParam("id") Long id) {
         return execTemplateService.deleteExecTemplateById(id);
+    }
+
+    @OperatorLog(ExecTemplateOperatorType.DELETE)
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "批量删除执行模板")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:exec-template:delete')")
+    public Integer batchDeleteExecTemplate(@RequestParam("idList") List<Long> idList) {
+        return execTemplateService.deleteExecTemplateByIdList(idList);
     }
 
 }

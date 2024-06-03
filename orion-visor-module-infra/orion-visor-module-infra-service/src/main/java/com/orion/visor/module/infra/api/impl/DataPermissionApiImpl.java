@@ -75,4 +75,9 @@ public class DataPermissionApiImpl implements DataPermissionApi {
         return dataPermissionService.deleteByRelId(type.name(), relId);
     }
 
+    @Override
+    public int deleteByRelIdList(DataPermissionTypeEnum type, List<Long> relIdList) {
+        return dataPermissionService.deleteByRelIdList(type.name(), relIdList);
+    }
+
 }

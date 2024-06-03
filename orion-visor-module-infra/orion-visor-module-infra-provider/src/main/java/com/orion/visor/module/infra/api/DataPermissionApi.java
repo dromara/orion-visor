@@ -76,4 +76,13 @@ public interface DataPermissionApi {
      */
     int deleteByRelId(DataPermissionTypeEnum type, Long relId);
 
+    /**
+     * 通过 relId 删除
+     *
+     * @param type      type
+     * @param relIdList relIdList
+     * @return effect
+     */
+    int deleteByRelIdList(DataPermissionTypeEnum type, List<Long> relIdList);
+
 }

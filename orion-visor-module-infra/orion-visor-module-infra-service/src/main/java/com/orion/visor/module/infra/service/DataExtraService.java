@@ -120,6 +120,14 @@ public interface DataExtraService {
     Integer deleteByUserId(Long userId);
 
     /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    Integer deleteByUserIdList(List<Long> userIdList);
+
+    /**
      * 通过 relId 删除
      *
      * @param type  type
@@ -127,5 +135,14 @@ public interface DataExtraService {
      * @return effect
      */
     Integer deleteByRelId(String type, Long relId);
+
+    /**
+     * 通过 relId 删除
+     *
+     * @param type      type
+     * @param relIdList relIdList
+     * @return effect
+     */
+    Integer deleteByRelIdList(String type, List<Long> relIdList);
 
 }

@@ -6,6 +6,8 @@ import com.orion.visor.module.asset.entity.request.exec.ExecTemplateQueryRequest
 import com.orion.visor.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
 import com.orion.visor.module.asset.entity.vo.ExecTemplateVO;
 
+import java.util.List;
+
 /**
  * 执行模板 服务类
  *
@@ -62,5 +64,13 @@ public interface ExecTemplateService {
      * @return effect
      */
     Integer deleteExecTemplateById(Long id);
+
+    /**
+     * 批量删除执行模板
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteExecTemplateByIdList(List<Long> idList);
 
 }
