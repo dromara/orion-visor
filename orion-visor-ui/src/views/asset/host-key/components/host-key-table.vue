@@ -59,19 +59,36 @@
               <icon-plus />
             </template>
           </a-button>
+          <!-- 删除 -->
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
+                        type="warning"
+                        @ok="deleteSelectRows">
+            <a-button v-permission="['asset:host-key:delete']"
+                      type="primary"
+                      status="danger"
+                      :disabled="selectedKeys.length === 0">
+              删除
+              <template #icon>
+                <icon-delete />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
+             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
+             :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
-             :bordered="false">
+             @page-size-change="(size) => fetchTableData(1, size)">
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -116,20 +133,21 @@
 <script lang="ts" setup>
   import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
+  import { deleteHostKey, batchDeleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { usePagination } from '@/types/table';
+  import { usePagination, useRowSelection } from '@/types/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
-  const tableRenderData = ref<HostKeyQueryResponse[]>([]);
-
   const pagination = usePagination();
+  const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
 
+  const selectedKeys = ref<number[]>([]);
+  const tableRenderData = ref<HostKeyQueryResponse[]>([]);
   const formModel = reactive<HostKeyQueryRequest>({
     id: undefined,
     name: undefined,
@@ -146,6 +164,22 @@
       // 调用删除接口
       await deleteHostKey(id);
       Message.success('删除成功');
+      // 重新加载数据
+      fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除选中行
+  const deleteSelectRows = async () => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await batchDeleteHostKey(selectedKeys.value);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
+      selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();
     } catch (e) {
@@ -177,6 +211,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+      selectedKeys.value = [];
     } catch (e) {
     } finally {
       setLoading(false);
