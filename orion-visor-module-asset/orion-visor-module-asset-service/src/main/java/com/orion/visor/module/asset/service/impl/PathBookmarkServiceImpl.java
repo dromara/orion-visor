@@ -144,6 +144,14 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
     }
 
     @Override
+    public Integer setGroupNull(Long userId, Long groupId) {
+        int effect = pathBookmarkDAO.setGroupIdWithNull(groupId);
+        // 删除缓存
+        RedisMaps.delete(PathBookmarkCacheKeyDefine.PATH_BOOKMARK.format(userId));
+        return effect;
+    }
+
+    @Override
     public Integer deletePathBookmarkById(Long id) {
         Long userId = SecurityUtils.getLoginUserId();
         log.info("PathBookmarkService-deletePathBookmarkById id: {}", id);
@@ -159,19 +167,16 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
     }
 
     @Override
-    public Integer setGroupNull(Long userId, Long groupId) {
-        int effect = pathBookmarkDAO.setGroupIdWithNull(groupId);
+    public Integer deleteByGroupId(Long userId, Long groupId) {
+        int effect = pathBookmarkDAO.deleteByGroupId(groupId);
         // 删除缓存
         RedisMaps.delete(PathBookmarkCacheKeyDefine.PATH_BOOKMARK.format(userId));
         return effect;
     }
 
     @Override
-    public Integer deleteByGroupId(Long userId, Long groupId) {
-        int effect = pathBookmarkDAO.deleteByGroupId(groupId);
-        // 删除缓存
-        RedisMaps.delete(PathBookmarkCacheKeyDefine.PATH_BOOKMARK.format(userId));
-        return effect;
+    public Integer deleteByUserIdList(List<Long> userIdList) {
+        return pathBookmarkDAO.deleteByUserIdList(userIdList);
     }
 
     /**

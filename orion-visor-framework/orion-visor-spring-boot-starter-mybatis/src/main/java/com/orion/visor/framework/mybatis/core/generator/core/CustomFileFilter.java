@@ -62,10 +62,6 @@ public class CustomFileFilter {
         if (!table.isEnableCache()) {
             files.removeIf(file -> isServerCacheFile(file.getTemplatePath()));
         }
-        // 不生成导出文件
-        if (!table.isEnableExport()) {
-            files.removeIf(file -> isExportFile(file.getTemplatePath()));
-        }
         // 不生成操作日志文件
         if (!table.isEnableOperatorLog()) {
             files.removeIf(file -> isOperatorLogFile(file.getTemplatePath()));

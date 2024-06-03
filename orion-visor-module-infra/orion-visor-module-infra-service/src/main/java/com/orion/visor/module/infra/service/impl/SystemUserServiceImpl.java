@@ -17,6 +17,8 @@ import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
+import com.orion.visor.module.infra.api.CommandSnippetApi;
+import com.orion.visor.module.infra.api.PathBookmarkApi;
 import com.orion.visor.module.infra.convert.SystemRoleConvert;
 import com.orion.visor.module.infra.convert.SystemUserConvert;
 import com.orion.visor.module.infra.dao.OperatorLogDAO;
@@ -85,6 +87,12 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Resource
     private DataGroupService dataGroupService;
+
+    @Resource
+    private CommandSnippetApi commandSnippetApi;
+
+    @Resource
+    private PathBookmarkApi pathBookmarkApi;
 
     @Override
     public Long createSystemUser(SystemUserCreateRequest request) {
@@ -264,7 +272,10 @@ public class SystemUserServiceImpl implements SystemUserService {
         dataExtraService.deleteByUserIdList(idList);
         // 删除分组数据
         dataGroupService.deleteDataGroupByUserIdList(idList);
-        // TODO snippet
+        // 删除命令片段
+        commandSnippetApi.deleteByUserIdList(idList);
+        // 删除路径标签
+        pathBookmarkApi.deleteByUserIdList(idList);
     }
 
     @Override

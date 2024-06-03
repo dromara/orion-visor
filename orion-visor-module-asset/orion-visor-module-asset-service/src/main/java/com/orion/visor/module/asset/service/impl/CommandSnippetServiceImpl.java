@@ -23,7 +23,6 @@ import com.orion.visor.module.asset.service.CommandSnippetGroupService;
 import com.orion.visor.module.asset.service.CommandSnippetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -52,7 +51,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
     @Override
     public Long createCommandSnippet(CommandSnippetCreateRequest request) {
         Long userId = SecurityUtils.getLoginUserId();
-        log.info("CommandSnippetService-createCommandSnippet request: {}", JSON.toJSONString(request));
+        log.info("CommandSnippetService-createCommandSnippet request: {}" , JSON.toJSONString(request));
         // 转换
         CommandSnippetDO record = CommandSnippetConvert.MAPPER.to(request);
         record.setUserId(userId);
@@ -61,7 +60,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
         // 插入
         int effect = commandSnippetDAO.insert(record);
         Long id = record.getId();
-        log.info("CommandSnippetService-createCommandSnippet id: {}, effect: {}", id, effect);
+        log.info("CommandSnippetService-createCommandSnippet id: {}, effect: {}" , id, effect);
         // 删除缓存
         RedisMaps.delete(CommandSnippetCacheKeyDefine.SNIPPET.format(userId));
         return id;
@@ -71,7 +70,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
     public Integer updateCommandSnippetById(CommandSnippetUpdateRequest request) {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         Long userId = SecurityUtils.getLoginUserId();
-        log.info("CommandSnippetService-updateCommandSnippetById id: {}, request: {}", id, JSON.toJSONString(request));
+        log.info("CommandSnippetService-updateCommandSnippetById id: {}, request: {}" , id, JSON.toJSONString(request));
         // 查询
         CommandSnippetDO record = commandSnippetDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
@@ -86,7 +85,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
                 .eq(CommandSnippetDO::getId, id)
                 .eq(CommandSnippetDO::getUserId, userId);
         int effect = commandSnippetDAO.update(null, update);
-        log.info("CommandSnippetService-updateCommandSnippetById effect: {}", effect);
+        log.info("CommandSnippetService-updateCommandSnippetById effect: {}" , effect);
         // 删除缓存
         RedisMaps.delete(CommandSnippetCacheKeyDefine.SNIPPET.format(userId));
         return effect;
@@ -145,26 +144,25 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    public Integer setGroupNull(Long userId, Long groupId) {
+        int effect = commandSnippetDAO.setGroupIdWithNull(groupId);
+        // 删除缓存
+        RedisMaps.delete(CommandSnippetCacheKeyDefine.SNIPPET.format(userId));
+        return effect;
+    }
+
+    @Override
     public Integer deleteCommandSnippetById(Long id) {
         Long userId = SecurityUtils.getLoginUserId();
-        log.info("CommandSnippetService-deleteCommandSnippetById id: {}", id);
+        log.info("CommandSnippetService-deleteCommandSnippetById id: {}" , id);
         // 检查数据是否存在
         CommandSnippetDO record = commandSnippetDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = commandSnippetDAO.deleteById(id);
-        log.info("CommandSnippetService-deleteCommandSnippetById id: {}, effect: {}", id, effect);
+        log.info("CommandSnippetService-deleteCommandSnippetById id: {}, effect: {}" , id, effect);
         // 删除缓存
         RedisMaps.delete(CommandSnippetCacheKeyDefine.SNIPPET.format(userId), id);
-        return effect;
-    }
-
-    @Override
-    public Integer setGroupNull(Long userId, Long groupId) {
-        int effect = commandSnippetDAO.setGroupIdWithNull(groupId);
-        // 删除缓存
-        RedisMaps.delete(CommandSnippetCacheKeyDefine.SNIPPET.format(userId));
         return effect;
     }
 
@@ -174,6 +172,11 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
         // 删除缓存
         RedisMaps.delete(CommandSnippetCacheKeyDefine.SNIPPET.format(userId));
         return effect;
+    }
+
+    @Override
+    public Integer deleteByUserIdList(List<Long> userIdList) {
+        return commandSnippetDAO.deleteByUserIdList(userIdList);
     }
 
     /**

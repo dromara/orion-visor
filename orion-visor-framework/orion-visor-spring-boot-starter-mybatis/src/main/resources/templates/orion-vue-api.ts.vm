@@ -133,12 +133,4 @@ export function batchDelete${vue.featureEntity}(idList: Array<number>) {
     }
   });
 }
-#if($meta.enableExport)
 
-/**
- * $apiComment.export
- */
-export function export${vue.featureEntity}(request: ${vue.featureEntity}QueryRequest) {
-  return axios.post('/${package.ModuleName}/${typeHyphen}/export', request);
-}
-#end

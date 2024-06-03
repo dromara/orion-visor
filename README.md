@@ -66,6 +66,7 @@ git clone https://github.com/lijiahangmax/orion-visor
 cd orion-visor
 # 启动
 docker compose up -d
+# 等待后端服务启动后 (2min±) 访问 http://localhost:1081/
 ```
 
 ## 项目文档

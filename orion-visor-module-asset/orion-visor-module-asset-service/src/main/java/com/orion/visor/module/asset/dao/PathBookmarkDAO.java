@@ -7,6 +7,8 @@ import com.orion.visor.framework.mybatis.core.mapper.IMapper;
 import com.orion.visor.module.asset.entity.domain.PathBookmarkDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 路径标签 Mapper 接口
  *
@@ -39,6 +41,18 @@ public interface PathBookmarkDAO extends IMapper<PathBookmarkDO> {
     default int deleteByGroupId(Long groupId) {
         LambdaQueryWrapper<PathBookmarkDO> wrapper = this.lambda()
                 .eq(PathBookmarkDO::getGroupId, groupId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    default int deleteByUserIdList(List<Long> userIdList) {
+        LambdaQueryWrapper<PathBookmarkDO> wrapper = this.lambda()
+                .in(PathBookmarkDO::getUserId, userIdList);
         return this.delete(wrapper);
     }
 

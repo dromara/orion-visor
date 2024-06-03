@@ -44,11 +44,6 @@ public class Table {
     protected boolean enableUnitTest;
 
     /**
-     * 是否生成导出
-     */
-    protected boolean enableExport;
-
-    /**
      * 是否可缓存
      */
     protected boolean enableCache;

@@ -14,12 +14,7 @@ VALUES
   (@MODULE_KEY_ID, 'operatorLogModule', '${package.ModuleName}:${typeHyphen}', '$!{table.comment}', '{}', @MODULE_KEY_MAX_SORT + 10, now(), now(), '1', '1', 0),
   (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:create', '创建$!{table.comment}', '{}', 10, now(), now(), '1', '1', 0),
   (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:update', '更新$!{table.comment}', '{}', 20, now(), now(), '1', '1', 0),
-  #if($meta.enableExport)
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', 30, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:export', '导出$!{table.comment}', '{}', 40, now(), now(), '1', '1', 0);
-  #else
   (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', 30, now(), now(), '1', '1', 0);
-  #end
 #end
 
 #if($dictMap.entrySet().size() > 0)
