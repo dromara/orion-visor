@@ -49,19 +49,36 @@
               <icon-plus />
             </template>
           </a-button>
+          <!-- 删除 -->
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
+                        type="warning"
+                        @ok="deleteSelectRows">
+            <a-button v-permission="['asset:exec-template:delete']"
+                      type="primary"
+                      status="danger"
+                      :disabled="selectedKeys.length === 0">
+              删除
+              <template #icon>
+                <icon-delete />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
+             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
+             :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
-             :bordered="false">
+             @page-size-change="(size) => fetchTableData(1, size)">
       <!-- 模板命令 -->
       <template #command="{ record }">
         <span class="copy-left" @click="copy(record.command, '已复制')">
@@ -112,18 +129,20 @@
 <script lang="ts" setup>
   import type { ExecTemplateQueryRequest, ExecTemplateQueryResponse } from '@/api/exec/exec-template';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteExecTemplate, getExecTemplatePage } from '@/api/exec/exec-template';
+  import { deleteExecTemplate, batchDeleteExecTemplate, getExecTemplatePage } from '@/api/exec/exec-template';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { usePagination } from '@/types/table';
+  import { usePagination, useRowSelection } from '@/types/table';
   import { copy } from '@/hooks/copy';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openExec']);
 
   const pagination = usePagination();
+  const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
 
+  const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);
   const formModel = reactive<ExecTemplateQueryRequest>({
     id: undefined,
@@ -140,6 +159,22 @@
       // 调用删除接口
       await deleteExecTemplate(id);
       Message.success('删除成功');
+      // 重新加载数据
+      fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除选中行
+  const deleteSelectRows = async () => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await batchDeleteExecTemplate(selectedKeys.value);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
+      selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();
     } catch (e) {
@@ -171,6 +206,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+      selectedKeys.value = [];
     } catch (e) {
     } finally {
       setLoading(false);

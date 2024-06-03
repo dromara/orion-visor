@@ -85,7 +85,7 @@
                         type="warning"
                         @ok="deleteSelectRows">
             <a-button v-permission="['asset:upload-task:delete']"
-                      type="secondary"
+                      type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
               删除
@@ -98,11 +98,11 @@
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
-             v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"

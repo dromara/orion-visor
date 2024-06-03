@@ -33,9 +33,9 @@
                :columns="columns"
                :data="tableRenderData"
                :pagination="pagination"
+               :bordered="false"
                @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-               @page-size-change="(size) => fetchTableData(1, size)"
-               :bordered="false">
+               @page-size-change="(size) => fetchTableData(1, size)">
         <!-- 修改前 -->
         <template #beforeValue="{ record }">
           <span class="copy-left"

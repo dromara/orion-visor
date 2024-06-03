@@ -2,11 +2,9 @@
   <a-layout-footer class="footer">
     <a-space direction="vertical" size="small">
       <a-space size="large">
-        <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor">官网</a-link> -->
-        <!-- <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor">教程</a-link> -->
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor">github</a-link>
         <a-link target="_blank" href="https://gitee.com/lijiahangmax/orion-visor">gitee</a-link>
-        <a-link target="_blank" href="https://lijiahangmax.github.io/orion-visor">文档</a-link>
+        <a-link target="_blank" href="https://lijiahangmax.github.io/open-orion/orion-visor">文档</a-link>
         <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE">License</a-link>
         <a-link target="_blank" :href="`https://github.com/lijiahangmax/orion-visor/releases/tag/v${version}`">v{{ version }} Community</a-link>
       </a-space>

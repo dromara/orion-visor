@@ -7,6 +7,8 @@ import com.orion.visor.framework.mybatis.core.mapper.IMapper;
 import com.orion.visor.module.asset.entity.domain.CommandSnippetDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 命令片段 Mapper 接口
  *
@@ -39,6 +41,18 @@ public interface CommandSnippetDAO extends IMapper<CommandSnippetDO> {
     default int deleteByGroupId(Long groupId) {
         LambdaQueryWrapper<CommandSnippetDO> wrapper = this.lambda()
                 .eq(CommandSnippetDO::getGroupId, groupId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    default int deleteByUserIdList(List<Long> userIdList) {
+        LambdaQueryWrapper<CommandSnippetDO> wrapper = this.lambda()
+                .in(CommandSnippetDO::getUserId, userIdList);
         return this.delete(wrapper);
     }
 

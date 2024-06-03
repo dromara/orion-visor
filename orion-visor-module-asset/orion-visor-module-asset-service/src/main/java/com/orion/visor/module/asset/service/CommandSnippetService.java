@@ -47,14 +47,6 @@ public interface CommandSnippetService {
     List<CommandSnippetVO> getCommandSnippetList();
 
     /**
-     * 删除命令片段
-     *
-     * @param id id
-     * @return effect
-     */
-    Integer deleteCommandSnippetById(Long id);
-
-    /**
      * 设置分组为 null
      *
      * @param userId  userId
@@ -64,6 +56,14 @@ public interface CommandSnippetService {
     Integer setGroupNull(Long userId, Long groupId);
 
     /**
+     * 删除命令片段
+     *
+     * @param id id
+     * @return effect
+     */
+    Integer deleteCommandSnippetById(Long id);
+
+    /**
      * 通过 groupId 删除
      *
      * @param userId  userId
@@ -71,5 +71,13 @@ public interface CommandSnippetService {
      * @return effect
      */
     Integer deleteByGroupId(Long userId, Long groupId);
+
+    /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    Integer deleteByUserIdList(List<Long> userIdList);
 
 }

@@ -182,9 +182,21 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     public int deleteByRelId(String type, Long relId) {
+        if (relId == null) {
+            return 0;
+        }
+        // 删除
+        return this.deleteByRelIdList(type, Lists.singleton(relId));
+    }
+
+    @Override
+    public int deleteByRelIdList(String type, List<Long> relIdList) {
+        if (Lists.isEmpty(relIdList)) {
+            return 0;
+        }
         LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.wrapper()
                 .eq(DataPermissionDO::getType, type)
-                .eq(DataPermissionDO::getRelId, relId);
+                .in(DataPermissionDO::getRelId, relIdList);
         // 查询
         List<DataPermissionDO> rows = dataPermissionDAO.selectList(wrapper);
         // 删除
@@ -204,12 +216,23 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     public int deleteByUserId(Long userId) {
-        LambdaQueryWrapper<DataPermissionDO> wrapper = Conditions.eq(DataPermissionDO::getUserId, userId);
+        if (userId == null) {
+            return 0;
+        }
         // 删除
-        int effect = dataPermissionDAO.delete(wrapper);
-        // 删除缓存
-        this.deleteCache(null, Lists.singleton(userId), null);
-        return effect;
+        return this.deleteByUserIdList(Lists.singleton(userId));
+    }
+
+    @Override
+    public int deleteByUserIdList(List<Long> userIdList) {
+        if (Lists.isEmpty(userIdList)) {
+            return 0;
+        }
+        LambdaQueryWrapper<DataPermissionDO> wrapper = Conditions.in(DataPermissionDO::getUserId, userIdList);
+        // 删除
+        return dataPermissionDAO.delete(wrapper);
+        // 删除缓存 让其自动过期
+        // this.deleteCache(null, userIdList, null);
     }
 
     @Override

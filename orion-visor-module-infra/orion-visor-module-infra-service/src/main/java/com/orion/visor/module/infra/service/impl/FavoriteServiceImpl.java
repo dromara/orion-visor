@@ -20,8 +20,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,13 +116,8 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (userId == null) {
             return;
         }
-        // 删除库
-        favoriteDAO.deleteFavoriteByUserId(userId);
-        // 删除缓存
-        List<String> favoriteKeyList = Arrays.stream(FavoriteTypeEnum.values())
-                .map(s -> FavoriteCacheKeyDefine.FAVORITE.format(s, userId))
-                .collect(Collectors.toList());
-        redisTemplate.delete(favoriteKeyList);
+        // 删除
+        this.deleteFavoriteByUserIdList(Lists.singleton(userId));
     }
 
     @Override
@@ -134,14 +127,14 @@ public class FavoriteServiceImpl implements FavoriteService {
         }
         // 删除库
         favoriteDAO.deleteFavoriteByUserIdList(userIdList);
-        // 删除缓存
-        List<String> favoriteKeyList = new ArrayList<>();
-        for (Long userId : userIdList) {
-            Arrays.stream(FavoriteTypeEnum.values())
-                    .map(s -> FavoriteCacheKeyDefine.FAVORITE.format(s, userId))
-                    .forEach(favoriteKeyList::add);
-        }
-        redisTemplate.delete(favoriteKeyList);
+        // 缓存自动过期
+        // List<String> favoriteKeyList = new ArrayList<>();
+        // for (Long userId : userIdList) {
+        //     Arrays.stream(FavoriteTypeEnum.values())
+        //             .map(s -> FavoriteCacheKeyDefine.FAVORITE.format(s, userId))
+        //             .forEach(favoriteKeyList::add);
+        // }
+        // redisTemplate.delete(favoriteKeyList);
     }
 
     /**

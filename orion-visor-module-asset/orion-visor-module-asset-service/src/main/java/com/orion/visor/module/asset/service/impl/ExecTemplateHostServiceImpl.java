@@ -97,9 +97,19 @@ public class ExecTemplateHostServiceImpl implements ExecTemplateHostService {
     public Integer deleteByTemplateId(Long templateId) {
         LambdaQueryWrapper<ExecTemplateHostDO> wrapper = execTemplateHostDAO.lambda()
                 .eq(ExecTemplateHostDO::getTemplateId, templateId);
-        log.info("ExecTemplateHostService-deleteByTemplateId idList: {}", templateId);
+        log.info("ExecTemplateHostService-deleteByTemplateId id: {}", templateId);
         int effect = execTemplateHostDAO.delete(wrapper);
         log.info("ExecTemplateHostService-deleteByTemplateId effect: {}", effect);
+        return effect;
+    }
+
+    @Override
+    public Integer deleteByTemplateIdList(List<Long> templateIdList) {
+        LambdaQueryWrapper<ExecTemplateHostDO> wrapper = execTemplateHostDAO.lambda()
+                .in(ExecTemplateHostDO::getTemplateId, templateIdList);
+        log.info("ExecTemplateHostService-deleteByTemplateIdList idList: {}", templateIdList);
+        int effect = execTemplateHostDAO.delete(wrapper);
+        log.info("ExecTemplateHostService-deleteByTemplateIdList effect: {}", effect);
         return effect;
     }
 
@@ -107,9 +117,19 @@ public class ExecTemplateHostServiceImpl implements ExecTemplateHostService {
     public Integer deleteByHostId(Long hostId) {
         LambdaQueryWrapper<ExecTemplateHostDO> wrapper = execTemplateHostDAO.lambda()
                 .eq(ExecTemplateHostDO::getHostId, hostId);
-        log.info("ExecTemplateHostService-deleteByHostId idList: {}", hostId);
+        log.info("ExecTemplateHostService-deleteByHostId id: {}", hostId);
         int effect = execTemplateHostDAO.delete(wrapper);
         log.info("ExecTemplateHostService-deleteByHostId effect: {}", effect);
+        return effect;
+    }
+
+    @Override
+    public Integer deleteByHostIdList(List<Long> hostIdList) {
+        LambdaQueryWrapper<ExecTemplateHostDO> wrapper = execTemplateHostDAO.lambda()
+                .in(ExecTemplateHostDO::getHostId, hostIdList);
+        log.info("ExecTemplateHostService-deleteByHostIdList id: {}", hostIdList);
+        int effect = execTemplateHostDAO.delete(wrapper);
+        log.info("ExecTemplateHostService-deleteByHostIdList effect: {}", effect);
         return effect;
     }
 

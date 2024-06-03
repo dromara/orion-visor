@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.security.PasswordModifier;
 import com.orion.visor.framework.common.utils.CryptoUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisMaps;
+import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.module.asset.convert.HostKeyConvert;
 import com.orion.visor.module.asset.dao.HostConfigDAO;
@@ -170,24 +173,33 @@ public class HostKeyServiceImpl implements HostKeyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer deleteHostKeyById(Long id) {
-        log.info("HostKeyService-deleteHostKeyById id: {}", id);
+        return this.deleteHostKeyByIdList(Lists.singleton(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteHostKeyByIdList(List<Long> idList) {
+        log.info("HostKeyService-deleteHostKeyById idList: {}", idList);
         // 检查数据是否存在
-        HostKeyDO record = hostKeyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        List<HostKeyDO> list = hostKeyDAO.selectBatchIds(idList);
+        Valid.notEmpty(list, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
-        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        String name = list.stream()
+                .map(HostKeyDO::getName)
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.NAME, name);
         // 删除数据库
-        int effect = hostKeyDAO.deleteById(id);
+        int effect = hostKeyDAO.deleteBatchIds(idList);
         // 删除关联
-        hostIdentityDAO.setKeyWithNull(id);
+        hostIdentityDAO.setKeyWithNull(idList);
         // 删除主机配置
-        hostConfigDAO.setKeyIdWithNull(id);
+        hostConfigDAO.setKeyIdWithNull(idList);
         // 删除主机密钥额外配置
-        dataExtraApi.deleteHostKeyExtra(id);
+        dataExtraApi.deleteHostKeyExtra(idList);
         // 删除数据权限
-        dataPermissionApi.deleteByRelId(DataPermissionTypeEnum.HOST_KEY, id);
+        dataPermissionApi.deleteByRelIdList(DataPermissionTypeEnum.HOST_KEY, idList);
         // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_KEY.getKey(), record.getId());
+        RedisUtils.delete(HostCacheKeyDefine.HOST_KEY);
         log.info("HostKeyService-deleteHostKeyById effect: {}", effect);
         return effect;
     }

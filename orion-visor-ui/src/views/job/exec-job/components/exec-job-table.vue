@@ -56,14 +56,31 @@
               <icon-plus />
             </template>
           </a-button>
+          <!-- 删除 -->
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
+                        type="warning"
+                        @ok="deleteSelectRows">
+            <a-button v-permission="['asset:exec-job:delete']"
+                      type="primary"
+                      status="danger"
+                      :disabled="selectedKeys.length === 0">
+              删除
+              <template #icon>
+                <icon-delete />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
+             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
@@ -174,13 +191,13 @@
 <script lang="ts" setup>
   import type { ExecJobQueryRequest, ExecJobQueryResponse } from '@/api/job/exec-job';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteExecJob, getExecJobPage, triggerExecJob, updateExecJobStatus } from '@/api/job/exec-job';
+  import { deleteExecJob, batchDeleteExecJob, getExecJobPage, triggerExecJob, updateExecJobStatus } from '@/api/job/exec-job';
   import { Message } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
-  import { usePagination } from '@/types/table';
+  import { usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
@@ -188,10 +205,12 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'testCron']);
 
   const pagination = usePagination();
+  const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { hasPermission } = usePermission();
   const { toOptions, getDictValue } = useDictStore();
 
+  const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<ExecJobQueryResponse[]>([]);
   const formModel = reactive<ExecJobQueryRequest>({
     id: undefined,
@@ -210,6 +229,22 @@
       // 调用删除接口
       await deleteExecJob(id);
       Message.success('删除成功');
+      // 重新加载数据
+      fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除选中行
+  const deleteSelectRows = async () => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await batchDeleteExecJob(selectedKeys.value);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
+      selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();
     } catch (e) {
@@ -265,6 +300,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+      selectedKeys.value = [];
     } catch (e) {
     } finally {
       setLoading(false);

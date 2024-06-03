@@ -5,6 +5,8 @@ import com.orion.visor.framework.mybatis.core.query.Conditions;
 import com.orion.visor.module.infra.entity.domain.PreferenceDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 用户偏好 Mapper 接口
  *
@@ -23,6 +25,16 @@ public interface PreferenceDAO extends IMapper<PreferenceDO> {
      */
     default int deleteByUserId(Long userId) {
         return this.delete(Conditions.eq(PreferenceDO::getUserId, userId));
+    }
+
+    /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    default int deleteByUserIdList(List<Long> userIdList) {
+        return this.delete(Conditions.in(PreferenceDO::getUserId, userIdList));
     }
 
 }

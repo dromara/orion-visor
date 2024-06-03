@@ -98,6 +98,15 @@ public class ExecJobController {
         return execJobService.deleteExecJobById(id);
     }
 
+    @OperatorLog(ExecJobOperatorType.DELETE)
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "批量删除计划任务")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:exec-job:delete')")
+    public Integer batchDeleteExecJob(@RequestParam("idList") List<Long> idList) {
+        return execJobService.deleteExecJobByIdList(idList);
+    }
+
     @OperatorLog(ExecJobOperatorType.TRIGGER)
     @PostMapping("/trigger")
     @Operation(summary = "手动触发计划任务")

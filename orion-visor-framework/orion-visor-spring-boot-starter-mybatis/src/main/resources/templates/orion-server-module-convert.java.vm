@@ -28,10 +28,6 @@ public interface ${type}Convert {
     ${type}DO to(${type}QueryRequest request);
 
     ${type}VO to(${type}DO domain);
-    #if($meta.enableExport)
-
-    ${type}Export toExport(${type}DO domain);
-    #end
 
     List<${type}VO> to(List<${type}DO> list);
 

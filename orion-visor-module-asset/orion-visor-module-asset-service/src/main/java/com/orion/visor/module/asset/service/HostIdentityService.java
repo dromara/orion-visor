@@ -64,4 +64,12 @@ public interface HostIdentityService {
      */
     Integer deleteHostIdentityById(Long id);
 
+    /**
+     * 通过 id 批量删除主机身份
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteHostIdentityByIdList(List<Long> idList);
+
 }

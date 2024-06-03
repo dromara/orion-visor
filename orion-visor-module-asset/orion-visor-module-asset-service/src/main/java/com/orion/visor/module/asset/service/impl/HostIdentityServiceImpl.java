@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.security.PasswordModifier;
 import com.orion.visor.framework.common.utils.CryptoUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisMaps;
+import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.module.asset.convert.HostIdentityConvert;
 import com.orion.visor.module.asset.dao.HostConfigDAO;
@@ -32,6 +35,7 @@ import com.orion.visor.module.infra.api.DataPermissionApi;
 import com.orion.visor.module.infra.enums.DataPermissionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -185,24 +189,34 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteHostIdentityById(Long id) {
-        log.info("HostIdentityService-deleteHostIdentityById id: {}", id);
+        return this.deleteHostIdentityByIdList(Lists.singleton(id));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteHostIdentityByIdList(List<Long> idList) {
+        log.info("HostIdentityService-deleteHostIdentityByIdList idList: {}", idList);
         // 检查数据是否存在
-        HostIdentityDO record = hostIdentityDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        List<HostIdentityDO> list = hostIdentityDAO.selectBatchIds(idList);
+        Valid.notEmpty(list, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
-        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        String name = list.stream()
+                .map(HostIdentityDO::getName)
+                .collect(Collectors.joining(Const.COMMA));
+        OperatorLogs.add(OperatorLogs.NAME, name);
         // 删除数据库
-        int effect = hostIdentityDAO.deleteById(id);
+        int effect = hostIdentityDAO.deleteBatchIds(idList);
         // 删除主机配置
-        hostConfigDAO.setIdentityIdWithNull(id);
+        hostConfigDAO.setIdentityIdWithNull(idList);
         // 删除主机身份额外配置
-        dataExtraApi.deleteHostIdentityExtra(id);
+        dataExtraApi.deleteHostIdentityExtra(idList);
         // 删除数据权限
-        dataPermissionApi.deleteByRelId(DataPermissionTypeEnum.HOST_IDENTITY, id);
+        dataPermissionApi.deleteByRelIdList(DataPermissionTypeEnum.HOST_IDENTITY, idList);
         // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_IDENTITY.getKey(), record.getId());
-        log.info("HostIdentityService-deleteHostIdentityById effect: {}", effect);
+        RedisUtils.delete(HostCacheKeyDefine.HOST_IDENTITY);
+        log.info("HostIdentityService-deleteHostIdentityByIdList effect: {}", effect);
         return effect;
     }
 

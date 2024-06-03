@@ -97,5 +97,15 @@ public class HostIdentityController {
         return hostIdentityService.deleteHostIdentityById(id);
     }
 
+    @DemoDisableApi
+    @OperatorLog(HostIdentityOperatorType.DELETE)
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "批量删除主机身份")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host-identity:delete')")
+    public Integer batchDeleteHostIdentity(@RequestParam("idList") List<Long> idList) {
+        return hostIdentityService.deleteHostIdentityByIdList(idList);
+    }
+
 }
 

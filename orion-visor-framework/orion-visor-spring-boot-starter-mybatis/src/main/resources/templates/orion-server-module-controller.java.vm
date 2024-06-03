@@ -141,19 +141,6 @@ public class ${table.controllerName} {
     public Integer batchDelete${type}(@RequestParam("idList") List<Long> idList) {
         return ${typeLower}Service.delete${type}ByIdList(idList);
     }
-    #if($meta.enableExport)
-
-    #if($meta.enableOperatorLog)
-    @OperatorLog(${type}OperatorType.EXPORT)
-    #end
-    @PostMapping("/export")
-    @Operation(summary = "${apiComment.export}")
-    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:export')")
-    public void export${type}(@Validated @RequestBody ${type}QueryRequest request,
-                              HttpServletResponse response) throws IOException {
-        ${typeLower}Service.export${type}(request, response);
-    }
-    #end
 
 }
 

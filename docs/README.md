@@ -40,6 +40,12 @@
 
 ------------------------------
 
+<p><b>⛔⛔此页面已不再维护, 请跳转至 
+<a target="_blank" href="https://lijiahangmax.github.io/open-orion/orion-visor">这里</a> 
+查看最新文档 ❗</b></p>
+
+------------------------------
+
 **`orion-visor`** 提供一站式服务器运维解决方案。
 
 * **资产管理**：支持对资产进行分组，实现对主机、密钥和身份的统一管理和授权。
@@ -70,9 +76,8 @@ docker compose up -d
 
 ## 项目文档
 
-* [文档地址](https://lijiahangmax.github.io/orion-visor/#/)
-* [docker安装](/quickstart/docker-install)
-* [普通安装](/quickstart/install)
+* [文档地址](/)
+* [安装文档](/quickstart/docker-install)
 * [更新日志](/about/change-log)
 * [操作手册](/operator/asset)
 * [常见问题](/quickstart/faq)

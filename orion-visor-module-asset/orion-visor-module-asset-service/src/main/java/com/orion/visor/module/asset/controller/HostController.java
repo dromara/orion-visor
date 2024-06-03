@@ -96,5 +96,15 @@ public class HostController {
         return hostService.deleteHostById(id);
     }
 
+    @DemoDisableApi
+    @OperatorLog(HostOperatorType.DELETE)
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "批量删除主机")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host:delete')")
+    public Integer batchDeleteHost(@RequestParam("idList") List<Long> idList) {
+        return hostService.deleteHostByIdList(idList);
+    }
+
 }
 

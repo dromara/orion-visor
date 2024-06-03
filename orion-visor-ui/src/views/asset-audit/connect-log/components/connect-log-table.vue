@@ -74,7 +74,7 @@
                         type="warning"
                         @ok="deleteSelectRows">
             <a-button v-permission="['asset:host-connect-log:management:delete']"
-                      type="secondary"
+                      type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
               删除
@@ -87,17 +87,17 @@
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
-             v-model:selected-keys="selectedKeys"
              :row-selection="rowSelection"
              :columns="columns"
              :data="tableRenderData"
              :pagination="pagination"
+             :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
-             :bordered="false">
+             @page-size-change="(size) => fetchTableData(1, size)">
       <!-- 连接用户 -->
       <template #username="{ record }">
         {{ record.username }}

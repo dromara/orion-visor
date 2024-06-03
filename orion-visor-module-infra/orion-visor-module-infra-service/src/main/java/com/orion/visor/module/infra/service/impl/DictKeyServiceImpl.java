@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
@@ -176,24 +177,13 @@ public class DictKeyServiceImpl implements DictKeyService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteDictKeyById(Long id) {
-        log.info("DictKeyService-deleteDictKeyById id: {}", id);
-        // 检查数据是否存在
-        DictKeyDO record = dictKeyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
-        OperatorLogs.add(OperatorLogs.KEY_NAME, record.getKeyName());
-        // 删除配置项
-        int effect = dictKeyDAO.deleteById(id);
-        // 删除配置值
-        dictValueService.deleteDictValueByKeyId(id);
-        // 删除缓存
-        RedisMaps.delete(DictCacheKeyDefine.DICT_KEY, id);
-        RedisUtils.delete(DictCacheKeyDefine.DICT_SCHEMA.format(record.getKeyName()));
-        log.info("DictKeyService-deleteDictKeyById id: {}, effect: {}", id, effect);
-        return effect;
+        return this.deleteDictKeyByIdList(Lists.singleton(id));
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteDictKeyByIdList(List<Long> idList) {
         log.info("DictKeyService-deleteDictKeyByIdList idList: {}", idList);
         // 检查数据是否存在

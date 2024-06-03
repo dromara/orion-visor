@@ -74,19 +74,36 @@
               <icon-plus />
             </template>
           </a-button>
+          <!-- 删除 -->
+          <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
+                        position="br"
+                        type="warning"
+                        @ok="deleteSelectRows">
+            <a-button v-permission="['asset:host-identity:delete']"
+                      type="primary"
+                      status="danger"
+                      :disabled="selectedKeys.length === 0">
+              删除
+              <template #icon>
+                <icon-delete />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </a-space>
       </div>
     </template>
     <!-- table -->
-    <a-table row-key="id"
+    <a-table v-model:selected-keys="selectedKeys"
+             row-key="id"
              ref="tableRef"
              :loading="loading"
              :columns="columns"
+             :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
+             :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
-             :bordered="false">
+             @page-size-change="(size) => fetchTableData(1, size)">
       <!-- 类型 -->
       <template #type="{ record }">
         <a-tag :color="getDictValue(identityTypeKey, record.type, 'color')">
@@ -159,14 +176,14 @@
 <script lang="ts" setup>
   import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
+  import { deleteHostIdentity, batchDeleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
   import { useDictStore } from '@/store';
-  import { usePagination } from '@/types/table';
+  import { usePagination, useRowSelection } from '@/types/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { IdentityType, identityTypeKey } from '../types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
@@ -174,10 +191,12 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const pagination = usePagination();
+  const rowSelection = useRowSelection();
   const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();
 
+  const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
   const formModel = reactive<HostIdentityQueryRequest>({
     id: undefined,
@@ -196,6 +215,22 @@
       // 调用删除接口
       await deleteHostIdentity(id);
       Message.success('删除成功');
+      // 重新加载数据
+      fetchTableData();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除选中行
+  const deleteSelectRows = async () => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await batchDeleteHostIdentity(selectedKeys.value);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
+      selectedKeys.value = [];
       // 重新加载数据
       fetchTableData();
     } catch (e) {
@@ -227,6 +262,7 @@
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;
+      selectedKeys.value = [];
     } catch (e) {
     } finally {
       setLoading(false);

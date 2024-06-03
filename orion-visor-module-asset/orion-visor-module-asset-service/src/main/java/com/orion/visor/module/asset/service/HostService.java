@@ -65,10 +65,18 @@ public interface HostService {
     Integer deleteHostById(Long id);
 
     /**
+     * 通过 id 批量删除主机
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteHostByIdList(List<Long> idList);
+
+    /**
      * 通过 id 删除主机引用
      *
-     * @param id id
+     * @param idList idList
      */
-    void deleteHostRelByIdAsync(Long id);
+    void deleteHostRelByIdListAsync(List<Long> idList);
 
 }

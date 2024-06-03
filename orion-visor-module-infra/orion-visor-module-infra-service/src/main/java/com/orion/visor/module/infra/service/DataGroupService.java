@@ -84,4 +84,12 @@ public interface DataGroupService {
      */
     Integer deleteDataGroupByUserId(Long userId);
 
+    /**
+     * 通过 userId 删除数据分组
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    Integer deleteDataGroupByUserIdList(List<Long> userIdList);
+
 }

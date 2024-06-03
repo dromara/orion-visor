@@ -17,6 +17,7 @@ public class VueTemplate extends Template {
     public VueTemplate(Table table, String module, String feature) {
         super(table);
         table.enableVue = true;
+        table.enableRowSelection = true;
         table.module = module;
         table.feature = feature;
     }
@@ -54,12 +55,12 @@ public class VueTemplate extends Template {
     }
 
     /**
-     * 列表可多选
+     * 关闭列表可多选
      *
      * @return this
      */
-    public VueTemplate enableRowSelection() {
-        table.enableRowSelection = true;
+    public VueTemplate disableRowSelection() {
+        table.enableRowSelection = false;
         return this;
     }
 

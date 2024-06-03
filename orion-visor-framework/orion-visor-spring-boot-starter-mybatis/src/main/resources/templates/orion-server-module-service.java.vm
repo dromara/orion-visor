@@ -115,16 +115,5 @@ public interface ${table.serviceName} {
      * @return effect
      */
     Integer delete${type}(${type}QueryRequest request);
-    #if($meta.enableExport)
-
-    /**
-     * ${apiComment.export}
-     *
-     * @param request  request
-     * @param response response
-     * @throws IOException IOException
-     */
-    void export${type}(${type}QueryRequest request, HttpServletResponse response) throws IOException;
-    #end
 
 }

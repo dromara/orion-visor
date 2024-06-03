@@ -43,8 +43,8 @@ INSERT INTO `dict_key` VALUES (39, 'pathBookmarkType', 'STRING', '[]', '路径�
 INSERT INTO `dict_key` VALUES (40, 'sftpTransferStatus', 'STRING', '[{\"name\": \"status\", \"type\": \"STRING\"}, {\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"icon\", \"type\": \"STRING\"}]', 'SFTP 传输状态', '2024-05-06 11:54:49', '2024-05-06 11:54:49', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (41, 'uploadTaskStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '上传任务状态', '2024-05-07 22:18:48', '2024-05-08 22:06:23', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (42, 'uploadTaskFileStatus', 'STRING', '[{\"name\": \"status\", \"type\": \"STRING\"}]', '上传任务文件状态', '2024-05-08 10:30:29', '2024-05-10 17:34:13', '1', '1', 0);
-INSERT INTO `dict_key` VALUES (43, 'messageType', 'STRING', '[{\"name\": \"tagLabel\", \"type\": \"STRING\"}, {\"name\": \"tagVisible\", \"type\": \"STRING\"}, {\"name\": \"tagColor\", \"type\": \"STRING\"}, {\"name\": \"redirectComponent\", \"type\": \"STRING\"}]', '消息类型', '2024-05-13 12:07:56', '2024-05-14 14:48:28', '1', '1', 0);
-INSERT INTO `dict_key` VALUES (44, 'messageClassify', 'STRING', '[]', '消息分类', '2024-05-13 15:06:27', '2024-05-13 15:06:27', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (43, 'messageType', 'STRING', '[{\"name\": \"tagLabel\", \"type\": \"STRING\"}, {\"name\": \"tagVisible\", \"type\": \"STRING\"}, {\"name\": \"tagColor\", \"type\": \"STRING\"}, {\"name\": \"redirectComponent\", \"type\": \"STRING\"}]', '消息类型', '2024-05-13 12:07:56', '2024-05-31 17:31:37', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (44, 'messageClassify', 'STRING', '[]', '消息分类', '2024-05-13 15:06:27', '2024-05-31 17:31:37', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -169,7 +169,7 @@ INSERT INTO `dict_value` VALUES (170, 25, 'hostNewConnectionType', 'list', '列�
 INSERT INTO `dict_value` VALUES (171, 25, 'hostNewConnectionType', 'favorite', '收藏', '{}', 30, '2023-12-14 17:25:00', '2024-01-31 23:39:19', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (172, 25, 'hostNewConnectionType', 'latest', '最近连接', '{}', 40, '2023-12-14 17:25:10', '2024-01-31 23:39:19', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (173, 26, 'hostExtraSshAuthType', 'DEFAULT', '主机默认配置', '{}', 10, '2023-12-25 15:48:26', '2023-12-25 15:48:26', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (174, 26, 'hostExtraSshAuthType', 'CUSTOM_KEY', '自定义', '{}', 20, '2023-12-25 15:48:42', '2024-05-17 12:49:13', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (174, 26, 'hostExtraSshAuthType', 'CUSTOM_KEY', '自定义密钥', '{}', 20, '2023-12-25 15:48:42', '2024-05-31 18:05:35', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (175, 26, 'hostExtraSshAuthType', 'CUSTOM_IDENTITY', '自定义身份', '{}', 30, '2023-12-25 15:48:52', '2023-12-25 16:05:31', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (176, 27, 'hostConnectType', 'SSH', 'SSH', '{\"color\": \"arcoblue\"}', 10, '2023-12-26 23:23:18', '2024-04-24 16:38:28', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (177, 28, 'hostConnectStatus', 'CONNECTING', '连接中', '{\"color\": \"rgb(var(--green-6))\"}', 10, '2023-12-26 23:29:00', '2023-12-26 23:29:00', '1', '1', 0);
@@ -285,17 +285,16 @@ INSERT INTO `dict_value` VALUES (291, 2, 'operatorLogType', 'upload-task:cancel'
 INSERT INTO `dict_value` VALUES (292, 2, 'operatorLogType', 'upload-task:delete', '删除上传记录', '{}', 30, '2024-05-08 22:23:44', '2024-05-08 22:23:44', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (293, 2, 'operatorLogType', 'upload-task:clear', '清理上传记录', '{}', 40, '2024-05-08 22:23:59', '2024-05-08 22:23:59', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (294, 41, 'uploadTaskStatus', 'FAILED', '已失败', '{\"color\": \"red\"}', 40, '2024-05-10 11:29:17', '2024-05-10 11:29:17', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (295, 43, 'messageType', 'EXEC_FAILED', '执行失败', '{\"tagColor\": \"red\", \"tagLabel\": \"部分失败\", \"tagVisible\": \"true\", \"redirectComponent\": \"execCommand\"}', 10, '2024-05-13 12:07:56', '2024-05-14 15:19:19', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (296, 43, 'messageType', 'UPLOAD_FAILED', '上传失败', '{\"tagColor\": \"red\", \"tagLabel\": \"部分失败\", \"tagVisible\": \"true\", \"redirectComponent\": \"batchUpload\"}', 20, '2024-05-13 12:07:56', '2024-05-14 15:11:21', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (297, 44, 'messageClassify', 'NOTICE', '通知', '{}', 10, '2024-05-13 15:06:27', '2024-05-13 15:06:27', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (298, 44, 'messageClassify', 'TODO', '待办', '{}', 20, '2024-05-13 15:06:27', '2024-05-13 15:06:27', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (295, 43, 'messageType', 'EXEC_FAILED', '执行失败', '{\"tagColor\": \"red\", \"tagLabel\": \"部分失败\", \"tagVisible\": \"true\", \"redirectComponent\": \"execCommand\"}', 10, '2024-05-13 12:07:56', '2024-05-31 17:31:18', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (296, 43, 'messageType', 'UPLOAD_FAILED', '上传失败', '{\"tagColor\": \"red\", \"tagLabel\": \"部分失败\", \"tagVisible\": \"true\", \"redirectComponent\": \"batchUpload\"}', 20, '2024-05-13 12:07:56', '2024-05-31 17:31:18', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (297, 44, 'messageClassify', 'NOTICE', '通知', '{}', 10, '2024-05-13 15:06:27', '2024-05-31 17:31:18', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (298, 44, 'messageClassify', 'TODO', '待办', '{}', 20, '2024-05-13 15:06:27', '2024-05-31 17:31:18', '1', '1', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2023-09-11 15:27:52', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (5, 0, '用户设置', NULL, 1, 700, 1, 1, 1, 0, 'icon-user', NULL, 'userModule', '2023-07-28 10:55:38', '2024-04-03 00:56:30', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (8, 0, '项目地址 github', NULL, 1, 1000, 1, 1, 1, 0, 'icon-github', 'https://github.com/lijiahangmax/orion-visor', '', '2023-07-28 11:04:59', '2024-05-17 12:57:19', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (8, 0, '项目地址', NULL, 1, 1000, 1, 1, 1, 0, 'icon-link', 'https://lijiahangmax.github.io/open-orion/orion-visor', '', '2023-07-28 11:04:59', '2024-05-31 17:13:12', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (10, 5, '角色管理', NULL, 2, 10, 1, 1, 1, 0, 'IconUserGroup', '', 'role', '2023-07-28 10:55:52', '2024-03-07 19:10:13', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (11, 0, '项目地址 gitee', NULL, 1, 1010, 1, 1, 1, 0, 'icon-gitlab', 'https://gitee.com/lijiahangmax/orion-visor', '', '2023-08-02 18:08:07', '2024-05-17 12:57:26', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (12, 0, '系统设置', NULL, 1, 800, 1, 1, 1, 0, 'icon-tool', NULL, 'systemModule', '2023-08-02 18:24:24', '2024-04-03 00:56:17', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (13, 12, '系统菜单', '', 2, 10, 1, 1, 1, 0, 'icon-menu', NULL, 'systemMenu', '2023-08-02 18:29:01', '2024-03-07 22:25:00', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (20, 10, '创建角色', 'infra:system-role:create', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-08-15 16:36:54', '2023-10-27 01:20:46', '1', '1', 0);

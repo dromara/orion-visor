@@ -79,6 +79,14 @@ public interface ExecJobService {
     Integer deleteExecJobById(Long id);
 
     /**
+     * 批量删除计划任务
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteExecJobByIdList(List<Long> idList);
+
+    /**
      * 手动触发任务
      *
      * @param id id

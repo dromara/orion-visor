@@ -5,13 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
-#if($meta.enableExport)
-import com.orion.office.excel.writer.exporting.ExcelExport;
-#end
 import com.orion.visor.framework.common.constant.ErrorMessage;
-#if($meta.enableExport)
-import com.orion.visor.framework.common.utils.FileNames;
-#end
 import com.orion.visor.framework.common.utils.Valid;
 #if($meta.enableCache)
 import com.orion.visor.framework.redis.core.utils.RedisMaps;
@@ -23,18 +17,11 @@ import ${pkg}.*;
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
-#if($meta.enableExport)
-import com.orion.web.servlet.web.Servlets;
-#end
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-#if($meta.enableExport)
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-#end
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +41,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     private ${type}DAO ${typeLower}DAO;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long create${type}(${type}CreateRequest request) {
         log.info("${type}Service-create${type} request: {}", JSON.toJSONString(request));
         // 转换
@@ -72,6 +60,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer update${type}ById(${type}UpdateRequest request) {
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("${type}Service-update${type}ById id: {}, request: {}", id, JSON.toJSONString(request));
@@ -93,6 +82,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer update${type}(${type}QueryRequest query, ${type}UpdateRequest update) {
         log.info("${type}Service.update${type} query: {}, update: {}", JSON.toJSONString(query), JSON.toJSONString(update));
         // 条件
@@ -179,6 +169,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete${type}ById(Long id) {
         log.info("${type}Service-delete${type}ById id: {}", id);
         // 检查数据是否存在
@@ -195,6 +186,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete${type}ByIdList(List<Long> idList) {
         log.info("${type}Service-delete${type}ByIdList idList: {}", idList);
         int effect = ${typeLower}DAO.deleteBatchIds(idList);
@@ -207,6 +199,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete${type}(${type}QueryRequest request) {
         log.info("${type}Service.delete${type} request: {}", JSON.toJSONString(request));
         // 条件
@@ -220,26 +213,6 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         #end
         return effect;
     }
-    #if($meta.enableExport)
-
-    @Override
-    public void export${type}(${type}QueryRequest request, HttpServletResponse response) throws IOException {
-        log.info("${type}Service.export${type} request: {}", JSON.toJSONString(request));
-        // 条件
-        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        List<${type}Export> rows = ${typeLower}DAO.of(wrapper).list(${type}Convert.MAPPER::toExport);
-        log.info("${type}Service.export${type} size: {}", rows.size());
-        // 导出
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ExcelExport.create(${type}Export.class)
-                .addRows(rows)
-                .write(out)
-                .close();
-        // 传输
-        Servlets.transfer(response, out.toByteArray(), FileNames.exportName(${type}Export.TITLE));
-    }
-    #end
 
     /**
      * 检查对象是否存在

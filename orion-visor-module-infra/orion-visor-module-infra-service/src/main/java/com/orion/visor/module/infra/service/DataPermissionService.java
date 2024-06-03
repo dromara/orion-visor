@@ -74,12 +74,29 @@ public interface DataPermissionService {
     int deleteByRelId(String type, Long relId);
 
     /**
+     * 通过 relId 删除
+     *
+     * @param type      type
+     * @param relIdList relIdList
+     * @return effect
+     */
+    int deleteByRelIdList(String type, List<Long> relIdList);
+
+    /**
      * 通过 userId 删除
      *
      * @param userId userId
      * @return effect
      */
     int deleteByUserId(Long userId);
+
+    /**
+     * 通过 userId 删除
+     *
+     * @param userIdList userIdList
+     * @return effect
+     */
+    int deleteByUserIdList(List<Long> userIdList);
 
     /**
      * 通过 roleId 删除

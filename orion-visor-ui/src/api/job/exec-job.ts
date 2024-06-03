@@ -2,6 +2,7 @@ import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import type { HostQueryResponse } from '@/api/asset/host';
 import axios from 'axios';
+import qs from 'query-string';
 
 /**
  * 计划任务创建请求
@@ -110,6 +111,18 @@ export function getExecJobPage(request: ExecJobQueryRequest) {
  */
 export function deleteExecJob(id: number) {
   return axios.delete('/asset/exec-job/delete', { params: { id } });
+}
+
+/**
+ * 批量删除计划任务
+ */
+export function batchDeleteExecJob(idList: Array<number>) {
+  return axios.delete('/asset/exec-job/batch-delete', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
 
 /**

@@ -2,6 +2,7 @@ import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import type { RoleQueryResponse } from '@/api/user/role';
 import axios from 'axios';
+import qs from 'query-string';
 
 /**
  * 用户创建请求
@@ -160,6 +161,18 @@ export function getUserPage(request: UserQueryRequest) {
  */
 export function deleteUser(id: number) {
   return axios.delete('/infra/system-user/delete', { params: { id } });
+}
+
+/**
+ * 批量删除用户
+ */
+export function batchDeleteUser(idList: Array<number>) {
+  return axios.delete('/infra/system-user/batch-delete', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }
 
 /**

@@ -66,11 +66,19 @@ public interface HostKeyService {
     DataGrid<HostKeyVO> getHostKeyPage(HostKeyQueryRequest request);
 
     /**
-     * 通过 id 删除主机密钥
+     * 通过 id 批量删除主机密钥
      *
      * @param id id
      * @return effect
      */
     Integer deleteHostKeyById(Long id);
+
+    /**
+     * 通过 id 删除主机密钥
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteHostKeyByIdList(List<Long> idList);
 
 }

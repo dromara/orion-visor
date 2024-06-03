@@ -96,5 +96,15 @@ public class HostKeyController {
         return hostKeyService.deleteHostKeyById(id);
     }
 
+    @DemoDisableApi
+    @OperatorLog(HostKeyOperatorType.DELETE)
+    @DeleteMapping("/batch-delete")
+    @Operation(summary = "批量删除主机密钥")
+    @Parameter(name = "idList", description = "idList", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host-key:delete')")
+    public Integer batchDeleteHostKey(@RequestParam("idList") List<Long> idList) {
+        return hostKeyService.deleteHostKeyByIdList(idList);
+    }
+
 }
 

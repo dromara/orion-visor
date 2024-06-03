@@ -45,6 +45,18 @@ public interface ExecJobHostDAO extends IMapper<ExecJobHostDO> {
     }
 
     /**
+     * 通过 jobId 删除
+     *
+     * @param jobIdList jobIdList
+     * @return effect
+     */
+    default Integer deleteByJobIdList(List<Long> jobIdList) {
+        LambdaQueryWrapper<ExecJobHostDO> wrapper = this.wrapper()
+                .in(ExecJobHostDO::getJobId, jobIdList);
+        return this.delete(wrapper);
+    }
+
+    /**
      * 通过 hostId 删除
      *
      * @param hostId hostId
@@ -53,6 +65,18 @@ public interface ExecJobHostDAO extends IMapper<ExecJobHostDO> {
     default Integer deleteByHostId(Long hostId) {
         LambdaQueryWrapper<ExecJobHostDO> wrapper = this.wrapper()
                 .eq(ExecJobHostDO::getHostId, hostId);
+        return this.delete(wrapper);
+    }
+
+    /**
+     * 通过 hostId 删除
+     *
+     * @param hostIdList hostIdList
+     * @return effect
+     */
+    default Integer deleteByHostIdList(List<Long> hostIdList) {
+        LambdaQueryWrapper<ExecJobHostDO> wrapper = this.wrapper()
+                .in(ExecJobHostDO::getHostId, hostIdList);
         return this.delete(wrapper);
     }
 

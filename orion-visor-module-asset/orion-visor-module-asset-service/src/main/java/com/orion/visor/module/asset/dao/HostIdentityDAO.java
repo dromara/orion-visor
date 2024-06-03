@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.orion.visor.framework.mybatis.core.mapper.IMapper;
 import com.orion.visor.module.asset.entity.domain.HostIdentityDO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 主机身份 Mapper 接口
@@ -20,13 +21,13 @@ public interface HostIdentityDAO extends IMapper<HostIdentityDO> {
     /**
      * 设置 keyId 为 null
      *
-     * @param keyId keyId
+     * @param keyIdList keyIdList
      * @return effect
      */
-    default int setKeyWithNull(@Param("keyId") Long keyId) {
+    default int setKeyWithNull(List<Long> keyIdList) {
         LambdaUpdateWrapper<HostIdentityDO> updateWrapper = Wrappers.<HostIdentityDO>lambdaUpdate()
                 .set(HostIdentityDO::getKeyId, null)
-                .eq(HostIdentityDO::getKeyId, keyId);
+                .in(HostIdentityDO::getKeyId, keyIdList);
         return this.update(null, updateWrapper);
     }
 

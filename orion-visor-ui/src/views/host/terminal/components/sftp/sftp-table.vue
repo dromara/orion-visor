@@ -1,9 +1,9 @@
 <template>
-  <a-table row-key="path"
+  <a-table v-model:selected-keys="selectedKeys"
+           row-key="path"
            ref="tableRef"
            class="sftp-table"
            :columns="columns"
-           v-model:selected-keys="selectedKeys"
            :row-selection="rowSelection"
            :sticky-header="true"
            :data="list"

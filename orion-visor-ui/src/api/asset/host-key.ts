@@ -1,6 +1,7 @@
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
+import qs from 'query-string';
 
 /**
  * 主机密钥创建请求
@@ -84,4 +85,16 @@ export function getHostKeyPage(request: HostKeyQueryRequest) {
  */
 export function deleteHostKey(id: number) {
   return axios.delete('/asset/host-key/delete', { params: { id } });
+}
+
+/**
+ * 批量删除主机密钥
+ */
+export function batchDeleteHostKey(idList: Array<number>) {
+  return axios.delete('/asset/host-key/batch-delete', {
+    params: { idList },
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'comma' });
+    }
+  });
 }

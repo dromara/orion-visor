@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -164,14 +163,29 @@ public class PreferenceServiceImpl implements PreferenceService {
 
     @Override
     public void deletePreferenceByUserId(Long userId) {
+        if (userId == null) {
+            return;
+        }
         // 删除
-        int effect = preferenceDAO.deleteByUserId(userId);
-        log.info("PreferenceService-deletePreferenceById userId: {}, effect: {}", userId, effect);
-        // 删除缓存
-        List<String> deleteKeys = Arrays.stream(PreferenceTypeEnum.values())
-                .map(s -> PreferenceCacheKeyDefine.PREFERENCE.format(userId, s))
-                .collect(Collectors.toList());
-        RedisMaps.delete(deleteKeys);
+        this.deletePreferenceByUserIdList(Lists.singleton(userId));
+    }
+
+    @Override
+    public void deletePreferenceByUserIdList(List<Long> userIdList) {
+        if (Lists.isEmpty(userIdList)) {
+            return;
+        }
+        // 删除
+        int effect = preferenceDAO.deleteByUserIdList(userIdList);
+        log.info("PreferenceService-deletePreferenceByUserIdList userIdList: {}, effect: {}", userIdList, effect);
+        // 删除缓存 让他自动过期
+        // List<String> deleteKeys = new ArrayList<>();
+        // for (Long userId : userIdList) {
+        //     Arrays.stream(PreferenceTypeEnum.values())
+        //             .map(s -> PreferenceCacheKeyDefine.PREFERENCE.format(userId, s))
+        //             .forEach(deleteKeys::add);
+        // }
+        // RedisMaps.delete(deleteKeys);
     }
 
     /**

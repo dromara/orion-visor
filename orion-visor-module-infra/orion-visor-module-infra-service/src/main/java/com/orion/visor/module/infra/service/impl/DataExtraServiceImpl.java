@@ -192,32 +192,56 @@ public class DataExtraServiceImpl implements DataExtraService {
 
     @Override
     public Integer deleteByUserId(Long userId) {
-        List<DataExtraDO> list = this.getCacheSelectWrapper()
-                .eq(DataExtraDO::getUserId, userId)
-                .then()
-                .list();
-        if (list.isEmpty()) {
-            return Const.N_0;
+        if (userId == null) {
+            return 0;
+        }
+        // 删除
+        return this.deleteByUserIdList(Lists.singleton(userId));
+    }
+
+    @Override
+    public Integer deleteByUserIdList(List<Long> userIdList) {
+        if (Lists.isEmpty(userIdList)) {
+            return 0;
         }
         // 删除数据
-        int effect = dataExtraDAO.deleteByUserId(userId);
-        // 删除缓存
-        this.deleteCache(list);
-        return effect;
+        return dataExtraDAO.deleteByUserIdList(userIdList);
+        // // 查询数据
+        // List<DataExtraDO> list = this.getCacheSelectWrapper()
+        //         .in(DataExtraDO::getUserId, userIdList)
+        //         .then()
+        //         .list();
+        // if (list.isEmpty()) {
+        //     return Const.N_0;
+        // }
+        // // 删除缓存 让其自动过期
+        // this.deleteCache(list);
     }
 
     @Override
     public Integer deleteByRelId(String type, Long relId) {
+        if (relId == null) {
+            return 0;
+        }
+        // 删除
+        return this.deleteByRelIdList(type, Lists.singleton(relId));
+    }
+
+    @Override
+    public Integer deleteByRelIdList(String type, List<Long> relIdList) {
+        if (Lists.isEmpty(relIdList)) {
+            return 0;
+        }
         List<DataExtraDO> list = this.getCacheSelectWrapper()
                 .eq(DataExtraDO::getType, type)
-                .eq(DataExtraDO::getRelId, relId)
+                .in(DataExtraDO::getRelId, relIdList)
                 .then()
                 .list();
         if (list.isEmpty()) {
             return Const.N_0;
         }
         // 删除数据
-        int effect = dataExtraDAO.deleteByRelId(type, relId);
+        int effect = dataExtraDAO.deleteByRelIdList(type, relIdList);
         // 删除缓存
         this.deleteCache(list);
         return effect;

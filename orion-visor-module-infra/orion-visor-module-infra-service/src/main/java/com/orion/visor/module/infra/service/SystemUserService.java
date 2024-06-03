@@ -71,12 +71,19 @@ public interface SystemUserService {
     Integer deleteSystemUserById(Long id);
 
     /**
-     * 删除 id 删除用户拓展信息
+     * 通过 id 批量删除用户
      *
-     * @param id       id
-     * @param username username
+     * @param idList idList
+     * @return effect
      */
-    void deleteSystemUserRelAsync(Long id, String username);
+    Integer deleteSystemUserByIdList(List<Long> idList);
+
+    /**
+     * 通过 idList 删除用户拓展信息
+     *
+     * @param idList idList
+     */
+    void deleteSystemUserListRelAsync(List<Long> idList);
 
     /**
      * 重置密码
