@@ -7,6 +7,7 @@ import com.orion.visor.framework.redis.configuration.config.RedissonConfig;
 import com.orion.visor.framework.redis.core.lock.RedisLocker;
 import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import org.redisson.api.RedissonClient;
+import org.redisson.config.SingleServerConfig;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -58,6 +59,9 @@ public class OrionRedisAutoConfiguration {
         return config -> {
             config.setThreads(redissonConfig.getThreads());
             config.setNettyThreads(redissonConfig.getNettyThreads());
+            // 单机配置
+            SingleServerConfig single = config.useSingleServer();
+            single.setConnectionMinimumIdleSize(redissonConfig.getMinimumIdleSize());
         };
     }
 

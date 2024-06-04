@@ -24,6 +24,7 @@ spring:
   redisson:
     threads: 4
     netty-threads: 4
+    minimum-idle-size: 4
   quartz:
     properties:
       org:

@@ -14,6 +14,7 @@ spring:
   redisson:
     threads: 2
     netty-threads: 2
+    minimum-idle-size: 2
 
 mybatis-plus:
   configuration:
