@@ -40,6 +40,16 @@ public enum TransferReceiverType {
     DOWNLOAD_FINISH("downloadFinish"),
 
     /**
+     * 开始下载
+     */
+    DOWNLOAD_START("downloadStart"),
+
+    /**
+     * 下载进度
+     */
+    DOWNLOAD_PROGRESS("downloadProgress"),
+
+    /**
      * 下载失败
      */
     DOWNLOAD_ERROR("downloadError"),

@@ -117,7 +117,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @return 是否存在
      */
     private boolean checkSession(WebSocketSession channel, TerminalCheckRequest payload) {
-        ITerminalSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        ITerminalSession session = hostTerminalManager.getSession(channel.getId(), payload.getSessionId());
         if (session != null) {
             this.sendCheckFailedMessage(channel, payload, ErrorMessage.SESSION_PRESENT);
             return true;

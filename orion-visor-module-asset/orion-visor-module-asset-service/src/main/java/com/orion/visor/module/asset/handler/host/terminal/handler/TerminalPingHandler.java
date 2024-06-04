@@ -26,7 +26,7 @@ public class TerminalPingHandler extends AbstractTerminalHandler<TerminalBasePay
         // 发送 pong
         this.send(channel, OutputTypeEnum.PONG.getType());
         // 活跃 terminal
-        Map<String, ITerminalSession> sessions = terminalManager.getSession(channel.getId());
+        Map<String, ITerminalSession> sessions = hostTerminalManager.getSession(channel.getId());
         if (!Maps.isEmpty(sessions)) {
             for (ITerminalSession session : sessions.values()) {
                 session.keepAlive();

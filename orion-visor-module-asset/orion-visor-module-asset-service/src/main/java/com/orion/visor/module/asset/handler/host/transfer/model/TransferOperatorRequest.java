@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Schema(name = "FileOperatorRequest", description = "文件操作请求 实体对象")
 public class TransferOperatorRequest {
 
-    @Schema(description = "上传路径")
+    @Schema(description = "文件路径")
     private String path;
 
     @Schema(description = "type")

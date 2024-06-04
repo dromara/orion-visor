@@ -19,6 +19,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
+    async:
+      # 异步请求时间 30min
+      request-timeout: 1800000
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver

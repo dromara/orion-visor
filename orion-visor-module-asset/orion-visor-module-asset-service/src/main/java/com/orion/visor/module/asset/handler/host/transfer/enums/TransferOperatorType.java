@@ -45,7 +45,7 @@ public enum TransferOperatorType {
 
     public static final String DOWNLOAD = "DOWNLOAD";
 
-    private final String operator;
+    private final String kind;
 
     private final String type;
 

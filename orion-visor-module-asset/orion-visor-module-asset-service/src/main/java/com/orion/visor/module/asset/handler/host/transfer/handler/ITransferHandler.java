@@ -2,6 +2,9 @@ package com.orion.visor.module.asset.handler.host.transfer.handler;
 
 import com.orion.lang.able.SafeCloseable;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
+import com.orion.visor.module.asset.handler.host.transfer.session.IDownloadSession;
+
+import java.util.Map;
 
 /**
  * 传输处理器定义
@@ -25,5 +28,12 @@ public interface ITransferHandler extends SafeCloseable {
      * @param content content
      */
     void putContent(byte[] content);
+
+    /**
+     * 获取 token sessions
+     *
+     * @return token sessions
+     */
+    Map<String, IDownloadSession> getTokenSessions();
 
 }

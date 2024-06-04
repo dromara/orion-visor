@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 终端管理器
+ * 主机终端管理器
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/1/3 11:35
  */
 @Component
-public class TerminalManager {
+public class HostTerminalManager {
 
     /**
      * 会话存储器
