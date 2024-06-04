@@ -60,7 +60,7 @@
   import CommandSnippetDrawer from '@/views/host/command-snippet/components/command-snippet-drawer.vue';
   import PathBookmarkDrawer from '@/views/host/path-bookmark/components/path-bookmark-drawer.vue';
   import '@/assets/style/host-terminal-layout.less';
-  import 'xterm/css/xterm.css';
+  import '@xterm/xterm/css/xterm.css';
 
   const terminalStore = useTerminalStore();
   const dictStore = useDictStore();

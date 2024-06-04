@@ -24,6 +24,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .fontFamily("_")
                 .fontSize(13)
                 .lineHeight(1.12)
+                .letterSpacing(1)
                 .fontWeight("normal")
                 .fontWeightBold("bold")
                 .cursorStyle("bar")
@@ -48,6 +49,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
         String defaultPluginsSetting = TerminalPreferenceModel.PluginsSettingModel.builder()
                 .enableWeblinkPlugin(true)
                 .enableWebglPlugin(true)
+                .enableUnicodePlugin(true)
                 .enableImagePlugin(false)
                 .build()
                 .toJsonString();

@@ -8,11 +8,12 @@ import { Message } from '@arco-design/web-vue';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';
 import { copy as copyText } from '@/hooks/copy';
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
-import { SearchAddon } from 'xterm-addon-search';
-import { WebLinksAddon } from 'xterm-addon-web-links';
-import { WebglAddon } from 'xterm-addon-webgl';
+import { Terminal } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
+import { SearchAddon } from '@xterm/addon-search';
+import { WebLinksAddon } from '@xterm/addon-web-links';
+import { WebglAddon } from '@xterm/addon-webgl';
+import { Unicode11Addon } from '@xterm/addon-unicode11';
 
 // 执行日志 appender 实现
 export default class LogAppender implements ILogAppender {
@@ -130,15 +131,19 @@ export default class LogAppender implements ILogAppender {
     const search = new SearchAddon();
     const webgl = new WebglAddon();
     const weblink = new WebLinksAddon();
+    const unicode = new Unicode11Addon();
     terminal.loadAddon(fit);
     terminal.loadAddon(search);
     terminal.loadAddon(webgl);
     terminal.loadAddon(weblink);
+    terminal.loadAddon(unicode);
+    terminal.unicode.activeVersion = '11';
     return {
       fit,
       search,
       webgl,
-      weblink
+      weblink,
+      unicode
     };
   }
 

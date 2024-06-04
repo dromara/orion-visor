@@ -40,6 +40,7 @@ export default class SftpTransferDownloader implements ISftpTransferDownloader {
   downloadFinish() {
     if (this.abort) {
       // 中断则不触发下载
+      this.blobArr = [];
       return;
     }
     try {

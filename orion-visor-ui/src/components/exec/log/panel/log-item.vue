@@ -176,7 +176,7 @@
   import { downloadExecJobLogFile } from '@/api/job/exec-job-log';
   import { downloadFile } from '@/utils/file';
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
-  import 'xterm/css/xterm.css';
+  import '@xterm/xterm/css/xterm.css';
 
   const props = defineProps<{
     type: ExecType;

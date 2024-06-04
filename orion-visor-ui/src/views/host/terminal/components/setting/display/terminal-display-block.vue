@@ -13,72 +13,86 @@
       <a-form class="terminal-setting-form"
               :model="formModel"
               layout="vertical">
-        <a-space>
+        <a-row :gutter="48">
           <!-- 字体样式 -->
-          <a-form-item field="fontFamily" label="字体样式">
-            <a-select v-model="formModel.fontFamily"
-                      class="form-item-font-family"
-                      placeholder="请选择字体样式"
-                      :options="toOptions(fontFamilyKey)"
-                      :allow-create="true"
-                      :filter-option="labelFilter">
-              <template #option="{ data }">
-                <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
-              </template>
-              <template #label="{ data }">
-                <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
-              </template>
-            </a-select>
-          </a-form-item>
+          <a-col :span="12">
+            <a-form-item field="fontFamily" label="字体样式">
+              <a-select v-model="formModel.fontFamily"
+                        placeholder="请选择字体样式"
+                        :options="toOptions(fontFamilyKey)"
+                        :allow-create="true"
+                        :filter-option="labelFilter">
+                <template #option="{ data }">
+                  <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
+                </template>
+                <template #label="{ data }">
+                  <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
+                </template>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <!-- 字体大小 -->
-          <a-form-item field="fontSize" label="字体大小">
-            <a-select v-model="formModel.fontSize"
-                      class="form-item-font-size"
-                      placeholder="请选择字体大小"
-                      :options="toOptions(fontSizeKey)" />
-          </a-form-item>
+          <a-col :span="12">
+            <a-form-item field="fontSize" label="字体大小">
+              <a-select v-model="formModel.fontSize"
+                        placeholder="请选择字体大小"
+                        :options="toOptions(fontSizeKey)" />
+            </a-form-item>
+          </a-col>
           <!-- 行高 -->
-          <a-form-item field="lineHeight" label="行高">
-            <a-input-number v-model="formModel.lineHeight"
-                            class="form-item-line-height"
-                            placeholder="请输入行高"
-                            :precision="2"
-                            :min="1"
-                            :max="2"
-                            hide-button />
-          </a-form-item>
-        </a-space>
-        <a-space>
+          <a-col :span="12">
+            <a-form-item field="lineHeight" label="行高">
+              <a-input-number v-model="formModel.lineHeight"
+                              placeholder="请输入行高"
+                              :precision="2"
+                              :step="0.05"
+                              :min="1"
+                              :max="2" />
+            </a-form-item>
+          </a-col>
+          <!-- 字间距 -->
+          <a-col :span="12">
+            <a-form-item field="lineHeight" label="字间距 (px)">
+              <a-input-number v-model="formModel.letterSpacing"
+                              placeholder="请输入字间距"
+                              :precision="0"
+                              :step="1"
+                              :min="-5"
+                              :max="5" />
+            </a-form-item>
+          </a-col>
           <!-- 普通文本字重 -->
-          <a-form-item field="fontWeight" label="普通文本字重">
-            <a-select v-model="formModel.fontWeight"
-                      class="form-item-font-weight"
-                      placeholder="请选择字重"
-                      :options="toOptions(fontWeightKey)" />
-          </a-form-item>
+          <a-col :span="12">
+            <a-form-item field="fontWeight" label="普通文本字重">
+              <a-select v-model="formModel.fontWeight"
+                        placeholder="请选择字重"
+                        :options="toOptions(fontWeightKey)" />
+            </a-form-item>
+          </a-col>
           <!-- 加粗文本字重 -->
-          <a-form-item field="fontWeightBold" label="加粗文本字重">
-            <a-select v-model="formModel.fontWeightBold"
-                      class="form-item-font-bold-weight"
-                      placeholder="请选择字重"
-                      :options="toOptions(fontWeightKey)" />
-          </a-form-item>
-        </a-space>
-        <a-space>
+          <a-col :span="12">
+            <a-form-item field="fontWeightBold" label="加粗文本字重">
+              <a-select v-model="formModel.fontWeightBold"
+                        placeholder="请选择字重"
+                        :options="toOptions(fontWeightKey)" />
+            </a-form-item>
+          </a-col>
           <!-- 光标样式 -->
-          <a-form-item field="cursorStyle" label="光标样式">
-            <a-radio-group type="button"
-                           v-model="formModel.cursorStyle"
-                           class="form-item-cursor-style usn"
-                           :options="toRadioOptions(cursorStyleKey)" />
-          </a-form-item>
+          <a-col :span="12">
+            <a-form-item field="cursorStyle" label="光标样式">
+              <a-radio-group type="button"
+                             v-model="formModel.cursorStyle"
+                             class="form-item-cursor-style usn"
+                             :options="toRadioOptions(cursorStyleKey)" />
+            </a-form-item>
+          </a-col>
           <!-- 光标闪烁 -->
-          <a-form-item field="cursorBlink" label="光标是否闪烁">
-            <a-switch v-model="formModel.cursorBlink"
-                      type="round"
-                      class="form-item-cursor-blink" />
-          </a-form-item>
-        </a-space>
+          <a-col :span="12">
+            <a-form-item field="cursorBlink" label="光标是否闪烁">
+              <a-switch v-model="formModel.cursorBlink" type="round" />
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
       <!-- 预览区域 -->
       <div class="terminal-example">
@@ -101,7 +115,7 @@
 
 <script lang="ts" setup>
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
+  import { ref, watch, onMounted } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../../types/terminal.const';
   import { labelFilter } from '@/types/form';
@@ -112,7 +126,7 @@
   const { preference, updateTerminalPreference } = useTerminalStore();
 
   const previewTerminal = ref();
-  const formModel = ref<TerminalDisplaySetting>({ ...preference.displaySetting });
+  const formModel = ref<TerminalDisplaySetting>({});
 
   // 监听内容变化
   watch(formModel, (v) => {
@@ -137,17 +151,24 @@
     previewTerminal.value.term.focus();
   }, { deep: true });
 
+  // 初始化配置
+  onMounted(() => {
+    formModel.value = { ...preference.displaySetting };
+  });
+
 </script>
 
 <style lang="less" scoped>
   @terminal-width: 458px;
 
   .setting-body {
-    height: 248px;
+    height: 326px;
     justify-content: space-between;
   }
 
   :deep(.arco-form) {
+    width: 412px;
+
     .arco-form-item-label {
       user-select: none;
     }
@@ -156,31 +177,10 @@
       margin-bottom: 14px;
     }
 
-    .form-item-font-family {
-      width: 158px;
-    }
-
-    .form-item-font-size {
-      width: 148px;
-    }
-
-    .form-item-line-height {
-      width: 114px;
-    }
-
-    .form-item-font-weight, .form-item-font-bold-weight {
-      width: 178px;
-    }
-
-    .form-item-font-weight {
-      margin-right: 70px;
-    }
-
     .form-item-cursor-style {
-      margin-right: 90px;
 
       .arco-radio-button-content {
-        padding: 0 20px;
+        padding: 0 24px;
       }
     }
   }
