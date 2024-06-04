@@ -63,13 +63,14 @@ public class HostSftpLogController {
 
     @PermitAll
     @IgnoreWrapper
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/download")
     @Operation(summary = "下载文件")
     @Parameter(name = "channelId", description = "channelId", required = true)
     @Parameter(name = "transferToken", description = "transferToken", required = true)
-    public StreamingResponseBody downloadFile(@RequestParam("channelId") String channelId,
-                                              @RequestParam("transferToken") String transferToken,
-                                              HttpServletResponse response) {
+    public StreamingResponseBody downloadWithTransferToken(@RequestParam("channelId") String channelId,
+                                                           @RequestParam("transferToken") String transferToken,
+                                                           HttpServletResponse response) {
         return hostSftpService.downloadWithTransferToken(channelId, transferToken, response);
     }
 

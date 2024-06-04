@@ -1,5 +1,6 @@
 package com.orion.visor.module.asset.handler.host.transfer.session;
 
+import com.orion.lang.define.wrapper.Ref;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Streams;
@@ -12,11 +13,13 @@ import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 下载会话实现
@@ -28,6 +31,9 @@ import java.io.InputStream;
 @Slf4j
 public class DownloadSession extends TransferHostSession implements IDownloadSession {
 
+    @Getter
+    private String path;
+
     private InputStream inputStream;
 
     public DownloadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
@@ -35,7 +41,8 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
     }
 
     @Override
-    public void startDownload(String path) {
+    public void downloadInit(String path, String token) {
+        this.path = path;
         String channelId = channel.getId();
         try {
             log.info("DownloadSession.startDownload open start channelId: {}, path: {}", channelId, path);
@@ -54,39 +61,17 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
             }
             // 打开输入流
             this.inputStream = executor.openInputStream(path);
+            // 响应开始下载
+            TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_START, null, e -> {
+                e.setChannelId(channelId);
+                e.setTransferToken(token);
+            });
             log.info("DownloadSession.startDownload open success channelId: {}, path: {}", channelId, path);
         } catch (Exception e) {
             log.error("DownloadSession.startDownload open error channelId: {}, path: {}", channelId, path, e);
-            // 响应结果
+            // 响应下载失败
             TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, e);
-            return;
         }
-        // 异步读取文件内容
-        AssetThreadPools.TERMINAL_OPERATOR.execute(() -> {
-            Exception ex = null;
-            try {
-                byte[] buffer = new byte[Const.BUFFER_KB_32];
-                int len;
-                // 响应文件内容
-                while (this.inputStream != null && (len = this.inputStream.read(buffer)) != -1) {
-                    this.channel.sendMessage(new BinaryMessage(buffer, 0, len, true));
-                }
-                log.info("DownloadSession.download finish channelId: {}, path: {}", channelId, path);
-            } catch (Exception e) {
-                log.error("DownloadSession.download error channelId: {}, path: {}", channelId, path, e);
-                ex = e;
-            }
-            // 关闭等待 jsch 内部处理
-            Threads.sleep(100);
-            this.closeStream();
-            Threads.sleep(100);
-            // 响应结果
-            if (ex == null) {
-                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_FINISH, null);
-            } else {
-                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, ex);
-            }
-        });
     }
 
     @Override
@@ -97,8 +82,71 @@ public class DownloadSession extends TransferHostSession implements IDownloadSes
     }
 
     @Override
+    public void writeTo(OutputStream outputStream) {
+        String channelId = channel.getId();
+        Ref<Exception> ex = new Ref<>();
+        try {
+            byte[] buffer = new byte[Const.BUFFER_KB_32];
+            int len;
+            int i = 0;
+            int size = 0;
+            // 响应文件内容
+            while (this.inputStream != null && (len = this.inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, len);
+                size += len;
+                // 不要每次都 flush 和 send > 1mb
+                if (i == 32) {
+                    i = 0;
+                }
+                // 首次触发
+                if (i == 0) {
+                    this.flushAndSendProgress(outputStream, size);
+                }
+                i++;
+            }
+            // 最后一次也要 flush
+            if (i != 0) {
+                this.flushAndSendProgress(outputStream, size);
+            }
+            log.info("DownloadSession.download finish channelId: {}, path: {}", channelId, path);
+        } catch (Exception e) {
+            log.error("DownloadSession.download error channelId: {}, path: {}", channelId, path, e);
+            ex.set(e);
+        }
+        // 异步关闭
+        AssetThreadPools.TERMINAL_OPERATOR.execute(() -> {
+            // 关闭等待 jsch 内部处理
+            Threads.sleep(100);
+            this.closeStream();
+            Threads.sleep(100);
+            // 响应结果
+            Exception e = ex.getValue();
+            if (e == null) {
+                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_FINISH, null);
+            } else {
+                TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_ERROR, e);
+            }
+        });
+    }
+
+    /**
+     * 刷流 & 发送进度
+     *
+     * @param outputStream outputStream
+     * @param size         size
+     * @throws IOException IOException
+     */
+    private void flushAndSendProgress(OutputStream outputStream, int size) throws IOException {
+        // flush
+        outputStream.flush();
+        // send
+        TransferUtils.sendMessage(this.channel, TransferReceiverType.DOWNLOAD_PROGRESS, null, e -> e.setCurrentSize(size));
+    }
+
+    @Override
     protected void closeStream() {
         // 关闭 inputStream 可能会被阻塞 ???...??? 只能关闭 executor
+        this.path = null;
         Streams.close(this.executor);
         this.executor = null;
         this.inputStream = null;

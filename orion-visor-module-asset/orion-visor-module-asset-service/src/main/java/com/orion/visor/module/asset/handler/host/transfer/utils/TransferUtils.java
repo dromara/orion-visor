@@ -6,6 +6,7 @@ import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiverType;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorResponse;
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.function.Consumer;
@@ -62,9 +63,10 @@ public class TransferUtils {
     public static String getErrorMessage(Exception ex) {
         if (ex == null) {
             return null;
-        }
-        if (ex instanceof InvalidArgumentException) {
+        } else if (ex instanceof InvalidArgumentException) {
             return ex.getMessage();
+        } else if (ex instanceof ClientAbortException) {
+            return ErrorMessage.CLIENT_ABORT;
         }
         return ErrorMessage.OPERATE_ERROR;
     }

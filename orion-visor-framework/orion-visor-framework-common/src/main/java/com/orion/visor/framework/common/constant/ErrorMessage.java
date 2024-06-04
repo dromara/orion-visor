@@ -97,4 +97,6 @@ public interface ErrorMessage {
 
     String PLEASE_CHECK_HOST_SSH = "请检查主机 {} 是否存在/权限/SSH配置";
 
+    String CLIENT_ABORT = "手动中断";
+
 }

@@ -12,12 +12,12 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 public interface IDownloadSession extends StreamingResponseBody {
 
     /**
-     * 开始下载
+     * 初始化下载
      *
      * @param path  path
      * @param token token
      */
-    void startDownload(String path, String token);
+    void downloadInit(String path, String token);
 
     /**
      * 停止下载

@@ -432,10 +432,8 @@ export interface ISftpTransferUploader {
 export interface ISftpTransferDownloader {
   // 是否中断
   abort: boolean;
-  // 开始下载
-  startDownload: () => void;
-  // 接收 blob
-  resolveBlob: (blob: Blob) => void;
+  // 初始化下载
+  initDownload: () => void;
   // 下载完成
   downloadFinish: () => void;
   // 下载失败
@@ -461,8 +459,11 @@ export interface SftpTransferItem {
 
 // 传输操作响应
 export interface TransferOperatorResponse {
+  channelId?: string;
   type: string;
   hostId?: number;
+  currentSize?: number;
+  transferToken?: string;
   success: boolean;
   msg?: string;
 }

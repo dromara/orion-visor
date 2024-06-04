@@ -336,7 +336,7 @@ export const TransferOperatorType = {
   UPLOAD_START: 'uploadStart',
   UPLOAD_FINISH: 'uploadFinish',
   UPLOAD_ERROR: 'uploadError',
-  DOWNLOAD_START: 'downloadStart',
+  DOWNLOAD_INIT: 'downloadInit',
   DOWNLOAD_ABORT: 'downloadAbort',
 };
 
@@ -346,6 +346,8 @@ export const TransferReceiverType = {
   UPLOAD_NEXT_BLOCK: 'uploadNextBlock',
   UPLOAD_FINISH: 'uploadFinish',
   UPLOAD_ERROR: 'uploadError',
+  DOWNLOAD_START: 'downloadStart',
+  DOWNLOAD_PROGRESS: 'downloadProgress',
   DOWNLOAD_FINISH: 'downloadFinish',
   DOWNLOAD_ERROR: 'downloadError',
 };

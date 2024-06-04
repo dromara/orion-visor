@@ -30,9 +30,9 @@ public enum TransferOperatorType {
     UPLOAD_ERROR(TransferOperatorType.UPLOAD, "uploadError"),
 
     /**
-     * 开始下载
+     * 初始化下载
      */
-    DOWNLOAD_START(TransferOperatorType.DOWNLOAD, "downloadStart"),
+    DOWNLOAD_INIT(TransferOperatorType.DOWNLOAD, "downloadInit"),
 
     /**
      * 中断下载

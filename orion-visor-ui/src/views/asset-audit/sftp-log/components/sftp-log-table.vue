@@ -172,9 +172,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostSftpLogQueryRequest, HostSftpLogQueryResponse } from '@/api/asset/host-sftp-log';
+  import type { HostSftpLogQueryRequest, HostSftpLogQueryResponse } from '@/api/asset/host-sftp';
   import { reactive, ref, onMounted } from 'vue';
-  import { getHostSftpLogPage, deleteHostSftpLog } from '@/api/asset/host-sftp-log';
+  import { getHostSftpLogPage, deleteHostSftpLog } from '@/api/asset/host-sftp';
   import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType } from '../types/const';
   import { usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
