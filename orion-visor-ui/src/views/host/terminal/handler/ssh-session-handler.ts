@@ -1,6 +1,6 @@
 import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
 import type { ISshSession, ISshSessionHandler, XtermDomRef } from '../types/terminal.type';
-import type { Terminal } from 'xterm';
+import type { Terminal } from '@xterm/xterm';
 import useCopy from '@/hooks/copy';
 import html2canvas from 'html2canvas';
 import { useTerminalStore, useUserStore } from '@/store';
