@@ -126,8 +126,9 @@
       onOk: async () => {
         setLoading(true);
         try {
-          // 调用删除
-          await clearExecJobLog(formModel.value);
+          // 调用清空
+          const { data } = await clearExecJobLog(formModel.value);
+          Message.success(`已成功清空 ${data} 条数据`);
           emits('clear');
           // 清空
           setVisible(false);
