@@ -72,7 +72,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             // 连接主机
             ITerminalSession session = this.connect(sessionId, connect, channel, payload);
             // 添加会话到 manager
-            terminalManager.addSession(session);
+            hostTerminalManager.addSession(session);
         } catch (Exception e) {
             ex = e;
             // 修改连接状态为失败

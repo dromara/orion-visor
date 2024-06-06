@@ -20,6 +20,9 @@ import lombok.NoArgsConstructor;
 @Schema(name = "FileOperatorResponse", description = "文件操作响应 实体对象")
 public class TransferOperatorResponse {
 
+    @Schema(description = "channelId")
+    private String channelId;
+
     @Schema(description = "type")
     private String type;
 
@@ -28,6 +31,12 @@ public class TransferOperatorResponse {
 
     @Schema(description = "是否成功")
     private Boolean success;
+
+    @Schema(description = "传输的大小")
+    private Integer currentSize;
+
+    @Schema(description = "transferToken")
+    private String transferToken;
 
     @Schema(description = "消息")
     private String msg;

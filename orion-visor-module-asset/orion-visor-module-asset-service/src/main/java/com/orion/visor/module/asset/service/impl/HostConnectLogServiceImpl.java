@@ -19,7 +19,7 @@ import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryReque
 import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
 import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
 import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.manager.TerminalManager;
+import com.orion.visor.module.asset.handler.host.terminal.manager.HostTerminalManager;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.service.HostConnectLogService;
@@ -49,7 +49,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     private HostConnectLogDAO hostConnectLogDAO;
 
     @Resource
-    private TerminalManager terminalManager;
+    private HostTerminalManager hostTerminalManager;
 
     @Override
     public Long create(HostConnectTypeEnum type, HostConnectLogCreateRequest request) {
@@ -84,7 +84,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     @Override
     public List<HostConnectLogVO> getHostConnectSessions(HostConnectLogQueryRequest request) {
         // 查询全部
-        List<Long> idList = terminalManager.getChannelSessions()
+        List<Long> idList = hostTerminalManager.getChannelSessions()
                 .values()
                 .stream()
                 .map(ConcurrentHashMap::values)
@@ -204,7 +204,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
         OperatorLogs.add(OperatorLogs.HOST_NAME, record.getHostName());
         // 获取会话
         HostConnectLogExtraDTO extra = JSON.parseObject(record.getExtraInfo(), HostConnectLogExtraDTO.class);
-        ITerminalSession session = terminalManager.getSession(extra.getChannelId(), extra.getSessionId());
+        ITerminalSession session = hostTerminalManager.getSession(extra.getChannelId(), extra.getSessionId());
         if (session != null) {
             // 关闭会话
             session.forceOffline();

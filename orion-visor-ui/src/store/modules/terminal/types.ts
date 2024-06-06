@@ -29,6 +29,7 @@ export interface TerminalDisplaySetting {
   fontFamily?: string;
   fontSize?: number;
   lineHeight?: number;
+  letterSpacing?: number;
   fontWeight?: string | number;
   fontWeightBold?: string | number;
   cursorStyle?: string;
@@ -61,6 +62,7 @@ export interface TerminalInteractSetting {
 export interface TerminalPluginsSetting {
   enableWeblinkPlugin: boolean;
   enableWebglPlugin: boolean;
+  enableUnicodePlugin: boolean;
   enableImagePlugin: boolean;
 }
 

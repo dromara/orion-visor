@@ -58,7 +58,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISearchOptions } from 'xterm-addon-search';
+  import type { ISearchOptions } from '@xterm/addon-search';
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
 

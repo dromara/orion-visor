@@ -20,7 +20,7 @@ public class SshInputHandler extends AbstractTerminalHandler<SshInputRequest> {
     @Override
     public void handle(WebSocketSession channel, SshInputRequest payload) {
         // 获取会话
-        ISshSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
+        ISshSession session = hostTerminalManager.getSession(channel.getId(), payload.getSessionId());
         // 处理输入
         session.write(payload.getCommand());
     }

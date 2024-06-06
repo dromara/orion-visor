@@ -1,10 +1,11 @@
-import type { Terminal } from 'xterm';
-import type { FitAddon } from 'xterm-addon-fit';
-import type { CanvasAddon } from 'xterm-addon-canvas';
-import type { WebglAddon } from 'xterm-addon-webgl';
-import type { WebLinksAddon } from 'xterm-addon-web-links';
-import type { ISearchOptions, SearchAddon } from 'xterm-addon-search';
-import type { ImageAddon } from 'xterm-addon-image';
+import type { Terminal } from '@xterm/xterm';
+import type { FitAddon } from '@xterm/addon-fit';
+import type { CanvasAddon } from '@xterm/addon-canvas';
+import type { WebglAddon } from '@xterm/addon-webgl';
+import type { WebLinksAddon } from '@xterm/addon-web-links';
+import type { ISearchOptions, SearchAddon } from '@xterm/addon-search';
+import type { ImageAddon } from '@xterm/addon-image';
+import type { Unicode11Addon } from '@xterm/addon-unicode11';
 import type { CSSProperties } from 'vue';
 import type { HostQueryResponse } from '@/api/asset/host';
 
@@ -225,6 +226,7 @@ export interface XtermAddons {
   weblink: WebLinksAddon;
   search: SearchAddon;
   image: ImageAddon;
+  unicode: Unicode11Addon;
 }
 
 // 终端会话定义
@@ -430,10 +432,8 @@ export interface ISftpTransferUploader {
 export interface ISftpTransferDownloader {
   // 是否中断
   abort: boolean;
-  // 开始下载
-  startDownload: () => void;
-  // 接收 blob
-  resolveBlob: (blob: Blob) => void;
+  // 初始化下载
+  initDownload: () => void;
   // 下载完成
   downloadFinish: () => void;
   // 下载失败
@@ -459,8 +459,11 @@ export interface SftpTransferItem {
 
 // 传输操作响应
 export interface TransferOperatorResponse {
+  channelId?: string;
   type: string;
   hostId?: number;
+  currentSize?: number;
+  transferToken?: string;
   success: boolean;
   msg?: string;
 }

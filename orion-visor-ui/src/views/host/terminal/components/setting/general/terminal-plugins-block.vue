@@ -21,6 +21,11 @@
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- unicode11 插件 -->
+        <block-setting-item label="unicode11 插件" desc="支持 Unicode 11 字符集">
+          <a-switch type="round"
+                    v-model="formModel.enableUnicodePlugin" />
+        </block-setting-item>
         <!-- 图片渲染插件 -->
         <block-setting-item label="图片渲染插件" desc="支持使用 sixel 打开图片 (一般不需要开启)">
           <a-switch type="round"

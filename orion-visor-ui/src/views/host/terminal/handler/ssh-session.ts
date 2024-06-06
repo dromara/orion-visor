@@ -1,16 +1,18 @@
 import type { UnwrapRef } from 'vue';
+import type { ISearchOptions } from '@xterm/addon-search';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
 import type { ISshSession, ISshSessionHandler, ITerminalChannel, XtermAddons, XtermDomRef } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '../types/terminal.protocol';
 import { fontFamilySuffix, TerminalShortcutType, TerminalStatus } from '../types/terminal.const';
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
-import { WebLinksAddon } from 'xterm-addon-web-links';
-import { ISearchOptions, SearchAddon } from 'xterm-addon-search';
-import { ImageAddon } from 'xterm-addon-image';
-import { CanvasAddon } from 'xterm-addon-canvas';
-import { WebglAddon } from 'xterm-addon-webgl';
+import { Terminal } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
+import { SearchAddon } from '@xterm/addon-search';
+import { WebLinksAddon } from '@xterm/addon-web-links';
+import { ImageAddon } from '@xterm/addon-image';
+import { Unicode11Addon } from '@xterm/addon-unicode11';
+import { CanvasAddon } from '@xterm/addon-canvas';
+import { WebglAddon } from '@xterm/addon-webgl';
 import { playBell } from '@/utils/bell';
 import { addEventListen } from '@/utils/event';
 import SshSessionHandler from './ssh-session-handler';
@@ -63,9 +65,10 @@ export default class SshSession implements ISshSession {
       fastScrollModifier: !!preference.interactSetting.fastScrollModifier ? 'alt' : 'none',
       altClickMovesCursor: !!preference.interactSetting.altClickMovesCursor,
       rightClickSelectsWord: !!preference.interactSetting.rightClickSelectsWord,
-      fontFamily: preference.displaySetting.fontFamily + fontFamilySuffix,
       wordSeparator: preference.interactSetting.wordSeparator,
+      fontFamily: preference.displaySetting.fontFamily + fontFamilySuffix,
       scrollback: preference.sessionSetting.scrollBackLine,
+      allowProposedApi: true,
     });
     // 处理器
     this.handler = new SshSessionHandler(this, domRef);
@@ -192,11 +195,19 @@ export default class SshSession implements ISshSession {
     if (preference.pluginsSetting.enableImagePlugin) {
       this.addons.image = new ImageAddon();
     }
+    // unicode11 插件
+    if (preference.pluginsSetting.enableUnicodePlugin) {
+      this.addons.unicode = new Unicode11Addon();
+    }
     // 加载插件
     for (const addon of Object.values(this.addons)) {
       if (addon) {
         this.inst.loadAddon(addon);
       }
+    }
+    // 设置 unicode11 版本
+    if (this.addons.unicode) {
+      this.inst.unicode.activeVersion = '11';
     }
   }
 

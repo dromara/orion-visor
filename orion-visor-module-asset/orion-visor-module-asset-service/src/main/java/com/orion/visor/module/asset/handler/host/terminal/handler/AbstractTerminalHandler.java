@@ -7,7 +7,7 @@ import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.manager.TerminalManager;
+import com.orion.visor.module.asset.handler.host.terminal.manager.HostTerminalManager;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
@@ -27,7 +27,7 @@ import java.util.Map;
 public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> implements ITerminalHandler<T> {
 
     @Resource
-    protected TerminalManager terminalManager;
+    protected HostTerminalManager hostTerminalManager;
 
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
@@ -75,7 +75,7 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
         String channelId = channel.getId();
         String sessionId = payload.getSessionId();
         // 获取会话并且设置参数
-        ITerminalSession session = terminalManager.getSession(channelId, sessionId);
+        ITerminalSession session = hostTerminalManager.getSession(channelId, sessionId);
         if (session != null) {
             TerminalConfig config = session.getConfig();
             extra.put(OperatorLogs.HOST_ID, config.getHostId());

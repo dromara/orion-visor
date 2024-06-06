@@ -30,7 +30,7 @@ public class SftpMoveHandler extends AbstractTerminalHandler<SftpMoveRequest> {
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         String target = payload.getTarget();
         log.info("SftpMoveHandler-handle start sessionId: {}, path: {}, target: {}", sessionId, path, target);

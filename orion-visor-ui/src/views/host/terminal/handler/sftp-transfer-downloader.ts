@@ -8,32 +8,24 @@ export default class SftpTransferDownloader implements ISftpTransferDownloader {
 
   public abort: boolean;
 
-  private blobArr: Array<Blob>;
   private client: WebSocket;
   private item: SftpTransferItem;
 
   constructor(item: SftpTransferItem, client: WebSocket) {
     this.abort = false;
-    this.blobArr = [];
     this.item = item;
     this.client = client;
   }
 
   // 开始下载
-  startDownload() {
+  initDownload() {
     this.item.status = TransferStatus.TRANSFERRING;
     // 发送开始下载信息
     this.client?.send(JSON.stringify({
-      type: TransferOperatorType.DOWNLOAD_START,
+      type: TransferOperatorType.DOWNLOAD_INIT,
       path: getPath(this.item.parentPath + '/' + this.item.name),
       hostId: this.item.hostId
     }));
-  }
-
-  // 接收 blob
-  resolveBlob(blob: Blob) {
-    this.blobArr.push(blob);
-    this.item.currentSize += blob.size;
   }
 
   // 下载完成
@@ -42,23 +34,27 @@ export default class SftpTransferDownloader implements ISftpTransferDownloader {
       // 中断则不触发下载
       return;
     }
-    try {
-      // 触发下载
-      saveAs(new Blob(this.blobArr, {
-        type: 'application/octet-stream'
-      }), getFileName(this.item.name));
+    // 设置实际大小
+    this.item.currentSize = this.item.totalSize;
+    if (this.item.totalSize === 0) {
+      // 空文件直接触发下载
+      try {
+        // 触发下载
+        saveAs(new Blob([], {
+          type: 'application/octet-stream'
+        }), getFileName(this.item.name));
+        this.item.status = TransferStatus.SUCCESS;
+      } catch (e) {
+        this.item.status = TransferStatus.ERROR;
+        this.item.errorMessage = '保存失败';
+      }
+    } else {
       this.item.status = TransferStatus.SUCCESS;
-    } catch (e) {
-      this.item.status = TransferStatus.ERROR;
-      this.item.errorMessage = '保存失败';
-    } finally {
-      this.blobArr = [];
     }
   }
 
   // 下载失败
   downloadError(msg: string | undefined) {
-    this.blobArr = [];
     this.item.status = TransferStatus.ERROR;
     this.item.errorMessage = msg || '下载失败';
   }

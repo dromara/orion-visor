@@ -65,6 +65,9 @@ public class TerminalPreferenceModel implements PreferenceModel {
         @Schema(description = "行高")
         private Double lineHeight;
 
+        @Schema(description = "字间距")
+        private Integer letterSpacing;
+
         @Schema(description = "文本字重")
         private String fontWeight;
 
@@ -128,6 +131,9 @@ public class TerminalPreferenceModel implements PreferenceModel {
 
         @Schema(description = "WebGL 渲染插件")
         private Boolean enableWebglPlugin;
+
+        @Schema(description = "unicode11 插件")
+        private Boolean enableUnicodePlugin;
 
         @Schema(description = "图片渲染插件")
         private Boolean enableImagePlugin;

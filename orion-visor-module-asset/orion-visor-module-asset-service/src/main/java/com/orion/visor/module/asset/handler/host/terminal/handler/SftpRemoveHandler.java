@@ -31,7 +31,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
         String[] paths = payload.getPath().split("\\|");
         log.info("SftpRemoveHandler-handle start sessionId: {}, path: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;

@@ -24,9 +24,15 @@ public class RedissonConfig {
      */
     private Integer nettyThreads;
 
+    /**
+     * 最小空闲连接数
+     */
+    private Integer minimumIdleSize;
+
     public RedissonConfig() {
         this.threads = 16;
         this.nettyThreads = 16;
+        this.minimumIdleSize = 16;
     }
 
 }

@@ -139,8 +139,9 @@
       onOk: async () => {
         setLoading(true);
         try {
-          // 调用删除
-          await clearHostConnectLog(formModel.value);
+          // 调用清空
+          const { data } = await clearHostConnectLog(formModel.value);
+          Message.success(`已成功清空 ${data} 条数据`);
           emits('clear');
           // 清空
           setVisible(false);

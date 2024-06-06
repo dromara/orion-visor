@@ -30,7 +30,7 @@ public class SftpSetContentHandler extends AbstractTerminalHandler<SftpSetConten
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         log.info("SftpSetContentHandler-handle start sessionId: {}, path: {}", sessionId, path);
         Exception ex = null;

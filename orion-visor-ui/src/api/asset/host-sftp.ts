@@ -1,5 +1,6 @@
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import { httpBaseUrl } from '@/utils/env';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -46,17 +47,25 @@ export interface HostSftpLogExtra {
  * 分页查询 SFTP 操作日志
  */
 export function getHostSftpLogPage(request: HostSftpLogQueryRequest) {
-  return axios.post<DataGrid<HostSftpLogQueryResponse>>('/asset/host-sftp-log/query', request);
+  return axios.post<DataGrid<HostSftpLogQueryResponse>>('/asset/host-sftp/query-log', request);
 }
 
 /**
  * 删除 SFTP 操作日志
  */
 export function deleteHostSftpLog(idList: Array<number>) {
-  return axios.delete('/asset/host-sftp-log/delete', {
+  return axios.delete('/asset/host-sftp/delete-log', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }
   });
 }
+
+/**
+ * 下载文件
+ */
+export function downloadWithTransferToken(channelId: string, transferToken: string) {
+  window.open(`${httpBaseUrl}/asset/host-sftp/download?channelId=${channelId}&transferToken=${transferToken}`, 'newWindow');
+}
+

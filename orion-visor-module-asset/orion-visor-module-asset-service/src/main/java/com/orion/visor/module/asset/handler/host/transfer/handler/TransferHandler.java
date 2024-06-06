@@ -1,5 +1,6 @@
 package com.orion.visor.module.asset.handler.host.transfer.handler;
 
+import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
@@ -14,6 +15,7 @@ import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperator
 import com.orion.visor.module.asset.handler.host.transfer.session.*;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
 import com.orion.visor.module.asset.service.HostTerminalService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -45,10 +47,14 @@ public class TransferHandler implements ITransferHandler {
      */
     private final ConcurrentHashMap<String, ITransferHostSession> sessions;
 
+    @Getter
+    private final ConcurrentHashMap<String, IDownloadSession> tokenSessions;
+
     public TransferHandler(WebSocketSession channel) {
         this.channel = channel;
         this.userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
         this.sessions = new ConcurrentHashMap<>();
+        this.tokenSessions = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -73,9 +79,11 @@ public class TransferHandler implements ITransferHandler {
                 // 上传失败
                 ((IUploadSession) currentSession).uploadError();
                 break;
-            case DOWNLOAD_START:
+            case DOWNLOAD_INIT:
                 // 开始下载
-                ((IDownloadSession) currentSession).startDownload(payload.getPath());
+                String token = UUIds.random32();
+                tokenSessions.put(token, (IDownloadSession) currentSession);
+                ((IDownloadSession) currentSession).downloadInit(payload.getPath(), token);
                 break;
             case DOWNLOAD_ABORT:
                 // 中断下载
@@ -100,7 +108,7 @@ public class TransferHandler implements ITransferHandler {
      */
     private boolean getAndInitSession(TransferOperatorRequest payload, TransferOperatorType type) {
         Long hostId = payload.getHostId();
-        String sessionKey = hostId + "_" + type.getOperator();
+        String sessionKey = hostId + "_" + type.getKind();
         try {
             // 获取会话
             ITransferHostSession session = sessions.get(sessionKey);
@@ -109,10 +117,10 @@ public class TransferHandler implements ITransferHandler {
                 HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(this.userId, hostId);
                 SessionStore sessionStore = hostTerminalService.openSessionStore(connectInfo);
                 // 打开会话并初始化
-                if (TransferOperatorType.UPLOAD.equals(type.getOperator())) {
+                if (TransferOperatorType.UPLOAD.equals(type.getKind())) {
                     // 上传操作
                     session = new UploadSession(connectInfo, sessionStore, this.channel);
-                } else if (TransferOperatorType.DOWNLOAD.equals(type.getOperator())) {
+                } else if (TransferOperatorType.DOWNLOAD.equals(type.getKind())) {
                     // 下载操作
                     session = new DownloadSession(connectInfo, sessionStore, this.channel);
                 } else {
@@ -136,6 +144,7 @@ public class TransferHandler implements ITransferHandler {
     public void close() {
         log.info("TransferHandler.close channelId: {}", channel.getId());
         sessions.values().forEach(Streams::close);
+        tokenSessions.clear();
     }
 
 }

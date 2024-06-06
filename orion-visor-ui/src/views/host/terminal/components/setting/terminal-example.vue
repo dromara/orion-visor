@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
   import type { TerminalThemeSchema } from '@/api/asset/host-terminal';
-  import { Terminal } from 'xterm';
+  import { Terminal } from '@xterm/xterm';
   import { onMounted, onUnmounted, ref } from 'vue';
 
   const props = defineProps<{

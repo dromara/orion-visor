@@ -4,6 +4,7 @@ import { TransferReceiverType, TransferStatus, TransferType } from '../types/ter
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken, openHostTransferChannel } from '@/api/asset/host-terminal';
 import { nextId } from '@/utils';
+import { downloadWithTransferToken } from '@/api/asset/host-sftp';
 import SftpTransferUploader from './sftp-transfer-uploader';
 import SftpTransferDownloader from './sftp-transfer-downloader';
 
@@ -144,7 +145,9 @@ export default class SftpTransferManager implements ISftpTransferManager {
   // 计算传输进度
   private calcProgress() {
     this.transferList.forEach(item => {
-      item.progress = (item.currentSize / item.totalSize * 100).toFixed(2);
+      if (item.totalSize != 0) {
+        item.progress = (item.currentSize / item.totalSize * 100).toFixed(2);
+      }
     });
   }
 
@@ -165,7 +168,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
         this.uploadFile();
       } else {
         // 下载
-        this.uploadDownload();
+        this.downloadFile();
       }
     } else {
       // 无任务关闭会话
@@ -175,27 +178,28 @@ export default class SftpTransferManager implements ISftpTransferManager {
 
   // 接收消息
   private async resolveMessage(message: MessageEvent) {
-    if (message.data instanceof Blob) {
-      // 二进制消息 下载数据
-      this.resolveDownloadBlob(message.data);
-    } else {
-      // 文本消息
-      const data = JSON.parse(message.data) as TransferOperatorResponse;
-      if (data.type === TransferReceiverType.NEXT_TRANSFER
-        || data.type === TransferReceiverType.UPLOAD_FINISH
-        || data.type === TransferReceiverType.UPLOAD_ERROR) {
-        // 执行下一个传输任务
-        this.resolveNextTransfer(data);
-      } else if (data.type === TransferReceiverType.UPLOAD_NEXT_BLOCK) {
-        // 接收下一块上传数据
-        await this.resolveUploadNextBlock();
-      } else if (data.type === TransferReceiverType.DOWNLOAD_FINISH) {
-        // 下载完成
-        this.resolveDownloadFinish();
-      } else if (data.type === TransferReceiverType.DOWNLOAD_ERROR) {
-        // 下载失败
-        this.resolveDownloadError(data.msg);
-      }
+    // 文本消息
+    const data = JSON.parse(message.data) as TransferOperatorResponse;
+    if (data.type === TransferReceiverType.NEXT_TRANSFER
+      || data.type === TransferReceiverType.UPLOAD_FINISH
+      || data.type === TransferReceiverType.UPLOAD_ERROR) {
+      // 执行下一个传输任务
+      this.resolveNextTransfer(data);
+    } else if (data.type === TransferReceiverType.UPLOAD_NEXT_BLOCK) {
+      // 接收下一块上传数据
+      await this.resolveUploadNextBlock();
+    } else if (data.type === TransferReceiverType.DOWNLOAD_START) {
+      // 开始下载
+      this.resolveDownloadStart(data);
+    } else if (data.type === TransferReceiverType.DOWNLOAD_PROGRESS) {
+      // 下载进度
+      this.resolveDownloadProgress(data);
+    } else if (data.type === TransferReceiverType.DOWNLOAD_FINISH) {
+      // 下载完成
+      this.resolveDownloadFinish();
+    } else if (data.type === TransferReceiverType.DOWNLOAD_ERROR) {
+      // 下载失败
+      this.resolveDownloadError(data.msg);
     }
   }
 
@@ -208,11 +212,11 @@ export default class SftpTransferManager implements ISftpTransferManager {
   }
 
   // 下载文件
-  private uploadDownload() {
+  private downloadFile() {
     // 创建下载器
     this.currentDownloader = new SftpTransferDownloader(this.currentItem as SftpTransferItem, this.client as WebSocket);
-    // 开始下载
-    this.currentDownloader.startDownload();
+    // 初始化下载
+    this.currentDownloader.initDownload();
   }
 
   // 接收下一个传输任务响应
@@ -251,9 +255,16 @@ export default class SftpTransferManager implements ISftpTransferManager {
     }
   }
 
-  // 接收下载数据
-  private resolveDownloadBlob(blob: Blob) {
-    this.currentDownloader?.resolveBlob(blob);
+  // 接收开始下载响应
+  private resolveDownloadStart(data: TransferOperatorResponse) {
+    downloadWithTransferToken(data.channelId as string, data.transferToken as string);
+  }
+
+  // 接收下载进度响应
+  private resolveDownloadProgress(data: TransferOperatorResponse) {
+    if (this.currentItem && data.currentSize) {
+      this.currentItem.currentSize = data.currentSize;
+    }
   }
 
   // 接收下载完成响应

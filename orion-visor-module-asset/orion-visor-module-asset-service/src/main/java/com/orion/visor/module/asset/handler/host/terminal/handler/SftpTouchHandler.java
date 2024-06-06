@@ -30,7 +30,7 @@ public class SftpTouchHandler extends AbstractTerminalHandler<SftpBaseRequest> {
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         log.info("SftpTouchHandler-handle start sessionId: {}, path: {}", sessionId, path);
         Exception ex = null;

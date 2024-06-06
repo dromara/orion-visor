@@ -18,6 +18,12 @@
       "type": "java.lang.Integer",
       "description": "netty 线程数.",
       "defaultValue": "16"
+    },
+    {
+      "name": "spring.redisson.minimum-idle-size",
+      "type": "java.lang.Integer",
+      "description": "最小空闲连接数.",
+      "defaultValue": "16"
     }
   ]
 }
