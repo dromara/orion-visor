@@ -11,6 +11,7 @@ import com.orion.lang.utils.json.matcher.ReplacementFormatter;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.PathConst;
@@ -36,8 +37,8 @@ import com.orion.visor.module.asset.entity.vo.ExecLogVO;
 import com.orion.visor.module.asset.enums.*;
 import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.visor.module.asset.handler.host.exec.command.ExecTaskExecutors;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
 import com.orion.visor.module.asset.service.AssetAuthorizedDataService;
 import com.orion.visor.module.asset.service.ExecCommandService;
 import com.orion.visor.module.asset.service.HostConfigService;
@@ -67,6 +68,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
 
     private static final int DESC_OMIT = 60;
 
+    @Keep
     @Resource
     private FileClient logsFileClient;
 

@@ -2,6 +2,7 @@ package com.orion.visor.module.infra.handler.upload;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.io.Streams;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
@@ -34,6 +35,7 @@ public class FileUploadMessageDispatcher extends AbstractWebSocketHandler {
 
     private final ConcurrentHashMap<String, IFileUploadHandler> handlers = new ConcurrentHashMap<>();
 
+    @Keep
     @Resource
     private FileClient localFileClient;
 

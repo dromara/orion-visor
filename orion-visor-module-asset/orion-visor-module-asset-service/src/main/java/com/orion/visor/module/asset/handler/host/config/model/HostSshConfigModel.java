@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostSftpConfig", description = "主机 SSH 配置")
+@Schema(name = "HostSshConfigModel", description = "主机 SSH 配置")
 public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordAction {
 
     @NotNull

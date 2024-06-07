@@ -72,9 +72,9 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         }
         Method method = invocation.getMethod();
         // 方法签名
-        requestLog.append("\tmethodSign: ").append(method.getDeclaringClass().getName()).append('#')
-                .append(method.getName()).append("\n");
-        // 参数
+        // requestLog.append("\tmethodSign: ").append(method.getDeclaringClass().getName()).append('#')
+        //         .append(method.getName()).append("\n");
+        // 方法参数
         requestLog.append("\tparameter: ").append(this.requestToString(method, invocation.getArguments()));
         log.info(requestLog.toString());
     }

@@ -1,4 +1,4 @@
-package com.orion.visor.module.asset.handler.host.exec.command.dto;
+package com.orion.visor.module.asset.handler.host.exec.command.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

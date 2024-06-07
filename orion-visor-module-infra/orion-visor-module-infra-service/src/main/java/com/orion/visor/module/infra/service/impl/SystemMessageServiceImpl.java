@@ -11,7 +11,7 @@ import com.orion.visor.module.infra.dao.SystemMessageDAO;
 import com.orion.visor.module.infra.dao.SystemUserDAO;
 import com.orion.visor.module.infra.entity.domain.SystemMessageDO;
 import com.orion.visor.module.infra.entity.domain.SystemUserDO;
-import com.orion.visor.module.infra.entity.dto.SystemMessageCountDTO;
+import com.orion.visor.module.infra.entity.po.SystemMessageCountPO;
 import com.orion.visor.module.infra.entity.request.message.SystemMessageCreateRequest;
 import com.orion.visor.module.infra.entity.request.message.SystemMessageQueryRequest;
 import com.orion.visor.module.infra.entity.vo.SystemMessageVO;
@@ -85,11 +85,11 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         Long userId = SecurityUtils.getLoginUserId();
         Integer status = queryUnread ? MessageStatusEnum.UNREAD.getStatus() : null;
         // 查询数量
-        List<SystemMessageCountDTO> countList = systemMessageDAO.selectSystemMessageCount(userId, status);
+        List<SystemMessageCountPO> countList = systemMessageDAO.selectSystemMessageCount(userId, status);
         // 返回
         return countList.stream()
-                .collect(Collectors.toMap(SystemMessageCountDTO::getClassify,
-                        SystemMessageCountDTO::getCount,
+                .collect(Collectors.toMap(SystemMessageCountPO::getClassify,
+                        SystemMessageCountPO::getCount,
                         Functions.right()));
     }
 

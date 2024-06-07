@@ -2,7 +2,7 @@ package com.orion.visor.module.infra.dao;
 
 import com.orion.visor.framework.mybatis.core.mapper.IMapper;
 import com.orion.visor.module.infra.entity.domain.SystemMessageDO;
-import com.orion.visor.module.infra.entity.dto.SystemMessageCountDTO;
+import com.orion.visor.module.infra.entity.po.SystemMessageCountPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,7 +25,7 @@ public interface SystemMessageDAO extends IMapper<SystemMessageDO> {
      * @param status     status
      * @return count
      */
-    List<SystemMessageCountDTO> selectSystemMessageCount(@Param("receiverId") Long receiverId,
-                                                         @Param("status") Integer status);
+    List<SystemMessageCountPO> selectSystemMessageCount(@Param("receiverId") Long receiverId,
+                                                        @Param("status") Integer status);
 
 }

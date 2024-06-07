@@ -1,4 +1,4 @@
-package com.orion.visor.module.asset.handler.host.upload.dto;
+package com.orion.visor.module.asset.handler.host.upload.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

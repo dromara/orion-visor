@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  * @since 2023/10/8 13:48
  */
-@Component
+@Component("systemPreferenceStrategy")
 public class SystemPreferenceStrategy implements IPreferenceStrategy<SystemPreferenceModel> {
 
     @Override

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  * @since 2023/12/8 14:46
  */
-@Component
+@Component("terminalPreferenceStrategy")
 public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalPreferenceModel> {
 
     @Override

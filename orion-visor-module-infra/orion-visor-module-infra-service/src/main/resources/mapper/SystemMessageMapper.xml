@@ -18,7 +18,7 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
-    <resultMap id="CountResultMap" type="com.orion.visor.module.infra.entity.dto.SystemMessageCountDTO">
+    <resultMap id="CountResultMap" type="com.orion.visor.module.infra.entity.po.SystemMessageCountPO">
         <result column="classify" property="classify"/>
         <result column="count" property="count"/>
     </resultMap>

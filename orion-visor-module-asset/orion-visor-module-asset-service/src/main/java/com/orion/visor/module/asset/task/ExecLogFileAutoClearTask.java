@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.task;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
@@ -37,6 +38,7 @@ public class ExecLogFileAutoClearTask {
     @Resource
     private AppExecLogConfig appExecLogConfig;
 
+    @Keep
     @Resource
     private FileClient logsFileClient;
 

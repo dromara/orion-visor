@@ -1,7 +1,7 @@
 package com.orion.visor.module.asset.handler.host.upload.uploader;
 
 import com.orion.lang.able.SafeCloseable;
-import com.orion.visor.module.asset.handler.host.upload.dto.FileUploadFileItemDTO;
+import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 
 import java.util.List;
 

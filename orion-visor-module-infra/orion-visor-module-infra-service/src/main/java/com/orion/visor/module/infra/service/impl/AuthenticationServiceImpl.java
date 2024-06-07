@@ -6,6 +6,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.security.LoginUser;
@@ -65,6 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Resource
     private PermissionService permissionService;
 
+    @Keep
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
