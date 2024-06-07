@@ -1,7 +1,6 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.request;
 
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,10 +19,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpBaseRequest", description = "sftp 基础请求 实体对象")
 public class SftpBaseRequest extends TerminalBasePayload {
 
-    @Schema(description = "path")
+    /**
+     * path
+     */
     private String path;
 
 }

@@ -1,6 +1,5 @@
 package com.orion.visor.module.infra.handler.upload.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +16,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FileUploadRequest", description = "文件上传请求 实体对象")
 public class FileUploadRequest {
 
-    @Schema(description = "type")
+    /**
+     * type
+     */
     private String type;
 
-    @Schema(description = "fileId")
+    /**
+     * fileId
+     */
     private String fileId;
 
 }

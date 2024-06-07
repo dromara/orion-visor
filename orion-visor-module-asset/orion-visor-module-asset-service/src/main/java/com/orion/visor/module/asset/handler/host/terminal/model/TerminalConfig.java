@@ -1,7 +1,5 @@
 package com.orion.visor.module.asset.handler.host.terminal.model;
 
-import com.orion.visor.framework.desensitize.core.annotation.DesensitizeObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,35 +16,51 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@DesensitizeObject
-@Schema(name = "TerminalConfig", description = "主机终端连接参数")
 public class TerminalConfig {
 
-    @Schema(description = "logId")
+    /**
+     * logId
+     */
     private Long logId;
 
-    @Schema(description = "主机id")
+    /**
+     * 主机id
+     */
     private Long hostId;
 
-    @Schema(description = "主机名称")
+    /**
+     * 主机名称
+     */
     private String hostName;
 
-    @Schema(description = "主机地址")
+    /**
+     * 主机地址
+     */
     private String address;
 
-    @Schema(description = "cols")
+    /**
+     * cols
+     */
     private Integer cols;
 
-    @Schema(description = "rows")
+    /**
+     * rows
+     */
     private Integer rows;
 
-    @Schema(description = "SSH输出编码")
+    /**
+     * SSH输出编码
+     */
     private String charset;
 
-    @Schema(description = "文件名称编码")
+    /**
+     * 文件名称编码
+     */
     private String fileNameCharset;
 
-    @Schema(description = "文件内容编码")
+    /**
+     * 文件内容编码
+     */
     private String fileContentCharset;
 
 }

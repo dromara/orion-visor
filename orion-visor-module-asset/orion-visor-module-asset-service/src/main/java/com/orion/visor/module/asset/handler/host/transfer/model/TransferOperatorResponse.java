@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.transfer.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,28 +16,41 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FileOperatorResponse", description = "文件操作响应 实体对象")
 public class TransferOperatorResponse {
 
-    @Schema(description = "channelId")
+    /**
+     * channelId
+     */
     private String channelId;
 
-    @Schema(description = "type")
+    /**
+     * type
+     */
     private String type;
 
-    @Schema(description = "主机id")
+    /**
+     * 主机id
+     */
     private Long hostId;
 
-    @Schema(description = "是否成功")
+    /**
+     * 是否成功
+     */
     private Boolean success;
 
-    @Schema(description = "传输的大小")
+    /**
+     * 传输的大小
+     */
     private Integer currentSize;
 
-    @Schema(description = "transferToken")
+    /**
+     * transferToken
+     */
     private String transferToken;
 
-    @Schema(description = "消息")
+    /**
+     * 消息
+     */
     private String msg;
 
 }

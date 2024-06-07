@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,10 +20,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpListRequest", description = "sftp 列表请求 实体对象")
 public class SftpListRequest extends SftpBaseRequest {
 
-    @Schema(description = "是否显示隐藏文件")
+    /**
+     * 是否显示隐藏文件
+     */
     private Integer showHiddenFile;
 
 }

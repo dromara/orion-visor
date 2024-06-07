@@ -1,7 +1,6 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.request;
 
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,10 +21,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SshInputRequest", description = "ssh 输入请求 实体对象")
 public class SshInputRequest extends TerminalBasePayload {
 
-    @Schema(description = "command")
+    /**
+     * command
+     */
     private String command;
 
 }

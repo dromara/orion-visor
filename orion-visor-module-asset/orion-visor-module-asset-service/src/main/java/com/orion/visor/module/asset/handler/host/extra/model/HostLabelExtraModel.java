@@ -1,7 +1,6 @@
 package com.orion.visor.module.asset.handler.host.extra.model;
 
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,13 +17,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostLabelExtraModel", description = "主机拓展信息 - 标签模型")
 public class HostLabelExtraModel implements GenericsDataModel {
 
-    @Schema(description = "别名")
+    /**
+     * 别名
+     */
     private String alias;
 
-    @Schema(description = "颜色")
+    /**
+     * 颜色
+     */
     private String color;
 
 }

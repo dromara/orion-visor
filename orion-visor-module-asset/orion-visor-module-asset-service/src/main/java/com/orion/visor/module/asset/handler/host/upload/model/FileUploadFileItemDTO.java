@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.upload.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,22 +16,31 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FileUploadFileItemDTO", description = "文件上传文件对象")
 public class FileUploadFileItemDTO {
 
-    @Schema(description = "id")
+    /**
+     * id
+     */
     private Long id;
 
-    @Schema(description = "fileId")
+    /**
+     * fileId
+     */
     private String fileId;
 
-    @Schema(description = "远程路径")
+    /**
+     * 远程路径
+     */
     private String remotePath;
 
-    @Schema(description = "当前大小")
+    /**
+     * 当前大小
+     */
     private Long current;
 
-    @Schema(description = "状态")
+    /**
+     * 状态
+     */
     private String status;
 
 }
