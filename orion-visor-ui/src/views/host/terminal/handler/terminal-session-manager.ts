@@ -19,17 +19,17 @@ import SftpSession from './sftp-session';
 // 终端会话管理器实现
 export default class TerminalSessionManager implements ITerminalSessionManager {
 
-  private readonly channel: ITerminalChannel;
+  public sessions: Record<string, ITerminalSession>;
 
-  private sessions: Record<string, ITerminalSession>;
+  private readonly channel: ITerminalChannel;
 
   private keepAliveTaskId?: any;
 
   private readonly dispatchResizeFn: () => {};
 
   constructor() {
-    this.channel = new TerminalChannel(this);
     this.sessions = {};
+    this.channel = new TerminalChannel(this);
     this.dispatchResizeFn = useDebounceFn(this.dispatchResize).bind(this);
   }
 

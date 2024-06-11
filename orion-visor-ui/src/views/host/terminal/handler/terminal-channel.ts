@@ -1,5 +1,6 @@
-import type { InputPayload, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload, Protocol, } from '../types/terminal.type';
-import { OutputProtocol } from '../types/terminal.protocol';
+import type { InputPayload, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, Protocol, } from '../types/terminal.type';
+import { format, OutputProtocol, parse } from '../types/terminal.protocol';
+import { sessionCloseMsg } from '../types/terminal.const';
 import { getTerminalAccessToken, openHostTerminalChannel } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
 import TerminalOutputProcessor from './terminal-output-processor';
@@ -9,9 +10,12 @@ export default class TerminalChannel implements ITerminalChannel {
 
   private client?: WebSocket;
 
+  private readonly sessionManager: ITerminalSessionManager;
+
   private readonly processor: ITerminalOutputProcessor;
 
   constructor(sessionManager: ITerminalSessionManager) {
+    this.sessionManager = sessionManager;
     this.processor = new TerminalOutputProcessor(sessionManager, this);
   }
 
@@ -29,6 +33,8 @@ export default class TerminalChannel implements ITerminalChannel {
     }
     this.client.onclose = event => {
       console.warn('terminal close', event);
+      // 关闭回调
+      this.closeCallback();
     };
     this.client.onmessage = this.handlerMessage.bind(this);
   }
@@ -66,6 +72,25 @@ export default class TerminalChannel implements ITerminalChannel {
     }
   }
 
+  // 关闭回调
+  private closeCallback(): void {
+    // 关闭时将手动触发 close 消息, 有可能是其他原因关闭的, 没有接收到 close 消息, 导致已断开是终端还是显示已连接
+    Object.values(this.sessionManager.sessions).forEach(s => {
+      if (!s?.connected) {
+        return;
+      }
+      // close 消息
+      const data = format(OutputProtocol.CLOSE, {
+        type: OutputProtocol.CLOSE.type,
+        sessionId: s.sessionId,
+        forceClose: 0,
+        msg: sessionCloseMsg,
+      });
+      // 触发 close 消息
+      this.handlerMessage({ data } as MessageEvent);
+    });
+  }
+
   // 关闭
   close(): void {
     // 关闭 client
@@ -78,55 +103,3 @@ export default class TerminalChannel implements ITerminalChannel {
   }
 
 }
-
-// 分隔符
-export const SEPARATOR = '|';
-
-// 解析参数
-export const parse = (payload: string) => {
-  const protocols = Object.values(OutputProtocol);
-  const useProtocol = protocols.find(p => payload.startsWith(p.type + SEPARATOR) || p.type === payload);
-  if (!useProtocol) {
-    return undefined;
-  }
-  const template = useProtocol.template;
-  const res = {} as OutputPayload;
-  let curr = 0;
-  let len = payload.length;
-  for (let i = 0, pl = template.length; i < pl; i++) {
-    if (i == pl - 1) {
-      // 最后一次
-      res[template[i]] = payload.substring(curr, len);
-    } else {
-      // 非最后一次
-      let tmp = '';
-      for (; curr < len; curr++) {
-        const c = payload.charAt(curr);
-        if (c == SEPARATOR) {
-          res[template[i]] = tmp;
-          curr++;
-          break;
-        } else {
-          tmp += c;
-        }
-      }
-    }
-  }
-  return res;
-};
-
-// 格式化参数
-export const format = (protocol: Protocol, payload: InputPayload) => {
-  payload.type = protocol.type;
-  return protocol.template
-    .map(i => getPayloadValueString(payload[i]))
-    .join(SEPARATOR);
-};
-
-// 获取默认值
-export const getPayloadValueString = (value: unknown): any => {
-  if (value === undefined || value === null) {
-    return '';
-  }
-  return value;
-};

@@ -153,6 +153,9 @@ export interface ITerminalPanelManager {
 
 // 终端会话管理器定义
 export interface ITerminalSessionManager {
+  // 全部会话
+  sessions: Record<string, ITerminalSession>;
+
   // 打开 ssh 会话
   openSsh: (tab: TerminalPanelTabItem, domRef: XtermDomRef) => Promise<ISshSession>;
   // 打开 sftp 会话

@@ -65,7 +65,7 @@ export function deleteHostSftpLog(idList: Array<number>) {
 /**
  * 下载文件
  */
-export function downloadWithTransferToken(channelId: string, transferToken: string) {
-  window.open(`${httpBaseUrl}/asset/host-sftp/download?channelId=${channelId}&transferToken=${transferToken}`, 'newWindow');
+export function getDownloadTransferUrl(channelId: string, transferToken: string) {
+  return `${httpBaseUrl}/asset/host-sftp/download?channelId=${channelId}&transferToken=${transferToken}`;
 }
 

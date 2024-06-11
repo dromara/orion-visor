@@ -85,6 +85,27 @@ export function getParentPath(path: string) {
 }
 
 /**
+ * 打开下载文件
+ */
+export function openDownloadFile(url: string) {
+  try {
+    // 创建隐藏的可下载链接
+    let element = document.createElement('a');
+    element.setAttribute('href', url);
+    element.setAttribute('download', '');
+    element.style.display = 'none';
+    // 将其附加到文档中
+    document.body.appendChild(element);
+    // 点击该下载链接
+    element.click();
+    // 移除已下载的链接
+    document.body.removeChild(element);
+  } catch (e) {
+    window.open(url, 'newWindow');
+  }
+}
+
+/**
  * 下载文件
  */
 export function downloadFile(res: any, fileName: string = '') {

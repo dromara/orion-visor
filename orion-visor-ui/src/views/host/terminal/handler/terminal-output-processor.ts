@@ -85,7 +85,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   }
 
   // 处理关闭消息
-  processClose({ sessionId, msg, forceClose }: OutputPayload): void {
+  processClose({ sessionId, forceClose, msg }: OutputPayload): void {
     const session = this.sessionManager.getSession(sessionId);
     // 无需处理 (直接关闭 tab)
     if (!session) {
