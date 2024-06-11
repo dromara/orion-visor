@@ -1,2 +1,2 @@
-// 执行
-export const historyCount = 20;
+// 历史数量
+export const historyCount = 15;

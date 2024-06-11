@@ -77,9 +77,9 @@ public class MineServiceImpl implements MineService {
     }
 
     @Override
-    public List<LoginHistoryVO> getCurrentLoginHistory() {
+    public List<LoginHistoryVO> getCurrentLoginHistory(Integer count) {
         String username = SecurityUtils.getLoginUsername();
-        return operatorLogService.getLoginHistory(username);
+        return operatorLogService.getLoginHistory(username, count);
     }
 
     @Override

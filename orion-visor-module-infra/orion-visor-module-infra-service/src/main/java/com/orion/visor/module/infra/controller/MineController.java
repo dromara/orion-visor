@@ -70,8 +70,8 @@ public class MineController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/login-history")
     @Operation(summary = "查询当前用户登录日志")
-    public List<LoginHistoryVO> getCurrentLoginHistory() {
-        return mineService.getCurrentLoginHistory();
+    public List<LoginHistoryVO> getCurrentLoginHistory(@RequestParam("count") Integer count) {
+        return mineService.getCurrentLoginHistory(count);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

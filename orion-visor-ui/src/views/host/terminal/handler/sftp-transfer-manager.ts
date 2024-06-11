@@ -1,12 +1,13 @@
 import type { ISftpTransferManager, ISftpTransferUploader, SftpTransferItem } from '../types/terminal.type';
 import { ISftpTransferDownloader, SftpFile, TransferOperatorResponse } from '../types/terminal.type';
-import { TransferReceiverType, TransferStatus, TransferType } from '../types/terminal.const';
+import { sessionCloseMsg, TransferReceiverType, TransferStatus, TransferType } from '../types/terminal.const';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalAccessToken, openHostTransferChannel } from '@/api/asset/host-terminal';
 import { nextId } from '@/utils';
-import { downloadWithTransferToken } from '@/api/asset/host-sftp';
+import { getDownloadTransferUrl } from '@/api/asset/host-sftp';
 import SftpTransferUploader from './sftp-transfer-uploader';
 import SftpTransferDownloader from './sftp-transfer-downloader';
+import { openDownloadFile } from '@/utils/file';
 
 // sftp 传输管理器实现
 export default class SftpTransferManager implements ISftpTransferManager {
@@ -257,7 +258,10 @@ export default class SftpTransferManager implements ISftpTransferManager {
 
   // 接收开始下载响应
   private resolveDownloadStart(data: TransferOperatorResponse) {
-    downloadWithTransferToken(data.channelId as string, data.transferToken as string);
+    // 获取下载 url
+    const url = getDownloadTransferUrl(data.channelId as string, data.transferToken as string);
+    // 打开
+    openDownloadFile(url);
   }
 
   // 接收下载进度响应
@@ -287,6 +291,14 @@ export default class SftpTransferManager implements ISftpTransferManager {
     this.run = false;
     // 关闭传输进度
     clearInterval(this.progressIntervalId);
+    // 进行中和等待中的文件改为失败
+    this.transferList.forEach(s => {
+      if (s.status === TransferStatus.WAITING ||
+        s.status === TransferStatus.TRANSFERRING) {
+        s.status = TransferStatus.ERROR;
+        s.errorMessage = sessionCloseMsg;
+      }
+    });
   }
 
 }

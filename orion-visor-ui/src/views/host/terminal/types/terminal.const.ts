@@ -352,6 +352,9 @@ export const TransferReceiverType = {
   DOWNLOAD_ERROR: 'downloadError',
 };
 
+// 会话关闭信息
+export const sessionCloseMsg = 'session closed...';
+
 // 打开 settingModal key
 export const openSettingModalKey = Symbol();
 

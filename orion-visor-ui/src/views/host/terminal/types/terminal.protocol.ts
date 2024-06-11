@@ -1,3 +1,8 @@
+import type { InputPayload, OutputPayload, Protocol } from './terminal.type';
+
+// 分隔符
+export const SEPARATOR = '|';
+
 // 输入协议
 export const InputProtocol = {
   // 主机连接检查
@@ -163,4 +168,53 @@ export const OutputProtocol = {
     template: ['type', 'sessionId', 'result', 'msg'],
     processMethod: 'processSftpSetContent'
   },
+};
+
+// 解析参数
+export const parse = (payload: string) => {
+  const protocols = Object.values(OutputProtocol);
+  const useProtocol = protocols.find(p => payload.startsWith(p.type + SEPARATOR) || p.type === payload);
+  if (!useProtocol) {
+    return undefined;
+  }
+  const template = useProtocol.template;
+  const res = {} as OutputPayload;
+  let curr = 0;
+  let len = payload.length;
+  for (let i = 0, pl = template.length; i < pl; i++) {
+    if (i == pl - 1) {
+      // 最后一次
+      res[template[i]] = payload.substring(curr, len);
+    } else {
+      // 非最后一次
+      let tmp = '';
+      for (; curr < len; curr++) {
+        const c = payload.charAt(curr);
+        if (c == SEPARATOR) {
+          res[template[i]] = tmp;
+          curr++;
+          break;
+        } else {
+          tmp += c;
+        }
+      }
+    }
+  }
+  return res;
+};
+
+// 格式化参数
+export const format = (protocol: Protocol, payload: InputPayload | OutputPayload) => {
+  payload.type = protocol.type;
+  return protocol.template
+    .map(i => getPayloadValueString(payload[i]))
+    .join(SEPARATOR);
+};
+
+// 获取默认值
+export const getPayloadValueString = (value: unknown): any => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  return value;
 };

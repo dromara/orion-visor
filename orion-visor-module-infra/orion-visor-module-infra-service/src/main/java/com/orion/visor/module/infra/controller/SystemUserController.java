@@ -182,8 +182,9 @@ public class SystemUserController {
     @GetMapping("/login-history")
     @Operation(summary = "查询用户登录日志")
     @PreAuthorize("@ss.hasPermission('infra:system-user:login-history')")
-    public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username) {
-        return operatorLogService.getLoginHistory(username);
+    public List<LoginHistoryVO> getLoginHistory(@RequestParam("username") String username,
+                                                @RequestParam("count") Integer count) {
+        return operatorLogService.getLoginHistory(username, count);
     }
 
 }

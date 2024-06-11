@@ -60,8 +60,9 @@ public interface OperatorLogService {
      * 查询用户登录日志
      *
      * @param username username
+     * @param count    count
      * @return rows
      */
-    List<LoginHistoryVO> getLoginHistory(String username);
+    List<LoginHistoryVO> getLoginHistory(String username, Integer count);
 
 }

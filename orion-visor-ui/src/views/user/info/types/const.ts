@@ -5,3 +5,6 @@ export const ResultStatus = {
   // 成功
   SUCCESS: 1,
 };
+
+// 历史数量
+export const historyCount = 30;

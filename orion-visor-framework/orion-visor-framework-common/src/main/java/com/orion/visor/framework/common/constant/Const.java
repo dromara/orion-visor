@@ -25,8 +25,6 @@ public interface Const extends com.orion.lang.constant.Const, FieldConst, CnCons
 
     Integer DEFAULT_SORT = 10;
 
-    int LOGIN_HISTORY_COUNT = 30;
-
     Long NONE_ID = -1L;
 
     Integer DEFAULT_VERSION = 1;
