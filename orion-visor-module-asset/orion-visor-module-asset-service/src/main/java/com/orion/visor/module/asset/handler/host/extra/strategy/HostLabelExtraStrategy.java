@@ -1,7 +1,7 @@
 package com.orion.visor.module.asset.handler.host.extra.strategy;
 
 import com.orion.visor.framework.common.constant.Const;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import com.orion.visor.module.asset.handler.host.extra.model.HostLabelExtraModel;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,11 @@ import org.springframework.stereotype.Component;
  * @since 2024/2/29 23:16
  */
 @Component
-public class HostLabelExtraStrategy implements MapDataStrategy<HostLabelExtraModel> {
+public class HostLabelExtraStrategy extends AbstractGenericsDataStrategy<HostLabelExtraModel> {
+
+    public HostLabelExtraStrategy() {
+        super(HostLabelExtraModel.class);
+    }
 
     @Override
     public HostLabelExtraModel getDefault() {
@@ -34,14 +38,6 @@ public class HostLabelExtraStrategy implements MapDataStrategy<HostLabelExtraMod
         if (afterModel.getColor() == null) {
             afterModel.setColor(beforeModel.getColor());
         }
-    }
-
-    @Override
-    public void preValid(HostLabelExtraModel model) {
-    }
-
-    @Override
-    public void valid(HostLabelExtraModel model) {
     }
 
 }

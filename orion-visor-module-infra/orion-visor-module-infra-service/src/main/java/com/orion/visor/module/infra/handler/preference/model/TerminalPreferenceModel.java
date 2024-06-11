@@ -2,6 +2,7 @@ package com.orion.visor.module.infra.handler.preference.model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.able.IJsonObject;
+import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TerminalPreferenceModel implements PreferenceModel {
+public class TerminalPreferenceModel implements GenericsDataModel {
 
     /**
      * 新建连接类型

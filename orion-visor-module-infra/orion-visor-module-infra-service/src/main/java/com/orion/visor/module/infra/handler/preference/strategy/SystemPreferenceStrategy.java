@@ -1,5 +1,7 @@
 package com.orion.visor.module.infra.handler.preference.strategy;
 
+import com.orion.lang.utils.Exceptions;
+import com.orion.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import com.orion.visor.module.infra.handler.preference.model.SystemPreferenceModel;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +12,12 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  * @since 2023/10/8 13:48
  */
-@Component("systemPreferenceStrategy")
-public class SystemPreferenceStrategy implements IPreferenceStrategy<SystemPreferenceModel> {
+@Component
+public class SystemPreferenceStrategy extends AbstractGenericsDataStrategy<SystemPreferenceModel> {
+
+    public SystemPreferenceStrategy() {
+        super(SystemPreferenceModel.class);
+    }
 
     @Override
     public SystemPreferenceModel getDefault() {
@@ -26,6 +32,11 @@ public class SystemPreferenceStrategy implements IPreferenceStrategy<SystemPrefe
                 .defaultTablePageSize(10)
                 .defaultCardPageSize(12)
                 .build();
+    }
+
+    @Override
+    public SystemPreferenceModel parse(String serialModel) {
+        throw Exceptions.unsupported();
     }
 
 }

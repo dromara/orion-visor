@@ -1,8 +1,10 @@
 package com.orion.visor.module.infra.handler.preference.strategy;
 
 import com.alibaba.fastjson.JSONObject;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.net.host.ssh.TerminalType;
+import com.orion.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import com.orion.visor.module.infra.handler.preference.model.TerminalPreferenceModel;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +15,12 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  * @since 2023/12/8 14:46
  */
-@Component("terminalPreferenceStrategy")
-public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalPreferenceModel> {
+@Component
+public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<TerminalPreferenceModel> {
+
+    public TerminalPreferenceStrategy() {
+        super(TerminalPreferenceModel.class);
+    }
 
     @Override
     public TerminalPreferenceModel getDefault() {
@@ -24,7 +30,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .fontFamily("_")
                 .fontSize(13)
                 .lineHeight(1.12)
-                .letterSpacing(1)
+                .letterSpacing(0)
                 .fontWeight("normal")
                 .fontWeightBold("bold")
                 .cursorStyle("bar")
@@ -100,7 +106,7 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .selectAll(false)
                 .search(true)
                 .copy(true)
-                .paste(false)
+                .paste(true)
                 .interrupt(false)
                 .enter(false)
                 .fontSizePlus(false)
@@ -118,12 +124,17 @@ public class TerminalPreferenceStrategy implements IPreferenceStrategy<TerminalP
                 .theme(new JSONObject())
                 .displaySetting(JSONObject.parseObject(defaultDisplaySetting))
                 .actionBarSetting(JSONObject.parseObject(actionBarSetting))
-                .rightMenuSetting(Lists.of("selectAll", "copy", "fontSizePlus", "fontSizeSubtract", "search", "clear"))
+                .rightMenuSetting(Lists.of("selectAll", "copy", "paste", "fontSizePlus", "fontSizeSubtract", "search", "clear"))
                 .interactSetting(JSONObject.parseObject(defaultInteractSetting))
                 .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))
                 .sessionSetting(JSONObject.parseObject(defaultSessionSetting))
                 .shortcutSetting(JSONObject.parseObject(shortcutSetting))
                 .build();
+    }
+
+    @Override
+    public TerminalPreferenceModel parse(String serialModel) {
+        throw Exceptions.unsupported();
     }
 
 }
