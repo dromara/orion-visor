@@ -46,9 +46,10 @@ public interface MineService {
     /**
      * 获取当前用户登录日志
      *
+     * @param count count
      * @return 登录日志
      */
-    List<LoginHistoryVO> getCurrentLoginHistory();
+    List<LoginHistoryVO> getCurrentLoginHistory(Integer count);
 
     /**
      * 获取当前用户会话列表

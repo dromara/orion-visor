@@ -2,10 +2,10 @@
   <div class="main-container">
     <span class="extra-message">
       <template v-if="user">
-        只展示用户 <span class="user-info">{{ user.nickname }}({{ user.username }})</span> 最近登录的 30 条历史记录
+        只展示用户 <span class="user-info">{{ user.nickname }}({{ user.username }})</span> 最近登录的 {{ historyCount }} 条历史记录
       </template>
       <template v-else>
-        只展示最近登录的 30 条历史记录
+        只展示最近登录的 {{ historyCount }} 条历史记录
       </template>
     </span>
     <!-- 加载中 -->
@@ -62,7 +62,7 @@
   import type { UserQueryResponse, LoginHistoryQueryResponse } from '@/api/user/user';
   import { ref, onBeforeMount } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { ResultStatus } from '../types/const';
+  import { historyCount, ResultStatus } from '../types/const';
   import { getCurrentLoginHistory } from '@/api/user/mine';
   import { getLoginHistory } from '@/api/user/user';
   import { dateFormat } from '@/utils';
@@ -82,11 +82,11 @@
       setLoading(true);
       if (props.user) {
         // 查询其他用户
-        const { data } = await getLoginHistory(props.user.username);
+        const { data } = await getLoginHistory(props.user.username, historyCount);
         list.value = data;
       } else {
         // 查询当前用户
-        const { data } = await getCurrentLoginHistory();
+        const { data } = await getCurrentLoginHistory(historyCount);
         list.value = data;
       }
     } catch (e) {

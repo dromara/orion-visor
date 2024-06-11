@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Valid;
 import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.constant.Const;
+import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.module.infra.convert.OperatorLogConvert;
 import com.orion.visor.module.infra.dao.OperatorLogDAO;
 import com.orion.visor.module.infra.define.operator.AuthenticationOperatorType;
@@ -81,7 +82,8 @@ public class OperatorLogServiceImpl implements OperatorLogService {
     }
 
     @Override
-    public List<LoginHistoryVO> getLoginHistory(String username) {
+    public List<LoginHistoryVO> getLoginHistory(String username, Integer count) {
+        Valid.gt(count, 0, ErrorMessage.PARAM_ERROR);
         // 条件
         OperatorLogQueryRequest request = new OperatorLogQueryRequest();
         request.setUsername(username);
@@ -89,7 +91,7 @@ public class OperatorLogServiceImpl implements OperatorLogService {
         LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询
         return operatorLogDAO.of(wrapper)
-                .limit(Const.LOGIN_HISTORY_COUNT)
+                .limit(count)
                 .list(OperatorLogConvert.MAPPER::toLoginHistory);
     }
 

@@ -192,6 +192,6 @@ export function offlineUserSession(request: UserSessionOfflineRequest) {
 /**
  * 查询登录日志
  */
-export function getLoginHistory(username: string) {
-  return axios.get<LoginHistoryQueryResponse[]>('/infra/system-user/login-history', { params: { username } });
+export function getLoginHistory(username: string, count: number) {
+  return axios.get<LoginHistoryQueryResponse[]>('/infra/system-user/login-history', { params: { username, count } });
 }

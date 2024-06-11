@@ -35,8 +35,8 @@ export function updateCurrentUser(request: UserUpdateRequest) {
 /**
  * 查询当前用户登录日志
  */
-export function getCurrentLoginHistory() {
-  return axios.get<LoginHistoryQueryResponse[]>('/infra/mine/login-history');
+export function getCurrentLoginHistory(count: number) {
+  return axios.get<LoginHistoryQueryResponse[]>('/infra/mine/login-history', { params: { count } });
 }
 
 /**
