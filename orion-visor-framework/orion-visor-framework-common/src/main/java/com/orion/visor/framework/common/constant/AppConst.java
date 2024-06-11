@@ -14,7 +14,7 @@ public interface AppConst extends OrionConst {
     /**
      * 同 ${orion.version} 迭代时候需要手动更改
      */
-    String VERSION = "2.0.5";
+    String VERSION = "2.0.6";
 
     String ORION_VISOR = "orion-visor";
 
