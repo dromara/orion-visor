@@ -40,13 +40,14 @@ spring:
       # 最大生存的时间
       max-evictable-idle-time-millis: 900000
       validation-query: SELECT 1
-      web-stat-filter:
-        enabled: true
+      # 控制台
       stat-view-servlet:
         enabled: true
         url-pattern: /druid/*
         login-username:
         login-password:
+      web-stat-filter:
+        enabled: true
       filter:
         stat:
           enabled: true
@@ -88,7 +89,7 @@ spring:
             misfireThreshold: 60000
             clusterCheckinInterval: 5000
             isClustered: true
-          #连接池
+          # 连接池
           threadPool:
             class: org.quartz.simpl.SimpleThreadPool
             threadCount: 5
@@ -98,12 +99,16 @@ spring:
     admin:
       context-path: /admin
       client:
+        enabled: true
         url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
         instance:
           service-host-type: IP
+      server:
+        enabled: true
 
 management:
   endpoints:
+    enabled-by-default: true
     web:
       base-path: /actuator
       exposure:
