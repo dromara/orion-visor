@@ -2,8 +2,8 @@ package com.orion.visor.module.asset.handler.host.exec.command.handler;
 
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.support.timeout.TimeoutEndpoint;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
 import lombok.extern.slf4j.Slf4j;
 
 /**

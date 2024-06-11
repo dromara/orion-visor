@@ -73,8 +73,8 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
         }
         Method method = invocation.getMethod();
         // 方法签名
-        fields.put(METHOD_SIGN, method.getDeclaringClass().getName() + "#" + method.getName());
-        // 参数
+        // fields.put(METHOD_SIGN, method.getDeclaringClass().getName() + "#" + method.getName());
+        // 方法参数
         fields.put(PARAMETER, this.requestToString(method, invocation.getArguments()));
         log.info("api请求-开始 {}", JSON.toJSONString(fields));
         fields.clear();

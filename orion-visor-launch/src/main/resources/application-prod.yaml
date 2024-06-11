@@ -10,9 +10,12 @@ spring:
       min-idle: 5
       # 最大连接池数量
       max-active: 20
-      web-stat-filter:
-        enabled: true
+      # 控制台
       stat-view-servlet:
+        enabled: true
+        login-username: ${DRUID_USERNAME:admin}
+        login-password: ${DRUID_PASSWORD:admin}
+      web-stat-filter:
         enabled: true
       filter:
         stat:
@@ -31,6 +34,16 @@ spring:
         quartz:
           threadPool:
             threadCount: 10
+  boot:
+    admin:
+      client:
+        enabled: true
+      server:
+        enabled: true
+
+management:
+  endpoints:
+    enabled-by-default: true
 
 springdoc:
   api-docs:
@@ -40,6 +53,7 @@ springdoc:
 
 knife4j:
   enable: false
+  production: true
 
 orion:
   # 是否为演示模式

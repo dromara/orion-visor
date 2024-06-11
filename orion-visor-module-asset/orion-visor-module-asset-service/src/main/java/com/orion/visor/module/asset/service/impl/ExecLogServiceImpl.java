@@ -12,6 +12,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.PathConst;
@@ -80,6 +81,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Resource
     private HostConfigService hostConfigService;
 
+    @Keep
     @Resource
     private FileClient logsFileClient;
 

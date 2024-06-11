@@ -16,7 +16,7 @@ import com.orion.visor.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.visor.module.asset.enums.HostSshOsTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
-import com.orion.visor.module.asset.handler.host.upload.dto.FileUploadFileItemDTO;
+import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import com.orion.visor.module.asset.service.HostTerminalService;
 import com.orion.visor.module.asset.service.UploadTaskService;
 import com.orion.visor.module.asset.utils.SftpUtils;

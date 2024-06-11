@@ -7,6 +7,8 @@ spring:
       initial-size: 0
       min-idle: 1
       max-active: 5
+      stat-view-servlet:
+        enabled: false
   redis:
     host: 127.0.0.1
     port: 6379
@@ -15,6 +17,19 @@ spring:
     threads: 2
     netty-threads: 2
     minimum-idle-size: 2
+  boot:
+    admin:
+      client:
+        enabled: false
+      server:
+        enabled: false
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: shutdown
 
 mybatis-plus:
   configuration:

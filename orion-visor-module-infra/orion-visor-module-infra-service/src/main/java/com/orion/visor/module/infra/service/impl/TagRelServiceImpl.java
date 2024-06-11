@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.module.infra.convert.TagRelConvert;
 import com.orion.visor.module.infra.dao.TagDAO;
@@ -38,6 +39,7 @@ public class TagRelServiceImpl implements TagRelService {
     @Resource
     private TagRelDAO tagRelDAO;
 
+    @Keep
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 

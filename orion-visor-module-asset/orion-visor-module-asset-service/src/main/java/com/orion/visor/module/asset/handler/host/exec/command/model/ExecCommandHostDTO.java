@@ -1,4 +1,4 @@
-package com.orion.visor.module.asset.handler.host.terminal.model;
+package com.orion.visor.module.asset.handler.host.exec.command.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,25 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机终端连接参数
+ * 批量执行启动主机对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/1/3 23:30
+ * @since 2024/3/11 15:46
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TerminalConfig {
+public class ExecCommandHostDTO {
 
     /**
-     * logId
+     * hostLogId
      */
-    private Long logId;
+    private Long hostLogId;
 
     /**
-     * 主机id
+     * hostId
      */
     private Long hostId;
 
@@ -36,20 +36,30 @@ public class TerminalConfig {
     /**
      * 主机地址
      */
-    private String address;
+    private String hostAddress;
 
     /**
-     * cols
+     * 日志文件路径
      */
-    private Integer cols;
+    private String logPath;
 
     /**
-     * rows
+     * 脚本路径
      */
-    private Integer rows;
+    private String scriptPath;
 
     /**
-     * SSH输出编码
+     * 执行命令
+     */
+    private String command;
+
+    /**
+     * 主机用户
+     */
+    private String username;
+
+    /**
+     * 命令编码
      */
     private String charset;
 

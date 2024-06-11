@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,10 +20,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpMoveRequest", description = "sftp 移动文件 实体对象")
 public class SftpMoveRequest extends SftpBaseRequest {
 
-    @Schema(description = "target")
+    /**
+     * target
+     */
     private String target;
 
 }

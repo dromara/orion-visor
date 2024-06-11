@@ -14,13 +14,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MovePosition {
 
-    // 拖拽到目标元素上
+    /**
+     * 拖拽到目标元素上
+     */
     TOP(-1),
 
-    // 拖拽到目标元素中
+    /**
+     * 拖拽到目标元素中
+     */
     IN(0),
 
-    // 拖拽到目标元素下
+    /**
+     * 拖拽到目标元素下
+     */
     BOTTOM(1),
 
     ;

@@ -1,4 +1,4 @@
-package com.orion.visor.module.infra.entity.dto;
+package com.orion.visor.module.infra.entity.po;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -19,8 +19,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SystemMessageCountDTO", description = "系统消息数量对象")
-public class SystemMessageCountDTO implements Serializable {
+@Schema(name = "SystemMessageCountPO", description = "系统消息数量对象")
+public class SystemMessageCountPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

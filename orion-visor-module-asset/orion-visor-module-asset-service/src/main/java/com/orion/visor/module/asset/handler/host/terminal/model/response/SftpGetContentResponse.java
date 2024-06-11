@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,13 +18,16 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpGetContentResponse", description = "sftp 获取内容响应 实体对象")
 public class SftpGetContentResponse extends SftpBaseResponse {
 
-    @Schema(description = "path")
+    /**
+     * path
+     */
     private String path;
 
-    @Schema(description = "content")
+    /**
+     * content
+     */
     private String content;
 
 }

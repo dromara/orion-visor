@@ -12,6 +12,7 @@ import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.file.FileClient;
@@ -37,7 +38,7 @@ import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.visor.module.asset.enums.UploadTaskStatusEnum;
 import com.orion.visor.module.asset.handler.host.upload.FileUploadTasks;
-import com.orion.visor.module.asset.handler.host.upload.dto.FileUploadFileItemDTO;
+import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import com.orion.visor.module.asset.handler.host.upload.manager.FileUploadTaskManager;
 import com.orion.visor.module.asset.handler.host.upload.task.IFileUploadTask;
 import com.orion.visor.module.asset.handler.host.upload.uploader.IFileUploader;
@@ -86,6 +87,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     @Resource
     private FileUploadTaskManager fileUploadTaskManager;
 
+    @Keep
     @Resource
     private FileClient localFileClient;
 

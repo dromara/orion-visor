@@ -1,8 +1,8 @@
 package com.orion.visor.module.asset.handler.host.exec.command;
 
 import com.orion.visor.module.asset.define.AssetThreadPools;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
 import com.orion.visor.module.asset.handler.host.exec.command.handler.ExecTaskHandler;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
 
 /**
  * 批量执行命令执行器

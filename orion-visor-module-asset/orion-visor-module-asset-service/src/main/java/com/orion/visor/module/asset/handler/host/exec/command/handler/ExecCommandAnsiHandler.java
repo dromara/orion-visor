@@ -9,8 +9,8 @@ import com.orion.lang.utils.time.Dates;
 import com.orion.net.host.ssh.ExitCode;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.module.asset.enums.ExecHostStatusEnum;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandDTO;
-import com.orion.visor.module.asset.handler.host.exec.command.dto.ExecCommandHostDTO;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
+import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
 
 /**
  * 命令执行器 ansi 日志输出

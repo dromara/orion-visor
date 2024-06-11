@@ -1,5 +1,8 @@
 package com.orion.visor.launch;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
@@ -14,7 +17,19 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 public class LaunchApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(LaunchApplication.class).run(args);
+        new SpringApplicationBuilder(LaunchApplication.class)
+                .beanNameGenerator(new CustomBeanNameGenerator())
+                .run(args);
+    }
+
+    /**
+     * 自定义 bean 名称生成器
+     */
+    public static class CustomBeanNameGenerator implements BeanNameGenerator {
+        @Override
+        public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
+            return definition.getBeanClassName();
+        }
     }
 
 }

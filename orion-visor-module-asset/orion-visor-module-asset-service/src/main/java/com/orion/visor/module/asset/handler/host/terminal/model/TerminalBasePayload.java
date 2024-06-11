@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.terminal.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,13 +16,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "TerminalBasePayload", description = "终端基础 payload")
 public class TerminalBasePayload {
 
-    @Schema(description = "会话id")
+    /**
+     * 会话id
+     */
     private String sessionId;
 
-    @Schema(description = "消息类型")
+    /**
+     * 消息类型
+     */
     private String type;
 
 }

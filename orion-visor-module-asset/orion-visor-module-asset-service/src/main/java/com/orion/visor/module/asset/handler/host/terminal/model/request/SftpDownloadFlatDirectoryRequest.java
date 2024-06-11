@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,10 +20,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "SftpDownloadDirectoryFlatRequest", description = "sftp 下载文件夹展开文件 实体对象")
 public class SftpDownloadFlatDirectoryRequest extends SftpBaseRequest {
 
-    @Schema(description = "当前路径")
+    /**
+     * 当前路径
+     */
     private String currentPath;
 
 }

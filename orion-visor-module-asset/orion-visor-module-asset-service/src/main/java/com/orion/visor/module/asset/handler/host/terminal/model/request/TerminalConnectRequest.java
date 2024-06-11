@@ -1,7 +1,6 @@
 package com.orion.visor.module.asset.handler.host.terminal.model.request;
 
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,16 +21,21 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TerminalConnectRequest", description = "终端连接请求 实体对象")
 public class TerminalConnectRequest extends TerminalBasePayload {
 
-    @Schema(description = "伪终端类型")
+    /**
+     * 伪终端类型
+     */
     private String terminalType;
 
-    @Schema(description = "列数")
+    /**
+     * 列数
+     */
     private Integer cols;
 
-    @Schema(description = "行数")
+    /**
+     * 行数
+     */
     private Integer rows;
 
 }
