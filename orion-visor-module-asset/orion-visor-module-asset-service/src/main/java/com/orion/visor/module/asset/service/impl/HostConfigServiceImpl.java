@@ -8,7 +8,7 @@ import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.common.enums.EnableStatus;
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.module.asset.convert.HostConfigConvert;
 import com.orion.visor.module.asset.dao.HostConfigDAO;
@@ -53,7 +53,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         // 转换
         HostConfigVO vo = HostConfigConvert.MAPPER.to(config);
         // 获取配置
-        Map<String, Object> configMap = configType.getStrategyBean().toView(config.getConfig());
+        Map<String, Object> configMap = configType.toView(config.getConfig()).toMap();
         vo.setConfig(configMap);
         return vo;
     }
@@ -121,10 +121,10 @@ public class HostConfigServiceImpl implements HostConfigService {
         OperatorLogs.add(OperatorLogs.TYPE, type.getType());
         // 检查版本
         Valid.eq(record.getVersion(), request.getVersion(), ErrorMessage.DATA_MODIFIED);
-        MapDataStrategy<GenericsDataModel> strategy = type.getStrategyBean();
+        GenericsDataStrategy<GenericsDataModel> strategy = type.getStrategy();
         GenericsDataModel beforeConfig = type.parse(record.getConfig());
         // 更新前校验
-        strategy.doValidChain(beforeConfig, newConfig);
+        strategy.doValid(beforeConfig, newConfig);
         // 修改配置
         HostConfigDO update = new HostConfigDO();
         update.setId(record.getId());
@@ -225,7 +225,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         insert.setHostId(hostId);
         insert.setType(type.getType());
         insert.setStatus(type.getDefaultStatus());
-        insert.setConfig(type.getStrategyBean().getDefault().serial());
+        insert.setConfig(type.getStrategy().getDefault().serial());
         insert.setVersion(Const.DEFAULT_VERSION);
         return insert;
     }
@@ -244,7 +244,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         }
         // 转为视图
         HostConfigVO vo = HostConfigConvert.MAPPER.to(row);
-        Map<String, Object> config = type.getStrategyBean().toView(row.getConfig());
+        Map<String, Object> config = type.toView(row.getConfig()).toMap();
         vo.setConfig(config);
         return vo;
     }

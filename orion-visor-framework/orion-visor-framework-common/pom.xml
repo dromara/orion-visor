@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <description>项目公共基准包</description>
-    <url>https://github.com/lijiahangmax/orion-visor</url>
+    <url>https://github.com/dromara/orion-visor</url>
 
     <dependencies>
         <dependency>

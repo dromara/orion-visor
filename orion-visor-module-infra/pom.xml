@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <description>项目基建模块 用户 菜单 日志等</description>
-    <url>https://github.com/lijiahangmax/orion-visor</url>
+    <url>https://github.com/dromara/orion-visor</url>
 
     <modules>
         <module>orion-visor-module-infra-provider</module>

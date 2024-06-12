@@ -5,16 +5,16 @@
           :body-style="{ padding: '0px 20px 8px 20px' }">
     <a-row>
       <a-col :span="12">
-        <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor">github</a-link>
+        <a-link target="_blank" href="https://github.com/dromara/orion-visor">github</a-link>
       </a-col>
       <a-col :span="12">
-        <a-link target="_blank" href="https://gitee.com/lijiahangmax/orion-visor">gitee</a-link>
+        <a-link target="_blank" href="https://gitee.com/dromara/orion-visor">gitee</a-link>
       </a-col>
       <a-col :span="12">
-        <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE">License</a-link>
+        <a-link target="_blank" href="https://github.com/dromara/orion-visor/blob/main/LICENSE">License</a-link>
       </a-col>
       <a-col :span="12">
-        <a-link target="_blank" href="https://github.com/lijiahangmax/orion-visor/issues">上报 bug</a-link>
+        <a-link target="_blank" href="https://github.com/dromara/orion-visor/issues">上报 bug</a-link>
       </a-col>
       <a-col :span="12">
         <a-link target="_blank" href="https://lijiahangmax.github.io/open-orion/orion-visor/operator/asset.html">操作手册</a-link>

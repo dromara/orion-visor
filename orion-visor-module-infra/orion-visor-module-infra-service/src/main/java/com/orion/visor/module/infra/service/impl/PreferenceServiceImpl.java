@@ -142,14 +142,14 @@ public class PreferenceServiceImpl implements PreferenceService {
     public Map<String, Object> getDefaultPreferenceByType(String type, List<String> items) {
         PreferenceTypeEnum preferenceType = Valid.valid(PreferenceTypeEnum::of, type);
         // 获取默认值
-        Map<String, String> defaultModel = preferenceType.getStrategy()
+        Map<String, Object> defaultModel = preferenceType.getStrategy()
                 .getDefault()
                 .toMap();
         Map<String, Object> result = Maps.newMap();
         if (Lists.isEmpty(items)) {
-            defaultModel.forEach((k, v) -> result.put(k, Refs.unref(defaultModel.get(k))));
+            defaultModel.forEach((k, v) -> result.put(k, defaultModel.get(k)));
         } else {
-            items.forEach(s -> result.put(s, Refs.unref(defaultModel.get(s))));
+            items.forEach(s -> result.put(s, defaultModel.get(s)));
         }
         return result;
     }
@@ -218,9 +218,10 @@ public class PreferenceServiceImpl implements PreferenceService {
         // 初始化
         if (Maps.isEmpty(config)) {
             // 获取默认值
-            config = type.getStrategy()
+            Map<String, Object> defaultConfig = type.getStrategy()
                     .getDefault()
                     .toMap();
+            config = Maps.map(defaultConfig, Function.identity(), Refs::json);
             // 插入默认值
             List<PreferenceDO> entities = config
                     .entrySet()

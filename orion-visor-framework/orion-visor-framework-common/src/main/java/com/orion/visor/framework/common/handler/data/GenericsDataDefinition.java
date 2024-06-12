@@ -1,9 +1,8 @@
 package com.orion.visor.framework.common.handler.data;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 
 /**
  * 标准数据定义
@@ -12,45 +11,50 @@ import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
  * @version 1.0.0
  * @since 2023/12/21 0:07
  */
+@SuppressWarnings("unchecked")
 public interface GenericsDataDefinition {
-
-    /**
-     * 获取数据模型类型
-     *
-     * @return class
-     */
-    Class<? extends GenericsDataModel> getModel();
 
     /**
      * 获取数据处理策略
      *
      * @return class
      */
-    Class<? extends MapDataStrategy<? extends GenericsDataModel>> getStrategy();
+    Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> getStrategyClass();
 
     /**
      * 获取数据模型策略处理器
      *
-     * @param <Model>    Model
-     * @param <Strategy> Strategy
-     * @return StrategyBean
+     * @param <M> Model
+     * @param <S> Strategy
+     * @return Strategy Bean
      */
-    @SuppressWarnings("unchecked")
-    default <Model extends GenericsDataModel, Strategy extends MapDataStrategy<Model>> Strategy getStrategyBean() {
-        return (Strategy) SpringHolder.getBean(this.getStrategy());
+    default <M extends GenericsDataModel, S extends GenericsDataStrategy<M>> S getStrategy() {
+        return (S) SpringHolder.getBean(this.getStrategyClass());
     }
 
     /**
      * 反序列化对象
      *
-     * @param json    json
-     * @param <Model> Model
+     * @param serialModel serialModel
+     * @param <M>         Model
      * @return object
      */
-    @SuppressWarnings("unchecked")
-    default <Model extends GenericsDataModel> Model parse(String json) {
-        return (Model) JSON.parseObject(json, this.getModel());
+    default <M extends GenericsDataModel> M parse(String serialModel) {
+        return (M) this.getStrategy().parse(serialModel);
     }
 
+    /**
+     * 转为视图对象
+     *
+     * @param serialModel serialModel
+     * @param <M>         Model
+     * @return viewModel
+     */
+    default <M extends GenericsDataModel> M toView(String serialModel) {
+        GenericsDataStrategy<GenericsDataModel> strategy = this.getStrategy();
+        GenericsDataModel model = strategy.parse(serialModel);
+        strategy.toView(model);
+        return (M) model;
+    }
 
 }

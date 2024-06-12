@@ -397,8 +397,8 @@ INSERT INTO `system_menu` VALUES (186, 184, '查询任务日志', 'asset:exec-jo
 INSERT INTO `system_menu` VALUES (187, 184, '删除任务日志', 'asset:exec-job-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:59', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (189, 184, '清理任务日志', 'asset:exec-job-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:58', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (190, 184, '中断计划任务', 'asset:exec-job-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 00:00:33', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (191, 0, '提交bug', NULL, 1, 1020, 1, 1, 0, 1, 'IconBug', 'https://github.com/lijiahangmax/orion-visor/issues', NULL, '2024-04-26 11:30:18', '2024-05-17 12:57:29', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (192, 0, '点个赞~', NULL, 1, 1030, 1, 1, 0, 1, 'IconThumbUp', 'https://github.com/lijiahangmax/orion-visor', NULL, '2024-04-26 11:32:30', '2024-05-17 12:57:32', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (191, 0, '提交bug', NULL, 1, 1020, 1, 1, 0, 1, 'IconBug', 'https://github.com/dromara/orion-visor/issues', NULL, '2024-04-26 11:30:18', '2024-06-12 14:03:29', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (192, 0, '点个赞~', NULL, 1, 1030, 1, 1, 0, 1, 'IconThumbUp', 'https://github.com/dromara/orion-visor', NULL, '2024-04-26 11:32:30', '2024-06-12 14:03:25', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (193, 0, '计划任务', NULL, 1, 430, 1, 1, 1, 0, 'IconCalendarClock', NULL, 'jobModule', '2024-04-28 15:31:24', '2024-04-28 15:32:56', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (194, 152, '在线会话', NULL, 2, 20, 1, 1, 1, 0, 'IconUserGroup', NULL, 'connectSession', '2024-05-07 11:12:17', '2024-05-07 11:12:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (195, 194, '查询在线会话', 'asset:host-connect-session:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:16', '2024-05-07 11:13:16', '1', '1', 0);

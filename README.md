@@ -13,27 +13,27 @@
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://github.com/lijiahangmax/orion-visor/releases">
+       href="https://github.com/dromara/orion-visor/releases">
       <img src="https://img.shields.io/github/v/release/lijiahangmax/orion-visor" alt="release" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://gitee.com/lijiahangmax/orion-visor/stargazers">
-      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/star.svg?theme=dark" alt="star" />
+       href="https://gitee.com/dromara/orion-visor/stargazers">
+      <img src="https://gitee.com/dromara/orion-visor/badge/star.svg?theme=dark" alt="star" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://gitee.com/lijiahangmax/orion-visor/members">
-      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/fork.svg?theme=dark" alt="fork" />
+       href="https://gitee.com/dromara/orion-visor/members">
+      <img src="https://gitee.com/dromara/orion-visor/badge/fork.svg?theme=dark" alt="fork" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://github.com/lijiahangmax/orion-visor">
+       href="https://github.com/dromara/orion-visor">
       <img src="https://img.shields.io/github/stars/lijiahangmax/orion-visor" alt="star" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://github.com/lijiahangmax/orion-visor">
+       href="https://github.com/dromara/orion-visor">
       <img src="https://img.shields.io/github/forks/lijiahangmax/orion-visor" alt="star" />
     </a>
 </p>
@@ -53,7 +53,7 @@
 
 * 🔗 演示地址: http://101.43.254.243:1081/
 * 🔏 演示账号: admin/admin
-* ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/lijiahangmax/orion-visor) [gitee](https://gitee.com/lijiahangmax/orion-visor)
+* ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
 * 🎭 演示环境部分功能不可用, 完整功能请本地部署!
 * 📛 演示环境请不要随便删除数据!
@@ -63,7 +63,7 @@
 
 ```bash
 # clone
-git clone https://github.com/lijiahangmax/orion-visor
+git clone https://github.com/dromara/orion-visor
 cd orion-visor
 # 启动
 docker compose up -d
@@ -131,8 +131,8 @@ docker compose up -d
 
 ## 免责声明
 
-在使用本项目之前, 请确保您已经了解并同意相关的使用协议和隐私政策。[免责声明](https://github.com/lijiahangmax/orion-visor/blob/main/DISCLAIMER.md)
+在使用本项目之前, 请确保您已经了解并同意相关的使用协议和隐私政策。[免责声明](https://github.com/dromara/orion-visor/blob/main/DISCLAIMER.md)
 
 ## License
 
-本项目遵循 [Apache-2.0](https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE) 开源许可证。  
+本项目遵循 [Apache-2.0](https://github.com/dromara/orion-visor/blob/main/LICENSE) 开源许可证。  

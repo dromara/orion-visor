@@ -1,7 +1,7 @@
 package com.orion.visor.module.asset.handler.host.extra.strategy;
 
 import com.orion.visor.framework.common.constant.ErrorMessage;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.dao.HostIdentityDAO;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  * @since 2023/12/20 22:17
  */
 @Component
-public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> {
+public class HostSshExtraStrategy extends AbstractGenericsDataStrategy<HostSshExtraModel> {
 
     @Resource
     private HostKeyDAO hostKeyDAO;
@@ -33,15 +33,15 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
     @Resource
     private DataPermissionApi dataPermissionApi;
 
+    public HostSshExtraStrategy() {
+        super(HostSshExtraModel.class);
+    }
+
     @Override
     public HostSshExtraModel getDefault() {
         return HostSshExtraModel.builder()
                 .authType(HostExtraSshAuthTypeEnum.DEFAULT.name())
                 .build();
-    }
-
-    @Override
-    public void updateFill(HostSshExtraModel beforeModel, HostSshExtraModel afterModel) {
     }
 
     @Override
@@ -77,10 +77,6 @@ public class HostSshExtraStrategy implements MapDataStrategy<HostSshExtraModel> 
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
         }
-    }
-
-    @Override
-    public void valid(HostSshExtraModel model) {
     }
 
 }
