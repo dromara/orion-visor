@@ -11,7 +11,7 @@
     <name>${project.artifactId}</name>
 
     <description>项目所有依赖</description>
-    <url>https://github.com/lijiahangmax/orion-visor</url>
+    <url>https://github.com/dromara/orion-visor</url>
 
     <properties>
         <revision>2.0.7</revision>

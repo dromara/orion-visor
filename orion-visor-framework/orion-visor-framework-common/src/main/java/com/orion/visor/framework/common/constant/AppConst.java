@@ -18,10 +18,10 @@ public interface AppConst extends OrionConst {
 
     String ORION_VISOR = "orion-visor";
 
-    String GITHUB = "https://github.com/lijiahangmax/orion-visor";
+    String GITHUB = "https://github.com/dromara/orion-visor";
 
-    String GITEE = "https://gitee.com/lijiahangmax/orion-visor";
+    String GITEE = "https://gitee.com/dromara/orion-visor";
 
-    String ISSUES = "https://github.com/lijiahangmax/orion-visor/issues";
+    String ISSUES = "https://github.com/dromara/orion-visor/issues";
 
 }

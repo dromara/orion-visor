@@ -220,10 +220,10 @@ orion:
     title: orion-visor 运维平台
     description: 一站式运维服务平台
     version: ${orion.version}
-    url: https://github.com/lijiahangmax/orion-visor
+    url: https://github.com/dromara/orion-visor
     email: ljh1553488six@139.com
     license: Apache-2.0
-    license-url: https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE
+    license-url: https://github.com/dromara/orion-visor/blob/main/LICENSE
     grouped-api:
       infra:
         group: "infra - 基建模块"

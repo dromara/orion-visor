@@ -1,6 +1,5 @@
 #/bin/bash
 docker compose down
-sh ./pull.sh
 # demo 启动
 if [ "$1" == "demo" ]; then
     sed -i 's/DEMO_MODE=false/DEMO_MODE=true/g' docker-compose.yml
