@@ -1,0 +1,4 @@
+### 查询应用信息
+GET {{baseUrl}}/infra/system/app-info
+Authorization: {{token}}
+

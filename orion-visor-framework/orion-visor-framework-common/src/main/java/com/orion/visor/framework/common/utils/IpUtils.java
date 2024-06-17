@@ -29,7 +29,7 @@ public class IpUtils {
      */
     public static String getLocation(String ip) {
         if (ip == null) {
-            return Const.UNKNOWN;
+            return Const.CN_UNKNOWN;
         }
         // 查询缓存
         return CACHE.computeIfAbsent(ip, IpUtils::queryLocation);
@@ -43,21 +43,21 @@ public class IpUtils {
      */
     private static String queryLocation(String ip) {
         if (ip == null) {
-            return Const.UNKNOWN;
+            return Const.CN_UNKNOWN;
         }
         Region region;
         try {
             region = LocationRegions.getRegion(ip, 3);
         } catch (Exception e) {
-            return Const.UNKNOWN;
+            return Const.CN_UNKNOWN;
         }
         if (region != null) {
             String net = region.getNet();
             String province = region.getProvince();
-            if (net.equals(Const.INTRANET_IP)) {
+            if (net.equals(Const.CN_INTRANET_IP)) {
                 return net;
             }
-            if (province.equals(Const.UNKNOWN)) {
+            if (province.equals(Const.CN_UNKNOWN)) {
                 return province;
             }
             StringBuilder location = new StringBuilder()
@@ -69,7 +69,7 @@ public class IpUtils {
             location.append(" (").append(net).append(')');
             return location.toString();
         }
-        return Const.UNKNOWN;
+        return Const.CN_UNKNOWN;
     }
 
 }
