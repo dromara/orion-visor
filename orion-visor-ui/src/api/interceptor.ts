@@ -13,7 +13,9 @@ export interface HttpResponse<T = unknown> {
 }
 
 axios.defaults.timeout = 10000;
+axios.defaults.setAuthorization = true;
 axios.defaults.promptBizErrorMessage = true;
+axios.defaults.promptRequestErrorMessage = true;
 axios.defaults.baseURL = httpBaseUrl;
 
 axios.interceptors.request.use(
@@ -24,7 +26,10 @@ axios.interceptors.request.use(
       if (!config.headers) {
         config.headers = {};
       }
-      config.headers.Authorization = `Bearer ${token}`;
+      // 设置 Authorization 头
+      if (config.setAuthorization === true) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -46,7 +51,7 @@ axios.interceptors.response.use(
       return res;
     }
     // 异常判断
-    if ([401, 700, 701, 702].includes(code)) {
+    if ([401, 700, 701, 702, 1000, 1001].includes(code)) {
       // 提示
       Message.error({
         content: res.msg || 'Error',
@@ -60,7 +65,10 @@ axios.interceptors.response.use(
           window.sessionStorage.setItem(reLoginTipsKey, res.msg);
         }
         // 登出
-        await useUserStore().logout();
+        const responseUrl = response.request?.responseURL;
+        if (!responseUrl || !responseUrl.includes('/logout')) {
+          await useUserStore().logout();
+        }
         // 重新加载自动跳转登录页面
         window.location.reload();
       });
@@ -76,10 +84,13 @@ axios.interceptors.response.use(
     return Promise.reject(new Error(res.msg || 'Error'));
   },
   (error) => {
-    Message.error({
-      content: error.msg || '请求失败',
-      duration: 5 * 1000,
-    });
+    // 判断是否弹出请求错误信息
+    if (error.config.promptRequestErrorMessage) {
+      Message.error({
+        content: error.msg || '请求失败',
+        duration: 5 * 1000,
+      });
+    }
     return Promise.reject(error);
   }
 );

@@ -7,7 +7,7 @@ import com.orion.visor.framework.common.constant.AppConst;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.Mixes;
 import com.orion.visor.module.infra.entity.vo.AppInfoVO;
-import com.orion.visor.module.infra.service.SystemService;
+import com.orion.visor.module.infra.service.SystemSettingService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @since 2024/6/17 18:10
  */
 @Service
-public class SystemServiceImpl implements SystemService {
+public class SystemSettingServiceImpl implements SystemSettingService {
 
     private String uuid;
 

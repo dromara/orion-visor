@@ -4,7 +4,7 @@ import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.entity.vo.AppInfoVO;
-import com.orion.visor.module.infra.service.SystemService;
+import com.orion.visor.module.infra.service.SystemSettingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +27,18 @@ import javax.annotation.Resource;
 @Validated
 @RestWrapper
 @RestController
-@RequestMapping("/infra/system")
+@RequestMapping("/infra/system-setting")
 @SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
-public class SystemController {
+public class SystemSettingController {
 
     @Resource
-    private SystemService systemService;
+    private SystemSettingService systemSettingService;
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/app-info")
     @Operation(summary = "查询应用信息")
     public AppInfoVO getAppInfo() {
-        return systemService.getAppInfo();
+        return systemSettingService.getAppInfo();
     }
 
 }

@@ -12,7 +12,6 @@ import com.orion.lang.utils.crypto.Caesars;
  */
 public class Mixes {
 
-
     private Mixes() {
     }
 

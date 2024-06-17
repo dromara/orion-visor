@@ -9,7 +9,7 @@ import com.orion.visor.module.infra.entity.vo.AppInfoVO;
  * @version 1.0.0
  * @since 2024/6/17 18:10
  */
-public interface SystemService {
+public interface SystemSettingService {
 
     /**
      * 获取应用信息
