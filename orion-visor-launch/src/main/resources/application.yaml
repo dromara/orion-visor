@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: orion-visor-launch
+    name: orion-visor
   profiles:
     active: dev
   main:
@@ -142,7 +142,7 @@ knife4j:
 
 logging:
   file:
-    path: ${user.home}/orion/logs/orion-visor
+    path: ${user.home}/orion/logs/${spring.application.name}
     name: ${logging.file.path}/app.log
   logback:
     rollingpolicy:
@@ -253,14 +253,14 @@ orion:
       timestamp-prefix: false
       date-directory: false
       storage-path: ${user.home}
-      base-path: /orion/orion-visor/storage
+      base-path: /orion/${spring.application.name}/storage
     # 日志文件存储
     logs:
       enabled: true
       timestamp-prefix: false
       date-directory: false
       storage-path: ${user.home}
-      base-path: /orion/orion-visor/logs
+      base-path: /orion/${spring.application.name}/logs
   security:
     password-encoder-length: 4
     # 匿名接口

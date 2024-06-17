@@ -16,7 +16,10 @@ public interface AppConst extends OrionConst {
      */
     String VERSION = "2.0.8";
 
-    String ORION_VISOR = "orion-visor";
+    /**
+     * 同 ${spring.application.name}
+     */
+    String APP_NAME = "orion-visor";
 
     String GITHUB = "https://github.com/dromara/orion-visor";
 
