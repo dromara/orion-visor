@@ -33,7 +33,7 @@ public class PathBookmarkGroupAutoClearTask {
     @Scheduled(cron = "0 20 2 * * ?")
     public void clear() {
         log.info("PathBookmarkGroupAutoClearTask.clear start");
-        // 获取锁并清理
+        // 获取锁并执行
         LockerUtils.tryLock(LOCK_KEY, pathBookmarkGroupService::clearUnusedGroup);
         log.info("PathBookmarkGroupAutoClearTask.clear finish");
     }

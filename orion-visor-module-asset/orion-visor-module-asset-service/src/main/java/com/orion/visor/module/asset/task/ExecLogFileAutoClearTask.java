@@ -51,7 +51,7 @@ public class ExecLogFileAutoClearTask {
     @Scheduled(cron = "0 0 3 * * ?")
     public void clear() {
         log.info("ExecLogFileAutoClearTask.clear start");
-        // 获取锁并且执行
+        // 获取锁并执行
         LockerUtils.tryLock(LOCK_KEY, this::doClearFile);
         log.info("ExecLogFileAutoClearTask.clear finish");
     }

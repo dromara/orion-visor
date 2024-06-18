@@ -68,6 +68,7 @@
       await openLogWithId(Number.parseInt(keyParam as string));
     }
   });
+
 </script>
 
 <style lang="less" scoped>

@@ -1,10 +1,10 @@
 <template>
   <div class="tabs-container">
-    <a-tabs type="rounded"
+    <a-tabs v-model:active-key="activeKey"
+            type="rounded"
             size="medium"
             position="left"
-            :lazy-load="true"
-            :destroy-on-hide="true">
+            :lazy-load="true">
       <!-- 关于 -->
       <a-tab-pane key="about" title="关于">
         <about />
@@ -20,7 +20,21 @@
 </script>
 
 <script lang="ts" setup>
+  import { onBeforeMount, ref } from 'vue';
+  import { useRoute } from 'vue-router';
   import About from './components/about.vue';
+
+  const route = useRoute();
+
+  const activeKey = ref('license');
+
+  // 跳转到指定页
+  onBeforeMount(() => {
+    const key = route.query.key;
+    if (key) {
+      activeKey.value = key as string;
+    }
+  });
 
 </script>
 
