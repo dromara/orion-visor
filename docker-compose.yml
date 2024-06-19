@@ -2,6 +2,7 @@ version: '3.3'
 services:
   orion-visor-service:
     image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.0.9
+    privileged: true
     ports:
       - 1081:80
     environment:

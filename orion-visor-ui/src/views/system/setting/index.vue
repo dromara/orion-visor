@@ -26,7 +26,7 @@
 
   const route = useRoute();
 
-  const activeKey = ref('license');
+  const activeKey = ref('about');
 
   // 跳转到指定页
   onBeforeMount(() => {
