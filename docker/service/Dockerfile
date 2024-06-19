@@ -8,6 +8,7 @@ RUN \
   sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
   apk update && \
   apk add tzdata && \
+  apk add dmidecode && \
   apk add openjdk8
 # 设置时区
 RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \

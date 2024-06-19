@@ -1,5 +1,6 @@
 package com.orion.visor.module.infra.controller;
 
+import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
 import com.orion.visor.module.infra.entity.request.preference.PreferenceUpdateRequest;
@@ -56,6 +57,7 @@ public class PreferenceController {
         return preferenceService.getPreferenceByType(type, items);
     }
 
+    @IgnoreLog
     @GetMapping("/get-default")
     @Operation(summary = "查询默认偏好")
     @Parameter(name = "type", description = "type", required = true)

@@ -1,7 +1,7 @@
 {
   "name": "orion-visor-ui",
   "description": "Orion Visor UI",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "private": true,
   "author": "Jiahang Li",
   "license": "Apache 2.0",
@@ -32,7 +32,7 @@
     ]
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.55.0",
+    "@arco-design/web-vue": "^2.55.3",
     "@dangojs/a-query-header": "^0.0.31",
     "@sanqi377/arco-vue-icon-picker": "^1.0.7",
     "@vueuse/core": "^9.3.0",

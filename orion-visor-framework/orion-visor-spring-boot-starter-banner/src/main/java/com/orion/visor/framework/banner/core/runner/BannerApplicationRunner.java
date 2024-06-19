@@ -51,7 +51,7 @@ public class BannerApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         AnsiAppender appender = AnsiAppender.create()
-                .append(AnsiForeground.BRIGHT_GREEN, ":: orion-visor-launch v" + version + " 服务已启动(" + env + ") ::\n");
+                .append(AnsiForeground.BRIGHT_GREEN, ":: orion-visor v" + version + " 服务已启动(" + env + ") ::\n");
         // swagger 地址
         if (apiDocsEnabled) {
             appender.append(AnsiForeground.BRIGHT_GREEN, ":: swagger 文档       ")

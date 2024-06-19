@@ -342,7 +342,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     /**
      * 删除主要用户缓存 其他的缓存自动过期
      *
-     * @param userList
+     * @param userList userList
      */
     private void deleteUserCacheKey(List<SystemUserDO> userList) {
         Set<String> deleteKeys = new HashSet<>();

@@ -110,6 +110,7 @@ public class PathBookmarkGroupServiceImpl implements PathBookmarkGroupService {
                 .select(PathBookmarkDO::getUserId, PathBookmarkDO::getGroupId)
                 .isNotNull(PathBookmarkDO::getGroupId)
                 .groupBy(PathBookmarkDO::getGroupId)
+                .groupBy(PathBookmarkDO::getUserId)
                 .then()
                 .stream()
                 .collect(Collectors.groupingBy(PathBookmarkDO::getUserId,

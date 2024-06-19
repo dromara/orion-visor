@@ -33,7 +33,7 @@ public class TagAutoClearTask {
     @Scheduled(cron = "0 0 2 * * ?")
     public void clear() {
         log.info("TagAutoClearTask.clear start");
-        // 获取锁并清理
+        // 获取锁并执行
         LockerUtils.tryLock(LOCK_KEY, tagService::clearUnusedTag);
         log.info("TagAutoClearTask.clear finish");
     }

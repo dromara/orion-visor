@@ -13,4 +13,8 @@ public interface CnConst {
 
     String CN_ROLE = "角色";
 
+    String CN_UNKNOWN = "未知";
+
+    String CN_INTRANET_IP = "内网IP";
+
 }

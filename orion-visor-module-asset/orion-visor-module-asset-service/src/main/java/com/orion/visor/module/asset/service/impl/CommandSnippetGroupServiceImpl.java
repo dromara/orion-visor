@@ -109,6 +109,7 @@ public class CommandSnippetGroupServiceImpl implements CommandSnippetGroupServic
                 .createWrapper()
                 .select(CommandSnippetDO::getUserId, CommandSnippetDO::getGroupId)
                 .isNotNull(CommandSnippetDO::getGroupId)
+                .groupBy(CommandSnippetDO::getUserId)
                 .groupBy(CommandSnippetDO::getGroupId)
                 .then()
                 .stream()
