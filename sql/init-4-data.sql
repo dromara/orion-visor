@@ -292,10 +292,10 @@ INSERT INTO `dict_value` VALUES (298, 44, 'messageClassify', 'TODO', '待办', '
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2023-09-11 15:27:52', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (5, 0, '用户设置', NULL, 1, 700, 1, 1, 1, 0, 'icon-user', NULL, 'userModule', '2023-07-28 10:55:38', '2024-04-03 00:56:30', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (5, 0, '用户管理', NULL, 1, 700, 1, 1, 1, 0, 'icon-user', NULL, 'userModule', '2023-07-28 10:55:38', '2024-06-17 20:45:29', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (8, 0, '项目地址', NULL, 1, 1000, 1, 1, 1, 0, 'icon-link', 'https://lijiahangmax.github.io/open-orion/orion-visor', '', '2023-07-28 11:04:59', '2024-05-31 17:13:12', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (10, 5, '角色管理', NULL, 2, 10, 1, 1, 1, 0, 'IconUserGroup', '', 'role', '2023-07-28 10:55:52', '2024-03-07 19:10:13', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (12, 0, '系统设置', NULL, 1, 800, 1, 1, 1, 0, 'icon-tool', NULL, 'systemModule', '2023-08-02 18:24:24', '2024-04-03 00:56:17', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (12, 0, '系统管理', NULL, 1, 800, 1, 1, 1, 0, 'icon-tool', NULL, 'systemModule', '2023-08-02 18:24:24', '2024-06-17 20:45:39', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (13, 12, '系统菜单', '', 2, 10, 1, 1, 1, 0, 'icon-menu', NULL, 'systemMenu', '2023-08-02 18:29:01', '2024-03-07 22:25:00', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (20, 10, '创建角色', 'infra:system-role:create', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-08-15 16:36:54', '2023-10-27 01:20:46', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (21, 10, '修改角色', 'infra:system-role:update', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-08-15 16:37:33', '2023-10-27 01:20:46', '1', '1', 0);
@@ -409,3 +409,4 @@ INSERT INTO `system_menu` VALUES (199, 197, '上传文件', 'asset:upload-task:u
 INSERT INTO `system_menu` VALUES (200, 198, '查询上传日志', 'asset:upload-task:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:01', '2024-05-08 22:20:01', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (201, 198, '删除上传日志', 'asset:upload-task:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:26', '2024-05-08 22:20:26', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (202, 198, '清理上传日志', 'asset:upload-task:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:37', '2024-05-08 22:20:37', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (203, 12, '系统设置', NULL, 2, 40, 1, 1, 1, 0, 'IconSettings', NULL, 'systemSetting', '2024-06-17 20:46:15', '2024-06-17 20:46:15', '1', '1', 0);
