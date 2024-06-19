@@ -63,6 +63,7 @@ export const LogAppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
   lineHeight: 1.12,
   convertEol: true,
   allowProposedApi: true,
+  fontFamily: 'Courier New, Monaco, courier, monospace',
 };
 
 // dom 引用

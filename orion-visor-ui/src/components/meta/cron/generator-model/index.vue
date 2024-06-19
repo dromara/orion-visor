@@ -52,8 +52,6 @@
   // 确定
   const handlerOk = () => {
     setVisible(false);
-    console.log(cronExpression.value);
-    console.log('ok', cronExpression.value);
     emits('ok', cronExpression.value);
   };
 

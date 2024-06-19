@@ -28,7 +28,7 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
         String defaultDisplaySetting = TerminalPreferenceModel.DisplaySettingModel
                 .builder()
                 .fontFamily("_")
-                .fontSize(13)
+                .fontSize(14)
                 .lineHeight(1.12)
                 .letterSpacing(0)
                 .fontWeight("normal")
