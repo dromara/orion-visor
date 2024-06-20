@@ -11,29 +11,33 @@ items:
     header:
       Content-type: application/json
     body: |
-      {"username":"admin","password":"admin"}
+      {"username":"admin","password":"21232f297a57a5a743894a0e4a801fc3"}
   expect:
     bodyFieldsExpect:
       code: 200
 - name: userPermission
   request:
-    api: /orion-visor/api/infra/permission/user?s={{.login.data.token}}
+    api: /orion-visor/api/infra/permission/user
     header:
       Authorization: Bearer {{.login.data.token}}
   expect:
     bodyFieldsExpect:
       code: 200
-      message: "success"
+      msg: "success"
 - name: menu
   request:
     api: /orion-visor/api/infra/permission/menu
+    header:
+      Authorization: Bearer {{.login.data.token}}
   expect:
     bodyFieldsExpect:
       code: 200
-      message: "success"
+      msg: "success"
 - name: haveUnRead
   request:
     api: /orion-visor/api/infra/system-message/has-unread
+    header:
+      Authorization: Bearer {{.login.data.token}}
   expect:
     bodyFieldsExpect:
       data: false
