@@ -3,6 +3,7 @@ package com.orion.visor.framework.log.core.interceptor;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.time.Dates;
+import com.orion.visor.framework.common.utils.IpUtils;
 import com.orion.visor.framework.common.utils.SwaggerUtils;
 import com.orion.visor.framework.log.configuration.config.LogPrinterConfig;
 import com.orion.web.servlet.web.Servlets;
@@ -60,7 +61,7 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         // http
         if (request != null) {
             // remoteAddr
-            requestLog.append("\tremoteAddr: ").append(Servlets.getRemoteAddr(request)).append('\n');
+            requestLog.append("\tremoteAddr: ").append(IpUtils.getRemoteAddr(request)).append('\n');
             // header
             Servlets.getHeaderMap(request).forEach((hk, hv) -> {
                 if (headerFilter.test(hk.toLowerCase())) {

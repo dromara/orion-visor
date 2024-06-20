@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.time.Dates;
+import com.orion.visor.framework.common.utils.IpUtils;
 import com.orion.visor.framework.common.utils.SwaggerUtils;
 import com.orion.visor.framework.log.configuration.config.LogPrinterConfig;
 import com.orion.visor.framework.log.core.enums.LogFieldConst;
@@ -61,7 +62,7 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
         // http
         if (request != null) {
             // remoteAddr
-            fields.put(REMOTE_ADDR, Servlets.getRemoteAddr(request));
+            fields.put(REMOTE_ADDR, IpUtils.getRemoteAddr(request));
             // header
             Map<String, Object> headers = new LinkedHashMap<>();
             Servlets.getHeaderMap(request).forEach((hk, hv) -> {
