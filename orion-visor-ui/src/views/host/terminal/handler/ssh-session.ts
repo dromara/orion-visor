@@ -1,13 +1,13 @@
 import type { UnwrapRef } from 'vue';
 import type { ISearchOptions } from '@xterm/addon-search';
+import { SearchAddon } from '@xterm/addon-search';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
-import type { ISshSession, ISshSessionHandler, ITerminalChannel, XtermAddons, XtermDomRef } from '../types/terminal.type';
+import type { ISshSession, ISshSessionHandler, ITerminalChannel, TerminalPanelTabItem, XtermAddons, XtermDomRef } from '../types/terminal.type';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '../types/terminal.protocol';
-import { fontFamilySuffix, TerminalShortcutType, TerminalStatus } from '../types/terminal.const';
+import { fontFamilySuffix, PanelSessionType, TerminalShortcutType, TerminalStatus, } from '../types/terminal.const';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { SearchAddon } from '@xterm/addon-search';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ImageAddon } from '@xterm/addon-image';
 import { Unicode11Addon } from '@xterm/addon-unicode11';
@@ -16,21 +16,12 @@ import { WebglAddon } from '@xterm/addon-webgl';
 import { playBell } from '@/utils/bell';
 import { addEventListen } from '@/utils/event';
 import SshSessionHandler from './ssh-session-handler';
+import BaseSession from './base-session';
 
 // ssh 会话实现
-export default class SshSession implements ISshSession {
-
-  public readonly hostId: number;
-
-  public sessionId: string;
+export default class SshSession extends BaseSession implements ISshSession {
 
   public inst: Terminal;
-
-  public connected: boolean;
-
-  public canReconnect: boolean;
-
-  public canWrite: boolean;
 
   public status: number;
 
@@ -40,15 +31,10 @@ export default class SshSession implements ISshSession {
 
   private readonly addons: XtermAddons;
 
-  constructor(hostId: number,
-              sessionId: string,
+  constructor(tab: TerminalPanelTabItem,
               channel: ITerminalChannel) {
-    this.hostId = hostId;
-    this.sessionId = sessionId;
+    super(PanelSessionType.SSH.type, tab);
     this.channel = channel;
-    this.connected = false;
-    this.canReconnect = false;
-    this.canWrite = false;
     this.status = TerminalStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
     this.handler = undefined as unknown as ISshSessionHandler;
@@ -213,14 +199,14 @@ export default class SshSession implements ISshSession {
 
   // 设置已连接
   connect(): void {
+    super.connect();
     this.status = TerminalStatus.CONNECTED;
-    this.connected = true;
     this.inst.focus();
   }
 
   // 设置是否可写
   setCanWrite(canWrite: boolean): void {
-    this.canWrite = canWrite;
+    super.setCanWrite(canWrite);
     if (canWrite) {
       this.inst.options.cursorBlink = useTerminalStore().preference.displaySetting.cursorBlink;
     } else {
@@ -229,7 +215,7 @@ export default class SshSession implements ISshSession {
   }
 
   // 写入数据
-  write(value: string | Uint8Array): void {
+  write(value: string): void {
     this.inst.write(value);
   }
 
@@ -259,6 +245,7 @@ export default class SshSession implements ISshSession {
 
   // 断开连接
   disconnect(): void {
+    super.disconnect();
     // 发送关闭消息
     this.channel.send(InputProtocol.CLOSE, {
       sessionId: this.sessionId
@@ -267,6 +254,7 @@ export default class SshSession implements ISshSession {
 
   // 关闭
   close(): void {
+    super.close();
     try {
       // 卸载插件
       Object.values(this.addons)

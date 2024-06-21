@@ -30,10 +30,11 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ISftpSession } from '../../types/terminal.type';
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import SftpSession from '../../handler/sftp-session';
+  import { PanelSessionType } from '../../types/terminal.const';
 
   const { visible, setVisible } = useVisible();
   const { sessionManager } = useTerminalStore();
@@ -69,8 +70,8 @@
         return false;
       }
       // 获取会话
-      const session = sessionManager.getSession(sessionId.value);
-      if (session instanceof SftpSession) {
+      const session = sessionManager.getSession<ISftpSession>(sessionId.value);
+      if (session.type === PanelSessionType.SFTP.type) {
         if (touch.value) {
           // 创建文件
           session.touch(formModel.value.path);

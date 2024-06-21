@@ -1,6 +1,6 @@
 <template>
   <a-drawer v-model:visible="visible"
-            :width="388"
+            width="40%"
             :title="title"
             :mask-closable="false"
             :unmount-on-close="true"
@@ -22,21 +22,18 @@
         </a-form-item>
         <!-- 分组 -->
         <a-form-item field="groupId" label="分组">
-          <path-bookmark-group-select v-model="formModel.groupId" />
+          <command-snippet-group-select v-model="formModel.groupId" />
         </a-form-item>
-        <!-- 类型 -->
-        <a-form-item field="type" label="类型">
-          <a-select v-model="formModel.type"
-                    :options="toOptions(pathBookmarkTypeKey)"
-                    placeholder="请选择类型"
-                    allow-clear />
-        </a-form-item>
-        <!-- 文件路径 -->
-        <a-form-item field="path" label="路径">
-          <a-textarea v-model="formModel.path"
-                      placeholder="文件路径"
-                      :auto-size="{ minRows: 8, maxRows: 8 }"
-                      allow-clear />
+        <!-- 代码片段 -->
+        <a-form-item field="command"
+                     label="代码片段"
+                     :hide-label="true">
+          <editor v-model="formModel.command"
+                  container-class="command-editor"
+                  language="shell"
+                  theme="vs-dark"
+                  :suggestions="true"
+                  :auto-focus="true" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -45,47 +42,43 @@
 
 <script lang="ts">
   export default {
-    name: 'pathBookmarkFormDrawer'
+    name: 'commandSnippetFormDrawer'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { PathBookmarkUpdateRequest } from '@/api/asset/path-bookmark';
+  import type { CommandSnippetUpdateRequest } from '@/api/asset/command-snippet';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { createPathBookmark, updatePathBookmark } from '@/api/asset/path-bookmark';
-  import formRules from '../types/form.rules';
-  import { PathBookmarkType, pathBookmarkTypeKey } from '../types/const';
-  import { useDictStore } from '@/store';
+  import { createCommandSnippet, updateCommandSnippet } from '@/api/asset/command-snippet';
+  import formRules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';
-  import PathBookmarkGroupSelect from './path-bookmark-group-select.vue';
+  import CommandSnippetGroupSelect from './command-snippet-group-select.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
-  const { toOptions } = useDictStore();
 
   const title = ref<string>();
   const isAddHandle = ref<boolean>(true);
 
-  const defaultForm = (): PathBookmarkUpdateRequest => {
+  const defaultForm = (): CommandSnippetUpdateRequest => {
     return {
       id: undefined,
       groupId: undefined,
       name: undefined,
-      type: PathBookmarkType.DIR,
-      path: undefined,
+      command: undefined,
     };
   };
 
   const formRef = ref<any>();
-  const formModel = ref<PathBookmarkUpdateRequest>({});
+  const formModel = ref<CommandSnippetUpdateRequest>({});
 
   const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
   const openAdd = () => {
-    title.value = '添加路径标签';
+    title.value = '添加命令片段';
     isAddHandle.value = true;
     renderForm({ ...defaultForm() });
     setVisible(true);
@@ -93,7 +86,7 @@
 
   // 打开修改
   const openUpdate = (record: any) => {
-    title.value = '修改路径标签';
+    title.value = '修改命令片段';
     isAddHandle.value = false;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
@@ -117,13 +110,13 @@
       }
       if (isAddHandle.value) {
         // 新增
-        const { data: id } = await createPathBookmark(formModel.value);
+        const { data: id } = await createCommandSnippet(formModel.value);
         formModel.value.id = id;
         Message.success('创建成功');
         emits('added', formModel.value);
       } else {
         // 修改
-        await updatePathBookmark(formModel.value);
+        await updateCommandSnippet(formModel.value);
         Message.success('修改成功');
         emits('updated', formModel.value);
       }
@@ -151,6 +144,10 @@
 <style lang="less" scoped>
   .form-container {
     padding: 16px;
+  }
+
+  .command-editor {
+    height: calc(100vh - 262px);
   }
 
 </style>

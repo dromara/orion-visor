@@ -403,6 +403,9 @@ export const tabColorKey = 'terminalTabColor';
 // SFTP 传输状态
 export const transferStatusKey = 'sftpTransferStatus';
 
+// 路径书签类型
+export const pathBookmarkTypeKey = 'pathBookmarkType';
+
 // 加载的字典值
 export const dictKeys = [
   fontFamilyKey, fontSizeKey,
@@ -410,4 +413,5 @@ export const dictKeys = [
   newConnectionTypeKey, extraSshAuthTypeKey,
   connectStatusKey, emulationTypeKey,
   tabColorKey, transferStatusKey,
+  pathBookmarkTypeKey,
 ];

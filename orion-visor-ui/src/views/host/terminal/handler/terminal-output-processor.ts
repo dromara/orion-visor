@@ -1,10 +1,16 @@
-import { ISftpSession, ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager, OutputPayload } from '../types/terminal.type';
+import {
+  ISftpSession,
+  ISshSession,
+  ITerminalChannel,
+  ITerminalOutputProcessor,
+  ITerminalSession,
+  ITerminalSessionManager,
+  OutputPayload
+} from '../types/terminal.type';
 import { InputProtocol } from '../types/terminal.protocol';
-import { TerminalStatus } from '../types/terminal.const';
+import { PanelSessionType, TerminalStatus } from '../types/terminal.const';
 import { useTerminalStore } from '@/store';
 import { Message } from '@arco-design/web-vue';
-import SshSession from './ssh-session';
-import SftpSession from './sftp-session';
 
 // 终端输出消息体处理器实现
 export default class TerminalOutputProcessor implements ITerminalOutputProcessor {
@@ -23,7 +29,8 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     const success = !!Number.parseInt(result);
     const session = this.sessionManager.getSession(sessionId);
     session.canReconnect = !success;
-    if (session instanceof SshSession) {
+    // 处理
+    this.processWithType(session, ssh => {
       // ssh 会话
       if (success) {
         // 检查成功发送 connect 命令
@@ -31,15 +38,15 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         this.channel.send(InputProtocol.CONNECT, {
           sessionId,
           terminalType: preference.sessionSetting.terminalEmulationType || 'xterm',
-          cols: session.inst.cols,
-          rows: session.inst.rows
+          cols: ssh.inst.cols,
+          rows: ssh.inst.rows
         });
       } else {
         // 未成功展示错误信息
-        session.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
-        session.status = TerminalStatus.CLOSED;
+        ssh.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
+        ssh.status = TerminalStatus.CLOSED;
       }
-    } else if (session instanceof SftpSession) {
+    }, sftp => {
       // sftp 会话
       if (success) {
         // 检查成功发送 connect 命令
@@ -48,10 +55,10 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         });
       } else {
         // 未成功提示错误信息
-        session.resolver?.onClose(false, msg);
+        sftp.resolver?.onClose(false, msg);
         Message.error(msg || '建立 SFTP 失败');
       }
-    }
+    });
   }
 
   // 处理连接消息
@@ -59,29 +66,32 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     const success = !!Number.parseInt(result);
     const session = this.sessionManager.getSession(sessionId);
     session.canReconnect = !success;
-    if (session instanceof SshSession) {
+    // 处理
+    this.processWithType(session, ssh => {
       // ssh 会话
       if (success) {
         // 设置可写
-        session.setCanWrite(true);
+        ssh.setCanWrite(true);
         // 执行连接逻辑
-        session.connect();
+        ssh.connect();
       } else {
         // 未成功展示错误信息
-        session.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
-        session.status = TerminalStatus.CLOSED;
+        ssh.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
+        ssh.status = TerminalStatus.CLOSED;
       }
-    } else if (session instanceof SftpSession) {
+    }, sftp => {
       // sftp 会话
       if (success) {
+        // 设置可写
+        sftp.setCanWrite(true);
         // 执行连接逻辑
-        session.connect();
+        sftp.connect();
       } else {
         // 未成功提示错误信息
-        session.resolver?.onClose(false, msg);
+        sftp.resolver?.onClose(false, msg);
         Message.error(msg || '打开 SFTP 失败');
       }
-    }
+    });
   }
 
   // 处理关闭消息
@@ -94,20 +104,23 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     const isForceClose = !!Number.parseInt(forceClose);
     session.connected = false;
     session.canReconnect = !isForceClose;
-    if (session instanceof SshSession) {
+    // 处理
+    this.processWithType(session, ssh => {
       // ssh 拼接关闭消息
-      session.write(`\r\n\r\n[91m${msg || ''}[0m\r\n`);
+      ssh.write(`\r\n\r\n[91m${msg || ''}[0m\r\n`);
       if (!isForceClose) {
-        session.write('[91m输入回车重新连接...[0m\r\n\r\n');
+        ssh.write('[91m输入回车重新连接...[0m\r\n\r\n');
       }
       // 设置状态
-      session.status = TerminalStatus.CLOSED;
+      ssh.status = TerminalStatus.CLOSED;
       // 设置不可写
-      session.setCanWrite(false);
-    } else if (session instanceof SftpSession) {
+      ssh.setCanWrite(false);
+    }, sftp => {
+      // 设置不可写
+      sftp.setCanWrite(false);
       // sftp 设置状态
-      session.resolver?.onClose(isForceClose, msg);
-    }
+      sftp.resolver?.onClose(isForceClose, msg);
+    });
   }
 
   // 处理 pong 消息
@@ -182,6 +195,19 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
     session && session.resolver.resolveSftpSetContent(result, msg);
+  }
+
+  // 根据类型处理操作
+  private processWithType(session: ITerminalSession,
+                          sshProcess: (ssh: ISshSession) => any | void,
+                          sftpProcess: (ssh: ISftpSession) => any | void) {
+    if (session.type === PanelSessionType.SSH.type) {
+      // SSH 操作
+      return sshProcess(session as ISshSession);
+    } else if (session.type === PanelSessionType.SFTP.type) {
+      // SFTP 操作
+      return sftpProcess(session as ISftpSession);
+    }
   }
 
 }

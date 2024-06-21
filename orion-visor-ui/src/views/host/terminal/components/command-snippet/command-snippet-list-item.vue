@@ -4,61 +4,55 @@
               trigger="contextMenu"
               position="bl"
               alignPoint>
-    <!-- 路径 -->
-    <div class="path-item-wrapper"
-         :class="[!!item.expand ? 'path-item-wrapper-expand' : '']"
+    <!-- 命令 -->
+    <div class="snippet-item-wrapper"
+         :class="[!!item.expand ? 'snippet-item-wrapper-expand' : '']"
          @click="clickItem">
-      <div class="path-item">
-        <div class="path-item-title">
+      <div class="snippet-item">
+        <div class="snippet-item-title">
           <!-- 名称 -->
-          <span class="path-item-title-name">
+          <span class="snippet-item-title-name">
             {{ item.name }}
           </span>
           <!-- 操作 -->
-          <div class="path-item-title-actions">
+          <div class="snippet-item-title-actions">
             <a-space>
-              <!-- 进入 -->
+              <!-- 粘贴 -->
               <a-tag class="pointer usn"
                      size="small"
                      :checkable="true"
                      :checked="true"
-                     @click.stop="changePath">
+                     @click.stop.prevent="paste">
                 <template #icon>
-                  <icon-link />
+                  <icon-paste />
                 </template>
-                进入
+                粘贴
               </a-tag>
-              <!-- 复制 -->
+              <!-- 执行 -->
               <a-tag class="pointer usn"
                      size="small"
                      :checkable="true"
                      :checked="true"
-                     @click.stop.prevent="copyPath">
+                     @click.stop="exec">
                 <template #icon>
-                  <icon-copy />
+                  <icon-thunderbolt />
                 </template>
-                复制
+                执行
               </a-tag>
             </a-space>
           </div>
         </div>
-        <!-- 路径 -->
-        <span class="path-item-value" @click="clickPath">
-          {{ item.path }}
+        <!-- 命令 -->
+        <span class="snippet-item-command"
+              @click="clickCommand">
+          {{ item.command }}
         </span>
       </div>
     </div>
     <!-- 右键菜单 -->
     <template #content>
-      <!-- 进入 -->
-      <a-doption @click="changePath">
-        <div class="terminal-context-menu-icon">
-          <icon-link />
-        </div>
-        <div>进入</div>
-      </a-doption>
       <!-- 复制 -->
-      <a-doption @click="copyPath">
+      <a-doption @click="copyCommand">
         <div class="terminal-context-menu-icon">
           <icon-copy />
         </div>
@@ -71,15 +65,22 @@
         </div>
         <div>粘贴</div>
       </a-doption>
+      <!-- 执行 -->
+      <a-doption @click="exec">
+        <div class="terminal-context-menu-icon">
+          <icon-thunderbolt />
+        </div>
+        <div>执行</div>
+      </a-doption>
       <!-- 修改 -->
-      <a-doption @click="openUpdatePath(item)">
+      <a-doption @click="openUpdateSnippet(item)">
         <div class="terminal-context-menu-icon">
           <icon-edit />
         </div>
         <div>修改</div>
       </a-doption>
       <!-- 删除 -->
-      <a-doption @click="removePath(item.id)">
+      <a-doption @click="removeSnippet(item.id)">
         <div class="terminal-context-menu-icon">
           <icon-delete />
         </div>
@@ -107,48 +108,40 @@
 
 <script lang="ts">
   export default {
-    name: 'pathBookmarkListItem'
+    name: 'commandSnippetListItem'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, ISshSession } from '@/views/host/terminal/types/terminal.type';
-  import type { PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
+  import type { ISshSession } from '../../types/terminal.type';
+  import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
   import { copy } from '@/hooks/copy';
   import { inject } from 'vue';
-  import { getParentPath } from '@/utils/file';
-  import { openUpdatePathKey, PathBookmarkType, removePathKey } from '../types/const';
-  import { PanelSessionType } from '@/views/host/terminal/types/terminal.const';
+  import { openUpdateSnippetKey, removeSnippetKey } from './types/const';
+  import { PanelSessionType } from '../../types/terminal.const';
 
   const props = defineProps<{
-    item: PathBookmarkQueryResponse;
+    item: CommandSnippetQueryResponse;
   }>();
 
-  const { getCurrentSession, getCurrentSessionType } = useTerminalStore();
+  const { getCurrentSession } = useTerminalStore();
 
   let clickCount = 0;
 
   // 修改
-  const openUpdatePath = inject(openUpdatePathKey) as (item: PathBookmarkQueryResponse) => void;
+  const openUpdateSnippet = inject(openUpdateSnippetKey) as (item: CommandSnippetQueryResponse) => void;
 
   // 删除
-  const removePath = inject(removePathKey) as (id: number) => void;
+  const removeSnippet = inject(removeSnippetKey) as (id: number) => void;
 
-  // 点击路径
+  // 点击命令
   const clickItem = () => {
     if (++clickCount == 2) {
+      // 双击执行
       clickCount = 0;
-      // 双击
-      const type = getCurrentSessionType(true);
-      if (type === PanelSessionType.SSH.type) {
-        // SSH 粘贴
-        paste();
-      } else if (type === PanelSessionType.SFTP.type) {
-        // SFTP 切换目录
-        listFiles();
-      }
+      exec();
     } else {
       // 单击展开
       expandItem();
@@ -166,8 +159,8 @@
     }, 50);
   });
 
-  // 点击路径
-  const clickPath = (e: Event) => {
+  // 点击命令
+  const clickCommand = (e: Event) => {
     if (props.item.expand) {
       // 获取选中的文本
       const selectedText = window.getSelection()?.toString();
@@ -177,43 +170,23 @@
     }
   };
 
-  // 复制路径
-  const copyPath = () => {
-    copy(props.item.path, '已复制');
+  // 复制命令
+  const copyCommand = () => {
+    copy(props.item.command, '已复制');
   };
 
   // 粘贴
   const paste = () => {
-    writeCommand(props.item.path);
+    write(props.item.command);
   };
 
-  // 切换目录
-  const changePath = () => {
-    const type = getCurrentSessionType(true);
-    if (type === PanelSessionType.SSH.type) {
-      const path = props.item.type === PathBookmarkType.DIR
-        ? props.item.path
-        : getParentPath(props.item.path);
-      // SSH cd
-      writeCommand('cd ' + path + '\r\n');
-    } else if (type === PanelSessionType.SFTP.type) {
-      // SFTP 切换目录
-      listFiles();
-    }
+  // 执行
+  const exec = () => {
+    write(props.item.command + '\r\n');
   };
 
-  // 查询 sftp 文件列表
-  const listFiles = () => {
-    // 如果非文件夹则查询父文件夹
-    const path = props.item.type === PathBookmarkType.DIR
-      ? props.item.path
-      : getParentPath(props.item.path);
-    // 查询列表
-    getCurrentSession<ISftpSession>(PanelSessionType.SFTP.type, true)?.list(path);
-  };
-
-  // 写入 ssh 命令
-  const writeCommand = (command: string) => {
+  // 写入命令
+  const write = (command: string) => {
     const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
     if (handler && handler.enabledStatus('checkAppendMissing')) {
       handler.checkAppendMissing(command);
@@ -233,7 +206,7 @@
   @item-inline-width: @item-width - @item-p * 2;
   @item-actions-width: 124px;
 
-  .path-item-wrapper {
+  .snippet-item-wrapper {
     padding: @item-wrapper-p-y 0;
     display: flex;
     justify-content: center;
@@ -242,11 +215,11 @@
 
     &-expand {
 
-      .path-item {
+      .snippet-item {
         width: @item-width-transform !important;
         background: var(--color-fill-3) !important;
 
-        .path-item-value {
+        .snippet-item-command {
           color: var(--color-text-1);
           text-overflow: unset;
           word-break: break-all;
@@ -256,7 +229,7 @@
       }
     }
 
-    .path-item {
+    .snippet-item {
       display: flex;
       flex-direction: column;
       padding: @item-p;
@@ -270,7 +243,7 @@
         width: @item-width-transform;
         background: var(--color-fill-3);
 
-        .path-item-title {
+        .snippet-item-title {
           &-name {
             width: calc(@item-inline-width - @item-actions-width);
           }
@@ -303,7 +276,7 @@
         }
       }
 
-      &-value {
+      &-command {
         color: var(--color-text-2);
         font-size: 12px;
         overflow: hidden;

@@ -5,33 +5,33 @@
             @close="onClose">
     <!-- 标题 -->
     <template #title>
-      <span class="path-drawer-title usn">
-        路径书签
+      <span class="snippet-drawer-title usn">
+        命令片段
       </span>
     </template>
-    <!-- 路径容器 -->
-    <div class="path-container">
-      <!-- 路径头部 -->
-      <div class="path-header">
+    <!-- 命令容器 -->
+    <div class="snippet-container">
+      <!-- 命令头部 -->
+      <div class="snippet-header">
         <!-- 左侧按钮 -->
         <a-space size="small">
-          <!-- 创建路径 -->
-          <span class="click-icon-wrapper path-header-icon"
-                title="创建路径"
+          <!-- 创建命令 -->
+          <span class="click-icon-wrapper snippet-header-icon"
+                title="创建命令"
                 @click="openAdd">
           <icon-plus />
         </span>
           <!-- 刷新 -->
-          <span class="click-icon-wrapper path-header-icon"
+          <span class="click-icon-wrapper snippet-header-icon"
                 title="刷新"
                 @click="fetchData(true)">
           <icon-refresh />
         </span>
         </a-space>
         <!-- 搜索框 -->
-        <a-input-search class="path-header-input"
+        <a-input-search class="snippet-header-input"
                         v-model="filterValue"
-                        placeholder="名称/路径"
+                        placeholder="名称/命令"
                         allow-clear />
       </div>
       <!-- 加载中 -->
@@ -43,51 +43,51 @@
                          :line-spacing="12" />
       </a-skeleton>
       <!-- 无数据 -->
-      <a-empty v-else-if="!pathBookmarkData || (pathBookmarkData.groups.length === 0 && pathBookmarkData.ungroupedItems.length === 0)"
+      <a-empty v-else-if="!snippetValue || (snippetValue.groups.length === 0 && snippetValue.ungroupedItems.length === 0)"
                style="padding: 28px 0">
         <span>暂无数据</span><br>
         <span>点击上方 '<icon-plus />' 添加一条数据吧~</span>
       </a-empty>
-      <!-- 路径书签 -->
-      <div v-else class="path-list-container">
-        <!-- 路径书签组 -->
-        <path-bookmark-list-group :value="pathBookmarkData" />
-        <!-- 未分组路径书签 -->
-        <div class="ungrouped-path-container">
-          <template v-for="item in pathBookmarkData.ungroupedItems">
-            <path-bookmark-list-item v-if="item.visible"
-                                     :key="item.id"
-                                     :item="item" />
+      <!-- 命令片段 -->
+      <div v-else class="snippet-list-container">
+        <!-- 命令片段组 -->
+        <command-snippet-list-group :value="snippetValue" />
+        <!-- 未分组命令片段 -->
+        <div class="ungrouped-snippet-container">
+          <template v-for="item in snippetValue.ungroupedItems">
+            <command-snippet-list-item v-if="item.visible"
+                                       :key="item.id"
+                                       :item="item" />
           </template>
         </div>
       </div>
     </div>
-    <!-- 路径编辑抽屉 -->
-    <path-bookmark-form-drawer ref="formDrawer"
-                               @added="onAdded"
-                               @updated="onUpdated" />
+    <!-- 命令编辑抽屉 -->
+    <command-snippet-form-drawer ref="formDrawer"
+                                 @added="onAdded"
+                                 @updated="onUpdated" />
   </a-drawer>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'pathBookmarkDrawer'
+    name: 'commandSnippetDrawer'
   };
 </script>
 
 <script lang="ts" setup>
-  import { ISshSession } from '@/views/host/terminal/types/terminal.type';
-  import type { PathBookmarkWrapperResponse, PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
-  import { ref, provide, onMounted, watch } from 'vue';
+  import type { ISshSession } from '../../types/terminal.type';
+  import type { CommandSnippetWrapperResponse, CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
+  import { ref, watch, provide } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
-  import { deletePathBookmark, getPathBookmarkList } from '@/api/asset/path-bookmark';
-  import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
-  import { PanelSessionType } from '@/views/host/terminal/types/terminal.const';
-  import { dictKeys, openUpdatePathKey, removePathKey } from '../types/const';
-  import PathBookmarkListItem from './path-bookmark-list-item.vue';
-  import PathBookmarkListGroup from './path-bookmark-list-group.vue';
-  import PathBookmarkFormDrawer from './path-bookmark-form-drawer.vue';
+  import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
+  import { useCacheStore, useTerminalStore } from '@/store';
+  import { openUpdateSnippetKey, removeSnippetKey } from './types/const';
+  import { PanelSessionType } from '../../types/terminal.const';
+  import CommandSnippetListItem from './command-snippet-list-item.vue';
+  import CommandSnippetListGroup from './command-snippet-list-group.vue';
+  import CommandSnippetFormDrawer from './command-snippet-form-drawer.vue';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
@@ -96,7 +96,7 @@
 
   const formDrawer = ref();
   const filterValue = ref<string>();
-  const pathBookmarkData = ref<PathBookmarkWrapperResponse>();
+  const snippetValue = ref<CommandSnippetWrapperResponse>();
 
   // 打开
   const open = async () => {
@@ -109,16 +109,16 @@
 
   // 加载数据
   const fetchData = async (force: boolean = false) => {
-    if (pathBookmarkData.value && !force) {
+    if (snippetValue.value && !force) {
       return;
     }
     setLoading(true);
     try {
       // 查询
-      const { data } = await getPathBookmarkList();
-      pathBookmarkData.value = data;
+      const { data } = await getCommandSnippetList();
+      snippetValue.value = data;
       // 设置状态
-      filterPath();
+      filterSnippet();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -126,23 +126,23 @@
   };
 
   // 过滤
-  const filterPath = () => {
-    pathBookmarkData.value?.groups.forEach(g => {
+  const filterSnippet = () => {
+    snippetValue.value?.groups.forEach(g => {
       g.items?.forEach(s => {
         s.visible = !filterValue.value
           || s.name.toLowerCase().includes(filterValue.value.toLowerCase())
-          || s.path.toLowerCase().includes(filterValue.value.toLowerCase());
+          || s.command.toLowerCase().includes(filterValue.value.toLowerCase());
       });
     });
-    pathBookmarkData.value?.ungroupedItems.forEach(s => {
+    snippetValue.value?.ungroupedItems.forEach(s => {
       s.visible = !filterValue.value
         || s.name.toLowerCase().includes(filterValue.value.toLowerCase())
-        || s.path.toLowerCase().includes(filterValue.value.toLowerCase());
+        || s.command.toLowerCase().includes(filterValue.value.toLowerCase());
     });
   };
 
   // 过滤列表
-  watch(filterValue, filterPath);
+  watch(filterValue, filterSnippet);
 
   // 新建
   const openAdd = () => {
@@ -150,7 +150,7 @@
   };
 
   // 查找并且删除
-  const findAndSplice = (id: number, items: Array<PathBookmarkQueryResponse>) => {
+  const findAndSplice = (id: number, items: Array<CommandSnippetQueryResponse>) => {
     if (items) {
       const index = items.findIndex(s => s.id === id);
       if (index !== -1) {
@@ -162,23 +162,23 @@
   };
 
   // 暴露 修改抽屉
-  provide(openUpdatePathKey, (e: PathBookmarkQueryResponse) => {
+  provide(openUpdateSnippetKey, (e: CommandSnippetQueryResponse) => {
     formDrawer.value.openUpdate(e);
   });
 
   // 暴露 删除
-  provide(removePathKey, async (id: number) => {
-    if (!pathBookmarkData.value) {
+  provide(removeSnippetKey, async (id: number) => {
+    if (!snippetValue.value) {
       return;
     }
     // 删除
-    await deletePathBookmark(id);
+    await deleteCommandSnippet(id);
     // 查找并且删除未分组的数据
-    if (findAndSplice(id, pathBookmarkData.value.ungroupedItems)) {
+    if (findAndSplice(id, snippetValue.value.ungroupedItems)) {
       return;
     }
     // 查找并且删除分组内数据
-    for (let group of pathBookmarkData.value.groups) {
+    for (let group of snippetValue.value.groups) {
       if (findAndSplice(id, group.items)) {
         return;
       }
@@ -186,16 +186,16 @@
   });
 
   // 添加回调
-  const onAdded = async (item: PathBookmarkQueryResponse) => {
+  const onAdded = async (item: CommandSnippetQueryResponse) => {
     if (item.groupId) {
-      let group = pathBookmarkData.value?.groups.find(g => g.id === item.groupId);
+      let group = snippetValue.value?.groups.find(g => g.id === item.groupId);
       if (group) {
         group?.items.push(item);
       } else {
-        const cacheGroups = await cacheStore.loadPathBookmarkGroups();
+        const cacheGroups = await cacheStore.loadCommandSnippetGroups();
         const findGroup = cacheGroups.find(s => s.id === item.groupId);
         if (findGroup) {
-          pathBookmarkData.value?.groups.push({
+          snippetValue.value?.groups.push({
             id: item.groupId,
             name: findGroup.name,
             items: [item]
@@ -203,24 +203,24 @@
         }
       }
     } else {
-      pathBookmarkData.value?.ungroupedItems.push(item);
+      snippetValue.value?.ungroupedItems.push(item);
     }
     // 重置过滤
-    filterPath();
+    filterSnippet();
   };
 
   // 修改回调
-  const onUpdated = async (item: PathBookmarkQueryResponse) => {
-    if (!pathBookmarkData.value) {
+  const onUpdated = async (item: CommandSnippetQueryResponse) => {
+    if (!snippetValue.value) {
       return;
     }
     // 查找原始数据
     let originItem;
-    const findInUngrouped = pathBookmarkData.value.ungroupedItems.find(s => s.id === item.id);
+    const findInUngrouped = snippetValue.value.ungroupedItems.find(s => s.id === item.id);
     if (findInUngrouped) {
       originItem = findInUngrouped;
     } else {
-      for (let group of pathBookmarkData.value.groups) {
+      for (let group of snippetValue.value.groups) {
         const find = group.items.find(s => s.id === item.id);
         if (find) {
           originItem = find;
@@ -232,12 +232,12 @@
       return;
     }
     // 检查分组是否存在
-    const findGroup = pathBookmarkData.value.groups.find(s => s.id === item.groupId);
+    const findGroup = snippetValue.value.groups.find(s => s.id === item.groupId);
     if (!findGroup) {
-      const cacheGroups = await cacheStore.loadPathBookmarkGroups();
+      const cacheGroups = await cacheStore.loadCommandSnippetGroups();
       const cacheGroup = cacheGroups.find(s => s.id === item.groupId);
       if (cacheGroup) {
-        pathBookmarkData.value.groups.push({
+        snippetValue.value.groups.push({
           id: item.groupId,
           name: cacheGroup.name,
           items: []
@@ -248,31 +248,31 @@
     const originGroupId = originItem.groupId;
     originItem.groupId = item.groupId;
     originItem.name = item.name;
-    originItem.path = item.path;
+    originItem.command = item.command;
     // 移动分组
     if (item.groupId !== originGroupId) {
       // 从原始分组移除
       if (originGroupId) {
-        const findGroup = pathBookmarkData.value.groups.find(s => s.id === originGroupId);
+        const findGroup = snippetValue.value.groups.find(s => s.id === originGroupId);
         if (findGroup) {
           findAndSplice(item.id, findGroup.items);
         }
       } else {
         // 从未分组数据中移除
-        findAndSplice(item.id, pathBookmarkData.value.ungroupedItems);
+        findAndSplice(item.id, snippetValue.value.ungroupedItems);
       }
       // 添加到新分组
       if (item.groupId) {
-        const findGroup = pathBookmarkData.value.groups.find(s => s.id === item.groupId);
+        const findGroup = snippetValue.value.groups.find(s => s.id === item.groupId);
         if (findGroup) {
           findGroup.items.push(item);
         }
       } else {
-        pathBookmarkData.value.ungroupedItems.push(originItem);
+        snippetValue.value.ungroupedItems.push(originItem);
       }
     }
     // 重置过滤
-    filterPath();
+    filterSnippet();
   };
 
   // 关闭回调
@@ -281,26 +281,21 @@
     getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
   };
 
-  // 加载字典值
-  onMounted(() => {
-    useDictStore().loadKeys(dictKeys);
-  });
-
 </script>
 
 <style lang="less" scoped>
-  .path-drawer-title {
+  .snippet-drawer-title {
     font-size: 16px;
   }
 
-  .path-container {
+  .snippet-container {
     position: relative;
     background: var(--color-bg-2);
     height: 100%;
     width: 100%;
     display: block;
 
-    .path-header {
+    .snippet-header {
       padding: 12px;
       height: 56px;
       display: flex;
@@ -320,7 +315,7 @@
     }
   }
 
-  .path-list-container {
+  .snippet-list-container {
     position: relative;
     height: calc(100% - 56px);
     overflow: auto;
