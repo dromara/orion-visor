@@ -67,7 +67,13 @@ services:
       timeout: 60s
       retries: 10
       start_period: 3s
-  orion-visor-adminer:
-    image: adminer
-    ports:
-      - 8081:8080
+  testing:
+    build:
+      context: ./docker/e2e
+    environment:
+      SERVER: http://orion-visor-service:80
+    depends_on:
+      orion-visor-service:
+        condition: service_healthy
+    links:
+      - orion-visor-service
