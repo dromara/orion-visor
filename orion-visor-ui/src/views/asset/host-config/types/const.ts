@@ -1,3 +1,10 @@
+// 主机所有配置
+export interface HostConfigWrapper {
+  ssh: HostSshConfig;
+
+  [key: string]: unknown;
+}
+
 // 主机 SSH 配置
 export interface HostSshConfig {
   osType?: string;
@@ -29,6 +36,11 @@ export const SshAuthType = {
 export const SshOsType = {
   LINUX: 'LINUX',
   WINDOWS: 'WINDOWS',
+};
+
+// 主机配置类型
+export const HostConfigType = {
+  SSH: 'ssh'
 };
 
 // 主机验证方式 字典项

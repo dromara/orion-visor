@@ -30,16 +30,15 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostConfigWrapper } from '../../types/const';
-  import type { HostSshConfig } from './ssh/types/const';
+  import type { HostConfigWrapper, HostSshConfig } from '../types/const';
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import { getHostConfigList } from '@/api/asset/host-config';
   import { useCacheStore, useDictStore } from '@/store';
-  import { dictKeys } from './ssh/types/const';
-  import SshConfigForm from './ssh/ssh-config-form.vue';
+  import { dictKeys } from '../types/const';
+  import SshConfigForm from '../components/ssh-config-form.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

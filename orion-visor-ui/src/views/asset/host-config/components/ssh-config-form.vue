@@ -13,6 +13,7 @@
                   :before-change="s => updateStatus(s as number)" />
       </div>
     </template>
+    <!-- 表单 -->
     <a-spin v-show="config.status" :loading="loading" class="config-form-wrapper">
       <!-- 表单 -->
       <a-form :model="formModel"
@@ -140,16 +141,16 @@
 
 <script lang="ts" setup>
   import type { FieldRule } from '@arco-design/web-vue';
-  import type { HostSshConfig } from './types/const';
+  import type { HostSshConfig } from '../types/const';
   import { reactive, ref, watch } from 'vue';
   import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host-config';
-  import { sshAuthTypeKey, sshOsTypeKey, SshAuthType, SshOsType } from './types/const';
-  import rules from './types/form.rules';
+  import { sshAuthTypeKey, sshOsTypeKey, SshAuthType, SshOsType } from '../types/const';
+  import rules from '../types/ssh-form.rules';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
   import { EnabledStatus } from '@/types/const';
-  import { HostConfigType } from '../../../types/const';
+  import { HostConfigType } from '../types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 

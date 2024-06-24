@@ -1,5 +1,53 @@
 [
   {
+    "name": "Dracula",
+    "dark": true,
+    "schema": {
+      "background": "#1E1F29",
+      "foreground": "#F8F8F2",
+      "cursor": "#BBBBBB",
+      "selectionBackground": "#44475A",
+      "black": "#000000",
+      "red": "#FF5555",
+      "green": "#50FA7B",
+      "yellow": "#F1FA8C",
+      "blue": "#BD93F9",
+      "cyan": "#8BE9FD",
+      "white": "#BBBBBB",
+      "brightBlack": "#555555",
+      "brightRed": "#FF5555",
+      "brightGreen": "#50FA7B",
+      "brightYellow": "#F1FA8C",
+      "brightBlue": "#BD93F9",
+      "brightCyan": "#8BE9FD",
+      "brightWhite": "#FFFFFF"
+    }
+  },
+  {
+    "name": "Atom",
+    "dark": true,
+    "schema": {
+      "background": "#161719",
+      "foreground": "#C5C8C6",
+      "cursor": "#D0D0D0",
+      "selectionBackground": "#444444",
+      "black": "#000000",
+      "red": "#FD5FF1",
+      "green": "#87C38A",
+      "yellow": "#FFD7B1",
+      "blue": "#85BEFD",
+      "cyan": "#85BEFD",
+      "white": "#E0E0E0",
+      "brightBlack": "#000000",
+      "brightRed": "#FD5FF1",
+      "brightGreen": "#94FA36",
+      "brightYellow": "#F5FFA8",
+      "brightBlue": "#96CBFE",
+      "brightCyan": "#85BEFD",
+      "brightWhite": "#E0E0E0"
+    }
+  },
+  {
     "name": "catppuccin-mocha",
     "dark": true,
     "schema": {
@@ -93,54 +141,6 @@
       "brightBlue": "#61AFEF",
       "brightCyan": "#56B6C2",
       "brightWhite": "#DCDFE4"
-    }
-  },
-  {
-    "name": "Dracula",
-    "dark": true,
-    "schema": {
-      "background": "#1E1F29",
-      "foreground": "#F8F8F2",
-      "cursor": "#BBBBBB",
-      "selectionBackground": "#44475A",
-      "black": "#000000",
-      "red": "#FF5555",
-      "green": "#50FA7B",
-      "yellow": "#F1FA8C",
-      "blue": "#BD93F9",
-      "cyan": "#8BE9FD",
-      "white": "#BBBBBB",
-      "brightBlack": "#555555",
-      "brightRed": "#FF5555",
-      "brightGreen": "#50FA7B",
-      "brightYellow": "#F1FA8C",
-      "brightBlue": "#BD93F9",
-      "brightCyan": "#8BE9FD",
-      "brightWhite": "#FFFFFF"
-    }
-  },
-  {
-    "name": "Atom",
-    "dark": true,
-    "schema": {
-      "background": "#161719",
-      "foreground": "#C5C8C6",
-      "cursor": "#D0D0D0",
-      "selectionBackground": "#444444",
-      "black": "#000000",
-      "red": "#FD5FF1",
-      "green": "#87C38A",
-      "yellow": "#FFD7B1",
-      "blue": "#85BEFD",
-      "cyan": "#85BEFD",
-      "white": "#E0E0E0",
-      "brightBlack": "#000000",
-      "brightRed": "#FD5FF1",
-      "brightGreen": "#94FA36",
-      "brightYellow": "#F5FFA8",
-      "brightBlue": "#96CBFE",
-      "brightCyan": "#85BEFD",
-      "brightWhite": "#E0E0E0"
     }
   },
   {
