@@ -117,7 +117,7 @@
               <exec-editor v-model="formModel.command"
                            container-class="command-editor"
                            theme="vs-dark"
-                           :parameter="jobBuiltinsParams" />
+                           :parameter="jobBuiltinParams" />
             </a-form-item>
           </a-col>
         </a-row>
@@ -139,7 +139,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
-  import { jobBuiltinsParams } from '../types/const';
+  import { jobBuiltinParams } from '../types/const';
   import { createExecJob, getExecJob, updateExecJob } from '@/api/job/exec-job';
   import { getExecTemplateWithAuthorized } from '@/api/exec/exec-template';
   import { Message } from '@arco-design/web-vue';
