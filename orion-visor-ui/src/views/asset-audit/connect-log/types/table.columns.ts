@@ -3,6 +3,13 @@ import { dateFormat } from '@/utils';
 
 const columns = [
   {
+    title: 'id',
+    dataIndex: 'id',
+    slotName: 'id',
+    width: 100,
+    align: 'left',
+    fixed: 'left',
+  }, {
     title: '连接用户',
     dataIndex: 'username',
     slotName: 'username',

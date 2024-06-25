@@ -6,14 +6,9 @@
       "sourceType": "com.orion.visor.framework.security.configuration.config.SecurityConfig"
     },
     {
-      "name": "orion.crypto",
-      "type": "com.orion.visor.framework.security.configuration.config.CryptoConfig",
-      "sourceType": "com.orion.visor.framework.security.configuration.config.CryptoConfig"
-    },
-    {
       "name": "orion.crypto.aes",
-      "type": "com.orion.visor.framework.security.core.crypto.aes.AesCryptoConfig",
-      "sourceType": "com.orion.visor.framework.security.core.crypto.aes.AesCryptoConfig"
+      "type": "com.orion.visor.framework.security.configuration.config.AesCryptoConfig",
+      "sourceType": "com.orion.visor.framework.security.configuration.config.AesCryptoConfig"
     }
   ],
   "properties": [

@@ -10,7 +10,7 @@
     {
       "name": "orion.async.executor.core-pool-size",
       "type": "java.lang.Integer",
-      "description": "核心线程数量",
+      "description": "核心线程数量.",
       "defaultValue": "8"
     },
     {

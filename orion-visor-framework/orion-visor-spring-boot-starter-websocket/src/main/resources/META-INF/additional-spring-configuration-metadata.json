@@ -10,7 +10,7 @@
     {
       "name": "orion.websocket.prefix",
       "type": "java.lang.String",
-      "description": "公共 websocket 前缀"
+      "description": "公共 websocket 前缀."
     },
     {
       "name": "orion.websocket.binary-buffer-size",

@@ -1,4 +1,4 @@
-package com.orion.visor.framework.security.core.crypto.aes;
+package com.orion.visor.framework.security.configuration.config;
 
 import com.orion.lang.utils.crypto.CryptoConst;
 import com.orion.lang.utils.crypto.enums.PaddingMode;
@@ -6,6 +6,7 @@ import com.orion.lang.utils.crypto.enums.WorkingMode;
 import com.orion.visor.framework.security.core.crypto.CryptoConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * aes 加密器配置
@@ -16,6 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ConfigurationProperties("orion.crypto.aes")
 public class AesCryptoConfig extends CryptoConfig {
 
     /**

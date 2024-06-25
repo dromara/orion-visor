@@ -1,19 +1,14 @@
 {
   "groups": [
     {
-      "name": "orion.storage",
-      "type": "com.orion.visor.framework.storage.configuration.config.StorageConfig",
-      "sourceType": "com.orion.visor.framework.storage.configuration.config.StorageConfig"
-    },
-    {
       "name": "orion.storage.local",
-      "type": "com.orion.visor.framework.storage.core.client.local.LocalFileClientConfig",
-      "sourceType": "com.orion.visor.framework.storage.core.client.local.LocalFileClientConfig"
+      "type": "com.orion.visor.framework.storage.configuration.config.LocalStorageConfig",
+      "sourceType": "com.orion.visor.framework.storage.configuration.config.LocalStorageConfig"
     },
     {
       "name": "orion.storage.logs",
-      "type": "com.orion.visor.framework.storage.core.client.local.LocalFileClientConfig",
-      "sourceType": "com.orion.visor.framework.storage.core.client.local.LocalFileClientConfig"
+      "type": "com.orion.visor.framework.storage.configuration.config.LogsStorageConfig",
+      "sourceType": "com.orion.visor.framework.storage.configuration.config.LogsStorageConfig"
     }
   ],
   "properties": [

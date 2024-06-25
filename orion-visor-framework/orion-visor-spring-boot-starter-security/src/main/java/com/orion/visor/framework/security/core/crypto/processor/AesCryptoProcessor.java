@@ -1,4 +1,4 @@
-package com.orion.visor.framework.security.core.crypto.aes;
+package com.orion.visor.framework.security.core.crypto.processor;
 
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.crypto.Keys;
@@ -6,6 +6,7 @@ import com.orion.lang.utils.crypto.enums.CipherAlgorithm;
 import com.orion.lang.utils.crypto.enums.WorkingMode;
 import com.orion.lang.utils.crypto.symmetric.SymmetricBuilder;
 import com.orion.lang.utils.crypto.symmetric.SymmetricCrypto;
+import com.orion.visor.framework.security.configuration.config.AesCryptoConfig;
 import com.orion.visor.framework.security.core.crypto.CryptoProcessor;
 
 import javax.crypto.SecretKey;
