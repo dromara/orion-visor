@@ -189,10 +189,16 @@ app:
   exec-log:
     # 是否拼接 ansi 执行状态日志
     append-ansi: true
-    # 自动清理执行文件
-    auto-clear: true
-    # 保留周期 (天)
-    keep-period: 30
+  # 自动清理配置
+  auto-clear:
+    # 批量执行日志
+    exec-log:
+      enabled: false
+      keep-period: 30
+    # 主机连接日志
+    host-connect-log:
+      enabled: false
+      keep-period: 30
 
 # orion framework config
 orion:

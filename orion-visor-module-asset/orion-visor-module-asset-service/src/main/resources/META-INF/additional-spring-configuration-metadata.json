@@ -19,6 +19,11 @@
       "name": "app.auto-clear.exec-log",
       "type": "com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig",
       "sourceType": "com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig"
+    },
+    {
+      "name": "app.auto-clear.host-connect-log",
+      "type": "com.orion.visor.module.asset.define.config.AppHostConnectLogAutoClearConfig",
+      "sourceType": "com.orion.visor.module.asset.define.config.AppHostConnectLogAutoClearConfig"
     }
   ],
   "properties": [
@@ -61,12 +66,22 @@
     {
       "name": "app.auto-clear.exec-log.enabled",
       "type": "java.lang.Boolean",
-      "description": "开启 批量执行日志文件自动清理."
+      "description": "开启 批量执行日志自动清理."
     },
     {
       "name": "app.auto-clear.exec-log.keep-period",
       "type": "java.lang.Integer",
-      "description": "批量执行日志文件自动清理 保留周期 (天)."
+      "description": "批量执行日志自动清理 保留周期 (天)."
+    },
+    {
+      "name": "app.auto-clear.host-connect-log.enabled",
+      "type": "java.lang.Boolean",
+      "description": "开启 主机连接日志自动清理."
+    },
+    {
+      "name": "app.auto-clear.host-connect-log.keep-period",
+      "type": "java.lang.Integer",
+      "description": "主机连接日志自动清理 保留周期 (天)."
     }
   ]
 }
