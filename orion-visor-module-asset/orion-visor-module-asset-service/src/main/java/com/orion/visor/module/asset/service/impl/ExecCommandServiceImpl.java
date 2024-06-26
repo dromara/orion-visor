@@ -14,7 +14,8 @@ import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
-import com.orion.visor.framework.common.constant.PathConst;
+import com.orion.visor.framework.common.constant.FileConst;
+import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.security.LoginUser;
 import com.orion.visor.framework.common.utils.PathUtils;
@@ -140,10 +141,10 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         execLogDAO.insert(execLog);
         Long execId = execLog.getId();
         // 获取内置参数
-        Map<String, Object> builtinsParams = this.getBaseBuiltinsParams(execId, request);
+        Map<String, Object> builtinParams = this.getBaseBuiltinParams(execId, request);
         // 设置主机日志
         List<ExecHostLogDO> execHostLogs = hosts.stream()
-                .map(s -> this.convertExecHostLog(s, execLog, hostConfigMap.get(s.getId()), builtinsParams))
+                .map(s -> this.convertExecHostLog(s, execLog, hostConfigMap.get(s.getId()), builtinParams))
                 .collect(Collectors.toList());
         execHostLogDAO.insertBatch(execHostLogs);
         // 操作日志
@@ -228,16 +229,16 @@ public class ExecCommandServiceImpl implements ExecCommandService {
     /**
      * 转换为 execHostLog
      *
-     * @param host           host
-     * @param execLog        execLog
-     * @param config         config
-     * @param builtinsParams builtinsParams
+     * @param host          host
+     * @param execLog       execLog
+     * @param config        config
+     * @param builtinParams builtinParams
      * @return execHostLog
      */
     private ExecHostLogDO convertExecHostLog(HostDO host,
                                              ExecLogDO execLog,
                                              HostSshConfigModel config,
-                                             Map<String, Object> builtinsParams) {
+                                             Map<String, Object> builtinParams) {
         Long execId = execLog.getId();
         Long hostId = host.getId();
         // 脚本路径
@@ -246,7 +247,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
             scriptPath = this.buildScriptPath(config.getUsername(), config.getOsType(), execId, hostId);
         }
         // 获取参数
-        String parameter = JSON.toJSONString(this.getHostParams(builtinsParams, host, config, scriptPath));
+        String parameter = JSON.toJSONString(this.getHostParams(builtinParams, host, config, scriptPath));
         return ExecHostLogDO.builder()
                 .logId(execId)
                 .hostId(hostId)
@@ -267,7 +268,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
      * @param request request
      * @return params
      */
-    private Map<String, Object> getBaseBuiltinsParams(Long execId, ExecCommandExecDTO request) {
+    private Map<String, Object> getBaseBuiltinParams(Long execId, ExecCommandExecDTO request) {
         String uuid = UUIds.random();
         Date date = new Date();
         // 输入参数
@@ -353,8 +354,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
      * @return logPath
      */
     private String buildLogPath(Long logId, Long hostId) {
-        String logFile = "/" + PathConst.EXEC + "/" + logId + "/" + logId + "_" + hostId + ".log";
-        return logsFileClient.getReturnPath(logFile);
+        return logsFileClient.getReturnPath(EndpointDefine.EXEC_LOG.format(logId, hostId));
     }
 
     /**
@@ -368,11 +368,11 @@ public class ExecCommandServiceImpl implements ExecCommandService {
      */
     private String buildScriptPath(String username, String osType, Long logId, Long hostId) {
         HostSshOsTypeEnum os = HostSshOsTypeEnum.of(osType);
-        String name = PathConst.EXEC
-                + "_" + logId
-                + "_" + hostId
+        String name = FileConst.EXEC
+                + "/" + logId
+                + "/" + hostId
                 + os.getScriptSuffix();
-        return PathUtils.buildAppPath(HostSshOsTypeEnum.WINDOWS.equals(os), username, PathConst.SCRIPT, name);
+        return PathUtils.buildAppPath(HostSshOsTypeEnum.WINDOWS.equals(os), username, FileConst.SCRIPT, name);
     }
 
 }

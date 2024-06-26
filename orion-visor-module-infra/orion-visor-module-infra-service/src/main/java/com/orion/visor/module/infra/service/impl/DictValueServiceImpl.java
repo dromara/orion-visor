@@ -396,6 +396,7 @@ public class DictValueServiceImpl implements DictValueService {
         Map<String, String> schema = dictKeyService.getDictSchema(key);
         // 转换
         return values.stream()
+                .sorted(Comparator.comparing(DictValueDO::getSort))
                 .map(s -> {
                     // 设置值
                     JSONObject item = new JSONObject();
