@@ -56,9 +56,9 @@
   import RightSidebar from './components/layout/right-sidebar.vue';
   import MainContent from './components/layout/main-content.vue';
   import LoadingSkeleton from './components/layout/loading-skeleton.vue';
-  import TransferDrawer from '@/views/host/terminal/components/transfer/transfer-drawer.vue';
-  import CommandSnippetDrawer from '@/views/host/command-snippet/components/command-snippet-drawer.vue';
-  import PathBookmarkDrawer from '@/views/host/path-bookmark/components/path-bookmark-drawer.vue';
+  import TransferDrawer from './components/transfer/transfer-drawer.vue';
+  import CommandSnippetDrawer from './components/command-snippet/command-snippet-drawer.vue';
+  import PathBookmarkDrawer from './components/path-bookmark/path-bookmark-drawer.vue';
   import '@/assets/style/host-terminal-layout.less';
   import '@xterm/xterm/css/xterm.css';
 
@@ -124,7 +124,7 @@
   // 卸载处理
   onUnmounted(() => {
     // 卸载时清除 cache
-    cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups');
+    cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups', 'pathBookmarkGroups');
     // 移除关闭视口事件
     window.removeEventListener('beforeunload', handleBeforeUnload);
     // 去除 body style

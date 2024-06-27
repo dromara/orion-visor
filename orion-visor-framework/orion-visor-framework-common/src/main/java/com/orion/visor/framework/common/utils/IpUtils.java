@@ -2,8 +2,12 @@ package com.orion.visor.framework.common.utils;
 
 import com.orion.ext.location.Region;
 import com.orion.ext.location.region.LocationRegions;
+import com.orion.lang.constant.StandardHttpHeader;
+import com.orion.lang.utils.Strings;
 import com.orion.visor.framework.common.constant.Const;
+import com.orion.web.servlet.web.Servlets;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +23,22 @@ public class IpUtils {
     private static final Map<String, String> CACHE = new HashMap<>();
 
     private IpUtils() {
+    }
+
+    /**
+     * 获取请求地址
+     *
+     * @param request request
+     * @return addr
+     */
+    public static String getRemoteAddr(HttpServletRequest request) {
+        // 获取实际地址
+        String realIp = request.getHeader(StandardHttpHeader.X_REAL_IP);
+        if (!Strings.isBlank(realIp)) {
+            return realIp;
+        }
+        // 获取请求地址
+        return Servlets.getRemoteAddr(request);
     }
 
     /**

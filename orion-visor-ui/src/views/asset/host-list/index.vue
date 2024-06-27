@@ -37,8 +37,8 @@
   import HostTable from './components/host-table.vue';
   import HostCardList from './components/host-card-list.vue';
   import HostFormModal from './components/host-form-modal.vue';
-  import HostConfigDrawer from './components/config/host-config-drawer.vue';
-  import HostGroupDrawer from './components/group/host-group-drawer.vue';
+  import HostConfigDrawer from '../host-config/drawer/index.vue';
+  import HostGroupDrawer from '../host-group/drawer/index.vue';
 
   const table = ref();
   const card = ref();

@@ -29,7 +29,7 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .builder()
                 .fontFamily("_")
                 .fontSize(14)
-                .lineHeight(1.12)
+                .lineHeight(1.20)
                 .letterSpacing(0)
                 .fontWeight("normal")
                 .fontWeightBold("bold")

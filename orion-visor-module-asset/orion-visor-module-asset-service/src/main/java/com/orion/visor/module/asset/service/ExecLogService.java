@@ -72,6 +72,14 @@ public interface ExecLogService {
     Integer deleteExecLogByIdList(List<Long> idList, String source);
 
     /**
+     * 批量删除批量执行日志
+     *
+     * @param idList idList
+     * @return effect
+     */
+    Integer deleteExecLogByIdList(List<Long> idList);
+
+    /**
      * 查询批量执行日志数量
      *
      * @param request request
@@ -127,5 +135,12 @@ public interface ExecLogService {
      * @param response response
      */
     void downloadLogFile(Long id, String source, HttpServletResponse response);
+
+    /**
+     * 异步删除日志文件
+     *
+     * @param idList idList
+     */
+    void asyncDeleteLogFiles(List<Long> idList);
 
 }

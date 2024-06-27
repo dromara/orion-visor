@@ -39,12 +39,12 @@
   import { onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';
   import EmptyRecommend from './empty-recommend.vue';
+  import TerminalPanelsView from './terminal-panels-view.vue';
   import NewConnectionView from '../new-connection/new-connection-view.vue';
   import TerminalDisplaySetting from '../setting/display/terminal-display-setting.vue';
   import TerminalThemeSetting from '../setting/theme/terminal-theme-setting.vue';
   import TerminalGeneralSetting from '../setting/general/terminal-general-setting.vue';
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
-  import TerminalPanelsView from '@/views/host/terminal/components/layout/terminal-panels-view.vue';
 
   const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'screenshot']);
 

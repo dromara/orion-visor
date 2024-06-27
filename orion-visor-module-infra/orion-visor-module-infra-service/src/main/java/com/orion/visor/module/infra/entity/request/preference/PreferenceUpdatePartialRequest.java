@@ -27,7 +27,7 @@ import java.util.Map;
 public class PreferenceUpdatePartialRequest implements Serializable {
 
     @NotBlank
-    @Size(max = 12)
+    @Size(max = 16)
     @Schema(description = "类型")
     private String type;
 

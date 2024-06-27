@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   orion-visor-service:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.0.9
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.0.10
     privileged: true
     ports:
       - 1081:80
@@ -16,12 +16,23 @@ services:
       - SECRET_KEY=uQeacXV8b3isvKLK
       - DEMO_MODE=false
     volumes:
-      - /data/orion-visor-space/docker-volumes/orion-visor-service/root-orion:/root/orion
+      - /data/orion-visor-space/docker-volumes/service/root-orion:/root/orion
+    healthcheck:
+      test: [ "CMD", "curl", "http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health" ]
+      interval: 3s
+      timeout: 300s
+      retries: 200
+      start_period: 3s
     depends_on:
+      orion-visor-mysql:
+        condition: service_healthy
+      orion-visor-redis:
+        condition: service_healthy
+    links:
       - orion-visor-mysql
       - orion-visor-redis
   orion-visor-mysql:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.0.9
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.0.10
     privileged: true
     ports:
       - 3307:3306
@@ -31,19 +42,31 @@ services:
       - MYSQL_PASSWORD=Data@123456
       - MYSQL_ROOT_PASSWORD=Data@123456
     volumes:
-      - /data/orion-visor-space/docker-volumes/orion-visor-mysql/var-lib-mysql:/var/lib/mysql
-      - /data/orion-visor-space/docker-volumes/orion-visor-mysql/var-lib-mysql-files:/var/lib/mysql-files
-      - /data/orion-visor-space/docker-volumes/orion-visor-mysql/etc-mysql:/etc/mysql
+      - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql:/var/lib/mysql
+      - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
+      - /data/orion-visor-space/docker-volumes/mysql/etc-mysql:/etc/mysql
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3306" ]
+      interval: 3s
+      timeout: 60s
+      retries: 10
+      start_period: 3s
   orion-visor-redis:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.0.9
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.0.10
     privileged: true
     ports:
       - 6380:6379
     environment:
       - REDIS_PASSWORD=Data@123456
     volumes:
-      - /data/orion-visor-space/docker-volumes/orion-visor-redis/data:/data
+      - /data/orion-visor-space/docker-volumes/redis/data:/data
     command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 3s
+      timeout: 60s
+      retries: 10
+      start_period: 3s
   orion-visor-adminer:
     image: adminer
     ports:

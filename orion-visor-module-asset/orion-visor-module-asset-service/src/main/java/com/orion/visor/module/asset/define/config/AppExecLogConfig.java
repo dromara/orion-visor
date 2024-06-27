@@ -21,20 +21,8 @@ public class AppExecLogConfig {
      */
     private Boolean appendAnsi;
 
-    /**
-     * 自动清理执行文件
-     */
-    private Boolean autoClear;
-
-    /**
-     * 保留周期 (天)
-     */
-    private Integer keepPeriod;
-
     public AppExecLogConfig() {
         this.appendAnsi = true;
-        this.autoClear = true;
-        this.keepPeriod = 30;
     }
 
 }
