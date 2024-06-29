@@ -14,6 +14,7 @@ import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
+import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.security.LoginUser;
@@ -140,7 +141,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         }
         uploadTaskFileDAO.insertBatch(uploadFiles);
         // 设置 uploadToken
-        String token = fileUploadApi.createUploadToken(user.getId(), Strings.format(SWAP_ENDPOINT, id));
+        String token = fileUploadApi.createUploadToken(user.getId(), EndpointDefine.UPLOAD_SWAP.format(id));
         log.info("UploadTaskService-createUploadTask id: {}, effect: {}", id, effect);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getDescription());
@@ -296,7 +297,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         }
         // 查询记录
         List<String> paths = idList.stream()
-                .map(s -> Strings.format(SWAP_ENDPOINT, s))
+                .map(EndpointDefine.UPLOAD_SWAP::format)
                 .map(localFileClient::getReturnPath)
                 .map(localFileClient::getAbsolutePath)
                 .collect(Collectors.toList());
@@ -348,7 +349,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                 .collect(Collectors.groupingBy(UploadTaskFileDO::getFileId));
         fileIdGroups.forEach((k, v) -> {
             // 获取文件实际路径
-            String path = localFileClient.getReturnPath(Strings.format(SWAP_ENDPOINT, id) + Const.SLASH + k);
+            String path = localFileClient.getReturnPath(EndpointDefine.UPLOAD_SWAP.format(id) + Const.SLASH + k);
             File file = new File(localFileClient.getAbsolutePath(path));
             // 文件不存在/大小不正确
             if (!Files1.isFile(file) || file.length() != v.get(0).getFileSize()) {

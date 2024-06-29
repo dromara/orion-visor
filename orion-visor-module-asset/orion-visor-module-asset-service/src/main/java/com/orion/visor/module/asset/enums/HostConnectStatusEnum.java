@@ -1,5 +1,9 @@
 package com.orion.visor.module.asset.enums;
 
+import com.orion.lang.utils.collect.Lists;
+
+import java.util.List;
+
 /**
  * 主机连接状态
  *
@@ -30,6 +34,8 @@ public enum HostConnectStatusEnum {
     FORCE_OFFLINE,
 
     ;
+
+    public static final List<String> FINISH_STATUS_LIST = Lists.of(COMPLETE.name(), FAILED.name(), FORCE_OFFLINE.name());
 
     public static HostConnectStatusEnum of(String type) {
         if (type == null) {

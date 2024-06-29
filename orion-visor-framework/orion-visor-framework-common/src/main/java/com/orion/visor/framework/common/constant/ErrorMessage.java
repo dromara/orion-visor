@@ -83,7 +83,11 @@ public interface ErrorMessage {
 
     String UNKNOWN_TYPE = "未知类型";
 
+    String ERROR_TYPE = "错误的类型";
+
     String FILE_ABSENT = "文件不存在";
+
+    String FILE_ABSENT_CLEAR = "文件不存在 (可能已被清理)";
 
     String LOG_ABSENT = "日志不存在";
 
@@ -94,6 +98,8 @@ public interface ErrorMessage {
     String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";
 
     String FILE_READ_ERROR = "文件读取失败";
+
+    String FILE_READ_ERROR_CLEAR = "文件读取失败 (可能已被清理)";
 
     String PLEASE_CHECK_HOST_SSH = "请检查主机 {} 是否存在/权限/SSH配置";
 

@@ -11,11 +11,13 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
+import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
-import com.orion.visor.framework.common.constant.PathConst;
+import com.orion.visor.framework.common.constant.FileConst;
+import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
@@ -46,11 +48,13 @@ import com.orion.visor.module.asset.service.ExecLogService;
 import com.orion.visor.module.asset.service.HostConfigService;
 import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -173,20 +177,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer deleteExecLogById(Long id, String source) {
-        log.info("ExecLogService-deleteExecLogById id: {}", id);
-        // 检查数据是否存在
-        ExecLogDO record = execLogDAO.selectByIdSource(id, source);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
-        // 中断命令执行
-        this.interruptTask(Lists.singleton(id));
-        // 删除执行日志
-        int effect = execLogDAO.deleteById(id);
-        // 删除主机日志
-        execHostLogService.deleteExecHostLogByLogId(Lists.singleton(id));
-        log.info("ExecLogService-deleteExecLogById id: {}, effect: {}", id, effect);
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.COUNT, effect);
-        return effect;
+        return this.deleteExecLogByIdList(Lists.singleton(id), source);
     }
 
     @Override
@@ -201,15 +192,28 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .count()
                 .intValue();
         Valid.isTrue(idList.size() == count, ErrorMessage.DATA_MODIFIED);
+        // 删除
+        return this.deleteExecLogByIdList(idList);
+    }
+
+    @Override
+    public Integer deleteExecLogByIdList(List<Long> idList) {
+        log.info("ExecLogService-deleteExecLogByIdList start: {}", idList);
+        if (Lists.isEmpty(idList)) {
+            OperatorLogs.add(OperatorLogs.COUNT, Const.N_0);
+            return Const.N_0;
+        }
         // 中断命令执行
         this.interruptTask(idList);
         // 删除执行日志
         int effect = execLogDAO.deleteBatchIds(idList);
         // 删除主机日志
         execHostLogService.deleteExecHostLogByLogId(idList);
-        log.info("ExecLogService-deleteExecLogByIdList effect: {}", effect);
+        log.info("ExecLogService-deleteExecLogByIdList end effect: {}", effect);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.COUNT, effect);
+        // 异步删除文件
+        SpringHolder.getBean(ExecLogService.class).asyncDeleteLogFiles(idList);
         return effect;
     }
 
@@ -229,19 +233,8 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .stream()
                 .map(ExecLogDO::getId)
                 .collect(Collectors.toList());
-        int effect = 0;
-        if (!idList.isEmpty()) {
-            // 中断命令执行
-            this.interruptTask(idList);
-            // 删除执行日志
-            effect = execLogDAO.delete(wrapper);
-            // 删除主机日志
-            execHostLogService.deleteExecHostLogByLogId(idList);
-        }
-        log.info("ExecLogService.clearExecLog finish {}", effect);
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.COUNT, effect);
-        return effect;
+        // 删除
+        return this.deleteExecLogByIdList(idList);
     }
 
     @Override
@@ -428,17 +421,33 @@ public class ExecLogServiceImpl implements ExecLogService {
         } catch (Exception e) {
             log.error("ExecLogService.downloadLogFile error id: {}", id, e);
             Streams.close(in);
-            String errorMessage = ErrorMessage.FILE_READ_ERROR;
+            String errorMessage = ErrorMessage.FILE_READ_ERROR_CLEAR;
             if (e instanceof InvalidArgumentException) {
                 errorMessage = e.getMessage();
             }
             // 响应错误信息
             try {
-                Servlets.transfer(response, Strings.bytes(errorMessage), PathConst.ERROR_LOG);
+                Servlets.transfer(response, Strings.bytes(errorMessage), FileConst.ERROR_LOG);
             } catch (Exception ex) {
                 log.error("ExecLogService.downloadLogFile transfer-error id: {}", id, ex);
             }
         }
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public void asyncDeleteLogFiles(List<Long> idList) {
+        if (Lists.isEmpty(idList)) {
+            return;
+        }
+        // 删除
+        idList.stream()
+                .map(s -> EndpointDefine.EXEC_LOG.format(s, Const.EMPTY))
+                .map(logsFileClient::getReturnPath)
+                .map(logsFileClient::getAbsolutePath)
+                .map(Files1::getParentPath)
+                .map(File::new)
+                .forEach(Files1::delete);
     }
 
     /**
@@ -457,8 +466,10 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .like(ExecLogDO::getDescription, request.getDescription())
                 .like(ExecLogDO::getCommand, request.getCommand())
                 .eq(ExecLogDO::getStatus, request.getStatus())
+                .in(ExecLogDO::getStatus, request.getStatusList())
                 .ge(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
+                .le(ExecLogDO::getCreateTime, request.getCreateTimeLe())
                 .orderByDesc(ExecLogDO::getId);
     }
 

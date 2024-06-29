@@ -1,13 +1,13 @@
 package com.orion.visor.framework.common.constant;
 
 /**
- * 路径常量
+ * 文件常量
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/4/17 10:35
  */
-public interface PathConst {
+public interface FileConst {
 
     String ERROR_LOG = "error.log";
 

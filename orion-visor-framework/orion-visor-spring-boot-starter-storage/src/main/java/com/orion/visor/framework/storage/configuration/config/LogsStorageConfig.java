@@ -2,27 +2,19 @@ package com.orion.visor.framework.storage.configuration.config;
 
 import com.orion.visor.framework.storage.core.client.local.LocalFileClientConfig;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 存储配置
+ * 日志存储配置
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/30 18:40
  */
 @Data
-@ConfigurationProperties(prefix = "orion.storage")
-public class StorageConfig {
-
-    /**
-     * 本地文件客户端 配置
-     */
-    private LocalFileClientConfig local;
-
-    /**
-     * 日志文件客户端 配置
-     */
-    private LocalFileClientConfig logs;
+@EqualsAndHashCode(callSuper = true)
+@ConfigurationProperties(prefix = "orion.storage.logs")
+public class LogsStorageConfig extends LocalFileClientConfig {
 
 }

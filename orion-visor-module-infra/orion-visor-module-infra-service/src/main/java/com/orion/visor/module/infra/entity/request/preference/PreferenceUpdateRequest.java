@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class PreferenceUpdateRequest implements Serializable {
 
     @NotBlank
-    @Size(max = 12)
+    @Size(max = 16)
     @Schema(description = "类型")
     private String type;
 

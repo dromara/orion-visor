@@ -14,25 +14,35 @@
       "name": "app.exec-log",
       "type": "com.orion.visor.module.asset.define.config.AppExecLogConfig",
       "sourceType": "com.orion.visor.module.asset.define.config.AppExecLogConfig"
+    },
+    {
+      "name": "app.auto-clear.exec-log",
+      "type": "com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig",
+      "sourceType": "com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig"
+    },
+    {
+      "name": "app.auto-clear.host-connect-log",
+      "type": "com.orion.visor.module.asset.define.config.AppHostConnectLogAutoClearConfig",
+      "sourceType": "com.orion.visor.module.asset.define.config.AppHostConnectLogAutoClearConfig"
     }
   ],
   "properties": [
     {
       "name": "app.tracker.offset",
       "type": "java.lang.Integer",
-      "description": "加载偏移量 (行)",
+      "description": "加载偏移量 (行).",
       "defaultValue": "300"
     },
     {
       "name": "app.tracker.delay",
       "type": "java.lang.Integer",
-      "description": "延迟时间 (ms)",
+      "description": "延迟时间 (ms).",
       "defaultValue": "100"
     },
     {
       "name": "app.tracker.wait-times",
       "type": "java.lang.Integer",
-      "description": "文件未找到等待次数",
+      "description": "文件未找到等待次数.",
       "defaultValue": "100"
     },
     {
@@ -54,16 +64,24 @@
       "defaultValue": "true"
     },
     {
-      "name": "app.exec-log.auto-clear",
+      "name": "app.auto-clear.exec-log.enabled",
       "type": "java.lang.Boolean",
-      "description": "自动清理执行文件.",
-      "defaultValue": "true"
+      "description": "开启 批量执行日志自动清理."
     },
     {
-      "name": "app.exec-log.keep-period",
+      "name": "app.auto-clear.exec-log.keep-period",
       "type": "java.lang.Integer",
-      "description": "保留周期 (天)",
-      "defaultValue": "30"
+      "description": "批量执行日志自动清理 保留周期 (天)."
+    },
+    {
+      "name": "app.auto-clear.host-connect-log.enabled",
+      "type": "java.lang.Boolean",
+      "description": "开启 主机连接日志自动清理."
+    },
+    {
+      "name": "app.auto-clear.host-connect-log.keep-period",
+      "type": "java.lang.Integer",
+      "description": "主机连接日志自动清理 保留周期 (天)."
     }
   ]
 }

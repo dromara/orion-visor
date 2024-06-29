@@ -31,7 +31,7 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
         // 拼接启动日志
         AnsiAppender appender = AnsiAppender.create()
                 .append(AnsiForeground.BRIGHT_GREEN, "> 准备执行命令    ")
-                .append(Dates.current())
+                .append(this.getCurrentTime())
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "执行记录: ")
                 .append(execCommand.getLogId())
@@ -81,7 +81,7 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
         // 非脚本执行拼接开始执行日志
         if (!Booleans.isTrue(execCommand.getScriptExec())) {
             appender.append(AnsiForeground.BRIGHT_GREEN, "> 开始执行命令    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine();
         }
         this.appendLog(appender);
@@ -94,7 +94,7 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
             AnsiAppender startAppender = AnsiAppender.create()
                     .newLine()
                     .append(AnsiForeground.BRIGHT_GREEN, "> 准备上传脚本    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine()
                     .append(AnsiForeground.BRIGHT_BLUE, "文件路径: ")
                     .append(execHostCommand.getScriptPath())
@@ -105,18 +105,18 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
             // 拼接完成日志
             AnsiAppender finishAppender = AnsiAppender.create()
                     .append(AnsiForeground.BRIGHT_GREEN, "< 脚本上传成功    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine()
                     .newLine()
                     .append(AnsiForeground.BRIGHT_GREEN, "> 开始执行脚本    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine();
             this.appendLog(finishAppender);
         } catch (Exception e) {
             // 拼接失败日志
             AnsiAppender errorAppender = AnsiAppender.create()
                     .append(AnsiForeground.BRIGHT_RED, "< 脚本上传失败    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine();
             this.appendLog(errorAppender);
             throw e;
@@ -133,12 +133,12 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
         if (this.status == ExecHostStatusEnum.INTERRUPTED) {
             // 中断执行
             appender.append(AnsiForeground.BRIGHT_YELLOW, "< 命令执行中断    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine();
         } else if (this.status == ExecHostStatusEnum.FAILED) {
             // 执行失败
             appender.append(AnsiForeground.BRIGHT_RED, "< 命令执行失败    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine()
                     .append(AnsiForeground.BRIGHT_RED, "错误原因: ")
                     .append(this.getErrorMessage(e))
@@ -146,14 +146,14 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
         } else if (this.status == ExecHostStatusEnum.TIMEOUT) {
             // 更新执行超时
             appender.append(AnsiForeground.BRIGHT_YELLOW, "< 命令执行超时    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine();
         } else {
             long ms = updateRecord.getFinishTime().getTime() - updateRecord.getStartTime().getTime();
             Integer exitCode = updateRecord.getExitCode();
             // 执行完成
             appender.append(AnsiForeground.BRIGHT_GREEN, "< 命令执行完成    ")
-                    .append(Dates.current())
+                    .append(this.getCurrentTime())
                     .newLine()
                     .append(AnsiForeground.BRIGHT_BLUE, "exit:     ");
             if (ExitCode.isSuccess(exitCode)) {
@@ -171,6 +171,15 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
         }
         // 拼接日志
         this.appendLog(appender);
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return 当前时间
+     */
+    private String getCurrentTime() {
+        return Const.SPACE + Dates.current();
     }
 
 }

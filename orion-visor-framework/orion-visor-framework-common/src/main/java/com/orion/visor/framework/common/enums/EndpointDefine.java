@@ -20,6 +20,11 @@ public enum EndpointDefine {
      */
     UPLOAD_SWAP("/upload/swap/{}"),
 
+    /**
+     * 批量执行日志
+     */
+    EXEC_LOG("/exec/{}/{}.log"),
+
     ;
 
     /**

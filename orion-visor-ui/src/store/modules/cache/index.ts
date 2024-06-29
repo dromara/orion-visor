@@ -2,6 +2,8 @@ import type { CacheState } from './types';
 import type { AxiosResponse } from 'axios';
 import type { TagType } from '@/api/meta/tag';
 import { getTagList } from '@/api/meta/tag';
+import type { PreferenceType } from '@/api/user/preference';
+import { getPreference } from '@/api/user/preference';
 import { defineStore } from 'pinia';
 import { getUserList } from '@/api/user/user';
 import { getRoleList } from '@/api/user/role';
@@ -129,6 +131,16 @@ export default defineStore('cache', {
     // 获取执行计划列表
     async loadExecJobs(force = false) {
       return await this.load('execJob', getExecJobList, force);
+    },
+
+    // 加载偏好
+    async loadPreference<T>(type: PreferenceType, force = false) {
+      return await this.load(`preference_${type}`, () => getPreference<T>(type), force);
+    },
+
+    // 加载偏好项
+    async loadPreferenceItem<T>(type: PreferenceType, item: string, force = false) {
+      return await this.load(`preference_${type}_${item}`, () => getPreference<T>(type, [item]), force);
     },
 
   }
