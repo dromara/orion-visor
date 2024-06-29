@@ -115,7 +115,6 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .openSftp(true)
                 .clear(true)
                 .disconnect(false)
-                .closeTab(true)
                 .build()
                 .toJsonString();
         // 默认配置

@@ -135,7 +135,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   private dispatchResize() {
     // 对所有已连接的会话重置大小
     Object.values(this.sessions)
-      .filter(s => s.type === PanelSessionType.SSH.type)
+      .filter(s => s?.type === PanelSessionType.SSH.type)
       .map(s => s as SshSession)
       .filter(h => h.connected)
       .forEach(h => h.fit());

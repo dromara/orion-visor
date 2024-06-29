@@ -201,10 +201,10 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   private processWithType(session: ITerminalSession,
                           sshProcess: (ssh: ISshSession) => any | void,
                           sftpProcess: (ssh: ISftpSession) => any | void) {
-    if (session.type === PanelSessionType.SSH.type) {
+    if (session?.type === PanelSessionType.SSH.type) {
       // SSH 操作
       return sshProcess(session as ISshSession);
-    } else if (session.type === PanelSessionType.SFTP.type) {
+    } else if (session?.type === PanelSessionType.SFTP.type) {
       // SFTP 操作
       return sftpProcess(session as ISftpSession);
     }
