@@ -1,9 +1,9 @@
 package com.orion.visor.module.asset.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
+import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
 import com.orion.visor.module.asset.service.HostTerminalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 主机终端 api
@@ -38,7 +39,7 @@ public class HostTerminalController {
     @IgnoreLog(IgnoreLogMode.ALL)
     @GetMapping("/themes")
     @Operation(summary = "获取主机终端主题")
-    public JSONArray getTerminalThemes() {
+    public List<HostTerminalThemeVO> getTerminalThemes() {
         return hostTerminalService.getTerminalThemes();
     }
 

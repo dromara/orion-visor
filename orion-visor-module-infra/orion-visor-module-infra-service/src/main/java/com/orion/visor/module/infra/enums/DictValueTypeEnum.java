@@ -1,7 +1,5 @@
 package com.orion.visor.module.infra.enums;
 
-import com.orion.lang.utils.convert.Converts;
-
 import java.math.BigDecimal;
 
 /**
@@ -53,7 +51,7 @@ public enum DictValueTypeEnum {
         @Override
         public Object parse(String s) {
             try {
-                return Converts.toBoolean(s);
+                return Boolean.valueOf(s);
             } catch (Exception e) {
                 return super.parse(s);
             }
