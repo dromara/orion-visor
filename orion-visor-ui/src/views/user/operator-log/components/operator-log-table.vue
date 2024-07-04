@@ -2,7 +2,8 @@
   <!-- 查询头 -->
   <a-card class="general-card table-search-card">
     <!-- 查询头组件 -->
-    <operator-log-query-header @submit="(e) => fetchTableData(undefined, undefined, e)" />
+    <operator-log-query-header :model="formModel"
+                               @submit="fetchTableData" />
   </a-card>
   <!-- 表格 -->
   <a-card class="general-card table-card">
@@ -131,7 +132,7 @@
 
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from '@/api/user/operator-log';
-  import { ref, onMounted } from 'vue';
+  import { ref, reactive, onMounted } from 'vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, getLogDetail } from '../types/const';
   import columns from '../types/table.columns';
   import { copy } from '@/hooks/copy';
@@ -152,8 +153,15 @@
 
   const clearModal = ref();
   const jsonView = ref();
-  const tableRenderData = ref<OperatorLogQueryResponse[]>([]);
-  const selectedKeys = ref<number[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<OperatorLogQueryResponse>>([]);
+  const formModel = reactive<OperatorLogQueryRequest>({
+    module: undefined,
+    type: undefined,
+    riskLevel: undefined,
+    result: undefined,
+    startTimeRange: undefined,
+  });
 
   // 查看详情
   const openLogDetail = (record: OperatorLogQueryResponse) => {
@@ -182,13 +190,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: OperatorLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteOperatorLog([id]);
+      await deleteOperatorLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载数据
@@ -218,7 +224,7 @@
   };
 
   // 切换页码
-  const fetchTableData = (page = 1, limit = pagination.pageSize, form = {}) => {
+  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
 

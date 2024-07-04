@@ -144,13 +144,12 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
-  const tableRenderData = ref<RoleQueryResponse[]>([]);
-
   const pagination = usePagination();
   const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
+  const tableRenderData = ref<Array<RoleQueryResponse>>([]);
   const formModel = reactive<RoleQueryRequest>({
     id: undefined,
     name: undefined,
@@ -168,13 +167,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: RoleQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteRole(id);
+      await deleteRole(record.id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();

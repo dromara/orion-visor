@@ -84,9 +84,13 @@
   const props = withDefaults(defineProps<Partial<{
     handleColumn: boolean;
     current: boolean;
-    baseParams: object;
+    baseParams: OperatorLogQueryRequest;
+    model: OperatorLogQueryRequest;
   }>>(), {
     baseParams: () => {
+      return {};
+    },
+    model: () => {
       return {};
     },
   });
@@ -131,7 +135,7 @@
   };
 
   // 切换页码
-  const fetchTableData = (page = 1, limit = pagination.pageSize, form = {}) => {
+  const fetchTableData = (page = 1, limit = pagination.pageSize, form = props.model) => {
     doFetchTableData({ page, limit, ...form });
   };
 
