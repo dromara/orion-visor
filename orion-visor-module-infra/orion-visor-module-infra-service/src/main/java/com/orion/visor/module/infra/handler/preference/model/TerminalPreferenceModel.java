@@ -324,11 +324,6 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          */
         private Boolean disconnect;
 
-        /**
-         * 关闭终端
-         */
-        private Boolean closeTab;
-
     }
 
     @Data
