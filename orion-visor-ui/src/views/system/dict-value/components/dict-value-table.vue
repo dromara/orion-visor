@@ -88,7 +88,7 @@
         <span class="copy-left" title="复制" @click="copy(record.value)">
           <icon-copy />
         </span>
-        <a-tooltip :content="record.value">
+        <a-tooltip position="tl" :content="record.value">
           <span>{{ record.value }}</span>
         </a-tooltip>
       </template>
@@ -146,12 +146,12 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openHistory']);
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<DictValueQueryResponse[]>([]);
-
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
+
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<DictValueQueryResponse>>([]);
 
   const formModel = reactive<DictValueQueryRequest>({
     keyId: undefined,
@@ -178,13 +178,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: DictValueQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteDictValue(id);
+      await deleteDictValue(record.id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();

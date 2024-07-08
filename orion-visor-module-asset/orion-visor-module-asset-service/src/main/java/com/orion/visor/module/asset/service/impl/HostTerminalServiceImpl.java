@@ -93,7 +93,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Override
     public String getTerminalAccessToken() {
-        LoginUser user = SecurityUtils.getLoginUser();
+        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
         log.info("HostConnectService.getHostAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();
         HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()

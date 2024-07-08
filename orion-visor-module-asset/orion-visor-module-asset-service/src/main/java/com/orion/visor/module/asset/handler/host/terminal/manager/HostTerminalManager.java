@@ -65,7 +65,7 @@ public class HostTerminalManager {
      *
      * @param channelId channelId
      * @param sessionId sessionId
-     * @param T         T
+     * @param <T>       T
      * @return session
      */
     @SuppressWarnings("unchecked")

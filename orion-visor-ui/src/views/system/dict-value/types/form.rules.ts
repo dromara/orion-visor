@@ -17,8 +17,8 @@ export const value = [{
   required: true,
   message: '请输入配置值'
 }, {
-  maxLength: 512,
-  message: '配置值长度不能大于512位'
+  maxLength: 1024,
+  message: '配置值长度不能大于1024位'
 }] as FieldRule[];
 
 export const label = [{
