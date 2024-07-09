@@ -139,6 +139,15 @@
           {{ record.extra?.address }}
         </span>
       </template>
+      <!-- 连接时间 -->
+      <template #connectTime="{ record }">
+        <div>
+          从: {{ record.startTime && dateFormat(new Date(record.startTime)) }}
+        </div>
+        <div class="mt4">
+          至: {{ (record.endTime && dateFormat(new Date(record.endTime)) || '现在') }}
+        </div>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -201,6 +210,7 @@
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
+  import { dateFormat } from '@/utils';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
   import ConnectLogClearModal from './connect-log-clear-modal.vue';

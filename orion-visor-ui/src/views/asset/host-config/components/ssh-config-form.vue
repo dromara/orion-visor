@@ -84,7 +84,7 @@
                      :hide-asterisk="true">
           <host-identity-selector v-model="formModel.identityId" />
         </a-form-item>
-        <!-- 用户名 -->
+        <!-- 连接超时时间 -->
         <a-form-item field="connectTimeout"
                      label="连接超时时间"
                      :hide-asterisk="true">

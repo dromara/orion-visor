@@ -46,12 +46,7 @@ const columns = [
     dataIndex: 'connectTime',
     slotName: 'connectTime',
     align: 'left',
-    width: 318,
-    render: ({ record }) => {
-      return (record.startTime && dateFormat(new Date(record.startTime)))
-        + ' - '
-        + (record.endTime && dateFormat(new Date(record.endTime)) || '现在');
-    },
+    width: 192,
   }, {
     title: '操作',
     slotName: 'handle',

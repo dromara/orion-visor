@@ -37,6 +37,7 @@
                          :allow-clear="true"
                          :data="filterOptions"
                          :filter-option="tagLabelFilter">
+          <!-- 选项 -->
           <template #option="{ data: { raw: { label, isTag } } }">
             <!-- tag -->
             <a-tag v-if="isTag" :color="dataColor(label, tagColor)">

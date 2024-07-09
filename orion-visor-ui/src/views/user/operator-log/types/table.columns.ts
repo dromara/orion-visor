@@ -30,6 +30,8 @@ const columns = [
     title: '操作日志',
     dataIndex: 'originLogInfo',
     slotName: 'originLogInfo',
+    minWidth: 238,
+    align: 'left',
     ellipsis: true,
     tooltip: true,
   }, {

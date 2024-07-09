@@ -31,6 +31,7 @@ const columns = [
     align: 'left',
     ellipsis: true,
     tooltip: true,
+    minWidth: 238,
   }, {
     title: '上传状态',
     dataIndex: 'status',

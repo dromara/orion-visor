@@ -32,12 +32,14 @@ const columns = [
     title: '权限标识',
     dataIndex: 'permission',
     slotName: 'permission',
+    minWidth: 138,
     ellipsis: true,
     tooltip: true
   }, {
     title: '组件名称',
     dataIndex: 'component',
     slotName: 'component',
+    minWidth: 138,
     ellipsis: true,
     tooltip: true,
   }, {

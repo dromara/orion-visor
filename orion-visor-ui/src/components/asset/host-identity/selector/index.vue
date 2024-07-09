@@ -3,7 +3,22 @@
             :options="optionData"
             :loading="loading"
             placeholder="请选择主机身份"
-            allow-clear />
+            allow-clear>
+    <!-- label -->
+    <template #label="{ data }">
+      <span class="option-wrapper">
+        <span class="label">{{ data.label }}</span>
+        <span class="username">{{ data.username }}</span>
+      </span>
+    </template>
+    <!-- 选项 -->
+    <template #option="{ data }">
+      <span class="option-wrapper">
+        <span class="label">{{ data.label }}</span>
+        <span class="username">{{ data.username }}</span>
+      </span>
+    </template>
+  </a-select>
 </template>
 
 <script lang="ts">
@@ -53,8 +68,9 @@
         : await cacheStore.loadHostIdentities();
       optionData.value = hostIdentities.map(s => {
         return {
-          label: `${s.name} (${s.username})`,
+          label: s.name,
           value: s.id,
+          username: s.username,
         };
       });
     } catch (e) {
@@ -66,5 +82,18 @@
 </script>
 
 <style lang="less" scoped>
+  .option-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
+    .label {
+      margin-right: 8px;
+    }
+
+    .username {
+      font-size: 12px;
+      color: var(--color-text-3);
+    }
+  }
 </style>
