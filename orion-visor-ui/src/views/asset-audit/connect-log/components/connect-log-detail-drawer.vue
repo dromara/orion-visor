@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="主机连接日志详情"
-            :width="428"
+            :width="442"
             :mask-closable="false"
             :unmount-on-close="true"
             ok-text="关闭"

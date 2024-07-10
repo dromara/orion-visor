@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="执行命令"
-            width="66%"
+            width="70%"
             :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"
@@ -275,7 +275,7 @@
 
   .command-editor {
     width: 100%;
-    height: 62vh;
+    height: 56vh;
   }
 
 </style>

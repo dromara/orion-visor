@@ -3,7 +3,7 @@
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
                   label-align="left"
-                  :itemOptions="{ 5: { span: 2 } }"
+                  :itemOptions="{ 6: { span: 2 } }"
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
@@ -29,6 +29,10 @@
       <!-- 主机地址 -->
       <a-form-item field="hostAddress" label="主机地址">
         <a-input v-model="formModel.hostAddress" placeholder="请输入主机地址" allow-clear />
+      </a-form-item>
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id" placeholder="请输入日志id" allow-clear />
       </a-form-item>
       <!-- 类型 -->
       <a-form-item field="type" label="类型">
@@ -154,7 +158,7 @@
           <!-- 详情 -->
           <a-button type="text"
                     size="mini"
-                    @click="openDetail(record)">
+                    @click="emits('openDetail', record)">
             详情
           </a-button>
           <!-- 下线 -->
@@ -186,11 +190,6 @@
       </template>
     </a-table>
   </a-card>
-  <!-- 清空模态框 -->
-  <connect-log-clear-modal ref="clearModal"
-                           @clear="fetchTableData" />
-  <!-- 详情模态框 -->
-  <connect-log-detail-drawer ref="detailModal" />
 </template>
 
 <script lang="ts">
@@ -213,20 +212,19 @@
   import { dateFormat } from '@/utils';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
-  import ConnectLogClearModal from './connect-log-clear-modal.vue';
-  import ConnectLogDetailDrawer from './connect-log-detail-drawer.vue';
 
-  const tableRenderData = ref<HostConnectLogQueryResponse[]>([]);
-  const selectedKeys = ref<number[]>([]);
-  const clearModal = ref();
-  const detailModal = ref();
+  const emits = defineEmits(['openClear', 'openDetail']);
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
+  const tableRenderData = ref<Array<HostConnectLogQueryResponse>>([]);
+  const selectedKeys = ref<Array<number>>([]);
+
   const formModel = reactive<HostConnectLogQueryRequest>({
+    id: undefined,
     userId: undefined,
     hostId: undefined,
     hostAddress: undefined,
@@ -256,14 +254,11 @@
     doFetchTableData({ page, limit, ...form });
   };
 
+  defineExpose({ fetchTableData });
+
   // 打开清空
   const openClear = () => {
-    clearModal.value?.open({ ...formModel });
-  };
-
-  // 打开详情
-  const openDetail = (record: HostConnectLogQueryResponse) => {
-    detailModal.value?.open(record);
+    emits('openClear', { ...formModel, id: undefined });
   };
 
   // 强制下线
@@ -297,13 +292,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: HostConnectLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostConnectLog([id]);
+      await deleteHostConnectLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载数据

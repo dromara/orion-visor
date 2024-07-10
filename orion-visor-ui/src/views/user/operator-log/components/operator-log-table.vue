@@ -98,7 +98,7 @@
           <!-- 详情 -->
           <a-button type="text"
                     size="mini"
-                    @click="openLogDetail(record)">
+                    @click="emits('openDetail', record)">
             详情
           </a-button>
           <!-- 删除 -->
@@ -117,11 +117,6 @@
       </template>
     </a-table>
   </a-card>
-  <!-- 清理模态框 -->
-  <operator-log-clear-modal ref="clearModal"
-                            @clear="fetchTableData" />
-  <!-- json 查看器模态框 -->
-  <json-editor-modal ref="jsonView" />
 </template>
 
 <script lang="ts">
@@ -133,7 +128,7 @@
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from '@/api/user/operator-log';
   import { ref, reactive, onMounted } from 'vue';
-  import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, getLogDetail } from '../types/const';
+  import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
   import columns from '../types/table.columns';
   import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
@@ -143,16 +138,14 @@
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
   import { Message } from '@arco-design/web-vue';
   import OperatorLogQueryHeader from './operator-log-query-header.vue';
-  import OperatorLogClearModal from './operator-log-clear-modal.vue';
-  import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
+
+  const emits = defineEmits(['openClear', 'openDetail']);
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
 
-  const clearModal = ref();
-  const jsonView = ref();
   const selectedKeys = ref<Array<number>>([]);
   const tableRenderData = ref<Array<OperatorLogQueryResponse>>([]);
   const formModel = reactive<OperatorLogQueryRequest>({
@@ -163,14 +156,9 @@
     startTimeRange: undefined,
   });
 
-  // 查看详情
-  const openLogDetail = (record: OperatorLogQueryResponse) => {
-    jsonView.value.open(getLogDetail(record));
-  };
-
   // 打开清空
   const openClear = () => {
-    clearModal.value?.open();
+    emits('openClear', { ...formModel });
   };
 
   // 删除选中行
@@ -227,6 +215,8 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
+
+  defineExpose({ fetchTableData });
 
   // 初始化
   onMounted(() => {

@@ -1,6 +1,6 @@
 <template>
   <a-drawer v-model:visible="visible"
-            width="66%"
+            width="70%"
             :title="title"
             :esc-to-close="false"
             :mask-closable="false"
@@ -103,18 +103,35 @@
                                :key="i"
                                class="parameter-item"
                                :class="[ i === parameter.length - 1 ? 'parameter-item-last' : '' ]">
+                  <!-- 参数名 -->
                   <a-input class="parameter-item-name"
                            v-model="item.name"
-                           placeholder="参数名称 (必填)"
-                           allow-clear />
+                           placeholder="必填"
+                           :max-length="24"
+                           allow-clear>
+                    <template #prepend>
+                      <span>参数名</span>
+                    </template>
+                  </a-input>
+                  <!-- 默认值 -->
                   <a-input class="parameter-item-default"
                            v-model="item.defaultValue"
-                           placeholder="默认值 (非必填)"
-                           allow-clear />
+                           placeholder="非必填"
+                           allow-clear>
+                    <template #prepend>
+                      <span>默认值</span>
+                    </template>
+                  </a-input>
+                  <!-- 描述 -->
                   <a-input class="parameter-item-description"
                            v-model="item.desc"
-                           placeholder="描述 (非必填)"
-                           allow-clear />
+                           placeholder="非必填"
+                           :max-length="64"
+                           allow-clear>
+                    <template #prepend>
+                      <span>描述</span>
+                    </template>
+                  </a-input>
                   <span class="parameter-item-close click-icon-wrapper"
                         title="移除"
                         @click="removeParameter(i)">

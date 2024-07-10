@@ -87,7 +87,7 @@ export const createDefaultOptions = (): Options => {
     showFoldingControls: 'always',
     renderLineHighlight: 'line',
     selectOnLineNumbers: true,
-    lineNumbersMinChars: 2,
+    lineNumbersMinChars: 3,
     disableLayerHinting: true,
     minimap: {
       enabled: false,
