@@ -9,7 +9,7 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full drawer-form-small" :loading="loading">
+    <a-spin class="form-container drawer-form-small" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
@@ -146,8 +146,8 @@
                     </template>
                   </a-input>
                   <!-- 参数值 -->
-                  <a-input class="parameter-item-default"
-                           v-model="item.defaultValue"
+                  <a-input class="parameter-item-value"
+                           v-model="item.value"
                            placeholder="必填"
                            allow-clear>
                     <template #prepend>
@@ -340,7 +340,7 @@
       }
       // 验证并设置命令参数
       for (const p of parameter.value) {
-        if (!p.name || !p.defaultValue) {
+        if (!p.name || !p.value) {
           Message.warning('请补全命令参数');
           return false;
         }
@@ -406,6 +406,11 @@
     }
   }
 
+  .form-container {
+    width: 100%;
+    min-height: 100%;
+  }
+
   .command-item {
     :deep(.arco-form-item-extra) {
       margin-top: -18px;
@@ -465,15 +470,15 @@
       }
 
       &-name {
-        width: 29%;
+        width: 30%;
       }
 
-      &-default {
-        width: 29%;
+      &-value {
+        width: 40%;
       }
 
       &-description {
-        width: calc(39% - 44px);
+        width: calc(30% - 44px);
       }
 
       &-close {

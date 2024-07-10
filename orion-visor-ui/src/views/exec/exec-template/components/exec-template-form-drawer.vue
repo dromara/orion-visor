@@ -9,7 +9,7 @@
             :cancel-button-props="{ disabled: loading }"
             :on-before-ok="handlerOk"
             @cancel="handleClose">
-    <a-spin class="full drawer-form-small" :loading="loading">
+    <a-spin class="form-container drawer-form-small" :loading="loading">
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
@@ -113,13 +113,13 @@
                       <span>参数名</span>
                     </template>
                   </a-input>
-                  <!-- 默认值 -->
-                  <a-input class="parameter-item-default"
-                           v-model="item.defaultValue"
+                  <!-- 参数值 -->
+                  <a-input class="parameter-item-value"
+                           v-model="item.value"
                            placeholder="非必填"
                            allow-clear>
                     <template #prepend>
-                      <span>默认值</span>
+                      <span>参数值</span>
                     </template>
                   </a-input>
                   <!-- 描述 -->
@@ -329,6 +329,11 @@
     }
   }
 
+  .form-container {
+    width: 100%;
+    min-height: 100%;
+  }
+
   .parameter-form-item {
     user-select: none;
     margin-top: 4px;
@@ -353,15 +358,15 @@
       }
 
       &-name {
-        width: 29%;
+        width: 30%;
       }
 
-      &-default {
-        width: 29%;
+      &-value {
+        width: 40%;
       }
 
       &-description {
-        width: calc(39% - 44px);
+        width: calc(30% - 44px);
       }
 
       &-close {

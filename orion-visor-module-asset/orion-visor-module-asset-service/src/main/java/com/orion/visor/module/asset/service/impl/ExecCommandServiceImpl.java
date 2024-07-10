@@ -336,9 +336,6 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                         s -> {
                             Object value = s.getValue();
                             if (value == null) {
-                                value = s.getDefaultValue();
-                            }
-                            if (value == null) {
                                 value = Const.EMPTY;
                             }
                             return value;
