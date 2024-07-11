@@ -84,36 +84,45 @@
                      :hide-asterisk="true">
           <host-identity-selector v-model="formModel.identityId" />
         </a-form-item>
-        <!-- 连接超时时间 -->
-        <a-form-item field="connectTimeout"
-                     label="连接超时时间"
-                     :hide-asterisk="true">
-          <a-input-number v-model="formModel.connectTimeout"
-                          placeholder="请输入连接超时时间"
-                          hide-button>
-            <template #suffix>
-              ms
+        <!-- 其他配置 -->
+        <a-collapse :bordered="false">
+          <a-collapse-item key="1">
+            <template #header>
+              <span class="usn">其他配置</span>
             </template>
-          </a-input-number>
-        </a-form-item>
-        <!-- SSH输出编码 -->
-        <a-form-item field="charset"
-                     label="SSH输出编码"
-                     :hide-asterisk="true">
-          <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
-        </a-form-item>
-        <!-- 文件名称编码 -->
-        <a-form-item field="fileNameCharset"
-                     label="文件名称编码"
-                     :hide-asterisk="true">
-          <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
-        </a-form-item>
-        <!-- 文件内容编码 -->
-        <a-form-item field="fileContentCharset"
-                     label="文件内容编码"
-                     :hide-asterisk="true">
-          <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
-        </a-form-item>
+            <!-- 连接超时时间 -->
+            <a-form-item class="mt4"
+                         field="connectTimeout"
+                         label="连接超时时间"
+                         :hide-asterisk="true">
+              <a-input-number v-model="formModel.connectTimeout"
+                              placeholder="请输入连接超时时间"
+                              hide-button>
+                <template #suffix>
+                  ms
+                </template>
+              </a-input-number>
+            </a-form-item>
+            <!-- SSH 输出编码 -->
+            <a-form-item field="charset"
+                         label="SSH输出编码"
+                         :hide-asterisk="true">
+              <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
+            </a-form-item>
+            <!-- 文件名称编码 -->
+            <a-form-item field="fileNameCharset"
+                         label="文件名称编码"
+                         :hide-asterisk="true">
+              <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
+            </a-form-item>
+            <!-- 文件内容编码 -->
+            <a-form-item field="fileContentCharset"
+                         label="文件内容编码"
+                         :hide-asterisk="true">
+              <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
+            </a-form-item>
+          </a-collapse-item>
+        </a-collapse>
       </a-form>
       <!-- 操作按钮 -->
       <div class="config-button-group">

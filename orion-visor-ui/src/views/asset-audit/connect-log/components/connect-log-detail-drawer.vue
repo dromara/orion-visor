@@ -31,11 +31,15 @@
       </a-descriptions-item>
       <!-- 连接类型 -->
       <a-descriptions-item label="连接类型">
-        {{ getDictValue(connectTypeKey, record.type) }}
+        <a-tag :color="getDictValue(connectTypeKey, record.type, 'color')">
+          {{ getDictValue(connectTypeKey, record.type) }}
+        </a-tag>
       </a-descriptions-item>
       <!-- 连接状态 -->
       <a-descriptions-item label="连接状态">
-        {{ getDictValue(connectStatusKey, record.status) }}
+        <span :style="{ color: getDictValue(connectStatusKey, record.status, 'color') }">
+          {{ getDictValue(connectStatusKey, record.status) }}
+        </span>
       </a-descriptions-item>
       <!-- 留痕地址 -->
       <a-descriptions-item label="留痕地址">
@@ -53,7 +57,9 @@
       </a-descriptions-item>
       <!-- 错误信息 -->
       <a-descriptions-item v-if="record.extra?.errorMessage" label="错误信息">
-        {{ record.extra?.errorMessage }}
+        <span class="span-red">
+          {{ record.extra?.errorMessage }}
+        </span>
       </a-descriptions-item>
       <!-- 开始时间 -->
       <a-descriptions-item label="开始时间">
@@ -141,4 +147,15 @@
     display: inline-block;
     color: rgb(var(--arcoblue-6));
   }
+
+
+  :deep(.arco-collapse-item-content) {
+    background: unset;
+    padding: 0;
+  }
+
+  :deep(.arco-collapse-item-header) {
+    border: none;
+  }
+
 </style>
