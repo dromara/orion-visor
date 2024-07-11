@@ -4,4 +4,4 @@ docker compose down
 if [ "$1" == "demo" ]; then
     sed -i 's/DEMO_MODE=false/DEMO_MODE=true/g' docker-compose.yml
 fi
-docker compose up -d
+docker compose up -d --remove-orphans
