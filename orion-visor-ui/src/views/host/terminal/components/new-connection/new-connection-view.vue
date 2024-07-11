@@ -18,6 +18,7 @@
                          :allow-clear="true"
                          :data="filterOptions"
                          :filter-option="tagLabelFilter">
+          <!-- 选项 -->
           <template #option="{ data: { raw: { label, isTag } } }">
             <!-- tag -->
             <a-tag v-if="isTag" :color="dataColor(label, tagColor)">
@@ -107,7 +108,7 @@
 
     .host-view-container {
       width: 100%;
-      height: calc(100vh - 240px);
+      height: calc(100vh - 242px);
       position: relative;
     }
   }

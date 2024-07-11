@@ -71,7 +71,7 @@
       }
       // 获取会话
       const session = sessionManager.getSession<ISftpSession>(sessionId.value);
-      if (session.type === PanelSessionType.SFTP.type) {
+      if (session?.type === PanelSessionType.SFTP.type) {
         if (touch.value) {
           // 创建文件
           session.touch(formModel.value.path);

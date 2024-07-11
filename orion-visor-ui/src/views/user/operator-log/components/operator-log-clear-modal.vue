@@ -105,8 +105,8 @@
   const emits = defineEmits(['clear']);
 
   // 打开
-  const open = () => {
-    renderForm({ ...defaultForm() });
+  const open = (record: OperatorLogQueryRequest) => {
+    renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
 

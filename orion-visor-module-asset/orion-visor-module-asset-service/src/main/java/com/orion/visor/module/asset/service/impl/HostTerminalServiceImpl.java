@@ -1,15 +1,15 @@
 package com.orion.visor.module.asset.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.exception.AuthenticationException;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.io.StreamReaders;
 import com.orion.net.host.SessionHolder;
 import com.orion.net.host.SessionStore;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.security.LoginUser;
 import com.orion.visor.framework.common.utils.CryptoUtils;
 import com.orion.visor.framework.common.utils.Valid;
@@ -24,6 +24,7 @@ import com.orion.visor.module.asset.entity.domain.HostIdentityDO;
 import com.orion.visor.module.asset.entity.domain.HostKeyDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
 import com.orion.visor.module.asset.enums.*;
 import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
@@ -31,14 +32,15 @@ import com.orion.visor.module.asset.service.HostConfigService;
 import com.orion.visor.module.asset.service.HostExtraService;
 import com.orion.visor.module.asset.service.HostTerminalService;
 import com.orion.visor.module.infra.api.DataPermissionApi;
+import com.orion.visor.module.infra.api.DictValueApi;
 import com.orion.visor.module.infra.enums.DataPermissionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 主机连接服务
@@ -51,7 +53,7 @@ import java.util.Optional;
 @Service
 public class HostTerminalServiceImpl implements HostTerminalService {
 
-    private static final String TERMINAL_PATH = "/theme/terminal.theme.json";
+    private static final String THEME_DICT_KEY = "terminalTheme";
 
     @Resource
     private HostConfigService hostConfigService;
@@ -74,20 +76,24 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Resource
     private DataPermissionApi dataPermissionApi;
 
+    @Resource
+    private DictValueApi dictValueApi;
+
     @Override
-    public JSONArray getTerminalThemes() {
-        try (InputStream in = HostTerminalService.class.getResourceAsStream(TERMINAL_PATH)) {
-            Valid.notNull(in, ErrorMessage.CONFIG_ABSENT);
-            byte[] bytes = StreamReaders.readAllBytes(in);
-            return JSONArray.parseArray(new String(bytes));
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+    public List<HostTerminalThemeVO> getTerminalThemes() {
+        List<JSONObject> themes = dictValueApi.getDictValue(THEME_DICT_KEY);
+        return themes.stream()
+                .map(s -> HostTerminalThemeVO.builder()
+                        .name(s.getString(ExtraFieldConst.LABEL))
+                        .dark(s.getBoolean(ExtraFieldConst.DARK))
+                        .schema(s.getJSONObject(ExtraFieldConst.VALUE))
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
     public String getTerminalAccessToken() {
-        LoginUser user = SecurityUtils.getLoginUser();
+        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
         log.info("HostConnectService.getHostAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();
         HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()

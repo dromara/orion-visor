@@ -31,6 +31,8 @@ public interface FieldConst {
 
     String INFO = "info";
 
+    String EXTRA = "extra";
+
     String REL_ID = "relId";
 
     String BEFORE = "before";
@@ -59,10 +61,24 @@ public interface FieldConst {
 
     String TIME = "time";
 
+    String ISSUE = "issue";
+
+    String EXPIRE = "expire";
+
     String LOCATION = "location";
 
     String USER_AGENT = "userAgent";
 
     String ERROR_MESSAGE = "errorMessage";
+
+    String UUID = "uuid";
+
+    String REDIRECT = "redirect";
+
+    String SCHEMA = "schema";
+
+    String FILTER = "filter";
+
+    String LICENSE = "license";
 
 }

@@ -36,22 +36,14 @@ items:
   - name: haveUnRead
     request:
       api: /orion-visor/api/infra/system-message/has-unread
-      header:
-        Authorization: Bearer {{.login.data.token}}
   - name: queryOperatorLog
     request:
       api: /orion-visor/api/infra/mine/query-operator-log
       method: POST
-      header:
-        Authorization: Bearer {{.login.data.token}}
   - name: hostList
     request:
       api: /orion-visor/api/infra/tag/list?type=HOST
-      header:
-        Authorization: Bearer {{.login.data.token}}
   - name: queryHost
     request:
       api: /orion-visor/api/asset/host/query
       method: POST
-      header:
-        Authorization: Bearer {{.login.data.token}}

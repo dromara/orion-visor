@@ -24,13 +24,13 @@
                      label="配置项">
           <dict-key-selector v-model="formModel.keyId" @change="changeKey" />
         </a-form-item>
-        <!-- 配置值 -->
-        <a-form-item field="value" label="配置值">
-          <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
-        </a-form-item>
         <!-- 配置描述 -->
         <a-form-item field="label" label="配置描述">
           <a-input v-model="formModel.label" placeholder="请输入配置描述" allow-clear />
+        </a-form-item>
+        <!-- 配置值 -->
+        <a-form-item field="value" label="配置值">
+          <a-input v-model="formModel.value" placeholder="请输入配置值" allow-clear />
         </a-form-item>
         <!-- 排序 -->
         <a-form-item field="sort" label="排序">

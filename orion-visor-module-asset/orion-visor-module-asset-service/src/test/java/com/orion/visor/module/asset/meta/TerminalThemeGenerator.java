@@ -66,8 +66,15 @@ public class TerminalThemeGenerator {
             arr.sort(Comparator.comparing(s -> schemaFilter.indexOf(s.getName())));
         }
         // 打印 json
-        String json = JSON.toJSONString(arr, colorFilter);
-        System.out.println("\n\n" + json);
+        System.out.println();
+        for (TerminalTheme theme : arr) {
+            System.out.println("name: " + theme.name);
+            System.out.println("dark: " + theme.dark);
+            System.out.println("value: \n" + JSON.toJSONString(theme.schema, colorFilter));
+            System.out.println();
+        }
+        // String json = JSON.toJSONString(arr, colorFilter);
+        // System.out.println("\n" + json);
     }
 
     /*

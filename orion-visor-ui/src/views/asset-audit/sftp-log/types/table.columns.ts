@@ -34,6 +34,7 @@ const columns = [
     dataIndex: 'paths',
     slotName: 'paths',
     align: 'left',
+    minWidth: 238,
   }, {
     title: '执行结果',
     dataIndex: 'result',

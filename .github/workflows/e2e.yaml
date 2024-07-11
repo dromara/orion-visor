@@ -4,9 +4,8 @@ on:
   pull_request:
     branches:
       - main
-      - dev
 
-concurrency: 
+concurrency:
   group: ${{github.workflow}} - ${{github.ref}}
   cancel-in-progress: true
 

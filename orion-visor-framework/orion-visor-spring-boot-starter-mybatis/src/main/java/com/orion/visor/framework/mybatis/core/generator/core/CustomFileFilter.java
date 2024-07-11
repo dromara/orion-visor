@@ -38,13 +38,13 @@ public class CustomFileFilter {
     public List<CustomFile> doFilter() {
         // 生成文件副本
         List<CustomFile> files = originCustomerFile.stream().map(s ->
-                new CustomFile.Builder()
-                        .enableFileOverride()
-                        .templatePath(s.getTemplatePath())
-                        .filePath(s.getFilePath())
-                        .fileName(s.getFileName())
-                        .packageName(s.getPackageName())
-                        .build())
+                        new CustomFile.Builder()
+                                .enableFileOverride()
+                                .templatePath(s.getTemplatePath())
+                                .filePath(s.getFilePath())
+                                .fileName(s.getFileName())
+                                .packageName(s.getPackageName())
+                                .build())
                 .collect(Collectors.toList());
         // 不生成对外 api 文件
         if (!table.isEnableProviderApi()) {

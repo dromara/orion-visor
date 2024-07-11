@@ -179,13 +179,15 @@
 
   // 选择公钥文件
   const selectPublicFile = async (fileList: FileItem[]) => {
-    formModel.value.publicKey = await readFileText(fileList[0].file as File);
+    formModel.value.publicKey = await readFileText(fileList[fileList.length - 1].file as File);
+    fileList.length = 0;
     formRef.value.clearValidate('publicKey');
   };
 
   // 选择私钥文件
   const selectPrivateFile = async (fileList: FileItem[]) => {
-    formModel.value.privateKey = await readFileText(fileList[0].file as File);
+    formModel.value.privateKey = await readFileText(fileList[fileList.length - 1].file as File);
+    fileList.length = 0;
     formRef.value.clearValidate('privateKey');
   };
 

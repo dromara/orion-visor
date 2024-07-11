@@ -11,7 +11,6 @@ export const templateSuffix = ' }}';
 export interface TemplateParam {
   name?: string;
   desc?: string;
-  defaultValue?: any;
   value?: any;
 }
 

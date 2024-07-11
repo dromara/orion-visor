@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="执行命令"
-            width="66%"
+            width="70%"
             :esc-to-close="false"
             :mask-closable="false"
             :unmount-on-close="true"
@@ -180,7 +180,7 @@
       parameterSchema.value = JSON.parse(record.parameterSchema);
       const params = {} as any;
       for (let param of parameterSchema.value) {
-        params[param.name as keyof any] = param.defaultValue;
+        params[param.name as keyof any] = param.value;
       }
       parameterFormModel.value = params;
     } else {
@@ -275,7 +275,7 @@
 
   .command-editor {
     width: 100%;
-    height: 62vh;
+    height: 56vh;
   }
 
 </style>

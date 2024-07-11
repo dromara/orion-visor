@@ -79,7 +79,7 @@
       }
       // 获取会话
       const session = sessionManager.getSession<ISftpSession>(sessionId.value);
-      if (session.type === PanelSessionType.SFTP.type) {
+      if (session?.type === PanelSessionType.SFTP.type) {
         session.move(formModel.value.path, formModel.value.target);
       }
     } catch (e) {

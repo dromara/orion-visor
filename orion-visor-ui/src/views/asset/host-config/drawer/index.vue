@@ -16,7 +16,8 @@
     </template>
     <a-spin :loading="loading" class="host-config-container">
       <!-- SSH 配置 -->
-      <ssh-config-form :host-id="record.id"
+      <ssh-config-form class="host-config-wrapper"
+                       :host-id="record.id"
                        :content="config.ssh"
                        @submitted="(e) => config.ssh = e" />
     </a-spin>
@@ -111,11 +112,12 @@
 
   .host-config-container {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     background-color: var(--color-fill-2);
   }
 
-  .arco-card {
-    margin: 18px 18px 0 18px;
+  .host-config-wrapper {
+    margin: 18px;
   }
+
 </style>

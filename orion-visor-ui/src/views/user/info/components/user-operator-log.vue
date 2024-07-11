@@ -3,8 +3,9 @@
     <!-- 查询头 -->
     <a-card class="general-card table-search-card">
       <!-- 查询头组件 -->
-      <operator-log-query-header :visible-user="false"
-                                 @submit="(e) => table.fetchTableData(undefined, undefined, e)" />
+      <operator-log-query-header :model="formModel"
+                                 :visible-user="false"
+                                 @submit="() => table.fetchTableData()" />
     </a-card>
     <!-- 表格 -->
     <a-card class="general-card table-card">
@@ -20,7 +21,8 @@
       <!-- 表格组件 -->
       <operator-log-simple-table ref="table"
                                  :current="!user"
-                                 :base-params="{ userId: user?.id }" />
+                                 :base-params="{ userId: user?.id }"
+                                 :model="formModel"/>
     </a-card>
   </div>
 </template>
@@ -33,11 +35,12 @@
 
 <script lang="ts" setup>
   import type { UserQueryResponse } from '@/api/user/user';
-  import { ref, onBeforeMount } from 'vue';
+  import { ref, reactive, onBeforeMount } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from '@/views/user/operator-log/types/const';
   import OperatorLogQueryHeader from '@/views/user/operator-log/components/operator-log-query-header.vue';
   import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
+  import { OperatorLogQueryRequest } from '@/api/user/operator-log';
 
   const props = defineProps<{
     user?: UserQueryResponse;
@@ -47,6 +50,13 @@
 
   const render = ref();
   const table = ref();
+  const formModel = reactive<OperatorLogQueryRequest>({
+    module: undefined,
+    type: undefined,
+    riskLevel: undefined,
+    result: undefined,
+    startTimeRange: undefined,
+  });
 
   onBeforeMount(async () => {
     // 加载字典值

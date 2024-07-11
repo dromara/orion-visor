@@ -8,6 +8,7 @@
             @exceed-limit="() => { emits('onLimited', limit, `最多选择${limit}个tag`) }"
             multiple
             allow-clear>
+    <!-- 选项 -->
     <template #option="{ data: { label } }">
       <a-tag :color="dataColor(label, tagColor)">
         {{ label }}

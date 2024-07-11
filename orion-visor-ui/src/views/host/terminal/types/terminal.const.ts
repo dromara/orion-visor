@@ -177,10 +177,6 @@ export const ActionBarItems = [
     item: 'disconnect',
     icon: 'icon-poweroff',
     content: '断开连接',
-  }, {
-    item: 'closeTab',
-    icon: 'icon-close',
-    content: '关闭终端',
   }
 ];
 

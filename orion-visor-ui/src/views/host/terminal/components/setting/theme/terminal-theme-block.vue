@@ -10,7 +10,9 @@
     <a-skeleton v-if="loading"
                 class="skeleton-wrapper"
                 :animation="true">
-      <a-skeleton-line :rows="8" />
+      <a-skeleton-line :rows="6"
+                       :line-height="64"
+                       :line-spacing="24" />
     </a-skeleton>
     <!-- 内容区域 -->
     <div v-else class="terminal-setting-body terminal-theme-container">
@@ -18,9 +20,9 @@
       <a-alert class="mb16">选择后会立刻保存, 刷新页面后生效</a-alert>
       <!-- 终端主题 -->
       <div class="theme-row"
-           v-for="rowIndex in themes.length / 2"
-           :key="rowIndex">
-        <a-card v-for="(theme, colIndex) in [themes[(rowIndex - 1) * 2], themes[(rowIndex - 1) * 2 + 1]]"
+           v-for="(themeArr, index) in themes"
+           :key="index">
+        <a-card v-for="(theme, colIndex) in themeArr"
                 :key="theme.name"
                 class="terminal-theme-card simple-card"
                 :class="{
@@ -67,7 +69,7 @@
   const { loading, setLoading } = useLoading();
 
   const currentThemeName = ref();
-  const themes = ref<Array<TerminalTheme>>([]);
+  const themes = ref<Array<Array<TerminalTheme>>>([]);
 
   // 选择主题
   const selectTheme = async (theme: TerminalTheme) => {
@@ -90,7 +92,12 @@
     try {
       // 加载全部主题
       const { data } = await getTerminalThemes();
-      themes.value = data;
+      const result = [];
+      for (let i = 0; i < data.length; i += 2) {
+        const subArray = data.slice(i, i + 2);
+        result.push(subArray);
+      }
+      themes.value = result;
     } catch (e) {
     } finally {
       setLoading(false);

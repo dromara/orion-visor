@@ -6,7 +6,7 @@ const columns = [
     title: 'id',
     dataIndex: 'id',
     slotName: 'id',
-    width: 100,
+    width: 80,
     align: 'left',
     fixed: 'left',
   }, #foreach($field in ${table.fields})#if("$!field.propertyName" != "id"){
@@ -15,6 +15,7 @@ const columns = [
     slotName: '${field.propertyName}',
     align: 'left',
     #if(${field.propertyType} == 'String')
+    minWidth: 238,
     ellipsis: true,
     tooltip: true,
     #elseif(${field.propertyType} == 'Date')
