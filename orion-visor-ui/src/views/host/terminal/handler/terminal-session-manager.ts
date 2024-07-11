@@ -137,7 +137,6 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     Object.values(this.sessions)
       .filter(s => s?.type === PanelSessionType.SSH.type)
       .map(s => s as SshSession)
-      .filter(h => h.connected)
       .forEach(h => h.fit());
   }
 

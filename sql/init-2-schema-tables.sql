@@ -177,18 +177,18 @@ CREATE TABLE `dict_key`
 DROP TABLE IF EXISTS `dict_value`;
 CREATE TABLE `dict_value`
 (
-    `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `key_id`      bigint(0)                                                     NOT NULL COMMENT '配置项id',
-    `key_name`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NOT NULL COMMENT '配置项',
-    `value`       varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置值',
-    `label`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '配置描述',
-    `extra`       json                                                          NULL COMMENT '额外参数',
-    `sort`        int(0)                                                        NULL DEFAULT NULL COMMENT '排序',
-    `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
-    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
-    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
-    `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    `id`          bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `key_id`      bigint(0)                                                      NOT NULL COMMENT '配置项id',
+    `key_name`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NOT NULL COMMENT '配置项',
+    `value`       varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置值',
+    `label`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '配置描述',
+    `extra`       json                                                           NULL COMMENT '额外参数',
+    `sort`        int(0)                                                         NULL DEFAULT NULL COMMENT '排序',
+    `create_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                     NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_key_id` (`key_id`) USING BTREE
 ) ENGINE = InnoDB
