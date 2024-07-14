@@ -1,8 +1,10 @@
 package com.orion.visor.module.asset.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.jcraft.jsch.SftpException;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.io.Files1;
 import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.net.host.sftp.SftpFile;
 import com.orion.visor.module.asset.define.config.AppSftpConfig;
@@ -39,7 +41,12 @@ public class SftpUtils {
             SftpFileBackupParams backupParams = new SftpFileBackupParams(file.getName(), System.currentTimeMillis());
             String target = Strings.format(config.getBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
             // 移动
-            executor.move(path, target);
+            try {
+                executor.getChannel().rename(path, Files1.getPath(Files1.normalize(Files1.getPath(path + "/../" + target))));
+            } catch (SftpException ignored) {
+            }
+            // FIXME kit
+            // executor.move(path, target);
         }
     }
 

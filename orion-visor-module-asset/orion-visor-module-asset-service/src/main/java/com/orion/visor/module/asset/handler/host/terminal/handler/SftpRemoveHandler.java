@@ -29,10 +29,11 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
     @Override
     public void handle(WebSocketSession channel, SftpBaseRequest payload) {
         long startTime = System.currentTimeMillis();
-        // 获取会话
+        String path = payload.getPath();
         String sessionId = payload.getSessionId();
+        // 获取会话
         ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
-        String[] paths = payload.getPath().split("\\|");
+        String[] paths = path.split("\\|");
         log.info("SftpRemoveHandler-handle start sessionId: {}, path: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;
         // 删除
@@ -53,7 +54,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
                         .build());
         // 保存操作日志
         Map<String, Object> extra = Maps.newMap();
-        extra.put(OperatorLogs.PATH, payload.getPath());
+        extra.put(OperatorLogs.PATH, path);
         this.saveOperatorLog(payload, channel,
                 extra, HostTerminalOperatorType.SFTP_REMOVE,
                 startTime, ex);

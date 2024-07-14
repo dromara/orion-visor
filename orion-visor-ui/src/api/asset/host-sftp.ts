@@ -41,6 +41,7 @@ export interface HostSftpLogQueryResponse extends TableData {
 export interface HostSftpLogExtra {
   mod: number;
   target: string;
+  maxCount: number;
 }
 
 /**

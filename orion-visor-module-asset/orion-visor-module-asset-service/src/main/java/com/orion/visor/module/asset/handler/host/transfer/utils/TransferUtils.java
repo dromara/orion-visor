@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.handler.host.transfer.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.lang.exception.argument.InvalidArgumentException;
+import com.orion.lang.utils.Strings;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiverType;
@@ -64,7 +65,11 @@ public class TransferUtils {
         if (ex == null) {
             return null;
         } else if (ex instanceof InvalidArgumentException) {
-            return ex.getMessage();
+            String message = ex.getMessage();
+            if (Strings.isBlank(message)) {
+                return ErrorMessage.OPERATE_ERROR;
+            }
+            return message;
         } else if (ex instanceof ClientAbortException) {
             return ErrorMessage.CLIENT_ABORT;
         }

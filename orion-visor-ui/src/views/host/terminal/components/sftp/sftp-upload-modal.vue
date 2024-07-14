@@ -106,7 +106,8 @@
       return false;
     }
     if (!fileList.value.length) {
-      return true;
+      Message.error('请选择文件');
+      return false;
     }
     // 添加到上传列表
     const files = fileList.value.map(s => s.file as File);
@@ -166,6 +167,10 @@
 
     :deep(.arco-upload-list-item-name) {
       margin-right: 0 !important;
+    }
+
+    :deep(.arco-upload-list-item-name-link) {
+      width: 100%;
     }
 
     :deep(.arco-upload-list-item-name-text) {

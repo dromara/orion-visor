@@ -50,7 +50,11 @@
   // 打开新增
   const open = (session: string, path: string, isTouch: boolean) => {
     sessionId.value = session;
-    formModel.value.path = path;
+    if (path === '/') {
+      formModel.value.path = path;
+    } else {
+      formModel.value.path = path + '/';
+    }
     touch.value = isTouch;
     setVisible(true);
     // 自动聚焦

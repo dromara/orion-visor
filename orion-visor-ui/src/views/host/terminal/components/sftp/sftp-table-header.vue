@@ -285,12 +285,12 @@
 
   // 创建文件
   const createFile = () => {
-    openSftpCreateModal(props.session?.sessionId as string, props.currentPath + '/', true);
+    openSftpCreateModal(props.session?.sessionId as string, props.currentPath, true);
   };
 
   // 创建文件夹
   const createDir = () => {
-    openSftpCreateModal(props.session?.sessionId as string, props.currentPath + '/', false);
+    openSftpCreateModal(props.session?.sessionId as string, props.currentPath, false);
   };
 
   // 删除选中文件

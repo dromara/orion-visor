@@ -3,7 +3,7 @@ import { TransferOperatorType, TransferStatus } from '../types/terminal.const';
 import { getFileName, getPath } from '@/utils/file';
 import { saveAs } from 'file-saver';
 
-// sftp 上传器实现
+// sftp 下载器实现
 export default class SftpTransferDownloader implements ISftpTransferDownloader {
 
   public abort: boolean;

@@ -60,7 +60,10 @@ public class HostSftpServiceImpl implements HostSftpService {
                     vo.setHostId(extra.getLong(ExtraFieldConst.HOST_ID));
                     vo.setHostName(extra.getString(ExtraFieldConst.HOST_NAME));
                     vo.setHostAddress(extra.getString(ExtraFieldConst.ADDRESS));
-                    vo.setPaths(extra.getString(ExtraFieldConst.PATH).split("\\|"));
+                    String[] paths = Optional.ofNullable(extra.getString(ExtraFieldConst.PATH))
+                            .map(p -> p.split("\\|"))
+                            .orElse(new String[0]);
+                    vo.setPaths(paths);
                     vo.setExtra(extra);
                     return vo;
                 });

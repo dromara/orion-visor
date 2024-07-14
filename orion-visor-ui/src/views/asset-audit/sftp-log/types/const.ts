@@ -4,6 +4,9 @@ export const SftpOperatorType = {
   SFTP_CHMOD: 'host-terminal:sftp-chmod',
 };
 
+// 最大展示数量
+export const showPathMaxCount = 5;
+
 // sftp 操作类型 字典项
 export const sftpOperatorTypeKey = 'sftpOperatorType';
 
