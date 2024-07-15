@@ -29,6 +29,14 @@
                     :options="toOptions(sshOsTypeKey)"
                     placeholder="请选择系统类型" />
         </a-form-item>
+        <!-- SSH 端口 -->
+        <a-form-item field="port"
+                     label="SSH端口"
+                     :hide-asterisk="true">
+          <a-input-number v-model="formModel.port"
+                          placeholder="请输入SSH端口"
+                          hide-button />
+        </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username"
                      label="用户名"
@@ -37,14 +45,6 @@
           <a-input v-model="formModel.username"
                    :disabled="SshAuthType.IDENTITY === formModel.authType"
                    placeholder="请输入用户名" />
-        </a-form-item>
-        <!-- SSH 端口 -->
-        <a-form-item field="port"
-                     label="SSH端口"
-                     :hide-asterisk="true">
-          <a-input-number v-model="formModel.port"
-                          placeholder="请输入SSH端口"
-                          hide-button />
         </a-form-item>
         <!-- 验证方式 -->
         <a-form-item field="authType"

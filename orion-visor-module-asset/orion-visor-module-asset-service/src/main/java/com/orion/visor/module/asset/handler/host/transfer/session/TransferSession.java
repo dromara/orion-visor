@@ -1,5 +1,6 @@
 package com.orion.visor.module.asset.handler.host.transfer.session;
 
+import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
@@ -11,6 +12,12 @@ import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.module.asset.define.config.AppSftpConfig;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
+import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
+import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
+import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
@@ -22,7 +29,8 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2024/2/21 21:12
  */
-public abstract class TransferHostSession implements ITransferHostSession {
+@Slf4j
+public abstract class TransferSession implements ITransferSession {
 
     protected static final AppSftpConfig SFTP_CONFIG = SpringHolder.getBean(AppSftpConfig.class);
 
@@ -34,10 +42,20 @@ public abstract class TransferHostSession implements ITransferHostSession {
 
     protected SftpExecutor executor;
 
-    public TransferHostSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
+    protected String channelId;
+
+    @Getter
+    protected String path;
+
+    @Getter
+    @Setter
+    protected String token;
+
+    public TransferSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         this.connectInfo = connectInfo;
         this.sessionStore = sessionStore;
         this.channel = channel;
+        this.channelId = channel.getId();
     }
 
     @Override
@@ -52,6 +70,52 @@ public abstract class TransferHostSession implements ITransferHostSession {
                 executor.connect();
             }
         }
+    }
+
+    @Override
+    public void handleBinary(byte[] bytes) {
+    }
+
+    @Override
+    public void onStart(TransferOperatorRequest request) {
+        this.path = request.getPath();
+    }
+
+    @Override
+    public void onFinish(TransferOperatorRequest request) {
+        log.info("TransferSession.uploadFinish channelId: {}", channelId);
+        this.closeStream();
+        // 响应结果
+        TransferUtils.sendMessage(channel, TransferReceiver.FINISH, null);
+    }
+
+    @Override
+    public void onError(TransferOperatorRequest request) {
+        log.error("TransferSession.uploadError channelId: {}", channelId);
+        this.closeStream();
+        // 响应结果
+        TransferUtils.sendMessage(channel, TransferReceiver.ERROR, new InvalidArgumentException((String) null));
+    }
+
+    @Override
+    public void onAbort(TransferOperatorRequest request) {
+        log.info("TransferSession.abort channelId: {}, path: {}", channelId, path);
+        // 关闭流
+        this.closeStream();
+        // 响应结果
+        TransferUtils.sendMessage(channel, TransferReceiver.ABORT, null);
+    }
+
+    /**
+     * 关闭流
+     */
+    protected abstract void closeStream();
+
+    @Override
+    public void close() {
+        this.closeStream();
+        Streams.close(executor);
+        Streams.close(sessionStore);
     }
 
     /**
@@ -71,18 +135,6 @@ public abstract class TransferHostSession implements ITransferHostSession {
         OperatorLogModel model = TerminalUtils.getOperatorLogModel(this.channel, extra, type, System.currentTimeMillis(), null);
         // 保存
         SpringHolder.getBean(OperatorLogFrameworkService.class).insert(model);
-    }
-
-    /**
-     * 关闭流
-     */
-    protected abstract void closeStream();
-
-    @Override
-    public void close() {
-        this.closeStream();
-        Streams.close(executor);
-        Streams.close(sessionStore);
     }
 
 }

@@ -1,52 +1,54 @@
-import type { ISftpTransferUploader, SftpTransferItem } from '../types/terminal.type';
-import { TransferOperatorType, TransferStatus } from '../types/terminal.const';
-import { getPath } from '@/utils/file';
+import type { SftpTransferItem } from '../types/terminal.type';
+import { TransferType } from '../types/terminal.const';
+import SftpTransferHandler from './sftp-transfer-handler';
 
 // 512 KB
-export const BLOCK_SIZE = 512 * 1024;
+export const PART_SIZE = 512 * 1024;
 
 // sftp 上传器实现
-export default class SftpTransferUploader implements ISftpTransferUploader {
+export default class SftpTransferUploader extends SftpTransferHandler {
 
-  public finish: boolean;
-  public abort: boolean;
-  private currentBlock: number;
-  private totalBlock: number;
-  private client: WebSocket;
-  private item: SftpTransferItem;
+  private currentPart: number;
+  private readonly totalPart: number;
   private file: File;
 
   constructor(item: SftpTransferItem, client: WebSocket) {
-    this.abort = false;
-    this.finish = false;
-    this.item = item;
-    this.client = client;
+    super(TransferType.UPLOAD, item, client);
     this.file = item.file;
-    this.currentBlock = 0;
-    this.totalBlock = Math.ceil(item.file.size / BLOCK_SIZE);
-  }
-
-  // 开始上传
-  startUpload() {
-    this.item.status = TransferStatus.TRANSFERRING;
-    // 发送开始上传信息
-    this.client?.send(JSON.stringify({
-      type: TransferOperatorType.UPLOAD_START,
-      path: getPath(this.item.parentPath + '/' + this.item.name),
-      hostId: this.item.hostId
-    }));
+    this.currentPart = 0;
+    this.totalPart = Math.ceil(item.file.size / PART_SIZE);
   }
 
   // 是否有下一个分片
-  hasNextBlock() {
-    return this.currentBlock < this.totalBlock;
+  hasNextPart() {
+    return this.currentPart < this.totalPart;
   }
 
   // 上传下一个分片
-  async uploadNextBlock() {
+  async onNextPart() {
+    super.onNextPart();
+    // 完成或者中断直接跳过
+    if (this.aborted || this.finished) {
+      return;
+    }
+    if (this.hasNextPart()) {
+      try {
+        // 有下一个分片则上传
+        await this.doUploadNextPart();
+      } catch (e) {
+        // 读取文件失败
+        this.error();
+      }
+    } else {
+      this.finish();
+    }
+  }
+
+  // 执行上传下一分片
+  private async doUploadNextPart() {
     // 读取数据
-    const start = this.currentBlock * BLOCK_SIZE;
-    const end = Math.min(this.file.size, start + BLOCK_SIZE);
+    const start = this.currentPart * PART_SIZE;
+    const end = Math.min(this.file.size, start + PART_SIZE);
     const chunk = this.file.slice(start, end);
     const reader = new FileReader();
     const arrayBuffer = await new Promise((resolve, reject) => {
@@ -56,36 +58,8 @@ export default class SftpTransferUploader implements ISftpTransferUploader {
     });
     // 发送数据
     this.client?.send(arrayBuffer as ArrayBuffer);
-    this.currentBlock++;
+    this.currentPart++;
     this.item.currentSize += (end - start);
-  }
-
-  // 上传完成
-  uploadFinish() {
-    this.finish = true;
-    this.item.status = TransferStatus.SUCCESS;
-    // 发送上传完成的信息
-    this.client?.send(JSON.stringify({
-      type: TransferOperatorType.UPLOAD_FINISH,
-      hostId: this.item.hostId
-    }));
-  }
-
-  // 上传失败
-  uploadError(msg: string | undefined) {
-    this.finish = true;
-    this.item.status = TransferStatus.ERROR;
-    this.item.errorMessage = msg || '上传失败';
-    // 发送上传完成的信息
-    this.client?.send(JSON.stringify({
-      type: TransferOperatorType.UPLOAD_ERROR,
-      hostId: this.item.hostId
-    }));
-  }
-
-  // 上传中断
-  uploadAbort() {
-    this.abort = true;
   }
 
 }

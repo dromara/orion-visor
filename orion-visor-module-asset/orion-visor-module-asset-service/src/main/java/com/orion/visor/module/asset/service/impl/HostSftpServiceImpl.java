@@ -15,9 +15,8 @@ import com.orion.visor.module.asset.convert.HostSftpLogConvert;
 import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
-import com.orion.visor.module.asset.handler.host.transfer.handler.ITransferHandler;
 import com.orion.visor.module.asset.handler.host.transfer.manager.HostTransferManager;
-import com.orion.visor.module.asset.handler.host.transfer.session.IDownloadSession;
+import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSession;
 import com.orion.visor.module.asset.service.HostSftpService;
 import com.orion.visor.module.infra.api.OperatorLogApi;
 import com.orion.visor.module.infra.entity.dto.operator.OperatorLogQueryDTO;
@@ -82,10 +81,10 @@ public class HostSftpServiceImpl implements HostSftpService {
     @Override
     public StreamingResponseBody downloadWithTransferToken(String channelId, String transferToken, HttpServletResponse response) {
         // 获取会话
-        IDownloadSession session = Optional.ofNullable(channelId)
+        DownloadSession session = (DownloadSession) Optional.ofNullable(channelId)
                 .map(hostTransferManager::getHandler)
-                .map(ITransferHandler::getTokenSessions)
-                .map(s -> s.remove(transferToken))
+                .map(s -> s.getSessionByToken(transferToken))
+                .filter(s -> s instanceof DownloadSession)
                 .orElse(null);
         // 响应会话
         if (session == null) {

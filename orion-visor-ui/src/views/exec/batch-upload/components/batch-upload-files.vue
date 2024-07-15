@@ -187,6 +187,10 @@
       }
     }
 
+    :deep(.arco-upload-list-item-name-link) {
+      width: 100%;
+    }
+
     :deep(.arco-upload-list-item-name-text) {
       width: 100%;
     }

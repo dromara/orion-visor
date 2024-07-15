@@ -1,41 +1,33 @@
-import type { ISftpTransferDownloader, SftpTransferItem } from '../types/terminal.type';
-import { TransferOperatorType, TransferStatus } from '../types/terminal.const';
-import { getFileName, getPath } from '@/utils/file';
+import type { SftpTransferItem } from '../types/terminal.type';
+import { TransferStatus, TransferType } from '../types/terminal.const';
+import { getFileName, openDownloadFile } from '@/utils/file';
 import { saveAs } from 'file-saver';
+import { getDownloadTransferUrl } from '@/api/asset/host-sftp';
+import SftpTransferHandler from './sftp-transfer-handler';
 
 // sftp 下载器实现
-export default class SftpTransferDownloader implements ISftpTransferDownloader {
-
-  public abort: boolean;
-
-  private client: WebSocket;
-  private item: SftpTransferItem;
+export default class SftpTransferDownloader extends SftpTransferHandler {
 
   constructor(item: SftpTransferItem, client: WebSocket) {
-    this.abort = false;
-    this.item = item;
-    this.client = client;
+    super(TransferType.DOWNLOAD, item, client);
   }
 
-  // 开始下载
-  initDownload() {
-    this.item.status = TransferStatus.TRANSFERRING;
-    // 发送开始下载信息
-    this.client?.send(JSON.stringify({
-      type: TransferOperatorType.DOWNLOAD_INIT,
-      path: getPath(this.item.parentPath + '/' + this.item.name),
-      hostId: this.item.hostId
-    }));
+  // 开始回调
+  onStart(channelId: string, token: string) {
+    super.onStart(channelId, token);
+    // 获取下载 url
+    const url = getDownloadTransferUrl(channelId, token);
+    // 打开
+    openDownloadFile(url);
   }
 
-  // 下载完成
-  downloadFinish() {
-    if (this.abort) {
+  // 完成回调
+  onFinish() {
+    super.onFinish();
+    if (this.aborted) {
       // 中断则不触发下载
       return;
     }
-    // 设置实际大小
-    this.item.currentSize = this.item.totalSize;
     if (this.item.totalSize === 0) {
       // 空文件直接触发下载
       try {
@@ -51,22 +43,6 @@ export default class SftpTransferDownloader implements ISftpTransferDownloader {
     } else {
       this.item.status = TransferStatus.SUCCESS;
     }
-  }
-
-  // 下载失败
-  downloadError(msg: string | undefined) {
-    this.item.status = TransferStatus.ERROR;
-    this.item.errorMessage = msg || '下载失败';
-  }
-
-  // 下载中断
-  downloadAbort() {
-    this.abort = true;
-    // 发送下载中断信息
-    this.client?.send(JSON.stringify({
-      type: TransferOperatorType.DOWNLOAD_ABORT,
-      hostId: this.item.hostId
-    }));
   }
 
 }

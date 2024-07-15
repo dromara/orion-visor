@@ -414,38 +414,41 @@ export interface ISftpTransferManager {
   cancelAllTransfer: () => void;
 }
 
-// sftp 上传器定义
-export interface ISftpTransferUploader {
-  // 是否完成
-  finish: boolean;
-  // 是否中断
-  abort: boolean;
-  // 开始上传
-  startUpload: () => void;
-  // 是否有下一个分片
-  hasNextBlock: () => boolean;
-  // 上传下一个分片
-  uploadNextBlock: () => Promise<void>;
-  // 上传完成
-  uploadFinish: () => void;
-  // 上传失败
-  uploadError: (msg: string | undefined) => void;
-  // 上传中断
-  uploadAbort: () => void;
+
+// sftp 传输处理回调定义
+export interface ISftpTransferCallback {
+  // 下一分片回调
+  onNextPart: () => Promise<void>;
+  // 开始回调
+  onStart: (channelId: string, token: string) => void;
+  // 进度回调
+  onProgress: (size: number) => void;
+  // 失败回调
+  onError: (msg: string | undefined) => void;
+  // 完成回调
+  onFinish: () => void;
+  // 中断回调
+  onAbort: () => void;
 }
 
-// sftp 下载器定义
-export interface ISftpTransferDownloader {
+// sftp 传输处理器定义
+export interface ISftpTransferHandler extends ISftpTransferCallback {
+  // 类型
+  type: string;
+  // 是否完成
+  finished: boolean;
   // 是否中断
-  abort: boolean;
-  // 初始化下载
-  initDownload: () => void;
-  // 下载完成
-  downloadFinish: () => void;
-  // 下载失败
-  downloadError: (msg: string | undefined) => void;
-  // 下载中断
-  downloadAbort: () => void;
+  aborted: boolean;
+  // 开始
+  start: () => void;
+  // 完成
+  finish: () => void;
+  // 失败
+  error: () => void;
+  // 中断
+  abort: () => void;
+  // 是否有下一个分片
+  hasNextPart: () => boolean;
 }
 
 // sftp 上传文件项
