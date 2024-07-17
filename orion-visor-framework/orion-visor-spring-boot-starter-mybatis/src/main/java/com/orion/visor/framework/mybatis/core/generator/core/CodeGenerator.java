@@ -310,8 +310,6 @@ public class CodeGenerator implements Executable {
                 new String[]{"/templates/orion-server-module-entity-request-update.java.vm", "${type}UpdateRequest.java", "entity.request.${bizPackage}"},
                 // query request 文件
                 new String[]{"/templates/orion-server-module-entity-request-query.java.vm", "${type}QueryRequest.java", "entity.request.${bizPackage}"},
-                // export 文件
-                new String[]{"/templates/orion-server-module-entity-export.java.vm", "${type}Export.java", "entity.export"},
                 // convert 文件
                 new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
                 // cache dto 文件

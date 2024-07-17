@@ -34,6 +34,11 @@ public class Table {
     protected String bizPackage;
 
     /**
+     * 是否生成 api http 文件
+     */
+    protected boolean enableApiHttp;
+
+    /**
      * 是否生成对外 api
      */
     protected boolean enableProviderApi;

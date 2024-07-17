@@ -46,6 +46,10 @@ public class CustomFileFilter {
                                 .packageName(s.getPackageName())
                                 .build())
                 .collect(Collectors.toList());
+        // 不生成 api http 文件
+        if (!table.isEnableApiHttp()) {
+            files.removeIf(file -> isApiHttpFile(file.getTemplatePath()));
+        }
         // 不生成对外 api 文件
         if (!table.isEnableProviderApi()) {
             files.removeIf(file -> isServerProviderFile(file.getTemplatePath()));
@@ -139,13 +143,13 @@ public class CustomFileFilter {
     }
 
     /**
-     * 是否为导出文件
+     * 是否为 api http 文件
      *
      * @param templatePath templatePath
      * @return 是否为导出文件
      */
-    public static boolean isExportFile(String templatePath) {
-        return templatePath.contains("orion-server-module-entity-export");
+    public static boolean isApiHttpFile(String templatePath) {
+        return templatePath.contains("orion-server-module-controller.http");
     }
 
     /**
