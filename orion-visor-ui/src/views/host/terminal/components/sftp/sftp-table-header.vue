@@ -353,6 +353,7 @@
 
     :deep(.sftp-path-unit) {
       cursor: pointer;
+      white-space: nowrap;
       font-size: 12px;
 
       &:hover {

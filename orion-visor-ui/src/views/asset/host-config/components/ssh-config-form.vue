@@ -84,27 +84,27 @@
                      :hide-asterisk="true">
           <host-identity-selector v-model="formModel.identityId" />
         </a-form-item>
+        <!-- 连接超时时间 -->
+        <a-form-item field="connectTimeout"
+                     label="连接超时时间"
+                     :hide-asterisk="true">
+          <a-input-number v-model="formModel.connectTimeout"
+                          placeholder="请输入连接超时时间"
+                          hide-button>
+            <template #suffix>
+              ms
+            </template>
+          </a-input-number>
+        </a-form-item>
         <!-- 其他配置 -->
         <a-collapse :bordered="false">
           <a-collapse-item key="1">
             <template #header>
               <span class="usn">其他配置</span>
             </template>
-            <!-- 连接超时时间 -->
-            <a-form-item class="mt4"
-                         field="connectTimeout"
-                         label="连接超时时间"
-                         :hide-asterisk="true">
-              <a-input-number v-model="formModel.connectTimeout"
-                              placeholder="请输入连接超时时间"
-                              hide-button>
-                <template #suffix>
-                  ms
-                </template>
-              </a-input-number>
-            </a-form-item>
             <!-- SSH 输出编码 -->
-            <a-form-item field="charset"
+            <a-form-item class="mt4"
+                         field="charset"
                          label="SSH输出编码"
                          :hide-asterisk="true">
               <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
@@ -311,4 +311,14 @@
     width: 148px;
     margin-left: 8px;
   }
+
+  :deep(.arco-collapse-item-content) {
+    background: unset;
+    padding: 0;
+  }
+
+  :deep(.arco-collapse-item-header) {
+    border: none;
+  }
+
 </style>

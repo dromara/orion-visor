@@ -148,7 +148,7 @@
   // 下载文件
   const downloadFiles = (paths: Array<string>) => {
     if (!paths.length) {
-      return paths;
+      return;
     }
     Message.success('已开始下载, 点击右侧传输列表查看进度');
     // 映射为文件
