@@ -30,7 +30,6 @@ import java.util.Map;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/system-message")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class SystemMessageController {
 
     @Resource

@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/auth")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class AuthenticationController {
 
     @Resource

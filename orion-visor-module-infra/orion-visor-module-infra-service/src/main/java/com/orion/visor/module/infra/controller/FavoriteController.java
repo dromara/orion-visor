@@ -27,7 +27,6 @@ import javax.annotation.Resource;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/favorite")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class FavoriteController {
 
     @Resource

@@ -43,7 +43,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/exec-command-log")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecCommandLogController {
 
     private static final String SOURCE = ExecSourceEnum.BATCH.name();

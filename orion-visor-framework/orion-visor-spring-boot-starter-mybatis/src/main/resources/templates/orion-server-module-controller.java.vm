@@ -44,7 +44,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/${package.ModuleName}/${typeHyphen}")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 #if(${superControllerClass})
 public class ${table.controllerName} extends ${superControllerClass} {
 #else

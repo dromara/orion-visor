@@ -39,7 +39,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/mine")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class MineController {
 
     @Resource

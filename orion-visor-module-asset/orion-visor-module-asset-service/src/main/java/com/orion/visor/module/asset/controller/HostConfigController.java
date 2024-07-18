@@ -34,7 +34,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-config")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostConfigController {
 
     @Resource

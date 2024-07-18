@@ -37,7 +37,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-identity")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostIdentityController {
 
     @Resource

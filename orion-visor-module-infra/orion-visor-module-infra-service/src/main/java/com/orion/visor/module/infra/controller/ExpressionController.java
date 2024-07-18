@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/expression")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExpressionController {
 
     @PermitAll

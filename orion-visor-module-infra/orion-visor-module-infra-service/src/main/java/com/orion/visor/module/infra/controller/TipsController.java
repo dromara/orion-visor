@@ -25,7 +25,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/tips")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class TipsController {
 
     @Resource

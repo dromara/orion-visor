@@ -36,7 +36,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/exec-template")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecTemplateController {
 
     @Resource

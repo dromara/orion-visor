@@ -29,7 +29,6 @@ import java.util.Map;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/preference")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class PreferenceController {
 
     @Resource

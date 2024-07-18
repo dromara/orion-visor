@@ -38,7 +38,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-sftp")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostSftpLogController {
 
     @Resource

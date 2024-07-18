@@ -29,7 +29,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/tag")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class TagController {
 
     @Resource

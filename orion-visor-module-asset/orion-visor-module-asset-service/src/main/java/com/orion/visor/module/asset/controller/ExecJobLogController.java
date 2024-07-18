@@ -42,7 +42,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/exec-job-log")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecJobLogController {
 
     private static final String SOURCE = ExecSourceEnum.JOB.name();

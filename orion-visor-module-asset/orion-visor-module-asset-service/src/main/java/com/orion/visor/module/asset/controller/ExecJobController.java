@@ -34,7 +34,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/exec-job")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecJobController {
 
     @Resource

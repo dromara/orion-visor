@@ -36,7 +36,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/dict-key")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class DictKeyController {
 
     @Resource

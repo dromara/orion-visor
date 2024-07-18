@@ -287,7 +287,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
      */
     protected String getErrorMessage(Exception ex) {
         String message;
-        if (ex instanceof InvalidArgumentException) {
+        if (ex instanceof InvalidArgumentException || ex instanceof IllegalArgumentException) {
             message = ex.getMessage();
         } else if (ex instanceof ConnectionRuntimeException) {
             message = "连接失败";
