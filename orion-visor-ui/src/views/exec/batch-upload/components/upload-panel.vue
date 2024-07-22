@@ -38,6 +38,7 @@
     </template>
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
+                           type="SSH"
                            @selected="setSelectedHost" />
   </a-spin>
 </template>

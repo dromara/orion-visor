@@ -216,7 +216,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'download', 'setLoading']);
+  const emits = defineEmits(['loadFile', 'download', 'deleteFile', 'setLoading']);
 
   const showHiddenFile = ref(false);
   const analysisPaths = ref<Array<PathAnalysis>>([]);
@@ -295,9 +295,12 @@
 
   // 删除选中文件
   const deleteSelectFiles = () => {
-    if (props.selectedFiles?.length) {
-      props.session?.remove(props.selectedFiles);
-    }
+    emits('deleteFile', [...props.selectedFiles]);
+  };
+
+  // 下载文件
+  const downloadFile = () => {
+    emits('download', [...props.selectedFiles], true);
   };
 
   // 重新连接
@@ -307,12 +310,6 @@
       // 重新连接
       useTerminalStore().reOpenSession(props.session.sessionId);
     }
-  };
-
-  // 下载文件
-  const downloadFile = () => {
-    emits('download', [...props.selectedFiles]);
-    emits('update:selectedFiles', []);
   };
 
 </script>

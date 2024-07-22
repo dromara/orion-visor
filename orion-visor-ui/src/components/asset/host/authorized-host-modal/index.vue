@@ -79,6 +79,7 @@
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import type { HostQueryResponse } from '@/api/asset/host';
+  import type { HostType } from '@/api/asset/host';
   import { onMounted, ref, watch, computed } from 'vue';
   import { dataColor } from '@/utils';
   import { dictKeys, NewConnectionType, newConnectionTypeKey } from './types/const';
@@ -91,6 +92,12 @@
   import { getAuthorizedHostOptions } from '@/types/options';
   import HostTable from './components/host-table.vue';
   import HostGroup from './components/host-group.vue';
+
+  const props = withDefaults(defineProps<Partial<{
+    type: HostType;
+  }>>(), {
+    type: undefined,
+  });
 
   const emits = defineEmits(['selected']);
 
@@ -110,10 +117,10 @@
   const emptyMessage = computed(() => {
     if (newConnectionType.value === NewConnectionType.LIST) {
       // 列表
-      return '无授权主机/主机未启用 SSH 配置!';
+      return '无授权主机!';
     } else if (newConnectionType.value === NewConnectionType.FAVORITE) {
       // 收藏
-      return '无收藏主机/主机未启用 SSH 配置!';
+      return '无收藏主机!';
     } else if (newConnectionType.value === NewConnectionType.LATEST) {
       // 最近连接
       return '暂无连接记录!';
@@ -144,7 +151,7 @@
     setLoading(true);
     try {
       // 加载主机列表
-      const { data } = await getCurrentAuthorizedHost('ssh');
+      const { data } = await getCurrentAuthorizedHost(props.type);
       hosts.value = data;
       // 禁用别名
       data.hostList.forEach(s => s.alias = undefined as unknown as string);

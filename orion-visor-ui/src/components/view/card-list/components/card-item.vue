@@ -89,8 +89,8 @@
   import useEmitter from '@/hooks/emitter';
 
   const props = defineProps<CardProps & {
-    index: number,
-    item: CardRecord,
+    index: number;
+    item: CardRecord;
   }>();
   const emits = defineEmits(['emitter']);
 

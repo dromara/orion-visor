@@ -67,7 +67,7 @@
 }
 
 // -- drawer
-.drawer-form-small{
+.drawer-form-small {
   padding: 20px 20px 2px 20px;
 }
 
@@ -184,4 +184,32 @@
 .simple-card {
   background: var(--color-bg-2);
   border-radius: 4px;
+}
+
+// -- doption
+.more-doption {
+  min-width: 42px;
+  padding: 0 4px;
+  font-size: 12px;
+  display: inline-block;
+
+  svg {
+    margin-right: 2px;
+  }
+
+  &.normal {
+    color: rgb(var(--arcoblue-6));
+  }
+
+  &.pass {
+    color: rgb(var(--green-6));
+  }
+
+  &.warn {
+    color: rgb(var(--orange-6));
+  }
+
+  &.error {
+    color: rgb(var(--red-6));
+  }
 }

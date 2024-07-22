@@ -98,8 +98,8 @@ export const useColLayout = (): ColResponsiveValue => {
     sm: 12,
     md: 8,
     lg: 8,
-    xl: 6,
-    xxl: 4,
+    xl: 8,
+    xxl: 6,
   };
 };
 

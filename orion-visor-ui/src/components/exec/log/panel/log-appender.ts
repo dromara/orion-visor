@@ -1,5 +1,6 @@
-import type { ExecType, ILogAppender, LogAddons, LogAppenderConf, LogDomRef } from '../const';
+import type { ExecType, ILogAppender, LogAppenderConf, LogDomRef } from '../const';
 import { LogAppenderOptions } from '../const';
+import type { XtermAddons } from '@/types/xterm';
 import type { ExecLogTailRequest } from '@/api/exec/exec-log';
 import { openExecLogChannel } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
@@ -43,13 +44,13 @@ export default class LogAppender implements ILogAppender {
   // 初始化
   async init(logDomRefs: Array<LogDomRef>) {
     // 初始化 appender
-    this.initAppender(logDomRefs);
+    await this.initAppender(logDomRefs);
     // 初始化 client
     await this.openClient();
   }
 
   // 初始化 appender
-  initAppender(logDomRefs: Array<LogDomRef>) {
+  async initAppender(logDomRefs: Array<LogDomRef>) {
     // 打开 log-view
     for (let logDomRef of logDomRefs) {
       // 初始化 terminal
@@ -126,7 +127,7 @@ export default class LogAppender implements ILogAppender {
   }
 
   // 初始化插件
-  initAddons(terminal: Terminal): LogAddons {
+  initAddons(terminal: Terminal): XtermAddons {
     const fit = new FitAddon();
     const search = new SearchAddon();
     const webgl = new WebglAddon();
@@ -144,7 +145,7 @@ export default class LogAppender implements ILogAppender {
       webgl,
       weblink,
       unicode
-    };
+    } as XtermAddons;
   }
 
   // 初始化 client

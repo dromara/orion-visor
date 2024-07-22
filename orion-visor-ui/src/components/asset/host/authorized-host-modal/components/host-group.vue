@@ -18,7 +18,7 @@
     <host-table class="host-list"
                 v-model:selected-keys="selectedKeysValue"
                 :host-list="hostList"
-                empty-message="当前分组内无授权主机/主机未启用 SSH 配置!" />
+                empty-message="当前分组内无授权主机!" />
   </div>
 </template>
 

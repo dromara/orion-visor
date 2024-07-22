@@ -2,7 +2,7 @@
   <card-list v-model:searchValue="formModel.searchValue"
              search-input-placeholder="输入 id / 名称"
              :loading="loading"
-             :fieldConfig="fieldConfig"
+             :field-config="fieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
@@ -47,47 +47,28 @@
             <!-- 详情 -->
             <a-doption v-permission="['asset:host-key:detail', 'asset:host-key:update']"
                        @click="emits('openView', record)">
-              <icon-list />
-              详情
+              <span class="more-doption normal">
+                <icon-list /> 详情
+              </span>
             </a-doption>
             <!-- 修改 -->
             <a-doption v-permission="['asset:host-key:update']"
                        @click="emits('openUpdate', record)">
-              <icon-edit />
-              修改
+              <span class="more-doption normal">
+                <icon-edit /> 修改
+              </span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['asset:host-key:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
-              <icon-delete />
-              删除
+              <span class="more-doption error">
+                <icon-delete /> 删除
+              </span>
             </a-doption>
           </template>
         </a-dropdown>
       </a-space>
-    </template>
-    <!-- 右键菜单 -->
-    <template #contextMenu="{ record }">
-      <!-- 详情 -->
-      <a-doption v-permission="['asset:host-key:detail', 'asset:host-key:update']"
-                 @click="emits('openView', record)">
-        <icon-list />
-        详情
-      </a-doption>
-      <!-- 修改 -->
-      <a-doption v-permission="['asset:host-key:update']"
-                 @click="emits('openUpdate', record)">
-        <icon-edit />
-        修改
-      </a-doption>
-      <!-- 删除 -->
-      <a-doption v-permission="['asset:host-key:delete']"
-                 class="span-red"
-                 @click="deleteRow(record.id)">
-        <icon-delete />
-        删除
-      </a-doption>
     </template>
   </card-list>
 </template>

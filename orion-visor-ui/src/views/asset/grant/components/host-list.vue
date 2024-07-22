@@ -58,7 +58,7 @@
     try {
       setLoading(true);
       const { data } = await getHostGroupRelList(groupId as number);
-      const hosts = await cacheStore.loadHosts();
+      const hosts = await cacheStore.loadHosts(undefined);
       selectedGroupHosts.value = data.map(s => hosts.find(h => h.id === s) as HostQueryResponse)
         .filter(Boolean);
     } catch (e) {

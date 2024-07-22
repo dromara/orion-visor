@@ -106,7 +106,7 @@
       <!-- 额外参数 -->
       <template #extraSchema="{ record }">
         <template v-if="record.extraSchema">
-          <a-space>
+          <a-space style="margin-bottom: -8px;" :wrap="true">
             <template v-for="item in JSON.parse(record.extraSchema)" :key="item.name">
               <a-tag :color="getDictValue(dictValueTypeKey, item.type, 'color')">
                 {{ item.name }}

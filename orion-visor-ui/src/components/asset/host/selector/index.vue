@@ -2,6 +2,7 @@
   <a-select v-model:model-value="value"
             :options="optionData"
             :loading="loading"
+            :multiple="multiple"
             placeholder="请选择主机"
             allow-clear />
 </template>
@@ -14,22 +15,30 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
+  import type { HostType } from '@/api/asset/host';
   import { computed, onBeforeMount, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
 
-  const props = defineProps<Partial<{
-    modelValue: number;
-  }>>();
+  const props = withDefaults(defineProps<Partial<{
+    type: HostType;
+    status: string | undefined;
+    modelValue: number | Array<number>;
+    multiple: boolean;
+  }>>(), {
+    type: undefined,
+    status: undefined,
+    multiple: false,
+  });
 
   const emits = defineEmits(['update:modelValue']);
 
   const { loading, setLoading } = useLoading();
   const cacheStore = useCacheStore();
 
-  const value = computed<number>({
+  const value = computed({
     get() {
-      return props.modelValue as number;
+      return props.modelValue;
     },
     set(e) {
       if (e) {
@@ -45,13 +54,14 @@
   onBeforeMount(async () => {
     setLoading(true);
     try {
-      const hosts = await cacheStore.loadHosts();
-      optionData.value = hosts.map(s => {
-        return {
-          label: `${s.name} - ${s.address}`,
-          value: s.id,
-        };
-      });
+      const hosts = await cacheStore.loadHosts(props.type);
+      optionData.value = hosts.filter(s => !props.status || s.status === props.status)
+        .map(s => {
+          return {
+            label: `${s.name} - ${s.address}`,
+            value: s.id,
+          };
+        });
     } catch (e) {
     } finally {
       setLoading(false);

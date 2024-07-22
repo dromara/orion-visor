@@ -16,6 +16,7 @@
       <!-- 操作主机 -->
       <a-form-item field="hostId" label="操作主机">
         <host-selector v-model="formModel.hostId"
+                       type="SSH"
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>

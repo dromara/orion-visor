@@ -2,10 +2,12 @@ import type { UnwrapRef } from 'vue';
 import type { ISearchOptions } from '@xterm/addon-search';
 import { SearchAddon } from '@xterm/addon-search';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
-import type { ISshSession, ISshSessionHandler, ITerminalChannel, TerminalPanelTabItem, XtermAddons, XtermDomRef } from '../types/terminal.type';
+import type { ISshSession, ISshSessionHandler, ITerminalChannel, TerminalPanelTabItem, XtermDomRef } from '../types/terminal.type';
+import type { XtermAddons } from '@/types/xterm';
+import { defaultFontFamily } from '@/types/xterm';
 import { useTerminalStore } from '@/store';
-import { InputProtocol } from '../types/terminal.protocol';
-import { fontFamilySuffix, PanelSessionType, TerminalShortcutType, TerminalStatus, } from '../types/terminal.const';
+import { InputProtocol } from '@/types/protocol/terminal.protocol';
+import { PanelSessionType, TerminalShortcutType, TerminalStatus } from '../types/terminal.const';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -44,6 +46,7 @@ export default class SshSession extends BaseSession implements ISshSession {
   // 初始化
   init(domRef: XtermDomRef): void {
     const { preference } = useTerminalStore();
+    const fontFamily = preference.displaySetting.fontFamily;
     // 初始化实例
     this.inst = new Terminal({
       ...(preference.displaySetting as any),
@@ -52,7 +55,7 @@ export default class SshSession extends BaseSession implements ISshSession {
       altClickMovesCursor: !!preference.interactSetting.altClickMovesCursor,
       rightClickSelectsWord: !!preference.interactSetting.rightClickSelectsWord,
       wordSeparator: preference.interactSetting.wordSeparator,
-      fontFamily: preference.displaySetting.fontFamily + fontFamilySuffix,
+      fontFamily: fontFamily === '_' ? defaultFontFamily : `${fontFamily}, ${defaultFontFamily}`,
       scrollback: preference.sessionSetting.scrollBackLine,
       allowProposedApi: true,
     });
@@ -217,6 +220,11 @@ export default class SshSession extends BaseSession implements ISshSession {
   // 写入数据
   write(value: string): void {
     this.inst.write(value);
+  }
+
+  // 修改大小
+  resize(cols: number, rows: number): void {
+    this.inst.resize(cols, rows);
   }
 
   // 聚焦

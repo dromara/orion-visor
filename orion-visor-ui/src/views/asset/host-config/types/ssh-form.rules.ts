@@ -5,16 +5,6 @@ export const osType = [{
   message: '请选择系统类型'
 }] as FieldRule[];
 
-export const port = [{
-  required: true,
-  message: '请输入SSH端口'
-}, {
-  type: 'number',
-  min: 1,
-  max: 65535,
-  message: '输入的端口不合法'
-}] as FieldRule[];
-
 export const authType = [{
   required: true,
   message: '请选择认证方式'
@@ -66,7 +56,6 @@ export const fileContentCharset = [{
 
 export default {
   osType,
-  port,
   authType,
   keyId,
   identityId,

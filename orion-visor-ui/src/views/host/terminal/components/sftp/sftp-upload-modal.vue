@@ -4,16 +4,17 @@
            title-align="start"
            title="文件上传"
            ok-text="上传"
-           :body-style="{ padding: '20px' }"
+           :body-style="{ padding: 0 }"
            :align-center="false"
            :mask-closable="false"
            :unmount-on-close="true"
            :on-before-ok="handlerOk"
            @cancel="handleClose">
-    <div class="upload-container">
-      <div class="parent-wrapper mb16">
-        <span class="parent-label">上传至文件夹:</span>
-        <a-input class="parent-input"
+    <!-- 上传目录 -->
+    <div class="item-wrapper">
+      <div class="form-item">
+        <span class="item-label">上传至文件夹</span>
+        <a-input class="item-input"
                  v-model="parentPath"
                  placeholder="上传目录" />
       </div>
@@ -80,8 +81,8 @@
   import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
-  import useVisible from '@/hooks/visible';
   import { getFileSize } from '@/utils/file';
+  import useVisible from '@/hooks/visible';
 
   const { visible, setVisible } = useVisible();
   const { transferManager } = useTerminalStore();
@@ -100,7 +101,7 @@
   defineExpose({ open });
 
   // 确定
-  const handlerOk = () => {
+  const handlerOk = async () => {
     if (!parentPath.value) {
       Message.error('请输入上传目录');
       return false;
@@ -109,8 +110,9 @@
       Message.error('请选择文件');
       return false;
     }
-    // 添加到上传列表
+    // 获取上传的文件
     const files = fileList.value.map(s => s.file as File);
+    // 上传
     transferManager.addUpload(hostId.value, parentPath.value, files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');
     // 清空
@@ -132,23 +134,35 @@
 
 <style lang="less" scoped>
   @file-size-width: 82px;
+  @item-label: 104px;
 
-  .upload-container {
-    width: 100%;
-  }
-
-  .parent-wrapper {
+  .item-wrapper {
+    margin-bottom: 24px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 
-    .parent-label {
-      width: 98px;
+    .form-item {
+      display: flex;
+      align-items: center;
     }
 
-    .parent-input {
-      width: 386px;
+    .item-label {
+      width: @item-label;
+      padding-right: 8px;
+      display: flex;
+      justify-content: flex-end;
+      user-select: none;
+
+      &:after {
+        content: ':';
+        margin-left: 2px;
+      }
     }
+
+    .item-input {
+      width: 376px;
+    }
+
   }
 
   .file-list-uploader {
@@ -160,7 +174,7 @@
 
     :deep(.arco-upload-list) {
       padding: 0 12px 0 0;
-      max-height: calc(100vh - 386px);
+      max-height: calc(100vh - 496px);
       overflow-x: hidden;
       overflow-y: auto;
     }

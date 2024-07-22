@@ -1,5 +1,5 @@
 import type { HostGroupQueryResponse } from '@/api/asset/host-group';
-import type { HostQueryResponse } from './host';
+import type { HostQueryResponse, HostType } from './host';
 import type { HostKeyQueryResponse } from './host-key';
 import type { HostIdentityQueryResponse } from './host-identity';
 import axios from 'axios';
@@ -17,7 +17,7 @@ export interface AuthorizedHostQueryResponse {
 /**
  * 查询当前用户已授权的主机
  */
-export function getCurrentAuthorizedHost(type: string) {
+export function getCurrentAuthorizedHost(type: HostType) {
   return axios.get<AuthorizedHostQueryResponse>('/asset/authorized-data/current-host', { params: { type } });
 }
 

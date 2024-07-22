@@ -27,7 +27,7 @@ export default abstract class SftpTransferHandler implements ISftpTransferHandle
       operator: TransferOperator.START,
       type: this.type,
       path: getPath(this.item.parentPath + '/' + this.item.name),
-      hostId: this.item.hostId
+      hostId: this.item.hostId,
     }));
   };
 
@@ -81,9 +81,14 @@ export default abstract class SftpTransferHandler implements ISftpTransferHandle
   };
 
   // 进度回调
-  onProgress(size: number) {
-    if (this.item && size) {
-      this.item.currentSize = size;
+  onProgress(totalSize: number | undefined, currentSize: number | undefined) {
+    if (this.item) {
+      if (totalSize) {
+        this.item.totalSize = totalSize;
+      }
+      if (currentSize) {
+        this.item.currentSize = currentSize;
+      }
     }
   };
 

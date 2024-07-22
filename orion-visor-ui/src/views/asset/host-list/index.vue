@@ -4,6 +4,7 @@
     <host-table v-if="renderTable"
                 ref="table"
                 @open-host-group="() => hostGroup.open()"
+                @open-copy="(e) => modal.openCopy(e.id)"
                 @open-add="() => modal.openAdd()"
                 @open-update="(e) => modal.openUpdate(e.id)"
                 @open-update-config="(e) => hostConfig.open(e)" />
@@ -11,6 +12,7 @@
     <host-card-list v-else
                     ref="card"
                     @open-host-group="() => hostGroup.open()"
+                    @open-copy="(e) => modal.openCopy(e.id)"
                     @open-add="() => modal.openAdd()"
                     @open-update="(e) => modal.openUpdate(e.id)"
                     @open-update-config="(e) => hostConfig.open(e)" />
@@ -32,8 +34,9 @@
 </script>
 
 <script lang="ts" setup>
-  import { computed, ref, onUnmounted } from 'vue';
-  import { useAppStore, useCacheStore } from '@/store';
+  import { computed, ref, onUnmounted, onBeforeMount } from 'vue';
+  import { useAppStore, useCacheStore, useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
   import HostTable from './components/host-table.vue';
   import HostCardList from './components/host-card-list.vue';
   import HostFormModal from './components/host-form-modal.vue';
@@ -69,9 +72,15 @@
     }
   };
 
+  // 加载字典配置
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+  });
+
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('hosts', 'hostKeys', 'hostIdentities', 'hostGroups', 'HOST_Tags');
+    cacheStore.reset('hostKeys', 'hostIdentities', 'hostGroups', 'HOST_Tags');
   });
 
 </script>

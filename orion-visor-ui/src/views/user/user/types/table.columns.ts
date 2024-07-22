@@ -6,7 +6,7 @@ const columns = [
     title: 'id',
     dataIndex: 'id',
     slotName: 'id',
-    width: 80,
+    width: 68,
     align: 'left',
     fixed: 'left',
   }, {

@@ -13,7 +13,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
 
   private run: boolean;
 
-  private progressIntervalId?: number;
+  private progressIntervalId?: any;
 
   private currentItem?: SftpTransferItem;
 
@@ -45,9 +45,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
     });
     this.transferList.push(...items);
     // 开始传输
-    if (!this.run) {
-      this.openClient();
-    }
+    this.startTransfer(items);
   }
 
   // 添加下载任务
@@ -67,6 +65,12 @@ export default class SftpTransferManager implements ISftpTransferManager {
         status: TransferStatus.WAITING,
       };
     }) as Array<SftpTransferItem>;
+    // 开始传输
+    this.startTransfer(items);
+  }
+
+  // 开始传输
+  startTransfer(items: Array<SftpTransferItem>) {
     this.transferList.push(...items);
     // 开始传输
     if (!this.run) {
@@ -154,18 +158,27 @@ export default class SftpTransferManager implements ISftpTransferManager {
     // 获取任务
     this.currentItem = this.transferList.find(s => s.status === TransferStatus.WAITING);
     if (this.currentItem) {
-      if (this.currentItem.type === TransferType.UPLOAD) {
-        // 上传
-        this.currentTransfer = new SftpTransferUploader(this.currentItem, this.client as WebSocket);
-      } else {
-        // 下载
-        this.currentTransfer = new SftpTransferDownloader(this.currentItem, this.client as WebSocket);
-      }
+      // 创建传输器
+      this.currentTransfer = this.createTransfer();
       // 开始
       this.currentTransfer?.start();
     } else {
       // 无任务关闭会话
       this.client?.close();
+    }
+  }
+
+  // 创建传输器
+  private createTransfer(): ISftpTransferHandler | undefined {
+    if (!this.currentItem) {
+      return undefined;
+    }
+    if (this.currentItem.type === TransferType.UPLOAD) {
+      // 上传
+      return new SftpTransferUploader(TransferType.UPLOAD, this.currentItem, this.client as WebSocket);
+    } else if (this.currentItem.type === TransferType.DOWNLOAD) {
+      // 下载
+      return new SftpTransferDownloader(TransferType.DOWNLOAD, this.currentItem, this.client as WebSocket);
     }
   }
 
@@ -181,7 +194,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
       this.currentTransfer?.onStart(data.channelId as string, data.transferToken as string);
     } else if (data.type === TransferReceiver.PROGRESS) {
       // 进度回调
-      this.currentTransfer?.onProgress(data.currentSize as number);
+      this.currentTransfer?.onProgress(data.totalSize, data.currentSize);
     } else if (data.type === TransferReceiver.FINISH) {
       // 完成回调
       this.currentTransfer?.onFinish();

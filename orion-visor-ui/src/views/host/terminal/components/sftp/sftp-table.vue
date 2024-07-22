@@ -161,7 +161,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'download']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'deleteFile', 'download']);
 
   const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionId: string, path: string) => void;
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
@@ -239,7 +239,7 @@
     if (!props.session?.connected) {
       return;
     }
-    props.session?.remove([path]);
+    emits('deleteFile', [path]);
   };
 
   // 下载文件
@@ -248,7 +248,7 @@
     if (!props.session?.connected) {
       return;
     }
-    emits('download', [path]);
+    emits('download', [path], false);
   };
 
   // 移动文件

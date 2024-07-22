@@ -51,7 +51,7 @@
 
   // 卸载时清除 cache
   onUnmounted(() => {
-    cacheStore.reset('users', 'roles', 'hosts', 'hostGroups', 'hostKeys', 'hostIdentities');
+    cacheStore.reset('users', 'roles', 'hostGroups', 'hostKeys', 'hostIdentities');
   });
 
 </script>

@@ -49,7 +49,7 @@
   const { toOptions } = useDictStore();
 
   const formModel = ref<LabelExtraSettingModel>({
-    color: ''
+    color: '',
   });
 
   // 渲染表单

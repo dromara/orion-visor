@@ -56,8 +56,8 @@ export const NewConnectionType = {
 
 // 主机额外配置项
 export const ExtraSettingItems = {
-  SSH: 'ssh',
-  LABEL: 'label',
+  SSH: 'SSH',
+  LABEL: 'LABEL',
 };
 
 // 主机额外配置 ssh 认证方式
@@ -324,7 +324,7 @@ export const TransferStatus = {
 // 传输类型
 export const TransferType = {
   UPLOAD: 'upload',
-  DOWNLOAD: 'download'
+  DOWNLOAD: 'download',
 };
 
 // 传输操作
@@ -362,9 +362,6 @@ export const openSftpChmodModalKey = Symbol();
 
 // 打开 sftpUploadModal key
 export const openSftpUploadModalKey = Symbol();
-
-// 字体后缀 兜底
-export const fontFamilySuffix = ', Courier New, Monaco, courier, monospace';
 
 // 终端字体样式
 export const fontFamilyKey = 'terminalFontFamily';

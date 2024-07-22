@@ -3,13 +3,18 @@ import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 import qs from 'query-string';
 
+// 主机类型
+export type HostType = 'SSH' | string | undefined;
+
 /**
  * 主机创建请求
  */
 export interface HostCreateRequest {
+  type?: string;
   name?: string;
   code?: string;
   address?: string;
+  port?: number;
   tags?: Array<number>;
   groupIdList?: Array<number>;
 }
@@ -22,14 +27,32 @@ export interface HostUpdateRequest extends HostCreateRequest {
 }
 
 /**
+ * 主机更新状态请求
+ */
+export interface HostUpdateStatusRequest {
+  id: number;
+  status: string;
+}
+
+/**
+ * 主机更新配置请求
+ */
+export interface HostUpdateConfigRequest {
+  id: number;
+  config: string;
+}
+
+/**
  * 主机查询请求
  */
 export interface HostQueryRequest extends Pagination {
   searchValue?: string;
   id?: number;
+  type?: string;
   name?: string;
   code?: string;
   address?: string;
+  status?: string;
   tags?: Array<number>;
   queryTag?: boolean;
 }
@@ -39,9 +62,12 @@ export interface HostQueryRequest extends Pagination {
  */
 export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   id: number;
+  type: string;
   name: string;
   code: string;
   address: string;
+  port: string;
+  status: string;
   createTime: number;
   updateTime: number;
   creator: string;
@@ -63,6 +89,22 @@ export interface HostQueryResponseExtra {
 }
 
 /**
+ * 主机 配置查询响应
+ */
+export interface HostConfigQueryResponse extends HostConfigQueryResponseExtra {
+  id: number;
+  type: string;
+  config: Record<string, any>;
+}
+
+/**
+ * 主机配置拓展
+ */
+export interface HostConfigQueryResponseExtra {
+  current: number;
+}
+
+/**
  * 创建主机
  */
 export function createHost(request: HostCreateRequest) {
@@ -77,7 +119,21 @@ export function updateHost(request: HostUpdateRequest) {
 }
 
 /**
- * 通过 id 查询主机
+ * 通过 id 更新主机状态
+ */
+export function updateHostStatus(request: HostUpdateStatusRequest) {
+  return axios.put('/asset/host/update-status', request);
+}
+
+/**
+ * 通过 id 更新主机配置
+ */
+export function updateHostConfig(request: HostUpdateConfigRequest) {
+  return axios.put('/asset/host/update-config', request);
+}
+
+/**
+ * 查询主机
  */
 export function getHost(id: number) {
   return axios.get<HostQueryResponse>('/asset/host/get', { params: { id } });
@@ -86,8 +142,15 @@ export function getHost(id: number) {
 /**
  * 查询全部主机
  */
-export function getHostList() {
-  return axios.get<Array<HostQueryResponse>>('/asset/host/list');
+export function getHostList(type: HostType) {
+  return axios.get<Array<HostQueryResponse>>('/asset/host/list', { params: { type } });
+}
+
+/**
+ * 通过 id 查询主机配置
+ */
+export function getHostConfig(id: number) {
+  return axios.get<HostConfigQueryResponse>('/asset/host/get-config', { params: { id } });
 }
 
 /**

@@ -1,5 +1,5 @@
 import type { SftpTransferItem } from '../types/terminal.type';
-import { TransferStatus, TransferType } from '../types/terminal.const';
+import { TransferStatus } from '../types/terminal.const';
 import { getFileName, openDownloadFile } from '@/utils/file';
 import { saveAs } from 'file-saver';
 import { getDownloadTransferUrl } from '@/api/asset/host-sftp';
@@ -8,8 +8,8 @@ import SftpTransferHandler from './sftp-transfer-handler';
 // sftp 下载器实现
 export default class SftpTransferDownloader extends SftpTransferHandler {
 
-  constructor(item: SftpTransferItem, client: WebSocket) {
-    super(TransferType.DOWNLOAD, item, client);
+  constructor(type: string, item: SftpTransferItem, client: WebSocket) {
+    super(type, item, client);
   }
 
   // 开始回调

@@ -2,6 +2,8 @@ import type { CacheState } from './types';
 import type { AxiosResponse } from 'axios';
 import type { TagType } from '@/api/meta/tag';
 import { getTagList } from '@/api/meta/tag';
+import type { HostType } from '@/api/asset/host';
+import { getHostList } from '@/api/asset/host';
 import type { PreferenceType } from '@/api/user/preference';
 import { getPreference } from '@/api/user/preference';
 import { defineStore } from 'pinia';
@@ -10,7 +12,6 @@ import { getRoleList } from '@/api/user/role';
 import { getDictKeyList } from '@/api/system/dict-key';
 import { getHostKeyList } from '@/api/asset/host-key';
 import { getHostIdentityList } from '@/api/asset/host-identity';
-import { getHostList } from '@/api/asset/host';
 import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
@@ -19,7 +20,7 @@ import { getExecJobList } from '@/api/job/exec-job';
 import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
 
 export type CacheType = 'users' | 'menus' | 'roles'
-  | 'hosts' | 'hostGroups' | 'hostKeys' | 'hostIdentities'
+  | 'hostGroups' | 'hostKeys' | 'hostIdentities'
   | 'dictKeys'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | 'commandSnippetGroups' | 'pathBookmarkGroups'
@@ -84,8 +85,8 @@ export default defineStore('cache', {
     },
 
     // 获取主机列表
-    async loadHosts(force = false) {
-      return await this.load('hosts', getHostList, force);
+    async loadHosts(type: HostType, force = false) {
+      return await this.load(`host_${type}`, () => getHostList(type), force);
     },
 
     // 获取主机密钥列表

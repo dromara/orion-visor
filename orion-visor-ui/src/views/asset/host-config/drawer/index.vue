@@ -11,15 +11,15 @@
     <!-- 标题 -->
     <template #title>
       <span class="host-title-text">
-        主机配置 <span class="host-name-title-text">{{ record.name }}</span>
+        主机配置 <span class="host-name-title-text">{{ record?.name }}</span>
       </span>
     </template>
     <a-spin :loading="loading" class="host-config-container">
       <!-- SSH 配置 -->
       <ssh-config-form class="host-config-wrapper"
-                       :host-id="record.id"
-                       :content="config.ssh"
-                       @submitted="(e) => config.ssh = e" />
+                       :host-config="hostConfig"
+                       @save="save"
+                       @reset="reset" />
     </a-spin>
   </a-drawer>
 </template>
@@ -31,14 +31,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostConfigWrapper, HostSshConfig } from '../types/const';
+  import type { HostConfigQueryResponse } from '@/api/asset/host';
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
-  import { getHostConfigList } from '@/api/asset/host-config';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from '../types/const';
+  import { getHostConfig, updateHostConfig } from '@/api/asset/host';
   import SshConfigForm from '../components/ssh-config-form.vue';
 
   const { visible, setVisible } = useVisible();
@@ -46,13 +46,12 @@
   const cacheStore = useCacheStore();
 
   const record = ref({} as any);
-  const config = ref<HostConfigWrapper>({
-    ssh: {} as HostSshConfig
-  });
+  const hostConfig = ref<HostConfigQueryResponse>({} as HostConfigQueryResponse);
 
   // 打开
   const open = async (e: any) => {
     record.value = { ...e };
+    hostConfig.value = { config: {} } as HostConfigQueryResponse;
     try {
       setLoading(true);
       setVisible(true);
@@ -60,10 +59,9 @@
       const dictStore = useDictStore();
       await dictStore.loadKeys(dictKeys);
       // 加载配置
-      const { data } = await getHostConfigList(record.value.id);
-      data.forEach(s => {
-        config.value[s.type] = s;
-      });
+      const { data } = await getHostConfig(record.value.id);
+      data.current = Date.now();
+      hostConfig.value = data;
     } catch ({ message }) {
       Message.error(`配置加载失败 ${message}`);
       setVisible(false);
@@ -72,13 +70,37 @@
     }
   };
 
+  defineExpose({ open });
+
+  // 保存
+  const save = async (conf: Record<string, any>) => {
+    try {
+      setLoading(true);
+      // 更新
+      await updateHostConfig({
+        id: hostConfig.value.id,
+        config: JSON.stringify(conf)
+      });
+      // 设置参数
+      hostConfig.value.config = conf;
+      Message.success('修改成功');
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 重置
+  const reset = () => {
+    // 修改 current 让子组件重新渲染
+    hostConfig.value.current = Date.now();
+  };
+
   // 关闭
   const handleCancel = () => {
     setLoading(false);
     setVisible(false);
   };
-
-  defineExpose({ open });
 
 </script>
 
@@ -118,6 +140,23 @@
 
   .host-config-wrapper {
     margin: 18px;
+  }
+
+  :deep(.config-title-wrapper) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title{
+      font-weight: 600;
+      user-select: none;
+    }
+  }
+
+  :deep(.config-button-group) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
 </style>

@@ -1,5 +1,4 @@
 import type { SftpTransferItem } from '../types/terminal.type';
-import { TransferType } from '../types/terminal.const';
 import SftpTransferHandler from './sftp-transfer-handler';
 
 // 512 KB
@@ -12,8 +11,8 @@ export default class SftpTransferUploader extends SftpTransferHandler {
   private readonly totalPart: number;
   private file: File;
 
-  constructor(item: SftpTransferItem, client: WebSocket) {
-    super(TransferType.UPLOAD, item, client);
+  constructor(type: string, item: SftpTransferItem, client: WebSocket) {
+    super(type, item, client);
     this.file = item.file;
     this.currentPart = 0;
     this.totalPart = Math.ceil(item.file.size / PART_SIZE);

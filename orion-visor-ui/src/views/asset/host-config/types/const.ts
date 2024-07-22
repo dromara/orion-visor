@@ -1,19 +1,11 @@
-// 主机所有配置
-export interface HostConfigWrapper {
-  ssh: HostSshConfig;
-
-  [key: string]: unknown;
-}
-
 // 主机 SSH 配置
 export interface HostSshConfig {
   osType?: string;
-  port?: number;
   username?: string;
   password?: string;
   authType?: string;
-  identityId?: number;
   keyId?: number;
+  identityId?: number;
   connectTimeout?: number;
   charset?: string;
   fileNameCharset?: string;
@@ -30,17 +22,6 @@ export const SshAuthType = {
   KEY: 'KEY',
   // 身份验证
   IDENTITY: 'IDENTITY'
-};
-
-// 主机系统版本
-export const SshOsType = {
-  LINUX: 'LINUX',
-  WINDOWS: 'WINDOWS',
-};
-
-// 主机配置类型
-export const HostConfigType = {
-  SSH: 'ssh'
 };
 
 // 主机验证方式 字典项

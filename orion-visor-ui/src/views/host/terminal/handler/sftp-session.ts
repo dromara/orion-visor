@@ -1,5 +1,5 @@
 import type { ISftpSession, ISftpSessionResolver, ITerminalChannel, TerminalPanelTabItem } from '../types/terminal.type';
-import { InputProtocol } from '../types/terminal.protocol';
+import { InputProtocol } from '@/types/protocol/terminal.protocol';
 import { PanelSessionType } from '../types/terminal.const';
 import { Modal } from '@arco-design/web-vue';
 import BaseSession from './base-session';

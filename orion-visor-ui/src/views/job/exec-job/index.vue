@@ -26,6 +26,7 @@
                          @selected="(e) => drawer.setWithTemplate(e)" />
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
+                           type="SSH"
                            @selected="(e) => drawer.setSelectedHost(e)" />
   </div>
 </template>

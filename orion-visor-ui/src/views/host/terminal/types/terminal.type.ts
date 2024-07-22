@@ -1,13 +1,8 @@
 import type { Terminal } from '@xterm/xterm';
-import type { FitAddon } from '@xterm/addon-fit';
-import type { CanvasAddon } from '@xterm/addon-canvas';
-import type { WebglAddon } from '@xterm/addon-webgl';
-import type { WebLinksAddon } from '@xterm/addon-web-links';
-import type { ISearchOptions, SearchAddon } from '@xterm/addon-search';
-import type { ImageAddon } from '@xterm/addon-image';
-import type { Unicode11Addon } from '@xterm/addon-unicode11';
+import type { ISearchOptions } from '@xterm/addon-search';
 import type { CSSProperties } from 'vue';
 import type { HostQueryResponse } from '@/api/asset/host';
+import type { InputPayload, OutputPayload, Protocol } from '@/types/protocol/terminal.protocol';
 
 // 终端 tab 元素
 export interface TerminalTabItem {
@@ -81,30 +76,6 @@ export interface PanelSessionTabType {
   icon: string;
 }
 
-// 终端协议
-export interface Protocol {
-  type: string;
-  template: string[];
-
-  [key: string]: unknown;
-}
-
-// 终端输入消息内容
-export interface InputPayload {
-  type?: string;
-  sessionId?: string;
-
-  [key: string]: unknown;
-}
-
-// 终端输出消息内容
-export interface OutputPayload {
-  type: string;
-  sessionId: string;
-
-  [key: string]: string;
-}
-
 // 终端 tab 管理器定义
 export interface ITerminalTabManager<T extends TerminalTabItem = TerminalTabItem> {
   // 当前 tab
@@ -166,6 +137,8 @@ export interface ITerminalSessionManager {
   getSession: <T extends ITerminalSession>(sessionId: string) => T;
   // 关闭终端会话
   closeSession: (sessionId: string) => void;
+  // 重置大小
+  dispatchResize: () => void;
   // 重置
   reset: () => void;
 }
@@ -221,17 +194,6 @@ export interface XtermDomRef {
   editorModal: any;
 }
 
-// xterm 插件
-export interface XtermAddons {
-  fit: FitAddon;
-  webgl: WebglAddon;
-  canvas: CanvasAddon;
-  weblink: WebLinksAddon;
-  search: SearchAddon;
-  image: ImageAddon;
-  unicode: Unicode11Addon;
-}
-
 // 终端会话定义
 export interface ITerminalSession {
   type: string;
@@ -269,6 +231,8 @@ export interface ISshSession extends ITerminalSession {
   init: (domRef: XtermDomRef) => void;
   // 写入数据
   write: (value: string) => void;
+  // 修改大小
+  resize: (cols: number, rows: number) => void;
   // 聚焦
   focus: () => void;
   // 失焦
@@ -368,7 +332,7 @@ export interface ISftpSessionResolver {
   // 关闭回调
   onClose: (forceClose: boolean, msg: string) => void;
   // 接受文件列表响应
-  resolveList: (result: string, path: string, list: Array<SftpFile>) => void;
+  resolveList: (path: string, result: string, msg: string, list: Array<SftpFile>) => void;
   // 接收创建文件夹响应
   resolveSftpMkdir: (result: string, msg: string) => void;
   // 接收创建文件响应
@@ -380,9 +344,9 @@ export interface ISftpSessionResolver {
   // 接收修改文件权限响应
   resolveSftpChmod: (result: string, msg: string) => void;
   // 接收下载文件夹展开文件响应
-  resolveDownloadFlatDirectory: (currentPath: string, list: Array<SftpFile>) => void;
+  resolveDownloadFlatDirectory: (currentPath: string, result: string, msg: string, list: Array<SftpFile>) => void;
   // 接收获取文件内容响应
-  resolveSftpGetContent: (path: string, result: string, content: string) => void;
+  resolveSftpGetContent: (path: string, result: string, msg: string, content: string) => void;
   // 接收修改文件内容响应
   resolveSftpSetContent: (result: string, msg: string) => void;
 }
@@ -414,7 +378,6 @@ export interface ISftpTransferManager {
   cancelAllTransfer: () => void;
 }
 
-
 // sftp 传输处理回调定义
 export interface ISftpTransferCallback {
   // 下一分片回调
@@ -422,7 +385,7 @@ export interface ISftpTransferCallback {
   // 开始回调
   onStart: (channelId: string, token: string) => void;
   // 进度回调
-  onProgress: (size: number) => void;
+  onProgress: (totalSize: number | undefined, currentSize: number | undefined) => void;
   // 失败回调
   onError: (msg: string | undefined) => void;
   // 完成回调
@@ -475,4 +438,5 @@ export interface TransferOperatorResponse {
   transferToken?: string;
   success: boolean;
   msg?: string;
+  totalSize?: number;
 }
