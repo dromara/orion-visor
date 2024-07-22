@@ -1,6 +1,7 @@
 package com.orion.visor.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
@@ -25,9 +26,9 @@ public interface HostConnectLogService {
      *
      * @param type    type
      * @param request request
-     * @return id
+     * @return record
      */
-    Long create(HostConnectTypeEnum type, HostConnectLogCreateRequest request);
+    HostConnectLogDO create(HostConnectTypeEnum type, HostConnectLogCreateRequest request);
 
     /**
      * 分页查询主机连接日志

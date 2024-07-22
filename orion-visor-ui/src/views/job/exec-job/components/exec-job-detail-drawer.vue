@@ -1,7 +1,7 @@
 <template>
   <a-drawer v-model:visible="visible"
             title="计划任务详情"
-            width="66%"
+            width="70%"
             :mask-closable="false"
             :unmount-on-close="true"
             ok-text="关闭"
@@ -75,6 +75,17 @@
                 :readonly="true"
                 :suggestions="false" />
       </a-descriptions-item>
+      <!-- 执行参数 -->
+      <a-descriptions-item v-if="record.parameterSchema"
+                           label="执行参数"
+                           :span="3">
+        <editor v-model="record.parameterSchema"
+                language="json"
+                theme="vs-dark"
+                container-class="json-editor"
+                :readonly="true"
+                :suggestions="false" />
+      </a-descriptions-item>
     </a-descriptions>
   </a-drawer>
 </template>
@@ -105,11 +116,20 @@
 
   // 打开
   const open = async (id: any) => {
-    // 查询计划任务
     try {
+      // 查询计划任务
       setLoading(true);
       const { data } = await getExecJob(id);
       record.value = data;
+      // 设置参数值
+      if (data.parameterSchema) {
+        const value = JSON.parse(data.parameterSchema);
+        if (value?.length) {
+          data.parameterSchema = JSON.stringify(value, undefined, 4);
+        } else {
+          data.parameterSchema = undefined as unknown as string;
+        }
+      }
       setVisible(true);
     } catch (e) {
     } finally {
@@ -146,7 +166,13 @@
   }
 
   .command-editor {
-    height: calc(100vh - 384px);
+    width: 100%;
+    height: calc(100vh - 396px);
+  }
+
+  .json-editor {
+    width: 100%;
+    height: 328px;
   }
 
 </style>

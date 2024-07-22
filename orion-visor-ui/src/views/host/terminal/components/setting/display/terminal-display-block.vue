@@ -22,10 +22,12 @@
                         :options="toOptions(fontFamilyKey)"
                         :allow-create="true"
                         :filter-option="labelFilter">
-                <template #option="{ data }">
+                <!-- label -->
+                <template #label="{ data }">
                   <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
                 </template>
-                <template #label="{ data }">
+                <!-- 选项 -->
+                <template #option="{ data }">
                   <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
                 </template>
               </a-select>

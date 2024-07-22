@@ -20,16 +20,13 @@ import lombok.NoArgsConstructor;
 @Schema(name = "ExecParameterSchemaDTO", description = "命令执行参数 schema 对象")
 public class ExecParameterSchemaDTO {
 
-    @Schema(description = "参数名称")
+    @Schema(description = "参数名")
     private String name;
 
     @Schema(description = "参数描述")
     private String desc;
 
-    @Schema(description = "默认值")
-    private Object defaultValue;
-
-    @Schema(description = "值")
+    @Schema(description = "参数值")
     private Object value;
 
 }

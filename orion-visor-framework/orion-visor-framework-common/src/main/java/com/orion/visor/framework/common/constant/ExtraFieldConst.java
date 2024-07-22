@@ -43,4 +43,6 @@ public interface ExtraFieldConst extends FieldConst {
 
     String LOG_ID = "logId";
 
+    String DARK = "dark";
+
 }

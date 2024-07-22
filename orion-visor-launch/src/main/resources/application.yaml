@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: orion-visor-launch
+    name: orion-visor
   profiles:
     active: dev
   main:
@@ -142,7 +142,7 @@ knife4j:
 
 logging:
   file:
-    path: ${user.home}/orion/logs/orion-visor
+    path: ${user.home}/orion/logs/${spring.application.name}
     name: ${logging.file.path}/app.log
   logback:
     rollingpolicy:
@@ -189,10 +189,16 @@ app:
   exec-log:
     # 是否拼接 ansi 执行状态日志
     append-ansi: true
-    # 自动清理执行文件
-    auto-clear: true
-    # 保留周期 (天)
-    keep-period: 30
+  # 自动清理配置
+  auto-clear:
+    # 批量执行日志
+    exec-log:
+      enabled: false
+      keep-period: 30
+    # 主机连接日志
+    host-connect-log:
+      enabled: false
+      keep-period: 30
 
 # orion framework config
 orion:
@@ -220,10 +226,10 @@ orion:
     title: orion-visor 运维平台
     description: 一站式运维服务平台
     version: ${orion.version}
-    url: https://github.com/lijiahangmax/orion-visor
+    url: https://github.com/dromara/orion-visor
     email: ljh1553488six@139.com
     license: Apache-2.0
-    license-url: https://github.com/lijiahangmax/orion-visor/blob/main/LICENSE
+    license-url: https://github.com/dromara/orion-visor/blob/main/LICENSE
     grouped-api:
       infra:
         group: "infra - 基建模块"
@@ -253,14 +259,14 @@ orion:
       timestamp-prefix: false
       date-directory: false
       storage-path: ${user.home}
-      base-path: /orion/orion-visor/storage
+      base-path: /orion/${spring.application.name}/storage
     # 日志文件存储
     logs:
       enabled: true
       timestamp-prefix: false
       date-directory: false
       storage-path: ${user.home}
-      base-path: /orion/orion-visor/logs
+      base-path: /orion/${spring.application.name}/logs
   security:
     password-encoder-length: 4
     # 匿名接口

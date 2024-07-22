@@ -234,13 +234,20 @@ export interface XtermAddons {
 
 // 终端会话定义
 export interface ITerminalSession {
+  type: string;
+  title: string;
+  address: string;
   hostId: number;
   sessionId: string;
   // 是否已连接
   connected: boolean;
   // 是否可以重新连接
   canReconnect: boolean;
+  // 是否可写
+  canWrite: boolean;
 
+  // 设置是否可写
+  setCanWrite: (canWrite: boolean) => void;
   // 连接
   connect: () => void;
   // 断开连接
@@ -253,8 +260,6 @@ export interface ITerminalSession {
 export interface ISshSession extends ITerminalSession {
   // terminal 实例
   inst: Terminal;
-  // 是否可写
-  canWrite: boolean;
   // 状态
   status: number;
   // 处理器
@@ -262,10 +267,8 @@ export interface ISshSession extends ITerminalSession {
 
   // 初始化
   init: (domRef: XtermDomRef) => void;
-  // 设置是否可写
-  setCanWrite: (canWrite: boolean) => void;
   // 写入数据
-  write: (value: string | Uint8Array) => void;
+  write: (value: string) => void;
   // 聚焦
   focus: () => void;
   // 失焦

@@ -3,7 +3,7 @@ package com.orion.visor.module.asset.service.impl;
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.entity.request.host.HostExtraQueryRequest;
@@ -98,7 +98,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         Long hostId = request.getHostId();
         Long userId = SecurityUtils.getLoginUserId();
         HostExtraItemEnum item = Valid.valid(HostExtraItemEnum::of, request.getItem());
-        MapDataStrategy<GenericsDataModel> strategy = item.getStrategyBean();
+        GenericsDataStrategy<GenericsDataModel> strategy = item.getStrategy();
         // 查询原始配置
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
@@ -114,7 +114,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         GenericsDataModel newExtra = item.parse(request.getExtra());
         GenericsDataModel beforeExtra = item.parse(beforeExtraItem.getValue());
         // 更新验证
-        strategy.doValidChain(beforeExtra, newExtra);
+        strategy.doValid(beforeExtra, newExtra);
         // 更新配置
         return dataExtraApi.updateExtraValue(beforeExtraItem.getId(), newExtra.serial());
     }
@@ -129,12 +129,11 @@ public class HostExtraServiceImpl implements HostExtraService {
      * @return viewMap
      */
     private Map<String, Object> checkItemAndToView(HostExtraItemEnum item, String extraValue, Long userId, Long hostId) {
-        MapDataStrategy<GenericsDataModel> strategy = item.getStrategyBean();
         if (extraValue == null) {
             // 初始化默认数据
             extraValue = this.checkInitItem(item, userId, hostId);
         }
-        return strategy.toView(extraValue);
+        return item.toView(extraValue).toMap();
     }
 
     /**
@@ -146,7 +145,7 @@ public class HostExtraServiceImpl implements HostExtraService {
      * @return defaultValue
      */
     private String checkInitItem(HostExtraItemEnum item, Long userId, Long hostId) {
-        MapDataStrategy<GenericsDataModel> strategy = item.getStrategyBean();
+        GenericsDataStrategy<GenericsDataModel> strategy = item.getStrategy();
         // 初始化默认数据
         String extraValue = strategy.getDefault().serial();
         // 插入默认值

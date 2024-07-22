@@ -20,6 +20,7 @@ const columns = [
     dataIndex: 'command',
     slotName: 'command',
     align: 'left',
+    minWidth: 238,
     ellipsis: true,
   }, {
     title: '执行状态',

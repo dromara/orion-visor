@@ -1,7 +1,10 @@
 package com.orion.visor.module.asset.enums;
 
+import com.orion.lang.utils.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * 批量执行状态
@@ -35,6 +38,8 @@ public enum ExecStatusEnum {
     FAILED(false),
 
     ;
+
+    public static final List<String> FINISH_STATUS_LIST = Lists.of(COMPLETED.name(), FAILED.name());
 
     private final boolean closeable;
 

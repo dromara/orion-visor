@@ -1,5 +1,6 @@
 package com.orion.visor.module.infra.handler.preference.model;
 
+import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SystemPreferenceModel implements PreferenceModel {
+public class SystemPreferenceModel implements GenericsDataModel {
 
     /**
      * 是否使用侧边菜单

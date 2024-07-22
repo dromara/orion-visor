@@ -41,7 +41,7 @@ public class Requests {
                 .map(s -> (ServletRequestAttributes) s)
                 .map(ServletRequestAttributes::getRequest)
                 .ifPresent(request -> {
-                    String address = Servlets.getRemoteAddr(request);
+                    String address = IpUtils.getRemoteAddr(request);
                     identity.setAddress(address);
                     identity.setLocation(IpUtils.getLocation(address));
                     identity.setUserAgent(Servlets.getUserAgent(request));

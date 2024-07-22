@@ -34,7 +34,6 @@ public class DictValueUpdateRequest implements Serializable {
     private Long keyId;
 
     @NotBlank
-    @Size(max = 512)
     @Schema(description = "配置值")
     private String value;
 

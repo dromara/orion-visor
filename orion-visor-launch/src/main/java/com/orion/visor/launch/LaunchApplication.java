@@ -1,10 +1,17 @@
 package com.orion.visor.launch;
 
+import com.orion.lang.utils.Strings;
+import com.orion.visor.framework.common.constant.Const;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.core.type.AnnotationMetadata;
+
+import java.util.Optional;
 
 /**
  * application 启动类
@@ -26,9 +33,25 @@ public class LaunchApplication {
      * 自定义 bean 名称生成器
      */
     public static class CustomBeanNameGenerator implements BeanNameGenerator {
+
+        private static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.stereotype.Component";
+
         @Override
         public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
-            return definition.getBeanClassName();
+            // 兼容注解自定义名称
+            if (definition instanceof AnnotatedBeanDefinition) {
+                AnnotationMetadata metadata = ((AnnotatedBeanDefinition) definition).getMetadata();
+                // 处理自定义 bean 名称
+                return Optional.of(metadata)
+                        .map(s -> s.getAnnotationAttributes(BEAN_ANNOTATION_CLASS_NAME))
+                        .map(s -> s.get(Const.VALUE))
+                        .map(Object::toString)
+                        .filter(Strings::isNotBlank)
+                        .orElseGet(definition::getBeanClassName);
+            } else {
+                // 非注解形式默认使用默认名称
+                return BeanDefinitionReaderUtils.generateBeanName(definition, registry);
+            }
         }
     }
 

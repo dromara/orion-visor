@@ -34,7 +34,7 @@
     readonly: boolean;
   }>>(), {
     width: '60%',
-    height: 'calc(100vh - 240px)',
+    height: 'calc(100vh - 242px)',
     readonly: true,
   });
 

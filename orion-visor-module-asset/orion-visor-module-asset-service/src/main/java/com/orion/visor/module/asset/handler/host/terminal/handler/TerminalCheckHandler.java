@@ -13,6 +13,7 @@ import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
@@ -95,9 +96,9 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
-        Long logId = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
+        HostConnectLogDO connectLog = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
         if (connect != null) {
-            connect.setLogId(logId);
+            connect.setLogId(connectLog.getId());
         }
         // 响应检查结果
         this.send(channel,
@@ -170,15 +171,15 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @param ex          ex
      * @param sessionId   sessionId
      * @param connectType connectType
-     * @return logId
+     * @return connectLog
      */
-    private Long saveHostLog(WebSocketSession channel,
-                             Long userId,
-                             HostDO host,
-                             long startTime,
-                             Exception ex,
-                             String sessionId,
-                             HostConnectTypeEnum connectType) {
+    private HostConnectLogDO saveHostLog(WebSocketSession channel,
+                                         Long userId,
+                                         HostDO host,
+                                         long startTime,
+                                         Exception ex,
+                                         String sessionId,
+                                         HostConnectTypeEnum connectType) {
         Long hostId = host.getId();
         String hostName = host.getName();
         String username = WebSockets.getAttr(channel, ExtraFieldConst.USERNAME);

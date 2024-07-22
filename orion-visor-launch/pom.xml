@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
 
     <description>后端服务主项目容器 按需引用 orion-visor-module-xxx 依赖</description>
-    <url>https://github.com/lijiahangmax/orion-visor</url>
+    <url>https://github.com/dromara/orion-visor</url>
 
     <dependencies>
         <!-- spring boot 配置所需依赖 -->

@@ -97,7 +97,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 重设用户缓存
         this.setUserCache(user);
         // 获取登录信息
-        String remoteAddr = Servlets.getRemoteAddr(servletRequest);
+        String remoteAddr = IpUtils.getRemoteAddr(servletRequest);
         String location = IpUtils.getLocation(remoteAddr);
         String userAgent = Servlets.getUserAgent(servletRequest);
         long current = System.currentTimeMillis();

@@ -11,12 +11,11 @@ export const templateSuffix = ' }}';
 export interface TemplateParam {
   name?: string;
   desc?: string;
-  defaultValue?: any;
   value?: any;
 }
 
 // 内置参数
-export const builtinsParams: Array<TemplateParam> = [
+export const builtinParams: Array<TemplateParam> = [
   {
     name: 'source',
     desc: '执行来源'

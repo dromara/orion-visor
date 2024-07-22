@@ -47,6 +47,14 @@ public interface DictValueService {
     /**
      * 查询字典配置值
      *
+     * @param key key
+     * @return rows
+     */
+    List<JSONObject> getDictValue(String key);
+
+    /**
+     * 查询字典配置值
+     *
      * @param keys keys
      * @return rows
      */

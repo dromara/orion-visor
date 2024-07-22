@@ -3,8 +3,7 @@ package com.orion.visor.module.asset.enums;
 import com.orion.visor.framework.common.enums.EnableStatus;
 import com.orion.visor.framework.common.handler.data.GenericsDataDefinition;
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
-import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
+import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import com.orion.visor.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +23,6 @@ public enum HostConfigTypeEnum implements GenericsDataDefinition {
      * SSH 配置
      */
     SSH("ssh",
-            HostSshConfigModel.class,
             HostSshConfigStrategy.class,
             EnableStatus.ENABLED.getValue()),
 
@@ -32,9 +30,7 @@ public enum HostConfigTypeEnum implements GenericsDataDefinition {
 
     private final String type;
 
-    private final Class<? extends GenericsDataModel> model;
-
-    private final Class<? extends MapDataStrategy<? extends GenericsDataModel>> strategy;
+    private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 
     private final Integer defaultStatus;
 

@@ -47,7 +47,7 @@ public class PathUtils {
     public static String getAppPath(boolean isWindows, String username) {
         return getHomePath(isWindows, username)
                 + "/" + AppConst.ORION
-                + "/" + AppConst.ORION_VISOR;
+                + "/" + AppConst.APP_NAME;
     }
 
     /**

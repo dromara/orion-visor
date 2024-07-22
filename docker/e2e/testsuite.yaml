@@ -1,0 +1,49 @@
+#!api-testing
+# yaml-language-server: $schema=https://linuxsuren.github.io/api-testing/api-testing-schema.json
+name: orion-visor
+api: |
+  {{default "http://orion-visor-service:80" (env "SERVER")}}
+items:
+  - name: login
+    request:
+      api: /orion-visor/api/infra/auth/login
+      method: POST
+      header:
+        Content-type: application/json
+      body: |
+        {"username":"admin","password":"21232f297a57a5a743894a0e4a801fc3"}
+    expect:
+      bodyFieldsExpect:
+        code: 200
+  - name: userPermission
+    request:
+      api: /orion-visor/api/infra/permission/user
+      header:
+        Authorization: Bearer {{.login.data.token}}
+    expect:
+      bodyFieldsExpect:
+        code: 200
+        msg: "success"
+  - name: menu
+    request:
+      api: /orion-visor/api/infra/permission/menu
+      header:
+        Authorization: Bearer {{.login.data.token}}
+    expect:
+      bodyFieldsExpect:
+        code: 200
+        msg: "success"
+  - name: haveUnRead
+    request:
+      api: /orion-visor/api/infra/system-message/has-unread
+  - name: queryOperatorLog
+    request:
+      api: /orion-visor/api/infra/mine/query-operator-log
+      method: POST
+  - name: hostList
+    request:
+      api: /orion-visor/api/infra/tag/list?type=HOST
+  - name: queryHost
+    request:
+      api: /orion-visor/api/asset/host/query
+      method: POST

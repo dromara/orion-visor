@@ -35,26 +35,21 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
 
   // 打开 ssh 会话
   async openSsh(tab: TerminalPanelTabItem, domRef: XtermDomRef) {
-    const sessionId = tab.sessionId;
-    const hostId = tab.hostId as number;
     // 初始化客户端
     await this.initChannel();
     // 新建会话
-    const session = new SshSession(
-      hostId,
-      sessionId,
-      this.channel
-    );
+    const session = new SshSession(tab, this.channel);
     // 初始化
     session.init(domRef);
     // 等待前端渲染完成
     await sleep(100);
     // 添加会话
+    const sessionId = tab.sessionId;
     this.sessions[sessionId] = session;
     // 发送会话初始化请求
     this.channel.send(InputProtocol.CHECK, {
       sessionId,
-      hostId,
+      hostId: tab.hostId,
       connectType: PanelSessionType.SSH.type
     });
     return session;
@@ -62,24 +57,19 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
 
   // 打开 sftp 会话
   async openSftp(tab: TerminalPanelTabItem, resolver: ISftpSessionResolver): Promise<ISftpSession> {
-    const sessionId = tab.sessionId;
-    const hostId = tab.hostId as number;
     // 初始化客户端
     await this.initChannel();
     // 新建会话
-    const session = new SftpSession(
-      hostId,
-      sessionId,
-      this.channel
-    );
+    const session = new SftpSession(tab, this.channel);
     // 初始化
     session.init(resolver);
     // 添加会话
+    const sessionId = tab.sessionId;
     this.sessions[sessionId] = session;
     // 发送会话初始化请求
     this.channel.send(InputProtocol.CHECK, {
       sessionId,
-      hostId,
+      hostId: tab.hostId,
       connectType: PanelSessionType.SFTP.type
     });
     return session;
@@ -145,9 +135,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   private dispatchResize() {
     // 对所有已连接的会话重置大小
     Object.values(this.sessions)
-      .filter(s => s instanceof SshSession)
+      .filter(s => s?.type === PanelSessionType.SSH.type)
       .map(s => s as SshSession)
-      .filter(h => h.connected)
       .forEach(h => h.fit());
   }
 

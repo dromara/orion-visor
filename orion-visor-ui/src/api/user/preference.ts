@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'query-string';
 
-type PreferenceType = 'SYSTEM' | 'TERMINAL'
+export type PreferenceType = 'SYSTEM' | 'TERMINAL'
 
 /**
  * 用户偏好更新请求-单个

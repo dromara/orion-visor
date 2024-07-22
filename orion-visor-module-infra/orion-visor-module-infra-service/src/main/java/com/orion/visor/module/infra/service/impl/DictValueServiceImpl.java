@@ -73,7 +73,7 @@ public class DictValueServiceImpl implements DictValueService {
         // 查询数据是否冲突
         this.checkDictValuePresent(record);
         // 插入
-        OperatorLogs.add(OperatorLogs.KEY_NAME, dictKey);
+        OperatorLogs.add(OperatorLogs.KEY_NAME, dictKey.getKeyName());
         record.setKeyName(key);
         int effect = dictValueDAO.insert(record);
         Long id = record.getId();
@@ -98,7 +98,7 @@ public class DictValueServiceImpl implements DictValueService {
         // 查询数据是否冲突
         this.checkDictValuePresent(updateRecord);
         // 更新
-        OperatorLogs.add(OperatorLogs.KEY_NAME, dictKey);
+        OperatorLogs.add(OperatorLogs.KEY_NAME, dictKey.getKeyName());
         OperatorLogs.add(OperatorLogs.VALUE, this.getDictValueJson(updateRecord));
         updateRecord.setKeyName(key);
         int effect = dictValueDAO.updateById(updateRecord);
@@ -140,6 +140,18 @@ public class DictValueServiceImpl implements DictValueService {
         // 记录历史归档
         this.checkRecordHistory(updateRecord, record);
         return effect;
+    }
+
+    @Override
+    public List<JSONObject> getDictValue(String key) {
+        // 查询字典值
+        Map<String, List<JSONObject>> values = this.getDictValueList(Lists.singleton(key));
+        List<JSONObject> value = values.get(key);
+        if (value == null) {
+            return Lists.newList();
+        } else {
+            return value;
+        }
     }
 
     @Override
@@ -396,6 +408,7 @@ public class DictValueServiceImpl implements DictValueService {
         Map<String, String> schema = dictKeyService.getDictSchema(key);
         // 转换
         return values.stream()
+                .sorted(Comparator.comparing(DictValueDO::getSort))
                 .map(s -> {
                     // 设置值
                     JSONObject item = new JSONObject();

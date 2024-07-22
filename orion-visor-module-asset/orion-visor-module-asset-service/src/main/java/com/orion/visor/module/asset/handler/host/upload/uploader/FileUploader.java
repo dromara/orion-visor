@@ -8,6 +8,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.Const;
+import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.utils.PathUtils;
 import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
@@ -18,7 +19,6 @@ import com.orion.visor.module.asset.enums.HostSshOsTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import com.orion.visor.module.asset.service.HostTerminalService;
-import com.orion.visor.module.asset.service.UploadTaskService;
 import com.orion.visor.module.asset.utils.SftpUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -134,7 +134,7 @@ public class FileUploader implements IFileUploader {
         this.updateStatus(file, UploadTaskFileStatusEnum.UPLOADING);
         try {
             // 获取本地文件路径
-            String endpoint = Strings.format(UploadTaskService.SWAP_ENDPOINT, taskId);
+            String endpoint = EndpointDefine.UPLOAD_SWAP.format(taskId);
             String localPath = localFileClient.getReturnPath(endpoint + Const.SLASH + file.getFileId());
             // 检查文件是否存在
             String remotePath = file.getRemotePath();

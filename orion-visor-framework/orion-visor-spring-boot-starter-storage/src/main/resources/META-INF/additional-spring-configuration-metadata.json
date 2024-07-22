@@ -1,0 +1,90 @@
+{
+  "groups": [
+    {
+      "name": "orion.storage.local",
+      "type": "com.orion.visor.framework.storage.configuration.config.LocalStorageConfig",
+      "sourceType": "com.orion.visor.framework.storage.configuration.config.LocalStorageConfig"
+    },
+    {
+      "name": "orion.storage.logs",
+      "type": "com.orion.visor.framework.storage.configuration.config.LogsStorageConfig",
+      "sourceType": "com.orion.visor.framework.storage.configuration.config.LogsStorageConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.storage.local.primary",
+      "type": "java.lang.Boolean",
+      "description": "是否为默认客户端.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.timestamp-prefix",
+      "type": "java.lang.Boolean",
+      "description": "是否使用时间戳作为文件名称前缀.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.date-directory",
+      "type": "java.lang.Boolean",
+      "description": "是否拼接时间作为文件夹.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.local.date-pattern",
+      "type": "java.lang.Boolean",
+      "description": "时间文件夹格式.",
+      "defaultValue": "yyyy-MM-dd"
+    },
+    {
+      "name": "orion.storage.local.storage-path",
+      "type": "java.lang.String",
+      "description": "存储路径."
+    },
+    {
+      "name": "orion.storage.local.base-path",
+      "type": "java.lang.String",
+      "description": "基础路径."
+    },
+    {
+      "name": "orion.storage.logs.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.logs.timestamp-prefix",
+      "type": "java.lang.Boolean",
+      "description": "是否使用时间戳作为文件名称前缀.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.logs.date-directory",
+      "type": "java.lang.Boolean",
+      "description": "是否拼接时间作为文件夹.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.storage.logs.date-pattern",
+      "type": "java.lang.Boolean",
+      "description": "时间文件夹格式.",
+      "defaultValue": "yyyy-MM-dd"
+    },
+    {
+      "name": "orion.storage.logs.storage-path",
+      "type": "java.lang.String",
+      "description": "存储路径."
+    },
+    {
+      "name": "orion.storage.logs.base-path",
+      "type": "java.lang.String",
+      "description": "基础路径."
+    }
+  ]
+}

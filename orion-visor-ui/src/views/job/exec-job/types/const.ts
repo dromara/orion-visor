@@ -12,7 +12,7 @@ export const ExecJobStatus = {
 };
 
 // 任务内置参数
-export const jobBuiltinsParams: Array<TemplateParam> = [
+export const jobBuiltinParams: Array<TemplateParam> = [
   {
     name: 'sourceId',
     desc: '计划任务id'

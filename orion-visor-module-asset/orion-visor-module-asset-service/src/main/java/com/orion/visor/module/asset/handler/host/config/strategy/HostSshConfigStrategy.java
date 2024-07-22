@@ -1,13 +1,12 @@
 package com.orion.visor.module.asset.handler.host.config.strategy;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.Booleans;
 import com.orion.lang.utils.Charsets;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
-import com.orion.visor.framework.common.handler.data.strategy.MapDataStrategy;
+import com.orion.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import com.orion.visor.framework.common.security.PasswordModifier;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.module.asset.dao.HostIdentityDAO;
@@ -18,7 +17,6 @@ import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * 主机 SSH 配置策略
@@ -28,7 +26,7 @@ import java.util.Map;
  * @since 2023/9/19 14:26
  */
 @Component
-public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel> {
+public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshConfigModel> {
 
     @Resource
     private HostKeyDAO hostKeyDAO;
@@ -39,6 +37,10 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
     private static final int SSH_PORT = 22;
 
     private static final String USERNAME = "root";
+
+    public HostSshConfigStrategy() {
+        super(HostSshConfigModel.class);
+    }
 
     @Override
     public HostSshConfigModel getDefault() {
@@ -55,7 +57,7 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
     }
 
     @Override
-    public void preValid(HostSshConfigModel model) {
+    protected void preValid(HostSshConfigModel model) {
         // 验证认证类型
         Valid.valid(HostSshAuthTypeEnum::of, model.getAuthType());
         // 验证系统版本
@@ -77,13 +79,13 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
     }
 
     @Override
-    public void valid(HostSshConfigModel model) {
+    protected void valid(HostSshConfigModel model) {
         // 验证填充后的参数
         Valid.valid(model);
     }
 
     @Override
-    public void updateFill(HostSshConfigModel beforeModel, HostSshConfigModel afterModel) {
+    protected void updateFill(HostSshConfigModel beforeModel, HostSshConfigModel afterModel) {
         // 加密密码
         this.checkEncryptPassword(beforeModel, afterModel);
         afterModel.setHasPassword(null);
@@ -91,14 +93,12 @@ public class HostSshConfigStrategy implements MapDataStrategy<HostSshConfigModel
     }
 
     @Override
-    public Map<String, Object> toView(String config) {
-        if (config == null) {
-            return null;
+    public void toView(HostSshConfigModel model) {
+        if (model == null) {
+            return;
         }
-        HostSshConfigModel model = JSON.parseObject(config, HostSshConfigModel.class);
         model.setHasPassword(Strings.isNotBlank(model.getPassword()));
         model.setPassword(null);
-        return JSON.parseObject(JSON.toJSONString(model));
     }
 
     /**

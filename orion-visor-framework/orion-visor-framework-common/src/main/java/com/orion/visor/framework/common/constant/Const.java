@@ -17,10 +17,6 @@ public interface Const extends com.orion.lang.constant.Const, FieldConst, CnCons
 
     int MD5_LEN = 32;
 
-    String UNKNOWN = "未知";
-
-    String INTRANET_IP = "内网IP";
-
     Long ROOT_PARENT_ID = 0L;
 
     Integer DEFAULT_SORT = 10;

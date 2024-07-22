@@ -14,14 +14,17 @@ public interface AppConst extends OrionConst {
     /**
      * 同 ${orion.version} 迭代时候需要手动更改
      */
-    String VERSION = "2.0.6";
+    String VERSION = "2.0.11";
 
-    String ORION_VISOR = "orion-visor";
+    /**
+     * 同 ${spring.application.name}
+     */
+    String APP_NAME = "orion-visor";
 
-    String GITHUB = "https://github.com/lijiahangmax/orion-visor";
+    String GITHUB = "https://github.com/dromara/orion-visor";
 
-    String GITEE = "https://gitee.com/lijiahangmax/orion-visor";
+    String GITEE = "https://gitee.com/dromara/orion-visor";
 
-    String ISSUES = "https://github.com/lijiahangmax/orion-visor/issues";
+    String ISSUES = "https://github.com/dromara/orion-visor/issues";
 
 }

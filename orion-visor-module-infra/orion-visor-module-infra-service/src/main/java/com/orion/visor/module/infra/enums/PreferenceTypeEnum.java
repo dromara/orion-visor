@@ -1,8 +1,10 @@
 package com.orion.visor.module.infra.enums;
 
-import com.orion.spring.SpringHolder;
-import com.orion.visor.module.infra.handler.preference.model.PreferenceModel;
-import com.orion.visor.module.infra.handler.preference.strategy.IPreferenceStrategy;
+import com.orion.visor.framework.common.handler.data.GenericsDataDefinition;
+import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
+import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
+import com.orion.visor.module.infra.handler.preference.strategy.SystemPreferenceStrategy;
+import com.orion.visor.module.infra.handler.preference.strategy.TerminalPreferenceStrategy;
 import lombok.Getter;
 
 /**
@@ -13,32 +15,28 @@ import lombok.Getter;
  * @since 2023/10/8 11:31
  */
 @Getter
-public enum PreferenceTypeEnum {
+public enum PreferenceTypeEnum implements GenericsDataDefinition {
 
     /**
      * 系统偏好
      */
-    SYSTEM("systemPreferenceStrategy"),
+    SYSTEM(SystemPreferenceStrategy.class),
 
     /**
      * 终端偏好
      */
-    TERMINAL("terminalPreferenceStrategy"),
+    TERMINAL(TerminalPreferenceStrategy.class),
 
     ;
 
-    PreferenceTypeEnum(String beanName) {
+    PreferenceTypeEnum(Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass) {
         this.type = this.name();
-        this.beanName = beanName;
+        this.strategyClass = strategyClass;
     }
 
     private final String type;
 
-    /**
-     * 策越 bean 名称
-     * 可能跨模块所以不用 class
-     */
-    private final String beanName;
+    private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 
     public static PreferenceTypeEnum of(String type) {
         if (type == null) {
@@ -50,17 +48,6 @@ public enum PreferenceTypeEnum {
             }
         }
         return null;
-    }
-
-    /**
-     * 获取策略
-     *
-     * @param <M> model
-     * @param <T> type
-     * @return IPreferenceStrategy
-     */
-    public <M extends PreferenceModel, T extends IPreferenceStrategy<M>> T getStrategy() {
-        return SpringHolder.getBean(beanName);
     }
 
 }

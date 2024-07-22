@@ -5,7 +5,7 @@ type ViewType = 'table' | 'card' | undefined;
 /**
  * 应用状态
  */
-export interface AppState extends AppSetting, UserPreferenceLayout, UserPreferenceData, UserPreferenceViews {
+export interface AppState extends AppSetting, UserPreferenceLayout, UserPreferenceData, UserPreferenceView {
   [key: string]: unknown;
 }
 
@@ -43,7 +43,7 @@ export interface UserPreferenceData {
 /**
  * 用户偏好 - 页面视图
  */
-export interface UserPreferenceViews {
+export interface UserPreferenceView {
   hostView: ViewType;
   hostKeyView: ViewType;
   hostIdentityView: ViewType;

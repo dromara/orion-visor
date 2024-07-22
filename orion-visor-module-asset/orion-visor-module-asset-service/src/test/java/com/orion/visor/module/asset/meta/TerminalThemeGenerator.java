@@ -28,9 +28,9 @@ public class TerminalThemeGenerator {
         List<File> files = Files1.listFiles("D:\\idea-project\\iTerm2-Color-Schemes\\vhs");
         // 过滤的 theme
         List<String> schemaFilter = Lists.of(
+                "Dracula", "Atom",
                 "catppuccin-mocha", "MaterialDesignColors",
                 "catppuccin-macchiato", "OneHalfDark",
-                "Dracula", "Atom",
                 "Apple System Colors", "Builtin Tango Light",
                 "Duotone Dark", "BlulocoLight",
                 "Chester", "CLRS",
@@ -66,8 +66,15 @@ public class TerminalThemeGenerator {
             arr.sort(Comparator.comparing(s -> schemaFilter.indexOf(s.getName())));
         }
         // 打印 json
-        String json = JSON.toJSONString(arr, colorFilter);
-        System.out.println("\n\n" + json);
+        System.out.println();
+        for (TerminalTheme theme : arr) {
+            System.out.println("name: " + theme.name);
+            System.out.println("dark: " + theme.dark);
+            System.out.println("value: \n" + JSON.toJSONString(theme.schema, colorFilter));
+            System.out.println();
+        }
+        // String json = JSON.toJSONString(arr, colorFilter);
+        // System.out.println("\n" + json);
     }
 
     /*

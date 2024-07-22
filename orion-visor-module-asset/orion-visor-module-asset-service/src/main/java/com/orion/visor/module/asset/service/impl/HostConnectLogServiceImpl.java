@@ -2,13 +2,13 @@ package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.constant.Const;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
-import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.convert.HostConnectLogConvert;
 import com.orion.visor.module.asset.dao.HostConnectLogDAO;
@@ -52,7 +52,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     private HostTerminalManager hostTerminalManager;
 
     @Override
-    public Long create(HostConnectTypeEnum type, HostConnectLogCreateRequest request) {
+    public HostConnectLogDO create(HostConnectTypeEnum type, HostConnectLogCreateRequest request) {
         HostConnectLogDO record = HostConnectLogConvert.MAPPER.to(request);
         record.setType(type.name());
         String status = request.getStatus();
@@ -64,7 +64,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
             record.setEndTime(new Date());
         }
         hostConnectLogDAO.insert(record);
-        return record.getId();
+        return record;
     }
 
     @Override
@@ -169,6 +169,11 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     @Override
     public Integer deleteHostConnectLog(List<Long> idList) {
         log.info("HostConnectLogService.deleteHostConnectLog start {}", JSON.toJSONString(idList));
+        if (Lists.isEmpty(idList)) {
+            OperatorLogs.add(OperatorLogs.COUNT, Const.N_0);
+            return Const.N_0;
+        }
+        // 删除
         int effect = hostConnectLogDAO.deleteBatchIds(idList);
         log.info("HostConnectLogService.deleteHostConnectLog finish {}", effect);
         // 设置日志参数
@@ -184,13 +189,21 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     @Override
     public Integer clearHostConnectLog(HostConnectLogQueryRequest request) {
         log.info("HostConnectLogService.clearHostConnectLog start {}", JSON.toJSONString(request));
+        // 查询
+        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request)
+                .select(HostConnectLogDO::getId);
+        List<HostConnectLogDO> list = hostConnectLogDAO.selectList(wrapper);
+        if (list.isEmpty()) {
+            log.info("HostConnectLogService.clearHostConnectLog empty");
+            // 设置日志参数
+            OperatorLogs.add(OperatorLogs.COUNT, Const.N_0);
+            return Const.N_0;
+        }
         // 删除
-        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request);
-        int effect = hostConnectLogDAO.delete(wrapper);
-        log.info("HostConnectLogService.clearHostConnectLog finish {}", effect);
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.COUNT, effect);
-        return effect;
+        List<Long> idList = list.stream()
+                .map(HostConnectLogDO::getId)
+                .collect(Collectors.toList());
+        return this.deleteHostConnectLog(idList);
     }
 
     @Override
@@ -229,8 +242,10 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
                 .eq(HostConnectLogDO::getType, request.getType())
                 .like(HostConnectLogDO::getToken, request.getToken())
                 .eq(HostConnectLogDO::getStatus, request.getStatus())
+                .in(HostConnectLogDO::getStatus, request.getStatusList())
                 .ge(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
+                .le(HostConnectLogDO::getCreateTime, request.getCreateTimeLe())
                 .orderByDesc(HostConnectLogDO::getId);
     }
 

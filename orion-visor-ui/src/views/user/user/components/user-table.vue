@@ -196,8 +196,8 @@
   const router = useRouter();
   const userStore = useUserStore();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<UserQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<UserQueryResponse>>([]);
   const formModel = reactive<UserQueryRequest>({
     id: undefined,
     username: undefined,
@@ -211,13 +211,11 @@
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: UserQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteUser(id);
+      await deleteUser(record.id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();

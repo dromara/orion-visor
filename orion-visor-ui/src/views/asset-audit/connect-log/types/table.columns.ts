@@ -3,6 +3,13 @@ import { dateFormat } from '@/utils';
 
 const columns = [
   {
+    title: 'id',
+    dataIndex: 'id',
+    slotName: 'id',
+    width: 100,
+    align: 'left',
+    fixed: 'left',
+  }, {
     title: '连接用户',
     dataIndex: 'username',
     slotName: 'username',
@@ -39,12 +46,7 @@ const columns = [
     dataIndex: 'connectTime',
     slotName: 'connectTime',
     align: 'left',
-    width: 318,
-    render: ({ record }) => {
-      return (record.startTime && dateFormat(new Date(record.startTime)))
-        + ' - '
-        + (record.endTime && dateFormat(new Date(record.endTime)) || '现在');
-    },
+    width: 192,
   }, {
     title: '操作',
     slotName: 'handle',

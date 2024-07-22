@@ -1,10 +1,12 @@
 package com.orion.visor.module.asset.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.orion.net.host.SessionStore;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
+
+import java.util.List;
 
 /**
  * 主机终端服务
@@ -20,7 +22,7 @@ public interface HostTerminalService {
      *
      * @return themes
      */
-    JSONArray getTerminalThemes();
+    List<HostTerminalThemeVO> getTerminalThemes();
 
     /**
      * 获取主机终端访问 accessToken
