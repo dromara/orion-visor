@@ -1,8 +1,8 @@
 package com.orion.visor.module.asset.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.jcraft.jsch.SftpException;
 import com.orion.lang.utils.Booleans;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.net.host.sftp.SftpExecutor;
@@ -41,13 +41,49 @@ public class SftpUtils {
             SftpFileBackupParams backupParams = new SftpFileBackupParams(file.getName(), System.currentTimeMillis());
             String target = Strings.format(config.getBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
             // 移动
-            try {
-                executor.getChannel().rename(path, Files1.getPath(Files1.normalize(Files1.getPath(path + "/../" + target))));
-            } catch (SftpException ignored) {
-            }
             // FIXME kit
+            move(executor, path, target);
             // executor.move(path, target);
         }
+    }
+
+    /**
+     * 移动文件
+     * FIXME kit DELETE
+     *
+     * @param executor executor
+     * @param source   source
+     * @param target   target
+     */
+    public static void move(SftpExecutor executor, String source, String target) {
+        try {
+            source = Files1.getPath(source);
+            target = Files1.getPath(target);
+            if (target.charAt(0) == '/') {
+                // 检查是否需要创建目标文件目录
+                if (!isSameParentPath(source, target)) {
+                    executor.makeDirectories(Files1.getParentPath(target));
+                }
+                // 绝对路径
+                executor.getChannel().rename(source, Files1.getPath(Files1.normalize(target)));
+            } else {
+                // 相对路径
+                executor.getChannel().rename(source, Files1.getPath(Files1.normalize(Files1.getPath(source + "/../" + target))));
+            }
+        } catch (Exception e) {
+            throw Exceptions.sftp(e);
+        }
+    }
+
+    /**
+     * FIXME kit DELETE
+     *
+     * @param source source
+     * @param target target
+     * @return res
+     */
+    private static boolean isSameParentPath(String source, String target) {
+        return Files1.getParentPath(source).equals(Files1.getParentPath(target));
     }
 
 }

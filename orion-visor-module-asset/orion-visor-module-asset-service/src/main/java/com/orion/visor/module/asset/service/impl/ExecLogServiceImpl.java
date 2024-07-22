@@ -422,7 +422,7 @@ public class ExecLogServiceImpl implements ExecLogService {
             log.error("ExecLogService.downloadLogFile error id: {}", id, e);
             Streams.close(in);
             String errorMessage = ErrorMessage.FILE_READ_ERROR_CLEAR;
-            if (e instanceof InvalidArgumentException) {
+            if (e instanceof InvalidArgumentException || e instanceof IllegalArgumentException) {
                 errorMessage = e.getMessage();
             }
             // 响应错误信息

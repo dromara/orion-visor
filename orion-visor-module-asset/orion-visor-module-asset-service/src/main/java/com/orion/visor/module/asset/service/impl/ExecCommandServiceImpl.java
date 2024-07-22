@@ -126,7 +126,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                 .sourceId(request.getSourceId())
                 .execSeq(request.getExecSeq())
                 .description(Strings.ifBlank(request.getDescription(), () -> {
-                    if (command.length() < DESC_OMIT + 3) {
+                    if (command.length() < DESC_OMIT + Const.OMIT.length()) {
                         return command;
                     } else {
                         return command.substring(0, DESC_OMIT) + Const.OMIT;

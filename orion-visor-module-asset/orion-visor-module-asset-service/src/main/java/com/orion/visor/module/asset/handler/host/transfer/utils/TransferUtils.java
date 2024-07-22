@@ -62,7 +62,7 @@ public class TransferUtils {
     public static String getErrorMessage(Exception ex) {
         if (ex == null) {
             return null;
-        } else if (ex instanceof InvalidArgumentException) {
+        } else if (ex instanceof InvalidArgumentException || ex instanceof IllegalArgumentException) {
             String message = ex.getMessage();
             if (Strings.isBlank(message)) {
                 return ErrorMessage.OPERATE_ERROR;
