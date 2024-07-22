@@ -1,17 +1,10 @@
 package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.orion.lang.exception.AuthenticationException;
 import com.orion.lang.id.UUIds;
-import com.orion.lang.utils.Exceptions;
-import com.orion.lang.utils.Strings;
-import com.orion.net.host.SessionHolder;
-import com.orion.net.host.SessionStore;
-import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.security.LoginUser;
-import com.orion.visor.framework.common.utils.CryptoUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
@@ -123,12 +116,10 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         log.info("HostConnectService.getTerminalConnectInfo-withHost hostId: {}", hostId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
         // 查询主机配置
-        HostSshConfigModel model = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
-        Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
+        HostSshConfigModel config = hostConfigService.buildHostConfig(host, HostTypeEnum.SSH);
         // 获取配置
-        return this.getHostConnectInfo(host, model, null);
+        return this.getHostConnectInfo(host, config, null);
     }
 
     @Override
@@ -136,6 +127,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 获取配置
         return this.getTerminalConnectInfo(userId, host);
     }
 
@@ -148,8 +140,8 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         Valid.isTrue(hostIdList.contains(hostId),
                 ErrorMessage.ANY_NO_PERMISSION,
                 DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
-        // 查询主机配置
-        HostSshConfigModel config = hostConfigService.getHostConfig(hostId, HostConfigTypeEnum.SSH);
+        // 获取主机配置
+        HostSshConfigModel config = hostConfigService.buildHostConfig(host, HostTypeEnum.SSH);
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostSshExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.SSH);
@@ -173,66 +165,6 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         return this.getHostConnectInfo(host, config, extra);
     }
 
-    @Override
-    public SessionStore openSessionStore(Long hostId) {
-        log.info("HostConnectService.openSessionStore-withHost hostId: {}", hostId);
-        // 获取配置
-        HostTerminalConnectDTO connect = this.getTerminalConnectInfo(hostId);
-        // 打开连接
-        return this.openSessionStore(connect);
-    }
-
-    @Override
-    public SessionStore openSessionStore(HostTerminalConnectDTO conn) {
-        Long hostId = conn.getHostId();
-        String address = conn.getHostAddress();
-        String username = conn.getUsername();
-        log.info("HostConnectService-openSessionStore-start hostId: {}, address: {}, username: {}", hostId, address, username);
-        try {
-            SessionHolder sessionHolder = new SessionHolder();
-            final boolean useKey = conn.getKeyId() != null;
-            // 使用密钥认证
-            if (useKey) {
-                // 加载密钥
-                String publicKey = Optional.ofNullable(conn.getPublicKey())
-                        .map(CryptoUtils::decryptAsString)
-                        .orElse(null);
-                String privateKey = Optional.ofNullable(conn.getPrivateKey())
-                        .map(CryptoUtils::decryptAsString)
-                        .orElse(null);
-                String password = Optional.ofNullable(conn.getPrivateKeyPassword())
-                        .map(CryptoUtils::decryptAsString)
-                        .orElse(null);
-                sessionHolder.addIdentityValue(String.valueOf(conn.getKeyId()),
-                        privateKey,
-                        publicKey,
-                        password);
-            }
-            // 获取会话
-            SessionStore session = sessionHolder.getSession(address, conn.getPort(), username);
-            // 使用密码认证
-            if (!useKey) {
-                session.password(CryptoUtils.decryptAsString(conn.getPassword()));
-            }
-            // 连接
-            session.connect(conn.getTimeout());
-            log.info("HostConnectService-openSessionStore-success hostId: {}, address: {}, username: {}", hostId, address, username);
-            return session;
-        } catch (Exception e) {
-            String message = e.getMessage();
-            log.error("HostConnectService-openSessionStore-error hostId: {}, address: {}, username: {}, message: {}", hostId, address, username, message, e);
-            if (Strings.contains(message, Const.TIMEOUT)) {
-                // 连接超时
-                throw Exceptions.timeout(message, e);
-            } else if (e instanceof AuthenticationException) {
-                // 认证失败
-                throw Exceptions.authentication(message, e);
-            } else {
-                throw e;
-            }
-        }
-    }
-
     /**
      * 获取主机会话连接配置
      *
@@ -249,8 +181,8 @@ public class HostTerminalServiceImpl implements HostTerminalService {
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
+        conn.setHostPort(host.getPort());
         conn.setOsType(config.getOsType());
-        conn.setPort(config.getPort());
         conn.setTimeout(config.getConnectTimeout());
         conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());

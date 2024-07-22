@@ -34,8 +34,6 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
     @Resource
     private HostIdentityDAO hostIdentityDAO;
 
-    private static final int SSH_PORT = 22;
-
     private static final String USERNAME = "root";
 
     public HostSshConfigStrategy() {
@@ -45,7 +43,6 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
     @Override
     public HostSshConfigModel getDefault() {
         return HostSshConfigModel.builder()
-                .port(SSH_PORT)
                 .username(USERNAME)
                 .authType(HostSshAuthTypeEnum.PASSWORD.name())
                 .osType(HostSshOsTypeEnum.LINUX.name())

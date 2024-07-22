@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -36,7 +35,7 @@ public class DownloadSession extends TransferSession implements StreamingRespons
 
     private static final int FLUSH_COUNT = Const.BUFFER_KB_1 * Const.BUFFER_KB_1 / Const.BUFFER_KB_32;
 
-    private InputStream inputStream;
+    protected InputStream inputStream;
 
     public DownloadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         super(connectInfo, sessionStore, channel);
@@ -90,7 +89,7 @@ public class DownloadSession extends TransferSession implements StreamingRespons
             byte[] buffer = new byte[BUFFER_SIZE];
             int len;
             int i = 0;
-            int size = 0;
+            long size = 0;
             // 响应文件内容
             while (this.inputStream != null && (len = this.inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, len);
@@ -101,47 +100,55 @@ public class DownloadSession extends TransferSession implements StreamingRespons
                 }
                 // 首次触发
                 if (i == 0) {
-                    this.flushAndSendProgress(outputStream, size);
+                    outputStream.flush();
+                    this.sendProgress(size, null);
                 }
                 i++;
             }
             // 最后一次也要 flush
             if (i != 0) {
-                this.flushAndSendProgress(outputStream, size);
+                outputStream.flush();
+                this.sendProgress(size, null);
             }
             log.info("DownloadSession.download finish channelId: {}, path: {}", channelId, path);
         } catch (Exception e) {
             log.error("DownloadSession.download error channelId: {}, path: {}", channelId, path, e);
             ex.set(e);
         }
-        // 异步关闭
-        AssetThreadPools.TERMINAL_OPERATOR.execute(() -> {
-            // 关闭等待 jsch 内部处理
-            Threads.sleep(100);
-            this.closeStream();
-            Threads.sleep(100);
-            // 响应结果
-            Exception e = ex.getValue();
-            if (e == null) {
-                TransferUtils.sendMessage(channel, TransferReceiver.FINISH, null);
-            } else {
-                TransferUtils.sendMessage(channel, TransferReceiver.ERROR, e);
-            }
+        // 传输结束 异步处理
+        AssetThreadPools.TERMINAL_OPERATOR.execute(() -> this.onTransferFinish(ex.getValue()));
+    }
+
+    /**
+     * 发送进度
+     *
+     * @param currentSize currentSize
+     * @param totalSize   totalSize
+     */
+    protected void sendProgress(Long currentSize, Long totalSize) {
+        // send
+        TransferUtils.sendMessage(channel, TransferReceiver.PROGRESS, null, e -> {
+            e.setCurrentSize(currentSize);
+            e.setTotalSize(totalSize);
         });
     }
 
     /**
-     * 刷流 & 发送进度
+     * 传输完成时候触发
      *
-     * @param outputStream outputStream
-     * @param size         size
-     * @throws IOException IOException
+     * @param e e
      */
-    private void flushAndSendProgress(OutputStream outputStream, int size) throws IOException {
-        // flush
-        outputStream.flush();
-        // send
-        TransferUtils.sendMessage(channel, TransferReceiver.PROGRESS, null, e -> e.setCurrentSize(size));
+    protected void onTransferFinish(Exception e) {
+        // 关闭等待 jsch 内部处理
+        Threads.sleep(100);
+        this.closeStream();
+        Threads.sleep(100);
+        // 发送消息
+        if (e == null) {
+            TransferUtils.sendMessage(channel, TransferReceiver.FINISH, null);
+        } else {
+            TransferUtils.sendMessage(channel, TransferReceiver.ERROR, e);
+        }
     }
 
     @Override

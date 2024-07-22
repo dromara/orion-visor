@@ -41,7 +41,12 @@ public class TransferOperatorResponse {
     /**
      * 传输的大小
      */
-    private Integer currentSize;
+    private Long currentSize;
+
+    /**
+     * 文件总大小
+     */
+    private Long totalSize;
 
     /**
      * transferToken

@@ -20,14 +20,14 @@ import com.orion.visor.module.asset.dao.ExecLogDAO;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.entity.domain.ExecJobDO;
 import com.orion.visor.module.asset.entity.domain.ExecLogDO;
-import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.ExecCommandExecDTO;
 import com.orion.visor.module.asset.entity.request.exec.*;
 import com.orion.visor.module.asset.entity.vo.ExecJobVO;
 import com.orion.visor.module.asset.entity.vo.ExecLogVO;
+import com.orion.visor.module.asset.entity.vo.HostBaseVO;
 import com.orion.visor.module.asset.enums.ExecJobStatusEnum;
 import com.orion.visor.module.asset.enums.ExecSourceEnum;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.enums.ScriptExecEnum;
 import com.orion.visor.module.asset.handler.host.exec.job.ExecCommandJob;
 import com.orion.visor.module.asset.service.AssetAuthorizedDataService;
@@ -166,8 +166,11 @@ public class ExecJobServiceImpl implements ExecJobService {
         vo.setHostIdList(hostIdList);
         // 查询主机列表
         if (!Lists.isEmpty(hostIdList)) {
-            List<HostDO> hostList = hostDAO.selectBatchIds(hostIdList);
-            vo.setHostList(HostConvert.MAPPER.toList(hostList));
+            List<HostBaseVO> hosts = hostDAO.selectBaseByIdList(hostIdList)
+                    .stream()
+                    .map(HostConvert.MAPPER::toBase)
+                    .collect(Collectors.toList());
+            vo.setHostList(hosts);
         } else {
             vo.setHostList(Lists.empty());
         }
@@ -378,7 +381,7 @@ public class ExecJobServiceImpl implements ExecJobService {
      */
     private void checkHostPermission(List<Long> hostIdList) {
         // 查询有权限的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }

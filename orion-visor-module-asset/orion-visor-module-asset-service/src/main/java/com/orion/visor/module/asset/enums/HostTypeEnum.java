@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.enums;
 
-import com.orion.visor.framework.common.enums.EnableStatus;
 import com.orion.visor.framework.common.handler.data.GenericsDataDefinition;
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
@@ -17,29 +16,23 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum HostConfigTypeEnum implements GenericsDataDefinition {
+public enum HostTypeEnum implements GenericsDataDefinition {
 
     /**
-     * SSH 配置
+     * SSH
      */
-    SSH("ssh",
-            HostSshConfigStrategy.class,
-            EnableStatus.ENABLED.getValue()),
+    SSH(HostSshConfigStrategy.class),
 
     ;
 
-    private final String type;
-
     private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 
-    private final Integer defaultStatus;
-
-    public static HostConfigTypeEnum of(String type) {
+    public static HostTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (HostConfigTypeEnum value : values()) {
-            if (value.type.equalsIgnoreCase(type)) {
+        for (HostTypeEnum value : values()) {
+            if (value.name().equals(type)) {
                 return value;
             }
         }

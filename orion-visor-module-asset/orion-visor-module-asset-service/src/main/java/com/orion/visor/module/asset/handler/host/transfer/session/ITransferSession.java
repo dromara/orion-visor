@@ -73,4 +73,11 @@ public interface ITransferSession extends SafeCloseable {
      */
     void setToken(String token);
 
+    /**
+     * 获取 hostId
+     *
+     * @return hostId
+     */
+    Long getHostId();
+
 }

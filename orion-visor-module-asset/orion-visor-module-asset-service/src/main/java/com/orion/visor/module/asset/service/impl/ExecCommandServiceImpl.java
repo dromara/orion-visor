@@ -97,7 +97,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         Long userId = user.getId();
         List<Long> hostIdList = request.getHostIdList();
         // 检查主机权限
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(userId, HostConfigTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(userId, HostTypeEnum.SSH);
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
         log.info("ExecService.startExecCommand host hostList: {}", hostIdList);
         Valid.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);
@@ -117,7 +117,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         // 查询主机信息
         List<HostDO> hosts = hostDAO.selectBatchIds(hostIdList);
         // 查询主机配置
-        Map<Long, HostSshConfigModel> hostConfigMap = hostConfigService.getHostConfigMap(hostIdList, HostConfigTypeEnum.SSH);
+        Map<Long, HostSshConfigModel> hostConfigMap = hostConfigService.buildHostConfigMap(hosts, HostTypeEnum.SSH);
         // 插入日志
         ExecLogDO execLog = ExecLogDO.builder()
                 .userId(request.getUserId())
@@ -309,11 +309,11 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         params.put("hostName", host.getName());
         params.put("hostCode", host.getCode());
         params.put("hostAddress", host.getAddress());
+        params.put("hostPort", host.getPort());
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         params.put("hostUsername", config.getUsername());
         params.put("osType", config.getOsType());
-        params.put("port", config.getPort());
         params.put("charset", config.getCharset());
         params.put("scriptPath", scriptPath);
         return params;

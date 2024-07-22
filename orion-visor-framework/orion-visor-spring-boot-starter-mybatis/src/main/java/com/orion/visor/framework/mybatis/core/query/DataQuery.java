@@ -210,14 +210,23 @@ public class DataQuery<T> {
     // -------------------- data grid --------------------
 
     public DataGrid<T> dataGrid() {
-        return this.dataGrid(Function.identity());
+        return this.dataGrid(this.wrapper, Function.identity());
+    }
+
+    public DataGrid<T> dataGrid(Wrapper<T> countWrapper) {
+        return this.dataGrid(countWrapper, Function.identity());
     }
 
     public <R> DataGrid<R> dataGrid(Function<T, R> mapper) {
-        Valid.notNull(mapper, "convert function is null");
+        return this.dataGrid(this.wrapper, mapper);
+    }
+
+    public <R> DataGrid<R> dataGrid(Wrapper<T> countWrapper, Function<T, R> mapper) {
         Valid.notNull(page, "page is null");
         Valid.notNull(wrapper, "wrapper is null");
-        Long count = dao.selectCount(wrapper);
+        Valid.notNull(countWrapper, "count wrapper is null");
+        Valid.notNull(mapper, "convert function is null");
+        Long count = dao.selectCount(countWrapper);
         Pager<R> pager = new Pager<>(page);
         pager.setTotal(count.intValue());
         boolean next = pager.hasMoreData();

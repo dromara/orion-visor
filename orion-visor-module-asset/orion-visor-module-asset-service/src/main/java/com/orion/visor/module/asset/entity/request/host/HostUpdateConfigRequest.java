@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 主机配置 更新请求对象
+ * 主机 更新配置请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,24 +21,15 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostConfigUpdateRequest", description = "主机配置 更新请求对象")
-public class HostConfigUpdateRequest implements Serializable {
+@Schema(name = "HostUpdateConfigRequest", description = "主机 更新配置请求对象")
+public class HostUpdateConfigRequest implements Serializable {
 
     @NotNull
-    @Schema(description = "主机id")
-    private Long hostId;
-
-    @NotNull
-    @Size(max = 32)
-    @Schema(description = "配置类型")
-    private String type;
+    @Schema(description = "id")
+    private Long id;
 
     @NotBlank
     @Schema(description = "配置详情")
     private String config;
-
-    @NotNull
-    @Schema(description = "配置版本号")
-    private Integer version;
 
 }

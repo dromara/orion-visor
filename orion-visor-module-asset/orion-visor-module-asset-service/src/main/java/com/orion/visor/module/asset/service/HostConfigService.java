@@ -1,10 +1,8 @@
 package com.orion.visor.module.asset.service;
 
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostConfigUpdateStatusRequest;
-import com.orion.visor.module.asset.entity.vo.HostConfigVO;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.entity.domain.HostDO;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 
 import java.util.List;
 import java.util.Map;
@@ -19,81 +17,43 @@ import java.util.Map;
 public interface HostConfigService {
 
     /**
-     * 获取配置
+     * 获取主机配置
      *
-     * @param hostId hostId
-     * @param type   type
-     * @return config
+     * @param id   id
+     * @param type type
+     * @param <T>  T
+     * @return host
      */
-    HostConfigVO getHostConfig(Long hostId, String type);
+    <T extends GenericsDataModel> T getHostConfig(Long id, HostTypeEnum type);
 
     /**
-     * 获取配置 配置未启用会报错
+     * 构建主机配置
      *
-     * @param hostId hostId
+     * @param host host
+     * @param type type
+     * @param <T>  T
+     * @return host
+     */
+    <T extends GenericsDataModel> T buildHostConfig(HostDO host, HostTypeEnum type);
+
+    /**
+     * 获取主机配置
+     *
+     * @param idList idList
      * @param type   type
      * @param <T>    T
      * @return config
      */
-    <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type);
+    <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> idList, HostTypeEnum type);
 
     /**
-     * 获取配置
+     * 构建主机配置
      *
-     * @param hostId hostId
+     * @param hostList hostList
+     * @param type     type
+     * @param <T>      T
      * @return config
      */
-    List<HostConfigVO> getHostConfigList(Long hostId);
-
-    /**
-     * 获取配置
-     *
-     * @param hostIdList hostIdList
-     * @param type       type
-     * @return config
-     */
-    List<HostConfigVO> getHostConfigList(List<Long> hostIdList, String type);
-
-    /**
-     * 获取配置
-     *
-     * @param hostIdList hostIdList
-     * @param type       type
-     * @param <T>        T
-     * @return config
-     */
-    <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> hostIdList, HostConfigTypeEnum type);
-
-    /**
-     * 更新配置
-     *
-     * @param request request
-     * @return version
-     */
-    Integer updateHostConfig(HostConfigUpdateRequest request);
-
-    /**
-     * 更新配置状态
-     *
-     * @param request request
-     * @return version
-     */
-    Integer updateHostConfigStatus(HostConfigUpdateStatusRequest request);
-
-    /**
-     * 初始化主机配置
-     *
-     * @param hostId hostId
-     */
-    void initHostConfig(Long hostId);
-
-    /**
-     * 获取启用配置的 hostId
-     *
-     * @param type       type
-     * @param hostIdList hostIdList
-     * @return hostId
-     */
-    List<Long> getEnabledConfigHostId(String type, List<Long> hostIdList);
+    <T extends GenericsDataModel> Map<Long, T> buildHostConfigMap(List<HostDO> hostList, HostTypeEnum type);
 
 }

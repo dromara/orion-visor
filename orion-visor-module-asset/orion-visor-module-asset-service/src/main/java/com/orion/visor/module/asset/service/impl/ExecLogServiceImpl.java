@@ -38,7 +38,7 @@ import com.orion.visor.module.asset.entity.vo.ExecLogStatusVO;
 import com.orion.visor.module.asset.entity.vo.ExecLogVO;
 import com.orion.visor.module.asset.enums.ExecHostStatusEnum;
 import com.orion.visor.module.asset.enums.ExecStatusEnum;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.visor.module.asset.handler.host.exec.command.handler.IExecCommandHandler;
 import com.orion.visor.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
@@ -360,7 +360,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         List<Long> hostIdList = hostLogs.stream()
                 .map(ExecHostLogDO::getHostId)
                 .collect(Collectors.toList());
-        Map<Long, HostSshConfigModel> configMap = hostConfigService.getHostConfigMap(hostIdList, HostConfigTypeEnum.SSH);
+        Map<Long, HostSshConfigModel> configMap = hostConfigService.getHostConfigMap(hostIdList, HostTypeEnum.SSH);
         // 生成缓存
         String token = UUIds.random19();
         String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);

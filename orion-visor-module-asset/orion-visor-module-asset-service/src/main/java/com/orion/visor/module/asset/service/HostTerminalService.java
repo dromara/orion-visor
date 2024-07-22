@@ -1,6 +1,5 @@
 package com.orion.visor.module.asset.service;
 
-import com.orion.net.host.SessionStore;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
@@ -64,21 +63,5 @@ public interface HostTerminalService {
      * @return session
      */
     HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
-
-    /**
-     * 使用默认配置打开主机会话
-     *
-     * @param hostId hostId
-     * @return session
-     */
-    SessionStore openSessionStore(Long hostId);
-
-    /**
-     * 打开主机会话
-     *
-     * @param conn conn
-     * @return session
-     */
-    SessionStore openSessionStore(HostTerminalConnectDTO conn);
 
 }

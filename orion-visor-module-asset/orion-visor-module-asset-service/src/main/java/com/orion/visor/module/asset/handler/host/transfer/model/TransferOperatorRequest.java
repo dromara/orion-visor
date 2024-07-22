@@ -38,4 +38,9 @@ public class TransferOperatorRequest {
      */
     private Long hostId;
 
+    /**
+     * 错误信息 后端赋值
+     */
+    private String errorMessage;
+
 }

@@ -24,7 +24,7 @@ import java.io.OutputStream;
 @Slf4j
 public class UploadSession extends TransferSession {
 
-    private OutputStream outputStream;
+    protected OutputStream outputStream;
 
     public UploadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         super(connectInfo, sessionStore, channel);

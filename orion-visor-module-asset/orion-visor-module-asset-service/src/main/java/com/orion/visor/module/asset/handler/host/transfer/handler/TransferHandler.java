@@ -7,9 +7,11 @@ import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferOperator;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferType;
+import com.orion.visor.module.asset.handler.host.transfer.model.HostConnection;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSession;
 import com.orion.visor.module.asset.handler.host.transfer.session.ITransferSession;
@@ -39,9 +41,12 @@ public class TransferHandler implements ITransferHandler {
 
     private final ConcurrentHashMap<String, ITransferSession> sessions;
 
+    private final ConcurrentHashMap<Long, HostConnection> hostConnections;
+
     public TransferHandler(WebSocketSession channel) {
         this.channel = channel;
         this.sessions = new ConcurrentHashMap<>();
+        this.hostConnections = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -54,7 +59,7 @@ public class TransferHandler implements ITransferHandler {
         }
         // 处理消息
         if (TransferOperator.START.equals(operator)) {
-            // 开始
+            // 开始传输
             currentSession.setToken(UUIds.random32());
             currentSession.onStart(payload);
         } else if (TransferOperator.FINISH.equals(operator)) {
@@ -85,19 +90,26 @@ public class TransferHandler implements ITransferHandler {
         TransferType type = TransferType.of(payload.getType());
         String sessionKey = hostId + "_" + type.getType();
         try {
-            // 获取会话
-            ITransferSession session = sessions.get(sessionKey);
-            if (session == null) {
+            // 获取主机连接信息
+            HostConnection hostConnection = hostConnections.get(hostId);
+            if (hostConnection == null) {
                 // 获取主机连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
                 HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(userId, hostId);
-                SessionStore sessionStore = hostTerminalService.openSessionStore(connectInfo);
+                hostConnection = new HostConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
+                hostConnections.put(hostId, hostConnection);
+            }
+            SessionStore sessionStore = hostConnection.getSessionStore();
+            HostTerminalConnectDTO connectInfo = hostConnection.getConnectInfo();
+            // 获取会话
+            ITransferSession session = sessions.get(sessionKey);
+            if (session == null) {
                 // 打开会话并初始化
                 if (TransferType.UPLOAD.equals(type)) {
-                    // 上传操作
+                    // 上传会话
                     session = new UploadSession(connectInfo, sessionStore, this.channel);
                 } else if (TransferType.DOWNLOAD.equals(type)) {
-                    // 下载操作
+                    // 下载会话
                     session = new DownloadSession(connectInfo, sessionStore, this.channel);
                 }
                 session.init();

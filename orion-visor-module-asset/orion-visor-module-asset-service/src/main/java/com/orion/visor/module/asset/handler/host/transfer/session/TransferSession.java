@@ -94,7 +94,7 @@ public abstract class TransferSession implements ITransferSession {
         log.error("TransferSession.uploadError channelId: {}", channelId);
         this.closeStream();
         // 响应结果
-        TransferUtils.sendMessage(channel, TransferReceiver.ERROR, new InvalidArgumentException((String) null));
+        TransferUtils.sendMessage(channel, TransferReceiver.ERROR, new InvalidArgumentException(request.getErrorMessage()));
     }
 
     @Override
@@ -116,6 +116,11 @@ public abstract class TransferSession implements ITransferSession {
         this.closeStream();
         Streams.close(executor);
         Streams.close(sessionStore);
+    }
+
+    @Override
+    public Long getHostId() {
+        return connectInfo.getHostId();
     }
 
     /**

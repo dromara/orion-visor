@@ -22,25 +22,23 @@ public enum HostExtraItemEnum implements GenericsDataDefinition {
     /**
      * SSH 额外配置
      */
-    SSH("ssh", HostSshExtraStrategy.class),
+    SSH(HostSshExtraStrategy.class),
 
     /**
      * 标签额外配置
      */
-    LABEL("label", HostLabelExtraStrategy.class),
+    LABEL(HostLabelExtraStrategy.class),
 
     ;
 
-    private final String item;
-
     private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 
-    public static HostExtraItemEnum of(String type) {
-        if (type == null) {
+    public static HostExtraItemEnum of(String item) {
+        if (item == null) {
             return null;
         }
         for (HostExtraItemEnum value : values()) {
-            if (value.item.equals(type)) {
+            if (value.name().equals(item)) {
                 return value;
             }
         }

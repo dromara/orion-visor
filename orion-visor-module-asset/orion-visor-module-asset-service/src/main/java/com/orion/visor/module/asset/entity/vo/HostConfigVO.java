@@ -25,17 +25,8 @@ public class HostConfigVO {
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "hostId")
-    private Long hostId;
-
-    @Schema(description = "version")
-    private Integer version;
-
-    @Schema(description = "配置类型")
+    @Schema(description = "type")
     private String type;
-
-    @Schema(description = "状态 0停用 1启用")
-    private Integer status;
 
     @Schema(description = "config")
     private Map<String, Object> config;

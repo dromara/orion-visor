@@ -10,23 +10,22 @@ import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisMaps;
-import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.module.asset.convert.HostConvert;
-import com.orion.visor.module.asset.dao.HostConfigDAO;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.define.cache.HostCacheKeyDefine;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.HostCacheDTO;
-import com.orion.visor.module.asset.entity.request.host.HostCreateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostQueryRequest;
-import com.orion.visor.module.asset.entity.request.host.HostUpdateRequest;
+import com.orion.visor.module.asset.entity.request.host.*;
+import com.orion.visor.module.asset.entity.vo.HostConfigVO;
 import com.orion.visor.module.asset.entity.vo.HostVO;
+import com.orion.visor.module.asset.enums.HostStatusEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.service.ExecJobHostService;
 import com.orion.visor.module.asset.service.ExecTemplateHostService;
-import com.orion.visor.module.asset.service.HostConfigService;
 import com.orion.visor.module.asset.service.HostService;
 import com.orion.visor.module.infra.api.DataExtraApi;
 import com.orion.visor.module.infra.api.DataGroupRelApi;
@@ -45,6 +44,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -60,14 +60,10 @@ import java.util.stream.Collectors;
 @Service
 public class HostServiceImpl implements HostService {
 
+    private static final ThreadLocal<Long> CURRENT_UPDATE_CONFIG_ID = new ThreadLocal<>();
+
     @Resource
     private HostDAO hostDAO;
-
-    @Resource
-    private HostConfigDAO hostConfigDAO;
-
-    @Resource
-    private HostConfigService hostConfigService;
 
     @Resource
     private ExecJobHostService execJobHostService;
@@ -89,12 +85,16 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public Long createHost(HostCreateRequest request) {
+        HostTypeEnum type = Valid.valid(HostTypeEnum::of, request.getType());
         log.info("HostService-createHost request: {}", JSON.toJSONString(request));
         // 转换
         HostDO record = HostConvert.MAPPER.to(request);
+        record.setStatus(HostStatusEnum.ENABLED.name());
         // 查询数据是否冲突
         this.checkHostNamePresent(record);
         this.checkHostCodePresent(record);
+        // 设置主机配置
+        record.setConfig(type.getStrategy().getDefault().serial());
         // 插入主机
         int effect = hostDAO.insert(record);
         log.info("HostService-createHost effect: {}", effect);
@@ -106,10 +106,8 @@ public class HostServiceImpl implements HostService {
         if (!Lists.isEmpty(groupIdList)) {
             dataGroupRelApi.updateRelGroup(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
         }
-        // 创建配置
-        hostConfigService.initHostConfig(id);
         // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO);
+        this.clearCache();
         return id;
     }
 
@@ -118,7 +116,7 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-updateHostById request: {}", JSON.toJSONString(request));
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        HostDO record = hostDAO.selectById(id);
+        HostDO record = hostDAO.selectBaseById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostDO updateRecord = HostConvert.MAPPER.to(request);
@@ -133,8 +131,58 @@ public class HostServiceImpl implements HostService {
         // 更新 tag
         tagRelApi.setTagRel(TagTypeEnum.HOST, id, request.getTags());
         // 删除缓存
-        RedisMaps.delete(HostCacheKeyDefine.HOST_INFO);
+        this.clearCache();
         return effect;
+    }
+
+    @Override
+    public Integer updateHostStatus(HostUpdateStatusRequest request) {
+        log.info("HostService-updateHostStatus request: {}", JSON.toJSONString(request));
+        Long id = request.getId();
+        HostStatusEnum status = Valid.valid(HostStatusEnum::of, request.getStatus());
+        // 查询主机
+        HostDO record = hostDAO.selectBaseById(id);
+        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        // 更新
+        HostDO update = HostDO.builder()
+                .id(id)
+                .status(status.name())
+                .build();
+        int effect = hostDAO.updateById(update);
+        log.info("HostService-updateHostStatus effect: {}", effect);
+        // 删除缓存
+        this.clearCache();
+        return effect;
+    }
+
+    @Override
+    public Integer updateHostConfig(HostUpdateConfigRequest request) {
+        log.info("HostService-updateHostConfig request: {}", JSON.toJSONString(request));
+        Long id = request.getId();
+        try {
+            CURRENT_UPDATE_CONFIG_ID.set(id);
+            // 查询主机信息
+            HostDO host = hostDAO.selectById(id);
+            Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+            HostTypeEnum type = Valid.valid(HostTypeEnum::of, host.getType());
+            GenericsDataModel beforeConfig = type.parse(host.getConfig());
+            GenericsDataModel newConfig = type.parse(request.getConfig());
+            // 添加日志参数
+            OperatorLogs.add(OperatorLogs.ID, id);
+            OperatorLogs.add(OperatorLogs.NAME, host.getName());
+            // 更新前校验
+            type.getStrategy().doValid(beforeConfig, newConfig);
+            // 修改配置
+            HostDO updateHost = HostDO.builder()
+                    .id(id)
+                    .config(newConfig.serial())
+                    .build();
+            int effect = hostDAO.updateById(updateHost);
+            log.info("HostService-updateHostConfig effect: {}", effect);
+            return effect;
+        } finally {
+            CURRENT_UPDATE_CONFIG_ID.remove();
+        }
     }
 
     @Override
@@ -145,7 +193,7 @@ public class HostServiceImpl implements HostService {
         // 查询分组信息
         Future<Set<Long>> groupIdFuture = dataGroupRelApi.getGroupIdByRelIdAsync(DataGroupTypeEnum.HOST, id);
         // 查询主机
-        HostDO record = hostDAO.selectById(id);
+        HostDO record = hostDAO.selectBaseById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostVO vo = HostConvert.MAPPER.to(record);
@@ -155,16 +203,45 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public List<HostVO> getHostListByCache() {
+    public HostConfigVO getHostConfig(Long id) {
+        // 查询主机
+        HostDO host = hostDAO.selectById(id);
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 获取主机类型
+        String type = host.getType();
+        HostTypeEnum hostType = HostTypeEnum.of(type);
+        // 获取主机配置
+        Map<String, Object> config = hostType.toView(host.getConfig()).toMap();
+        // 返回
+        return HostConfigVO.builder()
+                .id(id)
+                .type(type)
+                .config(config)
+                .build();
+    }
+
+    @Override
+    public List<HostVO> getHostList(String type) {
         // 查询缓存
-        List<HostCacheDTO> list = RedisMaps.valuesJson(HostCacheKeyDefine.HOST_INFO);
+        String cacheKey;
+        if (Strings.isBlank(type)) {
+            cacheKey = HostCacheKeyDefine.HOST_INFO.format(Const.ALL);
+        } else {
+            cacheKey = HostCacheKeyDefine.HOST_INFO.format(type);
+        }
+        List<HostCacheDTO> list = RedisMaps.valuesJson(cacheKey, HostCacheKeyDefine.HOST_INFO);
         if (list.isEmpty()) {
             // 查询数据库
-            list = hostDAO.of().list(HostConvert.MAPPER::toCache);
+            list = hostDAO.of()
+                    .createWrapper(true)
+                    .select(HostDAO.BASE_COLUMN)
+                    .eq(HostDO::getType, type)
+                    .then()
+                    .list(HostConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(list, HostCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(HostCacheKeyDefine.HOST_INFO, s -> s.getId().toString(), list);
+            RedisMaps.putAllJson(cacheKey, HostCacheKeyDefine.HOST_INFO, s -> s.getId().toString(), list);
         }
         // 删除屏障
         CacheBarriers.removeBarrier(list);
@@ -182,10 +259,13 @@ public class HostServiceImpl implements HostService {
         if (wrapper == null) {
             return DataGrid.of(Lists.empty());
         }
+        // 数量条件
+        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone();
+        wrapper.select(HostDAO.BASE_COLUMN);
         // 查询
         DataGrid<HostVO> hosts = hostDAO.of(wrapper)
                 .page(request)
-                .dataGrid(HostConvert.MAPPER::to);
+                .dataGrid(countWrapper, HostConvert.MAPPER::to);
         // 查询拓展信息
         this.setExtraInfo(request, hosts.getRows());
         return hosts;
@@ -200,18 +280,19 @@ public class HostServiceImpl implements HostService {
     public Integer deleteHostByIdList(List<Long> idList) {
         log.info("HostService-deleteHostByIdList idList: {}", idList);
         // 查询
-        List<HostDO> hosts = hostDAO.selectBatchIds(idList);
+        List<HostDO> hosts = hostDAO.selectBaseByIdList(idList);
         Valid.notEmpty(hosts, ErrorMessage.HOST_ABSENT);
         // 添加日志参数
         String name = hosts.stream()
                 .map(HostDO::getName)
                 .collect(Collectors.joining(Const.COMMA));
         OperatorLogs.add(OperatorLogs.NAME, name);
+        OperatorLogs.add(OperatorLogs.COUNT, hosts.size());
         // 删除
         int effect = hostDAO.deleteBatchIds(hosts);
         log.info("HostService-deleteHostByIdList effect: {}", effect);
         // 删除缓存
-        RedisUtils.delete(HostCacheKeyDefine.HOST_INFO);
+        this.clearCache();
         // 删除主机引用
         SpringHolder.getBean(HostService.class)
                 .deleteHostRelByIdListAsync(idList);
@@ -222,8 +303,6 @@ public class HostServiceImpl implements HostService {
     @Async("asyncExecutor")
     public void deleteHostRelByIdListAsync(List<Long> idList) {
         log.info("HostService-deleteHostRelByIdListAsync idList: {}", idList);
-        // 删除主机配置
-        hostConfigDAO.deleteByHostIdList(idList);
         // 删除计划任务主机
         execJobHostService.deleteByHostIdList(idList);
         // 删除执行模板主机
@@ -236,6 +315,18 @@ public class HostServiceImpl implements HostService {
         favoriteApi.deleteByRelIdList(FavoriteTypeEnum.HOST, idList);
         // 删除额外配置
         dataExtraApi.deleteByRelIdList(DataExtraTypeEnum.HOST, idList);
+    }
+
+    @Override
+    public Long getCurrentUpdateConfigHostId() {
+        return CURRENT_UPDATE_CONFIG_ID.get();
+    }
+
+    /**
+     * 清除缓存
+     */
+    private void clearCache() {
+        RedisMaps.scanKeysDelete(HostCacheKeyDefine.HOST_INFO.format("*"));
     }
 
     /**
@@ -292,6 +383,8 @@ public class HostServiceImpl implements HostService {
                 .like(HostDO::getName, request.getName())
                 .like(HostDO::getCode, request.getCode())
                 .like(HostDO::getAddress, request.getAddress())
+                .eq(HostDO::getStatus, request.getStatus())
+                .eq(HostDO::getType, request.getType())
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .eq(HostDO::getId, searchValue).or()
                         .like(HostDO::getName, searchValue).or()

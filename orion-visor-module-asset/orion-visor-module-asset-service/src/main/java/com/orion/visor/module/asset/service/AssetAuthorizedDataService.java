@@ -4,7 +4,7 @@ import com.orion.visor.module.asset.entity.request.asset.AssetAuthorizedDataQuer
 import com.orion.visor.module.asset.entity.vo.AuthorizedHostWrapperVO;
 import com.orion.visor.module.asset.entity.vo.HostIdentityVO;
 import com.orion.visor.module.asset.entity.vo.HostKeyVO;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.infra.enums.DataPermissionTypeEnum;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public interface AssetAuthorizedDataService {
      * @param type   type
      * @return hostId
      */
-    List<Long> getUserAuthorizedHostIdWithEnabledConfig(Long userId, HostConfigTypeEnum type);
+    List<Long> getUserAuthorizedEnabledHostId(Long userId, HostTypeEnum type);
 
     /**
      * 查询用户已授权的主机
