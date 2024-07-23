@@ -119,12 +119,12 @@
     margin-right: 8px;
 
     .extra-icon {
-      color: var(--color-panel-text-2);
+      color: var(--color-panel-text-1);
       transition: 0.2s;
       font-size: 16px;
       cursor: pointer;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -148,6 +148,18 @@
 
       &::-webkit-scrollbar {
         display: none;
+      }
+
+      .arco-tabs-content-list {
+        height: 100%;
+      }
+
+      .arco-tabs-content-item {
+        height: 100%;
+      }
+
+      .arco-tabs-pane {
+        height: 100%;
       }
     }
   }

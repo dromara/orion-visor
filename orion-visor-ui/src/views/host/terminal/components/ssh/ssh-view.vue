@@ -157,7 +157,7 @@
 
   .ssh-container {
     width: 100%;
-    height: calc(100vh - var(--header-height) - var(--panel-nav-height));
+    height: 100%;
     position: relative;
   }
 
@@ -183,6 +183,7 @@
         height: 100%;
         display: inline-flex;
         align-items: center;
+        user-select: none;
 
         .address-copy {
           display: none;
@@ -207,6 +208,7 @@
 
       .command-input {
         width: 36%;
+        user-select: none;
       }
     }
 
