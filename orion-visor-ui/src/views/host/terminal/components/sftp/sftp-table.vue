@@ -142,7 +142,7 @@
 
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { SftpFile, ISftpSession } from '../../types/terminal.type';
+  import type { SftpFile, ISftpSession } from '../../types/define';
   import type { VNodeRef } from 'vue';
   import { ref, computed, watch, inject } from 'vue';
   import { useRowSelection } from '@/types/table';
@@ -150,7 +150,7 @@
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';
   import columns from './types/table.columns';
-  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/terminal.const';
+  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/const';
 
   const previewSize = Number.parseInt(import.meta.env.VITE_SFTP_PREVIEW_MB);
 

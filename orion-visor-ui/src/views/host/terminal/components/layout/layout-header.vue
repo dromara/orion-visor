@@ -48,7 +48,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../types/define';
   import { useFullscreen } from '@vueuse/core';
   import { computed } from 'vue';
   import { useTerminalStore } from '@/store';

@@ -75,7 +75,7 @@
   import type { TerminalShortcutKeyEditable } from '@/store/modules/terminal/types';
   import type { VNodeRef } from 'vue';
   import { setAutoFocus } from '@/utils/dom';
-  import { TerminalShortcutKeys } from '../../../types/terminal.const';
+  import { TerminalShortcutKeys } from '../../../types/const';
 
   defineProps<{
     title: string;

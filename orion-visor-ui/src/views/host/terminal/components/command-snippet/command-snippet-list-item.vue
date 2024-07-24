@@ -113,14 +113,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/terminal.type';
+  import type { ISshSession } from '../../types/define';
   import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
   import { copy } from '@/hooks/copy';
   import { inject } from 'vue';
   import { openUpdateSnippetKey, removeSnippetKey } from './types/const';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
 
   const props = defineProps<{
     item: CommandSnippetQueryResponse;

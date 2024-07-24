@@ -45,10 +45,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession, ITerminalTabManager, TerminalPanelTabItem } from '../../types/terminal.type';
+  import type { ISshSession, ITerminalTabManager, TerminalPanelTabItem } from '../../types/define';
   import { watch } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
   import SshView from '../ssh/ssh-view.vue';
   import SftpView from '../sftp/sftp-view.vue';
 

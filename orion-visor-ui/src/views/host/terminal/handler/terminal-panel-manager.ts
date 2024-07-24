@@ -1,4 +1,4 @@
-import type { ITerminalPanelManager, TerminalPanelTabItem } from '../types/terminal.type';
+import type { ITerminalPanelManager, TerminalPanelTabItem } from '../types/define';
 import TerminalTabManager from '../handler/terminal-tab-manager';
 
 // 终端面板管理器实现

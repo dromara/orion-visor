@@ -68,11 +68,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession, TerminalPanelTabItem, SidebarAction } from '../../types/terminal.type';
+  import type { ISshSession, TerminalPanelTabItem, SidebarAction } from '../../types/define';
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { copy } from '@/hooks/copy';
-  import { ActionBarItems, connectStatusKey } from '../../types/terminal.const';
+  import { ActionBarItems, connectStatusKey } from '../../types/const';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import IconActions from '../layout/icon-actions.vue';
   import SshContextMenu from './ssh-context-menu.vue';

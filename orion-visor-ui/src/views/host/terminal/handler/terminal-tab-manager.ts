@@ -1,4 +1,4 @@
-import type { ITerminalTabManager, TerminalTabItem } from '../types/terminal.type';
+import type { ITerminalTabManager, TerminalTabItem } from '../types/define';
 
 // 终端 tab 管理器实现
 export default class TerminalTabManager<T extends TerminalTabItem = TerminalTabItem> implements ITerminalTabManager<T> {

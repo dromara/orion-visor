@@ -185,7 +185,7 @@
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import { updateHostExtra } from '@/api/asset/host-extra';
-  import { openSettingModalKey, PanelSessionType, ExtraSettingItems } from '../../types/terminal.const';
+  import { openSettingModalKey, PanelSessionType, ExtraSettingItems } from '../../types/const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{

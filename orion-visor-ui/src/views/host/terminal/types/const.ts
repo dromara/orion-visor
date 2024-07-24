@@ -1,4 +1,4 @@
-import type { ShortcutKeyItem } from './terminal.type';
+import type { ShortcutKeyItem } from './define';
 
 // 终端 tab
 export const TerminalTabs = {

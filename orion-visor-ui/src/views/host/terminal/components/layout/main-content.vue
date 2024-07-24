@@ -33,8 +33,8 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/terminal.type';
-  import { TerminalTabs, TerminalShortcutKeys, PanelSessionType } from '../../types/terminal.const';
+  import type { ISshSession } from '../../types/define';
+  import { TerminalTabs, TerminalShortcutKeys, PanelSessionType } from '../../types/const';
   import { useTerminalStore } from '@/store';
   import { onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';

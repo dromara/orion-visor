@@ -76,14 +76,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/terminal.type';
+  import type { ISshSession } from '../../types/define';
   import type { PathBookmarkWrapperResponse, PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
   import { ref, provide, watch } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { deletePathBookmark, getPathBookmarkList } from '@/api/asset/path-bookmark';
   import { useCacheStore, useTerminalStore } from '@/store';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
   import { openUpdatePathKey, removePathKey } from './types/const';
   import PathBookmarkListItem from './path-bookmark-list-item.vue';
   import PathBookmarkListGroup from './path-bookmark-list-group.vue';

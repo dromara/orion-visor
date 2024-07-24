@@ -57,7 +57,7 @@
   import { createPathBookmark, updatePathBookmark } from '@/api/asset/path-bookmark';
   import formRules from './types/form.rules';
   import { PathBookmarkType } from './types/const';
-  import { pathBookmarkTypeKey } from '../../types/terminal.const';
+  import { pathBookmarkTypeKey } from '../../types/const';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import PathBookmarkGroupSelect from './path-bookmark-group-select.vue';

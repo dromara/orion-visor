@@ -1,7 +1,7 @@
-import type { ISftpSession, ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSession, ITerminalSessionManager } from '../types/terminal.type';
+import type { ISftpSession, ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSession, ITerminalSessionManager } from '../types/define';
 import type { OutputPayload } from '@/types/protocol/terminal.protocol';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
-import { PanelSessionType, TerminalStatus } from '../types/terminal.const';
+import { PanelSessionType, TerminalStatus } from '../types/const';
 import { useTerminalStore } from '@/store';
 import { Message } from '@arco-design/web-vue';
 

@@ -35,9 +35,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { LabelExtraSettingModel } from '../../../types/terminal.type';
+  import type { LabelExtraSettingModel } from '../../../types/define';
   import { onMounted, ref } from 'vue';
-  import { tabColorKey } from '../../../types/terminal.const';
+  import { tabColorKey } from '../../../types/const';
   import { getHostExtraItem } from '@/api/asset/host-extra';
   import { useDictStore } from '@/store';
 

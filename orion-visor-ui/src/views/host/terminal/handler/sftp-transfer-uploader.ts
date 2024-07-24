@@ -1,4 +1,4 @@
-import type { SftpTransferItem } from '../types/terminal.type';
+import type { SftpTransferItem } from '../types/define';
 import SftpTransferHandler from './sftp-transfer-handler';
 
 // 512 KB

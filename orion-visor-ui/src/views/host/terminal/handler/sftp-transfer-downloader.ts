@@ -1,5 +1,5 @@
-import type { SftpTransferItem } from '../types/terminal.type';
-import { TransferStatus } from '../types/terminal.const';
+import type { SftpTransferItem } from '../types/define';
+import { TransferStatus } from '../types/const';
 import { getFileName, openDownloadFile } from '@/utils/file';
 import { saveAs } from 'file-saver';
 import { getDownloadTransferUrl } from '@/api/asset/host-sftp';

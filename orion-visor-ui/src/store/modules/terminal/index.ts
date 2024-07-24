@@ -8,7 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
-import type { ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/terminal.type';
+import type { ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/define';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -18,7 +18,7 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
-import { TerminalTabs } from '@/views/host/terminal/types/terminal.const';
+import { TerminalTabs } from '@/views/host/terminal/types/const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';

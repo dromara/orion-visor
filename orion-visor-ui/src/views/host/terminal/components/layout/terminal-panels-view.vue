@@ -21,7 +21,7 @@
 <script lang="ts" setup>
   import { useTerminalStore } from '@/store';
   import { ref, onMounted, onUnmounted } from 'vue';
-  import { TerminalShortcutKeys, TerminalTabs } from '../../types/terminal.const';
+  import { TerminalShortcutKeys, TerminalTabs } from '../../types/const';
   import { addEventListen, removeEventListen } from '@/utils/event';
   import TerminalPanel from './terminal-panel.vue';
   import HostListModal from '../new-connection/host-list-modal.vue';

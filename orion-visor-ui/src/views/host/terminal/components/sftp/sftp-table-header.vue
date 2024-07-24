@@ -203,10 +203,10 @@
 
 <script lang="ts" setup>
   import type { PathAnalysis } from '@/utils/file';
-  import type { ISftpSession } from '../../types/terminal.type';
+  import type { ISftpSession } from '../../types/define';
   import { inject, nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
-  import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{

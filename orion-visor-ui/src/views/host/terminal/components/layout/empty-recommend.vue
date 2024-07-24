@@ -71,11 +71,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalTabItem, CombinedHandlerItem } from '../../types/terminal.type';
+  import type { TerminalTabItem, CombinedHandlerItem } from '../../types/define';
   import type { HostQueryResponse } from '@/api/asset/host';
   import { onMounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PanelSessionType, TerminalTabs } from '../../types/terminal.const';
+  import { PanelSessionType, TerminalTabs } from '../../types/const';
 
   const totalCount = 7;
   const { tabManager, hosts, openSession } = useTerminalStore();

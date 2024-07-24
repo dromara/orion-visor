@@ -1,7 +1,7 @@
-import type { ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager } from '../types/terminal.type';
+import type { ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManager } from '../types/define';
 import type { InputPayload, Protocol } from '@/types/protocol/terminal.protocol';
 import { format, OutputProtocol, parse } from '@/types/protocol/terminal.protocol';
-import { sessionCloseMsg } from '../types/terminal.const';
+import { sessionCloseMsg } from '../types/const';
 import { getTerminalAccessToken, openHostTerminalChannel } from '@/api/asset/host-terminal';
 import { Message } from '@arco-design/web-vue';
 import TerminalOutputProcessor from './terminal-output-processor';

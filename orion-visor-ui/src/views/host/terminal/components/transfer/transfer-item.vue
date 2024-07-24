@@ -79,13 +79,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SftpTransferItem } from '../../types/terminal.type';
+  import type { SftpTransferItem } from '../../types/define';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { useDictStore, useTerminalStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { getFileSize } from '@/utils/file';
-  import { TransferStatus, TransferType, transferStatusKey } from '../../types/terminal.const';
+  import { TransferStatus, TransferType, transferStatusKey } from '../../types/const';
 
   const props = defineProps<{
     item: SftpTransferItem;

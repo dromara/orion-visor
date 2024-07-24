@@ -26,7 +26,7 @@
   import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, onMounted, provide, ref, watch } from 'vue';
-  import { NewConnectionType, openSettingModalKey } from '../../types/terminal.const';
+  import { NewConnectionType, openSettingModalKey } from '../../types/const';
   import HostGroupView from './host-group-view.vue';
   import HostListView from './host-list-view.vue';
   import HostSettingModal from '../setting/extra/host-setting-modal.vue';

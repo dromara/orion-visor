@@ -119,7 +119,7 @@
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
   import { ref, watch, onMounted } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey } from '../../../types/terminal.const';
+  import { fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey } from '../../../types/const';
   import { labelFilter } from '@/types/form';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { defaultFontFamily } from '@/types/xterm';

@@ -1,5 +1,5 @@
-import type { ISftpTransferHandler, SftpTransferItem } from '../types/terminal.type';
-import { TransferOperator, TransferStatus } from '../types/terminal.const';
+import type { ISftpTransferHandler, SftpTransferItem } from '../types/define';
+import { TransferOperator, TransferStatus } from '../types/const';
 import { getPath } from '@/utils/file';
 
 // sftp 传输处理器定义

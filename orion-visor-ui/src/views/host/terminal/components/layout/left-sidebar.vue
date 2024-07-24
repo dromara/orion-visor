@@ -18,8 +18,8 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
-  import { TerminalTabs } from '../../types/terminal.const';
+  import type { SidebarAction } from '../../types/define';
+  import { TerminalTabs } from '../../types/const';
   import { useTerminalStore } from '@/store';
   import IconActions from './icon-actions.vue';
 

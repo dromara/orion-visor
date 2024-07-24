@@ -64,12 +64,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, SftpFile, TerminalPanelTabItem } from '../../types/terminal.type';
+  import type { ISftpSession, SftpFile, TerminalPanelTabItem } from '../../types/define';
   import { onMounted, onUnmounted, provide, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/const';
   import SftpTableHeader from './sftp-table-header.vue';
   import SftpTable from './sftp-table.vue';
   import SftpEditorHeader from './sftp-editor-header.vue';

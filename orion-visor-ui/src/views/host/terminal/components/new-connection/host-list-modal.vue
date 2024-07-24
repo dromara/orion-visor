@@ -80,11 +80,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { PanelSessionTabType } from '../../types/terminal.type';
+  import type { PanelSessionTabType } from '../../types/define';
   import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
   import useVisible from '@/hooks/visible';
 
   const { hosts, openSession } = useTerminalStore();
