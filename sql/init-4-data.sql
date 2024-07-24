@@ -46,6 +46,8 @@ INSERT INTO `dict_key` VALUES (42, 'uploadTaskFileStatus', 'STRING', '[{\"name\"
 INSERT INTO `dict_key` VALUES (43, 'messageType', 'STRING', '[{\"name\": \"tagLabel\", \"type\": \"STRING\"}, {\"name\": \"tagVisible\", \"type\": \"STRING\"}, {\"name\": \"tagColor\", \"type\": \"STRING\"}, {\"name\": \"redirectComponent\", \"type\": \"STRING\"}]', '消息类型', '2024-05-13 12:07:56', '2024-05-31 17:31:37', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (44, 'messageClassify', 'STRING', '[]', '消息分类', '2024-05-13 15:06:27', '2024-05-31 17:31:37', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (53, 'terminalTheme', 'STRING', '[{\"name\": \"dark\", \"type\": \"BOOLEAN\"}]', '终端主题', '2024-07-04 19:14:34', '2024-07-04 19:14:34', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (57, 'hostStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"status\", \"type\": \"STRING\"}]', '主机状态', '2024-07-17 12:51:10', '2024-07-22 16:53:23', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (58, 'hostType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机类型', '2024-07-17 12:51:10', '2024-07-22 14:02:44', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -106,7 +108,7 @@ INSERT INTO `dict_value` VALUES (88, 2, 'operatorLogType', 'host:create', '创�
 INSERT INTO `dict_value` VALUES (89, 2, 'operatorLogType', 'host:update', '修改主机', '{}', 20, '2023-10-31 10:55:43', '2023-10-31 11:05:42', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (90, 2, 'operatorLogType', 'host:delete', '删除主机', '{}', 30, '2023-10-31 10:55:43', '2023-10-31 11:05:43', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (91, 2, 'operatorLogType', 'host:update-config', '修改主机配置', '{}', 40, '2023-10-31 10:55:43', '2023-10-31 11:05:43', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (92, 2, 'operatorLogType', 'host:update-config-status', '修改主机配置状态', '{}', 50, '2023-10-31 10:55:43', '2023-10-31 11:05:43', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (92, 2, 'operatorLogType', 'host:update-status', '修改主机状态', '{}', 50, '2023-10-31 10:55:43', '2024-07-22 14:48:11', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (93, 2, 'operatorLogType', 'host-key:create', '创建主机密钥', '{}', 10, '2023-10-31 10:55:43', '2024-05-17 12:49:00', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (94, 2, 'operatorLogType', 'host-key:update', '修改主机密钥', '{}', 20, '2023-10-31 10:55:43', '2024-05-17 12:49:03', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (95, 2, 'operatorLogType', 'host-key:delete', '删除主机密钥', '{}', 30, '2023-10-31 10:55:43', '2024-05-17 12:49:06', '1', '1', 0);
@@ -304,6 +306,9 @@ INSERT INTO `dict_value` VALUES (363, 53, 'terminalTheme', '{\"background\":\"#2
 INSERT INTO `dict_value` VALUES (364, 53, 'terminalTheme', '{\"background\":\"#FFFFFF\",\"foreground\":\"#262626\",\"cursor\":\"#6FD3FC\",\"selectionBackground\":\"#6FD3FC\",\"black\":\"#000000\",\"red\":\"#F8282A\",\"green\":\"#328A5D\",\"yellow\":\"#FA701D\",\"blue\":\"#135CD0\",\"cyan\":\"#33C3C1\",\"white\":\"#B3B3B3\",\"brightBlack\":\"#555753\",\"brightRed\":\"#FB0416\",\"brightGreen\":\"#2CC631\",\"brightYellow\":\"#FDD727\",\"brightBlue\":\"#1670FF\",\"brightCyan\":\"#3AD5CE\",\"brightWhite\":\"#EEEEEC\"}', 'CLRS', '{\"dark\": false}', 120, '2024-07-04 19:24:06', '2024-07-04 19:24:06', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (365, 53, 'terminalTheme', '{\"background\":\"#2F2833\",\"foreground\":\"#D5CED9\",\"cursor\":\"#D5CED9\",\"selectionBackground\":\"#7E6C88\",\"black\":\"#2F2833\",\"red\":\"#FC644D\",\"green\":\"#A5F69C\",\"yellow\":\"#E9D7A5\",\"blue\":\"#3B79C7\",\"cyan\":\"#74D3DE\",\"white\":\"#D5CED9\",\"brightBlack\":\"#7E6C88\",\"brightRed\":\"#FC644D\",\"brightGreen\":\"#A5F69C\",\"brightYellow\":\"#E9D7A5\",\"brightBlue\":\"#3B79C7\",\"brightCyan\":\"#74D3DE\",\"brightWhite\":\"#FFFFFF\"}', 'Calamity', '{\"dark\": true}', 130, '2024-07-04 19:24:17', '2024-07-04 19:24:17', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (366, 53, 'terminalTheme', '{\"background\":\"#FFFFFF\",\"foreground\":\"#4D4D4C\",\"cursor\":\"#4D4D4C\",\"selectionBackground\":\"#D6D6D6\",\"black\":\"#000000\",\"red\":\"#C82829\",\"green\":\"#718C00\",\"yellow\":\"#EAB700\",\"blue\":\"#4271AE\",\"cyan\":\"#3E999F\",\"white\":\"#FFFFFF\",\"brightBlack\":\"#000000\",\"brightRed\":\"#C82829\",\"brightGreen\":\"#718C00\",\"brightYellow\":\"#EAB700\",\"brightBlue\":\"#4271AE\",\"brightCyan\":\"#3E999F\",\"brightWhite\":\"#FFFFFF\"}', 'Tomorrow', '{\"dark\": false}', 140, '2024-07-04 19:24:27', '2024-07-04 21:07:57', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (385, 57, 'hostStatus', 'ENABLED', '启用', '{\"color\": \"arcoblue\", \"status\": \"normal\", \"buttonStatus\": \"normal\"}', 10, '2024-07-17 12:51:10', '2024-07-22 16:53:53', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (386, 57, 'hostStatus', 'DISABLED', '停用', '{\"color\": \"orangered\", \"status\": \"error\", \"buttonStatus\": \"danger\"}', 20, '2024-07-17 12:51:10', '2024-07-22 16:53:46', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (387, 58, 'hostType', 'SSH', 'SSH', '{\"color\": \"arcoblue\"}', 10, '2024-07-17 12:51:10', '2024-07-17 15:57:24', '1', '1', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2023-09-11 15:27:52', '1', '1', 0);
@@ -333,18 +338,19 @@ INSERT INTO `system_menu` VALUES (60, 48, '修改用户状态', 'infra:system-us
 INSERT INTO `system_menu` VALUES (61, 48, '分配用户角色', 'infra:system-user:grant-role', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-08-16 11:49:23', '2023-10-27 01:20:46', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (62, 48, '重置用户密码', 'infra:system-user:management:reset-password', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-08-16 11:49:50', '2023-12-27 12:42:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (63, 0, '资产管理', NULL, 1, 300, 1, 1, 1, 0, 'IconStorage', NULL, 'assetModule', '2023-09-11 14:17:31', '2024-04-03 00:20:16', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (64, 63, '主机管理', NULL, 2, 40, 1, 1, 1, 0, 'IconDesktop', NULL, 'hostList', '2023-09-11 14:17:31', '2024-03-07 19:09:20', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (64, 63, '主机管理', NULL, 2, 10, 1, 1, 1, 0, 'IconDesktop', NULL, 'hostList', '2023-09-11 14:17:31', '2024-07-03 18:52:10', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (65, 64, '查询主机', 'asset:host:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-11 14:17:31', '2023-10-27 01:15:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (66, 64, '创建主机', 'asset:host:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-11 14:17:31', '2023-10-27 01:15:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (67, 64, '修改主机', 'asset:host:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-11 14:17:31', '2023-10-27 01:15:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (68, 64, '删除主机', 'asset:host:delete', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-11 14:17:31', '2023-10-27 01:15:14', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (69, 64, '修改状态', 'asset:host:update-status', 3, 50, 1, 1, 1, 0, NULL, NULL, NULL, '2024-07-22 14:49:13', '2024-07-22 14:49:22', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (70, 64, '修改配置', 'asset:host:update-config', 3, 60, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-14 16:27:18', '2023-10-27 01:15:14', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (72, 63, '主机身份', NULL, 2, 60, 1, 1, 1, 0, 'IconIdcard', NULL, 'hostIdentity', '2023-09-20 11:47:18', '2024-03-07 19:09:31', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (72, 63, '主机身份', NULL, 2, 30, 1, 1, 1, 0, 'IconIdcard', NULL, 'hostIdentity', '2023-09-20 11:47:18', '2024-07-03 18:52:15', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (73, 72, '查询主机身份', 'asset:host-identity:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (74, 72, '创建主机身份', 'asset:host-identity:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (75, 72, '修改主机身份', 'asset:host-identity:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (76, 72, '删除主机身份', 'asset:host-identity:delete', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2023-10-27 01:15:14', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (79, 63, '主机密钥', NULL, 2, 50, 1, 1, 1, 0, 'IconLock', NULL, 'hostKey', '2023-09-20 11:47:18', '2024-05-17 12:49:51', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (79, 63, '主机密钥', NULL, 2, 20, 1, 1, 1, 0, 'IconLock', NULL, 'hostKey', '2023-09-20 11:47:18', '2024-07-03 18:52:13', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (80, 79, '查询主机密钥', 'asset:host-key:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2024-05-17 12:49:54', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (81, 79, '创建主机密钥', 'asset:host-key:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2024-05-17 12:49:56', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (82, 79, '修改主机密钥', 'asset:host-key:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2023-09-20 11:47:18', '2024-05-17 12:49:59', '1', '1', 0);
@@ -371,7 +377,7 @@ INSERT INTO `system_menu` VALUES (129, 64, '编辑主机分组', 'asset:host-gro
 INSERT INTO `system_menu` VALUES (133, 144, '主机分组授权', 'asset:host-group:grant', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-23 18:08:57', '2023-11-30 22:39:53', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (142, 144, '主机密钥授权', 'asset:host-key:grant', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-30 21:06:13', '2024-05-17 12:50:14', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (143, 144, '主机身份授权', 'asset:host-identity:grant', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2023-11-30 21:06:26', '2023-11-30 22:40:11', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (144, 63, '资产授权', NULL, 2, 70, 1, 1, 1, 0, 'icon-safe', NULL, 'assetGrant', '2023-11-30 22:38:57', '2023-11-30 22:39:06', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (144, 63, '资产授权', NULL, 2, 50, 1, 1, 1, 0, 'icon-safe', NULL, 'assetGrant', '2023-11-30 22:38:57', '2024-07-03 18:52:18', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (145, 0, '主机运维', NULL, 1, 400, 1, 1, 1, 1, 'IconDesktop', NULL, 'hostModule', '2023-12-04 23:33:25', '2024-04-03 00:57:16', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (146, 145, '主机终端', NULL, 2, 10, 1, 1, 1, 1, 'icon-code-square', NULL, 'terminal', '2023-12-04 23:38:01', '2024-03-07 19:09:44', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'connectLog', '2023-12-26 22:53:07', '2024-03-07 19:09:59', '1', '1', 0);
@@ -407,7 +413,7 @@ INSERT INTO `system_menu` VALUES (181, 177, '修改任务状态', 'asset:exec-jo
 INSERT INTO `system_menu` VALUES (182, 177, '删除计划任务', 'asset:exec-job:delete', 3, 50, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (183, 177, '手动执行任务', 'asset:exec-job:trigger', 3, 60, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (184, 193, '任务日志', NULL, 2, 20, 1, 1, 1, 0, 'icon-history', '', 'execJobLog', '2024-04-11 13:40:47', '2024-04-28 15:34:27', '2', '1', 0);
-INSERT INTO `system_menu` VALUES (185, 193, '计划任务日志', NULL, 2, 30, 0, 1, 0, 1, NULL, NULL, 'execJobLogView', '2024-04-11 13:41:47', '2024-07-08 18:22:28', '2', '1', 0);
+INSERT INTO `system_menu` VALUES (185, 193, '计划任务日志', NULL, 2, 30, 0, 1, 0, 1, NULL, NULL, 'execJobLogView', '2024-04-11 13:41:47', '2024-07-08 18:10:37', '2', '1', 0);
 INSERT INTO `system_menu` VALUES (186, 184, '查询任务日志', 'asset:exec-job-log:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:52:02', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (187, 184, '删除任务日志', 'asset:exec-job-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:59', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (189, 184, '清理任务日志', 'asset:exec-job-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:58', '1', '1', 0);
