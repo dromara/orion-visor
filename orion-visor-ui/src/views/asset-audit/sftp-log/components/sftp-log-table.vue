@@ -16,6 +16,7 @@
       <!-- 操作主机 -->
       <a-form-item field="hostId" label="操作主机">
         <host-selector v-model="formModel.hostId"
+                       type="SSH"
                        placeholder="请选择主机"
                        allow-clear />
       </a-form-item>
@@ -107,10 +108,14 @@
           {{ getDictValue(sftpOperatorTypeKey, record.type) }}
         </a-tag>
       </template>
+      <!-- 文件数量 -->
+      <template #fileCount="{ record }">
+        <b class="span-blue">{{ record.paths.length }}</b> 个
+      </template>
       <!-- 操作文件 -->
       <template #paths="{ record }">
         <div class="paths-wrapper">
-          <span v-for="path in record.paths"
+          <span v-for="path in record.paths.slice(0, record.extra.maxCount)"
                 class="path-wrapper text-ellipsis text-copy"
                 :title="path"
                 @click="copy(path)">
@@ -124,6 +129,13 @@
           <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
             提权 {{ record.extra?.mod }} {{ permission10toString(record.extra?.mod as number) }}
           </span>
+        </div>
+        <!-- 查看更多-->
+        <div v-if="record.paths.length > record.extra.maxCount"
+             class="paths-wrapper span-blue pointer"
+             title="查看更多"
+             @click="() => record.extra.maxCount = record.paths.length">
+          查看更多
         </div>
       </template>
       <!-- 执行结果 -->
@@ -175,7 +187,7 @@
   import type { HostSftpLogQueryRequest, HostSftpLogQueryResponse } from '@/api/asset/host-sftp';
   import { reactive, ref, onMounted } from 'vue';
   import { getHostSftpLogPage, deleteHostSftpLog } from '@/api/asset/host-sftp';
-  import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType } from '../types/const';
+  import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount } from '../types/const';
   import { usePagination, useRowSelection } from '@/types/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -186,14 +198,13 @@
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 
-  const tableRenderData = ref<HostSftpLogQueryResponse[]>([]);
-  const selectedKeys = ref<number[]>([]);
-
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
+  const tableRenderData = ref<Array<HostSftpLogQueryResponse>>([]);
+  const selectedKeys = ref<Array<number>>([]);
   const formModel = reactive<HostSftpLogQueryRequest>({
     userId: undefined,
     hostId: undefined,
@@ -206,7 +217,12 @@
   const doFetchTableData = async (request: HostSftpLogQueryRequest) => {
     try {
       setLoading(true);
+      // 查询
       const { data } = await getHostSftpLogPage(request);
+      // 设置最大数量
+      data.rows.forEach(s => {
+        s.extra.maxCount = showPathMaxCount;
+      });
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
@@ -240,13 +256,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: HostSftpLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostSftpLog([id]);
+      await deleteHostSftpLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载数据

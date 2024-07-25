@@ -29,7 +29,6 @@ import java.util.Map;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-extra")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostExtraController {
 
     @Resource

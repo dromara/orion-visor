@@ -203,10 +203,10 @@
 
 <script lang="ts" setup>
   import type { PathAnalysis } from '@/utils/file';
-  import type { ISftpSession } from '../../types/terminal.type';
+  import type { ISftpSession } from '../../types/define';
   import { inject, nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
-  import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpUploadModalKey } from '../../types/const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -216,7 +216,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'download', 'setLoading']);
+  const emits = defineEmits(['loadFile', 'download', 'deleteFile', 'setLoading']);
 
   const showHiddenFile = ref(false);
   const analysisPaths = ref<Array<PathAnalysis>>([]);
@@ -285,19 +285,22 @@
 
   // 创建文件
   const createFile = () => {
-    openSftpCreateModal(props.session?.sessionId as string, props.currentPath + '/', true);
+    openSftpCreateModal(props.session?.sessionId as string, props.currentPath, true);
   };
 
   // 创建文件夹
   const createDir = () => {
-    openSftpCreateModal(props.session?.sessionId as string, props.currentPath + '/', false);
+    openSftpCreateModal(props.session?.sessionId as string, props.currentPath, false);
   };
 
   // 删除选中文件
   const deleteSelectFiles = () => {
-    if (props.selectedFiles?.length) {
-      props.session?.remove(props.selectedFiles);
-    }
+    emits('deleteFile', [...props.selectedFiles]);
+  };
+
+  // 下载文件
+  const downloadFile = () => {
+    emits('download', [...props.selectedFiles], true);
   };
 
   // 重新连接
@@ -307,12 +310,6 @@
       // 重新连接
       useTerminalStore().reOpenSession(props.session.sessionId);
     }
-  };
-
-  // 下载文件
-  const downloadFile = () => {
-    emits('download', [...props.selectedFiles]);
-    emits('update:selectedFiles', []);
   };
 
 </script>
@@ -353,6 +350,7 @@
 
     :deep(.sftp-path-unit) {
       cursor: pointer;
+      white-space: nowrap;
       font-size: 12px;
 
       &:hover {

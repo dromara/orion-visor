@@ -27,7 +27,6 @@ import javax.annotation.Resource;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/path-bookmark")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class PathBookmarkController {
 
     @Resource

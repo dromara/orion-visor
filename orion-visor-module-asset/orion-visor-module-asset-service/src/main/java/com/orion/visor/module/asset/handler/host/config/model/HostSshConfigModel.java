@@ -26,13 +26,6 @@ import javax.validation.constraints.Size;
 public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordAction {
 
     /**
-     * ssh 端口
-     */
-    @NotNull
-    @Range(min = 1, max = 65535)
-    private Integer port;
-
-    /**
      * 用户名
      */
     @Size(max = 128)

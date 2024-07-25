@@ -30,11 +30,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession } from '../../types/terminal.type';
+  import type { ISftpSession } from '../../types/define';
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
 
   const { visible, setVisible } = useVisible();
   const { sessionManager } = useTerminalStore();
@@ -50,7 +50,11 @@
   // 打开新增
   const open = (session: string, path: string, isTouch: boolean) => {
     sessionId.value = session;
-    formModel.value.path = path;
+    if (path === '/') {
+      formModel.value.path = path;
+    } else {
+      formModel.value.path = path + '/';
+    }
     touch.value = isTouch;
     setVisible(true);
     // 自动聚焦

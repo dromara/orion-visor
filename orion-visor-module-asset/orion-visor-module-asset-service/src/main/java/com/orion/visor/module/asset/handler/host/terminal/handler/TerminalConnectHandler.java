@@ -14,6 +14,7 @@ import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
 import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
+import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
@@ -23,7 +24,6 @@ import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSessi
 import com.orion.visor.module.asset.handler.host.terminal.session.SftpSession;
 import com.orion.visor.module.asset.handler.host.terminal.session.SshSession;
 import com.orion.visor.module.asset.service.HostConnectLogService;
-import com.orion.visor.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -41,9 +41,6 @@ import java.util.Map;
 @Slf4j
 @Component
 public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConnectRequest> {
-
-    @Resource
-    private HostTerminalService hostTerminalService;
 
     @Resource
     private HostConnectLogService hostConnectLogService;
@@ -117,7 +114,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
                     .fileContentCharset(connect.getFileContentCharset())
                     .build();
             // 建立连接
-            SessionStore sessionStore = hostTerminalService.openSessionStore(connect);
+            SessionStore sessionStore = SessionStores.openSessionStore(connect);
             if (HostConnectTypeEnum.SSH.name().equals(connectType)) {
                 // 打开 ssh 会话
                 SshSession sshSession = new SshSession(sessionId, channel, sessionStore, config);

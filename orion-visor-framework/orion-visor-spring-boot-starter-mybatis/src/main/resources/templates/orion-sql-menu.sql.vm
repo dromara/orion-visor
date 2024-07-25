@@ -26,7 +26,3 @@ VALUES
   (@TMP_SUB_ID, '创建$table.comment', '${package.ModuleName}:${typeHyphen}:create', 3, 20, '1', '1', 0),
   (@TMP_SUB_ID, '修改$table.comment', '${package.ModuleName}:${typeHyphen}:update', 3, 30, '1', '1', 0),
   (@TMP_SUB_ID, '删除$table.comment', '${package.ModuleName}:${typeHyphen}:delete', 3, 40, '1', '1', 0);
-  #if(false)
-  (@TMP_SUB_ID, '导出$table.comment', '${package.ModuleName}:${typeHyphen}:export', 3, 50, '1', '1', 0),
-  (@TMP_SUB_ID, '导入$table.comment', '${package.ModuleName}:${typeHyphen}:import', 3, 60, '1', '1', 0);
-  #end

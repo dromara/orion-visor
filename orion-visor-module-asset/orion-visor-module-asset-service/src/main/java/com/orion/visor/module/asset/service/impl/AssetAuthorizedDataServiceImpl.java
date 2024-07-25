@@ -8,11 +8,13 @@ import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.TreeUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.module.asset.convert.HostGroupConvert;
+import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
 import com.orion.visor.module.asset.entity.vo.*;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
 import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
 import com.orion.visor.module.asset.enums.HostExtraItemEnum;
+import com.orion.visor.module.asset.enums.HostStatusEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.handler.host.extra.model.HostLabelExtraModel;
 import com.orion.visor.module.asset.service.*;
 import com.orion.visor.module.infra.api.*;
@@ -41,6 +43,9 @@ import java.util.stream.Collectors;
 public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataService {
 
     @Resource
+    private HostDAO hostDAO;
+
+    @Resource
     private DataGroupApi dataGroupApi;
 
     @Resource
@@ -51,9 +56,6 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
 
     @Resource
     private HostService hostService;
-
-    @Resource
-    private HostConfigService hostConfigService;
 
     @Resource
     private HostKeyService hostKeyService;
@@ -106,14 +108,14 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     }
 
     @Override
-    public List<Long> getUserAuthorizedHostIdWithEnabledConfig(Long userId, HostConfigTypeEnum type) {
-        // 获取启用的主机
+    public List<Long> getUserAuthorizedEnabledHostId(Long userId, HostTypeEnum type) {
+        // 获取有权限的的主机
         List<Long> hostIdList = this.getUserAuthorizedHostId(userId);
         if (hostIdList.isEmpty()) {
             return hostIdList;
         }
-        // 获取启用配置的主机
-        return hostConfigService.getEnabledConfigHostId(type.name(), hostIdList);
+        // 获取启用的主机
+        return hostDAO.getHostIdList(hostIdList, type.name(), HostStatusEnum.ENABLED.name());
     }
 
     @SneakyThrows
@@ -138,17 +140,17 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 查询主机拓展信息
         Future<Map<Long, String>> labelExtraResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId,
                 DataExtraTypeEnum.HOST,
-                HostExtraItemEnum.LABEL.getItem());
+                HostExtraItemEnum.LABEL.name());
         // 查询分组
         List<DataGroupDTO> dataGroup = dataGroupApi.getDataGroupList(DataGroupTypeEnum.HOST);
         // 查询分组引用
         Map<Long, Set<Long>> dataGroupRel = dataGroupRelApi.getGroupRelList(DataGroupTypeEnum.HOST);
-        // 过滤掉无分组权限以及未启用配置的主机
+        // 过滤掉无分组权限以及未启用的主机
         this.filterEnabledAuthorizedHost(dataGroup, dataGroupRel, authorizedGroupIdList, type);
         // 设置主机分组树
         wrapper.setGroupTree(this.getAuthorizedHostGroupTree(dataGroup));
         // 设置主机列表
-        wrapper.setHostList(this.getAuthorizedHostList(dataGroupRel));
+        wrapper.setHostList(this.getAuthorizedHostList(type, dataGroupRel));
         // 设置主机分组节点映射
         wrapper.setTreeNodes(Maps.map(dataGroupRel, String::valueOf, Function.identity()));
         // 设置主机拓展信息
@@ -190,7 +192,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
 
     /**
      * 过滤掉未授权的 dataGroupRel 和 dataGroupRel
-     * 过滤掉未启用配置的 dataGroupRel
+     * 过滤掉未启用的 dataGroupRel
      *
      * @param dataGroup             dataGroup
      * @param dataGroupRel          dataGroupRel
@@ -208,15 +210,18 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         dataGroup.addAll(new HashSet<>(authorizedDataGroup));
         // 移除未授权的分组引用
         dataGroupRel.keySet().removeIf(s -> !authorizedGroupIdList.contains(s));
-        // 查询配置已启用的主机
-        List<Long> hostIdList = dataGroupRel.values()
+        // 查询已启用的主机
+        List<Long> allHostId = dataGroupRel.values()
                 .stream()
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
-        List<Long> enabledConfigHostId = hostConfigService.getEnabledConfigHostId(type, hostIdList);
+        if (allHostId.isEmpty()) {
+            return;
+        }
+        List<Long> hostIdList = hostDAO.getHostIdList(allHostId, type, HostStatusEnum.ENABLED.name());
         // 从分组引用中移除未启用的主机
-        dataGroupRel.forEach((k, v) -> v.removeIf(s -> !enabledConfigHostId.contains(s)));
+        dataGroupRel.forEach((k, v) -> v.removeIf(s -> !hostIdList.contains(s)));
     }
 
     /**
@@ -238,12 +243,13 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     /**
      * 查询已授权的主机列表
      *
+     * @param type         type
      * @param dataGroupRel dataGroupRel
      * @return hosts
      */
-    private List<HostVO> getAuthorizedHostList(Map<Long, Set<Long>> dataGroupRel) {
+    private List<HostVO> getAuthorizedHostList(String type, Map<Long, Set<Long>> dataGroupRel) {
         // 查询主机列表
-        Map<Long, HostVO> hostMap = hostService.getHostListByCache()
+        Map<Long, HostVO> hostMap = hostService.getHostList(type)
                 .stream()
                 .collect(Collectors.toMap(HostVO::getId, Function.identity(), Functions.right()));
         // 设置已授权的数据

@@ -15,6 +15,7 @@
                                @open-host="(e) => openHostModal('exec', e)" />
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
+                           type="SSH"
                            @selected="hostSelected" />
   </div>
 </template>

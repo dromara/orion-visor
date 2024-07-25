@@ -45,12 +45,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession } from '../../types/terminal.type';
+  import type { ISftpSession } from '../../types/define';
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { permission10toString } from '@/utils/file';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
 
   const { visible, setVisible } = useVisible();
   const { sessionManager } = useTerminalStore();

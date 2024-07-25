@@ -31,12 +31,12 @@
             </div>
             <!-- 进度 -->
             <a-tooltip position="left"
-                       :content="((file.current || 0) / file.fileSize * 100).toFixed(2) + '%'"
+                       :content="file.fileSize ? ((file.current || 0) / file.fileSize * 100).toFixed(2) + '%' : '0%'"
                        mini>
               <a-progress type="circle"
                           size="mini"
                           :status="getDictValue(fileStatusKey, file.status, 'status') as any"
-                          :percent="(file.current || 0) / file.fileSize" />
+                          :percent="file.fileSize ? (file.current || 0) / file.fileSize : 0" />
             </a-tooltip>
           </div>
         </div>

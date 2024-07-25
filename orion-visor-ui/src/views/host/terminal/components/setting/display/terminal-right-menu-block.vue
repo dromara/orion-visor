@@ -85,11 +85,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ContextMenuItem } from '../../../types/terminal.type';
+  import type { ContextMenuItem } from '../../../types/define';
   import { computed, ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import { ActionBarItems } from '../../../types/terminal.const';
+  import { ActionBarItems } from '../../../types/const';
   import { isSecureEnvironment } from '@/utils/env';
 
   const { preference, updateTerminalPreference } = useTerminalStore();

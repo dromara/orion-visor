@@ -33,7 +33,6 @@ import javax.annotation.Resource;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/history-value")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HistoryValueController {
 
     @Resource

@@ -1,13 +1,12 @@
-import type { ITerminalPanelManager, TerminalPanelTabItem } from '../types/terminal.type';
+import type { ITerminalPanelManager, TerminalPanelTabItem } from '../types/define';
 import TerminalTabManager from '../handler/terminal-tab-manager';
 
 // 终端面板管理器实现
 export default class TerminalPanelManager implements ITerminalPanelManager {
 
-  // 当前面板
-  active: number;
-  // 面板列表
-  panels: Array<TerminalTabManager<TerminalPanelTabItem>>;
+  public active: number;
+
+  public panels: Array<TerminalTabManager<TerminalPanelTabItem>>;
 
   constructor() {
     this.active = 0;
@@ -31,17 +30,18 @@ export default class TerminalPanelManager implements ITerminalPanelManager {
 
   // 移除面板
   removePanel(index: number) {
-    this.panels.splice(index, 1);
+    this.panels[index].clear();
     this.active = index >= this.panels.length ? this.panels.length - 1 : index;
   };
 
   // 重置
   reset() {
-    for (let panel of this.panels) {
-      panel.clear();
-    }
     this.active = 0;
-    this.panels = [new TerminalTabManager()];
+    if (this.panels) {
+      for (let panel of this.panels) {
+        panel.clear();
+      }
+    }
   };
 
 }

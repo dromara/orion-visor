@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -26,6 +27,10 @@ import java.util.List;
 public class HostCreateRequest implements Serializable {
 
     @NotBlank
+    @Schema(description = "主机类型")
+    private String type;
+
+    @NotBlank
     @Size(max = 64)
     @Schema(description = "主机名称")
     private String name;
@@ -39,6 +44,10 @@ public class HostCreateRequest implements Serializable {
     @Size(max = 128)
     @Schema(description = "主机地址")
     private String address;
+
+    @Range(min = 1, max = 65535)
+    @Schema(description = "主机端口")
+    private Integer port;
 
     @Schema(description = "主机分组")
     private List<Long> groupIdList;

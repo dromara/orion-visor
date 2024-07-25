@@ -40,7 +40,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/system-role")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class SystemRoleController {
 
     @Resource

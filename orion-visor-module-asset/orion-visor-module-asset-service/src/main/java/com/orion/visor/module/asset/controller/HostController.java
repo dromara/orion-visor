@@ -8,9 +8,8 @@ import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostOperatorType;
-import com.orion.visor.module.asset.entity.request.host.HostCreateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostQueryRequest;
-import com.orion.visor.module.asset.entity.request.host.HostUpdateRequest;
+import com.orion.visor.module.asset.entity.request.host.*;
+import com.orion.visor.module.asset.entity.vo.HostConfigVO;
 import com.orion.visor.module.asset.entity.vo.HostVO;
 import com.orion.visor.module.asset.service.HostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +36,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostController {
 
     @Resource
@@ -61,6 +59,24 @@ public class HostController {
         return hostService.updateHostById(request);
     }
 
+    @DemoDisableApi
+    @OperatorLog(HostOperatorType.UPDATE_STATUS)
+    @PutMapping("/update-status")
+    @Operation(summary = "更新主机状态")
+    @PreAuthorize("@ss.hasPermission('asset:host:update-status')")
+    public Integer updateHostStatus(@Validated @RequestBody HostUpdateStatusRequest request) {
+        return hostService.updateHostStatus(request);
+    }
+
+    @DemoDisableApi
+    @OperatorLog(HostOperatorType.UPDATE_CONFIG)
+    @PutMapping("/update-config")
+    @Operation(summary = "更新主机配置")
+    @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
+    public Integer updateHostConfig(@Validated @RequestBody HostUpdateConfigRequest request) {
+        return hostService.updateHostConfig(request);
+    }
+
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询主机")
@@ -71,11 +87,21 @@ public class HostController {
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-config")
+    @Operation(summary = "查询主机配置")
+    @Parameter(name = "id", description = "id", required = true)
+    @PreAuthorize("@ss.hasPermission('asset:host:query')")
+    public HostConfigVO getHostConfig(@RequestParam("id") Long id) {
+        return hostService.getHostConfig(id);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询主机")
+    @Parameter(name = "type", description = "type", required = false)
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
-    public List<HostVO> getHostList() {
-        return hostService.getHostListByCache();
+    public List<HostVO> getHostList(@RequestParam(value = "type", required = false) String type) {
+        return hostService.getHostList(type);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

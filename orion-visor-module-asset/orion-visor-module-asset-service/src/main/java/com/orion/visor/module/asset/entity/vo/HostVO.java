@@ -31,6 +31,9 @@ public class HostVO implements Serializable {
     @Schema(description = "id")
     private Long id;
 
+    @Schema(description = "主机类型")
+    private String type;
+
     @Schema(description = "主机名称")
     private String name;
 
@@ -39,6 +42,12 @@ public class HostVO implements Serializable {
 
     @Schema(description = "主机地址")
     private String address;
+
+    @Schema(description = "主机端口")
+    private Integer port;
+
+    @Schema(description = "主机状态")
+    private String status;
 
     @Schema(description = "创建时间")
     private Date createTime;

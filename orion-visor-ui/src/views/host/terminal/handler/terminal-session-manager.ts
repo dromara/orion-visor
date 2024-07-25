@@ -6,10 +6,10 @@ import type {
   ITerminalSessionManager,
   TerminalPanelTabItem,
   XtermDomRef
-} from '../types/terminal.type';
+} from '../types/define';
 import { sleep } from '@/utils';
-import { InputProtocol } from '../types/terminal.protocol';
-import { PanelSessionType } from '../types/terminal.const';
+import { InputProtocol } from '@/types/protocol/terminal.protocol';
+import { PanelSessionType } from '../types/const';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';
 import TerminalChannel from './terminal-channel';
@@ -132,7 +132,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   }
 
   // 调度重置大小
-  private dispatchResize() {
+  dispatchResize() {
     // 对所有已连接的会话重置大小
     Object.values(this.sessions)
       .filter(s => s?.type === PanelSessionType.SSH.type)

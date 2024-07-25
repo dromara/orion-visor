@@ -1,4 +1,4 @@
-import type { ITerminalSession, TerminalPanelTabItem } from '../types/terminal.type';
+import type { ITerminalSession, TerminalPanelTabItem } from '../types/define';
 
 // 会话基类
 export default abstract class BaseSession implements ITerminalSession {

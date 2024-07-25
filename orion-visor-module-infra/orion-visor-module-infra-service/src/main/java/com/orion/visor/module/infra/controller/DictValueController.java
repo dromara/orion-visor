@@ -40,7 +40,6 @@ import java.util.Map;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/dict-value")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class DictValueController {
 
     @Resource

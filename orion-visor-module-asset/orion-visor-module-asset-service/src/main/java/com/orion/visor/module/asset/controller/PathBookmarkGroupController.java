@@ -31,7 +31,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/path-bookmark-group")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class PathBookmarkGroupController {
 
     @Resource

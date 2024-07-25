@@ -50,7 +50,7 @@ public class TransferMessageDispatcher extends AbstractWebSocketHandler {
         // 获取处理器
         ITransferHandler handler = hostTransferManager.getHandler(session.getId());
         // 添加数据
-        handler.putContent(message.getPayload().array());
+        handler.handleMessage(message.getPayload().array());
     }
 
     @Override

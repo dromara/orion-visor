@@ -142,7 +142,7 @@
 
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
-  import type { SftpFile, ISftpSession } from '../../types/terminal.type';
+  import type { SftpFile, ISftpSession } from '../../types/define';
   import type { VNodeRef } from 'vue';
   import { ref, computed, watch, inject } from 'vue';
   import { useRowSelection } from '@/types/table';
@@ -150,7 +150,7 @@
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';
   import columns from './types/table.columns';
-  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/terminal.const';
+  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/const';
 
   const previewSize = Number.parseInt(import.meta.env.VITE_SFTP_PREVIEW_MB);
 
@@ -161,7 +161,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'download']);
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'deleteFile', 'download']);
 
   const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionId: string, path: string) => void;
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
@@ -239,7 +239,7 @@
     if (!props.session?.connected) {
       return;
     }
-    props.session?.remove([path]);
+    emits('deleteFile', [path]);
   };
 
   // 下载文件
@@ -248,7 +248,7 @@
     if (!props.session?.connected) {
       return;
     }
-    emits('download', [path]);
+    emits('download', [path], false);
   };
 
   // 移动文件

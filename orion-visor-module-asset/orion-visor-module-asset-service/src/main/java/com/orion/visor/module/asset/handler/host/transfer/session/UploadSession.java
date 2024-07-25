@@ -1,11 +1,11 @@
 package com.orion.visor.module.asset.handler.host.transfer.session;
 
-import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiverType;
+import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
+import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
 import com.orion.visor.module.asset.utils.SftpUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +22,17 @@ import java.io.OutputStream;
  * @since 2024/2/22 22:04
  */
 @Slf4j
-public class UploadSession extends TransferHostSession implements IUploadSession {
+public class UploadSession extends TransferSession {
 
-    private OutputStream outputStream;
+    protected OutputStream outputStream;
 
     public UploadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         super(connectInfo, sessionStore, channel);
     }
 
     @Override
-    public void startUpload(String path) {
-        String channelId = channel.getId();
+    public void onStart(TransferOperatorRequest request) {
+        super.onStart(request);
         try {
             log.info("UploadSession.startUpload start channelId: {}, path: {}", channelId, path);
             // 保存操作日志
@@ -44,52 +44,38 @@ public class UploadSession extends TransferHostSession implements IUploadSession
             // 打开输出流
             this.outputStream = executor.openOutputStream(path);
             // 响应结果
-            TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_NEXT_BLOCK, null);
+            TransferUtils.sendMessage(channel, TransferReceiver.NEXT_PART, null);
             log.info("UploadSession.startUpload transfer channelId: {}, path: {}", channelId, path);
         } catch (Exception e) {
             log.error("UploadSession.startUpload error channelId: {}, path: {}", channelId, path, e);
             this.closeStream();
             // 响应结果
-            TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_ERROR, e);
+            TransferUtils.sendMessage(channel, TransferReceiver.ERROR, e);
         }
     }
 
     @Override
-    public void putContent(byte[] bytes) {
+    public void handleBinary(byte[] bytes) {
         try {
             // 写入内容
             outputStream.write(bytes);
             // 响应结果
-            TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_NEXT_BLOCK, null);
+            TransferUtils.sendMessage(channel, TransferReceiver.NEXT_PART, null);
         } catch (IOException e) {
-            log.error("UploadSession.putContent error channelId: {}", channel.getId(), e);
+            log.error("UploadSession.handleBinary error channelId: {}", channel.getId(), e);
             this.closeStream();
             // 响应结果
-            TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_ERROR, e);
+            TransferUtils.sendMessage(channel, TransferReceiver.ERROR, e);
         }
     }
 
     @Override
-    public void uploadFinish() {
-        log.info("UploadSession.uploadFinish channelId: {}", channel.getId());
-        this.closeStream();
-        // 响应结果
-        TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_FINISH, null);
-    }
-
-    @Override
-    public void uploadError() {
-        log.error("UploadSession.uploadError channelId: {}", channel.getId());
-        this.closeStream();
-        // 响应结果
-        TransferUtils.sendMessage(this.channel, TransferReceiverType.UPLOAD_ERROR, new InvalidArgumentException((String) null));
-    }
-
-    @Override
     protected void closeStream() {
-        // 关闭流
-        Streams.close(outputStream);
-        this.outputStream = null;
+        if (this.outputStream != null) {
+            // 关闭流
+            Streams.close(outputStream);
+            this.outputStream = null;
+        }
     }
 
 }

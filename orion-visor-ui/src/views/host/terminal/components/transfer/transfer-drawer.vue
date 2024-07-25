@@ -68,12 +68,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SftpTransferItem } from '../../types/terminal.type';
+  import type { SftpTransferItem } from '../../types/define';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { transferStatusKey } from '../../types/terminal.const';
+  import { transferStatusKey } from '../../types/const';
   import TransferItem from './transfer-item.vue';
 
   const { transferManager } = useTerminalStore();

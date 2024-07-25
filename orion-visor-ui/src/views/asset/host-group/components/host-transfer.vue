@@ -112,7 +112,7 @@
   });
 
   onMounted(() => {
-    cacheStore.loadHosts().then(hosts => {
+    cacheStore.loadHosts(undefined).then(hosts => {
       data.value = hosts.map(s => {
         return {
           value: String(s.id),

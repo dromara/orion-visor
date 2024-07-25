@@ -18,6 +18,15 @@
               label-align="right"
               :auto-label-width="true"
               :rules="formRules">
+        <!-- 主机类型 -->
+        <a-form-item v-if="isAddHandle"
+                     field="type"
+                     label="主机类型"
+                     help="主机创建后, 类型则无法修改">
+          <a-select v-model="formModel.type"
+                    placeholder="请选择主机类型"
+                    :options="toOptions(hostTypeKey)" />
+        </a-form-item>
         <!-- 主机名称 -->
         <a-form-item field="name" label="主机名称">
           <a-input v-model="formModel.name" placeholder="请输入主机名称" />
@@ -29,6 +38,12 @@
         <!-- 主机地址 -->
         <a-form-item field="address" label="主机地址">
           <a-input v-model="formModel.address" placeholder="请输入主机地址" />
+        </a-form-item>
+        <!-- 主机端口 -->
+        <a-form-item field="port" label="主机端口">
+          <a-input-number v-model="formModel.port"
+                          placeholder="请输入主机端口"
+                          hide-button />
         </a-form-item>
         <!-- 主机分组 -->
         <a-form-item field="groupIdList" label="主机分组">
@@ -65,10 +80,12 @@
   import { createHost, getHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import { pick } from 'lodash';
-  import { tagColor } from '@/views/asset/host-list/types/const';
+  import { tagColor, hostType, hostTypeKey } from '../types/const';
+  import { useDictStore } from '@/store';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
   import HostGroupTreeSelector from '@/components/asset/host-group/tree-selector/index.vue';
 
+  const { toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
@@ -78,9 +95,11 @@
   const defaultForm = (): HostUpdateRequest => {
     return {
       id: undefined,
+      type: hostType.SSH.type,
       name: undefined,
       code: undefined,
       address: undefined,
+      port: hostType.SSH.default.port,
       tags: undefined,
       groupIdList: undefined,
     };
@@ -108,13 +127,22 @@
     await fetchHostRender(id);
   };
 
+  // 打开复制
+  const openCopy = async (id: number) => {
+    title.value = '复制主机';
+    isAddHandle.value = true;
+    renderForm({ ...defaultForm() });
+    setVisible(true);
+    await fetchHostRender(id);
+  };
+
   // 渲染主机
   const fetchHostRender = async (id: number) => {
     try {
       setLoading(true);
       const { data } = await getHost(id);
       const detail = Object.assign({} as Record<string, any>,
-        pick(data, 'id', 'name', 'code', 'address', 'groupIdList'));
+        pick(data, 'id', 'type', 'name', 'code', 'address', 'port', 'status', 'groupIdList'));
       // tag
       const tags = (data.tags || []).map(s => s.id);
       // 渲染
@@ -130,7 +158,7 @@
     formModel.value = Object.assign({}, record);
   };
 
-  defineExpose({ openAdd, openUpdate });
+  defineExpose({ openAdd, openUpdate, openCopy });
 
   // tag 超出所选限制
   const onLimitedTag = (count: number, message: string) => {

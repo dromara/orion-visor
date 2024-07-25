@@ -43,7 +43,7 @@ public enum OutputTypeEnum {
     /**
      * SFTP 文件列表
      */
-    SFTP_LIST("ls", "${type}|${sessionId}|${path}|${result}|${body}"),
+    SFTP_LIST("ls", "${type}|${sessionId}|${path}|${result}|${msg}|${body}"),
 
     /**
      * SFTP 创建文件夹
@@ -78,12 +78,12 @@ public enum OutputTypeEnum {
     /**
      * SFTP 下载文件夹展开文件
      */
-    SFTP_DOWNLOAD_FLAT_DIRECTORY("df", "${type}|${sessionId}|${currentPath}|${body}"),
+    SFTP_DOWNLOAD_FLAT_DIRECTORY("df", "${type}|${sessionId}|${currentPath}|${result}|${msg}|${body}"),
 
     /**
      * SFTP 获取文件内容
      */
-    SFTP_GET_CONTENT("gc", "${type}|${sessionId}|${path}|${result}|${content}"),
+    SFTP_GET_CONTENT("gc", "${type}|${sessionId}|${path}|${result}|${msg}|${content}"),
 
     /**
      * SFTP 修改文件内容

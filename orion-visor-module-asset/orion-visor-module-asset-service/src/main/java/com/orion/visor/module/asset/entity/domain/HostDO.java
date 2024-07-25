@@ -30,6 +30,10 @@ public class HostDO extends BaseDO {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @Schema(description = "主机类型")
+    @TableField("type")
+    private String type;
+
     @Schema(description = "主机名称")
     @TableField("name")
     private String name;
@@ -41,5 +45,17 @@ public class HostDO extends BaseDO {
     @Schema(description = "主机地址")
     @TableField("address")
     private String address;
+
+    @Schema(description = "主机端口")
+    @TableField("port")
+    private Integer port;
+
+    @Schema(description = "主机状态")
+    @TableField("status")
+    private String status;
+
+    @Schema(description = "主机配置")
+    @TableField("config")
+    private String config;
 
 }

@@ -36,7 +36,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-connect-log")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostConnectLogController {
 
     @Resource

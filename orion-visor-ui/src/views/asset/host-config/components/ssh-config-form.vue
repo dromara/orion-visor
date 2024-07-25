@@ -1,20 +1,25 @@
 <template>
-  <a-card class="general-card"
-          :body-style="{ padding: config.status === EnabledStatus.ENABLED ? '' : '0' }">
+  <a-card class="general-card" :body-style="{ padding: '0 16px 0 20px'}">
     <!-- 标题 -->
     <template #title>
       <div class="config-title-wrapper">
-        <span>SSH 配置</span>
-        <a-switch v-model="config.status"
-                  :disabled="loading"
-                  type="round"
-                  :checked-value="EnabledStatus.ENABLED"
-                  :unchecked-value="EnabledStatus.DISABLED"
-                  :before-change="s => updateStatus(s as number)" />
+        <span class="title">SSH 配置</span>
+        <!-- 操作按钮 -->
+        <a-space>
+          <a-button size="small"
+                    @click="emits('reset')">
+            重置
+          </a-button>
+          <a-button type="primary"
+                    size="small"
+                    @click="saveConfig">
+            保存
+          </a-button>
+        </a-space>
       </div>
     </template>
     <!-- 表单 -->
-    <a-spin v-show="config.status" :loading="loading" class="config-form-wrapper">
+    <div class="config-form-wrapper full">
       <!-- 表单 -->
       <a-form :model="formModel"
               ref="formRef"
@@ -37,14 +42,6 @@
           <a-input v-model="formModel.username"
                    :disabled="SshAuthType.IDENTITY === formModel.authType"
                    placeholder="请输入用户名" />
-        </a-form-item>
-        <!-- SSH 端口 -->
-        <a-form-item field="port"
-                     label="SSH端口"
-                     :hide-asterisk="true">
-          <a-input-number v-model="formModel.port"
-                          placeholder="请输入SSH端口"
-                          hide-button />
         </a-form-item>
         <!-- 验证方式 -->
         <a-form-item field="authType"
@@ -85,7 +82,8 @@
           <host-identity-selector v-model="formModel.identityId" />
         </a-form-item>
         <!-- 连接超时时间 -->
-        <a-form-item field="connectTimeout"
+        <a-form-item class="mt4"
+                     field="connectTimeout"
                      label="连接超时时间"
                      :hide-asterisk="true">
           <a-input-number v-model="formModel.connectTimeout"
@@ -96,7 +94,7 @@
             </template>
           </a-input-number>
         </a-form-item>
-        <!-- SSH输出编码 -->
+        <!-- SSH 输出编码 -->
         <a-form-item field="charset"
                      label="SSH输出编码"
                      :hide-asterisk="true">
@@ -115,21 +113,7 @@
           <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
         </a-form-item>
       </a-form>
-      <!-- 操作按钮 -->
-      <div class="config-button-group">
-        <a-space>
-          <a-button size="small"
-                    @click="resetConfig">
-            重置
-          </a-button>
-          <a-button type="primary"
-                    size="small"
-                    @click="saveConfig">
-            保存
-          </a-button>
-        </a-space>
-      </div>
-    </a-spin>
+    </div>
   </a-card>
 </template>
 
@@ -142,38 +126,26 @@
 <script lang="ts" setup>
   import type { FieldRule } from '@arco-design/web-vue';
   import type { HostSshConfig } from '../types/const';
-  import { reactive, ref, watch } from 'vue';
-  import { updateHostConfigStatus, updateHostConfig } from '@/api/asset/host-config';
-  import { sshAuthTypeKey, sshOsTypeKey, SshAuthType, SshOsType } from '../types/const';
-  import rules from '../types/ssh-form.rules';
-  import { Message } from '@arco-design/web-vue';
-  import useLoading from '@/hooks/loading';
+  import type { HostConfigQueryResponse } from '@/api/asset/host';
+  import { ref, watch } from 'vue';
+  import { sshAuthTypeKey, sshOsTypeKey, SshAuthType } from '../types/const';
   import { useDictStore } from '@/store';
-  import { EnabledStatus } from '@/types/const';
-  import { HostConfigType } from '../types/const';
+  import rules from '../types/ssh-form.rules';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 
-  const { loading, setLoading } = useLoading();
   const { toOptions, toRadioOptions } = useDictStore();
 
   const props = defineProps<{
-    content: any;
-    hostId: number;
+    hostConfig: HostConfigQueryResponse;
   }>();
 
-  const emits = defineEmits(['submitted']);
-
-  const config = reactive({
-    status: undefined,
-    version: undefined,
-  });
+  const emits = defineEmits(['save', 'reset']);
 
   const formRef = ref();
   const formModel = ref<HostSshConfig>({
-    osType: SshOsType.LINUX,
+    osType: undefined,
     username: undefined,
-    port: undefined,
     password: undefined,
     authType: SshAuthType.PASSWORD,
     keyId: undefined,
@@ -187,10 +159,10 @@
   });
 
   // 监听数据变化
-  watch(() => props.content, (v: any) => {
-    config.status = v?.status;
-    config.version = v?.version;
-    resetConfig();
+  watch(() => props.hostConfig.current, () => {
+    formModel.value = Object.assign({}, props.hostConfig.config);
+    // 使用新密码默认为不包含密码
+    formModel.value.useNewPassword = !formModel.value.hasPassword;
   });
 
   // 用户名验证
@@ -221,77 +193,20 @@
     }
   }] as FieldRule[];
 
-  // 修改状态
-  const updateStatus = async (e: number) => {
-    setLoading(true);
-    return updateHostConfigStatus({
-      hostId: props?.hostId,
-      type: HostConfigType.SSH,
-      status: e,
-      version: config.version
-    }).then(({ data }) => {
-      config.version = data;
-      setLoading(false);
-      return true;
-    }).catch(() => {
-      setLoading(false);
-      return false;
-    });
-  };
-
-  // 重置配置
-  const resetConfig = () => {
-    formModel.value = Object.assign({}, props.content?.config);
-    // 使用新密码默认为不包含密码
-    formModel.value.useNewPassword = !formModel.value.hasPassword;
-  };
-
   // 保存配置
   const saveConfig = async () => {
-    try {
-      // 验证参数
-      const error = await formRef.value.validate();
-      if (error) {
-        return false;
-      }
-      setLoading(true);
-      // 更新
-      const { data } = await updateHostConfig({
-        hostId: props?.hostId,
-        type: HostConfigType.SSH,
-        version: config.version,
-        config: JSON.stringify(formModel.value)
-      });
-      config.version = data;
-      setLoading(false);
-      Message.success('修改成功');
-      // 回调 props
-      emits('submitted', { ...props.content, ...config, config: { ...formModel.value } });
-    } catch (e) {
-    } finally {
-      setLoading(false);
+    // 验证参数
+    const error = await formRef.value.validate();
+    if (error) {
+      return false;
     }
+    // 回调
+    emits('save', { ...formModel.value });
   };
 
 </script>
 
 <style lang="less" scoped>
-  .config-title-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .config-form-wrapper {
-    width: 100%;
-  }
-
-  .config-button-group {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
   .auth-type-group {
     width: 100%;
     display: flex;
@@ -302,4 +217,5 @@
     width: 148px;
     margin-left: 8px;
   }
+
 </style>

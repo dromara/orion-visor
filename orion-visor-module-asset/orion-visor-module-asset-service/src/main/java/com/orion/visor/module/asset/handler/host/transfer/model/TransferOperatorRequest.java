@@ -29,8 +29,18 @@ public class TransferOperatorRequest {
     private String type;
 
     /**
+     * operator
+     */
+    private String operator;
+
+    /**
      * 主机id
      */
     private Long hostId;
+
+    /**
+     * 错误信息 后端赋值
+     */
+    private String errorMessage;
 
 }

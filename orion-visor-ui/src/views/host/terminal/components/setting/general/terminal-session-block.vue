@@ -42,7 +42,7 @@
   import { ref, watch } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import { emulationTypeKey } from '../../../types/terminal.const';
+  import { emulationTypeKey } from '../../../types/const';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions } = useDictStore();

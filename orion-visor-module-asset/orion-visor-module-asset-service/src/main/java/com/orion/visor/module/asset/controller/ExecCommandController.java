@@ -33,7 +33,6 @@ import javax.annotation.Resource;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/exec-command")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class ExecCommandController {
 
     @Resource

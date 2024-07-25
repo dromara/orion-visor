@@ -56,7 +56,7 @@
   import { ref, onMounted, onUnmounted } from 'vue';
   import { getDefaultPreference, getPreference } from '@/api/user/preference';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import { TerminalShortcutItems, TerminalShortcutType } from '../../../types/terminal.const';
+  import { TerminalShortcutItems, TerminalShortcutType } from '../../../types/const';
   import { useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { useDebounceFn } from '@vueuse/core';

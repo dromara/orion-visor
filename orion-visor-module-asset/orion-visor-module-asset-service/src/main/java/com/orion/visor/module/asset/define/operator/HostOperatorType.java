@@ -22,9 +22,9 @@ public class HostOperatorType extends InitializingOperatorTypes {
 
     public static final String DELETE = "host:delete";
 
-    public static final String UPDATE_CONFIG = "host:update-config";
+    public static final String UPDATE_STATUS = "host:update-status";
 
-    public static final String UPDATE_CONFIG_STATUS = "host:update-config-status";
+    public static final String UPDATE_CONFIG = "host:update-config";
 
     @Override
     public OperatorType[] types() {
@@ -32,8 +32,8 @@ public class HostOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, CREATE, "创建主机 <sb>${name}</sb>"),
                 new OperatorType(L, UPDATE, "修改主机 <sb>${name}</sb>"),
                 new OperatorType(H, DELETE, "删除主机 <sb>${name}</sb>"),
-                new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb> | <sb>${type}</sb>"),
-                new OperatorType(M, UPDATE_CONFIG_STATUS, "修改主机配置状态 <sb>${name}</sb> | <sb>${type}</sb> - <sb>${statusName}</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "修改主机状态 <sb>${name}</sb> - <sb>${status}</sb>"),
+                new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb>"),
         };
     }
 

@@ -16,7 +16,7 @@ import com.orion.visor.module.asset.entity.request.exec.ExecTemplateCreateReques
 import com.orion.visor.module.asset.entity.request.exec.ExecTemplateQueryRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecTemplateUpdateRequest;
 import com.orion.visor.module.asset.entity.vo.ExecTemplateVO;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.enums.ScriptExecEnum;
 import com.orion.visor.module.asset.service.AssetAuthorizedDataService;
 import com.orion.visor.module.asset.service.ExecTemplateHostService;
@@ -113,7 +113,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
             return template;
         }
         // 过滤认证的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
         template.setHostIdList(hostIdList);
         return template;

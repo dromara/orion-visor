@@ -41,7 +41,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/system-user")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class SystemUserController {
 
     @Resource

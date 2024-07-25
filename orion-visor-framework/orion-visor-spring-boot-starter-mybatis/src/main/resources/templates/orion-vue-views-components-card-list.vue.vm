@@ -3,7 +3,7 @@
              search-input-placeholder="输入搜索值"
              create-card-position="head"
              :loading="loading"
-             :fieldConfig="fieldConfig"
+             :field-config="fieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
@@ -74,15 +74,16 @@
             <!-- 修改 -->
             <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
                        @click="emits('openUpdate', record)">
-              <icon-edit />
-              修改
+              <span class="more-doption normal">
+                <icon-edit /> 修改
+              </span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
-                       class="span-red"
                        @click="deleteRow(record.id)">
-              <icon-delete />
-              删除
+              <span class="more-doption error">
+                <icon-delete /> 删除
+              </span>
             </a-doption>
           </template>
         </a-dropdown>
@@ -93,15 +94,17 @@
       <!-- 修改 -->
       <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
                  @click="emits('openUpdate', record)">
-        <icon-edit />
-        修改
+        <span class="more-doption normal">
+          <icon-edit /> 修改
+        </span>
       </a-doption>
       <!-- 删除 -->
       <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
                  class="span-red"
                  @click="deleteRow(record.id)">
-        <icon-delete />
-        删除
+        <span class="more-doption error">
+          <icon-delete /> 删除
+        </span>
       </a-doption>
     </template>
   </card-list>

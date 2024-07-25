@@ -47,7 +47,7 @@
   import type { ExecCommandRequest } from '@/api/exec/exec-command';
   import { onMounted, ref } from 'vue';
   import { getExecCommandLogHistory } from '@/api/exec/exec-command-log';
-  import { historyCount } from '../types/const';
+  import { historyCount, descOmit, omit } from '../types/const';
   import useLoading from '@/hooks/loading';
 
   const emits = defineEmits(['selected']);
@@ -58,12 +58,20 @@
 
   // 添加
   const add = (record: ExecCommandRequest) => {
+    const command = record.command as string;
+    if (!record.description) {
+      if (command.length < descOmit + omit.length) {
+        record.description = command;
+      } else {
+        record.description = command.substring(0, descOmit) + omit;
+      }
+    }
     const index = historyLogs.value.findIndex(s => s.description === record.description);
     if (index === -1) {
       // 不存在
       historyLogs.value.unshift({
         description: record.description,
-        command: record.command,
+        command: command,
         parameterSchema: record.parameterSchema,
         timeout: record.timeout,
         hostIdList: record.hostIdList
@@ -74,7 +82,7 @@
       historyLogs.value.splice(index, 1);
       historyLogs.value.unshift({
         ...his,
-        command: record.command,
+        command: command,
         parameterSchema: record.parameterSchema,
         timeout: record.timeout,
         hostIdList: record.hostIdList

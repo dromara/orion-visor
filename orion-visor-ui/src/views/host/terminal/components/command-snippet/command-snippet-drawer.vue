@@ -76,7 +76,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/terminal.type';
+  import type { ISshSession } from '../../types/define';
   import type { CommandSnippetWrapperResponse, CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import { ref, watch, provide } from 'vue';
   import useVisible from '@/hooks/visible';
@@ -84,7 +84,7 @@
   import { deleteCommandSnippet, getCommandSnippetList } from '@/api/asset/command-snippet';
   import { useCacheStore, useTerminalStore } from '@/store';
   import { openUpdateSnippetKey, removeSnippetKey } from './types/const';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
   import CommandSnippetListItem from './command-snippet-list-item.vue';
   import CommandSnippetListGroup from './command-snippet-list-group.vue';
   import CommandSnippetFormDrawer from './command-snippet-form-drawer.vue';

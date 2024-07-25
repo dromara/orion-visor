@@ -1,10 +1,10 @@
 import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
-import type { ISshSession, ISshSessionHandler, XtermDomRef } from '../types/terminal.type';
+import type { ISshSession, ISshSessionHandler, XtermDomRef } from '../types/define';
 import type { Terminal } from '@xterm/xterm';
 import useCopy from '@/hooks/copy';
 import html2canvas from 'html2canvas';
 import { useTerminalStore, useUserStore } from '@/store';
-import { PanelSessionType, TerminalShortcutItems } from '../types/terminal.const';
+import { PanelSessionType, TerminalShortcutItems } from '../types/const';
 import { saveAs } from 'file-saver';
 import { Message } from '@arco-design/web-vue';
 import { dateFormat } from '@/utils';

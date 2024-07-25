@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 public interface HostCacheKeyDefine {
 
     CacheKeyDefine HOST_INFO = new CacheKeyBuilder()
-            .key("host:info:list")
-            .desc("主机列表")
+            .key("host:info:list:{}")
+            .desc("主机列表 ${type}")
             .type(HostCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(8, TimeUnit.HOURS)

@@ -113,7 +113,6 @@ public class CodeGeneratorEngine extends VelocityTemplateEngine {
         apiComment.put("deleteById", "删除" + comment);
         apiComment.put("deleteAll", "根据条件删除" + comment);
         apiComment.put("batchDelete", "批量删除" + comment);
-        apiComment.put("export", "导出" + comment);
         objectMap.put("apiComment", apiComment);
     }
 

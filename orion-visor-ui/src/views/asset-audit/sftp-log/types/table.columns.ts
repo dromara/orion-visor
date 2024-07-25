@@ -30,6 +30,12 @@ const columns = [
     width: 116,
     align: 'left',
   }, {
+    title: '文件数量',
+    dataIndex: 'fileCount',
+    slotName: 'fileCount',
+    align: 'left',
+    width: 100,
+  }, {
     title: '操作文件',
     dataIndex: 'paths',
     slotName: 'paths',

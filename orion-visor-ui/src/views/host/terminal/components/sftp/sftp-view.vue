@@ -11,13 +11,14 @@
                 :hide-icon="true">
           <!-- 表头 -->
           <sftp-table-header class="sftp-table-header"
-                             v-model:selected-files="selectFiles"
+                             :selected-files="selectFiles"
                              :close-message="closeMessage"
                              :current-path="currentPath"
                              :session="session"
                              @load-file="loadFiles"
-                             @download="downloadFiles"
-                             @set-loading="setTableLoading" />
+                             @set-loading="setTableLoading"
+                             @delete-file="deleteFile"
+                             @download="downloadFiles" />
           <!-- 表格 -->
           <sftp-table class="sftp-table-wrapper"
                       v-model:selected-files="selectFiles"
@@ -26,6 +27,7 @@
                       :loading="tableLoading"
                       @load-file="loadFiles"
                       @edit-file="editFile"
+                      @delete-file="deleteFile"
                       @download="downloadFiles" />
         </a-spin>
       </template>
@@ -62,12 +64,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, SftpFile, TerminalPanelTabItem } from '../../types/terminal.type';
+  import type { ISftpSession, SftpFile, TerminalPanelTabItem } from '../../types/define';
   import { onMounted, onUnmounted, provide, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/terminal.const';
+  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/const';
   import SftpTableHeader from './sftp-table-header.vue';
   import SftpTable from './sftp-table.vue';
   import SftpEditorHeader from './sftp-editor-header.vue';
@@ -145,17 +147,30 @@
     editorFilePath.value = '';
   };
 
-  // 下载文件
-  const downloadFiles = (paths: Array<string>) => {
+  // 删除文件
+  const deleteFile = (paths: Array<string>) => {
     if (!paths.length) {
-      return paths;
+      return;
     }
-    Message.success('已开始下载, 点击右侧传输列表查看进度');
+    // 删除
+    selectFiles.value = [];
+    session.value?.remove(paths);
+  };
+
+  // 下载文件
+  const downloadFiles = (paths: Array<string>, clear: boolean) => {
+    if (!paths.length) {
+      return;
+    }
     // 映射为文件
     const files = fileList.value.filter(s => paths.includes(s.path))
       .map(s => {
         return { ...s };
       });
+    if (clear) {
+      selectFiles.value = [];
+    }
+    Message.success('已开始下载, 点击右侧传输列表查看进度');
     // 添加普通文件到下载队列
     const normalFiles = files.filter(s => !s.isDir);
     transferManager.addDownload(props.tab.hostId as number, currentPath.value, normalFiles);
@@ -193,9 +208,9 @@
   };
 
   // 接收列表回调
-  const resolveList = (result: string, path: string, list: Array<SftpFile>) => {
+  const resolveList = (path: string, result: string, msg: string, list: Array<SftpFile>) => {
     setTableLoading(false);
-    if (!checkResult(result, '查询失败')) {
+    if (!checkResult(result, msg)) {
       return;
     }
     currentPath.value = path;
@@ -216,11 +231,11 @@
   };
 
   // 接收获取文件内容响应
-  const resolveSftpGetContent = (path: string, result: string, content: string) => {
+  const resolveSftpGetContent = (path: string, result: string, msg: string, content: string) => {
     setTableLoading(false);
     setEditorLoading(false);
     // 检查结果
-    if (!checkResult(result, '加载失败')) {
+    if (!checkResult(result, msg)) {
       return;
     }
     editorRef.value?.setValue(content);
@@ -237,8 +252,12 @@
   };
 
   // 接收下载文件夹展开文件响应
-  const resolveDownloadFlatDirectory = (currentPath: string, list: Array<SftpFile>) => {
+  const resolveDownloadFlatDirectory = (currentPath: string, result: string, msg: string, list: Array<SftpFile>) => {
     setTableLoading(false);
+    // 检查结果
+    if (!checkResult(result, msg)) {
+      return;
+    }
     transferManager.addDownload(props.tab.hostId as number, currentPath, list);
   };
 
@@ -273,7 +292,7 @@
 
   .sftp-container {
     width: 100%;
-    height: calc(100vh - var(--header-height) - var(--panel-nav-height));
+    height: 100%;
     position: relative;
 
     .split-view {

@@ -61,6 +61,10 @@ public interface ErrorMessage {
 
     String GROUP_ABSENT = "分组不存在";
 
+    String HOST_TYPE_ERROR = "主机类型错误";
+
+    String HOST_NOT_ENABLED = "主机未启用";
+
     String UNABLE_OPERATE_ADMIN_ROLE = "无法操作管理员账号";
 
     String UNSUPPORTED_CHARSET = "不支持的编码 [{}]";

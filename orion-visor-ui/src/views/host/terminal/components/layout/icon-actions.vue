@@ -32,7 +32,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SidebarAction } from '../../types/terminal.type';
+  import type { SidebarAction } from '../../types/define';
 
   defineProps<Partial<{
     actions: Array<SidebarAction>;

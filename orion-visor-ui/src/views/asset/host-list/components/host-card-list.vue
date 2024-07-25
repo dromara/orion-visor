@@ -2,7 +2,7 @@
   <card-list v-model:searchValue="formModel.searchValue"
              search-input-placeholder="输入 id / 名称 / 编码 / 地址"
              :loading="loading"
-             :fieldConfig="fieldConfig"
+             :field-config="fieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
@@ -70,6 +70,20 @@
         <a-form-item field="address" label="主机地址">
           <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
         </a-form-item>
+        <!-- 主机类型 -->
+        <a-form-item field="type" label="主机类型">
+          <a-select v-model="formModel.type"
+                    :options="toOptions(hostTypeKey)"
+                    placeholder="请选择主机类型"
+                    allow-clear />
+        </a-form-item>
+        <!-- 主机状态 -->
+        <a-form-item field="status" label="主机状态">
+          <a-select v-model="formModel.status"
+                    :options="toOptions(hostStatusKey)"
+                    placeholder="请选择主机状态"
+                    allow-clear />
+        </a-form-item>
         <!-- 主机标签 -->
         <a-form-item field="tags" label="主机标签">
           <tag-multi-selector v-model="formModel.tags"
@@ -88,11 +102,30 @@
     <template #code="{ record }">
       {{ record.code }}
     </template>
+    <!-- 主机类型 -->
+    <template #type="{ record }">
+      <a-tag :color="getDictValue(hostTypeKey, record.type, 'color')">
+        {{ getDictValue(hostTypeKey, record.type) }}
+      </a-tag>
+    </template>
     <!-- 地址 -->
     <template #address="{ record }">
-      <span class="span-blue text-copy" @click="copy(record.address)">
-        {{ record.address }}
-      </span>
+       <span class="span-blue text-copy host-address"
+             title="复制"
+             @click="copy(record.address)">
+          {{ record.address }}
+        </span>
+      <span class="span-blue text-copy"
+            title="复制"
+            @click="copy(record.port)">
+          {{ record.port }}
+        </span>
+    </template>
+    <!-- 主机状态 -->
+    <template #status="{ record }">
+      <a-tag :color="getDictValue(hostStatusKey, record.status, 'color')">
+        {{ getDictValue(hostStatusKey, record.status) }}
+      </a-tag>
     </template>
     <!-- 标签 -->
     <template #tags="{ record }">
@@ -114,47 +147,43 @@
             <!-- 修改 -->
             <a-doption v-permission="['asset:host:update']"
                        @click="emits('openUpdate', record)">
-              <icon-edit />
-              修改
+              <span class="more-doption normal">
+                <icon-edit /> 修改
+              </span>
             </a-doption>
             <!-- 配置 -->
             <a-doption v-permission="['asset:host:update-config']"
                        @click="emits('openUpdateConfig', record)">
-              <icon-settings />
-              配置
+              <span class="more-doption normal">
+                <icon-settings /> 配置
+              </span>
+            </a-doption>
+            <!-- 修改状态 -->
+            <a-doption v-permission="['asset:host:update-status']"
+                       @click="updateStatus(record as HostQueryResponse)">
+              <span class="more-doption"
+                    :class="[toggleDictValue(hostStatusKey, record.status, 'status')]">
+                <icon-sync /> {{ toggleDictValue(hostStatusKey, record.status, 'label') }}
+              </span>
+            </a-doption>
+            <!-- 复制 -->
+            <a-doption v-permission="['asset:host:create']"
+                       @click="emits('openCopy', record)">
+              <span class="more-doption normal">
+                <icon-copy /> 复制
+              </span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['asset:host:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
-              <icon-delete />
-              删除
+              <span class="more-doption error">
+                <icon-delete /> 删除
+              </span>
             </a-doption>
           </template>
         </a-dropdown>
       </a-space>
-    </template>
-    <!-- 右键菜单 -->
-    <template #contextMenu="{ record }">
-      <!-- 修改 -->
-      <a-doption v-permission="['asset:host:update']"
-                 @click="emits('openUpdate', record)">
-        <icon-edit />
-        修改
-      </a-doption>
-      <!-- 配置 -->
-      <a-doption v-permission="['asset:host:update-config']"
-                 @click="emits('openUpdateConfig', record)">
-        <icon-settings />
-        配置
-      </a-doption>
-      <!-- 删除 -->
-      <a-doption v-permission="['asset:host:delete']"
-                 class="span-red"
-                 @click="deleteRow(record.id)">
-        <icon-delete />
-        删除
-      </a-doption>
     </template>
   </card-list>
 </template>
@@ -169,24 +198,25 @@
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { usePagination, useColLayout } from '@/types/card';
   import { computed, reactive, ref, onMounted } from 'vue';
-  import useLoading from '@/hooks/loading';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
-  import fieldConfig from '../types/card.fields';
-  import { deleteHost, getHostPage } from '@/api/asset/host';
+  import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor } from '../types/const';
+  import { hostStatusKey, hostTypeKey, tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
+  import { useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import useLoading from '@/hooks/loading';
+  import fieldConfig from '../types/card.fields';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
-
-  const list = ref<HostQueryResponse[]>([]);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup', 'openCopy']);
 
   const cardColLayout = useColLayout();
   const pagination = usePagination();
   const { loading, setLoading } = useLoading();
+  const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
+  const list = ref<HostQueryResponse[]>([]);
   const formRef = ref();
   const formModel = reactive<HostQueryRequest>({
     searchValue: undefined,
@@ -194,6 +224,8 @@
     name: undefined,
     code: undefined,
     address: undefined,
+    type: undefined,
+    status: undefined,
     tags: undefined,
     queryTag: true
   });
@@ -202,6 +234,33 @@
   const filterCount = computed(() => {
     return objectTruthKeyCount(formModel, ['searchValue', 'queryTag']);
   });
+
+  // 更新状态
+  const updateStatus = async (record: HostQueryResponse) => {
+    const dict = toggleDict(hostStatusKey, record.status);
+    Modal.confirm({
+      title: `${dict.label}确认`,
+      titleAlign: 'start',
+      content: `确定要${dict.label}该主机吗?`,
+      okText: '确定',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          const newStatus = dict.value as string;
+          // 调用修改接口
+          await updateHostStatus({
+            id: record.id,
+            status: newStatus,
+          });
+          record.status = newStatus;
+          Message.success(`已${dict.label}`);
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+  };
 
   // 删除当前行
   const deleteRow = (id: number) => {
@@ -273,4 +332,8 @@
 </script>
 
 <style lang="less" scoped>
+  .host-address::after {
+    content: ':';
+    user-select: text;
+  }
 </style>

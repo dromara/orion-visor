@@ -1,30 +1,23 @@
 package com.orion.visor.module.asset.service.impl;
 
 import com.orion.lang.function.Functions;
-import com.orion.lang.utils.Exceptions;
-import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
-import com.orion.visor.framework.common.enums.BooleanBit;
-import com.orion.visor.framework.common.enums.EnableStatus;
 import com.orion.visor.framework.common.handler.data.model.GenericsDataModel;
-import com.orion.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import com.orion.visor.framework.common.utils.Valid;
-import com.orion.visor.module.asset.convert.HostConfigConvert;
-import com.orion.visor.module.asset.dao.HostConfigDAO;
 import com.orion.visor.module.asset.dao.HostDAO;
-import com.orion.visor.module.asset.entity.domain.HostConfigDO;
 import com.orion.visor.module.asset.entity.domain.HostDO;
-import com.orion.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostConfigUpdateStatusRequest;
-import com.orion.visor.module.asset.entity.vo.HostConfigVO;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.enums.HostStatusEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
+import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.visor.module.asset.service.HostConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -41,212 +34,49 @@ public class HostConfigServiceImpl implements HostConfigService {
     @Resource
     private HostDAO hostDAO;
 
-    @Resource
-    private HostConfigDAO hostConfigDAO;
-
     @Override
-    public HostConfigVO getHostConfig(Long hostId, String type) {
-        HostConfigTypeEnum configType = Valid.valid(HostConfigTypeEnum::of, type);
-        // 查询配置
-        HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type);
-        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
-        // 转换
-        HostConfigVO vo = HostConfigConvert.MAPPER.to(config);
-        // 获取配置
-        Map<String, Object> configMap = configType.toView(config.getConfig()).toMap();
-        vo.setConfig(configMap);
-        return vo;
-    }
-
-    @Override
-    public <T extends GenericsDataModel> T getHostConfig(Long hostId, HostConfigTypeEnum type) {
-        // 查询配置
-        HostConfigDO config = hostConfigDAO.getHostConfigByHostId(hostId, type.getType());
-        if (config == null) {
-            return null;
-        }
-        // 检查配置状态
-        if (!BooleanBit.toBoolean(config.getStatus())) {
-            throw Exceptions.disabled();
-        }
-        return type.parse(config.getConfig());
-    }
-
-    @Override
-    public List<HostConfigVO> getHostConfigList(Long hostId) {
-        // 查询
-        List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostId(hostId);
-        return configs.stream()
-                .map(this::convertHostConfig)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<HostConfigVO> getHostConfigList(List<Long> hostIdList, String type) {
-        // 查询
-        List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostIdList(hostIdList, type);
-        // 返回
-        return configs.stream()
-                .map(this::convertHostConfig)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> hostIdList, HostConfigTypeEnum type) {
-        // 查询
-        List<HostConfigDO> configs = hostConfigDAO.getHostConfigByHostIdList(hostIdList, type.getType());
-        // 返回
-        return configs.stream()
-                .collect(Collectors.toMap(
-                        HostConfigDO::getHostId,
-                        s -> type.parse(s.getConfig()),
-                        Functions.right()));
-    }
-
-    @Override
-    public Integer updateHostConfig(HostConfigUpdateRequest request) {
-        // 查询原配置
-        HostConfigDO record = this.getHostConfigByType(request.getHostId(), request.getType());
-        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
-        HostConfigTypeEnum type = Valid.valid(HostConfigTypeEnum::of, record.getType());
-        GenericsDataModel newConfig = type.parse(request.getConfig());
+    public <T extends GenericsDataModel> T getHostConfig(Long id, HostTypeEnum type) {
         // 查询主机
-        HostDO host = hostDAO.selectById(record.getHostId());
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        // 添加日志参数
-        OperatorLogs.add(OperatorLogs.REL_ID, host.getId());
-        OperatorLogs.add(OperatorLogs.NAME, host.getName());
-        OperatorLogs.add(OperatorLogs.TYPE, type.getType());
-        // 检查版本
-        Valid.eq(record.getVersion(), request.getVersion(), ErrorMessage.DATA_MODIFIED);
-        GenericsDataStrategy<GenericsDataModel> strategy = type.getStrategy();
-        GenericsDataModel beforeConfig = type.parse(record.getConfig());
-        // 更新前校验
-        strategy.doValid(beforeConfig, newConfig);
-        // 修改配置
-        HostConfigDO update = new HostConfigDO();
-        update.setId(record.getId());
-        update.setVersion(request.getVersion());
-        update.setConfig(newConfig.serial());
-        int effect = hostConfigDAO.updateById(update);
-        Valid.version(effect);
-        return update.getVersion();
+        HostDO host = hostDAO.selectById(id);
+        // 转换为配置
+        return this.buildHostConfig(host, type);
     }
 
     @Override
-    public Integer updateHostConfigStatus(HostConfigUpdateStatusRequest request) {
-        Long hostId = request.getHostId();
-        String type = request.getType();
-        Integer status = request.getStatus();
-        EnableStatus statusEnum = Valid.valid(EnableStatus::of, status);
-        HostConfigTypeEnum configType = Valid.valid(HostConfigTypeEnum::of, type);
+    @SuppressWarnings("unchecked")
+    public <T extends GenericsDataModel> T buildHostConfig(HostDO host, HostTypeEnum type) {
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 检查主机类型
+        Valid.isTrue(type.name().equals(host.getType()), ErrorMessage.HOST_TYPE_ERROR);
+        // 检查主机状态
+        Valid.isTrue(HostStatusEnum.ENABLED.name().equals(host.getStatus()), ErrorMessage.HOST_NOT_ENABLED);
+        // 查询主机配置
+        HostSshConfigModel model = type.parse(host.getConfig());
+        Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
+        return (T) model;
+    }
+
+    @Override
+    public <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> idList, HostTypeEnum type) {
         // 查询主机
-        HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        HostConfigDO config = this.getHostConfigByType(hostId, type);
-        // 添加日志参数
-        OperatorLogs.add(OperatorLogs.REL_ID, host.getId());
-        OperatorLogs.add(OperatorLogs.NAME, host.getName());
-        OperatorLogs.add(OperatorLogs.STATUS_NAME, statusEnum.name());
-        if (config != null) {
-            // 修改 查询配置
-            Integer version = request.getVersion();
-            Valid.notNull(version);
-            // 修改状态
-            HostConfigDO update = new HostConfigDO();
-            update.setId(config.getId());
-            update.setStatus(status);
-            update.setVersion(version);
-            update.setUpdateTime(new Date());
-            int effect = hostConfigDAO.updateById(update);
-            Valid.version(effect);
-            return update.getVersion();
-        } else {
-            // 新增 初始化
-            HostConfigDO defaultConfig = this.getDefaultConfig(hostId, configType);
-            defaultConfig.setStatus(status);
-            // 插入数据
-            hostConfigDAO.insert(defaultConfig);
-            return defaultConfig.getVersion();
-        }
-    }
-
-
-    @Override
-    public void initHostConfig(Long hostId) {
-        List<HostConfigDO> configs = Arrays.stream(HostConfigTypeEnum.values())
-                .map(s -> this.getDefaultConfig(hostId, s))
-                .collect(Collectors.toList());
-        hostConfigDAO.insertBatch(configs);
-    }
-
-    @Override
-    public List<Long> getEnabledConfigHostId(String type, List<Long> hostIdList) {
-        return hostConfigDAO.of()
-                .createValidateWrapper()
-                .select(HostConfigDO::getHostId)
-                .eq(HostConfigDO::getType, type)
-                .eq(HostConfigDO::getStatus, BooleanBit.TRUE.getValue())
-                .in(HostConfigDO::getHostId, hostIdList)
-                .then()
+        Map<Long, HostDO> hostMap = hostDAO.selectBatchIds(idList)
                 .stream()
-                .map(HostConfigDO::getHostId)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 通过类型获取配置
-     *
-     * @param hostId hostId
-     * @param type   type
-     * @return config
-     */
-    private HostConfigDO getHostConfigByType(Long hostId, String type) {
-        // 查询配置
-        return hostConfigDAO.of()
-                .createWrapper()
-                .eq(HostConfigDO::getHostId, hostId)
-                .eq(HostConfigDO::getType, type)
-                .then()
-                .getOne();
-    }
-
-    /**
-     * 获取默认配置
-     *
-     * @param hostId hostId
-     * @param type   type
-     * @return config
-     */
-    private HostConfigDO getDefaultConfig(Long hostId, HostConfigTypeEnum type) {
-        HostConfigDO insert = new HostConfigDO();
-        insert.setHostId(hostId);
-        insert.setType(type.getType());
-        insert.setStatus(type.getDefaultStatus());
-        insert.setConfig(type.getStrategy().getDefault().serial());
-        insert.setVersion(Const.DEFAULT_VERSION);
-        return insert;
-    }
-
-    /**
-     * 转化配置
-     *
-     * @param row row
-     * @return config
-     */
-    private HostConfigVO convertHostConfig(HostConfigDO row) {
-        // 获取配置
-        HostConfigTypeEnum type = HostConfigTypeEnum.of(row.getType());
-        if (type == null) {
-            return null;
+                .collect(Collectors.toMap(HostDO::getId, Function.identity(), Functions.right()));
+        // 转换为配置
+        Map<Long, T> result = new HashMap<>();
+        for (Long id : idList) {
+            result.put(id, this.buildHostConfig(hostMap.get(id), type));
         }
-        // 转为视图
-        HostConfigVO vo = HostConfigConvert.MAPPER.to(row);
-        Map<String, Object> config = type.toView(row.getConfig()).toMap();
-        vo.setConfig(config);
-        return vo;
+        return result;
+    }
+
+    @Override
+    public <T extends GenericsDataModel> Map<Long, T> buildHostConfigMap(List<HostDO> hostList, HostTypeEnum type) {
+        Map<Long, T> result = new HashMap<>();
+        for (HostDO host : hostList) {
+            result.put(host.getId(), this.buildHostConfig(host, type));
+        }
+        return result;
     }
 
 }

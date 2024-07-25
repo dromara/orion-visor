@@ -41,14 +41,14 @@ export const builtinParams: Array<TemplateParam> = [
     name: 'hostAddress',
     desc: '执行主机地址'
   }, {
+    name: 'hostPort',
+    desc: '主机端口'
+  }, {
     name: 'hostUsername',
     desc: '执行主机用户名'
   }, {
     name: 'osType',
     desc: '执行主机系统版本'
-  }, {
-    name: 'port',
-    desc: 'SSH 端口'
   }, {
     name: 'charset',
     desc: 'SSH 编码集'

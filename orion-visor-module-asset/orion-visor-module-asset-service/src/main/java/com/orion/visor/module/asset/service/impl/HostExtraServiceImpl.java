@@ -55,7 +55,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
                 .relId(hostId)
-                .item(item.getItem())
+                .item(item.name())
                 .build();
         String extraValue = dataExtraApi.getExtraValue(query, DataExtraTypeEnum.HOST);
         return item.parse(extraValue);
@@ -85,7 +85,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         // 检查初始化
         Map<String, Map<String, Object>> result = Maps.newMap();
         for (HostExtraItemEnum extraItem : extraItems) {
-            String item = extraItem.getItem();
+            String item = extraItem.name();
             // 检查初始化并转为视图
             Map<String, Object> extraValue = this.checkItemAndToView(extraItem, extraValues.get(item), userId, hostId);
             result.put(item, extraValue);
@@ -103,7 +103,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
                 .relId(hostId)
-                .item(item.getItem())
+                .item(item.name())
                 .build();
         DataExtraDTO beforeExtraItem = dataExtraApi.getExtraItem(query, DataExtraTypeEnum.HOST);
         if (beforeExtraItem == null) {
@@ -152,7 +152,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         DataExtraSetDTO set = DataExtraSetDTO.builder()
                 .userId(userId)
                 .relId(hostId)
-                .item(item.getItem())
+                .item(item.name())
                 .value(extraValue)
                 .build();
         dataExtraApi.addExtraItem(set, DataExtraTypeEnum.HOST);

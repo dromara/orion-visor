@@ -36,7 +36,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/system-menu")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class SystemMenuController {
 
     @Resource

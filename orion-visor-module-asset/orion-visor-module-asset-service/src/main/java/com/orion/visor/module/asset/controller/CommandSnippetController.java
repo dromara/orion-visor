@@ -29,7 +29,6 @@ import javax.annotation.Resource;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/command-snippet")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class CommandSnippetController {
 
     @Resource

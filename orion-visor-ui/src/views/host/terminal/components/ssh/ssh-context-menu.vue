@@ -31,8 +31,8 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ContextMenuItem, ISshSession } from '../../types/terminal.type';
-  import { ActionBarItems } from '../../types/terminal.const';
+  import type { ContextMenuItem, ISshSession } from '../../types/define';
+  import { ActionBarItems } from '../../types/const';
   import { useTerminalStore } from '@/store';
 
   defineProps<{

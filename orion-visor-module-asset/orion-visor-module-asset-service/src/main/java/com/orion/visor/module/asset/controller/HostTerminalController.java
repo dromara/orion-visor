@@ -30,7 +30,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-terminal")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostTerminalController {
 
     @Resource

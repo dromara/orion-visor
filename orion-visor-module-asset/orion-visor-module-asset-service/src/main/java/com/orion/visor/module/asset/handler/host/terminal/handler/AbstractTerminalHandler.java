@@ -100,7 +100,7 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
         if (ex == null) {
             return null;
         }
-        if (ex instanceof InvalidArgumentException) {
+        if (ex instanceof InvalidArgumentException || ex instanceof IllegalArgumentException) {
             return ex.getMessage();
         }
         return ErrorMessage.OPERATE_ERROR;

@@ -37,7 +37,6 @@ import java.util.Set;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/host-group")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class HostGroupController {
 
     @Resource

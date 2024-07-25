@@ -129,9 +129,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { CronPropType } from './const.types';
+  import type { CronPropType } from './const';
   import { computed, onMounted, reactive, ref, watch } from 'vue';
-  import { cronEmits, cronDefaultProps, convertWeekToQuartz } from './const.types';
+  import { cronEmits, cronDefaultProps, convertWeekToQuartz } from './const';
   import { useDebounceFn } from '@vueuse/core';
   import { dateFormat } from '@/utils';
   import { copy } from '@/hooks/copy';

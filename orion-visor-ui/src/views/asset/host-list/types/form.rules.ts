@@ -1,5 +1,10 @@
 import type { FieldRule } from '@arco-design/web-vue';
 
+export const type = [{
+  required: true,
+  message: '请选择主机类型'
+}] as FieldRule[];
+
 export const name = [{
   required: true,
   message: '请输入主机名称'
@@ -24,14 +29,26 @@ export const address = [{
   message: '主机地址长度不能大于128位'
 }] as FieldRule[];
 
+export const port = [{
+  required: true,
+  message: '请输入主机端口'
+}, {
+  type: 'number',
+  min: 1,
+  max: 65535,
+  message: '输入的端口不合法'
+}] as FieldRule[];
+
 export const tags = [{
   maxLength: 5,
   message: '最多选择5个标签'
 }] as FieldRule[];
 
 export default {
+  type,
   name,
   code,
   address,
+  port,
   tags,
 } as Record<string, FieldRule | FieldRule[]>;

@@ -13,12 +13,14 @@ const columns = [
     title: '角色名称',
     dataIndex: 'name',
     slotName: 'name',
+    minWidth: 118,
     ellipsis: true,
     tooltip: true,
   }, {
     title: '角色编码',
     dataIndex: 'code',
     slotName: 'code',
+    minWidth: 118,
   }, {
     title: '角色状态',
     dataIndex: 'status',

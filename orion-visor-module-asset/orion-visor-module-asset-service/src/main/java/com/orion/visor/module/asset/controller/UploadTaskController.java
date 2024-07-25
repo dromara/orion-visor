@@ -38,7 +38,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/upload-task")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class UploadTaskController {
 
     @Resource

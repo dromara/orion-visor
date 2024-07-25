@@ -64,6 +64,16 @@ public class ServerTemplate extends Template {
     }
 
     /**
+     * 是否生成 api http 文件
+     *
+     * @return this
+     */
+    public ServerTemplate enableApiHttp() {
+        table.enableApiHttp = true;
+        return this;
+    }
+
+    /**
      * 是否生成对外 api
      *
      * @return this

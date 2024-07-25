@@ -1,9 +1,8 @@
 package com.orion.visor.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.visor.module.asset.entity.request.host.HostCreateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostQueryRequest;
-import com.orion.visor.module.asset.entity.request.host.HostUpdateRequest;
+import com.orion.visor.module.asset.entity.request.host.*;
+import com.orion.visor.module.asset.entity.vo.HostConfigVO;
 import com.orion.visor.module.asset.entity.vo.HostVO;
 
 import java.util.List;
@@ -34,6 +33,22 @@ public interface HostService {
     Integer updateHostById(HostUpdateRequest request);
 
     /**
+     * 更新主机状态
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer updateHostStatus(HostUpdateStatusRequest request);
+
+    /**
+     * 更新主机配置
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer updateHostConfig(HostUpdateConfigRequest request);
+
+    /**
      * 通过 id 查询主机
      *
      * @param id id
@@ -42,11 +57,20 @@ public interface HostService {
     HostVO getHostById(Long id);
 
     /**
+     * 查询主机配置
+     *
+     * @param id id
+     * @return config
+     */
+    HostConfigVO getHostConfig(Long id);
+
+    /**
      * 查询主机
      *
+     * @param type type
      * @return rows
      */
-    List<HostVO> getHostListByCache();
+    List<HostVO> getHostList(String type);
 
     /**
      * 分页查询主机
@@ -78,5 +102,12 @@ public interface HostService {
      * @param idList idList
      */
     void deleteHostRelByIdListAsync(List<Long> idList);
+
+    /**
+     * 获取当前更新配置的 hostId
+     *
+     * @return hostId
+     */
+    Long getCurrentUpdateConfigHostId();
 
 }

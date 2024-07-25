@@ -31,7 +31,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/asset/command-snippet-group")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class CommandSnippetGroupController {
 
     @Resource

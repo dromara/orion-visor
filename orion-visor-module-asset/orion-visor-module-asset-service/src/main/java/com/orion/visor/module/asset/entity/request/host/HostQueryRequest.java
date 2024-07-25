@@ -40,13 +40,18 @@ public class HostQueryRequest extends PageRequest {
     @Schema(description = "主机地址")
     private String address;
 
+    @Size(max = 8)
+    @Schema(description = "主机类型")
+    private String type;
+
+    @Size(max = 8)
+    @Schema(description = "主机状态")
+    private String status;
+
     @Schema(description = "tag")
     private List<Long> tags;
 
     @Schema(description = "是否查询 tag 信息")
     private Boolean queryTag;
-
-    @Schema(description = "是否查询配置信息")
-    private Boolean queryConfig;
 
 }

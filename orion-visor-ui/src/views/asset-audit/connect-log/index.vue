@@ -41,7 +41,7 @@
   // 重置缓存
   onUnmounted(() => {
     const cacheStore = useCacheStore();
-    cacheStore.reset('users', 'hosts');
+    cacheStore.reset('users');
   });
 
 </script>

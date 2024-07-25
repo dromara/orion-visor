@@ -34,7 +34,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/operator-log")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class OperatorLogController {
 
     @Resource

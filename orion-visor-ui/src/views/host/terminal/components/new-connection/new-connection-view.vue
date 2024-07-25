@@ -69,7 +69,7 @@
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
   import { onBeforeMount, ref } from 'vue';
-  import { NewConnectionType, newConnectionTypeKey } from '../../types/terminal.const';
+  import { NewConnectionType, newConnectionTypeKey } from '../../types/const';
   import { useDictStore, useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { dataColor } from '@/utils';

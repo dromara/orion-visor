@@ -140,6 +140,30 @@
           </a-tag>
         </a-space>
       </template>
+      <!-- 权限标识 -->
+      <template #permission="{ record }">
+        <span v-if="record.permission"
+              class="text-copy"
+              @click="copy(record.permission, '已复制')">
+          {{ record.permission }}
+        </span>
+      </template>
+      <!-- 组件名称 -->
+      <template #component="{ record }">
+        <span v-if="record.component"
+              class="text-copy"
+              @click="copy(record.component, '已复制')">
+          {{ record.component }}
+        </span>
+      </template>
+      <!-- 链接路径 -->
+      <template #path="{ record }">
+        <span v-if="record.path"
+              class="text-copy"
+              @click="copy(record.path, '已复制')">
+          {{ record.path }}
+        </span>
+      </template>
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
@@ -193,28 +217,28 @@
   import { useCacheStore, useDictStore } from '@/store';
   import usePermission from '@/hooks/permission';
   import { findParentNode } from '@/utils/tree';
+  import { copy } from '@/hooks/copy';
 
-  const { toOptions, getDictValue, toggleDictValue } = useDictStore();
+  const emits = defineEmits(['openAdd', 'openUpdate']);
+
   const cacheStore = useCacheStore();
   const { hasPermission } = usePermission();
+  const { loading: fetchLoading, setLoading: setFetchLoading } = useLoading();
+  const { toOptions, getDictValue, toggleDictValue } = useDictStore();
 
   const formRef = ref();
+  const tableRef = ref();
+  const expandStatus = ref<boolean>(false);
+  const tableRenderData = ref<Array<MenuQueryResponse>>([]);
   const formModel = reactive<MenuQueryRequest>({
     name: undefined,
     status: undefined
   });
 
-  const tableRef = ref();
-  const expandStatus = ref<boolean>(false);
-
-  const tableRenderData = ref<MenuQueryResponse[]>([]);
-  const { loading: fetchLoading, setLoading: setFetchLoading } = useLoading();
-
-  const emits = defineEmits(['openAdd', 'openUpdate']);
-
   // 删除菜单
-  const doDeleteMenu = async ({ id }: any) => {
+  const doDeleteMenu = async (record: MenuQueryResponse) => {
     try {
+      const id = record.id;
       setFetchLoading(true);
       // 调用删除接口
       await deleteMenu(id);

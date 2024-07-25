@@ -25,6 +25,20 @@
       <a-form-item field="address" label="主机地址">
         <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
+      <!-- 主机类型 -->
+      <a-form-item field="type" label="主机类型">
+        <a-select v-model="formModel.type"
+                  :options="toOptions(hostTypeKey)"
+                  placeholder="请选择主机类型"
+                  allow-clear />
+      </a-form-item>
+      <!-- 主机状态 -->
+      <a-form-item field="status" label="主机状态">
+        <a-select v-model="formModel.status"
+                  :options="toOptions(hostStatusKey)"
+                  placeholder="请选择主机状态"
+                  allow-clear />
+      </a-form-item>
       <!-- 主机标签 -->
       <a-form-item field="tags" label="主机标签">
         <tag-multi-selector v-model="formModel.tags"
@@ -115,17 +129,34 @@
              :bordered="false"
              @page-change="(page) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size) => fetchTableData(1, size)">
-      <!-- 编码 -->
+      <!-- 主机类型 -->
+      <template #type="{ record }">
+        <a-tag :color="getDictValue(hostTypeKey, record.type, 'color')">
+          {{ getDictValue(hostTypeKey, record.type) }}
+        </a-tag>
+      </template>
+      <!-- 主机编码 -->
       <template #code="{ record }">
         <a-tag>{{ record.code }}</a-tag>
       </template>
       <!-- 地址 -->
       <template #address="{ record }">
-        <span class="span-blue text-copy"
+        <span class="span-blue text-copy host-address"
               title="复制"
               @click="copy(record.address)">
           {{ record.address }}
         </span>
+        <span class="span-blue text-copy"
+              title="复制"
+              @click="copy(record.port)">
+          {{ record.port }}
+        </span>
+      </template>
+      <!-- 主机状态 -->
+      <template #status="{ record }">
+        <a-tag :color="getDictValue(hostStatusKey, record.status, 'color')">
+          {{ getDictValue(hostStatusKey, record.status) }}
+        </a-tag>
       </template>
       <!-- 标签 -->
       <template #tags="{ record }">
@@ -149,13 +180,6 @@
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
-          <!-- 配置 -->
-          <a-button type="text"
-                    size="mini"
-                    v-permission="['asset:host:update-config']"
-                    @click="emits('openUpdateConfig', record)">
-            配置
-          </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -168,6 +192,36 @@
               删除
             </a-button>
           </a-popconfirm>
+          <!-- 更多 -->
+          <a-dropdown trigger="hover">
+            <a-button type="text" size="mini">
+              更多
+            </a-button>
+            <template #content>
+              <!-- 配置 -->
+              <a-doption v-permission="['asset:host:update-config']"
+                         @click="emits('openUpdateConfig', record)">
+                <span class="more-doption normal">
+                  配置
+                </span>
+              </a-doption>
+              <!-- 修改状态 -->
+              <a-doption v-permission="['asset:host:update-status']"
+                         @click="updateStatus(record)">
+                <span class="more-doption"
+                      :class="[toggleDictValue(hostStatusKey, record.status, 'status')]">
+                  {{ toggleDictValue(hostStatusKey, record.status, 'label') }}
+                </span>
+              </a-doption>
+              <!-- 复制 -->
+              <a-doption v-permission="['asset:host:create']"
+                         @click="emits('openCopy', record)">
+                <span class="more-doption normal">
+                  复制
+                </span>
+              </a-doption>
+            </template>
+          </a-dropdown>
         </div>
       </template>
     </a-table>
@@ -183,43 +237,72 @@
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteHost, batchDeleteHost, getHostPage } from '@/api/asset/host';
-  import { Message } from '@arco-design/web-vue';
-  import { tagColor } from '../types/const';
+  import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
+  import { Message, Modal } from '@arco-design/web-vue';
+  import { tagColor, hostTypeKey, hostStatusKey } from '../types/const';
   import { usePagination, useRowSelection } from '@/types/table';
-  import useLoading from '@/hooks/loading';
+  import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
-  import columns from '../types/table.columns';
   import { dataColor } from '@/utils';
+  import useLoading from '@/hooks/loading';
+  import columns from '../types/table.columns';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
+  const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
   const pagination = usePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
+  const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
   const tagSelector = ref();
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<HostQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<HostQueryResponse>>([]);
   const formModel = reactive<HostQueryRequest>({
     id: undefined,
     name: undefined,
     code: undefined,
     address: undefined,
+    type: undefined,
+    status: undefined,
     tags: undefined,
     queryTag: true
   });
 
+  // 更新状态
+  const updateStatus = async (record: HostQueryResponse) => {
+    const dict = toggleDict(hostStatusKey, record.status);
+    Modal.confirm({
+      title: `${dict.label}确认`,
+      titleAlign: 'start',
+      content: `确定要${dict.label}该主机吗?`,
+      okText: '确定',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          const newStatus = dict.value as string;
+          // 调用修改接口
+          await updateHostStatus({
+            id: record.id,
+            status: newStatus,
+          });
+          record.status = newStatus;
+          Message.success(`已${dict.label}`);
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+  };
+
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: HostQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHost(id);
+      await deleteHost(record.id);
       Message.success('删除成功');
       // 重新加载数据
       fetchTableData();
@@ -292,4 +375,10 @@
     display: flex;
     align-items: center;
   }
+
+  .host-address::after {
+    content: ':';
+    user-select: text;
+  }
+
 </style>

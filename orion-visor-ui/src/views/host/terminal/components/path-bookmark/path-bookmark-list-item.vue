@@ -112,7 +112,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, ISshSession } from '../../types/terminal.type';
+  import type { ISftpSession, ISshSession } from '../../types/define';
   import type { PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
@@ -120,7 +120,7 @@
   import { inject } from 'vue';
   import { getParentPath } from '@/utils/file';
   import { openUpdatePathKey, PathBookmarkType, removePathKey } from './types/const';
-  import { PanelSessionType } from '../../types/terminal.const';
+  import { PanelSessionType } from '../../types/const';
 
   const props = defineProps<{
     item: PathBookmarkQueryResponse;

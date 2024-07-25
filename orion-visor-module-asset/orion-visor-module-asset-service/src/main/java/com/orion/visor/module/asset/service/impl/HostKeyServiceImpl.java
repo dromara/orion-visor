@@ -15,7 +15,7 @@ import com.orion.visor.framework.redis.core.utils.RedisMaps;
 import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.module.asset.convert.HostKeyConvert;
-import com.orion.visor.module.asset.dao.HostConfigDAO;
+import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.dao.HostIdentityDAO;
 import com.orion.visor.module.asset.dao.HostKeyDAO;
 import com.orion.visor.module.asset.define.cache.HostCacheKeyDefine;
@@ -56,7 +56,7 @@ public class HostKeyServiceImpl implements HostKeyService {
     private HostIdentityDAO hostIdentityDAO;
 
     @Resource
-    private HostConfigDAO hostConfigDAO;
+    private HostDAO hostDAO;
 
     @Resource
     private DataExtraApi dataExtraApi;
@@ -193,7 +193,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 删除关联
         hostIdentityDAO.setKeyWithNull(idList);
         // 删除主机配置
-        hostConfigDAO.setKeyIdWithNull(idList);
+        hostDAO.setKeyIdWithNull(idList);
         // 删除主机密钥额外配置
         dataExtraApi.deleteHostKeyExtra(idList);
         // 删除数据权限

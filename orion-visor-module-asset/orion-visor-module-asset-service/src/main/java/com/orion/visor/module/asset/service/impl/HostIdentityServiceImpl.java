@@ -17,7 +17,7 @@ import com.orion.visor.framework.redis.core.utils.RedisMaps;
 import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import com.orion.visor.module.asset.convert.HostIdentityConvert;
-import com.orion.visor.module.asset.dao.HostConfigDAO;
+import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.dao.HostIdentityDAO;
 import com.orion.visor.module.asset.dao.HostKeyDAO;
 import com.orion.visor.module.asset.define.cache.HostCacheKeyDefine;
@@ -62,7 +62,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     private HostKeyDAO hostKeyDAO;
 
     @Resource
-    private HostConfigDAO hostConfigDAO;
+    private HostDAO hostDAO;
 
     @Resource
     private DataExtraApi dataExtraApi;
@@ -209,7 +209,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 删除数据库
         int effect = hostIdentityDAO.deleteBatchIds(idList);
         // 删除主机配置
-        hostConfigDAO.setIdentityIdWithNull(idList);
+        hostDAO.setIdentityIdWithNull(idList);
         // 删除主机身份额外配置
         dataExtraApi.deleteHostIdentityExtra(idList);
         // 删除数据权限

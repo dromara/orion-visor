@@ -26,7 +26,7 @@
   import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
   import type { HostQueryResponse } from '@/api/asset/host';
   import { computed, onMounted, provide, ref, watch } from 'vue';
-  import { NewConnectionType, openSettingModalKey } from '../../types/terminal.const';
+  import { NewConnectionType, openSettingModalKey } from '../../types/const';
   import HostGroupView from './host-group-view.vue';
   import HostListView from './host-list-view.vue';
   import HostSettingModal from '../setting/extra/host-setting-modal.vue';
@@ -49,7 +49,7 @@
   const emptyMessage = computed(() => {
     if (props.newConnectionType === NewConnectionType.LIST) {
       // 列表
-      return '无授权主机/主机未启用 SSH 配置!';
+      return '无授权主机!';
     } else if (props.newConnectionType === NewConnectionType.FAVORITE) {
       // 收藏
       return '无收藏记录, 快去点击主机右侧的⭐进行收藏吧!';

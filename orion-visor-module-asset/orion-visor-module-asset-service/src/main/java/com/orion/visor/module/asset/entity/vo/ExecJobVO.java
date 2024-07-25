@@ -69,6 +69,6 @@ public class ExecJobVO implements Serializable {
     private List<Long> hostIdList;
 
     @Schema(description = "执行主机")
-    private List<HostVO> hostList;
+    private List<HostBaseVO> hostList;
 
 }

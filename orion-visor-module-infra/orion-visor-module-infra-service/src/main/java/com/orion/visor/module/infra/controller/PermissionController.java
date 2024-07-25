@@ -32,7 +32,6 @@ import java.util.List;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/permission")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class PermissionController {
 
     @Resource

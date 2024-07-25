@@ -12,6 +12,7 @@ import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpFileVO;
+import com.orion.visor.module.asset.utils.SftpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -82,7 +83,10 @@ public class SftpSession extends TerminalSession implements ISftpSession {
     @Override
     public void move(String source, String target) {
         source = Valid.checkNormalize(source);
-        executor.move(source, target);
+        // 移动
+        SftpUtils.move(executor, source, target);
+        // FIXME kit
+        // executor.move(source, target);
     }
 
     @Override

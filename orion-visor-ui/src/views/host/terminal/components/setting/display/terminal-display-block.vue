@@ -119,9 +119,10 @@
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
   import { ref, watch, onMounted } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { fontFamilyKey, fontSizeKey, fontWeightKey, fontFamilySuffix, cursorStyleKey } from '../../../types/terminal.const';
+  import { fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey } from '../../../types/const';
   import { labelFilter } from '@/types/form';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import { defaultFontFamily } from '@/types/xterm';
   import TerminalExample from '../terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
@@ -142,7 +143,8 @@
     // 修改预览终端配置
     Object.keys(v).forEach(key => {
       if (key === 'fontFamily') {
-        options[key] = (formModel.value as any)[key] + fontFamilySuffix;
+        const fontFamily = (formModel.value as any)[key];
+        options[key] = fontFamily === '_' ? defaultFontFamily : `${fontFamily}, ${defaultFontFamily}`;
       } else {
         options[key] = (formModel.value as any)[key];
       }

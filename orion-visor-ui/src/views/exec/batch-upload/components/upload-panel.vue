@@ -38,6 +38,7 @@
     </template>
     <!-- 主机模态框 -->
     <authorized-host-modal ref="hostModal"
+                           type="SSH"
                            @selected="setSelectedHost" />
   </a-spin>
 </template>
@@ -143,7 +144,7 @@
       // 上传文件
       await filesRef.value.startUpload(data.token);
     } catch (e) {
-      taskStatus.value = UploadTaskStepStatus.FAILED;
+      taskStatus.value = UploadTaskStepStatus.WAITING;
     } finally {
       setLoading(false);
     }

@@ -42,10 +42,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SshExtraSettingModel } from '../../../types/terminal.type';
+  import type { SshExtraSettingModel } from '../../../types/define';
   import { onMounted, ref } from 'vue';
   import { getHostExtraItem } from '@/api/asset/host-extra';
-  import { ExtraSshAuthType, extraSshAuthTypeKey } from '../../../types/terminal.const';
+  import { ExtraSshAuthType, extraSshAuthTypeKey } from '../../../types/const';
   import { useDictStore } from '@/store';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';

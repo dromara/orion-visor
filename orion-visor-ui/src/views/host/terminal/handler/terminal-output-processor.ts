@@ -1,14 +1,7 @@
-import {
-  ISftpSession,
-  ISshSession,
-  ITerminalChannel,
-  ITerminalOutputProcessor,
-  ITerminalSession,
-  ITerminalSessionManager,
-  OutputPayload
-} from '../types/terminal.type';
-import { InputProtocol } from '../types/terminal.protocol';
-import { PanelSessionType, TerminalStatus } from '../types/terminal.const';
+import type { ISftpSession, ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSession, ITerminalSessionManager } from '../types/define';
+import type { OutputPayload } from '@/types/protocol/terminal.protocol';
+import { InputProtocol } from '@/types/protocol/terminal.protocol';
+import { PanelSessionType, TerminalStatus } from '../types/const';
 import { useTerminalStore } from '@/store';
 import { Message } from '@arco-design/web-vue';
 
@@ -43,7 +36,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         });
       } else {
         // 未成功展示错误信息
-        ssh.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
+        ssh.write(`[91m${msg || ''}[0m\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
         ssh.status = TerminalStatus.CLOSED;
       }
     }, sftp => {
@@ -76,7 +69,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         ssh.connect();
       } else {
         // 未成功展示错误信息
-        ssh.write(`[91m${msg || ''}\r\n输入回车重新连接...[0m\r\n\r\n`);
+        ssh.write(`[91m${msg || ''}[0m\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
         ssh.status = TerminalStatus.CLOSED;
       }
     }, sftp => {
@@ -135,10 +128,10 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   }
 
   // 处理 SFTP 文件列表
-  processSftpList({ sessionId, result, path, body }: OutputPayload): void {
+  processSftpList({ sessionId, result, path, msg, body }: OutputPayload): void {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveList(result, path, JSON.parse(body));
+    session && session.resolver.resolveList(path, result, msg, JSON.parse(body));
   }
 
   // 处理 SFTP 创建文件夹
@@ -177,17 +170,17 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   }
 
   // 处理 SFTP 下载文件夹展开文件
-  processDownloadFlatDirectory({ sessionId, currentPath, body }: OutputPayload): void {
+  processDownloadFlatDirectory({ sessionId, currentPath, result, msg, body }: OutputPayload): void {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveDownloadFlatDirectory(currentPath, JSON.parse(body));
+    session && session.resolver.resolveDownloadFlatDirectory(currentPath, result, msg, JSON.parse(body));
   }
 
   // 处理 SFTP 获取文件内容
-  processSftpGetContent({ sessionId, path, result, content }: OutputPayload): void {
+  processSftpGetContent({ sessionId, path, result, msg, content }: OutputPayload): void {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveSftpGetContent(path, result, content);
+    session && session.resolver.resolveSftpGetContent(path, result, msg, content);
   }
 
   // 处理 SFTP 修改文件内容

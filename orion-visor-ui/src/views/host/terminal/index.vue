@@ -45,9 +45,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from './types/terminal.type';
+  import type { ISshSession } from './types/define';
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
-  import { dictKeys, PanelSessionType, TerminalTabs } from './types/terminal.const';
+  import { dictKeys, PanelSessionType, TerminalTabs } from './types/const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import debug from '@/utils/env';

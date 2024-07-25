@@ -38,11 +38,11 @@ public class HostTerminalConnectDTO {
     @Schema(description = "主机地址")
     private String hostAddress;
 
+    @Schema(description = "主机端口")
+    private Integer hostPort;
+
     @Schema(description = "系统类型")
     private String osType;
-
-    @Schema(description = "端口")
-    private Integer port;
 
     @Schema(description = "超时时间")
     private Integer timeout;

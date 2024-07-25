@@ -35,7 +35,7 @@ import com.orion.visor.module.asset.entity.request.upload.UploadTaskFileRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskRequest;
 import com.orion.visor.module.asset.entity.vo.*;
-import com.orion.visor.module.asset.enums.HostConfigTypeEnum;
+import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.visor.module.asset.enums.UploadTaskStatusEnum;
 import com.orion.visor.module.asset.handler.host.upload.FileUploadTasks;
@@ -105,7 +105,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 检查主机是否有权限
         this.checkHostPermission(hostIdList);
         // 查询主机信息
-        List<HostBaseVO> hosts = hostDAO.selectBatchIds(hostIdList)
+        List<HostBaseVO> hosts = hostDAO.selectBaseByIdList(hostIdList)
                 .stream()
                 .map(HostConvert.MAPPER::toBase)
                 .collect(Collectors.toList());
@@ -330,7 +330,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
      */
     private void checkHostPermission(List<Long> hostIdList) {
         // 查询有权限的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedHostIdWithEnabledConfig(SecurityUtils.getLoginUserId(), HostConfigTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }

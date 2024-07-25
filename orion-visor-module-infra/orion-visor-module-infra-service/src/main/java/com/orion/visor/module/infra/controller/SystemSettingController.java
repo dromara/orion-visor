@@ -28,7 +28,6 @@ import javax.annotation.Resource;
 @RestWrapper
 @RestController
 @RequestMapping("/infra/system-setting")
-@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
 public class SystemSettingController {
 
     @Resource

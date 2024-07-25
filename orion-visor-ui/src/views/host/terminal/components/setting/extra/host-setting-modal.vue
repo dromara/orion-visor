@@ -47,7 +47,7 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { ExtraSettingItems } from '../../../types/terminal.const';
+  import { ExtraSettingItems } from '../../../types/const';
   import { updateHostExtra } from '@/api/asset/host-extra';
   import { Message } from '@arco-design/web-vue';
   import SshSettingForm from './ssh-setting-form.vue';

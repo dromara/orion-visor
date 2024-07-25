@@ -79,6 +79,6 @@ public interface FieldConst {
 
     String FILTER = "filter";
 
-    String LICENSE = "license";
+    String ALL = "all";
 
 }
