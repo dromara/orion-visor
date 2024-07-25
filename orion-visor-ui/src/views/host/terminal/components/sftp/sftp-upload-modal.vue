@@ -10,13 +10,15 @@
            :unmount-on-close="true"
            :on-before-ok="handlerOk"
            @cancel="handleClose">
-    <!-- 上传目录 -->
-    <div class="item-wrapper">
-      <div class="form-item">
-        <span class="item-label">上传至文件夹</span>
-        <a-input class="item-input"
-                 v-model="parentPath"
-                 placeholder="上传目录" />
+    <div class="upload-container">
+      <!-- 上传目录 -->
+      <div class="item-wrapper">
+        <div class="form-item">
+          <span class="item-label">上传至文件夹</span>
+          <a-input class="item-input"
+                   v-model="parentPath"
+                   placeholder="上传目录" />
+        </div>
       </div>
       <a-space>
         <!-- 选择文件 -->
@@ -112,7 +114,7 @@
     }
     // 获取上传的文件
     const files = fileList.value.map(s => s.file as File);
-    // 上传
+    // 普通上传
     transferManager.addUpload(hostId.value, parentPath.value, files);
     Message.success('已开始上传, 点击右侧传输列表查看进度');
     // 清空
@@ -135,6 +137,11 @@
 <style lang="less" scoped>
   @file-size-width: 82px;
   @item-label: 104px;
+
+  .upload-container {
+    width: 100%;
+    padding: 20px;
+  }
 
   .item-wrapper {
     margin-bottom: 24px;
@@ -163,6 +170,11 @@
       width: 376px;
     }
 
+    .form-help {
+      margin: 4px 0 0 @item-label;
+      font-size: 12px;
+      color: var(--color-text-2);
+    }
   }
 
   .file-list-uploader {
