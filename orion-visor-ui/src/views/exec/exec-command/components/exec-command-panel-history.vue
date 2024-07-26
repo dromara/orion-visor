@@ -18,9 +18,10 @@
       <a-empty description="无执行记录" />
     </div>
     <!-- 批量执行日志 -->
-    <div v-else class="exec-history-rows">
-      <div v-for="record in historyLogs"
+    <a-scrollbar v-else>
+      <div v-for="(record, index) in historyLogs"
            :key="record.id"
+           :style="{ marginBottom: index === historyLogs.length -1 ? 0 : '8px' }"
            class="exec-history"
            @click="emits('selected', record)">
         <!-- 机器数量 -->
@@ -32,7 +33,7 @@
           {{ record.description }}
         </span>
       </div>
-    </div>
+    </a-scrollbar>
   </div>
 </template>
 
@@ -110,14 +111,16 @@
 </script>
 
 <style lang="less" scoped>
-  .exec-history-rows {
-    position: absolute;
-    width: calc(100% - 32px);
-    height: calc(100% - 64px);
-    overflow: auto;
+  .container {
+    :deep(.arco-scrollbar) {
+      position: absolute;
+      width: calc(100% - 32px);
+      height: calc(100% - 64px);
 
-    &::-webkit-scrollbar-track {
-      display: none;
+      &-container {
+        height: 100%;
+        overflow-y: auto;
+      }
     }
   }
 
@@ -127,7 +130,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
     background: var(--color-fill-2);
     transition: all .2s;
     user-select: none;

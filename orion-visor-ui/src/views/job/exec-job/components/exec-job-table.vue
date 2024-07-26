@@ -84,8 +84,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- cron -->
       <template #expression="{ record }">
         <span class="copy-left"
@@ -118,7 +118,7 @@
                   :unchecked-text="getDictValue(execJobStatusKey, ExecJobStatus.DISABLED)"
                   :checked-value="ExecJobStatus.ENABLED"
                   :unchecked-value="ExecJobStatus.DISABLED"
-                  :before-change="s => updateStatus(record.id, s as number)" />
+                  :before-change="(s: number) => updateStatus(record.id, s)" />
         <!-- 状态 不可编辑 -->
         <a-tag v-else :color="getDictValue(execJobStatusKey, record.status, 'color')">
           {{ getDictValue(execJobStatusKey, record.status) }}

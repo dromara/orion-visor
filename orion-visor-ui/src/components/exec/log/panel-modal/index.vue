@@ -119,11 +119,6 @@
         align-items: center;
       }
     }
-
-    .exec-host-items {
-      width: 100%;
-      height: calc(100% - 38px);
-    }
   }
 
   :deep(.log-header) {

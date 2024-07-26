@@ -87,8 +87,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">

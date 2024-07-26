@@ -13,7 +13,7 @@
       <!-- 一级菜单 -->
       <a-menu-item v-if="!menu.children?.length"
                    :key="menu.name"
-                   @click="(e) => goto(e, menu)">
+                   @click="(e: any) => goto(e, menu)">
         <!-- 图标 -->
         <template #icon>
           <component v-if="menu.meta?.icon" :is="menu.meta?.icon" />
@@ -34,7 +34,7 @@
         <!-- 子菜单 -->
         <a-menu-item v-for="child in menu.children"
                      :key="child.name"
-                     @click="(e) => goto(e, child)">
+                     @click="(e: any) => goto(e, child)">
           <!-- 图标 -->
           <template #icon v-if="child.meta?.icon">
             <component :is="child.meta?.icon" />

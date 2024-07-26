@@ -77,8 +77,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 配置项 -->
       <template #keyName="{record}">
         {{ record.keyName }}<span style="margin: 0 4px;">-</span>{{ record.keyDescription }}

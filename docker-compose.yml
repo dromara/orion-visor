@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   orion-visor-service:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.0
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.1
     privileged: true
     ports:
       - 1081:80
@@ -32,7 +32,7 @@ services:
       - orion-visor-mysql
       - orion-visor-redis
   orion-visor-mysql:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.0
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.1
     privileged: true
     ports:
       - 3307:3306
@@ -52,7 +52,7 @@ services:
       retries: 10
       start_period: 3s
   orion-visor-redis:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.0
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.1
     privileged: true
     ports:
       - 6380:6379

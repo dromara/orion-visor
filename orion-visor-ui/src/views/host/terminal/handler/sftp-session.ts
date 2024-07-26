@@ -1,4 +1,5 @@
 import type { ISftpSession, ISftpSessionResolver, ITerminalChannel, TerminalPanelTabItem } from '../types/define';
+import { h } from 'vue';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
 import { PanelSessionType } from '../types/const';
 import { Modal } from '@arco-design/web-vue';
@@ -77,15 +78,32 @@ export default class SftpSession extends BaseSession implements ISftpSession {
   };
 
   // 删除文件
-  remove(path: string[]) {
+  remove(paths: string[]) {
+    // 内容
+    const contentNode = h('div', {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '40vh',
+          overflowY: 'auto'
+        }
+      },
+      paths.map(s => {
+        return h('span', { style: { marginTop: '4px' } }, s);
+      }));
+    // 提示
     Modal.confirm({
-      title: '删除确认',
-      content: `确定要删除 ${path.join(',')} 吗? 确定后将立即删除且无法恢复!`,
+      title: '确定后将立即删除这些文件且无法恢复!',
+      modalStyle: { padding: '24px 32px' },
+      bodyStyle: { marginTop: '-14px' },
+      okButtonProps: { status: 'danger' },
+      okText: '删除',
+      content: () => contentNode,
       onOk: () => {
         this.resolver.setLoading(true);
         this.channel.send(InputProtocol.SFTP_REMOVE, {
           sessionId: this.sessionId,
-          path: path.join('|')
+          path: paths.join('|')
         });
       }
     });

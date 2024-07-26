@@ -43,7 +43,6 @@ export default class SftpTransferManager implements ISftpTransferManager {
         file: s
       };
     });
-    this.transferList.push(...items);
     // 开始传输
     this.startTransfer(items);
   }

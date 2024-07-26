@@ -320,6 +320,18 @@
     height: calc(100% - 56px);
     overflow: auto;
     padding-bottom: 4px;
+
+    &::-webkit-scrollbar-track {
+      display: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background: var(--color-fill-4);
+    }
   }
 
   .loading-skeleton {

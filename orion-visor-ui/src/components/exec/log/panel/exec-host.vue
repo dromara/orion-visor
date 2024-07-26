@@ -13,23 +13,26 @@
     </div>
     <!-- 主机列表 -->
     <div class="exec-host-items">
-      <div v-for="item in hosts"
-           :key="item.id"
-           class="exec-host-item"
-           :class="[ current === item.id ? 'exec-host-item-selected' : '' ]"
-           @click="emits('selected', item.id)">
-        <!-- 主机名称 -->
-        <div class="exec-host-item-name">
-          <span class="host-name">{{ item.hostName }}</span>
-          <span class="host-address">{{ item.hostAddress }}</span>
+      <a-scrollbar>
+        <div v-for="(item, index) in hosts"
+             :key="item.id"
+             class="exec-host-item"
+             :class="[ current === item.id ? 'exec-host-item-selected' : '' ]"
+             :style="{ marginBottom: index === hosts.length -1 ? 0 : '8px' }"
+             @click="emits('selected', item.id)">
+          <!-- 主机名称 -->
+          <div class="exec-host-item-name">
+            <span class="host-name">{{ item.hostName }}</span>
+            <span class="host-address">{{ item.hostAddress }}</span>
+          </div>
+          <!-- 状态 -->
+          <div class="exec-host-item-status">
+            <a-tag :color="getDictValue(execHostStatusKey, item.status, 'execColor')">
+              {{ getDictValue(execHostStatusKey, item.status) }}
+            </a-tag>
+          </div>
         </div>
-        <!-- 状态 -->
-        <div class="exec-host-item-status">
-          <a-tag :color="getDictValue(execHostStatusKey, item.status, 'execColor')">
-            {{ getDictValue(execHostStatusKey, item.status) }}
-          </a-tag>
-        </div>
-      </div>
+      </a-scrollbar>
     </div>
   </div>
 </template>
@@ -78,13 +81,19 @@
   }
 
   .exec-host-items {
-    position: absolute;
-    width: calc(100% - 32px);
-    height: calc(100% - 68px);
-    overflow: auto;
+    position: relative;
+    width: 100%;
+    height: calc(100% - 38px);
 
-    &::-webkit-scrollbar-track {
-      display: none;
+    :deep(.arco-scrollbar) {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+
+      &-container {
+        height: 100%;
+        overflow-y: auto;
+      }
     }
   }
 
@@ -99,7 +108,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
     background: var(--color-fill-2);
     transition: all .2s;
     user-select: none;

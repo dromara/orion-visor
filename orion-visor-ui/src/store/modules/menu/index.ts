@@ -1,10 +1,10 @@
 import type { RouteMeta, RouteRecordNormalized } from 'vue-router';
 import type { MenuState } from './types';
 import type { MenuQueryResponse } from '@/api/system/menu';
+import router from '@/router';
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
 import { getMenuList } from '@/api/user/auth';
-import router from '@/router';
 import { EnabledStatus } from '@/types/const';
 
 export default defineStore('menu', {

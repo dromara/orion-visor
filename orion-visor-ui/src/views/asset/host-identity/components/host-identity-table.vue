@@ -102,8 +102,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 类型 -->
       <template #type="{ record }">
         <a-tag :color="getDictValue(identityTypeKey, record.type, 'color')">
