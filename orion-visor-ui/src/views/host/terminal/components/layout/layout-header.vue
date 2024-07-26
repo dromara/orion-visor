@@ -14,8 +14,8 @@
               :editable="true"
               :hide-content="true"
               :auto-switch="true"
-              @tab-click="k => tabManager.clickTab(k as string)"
-              @delete="k => tabManager.deleteTab(k as string)">
+              @tab-click="(k: string) => tabManager.clickTab(k)"
+              @delete="(k: string) => tabManager.deleteTab(k)">
         <a-tab-pane v-for="tab in tabManager.items"
                     :key="tab.key">
           <!-- 标题 -->

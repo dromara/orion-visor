@@ -88,8 +88,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 用户名 -->
       <template #username="{ record }">
         <span class="text-copy" @click="copy(record.username)">
@@ -107,7 +107,7 @@
                   :unchecked-text="getDictValue(userStatusKey, UserStatus.DISABLED)"
                   :checked-value="UserStatus.ENABLED"
                   :unchecked-value="UserStatus.DISABLED"
-                  :before-change="(s) => updateStatus(record.id, s as number)" />
+                  :before-change="(s: number) => updateStatus(record.id, s)" />
         <!-- 无修改权限 -->
         <span v-else>
           <span class="circle" :style="{

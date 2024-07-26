@@ -20,7 +20,7 @@
           <a-input size="small"
                    :ref="setAutoFocus as unknown as VNodeRef"
                    :model-value="filterValue[0]"
-                   @input="(value) => setFilterValue([value])"
+                   @input="(value: string) => setFilterValue([value])"
                    @press-enter="handleFilterConfirm" />
           <!-- 按钮 -->
           <div class="name-filter-footer">

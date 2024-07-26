@@ -51,8 +51,8 @@
                :pagination="pagination"
                :bordered="false"
                :scroll="{ x: '100%', y: '60vh' }"
-               @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-               @page-size-change="(size) => fetchTableData(1, size)">
+               @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+               @page-size-change="(size: number) => fetchTableData(1, size)">
         <!-- 模板名称 -->
         <template #name="{ record }">
           <span class="span-blue">{{ record.name }}</span>

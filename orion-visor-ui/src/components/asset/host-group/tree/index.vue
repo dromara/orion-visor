@@ -12,7 +12,7 @@
             :checkable="checkable"
             :check-strictly="true"
             @drop="moveGroup"
-            @select="(s) => emits('onSelected', s)">
+            @select="(s: any) => emits('onSelected', s)">
       <!-- 标题 -->
       <template #title="node">
         <!-- 修改名称输入框 -->

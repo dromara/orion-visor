@@ -93,8 +93,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)"
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)"
              @expand="loadExecHost">
       <!-- 展开表格 -->
       <template #expand-row="{ record }">
@@ -148,7 +148,7 @@
                     type="text"
                     size="mini"
                     title="ctrl + 左键新页面打开"
-                    @click="(e) => emits('viewLog', record.id, e.ctrlKey)">
+                    @click="(e: any) => emits('viewLog', record.id, e.ctrlKey)">
             日志
           </a-button>
           <!-- 中断 -->

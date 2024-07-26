@@ -14,8 +14,8 @@
                         v-model:page-size="(pagination as any).pageSize"
                         v-bind="pagination as any"
                         :auto-adjust="false"
-                        @change="page => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, page, (pagination as any).pageSize)"
-                        @page-size-change="limit => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, 1, limit)" />
+                        @change="(page: number) => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, page, (pagination as any).pageSize)"
+                        @page-size-change="(limit: number) => bubblesEmitter(HeaderEmitter.PAGE_CHANGE, 1, limit)" />
         </div>
       </div>
       <!-- 操作部分 -->
@@ -48,8 +48,8 @@
                        :placeholder="searchInputPlaceholder as string"
                        size="small"
                        allow-clear
-                       @input="(e) => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
-                       @change="(e) => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @input="(e: string) => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
+                       @change="(e: string) => bubblesEmitter(HeaderEmitter.UPDATE_SEARCH_VALUE, e)"
                        @keyup.enter="bubblesEmitter(HeaderEmitter.SEARCH)" />
             </div>
             <!-- 过滤条件 -->

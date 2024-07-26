@@ -50,7 +50,7 @@
             </template>
           </a-button>
         </a-tooltip>
-        <a-dropdown trigger="click" @select="s => changeLocale(s as string)">
+        <a-dropdown trigger="click" @select="(s: string) => changeLocale(s)">
           <div ref="localeRef" class="trigger-btn" />
           <template #content>
             <a-doption v-for="item in locales"

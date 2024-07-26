@@ -60,8 +60,8 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
-             @page-change="(page) => fetchTableData(page, pagination.pageSize)"
-             @page-size-change="(size) => fetchTableData(1, size)">
+             @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
+             @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 编码 -->
       <template #code="{ record }">
         <a-tag>{{ record.code }}</a-tag>
@@ -77,7 +77,7 @@
                   :unchecked-text="getDictValue(roleStatusKey, RoleStatus.DISABLED)"
                   :checked-value="RoleStatus.ENABLED"
                   :unchecked-value="RoleStatus.DISABLED"
-                  :before-change="(s) => updateStatus(record.id, s as number)" />
+                  :before-change="(s: number) => updateStatus(record.id, s)" />
         <!-- 无修改权限 -->
         <span v-else>
           <span class="circle" :style="{

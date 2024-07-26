@@ -6,8 +6,8 @@
             :auto-switch="true"
             :show-add-button="true"
             @add="openNewConnect"
-            @tab-click="k => panel.clickTab(k as string)"
-            @delete="k => panel.deleteTab(k as string)">
+            @tab-click="(k: string) => panel.clickTab(k)"
+            @delete="(k: string) => panel.deleteTab(k)">
       <!-- 右侧按钮 -->
       <template #extra>
         <a-space class="panel-extra">
