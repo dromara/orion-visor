@@ -134,10 +134,4 @@
 </script>
 
 <style lang="less" scoped>
-  .list-view-container {
-    max-height: 100%;
-    width: 100%;
-    overflow: auto;
-    position: relative;
-  }
 </style>

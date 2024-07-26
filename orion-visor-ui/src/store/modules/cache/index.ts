@@ -1,4 +1,4 @@
-import type { CacheState } from './types';
+import type { CacheState, CacheType } from './types';
 import type { AxiosResponse } from 'axios';
 import type { TagType } from '@/api/meta/tag';
 import { getTagList } from '@/api/meta/tag';
@@ -18,14 +18,6 @@ import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
 import { getExecJobList } from '@/api/job/exec-job';
 import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
-
-export type CacheType = 'users' | 'menus' | 'roles'
-  | 'hostGroups' | 'hostKeys' | 'hostIdentities'
-  | 'dictKeys'
-  | 'authorizedHostKeys' | 'authorizedHostIdentities'
-  | 'commandSnippetGroups' | 'pathBookmarkGroups'
-  | 'execJob'
-  | string
 
 export default defineStore('cache', {
   state: (): CacheState => ({}),

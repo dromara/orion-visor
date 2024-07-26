@@ -421,7 +421,7 @@
 
   .command-editor {
     width: 100%;
-    height: calc(100vh - 318px);
+    height: calc(100vh - 324px);
   }
 
   :deep(.arco-input-append) {

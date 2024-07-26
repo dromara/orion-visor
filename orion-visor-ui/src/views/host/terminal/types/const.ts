@@ -1,5 +1,8 @@
 import type { ShortcutKeyItem } from './define';
 
+// 首页推荐数量
+export const emptyRecommendCount = 7;
+
 // 终端 tab
 export const TerminalTabs = {
   NEW_CONNECTION: {

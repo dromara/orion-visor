@@ -75,9 +75,8 @@
   import type { HostQueryResponse } from '@/api/asset/host';
   import { onMounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
-  import { PanelSessionType, TerminalTabs } from '../../types/const';
+  import { PanelSessionType, TerminalTabs, emptyRecommendCount } from '../../types/const';
 
-  const totalCount = 7;
   const { tabManager, hosts, openSession } = useTerminalStore();
 
   const combinedHandlers = ref<Array<CombinedHandlerItem>>([{
@@ -103,7 +102,7 @@
         ...hosts.hostList.filter(s => s.favorite).map(s => s.id),
         ...hosts.hostList.map(s => s.id)
       ])
-    ].slice(0, totalCount - 1)
+    ].slice(0, emptyRecommendCount - 1)
       .map(s => hosts.hostList.find(t => t.id === s) as HostQueryResponse)
       .filter(Boolean)
       .map(s => {
@@ -116,10 +115,10 @@
     // 插入主机列表
     combinedHandlers.value.push(...combinedHosts);
     // 不足显示的行数用设置补充
-    if (totalCount - 1 - combinedHosts.length > 0) {
+    if (emptyRecommendCount - 1 - combinedHosts.length > 0) {
       const fillTabs = Object.values(TerminalTabs)
         .filter(s => s.key !== TerminalTabs.NEW_CONNECTION.key)
-        .slice(0, totalCount - 1 - combinedHosts.length)
+        .slice(0, emptyRecommendCount - 1 - combinedHosts.length)
         .map(s => {
           return {
             title: s.title,
@@ -147,23 +146,19 @@
 
   .combined-container {
     padding: 12px;
-    margin: 64px auto 0 auto;
+    margin: 32px auto 0 auto;
     width: @container-width;
-    height: @container-height;
+    max-height: @container-height;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-sizing: content-box;
     overflow: hidden;
-
-    &:hover {
-      overflow: auto;
-    }
   }
 
   .combined-handler {
     width: @container-width - @transform-x;
-    height: @handler-height;
+    max-height: @handler-height;
     border-radius: 4px;
     margin-bottom: 6px;
     color: var(--color-content-text-1);
