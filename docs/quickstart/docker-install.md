@@ -21,12 +21,12 @@ Dashboard 修改)
 
 ```shell
 # github
-git clone https://github.com/lijiahangmax/orion-visor
+git clone --depth=1 https://github.com/lijiahangmax/orion-visor
 # gitee
-git clone https://gitee.com/lijiahangmax/orion-visor
+git clone --depth=1 https://gitee.com/lijiahangmax/orion-visor
 ```
 
-### 构建镜像
+### 拉取镜像
 
 ```
 # 进入仓库目录
@@ -48,6 +48,8 @@ cp .env.example .env
     # REDIS_PASSWORD          redis 密码
 
     # SECRET_KEY              加密密钥
+# 拉取远程镜像
+docker compose pull
 ```
 
 ### 启动
@@ -56,7 +58,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-### 修改加密方式
+### 修改 MySQL 账户的加密方式
 
 ```
 访问 adminer: http://localhost:8081
