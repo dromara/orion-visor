@@ -1,17 +1,17 @@
 version: '3.3'
 services:
-  orion-visor-service:
+  service:
     image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.2
     privileged: true
     ports:
       - 1081:80
     environment:
-      - MYSQL_HOST=orion-visor-mysql
+      - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=orion_visor
       - MYSQL_USER=root
       - MYSQL_PASSWORD=Data@123456
-      - REDIS_HOST=orion-visor-redis
+      - REDIS_HOST=redis
       - REDIS_PASSWORD=Data@123456
       - SECRET_KEY=uQeacXV8b3isvKLK
       - DEMO_MODE=false
@@ -24,14 +24,14 @@ services:
       retries: 200
       start_period: 3s
     depends_on:
-      orion-visor-mysql:
+      mysql:
         condition: service_healthy
-      orion-visor-redis:
+      redis:
         condition: service_healthy
     links:
-      - orion-visor-mysql
-      - orion-visor-redis
-  orion-visor-mysql:
+      - mysql
+      - redis
+  mysql:
     image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.2
     privileged: true
     ports:
@@ -51,7 +51,7 @@ services:
       timeout: 60s
       retries: 10
       start_period: 3s
-  orion-visor-redis:
+  redis:
     image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.2
     privileged: true
     ports:
@@ -71,9 +71,9 @@ services:
     build:
       context: ./docker/e2e
     environment:
-      SERVER: http://orion-visor-service:80
+      SERVER: http://service:80
     depends_on:
-      orion-visor-service:
+      service:
         condition: service_healthy
     links:
-      - orion-visor-service
+      - service
