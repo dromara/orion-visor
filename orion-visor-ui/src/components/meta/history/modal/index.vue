@@ -85,7 +85,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { getHistoryValuePage } from '@/api/meta/history-value';
-  import { usePagination } from '@/types/table';
+  import { useTablePagination } from '@/hooks/table';
   import { copy } from '@/hooks/copy';
   import columns from './table.columns';
   import { Message } from '@arco-design/web-vue';
@@ -96,7 +96,7 @@
   }>();
   const emits = defineEmits(['updated']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 

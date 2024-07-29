@@ -33,7 +33,7 @@
   import { ref, onMounted } from 'vue';
   import { getAuthorizedHostKey, grantHostKey } from '@/api/asset/asset-data-grant';
   import useLoading from '@/hooks/loading';
-  import { useRowSelection } from '@/types/table';
+  import { useRowSelection } from '@/hooks/table';
   import { useCacheStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import { hostKeyColumns } from '../types/table.columns';

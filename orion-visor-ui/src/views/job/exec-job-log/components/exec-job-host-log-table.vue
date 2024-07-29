@@ -107,7 +107,7 @@
   import { useDictStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import columns from '@/views/exec/exec-command-log/types/host-table.columns';
-  import { useExpandable } from '@/types/table';
+  import { useExpandable } from '@/hooks/table';
   import { dateFormat, formatDuration } from '@/utils';
   import { downloadExecJobLogFile } from '@/api/job/exec-job-log';
   import { copy } from '@/hooks/copy';

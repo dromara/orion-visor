@@ -132,7 +132,7 @@
   import columns from '../types/table.columns';
   import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { getOperatorLogPage, deleteOperatorLog } from '@/api/user/operator-log';
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
@@ -141,7 +141,7 @@
 
   const emits = defineEmits(['openClear', 'openDetail']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();

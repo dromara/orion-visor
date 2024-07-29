@@ -240,7 +240,7 @@
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor, hostTypeKey, hostStatusKey } from '../types/const';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { dataColor } from '@/utils';
@@ -251,7 +251,7 @@
 
   const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();

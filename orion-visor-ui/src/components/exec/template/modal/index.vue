@@ -89,7 +89,7 @@
 <script lang="ts" setup>
   import type { ExecTemplateQueryRequest, ExecTemplateQueryResponse } from '@/api/exec/exec-template';
   import { reactive, ref } from 'vue';
-  import { usePagination } from '@/types/table';
+  import { useTablePagination } from '@/hooks/table';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
@@ -100,7 +100,7 @@
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
-  const pagination = usePagination();
+  const pagination = useTablePagination();
 
   const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);
   const formModel = reactive<ExecTemplateQueryRequest>({

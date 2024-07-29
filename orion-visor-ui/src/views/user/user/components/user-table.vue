@@ -180,7 +180,7 @@
   import columns from '../types/table.columns';
   import { userStatusKey, UserStatus } from '../types/const';
   import useLoading from '@/hooks/loading';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import usePermission from '@/hooks/permission';
   import { useRouter } from 'vue-router';
   import { useDictStore, useUserStore } from '@/store';
@@ -188,7 +188,7 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();

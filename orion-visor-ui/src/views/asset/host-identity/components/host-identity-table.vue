@@ -183,14 +183,14 @@
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
   import { useDictStore } from '@/store';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { IdentityType, identityTypeKey } from '../types/const';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();

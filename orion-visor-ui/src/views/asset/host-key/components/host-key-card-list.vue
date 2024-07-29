@@ -81,7 +81,7 @@
 
 <script lang="ts" setup>
   import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { usePagination, useColLayout } from '@/types/card';
+  import { useCardPagination, useCardColLayout } from '@/hooks/card';
   import { reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { resetObject } from '@/utils';
@@ -94,8 +94,8 @@
 
   const list = ref<HostKeyQueryResponse[]>([]);
 
-  const cardColLayout = useColLayout();
-  const pagination = usePagination();
+  const cardColLayout = useCardColLayout();
+  const pagination = useCardPagination();
   const { loading, setLoading } = useLoading();
 
   const formModel = reactive<HostKeyQueryRequest>({

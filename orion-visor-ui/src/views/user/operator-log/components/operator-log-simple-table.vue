@@ -74,7 +74,7 @@
   import { getLogDetail } from '../types/const';
   import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
-  import { usePagination } from '@/types/table';
+  import { useTablePagination } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { getOperatorLogPage } from '@/api/user/operator-log';
   import { getCurrentUserOperatorLog } from '@/api/user/mine';
@@ -95,7 +95,7 @@
     },
   });
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
 

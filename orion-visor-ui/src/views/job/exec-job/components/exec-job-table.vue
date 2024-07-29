@@ -197,14 +197,14 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'testCron']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { hasPermission } = usePermission();

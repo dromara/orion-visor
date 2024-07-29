@@ -165,7 +165,7 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { dictValueTypeKey } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
@@ -173,7 +173,7 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();

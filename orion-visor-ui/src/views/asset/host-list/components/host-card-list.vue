@@ -196,7 +196,7 @@
 
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
-  import { usePagination, useColLayout } from '@/types/card';
+  import { useCardPagination, useCardColLayout } from '@/hooks/card';
   import { computed, reactive, ref, onMounted } from 'vue';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
@@ -211,8 +211,8 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup', 'openCopy']);
 
-  const cardColLayout = useColLayout();
-  const pagination = usePagination();
+  const cardColLayout = useCardColLayout();
+  const pagination = useCardPagination();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 

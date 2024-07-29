@@ -188,7 +188,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { getHostSftpLogPage, deleteHostSftpLog } from '@/api/asset/host-sftp';
   import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount } from '../types/const';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
@@ -198,7 +198,7 @@
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();

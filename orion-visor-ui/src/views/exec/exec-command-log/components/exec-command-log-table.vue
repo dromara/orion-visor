@@ -220,7 +220,7 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { execStatus, execStatusKey } from '@/components/exec/log/const';
-  import { useExpandable, usePagination, useRowSelection } from '@/types/table';
+  import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
   import { reExecCommand } from '@/api/exec/exec-command';
@@ -230,7 +230,7 @@
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const expandable = useExpandable();
   const { loading, setLoading } = useLoading();

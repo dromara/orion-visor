@@ -187,14 +187,14 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { UploadTaskStatus, uploadTaskStatusKey } from '../types/const';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['openClear']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
