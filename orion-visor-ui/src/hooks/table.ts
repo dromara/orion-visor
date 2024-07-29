@@ -8,7 +8,7 @@ import { TablePageSizeOptions } from '@/types/const';
 /**
  * 创建列表分页
  */
-export const usePagination = (ext?: PaginationProps): PaginationProps => {
+export const useTablePagination = (ext?: PaginationProps): PaginationProps => {
   const appStore = useAppStore();
   return reactive({
     total: 0,

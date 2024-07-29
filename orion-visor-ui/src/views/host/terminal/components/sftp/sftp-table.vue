@@ -145,7 +145,7 @@
   import type { SftpFile, ISftpSession } from '../../types/define';
   import type { VNodeRef } from 'vue';
   import { ref, computed, watch, inject } from 'vue';
-  import { useRowSelection } from '@/types/table';
+  import { useRowSelection } from '@/hooks/table';
   import { dateFormat } from '@/utils';
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';

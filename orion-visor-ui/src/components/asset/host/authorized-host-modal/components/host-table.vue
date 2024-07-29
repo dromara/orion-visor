@@ -54,7 +54,7 @@
   import type { HostQueryResponse } from '@/api/asset/host';
   import { dataColor } from '@/utils';
   import { tagColor } from '@/views/asset/host-list/types/const';
-  import { useRowSelection } from '@/types/table';
+  import { useRowSelection } from '@/hooks/table';
   import columns from '../types/table.columns';
   import { computed } from 'vue';
 

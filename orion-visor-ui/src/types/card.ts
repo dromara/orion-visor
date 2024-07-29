@@ -1,9 +1,5 @@
-import type { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
+import type { ResponsiveValue } from '@arco-design/web-vue';
 import type { VNodeChild } from 'vue';
-import { reactive } from 'vue';
-import { useAppStore } from '@/store';
-import { isNumber } from '@/utils/is';
-import { CardPageSizeOptions } from '@/types/const';
 
 /**
  * 字段对齐方式
@@ -88,32 +84,3 @@ export interface HandleVisible {
   disableSearch?: boolean;
   disableReset?: boolean;
 }
-
-/**
- * 创建卡片列表列布局
- */
-export const useColLayout = (): ColResponsiveValue => {
-  return {
-    xs: 24,
-    sm: 12,
-    md: 8,
-    lg: 8,
-    xl: 8,
-    xxl: 6,
-  };
-};
-
-/**
- * 创建创建卡片列表分页
- */
-export const usePagination = (): PaginationProps => {
-  const appStore = useAppStore();
-  return reactive({
-    total: 0,
-    current: 1,
-    pageSize: isNumber(appStore.defaultCardPageSize) ? appStore.defaultCardPageSize : CardPageSizeOptions[0],
-    showTotal: true,
-    showPageSize: true,
-    pageSizeOptions: CardPageSizeOptions
-  });
-};

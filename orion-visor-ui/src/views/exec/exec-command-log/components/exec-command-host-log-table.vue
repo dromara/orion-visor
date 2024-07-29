@@ -108,7 +108,7 @@
   import columns from '../types/host-table.columns';
   import { execHostStatusKey, execHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
-  import { useExpandable } from '@/types/table';
+  import { useExpandable } from '@/hooks/table';
   import { dateFormat, formatDuration } from '@/utils';
   import { downloadExecCommandLogFile, interruptHostExecCommand } from '@/api/exec/exec-command-log';
   import { copy } from '@/hooks/copy';

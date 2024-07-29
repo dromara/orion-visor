@@ -85,6 +85,8 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                 .eq(DataPermissionDO::getRoleId, roleId)
                 .eq(DataPermissionDO::getType, type);
         dataPermissionDAO.delete(wrapper);
+        // 删除缓存
+        this.deleteCache(type, userId, roleId);
         if (Lists.isEmpty(request.getRelIdList())) {
             return;
         }
@@ -100,8 +102,6 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                         .build())
                 .collect(Collectors.toList());
         dataPermissionDAO.insertBatch(records);
-        // 删除缓存
-        this.deleteCache(type, userId, roleId);
     }
 
     @Override

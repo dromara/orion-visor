@@ -137,14 +137,14 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { RoleStatus, roleStatusKey } from '../types/const';
-  import { usePagination } from '@/types/table';
+  import { useTablePagination } from '@/hooks/table';
   import usePermission from '@/hooks/permission';
   import { useDictStore } from '@/store';
   import { AdminRoleCode } from '@/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();

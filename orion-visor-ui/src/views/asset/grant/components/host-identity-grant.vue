@@ -53,7 +53,7 @@
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { useRowSelection } from '@/types/table';
+  import { useRowSelection } from '@/hooks/table';
   import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
   import { useCacheStore, useDictStore } from '@/store';
   import { hostIdentityColumns } from '../types/table.columns';

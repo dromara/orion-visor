@@ -146,7 +146,7 @@
 
 <script lang="ts" setup>
   import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
-  import { usePagination, useColLayout } from '@/types/card';
+  import { useCardPagination, useCardColLayout } from '@/hooks/card';
   import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
@@ -164,8 +164,8 @@
 
   const list = ref<HostIdentityQueryResponse[]>([]);
 
-  const cardColLayout = useColLayout();
-  const pagination = usePagination();
+  const cardColLayout = useCardColLayout();
+  const pagination = useCardPagination();
   const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();

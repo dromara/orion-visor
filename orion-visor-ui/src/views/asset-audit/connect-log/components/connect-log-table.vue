@@ -203,7 +203,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHostConnectLog, getHostConnectLogPage, hostForceOffline } from '@/api/asset/host-connect-log';
   import { connectStatusKey, connectTypeKey, HostConnectStatus } from '../types/const';
-  import { usePagination, useRowSelection } from '@/types/table';
+  import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
@@ -215,7 +215,7 @@
 
   const emits = defineEmits(['openClear', 'openDetail']);
 
-  const pagination = usePagination();
+  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();

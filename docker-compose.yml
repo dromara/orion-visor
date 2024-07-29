@@ -1,17 +1,17 @@
 version: '3.3'
 services:
-  orion-visor-service:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.1
+  service:
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.2
     privileged: true
     ports:
       - 1081:80
     environment:
-      - MYSQL_HOST=orion-visor-mysql
+      - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=orion_visor
       - MYSQL_USER=root
       - MYSQL_PASSWORD=Data@123456
-      - REDIS_HOST=orion-visor-redis
+      - REDIS_HOST=redis
       - REDIS_PASSWORD=Data@123456
       - SECRET_KEY=uQeacXV8b3isvKLK
       - DEMO_MODE=false
@@ -24,15 +24,15 @@ services:
       retries: 200
       start_period: 3s
     depends_on:
-      orion-visor-mysql:
+      mysql:
         condition: service_healthy
-      orion-visor-redis:
+      redis:
         condition: service_healthy
     links:
-      - orion-visor-mysql
-      - orion-visor-redis
-  orion-visor-mysql:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.1
+      - mysql
+      - redis
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.2
     privileged: true
     ports:
       - 3307:3306
@@ -51,8 +51,8 @@ services:
       timeout: 60s
       retries: 10
       start_period: 3s
-  orion-visor-redis:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.1
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.2
     privileged: true
     ports:
       - 6380:6379
@@ -67,7 +67,12 @@ services:
       timeout: 60s
       retries: 10
       start_period: 3s
-  orion-visor-adminer:
-    image: adminer
+  adminer:
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-adminer:2.1.2
     ports:
       - 8081:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+    links:
+      - mysql
