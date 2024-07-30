@@ -11,14 +11,15 @@
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 终端类型 -->
         <block-setting-item label="终端类型" desc="若显示异常请尝试切换此选项 兼容性 vt100 > xterm > 16color > 256color">
-          <a-select style="width: 160px;"
-                    v-model="formModel.terminalEmulationType"
+          <a-select v-model="formModel.terminalEmulationType"
+                    style="width: 188px;"
                     size="small"
                     :options="toOptions(emulationTypeKey)" />
         </block-setting-item>
         <!-- 缓冲区行数 -->
         <block-setting-item label="缓冲区行数" desc="保存在缓冲区的行数, 多出的行数会被忽略, 此值越大占用内存的内存会更多">
           <a-input-number v-model="formModel.scrollBackLine"
+                          style="width: 188px"
                           size="small"
                           :min="1"
                           :max="10000"
