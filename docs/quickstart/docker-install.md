@@ -21,22 +21,35 @@ Dashboard 修改)
 
 ```shell
 # github
-git clone https://github.com/lijiahangmax/orion-visor
+git clone --depth=1 https://github.com/lijiahangmax/orion-visor
 # gitee
-git clone https://gitee.com/lijiahangmax/orion-visor
+git clone --depth=1 https://gitee.com/lijiahangmax/orion-visor
 ```
 
-### 构建镜像
+### 拉取镜像
 
 ```
 # 进入仓库目录
 cd orion-visor
-# 修改 docker-compose.yml (建议修改)
-    # MYSQL_USER          mysql 用户名
-    # MYSQL_PASSWORD      mysql 用户密码
-    # MYSQL_ROOT_PASSWORD mysql root 密码
-    # REDIS_PASSWORD      redis 密码
-    # SECRET_KEY          加密密钥
+# 创建名为 .env 的 .env.example 副本
+cp .env.example .env
+# 将其中的值删除以保持默认或将其修改为你喜欢的值
+    # SERVICE_PORT            你希望服务监听的端口
+    # VOLUME_BASE             你希望数据持久化保存的目录, 如果不提前创建将以 docker 进程宿主身份创建(通常是 root)
+
+    # MYSQL_HOST              mysql 服务所在的主机, 如果你没有现有的 MySQL 请保持值为 mysql, 如果你有自部署的请在 docker-compose.yml 中移除 services.mysql 以节约性能
+    # MYSQL_PORT              mysql 监听的端口
+    # MYSQL_DATABASE          mysql 数据库
+    # MYSQL_USER              mysql 用户名
+    # MYSQL_PASSWORD          mysql 用户密码
+    # MYSQL_ROOT_PASSWORD     mysql root 密码
+
+    # REDIS_HOST              redis 服务所在的主机, 如果你没有现有的 Redis 请保持值为 redis, 如果你有自部署的请在 docker-compose.yml 中移除 services.redis 以节约性能
+    # REDIS_PASSWORD          redis 密码
+
+    # SECRET_KEY              加密密钥
+# 拉取远程镜像
+docker compose pull
 ```
 
 ### 启动
@@ -45,7 +58,7 @@ cd orion-visor
 docker compose up -d
 ```
 
-### 修改加密方式
+### 修改 MySQL 账户的加密方式
 
 ```
 访问 adminer: http://localhost:8081
