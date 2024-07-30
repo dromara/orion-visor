@@ -6,8 +6,6 @@
         显示偏好
       </h3>
     </div>
-    <!-- 提示 -->
-    <a-alert class="mb16">修改后会立刻保存, 重新打开终端后生效 (无需刷新页面)</a-alert>
     <!-- 内容区域 -->
     <div class="terminal-setting-body block-body setting-body">
       <a-form class="terminal-setting-form"
@@ -100,7 +98,7 @@
       <div class="terminal-example">
         <span class="vertical-form-label">预览效果</span>
         <div class="terminal-example-wrapper"
-             :style="{ background: preference.theme.schema.background }">
+             :style="{ background: background }">
           <terminal-example :schema="preference.theme.schema"
                             ref="previewTerminal" />
         </div>
@@ -117,22 +115,24 @@
 
 <script lang="ts" setup>
   import type { TerminalDisplaySetting } from '@/store/modules/terminal/types';
+  import type { ISshSession } from '../../../types/define';
   import { ref, watch, onMounted } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey } from '../../../types/const';
+  import { fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey, PanelSessionType } from '../../../types/const';
   import { labelFilter } from '@/types/form';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { defaultFontFamily } from '@/types/xterm';
   import TerminalExample from '../terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
+  const { preference, updateTerminalPreference, sessionManager } = useTerminalStore();
 
+  const background = preference.theme.schema.background;
   const previewTerminal = ref();
   const formModel = ref<TerminalDisplaySetting>({});
 
   // 监听内容变化
-  watch(formModel, (v) => {
+  watch(formModel, (v, before) => {
     if (!v) {
       return;
     }
@@ -149,6 +149,26 @@
         options[key] = (formModel.value as any)[key];
       }
     });
+    // 非初始化则修改终端样式
+    if (before) {
+      Object.values(sessionManager.sessions)
+        .filter(s => s.type === PanelSessionType.SSH.type)
+        .map(s => s as ISshSession)
+        .forEach(s => {
+          const options = s.inst.options;
+          s.inst;
+          // 修改样式
+          Object.keys(v).forEach(k => {
+            let value = v[k as keyof TerminalDisplaySetting];
+            if (k === 'fontFamily') {
+              value = value === '_' ? defaultFontFamily : `${value}, ${defaultFontFamily}`;
+            }
+            options[k as keyof typeof options] = value;
+          });
+          // 自适应
+          s.fit();
+        });
+    }
     // 同步
     updateTerminalPreference(TerminalPreferenceItem.DISPLAY_SETTING, formModel.value, true);
     // 聚焦

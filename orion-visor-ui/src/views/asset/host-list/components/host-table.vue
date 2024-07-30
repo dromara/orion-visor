@@ -180,6 +180,13 @@
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
+          <!-- 配置 -->
+          <a-button type="text"
+                    size="mini"
+                    v-permission="['asset:host:update-config']"
+                    @click="emits('openUpdateConfig', record)">
+            配置
+          </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -198,13 +205,6 @@
               更多
             </a-button>
             <template #content>
-              <!-- 配置 -->
-              <a-doption v-permission="['asset:host:update-config']"
-                         @click="emits('openUpdateConfig', record)">
-                <span class="more-doption normal">
-                  配置
-                </span>
-              </a-doption>
               <!-- 修改状态 -->
               <a-doption v-permission="['asset:host:update-status']"
                          @click="updateStatus(record)">

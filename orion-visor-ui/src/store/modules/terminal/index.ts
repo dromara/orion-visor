@@ -65,7 +65,7 @@ export default defineStore('terminal', {
       } as TerminalShortcutSetting,
     },
     hosts: {} as AuthorizedHostQueryResponse,
-    tabManager: new TerminalTabManager(TerminalTabs.NEW_CONNECTION),
+    tabManager: new TerminalTabManager(),
     panelManager: new TerminalPanelManager(),
     sessionManager: new TerminalSessionManager(),
     transferManager: new SftpTransferManager(),

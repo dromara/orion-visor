@@ -6,8 +6,6 @@
         操作栏设置
       </h3>
     </div>
-    <!-- 提示 -->
-    <a-alert class="mb16">修改后会立刻保存, 立即生效 (无需刷新页面)</a-alert>
     <!-- 非安全环境提示 -->
     <a-alert v-if="!isSecureEnvironment"
              type="warning"
