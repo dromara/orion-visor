@@ -59,7 +59,7 @@
         </template>
         <!-- 模板命令 -->
         <template #command="{ record }">
-          <span class="copy-left" @click="copy(record.command, '已复制')">
+          <span class="copy-left" @click="copy(record.command, true)">
             <icon-copy />
           </span>
           <span :title="record.command">{{ record.command }}</span>

@@ -104,7 +104,7 @@
                 <template #append>
                   <span class="allow-click span-blue"
                         title="点击复制"
-                        @click="copy(inputValues.cron,'已复制')">
+                        @click="copy(inputValues.cron, true)">
                     <icon-copy />
                   </span>
                 </template>

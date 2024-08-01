@@ -12,7 +12,7 @@
                  content="点击复制">
         <a-tag class="sftp-path-container pointer"
                color="arcoblue"
-               @click="copy(path, '已复制')">
+               @click="copy(path, true)">
           <span>{{ name }}</span>
         </a-tag>
       </a-tooltip>

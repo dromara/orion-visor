@@ -144,7 +144,7 @@
       <template #permission="{ record }">
         <span v-if="record.permission"
               class="text-copy"
-              @click="copy(record.permission, '已复制')">
+              @click="copy(record.permission, true)">
           {{ record.permission }}
         </span>
       </template>
@@ -152,7 +152,7 @@
       <template #component="{ record }">
         <span v-if="record.component"
               class="text-copy"
-              @click="copy(record.component, '已复制')">
+              @click="copy(record.component, true)">
           {{ record.component }}
         </span>
       </template>
@@ -160,7 +160,7 @@
       <template #path="{ record }">
         <span v-if="record.path"
               class="text-copy"
-              @click="copy(record.path, '已复制')">
+              @click="copy(record.path, true)">
           {{ record.path }}
         </span>
       </template>

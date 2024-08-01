@@ -6,7 +6,7 @@
               alignPoint>
     <!-- 路径 -->
     <div class="path-item-wrapper"
-         :class="[!!item.expand ? 'path-item-wrapper-expand' : '']"
+         :class="[expand ? 'path-item-wrapper-expand' : '']"
          @click="clickItem">
       <div class="path-item">
         <div class="path-item-title">
@@ -33,7 +33,7 @@
                      size="small"
                      :checkable="true"
                      :checked="true"
-                     @click.stop.prevent="copyPath">
+                     @click.stop.prevent="emits('copy', item.path)">
                 <template #icon>
                   <icon-copy />
                 </template>
@@ -58,36 +58,36 @@
         <div>进入</div>
       </a-doption>
       <!-- 复制 -->
-      <a-doption @click="copyPath">
+      <a-doption @click="emits('copy', item.path)">
         <div class="terminal-context-menu-icon">
           <icon-copy />
         </div>
         <div>复制</div>
       </a-doption>
       <!-- 粘贴 -->
-      <a-doption @click="paste">
+      <a-doption @click="emits('paste', item.path)">
         <div class="terminal-context-menu-icon">
           <icon-paste />
         </div>
         <div>粘贴</div>
       </a-doption>
       <!-- 修改 -->
-      <a-doption @click="openUpdatePath(item)">
+      <a-doption @click="emits('update', item)">
         <div class="terminal-context-menu-icon">
           <icon-edit />
         </div>
         <div>修改</div>
       </a-doption>
       <!-- 删除 -->
-      <a-doption @click="removePath(item.id)">
+      <a-doption @click="emits('remove', item.id)">
         <div class="terminal-context-menu-icon">
           <icon-delete />
         </div>
         <div>删除</div>
       </a-doption>
       <!-- 展开 -->
-      <a-doption v-if="!item.expand"
-                 @click="() => item.expand = true">
+      <a-doption v-if="!expand"
+                 @click="() => expand = true">
         <div class="terminal-context-menu-icon">
           <icon-expand />
         </div>
@@ -95,7 +95,7 @@
       </a-doption>
       <!-- 收起 -->
       <a-doption v-else
-                 @click="() => item.expand = false">
+                 @click="() => expand = false">
         <div class="terminal-context-menu-icon">
           <icon-shrink />
         </div>
@@ -107,48 +107,37 @@
 
 <script lang="ts">
   export default {
-    name: 'pathBookmarkListItem'
+    name: 'pathBookmarkItem'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, ISshSession } from '../../types/define';
   import type { PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
+  import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
-  import { copy } from '@/hooks/copy';
-  import { inject } from 'vue';
   import { getParentPath } from '@/utils/file';
-  import { openUpdatePathKey, PathBookmarkType, removePathKey } from './types/const';
+  import { PathBookmarkType } from './types/const';
   import { PanelSessionType } from '../../types/const';
 
   const props = defineProps<{
     item: PathBookmarkQueryResponse;
   }>();
 
-  const { getCurrentSession, getCurrentSessionType } = useTerminalStore();
+  const emits = defineEmits(['remove', 'update', 'copy', 'paste', 'exec', 'change']);
+
+  const { getCurrentSessionType } = useTerminalStore();
+
+  const expand = ref(false);
 
   let clickCount = 0;
-
-  // 修改
-  const openUpdatePath = inject(openUpdatePathKey) as (item: PathBookmarkQueryResponse) => void;
-
-  // 删除
-  const removePath = inject(removePathKey) as (id: number) => void;
 
   // 点击路径
   const clickItem = () => {
     if (++clickCount == 2) {
       clickCount = 0;
       // 双击
-      const type = getCurrentSessionType(true);
-      if (type === PanelSessionType.SSH.type) {
-        // SSH 粘贴
-        paste();
-      } else if (type === PanelSessionType.SFTP.type) {
-        // SFTP 切换目录
-        listFiles();
-      }
+      changePath();
     } else {
       // 单击展开
       expandItem();
@@ -160,7 +149,7 @@
     setTimeout(() => {
       // 为 0 则代表为双击
       if (clickCount !== 0) {
-        props.item.expand = !props.item.expand;
+        expand.value = !expand.value;
         clickCount = 0;
       }
     }, 50);
@@ -168,7 +157,7 @@
 
   // 点击路径
   const clickPath = (e: Event) => {
-    if (props.item.expand) {
+    if (expand.value) {
       // 获取选中的文本
       const selectedText = window.getSelection()?.toString();
       if (selectedText) {
@@ -177,46 +166,21 @@
     }
   };
 
-  // 复制路径
-  const copyPath = () => {
-    copy(props.item.path, '已复制');
-  };
-
-  // 粘贴
-  const paste = () => {
-    writeCommand(props.item.path);
-  };
-
   // 切换目录
   const changePath = () => {
     const type = getCurrentSessionType(true);
     if (type === PanelSessionType.SSH.type) {
+      // SSH cd
       const path = props.item.type === PathBookmarkType.DIR
         ? props.item.path
         : getParentPath(props.item.path);
-      // SSH cd
-      writeCommand('cd ' + path + '\r\n');
+      emits('exec', `cd ${path}`);
     } else if (type === PanelSessionType.SFTP.type) {
       // SFTP 切换目录
-      listFiles();
-    }
-  };
-
-  // 查询 sftp 文件列表
-  const listFiles = () => {
-    // 如果非文件夹则查询父文件夹
-    const path = props.item.type === PathBookmarkType.DIR
-      ? props.item.path
-      : getParentPath(props.item.path);
-    // 查询列表
-    getCurrentSession<ISftpSession>(PanelSessionType.SFTP.type, true)?.list(path);
-  };
-
-  // 写入 ssh 命令
-  const writeCommand = (command: string) => {
-    const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
-    if (handler && handler.enabledStatus('checkAppendMissing')) {
-      handler.checkAppendMissing(command);
+      const path = props.item.type === PathBookmarkType.DIR
+        ? props.item.path
+        : getParentPath(props.item.path);
+      emits('change', path);
     }
   };
 

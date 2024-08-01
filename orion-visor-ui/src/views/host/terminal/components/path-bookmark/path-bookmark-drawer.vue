@@ -13,26 +13,26 @@
     <div class="path-container">
       <!-- 路径头部 -->
       <div class="path-header">
-        <!-- 左侧按钮 -->
+        <!-- 搜索框 -->
+        <a-input-search class="path-header-input"
+                        v-model="filterValue"
+                        placeholder="请输入名称/路径"
+                        allow-clear />
+        <!-- 右侧侧按钮 -->
         <a-space size="small">
           <!-- 创建路径 -->
           <span class="click-icon-wrapper path-header-icon"
                 title="创建路径"
                 @click="openAdd">
-          <icon-plus />
-        </span>
+            <icon-plus />
+          </span>
           <!-- 刷新 -->
           <span class="click-icon-wrapper path-header-icon"
                 title="刷新"
-                @click="fetchData(true)">
-          <icon-refresh />
-        </span>
+                @click="fetchData">
+            <icon-refresh />
+          </span>
         </a-space>
-        <!-- 搜索框 -->
-        <a-input-search class="path-header-input"
-                        v-model="filterValue"
-                        placeholder="名称/路径"
-                        allow-clear />
       </div>
       <!-- 加载中 -->
       <a-skeleton v-if="loading"
@@ -43,7 +43,7 @@
                          :line-spacing="12" />
       </a-skeleton>
       <!-- 无数据 -->
-      <a-empty v-else-if="!pathBookmarkData || (pathBookmarkData.groups.length === 0 && pathBookmarkData.ungroupedItems.length === 0)"
+      <a-empty v-else-if="bookmarkGroups.length === 0 && ungroupedItems.length === 0"
                style="padding: 28px 0">
         <span>暂无数据</span><br>
         <span>点击上方 '<icon-plus />' 添加一条数据吧~</span>
@@ -51,13 +51,42 @@
       <!-- 路径书签 -->
       <div v-else class="path-list-container">
         <!-- 路径书签组 -->
-        <path-bookmark-list-group :value="pathBookmarkData" />
+        <a-collapse :bordered="false">
+          <template v-for="group in bookmarkGroups">
+            <a-collapse-item v-if="calcGroupTotal(group) > 0"
+                             :key="group.id"
+                             :header="group.name">
+              <!-- 总量 -->
+              <template #extra>
+                {{ calcGroupTotal(group) }} 条
+              </template>
+              <!-- 路径 -->
+              <template v-for="item in group.items">
+                <path-bookmark-item v-if="item.visible"
+                                    :key="item.id"
+                                    :item="item"
+                                    @copy="(s: string) => copy(s, true)"
+                                    @paste="(s: string) => appendCommandToCurrentSession(s)"
+                                    @exec="(s: string) => appendCommandToCurrentSession(s, true)"
+                                    @change="(s: string) => changePath(s)"
+                                    @update="(s: PathBookmarkQueryResponse) => formDrawer.openUpdate(s)"
+                                    @remove="removeBookmark" />
+              </template>
+            </a-collapse-item>
+          </template>
+        </a-collapse>
         <!-- 未分组路径书签 -->
         <div class="ungrouped-path-container">
-          <template v-for="item in pathBookmarkData.ungroupedItems">
-            <path-bookmark-list-item v-if="item.visible"
-                                     :key="item.id"
-                                     :item="item" />
+          <template v-for="item in ungroupedItems">
+            <path-bookmark-item v-if="item.visible"
+                                :key="item.id"
+                                :item="item"
+                                @copy="(s: string) => copy(s, true)"
+                                @paste="(s: string) => appendCommandToCurrentSession(s)"
+                                @exec="(s: string) => appendCommandToCurrentSession(s, true)"
+                                @change="(s: string) => changePath(s)"
+                                @update="(s: PathBookmarkQueryResponse) => formDrawer.openUpdate(s)"
+                                @remove="removeBookmark" />
           </template>
         </div>
       </div>
@@ -76,27 +105,28 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/define';
-  import type { PathBookmarkWrapperResponse, PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
-  import { ref, provide, watch } from 'vue';
+  import type { ISftpSession, ISshSession } from '../../types/define';
+  import type { PathBookmarkQueryResponse } from '@/api/asset/path-bookmark';
+  import type { PathBookmarkGroupQueryResponse } from '@/api/asset/path-bookmark-group';
+  import { ref, watch } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
-  import { deletePathBookmark, getPathBookmarkList } from '@/api/asset/path-bookmark';
+  import { deletePathBookmark } from '@/api/asset/path-bookmark';
   import { useCacheStore, useTerminalStore } from '@/store';
   import { PanelSessionType } from '../../types/const';
-  import { openUpdatePathKey, removePathKey } from './types/const';
-  import PathBookmarkListItem from './path-bookmark-list-item.vue';
-  import PathBookmarkListGroup from './path-bookmark-list-group.vue';
+  import { copy } from '@/hooks/copy';
+  import PathBookmarkItem from './path-bookmark-item.vue';
   import PathBookmarkFormDrawer from './path-bookmark-form-drawer.vue';
 
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
-  const { getCurrentSession } = useTerminalStore();
+  const { getCurrentSession, appendCommandToCurrentSession } = useTerminalStore();
   const cacheStore = useCacheStore();
 
   const formDrawer = ref();
   const filterValue = ref<string>();
-  const pathBookmarkData = ref<PathBookmarkWrapperResponse>();
+  const bookmarkGroups = ref<Array<PathBookmarkGroupQueryResponse>>([]);
+  const ungroupedItems = ref<Array<PathBookmarkQueryResponse>>([]);
 
   // 打开
   const open = async () => {
@@ -108,15 +138,13 @@
   defineExpose({ open });
 
   // 加载数据
-  const fetchData = async (force: boolean = false) => {
-    if (pathBookmarkData.value && !force) {
-      return;
-    }
+  const fetchData = async () => {
     setLoading(true);
     try {
       // 查询
-      const { data } = await getPathBookmarkList();
-      pathBookmarkData.value = data;
+      const data = await cacheStore.loadPathBookmarks(true);
+      bookmarkGroups.value = data.groups;
+      ungroupedItems.value = data.ungroupedItems;
       // 设置状态
       filterPath();
     } catch (e) {
@@ -127,14 +155,14 @@
 
   // 过滤
   const filterPath = () => {
-    pathBookmarkData.value?.groups.forEach(g => {
+    bookmarkGroups.value.forEach(g => {
       g.items?.forEach(s => {
         s.visible = !filterValue.value
           || s.name.toLowerCase().includes(filterValue.value.toLowerCase())
           || s.path.toLowerCase().includes(filterValue.value.toLowerCase());
       });
     });
-    pathBookmarkData.value?.ungroupedItems.forEach(s => {
+    ungroupedItems.value.forEach(s => {
       s.visible = !filterValue.value
         || s.name.toLowerCase().includes(filterValue.value.toLowerCase())
         || s.path.toLowerCase().includes(filterValue.value.toLowerCase());
@@ -149,6 +177,11 @@
     formDrawer.value.openAdd();
   };
 
+  // 计算总量
+  const calcGroupTotal = (group: PathBookmarkGroupQueryResponse) => {
+    return group.items.filter(s => s.visible).length;
+  };
+
   // 查找并且删除
   const findAndSplice = (id: number, items: Array<PathBookmarkQueryResponse>) => {
     if (items) {
@@ -161,41 +194,38 @@
     }
   };
 
-  // 暴露 修改抽屉
-  provide(openUpdatePathKey, (e: PathBookmarkQueryResponse) => {
-    formDrawer.value.openUpdate(e);
-  });
+  // 查询 sftp 文件列表
+  const changePath = (path: string) => {
+    getCurrentSession<ISftpSession>(PanelSessionType.SFTP.type, true)?.list(path);
+  };
 
-  // 暴露 删除
-  provide(removePathKey, async (id: number) => {
-    if (!pathBookmarkData.value) {
-      return;
-    }
+  // 删除书签路径
+  const removeBookmark = async (id: number) => {
     // 删除
     await deletePathBookmark(id);
     // 查找并且删除未分组的数据
-    if (findAndSplice(id, pathBookmarkData.value.ungroupedItems)) {
+    if (findAndSplice(id, ungroupedItems.value)) {
       return;
     }
     // 查找并且删除分组内数据
-    for (let group of pathBookmarkData.value.groups) {
+    for (let group of bookmarkGroups.value) {
       if (findAndSplice(id, group.items)) {
         return;
       }
     }
-  });
+  };
 
   // 添加回调
   const onAdded = async (item: PathBookmarkQueryResponse) => {
     if (item.groupId) {
-      let group = pathBookmarkData.value?.groups.find(g => g.id === item.groupId);
+      let group = bookmarkGroups.value.find(g => g.id === item.groupId);
       if (group) {
         group?.items.push(item);
       } else {
         const cacheGroups = await cacheStore.loadPathBookmarkGroups();
         const findGroup = cacheGroups.find(s => s.id === item.groupId);
         if (findGroup) {
-          pathBookmarkData.value?.groups.push({
+          bookmarkGroups.value.push({
             id: item.groupId,
             name: findGroup.name,
             items: [item]
@@ -203,7 +233,7 @@
         }
       }
     } else {
-      pathBookmarkData.value?.ungroupedItems.push(item);
+      ungroupedItems.value.push(item);
     }
     // 重置过滤
     filterPath();
@@ -211,16 +241,13 @@
 
   // 修改回调
   const onUpdated = async (item: PathBookmarkQueryResponse) => {
-    if (!pathBookmarkData.value) {
-      return;
-    }
     // 查找原始数据
     let originItem;
-    const findInUngrouped = pathBookmarkData.value.ungroupedItems.find(s => s.id === item.id);
+    const findInUngrouped = ungroupedItems.value.find(s => s.id === item.id);
     if (findInUngrouped) {
       originItem = findInUngrouped;
     } else {
-      for (let group of pathBookmarkData.value.groups) {
+      for (let group of bookmarkGroups.value) {
         const find = group.items.find(s => s.id === item.id);
         if (find) {
           originItem = find;
@@ -232,12 +259,12 @@
       return;
     }
     // 检查分组是否存在
-    const findGroup = pathBookmarkData.value.groups.find(s => s.id === item.groupId);
+    const findGroup = bookmarkGroups.value.find(s => s.id === item.groupId);
     if (!findGroup) {
       const cacheGroups = await cacheStore.loadPathBookmarkGroups();
       const cacheGroup = cacheGroups.find(s => s.id === item.groupId);
       if (cacheGroup) {
-        pathBookmarkData.value.groups.push({
+        bookmarkGroups.value.push({
           id: item.groupId,
           name: cacheGroup.name,
           items: []
@@ -253,22 +280,22 @@
     if (item.groupId !== originGroupId) {
       // 从原始分组移除
       if (originGroupId) {
-        const findGroup = pathBookmarkData.value.groups.find(s => s.id === originGroupId);
+        const findGroup = bookmarkGroups.value.find(s => s.id === originGroupId);
         if (findGroup) {
           findAndSplice(item.id, findGroup.items);
         }
       } else {
         // 从未分组数据中移除
-        findAndSplice(item.id, pathBookmarkData.value.ungroupedItems);
+        findAndSplice(item.id, ungroupedItems.value);
       }
       // 添加到新分组
       if (item.groupId) {
-        const findGroup = pathBookmarkData.value.groups.find(s => s.id === item.groupId);
+        const findGroup = bookmarkGroups.value.find(s => s.id === item.groupId);
         if (findGroup) {
           findGroup.items.push(item);
         }
       } else {
-        pathBookmarkData.value.ungroupedItems.push(originItem);
+        ungroupedItems.value.push(originItem);
       }
     }
     // 重置过滤
@@ -331,6 +358,31 @@
 
     &:hover::-webkit-scrollbar-thumb {
       background: var(--color-fill-4);
+    }
+
+    :deep(.arco-collapse-item) {
+      border: none;
+
+      &-header {
+        border: none;
+
+        &-title {
+          user-select: none;
+        }
+
+        &-extra {
+          user-select: none;
+        }
+      }
+
+      &-content {
+        background-color: unset;
+        padding: 0;
+      }
+
+      &-content-box {
+        padding: 0;
+      }
     }
   }
 

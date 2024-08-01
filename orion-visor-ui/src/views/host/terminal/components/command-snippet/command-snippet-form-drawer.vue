@@ -22,7 +22,7 @@
         </a-form-item>
         <!-- 分组 -->
         <a-form-item field="groupId" label="分组">
-          <command-snippet-group-select v-model="formModel.groupId" />
+          <command-snippet-group-selector v-model="formModel.groupId" />
         </a-form-item>
         <!-- 代码片段 -->
         <a-form-item field="command"
@@ -49,12 +49,12 @@
 <script lang="ts" setup>
   import type { CommandSnippetUpdateRequest } from '@/api/asset/command-snippet';
   import { ref } from 'vue';
+  import { createCommandSnippet, updateCommandSnippet } from '@/api/asset/command-snippet';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { createCommandSnippet, updateCommandSnippet } from '@/api/asset/command-snippet';
   import formRules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';
-  import CommandSnippetGroupSelect from './command-snippet-group-select.vue';
+  import CommandSnippetGroupSelector from '@/components/host/command-snippte/gruop/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -77,10 +77,10 @@
   const emits = defineEmits(['added', 'updated']);
 
   // 打开新增
-  const openAdd = () => {
+  const openAdd = (command: string = '') => {
     title.value = '添加命令片段';
     isAddHandle.value = true;
-    renderForm({ ...defaultForm() });
+    renderForm({ ...defaultForm(), command });
     setVisible(true);
   };
 

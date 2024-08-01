@@ -6,7 +6,7 @@
               alignPoint>
     <!-- 命令 -->
     <div class="snippet-item-wrapper"
-         :class="[!!item.expand ? 'snippet-item-wrapper-expand' : '']"
+         :class="[expand ? 'snippet-item-wrapper-expand' : '']"
          @click="clickItem">
       <div class="snippet-item">
         <div class="snippet-item-title">
@@ -22,7 +22,7 @@
                      size="small"
                      :checkable="true"
                      :checked="true"
-                     @click.stop.prevent="paste">
+                     @click.stop.prevent="emits('paste', item.command)">
                 <template #icon>
                   <icon-paste />
                 </template>
@@ -33,7 +33,7 @@
                      size="small"
                      :checkable="true"
                      :checked="true"
-                     @click.stop="exec">
+                     @click.stop="emits('exec', item.command)">
                 <template #icon>
                   <icon-thunderbolt />
                 </template>
@@ -52,43 +52,43 @@
     <!-- 右键菜单 -->
     <template #content>
       <!-- 复制 -->
-      <a-doption @click="copyCommand">
+      <a-doption @click="emits('copy', item.command)">
         <div class="terminal-context-menu-icon">
           <icon-copy />
         </div>
         <div>复制</div>
       </a-doption>
       <!-- 粘贴 -->
-      <a-doption @click="paste">
+      <a-doption @click="emits('paste', item.command)">
         <div class="terminal-context-menu-icon">
           <icon-paste />
         </div>
         <div>粘贴</div>
       </a-doption>
       <!-- 执行 -->
-      <a-doption @click="exec">
+      <a-doption @click="emits('exec', item.command)">
         <div class="terminal-context-menu-icon">
           <icon-thunderbolt />
         </div>
         <div>执行</div>
       </a-doption>
       <!-- 修改 -->
-      <a-doption @click="openUpdateSnippet(item)">
+      <a-doption @click="emits('update', item)">
         <div class="terminal-context-menu-icon">
           <icon-edit />
         </div>
         <div>修改</div>
       </a-doption>
       <!-- 删除 -->
-      <a-doption @click="removeSnippet(item.id)">
+      <a-doption @click="emits('remove', item.id)">
         <div class="terminal-context-menu-icon">
           <icon-delete />
         </div>
         <div>删除</div>
       </a-doption>
       <!-- 展开 -->
-      <a-doption v-if="!item.expand"
-                 @click="() => item.expand = true">
+      <a-doption v-if="!expand"
+                 @click="() => expand = true">
         <div class="terminal-context-menu-icon">
           <icon-expand />
         </div>
@@ -96,7 +96,7 @@
       </a-doption>
       <!-- 收起 -->
       <a-doption v-else
-                 @click="() => item.expand = false">
+                 @click="() => expand = false">
         <div class="terminal-context-menu-icon">
           <icon-shrink />
         </div>
@@ -108,40 +108,31 @@
 
 <script lang="ts">
   export default {
-    name: 'commandSnippetListItem'
+    name: 'commandSnippetItem'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/define';
   import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
-  import { useTerminalStore } from '@/store';
+  import { ref } from 'vue';
   import { useDebounceFn } from '@vueuse/core';
-  import { copy } from '@/hooks/copy';
-  import { inject } from 'vue';
-  import { openUpdateSnippetKey, removeSnippetKey } from './types/const';
-  import { PanelSessionType } from '../../types/const';
 
   const props = defineProps<{
     item: CommandSnippetQueryResponse;
   }>();
 
-  const { getCurrentSession } = useTerminalStore();
+  const emits = defineEmits(['remove', 'update', 'copy', 'exec', 'paste']);
+
+  const expand = ref(false);
 
   let clickCount = 0;
-
-  // 修改
-  const openUpdateSnippet = inject(openUpdateSnippetKey) as (item: CommandSnippetQueryResponse) => void;
-
-  // 删除
-  const removeSnippet = inject(removeSnippetKey) as (id: number) => void;
 
   // 点击命令
   const clickItem = () => {
     if (++clickCount == 2) {
       // 双击执行
       clickCount = 0;
-      exec();
+      emits('exec', props.item.command);
     } else {
       // 单击展开
       expandItem();
@@ -153,7 +144,7 @@
     setTimeout(() => {
       // 为 0 则代表为双击
       if (clickCount !== 0) {
-        props.item.expand = !props.item.expand;
+        expand.value = !expand.value;
         clickCount = 0;
       }
     }, 50);
@@ -161,35 +152,12 @@
 
   // 点击命令
   const clickCommand = (e: Event) => {
-    if (props.item.expand) {
+    if (expand.value) {
       // 获取选中的文本
       const selectedText = window.getSelection()?.toString();
       if (selectedText) {
         e.stopPropagation();
       }
-    }
-  };
-
-  // 复制命令
-  const copyCommand = () => {
-    copy(props.item.command, '已复制');
-  };
-
-  // 粘贴
-  const paste = () => {
-    write(props.item.command);
-  };
-
-  // 执行
-  const exec = () => {
-    write(props.item.command + '\r\n');
-  };
-
-  // 写入命令
-  const write = (command: string) => {
-    const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
-    if (handler && handler.enabledStatus('checkAppendMissing')) {
-      handler.checkAppendMissing(command);
     }
   };
 

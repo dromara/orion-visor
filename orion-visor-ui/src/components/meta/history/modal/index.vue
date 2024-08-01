@@ -40,7 +40,7 @@
         <template #beforeValue="{ record }">
           <span class="copy-left"
                 title="复制"
-                @click="copy(record.beforeValue, '已复制')">
+                @click="copy(record.beforeValue, true)">
             <icon-copy />
           </span>
           <span>{{ record.beforeValue }}</span>
@@ -49,7 +49,7 @@
         <template #afterValue="{ record }">
           <span class="copy-left"
                 title="复制"
-                @click="copy(record.afterValue, '已复制')">
+                @click="copy(record.afterValue, true)">
             <icon-copy />
           </span>
           <span>{{ record.afterValue }}</span>

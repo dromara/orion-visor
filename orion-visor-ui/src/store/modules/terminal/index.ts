@@ -8,7 +8,7 @@ import type {
   TerminalShortcutSetting,
   TerminalState
 } from './types';
-import type { ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/define';
+import type { ISshSession, ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/define';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
@@ -18,7 +18,7 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
-import { TerminalTabs } from '@/views/host/terminal/types/const';
+import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
 import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';
@@ -246,6 +246,22 @@ export default defineStore('terminal', {
       }
       // 获取会话
       return this.sessionManager.getSession<T>(sessionTab.sessionId);
+    },
+
+    // 拼接命令到当前会话
+    appendCommandToCurrentSession(command: string, newLine: boolean = false) {
+      this.appendCommandToSession(this.getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true), command, newLine);
+    },
+
+    // 拼接命令到会话
+    appendCommandToSession(session: ISshSession | undefined, command: string, newLine: boolean = false) {
+      const handler = session?.handler;
+      if (handler && handler.enabledStatus('checkAppendMissing')) {
+        if (newLine) {
+          command = `${command}\r\n`;
+        }
+        handler.checkAppendMissing(command);
+      }
     },
 
   },

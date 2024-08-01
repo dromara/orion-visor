@@ -227,7 +227,7 @@ export default class LogAppender implements ILogAppender {
 
   // 复制
   copy(): void {
-    copyText(this.current.terminal.getSelection(), '已复制');
+    copyText(this.current.terminal.getSelection(), true);
     this.focus();
   }
 
