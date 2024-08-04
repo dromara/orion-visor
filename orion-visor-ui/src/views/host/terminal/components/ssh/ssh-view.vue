@@ -48,6 +48,8 @@
                             class="search-modal"
                             @find="findWords"
                             @close="focus" />
+        <!-- 上传文件模态框 -->
+        <sftp-upload-modal ref="uploadModal" @closed="focus" />
       </div>
     </ssh-context-menu>
     <!-- 命令编辑器 -->
@@ -76,6 +78,7 @@
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import IconActions from '../layout/icon-actions.vue';
   import SshContextMenu from './ssh-context-menu.vue';
+  import SftpUploadModal from '../sftp/sftp-upload-modal.vue';
   import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
 
   const props = defineProps<{
@@ -87,6 +90,7 @@
 
   const editorModal = ref();
   const searchModal = ref();
+  const uploadModal = ref();
   const commandInput = ref();
   const terminalRef = ref();
   const session = ref<ISshSession>();
@@ -141,7 +145,8 @@
     session.value = await sessionManager.openSsh(props.tab, {
       el: terminalRef.value,
       editorModal: editorModal.value,
-      searchModal: searchModal.value
+      searchModal: searchModal.value,
+      uploadModal: uploadModal.value,
     });
   });
 

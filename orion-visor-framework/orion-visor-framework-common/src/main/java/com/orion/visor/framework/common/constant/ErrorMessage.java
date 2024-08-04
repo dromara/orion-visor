@@ -109,4 +109,6 @@ public interface ErrorMessage {
 
     String CLIENT_ABORT = "手动中断";
 
+    String UNABLE_DOWNLOAD_FOLDER = "无法下载文件夹";
+
 }

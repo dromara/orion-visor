@@ -89,6 +89,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
       case 'enter':
       case 'commandEditor':
       case 'openSftp':
+      case 'uploadFile':
       case 'checkAppendMissing':
         return this.session.canWrite;
       case 'disconnect':
@@ -215,6 +216,11 @@ export default class SshSessionHandler implements ISshSessionHandler {
     if (host) {
       terminalStore.openSession(host, PanelSessionType.SFTP);
     }
+  }
+
+  // 上传文件
+  uploadFile(): void {
+    this.domRef.uploadModal.open(this.session.hostId, '/');
   }
 
   // ctrl + c

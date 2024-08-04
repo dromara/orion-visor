@@ -2,7 +2,7 @@
   <a-drawer v-model:visible="visible"
             :width="388"
             :footer="false"
-            @close="onClose">
+            @close="emits('closed')">
     <!-- 标题 -->
     <template #title>
       <span class="snippet-drawer-title usn">
@@ -103,7 +103,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession } from '../../types/define';
   import type { CommandSnippetQueryResponse } from '@/api/asset/command-snippet';
   import type { CommandSnippetGroupQueryResponse } from '@/api/asset/command-snippet-group';
   import { ref, watch } from 'vue';
@@ -111,14 +110,15 @@
   import useLoading from '@/hooks/loading';
   import { deleteCommandSnippet } from '@/api/asset/command-snippet';
   import { useCacheStore, useTerminalStore } from '@/store';
-  import { PanelSessionType } from '../../types/const';
   import { copy } from '@/hooks/copy';
   import CommandSnippetItem from './command-snippet-item.vue';
   import CommandSnippetFormDrawer from './command-snippet-form-drawer.vue';
 
+  const emits = defineEmits(['closed']);
+
   const { loading, setLoading } = useLoading();
   const { visible, setVisible } = useVisible();
-  const { getCurrentSession, appendCommandToCurrentSession } = useTerminalStore();
+  const { appendCommandToCurrentSession } = useTerminalStore();
 
   const cacheStore = useCacheStore();
 
@@ -295,12 +295,6 @@
     }
     // 重置过滤
     filterSnippet();
-  };
-
-  // 关闭回调
-  const onClose = () => {
-    // 关闭时候如果打开的是终端 则聚焦终端
-    getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
   };
 
 </script>

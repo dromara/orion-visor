@@ -5,7 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpChangeModRequest;
+import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpChangeModeRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpBaseResponse;
 import com.orion.visor.module.asset.handler.host.terminal.session.ISftpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -23,24 +23,24 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class SftpChangeModHandler extends AbstractTerminalHandler<SftpChangeModRequest> {
+public class SftpChangeModeHandler extends AbstractTerminalHandler<SftpChangeModeRequest> {
 
     @Override
-    public void handle(WebSocketSession channel, SftpChangeModRequest payload) {
+    public void handle(WebSocketSession channel, SftpChangeModeRequest payload) {
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
         ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         Integer mod = payload.getMod();
-        log.info("SftpChangeModHandler-handle start sessionId: {}, path: {}, mod: {}", sessionId, path, mod);
+        log.info("SftpChangeModeHandler-handle start sessionId: {}, path: {}, mod: {}", sessionId, path, mod);
         Exception ex = null;
         // 修改权限
         try {
             session.chmod(path, mod);
-            log.info("SftpChangeModHandler-handle success sessionId: {}, path: {}, mod: {}", sessionId, path, mod);
+            log.info("SftpChangeModeHandler-handle success sessionId: {}, path: {}, mod: {}", sessionId, path, mod);
         } catch (Exception e) {
-            log.error("SftpChangeModHandler-handle error sessionId: {}", sessionId, e);
+            log.error("SftpChangeModeHandler-handle error sessionId: {}", sessionId, e);
             ex = e;
         }
         // 返回

@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class SftpChangeModRequest extends SftpBaseRequest {
+public class SftpChangeModeRequest extends SftpBaseRequest {
 
     /**
      * 10进制的8进制 权限

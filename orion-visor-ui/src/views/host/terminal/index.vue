@@ -30,11 +30,11 @@
       </div>
     </main>
     <!-- 命令片段列表抽屉 -->
-    <command-snippet-drawer ref="snippetRef" />
+    <command-snippet-drawer ref="snippetRef" @closed="autoFocus" />
     <!-- 路径书签列表抽屉 -->
-    <path-bookmark-drawer ref="pathRef" />
+    <path-bookmark-drawer ref="pathRef" @closed="autoFocus" />
     <!-- 传输列表 -->
-    <transfer-drawer ref="transferRef" />
+    <transfer-drawer ref="transferRef" @closed="autoFocus" />
   </div>
 </template>
 
@@ -86,6 +86,11 @@
   const handleBeforeUnload = (event: any) => {
     event.preventDefault();
     event.returnValue = confirm('系统可能不会保存您所做的更改');
+  };
+
+  // 自动聚焦
+  const autoFocus = () => {
+    getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
   };
 
   // 打开默认打开页面

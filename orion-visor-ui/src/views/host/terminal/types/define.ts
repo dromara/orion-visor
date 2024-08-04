@@ -192,6 +192,7 @@ export interface XtermDomRef {
   el: HTMLElement;
   searchModal: any;
   editorModal: any;
+  uploadModal: any;
 }
 
 // 终端会话定义
@@ -280,6 +281,8 @@ export interface ISshSessionHandler {
   commandEditor: () => void;
   // 打开 sftp
   openSftp: () => void;
+  // 上传文件
+  uploadFile: () => void;
   // 中断
   interrupt: () => void;
   // 回车

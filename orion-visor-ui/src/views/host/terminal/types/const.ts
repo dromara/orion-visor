@@ -173,6 +173,10 @@ export const ActionBarItems = [
     icon: 'icon-folder',
     content: '打开 SFTP',
   }, {
+    item: 'uploadFile',
+    icon: 'icon-upload',
+    content: '上传文件',
+  }, {
     item: 'clear',
     icon: 'icon-delete',
     content: '清空',
@@ -300,6 +304,10 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   }, {
     item: 'search',
     content: '搜索',
+    type: TerminalShortcutType.TERMINAL
+  }, {
+    item: 'uploadFile',
+    content: '上传文件',
     type: TerminalShortcutType.TERMINAL
   }, {
     item: 'fontSizePlus',

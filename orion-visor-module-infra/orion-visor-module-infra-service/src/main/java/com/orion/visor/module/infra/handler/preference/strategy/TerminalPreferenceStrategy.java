@@ -91,6 +91,7 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                         new TerminalPreferenceModel.ShortcutKeysModel("toBottom", true, true, false, "ArrowDown", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("selectAll", true, true, false, "KeyA", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("search", true, true, false, "KeyF", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("uploadFile", true, true, false, "KeyU", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("commandEditor", true, false, true, "KeyE", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("fontSizePlus", true, false, true, "Equal", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("fontSizeSubtract", true, false, true, "Minus", true)
@@ -112,7 +113,10 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .fontSizePlus(false)
                 .fontSizeSubtract(false)
                 .commandEditor(true)
+                .fontSizePlus(true)
+                .fontSizeSubtract(true)
                 .openSftp(true)
+                .uploadFile(true)
                 .clear(true)
                 .disconnect(false)
                 .build()
@@ -123,7 +127,7 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .theme(new JSONObject())
                 .displaySetting(JSONObject.parseObject(defaultDisplaySetting))
                 .actionBarSetting(JSONObject.parseObject(actionBarSetting))
-                .rightMenuSetting(Lists.of("selectAll", "copy", "paste", "fontSizePlus", "fontSizeSubtract", "search", "clear"))
+                .rightMenuSetting(Lists.of("selectAll", "copy", "paste", "search", "clear"))
                 .interactSetting(JSONObject.parseObject(defaultInteractSetting))
                 .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))
                 .sessionSetting(JSONObject.parseObject(defaultSessionSetting))
