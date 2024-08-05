@@ -34,9 +34,6 @@ public class CommandSnippetCacheDTO implements LongCacheIdModel, Serializable {
     @Schema(description = "名称")
     private String name;
 
-    @Schema(description = "触发前缀")
-    private String prefix;
-
     @Schema(description = "代码片段")
     private String command;
 
