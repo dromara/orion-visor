@@ -1,5 +1,6 @@
 package com.orion.visor.module.infra.controller;
 
+import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
@@ -38,7 +39,7 @@ public class SystemMessageController {
     @IgnoreLog(IgnoreLogMode.ALL)
     @PostMapping("/list")
     @Operation(summary = "查询系统消息列表")
-    public List<SystemMessageVO> getSystemMessageList(@RequestBody SystemMessageQueryRequest request) {
+    public List<SystemMessageVO> getSystemMessageList(@Validated(Page.class) @RequestBody SystemMessageQueryRequest request) {
         return systemMessageService.getSystemMessageList(request);
     }
 

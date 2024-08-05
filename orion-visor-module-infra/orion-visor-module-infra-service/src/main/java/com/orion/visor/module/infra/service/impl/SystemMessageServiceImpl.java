@@ -74,9 +74,9 @@ public class SystemMessageServiceImpl implements SystemMessageService {
                 .eq(SystemMessageDO::getClassify, request.getClassify())
                 .lt(SystemMessageDO::getId, request.getMaxId())
                 .eq(SystemMessageDO::getStatus, status)
-                .last(Const.LIMIT + Const.SPACE + request.getLimit())
                 .orderByDesc(SystemMessageDO::getId)
                 .then()
+                .limit(request.getLimit())
                 .list(SystemMessageConvert.MAPPER::to);
     }
 

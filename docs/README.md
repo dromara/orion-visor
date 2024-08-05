@@ -19,12 +19,12 @@
     <a target="_blank"
        style="text-decoration: none !important;"
        href="https://gitee.com/lijiahangmax/orion-visor/stargazers">
-      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/star.svg?theme=dark" alt="star" />
+      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/star.svg?theme=gvp" alt="star" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
        href="https://gitee.com/lijiahangmax/orion-visor/members">
-      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/fork.svg?theme=dark" alt="fork" />
+      <img src="https://gitee.com/lijiahangmax/orion-visor/badge/fork.svg?theme=gvp" alt="fork" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"

@@ -200,7 +200,7 @@
             </a-button>
           </a-popconfirm>
           <!-- 更多 -->
-          <a-dropdown trigger="hover">
+          <a-dropdown trigger="hover" :popup-max-height="false">
             <a-button type="text" size="mini">
               更多
             </a-button>
@@ -218,6 +218,22 @@
                          @click="emits('openCopy', record)">
                 <span class="more-doption normal">
                   复制
+                </span>
+              </a-doption>
+              <!-- SSH -->
+              <a-doption v-if="record.type === hostType.SSH.type"
+                         v-permission="['asset:host-terminal:access']"
+                         @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
+                <span class="more-doption normal">
+                  SSH
+                </span>
+              </a-doption>
+              <!-- SFTP -->
+              <a-doption v-if="record.type === hostType.SSH.type"
+                         v-permission="['asset:host-terminal:access']"
+                         @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
+                <span class="more-doption normal">
+                  SFTP
                 </span>
               </a-doption>
             </template>
@@ -239,7 +255,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor, hostTypeKey, hostStatusKey } from '../types/const';
+  import { tagColor, hostTypeKey, hostStatusKey, hostType } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
@@ -247,6 +263,7 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { openNewRoute } from '@/router';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);

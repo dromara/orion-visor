@@ -1,10 +1,8 @@
 package com.orion.visor.module.infra.entity.request.message;
 
+import com.orion.visor.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 系统消息 查询请求对象
@@ -17,11 +15,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "SystemMessageQueryRequest", description = "系统消息 查询请求对象")
-public class SystemMessageQueryRequest {
-
-    @Schema(description = "大小")
-    private Integer limit;
+public class SystemMessageQueryRequest extends PageRequest {
 
     @Schema(description = "maxId")
     private Long maxId;

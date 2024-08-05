@@ -4,7 +4,7 @@ import com.orion.lang.utils.Urls;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.meta.TraceIdHolder;
 import com.orion.visor.framework.common.utils.Requests;
-import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
+import com.orion.visor.module.asset.entity.dto.HostTerminalTransferDTO;
 import com.orion.visor.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 终端访问拦截器
+ * 终端传输拦截器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -25,25 +25,25 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class TerminalAccessInterceptor implements HandshakeInterceptor {
+public class TerminalTransferInterceptor implements HandshakeInterceptor {
 
     @Resource
     private HostTerminalService hostTerminalService;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        // 获取 accessToken
-        String accessToken = Urls.getUrlSource(request.getURI().getPath());
-        log.info("TerminalAccessInterceptor-beforeHandshake start accessToken: {}", accessToken);
+        // 获取 transferToken
+        String transferToken = Urls.getUrlSource(request.getURI().getPath());
+        log.info("TerminalTransferInterceptor-beforeHandshake start transferToken: {}", transferToken);
         // 获取连接数据
-        HostTerminalAccessDTO access = hostTerminalService.getAccessInfoByToken(accessToken);
-        if (access == null) {
-            log.error("TerminalAccessInterceptor-beforeHandshake absent accessToken: {}", accessToken);
+        HostTerminalTransferDTO transfer = hostTerminalService.getTransferInfoByToken(transferToken);
+        if (transfer == null) {
+            log.error("TerminalTransferInterceptor-beforeHandshake absent transferToken: {}", transferToken);
             return false;
         }
         // 设置参数
-        attributes.put(ExtraFieldConst.USER_ID, access.getUserId());
-        attributes.put(ExtraFieldConst.USERNAME, access.getUsername());
+        attributes.put(ExtraFieldConst.USER_ID, transfer.getUserId());
+        attributes.put(ExtraFieldConst.USERNAME, transfer.getUsername());
         attributes.put(ExtraFieldConst.TRACE_ID, TraceIdHolder.get());
         attributes.put(ExtraFieldConst.IDENTITY, Requests.getIdentity());
         return true;
