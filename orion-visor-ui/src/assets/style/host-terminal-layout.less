@@ -20,6 +20,8 @@ body {
   --color-panel-text-2: var(--color-content-text-3);
   --color-panel-gradient-start: rgba(218, 218, 218, 1);
   --color-panel-gradient-end: rgba(218, 218, 218, 0);
+  --color-button-bg: #E3E3E3;
+  --color-button-bg-active: var(--color-sidebar-icon-checked);
   --search-bg-focus: rgba(234, 234, 234, .75);
   --search-bg: rgba(234, 234, 234, .95);
   --search-color-text: #0E0E0E;
@@ -52,6 +54,8 @@ body[terminal-theme='dark'] {
   --color-panel-text-2: var(--color-content-text-3);
   --color-panel-gradient-start: rgba(38, 38, 38, 1);
   --color-panel-gradient-end: rgba(38, 38, 38, 0);
+  --color-button-bg: var(--color-sidebar-icon-bg);
+  --color-button-bg-active: #484848;
   --search-bg: rgba(12, 12, 12, .75);
   --search-bg-focus: rgba(12, 12, 12, .95);
   --search-color-text: #E0E0E0;
@@ -508,7 +512,7 @@ body[terminal-theme='dark'] .arco-modal-container {
     color: var(--color-sidebar-icon);
     border-radius: 4px;
     border: 1px solid transparent;
-    transition: 0.1s cubic-bezier(0, 0, 1, 1);
+    transition: 0.15s cubic-bezier(0, 0, 1, 1);
     cursor: pointer;
 
     &:hover {

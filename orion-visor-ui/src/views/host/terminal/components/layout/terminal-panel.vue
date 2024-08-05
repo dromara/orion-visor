@@ -3,7 +3,7 @@
     <!-- 终端 tab -->
     <a-tabs v-model:active-key="panel.active"
             :editable="true"
-            :auto-switch="true"
+            :auto-switch="false"
             :show-add-button="true"
             @add="openNewConnect"
             @tab-click="(k: string) => panel.clickTab(k)"

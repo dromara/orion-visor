@@ -234,11 +234,22 @@
     }
 
     .status-bridge {
+      height: 100%;
       margin: 0 2px 0 8px;
+      display: flex;
+      align-items: center;
       user-select: none;
 
       :deep(.arco-badge-status-text) {
         width: 36px;
+      }
+
+      &::before {
+        content: "";
+        height: 56%;
+        margin: 0 12px 0 6px;
+        border-left: 2px solid var(--color-fill-4);
+        border-radius: 2px;
       }
     }
   }
