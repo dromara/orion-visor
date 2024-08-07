@@ -11,7 +11,10 @@
       <!-- 右侧按钮 -->
       <template #extra>
         <a-space class="panel-extra">
-          <span class="extra-icon" @click="close">
+          <!-- 关闭 -->
+          <span class="extra-icon"
+                title="关闭面板"
+                @click="close">
             <icon-close />
           </span>
         </a-space>
@@ -21,7 +24,10 @@
         <!-- 标题 -->
         <template #title>
           <span class="tab-title-wrapper usn"
-                :style="{ 'border-bottom': `2px ${tab.color || 'transparent'} solid` }"
+                :style="{
+                  '--color': getDictValue(tabColorKey, tab.color, 'color', 'transparent'),
+                  '--bg': panel.active === tab.key ? getDictValue(tabColorKey, tab.color, 'bg', 'transparent') : 'transparent',
+                }"
                 @dblclick="copySession(tab, index)">
             <span class="tab-title-icon">
               <component :is="tab.icon" />
@@ -47,8 +53,8 @@
 <script lang="ts" setup>
   import type { ISshSession, ITerminalTabManager, TerminalPanelTabItem } from '../../types/define';
   import { watch } from 'vue';
-  import { useTerminalStore } from '@/store';
-  import { PanelSessionType } from '../../types/const';
+  import { useDictStore, useTerminalStore } from '@/store';
+  import { tabColorKey, PanelSessionType } from '../../types/const';
   import SshView from '../ssh/ssh-view.vue';
   import SftpView from '../sftp/sftp-view.vue';
 
@@ -60,6 +66,7 @@
   const emits = defineEmits(['close', 'openNewConnect']);
 
   const { sessionManager, copySession } = useTerminalStore();
+  const { getDictValue } = useDictStore();
 
   // 监听 tab 切换
   watch(() => props.panel.active, (active, before) => {
@@ -107,11 +114,27 @@
     display: flex;
     align-items: center;
     padding: 11px 18px 9px 14px;
-    margin: 0 2px;
+    background: var(--bg);
+    position: relative;
+    transition: all .3s;
 
     .tab-title-icon {
       font-size: 16px;
       margin-right: 6px;
+    }
+
+    &:hover{
+      filter: brightness(1.04);
+    }
+
+    &::after {
+      content: '';
+      width: calc(100% - 3px);
+      height: 2px;
+      background: var(--color);
+      position: absolute;
+      left: 1px;
+      bottom: -1px;
     }
   }
 

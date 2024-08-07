@@ -157,12 +157,14 @@
   onUnmounted(() => {
     // 卸载时清除 cache
     useCacheStore().reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups', 'pathBookmarkGroups');
-    // 移除关闭视口事件
-    window.removeEventListener('beforeunload', handleBeforeUnload);
     // 去除 body style
     document.body.removeAttribute('terminal-theme');
     // 重置 title
     document.title = originTitle;
+    // 移除关闭视口事件
+    if (!debug) {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
   });
 
 </script>

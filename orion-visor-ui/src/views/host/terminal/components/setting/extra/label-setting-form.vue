@@ -17,7 +17,7 @@
       <template v-for="color in toOptions(tabColorKey)">
         <div class="color-wrapper"
              :class="[formModel.color === color.value ? 'selected-color' : '']"
-             :style="{ '--color': `${color.value}` }"
+             :style="{ '--color': `${color.color}` }"
              @click="clickColor(color.value as string)">
           <div class="color-item">
             <div class="color-item-dot" />

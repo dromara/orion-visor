@@ -22,11 +22,11 @@
                         :filter-option="labelFilter">
                 <!-- label -->
                 <template #label="{ data }">
-                  <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
+                  <span :style="{ fontFamily: data.value === '_' ? defaultFontFamily : data.value }">{{ data.label }}</span>
                 </template>
                 <!-- 选项 -->
                 <template #option="{ data }">
-                  <span :style="{ fontFamily: data.value }">{{ data.label }}</span>
+                  <span :style="{ fontFamily: data.value === '_' ? defaultFontFamily : data.value }">{{ data.label }}</span>
                 </template>
               </a-select>
             </a-form-item>

@@ -199,6 +199,7 @@
       height: var(--header-height);
       display: flex;
       align-items: center;
+      transition: all .3s;
 
       &::before {
         display: none;
