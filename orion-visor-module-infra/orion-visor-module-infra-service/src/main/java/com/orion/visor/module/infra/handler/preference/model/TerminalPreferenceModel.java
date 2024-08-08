@@ -315,6 +315,11 @@ public class TerminalPreferenceModel implements GenericsDataModel {
         private Boolean openSftp;
 
         /**
+         * 上传文件
+         */
+        private Boolean uploadFile;
+
+        /**
          * 清空
          */
         private Boolean clear;

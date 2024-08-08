@@ -23,7 +23,7 @@
                     :column="1">
       <!-- 机器码 -->
       <a-descriptions-item label="机器码">
-        <span class="text-copy span-blue uuid-wrapper" @click="copy(app.uuid, '已复制')">
+        <span class="text-copy span-blue uuid-wrapper" @click="copy(app.uuid, true)">
           {{ app.uuid }}
         </span>
       </a-descriptions-item>

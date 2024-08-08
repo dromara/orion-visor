@@ -30,7 +30,6 @@ CREATE TABLE `command_snippet`
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `group_id`    bigint(0)                                                    NULL DEFAULT NULL COMMENT '分组id',
     `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
-    `prefix`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '触发前缀',
     `command`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '代码片段',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',

@@ -7,7 +7,9 @@ export const copy = async (value: string | undefined, tips: string | boolean = `
       return;
     }
     await copyToClipboard(value);
-    if (tips) {
+    if (tips === true) {
+      Message.success('已复制');
+    } else if (tips) {
       Message.success(tips as string);
     }
   } catch (e) {

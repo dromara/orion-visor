@@ -17,6 +17,7 @@ import com.orion.visor.module.asset.entity.domain.HostIdentityDO;
 import com.orion.visor.module.asset.entity.domain.HostKeyDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.HostTerminalTransferDTO;
 import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
 import com.orion.visor.module.asset.enums.*;
 import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
@@ -100,6 +101,21 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     }
 
     @Override
+    public String getTerminalTransferToken() {
+        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
+        log.info("HostConnectService.getTerminalTransferToken userId: {}", user.getId());
+        String transferToken = UUIds.random19();
+        HostTerminalTransferDTO transfer = HostTerminalTransferDTO.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .build();
+        // 设置 transfer 缓存
+        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER.format(transferToken);
+        RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER, transfer);
+        return transferToken;
+    }
+
+    @Override
     public HostTerminalAccessDTO getAccessInfoByToken(String token) {
         // 获取缓存
         String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(token);
@@ -109,6 +125,18 @@ public class HostTerminalServiceImpl implements HostTerminalService {
             RedisStrings.delete(key);
         }
         return access;
+    }
+
+    @Override
+    public HostTerminalTransferDTO getTransferInfoByToken(String token) {
+        // 获取缓存
+        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER.format(token);
+        HostTerminalTransferDTO transfer = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER);
+        // 删除缓存
+        if (transfer != null) {
+            RedisStrings.delete(key);
+        }
+        return transfer;
     }
 
     @Override

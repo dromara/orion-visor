@@ -1,6 +1,6 @@
 <template>
   <a-select v-model:model-value="value"
-            placeholder="请选择路径分组"
+            placeholder="请选择命令分组"
             :options="optionData"
             :loading="loading"
             :allow-create="true"
@@ -9,17 +9,17 @@
 
 <script lang="ts">
   export default {
-    name: 'pathBookmarkGroupSelect'
+    name: 'commandSnippetGroupSelector'
   };
 </script>
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import type { PathBookmarkGroupQueryResponse } from '@/api/asset/path-bookmark-group';
+  import type { CommandSnippetGroupQueryResponse } from '@/api/asset/command-snippet-group';
   import { ref, computed, onBeforeMount } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import { createPathBookmarkGroup } from '@/api/asset/path-bookmark-group';
+  import { createCommandSnippetGroup } from '@/api/asset/command-snippet-group';
 
   const props = defineProps<Partial<{
     modelValue: number;
@@ -69,12 +69,12 @@
 
   // 创建分组
   const doCreateGroup = async (name: string) => {
-    const { data: id } = await createPathBookmarkGroup({
+    const { data: id } = await createCommandSnippetGroup({
       name,
     });
     // 插入缓存
-    const groups = await cacheStore.loadPathBookmarkGroups();
-    groups && groups.push({ id, name } as PathBookmarkGroupQueryResponse);
+    const groups = await cacheStore.loadCommandSnippetGroups();
+    groups && groups.push({ id, name } as CommandSnippetGroupQueryResponse);
     // 插入 options
     optionData.value.push({
       label: name,
@@ -87,7 +87,7 @@
   onBeforeMount(async () => {
     setLoading(true);
     try {
-      const tags = await cacheStore.loadPathBookmarkGroups();
+      const tags = await cacheStore.loadCommandSnippetGroups();
       optionData.value = tags.map(s => {
         return {
           label: s.name,

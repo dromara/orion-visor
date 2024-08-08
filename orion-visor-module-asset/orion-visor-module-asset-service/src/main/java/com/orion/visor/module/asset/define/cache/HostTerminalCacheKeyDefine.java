@@ -4,6 +4,7 @@ import com.orion.lang.define.cache.key.CacheKeyBuilder;
 import com.orion.lang.define.cache.key.CacheKeyDefine;
 import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
+import com.orion.visor.module.asset.entity.dto.HostTerminalTransferDTO;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,14 @@ public interface HostTerminalCacheKeyDefine {
             .key("host:terminal:access:{}")
             .desc("主机终端访问token ${token}")
             .type(HostTerminalAccessDTO.class)
+            .struct(RedisCacheStruct.STRING)
+            .timeout(3, TimeUnit.MINUTES)
+            .build();
+
+    CacheKeyDefine HOST_TERMINAL_TRANSFER = new CacheKeyBuilder()
+            .key("host:terminal:transfer:{}")
+            .desc("主机终端传输token ${token}")
+            .type(HostTerminalTransferDTO.class)
             .struct(RedisCacheStruct.STRING)
             .timeout(3, TimeUnit.MINUTES)
             .build();

@@ -31,7 +31,6 @@ export interface PathBookmarkQueryResponse extends PathBookmarkQueryResponseExtr
 
 export interface PathBookmarkQueryResponseExtra {
   visible: boolean;
-  expand?: boolean;
 }
 
 /**

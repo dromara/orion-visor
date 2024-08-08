@@ -37,8 +37,11 @@ public class DownloadSession extends TransferSession implements StreamingRespons
 
     protected InputStream inputStream;
 
+    private Long fileSize;
+
     public DownloadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         super(connectInfo, sessionStore, channel);
+        this.fileSize = 0L;
     }
 
     @Override
@@ -53,7 +56,9 @@ public class DownloadSession extends TransferSession implements StreamingRespons
             // 检查文件是否存在
             SftpFile file = executor.getFile(path);
             Valid.notNull(file, ErrorMessage.FILE_ABSENT);
-            if (file.getSize() == 0L) {
+            // 验证非文件夹
+            Valid.isTrue(!file.isDirectory(), ErrorMessage.UNABLE_DOWNLOAD_FOLDER);
+            if ((this.fileSize = file.getSize()) == 0L) {
                 // 文件为空
                 log.info("DownloadSession.startDownload file empty channelId: {}, path: {}", channelId, path);
                 TransferUtils.sendMessage(channel, TransferReceiver.FINISH, null);
@@ -101,14 +106,14 @@ public class DownloadSession extends TransferSession implements StreamingRespons
                 // 首次触发
                 if (i == 0) {
                     outputStream.flush();
-                    this.sendProgress(size, null);
+                    this.sendProgress(size, fileSize);
                 }
                 i++;
             }
             // 最后一次也要 flush
             if (i != 0) {
                 outputStream.flush();
-                this.sendProgress(size, null);
+                this.sendProgress(size, fileSize);
             }
             log.info("DownloadSession.download finish channelId: {}, path: {}", channelId, path);
         } catch (Exception e) {

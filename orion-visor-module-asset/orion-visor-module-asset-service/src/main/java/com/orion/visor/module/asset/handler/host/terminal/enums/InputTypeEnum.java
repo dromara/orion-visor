@@ -131,9 +131,9 @@ public enum InputTypeEnum {
      * SFTP 修改文件权限
      */
     SFTP_CHMOD("cm",
-            SftpChangeModHandler.class,
+            SftpChangeModeHandler.class,
             new String[]{"type", "sessionId", "path", "mod"},
-            SftpChangeModRequest.class,
+            SftpChangeModeRequest.class,
             true),
 
     /**

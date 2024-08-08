@@ -86,6 +86,8 @@
   import { getFileSize } from '@/utils/file';
   import useVisible from '@/hooks/visible';
 
+  const emits = defineEmits(['closed']);
+
   const { visible, setVisible } = useVisible();
   const { transferManager } = useTerminalStore();
 
@@ -130,6 +132,7 @@
   // 清空
   const handlerClear = () => {
     fileList.value = [];
+    emits('closed');
   };
 
 </script>

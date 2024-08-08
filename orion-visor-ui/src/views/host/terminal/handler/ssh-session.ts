@@ -128,7 +128,7 @@ export default class SshSession extends BaseSession implements ISshSession {
     // 启用响铃
     if (preference.interactSetting.enableBell) {
       this.inst.onBell(() => {
-        // 播放蜂鸣
+        // 播放响铃
         playBell();
       });
     }

@@ -8,7 +8,7 @@ import type { ImageAddon } from '@xterm/addon-image';
 import type { Unicode11Addon } from '@xterm/addon-unicode11';
 
 // 默认字体
-export const defaultFontFamily = 'Courier New, Monaco, courier, monospace';
+export const defaultFontFamily = 'Consolas, Courier New, Monaco, courier, monospace';
 
 // 默认主题
 export const defaultTheme = {

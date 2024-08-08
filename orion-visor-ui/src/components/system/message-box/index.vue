@@ -129,6 +129,7 @@
         : undefined;
       // 查询数据
       const { data } = await getSystemMessageList({
+        page: 1,
         limit: messageLimit,
         classify: currentClassify.value,
         queryUnread: queryUnread.value,

@@ -3,7 +3,8 @@
             class="transfer-drawer"
             :width="388"
             :unmount-on-close="false"
-            :footer="false">
+            :footer="false"
+            @close="emits('closed')">
     <!-- 标题 -->
     <template #title>
       <span class="path-drawer-title usn">
@@ -76,6 +77,8 @@
   import { transferStatusKey } from '../../types/const';
   import TransferItem from './transfer-item.vue';
 
+  const emits = defineEmits(['closed']);
+
   const { transferManager } = useTerminalStore();
   const { toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
@@ -108,16 +111,6 @@
   // 移除全部任务
   const removeAllTask = () => {
     transferManager.cancelAllTransfer();
-  };
-
-  // 关闭
-  const handleClose = () => {
-    handlerClear();
-  };
-
-  // 清空
-  const handlerClear = () => {
-    setLoading(false);
   };
 
 </script>

@@ -29,7 +29,7 @@
     </template>
     <!-- 操作日志 -->
     <template #originLogInfo="{ record }">
-      <icon-copy class="copy-left" @click="copy(record.originLogInfo, '已复制')" />
+      <icon-copy class="copy-left" @click="copy(record.originLogInfo, true)" />
       <span v-html="replaceHtmlTag(record.logInfo)" />
     </template>
     <!-- 留痕地址 -->

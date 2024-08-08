@@ -5,6 +5,7 @@ import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.net.host.SessionHolder;
+import com.orion.net.host.SessionLogger;
 import com.orion.net.host.SessionStore;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.CryptoUtils;
@@ -40,6 +41,7 @@ public class SessionStores {
             CURRENT_ADDRESS.set(address);
             // 创建会话
             SessionHolder sessionHolder = SessionHolder.create();
+            sessionHolder.setLogger(SessionLogger.INFO);
             SessionStore session = createSessionStore(conn, sessionHolder);
             // 连接
             session.connect();

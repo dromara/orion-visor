@@ -13,7 +13,7 @@
       <!-- 内容区域 -->
       <main class="host-terminal-layout-content">
         <!-- 主机加载中骨架 -->
-        <loading-skeleton v-if="contentLoading" />
+        <loading-skeleton v-if="loading" />
         <!-- 终端内容区域 -->
         <main-content v-else
                       @open-command-snippet="() => snippetRef.open()"
@@ -30,11 +30,11 @@
       </div>
     </main>
     <!-- 命令片段列表抽屉 -->
-    <command-snippet-drawer ref="snippetRef" />
+    <command-snippet-drawer ref="snippetRef" @closed="autoFocus" />
     <!-- 路径书签列表抽屉 -->
-    <path-bookmark-drawer ref="pathRef" />
+    <path-bookmark-drawer ref="pathRef" @closed="autoFocus" />
     <!-- 传输列表 -->
-    <transfer-drawer ref="transferRef" />
+    <transfer-drawer ref="transferRef" @closed="autoFocus" />
   </div>
 </template>
 
@@ -49,8 +49,10 @@
   import { ref, onBeforeMount, onUnmounted, onMounted } from 'vue';
   import { dictKeys, PanelSessionType, TerminalTabs } from './types/const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
+  import { useRoute } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import debug from '@/utils/env';
+  import { Message } from '@arco-design/web-vue';
   import LayoutHeader from './components/layout/layout-header.vue';
   import LeftSidebar from './components/layout/left-sidebar.vue';
   import RightSidebar from './components/layout/right-sidebar.vue';
@@ -62,10 +64,9 @@
   import '@/assets/style/host-terminal-layout.less';
   import '@xterm/xterm/css/xterm.css';
 
-  const terminalStore = useTerminalStore();
-  const dictStore = useDictStore();
-  const cacheStore = useCacheStore();
-  const { loading: contentLoading, setLoading: setContentLoading } = useLoading(true);
+  const { fetchPreference, getCurrentSession, openSession, preference, loadHosts, hosts, tabManager } = useTerminalStore();
+  const { loading, setLoading } = useLoading(true);
+  const route = useRoute();
 
   const originTitle = document.title;
   const render = ref(false);
@@ -75,7 +76,7 @@
 
   // 终端截屏
   const screenshot = () => {
-    const handler = terminalStore.getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
+    const handler = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true)?.handler;
     if (handler && handler.enabledStatus('screenshot')) {
       handler.screenshot();
     }
@@ -87,27 +88,58 @@
     event.returnValue = confirm('系统可能不会保存您所做的更改');
   };
 
+  // 自动聚焦
+  const autoFocus = () => {
+    getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
+  };
+
+  // 打开默认打开页面
+  onBeforeMount(() => {
+    // 打开默认 tab
+    let openTab;
+    const tab = route.query.tab;
+    if (tab) {
+      openTab = Object.values(TerminalTabs).find(s => s.key === tab);
+    }
+    tabManager.openTab(openTab || TerminalTabs.NEW_CONNECTION);
+  });
+
   // 加载用户终端偏好
   onBeforeMount(async () => {
-    await terminalStore.fetchPreference();
+    // 加载偏好
+    await fetchPreference();
     // 设置系统主题配色
-    const dark = terminalStore.preference.theme.dark;
+    const dark = preference.theme.dark;
     document.body.setAttribute('terminal-theme', dark ? 'dark' : 'light');
     render.value = true;
   });
 
   // 加载字典值
   onBeforeMount(async () => {
-    await dictStore.loadKeys(dictKeys);
+    await useDictStore().loadKeys(dictKeys);
   });
 
   // 加载主机信息
   onMounted(async () => {
     try {
-      await terminalStore.loadHosts();
+      // 加载主机
+      await loadHosts();
+      // 默认连接主机
+      const connect = route.query.connect;
+      if (connect) {
+        const connectHostId = Number.parseInt(connect as string);
+        const connectHost = hosts.hostList.find(s => s.id === connectHostId);
+        // 打开连接
+        if (connectHost) {
+          const type = Object.values(PanelSessionType).find(s => s.type === route.query.type) || PanelSessionType.SSH;
+          openSession(connectHost, type);
+        } else {
+          Message.error(`主机 ${connectHostId} 不存在/无权限`);
+        }
+      }
     } catch (e) {
     } finally {
-      setContentLoading(false);
+      setLoading(false);
     }
   });
 
@@ -124,13 +156,15 @@
   // 卸载处理
   onUnmounted(() => {
     // 卸载时清除 cache
-    cacheStore.reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups', 'pathBookmarkGroups');
-    // 移除关闭视口事件
-    window.removeEventListener('beforeunload', handleBeforeUnload);
+    useCacheStore().reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups', 'pathBookmarkGroups');
     // 去除 body style
     document.body.removeAttribute('terminal-theme');
     // 重置 title
     document.title = originTitle;
+    // 移除关闭视口事件
+    if (!debug) {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
   });
 
 </script>

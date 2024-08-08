@@ -52,6 +52,13 @@ export function getTerminalAccessToken() {
 }
 
 /**
+ * 获取主机终端 transferToken
+ */
+export function getTerminalTransferToken() {
+  return axios.get<string>('/asset/host-terminal/transfer');
+}
+
+/**
  * 打开主机终端 websocket
  */
 export const openHostTerminalChannel = (accessToken: string) => {

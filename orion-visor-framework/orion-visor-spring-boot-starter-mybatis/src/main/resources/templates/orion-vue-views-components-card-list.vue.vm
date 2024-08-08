@@ -68,7 +68,7 @@
     <template #extra="{ record }">
       <a-space>
         <!-- 更多操作 -->
-        <a-dropdown trigger="hover">
+        <a-dropdown trigger="hover" :popup-max-height="false">
           <icon-more class="card-extra-icon" />
           <template #content>
             <!-- 修改 -->

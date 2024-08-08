@@ -42,10 +42,6 @@ public class CommandSnippetDO extends BaseDO {
     @TableField("name")
     private String name;
 
-    @Schema(description = "触发前缀")
-    @TableField("prefix")
-    private String prefix;
-
     @Schema(description = "代码片段")
     @TableField("command")
     private String command;

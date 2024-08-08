@@ -22,7 +22,7 @@
         </a-form-item>
         <!-- 分组 -->
         <a-form-item field="groupId" label="分组">
-          <path-bookmark-group-select v-model="formModel.groupId" />
+          <path-bookmark-group-selector v-model="formModel.groupId" />
         </a-form-item>
         <!-- 类型 -->
         <a-form-item field="type" label="类型">
@@ -54,13 +54,13 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { createPathBookmark, updatePathBookmark } from '@/api/asset/path-bookmark';
   import formRules from './types/form.rules';
+  import { createPathBookmark, updatePathBookmark } from '@/api/asset/path-bookmark';
   import { PathBookmarkType } from './types/const';
-  import { pathBookmarkTypeKey } from '../../types/const';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
-  import PathBookmarkGroupSelect from './path-bookmark-group-select.vue';
+  import { pathBookmarkTypeKey } from '../../types/const';
+  import PathBookmarkGroupSelector from '@/components/host/bookmark-path/group/selector/index.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();

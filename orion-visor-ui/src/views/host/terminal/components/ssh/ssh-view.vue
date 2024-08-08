@@ -6,9 +6,10 @@
       <div class="ssh-header-left">
         <!-- 主机地址 -->
         <span class="address-wrapper">
-          {{ tab.address }}
-          <span class="address-copy copy-right" title="复制" @click="copy(tab.address as string)">
-            <icon-copy />
+          <span class="text-copy"
+                :title="tab.address"
+                @click="copy(tab.address as string, true)">
+            {{ tab.address }}
           </span>
         </span>
       </div>
@@ -48,6 +49,8 @@
                             class="search-modal"
                             @find="findWords"
                             @close="focus" />
+        <!-- 上传文件模态框 -->
+        <sftp-upload-modal ref="uploadModal" @closed="focus" />
       </div>
     </ssh-context-menu>
     <!-- 命令编辑器 -->
@@ -76,7 +79,8 @@
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import IconActions from '../layout/icon-actions.vue';
   import SshContextMenu from './ssh-context-menu.vue';
-  import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
+  import SftpUploadModal from '../sftp/sftp-upload-modal.vue';
+  import XtermSearchModal from '@/components/xterm/search-modal/index.vue';
 
   const props = defineProps<{
     tab: TerminalPanelTabItem;
@@ -87,6 +91,7 @@
 
   const editorModal = ref();
   const searchModal = ref();
+  const uploadModal = ref();
   const commandInput = ref();
   const terminalRef = ref();
   const session = ref<ISshSession>();
@@ -141,7 +146,8 @@
     session.value = await sessionManager.openSsh(props.tab, {
       el: terminalRef.value,
       editorModal: editorModal.value,
-      searchModal: searchModal.value
+      searchModal: searchModal.value,
+      uploadModal: uploadModal.value,
     });
   });
 
@@ -177,23 +183,13 @@
     }
 
     &-left {
-      width: 34%;
+      width: 25%;
 
       .address-wrapper {
         height: 100%;
         display: inline-flex;
         align-items: center;
         user-select: none;
-
-        .address-copy {
-          display: none;
-        }
-
-        &:hover {
-          .address-copy {
-            display: unset;
-          }
-        }
 
         &:before {
           content: 'IP:';
@@ -203,7 +199,7 @@
     }
 
     &-right {
-      width: 66%;
+      width: 75%;
       justify-content: flex-end;
 
       .command-input {
@@ -229,11 +225,22 @@
     }
 
     .status-bridge {
+      height: 100%;
       margin: 0 2px 0 8px;
+      display: flex;
+      align-items: center;
       user-select: none;
 
       :deep(.arco-badge-status-text) {
         width: 36px;
+      }
+
+      &::before {
+        content: "";
+        height: 56%;
+        margin: 0 12px 0 6px;
+        border-left: 2px solid var(--color-fill-4);
+        border-radius: 2px;
       }
     }
   }
@@ -242,7 +249,7 @@
     width: 100%;
     height: calc(100% - @ssh-header-height);
     position: relative;
-    padding: 8px;
+    padding: 8px 2px 2px 8px;
 
     .ssh-inst {
       width: 100%;

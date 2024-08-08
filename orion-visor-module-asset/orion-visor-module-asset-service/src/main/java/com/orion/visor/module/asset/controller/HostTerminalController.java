@@ -49,5 +49,12 @@ public class HostTerminalController {
         return hostTerminalService.getTerminalAccessToken();
     }
 
+    @GetMapping("/transfer")
+    @Operation(summary = "获取主机终端 transferToken")
+    @PreAuthorize("@ss.hasPermission('asset:host-terminal:access')")
+    public String getTerminalTransferToken() {
+        return hostTerminalService.getTerminalTransferToken();
+    }
+
 }
 

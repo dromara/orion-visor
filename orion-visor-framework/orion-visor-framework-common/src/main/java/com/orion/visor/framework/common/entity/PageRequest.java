@@ -21,7 +21,7 @@ public class PageRequest implements IPageRequest {
     @Schema(description = "页码")
     private int page;
 
-    @Range(min = 1, max = 100, groups = Page.class)
+    @Range(min = 1, max = 200, groups = Page.class)
     @Schema(description = "大小")
     private int limit;
 

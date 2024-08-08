@@ -4,6 +4,7 @@ export type CacheType = 'users' | 'menus' | 'roles'
   | 'dictKeys'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | 'commandSnippetGroups' | 'pathBookmarkGroups'
+  | 'commandSnippets' | 'pathBookmarks'
   | 'execJob'
   | string
 

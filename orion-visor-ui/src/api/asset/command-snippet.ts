@@ -29,7 +29,6 @@ export interface CommandSnippetQueryResponse extends CommandSnippetQueryResponse
 
 export interface CommandSnippetQueryResponseExtra {
   visible: boolean;
-  expand?: boolean;
 }
 
 /**

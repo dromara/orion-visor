@@ -5,6 +5,7 @@ import com.orion.visor.module.asset.handler.host.terminal.TerminalMessageDispatc
 import com.orion.visor.module.asset.handler.host.transfer.TransferMessageDispatcher;
 import com.orion.visor.module.asset.interceptor.ExecLogTailInterceptor;
 import com.orion.visor.module.asset.interceptor.TerminalAccessInterceptor;
+import com.orion.visor.module.asset.interceptor.TerminalTransferInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -29,6 +30,9 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
     private TerminalAccessInterceptor terminalAccessInterceptor;
 
     @Resource
+    private TerminalTransferInterceptor terminalTransferInterceptor;
+
+    @Resource
     private ExecLogTailInterceptor execLogTailInterceptor;
 
     @Resource
@@ -42,13 +46,13 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // 终端
+        // 终端会话
         registry.addHandler(terminalMessageDispatcher, prefix + "/host/terminal/{accessToken}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
         // 文件传输
-        registry.addHandler(transferMessageDispatcher, prefix + "/host/transfer/{accessToken}")
-                .addInterceptors(terminalAccessInterceptor)
+        registry.addHandler(transferMessageDispatcher, prefix + "/host/transfer/{transferToken}")
+                .addInterceptors(terminalTransferInterceptor)
                 .setAllowedOrigins("*");
         // 执行日志
         registry.addHandler(execLogTailHandler, prefix + "/exec/log/{token}")

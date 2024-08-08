@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 终端拦截器
+ * 终端访问拦截器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -34,11 +34,11 @@ public class TerminalAccessInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         // 获取 accessToken
         String accessToken = Urls.getUrlSource(request.getURI().getPath());
-        log.info("TerminalInterceptor-beforeHandshake start accessToken: {}", accessToken);
+        log.info("TerminalAccessInterceptor-beforeHandshake start accessToken: {}", accessToken);
         // 获取连接数据
         HostTerminalAccessDTO access = hostTerminalService.getAccessInfoByToken(accessToken);
         if (access == null) {
-            log.error("TerminalInterceptor-beforeHandshake absent accessToken: {}", accessToken);
+            log.error("TerminalAccessInterceptor-beforeHandshake absent accessToken: {}", accessToken);
             return false;
         }
         // 设置参数

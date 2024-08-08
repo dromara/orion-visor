@@ -11,25 +11,21 @@
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 超链接插件 -->
         <block-setting-item label="超链接插件" desc="自动检测 http(https) url 并可以点击">
-          <a-switch type="round"
-                    v-model="formModel.enableWeblinkPlugin" />
+          <a-switch v-model="formModel.enableWeblinkPlugin" type="round" />
         </block-setting-item>
         <!-- WebGL 渲染插件 -->
         <block-setting-item label="WebGL 渲染插件" desc="使用 WebGL 加速渲染终端 (建议开启, 若无法开启终端请关闭)">
-          <a-switch type="round"
-                    v-model="formModel.enableWebglPlugin" />
+          <a-switch v-model="formModel.enableWebglPlugin" type="round" />
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- unicode11 插件 -->
         <block-setting-item label="unicode11 插件" desc="支持 Unicode 11 字符集">
-          <a-switch type="round"
-                    v-model="formModel.enableUnicodePlugin" />
+          <a-switch v-model="formModel.enableUnicodePlugin" type="round" />
         </block-setting-item>
         <!-- 图片渲染插件 -->
         <block-setting-item label="图片渲染插件" desc="支持使用 sixel 打开图片 (一般不需要开启)">
-          <a-switch type="round"
-                    v-model="formModel.enableImagePlugin" />
+          <a-switch v-model="formModel.enableImagePlugin" type="round" />
         </block-setting-item>
       </a-row>
     </div>

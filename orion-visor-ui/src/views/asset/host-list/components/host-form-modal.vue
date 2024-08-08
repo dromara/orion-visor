@@ -33,7 +33,7 @@
         </a-form-item>
         <!-- 主机编码 -->
         <a-form-item field="code" label="主机编码">
-          <a-input v-model="formModel.code" placeholder="请输入主机编码" />
+          <a-input v-model="formModel.code" placeholder="请输入主机编码 (定义主机唯一值)" />
         </a-form-item>
         <!-- 主机地址 -->
         <a-form-item field="address" label="主机地址">

@@ -85,15 +85,21 @@ export default class SftpSession extends BaseSession implements ISftpSession {
           display: 'flex',
           flexDirection: 'column',
           maxHeight: '40vh',
-          overflowY: 'auto'
+          overflowY: 'auto',
         }
       },
       paths.map(s => {
-        return h('span', { style: { marginTop: '4px' } }, s);
+        return h('span', {
+          style: {
+            marginTop: '4px',
+            wordBreak: 'break-all',
+          }
+        }, s);
       }));
     // 提示
     Modal.confirm({
-      title: '确定后将立即删除这些文件且无法恢复!',
+      title: `确定后将立即删除这 ${paths.length} 个文件且无法恢复!`,
+      width: 426,
       modalStyle: { padding: '24px 32px' },
       bodyStyle: { marginTop: '-14px' },
       okButtonProps: { status: 'danger' },

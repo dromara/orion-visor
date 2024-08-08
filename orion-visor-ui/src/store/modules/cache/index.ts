@@ -18,6 +18,8 @@ import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
 import { getExecJobList } from '@/api/job/exec-job';
 import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
+import { getCommandSnippetList } from '@/api/asset/command-snippet';
+import { getPathBookmarkList } from '@/api/asset/path-bookmark';
 
 export default defineStore('cache', {
   state: (): CacheState => ({}),
@@ -119,6 +121,16 @@ export default defineStore('cache', {
     // 获取路径书签分组
     async loadPathBookmarkGroups(force = false) {
       return await this.load('pathBookmarkGroups', getPathBookmarkGroupList, force);
+    },
+
+    // 获取命令片段列表
+    async loadCommandSnippets(force = false) {
+      return await this.load('commandSnippets', getCommandSnippetList, force);
+    },
+
+    // 获取路径书签列表
+    async loadPathBookmarks(force = false) {
+      return await this.load('pathBookmarks', getPathBookmarkList, force);
     },
 
     // 获取执行计划列表

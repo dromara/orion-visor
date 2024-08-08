@@ -16,8 +16,6 @@
     </a-skeleton>
     <!-- 内容区域 -->
     <div v-else class="terminal-setting-body terminal-theme-container">
-      <!-- 提示 -->
-      <a-alert class="mb16">选择后会立刻保存, 刷新页面后生效</a-alert>
       <!-- 终端主题 -->
       <div class="theme-row"
            v-for="(themeArr, index) in themes"
@@ -57,15 +55,17 @@
 
 <script lang="ts" setup>
   import type { TerminalTheme } from '@/api/asset/host-terminal';
+  import type { ISshSession } from '../../../types/define';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import { PanelSessionType } from '../../../types/const';
   import { onMounted, ref } from 'vue';
   import { getTerminalThemes } from '@/api/asset/host-terminal';
   import { getPreference } from '@/api/user/preference';
   import useLoading from '@/hooks/loading';
   import TerminalExample from '../terminal-example.vue';
 
-  const { updateTerminalPreference } = useTerminalStore();
+  const { updateTerminalPreference, sessionManager } = useTerminalStore();
   const { loading, setLoading } = useLoading();
 
   const currentThemeName = ref();
@@ -73,8 +73,20 @@
 
   // 选择主题
   const selectTheme = async (theme: TerminalTheme) => {
+    // 修改主题色
+    document.body.setAttribute('terminal-theme', theme.dark ? 'dark' : 'light');
+    // 修改终端主题
+    Object.values(sessionManager.sessions)
+      .filter(s => s.type === PanelSessionType.SSH.type)
+      .map(s => s as ISshSession)
+      .forEach(s => {
+        s.inst.options.theme = theme.schema;
+        // 自适应
+        s.blur();
+      });
+    // 同步
     currentThemeName.value = theme.name;
-    await updateTerminalPreference(TerminalPreferenceItem.THEME, theme);
+    await updateTerminalPreference(TerminalPreferenceItem.THEME, theme, true);
   };
 
   // 加载用户主题

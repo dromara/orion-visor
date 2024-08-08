@@ -63,7 +63,7 @@
                    arrow-class="terminal-tooltip-content"
                    content="复制路径">
           <span class="click-icon-wrapper row-action-icon"
-                @click="copy(record.path, '已复制')">
+                @click="copy(record.path, true)">
             <icon-copy />
           </span>
         </a-tooltip>

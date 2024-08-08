@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.service;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.HostTerminalTransferDTO;
 import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
 
 import java.util.List;
@@ -31,12 +32,27 @@ public interface HostTerminalService {
     String getTerminalAccessToken();
 
     /**
+     * 获取主机终端传输 transferToken
+     *
+     * @return transferToken
+     */
+    String getTerminalTransferToken();
+
+    /**
      * 通过 accessToken 获取主机终端访问信息
      *
      * @param token token
      * @return config
      */
     HostTerminalAccessDTO getAccessInfoByToken(String token);
+
+    /**
+     * 通过 transferToken 获取主机终端传输信息
+     *
+     * @param token token
+     * @return config
+     */
+    HostTerminalTransferDTO getTransferInfoByToken(String token);
 
     /**
      * 获取连接信息

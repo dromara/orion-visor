@@ -90,7 +90,7 @@
       <template #expression="{ record }">
         <span class="copy-left"
               title="复制"
-              @click="copy(record.expression, '已复制')">
+              @click="copy(record.expression, true)">
           <icon-copy />
         </span>
         <span class="text-copy span-blue"
@@ -103,7 +103,7 @@
       <template #command="{ record }">
         <span class="copy-left"
               title="复制"
-              @click="copy(record.command, '已复制')">
+              @click="copy(record.command, true)">
           <icon-copy />
         </span>
         <span>{{ record.command }}</span>
