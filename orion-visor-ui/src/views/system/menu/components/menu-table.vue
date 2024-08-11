@@ -272,11 +272,13 @@
 
   // 添加后回调
   const addedCallback = () => {
+    formRef.value.resetFields();
     loadMenuData(true);
   };
 
   // 更新后回调
   const updatedCallback = () => {
+    formRef.value.resetFields();
     loadMenuData(true);
   };
 

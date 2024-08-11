@@ -17,7 +17,7 @@ const columns = [
     title: '类型',
     dataIndex: 'type',
     slotName: 'type',
-    width: 80,
+    width: 68,
   }, {
     title: '排序',
     dataIndex: 'sort',
@@ -32,20 +32,21 @@ const columns = [
     title: '权限标识',
     dataIndex: 'permission',
     slotName: 'permission',
-    minWidth: 138,
+    minWidth: 168,
     ellipsis: true,
     tooltip: true
   }, {
     title: '组件名称',
     dataIndex: 'component',
     slotName: 'component',
-    minWidth: 138,
+    minWidth: 218,
     ellipsis: true,
     tooltip: true,
   }, {
     title: '链接路径',
     dataIndex: 'path',
     slotName: 'path',
+    width: 168,
     ellipsis: true,
     tooltip: true,
   }, {
