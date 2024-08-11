@@ -17,7 +17,7 @@
       <a-form class="terminal-setting-form"
               :model="formModel"
               layout="vertical">
-        <a-space>
+        <a-space size="large">
           <!-- 顶部操作按钮 -->
           <a-form-item field="actions" label="顶部操作按钮">
             <icon-actions class="form-item-actions"
@@ -27,7 +27,6 @@
           <!-- 命令输入框 -->
           <a-form-item field="commandInput" label="命令输入框">
             <a-switch v-model="formModel.commandInput"
-                      class="form-item-command-input"
                       :default-checked="true"
                       type="round" />
           </a-form-item>
@@ -107,8 +106,8 @@
     }
   }
 
-  .form-item-actions, .form-item-command-input {
-    margin-right: 48px;
+  .form-item-actions {
+    margin-right: 24px;
   }
 
   :deep(.arco-form) {

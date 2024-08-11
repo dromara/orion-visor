@@ -6,9 +6,10 @@
       <div class="ssh-header-left">
         <!-- 主机地址 -->
         <span class="address-wrapper">
-          {{ tab.address }}
-          <span class="address-copy copy-right" title="复制" @click="copy(tab.address as string)">
-            <icon-copy />
+          <span class="text-copy"
+                :title="tab.address"
+                @click="copy(tab.address as string, true)">
+            {{ tab.address }}
           </span>
         </span>
       </div>
@@ -79,7 +80,7 @@
   import IconActions from '../layout/icon-actions.vue';
   import SshContextMenu from './ssh-context-menu.vue';
   import SftpUploadModal from '../sftp/sftp-upload-modal.vue';
-  import XtermSearchModal from '@/components/xtrem/search-modal/index.vue';
+  import XtermSearchModal from '@/components/xterm/search-modal/index.vue';
 
   const props = defineProps<{
     tab: TerminalPanelTabItem;
@@ -182,23 +183,13 @@
     }
 
     &-left {
-      width: 34%;
+      width: 25%;
 
       .address-wrapper {
         height: 100%;
         display: inline-flex;
         align-items: center;
         user-select: none;
-
-        .address-copy {
-          display: none;
-        }
-
-        &:hover {
-          .address-copy {
-            display: unset;
-          }
-        }
 
         &:before {
           content: 'IP:';
@@ -208,7 +199,7 @@
     }
 
     &-right {
-      width: 66%;
+      width: 75%;
       justify-content: flex-end;
 
       .command-input {
