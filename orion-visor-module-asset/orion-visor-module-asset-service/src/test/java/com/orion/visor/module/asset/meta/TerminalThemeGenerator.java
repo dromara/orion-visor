@@ -28,13 +28,15 @@ public class TerminalThemeGenerator {
         List<File> files = Files1.listFiles("D:\\idea-project\\iTerm2-Color-Schemes\\vhs");
         // 过滤的 theme
         List<String> schemaFilter = Lists.of(
-                "Dracula", "Atom",
-                "catppuccin-mocha", "MaterialDesignColors",
-                "catppuccin-macchiato", "OneHalfDark",
-                "Apple System Colors", "Builtin Tango Light",
-                "Duotone Dark", "BlulocoLight",
-                "Chester", "CLRS",
-                "Calamity", "Tomorrow"
+                "Dracula", "Builtin Tango Light",
+                "Atom", "AtomOneLight",
+                "OneHalfDark", "OneHalfLight",
+                "Apple System Colors", "Tomorrow",
+                "catppuccin-mocha", "catppuccin-latte",
+                "catppuccin-macchiato", "BlulocoLight",
+                "catppuccin-frappe", "MaterialDesignColors",
+                "GitHub Dark", "Github",
+                "DimmedMonokai", "Duotone Dark"
         );
         // 颜色大写
         ValueFilter colorFilter = (Object object, String name, Object value) -> {
@@ -60,7 +62,7 @@ public class TerminalThemeGenerator {
                     theme.setDark(Colors.isDarkColor(background));
                     theme.setSchema(JSON.parseObject(JSON.toJSONString(schema), TerminalThemeSchema.class));
                     return theme;
-                }).collect(Collectors.toList());
+                }).skip(0).limit(50).collect(Collectors.toList());
         // 排序
         if (!Lists.isEmpty(schemaFilter)) {
             arr.sort(Comparator.comparing(s -> schemaFilter.indexOf(s.getName())));
@@ -70,11 +72,12 @@ public class TerminalThemeGenerator {
         for (TerminalTheme theme : arr) {
             System.out.println("name: " + theme.name);
             System.out.println("dark: " + theme.dark);
-            System.out.println("value: \n" + JSON.toJSONString(theme.schema, colorFilter));
+            System.out.println("value: " + JSON.toJSONString(theme.schema, colorFilter));
+            System.out.println("json: " + JSON.toJSONString(theme, colorFilter));
             System.out.println();
         }
-        // String json = JSON.toJSONString(arr, colorFilter);
-        // System.out.println("\n" + json);
+        String json = JSON.toJSONString(arr, colorFilter);
+        System.out.println("\n" + json);
     }
 
     /*
