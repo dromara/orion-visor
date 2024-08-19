@@ -1,8 +1,10 @@
 <template>
-  <div class="host-terminal-layout" v-if="render">
+  <div v-if="render"
+       class="host-terminal-layout"
+       :class="{ 'terminal-full-layout': fullscreen }">
     <!-- 头部区域 -->
     <header class="host-terminal-layout-header">
-      <layout-header />
+      <layout-header @fullscreen="enterFullscreen" />
     </header>
     <!-- 主体区域 -->
     <main class="host-terminal-layout-main">
@@ -29,6 +31,14 @@
                        @screenshot="screenshot" />
       </div>
     </main>
+    <!-- 退出全屏 -->
+    <a-button v-if="fullscreen"
+              class="exit-fullscreen"
+              shape="circle"
+              title="退出全屏"
+              @click="exitFullscreen">
+      <icon-fullscreen-exit />
+    </a-button>
     <!-- 命令片段列表抽屉 -->
     <command-snippet-drawer ref="snippetRef" @closed="autoFocus" />
     <!-- 路径书签列表抽屉 -->
@@ -50,6 +60,7 @@
   import { dictKeys, PanelSessionType, TerminalTabs } from './types/const';
   import { useCacheStore, useDictStore, useTerminalStore } from '@/store';
   import { useRoute } from 'vue-router';
+  import { useFullscreen } from '@vueuse/core';
   import useLoading from '@/hooks/loading';
   import debug from '@/utils/env';
   import { Message } from '@arco-design/web-vue';
@@ -66,6 +77,7 @@
 
   const { fetchPreference, getCurrentSession, openSession, preference, loadHosts, hosts, tabManager } = useTerminalStore();
   const { loading, setLoading } = useLoading(true);
+  const { enter: enterFull, exit: exitFull } = useFullscreen();
   const route = useRoute();
 
   const originTitle = document.title;
@@ -73,6 +85,7 @@
   const snippetRef = ref();
   const pathRef = ref();
   const transferRef = ref();
+  const fullscreen = ref();
 
   // 终端截屏
   const screenshot = () => {
@@ -82,15 +95,29 @@
     }
   };
 
-  // 关闭视口处理
-  const handleBeforeUnload = (event: any) => {
-    event.preventDefault();
-    event.returnValue = confirm('系统可能不会保存您所做的更改');
+  // 进入全屏
+  const enterFullscreen = () => {
+    fullscreen.value = true;
+    // 进入全屏
+    enterFull();
+  };
+
+  // 退出全屏
+  const exitFullscreen = () => {
+    fullscreen.value = false;
+    // 退出全屏
+    exitFull();
   };
 
   // 自动聚焦
   const autoFocus = () => {
     getCurrentSession<ISshSession>(PanelSessionType.SSH.type)?.focus();
+  };
+
+  // 关闭视口处理
+  const handleBeforeUnload = (event: any) => {
+    event.preventDefault();
+    event.returnValue = confirm('系统可能不会保存您所做的更改');
   };
 
   // 打开默认打开页面
@@ -105,18 +132,19 @@
   });
 
   // 加载用户终端偏好
-  onBeforeMount(async () => {
+  onBeforeMount(() => {
     // 加载偏好
-    await fetchPreference();
-    // 设置系统主题配色
-    const dark = preference.theme.dark;
-    document.body.setAttribute('terminal-theme', dark ? 'dark' : 'light');
-    render.value = true;
+    fetchPreference().then(() => {
+      // 设置系统主题配色
+      const dark = preference.theme.dark;
+      document.body.setAttribute('terminal-theme', dark ? 'dark' : 'light');
+      render.value = true;
+    });
   });
 
   // 加载字典值
-  onBeforeMount(async () => {
-    await useDictStore().loadKeys(dictKeys);
+  onBeforeMount(() => {
+    useDictStore().loadKeys(dictKeys);
   });
 
   // 加载主机信息
@@ -176,6 +204,24 @@
     position: relative;
     color: var(--color-content-text-2);
 
+    &.terminal-full-layout {
+      .host-terminal-layout-header, .host-terminal-layout-left, .host-terminal-layout-right {
+        display: none;
+      }
+
+      .host-terminal-layout-main {
+        height: 100%;
+
+        :deep(.host-terminal-layout-content) {
+          width: 100%;
+        }
+      }
+
+      :deep(.terminal-panels-container) {
+        height: 100vh !important;
+      }
+    }
+
     &-header {
       width: 100%;
       height: var(--header-height);
@@ -211,6 +257,13 @@
       height: 100%;
       background: var(--color-bg-content);
       overflow: auto;
+    }
+
+    .exit-fullscreen {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      z-index: 9999;
     }
   }
 
