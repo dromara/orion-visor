@@ -3,6 +3,7 @@ package com.orion.visor.framework.mybatis.core.generator.core;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.FieldConst;
@@ -47,7 +48,7 @@ public class DictParser {
                     .stream()
                     .filter(s -> variable.equals(s.getName()) || variable.equals(s.getPropertyName()))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("未查询到字典映射字段 " + variable));
+                    .orElseThrow(() -> Exceptions.runtime("未查询到字典映射字段 " + variable));
             // 设置字段名称
             if (meta.getField() == null) {
                 meta.setField(Strings.firstUpper(tableField.getPropertyName()));
