@@ -5,7 +5,7 @@ import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.entity.vo.SystemMenuVO;
 import com.orion.visor.module.infra.entity.vo.UserPermissionVO;
-import com.orion.visor.module.infra.service.PermissionService;
+import com.orion.visor.module.infra.service.UserPermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,22 +26,23 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023/7/14 11:20
  */
-@Tag(name = "infra - 权限服务")
+@Tag(name = "infra - 用户权限服务")
 @Slf4j
 @Validated
 @RestWrapper
 @RestController
-@RequestMapping("/infra/permission")
-public class PermissionController {
+@RequestMapping("/infra/user-permission")
+@SuppressWarnings({"ELValidationInJSP", "SpringElInspection"})
+public class UserPermissionController {
 
     @Resource
-    private PermissionService permissionService;
+    private UserPermissionService userPermissionService;
 
     @PutMapping("/refresh-cache")
     @Operation(summary = "刷新角色权限缓存")
     @PreAuthorize("@ss.hasPermission('infra:system-menu:management:refresh-cache')")
     public Boolean refreshCache() {
-        permissionService.initPermissionCache();
+        userPermissionService.initPermissionCache();
         return true;
     }
 
@@ -49,14 +50,14 @@ public class PermissionController {
     @GetMapping("/menu")
     @Operation(summary = "获取用户菜单")
     public List<SystemMenuVO> getUserMenuList() {
-        return permissionService.getUserMenuList();
+        return userPermissionService.getUserMenuList();
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/user")
     @Operation(summary = "获取用户权限聚合信息")
     public UserPermissionVO getUserPermission() {
-        return permissionService.getUserPermission();
+        return userPermissionService.getUserPermission();
     }
 
 }

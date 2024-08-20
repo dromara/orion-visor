@@ -21,7 +21,7 @@ import com.orion.visor.module.infra.entity.vo.SystemMenuVO;
 import com.orion.visor.module.infra.enums.MenuStatusEnum;
 import com.orion.visor.module.infra.enums.MenuTypeEnum;
 import com.orion.visor.module.infra.enums.MenuVisibleEnum;
-import com.orion.visor.module.infra.service.PermissionService;
+import com.orion.visor.module.infra.service.UserPermissionService;
 import com.orion.visor.module.infra.service.SystemMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -51,7 +51,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     private SystemRoleMenuDAO systemRoleMenuDAO;
 
     @Resource
-    private PermissionService permissionService;
+    private UserPermissionService userPermissionService;
 
     @Override
     public Long createSystemMenu(SystemMenuCreateRequest request) {
@@ -68,7 +68,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         int effect = systemMenuDAO.insert(record);
         log.info("SystemMenuService-createSystemMenu effect: {}, record: {}", effect, JSON.toJSONString(record));
         // 保存至缓存
-        List<SystemMenuCacheDTO> menuCache = permissionService.getMenuCache();
+        List<SystemMenuCacheDTO> menuCache = userPermissionService.getMenuCache();
         menuCache.add(SystemMenuConvert.MAPPER.toCache(record));
         return record.getId();
     }
@@ -89,7 +89,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 重新查询转换为缓存
         SystemMenuCacheDTO cache = SystemMenuConvert.MAPPER.toCache(systemMenuDAO.selectById(id));
         // 获取原始缓存
-        permissionService.getMenuCache()
+        userPermissionService.getMenuCache()
                 .stream()
                 .filter(s -> s.getId().equals(id))
                 .findFirst()
@@ -115,7 +115,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         Integer type = request.getType();
         Integer status = request.getStatus();
         // 从缓存中查询
-        List<SystemMenuVO> menus = permissionService.getMenuCache()
+        List<SystemMenuVO> menus = userPermissionService.getMenuCache()
                 .stream()
                 .filter(s -> Strings.isBlank(name) || s.getName().contains(name))
                 .filter(s -> type == null || s.getType().equals(type))
@@ -197,7 +197,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 从缓存中查询
-        List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
+        List<SystemMenuCacheDTO> cache = userPermissionService.getMenuCache();
         // 获取要更新的id
         List<Long> updateIdList = this.getChildrenIdList(id, cache, record.getType());
         // 修改状态
@@ -229,7 +229,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 从缓存中查询
-        List<SystemMenuCacheDTO> cache = permissionService.getMenuCache();
+        List<SystemMenuCacheDTO> cache = userPermissionService.getMenuCache();
         // 获取要删除的id
         List<Long> deletedIdList = this.getChildrenIdList(id, cache, record.getType());
         // 删除菜单
@@ -239,7 +239,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         // 删除菜单缓存
         cache.removeIf(s -> deletedIdList.contains(s.getId()));
         // 删除引用缓存
-        permissionService.getRoleMenuCache()
+        userPermissionService.getRoleMenuCache()
                 .values()
                 .forEach(roleMenus -> roleMenus.removeIf(s -> deletedIdList.contains(s.getId())));
         log.info("SystemMenuService-deleteSystemMenu deletedIdList: {}, effect: {}", deletedIdList, effect);

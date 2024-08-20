@@ -16,7 +16,7 @@ import com.orion.visor.module.infra.entity.domain.SystemRoleDO;
 import com.orion.visor.module.infra.entity.domain.SystemRoleMenuDO;
 import com.orion.visor.module.infra.entity.dto.SystemMenuCacheDTO;
 import com.orion.visor.module.infra.entity.request.menu.SystemRoleGrantMenuRequest;
-import com.orion.visor.module.infra.service.PermissionService;
+import com.orion.visor.module.infra.service.UserPermissionService;
 import com.orion.visor.module.infra.service.SystemRoleMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
     private SystemRoleMenuDAO systemRoleMenuDAO;
 
     @Resource
-    private PermissionService permissionService;
+    private UserPermissionService userPermissionService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -104,7 +104,7 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
             effect += insertMenuIdList.size();
         }
         // 更新缓存
-        Map<Long, List<SystemMenuCacheDTO>> cache = permissionService.getRoleMenuCache();
+        Map<Long, List<SystemMenuCacheDTO>> cache = userPermissionService.getRoleMenuCache();
         List<SystemMenuCacheDTO> roleCache = cache.computeIfAbsent(roleId, s -> new ArrayList<>());
         roleCache.clear();
         roleCache.addAll(SystemMenuConvert.MAPPER.toCache(menuList));

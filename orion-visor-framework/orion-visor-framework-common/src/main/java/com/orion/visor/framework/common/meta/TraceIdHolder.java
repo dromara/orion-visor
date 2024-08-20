@@ -1,6 +1,8 @@
 package com.orion.visor.framework.common.meta;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.orion.lang.id.UUIds;
+import org.slf4j.MDC;
 
 /**
  * traceId 持有者
@@ -23,16 +25,74 @@ public class TraceIdHolder {
      */
     private static final ThreadLocal<String> HOLDER = new TransmittableThreadLocal<>();
 
+    /**
+     * 获取 traceId
+     *
+     * @return traceId
+     */
     public static String get() {
         return HOLDER.get();
     }
 
-    public static void set(String traceId) {
-        HOLDER.set(traceId);
+    /**
+     * 设置 traceId
+     */
+    public static void set() {
+        set(createTraceId());
     }
 
+    /**
+     * 设置 traceId
+     *
+     * @param traceId traceId
+     */
+    public static void set(String traceId) {
+        // 设置应用上下文
+        HOLDER.set(traceId);
+        // 设置日志上下文
+        setMdc(traceId);
+    }
+
+    /**
+     * 删除 traceId
+     */
     public static void remove() {
+        // 移除应用上下文
         HOLDER.remove();
+        // 移除日志上下文
+        removeMdc();
+    }
+
+    /**
+     * 从应用上下文 设置到日志上下文
+     */
+    public static void setMdc() {
+        setMdc(HOLDER.get());
+    }
+
+    /**
+     * 设置到日志上下文
+     *
+     * @param traceId traceId
+     */
+    public static void setMdc(String traceId) {
+        MDC.put(TRACE_ID_MDC, traceId);
+    }
+
+    /**
+     * 移除日志上下文
+     */
+    public static void removeMdc() {
+        MDC.remove(TRACE_ID_MDC);
+    }
+
+    /**
+     * 创建 traceId
+     *
+     * @return traceId
+     */
+    public static String createTraceId() {
+        return UUIds.random32();
     }
 
 }

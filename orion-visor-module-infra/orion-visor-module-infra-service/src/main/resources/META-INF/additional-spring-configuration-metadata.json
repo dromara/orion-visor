@@ -23,6 +23,11 @@
       "description": "凭证续签最大次数."
     },
     {
+      "name": "app.authentication.loginFailedSendThreshold",
+      "type": "java.lang.Integer",
+      "description": "登录失败发送站内信阈值."
+    },
+    {
       "name": "app.authentication.loginFailedLockCount",
       "type": "java.lang.Integer",
       "description": "登录失败锁定次数."

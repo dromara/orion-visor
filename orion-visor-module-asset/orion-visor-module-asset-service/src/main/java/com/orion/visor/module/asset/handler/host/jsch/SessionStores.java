@@ -7,6 +7,7 @@ import com.orion.lang.utils.Strings;
 import com.orion.net.host.SessionHolder;
 import com.orion.net.host.SessionLogger;
 import com.orion.net.host.SessionStore;
+import com.orion.visor.framework.common.constant.AppConst;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.CryptoUtils;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
@@ -43,6 +44,8 @@ public class SessionStores {
             SessionHolder sessionHolder = SessionHolder.create();
             sessionHolder.setLogger(SessionLogger.INFO);
             SessionStore session = createSessionStore(conn, sessionHolder);
+            // 设置版本
+            session.getSession().setClientVersion("SSH-2.0-ORION_VISOR_V" + AppConst.VERSION);
             // 连接
             session.connect();
             log.info("SessionStores-open-success hostId: {}, address: {}, username: {}", hostId, address, username);

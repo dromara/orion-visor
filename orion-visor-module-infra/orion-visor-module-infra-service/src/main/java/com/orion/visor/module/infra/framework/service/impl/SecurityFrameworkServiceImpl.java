@@ -8,7 +8,7 @@ import com.orion.visor.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.visor.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.visor.module.infra.enums.UserStatusEnum;
 import com.orion.visor.module.infra.service.AuthenticationService;
-import com.orion.visor.module.infra.service.PermissionService;
+import com.orion.visor.module.infra.service.UserPermissionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,30 +27,30 @@ public class SecurityFrameworkServiceImpl implements SecurityFrameworkService {
     private AuthenticationService authenticationService;
 
     @Resource
-    private PermissionService permissionService;
+    private UserPermissionService userPermissionService;
 
     @Override
     public boolean hasPermission(String permission) {
         // 检查是否有权限
-        return permissionService.hasPermission(permission);
+        return userPermissionService.hasPermission(permission);
     }
 
     @Override
     public boolean hasAnyPermission(String... permissions) {
         // 检查是否有权限
-        return permissionService.hasAnyPermission(permissions);
+        return userPermissionService.hasAnyPermission(permissions);
     }
 
     @Override
     public boolean hasRole(String role) {
         // 检查是否有角色
-        return permissionService.hasRole(role);
+        return userPermissionService.hasRole(role);
     }
 
     @Override
     public boolean hasAnyRole(String... roles) {
         // 检查是否有角色
-        return permissionService.hasAnyRole(roles);
+        return userPermissionService.hasAnyRole(roles);
     }
 
     @Override

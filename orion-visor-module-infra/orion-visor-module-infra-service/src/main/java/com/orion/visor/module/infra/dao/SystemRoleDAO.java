@@ -34,11 +34,22 @@ public interface SystemRoleDAO extends IMapper<SystemRoleDO> {
     /**
      * 通过 userId 和 roleCode 查询 roleId (检查用户是否包含某个角色)
      *
-     * @param userId userId
-     * @param code   code
+     * @param userId   userId
+     * @param codeList codeList
      * @return roleId
      */
-    Long getRoleIdByUserIdAndRoleCode(@Param("userId") Long userId, @Param("code") String code);
+    List<Long> getRoleIdByUserIdAndRoleCode(@Param("userId") Long userId,
+                                            @Param("codeList") List<String> codeList);
+
+    /**
+     * 通过 roleId 和 permission 查询 permission (检查角色是否包含某个权限)
+     *
+     * @param roleIdList     roleIdList
+     * @param permissionList permissionList
+     * @return permission
+     */
+    List<String> getPermissionByRoleIdAndPermission(@Param("roleIdList") List<Long> roleIdList,
+                                                    @Param("permissionList") List<String> permissionList);
 
     /**
      * 查询用户角色

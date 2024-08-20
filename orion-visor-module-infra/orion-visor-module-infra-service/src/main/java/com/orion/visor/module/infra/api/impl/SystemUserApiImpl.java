@@ -5,7 +5,6 @@ import com.orion.visor.module.infra.convert.SystemUserProviderConvert;
 import com.orion.visor.module.infra.dao.SystemUserDAO;
 import com.orion.visor.module.infra.entity.domain.SystemUserDO;
 import com.orion.visor.module.infra.entity.dto.user.SystemUserDTO;
-import com.orion.visor.module.infra.service.SystemUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,8 +22,25 @@ public class SystemUserApiImpl implements SystemUserApi {
     @Resource
     private SystemUserDAO systemUserDAO;
 
-    @Resource
-    private SystemUserService systemUserService;
+    @Override
+    public String getUsernameById(Long id) {
+        return systemUserDAO.of()
+                .createWrapper()
+                .select(SystemUserDO::getUsername)
+                .eq(SystemUserDO::getId, id)
+                .then()
+                .getOne(SystemUserDO::getUsername);
+    }
+
+    @Override
+    public String getNicknameById(Long id) {
+        return systemUserDAO.of()
+                .createWrapper()
+                .select(SystemUserDO::getNickname)
+                .eq(SystemUserDO::getId, id)
+                .then()
+                .getOne(SystemUserDO::getNickname);
+    }
 
     @Override
     public SystemUserDTO getUserById(Long id) {
@@ -33,11 +49,6 @@ public class SystemUserApiImpl implements SystemUserApi {
             return null;
         }
         return SystemUserProviderConvert.MAPPER.to(user);
-    }
-
-    @Override
-    public boolean isAdminUser(Long id) {
-        return systemUserService.isAdminUser(id);
     }
 
 }

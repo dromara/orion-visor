@@ -1,14 +1,17 @@
 package com.orion.visor.module.infra.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.orion.lang.annotation.Keep;
 import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.crypto.Signatures;
+import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.security.LoginUser;
 import com.orion.visor.framework.common.security.UserRole;
 import com.orion.visor.framework.common.utils.CryptoUtils;
@@ -17,30 +20,30 @@ import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.redis.core.utils.RedisUtils;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
+import com.orion.visor.module.infra.api.SystemMessageApi;
 import com.orion.visor.module.infra.convert.SystemUserConvert;
 import com.orion.visor.module.infra.dao.SystemUserDAO;
 import com.orion.visor.module.infra.dao.SystemUserRoleDAO;
 import com.orion.visor.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.visor.module.infra.define.config.AppAuthenticationConfig;
+import com.orion.visor.module.infra.define.message.SystemUserMessageDefine;
 import com.orion.visor.module.infra.entity.domain.SystemUserDO;
 import com.orion.visor.module.infra.entity.dto.LoginTokenDTO;
 import com.orion.visor.module.infra.entity.dto.LoginTokenIdentityDTO;
+import com.orion.visor.module.infra.entity.dto.message.SystemMessageDTO;
 import com.orion.visor.module.infra.entity.request.user.UserLoginRequest;
 import com.orion.visor.module.infra.entity.vo.UserLoginVO;
 import com.orion.visor.module.infra.enums.LoginTokenStatusEnum;
 import com.orion.visor.module.infra.enums.UserStatusEnum;
 import com.orion.visor.module.infra.service.AuthenticationService;
-import com.orion.visor.module.infra.service.PermissionService;
+import com.orion.visor.module.infra.service.UserPermissionService;
 import com.orion.web.servlet.web.Servlets;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -64,7 +67,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private SystemUserRoleDAO systemUserRoleDAO;
 
     @Resource
-    private PermissionService permissionService;
+    private UserPermissionService userPermissionService;
+
+    @Resource
+    private SystemMessageApi systemMessageApi;
 
     @Keep
     @Resource
@@ -72,39 +78,35 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserLoginVO login(UserLoginRequest request, HttpServletRequest servletRequest) {
-        // 设置日志上下文的用户 否则登录失败不会记录日志
-        OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(request));
-        // 登录前检查
-        this.preCheckLogin(request);
-        // 获取登录用户
-        SystemUserDO user = systemUserDAO.of()
-                .createWrapper()
-                .eq(SystemUserDO::getUsername, request.getUsername())
-                .then()
-                .getOne();
-        Valid.notNull(user, ErrorMessage.USERNAME_PASSWORD_ERROR);
-        // 重新设置日志上下文
-        OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(user));
-        // 检查密码
-        boolean passwordCorrect = this.checkPassword(request, user);
-        Valid.isTrue(passwordCorrect, ErrorMessage.USERNAME_PASSWORD_ERROR);
-        // 检查用户状态
-        UserStatusEnum.checkUserStatus(user.getStatus());
-        // 设置上次登录时间
-        this.setLastLoginTime(user.getId());
-        // 删除用户缓存
-        this.deleteUserCache(user);
-        // 重设用户缓存
-        this.setUserCache(user);
         // 获取登录信息
         String remoteAddr = IpUtils.getRemoteAddr(servletRequest);
         String location = IpUtils.getLocation(remoteAddr);
         String userAgent = Servlets.getUserAgent(servletRequest);
+        // 设置日志上下文的用户 否则登录失败不会记录日志
+        OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(request));
+        // 登录前检查
+        SystemUserDO user = this.preCheckLogin(request.getUsername(), request.getPassword());
+        // 重新设置日志上下文
+        OperatorLogs.setUser(SystemUserConvert.MAPPER.toLoginUser(user));
+        // 用户密码校验
+        boolean passRight = this.checkUserPassword(user, request.getPassword(), true);
+        // 发送站内信
+        this.sendLoginFailedErrorMessage(passRight, user, remoteAddr, location);
+        Valid.isTrue(passRight, ErrorMessage.USERNAME_PASSWORD_ERROR);
+        // 用户状态校验
+        this.checkUserStatus(user);
+        Long id = user.getId();
+        // 设置上次登录时间
+        this.setLastLoginTime(id);
+        // 删除用户缓存
+        this.deleteUserCache(user);
+        // 重设用户缓存
+        this.setUserCache(user);
         long current = System.currentTimeMillis();
         // 不允许多端登录
         if (!appAuthenticationConfig.getAllowMultiDevice()) {
             // 无效化其他缓存
-            this.invalidOtherDeviceToken(user.getId(), current, remoteAddr, location, userAgent);
+            this.invalidOtherDeviceToken(id, current, remoteAddr, location, userAgent);
         }
         // 生成 loginToken
         String token = this.generatorLoginToken(user, current, remoteAddr, location, userAgent);
@@ -189,62 +191,83 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return refresh;
     }
 
-    /**
-     * 获取 token pair
-     *
-     * @param loginToken loginToken
-     * @return pair
-     */
-    private Pair<Long, Long> getLoginTokenPair(String loginToken) {
-        if (loginToken == null) {
-            return null;
-        }
-        try {
-            String value = CryptoUtils.decryptBase62(loginToken);
-            String[] pair = value.split(":");
-            return Pair.of(Long.valueOf(pair[0]), Long.valueOf(pair[1]));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 登录预检查
-     *
-     * @param request request
-     */
-    private void preCheckLogin(UserLoginRequest request) {
+    @Override
+    public SystemUserDO preCheckLogin(String username, String password) {
         // 检查密码长度是否正确 MD5 长度为 32
-        if (request.getPassword().length() != Const.MD5_LEN) {
+        if (password.length() != Const.MD5_LEN) {
             throw Exceptions.argument(ErrorMessage.USERNAME_PASSWORD_ERROR);
         }
         // 检查登录失败次数
-        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
+        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(username);
         String failedCount = redisTemplate.opsForValue().get(failedCountKey);
         if (failedCount != null
                 && Integer.parseInt(failedCount) >= appAuthenticationConfig.getLoginFailedLockCount()) {
             throw Exceptions.argument(ErrorMessage.MAX_LOGIN_FAILED);
         }
+        // 获取登录用户
+        SystemUserDO user = systemUserDAO.of()
+                .createWrapper()
+                .eq(SystemUserDO::getUsername, username)
+                .then()
+                .getOne();
+        Valid.notNull(user, ErrorMessage.USERNAME_PASSWORD_ERROR);
+        return user;
+    }
+
+    @Override
+    public boolean checkUserPassword(SystemUserDO user, String password, boolean addFailedCount) {
+        // 检查密码
+        boolean passRight = user.getPassword().equals(Signatures.md5(password));
+        if (!passRight && addFailedCount) {
+            // 刷新登录失败缓存
+            String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
+            redisTemplate.opsForValue().increment(failedCountKey);
+            RedisUtils.setExpire(failedCountKey, appAuthenticationConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
+        }
+        return passRight;
+    }
+
+    @Override
+    public void checkUserStatus(SystemUserDO user) {
+        // 检查用户状态
+        UserStatusEnum.checkUserStatus(user.getStatus());
     }
 
     /**
-     * 检查密码
+     * 发送登录失败错误消息
      *
-     * @param request request
-     * @param user    user
-     * @return 是否正确
+     * @param passRight  passRight
+     * @param user       user
+     * @param remoteAddr remoteAddr
+     * @param location   location
      */
-    @SuppressWarnings("ALL")
-    private boolean checkPassword(UserLoginRequest request, SystemUserDO user) {
-        // 密码正确
-        if (user.getPassword().equals(Signatures.md5(request.getPassword()))) {
-            return true;
+    private void sendLoginFailedErrorMessage(boolean passRight, SystemUserDO user,
+                                             String remoteAddr, String location) {
+        if (passRight) {
+            return;
         }
-        // 刷新登录失败缓存
-        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(request.getUsername());
-        redisTemplate.opsForValue().increment(failedCountKey);
-        RedisUtils.setExpire(failedCountKey, appAuthenticationConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
-        return false;
+        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
+        String failedCountStr = redisTemplate.opsForValue().get(failedCountKey);
+        if (failedCountStr == null || !Strings.isInteger(failedCountStr)) {
+            return;
+        }
+        // 直接用相等 因为只触发一次
+        if (!appAuthenticationConfig.getLoginFailedSendThreshold().equals(Integer.valueOf(failedCountStr))) {
+            return;
+        }
+        // 发送站内信
+        Map<String, Object> params = new HashMap<>();
+        params.put(ExtraFieldConst.ADDRESS, remoteAddr);
+        params.put(ExtraFieldConst.LOCATION, location);
+        params.put(ExtraFieldConst.TIME, Dates.current());
+        SystemMessageDTO message = SystemMessageDTO.builder()
+                .receiverId(user.getId())
+                .receiverUsername(user.getUsername())
+                .relKey(user.getUsername())
+                .params(params)
+                .build();
+        // 发送
+        systemMessageApi.create(SystemUserMessageDefine.LOGIN_FAILED, message);
     }
 
     /**
@@ -274,6 +297,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     /**
+     * 获取 token pair
+     *
+     * @param loginToken loginToken
+     * @return pair
+     */
+    private Pair<Long, Long> getLoginTokenPair(String loginToken) {
+        if (loginToken == null) {
+            return null;
+        }
+        try {
+            String value = CryptoUtils.decryptBase62(loginToken);
+            String[] pair = value.split(":");
+            return Pair.of(Long.valueOf(pair[0]), Long.valueOf(pair[1]));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * 设置用户缓存
      *
      * @param user user
@@ -283,7 +325,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Long id = user.getId();
         // 查询用户角色
         List<Long> roleIds = systemUserRoleDAO.selectRoleIdByUserId(id);
-        List<UserRole> roleList = permissionService.getRoleCache()
+        List<UserRole> roleList = userPermissionService.getRoleCache()
                 .values()
                 .stream()
                 .filter(s -> roleIds.contains(s.getId()))
