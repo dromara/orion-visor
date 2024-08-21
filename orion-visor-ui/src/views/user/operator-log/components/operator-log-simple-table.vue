@@ -29,8 +29,20 @@
     </template>
     <!-- 操作日志 -->
     <template #originLogInfo="{ record }">
-      <icon-copy class="copy-left" @click="copy(record.originLogInfo, true)" />
-      <span v-html="replaceHtmlTag(record.logInfo)" />
+      <!-- 操作日志 -->
+      <a-tooltip position="tl"
+                 :content="record.originLogInfo">
+        <span v-html="replaceHtmlTag(record.logInfo)"
+              class="text-copy"
+              @click="copy(record.originLogInfo, true)" />
+      </a-tooltip>
+      <!-- 错误消息 -->
+      <br v-if="record.errorMessage">
+      <span v-if="record.errorMessage"
+            class="table-cell-sub-value text-copy error-message"
+            @click="copy(record.errorMessage, true)">
+        {{ record.errorMessage }}
+      </span>
     </template>
     <!-- 留痕地址 -->
     <template #address="{ record }">
@@ -170,4 +182,8 @@
 </script>
 
 <style lang="less" scoped>
+  .error-message {
+    color: rgb(var(--red-6));
+    font-size: 12px;
+  }
 </style>
