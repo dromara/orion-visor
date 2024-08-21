@@ -5,6 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.ExecJobOperatorType;
 import com.orion.visor.module.asset.entity.request.exec.*;
@@ -39,6 +40,7 @@ public class ExecJobController {
     @Resource
     private ExecJobService execJobService;
 
+    @DemoDisableApi
     @OperatorLog(ExecJobOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建计划任务")
@@ -47,6 +49,7 @@ public class ExecJobController {
         return execJobService.createExecJob(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecJobOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "更新计划任务")
@@ -55,6 +58,7 @@ public class ExecJobController {
         return execJobService.updateExecJobById(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecJobOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "更新计划任务状态")
@@ -88,6 +92,7 @@ public class ExecJobController {
         return execJobService.getExecJobPage(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecJobOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除计划任务")
@@ -97,6 +102,7 @@ public class ExecJobController {
         return execJobService.deleteExecJobById(id);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecJobOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
     @Operation(summary = "批量删除计划任务")
