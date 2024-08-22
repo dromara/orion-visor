@@ -32,6 +32,11 @@ public class AppAuthenticationConfig {
     private Integer maxRefreshCount;
 
     /**
+     * 登录失败发送站内信阈值
+     */
+    private Integer loginFailedSendThreshold;
+
+    /**
      * 登录失败锁定次数
      */
     private Integer loginFailedLockCount;

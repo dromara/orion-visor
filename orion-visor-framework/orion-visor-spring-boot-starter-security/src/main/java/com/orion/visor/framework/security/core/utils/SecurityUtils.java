@@ -99,6 +99,13 @@ public class SecurityUtils {
     }
 
     /**
+     * 清空用户上下文
+     */
+    public static void clearAuthentication() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    /**
      * 设置当前用户
      *
      * @param loginUser 登录用户
@@ -107,7 +114,9 @@ public class SecurityUtils {
     public static void setLoginUser(LoginUser loginUser, HttpServletRequest request) {
         // 创建 authentication
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginUser, null, Collections.emptyList());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        if (request != null) {
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        }
         // 设置上下文
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

@@ -25,7 +25,6 @@ import com.orion.visor.module.infra.dao.OperatorLogDAO;
 import com.orion.visor.module.infra.dao.SystemRoleDAO;
 import com.orion.visor.module.infra.dao.SystemUserDAO;
 import com.orion.visor.module.infra.dao.SystemUserRoleDAO;
-import com.orion.visor.module.infra.define.RoleDefine;
 import com.orion.visor.module.infra.define.cache.TipsCacheKeyDefine;
 import com.orion.visor.module.infra.define.cache.UserCacheKeyDefine;
 import com.orion.visor.module.infra.define.config.AppAuthenticationConfig;
@@ -300,11 +299,6 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (appAuthenticationConfig.getAllowRefresh()) {
             RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
         }
-    }
-
-    @Override
-    public boolean isAdminUser(Long userId) {
-        return systemRoleDAO.getRoleIdByUserIdAndRoleCode(userId, RoleDefine.ADMIN_CODE) != null;
     }
 
     /**

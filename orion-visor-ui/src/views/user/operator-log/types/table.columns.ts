@@ -33,7 +33,6 @@ const columns = [
     minWidth: 238,
     align: 'left',
     ellipsis: true,
-    tooltip: true,
   }, {
     title: '留痕地址',
     dataIndex: 'address',

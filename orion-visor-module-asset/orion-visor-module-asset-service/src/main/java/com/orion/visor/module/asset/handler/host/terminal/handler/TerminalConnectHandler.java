@@ -65,13 +65,15 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         // 移除会话连接信息
         channel.getAttributes().remove(sessionId);
         Exception ex = null;
+        ITerminalSession session = null;
         try {
             // 连接主机
-            ITerminalSession session = this.connect(sessionId, connect, channel, payload);
+            session = this.connect(sessionId, connect, channel, payload);
             // 添加会话到 manager
             hostTerminalManager.addSession(session);
         } catch (Exception e) {
             ex = e;
+            Streams.close(session);
             // 修改连接状态为失败
             Map<String, Object> extra = Maps.newMap(4);
             extra.put(ExtraFieldConst.ERROR_MESSAGE, this.getConnectErrorMessage(e));

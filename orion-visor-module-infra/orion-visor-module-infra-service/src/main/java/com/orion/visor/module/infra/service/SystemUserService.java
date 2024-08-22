@@ -92,12 +92,4 @@ public interface SystemUserService {
      */
     void resetPassword(UserResetPasswordRequest request);
 
-    /**
-     * 检测用户是否是为管理员
-     *
-     * @param userId userId
-     * @return 是否为管理员
-     */
-    boolean isAdminUser(Long userId);
-
 }

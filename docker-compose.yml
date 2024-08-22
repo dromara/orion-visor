@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   service:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.3
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.1.4
     privileged: true
     ports:
       - ${SERVICE_PORT:-1081}:80
@@ -19,9 +19,9 @@ services:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/service/root-orion:/root/orion
     healthcheck:
       test: [ "CMD", "curl", "http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health" ]
-      interval: 3s
+      interval: 15s
       timeout: 300s
-      retries: 200
+      retries: 15
       start_period: 3s
     depends_on:
       mysql:
@@ -32,7 +32,7 @@ services:
       - mysql
       - redis
   mysql:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.3
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.1.4
     privileged: true
     ports:
       - 3307:3306
@@ -47,12 +47,12 @@ services:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/etc-mysql:/etc/mysql
     healthcheck:
       test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3306" ]
-      interval: 3s
+      interval: 15s
       timeout: 60s
-      retries: 10
+      retries: 15
       start_period: 3s
   redis:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.3
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.1.4
     privileged: true
     ports:
       - 6380:6379
@@ -63,12 +63,12 @@ services:
     command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-      interval: 3s
+      interval: 15s
       timeout: 60s
-      retries: 10
+      retries: 15
       start_period: 3s
   adminer:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-adminer:2.1.3
+    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-adminer:2.1.4
     ports:
       - 8081:8080
     depends_on:

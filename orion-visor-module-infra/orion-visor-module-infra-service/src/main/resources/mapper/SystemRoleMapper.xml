@@ -24,12 +24,42 @@
         SELECT role_id
         FROM system_user_role
         WHERE user_id = #{userId}
-          AND deleted = 0
-          AND role_id IN (SELECT id FROM system_role WHERE CODE = #{code} AND deleted = 0) LIMIT 1
+        AND deleted = 0
+        AND role_id IN
+        (SELECT id
+        FROM system_role
+        WHERE deleted = 0
+        AND status = 1
+        AND code IN
+        <foreach collection="codeList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <select id="getPermissionByRoleIdAndPermission" resultType="java.lang.String">
+        SELECT m.permission
+        FROM system_menu m
+        LEFT JOIN system_role_menu rm ON rm.menu_id = m.id
+        WHERE rm.deleted = 0
+        AND m.deleted = 0
+        AND m.type = 3
+        AND m.status = 1
+        <if test="permissionList != null and permissionList.size() > 0">
+            AND m.permission IN
+            <foreach collection="permissionList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND rm.role_id IN
+        <foreach collection="roleIdList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </select>
 
     <select id="selectRoleByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM system_role
         WHERE deleted = 0
         AND id IN (SELECT role_id FROM system_user_role WHERE user_id = #{userId} AND deleted = 0)

@@ -249,7 +249,7 @@
     width: 100%;
     height: calc(100% - @ssh-header-height);
     position: relative;
-    padding: 8px 2px 2px 8px;
+    padding: 8px 4px 4px 8px;
 
     .ssh-inst {
       width: 100%;

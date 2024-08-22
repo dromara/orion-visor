@@ -50,12 +50,12 @@ export function logout() {
  * 获取用户信息
  */
 export function getUserPermission() {
-  return axios.get<UserPermissionResponse>('/infra/permission/user');
+  return axios.get<UserPermissionResponse>('/infra/user-permission/user');
 }
 
 /**
  * 获取菜单列表
  */
 export function getMenuList() {
-  return axios.get<Array<MenuQueryResponse>>('/infra/permission/menu');
+  return axios.get<Array<MenuQueryResponse>>('/infra/user-permission/menu');
 }

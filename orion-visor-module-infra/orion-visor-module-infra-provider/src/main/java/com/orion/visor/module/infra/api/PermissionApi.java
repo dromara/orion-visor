@@ -1,23 +1,23 @@
-package com.orion.visor.module.infra.service;
+package com.orion.visor.module.infra.api;
 
 import java.util.List;
 
 /**
- * 权限服务
+ * 权限 对外服务类
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/8/19 15:29
+ * @since 2024/8/19 15:22
  */
-public interface PermissionService {
+public interface PermissionApi {
 
     /**
-     * 检测用户是否是为管理员
+     * 用户是否为管理员用户
      *
-     * @param userId userId
-     * @return 是否为管理员
+     * @param id id
+     * @return isAdmin
      */
-    boolean isAdminUser(Long userId);
+    boolean isAdminUser(Long id);
 
     /**
      * 检查当前用户是否含有此角色

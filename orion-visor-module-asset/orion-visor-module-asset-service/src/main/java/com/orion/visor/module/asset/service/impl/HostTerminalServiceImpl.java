@@ -75,6 +75,10 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Override
     public List<HostTerminalThemeVO> getTerminalThemes() {
+        // if (true) {
+        //     String arr = "";
+        //     return JSON.parseArray(arr, HostTerminalThemeVO.class);
+        // }
         List<JSONObject> themes = dictValueApi.getDictValue(THEME_DICT_KEY);
         return themes.stream()
                 .map(s -> HostTerminalThemeVO.builder()

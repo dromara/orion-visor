@@ -167,6 +167,8 @@ app:
     allow-refresh: true
     # 凭证续签最大次数
     max-refresh-count: 3
+    # 登录失败发送站内信阈值
+    login-failed-send-threshold: 3
     # 登录失败锁定次数
     login-failed-lock-count: 5
     # 登录失败锁定时间 (分)

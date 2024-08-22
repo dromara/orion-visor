@@ -49,22 +49,21 @@
 
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/define';
-  import { useFullscreen } from '@vueuse/core';
-  import { computed } from 'vue';
   import { useTerminalStore } from '@/store';
   import IconActions from '../layout/icon-actions.vue';
 
-  const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
+  const emits = defineEmits(['fullscreen']);
+
   const { tabManager } = useTerminalStore();
 
   // 顶部操作
-  const actions = computed<Array<SidebarAction>>(() => [
+  const actions: Array<SidebarAction> = [
     {
-      icon: isFullscreen.value ? 'icon-fullscreen-exit' : 'icon-fullscreen',
-      content: isFullscreen.value ? '点击退出全屏模式' : '点击切换全屏模式',
-      click: toggleFullScreen
+      icon: 'icon-fullscreen',
+      content: '全屏模式',
+      click: () => emits('fullscreen')
     },
-  ]);
+  ];
 
 </script>
 
@@ -101,17 +100,17 @@
     }
 
     &-tabs {
-      width: calc(100% - @logo-width - var(--sidebar-icon-wrapper-size));
+      width: calc(100% - @logo-width - 100px);
       display: flex;
     }
 
     &-right {
-      width: var(--sidebar-icon-wrapper-size);
+      width: 100px;
       display: flex;
       justify-content: flex-end;
 
       &-actions {
-        width: var(--sidebar-icon-wrapper-size);
+        width: 100px;
         display: flex;
         justify-content: flex-end;
       }

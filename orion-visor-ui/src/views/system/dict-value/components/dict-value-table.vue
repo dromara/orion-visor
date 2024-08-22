@@ -83,14 +83,20 @@
       <template #keyName="{record}">
         {{ record.keyName }}<span style="margin: 0 4px;">-</span>{{ record.keyDescription }}
       </template>
-      <!-- 值 -->
+      <!-- 配置值 -->
       <template #value="{ record }">
-        <span class="copy-left" title="复制" @click="copy(record.value)">
-          <icon-copy />
-        </span>
-        <a-tooltip position="tl" :content="record.value">
-          <span>{{ record.value }}</span>
+        <a-tooltip position="tl"
+                   :content="record.value"
+                   @click="copy(record.value, true)">
+          <span class="text-copy">{{ record.value }}</span>
         </a-tooltip>
+      </template>
+      <!-- 额外参数 -->
+      <template #extra="{ record }">
+        <span class="text-copy"
+              @click="copy(record.extra, true)">
+          {{ record.extra }}
+        </span>
       </template>
       <!-- 操作 -->
       <template #handle="{ record }">

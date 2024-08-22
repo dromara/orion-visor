@@ -63,7 +63,7 @@
 
 ```bash
 # clone
-git clone https://github.com/dromara/orion-visor
+git clone --depth=1 https://github.com/dromara/orion-visor
 cd orion-visor
 # 启动
 docker compose up -d
