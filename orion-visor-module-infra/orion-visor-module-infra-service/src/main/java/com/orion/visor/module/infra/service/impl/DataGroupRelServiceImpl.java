@@ -2,6 +2,7 @@ package com.orion.visor.module.infra.service.impl;
 
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
@@ -17,17 +18,13 @@ import com.orion.visor.module.infra.define.cache.DataGroupCacheKeyDefine;
 import com.orion.visor.module.infra.entity.domain.DataGroupDO;
 import com.orion.visor.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.visor.module.infra.entity.dto.DataGroupRelCacheDTO;
-import com.orion.visor.module.infra.entity.request.data.DataGroupRelCreateRequest;
 import com.orion.visor.module.infra.service.DataGroupRelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -122,64 +119,32 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addGroupRel(String type, Long userId, Long groupId, Long relId) {
-        DataGroupRelCreateRequest record = DataGroupRelCreateRequest.builder()
-                .groupId(Valid.notNull(groupId))
-                .relId(Valid.notNull(relId))
-                .build();
+        Map<Long, List<Long>> map = new HashMap<>();
+        map.put(groupId, Lists.singleton(relId));
         // 插入
-        SpringHolder.getBean(DataGroupRelService.class)
-                .addGroupRel(type, userId, Lists.singleton(record));
+        SpringHolder.getBean(DataGroupRelService.class).addGroupRel(type, userId, map);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addGroupRel(String type, Long userId, List<DataGroupRelCreateRequest> list) {
-        if (Lists.isEmpty(list)) {
+    public void addGroupRel(String type, Long userId, Map<Long, List<Long>> groupRelListMap) {
+        if (Maps.isEmpty(groupRelListMap)) {
             return;
         }
-        // 通过 groupId 分组
-        Map<Long, List<DataGroupRelCreateRequest>> groupMapping = list.stream()
-                .collect(Collectors.groupingBy(DataGroupRelCreateRequest::getGroupId));
-        // 查询分组信息
-        List<DataGroupDO> groups = dataGroupDAO.selectBatchIds(groupMapping.keySet());
-        Valid.eq(groups.size(), groupMapping.size(), ErrorMessage.GROUP_ABSENT);
-        // 查询关联是否存在
-        groupMapping.forEach((k, v) -> {
-            List<Long> relIdList = v.stream()
-                    .map(DataGroupRelCreateRequest::getRelId)
-                    .collect(Collectors.toList());
-            // 查询关联
-            List<Long> presentRelIdList = dataGroupRelDAO.of()
-                    .createWrapper()
-                    .eq(DataGroupRelDO::getGroupId, k)
-                    .in(DataGroupRelDO::getRelId, relIdList)
-                    .then()
-                    .stream()
-                    .map(DataGroupRelDO::getRelId)
-                    .distinct()
-                    .collect(Collectors.toList());
-            if (!presentRelIdList.isEmpty()) {
-                // 删除待插入的重复数据
-                v.removeIf(s -> presentRelIdList.contains(s.getRelId()));
-            }
-        });
         // 构建插入数据
         List<DataGroupRelDO> records = new ArrayList<>();
-        groupMapping.forEach((k, v) -> {
+        groupRelListMap.forEach((k, v) -> {
             v.forEach(s -> records.add(DataGroupRelDO.builder()
                     .groupId(k)
                     .type(type)
                     .userId(userId)
-                    .relId(s.getRelId())
+                    .relId(s)
                     .build()));
         });
-        // 不为空则插入
-        if (!records.isEmpty()) {
-            // 插入
-            dataGroupRelDAO.insertBatch(records);
-            // 删除缓存
-            this.deleteCache(type, userId, groupMapping.keySet());
-        }
+        // 插入
+        dataGroupRelDAO.insertBatch(records);
+        // 删除缓存
+        this.deleteCache(type, userId, groupRelListMap.keySet());
     }
 
     @Override

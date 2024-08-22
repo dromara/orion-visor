@@ -101,7 +101,11 @@ export function getExecCommandLogTailToken(request: ExecLogTailRequest) {
  * 下载批量执行日志文件
  */
 export function downloadExecCommandLogFile(id: number) {
-  return axios.get('/asset/exec-command-log/download', { unwrap: true, params: { id } });
+  return axios.get('/asset/exec-command-log/download', {
+    unwrap: true,
+    responseType: 'blob',
+    params: { id },
+  });
 }
 
 /**

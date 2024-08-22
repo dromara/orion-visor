@@ -94,7 +94,11 @@ export function getExecJobLogTailToken(request: ExecLogTailRequest) {
  * 下载计划任务日志文件
  */
 export function downloadExecJobLogFile(id: number) {
-  return axios.get('/asset/exec-job-log/download', { unwrap: true, params: { id } });
+  return axios.get('/asset/exec-job-log/download', {
+    unwrap: true,
+    responseType: 'blob',
+    params: { id },
+  });
 }
 
 /**

@@ -78,6 +78,9 @@
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 
+  const emits = defineEmits(['clear']);
+
+  const { toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
@@ -93,10 +96,6 @@
   };
 
   const formModel = ref<HostConnectLogQueryRequest>({});
-
-  const emits = defineEmits(['clear']);
-
-  const { toOptions } = useDictStore();
 
   // 打开
   const open = (record: any) => {

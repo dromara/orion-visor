@@ -2,9 +2,9 @@ package com.orion.visor.module.infra.service;
 
 import com.orion.visor.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.visor.module.infra.entity.dto.DataGroupRelCacheDTO;
-import com.orion.visor.module.infra.entity.request.data.DataGroupRelCreateRequest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据分组关联 服务类
@@ -34,19 +34,23 @@ public interface DataGroupRelService {
     void updateRelGroup(String type, Long userId, List<Long> groupIdList, Long relId);
 
     /**
-     * 添加关联
+     * 添加关联 只新增
      *
+     * @param type    type
+     * @param userId  userId
      * @param groupId groupId
      * @param relId   relId
      */
     void addGroupRel(String type, Long userId, Long groupId, Long relId);
 
     /**
-     * 添加关联
+     * 添加关联 只新增
      *
-     * @param list list
+     * @param type            type
+     * @param userId          userId
+     * @param groupRelListMap groupRelListMap
      */
-    void addGroupRel(String type, Long userId, List<DataGroupRelCreateRequest> list);
+    void addGroupRel(String type, Long userId, Map<Long, List<Long>> groupRelListMap);
 
     /**
      * 通过 type 查询 relId 缓存

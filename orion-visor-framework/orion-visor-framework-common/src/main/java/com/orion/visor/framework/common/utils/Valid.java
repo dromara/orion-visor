@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -29,6 +30,10 @@ public class Valid extends com.orion.lang.utils.Valid {
 
     public static String notBlank(String s) {
         return notBlank(s, ErrorMessage.PARAM_MISSING);
+    }
+
+    public static <T extends Map<?, ?>> T notEmpty(T map) {
+        return notEmpty(map, ErrorMessage.PARAM_MISSING);
     }
 
     public static <T extends Collection<?>> T notEmpty(T object) {
