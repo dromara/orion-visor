@@ -5,7 +5,7 @@
     <!-- 子标题 -->
     <div v-if="!isDemoMode" class="login-form-sub-title">{{ $t('login.form.sub.title') }}</div>
     <!-- 演示模式 -->
-    <div v-else class="login-form-sub-title ">演示模式账号: admin/admin</div>
+    <div v-else class="login-form-sub-title">{{ $t('login.form.demo.title') }}</div>
     <!-- 错误信息 -->
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <!-- 登录表单 -->
