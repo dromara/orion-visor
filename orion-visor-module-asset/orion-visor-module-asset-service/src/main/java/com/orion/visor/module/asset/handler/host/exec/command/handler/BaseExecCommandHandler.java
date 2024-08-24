@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.orion.lang.exception.AuthenticationException;
 import com.orion.lang.exception.ConnectionRuntimeException;
 import com.orion.lang.exception.SftpException;
-import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.lang.utils.Booleans;
@@ -16,6 +15,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.net.host.ssh.command.CommandExecutor;
 import com.orion.spring.SpringHolder;
+import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
 import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
@@ -289,17 +289,25 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
      * @return errorMessage
      */
     protected String getErrorMessage(Exception ex) {
+        if (ex == null) {
+            return null;
+        }
         String message;
-        if (ex instanceof InvalidArgumentException || ex instanceof IllegalArgumentException) {
+        if (ErrorMessage.isBizException(ex)) {
+            // 业务异常
             message = ex.getMessage();
         } else if (ex instanceof ConnectionRuntimeException) {
-            message = "连接失败";
+            // 连接异常
+            message = ErrorMessage.CONNECT_ERROR;
         } else if (ex instanceof AuthenticationException) {
-            message = "认证失败";
+            // 认证异常
+            message = ErrorMessage.AUTH_ERROR;
         } else if (ex instanceof SftpException) {
-            message = "脚本上传失败";
+            // 上传异常
+            message = ErrorMessage.SCRIPT_UPLOAD_ERROR;
         } else {
-            message = "执行失败";
+            // 其他异常
+            message = ErrorMessage.EXEC_ERROR;
         }
         return Strings.retain(message, 250);
     }

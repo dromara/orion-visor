@@ -3,7 +3,6 @@ package com.orion.visor.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Objects1;
@@ -421,10 +420,8 @@ public class ExecLogServiceImpl implements ExecLogService {
         } catch (Exception e) {
             log.error("ExecLogService.downloadLogFile error id: {}", id, e);
             Streams.close(in);
-            String errorMessage = ErrorMessage.FILE_READ_ERROR_CLEAR;
-            if (e instanceof InvalidArgumentException || e instanceof IllegalArgumentException) {
-                errorMessage = e.getMessage();
-            }
+            // 获取错误信息
+            String errorMessage = ErrorMessage.getErrorMessage(e, ErrorMessage.FILE_READ_ERROR_CLEAR);
             // 响应错误信息
             try {
                 Servlets.transfer(response, Strings.bytes(errorMessage), FileConst.ERROR_LOG);

@@ -30,14 +30,14 @@ public enum HostSshOsTypeEnum {
 
     public static HostSshOsTypeEnum of(String type) {
         if (type == null) {
-            return null;
+            return LINUX;
         }
         for (HostSshOsTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }
         }
-        return null;
+        return LINUX;
     }
 
 }

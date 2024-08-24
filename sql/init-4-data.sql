@@ -18,7 +18,7 @@ INSERT INTO `dict_key` VALUES (7, 'systemMenuCache', 'INTEGER', '[]', '菜单缓
 INSERT INTO `dict_key` VALUES (8, 'dictValueType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '字典配置值类型', '2023-10-27 01:48:51', '2023-10-27 01:48:51', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (9, 'systemUserStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '用户状态', '2023-10-27 12:10:41', '2023-10-27 12:10:41', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (10, 'systemRoleStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"status\", \"type\": \"STRING\"}]', '角色状态', '2023-10-27 12:33:04', '2023-10-27 12:33:17', '1', '1', 0);
-INSERT INTO `dict_key` VALUES (11, 'hostSshAuthType', 'STRING', '[]', '主机ssh身份验证方式', '2023-10-27 14:29:12', '2023-12-25 15:41:40', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (11, 'hostSshAuthType', 'STRING', '[]', '主机ssh身份认证方式', '2023-10-27 14:29:12', '2023-12-25 15:41:40', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (15, 'operatorLogResult', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '操作日志结果', '2023-10-31 17:35:28', '2023-10-31 17:42:50', '2', '2', 0);
 INSERT INTO `dict_key` VALUES (16, 'operatorRiskLevel', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '操作风险等级', '2023-11-01 16:03:00', '2023-11-01 16:03:00', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (19, 'systemMenuNewWindow', 'INTEGER', '[]', '菜单是否开启新窗口', '2023-12-05 14:14:29', '2023-12-05 14:14:29', '1', '1', 0);
@@ -68,9 +68,9 @@ INSERT INTO `dict_value` VALUES (17, 9, 'systemUserStatus', '0', '停用', '{\"c
 INSERT INTO `dict_value` VALUES (18, 9, 'systemUserStatus', '1', '启用', '{\"color\": \"arcoblue\"}', 20, '2023-10-27 12:13:17', '2024-04-24 16:35:00', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (20, 10, 'systemRoleStatus', '0', '停用', '{\"color\": \"orange\", \"status\": \"danger\"}', 10, '2023-10-27 12:33:45', '2023-10-27 12:33:45', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (21, 10, 'systemRoleStatus', '1', '启用', '{\"color\": \"arcoblue\", \"status\": \"default\"}', 20, '2023-10-27 12:33:56', '2024-04-24 16:34:52', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (22, 11, 'hostSshAuthType', 'PASSWORD', '密码验证', '{}', 10, '2023-10-27 14:29:28', '2023-12-25 15:40:47', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (23, 11, 'hostSshAuthType', 'KEY', '密钥验证', '{}', 20, '2023-10-27 14:29:35', '2024-05-17 12:48:53', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (24, 11, 'hostSshAuthType', 'IDENTITY', '身份验证', '{}', 30, '2023-10-27 14:29:42', '2023-12-25 15:40:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (22, 11, 'hostSshAuthType', 'PASSWORD', '密码认证', '{}', 10, '2023-10-27 14:29:28', '2023-12-25 15:40:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (23, 11, 'hostSshAuthType', 'KEY', '密钥认证', '{}', 20, '2023-10-27 14:29:35', '2024-05-17 12:48:53', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (24, 11, 'hostSshAuthType', 'IDENTITY', '身份认证', '{}', 30, '2023-10-27 14:29:42', '2023-12-25 15:40:47', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (55, 1, 'operatorLogModule', 'infra:authentication', '身份认证', '{}', 1000, '2023-10-31 10:47:48', '2023-10-31 10:55:12', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (56, 1, 'operatorLogModule', 'infra:system-user', '系统用户', '{}', 1010, '2023-10-31 10:47:51', '2023-10-31 11:00:59', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (57, 1, 'operatorLogModule', 'infra:system-role', '系统角色', '{}', 1020, '2023-10-31 10:47:52', '2023-10-31 10:54:59', '1', '1', 0);

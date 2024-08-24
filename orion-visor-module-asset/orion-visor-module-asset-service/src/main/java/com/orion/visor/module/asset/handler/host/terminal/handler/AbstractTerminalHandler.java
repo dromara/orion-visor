@@ -97,13 +97,8 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
      * @return msg
      */
     protected String getErrorMessage(Exception ex) {
-        if (ex == null) {
-            return null;
-        }
-        if (ex instanceof InvalidArgumentException || ex instanceof IllegalArgumentException) {
-            return ex.getMessage();
-        }
-        return ErrorMessage.OPERATE_ERROR;
+        // 获取错误信息
+        return ErrorMessage.getErrorMessage(ex, ErrorMessage.OPERATE_ERROR);
     }
 
 }

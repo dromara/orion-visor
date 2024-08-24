@@ -36,7 +36,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         });
       } else {
         // 未成功展示错误信息
-        ssh.write(`[91m${msg || ''}[0m\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
+        ssh.write(`[91m${msg || ''}[0m\r\n\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
         ssh.status = TerminalStatus.CLOSED;
       }
     }, sftp => {
@@ -69,7 +69,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         ssh.connect();
       } else {
         // 未成功展示错误信息
-        ssh.write(`[91m${msg || ''}[0m\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
+        ssh.write(`[91m${msg || ''}[0m\r\n\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
         ssh.status = TerminalStatus.CLOSED;
       }
     }, sftp => {
