@@ -143,8 +143,8 @@
     try {
       // 查询
       const data = await cacheStore.loadCommandSnippets(true);
-      snippetGroups.value = data.groups;
-      ungroupedItems.value = data.ungroupedItems;
+      snippetGroups.value = data.groups || [];
+      ungroupedItems.value = data.ungroupedItems || [];
       // 设置状态
       filterSnippet();
     } catch (e) {

@@ -29,4 +29,6 @@ public interface Const extends com.orion.lang.constant.Const, FieldConst, CnCons
 
     String SYSTEM_USERNAME = "system";
 
+    int BATCH_COUNT = 500;
+
 }

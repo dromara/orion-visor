@@ -6,6 +6,9 @@ import java.lang.annotation.*;
 
 /**
  * 不执行统一日志打印
+ * <p>
+ * 如果设置在方法上，则忽略该方法的日志打印
+ * 如果设置到参数上，则忽略该参数的日志打印
  *
  * @author Jiahang Li
  * @version 1.0.0

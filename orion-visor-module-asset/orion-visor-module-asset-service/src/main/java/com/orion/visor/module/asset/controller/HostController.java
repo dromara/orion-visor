@@ -98,7 +98,7 @@ public class HostController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询主机")
-    @Parameter(name = "type", description = "type", required = false)
+    @Parameter(name = "type", description = "type")
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
     public List<HostVO> getHostList(@RequestParam(value = "type", required = false) String type) {
         return hostService.getHostList(type);

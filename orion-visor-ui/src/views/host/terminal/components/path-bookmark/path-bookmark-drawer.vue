@@ -145,8 +145,8 @@
     try {
       // 查询
       const data = await cacheStore.loadPathBookmarks(true);
-      bookmarkGroups.value = data.groups;
-      ungroupedItems.value = data.ungroupedItems;
+      bookmarkGroups.value = data.groups || [];
+      ungroupedItems.value = data.ungroupedItems || [];
       // 设置状态
       filterPath();
     } catch (e) {
