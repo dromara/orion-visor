@@ -1,10 +1,16 @@
 package com.orion.visor.module.asset.entity.request.host;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.entity.PageRequest;
+import com.orion.visor.framework.common.validator.group.Clear;
+import com.orion.visor.framework.common.validator.group.Id;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +30,7 @@ import java.util.List;
 @Schema(name = "HostConnectLogQueryRequest", description = "主机连接日志 查询请求对象")
 public class HostConnectLogQueryRequest extends PageRequest {
 
+    @NotNull(groups = Id.class)
     @Schema(description = "id")
     private Long id;
 
@@ -62,5 +69,17 @@ public class HostConnectLogQueryRequest extends PageRequest {
 
     @Schema(description = "状态")
     private List<String> statusList;
+
+    @NotNull(groups = Clear.class)
+    @Min(value = 1, groups = Clear.class)
+    @Max(value = 2000, groups = Clear.class)
+    @Schema(description = "清理数量限制")
+    private Integer clearLimit;
+
+    public void setClearLimit(Integer clearLimit) {
+        this.clearLimit = clearLimit;
+        this.setPage(Const.N_1);
+        this.setLimit(clearLimit);
+    }
 
 }

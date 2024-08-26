@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.utils.Valid;
+import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
@@ -125,7 +126,7 @@ public class ExecJobLogController {
     @PostMapping("/clear")
     @Operation(summary = "清空计划任务日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:management:clear')")
-    public Integer clearExecJobLog(@RequestBody ExecLogQueryRequest request) {
+    public Integer clearExecJobLog(@Validated(Clear.class) @RequestBody ExecLogQueryRequest request) {
         request.setSource(SOURCE);
         return execLogService.clearExecLog(request);
     }
@@ -167,4 +168,3 @@ public class ExecJobLogController {
     }
 
 }
-

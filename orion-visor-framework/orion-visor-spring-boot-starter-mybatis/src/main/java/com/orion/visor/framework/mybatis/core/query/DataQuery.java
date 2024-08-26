@@ -16,6 +16,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.reflect.Classes;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.Const;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.mybatis.core.domain.BaseDO;
 
 import java.io.Serializable;
@@ -111,11 +112,11 @@ public class DataQuery<T> {
     }
 
     public DataQuery<T> limit(int limit) {
-        return this.last(Const.LIMIT + Const.SPACE + limit);
+        return this.last(SqlUtils.limit(limit));
     }
 
     public DataQuery<T> limit(int offset, int limit) {
-        return this.last(Const.LIMIT + Const.SPACE + offset + Const.COMMA + limit);
+        return this.last(SqlUtils.limit(offset, limit));
     }
 
     public DataQuery<T> only() {

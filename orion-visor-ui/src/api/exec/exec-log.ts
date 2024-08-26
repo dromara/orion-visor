@@ -13,6 +13,7 @@ export interface ExecLogQueryRequest extends Pagination {
   command?: string;
   status?: string;
   startTimeRange?: string[];
+  clearLimit?: number;
 }
 
 /**

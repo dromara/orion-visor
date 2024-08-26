@@ -8,6 +8,7 @@ import com.orion.lang.utils.Valid;
 import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.module.infra.convert.OperatorLogConvert;
 import com.orion.visor.module.infra.dao.OperatorLogDAO;
 import com.orion.visor.module.infra.define.operator.AuthenticationOperatorType;
@@ -72,8 +73,10 @@ public class OperatorLogServiceImpl implements OperatorLogService {
     @Override
     public Integer clearOperatorLog(OperatorLogQueryRequest request) {
         log.info("OperatorLogService.clearOperatorLog start {}", JSON.toJSONString(request));
-        // 删除
+        // 删除参数
         LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        wrapper.last(SqlUtils.limit(request.getClearLimit()));
+        // 删除
         int effect = operatorLogDAO.delete(wrapper);
         log.info("OperatorLogService.clearOperatorLog finish {}", effect);
         // 设置日志参数
