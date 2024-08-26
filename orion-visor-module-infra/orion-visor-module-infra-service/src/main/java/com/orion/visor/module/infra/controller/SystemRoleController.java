@@ -48,6 +48,7 @@ public class SystemRoleController {
     @Resource
     private SystemRoleMenuService systemRoleMenuService;
 
+    @DemoDisableApi
     @OperatorLog(SystemRoleOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建角色")
@@ -56,6 +57,7 @@ public class SystemRoleController {
         return systemRoleService.createSystemRole(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemRoleOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新角色")
@@ -116,6 +118,7 @@ public class SystemRoleController {
         return systemRoleService.deleteSystemRoleById(id);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemRoleOperatorType.GRANT_MENU)
     @PutMapping("/grant-menu")
     @Operation(summary = "分配角色菜单")

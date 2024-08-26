@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.controller;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostGroupOperatorType;
 import com.orion.visor.module.asset.define.operator.HostIdentityOperatorType;
@@ -43,6 +44,7 @@ public class AssetDataGrantServiceController {
     @Resource
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
+    @DemoDisableApi
     @OperatorLog(HostGroupOperatorType.GRANT)
     @PutMapping("/grant-host-group")
     @Operation(summary = "主机分组授权")
@@ -60,6 +62,7 @@ public class AssetDataGrantServiceController {
         return assetAuthorizedDataService.getAuthorizedDataRelId(DataPermissionTypeEnum.HOST_GROUP, request);
     }
 
+    @DemoDisableApi
     @OperatorLog(HostKeyOperatorType.GRANT)
     @PutMapping("/grant-host-key")
     @Operation(summary = "主机密钥授权")
@@ -77,6 +80,7 @@ public class AssetDataGrantServiceController {
         return assetAuthorizedDataService.getAuthorizedDataRelId(DataPermissionTypeEnum.HOST_KEY, request);
     }
 
+    @DemoDisableApi
     @OperatorLog(HostIdentityOperatorType.GRANT)
     @PutMapping("/grant-host-identity")
     @Operation(summary = "主机身份授权")

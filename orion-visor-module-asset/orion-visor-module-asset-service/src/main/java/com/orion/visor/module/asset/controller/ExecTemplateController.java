@@ -5,6 +5,7 @@ import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
+import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.ExecTemplateOperatorType;
 import com.orion.visor.module.asset.entity.request.exec.ExecTemplateCreateRequest;
@@ -41,6 +42,7 @@ public class ExecTemplateController {
     @Resource
     private ExecTemplateService execTemplateService;
 
+    @DemoDisableApi
     @OperatorLog(ExecTemplateOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建执行模板")
@@ -49,6 +51,7 @@ public class ExecTemplateController {
         return execTemplateService.createExecTemplate(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecTemplateOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "更新执行模板")
@@ -83,6 +86,7 @@ public class ExecTemplateController {
         return execTemplateService.getExecTemplatePage(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecTemplateOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除执行模板")
@@ -92,6 +96,7 @@ public class ExecTemplateController {
         return execTemplateService.deleteExecTemplateById(id);
     }
 
+    @DemoDisableApi
     @OperatorLog(ExecTemplateOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
     @Operation(summary = "批量删除执行模板")
