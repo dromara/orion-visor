@@ -4,7 +4,7 @@
       <a-space size="large">
         <a-link target="_blank" href="https://github.com/dromara/orion-visor">github</a-link>
         <a-link target="_blank" href="https://gitee.com/dromara/orion-visor">gitee</a-link>
-        <a-link target="_blank" href="https://lijiahangmax.github.io/open-orion/orion-visor">文档</a-link>
+        <a-link target="_blank" href="https://visor.orionsec.cn">文档</a-link>
         <a-link target="_blank" href="https://github.com/dromara/orion-visor/blob/main/LICENSE">License</a-link>
         <a-link target="_blank" :href="`https://github.com/dromara/orion-visor/releases/tag/v${version}`">v{{ version }} {{ release }}</a-link>
       </a-space>
