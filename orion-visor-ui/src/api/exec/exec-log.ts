@@ -32,7 +32,6 @@ export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraRespon
   startTime: number;
   finishTime: number;
   hostIdList: Array<number>;
-  hosts: Array<ExecHostLogQueryResponse>;
 }
 
 /**

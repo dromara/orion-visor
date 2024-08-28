@@ -13,7 +13,7 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
 import { WebLinksAddon } from '@xterm/addon-web-links';
-import { WebglAddon } from '@xterm/addon-webgl';
+import { CanvasAddon } from '@xterm/addon-canvas';
 import { Unicode11Addon } from '@xterm/addon-unicode11';
 
 // 执行日志 appender 实现
@@ -129,20 +129,20 @@ export default class LogAppender implements ILogAppender {
   // 初始化插件
   initAddons(terminal: Terminal): XtermAddons {
     const fit = new FitAddon();
+    const canvas = new CanvasAddon();
     const search = new SearchAddon();
-    const webgl = new WebglAddon();
     const weblink = new WebLinksAddon();
     const unicode = new Unicode11Addon();
     terminal.loadAddon(fit);
+    terminal.loadAddon(canvas);
     terminal.loadAddon(search);
-    terminal.loadAddon(webgl);
     terminal.loadAddon(weblink);
     terminal.loadAddon(unicode);
     terminal.unicode.activeVersion = '11';
     return {
       fit,
+      canvas,
       search,
-      webgl,
       weblink,
       unicode
     } as XtermAddons;
@@ -177,7 +177,7 @@ export default class LogAppender implements ILogAppender {
       if (this.client?.readyState === WebSocket.OPEN) {
         this.client?.send('p');
       }
-    }, 15000);
+    }, 15000) as unknown as number;
   }
 
   // 设置当前元素

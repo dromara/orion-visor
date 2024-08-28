@@ -37,8 +37,14 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   async openSsh(tab: TerminalPanelTabItem, domRef: XtermDomRef) {
     // 初始化客户端
     await this.initChannel();
+    // 获取会话数量
+    const sshSessionLen = Object.values(this.sessions)
+      .filter(s => s?.type === PanelSessionType.SSH.type)
+      .length;
+    // 检查 webgl 数量
+    const canUseWebgl = (sshSessionLen || 0) <= (navigator.hardwareConcurrency || 0) / 2;
     // 新建会话
-    const session = new SshSession(tab, this.channel);
+    const session = new SshSession(tab, this.channel, canUseWebgl);
     // 初始化
     session.init(domRef);
     // 等待前端渲染完成

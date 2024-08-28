@@ -33,10 +33,14 @@ export default class SshSession extends BaseSession implements ISshSession {
 
   private readonly addons: XtermAddons;
 
+  private readonly canUseWebgl: boolean;
+
   constructor(tab: TerminalPanelTabItem,
-              channel: ITerminalChannel) {
+              channel: ITerminalChannel,
+              canUseWebgl: boolean) {
     super(PanelSessionType.SSH.type, tab);
     this.channel = channel;
+    this.canUseWebgl = canUseWebgl;
     this.status = TerminalStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
     this.handler = undefined as unknown as ISshSessionHandler;
@@ -173,7 +177,7 @@ export default class SshSession extends BaseSession implements ISshSession {
     if (preference.pluginsSetting.enableWeblinkPlugin) {
       this.addons.weblink = new WebLinksAddon();
     }
-    if (preference.pluginsSetting.enableWebglPlugin) {
+    if (preference.pluginsSetting.enableWebglPlugin && this.canUseWebgl) {
       // WebGL 渲染插件
       this.addons.webgl = new WebglAddon(true);
     } else {
