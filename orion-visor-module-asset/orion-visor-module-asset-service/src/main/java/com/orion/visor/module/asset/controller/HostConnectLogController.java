@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Id;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
@@ -84,7 +85,7 @@ public class HostConnectLogController {
     @PostMapping("/clear")
     @Operation(summary = "清空主机连接日志")
     @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:clear')")
-    public Integer clearHostConnectLog(@RequestBody HostConnectLogQueryRequest request) {
+    public Integer clearHostConnectLog(@Validated(Clear.class) @RequestBody HostConnectLogQueryRequest request) {
         return hostConnectLogService.clearHostConnectLog(request);
     }
 

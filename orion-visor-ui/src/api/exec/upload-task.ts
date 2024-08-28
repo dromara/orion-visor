@@ -40,6 +40,7 @@ export interface UploadTaskQueryRequest extends Pagination {
   description?: string;
   status?: string;
   createTimeRange?: string[];
+  clearLimit?: number;
 }
 
 /**

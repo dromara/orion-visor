@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -45,7 +46,8 @@ public class HostCreateRequest implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
-    @Range(min = 1, max = 65535)
+    @Min(value = 1)
+    @Max(value = 65535)
     @Schema(description = "主机端口")
     private Integer port;
 

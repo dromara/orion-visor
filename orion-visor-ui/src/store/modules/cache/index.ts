@@ -6,6 +6,7 @@ import type { HostType } from '@/api/asset/host';
 import { getHostList } from '@/api/asset/host';
 import type { PreferenceType } from '@/api/user/preference';
 import { getPreference } from '@/api/user/preference';
+import usePermission from '@/hooks/permission';
 import { defineStore } from 'pinia';
 import { getUserList } from '@/api/user/user';
 import { getRoleList } from '@/api/user/role';
@@ -43,7 +44,25 @@ export default defineStore('cache', {
     },
 
     // 加载数据
-    async load<T>(name: CacheType, loader: () => Promise<AxiosResponse<T>>, force = false, onErrorValue = []) {
+    async load<T>(name: CacheType,
+                  loader: () => Promise<AxiosResponse<T>>,
+                  permissions: Array<string> | undefined = undefined,
+                  force = false,
+                  onErrorValue: any = []) {
+      // 权限检查
+      const len = permissions?.length;
+      if (len) {
+        const { hasPermission, hasAnyPermission } = usePermission();
+        if (len === 1) {
+          if (!hasPermission(permissions[0])) {
+            return onErrorValue as T;
+          }
+        } else {
+          if (!hasAnyPermission(permissions)) {
+            return onErrorValue as T;
+          }
+        }
+      }
       // 尝试直接从缓存中获取数据
       if (this[name] && !force) {
         return this[name] as T;
@@ -60,92 +79,92 @@ export default defineStore('cache', {
 
     // 获取用户列表
     async loadUsers(force = false) {
-      return await this.load('users', getUserList, force);
+      return await this.load('users', getUserList, ['infra:system-user:query'], force);
     },
 
     // 获取角色列表
     async loadRoles(force = false) {
-      return await this.load('roles', getRoleList, force);
+      return await this.load('roles', getRoleList, ['infra:system-role:query'], force);
     },
 
     // 获取菜单列表
     async loadMenus(force = false) {
-      return await this.load('menus', () => getMenuList({}), force);
+      return await this.load('menus', () => getMenuList({}), ['infra:system-menu:query'], force);
     },
 
     // 获取主机分组列表
     async loadHostGroups(force = false) {
-      return await this.load('hostGroups', getHostGroupTree, force);
+      return await this.load('hostGroups', getHostGroupTree, ['asset:host-group:update'], force);
     },
 
     // 获取主机列表
     async loadHosts(type: HostType, force = false) {
-      return await this.load(`host_${type}`, () => getHostList(type), force);
+      return await this.load(`host_${type}`, () => getHostList(type), ['asset:host:query'], force);
     },
 
     // 获取主机密钥列表
     async loadHostKeys(force = false) {
-      return await this.load('hostKeys', getHostKeyList, force);
+      return await this.load('hostKeys', getHostKeyList, ['asset:host-key:query'], force);
     },
 
     // 获取主机身份列表
     async loadHostIdentities(force = false) {
-      return await this.load('hostIdentities', getHostIdentityList, force);
+      return await this.load('hostIdentities', getHostIdentityList, ['asset:host-identity:query'], force);
     },
 
     // 获取字典配置项列表
     async loadDictKeys(force = false) {
-      return await this.load('dictKeys', getDictKeyList, force);
+      return await this.load('dictKeys', getDictKeyList, undefined, force);
     },
 
     // 加载 tags
     async loadTags(type: TagType, force = false) {
-      return await this.load(`${type}_Tags`, () => getTagList(type), force);
+      return await this.load(`${type}_Tags`, () => getTagList(type), undefined, force);
     },
 
     // 获取已授权的主机密钥列表
     async loadAuthorizedHostKeys(force = false) {
-      return await this.load('authorizedHostKeys', getCurrentAuthorizedHostKey, force);
+      return await this.load('authorizedHostKeys', getCurrentAuthorizedHostKey, undefined, force);
     },
 
     // 获取已授权的主机身份列表
     async loadAuthorizedHostIdentities(force = false) {
-      return await this.load('authorizedHostIdentities', getCurrentAuthorizedHostIdentity, force);
+      return await this.load('authorizedHostIdentities', getCurrentAuthorizedHostIdentity, undefined, force);
     },
 
     // 获取命令片段分组
     async loadCommandSnippetGroups(force = false) {
-      return await this.load('commandSnippetGroups', getCommandSnippetGroupList, force);
+      return await this.load('commandSnippetGroups', getCommandSnippetGroupList, undefined, force);
     },
 
     // 获取路径书签分组
     async loadPathBookmarkGroups(force = false) {
-      return await this.load('pathBookmarkGroups', getPathBookmarkGroupList, force);
+      return await this.load('pathBookmarkGroups', getPathBookmarkGroupList, undefined, force);
     },
 
     // 获取命令片段列表
     async loadCommandSnippets(force = false) {
-      return await this.load('commandSnippets', getCommandSnippetList, force);
+      return await this.load('commandSnippets', getCommandSnippetList, undefined, force, {});
     },
 
     // 获取路径书签列表
     async loadPathBookmarks(force = false) {
-      return await this.load('pathBookmarks', getPathBookmarkList, force);
+      return await this.load('pathBookmarks', getPathBookmarkList, undefined, force, {});
     },
 
     // 获取执行计划列表
     async loadExecJobs(force = false) {
-      return await this.load('execJob', getExecJobList, force);
+      return await this.load('execJob', getExecJobList, ['asset:exec-job:query'], force);
     },
 
     // 加载偏好
     async loadPreference<T>(type: PreferenceType, force = false) {
-      return await this.load(`preference_${type}`, () => getPreference<T>(type), force);
+      return await this.load(`preference_${type}`, () => getPreference<T>(type), undefined, force, {});
     },
 
     // 加载偏好项
     async loadPreferenceItem<T>(type: PreferenceType, item: string, force = false) {
-      return await this.load(`preference_${type}_${item}`, () => getPreference<T>(type, [item]), force);
+      return await this.load(`preference_${type}_${item}`, () => getPreference<T>(type, [item]), undefined, force, {});
     },
 
   }

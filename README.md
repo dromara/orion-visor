@@ -72,11 +72,11 @@ docker compose up -d
 
 ## 项目文档
 
-* [文档地址](https://lijiahangmax.github.io/open-orion/orion-visor/)
-* [安装文档](https://lijiahangmax.github.io/open-orion/orion-visor/quickstart/docker.html)
-* [更新日志](https://lijiahangmax.github.io/open-orion/orion-visor/update/change-log.html)
-* [操作手册](https://lijiahangmax.github.io/open-orion/orion-visor/operator/asset.html)
-* [常见问题](https://lijiahangmax.github.io/open-orion/orion-visor/support/faq.html)
+* [文档地址](https://visor.orionsec.cn/)
+* [安装文档](https://visor.orionsec.cn/quickstart/docker.html)
+* [更新日志](https://visor.orionsec.cn/update/change-log.html)
+* [操作手册](https://visor.orionsec.cn/operator/asset.html)
+* [常见问题](https://visor.orionsec.cn/support/faq.html)
 
 ## 技术栈
 

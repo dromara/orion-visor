@@ -8,6 +8,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.convert.HostConnectLogConvert;
@@ -26,6 +27,7 @@ import com.orion.visor.module.asset.service.HostConnectLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -167,13 +169,14 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteHostConnectLog(List<Long> idList) {
         log.info("HostConnectLogService.deleteHostConnectLog start {}", JSON.toJSONString(idList));
         if (Lists.isEmpty(idList)) {
             OperatorLogs.add(OperatorLogs.COUNT, Const.N_0);
             return Const.N_0;
         }
-        // 删除
+        // 删除日志表
         int effect = hostConnectLogDAO.deleteBatchIds(idList);
         log.info("HostConnectLogService.deleteHostConnectLog finish {}", effect);
         // 设置日志参数
@@ -187,11 +190,13 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer clearHostConnectLog(HostConnectLogQueryRequest request) {
         log.info("HostConnectLogService.clearHostConnectLog start {}", JSON.toJSONString(request));
         // 查询
         LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request)
-                .select(HostConnectLogDO::getId);
+                .select(HostConnectLogDO::getId)
+                .last(SqlUtils.limit(request.getClearLimit()));
         List<HostConnectLogDO> list = hostConnectLogDAO.selectList(wrapper);
         if (list.isEmpty()) {
             log.info("HostConnectLogService.clearHostConnectLog empty");

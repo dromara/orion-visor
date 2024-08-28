@@ -6,11 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * 主机 SSH 配置
@@ -64,7 +61,8 @@ public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordActi
      * 连接超时时间
      */
     @NotNull
-    @Range(min = 0, max = 100000)
+    @Min(value = 1)
+    @Max(value = 100000)
     private Integer connectTimeout;
 
     /**

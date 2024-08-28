@@ -18,6 +18,7 @@ import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.security.LoginUser;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.mybatis.core.query.Conditions;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
@@ -226,7 +227,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     public Integer clearUploadTask(UploadTaskQueryRequest request) {
         // 查询id
         LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
-                .select(UploadTaskDO::getId);
+                .select(UploadTaskDO::getId)
+                .last(SqlUtils.limit(request.getClearLimit()));
         List<Long> idList = uploadTaskDAO.of(wrapper)
                 .list(UploadTaskDO::getId);
         // 删除

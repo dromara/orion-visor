@@ -2,6 +2,7 @@ package com.orion.visor.module.infra.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
@@ -67,7 +68,7 @@ public class OperatorLogController {
     @PostMapping("/clear")
     @Operation(summary = "清空操作日志")
     @PreAuthorize("@ss.hasPermission('infra:operator-log:management:clear')")
-    public Integer clearOperatorLog(@RequestBody OperatorLogQueryRequest request) {
+    public Integer clearOperatorLog(@Validated(Clear.class) @RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.clearOperatorLog(request);
     }
 

@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
+import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
@@ -123,7 +124,7 @@ public class UploadTaskController {
     @PostMapping("/clear")
     @Operation(summary = "清空上传任务")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
-    public Integer clearUploadTask(@RequestBody UploadTaskQueryRequest request) {
+    public Integer clearUploadTask(@Validated(Clear.class) @RequestBody UploadTaskQueryRequest request) {
         return uploadTaskService.clearUploadTask(request);
     }
 

@@ -18,6 +18,7 @@ import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.FileConst;
 import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
@@ -227,7 +228,8 @@ public class ExecLogServiceImpl implements ExecLogService {
         log.info("ExecLogService.clearExecLog start {}", JSON.toJSONString(request));
         // 查询
         LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
-                .select(ExecLogDO::getId);
+                .select(ExecLogDO::getId)
+                .last(SqlUtils.limit(request.getClearLimit()));
         List<Long> idList = execLogDAO.selectList(wrapper)
                 .stream()
                 .map(ExecLogDO::getId)
