@@ -279,17 +279,10 @@ public class HostServiceImpl implements HostService {
     @Override
     public Integer deleteHostByIdList(List<Long> idList) {
         log.info("HostService-deleteHostByIdList idList: {}", idList);
-        // 查询
-        List<HostDO> hosts = hostDAO.selectBaseByIdList(idList);
-        Valid.notEmpty(hosts, ErrorMessage.HOST_ABSENT);
-        // 添加日志参数
-        String name = hosts.stream()
-                .map(HostDO::getName)
-                .collect(Collectors.joining(Const.COMMA));
-        OperatorLogs.add(OperatorLogs.NAME, name);
-        OperatorLogs.add(OperatorLogs.COUNT, hosts.size());
         // 删除
-        int effect = hostDAO.deleteBatchIds(hosts);
+        int effect = hostDAO.deleteBatchIds(idList);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, idList.size());
         log.info("HostService-deleteHostByIdList effect: {}", effect);
         // 删除缓存
         this.clearCache();
