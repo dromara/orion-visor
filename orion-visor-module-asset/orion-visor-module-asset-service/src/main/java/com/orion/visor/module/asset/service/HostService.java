@@ -81,6 +81,14 @@ public interface HostService {
     DataGrid<HostVO> getHostPage(HostQueryRequest request);
 
     /**
+     * 查询主机数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getHostCount(HostQueryRequest request);
+
+    /**
      * 通过 id 删除主机
      *
      * @param id id
@@ -109,5 +117,10 @@ public interface HostService {
      * @return hostId
      */
     Long getCurrentUpdateConfigHostId();
+
+    /**
+     * 清除缓存
+     */
+    void clearCache();
 
 }

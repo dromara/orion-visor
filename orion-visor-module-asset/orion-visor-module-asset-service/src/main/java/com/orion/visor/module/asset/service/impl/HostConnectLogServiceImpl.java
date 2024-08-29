@@ -15,6 +15,7 @@ import com.orion.visor.module.asset.convert.HostConnectLogConvert;
 import com.orion.visor.module.asset.dao.HostConnectLogDAO;
 import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
 import com.orion.visor.module.asset.entity.dto.HostConnectLogExtraDTO;
+import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
@@ -186,17 +187,19 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
 
     @Override
     public Long getHostConnectLogCount(HostConnectLogQueryRequest request) {
-        return hostConnectLogDAO.selectCount(this.buildQueryWrapper(request));
+        return hostConnectLogDAO.of()
+                .wrapper(this.buildQueryWrapper(request))
+                .countMax(request.getLimit());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer clearHostConnectLog(HostConnectLogQueryRequest request) {
+    public Integer clearHostConnectLog(HostConnectLogClearRequest request) {
         log.info("HostConnectLogService.clearHostConnectLog start {}", JSON.toJSONString(request));
         // 查询
         LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request)
                 .select(HostConnectLogDO::getId)
-                .last(SqlUtils.limit(request.getClearLimit()));
+                .last(SqlUtils.limit(request.getLimit()));
         List<HostConnectLogDO> list = hostConnectLogDAO.selectList(wrapper);
         if (list.isEmpty()) {
             log.info("HostConnectLogService.clearHostConnectLog empty");

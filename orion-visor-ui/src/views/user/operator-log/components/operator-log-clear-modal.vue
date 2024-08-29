@@ -61,12 +61,12 @@
                     placeholder="请选择执行结果"
                     allow-clear />
         </a-form-item>
-        <!-- 清理数量 -->
-        <a-form-item field="clearLimit" label="清理数量">
-          <a-input-number v-model="formModel.clearLimit"
+        <!-- 数量限制 -->
+        <a-form-item field="limit" label="数量限制">
+          <a-input-number v-model="formModel.limit"
                           :min="1"
-                          :max="clearLimit"
-                          :placeholder="`请输入最大清理数量 最大: ${clearLimit}`"
+                          :max="maxLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
                           hide-button
                           allow-clear />
         </a-form-item>
@@ -90,7 +90,7 @@
   import { getOperatorLogCount, clearOperatorLog } from '@/api/user/operator-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
-  import { operatorLogModuleKey, operatorLogResultKey, operatorLogTypeKey, operatorRiskLevelKey, clearLimit } from '../types/const';
+  import { operatorLogModuleKey, operatorLogResultKey, operatorLogTypeKey, operatorRiskLevelKey, maxClearLimit } from '../types/const';
   import { labelFilter } from '@/types/form';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
@@ -105,10 +105,11 @@
       riskLevel: undefined,
       result: undefined,
       startTimeRange: undefined,
-      clearLimit,
+      limit: maxLimit.value,
     };
   };
 
+  const maxLimit = ref<number>(0);
   const typeOptions = ref<SelectOptionData[]>(toOptions(operatorLogTypeKey));
   const formModel = ref<OperatorLogQueryRequest>({});
 
@@ -116,6 +117,7 @@
 
   // 打开
   const open = (record: OperatorLogQueryRequest) => {
+    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -146,8 +148,8 @@
 
   // 确定
   const handlerOk = async () => {
-    if (!formModel.value.clearLimit) {
-      Message.error('请输入清理数量');
+    if (!formModel.value.limit) {
+      Message.error('请输入数量限制');
       return false;
     }
     setLoading(true);
@@ -172,7 +174,7 @@
   const doClear = (count: number) => {
     Modal.confirm({
       title: '删除清空',
-      content: `确定要删除 ${Math.min(count, formModel.value.clearLimit || 0)} 条数据吗? 确定后将立即删除且无法恢复!`,
+      content: `确定要删除 ${count} 条数据吗? 确定后将立即删除且无法恢复!`,
       onOk: async () => {
         setLoading(true);
         try {

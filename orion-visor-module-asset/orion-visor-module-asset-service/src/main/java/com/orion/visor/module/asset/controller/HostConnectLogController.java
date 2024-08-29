@@ -2,7 +2,6 @@ package com.orion.visor.module.asset.controller;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
-import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Id;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
@@ -10,6 +9,7 @@ import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.HostConnectLogOperatorType;
+import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
 import com.orion.visor.module.asset.service.HostConnectLogService;
@@ -50,6 +50,13 @@ public class HostConnectLogController {
         return hostConnectLogService.getHostConnectLogPage(request);
     }
 
+    @PostMapping("/count")
+    @Operation(summary = "查询主机连接日志数量")
+    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:query')")
+    public Long getHostConnectLogCount(@Validated @RequestBody HostConnectLogQueryRequest request) {
+        return hostConnectLogService.getHostConnectLogCount(request);
+    }
+
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/session")
     @Operation(summary = "查询全部主机连接会话")
@@ -74,18 +81,11 @@ public class HostConnectLogController {
         return hostConnectLogService.deleteHostConnectLog(idList);
     }
 
-    @PostMapping("/query-count")
-    @Operation(summary = "查询主机连接日志数量")
-    @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:clear')")
-    public Long getHostConnectLogCount(@RequestBody HostConnectLogQueryRequest request) {
-        return hostConnectLogService.getHostConnectLogCount(request);
-    }
-
     @OperatorLog(HostConnectLogOperatorType.CLEAR)
     @PostMapping("/clear")
     @Operation(summary = "清空主机连接日志")
     @PreAuthorize("@ss.hasPermission('asset:host-connect-log:management:clear')")
-    public Integer clearHostConnectLog(@Validated(Clear.class) @RequestBody HostConnectLogQueryRequest request) {
+    public Integer clearHostConnectLog(@Validated @RequestBody HostConnectLogClearRequest request) {
         return hostConnectLogService.clearHostConnectLog(request);
     }
 

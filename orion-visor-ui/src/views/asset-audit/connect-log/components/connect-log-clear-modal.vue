@@ -55,12 +55,12 @@
                     :options="toOptions(connectTypeKey)"
                     allow-clear />
         </a-form-item>
-        <!-- 清理数量 -->
-        <a-form-item field="clearLimit" label="清理数量">
-          <a-input-number v-model="formModel.clearLimit"
+        <!-- 数量限制 -->
+        <a-form-item field="limit" label="数量限制">
+          <a-input-number v-model="formModel.limit"
                           :min="1"
-                          :max="clearLimit"
-                          :placeholder="`请输入最大清理数量 最大: ${clearLimit}`"
+                          :max="maxLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
                           hide-button
                           allow-clear />
         </a-form-item>
@@ -80,7 +80,7 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { connectStatusKey, connectTypeKey, clearLimit } from '../types/const';
+  import { connectStatusKey, connectTypeKey, maxClearLimit } from '../types/const';
   import { getHostConnectLogCount, clearHostConnectLog } from '@/api/asset/host-connect-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
@@ -101,14 +101,16 @@
       type: undefined,
       status: undefined,
       startTimeRange: undefined,
-      clearLimit,
+      limit: maxLimit.value,
     };
   };
 
+  const maxLimit = ref<number>(0);
   const formModel = ref<HostConnectLogQueryRequest>({});
 
   // 打开
   const open = (record: any) => {
+    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -122,8 +124,8 @@
 
   // 确定
   const handlerOk = async () => {
-    if (!formModel.value.clearLimit) {
-      Message.error('请输入清理数量');
+    if (!formModel.value.limit) {
+      Message.error('请输入数量限制');
       return false;
     }
     setLoading(true);
@@ -148,7 +150,7 @@
   const doClear = (count: number) => {
     Modal.confirm({
       title: '删除清空',
-      content: `确定要删除 ${Math.min(count, formModel.value.clearLimit || 0)} 条数据吗? 确定后将立即删除且无法恢复!`,
+      content: `确定要删除 ${count} 条数据吗? 确定后将立即删除且无法恢复!`,
       onOk: async () => {
         setLoading(true);
         try {

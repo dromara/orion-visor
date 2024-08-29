@@ -3,7 +3,6 @@ package com.orion.visor.module.asset.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.utils.Valid;
-import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
@@ -11,6 +10,7 @@ import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.ExecCommandLogOperatorType;
 import com.orion.visor.module.asset.entity.request.exec.ExecInterruptRequest;
+import com.orion.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.visor.module.asset.entity.vo.ExecHostLogVO;
@@ -98,6 +98,14 @@ public class ExecCommandLogController {
         return execLogService.getExecHistory(request);
     }
 
+    @PostMapping("/count")
+    @Operation(summary = "查询批量执行日志数量")
+    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:query')")
+    public Long getExecCommandLogCount(@Validated @RequestBody ExecLogQueryRequest request) {
+        request.setSource(SOURCE);
+        return execLogService.queryExecLogCount(request);
+    }
+
     @OperatorLog(ExecCommandLogOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除批量执行日志")
@@ -125,19 +133,11 @@ public class ExecCommandLogController {
         return execHostLogService.deleteExecHostLogById(id);
     }
 
-    @PostMapping("/query-count")
-    @Operation(summary = "查询批量执行日志数量")
-    @PreAuthorize("@ss.hasPermission('asset:exec-command-log:management:clear')")
-    public Long getExecCommandLogCount(@RequestBody ExecLogQueryRequest request) {
-        request.setSource(SOURCE);
-        return execLogService.queryExecLogCount(request);
-    }
-
     @OperatorLog(ExecCommandLogOperatorType.CLEAR)
     @PostMapping("/clear")
     @Operation(summary = "清空批量执行日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-command-log:management:clear')")
-    public Integer clearExecCommandLog(@Validated(Clear.class) @RequestBody ExecLogQueryRequest request) {
+    public Integer clearExecCommandLog(@Validated @RequestBody ExecLogClearRequest request) {
         request.setSource(SOURCE);
         return execLogService.clearExecLog(request);
     }

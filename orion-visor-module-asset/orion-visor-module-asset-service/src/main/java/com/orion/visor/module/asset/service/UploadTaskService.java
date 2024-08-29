@@ -1,6 +1,7 @@
 package com.orion.visor.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.asset.entity.request.upload.UploadTaskClearRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskRequest;
@@ -66,7 +67,7 @@ public interface UploadTaskService {
      * @param request request
      * @return count
      */
-    Integer clearUploadTask(UploadTaskQueryRequest request);
+    Integer clearUploadTask(UploadTaskClearRequest request);
 
     /**
      * 删除上传任务

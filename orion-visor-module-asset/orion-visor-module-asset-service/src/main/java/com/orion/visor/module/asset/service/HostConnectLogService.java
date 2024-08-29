@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
+import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
@@ -95,7 +96,7 @@ public interface HostConnectLogService {
      * @param request request
      * @return effect
      */
-    Integer clearHostConnectLog(HostConnectLogQueryRequest request);
+    Integer clearHostConnectLog(HostConnectLogClearRequest request);
 
     /**
      * 强制断开主机连接

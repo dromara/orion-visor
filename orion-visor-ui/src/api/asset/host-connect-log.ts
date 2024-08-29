@@ -1,4 +1,4 @@
-import type { DataGrid, Pagination } from '@/types/global';
+import type { ClearRequest, DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 import qs from 'query-string';
@@ -15,7 +15,12 @@ export interface HostConnectLogQueryRequest extends Pagination {
   token?: string;
   status?: string;
   startTimeRange?: string[];
-  clearLimit?: number;
+}
+
+/**
+ * 主机连接日志清理请求
+ */
+export interface HostConnectLogClearRequest extends HostConnectLogQueryRequest, ClearRequest {
 }
 
 /**
@@ -89,13 +94,13 @@ export function deleteHostConnectLog(idList: Array<number>) {
  * 查询主机连接日志数量
  */
 export function getHostConnectLogCount(request: HostConnectLogQueryRequest) {
-  return axios.post<number>('/asset/host-connect-log/query-count', request);
+  return axios.post<number>('/asset/host-connect-log/count', request);
 }
 
 /**
  * 清空主机连接日志
  */
-export function clearHostConnectLog(request: HostConnectLogQueryRequest) {
+export function clearHostConnectLog(request: HostConnectLogClearRequest) {
   return axios.post<number>('/asset/host-connect-log/clear', request);
 }
 

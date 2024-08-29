@@ -1,4 +1,4 @@
-import type { DataGrid, Pagination } from '@/types/global';
+import type { ClearRequest, DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
 import qs from 'query-string';
@@ -40,7 +40,12 @@ export interface UploadTaskQueryRequest extends Pagination {
   description?: string;
   status?: string;
   createTimeRange?: string[];
-  clearLimit?: number;
+}
+
+/**
+ * 上传任务清理请求
+ */
+export interface UploadTaskClearRequest extends UploadTaskQueryRequest, ClearRequest {
 }
 
 /**
@@ -170,12 +175,12 @@ export function batchDeleteUploadTask(idList: Array<number>) {
  * 查询主机连接日志数量
  */
 export function getUploadTaskCount(request: UploadTaskQueryRequest) {
-  return axios.post<number>('/asset/upload-task/query-count', request);
+  return axios.post<number>('/asset/upload-task/count', request);
 }
 
 /**
  * 清空主机连接日志
  */
-export function clearUploadTask(request: UploadTaskQueryRequest) {
+export function clearUploadTask(request: UploadTaskClearRequest) {
   return axios.post<number>('/asset/upload-task/clear', request);
 }

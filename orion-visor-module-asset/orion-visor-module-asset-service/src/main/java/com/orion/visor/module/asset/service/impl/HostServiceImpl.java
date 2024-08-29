@@ -272,6 +272,13 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    public Long getHostCount(HostQueryRequest request) {
+        return hostDAO.of()
+                .wrapper(this.buildQueryWrapper(request))
+                .countMax(request.getLimit());
+    }
+
+    @Override
     public Integer deleteHostById(Long id) {
         return this.deleteHostByIdList(Lists.singleton(id));
     }
@@ -315,10 +322,8 @@ public class HostServiceImpl implements HostService {
         return CURRENT_UPDATE_CONFIG_ID.get();
     }
 
-    /**
-     * 清除缓存
-     */
-    private void clearCache() {
+    @Override
+    public void clearCache() {
         RedisMaps.scanKeysDelete(HostCacheKeyDefine.HOST_INFO.format("*"));
     }
 

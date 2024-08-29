@@ -113,6 +113,13 @@ public class ${table.controllerName} {
         return ${typeLower}Service.get${type}Page(request);
     }
 
+    @PostMapping("/count")
+    @Operation(summary = "${apiComment.queryCount}")
+    @PreAuthorize("@ss.hasPermission('${package.ModuleName}:${typeHyphen}:query')")
+    public Long get${type}Count(@Validated @RequestBody ${type}QueryRequest request) {
+        return ${typeLower}Service.get${type}Count(request);
+    }
+
     #if($meta.enableDemoApi)
     @DemoDisableApi
     #end

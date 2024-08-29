@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.annotation.Keep;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Arrays1;
@@ -12,7 +13,6 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.FileConst;
@@ -31,6 +31,7 @@ import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.visor.module.asset.entity.domain.ExecLogDO;
 import com.orion.visor.module.asset.entity.dto.ExecHostLogTailDTO;
 import com.orion.visor.module.asset.entity.dto.ExecLogTailDTO;
+import com.orion.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.visor.module.asset.entity.vo.ExecHostLogVO;
@@ -219,17 +220,19 @@ public class ExecLogServiceImpl implements ExecLogService {
 
     @Override
     public Long queryExecLogCount(ExecLogQueryRequest request) {
-        return execLogDAO.selectCount(this.buildQueryWrapper(request));
+        return execLogDAO.of()
+                .wrapper(this.buildQueryWrapper(request))
+                .countMax(request.getLimit());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer clearExecLog(ExecLogQueryRequest request) {
+    public Integer clearExecLog(ExecLogClearRequest request) {
         log.info("ExecLogService.clearExecLog start {}", JSON.toJSONString(request));
         // 查询
         LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
                 .select(ExecLogDO::getId)
-                .last(SqlUtils.limit(request.getClearLimit()));
+                .last(SqlUtils.limit(request.getLimit()));
         List<Long> idList = execLogDAO.selectList(wrapper)
                 .stream()
                 .map(ExecLogDO::getId)

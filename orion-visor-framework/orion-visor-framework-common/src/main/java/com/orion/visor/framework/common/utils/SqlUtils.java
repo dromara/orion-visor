@@ -20,7 +20,7 @@ public class SqlUtils {
      * @param limit limit
      * @return limit
      */
-    public static String limit(Integer limit) {
+    public static String limit(Number limit) {
         return Const.LIMIT + Const.SPACE + limit;
     }
 
@@ -31,7 +31,7 @@ public class SqlUtils {
      * @param limit  limit
      * @return limit
      */
-    public static String limit(int offset, Integer limit) {
+    public static String limit(Number offset, Number limit) {
         return Const.LIMIT + Const.SPACE + offset + Const.COMMA + limit;
     }
 

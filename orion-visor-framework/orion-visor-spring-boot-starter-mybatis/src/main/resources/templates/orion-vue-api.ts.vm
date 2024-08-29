@@ -116,6 +116,13 @@ export function get${vue.featureEntity}Page(request: ${vue.featureEntity}QueryRe
 }
 
 /**
+ * $apiComment.queryCount
+ */
+export function get${vue.featureEntity}Count(request: ${vue.featureEntity}QueryRequest) {
+  return axios.post<number>('/${package.ModuleName}/${typeHyphen}/count', request);
+}
+
+/**
  * $apiComment.deleteById
  */
 export function delete${vue.featureEntity}(id: number) {

@@ -37,7 +37,7 @@ public class DataQuery<T> {
 
     private final BaseMapper<T> dao;
 
-    private IPageRequest page;
+    private PageRequest page;
 
     private Wrapper<T> wrapper;
 
@@ -74,8 +74,9 @@ public class DataQuery<T> {
         return new DataQuery<>(dao, wrapper);
     }
 
-    public DataQuery<T> page(IPageRequest page) {
-        this.page = Valid.notNull(page, "page is null");
+    public DataQuery<T> page(com.orion.visor.framework.common.entity.PageRequest page) {
+        com.orion.visor.framework.common.entity.PageRequest pr = Valid.notNull(page, "page is null");
+        this.page = new PageRequest(pr.getPage(), pr.getLimit());
         return this;
     }
 
@@ -198,6 +199,18 @@ public class DataQuery<T> {
 
     public Long count() {
         return dao.selectCount(wrapper);
+    }
+
+    public Long countMax(Number max) {
+        Long count = dao.selectCount(wrapper);
+        if (max == null) {
+            return count;
+        }
+        long maxValue = max.longValue();
+        if (maxValue <= 0L) {
+            return count;
+        }
+        return Math.min(count, maxValue);
     }
 
     public boolean absent() {

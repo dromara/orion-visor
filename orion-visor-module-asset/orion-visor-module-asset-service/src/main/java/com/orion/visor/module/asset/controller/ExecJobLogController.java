@@ -3,13 +3,13 @@ package com.orion.visor.module.asset.controller;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import com.orion.visor.framework.common.utils.Valid;
-import com.orion.visor.framework.common.validator.group.Clear;
 import com.orion.visor.framework.common.validator.group.Page;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.ExecJobLogOperatorType;
 import com.orion.visor.module.asset.entity.request.exec.ExecInterruptRequest;
+import com.orion.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.visor.module.asset.entity.vo.ExecHostLogVO;
@@ -87,6 +87,14 @@ public class ExecJobLogController {
         return execLogService.getExecLogStatus(idList, SOURCE);
     }
 
+    @PostMapping("/count")
+    @Operation(summary = "查询计划任务日志数量")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
+    public Long getExecJobLogCount(@Validated @RequestBody ExecLogQueryRequest request) {
+        request.setSource(SOURCE);
+        return execLogService.queryExecLogCount(request);
+    }
+
     @OperatorLog(ExecJobLogOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除计划任务日志")
@@ -114,19 +122,11 @@ public class ExecJobLogController {
         return execHostLogService.deleteExecHostLogById(id);
     }
 
-    @PostMapping("/query-count")
-    @Operation(summary = "查询计划任务日志数量")
-    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:management:clear')")
-    public Long getExecJobLogCount(@RequestBody ExecLogQueryRequest request) {
-        request.setSource(SOURCE);
-        return execLogService.queryExecLogCount(request);
-    }
-
     @OperatorLog(ExecJobLogOperatorType.CLEAR)
     @PostMapping("/clear")
     @Operation(summary = "清空计划任务日志")
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:management:clear')")
-    public Integer clearExecJobLog(@Validated(Clear.class) @RequestBody ExecLogQueryRequest request) {
+    public Integer clearExecJobLog(@Validated @RequestBody ExecLogClearRequest request) {
         request.setSource(SOURCE);
         return execLogService.clearExecLog(request);
     }

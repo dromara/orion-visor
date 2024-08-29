@@ -152,10 +152,9 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     #end
     @Override
     public Long get${type}Count(${type}QueryRequest request) {
-        // 条件
-        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
-        // 查询
-        return ${typeLower}DAO.selectCount(wrapper);
+        return ${typeLower}DAO.of()
+                  .wrapper(this.buildQueryWrapper(request))
+                  .countMax(request.getLimit());
     }
 
     @Override

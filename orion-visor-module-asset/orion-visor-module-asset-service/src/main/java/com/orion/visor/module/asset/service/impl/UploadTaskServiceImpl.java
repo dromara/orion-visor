@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.annotation.Keep;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Booleans;
@@ -12,7 +13,6 @@ import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.enums.EndpointDefine;
@@ -31,10 +31,7 @@ import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
 import com.orion.visor.module.asset.entity.domain.UploadTaskDO;
 import com.orion.visor.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.visor.module.asset.entity.dto.UploadTaskExtraDTO;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskCreateRequest;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskFileRequest;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskQueryRequest;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskRequest;
+import com.orion.visor.module.asset.entity.request.upload.*;
 import com.orion.visor.module.asset.entity.vo.*;
 import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
@@ -219,16 +216,18 @@ public class UploadTaskServiceImpl implements UploadTaskService {
 
     @Override
     public Long getUploadTaskCount(UploadTaskQueryRequest request) {
-        return uploadTaskDAO.selectCount(this.buildQueryWrapper(request));
+        return uploadTaskDAO.of()
+                .wrapper(this.buildQueryWrapper(request))
+                .countMax(request.getLimit());
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Integer clearUploadTask(UploadTaskQueryRequest request) {
+    @Transactional(rollbackFor = Exception.class)
+    public Integer clearUploadTask(UploadTaskClearRequest request) {
         // 查询id
         LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
                 .select(UploadTaskDO::getId)
-                .last(SqlUtils.limit(request.getClearLimit()));
+                .last(SqlUtils.limit(request.getLimit()));
         List<Long> idList = uploadTaskDAO.of(wrapper)
                 .list(UploadTaskDO::getId);
         // 删除

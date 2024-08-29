@@ -2,6 +2,7 @@ package com.orion.visor.module.infra.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
+import com.orion.visor.module.infra.entity.request.operator.OperatorLogClearRequest;
 import com.orion.visor.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.visor.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.visor.module.infra.entity.vo.OperatorLogVO;
@@ -54,7 +55,7 @@ public interface OperatorLogService {
      * @param request request
      * @return effect
      */
-    Integer clearOperatorLog(OperatorLogQueryRequest request);
+    Integer clearOperatorLog(OperatorLogClearRequest request);
 
     /**
      * 查询用户登录日志

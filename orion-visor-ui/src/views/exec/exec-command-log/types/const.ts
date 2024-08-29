@@ -1,2 +1,2 @@
-// 清理数量
-export const clearLimit = 1000;
+// 最大清理数量
+export const maxClearLimit = 1000;

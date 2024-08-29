@@ -13,6 +13,7 @@ import com.orion.visor.module.infra.convert.OperatorLogConvert;
 import com.orion.visor.module.infra.dao.OperatorLogDAO;
 import com.orion.visor.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.visor.module.infra.entity.domain.OperatorLogDO;
+import com.orion.visor.module.infra.entity.request.operator.OperatorLogClearRequest;
 import com.orion.visor.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.visor.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.visor.module.infra.entity.vo.OperatorLogVO;
@@ -67,15 +68,17 @@ public class OperatorLogServiceImpl implements OperatorLogService {
 
     @Override
     public Long getOperatorLogCount(OperatorLogQueryRequest request) {
-        return operatorLogDAO.selectCount(this.buildQueryWrapper(request));
+        return operatorLogDAO.of()
+                .wrapper(this.buildQueryWrapper(request))
+                .countMax(request.getLimit());
     }
 
     @Override
-    public Integer clearOperatorLog(OperatorLogQueryRequest request) {
+    public Integer clearOperatorLog(OperatorLogClearRequest request) {
         log.info("OperatorLogService.clearOperatorLog start {}", JSON.toJSONString(request));
         // 删除参数
-        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
-        wrapper.last(SqlUtils.limit(request.getClearLimit()));
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request)
+                .last(SqlUtils.limit(request.getLimit()));
         // 删除
         int effect = operatorLogDAO.delete(wrapper);
         log.info("OperatorLogService.clearOperatorLog finish {}", effect);

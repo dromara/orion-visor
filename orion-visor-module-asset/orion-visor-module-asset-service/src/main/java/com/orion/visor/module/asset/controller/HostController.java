@@ -113,6 +113,14 @@ public class HostController {
     }
 
     @DemoDisableApi
+    @PostMapping("/count")
+    @Operation(summary = "查询主机数量")
+    @PreAuthorize("@ss.hasPermission('asset:host:query')")
+    public Long getHostExportCount(@Validated @RequestBody HostQueryRequest request) {
+        return hostService.getHostCount(request);
+    }
+
+    @DemoDisableApi
     @OperatorLog(HostOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "通过 id 删除主机")

@@ -4,13 +4,13 @@
     <!-- 不一致提示 -->
     <a-alert v-if="app.version && webVersion !== app.version"
              class="alert-wrapper">
-      当前前端版本与后端版本不一致, 请使用 Ctrl + F5 刷新页面
+      当前前端版本与后端版本不一致, 请使用 Ctrl + F5 强制刷新页面
     </a-alert>
     <!-- 升级提示 -->
-    <a v-if="app.version && repo.tag_name && ('v' + app.version) !== repo.tag_name"
+    <a v-if="app.version && repo.tagName && ('v' + app.version) !== repo.tagName"
        class="alert-href"
        target="_blank"
-       :href="`https://github.com/dromara/orion-visor/releases/tag/${repo.tag_name}`">
+       :href="`https://github.com/dromara/orion-visor/releases/tag/${repo.tagName}`">
       <a-alert class="alert-wrapper">
         新版本已发布, 请及时升级版本
       </a-alert>
@@ -23,7 +23,7 @@
                     :column="1">
       <!-- 机器码 -->
       <a-descriptions-item label="机器码">
-        <span class="text-copy span-blue uuid-wrapper" @click="copy(app.uuid, true)">
+        <span class="text-copy uuid-wrapper" @click="copy(app.uuid, true)">
           {{ app.uuid }}
         </span>
       </a-descriptions-item>
@@ -37,7 +37,7 @@
       </a-descriptions-item>
       <!-- 当前后端版本 -->
       <a-descriptions-item label="最新发布版本">
-        {{ repo.tag_name }}
+        {{ repo.tagName }}
       </a-descriptions-item>
       <!-- 当前后端版本 -->
       <a-descriptions-item label="最新更新日志">
@@ -58,9 +58,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { AppInfoResponse, RepoReleaseResponse } from '@/api/system/setting';
+  import type { AppInfoResponse, AppReleaseResponse } from '@/api/system/setting';
   import { onMounted, reactive } from 'vue';
-  import { getRepoLatestRelease, getSystemAppInfo } from '@/api/system/setting';
+  import { getAppLatestRelease, getSystemAppInfo } from '@/api/system/setting';
   import { copy } from '@/hooks/copy';
   import { Message } from '@arco-design/web-vue';
 
@@ -71,8 +71,8 @@
     uuid: '',
   });
 
-  const repo = reactive<RepoReleaseResponse>({
-    tag_name: '',
+  const repo = reactive<AppReleaseResponse>({
+    tagName: '',
     body: '',
   });
 
@@ -86,14 +86,14 @@
     }
   });
 
-  // 加载仓库信息
+  // 加载版本信息
   onMounted(async () => {
     try {
-      const { data } = await getRepoLatestRelease();
-      repo.tag_name = data.tag_name;
+      const { data } = await getAppLatestRelease();
+      repo.tagName = data.tagName;
       repo.body = data.body;
     } catch (e) {
-      Message.error('获取仓库信息失败, 请等待后重试');
+      Message.error('获取应用最新版本失败, 请等待后重试');
     }
   });
 
@@ -116,6 +116,7 @@
     }
 
     .uuid-wrapper {
+      color: rgb(var(--arcoblue-6));
       font-weight: 600;
     }
 

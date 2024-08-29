@@ -1,6 +1,7 @@
 import type { DataGrid } from '@/types/global';
 import type {
   ExecHostLogQueryResponse,
+  ExecLogClearRequest,
   ExecLogInterruptRequest,
   ExecLogQueryRequest,
   ExecLogQueryResponse,
@@ -73,13 +74,13 @@ export function deleteExecJobHostLog(id: number) {
  * 查询计划任务日志数量
  */
 export function getExecJobLogCount(request: ExecLogQueryRequest) {
-  return axios.post<number>('/asset/exec-job-log/query-count', request);
+  return axios.post<number>('/asset/exec-job-log/count', request);
 }
 
 /**
  * 清空计划任务日志
  */
-export function clearExecJobLog(request: ExecLogQueryRequest) {
+export function clearExecJobLog(request: ExecLogClearRequest) {
   return axios.post<number>('/asset/exec-job-log/clear', request);
 }
 

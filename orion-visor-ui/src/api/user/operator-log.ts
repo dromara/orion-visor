@@ -1,4 +1,4 @@
-import type { DataGrid, Pagination } from '@/types/global';
+import type { ClearRequest, DataGrid, Pagination } from '@/types/global';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -13,7 +13,12 @@ export interface OperatorLogQueryRequest extends Pagination {
   riskLevel?: string;
   result?: number;
   startTimeRange?: string[];
-  clearLimit?: number;
+}
+
+/**
+ * 操作日志清理参数
+ */
+export interface OperatorLogClearRequest extends OperatorLogQueryRequest, ClearRequest {
 }
 
 /**
@@ -65,12 +70,12 @@ export function deleteOperatorLog(idList: Array<number>) {
  * 查询操作日志数量
  */
 export function getOperatorLogCount(request: OperatorLogQueryRequest) {
-  return axios.post<number>('/infra/operator-log/query-count', request);
+  return axios.post<number>('/infra/operator-log/count', request);
 }
 
 /**
  * 清空操作日志
  */
-export function clearOperatorLog(request: OperatorLogQueryRequest) {
+export function clearOperatorLog(request: OperatorLogClearRequest) {
   return axios.post<number>('/infra/operator-log/clear', request);
 }

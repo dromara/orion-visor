@@ -1,15 +1,10 @@
 package com.orion.visor.module.infra.entity.request.operator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.entity.PageRequest;
-import com.orion.visor.framework.common.validator.group.Clear;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -52,17 +47,5 @@ public class OperatorLogQueryRequest extends PageRequest {
     @Schema(description = "开始时间-区间")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date[] startTimeRange;
-
-    @NotNull(groups = Clear.class)
-    @Min(value = 1, groups = Clear.class)
-    @Max(value = 2000, groups = Clear.class)
-    @Schema(description = "清理数量限制")
-    private Integer clearLimit;
-
-    public void setClearLimit(Integer clearLimit) {
-        this.clearLimit = clearLimit;
-        this.setPage(Const.N_1);
-        this.setLimit(clearLimit);
-    }
 
 }

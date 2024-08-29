@@ -12,8 +12,8 @@ export const HostConnectStatus = {
   FORCE_OFFLINE: 'FORCE_OFFLINE',
 };
 
-// 清理数量
-export const clearLimit = 2000;
+// 最大清理数量
+export const maxClearLimit = 2000;
 
 // 主机连接状态 字典项
 export const connectStatusKey = 'hostConnectStatus';
