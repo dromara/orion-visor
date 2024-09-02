@@ -3,7 +3,7 @@ package com.orion.visor.module.asset.task;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.asset.define.config.AppHostConnectLogAutoClearConfig;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
+import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
 import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
 import com.orion.visor.module.asset.service.HostConnectLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class HostConnectLogAutoClearTask {
                 .subDay(appHostConnectLogAutoClearConfig.getKeepPeriod())
                 .date();
         // 清理
-        HostConnectLogQueryRequest request = new HostConnectLogQueryRequest();
+        HostConnectLogClearRequest request = new HostConnectLogClearRequest();
         request.setCreateTimeLe(createLessEq);
         request.setStatusList(HostConnectStatusEnum.FINISH_STATUS_LIST);
         hostConnectLogService.clearHostConnectLog(request);

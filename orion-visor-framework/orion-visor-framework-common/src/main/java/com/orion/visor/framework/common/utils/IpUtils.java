@@ -32,11 +32,11 @@ public class IpUtils {
      * @return addr
      */
     public static String getRemoteAddr(HttpServletRequest request) {
-        // 获取实际地址
-        String realIp = request.getHeader(StandardHttpHeader.X_REAL_IP);
-        if (!Strings.isBlank(realIp)) {
-            return realIp;
-        }
+        // 获取实际地址 X_REAL_IP 在多代理情况下会有问题
+        // String realIp = request.getHeader(StandardHttpHeader.X_REAL_IP);
+        // if (!Strings.isBlank(realIp)) {
+        //     return realIp;
+        // }
         // 获取请求地址
         return Servlets.getRemoteAddr(request);
     }

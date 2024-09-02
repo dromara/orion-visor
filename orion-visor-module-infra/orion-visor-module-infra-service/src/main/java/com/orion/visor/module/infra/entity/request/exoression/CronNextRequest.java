@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -30,7 +31,8 @@ public class CronNextRequest implements Serializable {
     private String expression;
 
     @NotNull
-    @Range(min = 1, max = 100)
+    @Min(value = 1)
+    @Max(value = 100)
     @Schema(description = "次数")
     private Integer times;
 

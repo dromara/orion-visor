@@ -109,7 +109,7 @@ export function openDownloadFile(url: string) {
  * 下载文件
  */
 export function downloadFile(res: any, fileName: string = '') {
-  const blob = new Blob([res.data]);
+  const blob = new Blob([res.data], { type: 'application/octet-stream' });
   const tempLink = document.createElement('a');
   const blobURL = window.URL.createObjectURL(blob);
   tempLink.style.display = 'none';

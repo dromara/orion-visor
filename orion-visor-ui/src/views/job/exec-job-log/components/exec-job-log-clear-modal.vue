@@ -14,7 +14,6 @@
            @close="handleClose">
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
-              ref="formRef"
               label-align="right"
               :auto-label-width="true">
         <!-- 执行时间 -->
@@ -43,6 +42,15 @@
                     :options="toOptions(execStatusKey)"
                     placeholder="请选择执行状态" />
         </a-form-item>
+        <!-- 数量限制 -->
+        <a-form-item field="limit" label="数量限制">
+          <a-input-number v-model="formModel.limit"
+                          :min="1"
+                          :max="maxLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
+                          hide-button
+                          allow-clear />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -63,6 +71,7 @@
   import { getExecJobLogCount, clearExecJobLog } from '@/api/job/exec-job-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
+  import { maxClearLimit } from '../types/const';
   import ExecJobSelector from '@/components/exec/job/selector/index.vue';
 
   const emits = defineEmits(['clear']);
@@ -71,7 +80,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
 
-  const formRef = ref<any>();
+  const maxLimit = ref<number>(0);
   const formModel = ref<ExecLogQueryRequest>({});
 
   const defaultForm = (): ExecLogQueryRequest => {
@@ -81,12 +90,14 @@
       description: undefined,
       command: undefined,
       status: undefined,
-      startTimeRange: undefined
+      startTimeRange: undefined,
+      limit: maxLimit.value,
     };
   };
 
   // 打开
   const open = (record: any) => {
+    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -100,6 +111,10 @@
 
   // 确定
   const handlerOk = async () => {
+    if (!formModel.value.limit) {
+      Message.error('请输入数量限制');
+      return false;
+    }
     setLoading(true);
     try {
       // 获取总数量

@@ -1,5 +1,6 @@
 package ${package.Service};
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
@@ -115,5 +116,13 @@ public interface ${table.serviceName} {
      * @return effect
      */
     Integer delete${type}(${type}QueryRequest request);
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    private LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request);
 
 }

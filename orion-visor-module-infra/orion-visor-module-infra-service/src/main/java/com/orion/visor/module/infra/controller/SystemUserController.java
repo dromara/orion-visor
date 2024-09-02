@@ -55,6 +55,7 @@ public class SystemUserController {
     @Resource
     private OperatorLogService operatorLogService;
 
+    @DemoDisableApi
     @OperatorLog(SystemUserOperatorType.CREATE)
     @PostMapping("/create")
     @Operation(summary = "创建用户")
@@ -63,6 +64,7 @@ public class SystemUserController {
         return systemUserService.createSystemUser(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemUserOperatorType.UPDATE)
     @PutMapping("/update")
     @Operation(summary = "通过 id 更新用户")
@@ -82,6 +84,7 @@ public class SystemUserController {
         return systemUserService.updateUserStatus(request);
     }
 
+    @DemoDisableApi
     @OperatorLog(SystemUserOperatorType.GRANT_ROLE)
     @PutMapping("/grant-role")
     @Operation(summary = "分配用户角色")

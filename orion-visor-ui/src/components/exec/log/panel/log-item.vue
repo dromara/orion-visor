@@ -222,7 +222,7 @@
       // 下载计划任务日志
       fileGetter = downloadExecJobLogFile(id);
     }
-    // 瞎子啊
+    // 下载
     const data = await fileGetter;
     downloadFile(data);
   };

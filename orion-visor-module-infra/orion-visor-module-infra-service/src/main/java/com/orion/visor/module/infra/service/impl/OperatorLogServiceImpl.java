@@ -8,10 +8,12 @@ import com.orion.lang.utils.Valid;
 import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.module.infra.convert.OperatorLogConvert;
 import com.orion.visor.module.infra.dao.OperatorLogDAO;
 import com.orion.visor.module.infra.define.operator.AuthenticationOperatorType;
 import com.orion.visor.module.infra.entity.domain.OperatorLogDO;
+import com.orion.visor.module.infra.entity.request.operator.OperatorLogClearRequest;
 import com.orion.visor.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.visor.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.visor.module.infra.entity.vo.OperatorLogVO;
@@ -47,7 +49,8 @@ public class OperatorLogServiceImpl implements OperatorLogService {
     @Override
     public DataGrid<OperatorLogVO> getOperatorLogPage(OperatorLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(OperatorLogDO::getId);
         // 查询
         return operatorLogDAO.of(wrapper)
                 .page(request)
@@ -66,14 +69,22 @@ public class OperatorLogServiceImpl implements OperatorLogService {
 
     @Override
     public Long getOperatorLogCount(OperatorLogQueryRequest request) {
-        return operatorLogDAO.selectCount(this.buildQueryWrapper(request));
+        // 条件
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return operatorLogDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
     }
 
     @Override
-    public Integer clearOperatorLog(OperatorLogQueryRequest request) {
+    public Integer clearOperatorLog(OperatorLogClearRequest request) {
         log.info("OperatorLogService.clearOperatorLog start {}", JSON.toJSONString(request));
+        // 删除参数
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByAsc(OperatorLogDO::getId)
+                .last(SqlUtils.limit(request.getLimit()));
         // 删除
-        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
         int effect = operatorLogDAO.delete(wrapper);
         log.info("OperatorLogService.clearOperatorLog finish {}", effect);
         // 设置日志参数
@@ -83,25 +94,20 @@ public class OperatorLogServiceImpl implements OperatorLogService {
 
     @Override
     public List<LoginHistoryVO> getLoginHistory(String username, Integer count) {
-        Valid.gt(count, 0, ErrorMessage.PARAM_ERROR);
-        // 条件
-        OperatorLogQueryRequest request = new OperatorLogQueryRequest();
-        request.setUsername(username);
-        request.setType(AuthenticationOperatorType.LOGIN);
-        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        Valid.inRange(count, 0, 100, ErrorMessage.PARAM_ERROR);
         // 查询
-        return operatorLogDAO.of(wrapper)
+        return operatorLogDAO.of()
+                .createWrapper()
+                .eq(OperatorLogDO::getUsername, username)
+                .eq(OperatorLogDO::getType, AuthenticationOperatorType.LOGIN)
+                .orderByDesc(OperatorLogDO::getId)
+                .then()
                 .limit(count)
                 .list(OperatorLogConvert.MAPPER::toLoginHistory);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<OperatorLogDO> buildQueryWrapper(OperatorLogQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<OperatorLogDO> buildQueryWrapper(OperatorLogQueryRequest request) {
         return operatorLogDAO.wrapper()
                 .eq(OperatorLogDO::getUserId, request.getUserId())
                 .eq(OperatorLogDO::getUsername, request.getUsername())
@@ -110,8 +116,7 @@ public class OperatorLogServiceImpl implements OperatorLogService {
                 .eq(OperatorLogDO::getType, request.getType())
                 .eq(OperatorLogDO::getResult, request.getResult())
                 .ge(OperatorLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
-                .le(OperatorLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
-                .orderByDesc(OperatorLogDO::getId);
+                .le(OperatorLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1));
     }
 
 }

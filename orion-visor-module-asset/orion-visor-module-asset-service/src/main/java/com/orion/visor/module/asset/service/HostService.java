@@ -1,6 +1,8 @@
 package com.orion.visor.module.asset.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.request.host.*;
 import com.orion.visor.module.asset.entity.vo.HostConfigVO;
 import com.orion.visor.module.asset.entity.vo.HostVO;
@@ -81,6 +83,14 @@ public interface HostService {
     DataGrid<HostVO> getHostPage(HostQueryRequest request);
 
     /**
+     * 查询主机数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getHostCount(HostQueryRequest request);
+
+    /**
      * 通过 id 删除主机
      *
      * @param id id
@@ -109,5 +119,18 @@ public interface HostService {
      * @return hostId
      */
     Long getCurrentUpdateConfigHostId();
+
+    /**
+     * 清除缓存
+     */
+    void clearCache();
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request);
 
 }

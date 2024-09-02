@@ -2,8 +2,8 @@ package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.annotation.Keep;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Objects1;
@@ -13,12 +13,12 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.FileConst;
 import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
@@ -31,6 +31,7 @@ import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.visor.module.asset.entity.domain.ExecLogDO;
 import com.orion.visor.module.asset.entity.dto.ExecHostLogTailDTO;
 import com.orion.visor.module.asset.entity.dto.ExecLogTailDTO;
+import com.orion.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import com.orion.visor.module.asset.entity.vo.ExecHostLogVO;
@@ -92,7 +93,8 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(ExecLogDO::getId);
         // 查询
         return execLogDAO.of(wrapper)
                 .page(request)
@@ -219,16 +221,23 @@ public class ExecLogServiceImpl implements ExecLogService {
 
     @Override
     public Long queryExecLogCount(ExecLogQueryRequest request) {
-        return execLogDAO.selectCount(this.buildQueryWrapper(request));
+        // 条件
+        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return execLogDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer clearExecLog(ExecLogQueryRequest request) {
+    public Integer clearExecLog(ExecLogClearRequest request) {
         log.info("ExecLogService.clearExecLog start {}", JSON.toJSONString(request));
         // 查询
         LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
-                .select(ExecLogDO::getId);
+                .select(ExecLogDO::getId)
+                .orderByAsc(ExecLogDO::getId)
+                .last(SqlUtils.limit(request.getLimit()));
         List<Long> idList = execLogDAO.selectList(wrapper)
                 .stream()
                 .map(ExecLogDO::getId)
@@ -421,10 +430,8 @@ public class ExecLogServiceImpl implements ExecLogService {
         } catch (Exception e) {
             log.error("ExecLogService.downloadLogFile error id: {}", id, e);
             Streams.close(in);
-            String errorMessage = ErrorMessage.FILE_READ_ERROR_CLEAR;
-            if (e instanceof InvalidArgumentException || e instanceof IllegalArgumentException) {
-                errorMessage = e.getMessage();
-            }
+            // 获取错误信息
+            String errorMessage = ErrorMessage.getErrorMessage(e, ErrorMessage.FILE_READ_ERROR_CLEAR);
             // 响应错误信息
             try {
                 Servlets.transfer(response, Strings.bytes(errorMessage), FileConst.ERROR_LOG);
@@ -450,13 +457,8 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .forEach(Files1::delete);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<ExecLogDO> buildQueryWrapper(ExecLogQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<ExecLogDO> buildQueryWrapper(ExecLogQueryRequest request) {
         return execLogDAO.wrapper()
                 .eq(ExecLogDO::getId, request.getId())
                 .eq(ExecLogDO::getUserId, request.getUserId())
@@ -469,8 +471,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .in(ExecLogDO::getStatus, request.getStatusList())
                 .ge(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
-                .le(ExecLogDO::getCreateTime, request.getCreateTimeLe())
-                .orderByDesc(ExecLogDO::getId);
+                .le(ExecLogDO::getCreateTime, request.getCreateTimeLe());
     }
 
     /**

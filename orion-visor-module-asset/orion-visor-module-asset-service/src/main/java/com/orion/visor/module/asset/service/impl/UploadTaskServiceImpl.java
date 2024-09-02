@@ -2,6 +2,7 @@ package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.orion.lang.annotation.Keep;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Booleans;
@@ -12,12 +13,12 @@ import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.security.LoginUser;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.mybatis.core.query.Conditions;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
@@ -30,10 +31,7 @@ import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
 import com.orion.visor.module.asset.entity.domain.UploadTaskDO;
 import com.orion.visor.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.visor.module.asset.entity.dto.UploadTaskExtraDTO;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskCreateRequest;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskFileRequest;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskQueryRequest;
-import com.orion.visor.module.asset.entity.request.upload.UploadTaskRequest;
+import com.orion.visor.module.asset.entity.request.upload.*;
 import com.orion.visor.module.asset.entity.vo.*;
 import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
@@ -171,7 +169,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     @Override
     public DataGrid<UploadTaskVO> getUploadTaskPage(UploadTaskQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(UploadTaskDO::getId);
         // 查询
         return uploadTaskDAO.of(wrapper)
                 .page(request)
@@ -218,15 +217,22 @@ public class UploadTaskServiceImpl implements UploadTaskService {
 
     @Override
     public Long getUploadTaskCount(UploadTaskQueryRequest request) {
-        return uploadTaskDAO.selectCount(this.buildQueryWrapper(request));
+        // 条件
+        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return uploadTaskDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Integer clearUploadTask(UploadTaskQueryRequest request) {
+    @Transactional(rollbackFor = Exception.class)
+    public Integer clearUploadTask(UploadTaskClearRequest request) {
         // 查询id
         LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
-                .select(UploadTaskDO::getId);
+                .select(UploadTaskDO::getId)
+                .orderByAsc(UploadTaskDO::getId)
+                .last(SqlUtils.limit(request.getLimit()));
         List<Long> idList = uploadTaskDAO.of(wrapper)
                 .list(UploadTaskDO::getId);
         // 删除
@@ -305,13 +311,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         paths.forEach(Files1::delete);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<UploadTaskDO> buildQueryWrapper(UploadTaskQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<UploadTaskDO> buildQueryWrapper(UploadTaskQueryRequest request) {
         return uploadTaskDAO.wrapper()
                 .eq(UploadTaskDO::getId, request.getId())
                 .eq(UploadTaskDO::getUserId, request.getUserId())
@@ -319,8 +320,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                 .like(UploadTaskDO::getRemotePath, request.getRemotePath())
                 .eq(UploadTaskDO::getStatus, request.getStatus())
                 .ge(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 0))
-                .le(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 1))
-                .orderByDesc(UploadTaskDO::getId);
+                .le(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 1));
     }
 
     /**

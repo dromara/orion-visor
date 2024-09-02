@@ -14,7 +14,6 @@
            @close="handleClose">
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
-              ref="formRef"
               label-align="right"
               :auto-label-width="true">
         <!-- 上传时间 -->
@@ -49,6 +48,15 @@
                     placeholder="请选择状态"
                     allow-clear />
         </a-form-item>
+        <!-- 数量限制 -->
+        <a-form-item field="limit" label="数量限制">
+          <a-input-number v-model="formModel.limit"
+                          :min="1"
+                          :max="maxLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
+                          hide-button
+                          allow-clear />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -65,7 +73,7 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { uploadTaskStatusKey } from '../types/const';
+  import { maxClearLimit, uploadTaskStatusKey } from '../types/const';
   import { getUploadTaskCount, clearUploadTask } from '@/api/exec/upload-task';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
@@ -77,7 +85,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
 
-  const formRef = ref<any>();
+  const maxLimit = ref<number>(0);
   const formModel = ref<UploadTaskQueryRequest>({});
 
   const defaultForm = (): UploadTaskQueryRequest => {
@@ -87,11 +95,13 @@
       description: undefined,
       status: undefined,
       createTimeRange: undefined,
+      limit: maxLimit.value,
     };
   };
 
   // 打开
   const open = (record: any) => {
+    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -105,6 +115,10 @@
 
   // 确定
   const handlerOk = async () => {
+    if (!formModel.value.limit) {
+      Message.error('请输入数量限制');
+      return false;
+    }
     setLoading(true);
     try {
       // 获取总数量

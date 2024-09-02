@@ -1,6 +1,7 @@
 package com.orion.visor.module.asset.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.orion.lang.annotation.Keep;
 import com.orion.lang.function.Functions;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Strings;
@@ -11,7 +12,6 @@ import com.orion.lang.utils.json.matcher.ReplacementFormatter;
 import com.orion.lang.utils.json.matcher.ReplacementFormatters;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import com.orion.visor.framework.common.annotation.Keep;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.FileConst;

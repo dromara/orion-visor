@@ -3,6 +3,7 @@ package com.orion.visor.framework.mybatis.core.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.mybatis.core.query.Conditions;
 import com.orion.visor.framework.mybatis.core.query.DataQuery;
 
@@ -61,7 +62,7 @@ public interface IMapper<T> extends BaseMapper<T> {
      * @return 是否成功
      */
     default boolean insertBatch(Collection<T> entities) {
-        return Db.saveBatch(entities);
+        return this.insertBatch(entities, Const.BATCH_COUNT);
     }
 
     /**
@@ -82,7 +83,7 @@ public interface IMapper<T> extends BaseMapper<T> {
      * @return 是否成功
      */
     default boolean updateBatch(Collection<T> entities) {
-        return Db.updateBatchById(entities);
+        return this.updateBatch(entities, Const.BATCH_COUNT);
     }
 
     /**
@@ -113,7 +114,7 @@ public interface IMapper<T> extends BaseMapper<T> {
      * @return 是否成功
      */
     default boolean insertOrUpdateBatch(Collection<T> entities) {
-        return Db.saveOrUpdateBatch(entities);
+        return this.insertOrUpdateBatch(entities, Const.BATCH_COUNT);
     }
 
     /**

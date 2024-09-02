@@ -1,7 +1,10 @@
 package com.orion.visor.module.infra.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
+import com.orion.visor.module.infra.entity.domain.OperatorLogDO;
+import com.orion.visor.module.infra.entity.request.operator.OperatorLogClearRequest;
 import com.orion.visor.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.visor.module.infra.entity.vo.LoginHistoryVO;
 import com.orion.visor.module.infra.entity.vo.OperatorLogVO;
@@ -54,7 +57,7 @@ public interface OperatorLogService {
      * @param request request
      * @return effect
      */
-    Integer clearOperatorLog(OperatorLogQueryRequest request);
+    Integer clearOperatorLog(OperatorLogClearRequest request);
 
     /**
      * 查询用户登录日志
@@ -64,5 +67,13 @@ public interface OperatorLogService {
      * @return rows
      */
     List<LoginHistoryVO> getLoginHistory(String username, Integer count);
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<OperatorLogDO> buildQueryWrapper(OperatorLogQueryRequest request);
 
 }

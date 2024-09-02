@@ -207,18 +207,23 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public DataGrid<SystemUserVO> getSystemUserPage(SystemUserQueryRequest request) {
-        // 构造条件
-        LambdaQueryWrapper<SystemUserDO> wrapper = systemUserDAO.wrapper()
-                .eq(SystemUserDO::getId, request.getId())
-                .like(SystemUserDO::getUsername, request.getUsername())
-                .like(SystemUserDO::getNickname, request.getNickname())
-                .like(SystemUserDO::getMobile, request.getMobile())
-                .like(SystemUserDO::getEmail, request.getEmail())
-                .eq(SystemUserDO::getStatus, request.getStatus());
+        // 条件
+        LambdaQueryWrapper<SystemUserDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return systemUserDAO.of(wrapper)
+        return systemUserDAO.of()
                 .page(request)
+                .wrapper(wrapper)
                 .dataGrid(SystemUserConvert.MAPPER::to);
+    }
+
+    @Override
+    public Long getSystemUserCount(SystemUserQueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<SystemUserDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return systemUserDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
     }
 
     @Override
@@ -356,6 +361,17 @@ public class SystemUserServiceImpl implements SystemUserService {
             deleteKeys.addAll(RedisUtils.scanKeys(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*")));
         });
         RedisUtils.delete(deleteKeys);
+    }
+
+    @Override
+    public LambdaQueryWrapper<SystemUserDO> buildQueryWrapper(SystemUserQueryRequest request) {
+        return systemUserDAO.wrapper()
+                .eq(SystemUserDO::getId, request.getId())
+                .like(SystemUserDO::getUsername, request.getUsername())
+                .like(SystemUserDO::getNickname, request.getNickname())
+                .like(SystemUserDO::getMobile, request.getMobile())
+                .like(SystemUserDO::getEmail, request.getEmail())
+                .eq(SystemUserDO::getStatus, request.getStatus());
     }
 
 }

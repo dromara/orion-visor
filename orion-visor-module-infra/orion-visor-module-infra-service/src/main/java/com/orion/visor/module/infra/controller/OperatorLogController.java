@@ -7,6 +7,7 @@ import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.infra.define.operator.OperatorLogOperatorType;
+import com.orion.visor.module.infra.entity.request.operator.OperatorLogClearRequest;
 import com.orion.visor.module.infra.entity.request.operator.OperatorLogQueryRequest;
 import com.orion.visor.module.infra.entity.vo.OperatorLogVO;
 import com.orion.visor.module.infra.service.OperatorLogService;
@@ -56,10 +57,10 @@ public class OperatorLogController {
         return operatorLogService.deleteOperatorLog(idList);
     }
 
-    @PostMapping("/query-count")
+    @PostMapping("/count")
     @Operation(summary = "查询操作日志数量")
-    @PreAuthorize("@ss.hasPermission('infra:operator-log:management:clear')")
-    public Long getOperatorLogCount(@RequestBody OperatorLogQueryRequest request) {
+    @PreAuthorize("@ss.hasPermission('infra:operator-log:query')")
+    public Long getOperatorLogCount(@Validated @RequestBody OperatorLogQueryRequest request) {
         return operatorLogService.getOperatorLogCount(request);
     }
 
@@ -67,7 +68,7 @@ public class OperatorLogController {
     @PostMapping("/clear")
     @Operation(summary = "清空操作日志")
     @PreAuthorize("@ss.hasPermission('infra:operator-log:management:clear')")
-    public Integer clearOperatorLog(@RequestBody OperatorLogQueryRequest request) {
+    public Integer clearOperatorLog(@Validated @RequestBody OperatorLogClearRequest request) {
         return operatorLogService.clearOperatorLog(request);
     }
 

@@ -1,3 +1,4 @@
+import type { SelectOptionData } from '@arco-design/web-vue';
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
@@ -158,6 +159,13 @@ export function getHostConfig(id: number) {
  */
 export function getHostPage(request: HostQueryRequest) {
   return axios.post<DataGrid<HostQueryResponse>>('/asset/host/query', request);
+}
+
+/**
+ * 查询主机数量
+ */
+export function getHostCount(request: HostQueryRequest) {
+  return axios.post<number>('/asset/host/count', request);
 }
 
 /**

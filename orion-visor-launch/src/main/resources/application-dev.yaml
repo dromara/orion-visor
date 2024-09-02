@@ -33,5 +33,5 @@ management:
 
 mybatis-plus:
   configuration:
-    # 日志打印
+    # sql 日志打印
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

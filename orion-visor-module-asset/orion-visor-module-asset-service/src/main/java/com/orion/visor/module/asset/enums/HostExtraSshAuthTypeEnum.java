@@ -10,17 +10,17 @@ package com.orion.visor.module.asset.enums;
 public enum HostExtraSshAuthTypeEnum {
 
     /**
-     * 默认验证方式
+     * 默认认证方式
      */
     DEFAULT,
 
     /**
-     * 自定义密钥验证
+     * 自定义密钥认证
      */
     CUSTOM_KEY,
 
     /**
-     * 自定义身份验证
+     * 自定义身份认证
      */
     CUSTOM_IDENTITY,
 
@@ -28,14 +28,14 @@ public enum HostExtraSshAuthTypeEnum {
 
     public static HostExtraSshAuthTypeEnum of(String type) {
         if (type == null) {
-            return null;
+            return DEFAULT;
         }
         for (HostExtraSshAuthTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }
         }
-        return null;
+        return DEFAULT;
     }
 
 }

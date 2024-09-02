@@ -163,7 +163,7 @@
 
   defineExpose({ openAdd, openUpdate, openView });
 
-  // 密码验证
+  // 密码认证
   const passwordRules = [{
     validator: (value, cb) => {
       if (value && value.length > 512) {

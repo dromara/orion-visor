@@ -1,6 +1,5 @@
 package com.orion.visor.module.infra.api;
 
-import com.orion.visor.module.infra.entity.dto.data.DataGroupRelCreateDTO;
 import com.orion.visor.module.infra.enums.DataGroupTypeEnum;
 
 import java.util.List;
@@ -40,11 +39,11 @@ public interface DataGroupUserRelApi {
     /**
      * 批量添加关联
      *
-     * @param type   type
-     * @param userId userId
-     * @param list   list
+     * @param type            type
+     * @param userId          userId
+     * @param groupRelListMap groupRelListMap
      */
-    void addGroupRel(DataGroupTypeEnum type, Long userId, List<DataGroupRelCreateDTO> list);
+    void addGroupRel(DataGroupTypeEnum type, Long userId, Map<Long, List<Long>> groupRelListMap);
 
     /**
      * 通过 type 查询 relId 缓存

@@ -1,5 +1,8 @@
 package com.orion.visor.framework.common.constant;
 
+import com.orion.lang.exception.ApplicationException;
+import com.orion.lang.exception.argument.InvalidArgumentException;
+
 /**
  * 错误信息
  *
@@ -97,6 +100,14 @@ public interface ErrorMessage {
 
     String TASK_ABSENT = "任务不存在";
 
+    String CONNECT_ERROR = "连接失败";
+
+    String AUTH_ERROR = "认证失败";
+
+    String SCRIPT_UPLOAD_ERROR = "脚本上传失败";
+
+    String EXEC_ERROR = "执行失败";
+
     String ILLEGAL_STATUS = "当前状态不支持此操作";
 
     String CHECK_AUTHORIZED_HOST = "请选择已授权的主机";
@@ -110,5 +121,42 @@ public interface ErrorMessage {
     String CLIENT_ABORT = "手动中断";
 
     String UNABLE_DOWNLOAD_FOLDER = "无法下载文件夹";
+
+    /**
+     * 是否为业务异常
+     *
+     * @param ex ex
+     * @return biz exception
+     */
+    static boolean isBizException(Exception ex) {
+        if (ex == null) {
+            return false;
+        }
+        return ex instanceof InvalidArgumentException
+                || ex instanceof IllegalArgumentException
+                || ex instanceof ApplicationException;
+    }
+
+    /**
+     * 获取错误信息
+     *
+     * @param ex         ex
+     * @param defaultMsg defaultMsg
+     * @return message
+     */
+    static String getErrorMessage(Exception ex, String defaultMsg) {
+        if (ex == null) {
+            return null;
+        }
+        String message = ex.getMessage();
+        if (message == null) {
+            return defaultMsg;
+        }
+        // 业务异常
+        if (isBizException(ex)) {
+            return message;
+        }
+        return defaultMsg;
+    }
 
 }

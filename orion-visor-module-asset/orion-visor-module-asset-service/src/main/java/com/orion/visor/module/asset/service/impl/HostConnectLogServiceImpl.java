@@ -8,12 +8,14 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.convert.HostConnectLogConvert;
 import com.orion.visor.module.asset.dao.HostConnectLogDAO;
 import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
 import com.orion.visor.module.asset.entity.dto.HostConnectLogExtraDTO;
+import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
@@ -26,6 +28,7 @@ import com.orion.visor.module.asset.service.HostConnectLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -70,7 +73,8 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     @Override
     public DataGrid<HostConnectLogVO> getHostConnectLogPage(HostConnectLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(HostConnectLogDO::getId);
         // 查询
         return hostConnectLogDAO.of(wrapper)
                 .page(request)
@@ -101,7 +105,8 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
         // 条件
         request.setIdList(idList);
         request.setStatus(HostConnectStatusEnum.CONNECTING.name());
-        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(HostConnectLogDO::getId);
         // 查询
         return hostConnectLogDAO.of(wrapper)
                 .list(s -> {
@@ -167,13 +172,14 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteHostConnectLog(List<Long> idList) {
         log.info("HostConnectLogService.deleteHostConnectLog start {}", JSON.toJSONString(idList));
         if (Lists.isEmpty(idList)) {
             OperatorLogs.add(OperatorLogs.COUNT, Const.N_0);
             return Const.N_0;
         }
-        // 删除
+        // 删除日志表
         int effect = hostConnectLogDAO.deleteBatchIds(idList);
         log.info("HostConnectLogService.deleteHostConnectLog finish {}", effect);
         // 设置日志参数
@@ -183,15 +189,23 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
 
     @Override
     public Long getHostConnectLogCount(HostConnectLogQueryRequest request) {
-        return hostConnectLogDAO.selectCount(this.buildQueryWrapper(request));
+        // 条件
+        LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return hostConnectLogDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
     }
 
     @Override
-    public Integer clearHostConnectLog(HostConnectLogQueryRequest request) {
+    @Transactional(rollbackFor = Exception.class)
+    public Integer clearHostConnectLog(HostConnectLogClearRequest request) {
         log.info("HostConnectLogService.clearHostConnectLog start {}", JSON.toJSONString(request));
         // 查询
         LambdaQueryWrapper<HostConnectLogDO> wrapper = this.buildQueryWrapper(request)
-                .select(HostConnectLogDO::getId);
+                .select(HostConnectLogDO::getId)
+                .orderByAsc(HostConnectLogDO::getId)
+                .last(SqlUtils.limit(request.getLimit()));
         List<HostConnectLogDO> list = hostConnectLogDAO.selectList(wrapper);
         if (list.isEmpty()) {
             log.info("HostConnectLogService.clearHostConnectLog empty");
@@ -226,13 +240,8 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
         return this.updateStatus(record, HostConnectStatusEnum.FORCE_OFFLINE, null);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<HostConnectLogDO> buildQueryWrapper(HostConnectLogQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<HostConnectLogDO> buildQueryWrapper(HostConnectLogQueryRequest request) {
         return hostConnectLogDAO.wrapper()
                 .eq(HostConnectLogDO::getId, request.getId())
                 .in(HostConnectLogDO::getId, request.getIdList())
@@ -245,8 +254,7 @@ public class HostConnectLogServiceImpl implements HostConnectLogService {
                 .in(HostConnectLogDO::getStatus, request.getStatusList())
                 .ge(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(HostConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
-                .le(HostConnectLogDO::getCreateTime, request.getCreateTimeLe())
-                .orderByDesc(HostConnectLogDO::getId);
+                .le(HostConnectLogDO::getCreateTime, request.getCreateTimeLe());
     }
 
 }

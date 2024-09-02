@@ -1,7 +1,7 @@
 package com.orion.visor.module.asset.enums;
 
 /**
- * 主机验证类型 - ssh
+ * 主机认证类型 - ssh
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -10,17 +10,17 @@ package com.orion.visor.module.asset.enums;
 public enum HostSshAuthTypeEnum {
 
     /**
-     * 密码验证
+     * 密码认证
      */
     PASSWORD,
 
     /**
-     * 密钥验证
+     * 密钥认证
      */
     KEY,
 
     /**
-     * 身份验证
+     * 身份认证
      */
     IDENTITY,
 
@@ -28,14 +28,14 @@ public enum HostSshAuthTypeEnum {
 
     public static HostSshAuthTypeEnum of(String type) {
         if (type == null) {
-            return null;
+            return PASSWORD;
         }
         for (HostSshAuthTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }
         }
-        return null;
+        return PASSWORD;
     }
 
 }

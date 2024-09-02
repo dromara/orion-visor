@@ -61,6 +61,15 @@
                     placeholder="请选择执行结果"
                     allow-clear />
         </a-form-item>
+        <!-- 数量限制 -->
+        <a-form-item field="limit" label="数量限制">
+          <a-input-number v-model="formModel.limit"
+                          :min="1"
+                          :max="maxLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
+                          hide-button
+                          allow-clear />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -81,7 +90,7 @@
   import { getOperatorLogCount, clearOperatorLog } from '@/api/user/operator-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
-  import { operatorLogModuleKey, operatorLogResultKey, operatorLogTypeKey, operatorRiskLevelKey } from '@/views/user/operator-log/types/const';
+  import { operatorLogModuleKey, operatorLogResultKey, operatorLogTypeKey, operatorRiskLevelKey, maxClearLimit } from '../types/const';
   import { labelFilter } from '@/types/form';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
@@ -96,9 +105,11 @@
       riskLevel: undefined,
       result: undefined,
       startTimeRange: undefined,
+      limit: maxLimit.value,
     };
   };
 
+  const maxLimit = ref<number>(0);
   const typeOptions = ref<SelectOptionData[]>(toOptions(operatorLogTypeKey));
   const formModel = ref<OperatorLogQueryRequest>({});
 
@@ -106,6 +117,7 @@
 
   // 打开
   const open = (record: OperatorLogQueryRequest) => {
+    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -136,6 +148,10 @@
 
   // 确定
   const handlerOk = async () => {
+    if (!formModel.value.limit) {
+      Message.error('请输入数量限制');
+      return false;
+    }
     setLoading(true);
     try {
       // 获取总数量

@@ -1,6 +1,7 @@
 import type { DataGrid } from '@/types/global';
 import type {
   ExecHostLogQueryResponse,
+  ExecLogClearRequest,
   ExecLogInterruptRequest,
   ExecLogQueryRequest,
   ExecLogQueryResponse,
@@ -80,13 +81,13 @@ export function deleteExecCommandHostLog(id: number) {
  * 查询批量执行日志数量
  */
 export function getExecCommandLogCount(request: ExecLogQueryRequest) {
-  return axios.post<number>('/asset/exec-command-log/query-count', request);
+  return axios.post<number>('/asset/exec-command-log/count', request);
 }
 
 /**
  * 清空批量执行日志
  */
-export function clearExecCommandLog(request: ExecLogQueryRequest) {
+export function clearExecCommandLog(request: ExecLogClearRequest) {
   return axios.post<number>('/asset/exec-command-log/clear', request);
 }
 
@@ -101,7 +102,11 @@ export function getExecCommandLogTailToken(request: ExecLogTailRequest) {
  * 下载批量执行日志文件
  */
 export function downloadExecCommandLogFile(id: number) {
-  return axios.get('/asset/exec-command-log/download', { unwrap: true, params: { id } });
+  return axios.get('/asset/exec-command-log/download', {
+    unwrap: true,
+    responseType: 'blob',
+    params: { id },
+  });
 }
 
 /**

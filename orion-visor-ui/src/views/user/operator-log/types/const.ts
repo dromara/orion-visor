@@ -27,6 +27,9 @@ export const getLogDetail = (record: OperatorLogQueryResponse): Record<string, a
   }
 };
 
+// 最大清理数量
+export const maxClearLimit = 2000;
+
 // 操作日志模块 字典项
 export const operatorLogModuleKey = 'operatorLogModule';
 

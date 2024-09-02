@@ -43,9 +43,9 @@
                    :disabled="SshAuthType.IDENTITY === formModel.authType"
                    placeholder="请输入用户名" />
         </a-form-item>
-        <!-- 验证方式 -->
+        <!-- 认证方式 -->
         <a-form-item field="authType"
-                     label="验证方式"
+                     label="认证方式"
                      :hide-asterisk="true">
           <a-radio-group type="button"
                          class="auth-type-group usn"
@@ -165,7 +165,7 @@
     formModel.value.useNewPassword = !formModel.value.hasPassword;
   });
 
-  // 用户名验证
+  // 用户名认证
   const usernameRules = [{
     validator: (value, cb) => {
       if (value && value.length > 128) {
@@ -179,7 +179,7 @@
     }
   }] as FieldRule[];
 
-  // 密码验证
+  // 密码认证
   const passwordRules = [{
     validator: (value, cb) => {
       if (value && value.length > 256) {

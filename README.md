@@ -51,7 +51,7 @@
 
 ## 演示环境
 
-* 🔗 演示地址: http://101.43.254.243:1081/
+* 🔗 演示地址: https://dv.orionsec.cn/
 * 🔏 演示账号: admin/admin
 * ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor)  [gitcode](https://gitcode.com/dromara/orion-visor/overview)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
@@ -72,11 +72,11 @@ docker compose up -d
 
 ## 项目文档
 
-* [文档地址](https://lijiahangmax.github.io/open-orion/orion-visor/)
-* [安装文档](https://lijiahangmax.github.io/open-orion/orion-visor/quickstart/docker.html)
-* [更新日志](https://lijiahangmax.github.io/open-orion/orion-visor/update/change-log.html)
-* [操作手册](https://lijiahangmax.github.io/open-orion/orion-visor/operator/asset.html)
-* [常见问题](https://lijiahangmax.github.io/open-orion/orion-visor/support/faq.html)
+* [文档地址](https://visor.orionsec.cn/)
+* [安装文档](https://visor.orionsec.cn/quickstart/docker.html)
+* [更新日志](https://visor.orionsec.cn/update/change-log.html)
+* [操作手册](https://visor.orionsec.cn/operator/asset.html)
+* [常见问题](https://visor.orionsec.cn/support/faq.html)
 
 ## 技术栈
 

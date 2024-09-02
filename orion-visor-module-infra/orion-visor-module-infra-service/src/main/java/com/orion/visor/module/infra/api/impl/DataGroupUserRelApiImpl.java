@@ -2,11 +2,8 @@ package com.orion.visor.module.infra.api.impl;
 
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.module.infra.api.DataGroupUserRelApi;
-import com.orion.visor.module.infra.convert.DataGroupRelProviderConvert;
 import com.orion.visor.module.infra.entity.domain.DataGroupRelDO;
 import com.orion.visor.module.infra.entity.dto.DataGroupRelCacheDTO;
-import com.orion.visor.module.infra.entity.dto.data.DataGroupRelCreateDTO;
-import com.orion.visor.module.infra.entity.request.data.DataGroupRelCreateRequest;
 import com.orion.visor.module.infra.enums.DataGroupTypeEnum;
 import com.orion.visor.module.infra.service.DataGroupRelService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,10 +47,9 @@ public class DataGroupUserRelApiImpl implements DataGroupUserRelApi {
     }
 
     @Override
-    public void addGroupRel(DataGroupTypeEnum type, Long userId, List<DataGroupRelCreateDTO> list) {
-        Valid.valid(list);
-        List<DataGroupRelCreateRequest> rows = DataGroupRelProviderConvert.MAPPER.toList(list);
-        dataGroupRelService.addGroupRel(type.name(), userId, rows);
+    public void addGroupRel(DataGroupTypeEnum type, Long userId, Map<Long, List<Long>> groupRelListMap) {
+        Valid.notEmpty(groupRelListMap);
+        dataGroupRelService.addGroupRel(type.name(), userId, groupRelListMap);
     }
 
     @Override

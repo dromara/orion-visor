@@ -26,6 +26,9 @@ export const UploadTaskFileStatus = {
   CANCELED: 'CANCELED',
 };
 
+// 最大清理数量
+export const maxClearLimit = 2000;
+
 // 上传任务状态 字典项
 export const uploadTaskStatusKey = 'uploadTaskStatus';
 

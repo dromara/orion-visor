@@ -14,17 +14,17 @@ export interface HostSshConfig {
   hasPassword?: boolean;
 }
 
-// 主机验证方式
+// 主机认证方式
 export const SshAuthType = {
-  // 密码验证
+  // 密码认证
   PASSWORD: 'PASSWORD',
-  // 密钥验证
+  // 密钥认证
   KEY: 'KEY',
-  // 身份验证
+  // 身份认证
   IDENTITY: 'IDENTITY'
 };
 
-// 主机验证方式 字典项
+// 主机认证方式 字典项
 export const sshAuthTypeKey = 'hostSshAuthType';
 
 // 主机系统类型 字典项

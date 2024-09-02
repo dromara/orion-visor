@@ -55,6 +55,15 @@
                     :options="toOptions(connectTypeKey)"
                     allow-clear />
         </a-form-item>
+        <!-- 数量限制 -->
+        <a-form-item field="limit" label="数量限制">
+          <a-input-number v-model="formModel.limit"
+                          :min="1"
+                          :max="maxLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
+                          hide-button
+                          allow-clear />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -71,13 +80,16 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { connectStatusKey, connectTypeKey } from '../types/const';
+  import { connectStatusKey, connectTypeKey, maxClearLimit } from '../types/const';
   import { getHostConnectLogCount, clearHostConnectLog } from '@/api/asset/host-connect-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 
+  const emits = defineEmits(['clear']);
+
+  const { toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
@@ -89,17 +101,16 @@
       type: undefined,
       status: undefined,
       startTimeRange: undefined,
+      limit: maxLimit.value,
     };
   };
 
+  const maxLimit = ref<number>(0);
   const formModel = ref<HostConnectLogQueryRequest>({});
-
-  const emits = defineEmits(['clear']);
-
-  const { toOptions } = useDictStore();
 
   // 打开
   const open = (record: any) => {
+    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
@@ -113,6 +124,10 @@
 
   // 确定
   const handlerOk = async () => {
+    if (!formModel.value.limit) {
+      Message.error('请输入数量限制');
+      return false;
+    }
     setLoading(true);
     try {
       // 获取总数量

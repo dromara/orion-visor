@@ -98,7 +98,7 @@ public class HostController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询主机")
-    @Parameter(name = "type", description = "type", required = false)
+    @Parameter(name = "type", description = "type")
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
     public List<HostVO> getHostList(@RequestParam(value = "type", required = false) String type) {
         return hostService.getHostList(type);
@@ -110,6 +110,14 @@ public class HostController {
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
     public DataGrid<HostVO> getHostPage(@Validated(Page.class) @RequestBody HostQueryRequest request) {
         return hostService.getHostPage(request);
+    }
+
+    @DemoDisableApi
+    @PostMapping("/count")
+    @Operation(summary = "查询主机数量")
+    @PreAuthorize("@ss.hasPermission('asset:host:query')")
+    public Long getHostExportCount(@Validated @RequestBody HostQueryRequest request) {
+        return hostService.getHostCount(request);
     }
 
     @DemoDisableApi

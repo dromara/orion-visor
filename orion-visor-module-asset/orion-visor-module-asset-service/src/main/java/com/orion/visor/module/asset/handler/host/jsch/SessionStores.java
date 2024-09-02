@@ -53,7 +53,7 @@ public class SessionStores {
         } catch (Exception e) {
             String message = e.getMessage();
             log.error("SessionStores-open-error hostId: {}, address: {}, username: {}, message: {}", hostId, address, username, message, e);
-            throw Exceptions.runtime(getErrorMessage(e), e);
+            throw Exceptions.app(getErrorMessage(e), e);
         } finally {
             CURRENT_ADDRESS.remove();
         }
@@ -89,7 +89,10 @@ public class SessionStores {
         SessionStore session = sessionHolder.getSession(conn.getHostAddress(), conn.getHostPort(), conn.getUsername());
         // 使用密码认证
         if (!useKey) {
-            session.password(CryptoUtils.decryptAsString(conn.getPassword()));
+            String password = conn.getPassword();
+            if (!Strings.isEmpty(password)) {
+                session.password(CryptoUtils.decryptAsString(password));
+            }
         }
         // 超时时间
         session.timeout(conn.getTimeout());

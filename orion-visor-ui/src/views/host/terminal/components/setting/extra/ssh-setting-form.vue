@@ -4,8 +4,8 @@
           label-align="right"
           :label-col-props="{ span: 5 }"
           :wrapper-col-props="{ span: 18 }">
-    <!-- 验证方式 -->
-    <a-form-item field="authType" label="验证方式">
+    <!-- 认证方式 -->
+    <a-form-item field="authType" label="认证方式">
       <a-radio-group type="button"
                      v-model="formModel.authType"
                      :options="toRadioOptions(extraSshAuthTypeKey)" />

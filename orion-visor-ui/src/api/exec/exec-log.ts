@@ -1,4 +1,4 @@
-import type { Pagination } from '@/types/global';
+import type { ClearRequest, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import { createAppWebSocket } from '@/utils/http';
 
@@ -13,6 +13,12 @@ export interface ExecLogQueryRequest extends Pagination {
   command?: string;
   status?: string;
   startTimeRange?: string[];
+}
+
+/**
+ * 执行日志清理请求
+ */
+export interface ExecLogClearRequest extends ExecLogQueryRequest, ClearRequest {
 }
 
 /**
@@ -32,7 +38,6 @@ export interface ExecLogQueryResponse extends TableData, ExecLogQueryExtraRespon
   startTime: number;
   finishTime: number;
   hostIdList: Array<number>;
-  hosts: Array<ExecHostLogQueryResponse>;
 }
 
 /**

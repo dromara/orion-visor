@@ -55,10 +55,6 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
 
     @Override
     protected void preValid(HostSshConfigModel model) {
-        // 验证认证类型
-        Valid.valid(HostSshAuthTypeEnum::of, model.getAuthType());
-        // 验证系统版本
-        Valid.valid(HostSshOsTypeEnum::of, model.getOsType());
         // 验证编码格式
         this.validCharset(model.getCharset());
         this.validCharset(model.getFileNameCharset());

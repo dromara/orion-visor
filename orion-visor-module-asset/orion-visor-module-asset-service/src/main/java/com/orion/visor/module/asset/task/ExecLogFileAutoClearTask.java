@@ -3,7 +3,7 @@ package com.orion.visor.module.asset.task;
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.common.utils.LockerUtils;
 import com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig;
-import com.orion.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
+import com.orion.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import com.orion.visor.module.asset.enums.ExecStatusEnum;
 import com.orion.visor.module.asset.service.ExecLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class ExecLogFileAutoClearTask {
                 .subDay(appExecLogAutoClearConfig.getKeepPeriod())
                 .date();
         // 清理
-        ExecLogQueryRequest request = new ExecLogQueryRequest();
+        ExecLogClearRequest request = new ExecLogClearRequest();
         request.setCreateTimeLe(createLessEq);
         request.setStatusList(ExecStatusEnum.FINISH_STATUS_LIST);
         execLogService.clearExecLog(request);

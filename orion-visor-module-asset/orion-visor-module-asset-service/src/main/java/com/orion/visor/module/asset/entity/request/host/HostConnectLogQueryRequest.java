@@ -2,9 +2,11 @@ package com.orion.visor.module.asset.entity.request.host;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.orion.visor.framework.common.entity.PageRequest;
+import com.orion.visor.framework.common.validator.group.Id;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.List;
 @Schema(name = "HostConnectLogQueryRequest", description = "主机连接日志 查询请求对象")
 public class HostConnectLogQueryRequest extends PageRequest {
 
+    @NotNull(groups = Id.class)
     @Schema(description = "id")
     private Long id;
 

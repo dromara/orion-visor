@@ -16,6 +16,7 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.reflect.Classes;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.Const;
+import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.mybatis.core.domain.BaseDO;
 
 import java.io.Serializable;
@@ -36,7 +37,7 @@ public class DataQuery<T> {
 
     private final BaseMapper<T> dao;
 
-    private IPageRequest page;
+    private PageRequest page;
 
     private Wrapper<T> wrapper;
 
@@ -73,8 +74,9 @@ public class DataQuery<T> {
         return new DataQuery<>(dao, wrapper);
     }
 
-    public DataQuery<T> page(IPageRequest page) {
-        this.page = Valid.notNull(page, "page is null");
+    public DataQuery<T> page(com.orion.visor.framework.common.entity.PageRequest page) {
+        com.orion.visor.framework.common.entity.PageRequest pr = Valid.notNull(page, "page is null");
+        this.page = new PageRequest(pr.getPage(), pr.getLimit());
         return this;
     }
 
@@ -111,11 +113,11 @@ public class DataQuery<T> {
     }
 
     public DataQuery<T> limit(int limit) {
-        return this.last(Const.LIMIT + Const.SPACE + limit);
+        return this.last(SqlUtils.limit(limit));
     }
 
     public DataQuery<T> limit(int offset, int limit) {
-        return this.last(Const.LIMIT + Const.SPACE + offset + Const.COMMA + limit);
+        return this.last(SqlUtils.limit(offset, limit));
     }
 
     public DataQuery<T> only() {
@@ -197,6 +199,18 @@ public class DataQuery<T> {
 
     public Long count() {
         return dao.selectCount(wrapper);
+    }
+
+    public Long countMax(Number max) {
+        Long count = dao.selectCount(wrapper);
+        if (max == null) {
+            return count;
+        }
+        long maxValue = max.longValue();
+        if (maxValue <= 0L) {
+            return count;
+        }
+        return Math.min(count, maxValue);
     }
 
     public boolean absent() {

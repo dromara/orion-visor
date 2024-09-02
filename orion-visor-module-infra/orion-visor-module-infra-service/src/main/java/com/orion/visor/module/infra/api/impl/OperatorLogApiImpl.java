@@ -32,9 +32,12 @@ public class OperatorLogApiImpl implements OperatorLogApi {
     @Override
     public DataGrid<OperatorLogDTO> getOperatorLogPage(OperatorLogQueryDTO request) {
         Valid.valid(request);
+        // 条件
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
         return operatorLogDAO.of()
                 .page(request)
-                .wrapper(this.buildQueryWrapper(request))
+                .wrapper(wrapper)
                 .dataGrid(OperatorLogProviderConvert.MAPPER::to);
     }
 

@@ -7,6 +7,7 @@ import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.UploadTaskOperatorType;
+import com.orion.visor.module.asset.entity.request.upload.UploadTaskClearRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskQueryRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskRequest;
@@ -94,6 +95,13 @@ public class UploadTaskController {
         return uploadTaskService.getUploadTaskStatus(idList, queryFiles);
     }
 
+    @PostMapping("/count")
+    @Operation(summary = "查询上传任务数量")
+    @PreAuthorize("@ss.hasPermission('asset:upload-task:query')")
+    public Long getUploadTaskCount(@RequestBody UploadTaskQueryRequest request) {
+        return uploadTaskService.getUploadTaskCount(request);
+    }
+
     @OperatorLog(UploadTaskOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除上传任务")
@@ -112,18 +120,11 @@ public class UploadTaskController {
         return uploadTaskService.deleteUploadTaskByIdList(idList);
     }
 
-    @PostMapping("/query-count")
-    @Operation(summary = "查询上传任务数量")
-    @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
-    public Long getUploadTaskCount(@RequestBody UploadTaskQueryRequest request) {
-        return uploadTaskService.getUploadTaskCount(request);
-    }
-
     @OperatorLog(UploadTaskOperatorType.CLEAR)
     @PostMapping("/clear")
     @Operation(summary = "清空上传任务")
     @PreAuthorize("@ss.hasPermission('asset:upload-task:management:clear')")
-    public Integer clearUploadTask(@RequestBody UploadTaskQueryRequest request) {
+    public Integer clearUploadTask(@Validated @RequestBody UploadTaskClearRequest request) {
         return uploadTaskService.clearUploadTask(request);
     }
 

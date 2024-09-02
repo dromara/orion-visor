@@ -259,9 +259,10 @@ public class HostServiceImpl implements HostService {
         if (wrapper == null) {
             return DataGrid.of(Lists.empty());
         }
-        // 数量条件
-        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone();
-        wrapper.select(HostDAO.BASE_COLUMN);
+        // 基础条件
+        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone()
+                .select(HostDAO.BASE_COLUMN)
+                .orderByAsc(HostDO::getId);
         // 查询
         DataGrid<HostVO> hosts = hostDAO.of(wrapper)
                 .page(request)
@@ -272,6 +273,16 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    public Long getHostCount(HostQueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<HostDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return hostDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
+    }
+
+    @Override
     public Integer deleteHostById(Long id) {
         return this.deleteHostByIdList(Lists.singleton(id));
     }
@@ -279,17 +290,10 @@ public class HostServiceImpl implements HostService {
     @Override
     public Integer deleteHostByIdList(List<Long> idList) {
         log.info("HostService-deleteHostByIdList idList: {}", idList);
-        // 查询
-        List<HostDO> hosts = hostDAO.selectBaseByIdList(idList);
-        Valid.notEmpty(hosts, ErrorMessage.HOST_ABSENT);
-        // 添加日志参数
-        String name = hosts.stream()
-                .map(HostDO::getName)
-                .collect(Collectors.joining(Const.COMMA));
-        OperatorLogs.add(OperatorLogs.NAME, name);
-        OperatorLogs.add(OperatorLogs.COUNT, hosts.size());
         // 删除
-        int effect = hostDAO.deleteBatchIds(hosts);
+        int effect = hostDAO.deleteBatchIds(idList);
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.COUNT, idList.size());
         log.info("HostService-deleteHostByIdList effect: {}", effect);
         // 删除缓存
         this.clearCache();
@@ -322,10 +326,8 @@ public class HostServiceImpl implements HostService {
         return CURRENT_UPDATE_CONFIG_ID.get();
     }
 
-    /**
-     * 清除缓存
-     */
-    private void clearCache() {
+    @Override
+    public void clearCache() {
         RedisMaps.scanKeysDelete(HostCacheKeyDefine.HOST_INFO.format("*"));
     }
 
@@ -361,13 +363,8 @@ public class HostServiceImpl implements HostService {
         Valid.isFalse(present, ErrorMessage.CODE_PRESENT);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request) {
         String searchValue = request.getSearchValue();
         LambdaQueryWrapper<HostDO> wrapper = hostDAO.wrapper();
         // tag 条件

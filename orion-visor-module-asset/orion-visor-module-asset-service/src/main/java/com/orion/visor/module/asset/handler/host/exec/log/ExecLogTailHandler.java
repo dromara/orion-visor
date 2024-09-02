@@ -1,6 +1,6 @@
 package com.orion.visor.module.asset.handler.host.exec.log;
 
-import com.orion.visor.framework.common.annotation.Keep;
+import com.orion.lang.annotation.Keep;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
