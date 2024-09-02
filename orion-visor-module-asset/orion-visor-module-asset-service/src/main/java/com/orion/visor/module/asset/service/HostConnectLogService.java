@@ -1,5 +1,6 @@
 package com.orion.visor.module.asset.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
 import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
@@ -105,5 +106,13 @@ public interface HostConnectLogService {
      * @return effect
      */
     Integer forceOffline(HostConnectLogQueryRequest request);
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<HostConnectLogDO> buildQueryWrapper(HostConnectLogQueryRequest request);
 
 }

@@ -1,6 +1,8 @@
 package com.orion.visor.module.asset.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.asset.entity.domain.ExecLogDO;
 import com.orion.visor.module.asset.entity.dto.ExecLogTailDTO;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import com.orion.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
@@ -143,5 +145,13 @@ public interface ExecLogService {
      * @param idList idList
      */
     void asyncDeleteLogFiles(List<Long> idList);
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<ExecLogDO> buildQueryWrapper(ExecLogQueryRequest request);
 
 }

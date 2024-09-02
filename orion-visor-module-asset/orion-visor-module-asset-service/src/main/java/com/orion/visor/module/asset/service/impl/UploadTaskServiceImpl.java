@@ -169,7 +169,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     @Override
     public DataGrid<UploadTaskVO> getUploadTaskPage(UploadTaskQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(UploadTaskDO::getId);
         // 查询
         return uploadTaskDAO.of(wrapper)
                 .page(request)
@@ -216,8 +217,11 @@ public class UploadTaskServiceImpl implements UploadTaskService {
 
     @Override
     public Long getUploadTaskCount(UploadTaskQueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
         return uploadTaskDAO.of()
-                .wrapper(this.buildQueryWrapper(request))
+                .wrapper(wrapper)
                 .countMax(request.getLimit());
     }
 
@@ -227,6 +231,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询id
         LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
                 .select(UploadTaskDO::getId)
+                .orderByAsc(UploadTaskDO::getId)
                 .last(SqlUtils.limit(request.getLimit()));
         List<Long> idList = uploadTaskDAO.of(wrapper)
                 .list(UploadTaskDO::getId);
@@ -306,13 +311,8 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         paths.forEach(Files1::delete);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<UploadTaskDO> buildQueryWrapper(UploadTaskQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<UploadTaskDO> buildQueryWrapper(UploadTaskQueryRequest request) {
         return uploadTaskDAO.wrapper()
                 .eq(UploadTaskDO::getId, request.getId())
                 .eq(UploadTaskDO::getUserId, request.getUserId())
@@ -320,8 +320,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                 .like(UploadTaskDO::getRemotePath, request.getRemotePath())
                 .eq(UploadTaskDO::getStatus, request.getStatus())
                 .ge(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 0))
-                .le(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 1))
-                .orderByDesc(UploadTaskDO::getId);
+                .le(UploadTaskDO::getCreateTime, Arrays1.getIfPresent(request.getCreateTimeRange(), 1));
     }
 
     /**

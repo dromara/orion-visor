@@ -93,7 +93,8 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(ExecLogDO::getId);
         // 查询
         return execLogDAO.of(wrapper)
                 .page(request)
@@ -220,8 +221,11 @@ public class ExecLogServiceImpl implements ExecLogService {
 
     @Override
     public Long queryExecLogCount(ExecLogQueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
         return execLogDAO.of()
-                .wrapper(this.buildQueryWrapper(request))
+                .wrapper(wrapper)
                 .countMax(request.getLimit());
     }
 
@@ -232,6 +236,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         // 查询
         LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
                 .select(ExecLogDO::getId)
+                .orderByAsc(ExecLogDO::getId)
                 .last(SqlUtils.limit(request.getLimit()));
         List<Long> idList = execLogDAO.selectList(wrapper)
                 .stream()
@@ -452,13 +457,8 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .forEach(Files1::delete);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<ExecLogDO> buildQueryWrapper(ExecLogQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<ExecLogDO> buildQueryWrapper(ExecLogQueryRequest request) {
         return execLogDAO.wrapper()
                 .eq(ExecLogDO::getId, request.getId())
                 .eq(ExecLogDO::getUserId, request.getUserId())
@@ -471,8 +471,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .in(ExecLogDO::getStatus, request.getStatusList())
                 .ge(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))
                 .le(ExecLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 1))
-                .le(ExecLogDO::getCreateTime, request.getCreateTimeLe())
-                .orderByDesc(ExecLogDO::getId);
+                .le(ExecLogDO::getCreateTime, request.getCreateTimeLe());
     }
 
     /**

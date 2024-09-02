@@ -1,6 +1,8 @@
 package com.orion.visor.module.infra.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.infra.entity.domain.SystemUserDO;
 import com.orion.visor.module.infra.entity.request.user.*;
 import com.orion.visor.module.infra.entity.vo.SystemUserVO;
 
@@ -63,6 +65,14 @@ public interface SystemUserService {
     DataGrid<SystemUserVO> getSystemUserPage(SystemUserQueryRequest request);
 
     /**
+     * 查询系统用户数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getSystemUserCount(SystemUserQueryRequest request);
+
+    /**
      * 通过 id 删除用户
      *
      * @param id id
@@ -91,5 +101,13 @@ public interface SystemUserService {
      * @param request request
      */
     void resetPassword(UserResetPasswordRequest request);
+
+    /**
+     * 获取查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<SystemUserDO> buildQueryWrapper(SystemUserQueryRequest request);
 
 }

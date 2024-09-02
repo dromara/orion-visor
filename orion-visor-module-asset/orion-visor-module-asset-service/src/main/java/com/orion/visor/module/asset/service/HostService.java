@@ -1,6 +1,8 @@
 package com.orion.visor.module.asset.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.request.host.*;
 import com.orion.visor.module.asset.entity.vo.HostConfigVO;
 import com.orion.visor.module.asset.entity.vo.HostVO;
@@ -122,5 +124,13 @@ public interface HostService {
      * 清除缓存
      */
     void clearCache();
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request);
 
 }

@@ -1,6 +1,8 @@
 package com.orion.visor.module.asset.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.visor.module.asset.entity.domain.UploadTaskDO;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskClearRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskCreateRequest;
 import com.orion.visor.module.asset.entity.request.upload.UploadTaskQueryRequest;
@@ -112,5 +114,13 @@ public interface UploadTaskService {
      * @param idList idList
      */
     void clearUploadSwapFiles(List<Long> idList);
+
+    /**
+     * 构建查询 wrapper
+     *
+     * @param request request
+     * @return wrapper
+     */
+    LambdaQueryWrapper<UploadTaskDO> buildQueryWrapper(UploadTaskQueryRequest request);
 
 }

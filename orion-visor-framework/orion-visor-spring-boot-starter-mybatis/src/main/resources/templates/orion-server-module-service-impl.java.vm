@@ -122,7 +122,8 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     public List<${type}VO> get${type}List(${type}QueryRequest request) {
         // 条件
-        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(${type}DO::getId);
         // 查询
         return ${typeLower}DAO.of(wrapper).list(${type}Convert.MAPPER::to);
     }
@@ -148,23 +149,28 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
                 .sorted(Comparator.comparing(${type}VO::getId).reversed())
                 .collect(Collectors.toList());
     }
-
     #end
-    @Override
-    public Long get${type}Count(${type}QueryRequest request) {
-        return ${typeLower}DAO.of()
-                  .wrapper(this.buildQueryWrapper(request))
-                  .countMax(request.getLimit());
-    }
 
     @Override
     public DataGrid<${type}VO> get${type}Page(${type}QueryRequest request) {
         // 条件
+        LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(${type}DO::getId);
+        // 查询
+        return ${typeLower}DAO.of()
+                .page(request)
+                .wrapper(wrapper)
+                .dataGrid(${type}Convert.MAPPER::to);
+    }
+
+    @Override
+    public Long get${type}Count(${type}QueryRequest request) {
+        // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return ${typeLower}DAO.of(wrapper)
-                .page(request)
-                .dataGrid(${type}Convert.MAPPER::to);
+        return ${typeLower}DAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
     }
 
     @Override
@@ -234,13 +240,8 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request) {
         String searchValue = request.getSearchValue();
         return ${typeLower}DAO.wrapper()
                 #foreach($field in ${table.fields})
@@ -250,8 +251,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
                         #foreach($field in ${table.fields})
                         .eq(${type}DO::get${field.capitalName}, searchValue)#if($foreach.hasNext).or()#end
                         #end
-                )
-                .orderByDesc(${type}DO::getId);
+                );
     }
 
 }

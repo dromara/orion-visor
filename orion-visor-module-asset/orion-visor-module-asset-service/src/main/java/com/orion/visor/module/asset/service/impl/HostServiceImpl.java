@@ -259,9 +259,10 @@ public class HostServiceImpl implements HostService {
         if (wrapper == null) {
             return DataGrid.of(Lists.empty());
         }
-        // 数量条件
-        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone();
-        wrapper.select(HostDAO.BASE_COLUMN);
+        // 基础条件
+        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone()
+                .select(HostDAO.BASE_COLUMN)
+                .orderByAsc(HostDO::getId);
         // 查询
         DataGrid<HostVO> hosts = hostDAO.of(wrapper)
                 .page(request)
@@ -273,8 +274,11 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public Long getHostCount(HostQueryRequest request) {
+        // 条件
+        LambdaQueryWrapper<HostDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
         return hostDAO.of()
-                .wrapper(this.buildQueryWrapper(request))
+                .wrapper(wrapper)
                 .countMax(request.getLimit());
     }
 
@@ -359,13 +363,8 @@ public class HostServiceImpl implements HostService {
         Valid.isFalse(present, ErrorMessage.CODE_PRESENT);
     }
 
-    /**
-     * 构建查询 wrapper
-     *
-     * @param request request
-     * @return wrapper
-     */
-    private LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request) {
+    @Override
+    public LambdaQueryWrapper<HostDO> buildQueryWrapper(HostQueryRequest request) {
         String searchValue = request.getSearchValue();
         LambdaQueryWrapper<HostDO> wrapper = hostDAO.wrapper();
         // tag 条件
