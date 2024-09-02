@@ -259,9 +259,10 @@ public class HostServiceImpl implements HostService {
         if (wrapper == null) {
             return DataGrid.of(Lists.empty());
         }
+        // 数量条件
+        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone();
         // 基础条件
-        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone()
-                .select(HostDAO.BASE_COLUMN)
+        wrapper.select(HostDAO.BASE_COLUMN)
                 .orderByAsc(HostDO::getId);
         // 查询
         DataGrid<HostVO> hosts = hostDAO.of(wrapper)
