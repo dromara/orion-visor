@@ -1,4 +1,4 @@
-<div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/cec03bbd-0eab-464d-9caf-d0b5a7ffc5a6.png" alt="logo" width="32" /></div>
+<div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/9/11/11e7e78e-2af0-4c68-9811-db8a4c4400f4.png" alt="logo" width="520" /></div>
 <p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的智能运维&轻量堡垒机平台。</b></p>
 <p align="center">
     <a target="_blank"
@@ -51,7 +51,7 @@
 
 ## 演示环境
 
-* 🔗 演示地址: https://dv.orionsec.cn/
+* 🔗 演示地址: [https://dv.orionsec.cn/](https://dv.orionsec.cn/)
 * 🔏 演示账号: admin/admin
 * ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor)  [gitcode](https://gitcode.com/dromara/orion-visor/overview)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
