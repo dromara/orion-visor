@@ -52,8 +52,8 @@
         <a-form-item field="limit" label="数量限制">
           <a-input-number v-model="formModel.limit"
                           :min="1"
-                          :max="maxLimit"
-                          :placeholder="`请输入数量限制 最大: ${maxLimit}`"
+                          :max="maxClearLimit"
+                          :placeholder="`请输入数量限制 最大: ${maxClearLimit}`"
                           hide-button
                           allow-clear />
         </a-form-item>
@@ -85,7 +85,6 @@
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
 
-  const maxLimit = ref<number>(0);
   const formModel = ref<UploadTaskQueryRequest>({});
 
   const defaultForm = (): UploadTaskQueryRequest => {
@@ -95,13 +94,12 @@
       description: undefined,
       status: undefined,
       createTimeRange: undefined,
-      limit: maxLimit.value,
+      limit: maxClearLimit,
     };
   };
 
   // 打开
   const open = (record: any) => {
-    maxLimit.value = maxClearLimit;
     renderForm({ ...defaultForm(), ...record });
     setVisible(true);
   };
