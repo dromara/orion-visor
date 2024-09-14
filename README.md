@@ -1,5 +1,5 @@
 <div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/29/cec03bbd-0eab-464d-9caf-d0b5a7ffc5a6.png" alt="logo" width="32" /></div>
-<p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的智能运维&轻量堡垒机平台。</b></p>
+<p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的系统自动化运维&轻量堡垒机平台。</b></p>
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
@@ -40,7 +40,7 @@
 
 ------------------------------
 
-**`orion-visor`** 提供一站式服务器运维解决方案。
+**`orion-visor`** 提供一站式系统自动化运维解决方案。
 
 * **资产管理**：支持对资产进行分组，实现对主机、密钥和身份的统一管理和授权。
 * **在线终端**：提供在线终端 SSH 服务，支持快捷命令、自定义快捷键和主题风格。
@@ -111,14 +111,18 @@ docker compose up -d
 
 [![Star History Chart](https://api.star-history.com/svg?repos=lijiahangmax/orion-visor&type=Date)](https://star-history.com/#lijiahangmax/orion-visor&Date)
 
+## 关于我
+
+本人专注于使用 Java 和 Vue 进行全栈开发, 并在系统自动化运维方面拥有丰富开发的经验。如果您在这些领域有需求或遇到痛点, 请随时联系我, 并备注“合作”。
+
 ## 联系我
 
 <div style="display: flex;">
   <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/d42d91f3-f0ee-4c63-adab-a35809e0804c.jpg" alt="wx" width="298px" height="398px"/>  
 </div>
 
-![个人微信: ljh1553488](https://img.shields.io/badge/ljh1553488-blue?style=social&label=WX%3A)
-![QQ群1: 755242157](https://img.shields.io/badge/755242157-blue?style=social&label=QQ%E7%BE%A41%3A%20)
+微信: ljh1553488  
+QQ群: 755242157
 
 📧 咨询问题微信备注: vis  
 📧 合作/功能定制备注: 合作
