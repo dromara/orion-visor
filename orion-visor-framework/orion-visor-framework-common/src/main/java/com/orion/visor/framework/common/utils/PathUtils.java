@@ -1,6 +1,8 @@
 package com.orion.visor.framework.common.utils;
 
 import com.orion.lang.utils.Objects1;
+import com.orion.lang.utils.Systems;
+import com.orion.lang.utils.io.Files1;
 import com.orion.visor.framework.common.constant.AppConst;
 import com.orion.visor.framework.common.constant.Const;
 
@@ -24,9 +26,25 @@ public class PathUtils {
      * @return 用户目录
      */
     public static String getHomePath(boolean isWindows, String username) {
+        return getHomePath(isWindows, username, false);
+    }
+
+    /**
+     * 获取用户根目录
+     *
+     * @param isWindows        isWindows
+     * @param username         用户名
+     * @param prependSeparator 是否在头部添加分隔符
+     * @return 用户目录
+     */
+    public static String getHomePath(boolean isWindows, String username, boolean prependSeparator) {
         if (isWindows) {
             // windows
-            return "C:/Users/" + username;
+            if (prependSeparator) {
+                return "/C:/Users/" + username;
+            } else {
+                return "C:/Users/" + username;
+            }
         } else {
             // linux
             if (Const.ROOT.equals(username)) {
@@ -64,6 +82,36 @@ public class PathUtils {
             path.append("/").append(Objects1.toString(o));
         }
         return path.toString();
+    }
+
+    /**
+     * 头部添加分隔符
+     *
+     * @param path path
+     * @return path
+     */
+    public static String prependSeparator(String path) {
+        if (path.startsWith("/")) {
+            return path;
+        }
+        return "/" + path;
+    }
+
+    /**
+     * 获取 orion path
+     *
+     * @param path path
+     * @return path
+     */
+    public static String getOrionPath(String path) {
+        path = Systems.HOME_DIR
+                + Files1.SEPARATOR
+                + AppConst.ORION
+                + Files1.SEPARATOR
+                + AppConst.APP_NAME
+                + Files1.SEPARATOR
+                + path;
+        return Files1.getPath(path);
     }
 
 }

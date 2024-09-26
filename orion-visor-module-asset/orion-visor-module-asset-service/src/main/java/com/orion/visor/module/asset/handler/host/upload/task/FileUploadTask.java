@@ -1,11 +1,9 @@
 package com.orion.visor.module.asset.handler.host.upload.task;
 
 import com.orion.lang.utils.Threads;
-import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
 import com.orion.spring.SpringHolder;
-import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.module.asset.dao.UploadTaskDAO;
 import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
@@ -143,7 +141,7 @@ public class FileUploadTask implements IFileUploadTask {
                     .map(s -> FileUploadFileItemDTO.builder()
                             .id(s.getId())
                             .fileId(s.getFileId())
-                            .remotePath(Files1.getPath(Const.SLASH + record.getRemotePath() + Const.SLASH + s.getFilePath()))
+                            .remotePath(s.getRealFilePath())
                             .status(UploadTaskFileStatusEnum.WAITING.name())
                             .current(0L)
                             .build())

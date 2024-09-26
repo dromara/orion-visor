@@ -40,4 +40,24 @@ public enum HostSshOsTypeEnum {
         return LINUX;
     }
 
+    /**
+     * 是否为 linux 系统
+     *
+     * @param type type
+     * @return isLinux
+     */
+    public static boolean isLinux(String type) {
+        return LINUX.name().equals(type);
+    }
+
+    /**
+     * 是否为 windows 系统
+     *
+     * @param type type
+     * @return isWindows
+     */
+    public static boolean isWindows(String type) {
+        return WINDOWS.name().equals(type);
+    }
+
 }

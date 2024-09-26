@@ -48,6 +48,10 @@ public class UploadTaskFileDO extends BaseDO {
     @TableField("file_path")
     private String filePath;
 
+    @Schema(description = "实际文件路径")
+    @TableField("real_file_path")
+    private String realFilePath;
+
     @Schema(description = "文件大小")
     @TableField("file_size")
     private Long fileSize;

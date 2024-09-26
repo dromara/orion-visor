@@ -40,6 +40,9 @@ public class UploadTaskFileVO implements Serializable {
     @Schema(description = "文件路径")
     private String filePath;
 
+    @Schema(description = "实际文件路径")
+    private String realFilePath;
+
     @Schema(description = "文件大小")
     private Long fileSize;
 
