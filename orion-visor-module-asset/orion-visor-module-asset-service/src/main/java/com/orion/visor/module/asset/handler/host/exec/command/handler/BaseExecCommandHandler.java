@@ -17,6 +17,7 @@ import com.orion.net.host.ssh.command.CommandExecutor;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.file.FileClient;
+import com.orion.visor.framework.common.utils.PathUtils;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
 import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
@@ -159,11 +160,8 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
             // 打开 sftp
             sftpExecutor = sessionStore.getSftpExecutor(execHostCommand.getFileNameCharset());
             sftpExecutor.connect();
-            // 必须要以 / 开头
-            String scriptPath = execHostCommand.getScriptPath();
-            if (!scriptPath.startsWith("/")) {
-                scriptPath = "/" + scriptPath;
-            }
+            // 文件上传必须要以 / 开头
+            String scriptPath = PathUtils.prependSeparator(execHostCommand.getScriptPath());
             // 创建文件
             sftpExecutor.touch(scriptPath);
             // 写入命令
@@ -225,29 +223,33 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         Long id = execHostCommand.getHostLogId();
         String statusName = status.name();
         log.info("BaseExecCommandHandler.updateStatus start id: {}, status: {}", id, statusName);
-        updateRecord.setId(id);
-        updateRecord.setStatus(statusName);
-        if (ExecHostStatusEnum.RUNNING.equals(status)) {
-            // 运行中
-            updateRecord.setStartTime(new Date());
-        } else if (ExecHostStatusEnum.COMPLETED.equals(status)) {
-            // 完成
-            updateRecord.setFinishTime(new Date());
-            updateRecord.setExitCode(executor.getExitCode());
-            this.exitCode = executor.getExitCode();
-        } else if (ExecHostStatusEnum.FAILED.equals(status)) {
-            // 失败
-            updateRecord.setFinishTime(new Date());
-            updateRecord.setErrorMessage(this.getErrorMessage(ex));
-        } else if (ExecHostStatusEnum.TIMEOUT.equals(status)) {
-            // 超时
-            updateRecord.setFinishTime(new Date());
-        } else if (ExecHostStatusEnum.INTERRUPTED.equals(status)) {
-            // 中断
-            updateRecord.setFinishTime(new Date());
+        try {
+            updateRecord.setId(id);
+            updateRecord.setStatus(statusName);
+            if (ExecHostStatusEnum.RUNNING.equals(status)) {
+                // 运行中
+                updateRecord.setStartTime(new Date());
+            } else if (ExecHostStatusEnum.COMPLETED.equals(status)) {
+                // 完成
+                updateRecord.setFinishTime(new Date());
+                updateRecord.setExitCode(executor.getExitCode());
+                this.exitCode = executor.getExitCode();
+            } else if (ExecHostStatusEnum.FAILED.equals(status)) {
+                // 失败
+                updateRecord.setFinishTime(new Date());
+                updateRecord.setErrorMessage(this.getErrorMessage(ex));
+            } else if (ExecHostStatusEnum.TIMEOUT.equals(status)) {
+                // 超时
+                updateRecord.setFinishTime(new Date());
+            } else if (ExecHostStatusEnum.INTERRUPTED.equals(status)) {
+                // 中断
+                updateRecord.setFinishTime(new Date());
+            }
+            int effect = execHostLogDAO.updateById(updateRecord);
+            log.info("BaseExecCommandHandler.updateStatus finish id: {}, effect: {}", id, effect);
+        } catch (Exception e) {
+            log.error("BaseExecCommandHandler.updateStatus error id: {}", id, e);
         }
-        int effect = execHostLogDAO.updateById(updateRecord);
-        log.info("BaseExecCommandHandler.updateStatus finish id: {}, effect: {}", id, effect);
     }
 
     @Override

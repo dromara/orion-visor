@@ -9,7 +9,7 @@ export default {
   'login.form.userName.placeholder': '用户名',
   'login.form.password.placeholder': '密码',
   'login.form.login': '登录',
-  'login.banner.slogan1': '现代化的智能运维平台',
+  'login.banner.slogan1': '现代化的自动化运维平台',
   'login.banner.subSlogan1': '一站式操作 让运维变得更简单',
   'login.banner.slogan2': '高颜值的轻量堡垒机平台',
   'login.banner.subSlogan2': '内置批量处理模块 让工作更高效',

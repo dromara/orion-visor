@@ -1,5 +1,5 @@
 #/bin/bash
-version=2.1.6
+version=2.1.7
 mv ../../orion-visor-launch/target/orion-visor-launch.jar ./orion-visor-launch.jar
 mv ../../orion-visor-ui/dist ./dist
 docker build -t orion-visor-service:${version} .

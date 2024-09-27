@@ -1,5 +1,5 @@
 <div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/9/11/11e7e78e-2af0-4c68-9811-db8a4c4400f4.png" alt="logo" width="520" /></div>
-<p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的智能运维&轻量堡垒机平台。</b></p>
+<p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的自动化运维&轻量堡垒机平台。</b></p>
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
@@ -40,7 +40,7 @@
 
 ------------------------------
 
-**`orion-visor`** 提供一站式系统自动化运维解决方案。
+**`orion-visor`** 提供一站式自动化运维解决方案。
 
 * **资产管理**：支持对资产进行分组，实现对主机、密钥和身份的统一管理和授权。
 * **在线终端**：提供在线终端 SSH 服务，支持快捷命令、自定义快捷键和主题风格。

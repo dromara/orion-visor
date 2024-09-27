@@ -1,8 +1,5 @@
 package com.orion.visor.module.asset.handler.host.upload.uploader;
 
-import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.collect.Maps;
-import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
@@ -10,12 +7,10 @@ import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
-import com.orion.visor.framework.common.utils.PathUtils;
 import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
 import com.orion.visor.module.asset.define.config.AppSftpConfig;
 import com.orion.visor.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.enums.HostSshOsTypeEnum;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
@@ -28,7 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -106,10 +100,8 @@ public class FileUploader implements IFileUploader {
     private boolean initSession() {
         log.info("HostFileUploader.initSession start taskId: {}, hostId: {}", taskId, hostId);
         try {
-            // 替换用户路径
-            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(hostId);
-            this.replaceRemotePathVariable(connectInfo.getOsType(), connectInfo.getUsername());
             // 打开会话
+            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(hostId);
             this.sessionStore = SessionStores.openSessionStore(connectInfo);
             this.executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -220,27 +212,6 @@ public class FileUploader implements IFileUploader {
             update.setEndTime(new Date());
         }
         uploadTaskFileDAO.updateById(update);
-    }
-
-    /**
-     * 替换文件路径变量
-     *
-     * @param osType   osType
-     * @param username username
-     */
-    private void replaceRemotePathVariable(String osType, String username) {
-        // 包含变量
-        if (!files.get(0).getRemotePath().contains(Const.DOLLAR)) {
-            return;
-        }
-        String home = PathUtils.getHomePath(HostSshOsTypeEnum.WINDOWS.name().equals(osType), username);
-        // 替换变量
-        Map<String, String> env = Maps.newMap(4);
-        env.put("username", username);
-        env.put("home", home);
-        for (FileUploadFileItemDTO file : files) {
-            file.setRemotePath(Files1.getPath(Strings.format(file.getRemotePath(), env)));
-        }
     }
 
     @Override

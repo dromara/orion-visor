@@ -40,4 +40,6 @@ public interface HostConvert {
 
     List<HostVO> toList(List<HostDO> domain);
 
+    List<HostBaseVO> toBaseList(List<HostDO> domain);
+
 }

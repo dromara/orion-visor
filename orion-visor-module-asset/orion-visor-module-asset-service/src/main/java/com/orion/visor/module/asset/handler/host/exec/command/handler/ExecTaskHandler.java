@@ -154,24 +154,28 @@ public class ExecTaskHandler implements IExecTaskHandler {
      */
     private void updateStatus(ExecStatusEnum status) {
         Long id = execCommand.getLogId();
-        String statusName = status.name();
-        log.info("ExecTaskHandler-updateStatus start id: {}, status: {}", id, statusName);
-        ExecLogDO update = new ExecLogDO();
-        update.setId(id);
-        update.setStatus(statusName);
-        if (ExecStatusEnum.RUNNING.equals(status)) {
-            // 执行中
-            this.startTime = new Date();
-            update.setStartTime(new Date());
-        } else if (ExecStatusEnum.COMPLETED.equals(status)) {
-            // 执行完成
-            update.setFinishTime(new Date());
-        } else if (ExecStatusEnum.FAILED.equals(status)) {
-            // 执行失败
-            update.setFinishTime(new Date());
+        try {
+            String statusName = status.name();
+            log.info("ExecTaskHandler-updateStatus start id: {}, status: {}", id, statusName);
+            ExecLogDO update = new ExecLogDO();
+            update.setId(id);
+            update.setStatus(statusName);
+            if (ExecStatusEnum.RUNNING.equals(status)) {
+                // 执行中
+                this.startTime = new Date();
+                update.setStartTime(new Date());
+            } else if (ExecStatusEnum.COMPLETED.equals(status)) {
+                // 执行完成
+                update.setFinishTime(new Date());
+            } else if (ExecStatusEnum.FAILED.equals(status)) {
+                // 执行失败
+                update.setFinishTime(new Date());
+            }
+            int effect = execLogDAO.updateById(update);
+            log.info("ExecTaskHandler-updateStatus finish id: {}, effect: {}", id, effect);
+        } catch (Exception e) {
+            log.error("ExecTaskHandler-updateStatus error id: {}", id, e);
         }
-        int effect = execLogDAO.updateById(update);
-        log.info("ExecTaskHandler-updateStatus finish id: {}, effect: {}", id, effect);
     }
 
     /**

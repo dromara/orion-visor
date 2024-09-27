@@ -3,6 +3,7 @@ package com.orion.visor.module.asset.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.annotation.Keep;
+import com.orion.lang.define.collect.MultiHashMap;
 import com.orion.lang.define.wrapper.DataGrid;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Booleans;
@@ -15,9 +16,11 @@ import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
+import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.enums.EndpointDefine;
 import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.security.LoginUser;
+import com.orion.visor.framework.common.utils.PathUtils;
 import com.orion.visor.framework.common.utils.SqlUtils;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.framework.mybatis.core.query.Conditions;
@@ -28,20 +31,21 @@ import com.orion.visor.module.asset.convert.UploadTaskFileConvert;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.dao.UploadTaskDAO;
 import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
+import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.domain.UploadTaskDO;
 import com.orion.visor.module.asset.entity.domain.UploadTaskFileDO;
 import com.orion.visor.module.asset.entity.dto.UploadTaskExtraDTO;
 import com.orion.visor.module.asset.entity.request.upload.*;
 import com.orion.visor.module.asset.entity.vo.*;
-import com.orion.visor.module.asset.enums.HostTypeEnum;
-import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
-import com.orion.visor.module.asset.enums.UploadTaskStatusEnum;
+import com.orion.visor.module.asset.enums.*;
+import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.visor.module.asset.handler.host.upload.FileUploadTasks;
 import com.orion.visor.module.asset.handler.host.upload.manager.FileUploadTaskManager;
 import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import com.orion.visor.module.asset.handler.host.upload.task.IFileUploadTask;
 import com.orion.visor.module.asset.handler.host.upload.uploader.IFileUploader;
 import com.orion.visor.module.asset.service.AssetAuthorizedDataService;
+import com.orion.visor.module.asset.service.HostConfigService;
 import com.orion.visor.module.asset.service.UploadTaskFileService;
 import com.orion.visor.module.asset.service.UploadTaskService;
 import com.orion.visor.module.infra.api.FileUploadApi;
@@ -84,6 +88,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @Resource
+    private HostConfigService hostConfigService;
+
+    @Resource
     private FileUploadTaskManager fileUploadTaskManager;
 
     @Keep
@@ -103,10 +110,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 检查主机是否有权限
         this.checkHostPermission(hostIdList);
         // 查询主机信息
-        List<HostBaseVO> hosts = hostDAO.selectBaseByIdList(hostIdList)
-                .stream()
-                .map(HostConvert.MAPPER::toBase)
-                .collect(Collectors.toList());
+        List<HostDO> hosts = this.getUploadTaskHosts(hostIdList);
+        // 计算文件路径
+        MultiHashMap<Long, String, String> realRemoteFilePathMap = this.setFileRealRemotePath(request, hosts);
         // 转换
         UploadTaskDO record = UploadTaskConvert.MAPPER.to(request);
         record.setUserId(user.getId());
@@ -117,7 +123,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         record.setHostCount(hostIdList.size());
         UploadTaskExtraDTO extra = UploadTaskExtraDTO.builder()
                 .hostIdList(hostIdList)
-                .hosts(hosts)
+                .hosts(HostConvert.MAPPER.toBaseList(hosts))
                 .build();
         record.setExtraInfo(JSON.toJSONString(extra));
         // 插入任务表
@@ -132,6 +138,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                             .hostId(hostId)
                             .fileId(s.getFileId())
                             .filePath(s.getFilePath())
+                            .realFilePath(realRemoteFilePathMap.get(hostId, s.getFileId()))
                             .fileSize(s.getFileSize())
                             .status(UploadTaskFileStatusEnum.WAITING.name())
                             .build())
@@ -334,6 +341,68 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }
+    }
+
+    /**
+     * 查询上传任务主机信息
+     *
+     * @param hostIdList hostIdList
+     * @return hosts
+     */
+    public List<HostDO> getUploadTaskHosts(List<Long> hostIdList) {
+        // 查询主机信息
+        List<HostDO> hosts = hostDAO.selectBatchIds(hostIdList);
+        // 检查主机数量
+        Valid.eq(hosts.size(), hostIdList.size(), ErrorMessage.HOST_ABSENT);
+        // 检查主机状态
+        boolean allEnabled = hosts.stream()
+                .map(HostDO::getStatus)
+                .allMatch(s -> HostStatusEnum.ENABLED.name().equals(s));
+        Valid.isTrue(allEnabled, ErrorMessage.HOST_NOT_ENABLED);
+        return hosts;
+    }
+
+    /**
+     * 设置文件实际路径
+     *
+     * @param request request
+     * @param hosts   hosts
+     * @return realRemoteFilePathMap
+     */
+    public MultiHashMap<Long, String, String> setFileRealRemotePath(UploadTaskCreateRequest request,
+                                                                    List<HostDO> hosts) {
+        MultiHashMap<Long, String, String> realRemoteFilePathMap = MultiHashMap.create();
+        // 计算上传目录
+        String remotePath = request.getRemotePath();
+        List<UploadTaskFileRequest> files = request.getFiles();
+        boolean containsEnv = remotePath.contains(Const.DOLLAR);
+        if (containsEnv) {
+            // 获取主机配置信息
+            Map<Long, HostSshConfigModel> hostConfigMap = hostConfigService.buildHostConfigMap(hosts, HostTypeEnum.SSH);
+            hostConfigMap.forEach((k, v) -> {
+                // 替换占位符
+                String username = v.getUsername();
+                String home = PathUtils.getHomePath(HostSshOsTypeEnum.isWindows(v.getOsType()), username);
+                // 替换环境变量路径
+                Map<String, String> env = Maps.newMap(4);
+                env.put(ExtraFieldConst.USERNAME, username);
+                env.put(ExtraFieldConst.HOME, home);
+                // 设置主机上传路径
+                String realRemotePath = Files1.getPath(Strings.format(remotePath, env));
+                for (UploadTaskFileRequest file : files) {
+                    realRemoteFilePathMap.put(k, file.getFileId(), Files1.getPath(realRemotePath, file.getFilePath()));
+                }
+            });
+        } else {
+            // 无占位符
+            for (UploadTaskFileRequest file : files) {
+                String path = Files1.getPath(remotePath, file.getFilePath());
+                for (HostDO host : hosts) {
+                    realRemoteFilePathMap.put(host.getId(), file.getFileId(), path);
+                }
+            }
+        }
+        return realRemoteFilePathMap;
     }
 
     /**

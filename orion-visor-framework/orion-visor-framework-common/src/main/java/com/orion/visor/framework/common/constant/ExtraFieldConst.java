@@ -21,6 +21,8 @@ public interface ExtraFieldConst extends FieldConst {
 
     String USERNAME = "username";
 
+    String HOME = "home";
+
     String STATUS_NAME = "statusName";
 
     String KEY_NAME = "keyName";

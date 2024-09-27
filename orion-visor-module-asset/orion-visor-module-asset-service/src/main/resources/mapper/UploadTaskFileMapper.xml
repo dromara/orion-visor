@@ -9,6 +9,7 @@
         <result column="host_id" property="hostId"/>
         <result column="file_id" property="fileId"/>
         <result column="file_path" property="filePath"/>
+        <result column="real_file_path" property="realFilePath"/>
         <result column="file_size" property="fileSize"/>
         <result column="status" property="status"/>
         <result column="start_time" property="startTime"/>
@@ -22,7 +23,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, task_id, host_id, file_id, file_path, file_size, status, start_time, end_time, create_time, update_time, creator, updater, deleted
+        id, task_id, host_id, file_id, file_path, real_file_path, file_size, status, start_time, end_time, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>
