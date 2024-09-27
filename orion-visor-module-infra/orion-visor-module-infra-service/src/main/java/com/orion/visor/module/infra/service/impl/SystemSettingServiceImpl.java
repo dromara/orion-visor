@@ -4,10 +4,10 @@ import com.orion.ext.process.ProcessAwaitExecutor;
 import com.orion.lang.support.Attempt;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.crypto.Signatures;
 import com.orion.lang.utils.io.Streams;
 import com.orion.visor.framework.common.constant.AppConst;
 import com.orion.visor.framework.common.constant.Const;
-import com.orion.visor.framework.common.utils.Mixes;
 import com.orion.visor.module.infra.entity.vo.AppInfoVO;
 import com.orion.visor.module.infra.service.SystemSettingService;
 import org.springframework.stereotype.Service;
@@ -70,7 +70,7 @@ public class SystemSettingServiceImpl implements SystemSettingService {
                 if (!Strings.isBlank(extraUuid)) {
                     uuid = extraUuid.trim();
                 }
-                return this.uuid = Mixes.obfuscate(uuid);
+                return this.uuid = Signatures.md5(uuid);
             } catch (Exception e) {
                 // IGNORED
             }
