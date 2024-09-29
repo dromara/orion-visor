@@ -17,16 +17,17 @@
         <!-- 左侧按钮 -->
         <a-space size="small">
           <!-- 清空 -->
-          <span class="click-icon-wrapper transfer-header-icon"
-                title="清空"
-                @click="removeAllTask">
+          <a-button class="transfer-header-icon icon-button"
+                    title="清空"
+                    @click="removeAllTask">
             <icon-close />
-          </span>
+          </a-button>
         </a-space>
         <!-- 右侧数量 -->
         <a-space size="small">
           <a-tag v-for="option in toOptions(transferStatusKey)"
-                 class="pointer"
+                 class="pointer px12"
+                 size="large"
                  :color="option.color as string"
                  :title="option.label"
                  :bordered="option.value === filterStatus"
@@ -144,7 +145,6 @@
       &-icon {
         width: 32px;
         height: 32px;
-        font-size: 16px;
       }
 
       .status-count {

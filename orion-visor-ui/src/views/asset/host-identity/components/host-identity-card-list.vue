@@ -17,7 +17,7 @@
     <template #leftHandle>
       <!-- 角色授权 -->
       <a-button v-permission="['asset:host-identity:grant']"
-                class="card-header-icon-wrapper"
+                class="card-header-button"
                 @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
         角色授权
         <template #icon>
@@ -26,7 +26,7 @@
       </a-button>
       <!-- 用户授权 -->
       <a-button v-permission="['asset:host-identity:grant']"
-                class="card-header-icon-wrapper"
+                class="card-header-button"
                 @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
         用户授权
         <template #icon>
@@ -114,7 +114,7 @@
     <template #extra="{ record }">
       <a-space>
         <!-- 更多操作 -->
-        <a-dropdown trigger="hover">
+        <a-dropdown trigger="hover" :popup-max-height="false">
           <icon-more class="card-extra-icon" />
           <template #content>
             <!-- 修改 -->

@@ -29,28 +29,28 @@
             <span v-else class="disabled-key">已禁用</span>
           </div>
           <!-- 操作 -->
-          <a-space class="shortcut-actions-container">
+          <a-space class="shortcut-actions">
             <!-- 屏蔽 -->
-            <div class="click-icon-wrapper"
-                 v-if="item.enabled"
-                 title="屏蔽"
-                 @click="updateEnabledStatus(item, false)">
+            <a-button class="shortcut-action icon-button"
+                      v-if="item.enabled"
+                      title="屏蔽"
+                      @click="updateEnabledStatus(item, false)">
               <icon-message-banned />
-            </div>
+            </a-button>
             <!-- 恢复 -->
-            <div class="click-icon-wrapper"
-                 v-if="!item.enabled"
-                 title="恢复"
-                 @click="updateEnabledStatus(item, true)">
+            <a-button class="shortcut-action icon-button"
+                      v-if="!item.enabled"
+                      title="恢复"
+                      @click="updateEnabledStatus(item, true)">
               <icon-message />
-            </div>
+            </a-button>
             <!-- 设置 -->
-            <div class="click-icon-wrapper"
-                 v-if="!item.editable && item.enabled"
-                 title="设置"
-                 @click="setEditableStatus(item)">
+            <a-button class="shortcut-action icon-button"
+                      v-if="!item.editable && item.enabled"
+                      title="设置"
+                      @click="setEditableStatus(item)">
               <icon-settings />
-            </div>
+            </a-button>
           </a-space>
           <!-- 描述 -->
           <div class="shortcut-desc">
@@ -121,7 +121,7 @@
       &:hover {
         background: var(--color-neutral-3);
 
-        .shortcut-actions-container {
+        .shortcut-actions {
           display: flex;
         }
 
@@ -149,16 +149,17 @@
       font-size: 12px;
     }
 
-    .shortcut-actions-container {
+    .shortcut-actions {
       display: none;
+    }
 
-      .click-icon-wrapper {
-        font-size: 18px;
-        padding: 4px;
+    .shortcut-action {
+      width: 28px;
+      height: 28px;
+      font-size: 18px;
 
-        &:hover {
-          background: var(--color-neutral-4);
-        }
+      &:hover {
+        background: var(--color-neutral-4);
       }
     }
 
@@ -166,5 +167,4 @@
       color: var(--color-neutral-6);
     }
   }
-
 </style>

@@ -52,11 +52,11 @@
           <!-- 操作按钮 -->
           <div class="extra-action">
             <!-- 删除 -->
-            <span class="click-icon-wrapper minus-icon-wrapper"
-                  title="移除参数"
-                  @click="removeExtraParam(index)">
+            <a-button class="minus-icon-wrapper icon-button"
+                      title="移除参数"
+                      @click="removeExtraParam(index)">
               <icon-minus />
-            </span>
+            </a-button>
           </div>
         </a-form-item>
         <!-- 参数操作 -->
@@ -253,13 +253,13 @@
     height: 32px;
     margin-left: 8px;
     font-size: 18px;
-    padding: 6px;
   }
 
   .param-addition {
     margin-bottom: 20px;
     justify-content: flex-end;
     cursor: pointer;
+    font-size: 18px;
     user-select: none;
   }
 </style>

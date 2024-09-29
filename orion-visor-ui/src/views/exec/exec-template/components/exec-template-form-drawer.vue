@@ -132,11 +132,11 @@
                       <span>描述</span>
                     </template>
                   </a-input>
-                  <span class="parameter-item-close click-icon-wrapper"
-                        title="移除"
-                        @click="removeParameter(i)">
-                   <icon-close />
-                  </span>
+                  <a-button class="parameter-item-close icon-button"
+                            title="移除"
+                            @click="removeParameter(i)">
+                    <icon-close />
+                  </a-button>
                 </a-input-group>
               </template>
               <!-- 无参数 -->
@@ -373,7 +373,6 @@
         cursor: pointer;
         width: 32px;
         height: 32px;
-        font-size: 16px;
         background: var(--color-fill-2);
         display: flex;
         align-items: center;

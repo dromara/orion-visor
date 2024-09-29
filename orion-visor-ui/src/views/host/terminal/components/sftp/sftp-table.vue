@@ -62,10 +62,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="复制路径">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="copy(record.path, true)">
+          <a-button class="icon-button row-action-icon"
+                    @click="copy(record.path, true)">
             <icon-copy />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 编辑内容 -->
         <a-tooltip v-if="canEditable(record.size, record.attr)"
@@ -76,10 +76,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="编辑内容">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="editFile(record)">
+          <a-button class="icon-button row-action-icon"
+                    @click="editFile(record)">
             <icon-edit />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 删除 -->
         <a-tooltip position="top"
@@ -88,10 +88,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="删除">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="deleteFile(record.path)">
+          <a-button class="icon-button row-action-icon"
+                    @click="deleteFile(record.path)">
             <icon-delete />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 下载 -->
         <a-tooltip position="top"
@@ -100,10 +100,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="下载">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="downloadFile(record.path)">
+          <a-button class="icon-button row-action-icon"
+                    @click="downloadFile(record.path)">
             <icon-download />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 移动 -->
         <a-tooltip position="top"
@@ -112,10 +112,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="移动">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="moveFile(record.path)">
+          <a-button class="icon-button row-action-icon"
+                    @click="moveFile(record.path)">
             <icon-paste />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 提权 -->
         <a-tooltip position="top"
@@ -124,10 +124,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="提权">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="chmodFile(record.path, record.permission)">
+          <a-button class="icon-button row-action-icon"
+                    @click="chmodFile(record.path, record.permission)">
             <icon-user-group />
-          </span>
+          </a-button>
         </a-tooltip>
       </a-space>
     </template>
@@ -304,8 +304,8 @@
   }
 
   .row-action-icon {
-    font-size: 16px;
-    padding: 4px;
+    width: 26px;
+    height: 26px;
     background: unset;
 
     &:hover {

@@ -36,65 +36,65 @@
       <!-- 右侧操作 -->
       <a-space class="log-header-right" :size="12">
         <!-- 搜索 -->
-        <span class="log-action click-icon-wrapper"
-              title="搜索"
-              @click="() => appender?.openSearch()">
+        <a-button class="log-action icon-button"
+                  title="搜索"
+                  @click="() => appender?.openSearch()">
           <icon-find-replace />
-        </span>
+        </a-button>
         <!-- 增大字号 -->
-        <span class="log-action click-icon-wrapper"
-              title="增大字号"
-              @click="() => appender?.addFontSize(1)">
+        <a-button class="log-action icon-button"
+                  title="增大字号"
+                  @click="() => appender?.addFontSize(1)">
           <icon-zoom-in />
-        </span>
+        </a-button>
         <!-- 减小字号 -->
-        <span class="log-action click-icon-wrapper"
-              title="减小字号"
-              @click="() => appender?.addFontSize(-1)">
+        <a-button class="log-action icon-button"
+                  title="减小字号"
+                  @click="() => appender?.addFontSize(-1)">
           <icon-zoom-out />
-        </span>
+        </a-button>
         <!-- 去顶部 -->
-        <span class="log-action click-icon-wrapper"
-              title="去顶部"
-              @click="() => appender?.toTop()">
+        <a-button class="log-action icon-button"
+                  title="去顶部"
+                  @click="() => appender?.toTop()">
           <icon-up />
-        </span>
+        </a-button>
         <!-- 去底部 -->
-        <span class="log-action click-icon-wrapper"
-              title="去底部"
-              @click="() => appender?.toBottom()">
+        <a-button class="log-action icon-button"
+                  title="去底部"
+                  @click="() => appender?.toBottom()">
           <icon-down />
-        </span>
+        </a-button>
         <!-- 全选 -->
-        <span class="log-action click-icon-wrapper"
-              title="全选"
-              @click="() => appender?.selectAll()">
+        <a-button class="log-action icon-button"
+                  title="全选"
+                  @click="() => appender?.selectAll()">
           <icon-expand />
-        </span>
+        </a-button>
         <!-- 复制 -->
-        <span class="log-action click-icon-wrapper"
-              title="复制"
-              @click="() => appender?.copy()">
+        <a-button class="log-action icon-button"
+                  title="复制"
+                  @click="() => appender?.copy()">
           <icon-copy />
-        </span>
+        </a-button>
         <!-- 复制全部 -->
-        <span class="log-action click-icon-wrapper"
-              title="复制全部"
-              @click="() => appender?.copyAll()">
+        <a-button class="log-action icon-button"
+                  title="复制全部"
+                  @click="() => appender?.copyAll()">
           <icon-brush />
-        </span>
+        </a-button>
         <!-- 清空 -->
-        <span class="log-action click-icon-wrapper"
-              title="清空"
-              @click="() => appender?.clear()">
+        <a-button class="log-action icon-button"
+                  title="清空"
+                  @click="() => appender?.clear()">
           <icon-delete />
-        </span>
+        </a-button>
         <!-- 下载 -->
-        <span class="log-action click-icon-wrapper"
-              title="下载"
-              @click="downloadLogFile(host.id)">
+        <a-button class="log-action icon-button"
+                  title="下载"
+                  @click="downloadLogFile(host.id)">
           <icon-download />
-        </span>
+        </a-button>
       </a-space>
     </div>
     <!-- 右键菜单 -->
@@ -255,7 +255,6 @@
     .log-action {
       width: 24px;
       height: 24px;
-      font-size: 16px;
     }
   }
 
