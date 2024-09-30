@@ -9,7 +9,7 @@ INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, '2023-07-16 21:13:
 INSERT INTO `system_user_role` VALUES (1, 1, 1, '2023-07-16 21:15:49', '2023-07-17 18:18:02', '1', '1', 0);
 
 -- 系统设置
-INSERT INTO `system_setting` VALUES (1, 'SFTP', 'previewSize', '{\"value\": 2}', '2024-09-27 17:33:05', '2024-09-27 17:33:21', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (1, 'SFTP', 'preview', '{\"size\": 2}', '2024-09-27 17:33:05', '2024-09-27 17:33:21', '1', '1', 0);
 
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', '1', '1', 0);
