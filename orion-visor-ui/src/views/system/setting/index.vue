@@ -5,9 +5,13 @@
             size="medium"
             position="left"
             :lazy-load="true">
+      <!-- SFTP -->
+      <a-tab-pane key="sftp" title="SFTP">
+        <sftp-setting />
+      </a-tab-pane>
       <!-- 关于 -->
       <a-tab-pane key="about" title="关于">
-        <about />
+        <about-setting />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -15,18 +19,19 @@
 
 <script lang="ts">
   export default {
-    name: 'systemSetting'
+    name: 'systemSetting',
   };
 </script>
 
 <script lang="ts" setup>
   import { onBeforeMount, ref } from 'vue';
   import { useRoute } from 'vue-router';
-  import About from './components/about.vue';
+  import SftpSetting from './components/sftp-setting.vue';
+  import AboutSetting from './components/about-setting.vue';
 
   const route = useRoute();
 
-  const activeKey = ref('about');
+  const activeKey = ref('sftp');
 
   // 跳转到指定页
   onBeforeMount(() => {

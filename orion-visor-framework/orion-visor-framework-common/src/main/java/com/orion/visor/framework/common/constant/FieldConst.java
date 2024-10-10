@@ -61,6 +61,8 @@ public interface FieldConst {
 
     String TIME = "time";
 
+    String TEXT = "text";
+
     String ISSUE = "issue";
 
     String EXPIRE = "expire";

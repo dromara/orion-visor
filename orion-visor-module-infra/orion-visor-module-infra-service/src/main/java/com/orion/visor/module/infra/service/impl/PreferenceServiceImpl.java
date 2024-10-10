@@ -240,7 +240,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         if (setCache) {
             RedisMaps.putAll(key, PreferenceCacheKeyDefine.PREFERENCE, config);
         }
-        // unref
+        // unRef
         return Maps.map(config, Function.identity(), Refs::unref);
     }
 

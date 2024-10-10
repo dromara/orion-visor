@@ -141,18 +141,18 @@
 </script>
 
 <script lang="ts" setup>
+  import type { VNodeRef } from 'vue';
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { SftpFile, ISftpSession } from '../../types/define';
-  import type { VNodeRef } from 'vue';
-  import { ref, computed, watch, inject } from 'vue';
+  import type { SftpSetting } from '@/api/system/setting';
+  import { ref, computed, watch, inject, onMounted } from 'vue';
   import { useRowSelection } from '@/hooks/table';
   import { dateFormat } from '@/utils';
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';
   import columns from './types/table.columns';
   import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/const';
-
-  const previewSize = Number.parseInt(import.meta.env.VITE_SFTP_PREVIEW_MB);
+  import { useCacheStore } from '@/store';
 
   const props = defineProps<{
     session?: ISftpSession;
@@ -167,6 +167,8 @@
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
 
   const rowSelection = useRowSelection({ width: 40 });
+
+  const previewSize = ref(0);
 
   // 切换页面自动清空过滤
   watch(() => props.list, () => {
@@ -206,7 +208,7 @@
   const canEditable = (size: number, attr: string) => {
     // 是普通文件 && 文件小于 配置大小(MB) 可以编辑
     return FILE_TYPE.NORMAL_FILE.value == formatFileType(attr).value
-      && size <= previewSize * 1024 * 1024;
+      && size <= (previewSize.value || 0) * 1024 * 1024;
   };
 
   // 点击文件名称
@@ -275,6 +277,12 @@
       return s.value === attr.charAt(0);
     }) || FILE_TYPE.NORMAL_FILE;
   };
+
+  // 加载配置
+  onMounted(async () => {
+    const data = await useCacheStore().loadSystemSetting<SftpSetting>('SFTP');
+    previewSize.value = data?.previewSize;
+  });
 
 </script>
 

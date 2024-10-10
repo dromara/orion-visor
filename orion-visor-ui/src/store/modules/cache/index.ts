@@ -2,6 +2,8 @@ import type { CacheState, CacheType } from './types';
 import type { AxiosResponse } from 'axios';
 import type { TagType } from '@/api/meta/tag';
 import { getTagList } from '@/api/meta/tag';
+import type { SystemSettingType } from '@/api/system/setting';
+import { getSystemSetting } from '@/api/system/setting';
 import type { HostType } from '@/api/asset/host';
 import { getHostList } from '@/api/asset/host';
 import type { PreferenceType } from '@/api/user/preference';
@@ -165,6 +167,11 @@ export default defineStore('cache', {
     // 加载偏好项
     async loadPreferenceItem<T>(type: PreferenceType, item: string, force = false) {
       return await this.load(`preference_${type}_${item}`, () => getPreference<T>(type, [item]), undefined, force, {});
+    },
+
+    // 加载系统配置
+    async loadSystemSetting<T>(type: SystemSettingType, force = false) {
+      return await this.load(`system_setting_${type}`, () => getSystemSetting<T>(type), undefined, force, {});
     },
 
   }

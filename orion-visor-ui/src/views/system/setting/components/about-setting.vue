@@ -1,8 +1,9 @@
 <template>
-  <div class="main-container">
-    <h3>关于 Orion Visor</h3>
+  <a-spin class="main-container" :loading="loading">
+    <h3 class="setting-header">关于</h3>
     <!-- 不一致提示 -->
     <a-alert v-if="app.version && webVersion !== app.version"
+             type="warning"
              class="alert-wrapper">
       当前前端版本与后端版本不一致, 请使用 Ctrl + F5 强制刷新页面
     </a-alert>
@@ -19,7 +20,7 @@
     <a-descriptions class="detail-container"
                     size="large"
                     :align="{ label: 'right', value: 'left' }"
-                    :label-style="{ width: '134px' }"
+                    :label-style="{ width: '138px' }"
                     :column="1">
       <!-- 机器码 -->
       <a-descriptions-item label="机器码">
@@ -37,23 +38,22 @@
       </a-descriptions-item>
       <!-- 当前后端版本 -->
       <a-descriptions-item label="最新发布版本">
-        {{ repo.tagName }}
+        {{ repo.tagName || '-' }}
       </a-descriptions-item>
       <!-- 当前后端版本 -->
       <a-descriptions-item label="最新更新日志">
-        <a-textarea class="release-node"
-                    v-model="repo.body"
+        <a-textarea v-model="repo.body"
                     :auto-size="{ minRows: 3, maxRows: 16 }"
                     readonly>
         </a-textarea>
       </a-descriptions-item>
     </a-descriptions>
-  </div>
+  </a-spin>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'systemSettingAbout',
+    name: 'systemSettingAboutSetting',
   };
 </script>
 
@@ -62,7 +62,9 @@
   import { onMounted, reactive } from 'vue';
   import { getAppLatestRelease, getSystemAppInfo } from '@/api/system/setting';
   import { copy } from '@/hooks/copy';
-  import { Message } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
+
+  const { loading, setLoading } = useLoading();
 
   const webVersion = import.meta.env.VITE_APP_VERSION;
 
@@ -78,11 +80,14 @@
 
   // 加载应用信息
   onMounted(async () => {
+    setLoading(true);
     try {
       const { data } = await getSystemAppInfo();
       app.version = data.version;
       app.uuid = data.uuid;
     } catch (e) {
+    } finally {
+      setLoading(false);
     }
   });
 
@@ -93,35 +98,33 @@
       repo.tagName = data.tagName;
       repo.body = data.body;
     } catch (e) {
-      Message.error('获取应用最新版本失败, 请等待后重试');
     }
   });
 
 </script>
 
 <style lang="less" scoped>
-  @release-node-width: 528px;
-  @label-width: 134px;
+  @form-width: 628px;
 
   .main-container {
-    padding-left: 16px;
+    width: @form-width;
+    padding-left: 24px;
+
+    .setting-header {
+      color: var(--color-text-1);
+    }
 
     .alert-href {
       text-decoration: none;
     }
 
     .alert-wrapper {
-      width: @release-node-width + @label-width;
       margin-bottom: 12px;
     }
 
     .uuid-wrapper {
       color: rgb(var(--arcoblue-6));
       font-weight: 600;
-    }
-
-    .release-node {
-      width: @release-node-width;
     }
   }
 </style>

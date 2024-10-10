@@ -1,6 +1,21 @@
 import axios from 'axios';
 
 /**
+ * 系统配置类型
+ */
+export type SystemSettingType = 'SFTP';
+
+/**
+ * 系统设置更新请求
+ */
+export interface SystemSettingUpdateRequest {
+  type?: SystemSettingType;
+  item?: string;
+  value?: any;
+  settings?: Record<string, any>;
+}
+
+/**
  * 应用信息查询响应
  */
 export interface SystemLicenseResponse {
@@ -31,10 +46,10 @@ export interface AppReleaseResponse {
 }
 
 /**
- * 查询 license 信息
+ * SFTP 配置
  */
-export function getSystemLicenseInfo() {
-  return axios.get<SystemLicenseResponse>('/infra/system-setting/license');
+export interface SftpSetting {
+  previewSize: number;
 }
 
 /**
@@ -56,4 +71,25 @@ export function getAppLatestRelease() {
     // 不提示请求错误信息 可能会 403
     promptRequestErrorMessage: false,
   });
+}
+
+/**
+ * 更新系统设置
+ */
+export function updateSystemSetting(request: SystemSettingUpdateRequest) {
+  return axios.put<number>('/infra/system-setting/update', request);
+}
+
+/**
+ * 更新部分系统设置
+ */
+export function updatePartialSystemSetting(request: SystemSettingUpdateRequest) {
+  return axios.put<number>('/infra/system-setting/update-partial', request);
+}
+
+/**
+ * 查询系统设置
+ */
+export function getSystemSetting<T>(type: SystemSettingType) {
+  return axios.get<T>('/infra/system-setting/setting', { params: { type } });
 }
