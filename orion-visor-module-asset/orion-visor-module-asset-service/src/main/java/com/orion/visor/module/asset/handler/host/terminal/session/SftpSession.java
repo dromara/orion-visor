@@ -9,6 +9,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.net.host.sftp.SftpFile;
 import com.orion.visor.framework.common.constant.Const;
+import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.utils.Valid;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpFileVO;
@@ -143,6 +144,13 @@ public class SftpSession extends TerminalSession implements ISftpSession {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
+    }
+
+    @Override
+    public void checkCanEdit(String path) {
+        path = Valid.checkNormalize(path);
+        // 检查文件是否存在
+        Valid.isTrue(executor.isExist(path), ErrorMessage.FILE_ABSENT);
     }
 
     @Override

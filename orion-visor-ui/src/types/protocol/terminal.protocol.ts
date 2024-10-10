@@ -100,7 +100,7 @@ export const InputProtocol = {
   // SFTP 修改内容
   SFTP_SET_CONTENT: {
     type: 'sc',
-    template: ['type', 'sessionId', 'path', 'content']
+    template: ['type', 'sessionId', 'path']
   },
 };
 
@@ -181,13 +181,13 @@ export const OutputProtocol = {
   // SFTP 获取文件内容
   SFTP_GET_CONTENT: {
     type: 'gc',
-    template: ['type', 'sessionId', 'path', 'result', 'msg', 'content'],
+    template: ['type', 'sessionId', 'result', 'msg', 'token'],
     processMethod: 'processSftpGetContent'
   },
   // SFTP 修改文件内容
   SFTP_SET_CONTENT: {
     type: 'sc',
-    template: ['type', 'sessionId', 'result', 'msg'],
+    template: ['type', 'sessionId', 'result', 'msg', 'token'],
     processMethod: 'processSftpSetContent'
   },
 };

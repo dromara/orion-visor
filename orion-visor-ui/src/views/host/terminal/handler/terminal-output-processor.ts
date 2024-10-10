@@ -177,17 +177,17 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   }
 
   // 处理 SFTP 获取文件内容
-  processSftpGetContent({ sessionId, path, result, msg, content }: OutputPayload): void {
+  processSftpGetContent({ sessionId, result, msg, token }: OutputPayload): void {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveSftpGetContent(path, result, msg, content);
+    session && session.resolver.resolveSftpGetContent(result, msg, token);
   }
 
   // 处理 SFTP 修改文件内容
-  processSftpSetContent({ sessionId, result, msg }: OutputPayload) {
+  processSftpSetContent({ sessionId, result, msg, token }: OutputPayload) {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveSftpSetContent(result, msg);
+    session && session.resolver.resolveSftpSetContent(result, msg, token);
   }
 
   // 根据类型处理操作

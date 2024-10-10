@@ -83,12 +83,12 @@ public enum OutputTypeEnum {
     /**
      * SFTP 获取文件内容
      */
-    SFTP_GET_CONTENT("gc", "${type}|${sessionId}|${path}|${result}|${msg}|${content}"),
+    SFTP_GET_CONTENT("gc", "${type}|${sessionId}|${result}|${msg}|${token}"),
 
     /**
      * SFTP 修改文件内容
      */
-    SFTP_SET_CONTENT("sc", "${type}|${sessionId}|${result}|${msg}"),
+    SFTP_SET_CONTENT("sc", "${type}|${sessionId}|${result}|${msg}|${token}"),
 
     ;
 

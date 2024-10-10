@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.annotation.Resource;
@@ -58,6 +59,24 @@ public class HostSftpLogController {
     @PreAuthorize("@ss.hasAnyPermission('infra:operator-log:delete', 'asset:host-sftp-log:management:delete')")
     public Integer deleteHostSftpLog(@RequestParam("idList") List<Long> idList) {
         return hostSftpService.deleteHostSftpLog(idList);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-content")
+    @Operation(summary = "获取文件内容")
+    @Parameter(name = "token", description = "token", required = true)
+    public void getFileContentByToken(@RequestParam("token") String token, HttpServletResponse response) throws Exception {
+        hostSftpService.getFileContentByToken(token, response);
+    }
+
+    @PostMapping("/set-content")
+    @Operation(summary = "设置文件内容")
+    @Parameter(name = "token", description = "token", required = true)
+    @Parameter(name = "file", description = "file", required = true)
+    public Boolean setFileContentByToken(@RequestParam("token") String token,
+                                         @RequestParam("file") MultipartFile file) throws Exception {
+        hostSftpService.setFileContentByToken(token, file);
+        return true;
     }
 
     @PermitAll

@@ -323,7 +323,7 @@ export interface ISftpSession extends ITerminalSession {
   // 获取内容
   getContent: (path: string) => void;
   // 修改内容
-  setContent: (path: string, content: string) => void;
+  setContent: (path: string) => void;
 }
 
 // sftp 会话接收器定义
@@ -349,9 +349,9 @@ export interface ISftpSessionResolver {
   // 接收下载文件夹展开文件响应
   resolveDownloadFlatDirectory: (currentPath: string, result: string, msg: string, list: Array<SftpFile>) => void;
   // 接收获取文件内容响应
-  resolveSftpGetContent: (path: string, result: string, msg: string, content: string) => void;
+  resolveSftpGetContent: (result: string, msg: string, token: string) => void;
   // 接收修改文件内容响应
-  resolveSftpSetContent: (result: string, msg: string) => void;
+  resolveSftpSetContent: (result: string, msg: string, token: string) => void;
 }
 
 // sftp 文件

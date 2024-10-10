@@ -4,29 +4,47 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.orion.lang.constant.StandardContentType;
 import com.orion.lang.define.wrapper.DataGrid;
+import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
+import com.orion.net.host.SessionStore;
+import com.orion.net.host.sftp.SftpExecutor;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
+import com.orion.visor.framework.redis.core.utils.RedisStrings;
+import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.convert.HostSftpLogConvert;
+import com.orion.visor.module.asset.define.cache.HostTerminalCacheKeyDefine;
 import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.SftpGetContentCacheDTO;
+import com.orion.visor.module.asset.entity.dto.SftpSetContentCacheDTO;
 import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
+import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.transfer.manager.HostTransferManager;
 import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSession;
 import com.orion.visor.module.asset.service.HostSftpService;
+import com.orion.visor.module.asset.service.HostTerminalService;
 import com.orion.visor.module.infra.api.OperatorLogApi;
 import com.orion.visor.module.infra.entity.dto.operator.OperatorLogQueryDTO;
 import com.orion.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +64,9 @@ public class HostSftpServiceImpl implements HostSftpService {
 
     @Resource
     private HostTransferManager hostTransferManager;
+
+    @Resource
+    private HostTerminalService hostTerminalService;
 
     @Override
     public DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request) {
@@ -76,6 +97,73 @@ public class HostSftpServiceImpl implements HostSftpService {
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.COUNT, effect);
         return effect;
+    }
+
+    @Override
+    public void getFileContentByToken(String token, HttpServletResponse response) throws IOException {
+        // 解析 token
+        String key = HostTerminalCacheKeyDefine.SFTP_GET_CONTENT.format(token);
+        SftpGetContentCacheDTO cache = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.SFTP_GET_CONTENT);
+        if (cache == null) {
+            Servlets.writeHttpWrapper(response, HttpWrapper.error(ErrorMessage.FILE_ABSENT));
+            return;
+        }
+        // 删除缓存
+        RedisStrings.delete(key);
+        // 获取文件内容
+        SessionStore sessionStore = null;
+        SftpExecutor executor = null;
+        InputStream in = null;
+        try {
+            // 获取终端连接信息
+            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            sessionStore = SessionStores.openSessionStore(connectInfo);
+            executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
+            executor.connect();
+            // 读取文件
+            in = executor.openInputStream(cache.getPath());
+            // 设置返回
+            Servlets.setContentType(response, StandardContentType.TEXT_PLAIN);
+            Servlets.transfer(response, in);
+        } catch (Exception e) {
+            Servlets.writeHttpWrapper(response, HttpWrapper.error(ErrorMessage.FILE_READ_ERROR));
+        } finally {
+            Streams.close(executor);
+            Streams.close(sessionStore);
+            Streams.close(in);
+        }
+    }
+
+    @Override
+    public void setFileContentByToken(String token, MultipartFile file) {
+        // 解析 token
+        String key = HostTerminalCacheKeyDefine.SFTP_SET_CONTENT.format(token);
+        SftpSetContentCacheDTO cache = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.SFTP_SET_CONTENT);
+        Valid.notNull(cache, ErrorMessage.FILE_ABSENT);
+        // 删除缓存
+        RedisStrings.delete(key);
+        // 写入文件内容
+        SessionStore sessionStore = null;
+        SftpExecutor executor = null;
+        OutputStream out = null;
+        InputStream in = null;
+        try {
+            // 获取终端连接信息
+            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            sessionStore = SessionStores.openSessionStore(connectInfo);
+            executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
+            executor.connect();
+            // 写入文件
+            out = executor.openOutputStream(cache.getPath());
+            Streams.transfer(in = file.getInputStream(), out);
+        } catch (Exception e) {
+            throw Exceptions.app(ErrorMessage.OPERATE_ERROR);
+        } finally {
+            Streams.close(executor);
+            Streams.close(sessionStore);
+            Streams.close(out);
+            Streams.close(in);
+        }
     }
 
     @Override

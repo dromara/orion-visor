@@ -102,4 +102,11 @@ public interface ISftpSession extends ITerminalSession {
      */
     void setContent(String path, String content);
 
+    /**
+     * 检测文件是否可编辑
+     *
+     * @param path path
+     */
+    void checkCanEdit(String path);
+
 }

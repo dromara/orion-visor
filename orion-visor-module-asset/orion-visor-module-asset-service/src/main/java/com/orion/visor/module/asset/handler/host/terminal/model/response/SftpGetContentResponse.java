@@ -21,13 +21,8 @@ import lombok.experimental.SuperBuilder;
 public class SftpGetContentResponse extends SftpBaseResponse {
 
     /**
-     * path
-     */
-    private String path;
-
-    /**
      * content
      */
-    private String content;
+    private String token;
 
 }

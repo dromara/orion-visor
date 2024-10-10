@@ -159,8 +159,8 @@ public enum InputTypeEnum {
      */
     SFTP_SET_CONTENT("sc",
             SftpSetContentHandler.class,
-            new String[]{"type", "sessionId", "path", "content"},
-            SftpSetContentRequest.class,
+            new String[]{"type", "sessionId", "path"},
+            SftpBaseRequest.class,
             true),
 
     ;

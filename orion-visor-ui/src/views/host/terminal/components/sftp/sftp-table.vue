@@ -77,6 +77,7 @@
                    arrow-class="terminal-tooltip-content"
                    content="编辑内容">
           <a-button class="icon-button row-action-icon"
+                    :disabled="editorLoading"
                     @click="editFile(record)">
             <icon-edit />
           </a-button>
@@ -158,6 +159,7 @@
     session?: ISftpSession;
     list: Array<SftpFile>;
     loading: boolean;
+    editorLoading: boolean;
     selectedFiles: Array<string>;
   }>();
 
