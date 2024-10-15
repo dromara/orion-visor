@@ -112,8 +112,8 @@ export const FILE_TYPE = {
   }
 };
 
-// 终端状态
-export const TerminalStatus = {
+// 终端会话状态
+export const TerminalSessionStatus = {
   // 连接中
   CONNECTING: 0,
   // 已连接
@@ -392,8 +392,8 @@ export const newConnectionTypeKey = 'hostNewConnectionType';
 // ssh 认证类型
 export const extraSshAuthTypeKey = 'hostExtraSshAuthType';
 
-// 终端状态
-export const connectStatusKey = 'terminalConnectStatus';
+// 终端会话状态
+export const sessionStatusKey = 'terminalSessionStatus';
 
 // 终端类型
 export const emulationTypeKey = 'terminalEmulationType';
@@ -412,7 +412,7 @@ export const dictKeys = [
   fontFamilyKey, fontSizeKey,
   fontWeightKey, cursorStyleKey,
   newConnectionTypeKey, extraSshAuthTypeKey,
-  connectStatusKey, emulationTypeKey,
+  sessionStatusKey, emulationTypeKey,
   tabColorKey, transferStatusKey,
   pathBookmarkTypeKey,
 ];

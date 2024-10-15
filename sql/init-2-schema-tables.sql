@@ -77,9 +77,9 @@ DROP TABLE IF EXISTS `data_group`;
 CREATE TABLE `data_group`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `parent_id`   bigint(0)                                                    NULL DEFAULT NULL COMMENT '父id',
     `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '组类型',
-    `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '组名称',
     `sort`        int(0)                                                       NULL DEFAULT 10 COMMENT '排序',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -430,37 +430,6 @@ CREATE TABLE `host`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for terminal_connect_log
--- ----------------------------
-DROP TABLE IF EXISTS `terminal_connect_log`;
-CREATE TABLE `terminal_connect_log`
-(
-    `id`           bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `user_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '用户id',
-    `username`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '用户名',
-    `host_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
-    `host_name`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '主机名称',
-    `host_address` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
-    `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '类型',
-    `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '状态',
-    `token`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT 'token',
-    `start_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '开始时间',
-    `end_time`     datetime(3)                                                   NULL DEFAULT NULL COMMENT '结束时间',
-    `extra_info`   json                                                          NULL COMMENT '额外信息',
-    `create_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
-    `deleted`      tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
-    PRIMARY KEY (`id`) USING BTREE,
-    INDEX `idx_user_id` (`user_id`) USING BTREE,
-    INDEX `idx_host_type` (`host_id`, `type`) USING BTREE,
-    INDEX `idx_token` (`token`) USING BTREE
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '终端连接日志'
-  ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- Table structure for host_identity
 -- ----------------------------
 DROP TABLE IF EXISTS `host_identity`;
@@ -693,6 +662,28 @@ CREATE TABLE `system_role_menu`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for system_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `system_setting`;
+CREATE TABLE `system_setting`
+(
+    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '配置类型',
+    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置项',
+    `value`       json                                                         NULL COMMENT '配置值',
+    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '系统设置'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for system_user
 -- ----------------------------
 DROP TABLE IF EXISTS `system_user`;
@@ -787,6 +778,37 @@ CREATE TABLE `tag_rel`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '标签关联'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for terminal_connect_log
+-- ----------------------------
+DROP TABLE IF EXISTS `terminal_connect_log`;
+CREATE TABLE `terminal_connect_log`
+(
+    `id`           bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '用户id',
+    `username`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '用户名',
+    `host_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
+    `host_name`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '主机名称',
+    `host_address` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
+    `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '类型',
+    `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '状态',
+    `token`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT 'token',
+    `start_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '开始时间',
+    `end_time`     datetime(3)                                                   NULL DEFAULT NULL COMMENT '结束时间',
+    `extra_info`   json                                                          NULL COMMENT '额外信息',
+    `create_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `deleted`      tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user_id` (`user_id`) USING BTREE,
+    INDEX `idx_host_type` (`host_id`, `type`) USING BTREE,
+    INDEX `idx_token` (`token`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '终端连接日志'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------

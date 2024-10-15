@@ -32,8 +32,8 @@
         <!-- 连接状态 -->
         <a-badge v-if="preference.actionBarSetting.connectStatus !== false"
                  class="status-bridge"
-                 :status="getDictValue(connectStatusKey, session ? session.status : 0, 'status')"
-                 :text="getDictValue(connectStatusKey, session ? session.status : 0)" />
+                 :status="getDictValue(sessionStatusKey, session ? session.status : 0, 'status')"
+                 :text="getDictValue(sessionStatusKey, session ? session.status : 0)" />
       </div>
     </div>
     <!-- 终端右键菜单 -->
@@ -75,7 +75,7 @@
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { copy } from '@/hooks/copy';
-  import { ActionBarItems, connectStatusKey } from '../../types/const';
+  import { ActionBarItems, sessionStatusKey } from '../../types/const';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import IconActions from '../layout/icon-actions.vue';
   import SshContextMenu from './ssh-context-menu.vue';
