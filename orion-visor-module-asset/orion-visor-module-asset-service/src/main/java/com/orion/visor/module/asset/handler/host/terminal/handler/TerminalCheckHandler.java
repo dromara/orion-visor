@@ -41,7 +41,7 @@ import com.orion.visor.module.asset.handler.host.terminal.model.response.Termina
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
 import com.orion.visor.module.asset.service.TerminalConnectLogService;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -64,7 +64,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     private HostDAO hostDAO;
 
     @Resource
-    private HostTerminalService hostTerminalService;
+    private TerminalService terminalService;
 
     @Resource
     private TerminalConnectLogService terminalConnectLogService;
@@ -95,7 +95,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Exception ex = null;
         try {
             // 获取连接信息
-            connect = hostTerminalService.getTerminalConnectInfo(userId, host);
+            connect = terminalService.getTerminalConnectInfo(userId, host);
             connect.setConnectType(connectType.name());
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);

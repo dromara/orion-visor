@@ -32,7 +32,7 @@ import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSessio
 import com.orion.visor.module.asset.handler.host.transfer.session.ITransferSession;
 import com.orion.visor.module.asset.handler.host.transfer.session.UploadSession;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -48,7 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class TransferHandler implements ITransferHandler {
 
-    private static final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
+    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
 
     private final WebSocketSession channel;
 
@@ -110,7 +110,7 @@ public class TransferHandler implements ITransferHandler {
             if (terminalConnection == null) {
                 // 获取终端连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
-                HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(userId, hostId);
+                HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(userId, hostId);
                 terminalConnection = new TerminalConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
                 terminalConnections.put(hostId, terminalConnection);
             }

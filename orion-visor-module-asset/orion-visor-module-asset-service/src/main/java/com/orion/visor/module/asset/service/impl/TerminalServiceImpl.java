@@ -39,7 +39,7 @@ import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel
 import com.orion.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
 import com.orion.visor.module.asset.service.HostConfigService;
 import com.orion.visor.module.asset.service.HostExtraService;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import com.orion.visor.module.infra.api.DataPermissionApi;
 import com.orion.visor.module.infra.api.DictValueApi;
 import com.orion.visor.module.infra.enums.DataPermissionTypeEnum;
@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class HostTerminalServiceImpl implements HostTerminalService {
+public class TerminalServiceImpl implements TerminalService {
 
     private static final String THEME_DICT_KEY = "terminalTheme";
 
@@ -107,7 +107,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Override
     public String getTerminalAccessToken() {
         LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
-        log.info("HostConnectService.getHostAccessToken userId: {}", user.getId());
+        log.info("HostTerminalService.getTerminalAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();
         HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()
                 .userId(user.getId())
@@ -122,7 +122,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Override
     public String getTerminalTransferToken() {
         LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
-        log.info("HostConnectService.getTerminalTransferToken userId: {}", user.getId());
+        log.info("HostTerminalService.getTerminalTransferToken userId: {}", user.getId());
         String transferToken = UUIds.random19();
         HostTerminalTransferDTO transfer = HostTerminalTransferDTO.builder()
                 .userId(user.getId())
@@ -160,7 +160,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
 
     @Override
     public HostTerminalConnectDTO getTerminalConnectInfo(Long hostId) {
-        log.info("HostConnectService.getTerminalConnectInfo-withHost hostId: {}", hostId);
+        log.info("HostTerminalService.getTerminalConnectInfo-withHost hostId: {}", hostId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         // 查询主机配置
@@ -181,7 +181,7 @@ public class HostTerminalServiceImpl implements HostTerminalService {
     @Override
     public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
         Long hostId = host.getId();
-        log.info("HostConnectService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
+        log.info("HostTerminalService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 验证主机是否有权限
         List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
         Valid.isTrue(hostIdList.contains(hostId),

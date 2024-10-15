@@ -41,7 +41,7 @@ import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandD
 import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
 import com.orion.visor.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,7 +64,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
 
     private static final ExecLogManager execLogManager = SpringHolder.getBean(ExecLogManager.class);
 
-    private static final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
+    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
 
     private static final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
 
@@ -146,7 +146,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         // 初始化日志
         this.initLogOutputStream();
         // 打开会话
-        HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(execHostCommand.getHostId());
+        HostTerminalConnectDTO connect = terminalService.getTerminalConnectInfo(execHostCommand.getHostId());
         this.sessionStore = SessionStores.openSessionStore(connect);
         if (Booleans.isTrue(execCommand.getScriptExec())) {
             // 上传脚本文件

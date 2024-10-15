@@ -76,7 +76,7 @@ public class TerminalConnectLogController {
     @PostMapping("/session")
     @Operation(summary = "查询全部终端连接会话")
     @PreAuthorize("@ss.hasPermission('asset:terminal-connect-session:management:query')")
-    public List<TerminalConnectLogVO> getHostConnectSessions(@Validated @RequestBody TerminalConnectLogQueryRequest request) {
+    public List<TerminalConnectLogVO> getTerminalConnectSessions(@Validated @RequestBody TerminalConnectLogQueryRequest request) {
         return terminalConnectLogService.getTerminalConnectSessions(request);
     }
 

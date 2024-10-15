@@ -65,7 +65,6 @@ public class SystemSettingController {
     @GetMapping("/setting")
     @Operation(summary = "查询系统设置")
     @Parameter(name = "type", description = "type", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:system-setting:query')")
     public Map<String, Object> getSystemSettingByType(@RequestParam("type") String type) {
         return systemSettingService.getSystemSettingByType(type);
     }

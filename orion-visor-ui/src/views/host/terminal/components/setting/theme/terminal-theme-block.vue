@@ -54,13 +54,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalTheme } from '@/api/asset/host-terminal';
+  import type { TerminalTheme } from '@/api/asset/terminal';
   import type { ISshSession } from '../../../types/define';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { PanelSessionType } from '../../../types/const';
   import { onMounted, ref } from 'vue';
-  import { getTerminalThemes } from '@/api/asset/host-terminal';
+  import { getTerminalThemes } from '@/api/asset/terminal';
   import { getPreference } from '@/api/user/preference';
   import useLoading from '@/hooks/loading';
   import TerminalExample from '../terminal-example.vue';

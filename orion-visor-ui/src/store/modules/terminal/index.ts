@@ -12,8 +12,8 @@ import type { ISshSession, ITerminalSession, PanelSessionTabType, TerminalPanelT
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
-import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/host-terminal';
-import { getTerminalThemes } from '@/api/asset/host-terminal';
+import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/terminal';
+import { getTerminalThemes } from '@/api/asset/terminal';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { nextId } from '@/utils';

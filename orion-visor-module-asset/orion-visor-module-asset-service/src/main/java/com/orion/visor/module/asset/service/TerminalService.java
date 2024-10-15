@@ -30,7 +30,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023/12/26 14:22
  */
-public interface HostTerminalService {
+public interface TerminalService {
 
     /**
      * 获取主机终端主题

@@ -184,7 +184,7 @@
             </a-doption>
             <!-- SSH -->
             <a-doption v-if="record.type === hostType.SSH.type"
-                       v-permission="['asset:host-terminal:access']"
+                       v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
               <span class="more-doption normal">
                 <icon-thunderbolt /> SSH
@@ -192,7 +192,7 @@
             </a-doption>
             <!-- SFTP -->
             <a-doption v-if="record.type === hostType.SSH.type"
-                       v-permission="['asset:host-terminal:access']"
+                       v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
               <span class="more-doption normal">
                <icon-folder /> SFTP

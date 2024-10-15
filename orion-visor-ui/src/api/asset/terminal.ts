@@ -38,35 +38,35 @@ export interface TerminalThemeSchema {
 }
 
 /**
- * 获取主机终端主题
+ * 获取终端主题
  */
 export function getTerminalThemes() {
-  return axios.get<Array<TerminalTheme>>('/asset/host-terminal/themes');
+  return axios.get<Array<TerminalTheme>>('/asset/terminal/themes');
 }
 
 /**
- * 获取主机终端 accessToken
+ * 获取终端 accessToken
  */
 export function getTerminalAccessToken() {
-  return axios.get<string>('/asset/host-terminal/access');
+  return axios.get<string>('/asset/terminal/access');
 }
 
 /**
- * 获取主机终端 transferToken
+ * 获取终端 transferToken
  */
 export function getTerminalTransferToken() {
-  return axios.get<string>('/asset/host-terminal/transfer');
+  return axios.get<string>('/asset/terminal/transfer');
 }
 
 /**
- * 打开主机终端 websocket
+ * 打开终端 websocket
  */
 export const openHostTerminalChannel = (accessToken: string) => {
   return createAppWebSocket(`/host/terminal/${accessToken}`);
 };
 
 /**
- * 打开主机传输 websocket
+ * 打开终端传输 websocket
  */
 export const openHostTransferChannel = (accessToken: string) => {
   return createAppWebSocket(`/host/transfer/${accessToken}`);

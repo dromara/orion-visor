@@ -29,7 +29,7 @@ import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import com.orion.visor.module.asset.utils.SftpUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FileUploader implements IFileUploader {
 
-    private static final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
+    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
 
     private static final UploadTaskFileDAO uploadTaskFileDAO = SpringHolder.getBean(UploadTaskFileDAO.class);
 
@@ -116,7 +116,7 @@ public class FileUploader implements IFileUploader {
         log.info("HostFileUploader.initSession start taskId: {}, hostId: {}", taskId, hostId);
         try {
             // 打开会话
-            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(hostId);
+            HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId);
             this.sessionStore = SessionStores.openSessionStore(connectInfo);
             this.executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();

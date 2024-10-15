@@ -46,7 +46,7 @@ import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.transfer.manager.HostTransferManager;
 import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSession;
 import com.orion.visor.module.asset.service.HostSftpService;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import com.orion.visor.module.infra.api.OperatorLogApi;
 import com.orion.visor.module.infra.entity.dto.operator.OperatorLogQueryDTO;
 import com.orion.web.servlet.web.Servlets;
@@ -81,7 +81,7 @@ public class HostSftpServiceImpl implements HostSftpService {
     private HostTransferManager hostTransferManager;
 
     @Resource
-    private HostTerminalService hostTerminalService;
+    private TerminalService terminalService;
 
     @Override
     public DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request) {
@@ -131,7 +131,7 @@ public class HostSftpServiceImpl implements HostSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -164,7 +164,7 @@ public class HostSftpServiceImpl implements HostSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();

@@ -181,8 +181,8 @@ INSERT INTO `dict_value` VALUES (176, 27, 'terminalConnectType', 'SSH', 'SSH', '
 INSERT INTO `dict_value` VALUES (177, 28, 'terminalConnectStatus', 'CONNECTING', '连接中', '{\"color\": \"rgb(var(--green-6))\"}', 10, '2023-12-26 23:29:00', '2024-10-15 11:59:01', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (178, 28, 'terminalConnectStatus', 'COMPLETE', '完成', '{\"color\": \"rgb(var(--blue-6))\"}', 20, '2023-12-26 23:29:15', '2024-10-15 11:59:01', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (179, 28, 'terminalConnectStatus', 'FAILED', '失败', '{\"color\": \"rgb(var(--red-6))\"}', 30, '2023-12-26 23:29:34', '2024-10-15 11:59:01', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (180, 1, 'operatorLogModule', 'asset:host-terminal', '主机终端', '{}', 2050, '2023-12-27 18:42:39', '2024-04-11 23:34:50', '2', '1', 0);
-INSERT INTO `dict_value` VALUES (181, 2, 'operatorLogType', 'host-terminal:connect', '连接主机终端', '{}', 10, '2023-12-27 18:43:17', '2024-04-11 23:34:50', '2', '1', 0);
+INSERT INTO `dict_value` VALUES (180, 1, 'operatorLogModule', 'asset:terminal', '主机终端', '{}', 2050, '2023-12-27 18:42:39', '2024-10-15 15:52:47', '2', '1', 0);
+INSERT INTO `dict_value` VALUES (181, 2, 'operatorLogType', 'terminal:connect', '连接主机终端', '{}', 10, '2023-12-27 18:43:17', '2024-10-15 15:54:47', '2', '1', 0);
 INSERT INTO `dict_value` VALUES (182, 29, 'terminalSessionStatus', '0', '连接中', '{\"status\": \"normal\"}', 10, '2024-01-09 00:32:47', '2024-10-15 13:39:21', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (183, 29, 'terminalSessionStatus', '1', '已连接', '{\"status\": \"processing\"}', 20, '2024-01-09 00:32:59', '2024-10-15 13:39:23', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (184, 29, 'terminalSessionStatus', '2', '已断开', '{\"status\": \"danger\"}', 30, '2024-01-09 00:33:09', '2024-10-15 13:39:24', '1', '1', 0);
@@ -191,15 +191,15 @@ INSERT INTO `dict_value` VALUES (190, 31, 'terminalEmulationType', 'xterm-16colo
 INSERT INTO `dict_value` VALUES (191, 31, 'terminalEmulationType', 'xterm-256color', 'xterm-256color', '{}', 30, '2024-01-11 23:35:55', '2024-01-11 23:35:55', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (192, 31, 'terminalEmulationType', 'vt100', 'vt100', '{}', 40, '2024-01-11 23:36:00', '2024-01-11 23:36:00', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (193, 27, 'terminalConnectType', 'SFTP', 'SFTP', '{\"color\": \"purple\"}', 20, '2024-02-04 18:23:10', '2024-10-15 11:56:41', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (194, 2, 'operatorLogType', 'host-terminal:sftp-mkdir', '创建文件夹', '{}', 20, '2024-02-23 17:53:21', '2024-02-23 17:53:21', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (195, 2, 'operatorLogType', 'host-terminal:sftp-touch', '创建文件', '{}', 30, '2024-02-23 17:53:28', '2024-02-23 17:53:28', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (196, 2, 'operatorLogType', 'host-terminal:sftp-move', '移动文件', '{}', 40, '2024-02-23 17:53:39', '2024-02-23 17:53:39', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (197, 2, 'operatorLogType', 'host-terminal:sftp-remove', '删除文件', '{}', 50, '2024-02-23 17:53:51', '2024-02-23 17:53:51', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (198, 2, 'operatorLogType', 'host-terminal:sftp-truncate', '截断文件', '{}', 60, '2024-02-23 17:54:06', '2024-02-23 17:54:06', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (199, 2, 'operatorLogType', 'host-terminal:sftp-chmod', '文件提权', '{}', 70, '2024-02-23 17:54:17', '2024-02-23 17:54:17', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (200, 2, 'operatorLogType', 'host-terminal:sftp-set-content', '修改文件内容', '{}', 80, '2024-02-23 17:54:37', '2024-02-23 17:54:37', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (201, 2, 'operatorLogType', 'host-terminal:sftp-upload', '上传文件', '{}', 90, '2024-02-23 17:54:52', '2024-02-23 17:54:52', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (202, 2, 'operatorLogType', 'host-terminal:sftp-download', '下载文件', '{}', 100, '2024-02-23 17:55:03', '2024-02-23 17:55:03', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (194, 2, 'operatorLogType', 'terminal:sftp-mkdir', '创建文件夹', '{}', 20, '2024-02-23 17:53:21', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (195, 2, 'operatorLogType', 'terminal:sftp-touch', '创建文件', '{}', 30, '2024-02-23 17:53:28', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (196, 2, 'operatorLogType', 'terminal:sftp-move', '移动文件', '{}', 40, '2024-02-23 17:53:39', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (197, 2, 'operatorLogType', 'terminal:sftp-remove', '删除文件', '{}', 50, '2024-02-23 17:53:51', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (198, 2, 'operatorLogType', 'terminal:sftp-truncate', '截断文件', '{}', 60, '2024-02-23 17:54:06', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (199, 2, 'operatorLogType', 'terminal:sftp-chmod', '文件提权', '{}', 70, '2024-02-23 17:54:17', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (200, 2, 'operatorLogType', 'terminal:sftp-set-content', '修改文件内容', '{}', 80, '2024-02-23 17:54:37', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (201, 2, 'operatorLogType', 'terminal:sftp-upload', '上传文件', '{}', 90, '2024-02-23 17:54:52', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (202, 2, 'operatorLogType', 'terminal:sftp-download', '下载文件', '{}', 100, '2024-02-23 17:55:03', '2024-10-15 15:54:47', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (203, 32, 'terminalTabColor', 'red', '红色', '{\"bg\": \"rgb(var(--red-2))\", \"color\": \"rgb(var(--red-6))\"}', 10, '2024-03-01 15:07:41', '2024-08-05 14:24:28', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (204, 32, 'terminalTabColor', 'orange', '橙色', '{\"bg\": \"rgb(var(--orange-2))\", \"color\": \"rgb(var(--orange-6))\"}', 20, '2024-03-01 15:07:55', '2024-08-05 14:24:23', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (205, 32, 'terminalTabColor', 'yellow', '黄色', '{\"bg\": \"rgb(var(--yellow-2))\", \"color\": \"rgb(var(--yellow-6))\"}', 30, '2024-03-01 15:08:13', '2024-08-05 14:24:15', '1', '1', 0);
@@ -218,16 +218,16 @@ INSERT INTO `dict_value` VALUES (218, 2, 'operatorLogType', 'terminal-connect-lo
 INSERT INTO `dict_value` VALUES (219, 1, 'operatorLogModule', 'infra:operator-log', '操作日志', '{}', 1060, '2024-03-04 16:32:11', '2024-03-04 16:32:11', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (220, 2, 'operatorLogType', 'operator-log:delete', '删除操作日志', '{}', 10, '2024-03-04 16:33:11', '2024-03-04 16:33:44', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (221, 2, 'operatorLogType', 'operator-log:clear', '清空操作日志', '{}', 20, '2024-03-04 16:33:31', '2024-03-04 16:33:31', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (222, 2, 'operatorLogType', 'host-terminal:delete-sftp-log', '删除文件操作日志', '{}', 15, '2024-03-05 15:28:00', '2024-04-12 13:47:36', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (223, 33, 'sftpOperatorType', 'host-terminal:sftp-mkdir', '创建文件夹', '{}', 10, '2024-03-05 16:50:17', '2024-03-05 16:50:17', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (224, 33, 'sftpOperatorType', 'host-terminal:sftp-touch', '创建文件', '{}', 20, '2024-03-05 16:50:27', '2024-03-05 16:50:27', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (225, 33, 'sftpOperatorType', 'host-terminal:sftp-move', '移动文件', '{}', 30, '2024-03-05 16:50:41', '2024-03-05 16:50:41', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (226, 33, 'sftpOperatorType', 'host-terminal:sftp-remove', '删除文件', '{}', 40, '2024-03-05 16:50:53', '2024-03-05 16:50:53', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (227, 33, 'sftpOperatorType', 'host-terminal:sftp-truncate', '截断文件', '{}', 50, '2024-03-05 16:51:04', '2024-03-05 16:51:04', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (228, 33, 'sftpOperatorType', 'host-terminal:sftp-chmod', '文件提权', '{}', 60, '2024-03-05 16:51:15', '2024-03-05 16:51:15', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (229, 33, 'sftpOperatorType', 'host-terminal:sftp-set-content', '修改文件内容', '{}', 70, '2024-03-05 16:51:30', '2024-03-05 16:51:48', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (230, 33, 'sftpOperatorType', 'host-terminal:sftp-upload', '上传文件', '{}', 80, '2024-03-05 16:52:06', '2024-03-05 16:52:06', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (231, 33, 'sftpOperatorType', 'host-terminal:sftp-download', '下载文件', '{}', 90, '2024-03-05 16:52:18', '2024-03-05 16:52:18', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (222, 2, 'operatorLogType', 'terminal:delete-sftp-log', '删除文件操作日志', '{}', 15, '2024-03-05 15:28:00', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (223, 33, 'sftpOperatorType', 'terminal:sftp-mkdir', '创建文件夹', '{}', 10, '2024-03-05 16:50:17', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (224, 33, 'sftpOperatorType', 'terminal:sftp-touch', '创建文件', '{}', 20, '2024-03-05 16:50:27', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (225, 33, 'sftpOperatorType', 'terminal:sftp-move', '移动文件', '{}', 30, '2024-03-05 16:50:41', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (226, 33, 'sftpOperatorType', 'terminal:sftp-remove', '删除文件', '{}', 40, '2024-03-05 16:50:53', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (227, 33, 'sftpOperatorType', 'terminal:sftp-truncate', '截断文件', '{}', 50, '2024-03-05 16:51:04', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (228, 33, 'sftpOperatorType', 'terminal:sftp-chmod', '文件提权', '{}', 60, '2024-03-05 16:51:15', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (229, 33, 'sftpOperatorType', 'terminal:sftp-set-content', '修改文件内容', '{}', 70, '2024-03-05 16:51:30', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (230, 33, 'sftpOperatorType', 'terminal:sftp-upload', '上传文件', '{}', 80, '2024-03-05 16:52:06', '2024-10-15 15:54:47', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (231, 33, 'sftpOperatorType', 'terminal:sftp-download', '下载文件', '{}', 90, '2024-03-05 16:52:18', '2024-10-15 15:54:47', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (232, 1, 'operatorLogModule', 'asset:exec-template', '执行模板', '{}', 2070, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (233, 2, 'operatorLogType', 'exec-template:create', '创建执行模板', '{}', 10, '2024-03-07 18:32:41', '2024-04-12 13:48:54', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (234, 2, 'operatorLogType', 'exec-template:update', '更新执行模板', '{}', 20, '2024-03-07 18:32:41', '2024-04-12 13:48:56', '1', '1', 0);
@@ -317,6 +317,8 @@ INSERT INTO `dict_value` VALUES (402, 53, 'terminalTheme', '{\"background\":\"#1
 INSERT INTO `dict_value` VALUES (403, 53, 'terminalTheme', '{\"background\":\"#F4F4F4\",\"foreground\":\"#3E3E3E\",\"cursor\":\"#3F3F3F\",\"selectionBackground\":\"#A9C1E2\",\"black\":\"#3E3E3E\",\"red\":\"#970B16\",\"green\":\"#07962A\",\"yellow\":\"#F8EEC7\",\"blue\":\"#003E8A\",\"cyan\":\"#89D1EC\",\"white\":\"#FFFFFF\",\"brightBlack\":\"#666666\",\"brightRed\":\"#DE0000\",\"brightGreen\":\"#87D5A2\",\"brightYellow\":\"#F1D007\",\"brightBlue\":\"#2E6CBA\",\"brightCyan\":\"#1CFAFE\",\"brightWhite\":\"#FFFFFF\"}', 'Github', '{\"dark\": false}', 160, '2024-08-19 18:53:39', '2024-08-19 18:53:39', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (404, 53, 'terminalTheme', '{\"background\":\"#1F1F1F\",\"foreground\":\"#B9BCBA\",\"cursor\":\"#F83E19\",\"selectionBackground\":\"#2A2D32\",\"black\":\"#3A3D43\",\"red\":\"#BE3F48\",\"green\":\"#879A3B\",\"yellow\":\"#C5A635\",\"blue\":\"#4F76A1\",\"cyan\":\"#578FA4\",\"white\":\"#B9BCBA\",\"brightBlack\":\"#888987\",\"brightRed\":\"#FB001F\",\"brightGreen\":\"#0F722F\",\"brightYellow\":\"#C47033\",\"brightBlue\":\"#186DE3\",\"brightCyan\":\"#2E706D\",\"brightWhite\":\"#FDFFB9\"}', 'DimmedMonokai', '{\"dark\": true}', 170, '2024-08-19 18:53:52', '2024-08-19 18:53:52', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (405, 53, 'terminalTheme', '{\"background\":\"#1F1D27\",\"foreground\":\"#B7A1FF\",\"cursor\":\"#FF9839\",\"selectionBackground\":\"#353147\",\"black\":\"#1F1D27\",\"red\":\"#D9393E\",\"green\":\"#2DCD73\",\"yellow\":\"#D9B76E\",\"blue\":\"#FFC284\",\"cyan\":\"#2488FF\",\"white\":\"#B7A1FF\",\"brightBlack\":\"#353147\",\"brightRed\":\"#D9393E\",\"brightGreen\":\"#2DCD73\",\"brightYellow\":\"#D9B76E\",\"brightBlue\":\"#FFC284\",\"brightCyan\":\"#2488FF\",\"brightWhite\":\"#EAE5FF\"}', 'Duotone Dark', '{\"dark\": true}', 180, '2024-08-19 18:54:09', '2024-08-19 18:54:09', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (424, 1, 'operatorLogModule', 'infra:system-setting', '系统设置', '{}', 1070, '2024-10-09 19:28:58', '2024-10-09 19:28:58', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (425, 2, 'operatorLogType', 'system-setting:update', '更新系统设置', '{}', 10, '2024-10-09 19:30:17', '2024-10-09 19:30:43', '1', '1', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', '1', '1', 0);
@@ -390,7 +392,7 @@ INSERT INTO `system_menu` VALUES (145, 0, '主机运维', NULL, 1, 400, 1, 1, 1,
 INSERT INTO `system_menu` VALUES (146, 145, '主机终端', NULL, 2, 10, 1, 1, 1, 1, 'icon-code-square', NULL, 'terminal', '2023-12-04 23:38:01', '2024-03-07 19:09:44', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'connectLog', '2023-12-26 22:53:07', '2024-03-07 19:09:59', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (149, 148, '查询连接日志', 'asset:terminal-connect-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-26 22:53:08', '2024-10-15 11:28:08', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (151, 146, '连接终端', 'asset:host-terminal:access', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 18:56:33', '2023-12-27 18:56:33', '2', '2', 0);
+INSERT INTO `system_menu` VALUES (151, 146, '连接终端', 'asset:terminal:access', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 18:56:33', '2024-10-15 15:52:13', '2', '2', 0);
 INSERT INTO `system_menu` VALUES (152, 0, '运维审计', NULL, 1, 410, 1, 1, 1, 0, 'IconSafe', NULL, 'assetAuditModule', '2024-01-04 17:54:56', '2024-04-28 15:30:04', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (153, 148, '删除连接日志', 'asset:terminal-connect-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 13:39:46', '2024-10-15 11:28:08', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (154, 148, '清空连接日志', 'asset:terminal-connect-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 13:40:05', '2024-10-15 11:28:08', '1', '1', 0);
@@ -439,3 +441,4 @@ INSERT INTO `system_menu` VALUES (200, 198, '查询上传日志', 'asset:upload-
 INSERT INTO `system_menu` VALUES (201, 198, '删除上传日志', 'asset:upload-task:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:26', '2024-05-08 22:20:26', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (202, 198, '清理上传日志', 'asset:upload-task:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:37', '2024-05-08 22:20:37', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (203, 12, '系统设置', NULL, 2, 40, 1, 1, 1, 0, 'IconSettings', NULL, 'systemSetting', '2024-06-17 20:46:15', '2024-06-17 20:46:15', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (265, 203, '更新系统设置', 'infra:system-setting:update', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-10-09 19:25:28', '2024-10-09 19:25:28', '1', '1', 0);

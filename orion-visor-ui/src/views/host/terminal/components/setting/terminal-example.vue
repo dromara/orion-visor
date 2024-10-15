@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalThemeSchema } from '@/api/asset/host-terminal';
+  import type { TerminalThemeSchema } from '@/api/asset/terminal';
   import { Terminal } from '@xterm/xterm';
   import { onMounted, onUnmounted, ref } from 'vue';
 

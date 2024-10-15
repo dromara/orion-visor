@@ -31,30 +31,30 @@ import static com.orion.visor.framework.biz.operator.log.core.enums.OperatorRisk
  * @version 1.0.0
  * @since 2023/10/10 17:30
  */
-@Module("asset:host-terminal")
+@Module("asset:terminal")
 public class HostTerminalOperatorType extends InitializingOperatorTypes {
 
-    public static final String CONNECT = "host-terminal:connect";
+    public static final String CONNECT = "terminal:connect";
 
-    public static final String DELETE_SFTP_LOG = "host-terminal:delete-sftp-log";
+    public static final String DELETE_SFTP_LOG = "terminal:delete-sftp-log";
 
-    public static final String SFTP_MKDIR = "host-terminal:sftp-mkdir";
+    public static final String SFTP_MKDIR = "terminal:sftp-mkdir";
 
-    public static final String SFTP_TOUCH = "host-terminal:sftp-touch";
+    public static final String SFTP_TOUCH = "terminal:sftp-touch";
 
-    public static final String SFTP_MOVE = "host-terminal:sftp-move";
+    public static final String SFTP_MOVE = "terminal:sftp-move";
 
-    public static final String SFTP_REMOVE = "host-terminal:sftp-remove";
+    public static final String SFTP_REMOVE = "terminal:sftp-remove";
 
-    public static final String SFTP_TRUNCATE = "host-terminal:sftp-truncate";
+    public static final String SFTP_TRUNCATE = "terminal:sftp-truncate";
 
-    public static final String SFTP_CHMOD = "host-terminal:sftp-chmod";
+    public static final String SFTP_CHMOD = "terminal:sftp-chmod";
 
-    public static final String SFTP_SET_CONTENT = "host-terminal:sftp-set-content";
+    public static final String SFTP_SET_CONTENT = "terminal:sftp-set-content";
 
-    public static final String SFTP_UPLOAD = "host-terminal:sftp-upload";
+    public static final String SFTP_UPLOAD = "terminal:sftp-upload";
 
-    public static final String SFTP_DOWNLOAD = "host-terminal:sftp-download";
+    public static final String SFTP_DOWNLOAD = "terminal:sftp-download";
 
     public static final List<String> SFTP_TYPES = Lists.of(
             SFTP_MKDIR,
