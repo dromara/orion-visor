@@ -117,9 +117,7 @@ docker compose up -d
 
 ## 联系我
 
-<div style="display: flex;">
-  <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/d42d91f3-f0ee-4c63-adab-a35809e0804c.jpg" alt="wx" width="298px" height="398px"/>  
-</div>
+<img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/10/11/cf72c603-3951-4171-95b4-06271dda1c80.jpg" alt="wx" width="628px"/>  
 
 微信: ljh1553488  
 QQ群: 755242157
