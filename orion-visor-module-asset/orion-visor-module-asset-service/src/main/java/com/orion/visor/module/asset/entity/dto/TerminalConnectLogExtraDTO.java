@@ -22,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机连接日志拓展信息对象
+ * 终端连接日志拓展信息对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -32,8 +32,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostConnectLogExtraDTO", description = "主机连接日志拓展信息对象")
-public class HostConnectLogExtraDTO {
+@Schema(name = "TerminalConnectLogExtraDTO", description = "终端连接日志拓展信息对象")
+public class TerminalConnectLogExtraDTO {
 
     @Schema(description = "hostId")
     private Long hostId;

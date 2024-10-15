@@ -27,8 +27,8 @@ import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
-import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
@@ -38,7 +38,7 @@ import com.orion.visor.module.asset.handler.host.terminal.model.response.Termina
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.handler.host.terminal.session.SftpSession;
 import com.orion.visor.module.asset.handler.host.terminal.session.SshSession;
-import com.orion.visor.module.asset.service.HostConnectLogService;
+import com.orion.visor.module.asset.service.TerminalConnectLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -58,13 +58,13 @@ import java.util.Map;
 public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConnectRequest> {
 
     @Resource
-    private HostConnectLogService hostConnectLogService;
+    private TerminalConnectLogService terminalConnectLogService;
 
     @Override
     public void handle(WebSocketSession channel, TerminalConnectRequest payload) {
         String sessionId = payload.getSessionId();
         log.info("TerminalConnectHandler-handle start sessionId: {}", sessionId);
-        // 获取主机连接信息
+        // 获取终端连接信息
         HostTerminalConnectDTO connect = WebSockets.getAttr(channel, sessionId);
         if (connect == null) {
             log.info("TerminalConnectHandler-handle unknown sessionId: {}", sessionId);
@@ -92,7 +92,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             // 修改连接状态为失败
             Map<String, Object> extra = Maps.newMap(4);
             extra.put(ExtraFieldConst.ERROR_MESSAGE, this.getConnectErrorMessage(e));
-            hostConnectLogService.updateStatusById(connect.getLogId(), HostConnectStatusEnum.FAILED, extra);
+            terminalConnectLogService.updateStatusById(connect.getLogId(), TerminalConnectStatusEnum.FAILED, extra);
         }
         // 返回连接状态
         this.send(channel,
@@ -132,12 +132,12 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
                     .build();
             // 建立连接
             SessionStore sessionStore = SessionStores.openSessionStore(connect);
-            if (HostConnectTypeEnum.SSH.name().equals(connectType)) {
+            if (TerminalConnectTypeEnum.SSH.name().equals(connectType)) {
                 // 打开 ssh 会话
                 SshSession sshSession = new SshSession(sessionId, channel, sessionStore, config);
                 sshSession.connect(body.getTerminalType(), body.getCols(), body.getRows());
                 session = sshSession;
-            } else if (HostConnectTypeEnum.SFTP.name().equals(connectType)) {
+            } else if (TerminalConnectTypeEnum.SFTP.name().equals(connectType)) {
                 // 打开 sftp 会话
                 SftpSession sftpSession = new SftpSession(sessionId, channel, sessionStore, config);
                 sftpSession.connect();

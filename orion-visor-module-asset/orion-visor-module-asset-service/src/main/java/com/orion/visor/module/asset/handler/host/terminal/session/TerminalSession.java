@@ -18,12 +18,12 @@ package com.orion.visor.module.asset.handler.host.terminal.session;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
-import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
 import com.orion.visor.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.TerminalCloseResponse;
-import com.orion.visor.module.asset.service.HostConnectLogService;
+import com.orion.visor.module.asset.service.TerminalConnectLogService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -83,8 +83,8 @@ public abstract class TerminalSession implements ITerminalSession {
         // 检查并且关闭
         if (this.checkAndClose()) {
             // 修改状态
-            SpringHolder.getBean(HostConnectLogService.class)
-                    .updateStatusById(config.getLogId(), HostConnectStatusEnum.COMPLETE, null);
+            SpringHolder.getBean(TerminalConnectLogService.class)
+                    .updateStatusById(config.getLogId(), TerminalConnectStatusEnum.COMPLETE, null);
         }
     }
 

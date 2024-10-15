@@ -430,10 +430,10 @@ CREATE TABLE `host`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for host_connect_log
+-- Table structure for terminal_connect_log
 -- ----------------------------
-DROP TABLE IF EXISTS `host_connect_log`;
-CREATE TABLE `host_connect_log`
+DROP TABLE IF EXISTS `terminal_connect_log`;
+CREATE TABLE `terminal_connect_log`
 (
     `id`           bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '用户id',
@@ -457,7 +457,7 @@ CREATE TABLE `host_connect_log`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '主机连接日志'
+  COLLATE = utf8mb4_general_ci COMMENT = '终端连接日志'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------

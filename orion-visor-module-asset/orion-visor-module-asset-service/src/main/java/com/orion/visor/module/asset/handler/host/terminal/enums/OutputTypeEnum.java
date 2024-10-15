@@ -31,12 +31,12 @@ import lombok.Getter;
 public enum OutputTypeEnum {
 
     /**
-     * 主机连接检查
+     * 终端连接检查
      */
     CHECK("ck", "${type}|${sessionId}|${result}|${msg}"),
 
     /**
-     * 主机连接
+     * 终端连接
      */
     CONNECT("co", "${type}|${sessionId}|${result}|${msg}"),
 

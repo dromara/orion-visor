@@ -35,7 +35,7 @@ import javax.annotation.PostConstruct;
 public enum InputTypeEnum {
 
     /**
-     * 主机连接检查
+     * 终端连接检查
      */
     CHECK("ck",
             TerminalCheckHandler.class,

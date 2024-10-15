@@ -15,36 +15,36 @@
  */
 package com.orion.visor.module.asset.convert;
 
-import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
+import com.orion.visor.module.asset.entity.domain.TerminalConnectLogDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
-import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogCreateRequest;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogQueryRequest;
+import com.orion.visor.module.asset.entity.vo.TerminalConnectLogVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 /**
- * 主机连接日志 内部对象转换器
+ * 终端连接日志 内部对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023-12-26 22:09
  */
 @Mapper
-public interface HostConnectLogConvert {
+public interface TerminalConnectLogConvert {
 
-    HostConnectLogConvert MAPPER = Mappers.getMapper(HostConnectLogConvert.class);
+    TerminalConnectLogConvert MAPPER = Mappers.getMapper(TerminalConnectLogConvert.class);
 
-    HostConnectLogDO to(HostConnectLogCreateRequest request);
+    TerminalConnectLogDO to(TerminalConnectLogCreateRequest request);
 
-    HostConnectLogDO to(HostConnectLogQueryRequest request);
+    TerminalConnectLogDO to(TerminalConnectLogQueryRequest request);
 
-    HostConnectLogVO to(HostConnectLogDO domain);
+    TerminalConnectLogVO to(TerminalConnectLogDO domain);
 
-    HostConnectLogCreateRequest to(HostTerminalConnectDTO dto);
+    TerminalConnectLogCreateRequest to(HostTerminalConnectDTO dto);
 
-    List<HostConnectLogVO> to(List<HostConnectLogDO> list);
+    List<TerminalConnectLogVO> to(List<TerminalConnectLogDO> list);
 
 }

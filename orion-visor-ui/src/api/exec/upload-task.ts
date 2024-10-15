@@ -172,14 +172,14 @@ export function batchDeleteUploadTask(idList: Array<number>) {
 }
 
 /**
- * 查询主机连接日志数量
+ * 查询批量上传任务数量
  */
 export function getUploadTaskCount(request: UploadTaskQueryRequest) {
   return axios.post<number>('/asset/upload-task/count', request);
 }
 
 /**
- * 清空主机连接日志
+ * 清空查询批量上传任务
  */
 export function clearUploadTask(request: UploadTaskClearRequest) {
   return axios.post<number>('/asset/upload-task/clear', request);

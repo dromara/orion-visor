@@ -17,10 +17,10 @@ package com.orion.visor.module.asset.task;
 
 import com.orion.lang.utils.time.Dates;
 import com.orion.visor.framework.common.utils.LockerUtils;
-import com.orion.visor.module.asset.define.config.AppHostConnectLogAutoClearConfig;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
-import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
-import com.orion.visor.module.asset.service.HostConnectLogService;
+import com.orion.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogClearRequest;
+import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
+import com.orion.visor.module.asset.service.TerminalConnectLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 /**
- * 主机连接日志自动清理
+ * 终端连接日志自动清理
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -38,8 +38,8 @@ import java.util.Date;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "app.auto-clear.host-connect-log.enabled", havingValue = "true")
-public class HostConnectLogAutoClearTask {
+@ConditionalOnProperty(value = "app.auto-clear.terminal-connect-log.enabled", havingValue = "true")
+public class TerminalConnectLogAutoClearTask {
 
     /**
      * 分布式锁名称
@@ -47,20 +47,20 @@ public class HostConnectLogAutoClearTask {
     private static final String LOCK_KEY = "clear:hcl:lock";
 
     @Resource
-    private AppHostConnectLogAutoClearConfig appHostConnectLogAutoClearConfig;
+    private AppTerminalConnectLogAutoClearConfig appTerminalConnectLogAutoClearConfig;
 
     @Resource
-    private HostConnectLogService hostConnectLogService;
+    private TerminalConnectLogService terminalConnectLogService;
 
     /**
      * 清理
      */
     @Scheduled(cron = "0 10 3 * * ?")
     public void clear() {
-        log.info("HostConnectLogAutoClearTask.clear start");
+        log.info("TerminalConnectLogAutoClearTask.clear start");
         // 获取锁并执行
         LockerUtils.tryLock(LOCK_KEY, this::doClear);
-        log.info("HostConnectLogAutoClearTask.clear finish");
+        log.info("TerminalConnectLogAutoClearTask.clear finish");
     }
 
     /**
@@ -69,13 +69,13 @@ public class HostConnectLogAutoClearTask {
     private void doClear() {
         // 删除的时间区间
         Date createLessEq = Dates.stream()
-                .subDay(appHostConnectLogAutoClearConfig.getKeepPeriod())
+                .subDay(appTerminalConnectLogAutoClearConfig.getKeepPeriod())
                 .date();
         // 清理
-        HostConnectLogClearRequest request = new HostConnectLogClearRequest();
+        TerminalConnectLogClearRequest request = new TerminalConnectLogClearRequest();
         request.setCreateTimeLe(createLessEq);
-        request.setStatusList(HostConnectStatusEnum.FINISH_STATUS_LIST);
-        hostConnectLogService.clearHostConnectLog(request);
+        request.setStatusList(TerminalConnectStatusEnum.FINISH_STATUS_LIST);
+        terminalConnectLogService.clearTerminalConnectLog(request);
     }
 
 }

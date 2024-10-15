@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 import java.util.Map;
 
 /**
- * 主机连接日志 创建请求对象
+ * 终端连接日志 创建请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -35,8 +35,8 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostConnectLogCreateRequest", description = "主机连接日志 创建请求对象")
-public class HostConnectLogCreateRequest {
+@Schema(name = "TerminalConnectLogCreateRequest", description = "终端连接日志 创建请求对象")
+public class TerminalConnectLogCreateRequest {
 
     @Schema(description = "用户id")
     private Long userId;

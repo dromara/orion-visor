@@ -25,7 +25,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * 主机连接日志 清理请求对象
+ * 终端连接日志 清理请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -33,8 +33,8 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "HostConnectLogClearRequest", description = "主机连接日志 清理请求对象")
-public class HostConnectLogClearRequest extends HostConnectLogQueryRequest implements DataClearRequest {
+@Schema(name = "TerminalConnectLogClearRequest", description = "终端连接日志 清理请求对象")
+public class TerminalConnectLogClearRequest extends TerminalConnectLogQueryRequest implements DataClearRequest {
 
     @NotNull
     @Min(value = 1)

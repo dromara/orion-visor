@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 主机连接日志 查询请求对象
+ * 终端连接日志 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -38,8 +38,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "HostConnectLogQueryRequest", description = "主机连接日志 查询请求对象")
-public class HostConnectLogQueryRequest extends PageRequest {
+@Schema(name = "TerminalConnectLogQueryRequest", description = "终端连接日志 查询请求对象")
+public class TerminalConnectLogQueryRequest extends PageRequest {
 
     @NotNull(groups = Id.class)
     @Schema(description = "id")

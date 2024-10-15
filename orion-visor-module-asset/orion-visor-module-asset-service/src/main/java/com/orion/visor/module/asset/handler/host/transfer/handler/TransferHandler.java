@@ -26,7 +26,7 @@ import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferOperator;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferType;
-import com.orion.visor.module.asset.handler.host.transfer.model.HostConnection;
+import com.orion.visor.module.asset.handler.host.transfer.model.TerminalConnection;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSession;
 import com.orion.visor.module.asset.handler.host.transfer.session.ITransferSession;
@@ -56,12 +56,12 @@ public class TransferHandler implements ITransferHandler {
 
     private final ConcurrentHashMap<String, ITransferSession> sessions;
 
-    private final ConcurrentHashMap<Long, HostConnection> hostConnections;
+    private final ConcurrentHashMap<Long, TerminalConnection> terminalConnections;
 
     public TransferHandler(WebSocketSession channel) {
         this.channel = channel;
         this.sessions = new ConcurrentHashMap<>();
-        this.hostConnections = new ConcurrentHashMap<>();
+        this.terminalConnections = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -105,17 +105,17 @@ public class TransferHandler implements ITransferHandler {
         TransferType type = TransferType.of(payload.getType());
         String sessionKey = hostId + "_" + type.getType();
         try {
-            // 获取主机连接信息
-            HostConnection hostConnection = hostConnections.get(hostId);
-            if (hostConnection == null) {
-                // 获取主机连接信息
+            // 获取终端连接信息
+            TerminalConnection terminalConnection = terminalConnections.get(hostId);
+            if (terminalConnection == null) {
+                // 获取终端连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
                 HostTerminalConnectDTO connectInfo = hostTerminalService.getTerminalConnectInfo(userId, hostId);
-                hostConnection = new HostConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
-                hostConnections.put(hostId, hostConnection);
+                terminalConnection = new TerminalConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
+                terminalConnections.put(hostId, terminalConnection);
             }
-            SessionStore sessionStore = hostConnection.getSessionStore();
-            HostTerminalConnectDTO connectInfo = hostConnection.getConnectInfo();
+            SessionStore sessionStore = terminalConnection.getSessionStore();
+            HostTerminalConnectDTO connectInfo = terminalConnection.getConnectInfo();
             // 获取会话
             ITransferSession session = sessions.get(sessionKey);
             if (session == null) {

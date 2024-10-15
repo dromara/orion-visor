@@ -52,7 +52,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 主机连接服务
+ * 终端连接服务
  *
  * @author Jiahang Li
  * @version 1.0.0

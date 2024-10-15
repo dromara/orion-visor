@@ -1,11 +1,11 @@
-// 主机连接类型
-export const HostConnectType = {
+// 终端连接类型
+export const TerminalConnectType = {
   SSH: 'SSH',
   SFTP: 'SFTP',
 };
 
-// 主机连接状态
-export const HostConnectStatus = {
+// 终端连接状态
+export const TerminalConnectStatus = {
   CONNECTING: 'CONNECTING',
   COMPLETE: 'COMPLETE',
   FAILED: 'FAILED',
@@ -15,11 +15,11 @@ export const HostConnectStatus = {
 // 最大清理数量
 export const maxClearLimit = 2000;
 
-// 主机连接状态 字典项
-export const connectStatusKey = 'hostConnectStatus';
+// 终端连接状态 字典项
+export const connectStatusKey = 'terminalConnectStatus';
 
-// 主机连接类型 字典项
-export const connectTypeKey = 'hostConnectType';
+// 终端连接类型 字典项
+export const connectTypeKey = 'terminalConnectType';
 
 // 加载的字典值
 export const dictKeys = [connectStatusKey, connectTypeKey];

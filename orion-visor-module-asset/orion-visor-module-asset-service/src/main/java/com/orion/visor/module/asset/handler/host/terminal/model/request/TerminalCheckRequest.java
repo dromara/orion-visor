@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 主机连接检查请求 实体对象
+ * 终端连接检查请求 实体对象
  * <p>
  * ck|eff00a1|1
  *

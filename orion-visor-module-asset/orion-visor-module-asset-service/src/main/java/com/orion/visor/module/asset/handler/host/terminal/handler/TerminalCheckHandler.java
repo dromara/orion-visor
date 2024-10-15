@@ -28,19 +28,19 @@ import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
-import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
+import com.orion.visor.module.asset.entity.domain.TerminalConnectLogDO;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
-import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
-import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogCreateRequest;
+import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
-import com.orion.visor.module.asset.service.HostConnectLogService;
+import com.orion.visor.module.asset.service.TerminalConnectLogService;
 import com.orion.visor.module.asset.service.HostTerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -50,7 +50,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 主机连接检查
+ * 终端连接检查
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -67,7 +67,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     private HostTerminalService hostTerminalService;
 
     @Resource
-    private HostConnectLogService hostConnectLogService;
+    private TerminalConnectLogService terminalConnectLogService;
 
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
@@ -77,7 +77,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Long hostId = payload.getHostId();
         Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
-        HostConnectTypeEnum connectType = HostConnectTypeEnum.of(payload.getConnectType());
+        TerminalConnectTypeEnum connectType = TerminalConnectTypeEnum.of(payload.getConnectType());
         String sessionId = payload.getSessionId();
         log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         // 检查 session 是否存在
@@ -111,7 +111,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
-        HostConnectLogDO connectLog = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
+        TerminalConnectLogDO connectLog = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
         if (connect != null) {
             connect.setLogId(connectLog.getId());
         }
@@ -188,13 +188,13 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @param connectType connectType
      * @return connectLog
      */
-    private HostConnectLogDO saveHostLog(WebSocketSession channel,
-                                         Long userId,
-                                         HostDO host,
-                                         long startTime,
-                                         Exception ex,
-                                         String sessionId,
-                                         HostConnectTypeEnum connectType) {
+    private TerminalConnectLogDO saveHostLog(WebSocketSession channel,
+                                             Long userId,
+                                             HostDO host,
+                                             long startTime,
+                                             Exception ex,
+                                             String sessionId,
+                                             TerminalConnectTypeEnum connectType) {
         Long hostId = host.getId();
         String hostName = host.getName();
         String username = WebSockets.getAttr(channel, ExtraFieldConst.USERNAME);
@@ -211,13 +211,13 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         // 记录操作日志
         operatorLogFrameworkService.insert(logModel);
         // 记录连接日志
-        HostConnectLogCreateRequest connectLog = HostConnectLogCreateRequest.builder()
+        TerminalConnectLogCreateRequest connectLog = TerminalConnectLogCreateRequest.builder()
                 .userId(userId)
                 .username(username)
                 .hostId(hostId)
                 .hostName(hostName)
                 .hostAddress(host.getAddress())
-                .status(ex == null ? HostConnectStatusEnum.CONNECTING.name() : HostConnectStatusEnum.FAILED.name())
+                .status(ex == null ? TerminalConnectStatusEnum.CONNECTING.name() : TerminalConnectStatusEnum.FAILED.name())
                 .token(sessionId)
                 .extra(extra)
                 .build();
@@ -228,7 +228,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         extra.put(OperatorLogs.USER_AGENT, logModel.getUserAgent());
         extra.put(OperatorLogs.ERROR_MESSAGE, logModel.getErrorMessage());
         // 记录连接日志
-        return hostConnectLogService.create(connectType, connectLog);
+        return terminalConnectLogService.create(connectType, connectLog);
     }
 
 }

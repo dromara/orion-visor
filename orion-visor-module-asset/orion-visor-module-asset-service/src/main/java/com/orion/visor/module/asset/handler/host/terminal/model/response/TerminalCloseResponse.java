@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 主机连接关闭响应 实体对象
+ * 终端连接关闭响应 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -26,7 +26,7 @@ import com.orion.visor.module.asset.convert.HostGroupConvert;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
 import com.orion.visor.module.asset.entity.vo.*;
-import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 import com.orion.visor.module.asset.enums.HostExtraItemEnum;
 import com.orion.visor.module.asset.enums.HostStatusEnum;
 import com.orion.visor.module.asset.enums.HostTypeEnum;
@@ -79,7 +79,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     private HostIdentityService hostIdentityService;
 
     @Resource
-    private HostConnectLogService hostConnectLogService;
+    private TerminalConnectLogService terminalConnectLogService;
 
     @Resource
     private FavoriteApi favoriteApi;
@@ -151,7 +151,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         // 查询我的收藏
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
         // 查询最近连接的主机
-        Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.of(type), userId);
+        Future<List<Long>> latestConnectHostIdList = terminalConnectLogService.getLatestConnectHostIdAsync(TerminalConnectTypeEnum.of(type), userId);
         // 查询主机拓展信息
         Future<Map<Long, String>> labelExtraResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId,
                 DataExtraTypeEnum.HOST,

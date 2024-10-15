@@ -22,7 +22,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * 主机连接日志自动清理配置
+ * 终端连接日志自动清理配置
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties(prefix = "app.auto-clear.host-connect-log")
-public class AppHostConnectLogAutoClearConfig extends AutoClearConfig {
+@ConfigurationProperties(prefix = "app.auto-clear.terminal-connect-log")
+public class AppTerminalConnectLogAutoClearConfig extends AutoClearConfig {
 
 }

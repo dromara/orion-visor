@@ -15,49 +15,33 @@
  */
 package com.orion.visor.module.asset.enums;
 
-import com.orion.lang.utils.collect.Lists;
-
-import java.util.List;
-
 /**
- * 主机连接状态
+ * 终端连接类型
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/12/26 22:27
  */
-public enum HostConnectStatusEnum {
+public enum TerminalConnectTypeEnum {
 
     /**
-     * 连接中
+     * ssh
      */
-    CONNECTING,
+    SSH,
 
     /**
-     * 完成
+     * sftp
      */
-    COMPLETE,
-
-    /**
-     * 失败
-     */
-    FAILED,
-
-    /**
-     * 强制下线
-     */
-    FORCE_OFFLINE,
+    SFTP,
 
     ;
 
-    public static final List<String> FINISH_STATUS_LIST = Lists.of(COMPLETE.name(), FAILED.name(), FORCE_OFFLINE.name());
-
-    public static HostConnectStatusEnum of(String type) {
+    public static TerminalConnectTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
-        for (HostConnectStatusEnum value : values()) {
-            if (value.name().equals(type)) {
+        for (TerminalConnectTypeEnum value : values()) {
+            if (value.name().equalsIgnoreCase(type)) {
                 return value;
             }
         }

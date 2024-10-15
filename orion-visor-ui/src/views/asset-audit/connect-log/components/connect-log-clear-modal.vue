@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            modal-class="modal-form-large"
            title-align="start"
-           title="清空主机连接日志"
+           title="清空终端连接日志"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
@@ -76,12 +76,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostConnectLogQueryRequest } from '@/api/asset/host-connect-log';
+  import type { TerminalConnectLogQueryRequest } from '@/api/asset/terminal-connect-log';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { connectStatusKey, connectTypeKey, maxClearLimit } from '../types/const';
-  import { getHostConnectLogCount, clearHostConnectLog } from '@/api/asset/host-connect-log';
+  import { getTerminalConnectLogCount, clearTerminalConnectLog } from '@/api/asset/terminal-connect-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import UserSelector from '@/components/user/user/selector/index.vue';
@@ -93,7 +93,7 @@
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const defaultForm = (): HostConnectLogQueryRequest => {
+  const defaultForm = (): TerminalConnectLogQueryRequest => {
     return {
       userId: undefined,
       hostId: undefined,
@@ -105,7 +105,7 @@
     };
   };
 
-  const formModel = ref<HostConnectLogQueryRequest>({});
+  const formModel = ref<TerminalConnectLogQueryRequest>({});
 
   // 打开
   const open = (record: any) => {
@@ -129,7 +129,7 @@
     setLoading(true);
     try {
       // 获取总数量
-      const { data } = await getHostConnectLogCount(formModel.value);
+      const { data } = await getTerminalConnectLogCount(formModel.value);
       if (data) {
         // 清空
         doClear(data);
@@ -153,7 +153,7 @@
         setLoading(true);
         try {
           // 调用清空
-          const { data } = await clearHostConnectLog(formModel.value);
+          const { data } = await clearTerminalConnectLog(formModel.value);
           Message.success(`已成功清空 ${data} 条数据`);
           emits('clear');
           // 清空

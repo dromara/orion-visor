@@ -197,8 +197,8 @@ app:
     exec-log:
       enabled: false
       keep-period: 30
-    # 主机连接日志
-    host-connect-log:
+    # 终端连接日志
+    terminal-connect-log:
       enabled: false
       keep-period: 30
 

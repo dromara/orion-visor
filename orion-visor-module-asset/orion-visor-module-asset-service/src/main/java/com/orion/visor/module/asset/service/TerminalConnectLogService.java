@@ -17,51 +17,51 @@ package com.orion.visor.module.asset.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogClearRequest;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogQueryRequest;
-import com.orion.visor.module.asset.entity.vo.HostConnectLogVO;
-import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
-import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
+import com.orion.visor.module.asset.entity.domain.TerminalConnectLogDO;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogClearRequest;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogCreateRequest;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogQueryRequest;
+import com.orion.visor.module.asset.entity.vo.TerminalConnectLogVO;
+import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
- * 主机连接日志 服务类
+ * 终端连接日志 服务类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023-12-26 22:09
  */
-public interface HostConnectLogService {
+public interface TerminalConnectLogService {
 
     /**
-     * 创建主机连接日志
+     * 创建终端连接日志
      *
      * @param type    type
      * @param request request
      * @return record
      */
-    HostConnectLogDO create(HostConnectTypeEnum type, HostConnectLogCreateRequest request);
+    TerminalConnectLogDO create(TerminalConnectTypeEnum type, TerminalConnectLogCreateRequest request);
 
     /**
-     * 分页查询主机连接日志
+     * 分页查询终端连接日志
      *
      * @param request request
      * @return rows
      */
-    DataGrid<HostConnectLogVO> getHostConnectLogPage(HostConnectLogQueryRequest request);
+    DataGrid<TerminalConnectLogVO> getTerminalConnectLogPage(TerminalConnectLogQueryRequest request);
 
     /**
-     * 分页查询主机连接会话
+     * 分页查询终端连接会话
      *
      * @param request request
      * @return rows
      */
-    List<HostConnectLogVO> getHostConnectSessions(HostConnectLogQueryRequest request);
+    List<TerminalConnectLogVO> getTerminalConnectSessions(TerminalConnectLogQueryRequest request);
 
     /**
      * 更新连接状态
@@ -71,7 +71,7 @@ public interface HostConnectLogService {
      * @param extra  extra
      * @return effect
      */
-    Integer updateStatusById(Long id, HostConnectStatusEnum status, Map<String, Object> extra);
+    Integer updateStatusById(Long id, TerminalConnectStatusEnum status, Map<String, Object> extra);
 
     /**
      * 查询用户最近连接的主机
@@ -79,7 +79,7 @@ public interface HostConnectLogService {
      * @param request request
      * @return hostId
      */
-    List<Long> getLatestConnectHostId(HostConnectLogQueryRequest request);
+    List<Long> getLatestConnectHostId(TerminalConnectLogQueryRequest request);
 
     /**
      * 查询用户最近连接的主机
@@ -88,39 +88,39 @@ public interface HostConnectLogService {
      * @param userId userId
      * @return hostId
      */
-    Future<List<Long>> getLatestConnectHostIdAsync(HostConnectTypeEnum type, Long userId);
+    Future<List<Long>> getLatestConnectHostIdAsync(TerminalConnectTypeEnum type, Long userId);
 
     /**
-     * 删除主机连接日志
+     * 删除终端连接日志
      *
      * @param idList idList
      * @return effect
      */
-    Integer deleteHostConnectLog(List<Long> idList);
+    Integer deleteTerminalConnectLog(List<Long> idList);
 
     /**
-     * 获取主机连接日志数量
+     * 获取终端连接日志数量
      *
      * @param request request
      * @return count
      */
-    Long getHostConnectLogCount(HostConnectLogQueryRequest request);
+    Long getTerminalConnectLogCount(TerminalConnectLogQueryRequest request);
 
     /**
-     * 清空主机连接日志
+     * 清空终端连接日志
      *
      * @param request request
      * @return effect
      */
-    Integer clearHostConnectLog(HostConnectLogClearRequest request);
+    Integer clearTerminalConnectLog(TerminalConnectLogClearRequest request);
 
     /**
-     * 强制断开主机连接
+     * 强制断开终端连接
      *
      * @param request request
      * @return effect
      */
-    Integer forceOffline(HostConnectLogQueryRequest request);
+    Integer forceOffline(TerminalConnectLogQueryRequest request);
 
     /**
      * 构建查询 wrapper
@@ -128,6 +128,6 @@ public interface HostConnectLogService {
      * @param request request
      * @return wrapper
      */
-    LambdaQueryWrapper<HostConnectLogDO> buildQueryWrapper(HostConnectLogQueryRequest request);
+    LambdaQueryWrapper<TerminalConnectLogDO> buildQueryWrapper(TerminalConnectLogQueryRequest request);
 
 }

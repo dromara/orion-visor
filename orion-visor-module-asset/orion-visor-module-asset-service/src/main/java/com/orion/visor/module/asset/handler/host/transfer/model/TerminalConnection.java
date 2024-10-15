@@ -23,7 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机连接信息
+ * 终端连接信息
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HostConnection {
+public class TerminalConnection {
 
     /**
      * connectInfo
