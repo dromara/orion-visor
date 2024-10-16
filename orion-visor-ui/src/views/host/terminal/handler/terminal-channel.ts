@@ -2,7 +2,7 @@ import type { ITerminalChannel, ITerminalOutputProcessor, ITerminalSessionManage
 import type { InputPayload, Protocol } from '@/types/protocol/terminal.protocol';
 import { format, OutputProtocol, parse } from '@/types/protocol/terminal.protocol';
 import { sessionCloseMsg } from '../types/const';
-import { getTerminalAccessToken, openHostTerminalChannel } from '@/api/asset/terminal';
+import { getTerminalAccessToken, openTerminalAccessChannel } from '@/api/asset/terminal';
 import { Message } from '@arco-design/web-vue';
 import TerminalOutputProcessor from './terminal-output-processor';
 
@@ -26,7 +26,7 @@ export default class TerminalChannel implements ITerminalChannel {
     const { data: accessToken } = await getTerminalAccessToken();
     // 打开会话
     try {
-      this.client = await openHostTerminalChannel(accessToken);
+      this.client = await openTerminalAccessChannel(accessToken);
     } catch (e) {
       Message.error('无法连接至服务器');
       console.error('terminal error', e);

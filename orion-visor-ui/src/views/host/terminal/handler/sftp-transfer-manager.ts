@@ -1,7 +1,7 @@
 import type { ISftpTransferHandler, ISftpTransferManager, SftpFile, SftpTransferItem, TransferOperatorResponse } from '../types/define';
 import { sessionCloseMsg, TransferReceiver, TransferStatus, TransferType } from '../types/const';
 import { Message } from '@arco-design/web-vue';
-import { getTerminalTransferToken, openHostTransferChannel } from '@/api/asset/terminal';
+import { getTerminalTransferToken, openTerminalTransferChannel } from '@/api/asset/terminal';
 import { nextId } from '@/utils';
 import SftpTransferUploader from './sftp-transfer-uploader';
 import SftpTransferDownloader from './sftp-transfer-downloader';
@@ -109,7 +109,7 @@ export default class SftpTransferManager implements ISftpTransferManager {
     const { data: transferToken } = await getTerminalTransferToken();
     // 打开会话
     try {
-      this.client = await openHostTransferChannel(transferToken);
+      this.client = await openTerminalTransferChannel(transferToken);
     } catch (e) {
       // 打开失败将传输列表置为失效
       Message.error('会话打开失败');

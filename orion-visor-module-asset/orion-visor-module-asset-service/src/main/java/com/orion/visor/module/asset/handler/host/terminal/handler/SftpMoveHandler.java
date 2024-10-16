@@ -18,7 +18,7 @@ package com.orion.visor.module.asset.handler.host.terminal.handler;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.enums.BooleanBit;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpMoveRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpBaseResponse;
@@ -45,7 +45,7 @@ public class SftpMoveHandler extends AbstractTerminalHandler<SftpMoveRequest> {
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         String target = payload.getTarget();
         log.info("SftpMoveHandler-handle start sessionId: {}, path: {}, target: {}", sessionId, path, target);
@@ -71,7 +71,7 @@ public class SftpMoveHandler extends AbstractTerminalHandler<SftpMoveRequest> {
         extra.put(OperatorLogs.PATH, path);
         extra.put(OperatorLogs.TARGET, target);
         this.saveOperatorLog(payload, channel,
-                extra, HostTerminalOperatorType.SFTP_MOVE,
+                extra, TerminalOperatorType.SFTP_MOVE,
                 startTime, ex);
     }
 

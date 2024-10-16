@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.orion.visor.module.asset.entity.vo;
+package com.orion.visor.module.asset.entity.dto;
 
-import com.alibaba.fastjson.JSONObject;
+import com.orion.visor.framework.desensitize.core.annotation.DesensitizeObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,26 +23,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机终端主题 视图响应对象
+ * 终端访问参数
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/7/4 19:27
+ * @since 2023/12/26 15:47
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostTerminalThemeVO", description = "主机终端主题 视图响应对象")
-public class HostTerminalThemeVO {
+@DesensitizeObject
+@Schema(name = "TerminalAccessDTO", description = "终端访问参数")
+public class TerminalAccessDTO {
 
-    @Schema(description = "主题名称")
-    private String name;
+    @Schema(description = "userId")
+    private Long userId;
 
-    @Schema(description = "是否为暗色")
-    private Boolean dark;
-
-    @Schema(description = "主题 schema")
-    private JSONObject schema;
+    @Schema(description = "username")
+    private String username;
 
 }

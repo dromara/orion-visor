@@ -35,7 +35,7 @@ import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.utils.PathUtils;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
 import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.enums.ExecHostStatusEnum;
 import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
 import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
@@ -146,7 +146,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         // 初始化日志
         this.initLogOutputStream();
         // 打开会话
-        HostTerminalConnectDTO connect = terminalService.getTerminalConnectInfo(execHostCommand.getHostId());
+        TerminalConnectDTO connect = terminalService.getTerminalConnectInfo(execHostCommand.getHostId());
         this.sessionStore = SessionStores.openSessionStore(connect);
         if (Booleans.isTrue(execCommand.getScriptExec())) {
             // 上传脚本文件

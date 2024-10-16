@@ -26,7 +26,7 @@ import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
 import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
@@ -65,7 +65,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
         String sessionId = payload.getSessionId();
         log.info("TerminalConnectHandler-handle start sessionId: {}", sessionId);
         // 获取终端连接信息
-        HostTerminalConnectDTO connect = WebSockets.getAttr(channel, sessionId);
+        TerminalConnectDTO connect = WebSockets.getAttr(channel, sessionId);
         if (connect == null) {
             log.info("TerminalConnectHandler-handle unknown sessionId: {}", sessionId);
             this.send(channel,
@@ -85,7 +85,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
             // 连接主机
             session = this.connect(sessionId, connect, channel, payload);
             // 添加会话到 manager
-            hostTerminalManager.addSession(session);
+            terminalManager.addSession(session);
         } catch (Exception e) {
             ex = e;
             Streams.close(session);
@@ -114,7 +114,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
      * @return channel
      */
     private ITerminalSession connect(String sessionId,
-                                     HostTerminalConnectDTO connect,
+                                     TerminalConnectDTO connect,
                                      WebSocketSession channel,
                                      TerminalConnectRequest body) {
         String connectType = connect.getConnectType();

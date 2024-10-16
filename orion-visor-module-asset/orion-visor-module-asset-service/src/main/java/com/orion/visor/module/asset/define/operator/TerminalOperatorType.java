@@ -25,14 +25,14 @@ import java.util.List;
 import static com.orion.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
- * 主机终端 操作日志类型
+ * 终端 操作日志类型
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/10/10 17:30
  */
 @Module("asset:terminal")
-public class HostTerminalOperatorType extends InitializingOperatorTypes {
+public class TerminalOperatorType extends InitializingOperatorTypes {
 
     public static final String CONNECT = "terminal:connect";
 

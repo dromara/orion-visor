@@ -16,7 +16,7 @@
 package com.orion.visor.module.asset.handler.host.transfer.model;
 
 import com.orion.net.host.SessionStore;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,7 +38,7 @@ public class TerminalConnection {
     /**
      * connectInfo
      */
-    private HostTerminalConnectDTO connectInfo;
+    private TerminalConnectDTO connectInfo;
 
     /**
      * sessionStore

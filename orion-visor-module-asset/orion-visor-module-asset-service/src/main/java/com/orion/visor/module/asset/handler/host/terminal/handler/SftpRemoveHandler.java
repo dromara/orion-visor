@@ -18,7 +18,7 @@ package com.orion.visor.module.asset.handler.host.terminal.handler;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.enums.BooleanBit;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpBaseRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpBaseResponse;
@@ -47,7 +47,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
         String path = payload.getPath();
         String sessionId = payload.getSessionId();
         // 获取会话
-        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String[] paths = path.split("\\|");
         log.info("SftpRemoveHandler-handle start sessionId: {}, path: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;
@@ -71,7 +71,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<SftpBaseRequest> 
         Map<String, Object> extra = Maps.newMap();
         extra.put(OperatorLogs.PATH, path);
         this.saveOperatorLog(payload, channel,
-                extra, HostTerminalOperatorType.SFTP_REMOVE,
+                extra, TerminalOperatorType.SFTP_REMOVE,
                 startTime, ex);
     }
 

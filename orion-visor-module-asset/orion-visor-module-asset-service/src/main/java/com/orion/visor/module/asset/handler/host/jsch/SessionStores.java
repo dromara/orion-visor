@@ -25,7 +25,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.visor.framework.common.constant.AppConst;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.CryptoUtils;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
@@ -48,7 +48,7 @@ public class SessionStores {
      * @param conn conn
      * @return sessionStore
      */
-    public static SessionStore openSessionStore(HostTerminalConnectDTO conn) {
+    public static SessionStore openSessionStore(TerminalConnectDTO conn) {
         Long hostId = conn.getHostId();
         String address = conn.getHostAddress();
         String username = conn.getUsername();
@@ -81,7 +81,7 @@ public class SessionStores {
      * @param sessionHolder sessionHolder
      * @return sessionStore
      */
-    private static SessionStore createSessionStore(HostTerminalConnectDTO conn, SessionHolder sessionHolder) {
+    private static SessionStore createSessionStore(TerminalConnectDTO conn, SessionHolder sessionHolder) {
         final boolean useKey = conn.getKeyId() != null;
         // 使用密钥认证
         if (useKey) {

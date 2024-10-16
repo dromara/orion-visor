@@ -22,7 +22,7 @@ import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.IgnoreWrapper;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
 import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
 import com.orion.visor.module.asset.service.HostSftpService;
@@ -67,7 +67,7 @@ public class HostSftpLogController {
         return hostSftpService.getHostSftpLogPage(request);
     }
 
-    @OperatorLog(HostTerminalOperatorType.DELETE_SFTP_LOG)
+    @OperatorLog(TerminalOperatorType.DELETE_SFTP_LOG)
     @DeleteMapping("/delete-log")
     @Operation(summary = "删除 SFTP 操作日志")
     @Parameter(name = "idList", description = "idList", required = true)

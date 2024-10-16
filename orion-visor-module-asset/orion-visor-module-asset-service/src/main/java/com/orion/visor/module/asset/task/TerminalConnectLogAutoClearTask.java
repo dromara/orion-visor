@@ -44,7 +44,7 @@ public class TerminalConnectLogAutoClearTask {
     /**
      * 分布式锁名称
      */
-    private static final String LOCK_KEY = "clear:hcl:lock";
+    private static final String LOCK_KEY = "clear:tcl:lock";
 
     @Resource
     private AppTerminalConnectLogAutoClearConfig appTerminalConnectLogAutoClearConfig;

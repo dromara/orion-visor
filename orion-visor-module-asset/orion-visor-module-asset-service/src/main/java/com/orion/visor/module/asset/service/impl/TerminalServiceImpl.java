@@ -26,14 +26,14 @@ import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.dao.HostIdentityDAO;
 import com.orion.visor.module.asset.dao.HostKeyDAO;
-import com.orion.visor.module.asset.define.cache.HostTerminalCacheKeyDefine;
+import com.orion.visor.module.asset.define.cache.TerminalCacheKeyDefine;
 import com.orion.visor.module.asset.entity.domain.HostDO;
 import com.orion.visor.module.asset.entity.domain.HostIdentityDO;
 import com.orion.visor.module.asset.entity.domain.HostKeyDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalTransferDTO;
-import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
+import com.orion.visor.module.asset.entity.dto.TerminalAccessDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalTransferDTO;
+import com.orion.visor.module.asset.entity.vo.TerminalThemeVO;
 import com.orion.visor.module.asset.enums.*;
 import com.orion.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import com.orion.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
@@ -89,14 +89,14 @@ public class TerminalServiceImpl implements TerminalService {
     private DictValueApi dictValueApi;
 
     @Override
-    public List<HostTerminalThemeVO> getTerminalThemes() {
+    public List<TerminalThemeVO> getTerminalThemes() {
         // if (true) {
         //     String arr = "";
         //     return JSON.parseArray(arr, HostTerminalThemeVO.class);
         // }
         List<JSONObject> themes = dictValueApi.getDictValue(THEME_DICT_KEY);
         return themes.stream()
-                .map(s -> HostTerminalThemeVO.builder()
+                .map(s -> TerminalThemeVO.builder()
                         .name(s.getString(ExtraFieldConst.LABEL))
                         .dark(s.getBoolean(ExtraFieldConst.DARK))
                         .schema(s.getJSONObject(ExtraFieldConst.VALUE))
@@ -109,13 +109,13 @@ public class TerminalServiceImpl implements TerminalService {
         LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
         log.info("HostTerminalService.getTerminalAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();
-        HostTerminalAccessDTO access = HostTerminalAccessDTO.builder()
+        TerminalAccessDTO access = TerminalAccessDTO.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .build();
         // 设置 access 缓存
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(accessToken);
-        RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS, access);
+        String key = TerminalCacheKeyDefine.TERMINAL_ACCESS.format(accessToken);
+        RedisStrings.setJson(key, TerminalCacheKeyDefine.TERMINAL_ACCESS, access);
         return accessToken;
     }
 
@@ -124,21 +124,21 @@ public class TerminalServiceImpl implements TerminalService {
         LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
         log.info("HostTerminalService.getTerminalTransferToken userId: {}", user.getId());
         String transferToken = UUIds.random19();
-        HostTerminalTransferDTO transfer = HostTerminalTransferDTO.builder()
+        TerminalTransferDTO transfer = TerminalTransferDTO.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .build();
         // 设置 transfer 缓存
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER.format(transferToken);
-        RedisStrings.setJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER, transfer);
+        String key = TerminalCacheKeyDefine.TERMINAL_TRANSFER.format(transferToken);
+        RedisStrings.setJson(key, TerminalCacheKeyDefine.TERMINAL_TRANSFER, transfer);
         return transferToken;
     }
 
     @Override
-    public HostTerminalAccessDTO getAccessInfoByToken(String token) {
+    public TerminalAccessDTO getAccessInfoByToken(String token) {
         // 获取缓存
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS.format(token);
-        HostTerminalAccessDTO access = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_ACCESS);
+        String key = TerminalCacheKeyDefine.TERMINAL_ACCESS.format(token);
+        TerminalAccessDTO access = RedisStrings.getJson(key, TerminalCacheKeyDefine.TERMINAL_ACCESS);
         // 删除缓存
         if (access != null) {
             RedisStrings.delete(key);
@@ -147,10 +147,10 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public HostTerminalTransferDTO getTransferInfoByToken(String token) {
+    public TerminalTransferDTO getTransferInfoByToken(String token) {
         // 获取缓存
-        String key = HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER.format(token);
-        HostTerminalTransferDTO transfer = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.HOST_TERMINAL_TRANSFER);
+        String key = TerminalCacheKeyDefine.TERMINAL_TRANSFER.format(token);
+        TerminalTransferDTO transfer = RedisStrings.getJson(key, TerminalCacheKeyDefine.TERMINAL_TRANSFER);
         // 删除缓存
         if (transfer != null) {
             RedisStrings.delete(key);
@@ -159,7 +159,7 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long hostId) {
+    public TerminalConnectDTO getTerminalConnectInfo(Long hostId) {
         log.info("HostTerminalService.getTerminalConnectInfo-withHost hostId: {}", hostId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
@@ -170,7 +170,7 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
+    public TerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
@@ -179,7 +179,7 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
+    public TerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
         Long hostId = host.getId();
         log.info("HostTerminalService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 验证主机是否有权限
@@ -220,11 +220,11 @@ public class TerminalServiceImpl implements TerminalService {
      * @param extra  extra
      * @return session
      */
-    private HostTerminalConnectDTO getHostConnectInfo(HostDO host,
-                                                      HostSshConfigModel config,
-                                                      HostSshExtraModel extra) {
+    private TerminalConnectDTO getHostConnectInfo(HostDO host,
+                                                  HostSshConfigModel config,
+                                                  HostSshExtraModel extra) {
         // 填充认证信息
-        HostTerminalConnectDTO conn = new HostTerminalConnectDTO();
+        TerminalConnectDTO conn = new TerminalConnectDTO();
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());

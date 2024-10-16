@@ -35,9 +35,9 @@ import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
 import com.orion.visor.module.asset.convert.HostSftpLogConvert;
-import com.orion.visor.module.asset.define.cache.HostTerminalCacheKeyDefine;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.define.cache.TerminalCacheKeyDefine;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.entity.dto.SftpGetContentCacheDTO;
 import com.orion.visor.module.asset.entity.dto.SftpSetContentCacheDTO;
 import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
@@ -117,8 +117,8 @@ public class HostSftpServiceImpl implements HostSftpService {
     @Override
     public void getFileContentByToken(String token, HttpServletResponse response) throws IOException {
         // 解析 token
-        String key = HostTerminalCacheKeyDefine.SFTP_GET_CONTENT.format(token);
-        SftpGetContentCacheDTO cache = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.SFTP_GET_CONTENT);
+        String key = TerminalCacheKeyDefine.TERMINAL_SFTP_GET_CONTENT.format(token);
+        SftpGetContentCacheDTO cache = RedisStrings.getJson(key, TerminalCacheKeyDefine.TERMINAL_SFTP_GET_CONTENT);
         if (cache == null) {
             Servlets.writeHttpWrapper(response, HttpWrapper.error(ErrorMessage.FILE_ABSENT));
             return;
@@ -131,7 +131,7 @@ public class HostSftpServiceImpl implements HostSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -152,8 +152,8 @@ public class HostSftpServiceImpl implements HostSftpService {
     @Override
     public void setFileContentByToken(String token, MultipartFile file) {
         // 解析 token
-        String key = HostTerminalCacheKeyDefine.SFTP_SET_CONTENT.format(token);
-        SftpSetContentCacheDTO cache = RedisStrings.getJson(key, HostTerminalCacheKeyDefine.SFTP_SET_CONTENT);
+        String key = TerminalCacheKeyDefine.TERMINAL_SFTP_SET_CONTENT.format(token);
+        SftpSetContentCacheDTO cache = RedisStrings.getJson(key, TerminalCacheKeyDefine.TERMINAL_SFTP_SET_CONTENT);
         Valid.notNull(cache, ErrorMessage.FILE_ABSENT);
         // 删除缓存
         RedisStrings.delete(key);
@@ -164,7 +164,7 @@ public class HostSftpServiceImpl implements HostSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -220,7 +220,7 @@ public class HostSftpServiceImpl implements HostSftpService {
         query.setLimit(request.getLimit());
         if (Strings.isBlank(type)) {
             // 查询全部 SFTP 类型
-            query.setTypeList(HostTerminalOperatorType.SFTP_TYPES);
+            query.setTypeList(TerminalOperatorType.SFTP_TYPES);
         } else {
             query.setType(type);
         }

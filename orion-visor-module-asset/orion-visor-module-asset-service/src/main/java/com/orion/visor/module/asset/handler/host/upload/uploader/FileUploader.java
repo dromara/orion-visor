@@ -25,7 +25,7 @@ import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.module.asset.dao.UploadTaskFileDAO;
 import com.orion.visor.module.asset.define.config.AppSftpConfig;
 import com.orion.visor.module.asset.entity.domain.UploadTaskFileDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
@@ -116,7 +116,7 @@ public class FileUploader implements IFileUploader {
         log.info("HostFileUploader.initSession start taskId: {}, hostId: {}", taskId, hostId);
         try {
             // 打开会话
-            HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId);
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId);
             this.sessionStore = SessionStores.openSessionStore(connectInfo);
             this.executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();

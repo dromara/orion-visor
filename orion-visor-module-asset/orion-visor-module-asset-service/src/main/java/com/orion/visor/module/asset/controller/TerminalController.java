@@ -18,7 +18,7 @@ package com.orion.visor.module.asset.controller;
 import com.orion.visor.framework.log.core.annotation.IgnoreLog;
 import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
-import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
+import com.orion.visor.module.asset.entity.vo.TerminalThemeVO;
 import com.orion.visor.module.asset.service.TerminalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +33,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 主机终端 api
+ * 终端 api
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -53,7 +53,7 @@ public class TerminalController {
     @IgnoreLog(IgnoreLogMode.ALL)
     @GetMapping("/themes")
     @Operation(summary = "获取终端主题")
-    public List<HostTerminalThemeVO> getTerminalThemes() {
+    public List<TerminalThemeVO> getTerminalThemes() {
         return terminalService.getTerminalThemes();
     }
 

@@ -21,7 +21,7 @@ import com.orion.net.host.SessionStore;
 import com.orion.spring.SpringHolder;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferOperator;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
@@ -110,12 +110,12 @@ public class TransferHandler implements ITransferHandler {
             if (terminalConnection == null) {
                 // 获取终端连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
-                HostTerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(userId, hostId);
+                TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(userId, hostId);
                 terminalConnection = new TerminalConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
                 terminalConnections.put(hostId, terminalConnection);
             }
             SessionStore sessionStore = terminalConnection.getSessionStore();
-            HostTerminalConnectDTO connectInfo = terminalConnection.getConnectInfo();
+            TerminalConnectDTO connectInfo = terminalConnection.getConnectInfo();
             // 获取会话
             ITransferSession session = sessions.get(sessionKey);
             if (session == null) {

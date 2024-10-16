@@ -19,7 +19,7 @@ import com.orion.lang.utils.Urls;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.meta.TraceIdHolder;
 import com.orion.visor.framework.common.utils.Requests;
-import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalAccessDTO;
 import com.orion.visor.module.asset.service.TerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -51,7 +51,7 @@ public class TerminalAccessInterceptor implements HandshakeInterceptor {
         String accessToken = Urls.getUrlSource(request.getURI().getPath());
         log.info("TerminalAccessInterceptor-beforeHandshake start accessToken: {}", accessToken);
         // 获取连接数据
-        HostTerminalAccessDTO access = terminalService.getAccessInfoByToken(accessToken);
+        TerminalAccessDTO access = terminalService.getAccessInfoByToken(accessToken);
         if (access == null) {
             log.error("TerminalAccessInterceptor-beforeHandshake absent accessToken: {}", accessToken);
             return false;

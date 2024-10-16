@@ -17,7 +17,7 @@ package com.orion.visor.module.asset.handler.host.terminal;
 
 import com.orion.visor.module.asset.define.AssetThreadPools;
 import com.orion.visor.module.asset.handler.host.terminal.enums.InputTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.manager.HostTerminalManager;
+import com.orion.visor.module.asset.handler.host.terminal.manager.TerminalManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -39,7 +39,7 @@ import javax.annotation.Resource;
 public class TerminalMessageDispatcher extends AbstractWebSocketHandler {
 
     @Resource
-    private HostTerminalManager hostTerminalManager;
+    private TerminalManager terminalManager;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
@@ -80,7 +80,7 @@ public class TerminalMessageDispatcher extends AbstractWebSocketHandler {
         String id = session.getId();
         log.info("TerminalMessageDispatcher-afterConnectionClosed id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
         // 关闭会话
-        hostTerminalManager.closeSession(id);
+        terminalManager.closeSession(id);
     }
 
 }

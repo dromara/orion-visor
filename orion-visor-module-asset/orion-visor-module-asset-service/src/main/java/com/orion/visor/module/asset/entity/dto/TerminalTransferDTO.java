@@ -23,7 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机终端访问参数
+ * 终端传输参数
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -34,8 +34,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @DesensitizeObject
-@Schema(name = "HostTerminalAccessDTO", description = "主机终端访问参数")
-public class HostTerminalAccessDTO {
+@Schema(name = "TerminalTransferDTO", description = "终端传输参数")
+public class TerminalTransferDTO {
 
     @Schema(description = "userId")
     private Long userId;

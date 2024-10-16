@@ -16,7 +16,7 @@
 package com.orion.visor.module.asset.convert;
 
 import com.orion.visor.module.asset.entity.domain.TerminalConnectLogDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogCreateRequest;
 import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogQueryRequest;
 import com.orion.visor.module.asset.entity.vo.TerminalConnectLogVO;
@@ -43,7 +43,7 @@ public interface TerminalConnectLogConvert {
 
     TerminalConnectLogVO to(TerminalConnectLogDO domain);
 
-    TerminalConnectLogCreateRequest to(HostTerminalConnectDTO dto);
+    TerminalConnectLogCreateRequest to(TerminalConnectDTO dto);
 
     List<TerminalConnectLogVO> to(List<TerminalConnectLogDO> list);
 

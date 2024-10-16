@@ -16,15 +16,15 @@
 package com.orion.visor.module.asset.service;
 
 import com.orion.visor.module.asset.entity.domain.HostDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalAccessDTO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalTransferDTO;
-import com.orion.visor.module.asset.entity.vo.HostTerminalThemeVO;
+import com.orion.visor.module.asset.entity.dto.TerminalAccessDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalTransferDTO;
+import com.orion.visor.module.asset.entity.vo.TerminalThemeVO;
 
 import java.util.List;
 
 /**
- * 主机终端服务
+ * 终端服务
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -37,7 +37,7 @@ public interface TerminalService {
      *
      * @return themes
      */
-    List<HostTerminalThemeVO> getTerminalThemes();
+    List<TerminalThemeVO> getTerminalThemes();
 
     /**
      * 获取主机终端访问 accessToken
@@ -54,20 +54,20 @@ public interface TerminalService {
     String getTerminalTransferToken();
 
     /**
-     * 通过 accessToken 获取主机终端访问信息
+     * 通过 accessToken 获取终端访问信息
      *
      * @param token token
      * @return config
      */
-    HostTerminalAccessDTO getAccessInfoByToken(String token);
+    TerminalAccessDTO getAccessInfoByToken(String token);
 
     /**
-     * 通过 transferToken 获取主机终端传输信息
+     * 通过 transferToken 获取终端传输信息
      *
      * @param token token
      * @return config
      */
-    HostTerminalTransferDTO getTransferInfoByToken(String token);
+    TerminalTransferDTO getTransferInfoByToken(String token);
 
     /**
      * 获取连接信息
@@ -75,7 +75,7 @@ public interface TerminalService {
      * @param hostId hostId
      * @return session
      */
-    HostTerminalConnectDTO getTerminalConnectInfo(Long hostId);
+    TerminalConnectDTO getTerminalConnectInfo(Long hostId);
 
     /**
      * 使用用户配置获取连接信息
@@ -84,7 +84,7 @@ public interface TerminalService {
      * @param userId userId
      * @return session
      */
-    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
+    TerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
 
     /**
      * 使用用户配置获取连接信息
@@ -93,6 +93,6 @@ public interface TerminalService {
      * @param userId userId
      * @return session
      */
-    HostTerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
+    TerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
 
 }

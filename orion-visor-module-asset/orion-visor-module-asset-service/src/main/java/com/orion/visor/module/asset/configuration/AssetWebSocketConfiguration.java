@@ -62,11 +62,11 @@ public class AssetWebSocketConfiguration implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // 终端会话
-        registry.addHandler(terminalMessageDispatcher, prefix + "/host/terminal/{accessToken}")
+        registry.addHandler(terminalMessageDispatcher, prefix + "/terminal/access/{accessToken}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
         // 文件传输
-        registry.addHandler(transferMessageDispatcher, prefix + "/host/transfer/{transferToken}")
+        registry.addHandler(transferMessageDispatcher, prefix + "/terminal/transfer/{transferToken}")
                 .addInterceptors(terminalTransferInterceptor)
                 .setAllowedOrigins("*");
         // 执行日志

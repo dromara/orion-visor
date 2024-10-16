@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机终端连接参数
+ * 终端连接参数
  *
  * @author Jiahang Li
  * @version 1.0.0

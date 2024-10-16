@@ -36,7 +36,7 @@ import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogQueryR
 import com.orion.visor.module.asset.entity.vo.TerminalConnectLogVO;
 import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
 import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.manager.HostTerminalManager;
+import com.orion.visor.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.service.TerminalConnectLogService;
@@ -67,7 +67,7 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
     private TerminalConnectLogDAO terminalConnectLogDAO;
 
     @Resource
-    private HostTerminalManager hostTerminalManager;
+    private TerminalManager terminalManager;
 
     @Override
     public TerminalConnectLogDO create(TerminalConnectTypeEnum type, TerminalConnectLogCreateRequest request) {
@@ -103,7 +103,7 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
     @Override
     public List<TerminalConnectLogVO> getTerminalConnectSessions(TerminalConnectLogQueryRequest request) {
         // 查询全部
-        List<Long> idList = hostTerminalManager.getChannelSessions()
+        List<Long> idList = terminalManager.getChannelSessions()
                 .values()
                 .stream()
                 .map(ConcurrentHashMap::values)
@@ -246,7 +246,7 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
         OperatorLogs.add(OperatorLogs.HOST_NAME, record.getHostName());
         // 获取会话
         TerminalConnectLogExtraDTO extra = JSON.parseObject(record.getExtraInfo(), TerminalConnectLogExtraDTO.class);
-        ITerminalSession session = hostTerminalManager.getSession(extra.getChannelId(), extra.getSessionId());
+        ITerminalSession session = terminalManager.getSession(extra.getChannelId(), extra.getSessionId());
         if (session != null) {
             // 关闭会话
             session.forceOffline();

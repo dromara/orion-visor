@@ -45,7 +45,7 @@ public class SftpDownloadFlatDirectoryHandler extends AbstractTerminalHandler<Sf
     public void handle(WebSocketSession channel, SftpDownloadFlatDirectoryRequest payload) {
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String[] paths = payload.getPath().split("\\|");
         log.info("SftpDownloadFlatDirectoryHandler-handle start sessionId: {}, paths: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;

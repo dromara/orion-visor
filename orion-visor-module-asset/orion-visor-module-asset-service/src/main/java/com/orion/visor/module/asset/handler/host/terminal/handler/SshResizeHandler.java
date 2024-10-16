@@ -35,7 +35,7 @@ public class SshResizeHandler extends AbstractTerminalHandler<SshResizeRequest> 
     @Override
     public void handle(WebSocketSession channel, SshResizeRequest payload) {
         // 获取会话
-        ISshSession session = hostTerminalManager.getSession(channel.getId(), payload.getSessionId());
+        ISshSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
         // 修改大小
         session.resize(payload.getCols(), payload.getRows());
     }

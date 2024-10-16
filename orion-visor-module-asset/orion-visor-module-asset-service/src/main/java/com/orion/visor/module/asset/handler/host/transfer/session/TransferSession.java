@@ -25,7 +25,7 @@ import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.module.asset.define.config.AppSftpConfig;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
@@ -49,7 +49,7 @@ public abstract class TransferSession implements ITransferSession {
 
     protected static final AppSftpConfig SFTP_CONFIG = SpringHolder.getBean(AppSftpConfig.class);
 
-    protected final HostTerminalConnectDTO connectInfo;
+    protected final TerminalConnectDTO connectInfo;
 
     protected final SessionStore sessionStore;
 
@@ -66,7 +66,7 @@ public abstract class TransferSession implements ITransferSession {
     @Setter
     protected String token;
 
-    public TransferSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
+    public TransferSession(TerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         this.connectInfo = connectInfo;
         this.sessionStore = sessionStore;
         this.channel = channel;

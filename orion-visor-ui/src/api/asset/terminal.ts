@@ -61,13 +61,13 @@ export function getTerminalTransferToken() {
 /**
  * 打开终端 websocket
  */
-export const openHostTerminalChannel = (accessToken: string) => {
-  return createAppWebSocket(`/host/terminal/${accessToken}`);
+export const openTerminalAccessChannel = (accessToken: string) => {
+  return createAppWebSocket(`/terminal/access/${accessToken}`);
 };
 
 /**
  * 打开终端传输 websocket
  */
-export const openHostTransferChannel = (accessToken: string) => {
-  return createAppWebSocket(`/host/transfer/${accessToken}`);
+export const openTerminalTransferChannel = (accessToken: string) => {
+  return createAppWebSocket(`/terminal/transfer/${accessToken}`);
 };

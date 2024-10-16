@@ -24,7 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 主机终端连接参数
+ * 终端连接参数
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -35,8 +35,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @DesensitizeObject
-@Schema(name = "HostTerminalConnectDTO", description = "主机终端连接参数")
-public class HostTerminalConnectDTO {
+@Schema(name = "TerminalConnectDTO", description = "终端连接参数")
+public class TerminalConnectDTO {
 
     @Schema(description = "logId")
     private Long logId;

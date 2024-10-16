@@ -24,8 +24,8 @@ import com.orion.net.host.sftp.SftpFile;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.module.asset.define.AssetThreadPools;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
@@ -54,7 +54,7 @@ public class DownloadSession extends TransferSession implements StreamingRespons
 
     private Long fileSize;
 
-    public DownloadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
+    public DownloadSession(TerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         super(connectInfo, sessionStore, channel);
         this.fileSize = 0L;
     }
@@ -65,7 +65,7 @@ public class DownloadSession extends TransferSession implements StreamingRespons
             super.onStart(request);
             log.info("DownloadSession.startDownload open start channelId: {}, path: {}", channelId, path);
             // 保存操作日志
-            this.saveOperatorLog(HostTerminalOperatorType.SFTP_DOWNLOAD, path);
+            this.saveOperatorLog(TerminalOperatorType.SFTP_DOWNLOAD, path);
             // 检查连接
             this.init();
             // 检查文件是否存在

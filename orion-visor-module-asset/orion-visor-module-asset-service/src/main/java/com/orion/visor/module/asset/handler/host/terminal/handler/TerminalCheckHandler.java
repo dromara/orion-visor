@@ -27,10 +27,10 @@ import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.dao.HostDAO;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
 import com.orion.visor.module.asset.entity.domain.TerminalConnectLogDO;
 import com.orion.visor.module.asset.entity.domain.HostDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogCreateRequest;
 import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
 import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
@@ -91,7 +91,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.info("TerminalCheckHandler-handle unknown host userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
             return;
         }
-        HostTerminalConnectDTO connect = null;
+        TerminalConnectDTO connect = null;
         Exception ex = null;
         try {
             // 获取连接信息
@@ -133,7 +133,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @return 是否存在
      */
     private boolean checkSession(WebSocketSession channel, TerminalCheckRequest payload) {
-        ITerminalSession session = hostTerminalManager.getSession(channel.getId(), payload.getSessionId());
+        ITerminalSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
         if (session != null) {
             this.sendCheckFailedMessage(channel, payload, ErrorMessage.SESSION_PRESENT);
             return true;
@@ -207,7 +207,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         extra.put(OperatorLogs.SESSION_ID, sessionId);
         // 日志参数
         OperatorLogModel logModel = TerminalUtils.getOperatorLogModel(channel, extra,
-                HostTerminalOperatorType.CONNECT, startTime, ex);
+                TerminalOperatorType.CONNECT, startTime, ex);
         // 记录操作日志
         operatorLogFrameworkService.insert(logModel);
         // 记录连接日志
