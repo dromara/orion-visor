@@ -36,8 +36,8 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostSftpLogVO", description = "SFTP 操作日志 实体对象")
-public class HostSftpLogVO implements Serializable {
+@Schema(name = "TerminalSftpLogVO", description = "SFTP 操作日志 实体对象")
+public class TerminalSftpLogVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

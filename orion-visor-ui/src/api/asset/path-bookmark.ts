@@ -1,4 +1,4 @@
-import { PathBookmarkGroupQueryResponse } from '@/api/asset/path-bookmark-group';
+import type { PathBookmarkGroupQueryResponse } from './path-bookmark-group';
 import axios from 'axios';
 
 /**

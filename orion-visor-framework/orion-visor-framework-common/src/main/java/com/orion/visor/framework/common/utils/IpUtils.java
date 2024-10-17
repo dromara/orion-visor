@@ -17,8 +17,6 @@ package com.orion.visor.framework.common.utils;
 
 import com.orion.ext.location.Region;
 import com.orion.ext.location.region.LocationRegions;
-import com.orion.lang.constant.StandardHttpHeader;
-import com.orion.lang.utils.Strings;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.web.servlet.web.Servlets;
 

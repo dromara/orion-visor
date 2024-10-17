@@ -61,7 +61,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
-            <a-button v-permission="['infra:operator-log:delete', 'asset:host-sftp-log:management:delete']"
+            <a-button v-permission="['infra:operator-log:delete', 'asset:terminal-sftp-log:management:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -164,7 +164,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['infra:operator-log:delete', 'asset:host-sftp-log:management:delete']"
+            <a-button v-permission="['infra:operator-log:delete', 'asset:terminal-sftp-log:management:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -184,9 +184,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostSftpLogQueryRequest, HostSftpLogQueryResponse } from '@/api/asset/host-sftp';
+  import type { TerminalSftpLogQueryRequest, TerminalSftpLogQueryResponse } from '@/api/asset/terminal-sftp';
   import { reactive, ref, onMounted } from 'vue';
-  import { getHostSftpLogPage, deleteHostSftpLog } from '@/api/asset/host-sftp';
+  import { getTerminalSftpLogPage, deleteTerminalSftpLog } from '@/api/asset/terminal-sftp';
   import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
@@ -203,9 +203,9 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const tableRenderData = ref<Array<HostSftpLogQueryResponse>>([]);
+  const tableRenderData = ref<Array<TerminalSftpLogQueryResponse>>([]);
   const selectedKeys = ref<Array<number>>([]);
-  const formModel = reactive<HostSftpLogQueryRequest>({
+  const formModel = reactive<TerminalSftpLogQueryRequest>({
     userId: undefined,
     hostId: undefined,
     type: undefined,
@@ -214,11 +214,11 @@
   });
 
   // 加载数据
-  const doFetchTableData = async (request: HostSftpLogQueryRequest) => {
+  const doFetchTableData = async (request: TerminalSftpLogQueryRequest) => {
     try {
       setLoading(true);
       // 查询
-      const { data } = await getHostSftpLogPage(request);
+      const { data } = await getTerminalSftpLogPage(request);
       // 设置最大数量
       data.rows.forEach(s => {
         s.extra.maxCount = showPathMaxCount;
@@ -244,7 +244,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostSftpLog(selectedKeys.value);
+      await deleteTerminalSftpLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
@@ -256,11 +256,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async (record: HostSftpLogQueryResponse) => {
+  const deleteRow = async (record: TerminalSftpLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostSftpLog([record.id]);
+      await deleteTerminalSftpLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载数据

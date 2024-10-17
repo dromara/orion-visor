@@ -400,8 +400,8 @@ INSERT INTO `system_menu` VALUES (155, 148, '强制断开连接', 'asset:termina
 INSERT INTO `system_menu` VALUES (156, 122, '删除操作日志', 'infra:operator-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 17:06:55', '2024-03-04 17:08:22', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (157, 122, '清空操作日志', 'infra:operator-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 17:07:25', '2024-04-11 11:16:17', '1', '2', 0);
 INSERT INTO `system_menu` VALUES (158, 152, '文件操作日志', NULL, 2, 40, 1, 1, 1, 0, 'IconFile', NULL, 'sftpLog', '2024-03-05 15:30:13', '2024-08-04 20:23:19', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (159, 158, '查询文件操作日志', 'asset:host-sftp-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:02', '2024-04-12 14:49:18', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (160, 158, '删除文件操作日志', 'asset:host-sftp-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:17', '2024-04-12 14:49:21', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (159, 158, '查询文件操作日志', 'asset:terminal-sftp-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:02', '2024-04-12 14:49:18', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (160, 158, '删除文件操作日志', 'asset:terminal-sftp-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:17', '2024-04-12 14:49:21', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (161, 176, '执行模板', NULL, 2, 50, 1, 1, 1, 0, 'IconBookmark', NULL, 'execTemplate', '2024-03-07 18:32:41', '2024-05-14 15:58:51', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (162, 161, '查询执行模板', 'asset:exec-template:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (163, 161, '创建执行模板', 'asset:exec-template:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);

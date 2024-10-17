@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.orion.lang.utils.io.Streams;
 import com.orion.visor.module.asset.handler.host.transfer.handler.ITransferHandler;
 import com.orion.visor.module.asset.handler.host.transfer.handler.TransferHandler;
-import com.orion.visor.module.asset.handler.host.transfer.manager.HostTransferManager;
+import com.orion.visor.module.asset.handler.host.transfer.manager.TerminalTransferManager;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -43,19 +43,19 @@ import javax.annotation.Resource;
 public class TransferMessageDispatcher extends AbstractWebSocketHandler {
 
     @Resource
-    private HostTransferManager hostTransferManager;
+    private TerminalTransferManager terminalTransferManager;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         log.info("TransferMessageHandler-afterConnectionEstablished id: {}", session.getId());
         // 添加处理器
-        hostTransferManager.putHandler(session.getId(), new TransferHandler(session));
+        terminalTransferManager.putHandler(session.getId(), new TransferHandler(session));
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         // 获取处理器
-        ITransferHandler handler = hostTransferManager.getHandler(session.getId());
+        ITransferHandler handler = terminalTransferManager.getHandler(session.getId());
         // 处理消息
         handler.handleMessage(JSON.parseObject(message.getPayload(), TransferOperatorRequest.class));
     }
@@ -63,7 +63,7 @@ public class TransferMessageDispatcher extends AbstractWebSocketHandler {
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         // 获取处理器
-        ITransferHandler handler = hostTransferManager.getHandler(session.getId());
+        ITransferHandler handler = terminalTransferManager.getHandler(session.getId());
         // 添加数据
         handler.handleMessage(message.getPayload().array());
     }
@@ -78,7 +78,7 @@ public class TransferMessageDispatcher extends AbstractWebSocketHandler {
         String id = session.getId();
         log.info("TransferMessageHandler-afterConnectionClosed id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
         // 关闭会话
-        Streams.close(hostTransferManager.removeHandler(id));
+        Streams.close(terminalTransferManager.removeHandler(id));
     }
 
 }

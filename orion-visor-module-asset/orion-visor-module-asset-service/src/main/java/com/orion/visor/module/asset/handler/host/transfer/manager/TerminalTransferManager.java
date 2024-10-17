@@ -21,14 +21,14 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 主机传输管理器
+ * 终端传输管理器
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/6/4 17:58
  */
 @Component
-public class HostTransferManager {
+public class TerminalTransferManager {
 
     private final ConcurrentHashMap<String, ITransferHandler> handlers = new ConcurrentHashMap<>();
 

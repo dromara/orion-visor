@@ -71,7 +71,7 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/const';
-  import { getSftpFileContent, setSftpFileContent } from '@/api/asset/host-sftp';
+  import { getSftpFileContent, setSftpFileContent } from '@/api/asset/terminal-sftp';
   import { isString } from '@/utils/is';
   import SftpTableHeader from './sftp-table-header.vue';
   import SftpTable from './sftp-table.vue';

@@ -23,9 +23,9 @@ import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
 import com.orion.visor.framework.web.core.annotation.IgnoreWrapper;
 import com.orion.visor.framework.web.core.annotation.RestWrapper;
 import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
-import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
-import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
-import com.orion.visor.module.asset.service.HostSftpService;
+import com.orion.visor.module.asset.entity.request.host.TerminalSftpLogQueryRequest;
+import com.orion.visor.module.asset.entity.vo.TerminalSftpLogVO;
+import com.orion.visor.module.asset.service.TerminalSftpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,27 +53,27 @@ import java.util.List;
 @Validated
 @RestWrapper
 @RestController
-@RequestMapping("/asset/host-sftp")
-public class HostSftpLogController {
+@RequestMapping("/asset/terminal-sftp")
+public class TerminalSftpController {
 
     @Resource
-    private HostSftpService hostSftpService;
+    private TerminalSftpService terminalSftpService;
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query-log")
     @Operation(summary = "分页查询 SFTP 操作日志")
-    @PreAuthorize("@ss.hasAnyPermission('infra:operator-log:query', 'asset:host-sftp-log:management:query')")
-    public DataGrid<HostSftpLogVO> getHostSftpLogPage(@Validated(Page.class) @RequestBody HostSftpLogQueryRequest request) {
-        return hostSftpService.getHostSftpLogPage(request);
+    @PreAuthorize("@ss.hasAnyPermission('infra:operator-log:query', 'asset:terminal-sftp-log:management:query')")
+    public DataGrid<TerminalSftpLogVO> getTerminalSftpLogPage(@Validated(Page.class) @RequestBody TerminalSftpLogQueryRequest request) {
+        return terminalSftpService.getTerminalSftpLogPage(request);
     }
 
     @OperatorLog(TerminalOperatorType.DELETE_SFTP_LOG)
     @DeleteMapping("/delete-log")
     @Operation(summary = "删除 SFTP 操作日志")
     @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasAnyPermission('infra:operator-log:delete', 'asset:host-sftp-log:management:delete')")
-    public Integer deleteHostSftpLog(@RequestParam("idList") List<Long> idList) {
-        return hostSftpService.deleteHostSftpLog(idList);
+    @PreAuthorize("@ss.hasAnyPermission('infra:operator-log:delete', 'asset:terminal-sftp-log:management:delete')")
+    public Integer deleteTerminalSftpLog(@RequestParam("idList") List<Long> idList) {
+        return terminalSftpService.deleteTerminalSftpLog(idList);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -81,7 +81,7 @@ public class HostSftpLogController {
     @Operation(summary = "获取文件内容")
     @Parameter(name = "token", description = "token", required = true)
     public void getFileContentByToken(@RequestParam("token") String token, HttpServletResponse response) throws Exception {
-        hostSftpService.getFileContentByToken(token, response);
+        terminalSftpService.getFileContentByToken(token, response);
     }
 
     @PostMapping("/set-content")
@@ -90,7 +90,7 @@ public class HostSftpLogController {
     @Parameter(name = "file", description = "file", required = true)
     public Boolean setFileContentByToken(@RequestParam("token") String token,
                                          @RequestParam("file") MultipartFile file) throws Exception {
-        hostSftpService.setFileContentByToken(token, file);
+        terminalSftpService.setFileContentByToken(token, file);
         return true;
     }
 
@@ -104,7 +104,7 @@ public class HostSftpLogController {
     public StreamingResponseBody downloadWithTransferToken(@RequestParam("channelId") String channelId,
                                                            @RequestParam("transferToken") String transferToken,
                                                            HttpServletResponse response) {
-        return hostSftpService.downloadWithTransferToken(channelId, transferToken, response);
+        return terminalSftpService.downloadWithTransferToken(channelId, transferToken, response);
     }
 
 }

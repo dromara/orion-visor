@@ -7,7 +7,7 @@ import qs from 'query-string';
 /**
  * SFTP 操作日志 查询请求
  */
-export interface HostSftpLogQueryRequest extends Pagination {
+export interface TerminalSftpLogQueryRequest extends Pagination {
   userId?: number;
   hostId?: number;
   type?: string;
@@ -18,7 +18,7 @@ export interface HostSftpLogQueryRequest extends Pagination {
 /**
  * SFTP 操作日志 查询响应
  */
-export interface HostSftpLogQueryResponse extends TableData {
+export interface TerminalSftpLogQueryResponse extends TableData {
   id: number;
   userId: number;
   username: number;
@@ -32,13 +32,13 @@ export interface HostSftpLogQueryResponse extends TableData {
   type: string;
   result: string;
   startTime: number;
-  extra: HostSftpLogExtra;
+  extra: TerminalSftpLogExtra;
 }
 
 /**
  * SFTP 操作日志 拓展对象
  */
-export interface HostSftpLogExtra {
+export interface TerminalSftpLogExtra {
   mod: number;
   target: string;
   maxCount: number;
@@ -47,15 +47,15 @@ export interface HostSftpLogExtra {
 /**
  * 分页查询 SFTP 操作日志
  */
-export function getHostSftpLogPage(request: HostSftpLogQueryRequest) {
-  return axios.post<DataGrid<HostSftpLogQueryResponse>>('/asset/host-sftp/query-log', request);
+export function getTerminalSftpLogPage(request: TerminalSftpLogQueryRequest) {
+  return axios.post<DataGrid<TerminalSftpLogQueryResponse>>('/asset/terminal-sftp/query-log', request);
 }
 
 /**
  * 删除 SFTP 操作日志
  */
-export function deleteHostSftpLog(idList: Array<number>) {
-  return axios.delete('/asset/host-sftp/delete-log', {
+export function deleteTerminalSftpLog(idList: Array<number>) {
+  return axios.delete('/asset/terminal-sftp/delete-log', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
@@ -67,7 +67,7 @@ export function deleteHostSftpLog(idList: Array<number>) {
  * 获取 SFTP 文件内容
  */
 export function getSftpFileContent(token: string) {
-  return axios.get<string>('/asset/host-sftp/get-content', {
+  return axios.get<string>('/asset/terminal-sftp/get-content', {
     unwrap: true,
     params: { token },
     timeout: 60000
@@ -81,7 +81,7 @@ export function setSftpFileContent(token: string, content: string) {
   const formData = new FormData();
   formData.append('token', token);
   formData.append('file', new File([content], Date.now() + '', { type: 'text/plain' }));
-  return axios.post<boolean>('/asset/host-sftp/set-content', formData, {
+  return axios.post<boolean>('/asset/terminal-sftp/set-content', formData, {
     timeout: 60000,
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -93,5 +93,5 @@ export function setSftpFileContent(token: string, content: string) {
  * 下载文件
  */
 export function getDownloadTransferUrl(channelId: string, transferToken: string) {
-  return `${httpBaseUrl}/asset/host-sftp/download?channelId=${channelId}&transferToken=${transferToken}`;
+  return `${httpBaseUrl}/asset/terminal-sftp/download?channelId=${channelId}&transferToken=${transferToken}`;
 }

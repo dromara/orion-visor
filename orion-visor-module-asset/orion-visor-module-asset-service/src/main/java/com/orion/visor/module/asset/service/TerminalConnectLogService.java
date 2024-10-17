@@ -27,7 +27,7 @@ import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.Set;
 
 /**
  * 终端连接日志 服务类
@@ -79,16 +79,7 @@ public interface TerminalConnectLogService {
      * @param request request
      * @return hostId
      */
-    List<Long> getLatestConnectHostId(TerminalConnectLogQueryRequest request);
-
-    /**
-     * 查询用户最近连接的主机
-     *
-     * @param type   type
-     * @param userId userId
-     * @return hostId
-     */
-    Future<List<Long>> getLatestConnectHostIdAsync(TerminalConnectTypeEnum type, Long userId);
+    Set<Long> getLatestConnectHostId(TerminalConnectLogQueryRequest request);
 
     /**
      * 删除终端连接日志

@@ -250,7 +250,7 @@ orion:
       # 下面引用了 需要注意
       field:
         ignore:
-          - password,beforePassword,newPassword,useNewPassword,publicKey,privateKey,token
+          - password,beforePassword,newPassword,useNewPassword,publicKey,privateKey,privateKeyPassword
           - metrics
         desensitize:
   storage:

@@ -35,8 +35,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "HostSftpLogQueryRequest", description = "SFTP 操作日志 查询请求对象")
-public class HostSftpLogQueryRequest extends PageRequest {
+@Schema(name = "TerminalSftpLogQueryRequest", description = "SFTP 操作日志 查询请求对象")
+public class TerminalSftpLogQueryRequest extends PageRequest {
 
     @Schema(description = "用户id")
     private Long userId;

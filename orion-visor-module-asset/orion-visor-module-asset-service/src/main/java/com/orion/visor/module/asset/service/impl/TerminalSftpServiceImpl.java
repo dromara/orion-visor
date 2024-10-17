@@ -34,19 +34,19 @@ import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.redis.core.utils.RedisStrings;
 import com.orion.visor.framework.security.core.utils.SecurityUtils;
-import com.orion.visor.module.asset.convert.HostSftpLogConvert;
+import com.orion.visor.module.asset.convert.TerminalSftpLogConvert;
 import com.orion.visor.module.asset.define.cache.TerminalCacheKeyDefine;
 import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
-import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.entity.dto.SftpGetContentCacheDTO;
 import com.orion.visor.module.asset.entity.dto.SftpSetContentCacheDTO;
-import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
-import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
+import com.orion.visor.module.asset.entity.request.host.TerminalSftpLogQueryRequest;
+import com.orion.visor.module.asset.entity.vo.TerminalSftpLogVO;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
-import com.orion.visor.module.asset.handler.host.transfer.manager.HostTransferManager;
+import com.orion.visor.module.asset.handler.host.transfer.manager.TerminalTransferManager;
 import com.orion.visor.module.asset.handler.host.transfer.session.DownloadSession;
-import com.orion.visor.module.asset.service.HostSftpService;
 import com.orion.visor.module.asset.service.TerminalService;
+import com.orion.visor.module.asset.service.TerminalSftpService;
 import com.orion.visor.module.infra.api.OperatorLogApi;
 import com.orion.visor.module.infra.entity.dto.operator.OperatorLogQueryDTO;
 import com.orion.web.servlet.web.Servlets;
@@ -72,26 +72,26 @@ import java.util.Optional;
  */
 @Slf4j
 @Service
-public class HostSftpServiceImpl implements HostSftpService {
+public class TerminalSftpServiceImpl implements TerminalSftpService {
 
     @Resource
     private OperatorLogApi operatorLogApi;
 
     @Resource
-    private HostTransferManager hostTransferManager;
-
-    @Resource
     private TerminalService terminalService;
 
+    @Resource
+    private TerminalTransferManager terminalTransferManager;
+
     @Override
-    public DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request) {
+    public DataGrid<TerminalSftpLogVO> getTerminalSftpLogPage(TerminalSftpLogQueryRequest request) {
         // 查询
         OperatorLogQueryDTO query = this.buildQueryInfo(request);
         // 转换
         return operatorLogApi.getOperatorLogPage(query)
                 .map(s -> {
                     JSONObject extra = JSON.parseObject(s.getExtra());
-                    HostSftpLogVO vo = HostSftpLogConvert.MAPPER.to(s);
+                    TerminalSftpLogVO vo = TerminalSftpLogConvert.MAPPER.to(s);
                     vo.setHostId(extra.getLong(ExtraFieldConst.HOST_ID));
                     vo.setHostName(extra.getString(ExtraFieldConst.HOST_NAME));
                     vo.setHostAddress(extra.getString(ExtraFieldConst.ADDRESS));
@@ -105,10 +105,10 @@ public class HostSftpServiceImpl implements HostSftpService {
     }
 
     @Override
-    public Integer deleteHostSftpLog(List<Long> idList) {
-        log.info("HostSftpLogService.deleteSftpLog start {}", JSON.toJSONString(idList));
+    public Integer deleteTerminalSftpLog(List<Long> idList) {
+        log.info("TerminalSftpService.deleteSftpLog start {}", JSON.toJSONString(idList));
         Integer effect = operatorLogApi.deleteOperatorLog(idList);
-        log.info("HostSftpLogService.deleteSftpLog finish {}", effect);
+        log.info("TerminalSftpService.deleteSftpLog finish {}", effect);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.COUNT, effect);
         return effect;
@@ -185,7 +185,7 @@ public class HostSftpServiceImpl implements HostSftpService {
     public StreamingResponseBody downloadWithTransferToken(String channelId, String transferToken, HttpServletResponse response) {
         // 获取会话
         DownloadSession session = (DownloadSession) Optional.ofNullable(channelId)
-                .map(hostTransferManager::getHandler)
+                .map(terminalTransferManager::getHandler)
                 .map(s -> s.getSessionByToken(transferToken))
                 .filter(s -> s instanceof DownloadSession)
                 .orElse(null);
@@ -206,7 +206,7 @@ public class HostSftpServiceImpl implements HostSftpService {
      * @param request request
      * @return query
      */
-    private OperatorLogQueryDTO buildQueryInfo(HostSftpLogQueryRequest request) {
+    private OperatorLogQueryDTO buildQueryInfo(TerminalSftpLogQueryRequest request) {
         Long hostId = request.getHostId();
         String type = request.getType();
         // 构建参数

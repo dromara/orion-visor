@@ -16,8 +16,8 @@
 package com.orion.visor.module.asset.service;
 
 import com.orion.lang.define.wrapper.DataGrid;
-import com.orion.visor.module.asset.entity.request.host.HostSftpLogQueryRequest;
-import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
+import com.orion.visor.module.asset.entity.request.host.TerminalSftpLogQueryRequest;
+import com.orion.visor.module.asset.entity.vo.TerminalSftpLogVO;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -32,7 +32,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023-12-26 22:09
  */
-public interface HostSftpService {
+public interface TerminalSftpService {
 
     /**
      * 分页查询 SFTP 操作日志
@@ -40,7 +40,7 @@ public interface HostSftpService {
      * @param request request
      * @return rows
      */
-    DataGrid<HostSftpLogVO> getHostSftpLogPage(HostSftpLogQueryRequest request);
+    DataGrid<TerminalSftpLogVO> getTerminalSftpLogPage(TerminalSftpLogQueryRequest request);
 
     /**
      * 删除 SFTP 操作日志
@@ -48,7 +48,7 @@ public interface HostSftpService {
      * @param idList idList
      * @return effect
      */
-    Integer deleteHostSftpLog(List<Long> idList);
+    Integer deleteTerminalSftpLog(List<Long> idList);
 
     /**
      * 设置文件内容

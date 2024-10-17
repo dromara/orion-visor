@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 终端连接日志 api
@@ -83,7 +84,7 @@ public class TerminalConnectLogController {
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/latest-connect")
     @Operation(summary = "查询用户最近连接的主机")
-    public List<Long> getLatestConnectHostId(@RequestBody TerminalConnectLogQueryRequest request) {
+    public Set<Long> getLatestConnectHostId(@RequestBody TerminalConnectLogQueryRequest request) {
         return terminalConnectLogService.getLatestConnectHostId(request);
     }
 

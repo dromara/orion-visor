@@ -41,15 +41,12 @@ import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.service.TerminalConnectLogService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -175,15 +172,10 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
     }
 
     @Override
-    public List<Long> getLatestConnectHostId(TerminalConnectLogQueryRequest request) {
-        return terminalConnectLogDAO.selectLatestConnectHostId(SecurityUtils.getLoginUserId(), request.getType(), request.getLimit());
-    }
-
-    @Override
-    @Async("asyncExecutor")
-    public Future<List<Long>> getLatestConnectHostIdAsync(TerminalConnectTypeEnum type, Long userId) {
-        List<Long> hostIdList = terminalConnectLogDAO.selectLatestConnectHostId(userId, type.name(), Const.N_10);
-        return CompletableFuture.completedFuture(hostIdList);
+    public Set<Long> getLatestConnectHostId(TerminalConnectLogQueryRequest request) {
+        // 查询最近连接的主机
+        List<Long> hostIdList = terminalConnectLogDAO.selectLatestConnectHostId(SecurityUtils.getLoginUserId(), request.getType(), request.getLimit());
+        return new LinkedHashSet<>(hostIdList);
     }
 
     @Override

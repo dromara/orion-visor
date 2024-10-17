@@ -48,7 +48,4 @@ public class AuthorizedHostWrapperVO {
     @Schema(description = "分组树节点映射 groupId:hostIdList")
     private Map<String, Set<Long>> treeNodes;
 
-    @Schema(description = "最近访问的主机")
-    private Set<Long> latestHosts;
-
 }

@@ -15,7 +15,7 @@
  */
 package com.orion.visor.module.asset.convert;
 
-import com.orion.visor.module.asset.entity.vo.HostSftpLogVO;
+import com.orion.visor.module.asset.entity.vo.TerminalSftpLogVO;
 import com.orion.visor.module.infra.entity.dto.operator.OperatorLogDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,11 +29,11 @@ import org.mapstruct.factory.Mappers;
  * @since 2023-12-26 22:09
  */
 @Mapper
-public interface HostSftpLogConvert {
+public interface TerminalSftpLogConvert {
 
-    HostSftpLogConvert MAPPER = Mappers.getMapper(HostSftpLogConvert.class);
+    TerminalSftpLogConvert MAPPER = Mappers.getMapper(TerminalSftpLogConvert.class);
 
     @Mapping(target = "extra", ignore = true)
-    HostSftpLogVO to(OperatorLogDTO request);
+    TerminalSftpLogVO to(OperatorLogDTO request);
 
 }
