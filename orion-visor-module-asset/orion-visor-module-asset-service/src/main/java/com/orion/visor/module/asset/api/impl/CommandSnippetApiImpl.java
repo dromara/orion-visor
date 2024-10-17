@@ -15,8 +15,8 @@
  */
 package com.orion.visor.module.asset.api.impl;
 
+import com.orion.visor.module.asset.api.CommandSnippetApi;
 import com.orion.visor.module.asset.service.CommandSnippetService;
-import com.orion.visor.module.infra.api.CommandSnippetApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

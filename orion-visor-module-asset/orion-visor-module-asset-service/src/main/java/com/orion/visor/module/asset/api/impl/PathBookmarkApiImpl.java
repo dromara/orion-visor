@@ -15,8 +15,8 @@
  */
 package com.orion.visor.module.asset.api.impl;
 
+import com.orion.visor.module.asset.api.PathBookmarkApi;
 import com.orion.visor.module.asset.service.PathBookmarkService;
-import com.orion.visor.module.infra.api.PathBookmarkApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
