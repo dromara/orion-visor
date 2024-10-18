@@ -138,6 +138,6 @@ public interface ${table.serviceName} {
      * @param request request
      * @return wrapper
      */
-    private LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request);
+    LambdaQueryWrapper<${type}DO> buildQueryWrapper(${type}QueryRequest request);
 
 }
