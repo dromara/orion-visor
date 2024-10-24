@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.transfer.session;
 
 import com.orion.lang.exception.argument.InvalidArgumentException;
@@ -10,7 +25,7 @@ import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.module.asset.define.config.AppSftpConfig;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
@@ -34,7 +49,7 @@ public abstract class TransferSession implements ITransferSession {
 
     protected static final AppSftpConfig SFTP_CONFIG = SpringHolder.getBean(AppSftpConfig.class);
 
-    protected final HostTerminalConnectDTO connectInfo;
+    protected final TerminalConnectDTO connectInfo;
 
     protected final SessionStore sessionStore;
 
@@ -51,7 +66,7 @@ public abstract class TransferSession implements ITransferSession {
     @Setter
     protected String token;
 
-    public TransferSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
+    public TransferSession(TerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         this.connectInfo = connectInfo;
         this.sessionStore = sessionStore;
         this.channel = channel;

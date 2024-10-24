@@ -1,12 +1,31 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.terminal.handler;
 
+import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.enums.BooleanBit;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.framework.redis.core.utils.RedisStrings;
+import com.orion.visor.module.asset.define.cache.TerminalCacheKeyDefine;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
+import com.orion.visor.module.asset.entity.dto.SftpSetContentCacheDTO;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpSetContentRequest;
-import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpBaseResponse;
+import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpBaseRequest;
+import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpSetContentResponse;
 import com.orion.visor.module.asset.handler.host.terminal.session.ISftpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,20 +42,28 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class SftpSetContentHandler extends AbstractTerminalHandler<SftpSetContentRequest> {
+public class SftpSetContentHandler extends AbstractTerminalHandler<SftpBaseRequest> {
 
     @Override
-    public void handle(WebSocketSession channel, SftpSetContentRequest payload) {
+    public void handle(WebSocketSession channel, SftpBaseRequest payload) {
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         log.info("SftpSetContentHandler-handle start sessionId: {}, path: {}", sessionId, path);
+        String token = UUIds.random32();
         Exception ex = null;
-        // 修改内容
         try {
-            session.setContent(path, payload.getContent());
+            // 检查文件是否可编辑
+            session.checkCanEdit(path);
+            // 设置缓存
+            String key = TerminalCacheKeyDefine.TERMINAL_SFTP_SET_CONTENT.format(token);
+            SftpSetContentCacheDTO cache = SftpSetContentCacheDTO.builder()
+                    .hostId(session.getConfig().getHostId())
+                    .path(path)
+                    .build();
+            RedisStrings.setJson(key, TerminalCacheKeyDefine.TERMINAL_SFTP_SET_CONTENT, cache);
             log.info("SftpSetContentHandler-handle success sessionId: {}, path: {}", sessionId, path);
         } catch (Exception e) {
             log.error("SftpSetContentHandler-handle error sessionId: {}", sessionId, e);
@@ -45,16 +72,17 @@ public class SftpSetContentHandler extends AbstractTerminalHandler<SftpSetConten
         // 返回
         this.send(channel,
                 OutputTypeEnum.SFTP_SET_CONTENT,
-                SftpBaseResponse.builder()
+                SftpSetContentResponse.builder()
                         .sessionId(sessionId)
                         .result(BooleanBit.of(ex == null).getValue())
+                        .token(token)
                         .msg(this.getErrorMessage(ex))
                         .build());
         // 保存操作日志
         Map<String, Object> extra = Maps.newMap();
         extra.put(OperatorLogs.PATH, path);
         this.saveOperatorLog(payload, channel,
-                extra, HostTerminalOperatorType.SFTP_SET_CONTENT,
+                extra, TerminalOperatorType.SFTP_SET_CONTENT,
                 startTime, ex);
     }
 

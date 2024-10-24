@@ -1,9 +1,24 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.terminal.handler;
 
 import com.orion.lang.utils.collect.Maps;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.enums.BooleanBit;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpMoveRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpBaseResponse;
@@ -30,7 +45,7 @@ public class SftpMoveHandler extends AbstractTerminalHandler<SftpMoveRequest> {
         long startTime = System.currentTimeMillis();
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         String target = payload.getTarget();
         log.info("SftpMoveHandler-handle start sessionId: {}, path: {}, target: {}", sessionId, path, target);
@@ -56,7 +71,7 @@ public class SftpMoveHandler extends AbstractTerminalHandler<SftpMoveRequest> {
         extra.put(OperatorLogs.PATH, path);
         extra.put(OperatorLogs.TARGET, target);
         this.saveOperatorLog(payload, channel,
-                extra, HostTerminalOperatorType.SFTP_MOVE,
+                extra, TerminalOperatorType.SFTP_MOVE,
                 startTime, ex);
     }
 

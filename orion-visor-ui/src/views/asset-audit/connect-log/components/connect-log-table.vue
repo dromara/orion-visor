@@ -57,14 +57,14 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          主机连接日志
+          终端连接日志
         </div>
       </div>
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 清空 -->
-          <a-button v-permission="['asset:host-connect-log:management:clear']"
+          <a-button v-permission="['asset:terminal-connect-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -77,7 +77,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectRows">
-            <a-button v-permission="['asset:host-connect-log:management:delete']"
+            <a-button v-permission="['asset:terminal-connect-log:management:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -162,12 +162,12 @@
             详情
           </a-button>
           <!-- 下线 -->
-          <a-popconfirm v-if="record.status === HostConnectStatus.CONNECTING"
+          <a-popconfirm v-if="record.status === TerminalConnectStatus.CONNECTING"
                         content="确认要强制下线吗?"
                         position="left"
                         type="warning"
                         @ok="forceOffline(record)">
-            <a-button v-permission="['asset:host-connect-log:management:force-offline', 'asset:host-connect-session:management:force-offline']"
+            <a-button v-permission="['asset:terminal-connect-log:management:force-offline', 'asset:terminal-connect-session:management:force-offline']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -179,7 +179,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:host-connect-log:management:delete']"
+            <a-button v-permission="['asset:terminal-connect-log:management:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -199,10 +199,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostConnectLogQueryRequest, HostConnectLogQueryResponse } from '@/api/asset/host-connect-log';
+  import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteHostConnectLog, getHostConnectLogPage, hostForceOffline } from '@/api/asset/host-connect-log';
-  import { connectStatusKey, connectTypeKey, HostConnectStatus } from '../types/const';
+  import { deleteTerminalConnectLog, getTerminalConnectLogPage, hostForceOffline } from '@/api/asset/terminal-connect-log';
+  import { connectStatusKey, connectTypeKey, TerminalConnectStatus } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -220,10 +220,10 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const tableRenderData = ref<Array<HostConnectLogQueryResponse>>([]);
+  const tableRenderData = ref<Array<TerminalConnectLogQueryResponse>>([]);
   const selectedKeys = ref<Array<number>>([]);
 
-  const formModel = reactive<HostConnectLogQueryRequest>({
+  const formModel = reactive<TerminalConnectLogQueryRequest>({
     id: undefined,
     userId: undefined,
     hostId: undefined,
@@ -234,10 +234,10 @@
   });
 
   // 加载数据
-  const doFetchTableData = async (request: HostConnectLogQueryRequest) => {
+  const doFetchTableData = async (request: TerminalConnectLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostConnectLogPage(request);
+      const { data } = await getTerminalConnectLogPage(request);
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
@@ -262,11 +262,11 @@
   };
 
   // 强制下线
-  const forceOffline = async (record: HostConnectLogQueryResponse) => {
+  const forceOffline = async (record: TerminalConnectLogQueryResponse) => {
     try {
       setLoading(true);
       await hostForceOffline({ id: record.id });
-      record.status = HostConnectStatus.FORCE_OFFLINE;
+      record.status = TerminalConnectStatus.FORCE_OFFLINE;
       record.endTime = Date.now();
       Message.success('已下线');
     } catch (e) {
@@ -280,7 +280,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostConnectLog(selectedKeys.value);
+      await deleteTerminalConnectLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载数据
@@ -292,11 +292,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async (record: HostConnectLogQueryResponse) => {
+  const deleteRow = async (record: TerminalConnectLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostConnectLog([record.id]);
+      await deleteTerminalConnectLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载数据

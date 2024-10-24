@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.terminal.handler;
 
 import com.orion.lang.exception.DisabledException;
@@ -12,21 +27,21 @@ import com.orion.visor.framework.common.constant.ExtraFieldConst;
 import com.orion.visor.framework.common.enums.BooleanBit;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.dao.HostDAO;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
-import com.orion.visor.module.asset.entity.domain.HostConnectLogDO;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
 import com.orion.visor.module.asset.entity.domain.HostDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
-import com.orion.visor.module.asset.entity.request.host.HostConnectLogCreateRequest;
-import com.orion.visor.module.asset.enums.HostConnectStatusEnum;
-import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
+import com.orion.visor.module.asset.entity.domain.TerminalConnectLogDO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
+import com.orion.visor.module.asset.entity.request.host.TerminalConnectLogCreateRequest;
+import com.orion.visor.module.asset.enums.TerminalConnectStatusEnum;
+import com.orion.visor.module.asset.enums.TerminalConnectTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.constant.TerminalMessage;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.TerminalCheckRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import com.orion.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
-import com.orion.visor.module.asset.service.HostConnectLogService;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalConnectLogService;
+import com.orion.visor.module.asset.service.TerminalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -35,7 +50,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 主机连接检查
+ * 终端连接检查
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -49,10 +64,10 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     private HostDAO hostDAO;
 
     @Resource
-    private HostTerminalService hostTerminalService;
+    private TerminalService terminalService;
 
     @Resource
-    private HostConnectLogService hostConnectLogService;
+    private TerminalConnectLogService terminalConnectLogService;
 
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
@@ -62,7 +77,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Long hostId = payload.getHostId();
         Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
         long startTime = System.currentTimeMillis();
-        HostConnectTypeEnum connectType = HostConnectTypeEnum.of(payload.getConnectType());
+        TerminalConnectTypeEnum connectType = TerminalConnectTypeEnum.of(payload.getConnectType());
         String sessionId = payload.getSessionId();
         log.info("TerminalCheckHandler-handle start userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
         // 检查 session 是否存在
@@ -76,11 +91,11 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.info("TerminalCheckHandler-handle unknown host userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId);
             return;
         }
-        HostTerminalConnectDTO connect = null;
+        TerminalConnectDTO connect = null;
         Exception ex = null;
         try {
             // 获取连接信息
-            connect = hostTerminalService.getTerminalConnectInfo(userId, host);
+            connect = terminalService.getTerminalConnectInfo(userId, host);
             connect.setConnectType(connectType.name());
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);
@@ -96,7 +111,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
             log.error("TerminalCheckHandler-handle exception userId: {}, hostId: {}, sessionId: {}", userId, hostId, sessionId, e);
         }
         // 记录主机日志
-        HostConnectLogDO connectLog = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
+        TerminalConnectLogDO connectLog = this.saveHostLog(channel, userId, host, startTime, ex, sessionId, connectType);
         if (connect != null) {
             connect.setLogId(connectLog.getId());
         }
@@ -118,7 +133,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @return 是否存在
      */
     private boolean checkSession(WebSocketSession channel, TerminalCheckRequest payload) {
-        ITerminalSession session = hostTerminalManager.getSession(channel.getId(), payload.getSessionId());
+        ITerminalSession session = terminalManager.getSession(channel.getId(), payload.getSessionId());
         if (session != null) {
             this.sendCheckFailedMessage(channel, payload, ErrorMessage.SESSION_PRESENT);
             return true;
@@ -173,13 +188,13 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
      * @param connectType connectType
      * @return connectLog
      */
-    private HostConnectLogDO saveHostLog(WebSocketSession channel,
-                                         Long userId,
-                                         HostDO host,
-                                         long startTime,
-                                         Exception ex,
-                                         String sessionId,
-                                         HostConnectTypeEnum connectType) {
+    private TerminalConnectLogDO saveHostLog(WebSocketSession channel,
+                                             Long userId,
+                                             HostDO host,
+                                             long startTime,
+                                             Exception ex,
+                                             String sessionId,
+                                             TerminalConnectTypeEnum connectType) {
         Long hostId = host.getId();
         String hostName = host.getName();
         String username = WebSockets.getAttr(channel, ExtraFieldConst.USERNAME);
@@ -192,17 +207,17 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         extra.put(OperatorLogs.SESSION_ID, sessionId);
         // 日志参数
         OperatorLogModel logModel = TerminalUtils.getOperatorLogModel(channel, extra,
-                HostTerminalOperatorType.CONNECT, startTime, ex);
+                TerminalOperatorType.CONNECT, startTime, ex);
         // 记录操作日志
         operatorLogFrameworkService.insert(logModel);
         // 记录连接日志
-        HostConnectLogCreateRequest connectLog = HostConnectLogCreateRequest.builder()
+        TerminalConnectLogCreateRequest connectLog = TerminalConnectLogCreateRequest.builder()
                 .userId(userId)
                 .username(username)
                 .hostId(hostId)
                 .hostName(hostName)
                 .hostAddress(host.getAddress())
-                .status(ex == null ? HostConnectStatusEnum.CONNECTING.name() : HostConnectStatusEnum.FAILED.name())
+                .status(ex == null ? TerminalConnectStatusEnum.CONNECTING.name() : TerminalConnectStatusEnum.FAILED.name())
                 .token(sessionId)
                 .extra(extra)
                 .build();
@@ -213,7 +228,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         extra.put(OperatorLogs.USER_AGENT, logModel.getUserAgent());
         extra.put(OperatorLogs.ERROR_MESSAGE, logModel.getErrorMessage());
         // 记录连接日志
-        return hostConnectLogService.create(connectType, connectLog);
+        return terminalConnectLogService.create(connectType, connectLog);
     }
 
 }

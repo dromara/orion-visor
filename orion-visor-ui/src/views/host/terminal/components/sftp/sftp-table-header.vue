@@ -11,10 +11,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="返回上级">
-        <span class="click-icon-wrapper header-action-icon mr8"
-              @click="backParentPath">
+        <a-button class="header-action-icon icon-button mr8"
+                  @click="backParentPath">
           <icon-left />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 当前路径 -->
       <div class="sftp-path-container"
@@ -62,10 +62,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="重连">
-        <span class="click-icon-wrapper header-action-icon ml8"
-              @click="reConnect">
+        <a-button class="header-action-icon icon-button ml8"
+                  @click="reConnect">
           <icon-refresh />
-        </span>
+        </a-button>
       </a-tooltip>
     </div>
     <!-- 路径编辑模式-右侧操作 -->
@@ -78,10 +78,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="进入">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="doChangePath">
+        <a-button class="header-action-icon icon-button"
+                  @click="doChangePath">
           <icon-right />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 取消 -->
       <a-tooltip position="top"
@@ -91,10 +91,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="取消">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="setPathEditable(false)">
+        <a-button class="header-action-icon icon-button"
+                  @click="setPathEditable(false)">
           <icon-stop />
-        </span>
+        </a-button>
       </a-tooltip>
     </a-space>
     <!-- 非路径编辑模式-右侧操作 -->
@@ -107,10 +107,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="刷新">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="loadFileList()">
+        <a-button class="header-action-icon icon-button"
+                  @click="loadFileList()">
           <icon-refresh />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 显示隐藏文件 -->
       <a-tooltip position="top"
@@ -120,11 +120,11 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  :content="showHiddenFile ? '不显示隐藏文件' : '显示隐藏文件'">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="toggleShowHiddenFile">
+        <a-button class="header-action-icon icon-button"
+                  @click="toggleShowHiddenFile">
           <icon-eye-invisible v-if="showHiddenFile" />
           <icon-eye v-else />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 创建文件 -->
       <a-tooltip position="top"
@@ -134,10 +134,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="创建文件">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="createFile">
+        <a-button class="header-action-icon icon-button"
+                  @click="createFile">
           <icon-drive-file />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 创建文件夹 -->
       <a-tooltip position="top"
@@ -147,10 +147,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="创建文件夹">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="createDir">
+        <a-button class="header-action-icon icon-button"
+                  @click="createDir">
           <icon-folder-add />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 删除选中文件 -->
       <a-tooltip position="top"
@@ -160,10 +160,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="删除选中文件">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="deleteSelectFiles">
+        <a-button class="header-action-icon icon-button"
+                  @click="deleteSelectFiles">
           <icon-delete />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 上传 -->
       <a-tooltip position="top"
@@ -173,10 +173,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="上传">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="openSftpUploadModal">
+        <a-button class="header-action-icon icon-button"
+                  @click="openSftpUploadModal">
           <icon-upload />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 下载 -->
       <a-tooltip position="top"
@@ -186,10 +186,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="下载">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="downloadFile">
+        <a-button class="header-action-icon icon-button"
+                  @click="downloadFile">
           <icon-download />
-        </span>
+        </a-button>
       </a-tooltip>
     </a-space>
   </div>
@@ -371,8 +371,6 @@
   }
 
   .header-action-icon {
-    font-size: 16px;
-    padding: 4px;
     width: @action-size;
     height: @action-size;
   }

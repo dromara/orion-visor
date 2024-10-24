@@ -1,9 +1,24 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.transfer.session;
 
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.SessionStore;
-import com.orion.visor.module.asset.define.operator.HostTerminalOperatorType;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.define.operator.TerminalOperatorType;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import com.orion.visor.module.asset.handler.host.transfer.model.TransferOperatorRequest;
 import com.orion.visor.module.asset.handler.host.transfer.utils.TransferUtils;
@@ -26,7 +41,7 @@ public class UploadSession extends TransferSession {
 
     protected OutputStream outputStream;
 
-    public UploadSession(HostTerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
+    public UploadSession(TerminalConnectDTO connectInfo, SessionStore sessionStore, WebSocketSession channel) {
         super(connectInfo, sessionStore, channel);
     }
 
@@ -36,7 +51,7 @@ public class UploadSession extends TransferSession {
         try {
             log.info("UploadSession.startUpload start channelId: {}, path: {}", channelId, path);
             // 保存操作日志
-            this.saveOperatorLog(HostTerminalOperatorType.SFTP_UPLOAD, path);
+            this.saveOperatorLog(TerminalOperatorType.SFTP_UPLOAD, path);
             // 检查连接
             this.init();
             // 检查文件是否存在

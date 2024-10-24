@@ -2,8 +2,9 @@ import type { CardField, CardFieldConfig } from '@/types/card';
 import { dateFormat } from '@/utils';
 
 const fieldConfig = {
-  rowGap: '12px',
+  rowGap: '10px',
   labelSpan: 8,
+  minHeight: '22px',
   fields: [
     {
       label: 'id',

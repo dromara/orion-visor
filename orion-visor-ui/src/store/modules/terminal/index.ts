@@ -12,10 +12,11 @@ import type { ISshSession, ITerminalSession, PanelSessionTabType, TerminalPanelT
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
-import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/host-terminal';
-import { getTerminalThemes } from '@/api/asset/host-terminal';
+import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/terminal';
+import { getTerminalThemes } from '@/api/asset/terminal';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
+import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
 import { nextId } from '@/utils';
 import { Message } from '@arco-design/web-vue';
 import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/const';
@@ -128,10 +129,15 @@ export default defineStore('terminal', {
       if (this.hosts.hostList?.length) {
         return;
       }
+      // 查询授权主机
       const { data } = await getCurrentAuthorizedHost('SSH');
       Object.keys(data).forEach(k => {
         this.hosts[k as keyof AuthorizedHostQueryResponse] = data[k as keyof AuthorizedHostQueryResponse] as any;
       });
+      this.hosts.latestHosts = [];
+      // 查询最近连接的主机
+      const { data: latestHosts } = await getLatestConnectHostId('SSH', 30);
+      this.hosts.latestHosts = latestHosts;
     },
 
     // 打开会话

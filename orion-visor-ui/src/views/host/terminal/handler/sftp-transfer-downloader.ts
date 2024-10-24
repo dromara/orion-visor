@@ -2,7 +2,7 @@ import type { SftpTransferItem } from '../types/define';
 import { TransferStatus } from '../types/const';
 import { getFileName, openDownloadFile } from '@/utils/file';
 import { saveAs } from 'file-saver';
-import { getDownloadTransferUrl } from '@/api/asset/host-sftp';
+import { getDownloadTransferUrl } from '@/api/asset/terminal-sftp';
 import SftpTransferHandler from './sftp-transfer-handler';
 
 // sftp 下载器实现

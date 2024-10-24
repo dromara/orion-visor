@@ -17,7 +17,7 @@
     <template #leftHandle>
       <!-- 主机分组 -->
       <a-button v-permission="['asset:host-group:update']"
-                class="card-header-icon-wrapper"
+                class="card-header-button"
                 @click="emits('openHostGroup')">
         主机分组
         <template #icon>
@@ -26,7 +26,7 @@
       </a-button>
       <!-- 角色授权 -->
       <a-button v-permission="['asset:host-group:grant']"
-                class="card-header-icon-wrapper"
+                class="card-header-button"
                 @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
         角色授权
         <template #icon>
@@ -35,7 +35,7 @@
       </a-button>
       <!-- 用户授权 -->
       <a-button v-permission="['asset:host-group:grant']"
-                class="card-header-icon-wrapper"
+                class="card-header-button"
                 @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
         用户授权
         <template #icon>
@@ -142,7 +142,7 @@
     <template #extra="{ record }">
       <a-space>
         <!-- 更多操作 -->
-        <a-dropdown trigger="hover">
+        <a-dropdown trigger="hover" :popup-max-height="false">
           <icon-more class="card-extra-icon" />
           <template #content>
             <!-- 修改 -->
@@ -182,6 +182,22 @@
                 <icon-delete /> 删除
               </span>
             </a-doption>
+            <!-- SSH -->
+            <a-doption v-if="record.type === hostType.SSH.type"
+                       v-permission="['asset:terminal:access']"
+                       @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
+              <span class="more-doption normal">
+                <icon-thunderbolt /> SSH
+              </span>
+            </a-doption>
+            <!-- SFTP -->
+            <a-doption v-if="record.type === hostType.SSH.type"
+                       v-permission="['asset:terminal:access']"
+                       @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
+              <span class="more-doption normal">
+               <icon-folder /> SFTP
+              </span>
+            </a-doption>
           </template>
         </a-dropdown>
       </a-space>
@@ -202,12 +218,13 @@
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { hostStatusKey, hostTypeKey, tagColor } from '../types/const';
+  import { hostStatusKey, hostType, hostTypeKey, tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import useLoading from '@/hooks/loading';
   import fieldConfig from '../types/card.fields';
+  import { openNewRoute } from '@/router';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup', 'openCopy']);

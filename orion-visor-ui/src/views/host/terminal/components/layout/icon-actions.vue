@@ -11,15 +11,15 @@
       <div v-if="action.visible !== false"
            class="terminal-sidebar-icon-wrapper"
            :class="[ wrapperClass ]">
-        <div class="terminal-sidebar-icon"
-             :class="[
-               iconClass,
-               action.disabled === true ? 'disabled-item' : '',
-               action.checked === true ? 'checked-item' : '',
-             ]"
-             @click="action.disabled === true ? false : action.click()">
+        <a-button class="terminal-sidebar-icon"
+                  :class="[
+                    iconClass,
+                    action.checked === true ? 'checked-item' : '',
+                  ]"
+                  :disabled="action.disabled === true"
+                  @click="action.click()">
           <component :is="action.icon" :style="action?.iconStyle" />
-        </div>
+        </a-button>
       </div>
     </a-tooltip>
   </div>
@@ -44,5 +44,7 @@
 </script>
 
 <style lang="less" scoped>
-
+  .terminal-sidebar-icon[disabled]:hover {
+    background: var(--color-secondary-disabled);
+  }
 </style>

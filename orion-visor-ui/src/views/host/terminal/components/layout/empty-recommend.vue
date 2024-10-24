@@ -25,11 +25,11 @@
                        content-class="terminal-tooltip-content"
                        arrow-class="terminal-tooltip-content"
                        content="跳转页面">
-              <span v-if="!handler.host"
-                    class="click-icon-wrapper"
-                    @click="openTab(handler)">
+              <a-button v-if="!handler.host"
+                        class="combined-handler-action icon-button"
+                        @click="openTab(handler)">
                 <icon-right />
-              </span>
+              </a-button>
             </a-tooltip>
             <!-- 打开 SSH -->
             <a-tooltip position="top"
@@ -38,11 +38,11 @@
                        content-class="terminal-tooltip-content"
                        arrow-class="terminal-tooltip-content"
                        content="打开 SSH">
-              <span v-if="handler.host"
-                    class="click-icon-wrapper"
-                    @click="openSession(handler.host as any, PanelSessionType.SSH)">
+              <a-button v-if="handler.host"
+                        class="combined-handler-action icon-button"
+                        @click="openSession(handler.host as any, PanelSessionType.SSH)">
                 <icon-thunderbolt />
-              </span>
+              </a-button>
             </a-tooltip>
             <!-- 打开 SFTP -->
             <a-tooltip position="top"
@@ -51,11 +51,11 @@
                        content-class="terminal-tooltip-content"
                        arrow-class="terminal-tooltip-content"
                        content="打开 SFTP">
-              <span v-if="handler.host"
-                    class="click-icon-wrapper"
-                    @click="openSession(handler.host as any, PanelSessionType.SFTP)">
+              <a-button v-if="handler.host"
+                        class="combined-handler-action icon-button"
+                        @click="openSession(handler.host as any, PanelSessionType.SFTP)">
                 <icon-folder />
-              </span>
+              </a-button>
             </a-tooltip>
           </div>
         </div>
@@ -138,7 +138,8 @@
   @container-height: 448px;
   @handler-height: 44px;
   @icon-size: @handler-height;
-  @actions-width: 80px;
+  @actions-width: 83px;
+  @action-size: 28px;
 
   .recommend-container {
     overflow: hidden;
@@ -211,16 +212,17 @@
       padding-right: 8px;
       align-items: center;
       justify-content: flex-end;
+    }
 
-      .click-icon-wrapper {
-        font-size: 18px;
-        padding: 4px;
-        border-radius: 4px;
-        margin: 0 4px;
+    &-action {
+      width: @action-size;
+      height: @action-size;
+      margin: 0 4px;
+      border-radius: 4px;
+      font-size: 18px;
 
-        &:hover {
-          background: var(--color-neutral-4);
-        }
+      &:hover {
+        background: var(--color-neutral-4);
       }
     }
   }

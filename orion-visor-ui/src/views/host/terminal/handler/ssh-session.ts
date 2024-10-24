@@ -7,7 +7,7 @@ import type { XtermAddons } from '@/types/xterm';
 import { defaultFontFamily } from '@/types/xterm';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
-import { PanelSessionType, TerminalShortcutType, TerminalStatus } from '../types/const';
+import { PanelSessionType, TerminalShortcutType, TerminalSessionStatus } from '../types/const';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -41,7 +41,7 @@ export default class SshSession extends BaseSession implements ISshSession {
     super(PanelSessionType.SSH.type, tab);
     this.channel = channel;
     this.canUseWebgl = canUseWebgl;
-    this.status = TerminalStatus.CONNECTING;
+    this.status = TerminalSessionStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
     this.handler = undefined as unknown as ISshSessionHandler;
     this.addons = {} as XtermAddons;
@@ -207,7 +207,7 @@ export default class SshSession extends BaseSession implements ISshSession {
   // 设置已连接
   connect(): void {
     super.connect();
-    this.status = TerminalStatus.CONNECTED;
+    this.status = TerminalSessionStatus.CONNECTED;
     this.inst.focus();
   }
 

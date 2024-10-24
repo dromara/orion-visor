@@ -1,7 +1,7 @@
 import type { ISftpSession, ISshSession, ITerminalChannel, ITerminalOutputProcessor, ITerminalSession, ITerminalSessionManager } from '../types/define';
 import type { OutputPayload } from '@/types/protocol/terminal.protocol';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
-import { PanelSessionType, TerminalStatus } from '../types/const';
+import { PanelSessionType, TerminalSessionStatus } from '../types/const';
 import { useTerminalStore } from '@/store';
 import { Message } from '@arco-design/web-vue';
 
@@ -37,7 +37,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       } else {
         // 未成功展示错误信息
         ssh.write(`[91m${msg || ''}[0m\r\n\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
-        ssh.status = TerminalStatus.CLOSED;
+        ssh.status = TerminalSessionStatus.CLOSED;
       }
     }, sftp => {
       // sftp 会话
@@ -70,7 +70,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       } else {
         // 未成功展示错误信息
         ssh.write(`[91m${msg || ''}[0m\r\n\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
-        ssh.status = TerminalStatus.CLOSED;
+        ssh.status = TerminalSessionStatus.CLOSED;
       }
     }, sftp => {
       // sftp 会话
@@ -105,7 +105,7 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
         ssh.write('[91m输入回车重新连接...[0m\r\n\r\n');
       }
       // 设置状态
-      ssh.status = TerminalStatus.CLOSED;
+      ssh.status = TerminalSessionStatus.CLOSED;
       // 设置不可写
       ssh.setCanWrite(false);
     }, sftp => {
@@ -177,17 +177,17 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
   }
 
   // 处理 SFTP 获取文件内容
-  processSftpGetContent({ sessionId, path, result, msg, content }: OutputPayload): void {
+  processSftpGetContent({ sessionId, result, msg, token }: OutputPayload): void {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveSftpGetContent(path, result, msg, content);
+    session && session.resolver.resolveSftpGetContent(result, msg, token);
   }
 
   // 处理 SFTP 修改文件内容
-  processSftpSetContent({ sessionId, result, msg }: OutputPayload) {
+  processSftpSetContent({ sessionId, result, msg, token }: OutputPayload) {
     // 获取会话
     const session = this.sessionManager.getSession<ISftpSession>(sessionId);
-    session && session.resolver.resolveSftpSetContent(result, msg);
+    session && session.resolver.resolveSftpSetContent(result, msg, token);
   }
 
   // 根据类型处理操作

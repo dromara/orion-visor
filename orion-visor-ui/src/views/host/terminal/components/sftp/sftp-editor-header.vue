@@ -27,10 +27,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="保存">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="emits('save')">
+        <a-button class="header-action-icon icon-button"
+                  @click="emits('save')">
           <icon-save />
-        </span>
+        </a-button>
       </a-tooltip>
       <!-- 关闭 -->
       <a-tooltip position="top"
@@ -40,10 +40,10 @@
                  content-class="terminal-tooltip-content"
                  arrow-class="terminal-tooltip-content"
                  content="关闭">
-        <span class="click-icon-wrapper header-action-icon"
-              @click="emits('close')">
+        <a-button class="header-action-icon icon-button"
+                  @click="emits('close')">
           <icon-close />
-        </span>
+        </a-button>
       </a-tooltip>
     </a-space>
   </div>
@@ -96,8 +96,6 @@
   }
 
   .header-action-icon {
-    font-size: 16px;
-    padding: 4px;
     width: @action-size;
     height: @action-size;
   }

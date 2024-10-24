@@ -1,6 +1,6 @@
 <template>
   <a-drawer v-model:visible="visible"
-            title="主机连接日志详情"
+            title="终端连接日志详情"
             :width="442"
             :mask-closable="false"
             :unmount-on-close="true"
@@ -98,7 +98,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostConnectLogQueryResponse } from '@/api/asset/host-connect-log';
+  import type { TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
@@ -111,7 +111,7 @@
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
-  const record = ref<HostConnectLogQueryResponse>({} as HostConnectLogQueryResponse);
+  const record = ref<TerminalConnectLogQueryResponse>({} as TerminalConnectLogQueryResponse);
 
   // 打开
   const open = (s: any) => {

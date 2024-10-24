@@ -25,6 +25,7 @@
                       :session="session"
                       :list="fileList"
                       :loading="tableLoading"
+                      :editor-loading="editorLoading"
                       @load-file="loadFiles"
                       @edit-file="editFile"
                       @delete-file="deleteFile"
@@ -70,6 +71,8 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '../../types/const';
+  import { getSftpFileContent, setSftpFileContent } from '@/api/asset/terminal-sftp';
+  import { isString } from '@/utils/is';
   import SftpTableHeader from './sftp-table-header.vue';
   import SftpTable from './sftp-table.vue';
   import SftpEditorHeader from './sftp-editor-header.vue';
@@ -135,8 +138,7 @@
   // 编辑器保存
   const editorSave = () => {
     setEditorLoading(true);
-    const value = editorRef.value?.getValue() || '';
-    session.value?.setContent(editorFilePath.value, value);
+    session.value?.setContent(editorFilePath.value);
   };
 
   // 关闭编辑器
@@ -231,24 +233,47 @@
   };
 
   // 接收获取文件内容响应
-  const resolveSftpGetContent = (path: string, result: string, msg: string, content: string) => {
+  const resolveSftpGetContent = (result: string, msg: string, token: string) => {
     setTableLoading(false);
     setEditorLoading(false);
     // 检查结果
     if (!checkResult(result, msg)) {
       return;
     }
-    editorRef.value?.setValue(content);
+    setEditorLoading(true);
+    editorRef.value?.setValue('');
+    // 读取文件
+    getSftpFileContent(token).then(async ({ data }) => {
+      if (isString(data)) {
+        // 成功为 string
+        editorRef.value?.setValue(data || '');
+      } else {
+        // 失败为 object
+        Message.error((data as any).msg || '读取失败');
+      }
+      setEditorLoading(false);
+    }).catch(() => {
+      setEditorLoading(false);
+    });
   };
 
   // 接收修改文件内容响应
-  const resolveSftpSetContent = (result: string, msg: string) => {
+  const resolveSftpSetContent = (result: string, msg: string, token: string) => {
     setEditorLoading(false);
     // 检查结果
     if (!checkResult(result, msg)) {
       return;
     }
-    Message.success('保存成功');
+    setEditorLoading(true);
+    // 获取文本
+    const value = editorRef.value?.getValue() || '';
+    // 保存
+    setSftpFileContent(token, value).then(() => {
+      setEditorLoading(false);
+      Message.success('保存成功');
+    }).catch(() => {
+      setEditorLoading(false);
+    });
   };
 
   // 接收下载文件夹展开文件响应

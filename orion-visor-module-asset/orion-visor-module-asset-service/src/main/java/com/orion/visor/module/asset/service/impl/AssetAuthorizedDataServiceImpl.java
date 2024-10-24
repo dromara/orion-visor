@@ -1,9 +1,23 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.service.impl;
 
 import com.orion.lang.function.Functions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.collect.Maps;
-import com.orion.lang.utils.collect.Sets;
 import com.orion.visor.framework.common.constant.Const;
 import com.orion.visor.framework.common.utils.TreeUtils;
 import com.orion.visor.framework.common.utils.Valid;
@@ -11,12 +25,14 @@ import com.orion.visor.module.asset.convert.HostGroupConvert;
 import com.orion.visor.module.asset.dao.HostDAO;
 import com.orion.visor.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
 import com.orion.visor.module.asset.entity.vo.*;
-import com.orion.visor.module.asset.enums.HostConnectTypeEnum;
 import com.orion.visor.module.asset.enums.HostExtraItemEnum;
 import com.orion.visor.module.asset.enums.HostStatusEnum;
 import com.orion.visor.module.asset.enums.HostTypeEnum;
 import com.orion.visor.module.asset.handler.host.extra.model.HostLabelExtraModel;
-import com.orion.visor.module.asset.service.*;
+import com.orion.visor.module.asset.service.AssetAuthorizedDataService;
+import com.orion.visor.module.asset.service.HostIdentityService;
+import com.orion.visor.module.asset.service.HostKeyService;
+import com.orion.visor.module.asset.service.HostService;
 import com.orion.visor.module.infra.api.*;
 import com.orion.visor.module.infra.entity.dto.data.DataGroupDTO;
 import com.orion.visor.module.infra.entity.dto.tag.TagDTO;
@@ -62,9 +78,6 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
 
     @Resource
     private HostIdentityService hostIdentityService;
-
-    @Resource
-    private HostConnectLogService hostConnectLogService;
 
     @Resource
     private FavoriteApi favoriteApi;
@@ -129,14 +142,11 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
                     .groupTree(Lists.empty())
                     .treeNodes(Maps.empty())
                     .hostList(Lists.empty())
-                    .latestHosts(Sets.empty())
                     .build();
         }
         AuthorizedHostWrapperVO wrapper = new AuthorizedHostWrapperVO();
         // 查询我的收藏
         Future<List<Long>> favoriteResult = favoriteApi.getFavoriteRelIdListAsync(FavoriteTypeEnum.HOST, userId);
-        // 查询最近连接的主机
-        Future<List<Long>> latestConnectHostIdList = hostConnectLogService.getLatestConnectHostIdAsync(HostConnectTypeEnum.of(type), userId);
         // 查询主机拓展信息
         Future<Map<Long, String>> labelExtraResult = dataExtraApi.getExtraItemValuesByCacheAsync(userId,
                 DataExtraTypeEnum.HOST,
@@ -157,8 +167,6 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
         this.getAuthorizedHostExtra(wrapper.getHostList(),
                 favoriteResult.get(),
                 labelExtraResult.get());
-        // 设置最近连接的主机
-        wrapper.setLatestHosts(new LinkedHashSet<>(latestConnectHostIdList.get()));
         return wrapper;
     }
 

@@ -26,7 +26,7 @@
     <!-- 右侧操作 -->
     <ul class="right-side">
       <!-- 主机终端 -->
-      <li v-permission="['asset:host-terminal:access']">
+      <li v-permission="['asset:terminal:access']">
         <a-tooltip content="主机终端">
           <a-button class="nav-btn"
                     type="outline"

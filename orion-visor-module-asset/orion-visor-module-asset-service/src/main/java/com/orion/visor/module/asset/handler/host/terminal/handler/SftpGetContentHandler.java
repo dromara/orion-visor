@@ -1,7 +1,25 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.terminal.handler;
 
-import com.orion.visor.framework.common.constant.Const;
+import com.orion.lang.id.UUIds;
 import com.orion.visor.framework.common.enums.BooleanBit;
+import com.orion.visor.framework.redis.core.utils.RedisStrings;
+import com.orion.visor.module.asset.define.cache.TerminalCacheKeyDefine;
+import com.orion.visor.module.asset.entity.dto.SftpGetContentCacheDTO;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import com.orion.visor.module.asset.handler.host.terminal.model.request.SftpBaseRequest;
 import com.orion.visor.module.asset.handler.host.terminal.model.response.SftpGetContentResponse;
@@ -25,14 +43,21 @@ public class SftpGetContentHandler extends AbstractTerminalHandler<SftpBaseReque
     public void handle(WebSocketSession channel, SftpBaseRequest payload) {
         // 获取会话
         String sessionId = payload.getSessionId();
-        ISftpSession session = hostTerminalManager.getSession(channel.getId(), sessionId);
+        ISftpSession session = terminalManager.getSession(channel.getId(), sessionId);
         String path = payload.getPath();
         log.info("SftpGetContentHandler-handle start sessionId: {}, path: {}", sessionId, path);
-        String content = Const.EMPTY;
+        String token = UUIds.random32();
         Exception ex = null;
-        // 获取内容
         try {
-            content = session.getContent(path);
+            // 检查文件是否可编辑
+            session.checkCanEdit(path);
+            // 设置缓存
+            String key = TerminalCacheKeyDefine.TERMINAL_SFTP_GET_CONTENT.format(token);
+            SftpGetContentCacheDTO cache = SftpGetContentCacheDTO.builder()
+                    .hostId(session.getConfig().getHostId())
+                    .path(path)
+                    .build();
+            RedisStrings.setJson(key, TerminalCacheKeyDefine.TERMINAL_SFTP_GET_CONTENT, cache);
             log.info("SftpGetContentHandler-handle success sessionId: {}, path: {}", sessionId, path);
         } catch (Exception e) {
             log.error("SftpGetContentHandler-handle error sessionId: {}", sessionId, e);
@@ -44,7 +69,7 @@ public class SftpGetContentHandler extends AbstractTerminalHandler<SftpBaseReque
                 SftpGetContentResponse.builder()
                         .sessionId(sessionId)
                         .result(BooleanBit.of(ex == null).getValue())
-                        .content(content)
+                        .token(token)
                         .msg(this.getErrorMessage(ex))
                         .build());
     }

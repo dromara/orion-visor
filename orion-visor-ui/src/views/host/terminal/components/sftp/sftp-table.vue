@@ -62,10 +62,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="复制路径">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="copy(record.path, true)">
+          <a-button class="icon-button row-action-icon"
+                    @click="copy(record.path, true)">
             <icon-copy />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 编辑内容 -->
         <a-tooltip v-if="canEditable(record.size, record.attr)"
@@ -76,10 +76,11 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="编辑内容">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="editFile(record)">
+          <a-button class="icon-button row-action-icon"
+                    :disabled="editorLoading"
+                    @click="editFile(record)">
             <icon-edit />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 删除 -->
         <a-tooltip position="top"
@@ -88,10 +89,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="删除">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="deleteFile(record.path)">
+          <a-button class="icon-button row-action-icon"
+                    @click="deleteFile(record.path)">
             <icon-delete />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 下载 -->
         <a-tooltip position="top"
@@ -100,10 +101,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="下载">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="downloadFile(record.path)">
+          <a-button class="icon-button row-action-icon"
+                    @click="downloadFile(record.path)">
             <icon-download />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 移动 -->
         <a-tooltip position="top"
@@ -112,10 +113,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="移动">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="moveFile(record.path)">
+          <a-button class="icon-button row-action-icon"
+                    @click="moveFile(record.path)">
             <icon-paste />
-          </span>
+          </a-button>
         </a-tooltip>
         <!-- 提权 -->
         <a-tooltip position="top"
@@ -124,10 +125,10 @@
                    content-class="terminal-tooltip-content"
                    arrow-class="terminal-tooltip-content"
                    content="提权">
-          <span class="click-icon-wrapper row-action-icon"
-                @click="chmodFile(record.path, record.permission)">
+          <a-button class="icon-button row-action-icon"
+                    @click="chmodFile(record.path, record.permission)">
             <icon-user-group />
-          </span>
+          </a-button>
         </a-tooltip>
       </a-space>
     </template>
@@ -141,23 +142,24 @@
 </script>
 
 <script lang="ts" setup>
+  import type { VNodeRef } from 'vue';
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { SftpFile, ISftpSession } from '../../types/define';
-  import type { VNodeRef } from 'vue';
-  import { ref, computed, watch, inject } from 'vue';
+  import type { SftpSetting } from '@/api/system/setting';
+  import { ref, computed, watch, inject, onMounted } from 'vue';
   import { useRowSelection } from '@/hooks/table';
   import { dateFormat } from '@/utils';
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';
   import columns from './types/table.columns';
   import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '../../types/const';
-
-  const previewSize = Number.parseInt(import.meta.env.VITE_SFTP_PREVIEW_MB);
+  import { useCacheStore } from '@/store';
 
   const props = defineProps<{
     session?: ISftpSession;
     list: Array<SftpFile>;
     loading: boolean;
+    editorLoading: boolean;
     selectedFiles: Array<string>;
   }>();
 
@@ -167,6 +169,8 @@
   const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionId: string, path: string, permission: number) => void;
 
   const rowSelection = useRowSelection({ width: 40 });
+
+  const previewSize = ref(0);
 
   // 切换页面自动清空过滤
   watch(() => props.list, () => {
@@ -206,7 +210,7 @@
   const canEditable = (size: number, attr: string) => {
     // 是普通文件 && 文件小于 配置大小(MB) 可以编辑
     return FILE_TYPE.NORMAL_FILE.value == formatFileType(attr).value
-      && size <= previewSize * 1024 * 1024;
+      && size <= (previewSize.value || 0) * 1024 * 1024;
   };
 
   // 点击文件名称
@@ -276,6 +280,12 @@
     }) || FILE_TYPE.NORMAL_FILE;
   };
 
+  // 加载配置
+  onMounted(async () => {
+    const data = await useCacheStore().loadSystemSetting<SftpSetting>('SFTP');
+    previewSize.value = data?.previewSize;
+  });
+
 </script>
 
 <style lang="less" scoped>
@@ -304,8 +314,8 @@
   }
 
   .row-action-icon {
-    font-size: 16px;
-    padding: 4px;
+    width: 26px;
+    height: 26px;
     background: unset;
 
     &:hover {

@@ -8,6 +8,22 @@ export function getBase64Data(e: string) {
 }
 
 /**
+ * 读取 blob 内容 返回 promise
+ */
+export function readBlobText(blob: Blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = event => {
+      resolve(event.target?.result as string);
+    };
+    reader.onerror = err => {
+      reject(err);
+    };
+    reader.readAsText(blob);
+  });
+}
+
+/**
  * 读取文件内容 返回 promise
  */
 export function readFileText(e: File, encoding = 'UTF-8'): Promise<string> {

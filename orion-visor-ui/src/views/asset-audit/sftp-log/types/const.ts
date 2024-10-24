@@ -1,7 +1,7 @@
 // sftp 操作类型
 export const SftpOperatorType = {
-  SFTP_MOVE: 'host-terminal:sftp-move',
-  SFTP_CHMOD: 'host-terminal:sftp-chmod',
+  SFTP_MOVE: 'terminal:sftp-move',
+  SFTP_CHMOD: 'terminal:sftp-chmod',
 };
 
 // 最大展示数量

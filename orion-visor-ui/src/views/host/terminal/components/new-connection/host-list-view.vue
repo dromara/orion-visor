@@ -119,9 +119,9 @@
                          arrow-class="terminal-tooltip-content"
                          content="打开 SSH">
                 <div class="terminal-sidebar-icon-wrapper">
-                  <div class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.SSH)">
+                  <a-button class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.SSH)">
                     <icon-thunderbolt />
-                  </div>
+                  </a-button>
                 </div>
               </a-tooltip>
               <!-- 打开 SFTP -->
@@ -132,9 +132,9 @@
                          arrow-class="terminal-tooltip-content"
                          content="打开 SFTP">
                 <div class="terminal-sidebar-icon-wrapper">
-                  <div class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.SFTP)">
+                  <a-button class="terminal-sidebar-icon" @click="openSession(item, PanelSessionType.SFTP)">
                     <icon-folder />
-                  </div>
+                  </a-button>
                 </div>
               </a-tooltip>
               <!-- 主机设置 -->
@@ -145,9 +145,9 @@
                          arrow-class="terminal-tooltip-content"
                          content="主机设置">
                 <div class="terminal-sidebar-icon-wrapper">
-                  <div class="terminal-sidebar-icon" @click="openSetting(item)">
+                  <a-button class="terminal-sidebar-icon" @click="openSetting(item)">
                     <icon-settings />
-                  </div>
+                  </a-button>
                 </div>
               </a-tooltip>
               <!-- 收藏 -->
@@ -158,10 +158,10 @@
                          arrow-class="terminal-tooltip-content"
                          content="收藏">
                 <div class="terminal-sidebar-icon-wrapper">
-                  <div class="terminal-sidebar-icon" @click="setFavorite(item)">
+                  <a-button class="terminal-sidebar-icon" @click="setFavorite(item)">
                     <icon-star-fill class="favorite" v-if="item.favorite" />
                     <icon-star v-else />
-                  </div>
+                  </a-button>
                 </div>
               </a-tooltip>
             </div>

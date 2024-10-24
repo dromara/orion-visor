@@ -144,11 +144,10 @@ export default class SftpSession extends BaseSession implements ISftpSession {
   };
 
   // 修改内容
-  setContent(path: string, content: string) {
+  setContent(path: string) {
     this.channel.send(InputProtocol.SFTP_SET_CONTENT, {
       sessionId: this.sessionId,
       path,
-      content
     });
   };
 

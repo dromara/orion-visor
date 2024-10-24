@@ -21,17 +21,17 @@
         <!-- 右侧侧按钮 -->
         <a-space size="small">
           <!-- 创建路径 -->
-          <span class="click-icon-wrapper path-header-icon"
-                title="创建路径"
-                @click="openAdd">
+          <a-button class="path-header-icon icon-button"
+                    title="创建路径"
+                    @click="openAdd">
             <icon-plus />
-          </span>
+          </a-button>
           <!-- 刷新 -->
-          <span class="click-icon-wrapper path-header-icon"
-                title="刷新"
-                @click="fetchData">
+          <a-button class="path-header-icon icon-button"
+                    title="刷新"
+                    @click="fetchData">
             <icon-refresh />
-          </span>
+          </a-button>
         </a-space>
       </div>
       <!-- 加载中 -->
@@ -328,7 +328,6 @@
       &-icon {
         width: 32px;
         height: 32px;
-        font-size: 16px;
       }
 
       &-input {

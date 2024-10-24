@@ -100,7 +100,7 @@
                         position="left"
                         type="warning"
                         @ok="forceOffline(record)">
-            <a-button v-permission="['asset:host-connect-log:management:force-offline', 'asset:host-connect-session:management:force-offline']"
+            <a-button v-permission="['asset:terminal-connect-log:management:force-offline', 'asset:terminal-connect-session:management:force-offline']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -120,9 +120,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostConnectLogQueryRequest, HostConnectLogQueryResponse } from '@/api/asset/host-connect-log';
+  import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { getHostConnectSessions, hostForceOffline } from '@/api/asset/host-connect-log';
+  import { getTerminalConnectSessions, hostForceOffline } from '@/api/asset/terminal-connect-log';
   import { connectTypeKey } from '../types/const';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -132,12 +132,12 @@
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 
-  const tableRenderData = ref<HostConnectLogQueryResponse[]>([]);
+  const tableRenderData = ref<TerminalConnectLogQueryResponse[]>([]);
 
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const formModel = reactive<HostConnectLogQueryRequest>({
+  const formModel = reactive<TerminalConnectLogQueryRequest>({
     userId: undefined,
     hostId: undefined,
     hostAddress: undefined,
@@ -149,7 +149,7 @@
   const fetchTableData = async () => {
     try {
       setLoading(true);
-      const { data } = await getHostConnectSessions(formModel);
+      const { data } = await getTerminalConnectSessions(formModel);
       tableRenderData.value = data;
     } catch (e) {
     } finally {
@@ -158,7 +158,7 @@
   };
 
   // 强制下线
-  const forceOffline = async (record: HostConnectLogQueryResponse) => {
+  const forceOffline = async (record: TerminalConnectLogQueryResponse) => {
     try {
       setLoading(true);
       // 下线

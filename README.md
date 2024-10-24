@@ -53,7 +53,7 @@
 
 * 🔗 演示地址: [https://dv.orionsec.cn/](https://dv.orionsec.cn/)
 * 🔏 演示账号: admin/admin
-* ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor)  [gitcode](https://gitcode.com/dromara/orion-visor/overview)
+* ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor/overview)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
 * 🎭 演示环境部分功能不可用, 完整功能请本地部署!
 * 📛 演示环境请不要随便删除数据!
@@ -117,9 +117,7 @@ docker compose up -d
 
 ## 联系我
 
-<div style="display: flex;">
-  <img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/5/17/d42d91f3-f0ee-4c63-adab-a35809e0804c.jpg" alt="wx" width="298px" height="398px"/>  
-</div>
+<img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/10/11/cf72c603-3951-4171-95b4-06271dda1c80.jpg" alt="wx" width="628px"/>  
 
 微信: ljh1553488  
 QQ群: 755242157

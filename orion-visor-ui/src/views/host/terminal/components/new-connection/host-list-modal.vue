@@ -47,10 +47,10 @@
                            content-class="terminal-tooltip-content"
                            arrow-class="terminal-tooltip-content"
                            content="打开 SSH">
-                  <span class="click-icon-wrapper"
-                        @click="clickHost(item, PanelSessionType.SSH)">
+                  <a-button class="host-item-action icon-button"
+                            @click="clickHost(item, PanelSessionType.SSH)">
                     <icon-thunderbolt />
-                  </span>
+                  </a-button>
                 </a-tooltip>
                 <!-- 打开 SFTP -->
                 <a-tooltip position="top"
@@ -59,10 +59,10 @@
                            content-class="terminal-tooltip-content"
                            arrow-class="terminal-tooltip-content"
                            content="打开 SFTP">
-                  <span class="click-icon-wrapper"
-                        @click="clickHost(item, PanelSessionType.SFTP)">
+                  <a-button class="host-item-action icon-button"
+                            @click="clickHost(item, PanelSessionType.SFTP)">
                     <icon-folder />
-                  </span>
+                  </a-button>
                 </a-tooltip>
               </div>
             </div>
@@ -141,6 +141,7 @@
   @item-height: 54px;
   @item-padding-y: 4px;
   @item-padding-x: 12px;
+  @action-size: 32px;
 
   .host-list-wrapper {
     padding: 12px;
@@ -215,16 +216,17 @@
       height: 100%;
       align-items: center;
       justify-content: flex-end;
+    }
 
-      .click-icon-wrapper {
-        font-size: 22px;
-        padding: 4px;
-        border-radius: 4px;
-        margin: 0 4px;
+    &-action {
+      width: @action-size;
+      height: @action-size;
+      margin: 0 4px;
+      border-radius: 4px;
+      font-size: 22px;
 
-        &:hover {
-          background: var(--color-neutral-4);
-        }
+      &:hover {
+        background: var(--color-neutral-4);
       }
     }
   }

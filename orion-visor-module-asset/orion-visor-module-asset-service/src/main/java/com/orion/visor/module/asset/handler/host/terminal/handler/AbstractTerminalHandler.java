@@ -1,13 +1,27 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.terminal.handler;
 
-import com.orion.lang.exception.argument.InvalidArgumentException;
 import com.orion.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import com.orion.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import com.orion.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import com.orion.visor.framework.common.constant.ErrorMessage;
 import com.orion.visor.framework.websocket.core.utils.WebSockets;
 import com.orion.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
-import com.orion.visor.module.asset.handler.host.terminal.manager.HostTerminalManager;
+import com.orion.visor.module.asset.handler.host.terminal.manager.TerminalManager;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
 import com.orion.visor.module.asset.handler.host.terminal.model.TerminalConfig;
 import com.orion.visor.module.asset.handler.host.terminal.session.ITerminalSession;
@@ -27,7 +41,7 @@ import java.util.Map;
 public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> implements ITerminalHandler<T> {
 
     @Resource
-    protected HostTerminalManager hostTerminalManager;
+    protected TerminalManager terminalManager;
 
     @Resource
     private OperatorLogFrameworkService operatorLogFrameworkService;
@@ -75,7 +89,7 @@ public abstract class AbstractTerminalHandler<T extends TerminalBasePayload> imp
         String channelId = channel.getId();
         String sessionId = payload.getSessionId();
         // 获取会话并且设置参数
-        ITerminalSession session = hostTerminalManager.getSession(channelId, sessionId);
+        ITerminalSession session = terminalManager.getSession(channelId, sessionId);
         if (session != null) {
             TerminalConfig config = session.getConfig();
             extra.put(OperatorLogs.HOST_ID, config.getHostId());

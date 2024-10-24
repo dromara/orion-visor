@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.orion.visor.module.asset.handler.host.exec.command.handler;
 
 import com.alibaba.fastjson.JSON;
@@ -20,13 +35,13 @@ import com.orion.visor.framework.common.file.FileClient;
 import com.orion.visor.framework.common.utils.PathUtils;
 import com.orion.visor.module.asset.dao.ExecHostLogDAO;
 import com.orion.visor.module.asset.entity.domain.ExecHostLogDO;
-import com.orion.visor.module.asset.entity.dto.HostTerminalConnectDTO;
+import com.orion.visor.module.asset.entity.dto.TerminalConnectDTO;
 import com.orion.visor.module.asset.enums.ExecHostStatusEnum;
 import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
 import com.orion.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
 import com.orion.visor.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import com.orion.visor.module.asset.handler.host.jsch.SessionStores;
-import com.orion.visor.module.asset.service.HostTerminalService;
+import com.orion.visor.module.asset.service.TerminalService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +64,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
 
     private static final ExecLogManager execLogManager = SpringHolder.getBean(ExecLogManager.class);
 
-    private static final HostTerminalService hostTerminalService = SpringHolder.getBean(HostTerminalService.class);
+    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
 
     private static final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
 
@@ -131,7 +146,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         // 初始化日志
         this.initLogOutputStream();
         // 打开会话
-        HostTerminalConnectDTO connect = hostTerminalService.getTerminalConnectInfo(execHostCommand.getHostId());
+        TerminalConnectDTO connect = terminalService.getTerminalConnectInfo(execHostCommand.getHostId());
         this.sessionStore = SessionStores.openSessionStore(connect);
         if (Booleans.isTrue(execCommand.getScriptExec())) {
             // 上传脚本文件

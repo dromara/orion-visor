@@ -25,17 +25,17 @@
             </div>
             <!-- 操作 -->
             <div class="tree-card-handler">
-              <div v-permission="['asset:host-group:create']"
-                   class="click-icon-wrapper handler-icon-wrapper"
-                   title="根节点添加"
-                   @click="addRootNode">
+              <a-button v-permission="['asset:host-group:create']"
+                        class="handler-icon-wrapper icon-button mr4"
+                        title="根节点添加"
+                        @click="addRootNode">
                 <icon-plus />
-              </div>
-              <div class="click-icon-wrapper handler-icon-wrapper"
-                   title="刷新"
-                   @click="refreshTree">
+              </a-button>
+              <a-button class="handler-icon-wrapper icon-button"
+                        title="刷新"
+                        @click="refreshTree">
                 <icon-refresh />
-              </div>
+              </a-button>
             </div>
           </div>
           <!-- 主机分组树 -->
@@ -177,9 +177,8 @@
       display: flex;
 
       .handler-icon-wrapper {
-        margin-left: 2px;
-        padding: 4px;
-        font-size: 16px;
+        width: 24px;
+        height: 24px;
         background: unset;
 
         &:hover {
