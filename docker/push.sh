@@ -1,5 +1,5 @@
 #/bin/bash
-version=2.1.7
+version=2.1.8
 docker push registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-adminer:${version}
 docker push registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:${version}
 docker push registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:${version}

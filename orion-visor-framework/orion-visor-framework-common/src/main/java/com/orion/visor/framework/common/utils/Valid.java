@@ -43,6 +43,10 @@ public class Valid extends com.orion.lang.utils.Valid {
         return notNull(object, ErrorMessage.PARAM_MISSING);
     }
 
+    public static <T> T isNull(T object) {
+        return isNull(object, ErrorMessage.PARAM_ERROR);
+    }
+
     public static String notBlank(String s) {
         return notBlank(s, ErrorMessage.PARAM_MISSING);
     }
