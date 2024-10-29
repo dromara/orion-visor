@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.orion.visor</groupId>
+        <groupId>org.dromara.visor</groupId>
         <artifactId>orion-visor-framework</artifactId>
         <version>${revision}</version>
     </parent>
@@ -18,19 +18,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-framework-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-mybatis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-datasource</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-redis</artifactId>
         </dependency>
 

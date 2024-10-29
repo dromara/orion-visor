@@ -1,2 +1,2 @@
-com.orion.visor.framework.security.configuration.OrionSecurityAutoConfiguration
-com.orion.visor.framework.security.configuration.OrionCryptoAutoConfiguration
+org.dromara.visor.framework.security.configuration.OrionSecurityAutoConfiguration
+org.dromara.visor.framework.security.configuration.OrionCryptoAutoConfiguration

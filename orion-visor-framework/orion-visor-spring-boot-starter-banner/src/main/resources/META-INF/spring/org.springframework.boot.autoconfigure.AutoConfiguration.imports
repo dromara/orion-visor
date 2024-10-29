@@ -1,1 +1,1 @@
-com.orion.visor.framework.banner.configuration.OrionBannerAutoConfiguration
+org.dromara.visor.framework.banner.configuration.OrionBannerAutoConfiguration

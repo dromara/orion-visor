@@ -15,11 +15,11 @@
  */
 package ${currentPackage};
 
-import com.orion.visor.framework.biz.operator.log.core.annotation.Module;
-import com.orion.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
-import com.orion.visor.framework.biz.operator.log.core.model.OperatorType;
+import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
+import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
+import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
 
-import static com.orion.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * $!{table.comment} 操作日志类型

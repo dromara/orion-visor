@@ -1,1 +1,1 @@
-com.orion.visor.framework.common.configuration.OrionCommonAutoConfiguration
+org.dromara.visor.framework.common.configuration.OrionCommonAutoConfiguration

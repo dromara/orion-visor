@@ -1,1 +1,1 @@
-com.orion.visor.framework.desensitize.configuration.OrionDesensitizeAutoConfiguration
+org.dromara.visor.framework.desensitize.configuration.OrionDesensitizeAutoConfiguration

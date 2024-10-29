@@ -155,7 +155,7 @@ logging:
     console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%6p}) %boldBlue([%X{tid}]) %clr([%22.22t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
     file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%6p} [%X{tid}] [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
   level:
-    com.orion.visor.launch.controller.BootstrapController: INFO
+    org.dromara.visor.launch.controller.BootstrapController: INFO
 
 # 应用配置
 app:
@@ -243,7 +243,7 @@ orion:
     # 全局日志打印
     printer:
       mode: PRETTY
-      expression: 'execution (* com.orion.visor..*.controller..*.*(..))'
+      expression: 'execution (* org.dromara.visor..*.controller..*.*(..))'
       headers:
         - user-agent,accept
         - content-type

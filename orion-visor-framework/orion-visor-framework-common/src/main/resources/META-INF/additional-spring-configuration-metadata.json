@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.async.executor",
-      "type": "com.orion.visor.framework.common.configuration.config.AsyncExecutorConfig",
-      "sourceType": "com.orion.visor.framework.common.configuration.config.AsyncExecutorConfig"
+      "type": "org.dromara.visor.framework.common.configuration.config.AsyncExecutorConfig",
+      "sourceType": "org.dromara.visor.framework.common.configuration.config.AsyncExecutorConfig"
     }
   ],
   "properties": [

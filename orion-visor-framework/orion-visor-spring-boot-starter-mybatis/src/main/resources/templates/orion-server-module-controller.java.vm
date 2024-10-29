@@ -15,17 +15,21 @@
  */
 package ${package.Controller};
 
-import com.orion.lang.define.wrapper.DataGrid;
+import cn.orionsec.kit.lang.define.wrapper.DataGrid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 #if($meta.enableOperatorLog)
-import com.orion.visor.framework.biz.operator.log.core.annotation.OperatorLog;
+import org.dromara.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 #end
-import com.orion.visor.framework.common.validator.group.Page;
-import com.orion.visor.framework.log.core.annotation.IgnoreLog;
+import org.dromara.visor.framework.common.validator.group.Page;
+import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 #if($meta.enableDemoApi)
-import com.orion.visor.framework.web.core.annotation.DemoDisableApi;
+import org.dromara.visor.framework.web.core.annotation.DemoDisableApi;
 #end
-import com.orion.visor.framework.log.core.enums.IgnoreLogMode;
-import com.orion.visor.framework.web.core.annotation.RestWrapper;
+import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
+import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import ${package.Service}.*;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
@@ -33,10 +37,6 @@ import ${pkg}.*;
 #if(${superControllerClassPackage})
 import ${superControllerClassPackage};
 #end
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

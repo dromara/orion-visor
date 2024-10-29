@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.orion.visor</groupId>
+        <groupId>org.dromara.visor</groupId>
         <artifactId>orion-visor-module-asset</artifactId>
         <version>${revision}</version>
     </parent>
@@ -17,81 +17,81 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-framework-common</artifactId>
         </dependency>
 
         <!-- infra provider -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-infra-provider</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <!-- asset provider -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-asset-provider</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <!-- web -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- websocket -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-websocket</artifactId>
         </dependency>
 
         <!-- log -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-log</artifactId>
         </dependency>
 
         <!-- operator-log -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
 
         <!-- desensitize -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-desensitize</artifactId>
         </dependency>
 
         <!-- security -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-security</artifactId>
         </dependency>
 
         <!-- redis -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-redis</artifactId>
         </dependency>
 
         <!-- mybatis -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-mybatis</artifactId>
         </dependency>
 
         <!-- storage -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-storage</artifactId>
         </dependency>
 
         <!-- job -->
         <dependency>
-            <groupId>com.orion.visor</groupId>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-job</artifactId>
         </dependency>
     </dependencies>

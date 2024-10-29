@@ -1,1 +1,1 @@
-com.orion.visor.framework.storage.configuration.OrionStorageAutoConfiguration
+org.dromara.visor.framework.storage.configuration.OrionStorageAutoConfiguration

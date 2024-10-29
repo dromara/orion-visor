@@ -2,13 +2,13 @@
   "groups": [
     {
       "name": "orion.storage.local",
-      "type": "com.orion.visor.framework.storage.configuration.config.LocalStorageConfig",
-      "sourceType": "com.orion.visor.framework.storage.configuration.config.LocalStorageConfig"
+      "type": "org.dromara.visor.framework.storage.configuration.config.LocalStorageConfig",
+      "sourceType": "org.dromara.visor.framework.storage.configuration.config.LocalStorageConfig"
     },
     {
       "name": "orion.storage.logs",
-      "type": "com.orion.visor.framework.storage.configuration.config.LogsStorageConfig",
-      "sourceType": "com.orion.visor.framework.storage.configuration.config.LogsStorageConfig"
+      "type": "org.dromara.visor.framework.storage.configuration.config.LogsStorageConfig",
+      "sourceType": "org.dromara.visor.framework.storage.configuration.config.LogsStorageConfig"
     }
   ],
   "properties": [

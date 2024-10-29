@@ -2,28 +2,28 @@
   "groups": [
     {
       "name": "app.tracker",
-      "type": "com.orion.visor.module.asset.define.config.AppTrackerConfig",
-      "sourceType": "com.orion.visor.module.asset.define.config.AppTrackerConfig"
+      "type": "org.dromara.visor.module.asset.define.config.AppTrackerConfig",
+      "sourceType": "org.dromara.visor.module.asset.define.config.AppTrackerConfig"
     },
     {
       "name": "app.sftp",
-      "type": "com.orion.visor.module.asset.define.config.AppSftpConfig",
-      "sourceType": "com.orion.visor.module.asset.define.config.AppSftpConfig"
+      "type": "org.dromara.visor.module.asset.define.config.AppSftpConfig",
+      "sourceType": "org.dromara.visor.module.asset.define.config.AppSftpConfig"
     },
     {
       "name": "app.exec-log",
-      "type": "com.orion.visor.module.asset.define.config.AppExecLogConfig",
-      "sourceType": "com.orion.visor.module.asset.define.config.AppExecLogConfig"
+      "type": "org.dromara.visor.module.asset.define.config.AppExecLogConfig",
+      "sourceType": "org.dromara.visor.module.asset.define.config.AppExecLogConfig"
     },
     {
       "name": "app.auto-clear.exec-log",
-      "type": "com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig",
-      "sourceType": "com.orion.visor.module.asset.define.config.AppExecLogAutoClearConfig"
+      "type": "org.dromara.visor.module.asset.define.config.AppExecLogAutoClearConfig",
+      "sourceType": "org.dromara.visor.module.asset.define.config.AppExecLogAutoClearConfig"
     },
     {
       "name": "app.auto-clear.terminal-connect-log",
-      "type": "com.orion.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig",
-      "sourceType": "com.orion.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig"
+      "type": "org.dromara.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig",
+      "sourceType": "org.dromara.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig"
     }
   ],
   "properties": [

@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "spring.redisson",
-      "type": "com.orion.visor.framework.redis.configuration.config.RedissonConfig",
-      "sourceType": "com.orion.visor.framework.redis.configuration.config.RedissonConfig"
+      "type": "org.dromara.visor.framework.redis.configuration.config.RedissonConfig",
+      "sourceType": "org.dromara.visor.framework.redis.configuration.config.RedissonConfig"
     }
   ],
   "properties": [

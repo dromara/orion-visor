@@ -1,1 +1,1 @@
-com.orion.visor.framework.biz.operator.log.configuration.OrionOperatorLogAutoConfiguration
+org.dromara.visor.framework.biz.operator.log.configuration.OrionOperatorLogAutoConfiguration

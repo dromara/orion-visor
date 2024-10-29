@@ -16,11 +16,11 @@
 package ${package.Mapper};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import ${superMapperClassPackage};
-import ${package.Entity}.${entity};
 #if(${mapperAnnotationClass})
 import ${mapperAnnotationClass.name};
 #end
+import ${superMapperClassPackage};
+import ${package.Entity}.${entity};
 
 /**
  * $!{table.comment} Mapper 接口

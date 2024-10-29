@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.swagger",
-      "type": "com.orion.visor.framework.swagger.configuration.config.SwaggerConfig",
-      "sourceType": "com.orion.visor.framework.swagger.configuration.config.SwaggerConfig"
+      "type": "org.dromara.visor.framework.swagger.configuration.config.SwaggerConfig",
+      "sourceType": "org.dromara.visor.framework.swagger.configuration.config.SwaggerConfig"
     }
   ],
   "properties": [
