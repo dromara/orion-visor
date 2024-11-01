@@ -1,2 +1,2 @@
-com.orion.visor.framework.redis.configuration.OrionRedisAutoConfiguration
-com.orion.visor.framework.redis.configuration.OrionCacheAutoConfiguration
+org.dromara.visor.framework.redis.configuration.OrionRedisAutoConfiguration
+org.dromara.visor.framework.redis.configuration.OrionCacheAutoConfiguration

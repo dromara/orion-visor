@@ -2,13 +2,13 @@
   "groups": [
     {
       "name": "orion.security",
-      "type": "com.orion.visor.framework.security.configuration.config.SecurityConfig",
-      "sourceType": "com.orion.visor.framework.security.configuration.config.SecurityConfig"
+      "type": "org.dromara.visor.framework.security.configuration.config.SecurityConfig",
+      "sourceType": "org.dromara.visor.framework.security.configuration.config.SecurityConfig"
     },
     {
       "name": "orion.crypto.aes",
-      "type": "com.orion.visor.framework.security.configuration.config.AesCryptoConfig",
-      "sourceType": "com.orion.visor.framework.security.configuration.config.AesCryptoConfig"
+      "type": "org.dromara.visor.framework.security.configuration.config.AesCryptoConfig",
+      "sourceType": "org.dromara.visor.framework.security.configuration.config.AesCryptoConfig"
     }
   ],
   "properties": [
@@ -37,13 +37,13 @@
     },
     {
       "name": "orion.crypto.aes.working-mode",
-      "type": "com.orion.lang.utils.crypto.enums.WorkingMode",
+      "type": "cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode",
       "description": "加密模式.",
       "defaultValue": "ECB"
     },
     {
       "name": "orion.crypto.aes.padding-mode",
-      "type": "com.orion.lang.utils.crypto.enums.PaddingMode",
+      "type": "cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode",
       "description": "填充模式.",
       "defaultValue": "PKCS5_PADDING"
     },

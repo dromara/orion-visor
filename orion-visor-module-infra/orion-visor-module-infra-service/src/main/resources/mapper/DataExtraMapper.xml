@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.orion.visor.module.infra.dao.DataExtraDAO">
+<mapper namespace="org.dromara.visor.module.infra.dao.DataExtraDAO">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.orion.visor.module.infra.entity.domain.DataExtraDO">
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.infra.entity.domain.DataExtraDO">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="rel_id" property="relId"/>

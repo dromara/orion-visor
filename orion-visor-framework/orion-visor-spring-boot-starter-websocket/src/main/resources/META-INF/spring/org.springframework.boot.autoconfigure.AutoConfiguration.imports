@@ -1,1 +1,1 @@
-com.orion.visor.framework.websocket.configuration.OrionWebSocketAutoConfiguration
+org.dromara.visor.framework.websocket.configuration.OrionWebSocketAutoConfiguration

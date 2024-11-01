@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "app.authentication",
-      "type": "com.orion.visor.module.infra.define.config.AppAuthenticationConfig",
-      "sourceType": "com.orion.visor.module.infra.define.config.AppAuthenticationConfig"
+      "type": "org.dromara.visor.module.infra.define.config.AppAuthenticationConfig",
+      "sourceType": "org.dromara.visor.module.infra.define.config.AppAuthenticationConfig"
     }
   ],
   "properties": [

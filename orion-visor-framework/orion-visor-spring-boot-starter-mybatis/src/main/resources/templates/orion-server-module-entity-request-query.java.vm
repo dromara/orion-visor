@@ -16,9 +16,9 @@
 package ${currentPackage};
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.orion.visor.framework.common.entity.PageRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.dromara.visor.framework.common.entity.PageRequest;
 
 import javax.validation.constraints.Size;
 import java.util.*;

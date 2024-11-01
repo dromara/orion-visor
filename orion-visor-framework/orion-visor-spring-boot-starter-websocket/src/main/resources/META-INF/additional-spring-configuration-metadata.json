@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "orion.websocket",
-      "type": "com.orion.visor.framework.websocket.configuration.config.WebSocketConfig",
-      "sourceType": "com.orion.visor.framework.websocket.configuration.config.WebSocketConfig"
+      "type": "org.dromara.visor.framework.websocket.configuration.config.WebSocketConfig",
+      "sourceType": "org.dromara.visor.framework.websocket.configuration.config.WebSocketConfig"
     }
   ],
   "properties": [

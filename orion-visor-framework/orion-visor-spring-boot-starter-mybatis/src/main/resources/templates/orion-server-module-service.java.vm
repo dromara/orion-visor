@@ -15,8 +15,8 @@
  */
 package ${package.Service};
 
+import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.orion.lang.define.wrapper.DataGrid;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end

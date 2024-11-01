@@ -16,8 +16,8 @@
 package ${package.Entity};
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.orion.visor.framework.mybatis.core.domain.BaseDO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 import lombok.*;
 
 import java.util.*;

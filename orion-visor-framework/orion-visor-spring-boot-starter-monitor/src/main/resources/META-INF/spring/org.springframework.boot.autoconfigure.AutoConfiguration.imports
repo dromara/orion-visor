@@ -1,1 +1,1 @@
-com.orion.visor.framework.monitor.configuration.OrionAdminAutoConfiguration
+org.dromara.visor.framework.monitor.configuration.OrionAdminAutoConfiguration

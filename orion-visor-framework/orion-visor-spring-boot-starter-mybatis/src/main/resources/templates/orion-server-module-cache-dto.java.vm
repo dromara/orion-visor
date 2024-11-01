@@ -15,7 +15,7 @@
  */
 package ${currentPackage};
 
-import com.orion.lang.define.cache.key.model.LongCacheIdModel;
+import cn.orionsec.kit.lang.define.cache.key.model.LongCacheIdModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

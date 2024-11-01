@@ -15,9 +15,9 @@
  */
 package ${currentPackage};
 
-import com.orion.lang.define.cache.key.CacheKeyBuilder;
-import com.orion.lang.define.cache.key.CacheKeyDefine;
-import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
+import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
+import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
+import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end

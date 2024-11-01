@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.orion.visor</groupId>
+    <groupId>org.dromara.visor</groupId>
     <artifactId>orion-visor</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <revision>2.1.8</revision>
+        <revision>2.2.0</revision>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
@@ -37,7 +37,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.orion.visor</groupId>
+                <groupId>org.dromara.visor</groupId>
                 <artifactId>orion-visor-dependencies</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>

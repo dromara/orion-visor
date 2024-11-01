@@ -1,1 +1,1 @@
-com.orion.visor.framework.log.configuration.OrionLogPrinterConfiguration
+org.dromara.visor.framework.log.configuration.OrionLogPrinterConfiguration

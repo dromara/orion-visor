@@ -53,7 +53,8 @@
 
 * 🔗 演示地址: [https://dv.orionsec.cn/](https://dv.orionsec.cn/)
 * 🔏 演示账号: admin/admin
-* ⭐ 体验后可以点一下 `star` 这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor/overview)
+* ⭐ 体验后可以点一下 `star`
+  这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor/overview)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
 * 🎭 演示环境部分功能不可用, 完整功能请本地部署!
 * 📛 演示环境请不要随便删除数据!
@@ -80,7 +81,7 @@ docker compose up -d
 
 ## 技术栈
 
-* SpringBoot 2.7.17
+* SpringBoot 2.7.+
 * Mysql 8.0.+
 * Redis 6.0.+
 * Vue3 3.2.+
@@ -122,7 +123,7 @@ docker compose up -d
 微信: ljh1553488  
 QQ群: 755242157
 
-📧 咨询问题微信备注: vis  
+📧 问题/加群微信备注: ops  
 📧 合作/功能定制备注: 合作
 
 ## 支持一下
@@ -137,4 +138,8 @@ QQ群: 755242157
 
 ## License
 
-本项目遵循 [Apache-2.0](https://github.com/dromara/orion-visor/blob/main/LICENSE) 开源许可证。  
+本项目遵循 [Apache-2.0](https://github.com/dromara/orion-visor/blob/main/LICENSE) 开源许可证。
+
+## Gite 最有价值开源项目 GVP
+
+![GVP](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/10/24/8dd98b8d-9de5-44e6-86d3-04e27ec66123.jpg "GVP")
