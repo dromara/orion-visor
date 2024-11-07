@@ -7,8 +7,8 @@
                          @open-exec="(e) => execModal.open(e)" />
     <!-- 添加修改模态框 -->
     <exec-template-form-drawer ref="drawer"
-                               @added="modalAddCallback"
-                               @updated="modalUpdateCallback"
+                               @added="() => table.reload()"
+                               @updated="() => table.reload()"
                                @open-host="(e) => openHostModal('drawer', e)" />
     <!-- 执行模态框 -->
     <exec-template-exec-drawer ref="execModal"
@@ -39,16 +39,6 @@
   const execModal = ref();
   const hostModal = ref();
   const lastOpenHostRef = ref();
-
-  // 添加回调
-  const modalAddCallback = () => {
-    table.value.addedCallback();
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    table.value.updatedCallback();
-  };
 
   // 打开主机模态框
   const openHostModal = (openRef: string, data: any) => {

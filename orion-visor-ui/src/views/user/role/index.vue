@@ -7,8 +7,8 @@
                 @open-grant="(e) => grantModal.open(e)" />
     <!-- 添加修改模态框 -->
     <role-form-modal ref="modal"
-                     @added="() => table.addedCallback()"
-                     @updated="() => table.updatedCallback()" />
+                     @added="() => table.reload()"
+                     @updated="() => table.reload()" />
     <!-- 分配角色菜单模态框 -->
     <role-menu-grant-modal ref="grantModal" />
   </div>

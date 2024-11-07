@@ -142,8 +142,8 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         // 查询
         return ${typeLower}DAO.of(wrapper).list(${type}Convert.MAPPER::to);
     }
-
     #if($meta.enableCache)
+
     @Override
     public List<${type}VO> get${type}ListByCache() {
         // 查询缓存

@@ -67,7 +67,7 @@
           <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
                         position="br"
                         type="warning"
-                        @ok="deleteSelectRows">
+                        @ok="deleteSelectedRows">
             <a-button v-permission="['infra:dict-key:delete']"
                       type="primary"
                       status="danger"
@@ -206,7 +206,7 @@
   };
 
   // 删除选中行
-  const deleteSelectRows = async () => {
+  const deleteSelectedRows = async () => {
     try {
       setLoading(true);
       // 调用删除接口
@@ -222,21 +222,13 @@
     }
   };
 
-  // 添加后回调
-  const addedCallback = () => {
+  // 重新加载
+  const reload = () => {
     fetchTableData();
     cacheStore.reset('dictKeys');
   };
 
-  // 更新后回调
-  const updatedCallback = () => {
-    fetchTableData();
-    cacheStore.reset('dictKeys');
-  };
-
-  defineExpose({
-    addedCallback, updatedCallback
-  });
+  defineExpose({ reload });
 
   // 打开查看视图
   const openView = async (record: DictKeyQueryResponse) => {

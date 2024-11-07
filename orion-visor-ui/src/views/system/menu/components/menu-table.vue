@@ -270,21 +270,13 @@
     }
   };
 
-  // 添加后回调
-  const addedCallback = () => {
+  // 重新加载
+  const reload = () => {
     formRef.value.resetFields();
     loadMenuData(true);
   };
 
-  // 更新后回调
-  const updatedCallback = () => {
-    formRef.value.resetFields();
-    loadMenuData(true);
-  };
-
-  defineExpose({
-    addedCallback, updatedCallback
-  });
+  defineExpose({ reload });
 
   // 加载菜单
   const loadMenuData = async (all: any = undefined) => {

@@ -7,8 +7,8 @@
                     @open-view="(v, t) => view.open(v, t)" />
     <!-- 添加修改模态框 -->
     <dict-key-form-modal ref="modal"
-                         @added="modalAddCallback"
-                         @updated="modalUpdateCallback" />
+                         @added="() => table.reload()"
+                         @updated="() => table.reload()" />
     <!-- json 查看器模态框 -->
     <json-editor-modal ref="view" />
   </div>
@@ -32,16 +32,6 @@
   const table = ref();
   const modal = ref();
   const view = ref();
-
-  // 添加回调
-  const modalAddCallback = () => {
-    table.value.addedCallback();
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    table.value.updatedCallback();
-  };
 
   onBeforeMount(async () => {
     const dictStore = useDictStore();

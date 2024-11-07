@@ -14,8 +14,8 @@
                         @open-update="(e) => drawer.openUpdate(e)" />
     <!-- 添加修改模态框 -->
     <host-key-form-drawer ref="drawer"
-                          @added="modalAddCallback"
-                          @updated="modalUpdateCallback" />
+                          @added="reload"
+                          @updated="reload" />
   </div>
 </template>
 
@@ -39,21 +39,12 @@
 
   const renderTable = computed(() => appStore.hostKeyView === 'table');
 
-  // 添加回调
-  const modalAddCallback = () => {
+  // 重新加载
+  const reload = () => {
     if (renderTable.value) {
-      table.value.addedCallback();
+      table.value.reload();
     } else {
-      card.value.addedCallback();
-    }
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    if (renderTable.value) {
-      table.value.updatedCallback();
-    } else {
-      card.value.updatedCallback();
+      card.value.reload();
     }
   };
 

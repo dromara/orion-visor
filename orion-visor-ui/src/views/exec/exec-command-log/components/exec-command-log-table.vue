@@ -83,7 +83,7 @@
           <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗? 删除后会中断执行!`"
                         position="br"
                         type="warning"
-                        @ok="deleteSelectRows">
+                        @ok="deleteSelectedRows">
             <a-button v-permission="['asset:exec-command-log:delete']"
                       type="primary"
                       status="danger"
@@ -255,7 +255,7 @@
   };
 
   // 删除选中行
-  const deleteSelectRows = async () => {
+  const deleteSelectedRows = async () => {
     try {
       setLoading(true);
       // 调用删除接口
