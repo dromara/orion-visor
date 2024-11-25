@@ -18,8 +18,8 @@
         #if("$field.propertyType" == "Integer" || "$field.propertyType" == "Long")
         <a-input-number v-model="formModel.${field.propertyName}"
                         placeholder="请输入${field.comment}"
-                        allow-clear
-                        hide-button />
+                        hide-button
+                        allow-clear />
         #elseif("$field.propertyType" == "Date")
         <a-date-picker v-model="formModel.${field.propertyName}"
                        style="width: 100%"
