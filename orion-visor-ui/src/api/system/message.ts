@@ -43,7 +43,10 @@ export function getSystemMessageCount(queryUnread: boolean) {
  * 查询是否有未读消息
  */
 export function checkHasUnreadMessage() {
-  return axios.get<boolean>('/infra/system-message/has-unread');
+  return axios.get<boolean>('/infra/system-message/has-unread', {
+    promptBizErrorMessage: false,
+    promptRequestErrorMessage: false,
+  });
 }
 
 /**

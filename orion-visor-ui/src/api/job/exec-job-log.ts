@@ -38,6 +38,8 @@ export function getExecJobHostLogList(logId: number) {
 export function getExecJobLogStatus(idList: Array<number>) {
   return axios.get<ExecLogStatusResponse>('/asset/exec-job-log/status', {
     params: { idList },
+    promptBizErrorMessage: false,
+    promptRequestErrorMessage: false,
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }
