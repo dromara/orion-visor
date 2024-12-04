@@ -1,5 +1,5 @@
 <div align="center"><img src="https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/9/11/11e7e78e-2af0-4c68-9811-db8a4c4400f4.png" alt="logo" width="520" /></div>
-<p style="margin-top: 12px" align="center"><b>一款高颜值、现代化的自动化运维&轻量堡垒机平台。</b></p>
+<p style="margin-top: 12px" align="center"><b>Dromara Orion Visor 一款高颜值、现代化的自动化运维&轻量堡垒机平台。</b></p>
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
