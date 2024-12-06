@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
 
-    <description>项目所有依赖</description>
+    <description>项目全部依赖</description>
     <url>https://github.com/dromara/orion-visor</url>
 
     <properties>
