@@ -8,12 +8,12 @@
                     @test-cron="openNextCron" />
     <!-- 添加修改模态框 -->
     <exec-job-form-drawer ref="drawer"
-                          @added="modalAddCallback"
-                          @updated="modalUpdateCallback"
+                          @added="() => table.reload()"
+                          @updated="() => table.reload()"
                           @open-host="(e) => hostModal.open(e)"
                           @open-template="() => templateModal.open()"
                           @test-cron="openNextCron"
-                          @gen-cron="openGeneratorCron" />
+                          @gen-cron="(e) => genModal.open(e)" />
     <!-- 任务详情模态框 -->
     <exec-job-detail-drawer ref="detail" />
     <!-- cron 执行时间模态框 -->
@@ -58,24 +58,9 @@
   const templateModal = ref();
   const hostModal = ref();
 
-  // 添加回调
-  const modalAddCallback = () => {
-    table.value.addedCallback();
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    table.value.updatedCallback();
-  };
-
   // 打开下次执行时间
   const openNextCron = (cron: string) => {
     nextCron.value.open({ expression: cron, times: CronNextTimes });
-  };
-
-  // 打开生成表达式
-  const openGeneratorCron = (cron: string) => {
-    genModal.value.open(cron);
   };
 
   onBeforeMount(async () => {

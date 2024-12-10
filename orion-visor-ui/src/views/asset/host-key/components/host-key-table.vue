@@ -63,7 +63,7 @@
           <a-popconfirm :content="`确认删除选中的 ${selectedKeys.length} 条记录吗?`"
                         position="br"
                         type="warning"
-                        @ok="deleteSelectRows">
+                        @ok="deleteSelectedRows">
             <a-button v-permission="['asset:host-key:delete']"
                       type="primary"
                       status="danger"
@@ -173,7 +173,7 @@
   };
 
   // 删除选中行
-  const deleteSelectRows = async () => {
+  const deleteSelectedRows = async () => {
     try {
       setLoading(true);
       // 调用删除接口
@@ -188,19 +188,12 @@
     }
   };
 
-  // 添加后回调
-  const addedCallback = () => {
+  // 重新加载
+  const reload = () => {
     fetchTableData();
   };
 
-  // 更新后回调
-  const updatedCallback = () => {
-    fetchTableData();
-  };
-
-  defineExpose({
-    addedCallback, updatedCallback
-  });
+  defineExpose({ reload });
 
   // 加载数据
   const doFetchTableData = async (request: HostKeyQueryRequest) => {

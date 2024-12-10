@@ -146,6 +146,8 @@ export function getUploadTaskPage(request: UploadTaskQueryRequest) {
 export function getUploadTaskStatus(idList: Array<number>, queryFiles: boolean) {
   return axios.get<Array<UploadTaskStatusResponse>>('/asset/upload-task/status', {
     params: { idList, queryFiles },
+    promptBizErrorMessage: false,
+    promptRequestErrorMessage: false,
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }

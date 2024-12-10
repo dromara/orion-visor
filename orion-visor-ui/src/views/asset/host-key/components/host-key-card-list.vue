@@ -126,19 +126,12 @@
     });
   };
 
-  // 添加后回调
-  const addedCallback = () => {
+  // 重新加载
+  const reload = () => {
     fetchCardData();
   };
 
-  // 更新后回调
-  const updatedCallback = () => {
-    fetchCardData();
-  };
-
-  defineExpose({
-    addedCallback, updatedCallback
-  });
+  defineExpose({ reload });
 
   // 重置条件
   const reset = () => {

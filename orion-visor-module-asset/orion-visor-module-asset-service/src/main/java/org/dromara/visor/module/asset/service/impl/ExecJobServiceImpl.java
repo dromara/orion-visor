@@ -112,7 +112,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         // 设置任务主机
         execJobHostService.setHostIdByJobId(id, request.getHostIdList());
         // 设置 quartz 状态
-        this.setQuartzJobStatus(record, false, true);
+        // this.setQuartzJobStatus(record, false, false);
         log.info("ExecJobService-createExecJob id: {}, effect: {}", id, effect);
         return id;
     }

@@ -181,19 +181,12 @@
     }
   };
 
-  // 添加后回调
-  const addedCallback = () => {
+  // 重新加载
+  const reload = () => {
     fetchTableData();
   };
 
-  // 更新后回调
-  const updatedCallback = () => {
-    fetchTableData();
-  };
-
-  defineExpose({
-    addedCallback, updatedCallback
-  });
+  defineExpose({ reload });
 
   // 加载数据
   const doFetchTableData = async (request: RoleQueryRequest) => {

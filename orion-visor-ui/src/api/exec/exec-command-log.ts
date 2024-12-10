@@ -38,6 +38,8 @@ export function getExecCommandHostLogList(logId: number) {
 export function getExecCommandLogStatus(idList: Array<number>) {
   return axios.get<ExecLogStatusResponse>('/asset/exec-command-log/status', {
     params: { idList },
+    promptBizErrorMessage: false,
+    promptRequestErrorMessage: false,
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }

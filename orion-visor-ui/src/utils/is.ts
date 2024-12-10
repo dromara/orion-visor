@@ -55,6 +55,14 @@ export function isWindow(el: any): el is Window {
 /**
  * 是否为移动端 ua
  */
-export function isMobile(userAgent: string) {
+export function isMobile(userAgent: string): boolean {
   return /Mobi|Android|iPhone/i.test(userAgent);
+}
+
+/**
+ * 是否为 IPv4
+ */
+export function isIPv4(ip: string): boolean {
+  const reg = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  return reg.test(ip);
 }

@@ -7,13 +7,13 @@
                       @open-history="(e) => history.open(e.id, e.label)" />
     <!-- 添加修改模态框 -->
     <dict-value-form-modal ref="modal"
-                           @added="modalAddCallback"
-                           @updated="modalUpdateCallback" />
+                           @added="() => table.reload()"
+                           @updated="() => table.reload()" />
     <!-- 历史值模态框 -->
     <history-value-modal ref="history"
                          :type="historyType"
                          :rollback="rollback"
-                         @updated="modalUpdateCallback" />
+                         @updated="() => table.reload()" />
   </div>
 </template>
 
@@ -36,16 +36,6 @@
   const modal = ref();
   const history = ref();
   const cacheStore = useCacheStore();
-
-  // 添加回调
-  const modalAddCallback = () => {
-    table.value.addedCallback();
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    table.value.updatedCallback();
-  };
 
   // 回滚
   const rollback = async (id: number, valueId: number) => {

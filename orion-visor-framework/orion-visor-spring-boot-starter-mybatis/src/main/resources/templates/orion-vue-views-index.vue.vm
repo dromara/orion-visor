@@ -18,15 +18,15 @@
                   @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #end
     #if($vue.enableDrawerForm)
-    <!-- 添加修改模态框 -->
+    <!-- 添加修改抽屉 -->
     <${vue.feature}-form-drawer ref="drawer"
-                   @added="modalAddCallback"
-                   @updated="modalUpdateCallback" />
+                   @added="reload"
+                   @updated="reload" />
     #else
     <!-- 添加修改模态框 -->
     <${vue.feature}-form-modal ref="modal"
-                   @added="modalAddCallback"
-                   @updated="modalUpdateCallback" />
+                   @added="reload"
+                   @updated="reload" />
     #end
   </div>
 </template>
@@ -81,29 +81,16 @@
   const modal = ref();
   #end
 
-  // 添加回调
-  const modalAddCallback = () => {
+  // 重新加载
+  const reload = () => {
     #if($vue.enableCardView)
     if (renderTable.value) {
-      table.value.addedCallback();
+      table.value.reload();
     } else {
-      card.value.addedCallback();
+      card.value.reload();
     }
     #else
-    table.value.addedCallback();
-    #end
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    #if($vue.enableCardView)
-    if (renderTable.value) {
-      table.value.updatedCallback();
-    } else {
-      card.value.updatedCallback();
-    }
-    #else
-    table.value.updatedCallback();
+    table.value.reload();
     #end
   };
 

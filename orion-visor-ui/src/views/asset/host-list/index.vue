@@ -18,8 +18,8 @@
                     @open-update-config="(e) => hostConfig.open(e)" />
     <!-- 添加修改模态框 -->
     <host-form-modal ref="modal"
-                     @added="modalAddCallback"
-                     @updated="modalUpdateCallback" />
+                     @added="reload"
+                     @updated="reload" />
     <!-- 配置面板 -->
     <host-config-drawer ref="hostConfig" />
     <!-- 分组配置 -->
@@ -54,21 +54,12 @@
 
   const renderTable = computed(() => appStore.hostView === 'table');
 
-  // 添加回调
-  const modalAddCallback = () => {
+  // 重新加载
+  const reload = () => {
     if (renderTable.value) {
-      table.value.addedCallback();
+      table.value.reload();
     } else {
-      card.value.addedCallback();
-    }
-  };
-
-  // 修改回调
-  const modalUpdateCallback = () => {
-    if (renderTable.value) {
-      table.value.updatedCallback();
-    } else {
-      card.value.updatedCallback();
+      card.value.reload();
     }
   };
 

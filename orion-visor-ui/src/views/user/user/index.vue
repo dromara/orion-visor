@@ -8,8 +8,8 @@
                 @open-grant-role="(e) => grantRoleModal.open(e)" />
     <!-- 添加修改模态框 -->
     <user-form-modal ref="modal"
-                     @added="() => table.addedCallback()"
-                     @updated="() => table.updatedCallback()" />
+                     @added="() => table.reload()"
+                     @updated="() => table.reload()" />
     <!-- 重置密码模态框 -->
     <user-reset-password-form-modal ref="resetModal" />
     <!-- 分配角色模态框 -->
