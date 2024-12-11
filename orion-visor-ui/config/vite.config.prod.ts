@@ -19,12 +19,19 @@ export default mergeConfig(
         output: {
           manualChunks: {
             arco: ['@arco-design/web-vue'],
+            arcoExt: ['@sanqi377/arco-vue-icon-picker', '@dangojs/a-query-header'],
             chart: ['echarts', 'vue-echarts'],
             vue: ['vue', 'vue-router', 'pinia', '@vueuse/core', 'vue-i18n'],
+            axios: ['axios'],
+            xterm: ['@xterm/xterm', '@xterm/addon-canvas', '@xterm/addon-fit',
+              '@xterm/addon-image', '@xterm/addon-search', '@xterm/addon-unicode11',
+              '@xterm/addon-web-links', '@xterm/addon-webgl'],
+            monaco: ['monaco-editor'],
+            pkg: ['dayjs', 'cron-parser', 'ts-md5', 'file-saver', 'html2canvas']
           },
         },
       },
-      chunkSizeWarningLimit: 2000,
+      chunkSizeWarningLimit: 1024 * 8,
     },
   },
   baseConfig,
