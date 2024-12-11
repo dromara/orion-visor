@@ -23,6 +23,12 @@
   </div>
 </template>
 
+<script lang="ts">
+  export default {
+    name: 'login',
+  };
+</script>
+
 <script lang="ts" setup>
   import { Notification } from '@arco-design/web-vue';
   import { reLoginTipsKey } from '@/types/symbol';

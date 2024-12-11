@@ -22,9 +22,7 @@ export default function usePermission() {
         const element = menuConfig.shift();
         if (element?.name === route.name) exist = true;
         if (element?.children) {
-          menuConfig.push(
-            ...(element.children as unknown as RouteRecordNormalized[])
-          );
+          menuConfig.push(...(element.children as unknown as RouteRecordNormalized[]));
         }
       }
       return exist;

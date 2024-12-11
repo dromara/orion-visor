@@ -1,9 +1,11 @@
 import type { RouteLocationNormalized } from 'vue-router';
 import type { TagProps } from '@/store/modules/tab-bar/types';
 
+export const LOGIN_ROUTE_NAME = 'login';
+
 export const REDIRECT_ROUTE_NAME = 'redirect';
 
-export const LOGIN_ROUTE_NAME = 'login';
+export const UPDATE_PASSWORD_ROUTE_NAME = 'updatePassword';
 
 export const FORBIDDEN_ROUTER_NAME = 'forbidden';
 
@@ -24,6 +26,7 @@ export const DEFAULT_ROUTER = { name: DEFAULT_ROUTE_NAME, children: [] };
 export const WHITE_ROUTER_LIST = [
   { name: LOGIN_ROUTE_NAME, children: [] },
   { name: REDIRECT_ROUTE_NAME, children: [] },
+  { name: UPDATE_PASSWORD_ROUTE_NAME, children: [] },
 ];
 
 /**
@@ -33,16 +36,6 @@ export const STATUS_ROUTER_LIST = [
   { name: NOT_FOUND_ROUTER_NAME, children: [] },
   { name: FORBIDDEN_ROUTER_NAME, children: [] },
 ];
-
-/**
- * 默认 tab 页面
- */
-export const DEFAULT_TAB = {
-  title: '工作台',
-  name: DEFAULT_ROUTE_NAME,
-  path: DEFAULT_ROUTE_FULL_PATH,
-  fullPath: DEFAULT_ROUTE_FULL_PATH,
-};
 
 /**
  * router 转 tag

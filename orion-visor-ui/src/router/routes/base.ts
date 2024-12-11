@@ -1,5 +1,12 @@
 import type { RouteRecordRaw } from 'vue-router';
-import { DEFAULT_ROUTE_FULL_PATH, FORBIDDEN_ROUTER_NAME, LOGIN_ROUTE_NAME, NOT_FOUND_ROUTER_NAME, REDIRECT_ROUTE_NAME, } from '@/router/constants';
+import {
+  DEFAULT_ROUTE_FULL_PATH,
+  FORBIDDEN_ROUTER_NAME,
+  LOGIN_ROUTE_NAME,
+  NOT_FOUND_ROUTER_NAME,
+  REDIRECT_ROUTE_NAME,
+  UPDATE_PASSWORD_ROUTE_NAME,
+} from '@/router/constants';
 
 // 默认布局
 export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue');
@@ -8,13 +15,13 @@ export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue');
 export const FULL_LAYOUT = () => import('@/layout/full-layout.vue');
 
 // 根页面
-export const ROOT_ROUTER: RouteRecordRaw = {
+export const ROOT_ROUTE: RouteRecordRaw = {
   path: '/',
   redirect: DEFAULT_ROUTE_FULL_PATH,
 };
 
 // 登录页面
-export const LOGIN_ROUTER: RouteRecordRaw = {
+export const LOGIN_ROUTE: RouteRecordRaw = {
   path: '/login',
   name: LOGIN_ROUTE_NAME,
   meta: {
@@ -24,7 +31,7 @@ export const LOGIN_ROUTER: RouteRecordRaw = {
 };
 
 // 重定向页面
-export const REDIRECT_ROUTER: RouteRecordRaw = {
+export const REDIRECT_ROUTE: RouteRecordRaw = {
   path: '/redirect',
   name: 'redirectWrapper',
   component: DEFAULT_LAYOUT,
@@ -46,14 +53,24 @@ export const REDIRECT_ROUTER: RouteRecordRaw = {
   ],
 };
 
+// 修改密码
+export const UPDATE_PASSWORD_ROUTE: RouteRecordRaw = {
+  path: '/update-password',
+  name: UPDATE_PASSWORD_ROUTE_NAME,
+  component: () => import('@/views/base/update-password/index.vue'),
+  meta: {
+    locale: '修改密码'
+  },
+};
+
 // 403 页面
 export const FORBIDDEN_ROUTE: RouteRecordRaw = {
   path: '/403',
   name: FORBIDDEN_ROUTER_NAME,
+  component: () => import('@/views/base/status/forbidden/index.vue'),
   meta: {
     locale: '403'
   },
-  component: () => import('@/views/base/status/forbidden/index.vue'),
 };
 
 // 404 页面
@@ -61,16 +78,17 @@ export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   // path: '/:pathMatch(.*)*',
   path: '/404',
   name: NOT_FOUND_ROUTER_NAME,
+  component: () => import('@/views/base/status/not-found/index.vue'),
   meta: {
     locale: '404'
   },
-  component: () => import('@/views/base/status/not-found/index.vue'),
 };
 
 export default [
-  ROOT_ROUTER,
-  LOGIN_ROUTER,
-  REDIRECT_ROUTER,
+  ROOT_ROUTE,
+  LOGIN_ROUTE,
+  REDIRECT_ROUTE,
+  UPDATE_PASSWORD_ROUTE,
   NOT_FOUND_ROUTE,
   FORBIDDEN_ROUTE
 ];

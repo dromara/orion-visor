@@ -9,6 +9,7 @@ import axios from 'axios';
 export interface UserUpdatePasswordRequest {
   beforePassword?: string;
   password?: string;
+  checkPassword?: string;
 }
 
 /**

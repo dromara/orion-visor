@@ -30,13 +30,14 @@ import org.dromara.visor.module.infra.convert.SystemUserConvert;
 import org.dromara.visor.module.infra.dao.SystemMenuDAO;
 import org.dromara.visor.module.infra.dao.SystemRoleDAO;
 import org.dromara.visor.module.infra.dao.SystemRoleMenuDAO;
+import org.dromara.visor.module.infra.dao.SystemUserDAO;
 import org.dromara.visor.module.infra.define.RoleDefine;
 import org.dromara.visor.module.infra.entity.domain.SystemMenuDO;
 import org.dromara.visor.module.infra.entity.domain.SystemRoleDO;
 import org.dromara.visor.module.infra.entity.domain.SystemRoleMenuDO;
+import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.SystemMenuCacheDTO;
 import org.dromara.visor.module.infra.entity.vo.SystemMenuVO;
-import org.dromara.visor.module.infra.entity.vo.UserCollectInfoVO;
 import org.dromara.visor.module.infra.entity.vo.UserPermissionVO;
 import org.dromara.visor.module.infra.enums.MenuStatusEnum;
 import org.dromara.visor.module.infra.enums.MenuTypeEnum;
@@ -75,6 +76,9 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
     @Getter
     private final Map<Long, List<SystemMenuCacheDTO>> roleMenuCache = new HashMap<>();
+
+    @Resource
+    private SystemUserDAO systemUserDAO;
 
     @Resource
     private SystemRoleDAO systemRoleDAO;
@@ -229,43 +233,24 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     @Override
     public UserPermissionVO getUserPermission() {
         // 获取用户信息
-        UserCollectInfoVO user = SystemUserConvert.MAPPER.toCollectInfo(SecurityUtils.getLoginUser());
-        Long id = user.getId();
+        Long userId = SecurityUtils.getLoginUserId();
         // 获取用户系统偏好
-        Future<Map<String, Object>> systemPreference = preferenceService.getPreferenceAsync(id, PreferenceTypeEnum.SYSTEM);
+        Future<Map<String, Object>> systemPreference = preferenceService.getPreferenceAsync(userId, PreferenceTypeEnum.SYSTEM);
+        // 查询用户信息
+        SystemUserDO user = systemUserDAO.selectById(userId);
         // 获取用户角色
         Map<Long, String> roles = this.getUserEnabledRoles();
-        // 获取用户权限
-        List<String> permissions;
-        if (roles.isEmpty()) {
-            permissions = Lists.empty();
-        } else {
-            if (RoleDefine.containsAdmin(roles.values())) {
-                // 管理员拥有全部权限
-                permissions = Lists.of(Const.ASTERISK);
-            } else {
-                // 当前用户所适配的角色的权限
-                permissions = roles.keySet()
-                        .stream()
-                        .map(roleMenuCache::get)
-                        .filter(Objects::nonNull)
-                        .flatMap(Collection::stream)
-                        .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
-                        .map(SystemMenuCacheDTO::getPermission)
-                        .filter(Objects::nonNull)
-                        .distinct()
-                        .collect(Collectors.toList());
-            }
-        }
-        // 设置已提示的 key
-        user.setTippedKeys(tipsService.getTippedKeys());
-        // 获取异步结果
-        user.setSystemPreference(systemPreference.get());
+        // 获取角色权限
+        List<String> permissions = this.getRolePermissions(roles);
+        // 提示信息
+        List<String> tippedKeys = tipsService.getTippedKeys();
         // 组装数据
         return UserPermissionVO.builder()
-                .user(user)
+                .user(SystemUserConvert.MAPPER.toBase(user))
                 .roles(roles.values())
                 .permissions(permissions)
+                .systemPreference(systemPreference.get())
+                .tippedKeys(tippedKeys)
                 .build();
     }
 
@@ -315,6 +300,33 @@ public class UserPermissionServiceImpl implements UserPermissionService {
             return Maps.empty();
         }
         return roles;
+    }
+
+    /**
+     * 获取角色对应的权限
+     *
+     * @param roles roles
+     * @return 权限
+     */
+    private List<String> getRolePermissions(Map<Long, String> roles) {
+        if (Maps.isEmpty(roles)) {
+            return Lists.empty();
+        }
+        // 管理员拥有全部权限
+        if (RoleDefine.containsAdmin(roles.values())) {
+            return Lists.singleton(Const.ASTERISK);
+        }
+        // 角色权限
+        return roles.keySet()
+                .stream()
+                .map(roleMenuCache::get)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .filter(s -> MenuStatusEnum.ENABLED.getStatus().equals(s.getStatus()))
+                .map(SystemMenuCacheDTO::getPermission)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
 }

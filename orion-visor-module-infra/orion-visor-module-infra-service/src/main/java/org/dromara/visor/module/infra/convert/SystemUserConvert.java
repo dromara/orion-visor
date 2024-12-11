@@ -19,8 +19,8 @@ import org.dromara.visor.framework.common.security.LoginUser;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.UserInfoDTO;
 import org.dromara.visor.module.infra.entity.request.user.*;
+import org.dromara.visor.module.infra.entity.vo.SystemUserBaseVO;
 import org.dromara.visor.module.infra.entity.vo.SystemUserVO;
-import org.dromara.visor.module.infra.entity.vo.UserCollectInfoVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -58,6 +58,6 @@ public interface SystemUserConvert {
 
     UserInfoDTO toUserInfo(SystemUserDO domain);
 
-    UserCollectInfoVO toCollectInfo(LoginUser user);
+    SystemUserBaseVO toBase(SystemUserDO user);
 
 }

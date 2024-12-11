@@ -1,12 +1,11 @@
 import type { TabBarState, TagProps } from './types';
 import { defineStore } from 'pinia';
-import { DEFAULT_ROUTE_NAME, DEFAULT_TAB } from '@/router/constants';
 import { isString } from '@/utils/is';
 
 export default defineStore('tabBar', {
   state: (): TabBarState => ({
-    cacheTabList: new Set([DEFAULT_ROUTE_NAME]),
-    tagList: [DEFAULT_TAB],
+    cacheTabList: new Set([]),
+    tagList: [],
   }),
 
   getters: {
@@ -55,9 +54,8 @@ export default defineStore('tabBar', {
 
     // 重设 tab
     resetTabList() {
-      this.tagList = [DEFAULT_TAB];
+      this.tagList = [];
       this.cacheTabList.clear();
-      this.cacheTabList.add(DEFAULT_ROUTE_NAME);
     },
   },
 });

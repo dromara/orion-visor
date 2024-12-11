@@ -21,9 +21,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * 用户基本信息 视图响应对象
  *
@@ -35,8 +32,8 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "UserCollectInfoVO", description = "用户聚合信息 视图响应对象")
-public class UserCollectInfoVO {
+@Schema(name = "SystemUserBaseVO", description = "用户基本信息 视图响应对象")
+public class SystemUserBaseVO {
 
     @Schema(description = "id")
     private Long id;
@@ -50,10 +47,10 @@ public class UserCollectInfoVO {
     @Schema(description = "头像地址")
     private String avatar;
 
-    @Schema(description = "系统偏好")
-    private Map<String, Object> systemPreference;
+    @Schema(description = "修改密码状态")
+    private Integer passwordUpdateStatus;
 
-    @Schema(description = "已经提示的key")
-    private List<String> tippedKeys;
+    @Schema(description = "修改密码原因")
+    private String passwordUpdateReason;
 
 }

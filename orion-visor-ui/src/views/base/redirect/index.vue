@@ -1,6 +1,12 @@
 <template>
-  <div></div>
+  <div />
 </template>
+
+<script lang="ts">
+  export default {
+    name: 'redirect',
+  };
+</script>
 
 <script lang="ts" setup>
   import { useRoute, useRouter } from 'vue-router';

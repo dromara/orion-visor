@@ -122,7 +122,6 @@
       // 关闭左侧
       const currentRouteIdx = findCurrentRouteIndex();
       copyTagList.splice(1, props.index - 1);
-
       tabBarStore.freshTabList(copyTagList);
       if (currentRouteIdx < index) {
         await router.push({ name: itemData.name });
@@ -131,7 +130,6 @@
       // 关闭右侧
       const currentRouteIdx = findCurrentRouteIndex();
       copyTagList.splice(props.index + 1);
-
       tabBarStore.freshTabList(copyTagList);
       if (currentRouteIdx > index) {
         await router.push({ name: itemData.name });
@@ -154,7 +152,8 @@
     } else {
       // 关闭全部
       tabBarStore.resetTabList();
-      await router.push({ name: DEFAULT_ROUTE_NAME });
+      // 跳转到首页 添加 query 强行刷新
+      await router.push({ name: DEFAULT_ROUTE_NAME, query: { _: Date.now() } });
     }
   };
 </script>

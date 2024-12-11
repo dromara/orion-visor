@@ -1,10 +1,11 @@
 import type { UserState } from './types';
 import type { LoginRequest } from '@/api/user/auth';
-import { getUserPermission, login as userLogin, logout as userLogout } from '@/api/user/auth';
+import { userLogin, userLogout } from '@/api/user/auth';
+import { md5 } from '@/utils';
 import { defineStore } from 'pinia';
 import { clearToken, setToken } from '@/utils/auth';
-import { md5 } from '@/utils';
 import { removeRouteListener } from '@/utils/route-listener';
+import { getUserPermission } from '@/api/user/permission';
 import { useAppStore, useCacheStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
 
 export default defineStore('user', {
@@ -25,15 +26,15 @@ export default defineStore('user', {
 
   actions: {
     // 设置用户信息
-    setInfo(partial: Partial<UserState>) {
+    setUserInfo(partial: Partial<UserState>) {
       this.$patch(partial);
     },
 
     // 获取用户信息
-    async info() {
+    async getUserInfo() {
       const { data } = await getUserPermission();
       // 设置用户信息
-      this.setInfo({
+      this.setUserInfo({
         id: data.user.id,
         username: data.user.username,
         nickname: data.user.nickname,
@@ -42,11 +43,10 @@ export default defineStore('user', {
         permission: data.permissions,
       });
       // 设置用户偏好
-      const appStore = useAppStore();
-      appStore.updateSettings(data.user.systemPreference);
+      useAppStore().updateSettings(data.systemPreference);
       // 设置已经提示的key
-      const tipsStore = useTipsStore();
-      tipsStore.set(data.user.tippedKeys);
+      useTipsStore().set(data.tippedKeys);
+      return data;
     },
 
     // 登录

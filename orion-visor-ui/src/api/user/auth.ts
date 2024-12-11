@@ -1,4 +1,3 @@
-import type { MenuQueryResponse } from '@/api/system/menu';
 import axios from 'axios';
 
 /**
@@ -17,45 +16,15 @@ export interface LoginResponse {
 }
 
 /**
- * 用户权限响应
+ * 用户登录
  */
-export interface UserPermissionResponse {
-  user: {
-    id: number;
-    username: string;
-    nickname: string;
-    avatar: string;
-    systemPreference: Record<string, any>;
-    tippedKeys: Array<string>;
-  };
-  roles: Array<string>;
-  permissions: Array<string>;
-}
-
-/**
- * 登录
- */
-export function login(data: LoginRequest) {
+export function userLogin(data: LoginRequest) {
   return axios.post<LoginResponse>('/infra/auth/login', data);
 }
 
 /**
- * 登出
+ * 用户登出
  */
-export function logout() {
+export function userLogout() {
   return axios.get('/infra/auth/logout');
-}
-
-/**
- * 获取用户信息
- */
-export function getUserPermission() {
-  return axios.get<UserPermissionResponse>('/infra/user-permission/user');
-}
-
-/**
- * 获取菜单列表
- */
-export function getMenuList() {
-  return axios.get<Array<MenuQueryResponse>>('/infra/user-permission/menu');
 }

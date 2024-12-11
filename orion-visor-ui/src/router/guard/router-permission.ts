@@ -1,7 +1,7 @@
 import type { Router } from 'vue-router';
-import NProgress from 'nprogress';
 import { useMenuStore } from '@/store';
 import { NOT_FOUND_ROUTER_NAME, WHITE_ROUTER_LIST } from '../constants';
+import NProgress from 'nprogress';
 import usePermission from '@/hooks/permission';
 
 export default function setupPermissionGuard(router: Router) {

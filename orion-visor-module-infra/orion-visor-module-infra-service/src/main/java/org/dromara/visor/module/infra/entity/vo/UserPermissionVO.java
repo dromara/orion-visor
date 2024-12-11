@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户权限 视图响应对象
@@ -38,13 +39,19 @@ import java.util.List;
 @Schema(name = "UserPermissionVO", description = "用户权限 视图响应对象")
 public class UserPermissionVO {
 
-    @Schema(description = "用户聚合信息")
-    private UserCollectInfoVO user;
+    @Schema(description = "用户信息")
+    private SystemUserBaseVO user;
 
     @Schema(description = "该用户已启用的角色")
     private Collection<String> roles;
 
     @Schema(description = "该用户已启用的权限")
     private List<String> permissions;
+
+    @Schema(description = "系统偏好")
+    private Map<String, Object> systemPreference;
+
+    @Schema(description = "已经提示的key")
+    private List<String> tippedKeys;
 
 }
