@@ -97,14 +97,14 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ExecJobQueryResponse } from '@/api/job/exec-job';
+  import type { ExecJobQueryResponse } from '@/api/exec/exec-job';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { useDictStore } from '@/store';
   import { dateFormat } from '@/utils';
   import { copy } from '@/hooks/copy';
-  import { getExecJob } from '@/api/job/exec-job';
+  import { getExecJob } from '@/api/exec/exec-job';
   import { EnabledStatus } from '@/types/const';
   import { execJobStatusKey } from '../types/const';
 

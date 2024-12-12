@@ -4,7 +4,7 @@ import type { XtermAddons } from '@/types/xterm';
 import type { ExecLogTailRequest } from '@/api/exec/exec-log';
 import { openExecLogChannel } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
-import { getExecJobLogTailToken } from '@/api/job/exec-job-log';
+import { getExecJobLogTailToken } from '@/api/exec/exec-job-log';
 import { Message } from '@arco-design/web-vue';
 import { useDebounceFn } from '@vueuse/core';
 import { addEventListen, removeEventListen } from '@/utils/event';

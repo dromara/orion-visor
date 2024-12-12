@@ -10,12 +10,12 @@ const JOB: AppRouteRecordRaw[] = [
       {
         name: 'execJob',
         path: '/exec-job',
-        component: () => import('@/views/job/exec-job/index.vue'),
+        component: () => import('@/views/exec/exec-job/index.vue'),
       },
       {
         name: 'execJobLog',
         path: '/exec-job-log',
-        component: () => import('@/views/job/exec-job-log/index.vue'),
+        component: () => import('@/views/exec/exec-job-log/index.vue'),
       },
     ],
   },
@@ -27,7 +27,7 @@ const JOB: AppRouteRecordRaw[] = [
       {
         name: 'execJobLogView',
         path: '/job-log-view',
-        component: () => import('@/views/job/exec-job-log-view/index.vue'),
+        component: () => import('@/views/exec/exec-job-log-view/index.vue'),
       },
     ],
   }

@@ -7,7 +7,7 @@ import type {
   ExecLogQueryResponse,
   ExecLogStatusResponse,
   ExecLogTailRequest
-} from '../exec/exec-log';
+} from './exec-log';
 import axios from 'axios';
 import qs from 'query-string';
 

@@ -1,18 +1,18 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://116.62.194.246:3306/orion_visor?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
+      url: jdbc:mysql://127.0.0.1:3306/orion_visor?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
       username: root
-      password: Orionsec@123456
+      password: Data@123456
       initial-size: 0
       min-idle: 1
       max-active: 5
       stat-view-servlet:
         enabled: false
   redis:
-    host: 116.62.194.246
+    host: 127.0.0.1
     port: 6379
-    password: Orionsec@123456
+    password: Data@123456
   redisson:
     threads: 2
     netty-threads: 2

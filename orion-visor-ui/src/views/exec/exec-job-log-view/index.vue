@@ -17,7 +17,7 @@
 <script lang="ts" setup>
   import { onMounted, ref, nextTick } from 'vue';
   import { useRoute } from 'vue-router';
-  import { getExecJobLog } from '@/api/job/exec-job-log';
+  import { getExecJobLog } from '@/api/exec/exec-job-log';
   import ExecLogPanel from '@/components/exec/log/panel/index.vue';
 
   const route = useRoute();
