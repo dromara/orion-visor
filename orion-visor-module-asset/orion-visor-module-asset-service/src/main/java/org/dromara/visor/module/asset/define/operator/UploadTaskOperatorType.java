@@ -16,9 +16,11 @@
 package org.dromara.visor.module.asset.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.H;
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.M;
 
 /**
  * 上传任务 操作日志类型
@@ -41,10 +43,10 @@ public class UploadTaskOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.M, UPLOAD, "批量上传文件 <sb>${count}</sb> 个 (${name})"),
-                new OperatorType(OperatorRiskLevel.M, CANCEL, "取消上传文件 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除上传记录 <sb>${count}</sb>条"),
-                new OperatorType(OperatorRiskLevel.H, CLEAR, "清理上传记录 <sb>${count}</sb>条"),
+                new OperatorType(M, UPLOAD, "批量上传文件 <sb>${count}</sb> 个 (${name})"),
+                new OperatorType(M, CANCEL, "取消上传文件 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除上传记录 <sb>${count}</sb>条"),
+                new OperatorType(H, CLEAR, "清理上传记录 <sb>${count}</sb>条"),
         };
     }
 

@@ -146,7 +146,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         // 初始化日志
         this.initLogOutputStream();
         // 打开会话
-        TerminalConnectDTO connect = terminalService.getTerminalConnectInfo(execHostCommand.getHostId());
+        TerminalConnectDTO connect = terminalService.getTerminalConnectInfo(execHostCommand.getHostId(), execCommand.getUserId());
         this.sessionStore = SessionStores.openSessionStore(connect);
         if (Booleans.isTrue(execCommand.getScriptExec())) {
             // 上传脚本文件

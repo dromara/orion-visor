@@ -16,9 +16,10 @@
 package org.dromara.visor.module.infra.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 系统角色 操作日志类型
@@ -43,11 +44,11 @@ public class SystemRoleOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建角色 <sb>${name}(${code})</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE, "修改角色 <sb>${name}(${code})</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_STATUS, "修改角色状态 <sb>${name}(${code})</sb> - <sb>${statusName}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除角色 <sb>${name}(${code})</sb>"),
-                new OperatorType(OperatorRiskLevel.M, GRANT_MENU, "分配角色菜单 <sb>${name}(${code})</sb>"),
+                new OperatorType(L, CREATE, "创建角色 <sb>${name}(${code})</sb>"),
+                new OperatorType(M, UPDATE, "修改角色 <sb>${name}(${code})</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "修改角色状态 <sb>${name}(${code})</sb> - <sb>${statusName}</sb>"),
+                new OperatorType(H, DELETE, "删除角色 <sb>${name}(${code})</sb>"),
+                new OperatorType(M, GRANT_MENU, "分配角色菜单 <sb>${name}(${code})</sb>"),
         };
     }
 

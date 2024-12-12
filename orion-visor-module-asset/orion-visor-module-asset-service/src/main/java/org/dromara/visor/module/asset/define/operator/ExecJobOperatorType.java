@@ -16,9 +16,10 @@
 package org.dromara.visor.module.asset.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 计划任务 操作日志类型
@@ -27,7 +28,7 @@ import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
  * @version 1.0.3
  * @since 2024-3-28 12:03
  */
-@Module("asset:exec-job")
+@Module("exec:exec-job")
 public class ExecJobOperatorType extends InitializingOperatorTypes {
 
     public static final String CREATE = "exec-job:create";
@@ -38,16 +39,25 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
 
     public static final String TRIGGER = "exec-job:trigger";
 
+    public static final String SET_EXEC_USER = "exec-job:set-exec-user";
+
     public static final String DELETE = "exec-job:delete";
+
+    public static final String IMPORT = "exec-job:import";
+
+    public static final String EXPORT = "exec-job:export";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建计划任务 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE, "更新计划任务 <sb>${before}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_STATUS, "<sb>${statusName}</sb> 计划任务 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, TRIGGER, "手动触发计划任务 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除计划任务 <sb>${name}</sb>"),
+                new OperatorType(L, CREATE, "创建计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE, "更新计划任务 <sb>${before}</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "<sb>${statusName}</sb> 计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, TRIGGER, "手动触发计划任务 <sb>${name}</sb>"),
+                new OperatorType(M, SET_EXEC_USER, "修改计划任务 <sb>${name}</sb> 执行用户为 <sb>${username}</sb>"),
+                new OperatorType(H, DELETE, "删除计划任务 <sb>${name}</sb>"),
+                new OperatorType(H, IMPORT, "导入计划任务 <sb>${count}</sb> 条"),
+                new OperatorType(H, EXPORT, "导出计划任务 <sb>${count}</sb> 条"),
         };
     }
 

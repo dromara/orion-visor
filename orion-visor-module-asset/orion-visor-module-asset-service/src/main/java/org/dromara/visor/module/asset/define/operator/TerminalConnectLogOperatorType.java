@@ -16,9 +16,11 @@
 package org.dromara.visor.module.asset.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.H;
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.M;
 
 /**
  * 终端连接日志 操作日志类型
@@ -39,9 +41,9 @@ public class TerminalConnectLogOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除终端连接记录 <sb>${count}</sb> 条"),
-                new OperatorType(OperatorRiskLevel.H, CLEAR, "清空终端连接记录 <sb>${count}</sb> 条"),
-                new OperatorType(OperatorRiskLevel.M, FORCE_OFFLINE, "强制下线终端连接 <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE, "删除终端连接记录 <sb>${count}</sb> 条"),
+                new OperatorType(H, CLEAR, "清空终端连接记录 <sb>${count}</sb> 条"),
+                new OperatorType(M, FORCE_OFFLINE, "强制下线终端连接 <sb>${hostName}</sb>"),
         };
     }
 

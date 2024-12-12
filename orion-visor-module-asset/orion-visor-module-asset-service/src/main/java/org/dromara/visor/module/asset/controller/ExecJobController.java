@@ -108,6 +108,15 @@ public class ExecJobController {
     }
 
     @DemoDisableApi
+    @OperatorLog(ExecJobOperatorType.SET_EXEC_USER)
+    @PutMapping("/set-exec-user")
+    @Operation(summary = "设置计划任务执行用户")
+    @PreAuthorize("@ss.hasPermission('exec:exec-job:set-exec-user')")
+    public Integer setExecJobExecUser(@Validated @RequestBody ExecJobSetExecUserRequest request) {
+        return execJobService.setExecJobExecUser(request);
+    }
+
+    @DemoDisableApi
     @OperatorLog(ExecJobOperatorType.DELETE)
     @DeleteMapping("/delete")
     @Operation(summary = "删除计划任务")

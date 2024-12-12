@@ -16,9 +16,10 @@
 package org.dromara.visor.module.infra.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 字典配置项 操作日志类型
@@ -39,9 +40,9 @@ public class DictKeyOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建字典配置项 <sb>${keyName}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE, "更新字典配置项 <sb>${keyName}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除字典配置项 <sb>${keyName}</sb>"),
+                new OperatorType(L, CREATE, "创建字典配置项 <sb>${keyName}</sb>"),
+                new OperatorType(M, UPDATE, "更新字典配置项 <sb>${keyName}</sb>"),
+                new OperatorType(H, DELETE, "删除字典配置项 <sb>${keyName}</sb>"),
         };
     }
 

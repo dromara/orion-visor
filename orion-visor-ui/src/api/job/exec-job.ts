@@ -58,10 +58,20 @@ export interface ExecJobQueryResponse extends TableData {
   recentLogId: number;
   recentLogStatus: string;
   recentLogTime: number;
+  execUserId: number;
+  execUsername: string;
   createTime: number;
   updateTime: number;
   hostIdList: Array<number>;
   hostList: Array<HostQueryResponse>;
+}
+
+/**
+ * 设置计划任务执行用户
+ */
+export interface ExecJobSetExecUserRequest {
+  id: number;
+  userId: number;
 }
 
 /**
@@ -104,6 +114,13 @@ export function getExecJobList() {
  */
 export function getExecJobPage(request: ExecJobQueryRequest) {
   return axios.post<DataGrid<ExecJobQueryResponse>>('/asset/exec-job/query', request);
+}
+
+/**
+ * 设置计划任务执行用户
+ */
+export function setExecJobExecUser(request: ExecJobSetExecUserRequest) {
+  return axios.put<number>('/exec/exec-job/set-exec-user', request);
 }
 
 /**

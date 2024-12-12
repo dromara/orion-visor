@@ -55,6 +55,10 @@ public class ExecLogQueryRequest extends PageRequest {
     @Schema(description = "执行来源id")
     private Long sourceId;
 
+    @Size(max = 8)
+    @Schema(description = "执行方式")
+    private String execMode;
+
     @Size(max = 128)
     @Schema(description = "执行描述")
     private String description;

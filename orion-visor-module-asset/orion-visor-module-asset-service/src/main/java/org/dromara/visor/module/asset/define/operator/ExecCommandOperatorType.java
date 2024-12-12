@@ -16,9 +16,10 @@
 package org.dromara.visor.module.asset.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.M;
 
 /**
  * 批量执行 操作记录类型
@@ -35,7 +36,7 @@ public class ExecCommandOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.M, EXEC, "执行主机命令"),
+                new OperatorType(M, EXEC, "执行主机命令"),
         };
     }
 

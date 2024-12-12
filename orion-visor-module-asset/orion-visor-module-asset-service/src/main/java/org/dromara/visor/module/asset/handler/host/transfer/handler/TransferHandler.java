@@ -110,7 +110,7 @@ public class TransferHandler implements ITransferHandler {
             if (terminalConnection == null) {
                 // 获取终端连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
-                TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(userId, hostId);
+                TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId, userId);
                 terminalConnection = new TerminalConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
                 terminalConnections.put(hostId, terminalConnection);
             }

@@ -170,16 +170,16 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public TerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
+    public TerminalConnectDTO getTerminalConnectInfo(Long hostId, Long userId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
         // 获取配置
-        return this.getTerminalConnectInfo(userId, host);
+        return this.getTerminalConnectInfo(host, userId);
     }
 
     @Override
-    public TerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
+    public TerminalConnectDTO getTerminalConnectInfo(HostDO host, Long userId) {
         Long hostId = host.getId();
         log.info("HostTerminalService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 验证主机是否有权限

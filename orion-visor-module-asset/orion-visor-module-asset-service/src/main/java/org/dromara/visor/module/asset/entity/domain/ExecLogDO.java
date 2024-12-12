@@ -63,6 +63,10 @@ public class ExecLogDO extends BaseDO {
     @TableField("source_id")
     private Long sourceId;
 
+    @Schema(description = "执行方式")
+    @TableField("exec_mode")
+    private String execMode;
+
     @Schema(description = "执行描述")
     @TableField("description")
     private String description;

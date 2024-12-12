@@ -74,6 +74,12 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "最近执行时间")
     private Date recentLogTime;
 
+    @Schema(description = "执行用户id")
+    private Long execUserId;
+
+    @Schema(description = "执行用户名")
+    private String execUsername;
+
     @Schema(description = "创建时间")
     private Date createTime;
 

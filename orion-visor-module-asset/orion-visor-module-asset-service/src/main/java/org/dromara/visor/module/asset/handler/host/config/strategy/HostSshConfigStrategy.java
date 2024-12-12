@@ -27,7 +27,6 @@ import org.dromara.visor.framework.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
 import org.dromara.visor.module.asset.enums.HostSshAuthTypeEnum;
-import org.dromara.visor.module.asset.enums.HostSshOsTypeEnum;
 import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.springframework.stereotype.Component;
 

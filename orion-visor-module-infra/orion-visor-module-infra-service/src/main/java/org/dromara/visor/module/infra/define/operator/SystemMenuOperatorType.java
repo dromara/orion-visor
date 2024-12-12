@@ -16,9 +16,10 @@
 package org.dromara.visor.module.infra.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 系统菜单 操作日志类型
@@ -41,10 +42,10 @@ public class SystemMenuOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建菜单 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.L, UPDATE, "修改菜单 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_STATUS, "修改菜单状态 <sb>${name}</sb> - <sb>${label}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除菜单 <sb>${name}</sb>"),
+                new OperatorType(L, CREATE, "创建菜单 <sb>${name}</sb>"),
+                new OperatorType(L, UPDATE, "修改菜单 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "修改菜单状态 <sb>${name}</sb> - <sb>${label}</sb>"),
+                new OperatorType(H, DELETE, "删除菜单 <sb>${name}</sb>"),
         };
     }
 

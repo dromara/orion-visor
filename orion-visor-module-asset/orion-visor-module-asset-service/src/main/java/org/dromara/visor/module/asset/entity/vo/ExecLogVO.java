@@ -44,6 +44,9 @@ public class ExecLogVO implements Serializable {
     @Schema(description = "id")
     private Long id;
 
+    @Schema(description = "执行方式")
+    private String execMode;
+
     @Schema(description = "执行用户id")
     private Long userId;
 

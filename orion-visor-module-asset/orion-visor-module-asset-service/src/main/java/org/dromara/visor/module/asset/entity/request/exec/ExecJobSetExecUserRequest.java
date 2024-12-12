@@ -16,16 +16,13 @@
 package org.dromara.visor.module.asset.entity.request.exec;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.dromara.visor.framework.common.entity.PageRequest;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
- * 计划任务 手动触发请求对象
+ * 设置计划任务执行用户 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -35,22 +32,16 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecJobTriggerRequest", description = "计划任务 手动触发请求对象")
-public class ExecJobTriggerRequest implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@EqualsAndHashCode(callSuper = true)
+@Schema(name = "ExecJobSetExecUserRequest", description = "设置计划任务执行用户 查询请求对象")
+public class ExecJobSetExecUserRequest extends PageRequest {
 
     @NotNull
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "执行用户 id")
+    @NotNull
+    @Schema(description = "userId")
     private Long userId;
-
-    @Schema(description = "执行用户名")
-    private String username;
-
-    @Schema(description = "执行方式")
-    private String execMode;
 
 }

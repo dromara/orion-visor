@@ -16,6 +16,7 @@
 package org.dromara.visor.module.asset.service;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
+import org.dromara.visor.module.asset.entity.domain.ExecJobDO;
 import org.dromara.visor.module.asset.entity.request.exec.*;
 import org.dromara.visor.module.asset.entity.vo.ExecJobVO;
 
@@ -78,6 +79,14 @@ public interface ExecJobService {
     DataGrid<ExecJobVO> getExecJobPage(ExecJobQueryRequest request);
 
     /**
+     * 设置执行用户
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer setExecJobExecUser(ExecJobSetExecUserRequest request);
+
+    /**
      * 获取下一个执行序列
      *
      * @param id id
@@ -112,7 +121,8 @@ public interface ExecJobService {
      * 触发任务
      *
      * @param request request
+     * @param job     job
      */
-    void triggerExecJob(ExecJobTriggerRequest request);
+    void triggerExecJob(ExecJobTriggerRequest request, ExecJobDO job);
 
 }

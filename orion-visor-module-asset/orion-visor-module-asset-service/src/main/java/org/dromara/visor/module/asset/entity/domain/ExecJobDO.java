@@ -81,4 +81,12 @@ public class ExecJobDO extends BaseDO {
     @TableField("recent_log_id")
     private Long recentLogId;
 
+    @Schema(description = "执行用户id")
+    @TableField("exec_user_id")
+    private Long execUserId;
+
+    @Schema(description = "执行用户名")
+    @TableField("exec_username")
+    private String execUsername;
+
 }

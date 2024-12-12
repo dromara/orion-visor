@@ -16,9 +16,10 @@
 package org.dromara.visor.module.asset.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 主机 操作日志类型
@@ -43,11 +44,11 @@ public class HostOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建主机 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.L, UPDATE, "修改主机 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除主机 <sb>${count}</sb> 条"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_STATUS, "修改主机状态 <sb>${name}</sb> - <sb>${status}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb>"),
+                new OperatorType(L, CREATE, "创建主机 <sb>${name}</sb>"),
+                new OperatorType(L, UPDATE, "修改主机 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除主机 <sb>${count}</sb> 条"),
+                new OperatorType(M, UPDATE_STATUS, "修改主机状态 <sb>${name}</sb> - <sb>${status}</sb>"),
+                new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb>"),
         };
     }
 

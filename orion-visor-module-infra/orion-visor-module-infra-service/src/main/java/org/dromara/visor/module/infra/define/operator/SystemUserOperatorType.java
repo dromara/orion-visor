@@ -16,9 +16,10 @@
 package org.dromara.visor.module.infra.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 系统用户 操作日志类型
@@ -47,13 +48,13 @@ public class SystemUserOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建用户 <sb>${username}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE, "修改用户 <sb>${username}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_STATUS, "修改用户状态 <sb>${username}</sb> - <sb>${statusName}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, GRANT_ROLE, "分配用户角色 <sb>${username}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, RESET_PASSWORD, "重置用户密码 <sb>${username}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除用户 <sb>${username}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, OFFLINE, "下线用户会话 <sb>${username}</sb>"),
+                new OperatorType(L, CREATE, "创建用户 <sb>${username}</sb>"),
+                new OperatorType(M, UPDATE, "修改用户 <sb>${username}</sb>"),
+                new OperatorType(M, UPDATE_STATUS, "修改用户状态 <sb>${username}</sb> - <sb>${statusName}</sb>"),
+                new OperatorType(M, GRANT_ROLE, "分配用户角色 <sb>${username}</sb>"),
+                new OperatorType(H, RESET_PASSWORD, "重置用户密码 <sb>${username}</sb>"),
+                new OperatorType(H, DELETE, "删除用户 <sb>${username}</sb>"),
+                new OperatorType(M, OFFLINE, "下线用户会话 <sb>${username}</sb>"),
         };
     }
 

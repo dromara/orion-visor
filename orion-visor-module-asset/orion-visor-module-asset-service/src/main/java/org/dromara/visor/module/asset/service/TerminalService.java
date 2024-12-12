@@ -84,7 +84,7 @@ public interface TerminalService {
      * @param userId userId
      * @return session
      */
-    TerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
+    TerminalConnectDTO getTerminalConnectInfo(Long hostId, Long userId);
 
     /**
      * 使用用户配置获取连接信息
@@ -93,6 +93,6 @@ public interface TerminalService {
      * @param userId userId
      * @return session
      */
-    TerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
+    TerminalConnectDTO getTerminalConnectInfo(HostDO host, Long userId);
 
 }

@@ -121,12 +121,14 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         execRequest.setUserId(userId);
         execRequest.setUsername(user.getUsername());
         execRequest.setSource(ExecSourceEnum.BATCH.name());
+        execRequest.setExecMode(ExecModeEnum.MANUAL.name());
         return this.execCommandWithSource(execRequest);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ExecLogVO execCommandWithSource(ExecCommandExecDTO request) {
+        log.info("ExecService.execCommandWithSource start params: {}", JSON.toJSONString(request));
         String command = request.getCommand();
         List<Long> hostIdList = request.getHostIdList();
         // 查询主机信息

@@ -131,7 +131,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -164,7 +164,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();

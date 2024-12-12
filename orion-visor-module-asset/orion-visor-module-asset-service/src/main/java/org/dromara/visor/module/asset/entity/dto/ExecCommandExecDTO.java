@@ -49,6 +49,9 @@ public class ExecCommandExecDTO {
     @Schema(description = "来源id")
     private Long sourceId;
 
+    @Schema(description = "执行方式")
+    private String execMode;
+
     @Schema(description = "执行序列")
     private Integer execSeq;
 
