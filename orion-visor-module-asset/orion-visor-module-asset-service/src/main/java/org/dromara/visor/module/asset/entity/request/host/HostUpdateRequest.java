@@ -44,6 +44,11 @@ public class HostUpdateRequest implements Serializable {
     private Long id;
 
     @NotBlank
+    @Size(max = 12)
+    @Schema(description = "系统类型")
+    private String osType;
+
+    @NotBlank
     @Size(max = 64)
     @Schema(description = "主机名称")
     private String name;

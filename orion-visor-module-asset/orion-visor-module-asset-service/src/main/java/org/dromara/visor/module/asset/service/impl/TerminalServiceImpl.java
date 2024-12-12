@@ -229,7 +229,7 @@ public class TerminalServiceImpl implements TerminalService {
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setHostPort(host.getPort());
-        conn.setOsType(config.getOsType());
+        conn.setOsType(host.getOsType());
         conn.setTimeout(config.getConnectTimeout());
         conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());

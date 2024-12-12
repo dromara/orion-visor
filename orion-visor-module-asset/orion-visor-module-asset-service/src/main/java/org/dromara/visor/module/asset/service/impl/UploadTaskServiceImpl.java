@@ -394,10 +394,14 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         if (containsEnv) {
             // 获取主机配置信息
             Map<Long, HostSshConfigModel> hostConfigMap = hostConfigService.buildHostConfigMap(hosts, HostTypeEnum.SSH);
-            hostConfigMap.forEach((k, v) -> {
+            for (HostDO host : hosts) {
+                Long id = host.getId();
                 // 替换占位符
-                String username = v.getUsername();
-                String home = PathUtils.getHomePath(HostSshOsTypeEnum.isWindows(v.getOsType()), username);
+                String username = Optional.ofNullable(id)
+                        .map(hostConfigMap::get)
+                        .map(HostSshConfigModel::getUsername)
+                        .orElse(Const.EMPTY);
+                String home = PathUtils.getHomePath(HostSshOsTypeEnum.isWindows(host.getOsType()), username);
                 // 替换环境变量路径
                 Map<String, String> env = Maps.newMap(4);
                 env.put(ExtraFieldConst.USERNAME, username);
@@ -405,9 +409,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                 // 设置主机上传路径
                 String realRemotePath = Files1.getPath(Strings.format(remotePath, env));
                 for (UploadTaskFileRequest file : files) {
-                    realRemoteFilePathMap.put(k, file.getFileId(), Files1.getPath(realRemotePath, file.getFilePath()));
+                    realRemoteFilePathMap.put(id, file.getFileId(), Files1.getPath(realRemotePath, file.getFilePath()));
                 }
-            });
+            }
         } else {
             // 无占位符
             for (UploadTaskFileRequest file : files) {

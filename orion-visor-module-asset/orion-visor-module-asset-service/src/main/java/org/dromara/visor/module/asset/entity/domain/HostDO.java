@@ -49,6 +49,10 @@ public class HostDO extends BaseDO {
     @TableField("type")
     private String type;
 
+    @Schema(description = "系统类型")
+    @TableField("os_type")
+    private String osType;
+
     @Schema(description = "主机名称")
     @TableField("name")
     private String name;

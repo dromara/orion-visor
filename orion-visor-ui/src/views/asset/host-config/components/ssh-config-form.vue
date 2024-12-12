@@ -26,14 +26,6 @@
               label-align="right"
               :auto-label-width="true"
               :rules="rules">
-        <!-- 系统类型 -->
-        <a-form-item field="osType"
-                     label="系统类型"
-                     :hide-asterisk="true">
-          <a-select v-model="formModel.osType"
-                    :options="toOptions(sshOsTypeKey)"
-                    placeholder="请选择系统类型" />
-        </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username"
                      label="用户名"
@@ -128,7 +120,7 @@
   import type { HostSshConfig } from '../types/const';
   import type { HostConfigQueryResponse } from '@/api/asset/host';
   import { ref, watch } from 'vue';
-  import { sshAuthTypeKey, sshOsTypeKey, SshAuthType } from '../types/const';
+  import { sshAuthTypeKey, SshAuthType } from '../types/const';
   import { useDictStore } from '@/store';
   import rules from '../types/ssh-form.rules';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
@@ -144,7 +136,6 @@
 
   const formRef = ref();
   const formModel = ref<HostSshConfig>({
-    osType: undefined,
     username: undefined,
     password: undefined,
     authType: SshAuthType.PASSWORD,

@@ -49,6 +49,9 @@ public class HostVO implements Serializable {
     @Schema(description = "主机类型")
     private String type;
 
+    @Schema(description = "系统类型")
+    private String osType;
+
     @Schema(description = "主机名称")
     private String name;
 

@@ -398,6 +398,7 @@ public class HostServiceImpl implements HostService {
                 .like(HostDO::getAddress, request.getAddress())
                 .eq(HostDO::getStatus, request.getStatus())
                 .eq(HostDO::getType, request.getType())
+                .eq(HostDO::getOsType, request.getOsType())
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .eq(HostDO::getId, searchValue).or()
                         .like(HostDO::getName, searchValue).or()

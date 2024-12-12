@@ -60,7 +60,6 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
         return HostSshConfigModel.builder()
                 .username(USERNAME)
                 .authType(HostSshAuthTypeEnum.PASSWORD.name())
-                .osType(HostSshOsTypeEnum.LINUX.name())
                 .connectTimeout(Const.MS_S_10)
                 .charset(Const.UTF_8)
                 .fileNameCharset(Const.UTF_8)

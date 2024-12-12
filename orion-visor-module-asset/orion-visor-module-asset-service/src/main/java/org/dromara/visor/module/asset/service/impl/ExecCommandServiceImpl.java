@@ -259,7 +259,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         // 脚本路径
         String scriptPath = null;
         if (ScriptExecEnum.isEnabled(execLog.getScriptExec())) {
-            scriptPath = this.buildScriptPath(config.getUsername(), config.getOsType(), execId, hostId);
+            scriptPath = this.buildScriptPath(config.getUsername(), host.getOsType(), execId, hostId);
         }
         // 获取参数
         String parameter = JSON.toJSONString(this.getHostParams(builtinParams, host, config, scriptPath));
@@ -328,7 +328,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         params.put("hostUsername", config.getUsername());
-        params.put("osType", config.getOsType());
+        params.put("osType", host.getOsType());
         params.put("charset", config.getCharset());
         params.put("scriptPath", scriptPath);
         return params;

@@ -37,6 +37,7 @@ public interface HostDAO extends IMapper<HostDO> {
     List<SFunction<HostDO, ?>> BASE_COLUMN = Arrays.asList(
             HostDO::getId,
             HostDO::getType,
+            HostDO::getOsType,
             HostDO::getName,
             HostDO::getCode,
             HostDO::getAddress,

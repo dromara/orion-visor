@@ -5,6 +5,11 @@ export const type = [{
   message: '请选择主机类型'
 }] as FieldRule[];
 
+export const osType = [{
+  required: true,
+  message: '请选择系统类型'
+}] as FieldRule[];
+
 export const name = [{
   required: true,
   message: '请输入主机名称'
@@ -46,6 +51,7 @@ export const tags = [{
 
 export default {
   type,
+  osType,
   name,
   code,
   address,

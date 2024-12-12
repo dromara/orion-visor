@@ -47,6 +47,11 @@ public class HostCreateRequest implements Serializable {
     private String type;
 
     @NotBlank
+    @Size(max = 12)
+    @Schema(description = "系统类型")
+    private String osType;
+
+    @NotBlank
     @Size(max = 64)
     @Schema(description = "主机名称")
     private String name;
