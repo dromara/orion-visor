@@ -22,7 +22,7 @@ import org.dromara.visor.framework.common.entity.PageRequest;
 import javax.validation.constraints.NotNull;
 
 /**
- * 设置计划任务执行用户 查询请求对象
+ * 修改计划任务执行用户 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.3
@@ -33,8 +33,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "ExecJobSetExecUserRequest", description = "设置计划任务执行用户 查询请求对象")
-public class ExecJobSetExecUserRequest extends PageRequest {
+@Schema(name = "ExecJobUpdateExecUserRequest", description = "修改计划任务执行用户 查询请求对象")
+public class ExecJobUpdateExecUserRequest extends PageRequest {
 
     @NotNull
     @Schema(description = "id")

@@ -146,13 +146,6 @@
                     @click="emits('openDetail', record.id)">
             详情
           </a-button>
-          <!-- 修改 -->
-          <a-button v-permission="['asset:exec-job:update']"
-                    type="text"
-                    size="mini"
-                    @click="emits('openUpdate', record.id)">
-            修改
-          </a-button>
           <!-- 手动触发 -->
           <a-popconfirm content="确认要手动触发吗?"
                         position="left"
@@ -176,6 +169,24 @@
               删除
             </a-button>
           </a-popconfirm>
+          <!-- 更多 -->
+          <a-dropdown trigger="hover" :popup-max-height="false">
+            <a-button type="text" size="mini">
+              更多
+            </a-button>
+            <template #content>
+              <!-- 修改任务 -->
+              <a-doption v-permission="['asset:exec-job:update']"
+                         @click="emits('openUpdate', record.id)">
+                <span class="more-doption normal">修改任务</span>
+              </a-doption>
+              <!-- 修改执行用户 -->
+              <a-doption v-permission="['asset:exec-job:update-exec-user']"
+                         @click="emits('updateExecUser', record)">
+                <span class="more-doption normal">修改执行用户</span>
+              </a-doption>
+            </template>
+          </a-dropdown>
         </div>
       </template>
     </a-table>
@@ -202,7 +213,7 @@
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'testCron']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'updateExecUser', 'testCron']);
 
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();

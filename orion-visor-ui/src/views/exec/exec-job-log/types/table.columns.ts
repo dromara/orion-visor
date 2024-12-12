@@ -23,6 +23,13 @@ const columns = [
     minWidth: 238,
     ellipsis: true,
   }, {
+    title: '执行用户',
+    dataIndex: 'username',
+    slotName: 'username',
+    align: 'left',
+    width: 128,
+    ellipsis: true,
+  }, {
     title: '执行状态',
     dataIndex: 'status',
     slotName: 'status',

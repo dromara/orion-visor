@@ -141,6 +141,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                 .username(request.getUsername())
                 .source(request.getSource())
                 .sourceId(request.getSourceId())
+                .execMode(request.getExecMode())
                 .execSeq(request.getExecSeq())
                 .description(Strings.ifBlank(request.getDescription(), () -> {
                     if (command.length() < DESC_OMIT + Const.OMIT.length()) {

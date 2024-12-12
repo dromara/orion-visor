@@ -118,6 +118,28 @@
           {{ record.command }}
         </span>
       </template>
+      <!-- 执行用户 -->
+      <template #username="{ record }">
+        <div class="flex-center">
+          <!-- 执行用户 -->
+          <span :title="record.username">
+            {{ record.username }}
+          </span>
+          <!-- 手动触发 -->
+          <a-tooltip v-if="ExecMode.MANUAL === record.execMode"
+                     position="top"
+                     content="手动触发"
+                     mini>
+            <a-tag class="ml8"
+                   style="width: 28px"
+                   color="pinkpurple">
+              <template #icon>
+                <icon-user />
+              </template>
+            </a-tag>
+          </a-tooltip>
+        </div>
+      </template>
       <!-- 执行状态 -->
       <template #status="{ record }">
         <a-tag :color="getDictValue(execStatusKey, record.status, 'color')">
@@ -160,7 +182,7 @@
                       type="text"
                       size="mini"
                       status="danger"
-                      :disabled="record.status !== execStatus.WAITING && record.status !== execStatus.RUNNING">
+                      :disabled="record.status !== ExecStatus.WAITING && record.status !== ExecStatus.RUNNING">
               中断
             </a-button>
           </a-popconfirm>
@@ -202,7 +224,7 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { execStatus, execStatusKey } from '@/components/exec/log/const';
+  import { ExecStatus, execStatusKey, ExecMode } from '@/components/exec/log/const';
   import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
@@ -267,7 +289,6 @@
     }
   };
 
-
   // 中断执行
   const doInterruptExecJob = async (record: ExecLogQueryResponse) => {
     try {
@@ -277,7 +298,7 @@
         logId: record.id
       });
       Message.success('已中断');
-      record.status = execStatus.COMPLETED;
+      record.status = ExecStatus.COMPLETED;
     } catch (e) {
     } finally {
       setLoading(false);
@@ -310,7 +331,7 @@
   // 加载状态
   const pullJobStatus = async () => {
     const unCompleteIdList = tableRenderData.value
-      .filter(s => s.status === execStatus.WAITING || s.status === execStatus.RUNNING)
+      .filter(s => s.status === ExecStatus.WAITING || s.status === ExecStatus.RUNNING)
       .map(s => s.id);
     if (!unCompleteIdList.length) {
       return;

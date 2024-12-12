@@ -5,6 +5,7 @@
                     @open-add="() => drawer.openAdd()"
                     @open-update="(e) => drawer.openUpdate(e)"
                     @open-detail="(e) => detail.open(e)"
+                    @update-exec-user="(e) => execUserModal.open(e)"
                     @test-cron="openNextCron" />
     <!-- 添加修改模态框 -->
     <exec-job-form-drawer ref="drawer"
@@ -16,6 +17,8 @@
                           @gen-cron="(e) => genModal.open(e)" />
     <!-- 任务详情模态框 -->
     <exec-job-detail-drawer ref="detail" />
+    <!-- 修改执行用户模态框 -->
+    <exec-user-update-modal ref="execUserModal" />
     <!-- cron 执行时间模态框 -->
     <cron-next-modal ref="nextCron" />
     <!-- cron 生成模态框 -->
@@ -43,6 +46,7 @@
   import { CronNextTimes, dictKeys } from './types/const';
   import ExecJobTable from './components/exec-job-table.vue';
   import ExecJobFormDrawer from './components/exec-job-form-drawer.vue';
+  import ExecUserUpdateModal from './components/exec-user-update-modal.vue';
   import ExecJobDetailDrawer from './components/exec-job-detail-drawer.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
   import ExecTemplateModal from '@/components/exec/template/modal/index.vue';
@@ -53,6 +57,7 @@
   const table = ref();
   const drawer = ref();
   const detail = ref();
+  const execUserModal = ref();
   const nextCron = ref();
   const genModal = ref();
   const templateModal = ref();

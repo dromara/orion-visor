@@ -56,6 +56,14 @@ public interface ExecJobService {
     Integer updateExecJobStatus(ExecJobUpdateStatusRequest request);
 
     /**
+     * 修改执行用户
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer updateExecJobExecUser(ExecJobUpdateExecUserRequest request);
+
+    /**
      * 查询计划任务
      *
      * @param id id
@@ -77,14 +85,6 @@ public interface ExecJobService {
      * @return rows
      */
     DataGrid<ExecJobVO> getExecJobPage(ExecJobQueryRequest request);
-
-    /**
-     * 设置执行用户
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer setExecJobExecUser(ExecJobSetExecUserRequest request);
 
     /**
      * 获取下一个执行序列

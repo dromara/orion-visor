@@ -27,7 +27,7 @@
                color="arcoblue"
                title="持续时间">
           <template #icon>
-            <icon-loading v-if="host.status === execHostStatus.WAITING || host.status === execHostStatus.RUNNING" />
+            <icon-loading v-if="host.status === ExecHostStatus.WAITING || host.status === ExecHostStatus.RUNNING" />
             <icon-clock-circle v-else />
           </template>
           <span class="tag-value">{{ formatDuration(host.startTime, host.finishTime) || '0s' }}</span>
@@ -169,7 +169,7 @@
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecType, ILogAppender } from '../const';
   import { ref } from 'vue';
-  import { execHostStatus, execHostStatusKey } from '../const';
+  import { ExecHostStatus, execHostStatusKey } from '../const';
   import { formatDuration } from '@/utils';
   import { useDictStore } from '@/store';
   import { downloadExecCommandLogFile } from '@/api/exec/exec-command-log';

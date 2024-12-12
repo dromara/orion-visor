@@ -73,7 +73,7 @@
                     type="text"
                     size="mini"
                     status="danger"
-                    :disabled="record.status !== execHostStatus.WAITING && record.status !== execHostStatus.RUNNING">
+                    :disabled="record.status !== ExecHostStatus.WAITING && record.status !== ExecHostStatus.RUNNING">
             中断
           </a-button>
         </a-popconfirm>
@@ -103,7 +103,7 @@
 <script lang="ts" setup>
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
   import { deleteExecJobHostLog, interruptHostExecJob } from '@/api/exec/exec-job-log';
-  import { execHostStatusKey, execHostStatus } from '@/components/exec/log/const';
+  import { execHostStatusKey, ExecHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import columns from '@/views/exec/exec-command-log/types/host-table.columns';
@@ -139,7 +139,7 @@
         hostLogId: record.id
       });
       Message.success('已中断');
-      record.status = execHostStatus.INTERRUPTED;
+      record.status = ExecHostStatus.INTERRUPTED;
     } catch (e) {
     } finally {
       setLoading(false);

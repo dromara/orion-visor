@@ -97,6 +97,7 @@ public class ExecJobServiceImpl implements ExecJobService {
     @Transactional(rollbackFor = Exception.class)
     public Long createExecJob(ExecJobCreateRequest request) {
         log.info("ExecJobService-createExecJob request: {}", JSON.toJSONString(request));
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         // 验证表达式是否正确
         Cron.of(request.getExpression());
         Valid.valid(ScriptExecEnum::of, request.getScriptExec());
@@ -108,6 +109,10 @@ public class ExecJobServiceImpl implements ExecJobService {
         this.checkHostPermission(request.getHostIdList());
         // 插入任务
         record.setStatus(ExecJobStatusEnum.DISABLED.getStatus());
+        if (loginUser != null) {
+            record.setExecUserId(loginUser.getId());
+            record.setExecUsername(loginUser.getUsername());
+        }
         int effect = execJobDAO.insert(record);
         Long id = record.getId();
         // 设置任务主机
@@ -167,6 +172,31 @@ public class ExecJobServiceImpl implements ExecJobService {
         OperatorLogs.add(OperatorLogs.STATUS_NAME, status.getStatusName());
         // 设置 quartz 状态
         this.setQuartzJobStatus(record, true, ExecJobStatusEnum.ENABLED.equals(status));
+        return effect;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateExecJobExecUser(ExecJobUpdateExecUserRequest request) {
+        Long id = request.getId();
+        Long userId = request.getUserId();
+        log.info("ExecJobService-updateExecJobExecUser id: {}, userId: {}", id, userId);
+        // 查询任务
+        ExecJobDO job = execJobDAO.selectById(id);
+        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
+        // 查询用户
+        String username = systemUserApi.getUsernameById(userId);
+        Valid.notNull(username, ErrorMessage.USER_ABSENT);
+        // 修改任务
+        ExecJobDO update = new ExecJobDO();
+        update.setId(id);
+        update.setExecUserId(userId);
+        update.setExecUsername(username);
+        int effect = execJobDAO.updateById(update);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.NAME, job.getName());
+        OperatorLogs.add(OperatorLogs.USERNAME, username);
+        log.info("ExecJobService-setExecJobExecUser effect: {}", effect);
         return effect;
     }
 
@@ -237,30 +267,6 @@ public class ExecJobServiceImpl implements ExecJobService {
             });
         }
         return dataGrid;
-    }
-
-    @Override
-    public Integer setExecJobExecUser(ExecJobSetExecUserRequest request) {
-        Long id = request.getId();
-        Long userId = request.getUserId();
-        log.info("ExecJobService-setExecJobExecUser id: {}, userId: {}", id, userId);
-        // 查询任务
-        ExecJobDO job = execJobDAO.selectById(id);
-        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
-        // 查询用户
-        String username = systemUserApi.getUsernameById(userId);
-        Valid.notNull(username, ErrorMessage.USER_ABSENT);
-        // 修改任务
-        ExecJobDO update = new ExecJobDO();
-        update.setId(id);
-        update.setExecUserId(userId);
-        update.setExecUsername(username);
-        int effect = execJobDAO.updateById(update);
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.NAME, job.getName());
-        OperatorLogs.add(OperatorLogs.USERNAME, username);
-        log.info("ExecJobService-setExecJobExecUser effect: {}", effect);
-        return effect;
     }
 
     @Override

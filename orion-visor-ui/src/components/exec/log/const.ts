@@ -6,7 +6,7 @@ import type { ITerminalInitOnlyOptions, ITerminalOptions, Terminal } from '@xter
 export type ExecType = 'BATCH' | 'JOB';
 
 // 批量执行状态
-export const execStatus = {
+export const ExecStatus = {
   // 等待中
   WAITING: 'WAITING',
   // 运行中
@@ -18,7 +18,7 @@ export const execStatus = {
 };
 
 // 主机执行状态
-export const execHostStatus = {
+export const ExecHostStatus = {
   // 等待中
   WAITING: 'WAITING',
   // 运行中
@@ -31,6 +31,12 @@ export const execHostStatus = {
   TIMEOUT: 'TIMEOUT',
   // 已中断
   INTERRUPTED: 'INTERRUPTED',
+};
+
+// 执行模式
+export const ExecMode = {
+  MANUAL: 'MANUAL',
+  JOB: 'JOB'
 };
 
 // 执行状态 字典项

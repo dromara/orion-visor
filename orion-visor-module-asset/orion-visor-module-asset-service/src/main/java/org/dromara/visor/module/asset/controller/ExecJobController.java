@@ -108,12 +108,12 @@ public class ExecJobController {
     }
 
     @DemoDisableApi
-    @OperatorLog(ExecJobOperatorType.SET_EXEC_USER)
-    @PutMapping("/set-exec-user")
-    @Operation(summary = "设置计划任务执行用户")
-    @PreAuthorize("@ss.hasPermission('exec:exec-job:set-exec-user')")
-    public Integer setExecJobExecUser(@Validated @RequestBody ExecJobSetExecUserRequest request) {
-        return execJobService.setExecJobExecUser(request);
+    @OperatorLog(ExecJobOperatorType.UPDATE_EXEC_USER)
+    @PutMapping("/update-exec-user")
+    @Operation(summary = "修改计划任务执行用户")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job:update-exec-user')")
+    public Integer updateExecJobExecUser(@Validated @RequestBody ExecJobUpdateExecUserRequest request) {
+        return execJobService.updateExecJobExecUser(request);
     }
 
     @DemoDisableApi

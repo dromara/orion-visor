@@ -33,6 +33,14 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
+    title: '执行用户',
+    dataIndex: 'execUsername',
+    slotName: 'execUsername',
+    align: 'left',
+    ellipsis: true,
+    tooltip: true,
+    width: 124,
+  }, {
     title: '任务状态',
     dataIndex: 'status',
     slotName: 'status',

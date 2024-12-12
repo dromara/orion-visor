@@ -29,7 +29,7 @@
   import { onUnmounted, ref, nextTick, onMounted } from 'vue';
   import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
   import { getExecJobLogStatus } from '@/api/exec/exec-job-log';
-  import { dictKeys, execHostStatus, execStatus } from '../const';
+  import { dictKeys, ExecHostStatus, ExecStatus } from '../const';
   import { useDictStore } from '@/store';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
@@ -54,8 +54,8 @@
     execLog.value = record;
     currentHostExecId.value = record.hosts[0].id;
     // 定时查询执行状态
-    if (record.status === execStatus.WAITING ||
-      record.status === execStatus.RUNNING) {
+    if (record.status === ExecStatus.WAITING ||
+      record.status === ExecStatus.RUNNING) {
       // 等待一秒后先查询一下状态
       setTimeout(pullExecStatus, 1000);
       // 注册状态轮询
@@ -100,8 +100,8 @@
       }
     }
     // 已完成跳过
-    if (execLog.value.status === execStatus.COMPLETED ||
-      execLog.value.status === execStatus.FAILED) {
+    if (execLog.value.status === ExecStatus.COMPLETED ||
+      execLog.value.status === ExecStatus.FAILED) {
       closeClient();
     }
   };
@@ -114,8 +114,8 @@
     }
     hosts.forEach(s => {
       // 未完成自动设置完成时间为当前时间 用于展示使用时间
-      if (s.status === execHostStatus.WAITING ||
-        s.status === execHostStatus.RUNNING) {
+      if (s.status === ExecHostStatus.WAITING ||
+        s.status === ExecHostStatus.RUNNING) {
         if (!s.startTime) {
           s.startTime = Date.now();
         }

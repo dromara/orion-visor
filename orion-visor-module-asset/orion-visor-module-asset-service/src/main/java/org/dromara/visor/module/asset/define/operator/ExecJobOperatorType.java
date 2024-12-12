@@ -28,7 +28,7 @@ import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRi
  * @version 1.0.3
  * @since 2024-3-28 12:03
  */
-@Module("exec:exec-job")
+@Module("asset:exec-job")
 public class ExecJobOperatorType extends InitializingOperatorTypes {
 
     public static final String CREATE = "exec-job:create";
@@ -39,7 +39,7 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
 
     public static final String TRIGGER = "exec-job:trigger";
 
-    public static final String SET_EXEC_USER = "exec-job:set-exec-user";
+    public static final String UPDATE_EXEC_USER = "exec-job:update-exec-user";
 
     public static final String DELETE = "exec-job:delete";
 
@@ -54,7 +54,7 @@ public class ExecJobOperatorType extends InitializingOperatorTypes {
                 new OperatorType(M, UPDATE, "更新计划任务 <sb>${before}</sb>"),
                 new OperatorType(M, UPDATE_STATUS, "<sb>${statusName}</sb> 计划任务 <sb>${name}</sb>"),
                 new OperatorType(M, TRIGGER, "手动触发计划任务 <sb>${name}</sb>"),
-                new OperatorType(M, SET_EXEC_USER, "修改计划任务 <sb>${name}</sb> 执行用户为 <sb>${username}</sb>"),
+                new OperatorType(M, UPDATE_EXEC_USER, "修改计划任务 <sb>${name}</sb> 执行用户为 <sb>${username}</sb>"),
                 new OperatorType(H, DELETE, "删除计划任务 <sb>${name}</sb>"),
                 new OperatorType(H, IMPORT, "导入计划任务 <sb>${count}</sb> 条"),
                 new OperatorType(H, EXPORT, "导出计划任务 <sb>${count}</sb> 条"),

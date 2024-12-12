@@ -33,6 +33,14 @@ export interface ExecJobUpdateStatusRequest {
 }
 
 /**
+ * 更新计划任务执行用户
+ */
+export interface ExecJobUpdateExecUserRequest {
+  id?: number;
+  userId?: number;
+}
+
+/**
  * 计划任务查询请求
  */
 export interface ExecJobQueryRequest extends Pagination {
@@ -67,14 +75,6 @@ export interface ExecJobQueryResponse extends TableData {
 }
 
 /**
- * 设置计划任务执行用户
- */
-export interface ExecJobSetExecUserRequest {
-  id: number;
-  userId: number;
-}
-
-/**
  * 创建计划任务
  */
 export function createExecJob(request: ExecJobCreateRequest) {
@@ -96,6 +96,13 @@ export function updateExecJobStatus(request: ExecJobUpdateStatusRequest) {
 }
 
 /**
+ * 更新计划任务执行用户
+ */
+export function updateExecJobExecUser(request: ExecJobUpdateExecUserRequest) {
+  return axios.put<number>('/asset/exec-job/update-exec-user', request);
+}
+
+/**
  * 查询计划任务
  */
 export function getExecJob(id: number) {
@@ -114,13 +121,6 @@ export function getExecJobList() {
  */
 export function getExecJobPage(request: ExecJobQueryRequest) {
   return axios.post<DataGrid<ExecJobQueryResponse>>('/asset/exec-job/query', request);
-}
-
-/**
- * 设置计划任务执行用户
- */
-export function setExecJobExecUser(request: ExecJobSetExecUserRequest) {
-  return axios.put<number>('/exec/exec-job/set-exec-user', request);
 }
 
 /**
