@@ -106,7 +106,7 @@
               @click="copy(record.command, true)">
           <icon-copy />
         </span>
-        <span>{{ record.command }}</span>
+        <span :title="record.command">{{ record.command }}</span>
       </template>
       <!-- 任务状态 -->
       <template #status="{ record }">

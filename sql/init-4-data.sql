@@ -1,6 +1,6 @@
 -- 默认管理员账号
 -- 账号: admin 密码: admin
-INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'INIT', NULL, NOW(), NOW(), '1', '1', 0);
+INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NOW(), NOW(), '1', '1', 0);
 
 -- 角色配置
 INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, '2023-07-16 21:13:14', '2023-07-17 17:31:29', '1', '1', 0);

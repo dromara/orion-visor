@@ -81,7 +81,9 @@
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 模板命令 -->
       <template #command="{ record }">
-        <span class="copy-left" @click="copy(record.command, true)">
+        <span class="copy-left"
+              title="复制"
+              @click="copy(record.command, true)">
           <icon-copy />
         </span>
         <span :title="record.command">{{ record.command }}</span>
