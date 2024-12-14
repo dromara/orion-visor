@@ -47,7 +47,7 @@ import java.util.Map;
 @Slf4j
 public abstract class TransferSession implements ITransferSession {
 
-    protected static final AppSftpConfig SFTP_CONFIG = SpringHolder.getBean(AppSftpConfig.class);
+    protected static final AppSftpConfig sftpConfig = SpringHolder.getBean(AppSftpConfig.class);
 
     protected final TerminalConnectDTO connectInfo;
 

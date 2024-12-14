@@ -37,7 +37,7 @@ import java.util.function.Function;
  */
 public class Valid extends cn.orionsec.kit.lang.utils.Valid {
 
-    private static final Validator VALIDATOR = SpringHolder.getBean(Validator.class);
+    private static final Validator validator = SpringHolder.getBean(Validator.class);
 
     public static <T> T notNull(T object) {
         return notNull(object, ErrorMessage.PARAM_MISSING);
@@ -123,7 +123,7 @@ public class Valid extends cn.orionsec.kit.lang.utils.Valid {
     public static <T> T valid(T obj, Class<?>... groups) {
         notNull(obj, ErrorMessage.PARAM_MISSING);
         // 验证对象
-        Set<ConstraintViolation<T>> set = VALIDATOR.validate(obj, groups);
+        Set<ConstraintViolation<T>> set = validator.validate(obj, groups);
         if (!set.isEmpty()) {
             throw new ConstraintViolationException(set);
         }

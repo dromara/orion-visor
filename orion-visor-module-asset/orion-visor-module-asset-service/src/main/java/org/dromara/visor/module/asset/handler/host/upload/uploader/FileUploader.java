@@ -15,6 +15,9 @@
  */
 package org.dromara.visor.module.asset.handler.host.upload.uploader;
 
+import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.collect.Maps;
+import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
@@ -22,14 +25,19 @@ import cn.orionsec.kit.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.framework.common.constant.ErrorMessage;
+import org.dromara.visor.framework.common.constant.ExtraFieldConst;
 import org.dromara.visor.framework.common.enums.EndpointDefine;
 import org.dromara.visor.framework.common.file.FileClient;
+import org.dromara.visor.framework.common.utils.PathUtils;
 import org.dromara.visor.module.asset.dao.UploadTaskFileDAO;
 import org.dromara.visor.module.asset.define.config.AppSftpConfig;
 import org.dromara.visor.module.asset.entity.domain.UploadTaskFileDO;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
+import org.dromara.visor.module.asset.enums.HostOsTypeEnum;
 import org.dromara.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import org.dromara.visor.module.asset.handler.host.jsch.SessionStores;
+import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadConfigDTO;
 import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import org.dromara.visor.module.asset.service.TerminalService;
 import org.dromara.visor.module.asset.utils.SftpUtils;
@@ -38,6 +46,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -54,9 +63,11 @@ public class FileUploader implements IFileUploader {
 
     private static final UploadTaskFileDAO uploadTaskFileDAO = SpringHolder.getBean(UploadTaskFileDAO.class);
 
-    private static final AppSftpConfig SFTP_CONFIG = SpringHolder.getBean(AppSftpConfig.class);
+    private static final AppSftpConfig sftpConfig = SpringHolder.getBean(AppSftpConfig.class);
 
     private static final FileClient localFileClient = SpringHolder.getBean("localFileClient");
+
+    private TerminalConnectDTO connectInfo;
 
     private SessionStore sessionStore;
 
@@ -65,6 +76,8 @@ public class FileUploader implements IFileUploader {
     private final Long taskId;
 
     private final Long hostId;
+
+    private final FileUploadConfigDTO config;
 
     @Getter
     private final List<FileUploadFileItemDTO> files;
@@ -77,10 +90,11 @@ public class FileUploader implements IFileUploader {
 
     private volatile boolean closed;
 
-    public FileUploader(Long taskId, Long hostId, List<FileUploadFileItemDTO> files) {
-        this.taskId = taskId;
-        this.hostId = hostId;
-        this.files = files;
+    public FileUploader(FileUploadConfigDTO config) {
+        this.taskId = config.getTaskId();
+        this.hostId = config.getHostId();
+        this.files = config.getFiles();
+        this.config = config;
     }
 
     @Override
@@ -91,6 +105,8 @@ public class FileUploader implements IFileUploader {
             if (!run) {
                 return;
             }
+            // 计算实际上传路径
+            this.calcRemotePath();
             // 上传文件
             for (FileUploadFileItemDTO file : files) {
                 if (closed) {
@@ -116,7 +132,7 @@ public class FileUploader implements IFileUploader {
         log.info("HostFileUploader.initSession start taskId: {}, hostId: {}", taskId, hostId);
         try {
             // 打开会话
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId);
+            this.connectInfo = terminalService.getTerminalConnectInfo(hostId, config.getUserId());
             this.sessionStore = SessionStores.openSessionStore(connectInfo);
             this.executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -125,9 +141,29 @@ public class FileUploader implements IFileUploader {
         } catch (Exception e) {
             log.error("HostFileUploader.initSession error taskId: {}, hostId: {}", taskId, hostId, e);
             // 修改状态
-            uploadTaskFileDAO.updateStatusByTaskHostId(taskId, hostId, UploadTaskFileStatusEnum.FAILED.name());
+            uploadTaskFileDAO.updateToFailedByTaskHostId(taskId, hostId, ErrorMessage.getErrorMessage(e, ErrorMessage.CONNECT_ERROR));
             files.forEach(s -> s.setStatus(UploadTaskFileStatusEnum.FAILED.name()));
             return false;
+        }
+    }
+
+    /**
+     * 计算实际上传路径
+     */
+    public void calcRemotePath() {
+        // 计算上传目录
+        String remotePath = config.getRemotePath();
+        boolean containsEnv = remotePath.contains(Const.DOLLAR);
+        if (containsEnv) {
+            // 替换占位符
+            String username = connectInfo.getUsername();
+            String home = PathUtils.getHomePath(HostOsTypeEnum.isWindows(connectInfo.getOsType()), username);
+            // 替换环境变量路径
+            Map<String, String> env = Maps.newMap(4);
+            env.put(ExtraFieldConst.USERNAME, username);
+            env.put(ExtraFieldConst.HOME, home);
+            // 设置主机上传路径
+            config.setRemotePath(Files1.getPath(Strings.format(remotePath, env)));
         }
     }
 
@@ -138,18 +174,18 @@ public class FileUploader implements IFileUploader {
      */
     private void uploadFile(FileUploadFileItemDTO file) {
         log.info("HostFileUploader.uploadFile start taskId: {}, hostId: {}, id: {}", taskId, hostId, file.getId());
-        // 修改状态
-        this.updateStatus(file, UploadTaskFileStatusEnum.UPLOADING);
+        String path = Files1.getPath(config.getRemotePath(), file.getFilePath());
         try {
+            // 修改为上传中
+            this.updateToUploading(file, path);
             // 获取本地文件路径
             String endpoint = EndpointDefine.UPLOAD_SWAP.format(taskId);
             String localPath = localFileClient.getReturnPath(endpoint + Const.SLASH + file.getFileId());
             // 检查文件是否存在
-            String remotePath = file.getRemotePath();
-            SftpUtils.checkUploadFilePresent(SFTP_CONFIG, executor, remotePath);
+            SftpUtils.checkUploadFilePresent(sftpConfig, executor, path);
             // 打开输出流
             this.inputStream = localFileClient.getContentInputStream(localPath);
-            this.outputStream = executor.openOutputStream(remotePath);
+            this.outputStream = executor.openOutputStream(path);
             // 传输
             byte[] buffer = new byte[executor.getBufferSize()];
             int read;
@@ -159,26 +195,26 @@ public class FileUploader implements IFileUploader {
             }
             outputStream.flush();
             // 修改状态
-            this.updateStatus(file, UploadTaskFileStatusEnum.FINISHED);
+            this.updateToFinished(file);
             log.info("HostFileUploader.uploadFile finish taskId: {}, hostId: {}, id: {}", taskId, hostId, file.getId());
         } catch (Exception e) {
-            log.info("HostFileUploader.uploadFile error taskId: {}, hostId: {}, id: {}, canceled: {}", taskId, hostId, file.getId(), canceled);
+            log.error("HostFileUploader.uploadFile error taskId: {}, hostId: {}, id: {}, canceled: {}", taskId, hostId, file.getId(), canceled, e);
             // 修改状态
             if (canceled) {
-                this.updateStatus(file, UploadTaskFileStatusEnum.CANCELED);
+                this.updateToCanceled(file);
             } else {
-                this.updateStatus(file, UploadTaskFileStatusEnum.FAILED);
+                this.updateToFailed(file, ErrorMessage.getErrorMessage(e, ErrorMessage.FILE_UPLOAD_ERROR));
             }
         } finally {
             // 释放文件
-            this.resetFile();
+            this.releaseFileResource();
         }
     }
 
     /**
-     * 释放文件
+     * 释放文件资源
      */
-    private void resetFile() {
+    private void releaseFileResource() {
         Streams.close(outputStream);
         Streams.close(inputStream);
     }
@@ -199,34 +235,70 @@ public class FileUploader implements IFileUploader {
             return;
         }
         // 修改状态
-        uploadTaskFileDAO.updateStatusByIdList(idList, UploadTaskFileStatusEnum.CANCELED.name());
+        uploadTaskFileDAO.updateToCanceledByIdList(idList);
     }
 
     /**
-     * 更新状态
+     * 修改为上传中
+     *
+     * @param file         file
+     * @param realFilePath realFilePath
+     */
+    private void updateToUploading(FileUploadFileItemDTO file, String realFilePath) {
+        UploadTaskFileDO record = this.getUpdateRecord(file, UploadTaskFileStatusEnum.UPLOADING);
+        record.setRealFilePath(realFilePath);
+        record.setStartTime(new Date());
+        uploadTaskFileDAO.updateById(record);
+    }
+
+    /**
+     * 修改为完成
+     *
+     * @param file file
+     */
+    private void updateToFinished(FileUploadFileItemDTO file) {
+        UploadTaskFileDO record = this.getUpdateRecord(file, UploadTaskFileStatusEnum.FINISHED);
+        record.setEndTime(new Date());
+        uploadTaskFileDAO.updateById(record);
+    }
+
+    /**
+     * 修改为失败
+     *
+     * @param file         file
+     * @param errorMessage errorMessage
+     */
+    private void updateToFailed(FileUploadFileItemDTO file, String errorMessage) {
+        UploadTaskFileDO record = this.getUpdateRecord(file, UploadTaskFileStatusEnum.FAILED);
+        record.setErrorMessage(errorMessage);
+        record.setEndTime(new Date());
+        uploadTaskFileDAO.updateById(record);
+    }
+
+    /**
+     * 修改为取消
+     *
+     * @param file file
+     */
+    private void updateToCanceled(FileUploadFileItemDTO file) {
+        UploadTaskFileDO record = this.getUpdateRecord(file, UploadTaskFileStatusEnum.CANCELED);
+        record.setEndTime(new Date());
+        uploadTaskFileDAO.updateById(record);
+    }
+
+    /**
+     * 获取修改记录
      *
      * @param file   file
      * @param status status
+     * @return record
      */
-    private void updateStatus(FileUploadFileItemDTO file, UploadTaskFileStatusEnum status) {
+    private UploadTaskFileDO getUpdateRecord(FileUploadFileItemDTO file, UploadTaskFileStatusEnum status) {
         file.setStatus(status.name());
         UploadTaskFileDO update = new UploadTaskFileDO();
         update.setId(file.getId());
         update.setStatus(status.name());
-        if (UploadTaskFileStatusEnum.UPLOADING.equals(status)) {
-            // 上传中
-            update.setStartTime(new Date());
-        } else if (UploadTaskFileStatusEnum.FINISHED.equals(status)) {
-            // 已完成
-            update.setEndTime(new Date());
-        } else if (UploadTaskFileStatusEnum.FAILED.equals(status)) {
-            // 已失败
-            update.setEndTime(new Date());
-        } else if (UploadTaskFileStatusEnum.CANCELED.equals(status)) {
-            // 已失败
-            update.setEndTime(new Date());
-        }
-        uploadTaskFileDAO.updateById(update);
+        return update;
     }
 
     @Override
@@ -247,9 +319,9 @@ public class FileUploader implements IFileUploader {
             return;
         }
         this.closed = true;
-        // 释放资源
-        Streams.close(outputStream);
-        Streams.close(inputStream);
+        // 释放文件资源
+        this.releaseFileResource();
+        // 释放连接资源
         Streams.close(executor);
         Streams.close(sessionStore);
     }

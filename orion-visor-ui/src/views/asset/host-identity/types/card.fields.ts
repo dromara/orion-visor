@@ -11,14 +11,14 @@ const fieldConfig = {
       dataIndex: 'id',
       slotName: 'id',
     }, {
-      label: '类型',
-      dataIndex: 'type',
-      slotName: 'type',
-    }, {
       label: '用户名',
       dataIndex: 'username',
       slotName: 'username',
       ellipsis: true,
+    }, {
+      label: '类型',
+      dataIndex: 'type',
+      slotName: 'type',
     }, {
       label: '主机密钥',
       dataIndex: 'keyId',

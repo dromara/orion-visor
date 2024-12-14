@@ -119,6 +119,8 @@ public interface ErrorMessage {
 
     String AUTH_ERROR = "认证失败";
 
+    String FILE_UPLOAD_ERROR = "文件上传失败";
+
     String SCRIPT_UPLOAD_ERROR = "脚本上传失败";
 
     String EXEC_ERROR = "执行失败";

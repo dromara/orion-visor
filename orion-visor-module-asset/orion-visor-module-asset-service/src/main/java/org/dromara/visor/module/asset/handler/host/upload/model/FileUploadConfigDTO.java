@@ -20,8 +20,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * 文件上传文件对象
+ * 文件上传配置
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -31,31 +33,31 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileUploadFileItemDTO {
+public class FileUploadConfigDTO {
 
     /**
-     * id
+     * taskId
      */
-    private Long id;
+    private Long taskId;
 
     /**
-     * fileId
+     * hostId
      */
-    private String fileId;
+    private Long hostId;
 
     /**
-     * 文件路径
+     * userId
      */
-    private String filePath;
+    private Long userId;
 
     /**
-     * 当前大小
+     * 上传路径
      */
-    private Long current;
+    private String remotePath;
 
     /**
-     * 状态
+     * 文件
      */
-    private String status;
+    private List<FileUploadFileItemDTO> files;
 
 }

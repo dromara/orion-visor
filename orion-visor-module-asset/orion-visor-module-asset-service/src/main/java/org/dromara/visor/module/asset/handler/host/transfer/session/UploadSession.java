@@ -55,7 +55,7 @@ public class UploadSession extends TransferSession {
             // 检查连接
             this.init();
             // 检查文件是否存在
-            SftpUtils.checkUploadFilePresent(SFTP_CONFIG, executor, path);
+            SftpUtils.checkUploadFilePresent(sftpConfig, executor, path);
             // 打开输出流
             this.outputStream = executor.openOutputStream(path);
             // 响应结果

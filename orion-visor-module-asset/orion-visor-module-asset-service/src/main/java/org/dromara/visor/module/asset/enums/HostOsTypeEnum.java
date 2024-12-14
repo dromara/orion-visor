@@ -27,7 +27,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum HostSshOsTypeEnum {
+public enum HostOsTypeEnum {
 
     /**
      * linux
@@ -43,11 +43,11 @@ public enum HostSshOsTypeEnum {
 
     private final String scriptSuffix;
 
-    public static HostSshOsTypeEnum of(String type) {
+    public static HostOsTypeEnum of(String type) {
         if (type == null) {
             return LINUX;
         }
-        for (HostSshOsTypeEnum value : values()) {
+        for (HostOsTypeEnum value : values()) {
             if (value.name().equals(type)) {
                 return value;
             }

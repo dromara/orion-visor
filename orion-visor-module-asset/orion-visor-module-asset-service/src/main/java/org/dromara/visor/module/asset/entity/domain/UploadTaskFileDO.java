@@ -75,6 +75,10 @@ public class UploadTaskFileDO extends BaseDO {
     @TableField("status")
     private String status;
 
+    @Schema(description = "错误信息")
+    @TableField("error_message")
+    private String errorMessage;
+
     @Schema(description = "开始时间")
     @TableField("start_time")
     private Date startTime;

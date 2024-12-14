@@ -31,7 +31,11 @@
             </div>
             <!-- 进度 -->
             <a-tooltip position="left"
-                       :content="file.fileSize ? ((file.current || 0) / file.fileSize * 100).toFixed(2) + '%' : '0%'"
+                       :content="(
+                         file.status === UploadTaskFileStatus.FAILED
+                         ? (file.errorMessage || '')
+                         : (file.fileSize ? ((file.current || 0) / file.fileSize * 100).toFixed(2) + '%' : '0%')
+                       )"
                        mini>
               <a-progress type="circle"
                           size="mini"

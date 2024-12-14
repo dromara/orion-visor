@@ -46,9 +46,9 @@
       <a-descriptions-item label="脚本执行">
         {{ record.scriptExec === EnabledStatus.ENABLED ? '是' : '否' }}
       </a-descriptions-item>
-      <!-- 创建时间 -->
-      <a-descriptions-item label="创建时间">
-        {{ dateFormat(new Date(record.createTime)) }}
+      <!-- 执行用户 -->
+      <a-descriptions-item label="执行用户">
+        {{ record.execUsername }}
       </a-descriptions-item>
       <!-- 修改时间 -->
       <a-descriptions-item label="修改时间">

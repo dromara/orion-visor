@@ -12,6 +12,8 @@
            :on-before-ok="handlerOk"
            @close="handleClose">
     <a-spin class="full" :loading="loading">
+      <!-- 提示 -->
+      <a-alert class="mb16">修改后将使用此用户的权限以及主机配置执行此任务</a-alert>
       <a-form :model="formModel"
               label-align="right"
               :auto-label-width="true">

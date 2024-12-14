@@ -240,8 +240,9 @@
       for (let file of host.files) {
         const fileStatus = taskStatusData.files.find(s => s.id === file.id);
         if (fileStatus) {
-          file.status = fileStatus.status;
           file.current = fileStatus.current;
+          file.status = fileStatus.status;
+          file.errorMessage = fileStatus.errorMessage;
         }
       }
     }

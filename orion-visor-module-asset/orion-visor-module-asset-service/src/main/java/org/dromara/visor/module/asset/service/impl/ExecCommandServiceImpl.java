@@ -382,12 +382,12 @@ public class ExecCommandServiceImpl implements ExecCommandService {
      * @return scriptPath
      */
     private String buildScriptPath(String username, String osType, Long logId, Long hostId) {
-        HostSshOsTypeEnum os = HostSshOsTypeEnum.of(osType);
+        HostOsTypeEnum os = HostOsTypeEnum.of(osType);
         String name = FileConst.EXEC
                 + "/" + logId
                 + "/" + hostId
                 + os.getScriptSuffix();
-        return PathUtils.buildAppPath(HostSshOsTypeEnum.WINDOWS.equals(os), username, FileConst.SCRIPT, name);
+        return PathUtils.buildAppPath(HostOsTypeEnum.WINDOWS.equals(os), username, FileConst.SCRIPT, name);
     }
 
 }
