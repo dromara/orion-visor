@@ -152,6 +152,7 @@
     // 非初始化则修改终端样式
     if (before) {
       Object.values(sessionManager.sessions)
+        .filter(Boolean)
         .filter(s => s.type === PanelSessionType.SSH.type)
         .map(s => s as ISshSession)
         .forEach(s => {

@@ -24,12 +24,6 @@
                           :actions="actions"
                           position="bottom" />
           </a-form-item>
-          <!-- 命令输入框 -->
-          <a-form-item field="commandInput" label="命令输入框">
-            <a-switch v-model="formModel.commandInput"
-                      :default-checked="true"
-                      type="round" />
-          </a-form-item>
           <!-- 终端连接状态 -->
           <a-form-item field="showStatus" label="终端连接状态">
             <a-switch v-model="formModel.connectStatus"

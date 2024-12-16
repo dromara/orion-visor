@@ -260,11 +260,6 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     public static class ActionBarSettingModel implements IJsonObject {
 
         /**
-         * 命令输入框
-         */
-        private Boolean commandInput;
-
-        /**
          * 连接状态
          */
         private Boolean connectStatus;

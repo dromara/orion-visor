@@ -4,6 +4,7 @@ import type { TerminalTheme } from '@/api/asset/terminal';
 
 export interface TerminalState {
   preference: TerminalPreference;
+  commandBarVisible: boolean;
   hosts: AuthorizedHostQueryResponse;
   tabManager: ITerminalTabManager;
   panelManager: ITerminalPanelManager;
@@ -38,7 +39,6 @@ export interface TerminalDisplaySetting {
 
 // 操作栏设置
 export interface TerminalActionBarSetting {
-  commandInput?: boolean;
   connectStatus?: boolean;
 
   [key: string]: unknown;

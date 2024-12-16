@@ -77,6 +77,7 @@
     document.body.setAttribute('terminal-theme', theme.dark ? 'dark' : 'light');
     // 修改终端主题
     Object.values(sessionManager.sessions)
+      .filter(Boolean)
       .filter(s => s.type === PanelSessionType.SSH.type)
       .map(s => s as ISshSession)
       .forEach(s => {

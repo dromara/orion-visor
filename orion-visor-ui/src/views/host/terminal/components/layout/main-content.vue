@@ -23,6 +23,8 @@
     </a-tabs>
     <!-- 承载页推荐 -->
     <empty-recommend v-else />
+    <!-- 底部发送命令 -->
+    <command-bar v-if="commandBarVisible" />
   </div>
 </template>
 
@@ -45,10 +47,11 @@
   import TerminalThemeSetting from '../setting/theme/terminal-theme-setting.vue';
   import TerminalGeneralSetting from '../setting/general/terminal-general-setting.vue';
   import TerminalShortcutSetting from '../setting/shortcut/terminal-shortcut-setting.vue';
+  import CommandBar from '../command-bar/index.vue';
 
-  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'screenshot']);
+  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'openCommandBar', 'screenshot']);
 
-  const { preference, tabManager, getCurrentSession } = useTerminalStore();
+  const { commandBarVisible, preference, tabManager, getCurrentSession } = useTerminalStore();
 
   // 监听 tab 切换
   watch(() => tabManager.active, (active, before) => {
@@ -110,6 +113,10 @@
       case TerminalShortcutKeys.OPEN_TRANSFER_LIST:
         // 打开文件传输列表
         emits('openTransferList');
+        break;
+      case TerminalShortcutKeys.OPEN_COMMAND_BAR:
+        // 打开发送命令
+        emits('openCommandBar');
         break;
       case TerminalShortcutKeys.SCREENSHOT:
         // 截图

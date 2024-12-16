@@ -21,6 +21,7 @@
                       @open-command-snippet="() => snippetRef.open()"
                       @open-path-bookmark="() => pathRef.open()"
                       @open-transfer-list="() => transferRef.open()"
+                      @open-command-bar="setCommandBarVisible(true)"
                       @screenshot="screenshot" />
       </main>
       <!-- 右侧操作栏 -->
@@ -28,6 +29,7 @@
         <right-sidebar @open-command-snippet="() => snippetRef.open()"
                        @open-path-bookmark="() => pathRef.open()"
                        @open-transfer-list="() => transferRef.open()"
+                       @open-command-bar="setCommandBarVisible(true)"
                        @screenshot="screenshot" />
       </div>
     </main>
@@ -75,7 +77,11 @@
   import '@/assets/style/host-terminal-layout.less';
   import '@xterm/xterm/css/xterm.css';
 
-  const { fetchPreference, getCurrentSession, openSession, preference, loadHosts, hosts, tabManager } = useTerminalStore();
+  const {
+    fetchPreference, getCurrentSession, openSession,
+    preference, loadHosts, hosts, tabManager,
+    setCommandBarVisible
+  } = useTerminalStore();
   const { loading, setLoading } = useLoading(true);
   const { enter: enterFull, exit: exitFull } = useFullscreen();
   const route = useRoute();

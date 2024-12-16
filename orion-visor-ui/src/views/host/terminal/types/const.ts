@@ -211,6 +211,8 @@ export const TerminalShortcutKeys = {
   OPEN_PATH_BOOKMARK: 'openPathBookmark',
   // 打开文件传输列表
   OPEN_TRANSFER_LIST: 'openTransferList',
+  // 打开发送命令
+  OPEN_COMMAND_BAR: 'openCommandBar',
   // 截图
   SCREENSHOT: 'screenshot',
   // 打开新建连接弹框
@@ -256,6 +258,10 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   }, {
     item: TerminalShortcutKeys.OPEN_TRANSFER_LIST,
     content: '打开文件传输列表',
+    type: TerminalShortcutType.GLOBAL
+  }, {
+    item: TerminalShortcutKeys.OPEN_COMMAND_BAR,
+    content: '打开发送命令',
     type: TerminalShortcutType.GLOBAL
   }, {
     item: TerminalShortcutKeys.SCREENSHOT,

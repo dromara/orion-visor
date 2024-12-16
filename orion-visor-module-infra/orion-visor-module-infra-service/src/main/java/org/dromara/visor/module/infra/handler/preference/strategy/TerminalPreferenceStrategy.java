@@ -115,7 +115,6 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .toJsonString();
         // 操作栏设置
         String actionBarSetting = TerminalPreferenceModel.ActionBarSettingModel.builder()
-                .commandInput(false)
                 .connectStatus(true)
                 .toTop(false)
                 .toBottom(false)
