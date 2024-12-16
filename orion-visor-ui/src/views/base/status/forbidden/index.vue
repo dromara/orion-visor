@@ -28,7 +28,7 @@
     top: 50%;
     left: 50%;
     margin-left: -96px;
-    margin-top: -124px;
+    margin-top: -128px;
     text-align: center;
   }
 </style>

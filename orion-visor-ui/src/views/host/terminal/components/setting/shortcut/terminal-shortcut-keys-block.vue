@@ -17,7 +17,7 @@
             <!-- 启用-修改中 -->
             <a-input v-if="item.editable && item.enabled"
                      v-model="item.shortcutKey"
-                     :ref="setAutoFocus as unknown as VNodeRef"
+                     :ref="setAutoFocus"
                      class="trigger-input"
                      size="small"
                      placeholder="请按下快捷键"
@@ -73,7 +73,6 @@
 
 <script lang="ts" setup>
   import type { TerminalShortcutKeyEditable } from '@/store/modules/terminal/types';
-  import type { VNodeRef } from 'vue';
   import { setAutoFocus } from '@/utils/dom';
   import { TerminalShortcutKeys } from '../../../types/const';
 

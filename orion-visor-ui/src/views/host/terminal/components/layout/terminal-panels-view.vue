@@ -115,7 +115,7 @@
 <style lang="less" scoped>
   .terminal-panels-container {
     width: 100%;
-    height: calc(100vh - var(--header-height));
+    height: 100%;
     position: relative;
     display: flex;
   }

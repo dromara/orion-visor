@@ -92,6 +92,7 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                         new TerminalPreferenceModel.ShortcutKeysModel("openCommandSnippet", true, true, true, "KeyC", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("openPathBookmark", true, true, true, "KeyP", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("openTransferList", true, true, true, "KeyT", true),
+                        new TerminalPreferenceModel.ShortcutKeysModel("openCommandBar", true, true, true, "KeyI", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("screenshot", true, true, true, "KeyS", true),
                         // 会话快捷键
                         new TerminalPreferenceModel.ShortcutKeysModel("openNewConnectModal", true, false, true, "KeyN", true),

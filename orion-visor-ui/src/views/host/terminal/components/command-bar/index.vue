@@ -22,8 +22,8 @@
       </div>
       <!-- 右侧按钮 -->
       <div class="command-header-right">
-        <!-- 隐藏 -->
-        <a-button size="mini" @click="setCommandBarVisible(false)">
+        <!-- 关闭 -->
+        <a-button size="mini" @click="close">
           <template #icon>
             <icon-down />
           </template>
@@ -34,8 +34,8 @@
       <!-- 命令框 -->
       <div class="command-input">
         <a-textarea v-model="text"
-                    placeholder="输入命令, F8 发送"
                     :auto-size="{ minRows: 3, maxRows: 3 }"
+                    placeholder="输入命令, F8 发送"
                     @keyup="checkCommandKey" />
       </div>
     </div>
@@ -52,7 +52,7 @@
   import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
 
-  const { setCommandBarVisible, appendCommandToCurrentSession } = useTerminalStore();
+  const { layoutState, appendCommandToCurrentSession } = useTerminalStore();
 
   const text = ref('');
 
@@ -74,11 +74,18 @@
     }
   };
 
+  // 关闭
+  const close = () => {
+    // 隐藏
+    layoutState.commandBar = false;
+  };
+
 </script>
 
 <style lang="less" scoped>
   .command-bar {
-    height: 122px;
+    height: 128px;
+    overflow: hidden;
   }
 
   .command-header {

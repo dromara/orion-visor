@@ -65,7 +65,10 @@ export default defineStore('terminal', {
         keys: []
       } as TerminalShortcutSetting,
     },
-    commandBarVisible: false,
+    layoutState: {
+      commandBar: false,
+      fullscreen: false,
+    },
     hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(),
     panelManager: new TerminalPanelManager(),
@@ -123,11 +126,6 @@ export default defineStore('terminal', {
       } catch (e) {
         Message.error('同步失败');
       }
-    },
-
-    // 修改命令发送显示
-    setCommandBarVisible(visible: boolean) {
-      this.commandBarVisible = visible;
     },
 
     // 加载主机列表

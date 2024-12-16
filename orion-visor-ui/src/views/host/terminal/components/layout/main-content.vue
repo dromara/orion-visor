@@ -1,30 +1,33 @@
 <template>
-  <div class="terminal-content">
-    <!-- 内容 tabs -->
-    <a-tabs v-if="tabManager.active"
-            v-model:active-key="tabManager.active"
-            class="main-tabs">
-      <a-tab-pane v-for="tab in tabManager.items"
-                  :key="tab.key"
-                  :title="tab.title">
-        <!-- 新建连接 -->
-        <new-connection-view v-if="tab.key === TerminalTabs.NEW_CONNECTION.key" />
-        <!-- 快捷键设置 -->
-        <terminal-shortcut-setting v-else-if="tab.key === TerminalTabs.SHORTCUT_SETTING.key" />
-        <!-- 显示设置 -->
-        <terminal-display-setting v-else-if="tab.key === TerminalTabs.DISPLAY_SETTING.key" />
-        <!-- 主题设置 -->
-        <terminal-theme-setting v-else-if="tab.key === TerminalTabs.THEME_SETTING.key" />
-        <!-- 终端设置 -->
-        <terminal-general-setting v-else-if="tab.key === TerminalTabs.TERMINAL_SETTING.key" />
-        <!-- 终端面板 -->
-        <terminal-panels-view v-else-if="tab.key === TerminalTabs.TERMINAL_PANEL.key" />
-      </a-tab-pane>
-    </a-tabs>
-    <!-- 承载页推荐 -->
-    <empty-recommend v-else />
+  <div class="main-content">
+    <!-- 内容部分 -->
+    <div class="main-content-wrapper" :style="{ height: `calc(100% - ${mainSubtractHeight})` }">
+      <!-- 内容 tabs -->
+      <a-tabs v-if="tabManager.active"
+              v-model:active-key="tabManager.active"
+              class="main-tabs">
+        <a-tab-pane v-for="tab in tabManager.items"
+                    :key="tab.key"
+                    :title="tab.title">
+          <!-- 新建连接 -->
+          <new-connection-view v-if="tab.key === TerminalTabs.NEW_CONNECTION.key" />
+          <!-- 快捷键设置 -->
+          <terminal-shortcut-setting v-else-if="tab.key === TerminalTabs.SHORTCUT_SETTING.key" />
+          <!-- 显示设置 -->
+          <terminal-display-setting v-else-if="tab.key === TerminalTabs.DISPLAY_SETTING.key" />
+          <!-- 主题设置 -->
+          <terminal-theme-setting v-else-if="tab.key === TerminalTabs.THEME_SETTING.key" />
+          <!-- 终端设置 -->
+          <terminal-general-setting v-else-if="tab.key === TerminalTabs.TERMINAL_SETTING.key" />
+          <!-- 终端面板 -->
+          <terminal-panels-view v-else-if="tab.key === TerminalTabs.TERMINAL_PANEL.key" />
+        </a-tab-pane>
+      </a-tabs>
+      <!-- 承载页推荐 -->
+      <empty-recommend v-else />
+    </div>
     <!-- 底部发送命令 -->
-    <command-bar v-if="commandBarVisible" />
+    <command-bar v-if="layoutState.commandBar && tabManager.active === TerminalTabs.TERMINAL_PANEL.key" />
   </div>
 </template>
 
@@ -38,7 +41,7 @@
   import type { ISshSession } from '../../types/define';
   import { TerminalTabs, TerminalShortcutKeys, PanelSessionType } from '../../types/const';
   import { useTerminalStore } from '@/store';
-  import { onMounted, onUnmounted, watch } from 'vue';
+  import { computed, onMounted, onUnmounted, watch } from 'vue';
   import { addEventListen, removeEventListen } from '@/utils/event';
   import EmptyRecommend from './empty-recommend.vue';
   import TerminalPanelsView from './terminal-panels-view.vue';
@@ -51,7 +54,21 @@
 
   const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'openCommandBar', 'screenshot']);
 
-  const { commandBarVisible, preference, tabManager, getCurrentSession } = useTerminalStore();
+  const { layoutState, preference, tabManager, getCurrentSession, sessionManager } = useTerminalStore();
+
+  // 内容部分减去的高度
+  const mainSubtractHeight = computed(() => {
+    let height = 0;
+    // 底部发送命令高度
+    if (layoutState.commandBar && tabManager.active === TerminalTabs.TERMINAL_PANEL.key) {
+      height += 128;
+    }
+    // 自适应
+    setTimeout(() => {
+      sessionManager.dispatchResize();
+    }, 200);
+    return `${height}px`;
+  });
 
   // 监听 tab 切换
   watch(() => tabManager.active, (active, before) => {
@@ -144,10 +161,15 @@
 </script>
 
 <style lang="less" scoped>
-  .terminal-content {
+  .main-content {
     width: 100%;
     height: 100%;
     position: relative;
+
+    &-wrapper {
+      width: 100%;
+      height: 100%;
+    }
 
     :deep(.main-tabs) {
       width: 100%;
@@ -166,7 +188,13 @@
         &::-webkit-scrollbar {
           display: none;
         }
+
+        .arco-tabs-content-list, .arco-tabs-pane {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
+
 </style>
