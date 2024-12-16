@@ -90,7 +90,12 @@
     editor?.setValue(value);
   };
 
-  defineExpose({ getValue, setValue });
+  // 聚焦
+  const focus = () => {
+    editor?.focus();
+  };
+
+  defineExpose({ getValue, setValue, focus });
 
   // 监听主题变更
   watch(() => appStore.theme, (v) => {

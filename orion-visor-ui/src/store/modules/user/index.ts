@@ -5,7 +5,7 @@ import { md5 } from '@/utils';
 import { defineStore } from 'pinia';
 import { clearToken, setToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
-import { getUserPermission } from '@/api/user/permission';
+import { getUserAggregateInfo } from '@/api/user/user-aggregate';
 import { useAppStore, useCacheStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
 
 export default defineStore('user', {
@@ -32,7 +32,7 @@ export default defineStore('user', {
 
     // 获取用户信息
     async getUserInfo() {
-      const { data } = await getUserPermission();
+      const { data } = await getUserAggregateInfo();
       // 设置用户信息
       this.setUserInfo({
         id: data.user.id,

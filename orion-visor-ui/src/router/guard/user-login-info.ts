@@ -19,11 +19,11 @@ export default function setupUserLoginInfoGuard(router: Router) {
         try {
           // 获取用户信息
           const info = await userStore.getUserInfo();
-          if (info.user.passwordUpdateStatus === 1) {
+          if (info.updatePassword?.updatePasswordStatus === 1) {
             // 跳转到修改密码页面
             next({
               name: UPDATE_PASSWORD_ROUTE_NAME,
-              query: { reason: info.user.passwordUpdateReason },
+              query: { reason: info.updatePassword?.updatePasswordReason },
             } as RouteLocationRaw);
           } else {
             // 跳转

@@ -47,10 +47,4 @@ public class SystemUserBaseVO {
     @Schema(description = "头像地址")
     private String avatar;
 
-    @Schema(description = "修改密码状态")
-    private Integer passwordUpdateStatus;
-
-    @Schema(description = "修改密码原因")
-    private String passwordUpdateReason;
-
 }

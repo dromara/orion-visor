@@ -17,8 +17,8 @@
         <result column="mobile" property="mobile"/>
         <result column="email" property="email"/>
         <result column="status" property="status"/>
-        <result column="update_password_status" property="passwordUpdateStatus"/>
-        <result column="update_password_reason" property="passwordUpdateReason"/>
+        <result column="update_password_status" property="updatePasswordStatus"/>
+        <result column="update_password_reason" property="updatePasswordReason"/>
         <result column="last_login_time" property="lastLoginTime"/>
     </resultMap>
 

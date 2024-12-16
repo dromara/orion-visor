@@ -93,5 +93,5 @@ export function deleteMenu(id: number) {
  * 刷新缓存
  */
 export function refreshCache() {
-  return axios.put('/infra/user-permission/refresh-cache');
+  return axios.put('/infra/system-menu/refresh-cache');
 }

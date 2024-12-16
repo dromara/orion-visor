@@ -120,8 +120,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         this.checkNicknamePresent(record);
         // 加密密码
         record.setPassword(Signatures.md5(request.getPassword()));
-        record.setPasswordUpdateStatus(UpdatePasswordStatusEnum.REQUIRED.getStatus());
-        record.setPasswordUpdateReason(UpdatePasswordReasonEnum.NEW.name());
+        record.setUpdatePasswordStatus(UpdatePasswordStatusEnum.REQUIRED.getStatus());
+        record.setUpdatePasswordReason(UpdatePasswordReasonEnum.NEW.name());
         // 插入
         int effect = systemUserDAO.insert(record);
         log.info("SystemUserService-createSystemUser effect: {}, record: {}", effect, JSON.toJSONString(record));
@@ -313,8 +313,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         SystemUserDO update = new SystemUserDO();
         update.setId(id);
         update.setPassword(Signatures.md5(request.getPassword()));
-        update.setPasswordUpdateStatus(UpdatePasswordStatusEnum.NO_REQUIRE.getStatus());
-        update.setPasswordUpdateReason(Const.EMPTY);
+        update.setUpdatePasswordStatus(UpdatePasswordStatusEnum.NO_REQUIRE.getStatus());
+        update.setUpdatePasswordReason(Const.EMPTY);
         int effect = systemUserDAO.updateById(update);
         log.info("SystemUserService-resetPassword record: {}, effect: {}", JSON.toJSONString(update), effect);
         // 删除登录失败次数缓存

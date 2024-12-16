@@ -17,8 +17,6 @@ package org.dromara.visor.module.infra.service;
 
 import org.dromara.visor.module.infra.entity.domain.SystemRoleDO;
 import org.dromara.visor.module.infra.entity.dto.SystemMenuCacheDTO;
-import org.dromara.visor.module.infra.entity.vo.SystemMenuVO;
-import org.dromara.visor.module.infra.entity.vo.UserPermissionVO;
 
 import java.util.List;
 import java.util.Map;
@@ -31,27 +29,6 @@ import java.util.Map;
  * @since 2023/7/16 1:03
  */
 public interface UserPermissionService {
-
-    /**
-     * 获取 角色缓存
-     *
-     * @return cache
-     */
-    Map<Long, SystemRoleDO> getRoleCache();
-
-    /**
-     * 获取 菜单缓存 以作角色权限直接引用
-     *
-     * @return cache
-     */
-    List<SystemMenuCacheDTO> getMenuCache();
-
-    /**
-     * 获取 角色菜单关联
-     *
-     * @return cache
-     */
-    Map<Long, List<SystemMenuCacheDTO>> getRoleMenuCache();
 
     /**
      * 初始化权限缓存
@@ -91,17 +68,54 @@ public interface UserPermissionService {
     boolean hasAnyPermission(String... permissions);
 
     /**
-     * 获取用户菜单
+     * 获取 角色缓存
      *
-     * @return 菜单
+     * @return cache
      */
-    List<SystemMenuVO> getUserMenuList();
+    Map<Long, SystemRoleDO> getRoleCache();
 
     /**
-     * 获取用户权限
+     * 获取 菜单缓存 以作角色权限直接引用
      *
-     * @return 权限信息
+     * @return cache
      */
-    UserPermissionVO getUserPermission();
+    List<SystemMenuCacheDTO> getMenuCache();
+
+    /**
+     * 获取 角色菜单关联
+     *
+     * @return cache
+     */
+    Map<Long, List<SystemMenuCacheDTO>> getRoleMenuCache();
+
+    /**
+     * 获取用户启用的角色
+     *
+     * @return roles
+     */
+    Map<Long, String> getUserEnabledRoles();
+
+    /**
+     * 获取用户启用的菜单
+     *
+     * @return menus
+     */
+    List<SystemMenuCacheDTO> getUserEnabledMenus();
+
+    /**
+     * 获取角色启用的菜单
+     *
+     * @param roles roles
+     * @return menus
+     */
+    List<SystemMenuCacheDTO> getRolesEnabledMenus(Map<Long, String> roles);
+
+    /**
+     * 获取菜单权限
+     *
+     * @param menus menus
+     * @return permissions
+     */
+    List<String> getMenuPermissions(List<SystemMenuCacheDTO> menus);
 
 }

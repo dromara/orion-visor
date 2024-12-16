@@ -5,7 +5,7 @@ import router from '@/router';
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
 import { EnabledStatus } from '@/types/const';
-import { getUserMenuList } from '@/api/user/permission';
+import { getUserMenuList } from '@/api/user/user-aggregate';
 
 export default defineStore('menu', {
   state: (): MenuState => ({

@@ -77,11 +77,11 @@ public class SystemUserDO extends BaseDO {
 
     @Schema(description = "修改密码状态")
     @TableField("update_password_status")
-    private Integer passwordUpdateStatus;
+    private Integer updatePasswordStatus;
 
     @Schema(description = "修改密码原因")
     @TableField("update_password_reason")
-    private String passwordUpdateReason;
+    private String updatePasswordReason;
 
     @Schema(description = "最后登录时间")
     @TableField("last_login_time")

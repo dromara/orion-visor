@@ -32,17 +32,15 @@ export default function usePermission() {
      * 是否有权限
      */
     hasPermission(permission: string) {
-      return userStore.permission?.includes('*') ||
-        userStore.permission?.includes(permission);
+      return userStore.permission?.includes(permission);
     },
 
     /**
      * 是否有权限
      */
     hasAnyPermission(permission: string[]) {
-      return userStore.permission?.includes('*') ||
-        permission.map(s => userStore.permission?.includes(s))
-          .filter(Boolean).length > 0;
+      return permission.map(s => userStore.permission?.includes(s))
+        .filter(Boolean).length > 0;
     },
 
     /**
