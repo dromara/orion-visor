@@ -3,13 +3,24 @@
     <div class="command-header">
       <!-- 左侧按钮 -->
       <div class="command-header-left">
-        <!-- 粘贴 -->
+        <!-- 发送 -->
         <a-button size="mini"
                   class="mr8"
-                  @click="paste">
-          粘贴
+                  title="直接发送到终端"
+                  @click="write(false)">
+          发送
           <template #icon>
             <icon-send />
+          </template>
+        </a-button>
+        <!-- 执行 -->
+        <a-button size="mini"
+                  class="mr8"
+                  title="拼接 \r\n 后发送到终端"
+                  @click="write(true)">
+          执行
+          <template #icon>
+            <icon-thunderbolt />
           </template>
         </a-button>
         <!-- 清空 -->
@@ -34,8 +45,8 @@
       <!-- 命令框 -->
       <div class="command-input">
         <a-textarea v-model="text"
-                    :auto-size="{ minRows: 3, maxRows: 3 }"
                     placeholder="输入命令, F8 发送"
+                    :auto-size="{ minRows: 3, maxRows: 3 }"
                     @keyup="checkCommandKey" />
       </div>
     </div>
@@ -49,17 +60,35 @@
 </script>
 
 <script lang="ts" setup>
+  import type { ISshSession } from '@/views/host/terminal/types/define';
   import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
+  import { PanelSessionType } from '@/views/host/terminal/types/const';
+  import { Message } from '@arco-design/web-vue';
 
-  const { layoutState, appendCommandToCurrentSession } = useTerminalStore();
+  const { layoutState, sessionManager, getCurrentSession, pasteCommandToSession } = useTerminalStore();
 
   const text = ref('');
 
-  // 粘贴
-  const paste = () => {
-    appendCommandToCurrentSession(text.value);
+  // 写入
+  const write = (newLine: boolean) => {
+    if (!text.value) {
+      Message.warning('请选择输入命令');
+      return;
+    }
+    // 写入
+    writeToSession(text.value, newLine);
     text.value = '';
+  };
+
+  // 写入到会话
+  const writeToSession = (command: string, newLine: boolean) => {
+    // 当前会话
+    const session = getCurrentSession(PanelSessionType.SSH.type, false);
+    // 粘贴
+    if (session) {
+      pasteCommandToSession((session as ISshSession), command, newLine);
+    }
   };
 
   // 清空
@@ -70,7 +99,7 @@
   // 检查命令快捷键
   const checkCommandKey = async (e: KeyboardEvent) => {
     if (text.value && e.code === 'F8') {
-      paste();
+      write(false);
     }
   };
 
