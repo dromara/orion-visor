@@ -17,7 +17,7 @@ CREATE TABLE `_copy`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci
+  COLLATE = utf8mb4_unicode_ci
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -29,8 +29,8 @@ CREATE TABLE `command_snippet`
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `group_id`    bigint(0)                                                    NULL DEFAULT NULL COMMENT '分组id',
-    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
-    `command`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '代码片段',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
+    `command`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '代码片段',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -41,7 +41,7 @@ CREATE TABLE `command_snippet`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '命令片段'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '命令片段'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -53,8 +53,8 @@ CREATE TABLE `data_extra`
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `rel_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '数据id',
-    `type`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '数据类型',
-    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置项',
+    `type`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '数据类型',
+    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置项',
     `value`       json                                                         NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -67,7 +67,7 @@ CREATE TABLE `data_extra`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '数据拓展信息表'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '数据拓展信息表'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -79,8 +79,8 @@ CREATE TABLE `data_group`
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `parent_id`   bigint(0)                                                    NULL DEFAULT NULL COMMENT '父id',
-    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '组类型',
-    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '组名称',
+    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '组类型',
+    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '组名称',
     `sort`        int(0)                                                       NULL DEFAULT 10 COMMENT '排序',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -92,7 +92,7 @@ CREATE TABLE `data_group`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '数据分组'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '数据分组'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -102,7 +102,7 @@ DROP TABLE IF EXISTS `data_group_rel`;
 CREATE TABLE `data_group_rel`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '组类型',
+    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '组类型',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `group_id`    bigint(0)                                                    NULL DEFAULT NULL COMMENT '组id',
     `rel_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '引用id',
@@ -117,7 +117,7 @@ CREATE TABLE `data_group_rel`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '数据分组关联'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '数据分组关联'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -130,7 +130,7 @@ CREATE TABLE `data_permission`
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `role_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '角色id',
     `rel_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '引用id',
-    `type`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据类型',
+    `type`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '数据类型',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -143,7 +143,7 @@ CREATE TABLE `data_permission`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '数据权限表'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '数据权限表'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -153,10 +153,10 @@ DROP TABLE IF EXISTS `dict_key`;
 CREATE TABLE `dict_key`
 (
     `id`           bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `key_name`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '配置项',
-    `value_type`   char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '配置值定义',
+    `key_name`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置项',
+    `value_type`   char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '配置值定义',
     `extra_schema` json                                                         NULL COMMENT '额外配置定义',
-    `description`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置描述',
+    `description`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置描述',
     `create_time`  datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -167,7 +167,7 @@ CREATE TABLE `dict_key`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '字典配置项'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '字典配置项'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -178,9 +178,9 @@ CREATE TABLE `dict_value`
 (
     `id`          bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
     `key_id`      bigint(0)                                                      NOT NULL COMMENT '配置项id',
-    `key_name`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NOT NULL COMMENT '配置项',
-    `value`       varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置值',
-    `label`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '配置描述',
+    `key_name`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NOT NULL COMMENT '配置项',
+    `value`       varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置值',
+    `label`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '配置描述',
     `extra`       json                                                           NULL COMMENT '额外参数',
     `sort`        int(0)                                                         NULL DEFAULT NULL COMMENT '排序',
     `create_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -193,7 +193,7 @@ CREATE TABLE `dict_value`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '字典配置值'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '字典配置值'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -205,15 +205,15 @@ CREATE TABLE `exec_host_log`
     `id`            bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
     `log_id`        bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行日志id',
     `host_id`       bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
-    `host_name`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机名称',
-    `host_address`  varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
-    `status`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行状态',
-    `command`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
+    `host_name`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机名称',
+    `host_address`  varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机地址',
+    `status`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '执行状态',
+    `command`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '执行命令',
     `parameter`     json                                                          NULL COMMENT '执行参数',
     `exit_code`     int(0)                                                        NULL DEFAULT NULL COMMENT '退出码',
-    `log_path`      varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志路径',
-    `script_path`   varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '脚本路径',
-    `error_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '错误信息',
+    `log_path`      varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '日志路径',
+    `script_path`   varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '脚本路径',
+    `error_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '错误信息',
     `start_time`    datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行开始时间',
     `finish_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行结束时间',
     `create_time`   datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -226,7 +226,7 @@ CREATE TABLE `exec_host_log`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '批量执行主机日志'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '批量执行主机日志'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -236,17 +236,17 @@ DROP TABLE IF EXISTS `exec_job`;
 CREATE TABLE `exec_job`
 (
     `id`               bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '任务名称',
+    `name`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '任务名称',
     `exec_seq`         int(0)                                                        NULL DEFAULT 0 COMMENT '执行序列',
-    `expression`       varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'cron 表达式',
+    `expression`       varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'cron 表达式',
     `timeout`          int(0)                                                        NULL DEFAULT 0 COMMENT '超时时间',
     `script_exec`      tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否使用脚本执行',
-    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
+    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '执行命令',
     `parameter_schema` json                                                          NULL COMMENT '命令参数',
     `status`           tinyint(0)                                                    NULL DEFAULT 0 COMMENT '任务状态',
     `recent_log_id`    bigint(0)                                                     NULL DEFAULT NULL COMMENT '最近执行id',
     `exec_user_id`     bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行用户id',
-    `exec_username`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '执行用户名',
+    `exec_username`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '执行用户名',
     `create_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -256,7 +256,7 @@ CREATE TABLE `exec_job`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '计划任务'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '计划任务'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -278,7 +278,7 @@ CREATE TABLE `exec_job_host`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '计划任务主机'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '计划任务主机'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -289,17 +289,17 @@ CREATE TABLE `exec_log`
 (
     `id`               bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`          bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行用户id',
-    `username`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '执行用户名',
-    `source`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行来源',
+    `username`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '执行用户名',
+    `source`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '执行来源',
     `source_id`        bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行来源id',
-    `exec_mode`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '执行方式',
-    `description`      varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '执行描述',
+    `exec_mode`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '执行方式',
+    `description`      varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '执行描述',
     `exec_seq`         int(0)                                                        NULL DEFAULT 0 COMMENT '执行序列',
-    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '执行命令',
+    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '执行命令',
     `parameter_schema` json                                                          NULL COMMENT '参数 schema',
     `timeout`          int(0)                                                        NULL DEFAULT NULL COMMENT '超时时间',
     `script_exec`      tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否使用脚本执行',
-    `status`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '执行状态',
+    `status`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '执行状态',
     `start_time`       datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行开始时间',
     `finish_time`      datetime(3)                                                   NULL DEFAULT NULL COMMENT '执行完成时间',
     `create_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -313,7 +313,7 @@ CREATE TABLE `exec_log`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '批量执行日志'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '批量执行日志'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -323,8 +323,8 @@ DROP TABLE IF EXISTS `exec_template`;
 CREATE TABLE `exec_template`
 (
     `id`               bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
-    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '命令',
+    `name`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
+    `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '命令',
     `timeout`          int(0)                                                       NULL DEFAULT 0 COMMENT '超时时间秒 0不超时',
     `script_exec`      tinyint(0)                                                   NULL DEFAULT 0 COMMENT '是否使用脚本执行',
     `parameter_schema` json                                                         NULL COMMENT '参数定义',
@@ -337,7 +337,7 @@ CREATE TABLE `exec_template`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '执行模板'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '执行模板'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -359,7 +359,7 @@ CREATE TABLE `exec_template_host`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '执行模板主机'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '执行模板主机'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -371,7 +371,7 @@ CREATE TABLE `favorite`
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `rel_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '引用id',
-    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '收藏类型',
+    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '收藏类型',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -382,7 +382,7 @@ CREATE TABLE `favorite`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '收藏关联'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '收藏关联'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -393,9 +393,9 @@ CREATE TABLE `history_value`
 (
     `id`           bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `rel_id`       bigint(0)                                                    NULL DEFAULT NULL COMMENT '引用id',
-    `type`         char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '类型',
-    `before_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '修改前',
-    `after_value`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci        NULL COMMENT '修改后',
+    `type`         char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '类型',
+    `before_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '修改前',
+    `after_value`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '修改后',
     `create_time`  datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `creator`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
     `deleted`      tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
@@ -403,7 +403,7 @@ CREATE TABLE `history_value`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '历史归档表'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '历史归档表'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -413,13 +413,13 @@ DROP TABLE IF EXISTS `host`;
 CREATE TABLE `host`
 (
     `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `type`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '主机类型',
-    `os_type`     char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '系统类型',
-    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '主机名称',
-    `code`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '主机编码',
-    `address`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
+    `type`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '主机类型',
+    `os_type`     char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '系统类型',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机名称',
+    `code`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机编码',
+    `address`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机地址',
     `port`        int(0)                                                        NULL DEFAULT NULL COMMENT '主机端口',
-    `status`      char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '主机状态',
+    `status`      char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '主机状态',
     `config`      json                                                          NULL COMMENT '主机配置',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -430,7 +430,7 @@ CREATE TABLE `host`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '主机'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '主机'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -440,10 +440,10 @@ DROP TABLE IF EXISTS `host_identity`;
 CREATE TABLE `host_identity`
 (
     `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '名称',
-    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '类型',
-    `username`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名',
-    `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户密码',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '名称',
+    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '类型',
+    `username`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户名',
+    `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户密码',
     `key_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '密钥id',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -454,7 +454,7 @@ CREATE TABLE `host_identity`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '主机身份'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '主机身份'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -464,10 +464,10 @@ DROP TABLE IF EXISTS `host_key`;
 CREATE TABLE `host_key`
 (
     `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '名称',
-    `public_key`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '公钥文本',
-    `private_key` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '私钥文本',
-    `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '名称',
+    `public_key`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '公钥文本',
+    `private_key` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '私钥文本',
+    `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密码',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -477,7 +477,7 @@ CREATE TABLE `host_key`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '主机密钥'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '主机密钥'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -488,18 +488,18 @@ CREATE TABLE `operator_log`
 (
     `id`            bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`       bigint(0)                                                     NULL DEFAULT NULL COMMENT '用户id',
-    `username`      char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '用户名',
-    `trace_id`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT 'traceId',
-    `address`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '请求ip',
-    `location`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '请求地址',
-    `user_agent`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'userAgent',
-    `risk_level`    char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '风险等级',
-    `module`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '模块',
-    `type`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '操作类型',
-    `log_info`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '日志',
+    `username`      char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '用户名',
+    `trace_id`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT 'traceId',
+    `address`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '请求ip',
+    `location`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '请求地址',
+    `user_agent`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'userAgent',
+    `risk_level`    char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '风险等级',
+    `module`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '模块',
+    `type`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '操作类型',
+    `log_info`      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '日志',
     `extra`         json                                                          NULL COMMENT '参数',
     `result`        int(0)                                                        NULL DEFAULT NULL COMMENT '操作结果 0失败 1成功',
-    `error_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '错误信息',
+    `error_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '错误信息',
     `return_value`  json                                                          NULL COMMENT '返回值',
     `duration`      int(0)                                                        NULL DEFAULT NULL COMMENT '操作时间',
     `start_time`    datetime(3)                                                   NULL DEFAULT NULL COMMENT '开始时间',
@@ -512,7 +512,7 @@ CREATE TABLE `operator_log`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '操作日志'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '操作日志'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -524,9 +524,9 @@ CREATE TABLE `path_bookmark`
     `id`          bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                      NULL DEFAULT NULL COMMENT '用户id',
     `group_id`    bigint(0)                                                      NULL DEFAULT NULL COMMENT '分组id',
-    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '名称',
-    `type`        char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci       NULL DEFAULT NULL COMMENT '类型',
-    `path`        varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '路径',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '名称',
+    `type`        char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci       NULL DEFAULT NULL COMMENT '类型',
+    `path`        varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '路径',
     `create_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '创建人',
@@ -537,7 +537,7 @@ CREATE TABLE `path_bookmark`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '路径书签'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '路径书签'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -548,8 +548,8 @@ CREATE TABLE `preference`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
-    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '偏好类型',
-    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置项',
+    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '偏好类型',
+    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置项',
     `value`       json                                                         NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -561,7 +561,7 @@ CREATE TABLE `preference`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '用户偏好'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '用户偏好'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -602,14 +602,14 @@ DROP TABLE IF EXISTS `system_message`;
 CREATE TABLE `system_message`
 (
     `id`                bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `classify`          char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci     NULL DEFAULT NULL COMMENT '消息分类',
-    `type`              varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '消息类型',
+    `classify`          char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '消息分类',
+    `type`              varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '消息类型',
     `status`            tinyint(0)                                                    NULL DEFAULT NULL COMMENT '消息状态',
-    `rel_key`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '消息关联',
-    `title`             varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
-    `content`           text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci         NULL COMMENT '消息内容',
+    `rel_key`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '消息关联',
+    `title`             varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
+    `content`           text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '消息内容',
     `receiver_id`       bigint(0)                                                     NULL DEFAULT NULL COMMENT '接收人id',
-    `receiver_username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '接收人用户名',
+    `receiver_username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '接收人用户名',
     `create_time`       datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`       datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `deleted`           tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
@@ -618,7 +618,7 @@ CREATE TABLE `system_message`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '系统消息'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '系统消息'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -672,8 +672,8 @@ DROP TABLE IF EXISTS `system_setting`;
 CREATE TABLE `system_setting`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '配置类型',
-    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '配置项',
+    `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '配置类型',
+    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置项',
     `value`       json                                                         NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -684,7 +684,7 @@ CREATE TABLE `system_setting`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '系统设置'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '系统设置'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -746,8 +746,8 @@ DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '标签名称',
-    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '标签类型',
+    `name`        char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '标签名称',
+    `type`        char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '标签类型',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -758,7 +758,7 @@ CREATE TABLE `tag`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '标签枚举'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '标签枚举'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -769,8 +769,8 @@ CREATE TABLE `tag_rel`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
     `tag_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '标签id',
-    `tag_name`    char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '标签名称',
-    `tag_type`    char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci    NULL DEFAULT NULL COMMENT '标签类型',
+    `tag_name`    char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '标签名称',
+    `tag_type`    char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '标签类型',
     `rel_id`      bigint(0)                                                    NULL DEFAULT NULL COMMENT '关联id',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -783,7 +783,7 @@ CREATE TABLE `tag_rel`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '标签关联'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '标签关联'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -794,13 +794,13 @@ CREATE TABLE `terminal_connect_log`
 (
     `id`           bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '用户id',
-    `username`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '用户名',
+    `username`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '用户名',
     `host_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '主机id',
-    `host_name`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '主机名称',
-    `host_address` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '主机地址',
-    `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '类型',
-    `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '状态',
-    `token`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT 'token',
+    `host_name`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机名称',
+    `host_address` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机地址',
+    `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '类型',
+    `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '状态',
+    `token`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT 'token',
     `start_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '开始时间',
     `end_time`     datetime(3)                                                   NULL DEFAULT NULL COMMENT '结束时间',
     `extra_info`   json                                                          NULL COMMENT '额外信息',
@@ -814,7 +814,7 @@ CREATE TABLE `terminal_connect_log`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '终端连接日志'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '终端连接日志'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -825,10 +825,10 @@ CREATE TABLE `upload_task`
 (
     `id`          bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
     `user_id`     bigint(0)                                                      NULL DEFAULT NULL COMMENT '用户id',
-    `username`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '用户名',
-    `remote_path` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '远程路径',
-    `description` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL DEFAULT NULL COMMENT '描述',
-    `status`      char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '状态',
+    `username`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '用户名',
+    `remote_path` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '远程路径',
+    `description` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '描述',
+    `status`      char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '状态',
     `file_count`  int(0)                                                         NULL DEFAULT NULL COMMENT '文件数量',
     `host_count`  int(0)                                                         NULL DEFAULT NULL COMMENT '主机数量',
     `extra_info`  json                                                           NULL COMMENT '额外信息',
@@ -843,7 +843,7 @@ CREATE TABLE `upload_task`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '上传任务'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '上传任务'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -855,15 +855,15 @@ CREATE TABLE `upload_task_file`
     `id`             bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
     `task_id`        bigint(0)                                                      NULL DEFAULT NULL COMMENT '用户id',
     `host_id`        bigint(0)                                                      NULL DEFAULT NULL COMMENT '主机id',
-    `file_id`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci   NULL DEFAULT NULL COMMENT '文件id',
-    `file_path`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件路径',
-    `real_file_path` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '实际文件路径',
+    `file_id`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '文件id',
+    `file_path`      varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件路径',
+    `real_file_path` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '实际文件路径',
     `file_size`      bigint(0)                                                      NULL DEFAULT NULL COMMENT '文件大小',
-    `status`         char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci      NULL DEFAULT NULL COMMENT '状态',
+    `status`         char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '状态',
     `start_time`     datetime(3)                                                    NULL DEFAULT NULL COMMENT '开始时间',
     `end_time`       datetime(3)                                                    NULL DEFAULT NULL COMMENT '结束时间',
     `create_time`    datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `error_message`  varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '错误信息',
+    `error_message`  varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '错误信息',
     `update_time`    datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '创建人',
     `updater`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '更新人',
@@ -873,7 +873,7 @@ CREATE TABLE `upload_task_file`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_general_ci COMMENT = '上传任务文件'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '上传任务文件'
   ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
