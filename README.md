@@ -3,18 +3,18 @@
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://app.codacy.com/gh/lijiahangmax/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+       href="https://app.codacy.com/gh/orionsec/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
       <img src="https://app.codacy.com/project/badge/Grade/49eaab3a9a474af3b87e1d21ffec71c4" alt="quality" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
        href="https://www.apache.org/licenses/LICENSE-2.0">
-      <img src="https://img.shields.io/github/license/lijiahangmax/orion-visor" alt="License" />
+      <img src="https://img.shields.io/github/license/dromara/orion-visor" alt="License" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
        href="https://github.com/dromara/orion-visor/releases">
-      <img src="https://img.shields.io/github/v/release/lijiahangmax/orion-visor" alt="release" />
+      <img src="https://img.shields.io/github/v/release/dromara/orion-visor" alt="release" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
@@ -29,12 +29,12 @@
     <a target="_blank"
        style="text-decoration: none !important;"
        href="https://github.com/dromara/orion-visor">
-      <img src="https://img.shields.io/github/stars/lijiahangmax/orion-visor" alt="star" />
+      <img src="https://img.shields.io/github/stars/dromara/orion-visor" alt="star" />
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
        href="https://github.com/dromara/orion-visor">
-      <img src="https://img.shields.io/github/forks/lijiahangmax/orion-visor" alt="star" />
+      <img src="https://img.shields.io/github/forks/dromara/orion-visor" alt="star" />
     </a>
 </p>
 
@@ -110,7 +110,7 @@ docker compose up -d
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=lijiahangmax/orion-visor&type=Date)](https://star-history.com/#lijiahangmax/orion-visor&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=dromara/orion-visor&type=Date)](https://star-history.com/#dromara/orion-visor&Date)
 
 ## 关于我
 

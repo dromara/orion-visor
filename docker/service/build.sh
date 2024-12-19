@@ -5,4 +5,4 @@ mv ../../orion-visor-ui/dist ./dist
 docker build --no-cache -t orion-visor-service:${version} .
 rm -rf ./orion-visor-launch.jar
 rm -rf ./dist
-docker tag orion-visor-service:${version} registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:${version}
+docker tag orion-visor-service:${version} registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:${version}
