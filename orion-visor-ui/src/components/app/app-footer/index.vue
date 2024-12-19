@@ -6,7 +6,7 @@
         <a-link target="_blank" href="https://gitee.com/dromara/orion-visor">gitee</a-link>
         <a-link target="_blank" href="https://visor.orionsec.cn">文档</a-link>
         <a-link target="_blank" href="https://github.com/dromara/orion-visor/blob/main/LICENSE">License</a-link>
-        <a-link target="_blank" :href="`https://github.com/dromara/orion-visor/releases/tag/v${version}`">v{{ version }} {{ release }}</a-link>
+        <a-link target="_blank" :href="`https://github.com/dromara/orion-visor/releases/tag/v${version}`">v{{ version }}</a-link>
       </a-space>
       <span class="copyright">
         Copyright<icon-copyright /> 2023 - {{ new Date().getFullYear() }} Jiahang Li, All rights reserved.
@@ -17,7 +17,6 @@
 
 <script lang="ts" setup>
   const version = import.meta.env.VITE_APP_VERSION;
-  const release = import.meta.env.VITE_APP_RELEASE;
 </script>
 
 <style lang="less" scoped>
