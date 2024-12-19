@@ -67,7 +67,7 @@
             </span>
           </a-popconfirm>
           <!-- 新增 -->
-          <span v-permission="['asset:host-group:create']"
+          <span v-permission="['asset:host-group:update']"
                 class="tree-icon"
                 title="新增"
                 @click="addChildren(node)">
