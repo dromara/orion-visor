@@ -41,7 +41,7 @@ INSERT INTO `dict_key` VALUES (34, 'execStatus', 'STRING', '[{\"name\": \"color\
 INSERT INTO `dict_key` VALUES (35, 'execHostStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"execColor\", \"type\": \"COLOR\"}]', '主机执行状态', '2024-03-13 15:09:10', '2024-03-17 20:31:07', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (36, 'execJobStatus', 'INTEGER', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '计划任务状态', '2024-04-10 16:18:07', '2024-04-11 14:25:05', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (37, 'hostIdentityType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机身份类型', '2024-04-16 17:15:31', '2024-04-16 17:15:31', '2', '2', 0);
-INSERT INTO `dict_key` VALUES (38, 'hostSshOsType', 'STRING', '[]', '主机系统类型', '2024-04-16 22:18:59', '2024-04-16 22:30:59', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (38, 'hostOsType', 'STRING', '[]', '主机系统类型', '2024-04-16 22:18:59', '2024-12-12 16:20:52', '1', '3', 0);
 INSERT INTO `dict_key` VALUES (39, 'pathBookmarkType', 'STRING', '[]', '路径标签类型', '2024-04-24 13:43:12', '2024-04-24 13:43:12', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (40, 'sftpTransferStatus', 'STRING', '[{\"name\": \"status\", \"type\": \"STRING\"}, {\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"icon\", \"type\": \"STRING\"}]', 'SFTP 传输状态', '2024-05-06 11:54:49', '2024-05-06 11:54:49', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (41, 'uploadTaskStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '上传任务状态', '2024-05-07 22:18:48', '2024-05-08 22:06:23', '1', '1', 0);
@@ -51,6 +51,7 @@ INSERT INTO `dict_key` VALUES (44, 'messageClassify', 'STRING', '[]', '消息分
 INSERT INTO `dict_key` VALUES (53, 'terminalTheme', 'STRING', '[{\"name\": \"dark\", \"type\": \"BOOLEAN\"}]', '终端主题', '2024-07-04 19:14:34', '2024-07-04 19:14:34', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (57, 'hostStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"status\", \"type\": \"STRING\"}]', '主机状态', '2024-07-17 12:51:10', '2024-07-22 16:53:23', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (58, 'hostType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机类型', '2024-07-17 12:51:10', '2024-07-22 14:02:44', '1', '1', 0);
+INSERT INTO `dict_key` VALUES (61, 'updatePasswordReason', 'STRING', '[]', '修改密码原因', '2024-12-11 17:19:40', '2024-12-11 17:20:04', '1', '1', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', '1', '1', 0);
@@ -268,8 +269,8 @@ INSERT INTO `dict_value` VALUES (268, 2, 'operatorLogType', 'exec-job-log:interr
 INSERT INTO `dict_value` VALUES (269, 2, 'operatorLogType', 'exec-job-log:interrupt-host', '中断计划任务主机', '{}', 60, '2024-03-13 15:08:43', '2024-04-12 15:23:42', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (270, 37, 'hostIdentityType', 'PASSWORD', '密码', '{\"color\": \"purple\"}', 10, '2024-04-16 17:17:49', '2024-04-16 17:17:49', '2', '2', 0);
 INSERT INTO `dict_value` VALUES (271, 37, 'hostIdentityType', 'KEY', '密钥', '{\"color\": \"arcoblue\"}', 20, '2024-04-16 17:18:12', '2024-05-17 12:49:16', '2', '2', 0);
-INSERT INTO `dict_value` VALUES (272, 38, 'hostSshOsType', 'LINUX', 'linux', '{}', 10, '2024-04-16 22:19:25', '2024-04-16 22:30:59', '1', '1', 0);
-INSERT INTO `dict_value` VALUES (273, 38, 'hostSshOsType', 'WINDOWS', 'windows', '{}', 20, '2024-04-16 22:19:39', '2024-04-16 22:30:59', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (272, 38, 'hostOsType', 'LINUX', 'linux', '{}', 10, '2024-04-16 22:19:25', '2024-12-12 16:20:39', '1', '3', 0);
+INSERT INTO `dict_value` VALUES (273, 38, 'hostOsType', 'WINDOWS', 'windows', '{}', 20, '2024-04-16 22:19:39', '2024-12-12 16:20:39', '1', '3', 0);
 INSERT INTO `dict_value` VALUES (274, 39, 'pathBookmarkType', 'FILE', '文件', '{}', 10, '2024-04-24 13:43:28', '2024-04-24 13:43:28', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (275, 39, 'pathBookmarkType', 'DIR', '文件夹', '{}', 20, '2024-04-24 13:43:39', '2024-04-24 13:43:39', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (276, 40, 'sftpTransferStatus', 'waiting', '传输中', '{\"icon\": \"icon-clock-circle\", \"color\": \"gray\", \"status\": \"waiting\"}', 10, '2024-05-06 12:00:04', '2024-05-06 12:00:04', '1', '1', 0);
@@ -319,6 +320,8 @@ INSERT INTO `dict_value` VALUES (404, 53, 'terminalTheme', '{\"background\":\"#1
 INSERT INTO `dict_value` VALUES (405, 53, 'terminalTheme', '{\"background\":\"#1F1D27\",\"foreground\":\"#B7A1FF\",\"cursor\":\"#FF9839\",\"selectionBackground\":\"#353147\",\"black\":\"#1F1D27\",\"red\":\"#D9393E\",\"green\":\"#2DCD73\",\"yellow\":\"#D9B76E\",\"blue\":\"#FFC284\",\"cyan\":\"#2488FF\",\"white\":\"#B7A1FF\",\"brightBlack\":\"#353147\",\"brightRed\":\"#D9393E\",\"brightGreen\":\"#2DCD73\",\"brightYellow\":\"#D9B76E\",\"brightBlue\":\"#FFC284\",\"brightCyan\":\"#2488FF\",\"brightWhite\":\"#EAE5FF\"}', 'Duotone Dark', '{\"dark\": true}', 180, '2024-08-19 18:54:09', '2024-08-19 18:54:09', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (424, 1, 'operatorLogModule', 'infra:system-setting', '系统设置', '{}', 1070, '2024-10-09 19:28:58', '2024-10-09 19:28:58', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (425, 2, 'operatorLogType', 'system-setting:update', '更新系统设置', '{}', 10, '2024-10-09 19:30:17', '2024-10-09 19:30:43', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (431, 61, 'updatePasswordReason', 'NEW', '为了保障账户安全，请立即修改初始密码。', '{}', 10, '2024-12-11 17:24:19', '2024-12-11 17:24:19', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (432, 2, 'operatorLogType', 'exec-job:update-exec-user', '修改计划执行用户', '{}', 45, '2024-12-13 00:17:03', '2024-12-13 00:17:03', '1', '1', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', '1', '1', 0);
@@ -402,12 +405,12 @@ INSERT INTO `system_menu` VALUES (157, 122, '清空操作日志', 'infra:operato
 INSERT INTO `system_menu` VALUES (158, 152, '文件操作日志', NULL, 2, 40, 1, 1, 1, 0, 'IconFile', NULL, 'sftpLog', '2024-03-05 15:30:13', '2024-08-04 20:23:19', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (159, 158, '查询文件操作日志', 'asset:terminal-sftp-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:02', '2024-04-12 14:49:18', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (160, 158, '删除文件操作日志', 'asset:terminal-sftp-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:17', '2024-04-12 14:49:21', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (161, 176, '执行模板', NULL, 2, 50, 1, 1, 1, 0, 'IconBookmark', NULL, 'execTemplate', '2024-03-07 18:32:41', '2024-05-14 15:58:51', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (161, 176, '执行模板', NULL, 2, 80, 1, 1, 1, 0, 'IconBookmark', NULL, 'execTemplate', '2024-03-07 18:32:41', '2024-12-12 23:31:06', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (162, 161, '查询执行模板', 'asset:exec-template:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (163, 161, '创建执行模板', 'asset:exec-template:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (164, 161, '修改执行模板', 'asset:exec-template:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (165, 161, '删除执行模板', 'asset:exec-template:delete', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-03-07 18:32:41', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (167, 176, '执行日志', NULL, 2, 20, 1, 1, 1, 0, 'icon-history', NULL, 'execCommandLog', '2024-03-13 15:08:23', '2024-04-28 15:36:36', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (167, 176, '执行日志', NULL, 2, 20, 1, 1, 1, 0, 'IconFindReplace', NULL, 'execCommandLog', '2024-03-13 15:08:23', '2024-12-12 23:35:30', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (168, 167, '查询执行日志', 'asset:exec-command-log:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:48', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (169, 167, '删除执行日志', 'asset:exec-command-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:50', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (171, 167, '清理执行日志', 'asset:exec-command-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:52', '1', '1', 0);
@@ -415,30 +418,31 @@ INSERT INTO `system_menu` VALUES (172, 176, '命令执行', NULL, 2, 10, 1, 1, 1
 INSERT INTO `system_menu` VALUES (173, 172, '执行命令', 'asset:exec-command:exec', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-10 22:04:32', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (174, 167, '中断批量执行', 'asset:exec-command-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:25:36', '2024-04-12 12:48:36', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (176, 0, '批量执行', NULL, 1, 420, 1, 1, 1, 0, 'icon-relation', NULL, 'execModule', '2024-04-10 16:13:27', '2024-04-28 15:30:31', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (177, 193, '任务列表', NULL, 2, 10, 1, 1, 1, 0, 'IconUnorderedList', NULL, 'execJob', '2024-04-10 16:13:27', '2024-04-28 15:36:10', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (177, 176, '任务列表', NULL, 2, 30, 1, 1, 1, 0, 'IconUnorderedList', NULL, 'execJob', '2024-04-10 16:13:27', '2024-12-12 23:34:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (178, 177, '查询计划任务', 'asset:exec-job:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (179, 177, '创建计划任务', 'asset:exec-job:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (180, 177, '修改计划任务', 'asset:exec-job:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (181, 177, '修改任务状态', 'asset:exec-job:update-status', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (182, 177, '删除计划任务', 'asset:exec-job:delete', 3, 50, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (183, 177, '手动执行任务', 'asset:exec-job:trigger', 3, 60, 1, 1, 1, 0, NULL, NULL, NULL, '2024-04-10 16:13:27', '2024-04-10 16:13:27', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (184, 193, '任务日志', NULL, 2, 20, 1, 1, 1, 0, 'icon-history', '', 'execJobLog', '2024-04-11 13:40:47', '2024-04-28 15:34:27', '2', '1', 0);
-INSERT INTO `system_menu` VALUES (185, 193, '计划任务日志', NULL, 2, 30, 0, 1, 0, 1, NULL, NULL, 'execJobLogView', '2024-04-11 13:41:47', '2024-07-08 18:10:37', '2', '1', 0);
+INSERT INTO `system_menu` VALUES (184, 176, '任务日志', NULL, 2, 40, 1, 1, 1, 0, 'icon-history', '', 'execJobLog', '2024-04-11 13:40:47', '2024-12-12 23:34:45', '2', '1', 0);
+INSERT INTO `system_menu` VALUES (185, 176, '计划任务日志', NULL, 2, 50, 0, 1, 0, 1, NULL, NULL, 'execJobLogView', '2024-04-11 13:41:47', '2024-12-12 23:34:55', '2', '1', 0);
 INSERT INTO `system_menu` VALUES (186, 184, '查询任务日志', 'asset:exec-job-log:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:52:02', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (187, 184, '删除任务日志', 'asset:exec-job-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:59', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (189, 184, '清理任务日志', 'asset:exec-job-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 13:51:58', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (190, 184, '中断计划任务', 'asset:exec-job-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-04-12 00:00:33', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (191, 0, '提交bug', NULL, 1, 1020, 1, 1, 0, 1, 'IconBug', 'https://github.com/dromara/orion-visor/issues', NULL, '2024-04-26 11:30:18', '2024-06-12 14:03:29', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (192, 0, '点个赞~', NULL, 1, 1030, 1, 1, 0, 1, 'IconThumbUp', 'https://github.com/dromara/orion-visor', NULL, '2024-04-26 11:32:30', '2024-06-12 14:03:25', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (193, 0, '计划任务', NULL, 1, 430, 1, 1, 1, 0, 'IconCalendarClock', NULL, 'jobModule', '2024-04-28 15:31:24', '2024-04-28 15:32:56', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (193, 0, '计划任务', NULL, 1, 430, 1, 1, 1, 0, 'IconCalendarClock', NULL, 'jobModule', '2024-04-28 15:31:24', '2024-12-12 23:31:52', '1', '1', 1);
 INSERT INTO `system_menu` VALUES (194, 152, '在线会话', NULL, 2, 20, 1, 1, 1, 0, 'IconUserGroup', NULL, 'connectSession', '2024-05-07 11:12:17', '2024-05-07 11:12:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (195, 194, '查询在线会话', 'asset:terminal-connect-session:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:16', '2024-10-15 11:28:11', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (196, 194, '强制断开连接', 'asset:terminal-connect-session:management:force-offline', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:37', '2024-10-15 11:28:11', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (197, 176, '批量上传', NULL, 2, 30, 1, 1, 1, 0, 'IconUpload', NULL, 'batchUpload', '2024-05-08 22:12:23', '2024-05-14 15:58:44', '1', '1', 0);
-INSERT INTO `system_menu` VALUES (198, 176, '上传任务', NULL, 2, 40, 1, 1, 1, 0, 'IconCloud', NULL, 'uploadTask', '2024-05-08 22:16:05', '2024-05-14 15:58:46', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (197, 176, '批量上传', NULL, 2, 60, 1, 1, 1, 0, 'IconUpload', NULL, 'batchUpload', '2024-05-08 22:12:23', '2024-12-12 23:34:11', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (198, 176, '上传任务', NULL, 2, 70, 1, 1, 1, 0, 'IconCloud', NULL, 'uploadTask', '2024-05-08 22:16:05', '2024-12-12 23:34:19', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (199, 197, '上传文件', 'asset:upload-task:upload', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:19:35', '2024-05-08 22:19:35', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (200, 198, '查询上传日志', 'asset:upload-task:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:01', '2024-05-08 22:20:01', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (201, 198, '删除上传日志', 'asset:upload-task:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:26', '2024-05-08 22:20:26', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (202, 198, '清理上传日志', 'asset:upload-task:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-08 22:20:37', '2024-05-08 22:20:37', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (203, 12, '系统设置', NULL, 2, 40, 1, 1, 1, 0, 'IconSettings', NULL, 'systemSetting', '2024-06-17 20:46:15', '2024-06-17 20:46:15', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (265, 203, '更新系统设置', 'infra:system-setting:update', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-10-09 19:25:28', '2024-10-09 19:25:28', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (271, 177, '修改任务执行用户', 'asset:exec-job:update-exec-user', 3, 45, 1, 1, 1, 0, NULL, NULL, NULL, '2024-12-13 00:18:13', '2024-12-13 00:18:13', '1', '1', 0);

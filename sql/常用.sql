@@ -7,7 +7,7 @@ CREATE TABLE `table` (
   `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '更新人',
   `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='table';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='table';
 
 -- 添加默认列
 ALTER TABLE `table` 
