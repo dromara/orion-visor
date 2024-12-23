@@ -43,7 +43,7 @@ export const STATUS_ROUTER_LIST = [
 export const routerToTag = (route: RouteLocationNormalized): TagProps => {
   const { name, meta, path, fullPath, query } = route;
   return {
-    title: meta.locale || '',
+    title: meta.locale || String(name),
     name: String(name),
     path,
     fullPath,

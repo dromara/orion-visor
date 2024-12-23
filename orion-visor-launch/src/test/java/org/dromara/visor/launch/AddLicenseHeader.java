@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Dromara (visor.dromara.org ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +43,14 @@ import java.util.List;
 public class AddLicenseHeader {
 
     private static final String LICENSE = "/*\n" +
-            " * Copyright (c) 2023 - present Dromara (visor.dromara.org ljh1553488six@139.com).\n" +
+            " * Copyright (c) 2023 - present Dromara, All rights reserved.\n" +
+            " *\n" +
+            " *   https://visor.dromara.org\n" +
+            " *   https://visor.dromara.org.cn\n" +
+            " *   https://visor.orionsec.cn\n" +
+            " *\n" +
+            " * Members:\n" +
+            " *   Jiahang Li - ljh1553488six@139.com - author\n" +
             " *\n" +
             " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
             " * you may not use this file except in compliance with the License.\n" +
