@@ -6,7 +6,7 @@
  *   https://visor.orionsec.cn
  *
  * Members:
- *   lijiahangmax ljh1553488six@139.com - author
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class AddLicenseHeader {
             " *   https://visor.orionsec.cn\n" +
             " *\n" +
             " * Members:\n" +
-            " *   lijiahangmax ljh1553488six@139.com - author\n" +
+            " *   Jiahang Li - ljh1553488six@139.com - author\n" +
             " *\n" +
             " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
             " * you may not use this file except in compliance with the License.\n" +
