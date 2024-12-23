@@ -31,7 +31,7 @@
         id, user_id, username, source, source_id, exec_mode, description, exec_seq, command, parameter_schema, timeout, script_exec, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
     </sql>
 
-    <select id="getExecHistory" resultMap="BaseResultMap">
+    <select id="selectExecHistory" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM exec_log e

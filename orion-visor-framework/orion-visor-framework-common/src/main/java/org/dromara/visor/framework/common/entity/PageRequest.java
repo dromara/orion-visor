@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
  * @since 2023/7/12 23:14
  */
 @Data
-@Schema(description = "公共页码请求")
+@Schema(name = "PageRequest", description = "公共页码请求")
 public class PageRequest {
 
     @NotNull(groups = Page.class)

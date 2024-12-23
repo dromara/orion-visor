@@ -56,8 +56,8 @@ public interface ExecLogDAO extends IMapper<ExecLogDO> {
      * @param limit  limit
      * @return rows
      */
-    List<ExecLogDO> getExecHistory(@Param("source") String source,
-                                   @Param("userId") Long userId,
-                                   @Param("limit") Integer limit);
+    List<ExecLogDO> selectExecHistory(@Param("source") String source,
+                                      @Param("userId") Long userId,
+                                      @Param("limit") Integer limit);
 
 }

@@ -132,7 +132,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public List<ExecLogVO> getExecHistory(ExecLogQueryRequest request) {
         // 查询执行记录
-        List<ExecLogDO> rows = execLogDAO.getExecHistory(request.getSource(), request.getUserId(), request.getLimit());
+        List<ExecLogDO> rows = execLogDAO.selectExecHistory(request.getSource(), request.getUserId(), request.getLimit());
         if (rows.isEmpty()) {
             return Lists.empty();
         }

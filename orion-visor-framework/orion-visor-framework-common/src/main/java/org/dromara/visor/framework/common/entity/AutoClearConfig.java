@@ -15,6 +15,7 @@
  */
 package org.dromara.visor.framework.common.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -25,16 +26,13 @@ import lombok.Data;
  * @since 2024/6/24 15:03
  */
 @Data
+@Schema(name = "AutoClearConfig", description = "自动清理配置")
 public class AutoClearConfig {
 
-    /**
-     * 是否开启
-     */
+    @Schema(description = "是否开启")
     private Boolean enabled;
 
-    /**
-     * 保留周期 (天)
-     */
+    @Schema(description = "保留周期 (天)")
     private Integer keepPeriod;
 
 }
