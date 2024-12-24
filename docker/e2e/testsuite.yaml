@@ -15,9 +15,9 @@ items:
     expect:
       bodyFieldsExpect:
         code: 200
-  - name: userPermission
+  - name: user
     request:
-      api: /orion-visor/api/infra/user-permission/user
+      api: /orion-visor/api/infra/user-aggregate/user
       header:
         Authorization: Bearer {{.login.data.token}}
     expect:
@@ -26,7 +26,7 @@ items:
         msg: "success"
   - name: menu
     request:
-      api: /orion-visor/api/infra/user-permission/menu
+      api: /orion-visor/api/infra/user-aggregate/menu
       header:
         Authorization: Bearer {{.login.data.token}}
     expect:
