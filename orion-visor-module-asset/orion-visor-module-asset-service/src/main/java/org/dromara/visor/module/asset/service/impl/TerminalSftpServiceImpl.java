@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +138,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -164,7 +171,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(SecurityUtils.getLoginUserId(), cache.getHostId());
+            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();

@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +23,6 @@
 package org.dromara.visor.module.asset.service.impl;
 
 import cn.orionsec.kit.lang.annotation.Keep;
-import cn.orionsec.kit.lang.define.collect.MultiHashMap;
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Booleans;
@@ -32,11 +38,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.common.constant.Const;
 import org.dromara.visor.framework.common.constant.ErrorMessage;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
 import org.dromara.visor.framework.common.enums.EndpointDefine;
 import org.dromara.visor.framework.common.file.FileClient;
 import org.dromara.visor.framework.common.security.LoginUser;
-import org.dromara.visor.framework.common.utils.PathUtils;
 import org.dromara.visor.framework.common.utils.SqlUtils;
 import org.dromara.visor.framework.common.utils.Valid;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
@@ -53,15 +57,16 @@ import org.dromara.visor.module.asset.entity.domain.UploadTaskFileDO;
 import org.dromara.visor.module.asset.entity.dto.UploadTaskExtraDTO;
 import org.dromara.visor.module.asset.entity.request.upload.*;
 import org.dromara.visor.module.asset.entity.vo.*;
-import org.dromara.visor.module.asset.enums.*;
-import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
+import org.dromara.visor.module.asset.enums.HostStatusEnum;
+import org.dromara.visor.module.asset.enums.HostTypeEnum;
+import org.dromara.visor.module.asset.enums.UploadTaskFileStatusEnum;
+import org.dromara.visor.module.asset.enums.UploadTaskStatusEnum;
 import org.dromara.visor.module.asset.handler.host.upload.FileUploadTasks;
 import org.dromara.visor.module.asset.handler.host.upload.manager.FileUploadTaskManager;
 import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import org.dromara.visor.module.asset.handler.host.upload.task.IFileUploadTask;
 import org.dromara.visor.module.asset.handler.host.upload.uploader.IFileUploader;
 import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
-import org.dromara.visor.module.asset.service.HostConfigService;
 import org.dromara.visor.module.asset.service.UploadTaskFileService;
 import org.dromara.visor.module.asset.service.UploadTaskService;
 import org.dromara.visor.module.infra.api.FileUploadApi;
@@ -103,9 +108,6 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @Resource
-    private HostConfigService hostConfigService;
-
-    @Resource
     private FileUploadTaskManager fileUploadTaskManager;
 
     @Keep
@@ -126,8 +128,6 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         this.checkHostPermission(hostIdList);
         // 查询主机信息
         List<HostDO> hosts = this.getUploadTaskHosts(hostIdList);
-        // 计算文件路径
-        MultiHashMap<Long, String, String> realRemoteFilePathMap = this.setFileRealRemotePath(request, hosts);
         // 转换
         UploadTaskDO record = UploadTaskConvert.MAPPER.to(request);
         record.setUserId(user.getId());
@@ -153,7 +153,6 @@ public class UploadTaskServiceImpl implements UploadTaskService {
                             .hostId(hostId)
                             .fileId(s.getFileId())
                             .filePath(s.getFilePath())
-                            .realFilePath(realRemoteFilePathMap.get(hostId, s.getFileId()))
                             .fileSize(s.getFileSize())
                             .status(UploadTaskFileStatusEnum.WAITING.name())
                             .build())
@@ -204,8 +203,10 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询任务
         List<UploadTaskStatusVO> tasks = uploadTaskDAO.of()
                 .createWrapper()
-                .select(UploadTaskDO::getId, UploadTaskDO::getStatus,
-                        UploadTaskDO::getStartTime, UploadTaskDO::getEndTime)
+                .select(UploadTaskDO::getId,
+                        UploadTaskDO::getStatus,
+                        UploadTaskDO::getStartTime,
+                        UploadTaskDO::getEndTime)
                 .in(UploadTaskDO::getId, idList)
                 .then()
                 .list(UploadTaskConvert.MAPPER::toStatus);
@@ -215,9 +216,14 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询任务文件
         Map<Long, List<UploadTaskFileVO>> taskFilesMap = uploadTaskFileDAO.of()
                 .createWrapper()
-                .select(UploadTaskFileDO::getId, UploadTaskFileDO::getTaskId, UploadTaskFileDO::getHostId,
-                        UploadTaskFileDO::getStatus, UploadTaskFileDO::getFileSize,
-                        UploadTaskFileDO::getStartTime, UploadTaskFileDO::getEndTime)
+                .select(UploadTaskFileDO::getId,
+                        UploadTaskFileDO::getTaskId,
+                        UploadTaskFileDO::getHostId,
+                        UploadTaskFileDO::getStatus,
+                        UploadTaskFileDO::getFileSize,
+                        UploadTaskFileDO::getErrorMessage,
+                        UploadTaskFileDO::getStartTime,
+                        UploadTaskFileDO::getEndTime)
                 .in(UploadTaskFileDO::getTaskId, idList)
                 .then()
                 .stream()
@@ -378,49 +384,6 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     }
 
     /**
-     * 设置文件实际路径
-     *
-     * @param request request
-     * @param hosts   hosts
-     * @return realRemoteFilePathMap
-     */
-    public MultiHashMap<Long, String, String> setFileRealRemotePath(UploadTaskCreateRequest request,
-                                                                    List<HostDO> hosts) {
-        MultiHashMap<Long, String, String> realRemoteFilePathMap = MultiHashMap.create();
-        // 计算上传目录
-        String remotePath = request.getRemotePath();
-        List<UploadTaskFileRequest> files = request.getFiles();
-        boolean containsEnv = remotePath.contains(Const.DOLLAR);
-        if (containsEnv) {
-            // 获取主机配置信息
-            Map<Long, HostSshConfigModel> hostConfigMap = hostConfigService.buildHostConfigMap(hosts, HostTypeEnum.SSH);
-            hostConfigMap.forEach((k, v) -> {
-                // 替换占位符
-                String username = v.getUsername();
-                String home = PathUtils.getHomePath(HostSshOsTypeEnum.isWindows(v.getOsType()), username);
-                // 替换环境变量路径
-                Map<String, String> env = Maps.newMap(4);
-                env.put(ExtraFieldConst.USERNAME, username);
-                env.put(ExtraFieldConst.HOME, home);
-                // 设置主机上传路径
-                String realRemotePath = Files1.getPath(Strings.format(remotePath, env));
-                for (UploadTaskFileRequest file : files) {
-                    realRemoteFilePathMap.put(k, file.getFileId(), Files1.getPath(realRemotePath, file.getFilePath()));
-                }
-            });
-        } else {
-            // 无占位符
-            for (UploadTaskFileRequest file : files) {
-                String path = Files1.getPath(remotePath, file.getFilePath());
-                for (HostDO host : hosts) {
-                    realRemoteFilePathMap.put(host.getId(), file.getFileId(), path);
-                }
-            }
-        }
-        return realRemoteFilePathMap;
-    }
-
-    /**
      * 检查文件完整性
      *
      * @param id id
@@ -444,7 +407,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
             return;
         }
         // 修改任务状态
-        uploadTaskFileDAO.updateStatusByIdList(cancelIdList, UploadTaskFileStatusEnum.CANCELED.name());
+        uploadTaskFileDAO.updateToCanceledByIdList(cancelIdList);
     }
 
     /**

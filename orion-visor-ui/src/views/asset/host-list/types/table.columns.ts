@@ -25,7 +25,7 @@ const columns = [
     dataIndex: 'type',
     slotName: 'type',
     align: 'center',
-    width: 88,
+    width: 100,
   }, {
     title: '主机地址',
     dataIndex: 'address',

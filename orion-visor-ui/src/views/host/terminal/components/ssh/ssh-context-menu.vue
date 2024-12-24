@@ -12,7 +12,7 @@
       <a-doption v-for="(action, index) in actions"
                  :key="index"
                  :disabled="!session.handler.enabledStatus(action.item)"
-                 @click="emits('click', action.item)">
+                 @click="emits('handle', action.item)">
         <!-- 图标 -->
         <div class="terminal-context-menu-icon">
           <component :is="action.icon" />
@@ -39,7 +39,7 @@
     session?: ISshSession;
   }>();
 
-  const emits = defineEmits(['click']);
+  const emits = defineEmits(['handle']);
 
   const { preference } = useTerminalStore();
 

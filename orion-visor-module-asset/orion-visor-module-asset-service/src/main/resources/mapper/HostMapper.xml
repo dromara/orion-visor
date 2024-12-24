@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.asset.entity.domain.HostDO">
         <id column="id" property="id"/>
         <result column="type" property="type"/>
+        <result column="os_type" property="osType"/>
         <result column="name" property="name"/>
         <result column="code" property="code"/>
         <result column="address" property="address"/>
@@ -21,7 +22,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, type, name, code, address, port, status, config, create_time, update_time, creator, updater, deleted
+        id, type, os_type, name, code, address, port, status, config, create_time, update_time, creator, updater, deleted
     </sql>
 
     <update id="setKeyIdWithNull">

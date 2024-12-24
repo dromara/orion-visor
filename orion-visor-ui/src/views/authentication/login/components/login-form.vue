@@ -3,9 +3,7 @@
     <!-- 标题 -->
     <div class="login-form-title usn">{{ $t('login.form.title') }}</div>
     <!-- 子标题 -->
-    <div v-if="!isDemoMode" class="login-form-sub-title">{{ $t('login.form.sub.title') }}</div>
-    <!-- 演示模式 -->
-    <div v-else class="login-form-sub-title">{{ $t('login.form.demo.title') }}</div>
+    <div class="login-form-sub-title">{{ $t('login.form.sub.title') }}</div>
     <!-- 错误信息 -->
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <!-- 登录表单 -->
@@ -56,7 +54,7 @@
   import { useI18n } from 'vue-i18n';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import { isDemoMode } from '@/utils/env';
+  import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -83,7 +81,7 @@
         // 跳转路由
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({
-          name: (redirect as string) || 'workplace',
+          name: (redirect as string) || DEFAULT_ROUTE_NAME,
           query: {
             ...othersQuery,
           },

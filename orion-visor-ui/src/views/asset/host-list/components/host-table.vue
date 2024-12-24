@@ -32,6 +32,13 @@
                   placeholder="请选择主机类型"
                   allow-clear />
       </a-form-item>
+      <!-- 系统类型 -->
+      <a-form-item field="osType" label="系统类型">
+        <a-select v-model="formModel.osType"
+                  :options="toOptions(hostOsTypeKey)"
+                  placeholder="请选择系统类型"
+                  allow-clear />
+      </a-form-item>
       <!-- 主机状态 -->
       <a-form-item field="status" label="主机状态">
         <a-select v-model="formModel.status"
@@ -131,8 +138,13 @@
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 主机类型 -->
       <template #type="{ record }">
-        <a-tag :color="getDictValue(hostTypeKey, record.type, 'color')">
-          {{ getDictValue(hostTypeKey, record.type) }}
+        <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
+          <!-- 系统类型图标 -->
+          <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
+                     :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+                     class="os-icon" />
+          <!-- 主机类型 -->
+          <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
         </a-tag>
       </template>
       <!-- 主机编码 -->
@@ -221,16 +233,16 @@
                 </span>
               </a-doption>
               <!-- SSH -->
-              <a-doption v-if="record.type === hostType.SSH.type"
-                         v-permission="['asset:terminal:access']"
+              <a-doption v-if="record.type === HostType.SSH.value"
+                         v-permission="['terminal:terminal:access']"
                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
                 <span class="more-doption normal">
                   SSH
                 </span>
               </a-doption>
               <!-- SFTP -->
-              <a-doption v-if="record.type === hostType.SSH.type"
-                         v-permission="['asset:terminal:access']"
+              <a-doption v-if="record.type === HostType.SSH.value"
+                         v-permission="['terminal:terminal:access']"
                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
                 <span class="more-doption normal">
                   SFTP
@@ -255,7 +267,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor, hostTypeKey, hostStatusKey, hostType } from '../types/const';
+  import { tagColor, hostTypeKey, hostStatusKey, HostType, HostOsType, hostOsTypeKey } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
@@ -282,6 +294,7 @@
     code: undefined,
     address: undefined,
     type: undefined,
+    osType: undefined,
     status: undefined,
     tags: undefined,
     queryTag: true
@@ -380,6 +393,12 @@
 </script>
 
 <style lang="less" scoped>
+
+  .os-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+  }
 
   .row-handle-wrapper {
     display: flex;

@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +117,7 @@ public class TransferHandler implements ITransferHandler {
             if (terminalConnection == null) {
                 // 获取终端连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
-                TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(userId, hostId);
+                TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId, userId);
                 terminalConnection = new TerminalConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
                 terminalConnections.put(hostId, terminalConnection);
             }

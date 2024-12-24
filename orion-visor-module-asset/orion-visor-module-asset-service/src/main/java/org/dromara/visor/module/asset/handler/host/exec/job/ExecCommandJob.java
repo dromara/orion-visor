@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +25,11 @@ package org.dromara.visor.module.asset.handler.host.exec.job;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import org.dromara.visor.framework.common.constant.Const;
 import org.dromara.visor.framework.common.constant.FieldConst;
+import org.dromara.visor.module.asset.dao.ExecJobDAO;
+import org.dromara.visor.module.asset.entity.domain.ExecJobDO;
 import org.dromara.visor.module.asset.entity.request.exec.ExecJobTriggerRequest;
+import org.dromara.visor.module.asset.enums.ExecModeEnum;
 import org.dromara.visor.module.asset.service.ExecJobService;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -35,19 +44,28 @@ import org.quartz.JobExecutionContext;
 @Slf4j
 public class ExecCommandJob implements Job {
 
+    private static final ExecJobDAO execJobDAO = SpringHolder.getBean(ExecJobDAO.class);
+
     private static final ExecJobService execJobService = SpringHolder.getBean(ExecJobService.class);
 
     @Override
     public void execute(JobExecutionContext context) {
         long id = context.getMergedJobDataMap().getLong(FieldConst.KEY);
         log.info("ExecCommandJob.execute id: {}", id);
+        // 查询任务
+        ExecJobDO job = execJobDAO.selectById(id);
+        if (job == null) {
+            log.info("ExecCommandJob.execute absent id: {}", id);
+            return;
+        }
         // 执行命令
         ExecJobTriggerRequest request = ExecJobTriggerRequest.builder()
                 .id(id)
-                .userId(Const.SYSTEM_USER_ID)
-                .username(Const.SYSTEM_USERNAME)
+                .userId(job.getExecUserId())
+                .username(job.getExecUsername())
+                .execMode(ExecModeEnum.JOB.name())
                 .build();
-        execJobService.triggerExecJob(request);
+        execJobService.triggerExecJob(request, job);
         // 清理日志上下文
         OperatorLogs.clear();
     }

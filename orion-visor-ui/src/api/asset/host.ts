@@ -12,6 +12,7 @@ export type HostType = 'SSH' | string | undefined;
  */
 export interface HostCreateRequest {
   type?: string;
+  osType?: string;
   name?: string;
   code?: string;
   address?: string;
@@ -50,6 +51,7 @@ export interface HostQueryRequest extends Pagination {
   searchValue?: string;
   id?: number;
   type?: string;
+  osType?: string;
   name?: string;
   code?: string;
   address?: string;
@@ -64,6 +66,7 @@ export interface HostQueryRequest extends Pagination {
 export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   id: number;
   type: string;
+  osType?: string;
   name: string;
   code: string;
   address: string;

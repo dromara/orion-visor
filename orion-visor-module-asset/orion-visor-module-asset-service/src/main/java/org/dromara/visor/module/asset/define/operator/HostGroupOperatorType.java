@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +23,10 @@
 package org.dromara.visor.module.asset.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 主机分组 操作日志类型
@@ -45,12 +53,12 @@ public class HostGroupOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CREATE, "创建主机分组 <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.L, RENAME, "重命名主机分组 <sb>${before}</sb> -> <sb>${name}</sb>"),
-                new OperatorType(OperatorRiskLevel.L, MOVE, "移动主机分组 <sb>${source}</sb> 到 <sb>${target}(${position})</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE, "删除主机分组 <sb>${groupName}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, UPDATE_REL, "修改分组内主机 <sb>${groupName}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, GRANT, "将主机分组权限授予 <sb>${grantType}</sb> <sb>${grantName}</sb>"),
+                new OperatorType(L, CREATE, "创建主机分组 <sb>${name}</sb>"),
+                new OperatorType(L, RENAME, "重命名主机分组 <sb>${before}</sb> -> <sb>${name}</sb>"),
+                new OperatorType(L, MOVE, "移动主机分组 <sb>${source}</sb> 到 <sb>${target}(${position})</sb>"),
+                new OperatorType(H, DELETE, "删除主机分组 <sb>${groupName}</sb>"),
+                new OperatorType(M, UPDATE_REL, "修改分组内主机 <sb>${groupName}</sb>"),
+                new OperatorType(H, GRANT, "将主机分组权限授予 <sb>${grantType}</sb> <sb>${grantName}</sb>"),
         };
     }
 

@@ -2,7 +2,7 @@
   <a-modal v-model:visible="visible"
            modal-class="modal-form-large"
            title-align="start"
-           title="重置密码"
+           title="修改密码"
            :top="120"
            :align-center="false"
            :draggable="true"
@@ -16,15 +16,24 @@
       <a-form :model="formModel"
               ref="formRef"
               label-align="right"
-              :rules="rules"
-              :auto-label-width="true">
-        <!-- 密码 -->
-        <a-form-item field="beforePassword" label="原始密码">
+              :rules="rules">
+        <!-- 原始密码 -->
+        <a-form-item field="beforePassword"
+                     label="原始密码"
+                     hide-label>
           <a-input-password v-model="formModel.beforePassword" placeholder="请输入原始密码" />
         </a-form-item>
-        <!-- 密码 -->
-        <a-form-item field="password" label="新密码">
+        <!-- 新密码 -->
+        <a-form-item field="password"
+                     label="新密码"
+                     hide-label>
           <a-input-password v-model="formModel.password" placeholder="请输入新密码" />
+        </a-form-item>
+        <!-- 确认密码 -->
+        <a-form-item field="checkPassword"
+                     label="确认密码"
+                     hide-label>
+          <a-input-password v-model="formModel.checkPassword" placeholder="请再次输入新密码" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -38,12 +47,13 @@
 </script>
 
 <script lang="ts" setup>
+  import type { FieldRule } from '@arco-design/web-vue';
   import type { UserUpdatePasswordRequest } from '@/api/user/mine';
   import { ref } from 'vue';
+  import { md5 } from '@/utils';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
-  import { md5 } from '@/utils';
   import { updateCurrentUserPassword } from '@/api/user/mine';
 
   const emits = defineEmits(['updated']);
@@ -63,8 +73,26 @@
       minLength: 8,
       maxLength: 32,
       message: '新密码长度需要在 8-32 位之间'
+    }, {
+      validator: (value, cb) => {
+        if (formModel.value.beforePassword === value) {
+          cb('新密码不能和原始密码相同');
+          return;
+        }
+      }
     }],
-  };
+    checkPassword: [{
+      required: true,
+      message: '请再次输入新密码'
+    }, {
+      validator: (value, cb) => {
+        if (formModel.value.password !== value) {
+          cb('两次输入的密码不一致');
+          return;
+        }
+      }
+    }],
+  } as Record<string, FieldRule | FieldRule[]>;
 
   const formRef = ref();
   const formModel = ref<UserUpdatePasswordRequest>({});
@@ -73,7 +101,8 @@
   const open = () => {
     formModel.value = {
       beforePassword: undefined,
-      password: undefined
+      password: undefined,
+      checkPassword: undefined,
     };
     setVisible(true);
   };
@@ -87,16 +116,6 @@
       // 验证参数
       const error = await formRef.value.validate();
       if (error) {
-        return false;
-      }
-      // 相同校验
-      if (formModel.value.beforePassword === formModel.value.password) {
-        formRef.value.setFields({
-          password: {
-            status: 'error',
-            message: '新密码不能和原始密码相同'
-          }
-        });
         return false;
       }
       // 修改

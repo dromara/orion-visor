@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +102,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Exception ex = null;
         try {
             // 获取连接信息
-            connect = terminalService.getTerminalConnectInfo(userId, host);
+            connect = terminalService.getTerminalConnectInfo(host, userId);
             connect.setConnectType(connectType.name());
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);

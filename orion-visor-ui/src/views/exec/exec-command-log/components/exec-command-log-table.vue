@@ -177,7 +177,7 @@
                       type="text"
                       size="mini"
                       status="danger"
-                      :disabled="record.status !== execStatus.WAITING && record.status !== execStatus.RUNNING">
+                      :disabled="record.status !== ExecStatus.WAITING && record.status !== ExecStatus.RUNNING">
               中断
             </a-button>
           </a-popconfirm>
@@ -219,7 +219,7 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { execStatus, execStatusKey } from '@/components/exec/log/const';
+  import { ExecStatus, execStatusKey } from '@/components/exec/log/const';
   import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
@@ -312,7 +312,7 @@
         logId: record.id
       });
       Message.success('已中断');
-      record.status = execStatus.COMPLETED;
+      record.status = ExecStatus.COMPLETED;
     } catch (e) {
     } finally {
       setLoading(false);
@@ -345,7 +345,7 @@
   // 加载状态
   const pullExecStatus = async () => {
     const unCompleteIdList = tableRenderData.value
-      .filter(s => s.status === execStatus.WAITING || s.status === execStatus.RUNNING)
+      .filter(s => s.status === ExecStatus.WAITING || s.status === ExecStatus.RUNNING)
       .map(s => s.id);
     if (!unCompleteIdList.length) {
       return;

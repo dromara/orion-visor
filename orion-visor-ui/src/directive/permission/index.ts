@@ -6,8 +6,15 @@ function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
   const permission = usePermission();
   if (Array.isArray(value)) {
     if (value.length > 0) {
-      if (!permission.hasAnyPermission(value) && el.parentNode) {
-        el.parentNode.removeChild(el);
+      const parentNode = el.parentNode as Element;
+      if (!permission.hasAnyPermission(value) && parentNode) {
+        if (parentNode.classList.contains('arco-space-item')) {
+          // 如果是 arco-space-item 则移除父节点
+          parentNode.parentNode?.removeChild(parentNode);
+        } else {
+          // 只移除当前元素
+          parentNode.removeChild(el);
+        }
       }
     }
   } else {

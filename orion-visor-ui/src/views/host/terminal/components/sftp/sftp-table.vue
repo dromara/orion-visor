@@ -18,7 +18,7 @@
         <a-space direction="vertical">
           <!-- 过滤输入框 -->
           <a-input size="small"
-                   :ref="setAutoFocus as unknown as VNodeRef"
+                   :ref="setAutoFocus"
                    :model-value="filterValue[0]"
                    @input="(value: string) => setFilterValue([value])"
                    @press-enter="handleFilterConfirm" />
@@ -142,7 +142,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { VNodeRef } from 'vue';
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { SftpFile, ISftpSession } from '../../types/define';
   import type { SftpSetting } from '@/api/system/setting';

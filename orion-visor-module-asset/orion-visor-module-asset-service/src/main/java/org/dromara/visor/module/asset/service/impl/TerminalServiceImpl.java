@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,16 +177,16 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public TerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId) {
+    public TerminalConnectDTO getTerminalConnectInfo(Long hostId, Long userId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
         // 获取配置
-        return this.getTerminalConnectInfo(userId, host);
+        return this.getTerminalConnectInfo(host, userId);
     }
 
     @Override
-    public TerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host) {
+    public TerminalConnectDTO getTerminalConnectInfo(HostDO host, Long userId) {
         Long hostId = host.getId();
         log.info("HostTerminalService.getTerminalConnectInfo hostId: {}, userId: {}", hostId, userId);
         // 验证主机是否有权限
@@ -229,7 +236,7 @@ public class TerminalServiceImpl implements TerminalService {
         conn.setHostName(host.getName());
         conn.setHostAddress(host.getAddress());
         conn.setHostPort(host.getPort());
-        conn.setOsType(config.getOsType());
+        conn.setOsType(host.getOsType());
         conn.setTimeout(config.getConnectTimeout());
         conn.setCharset(config.getCharset());
         conn.setFileNameCharset(config.getFileNameCharset());

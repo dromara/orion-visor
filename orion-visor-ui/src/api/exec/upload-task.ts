@@ -89,6 +89,7 @@ export interface UploadTaskFile {
   filePath: string;
   fileSize: number;
   status: string;
+  errorMessage: string;
   startTime: number;
   endTime: number;
   current: number;

@@ -4,6 +4,7 @@ import type { TerminalTheme } from '@/api/asset/terminal';
 
 export interface TerminalState {
   preference: TerminalPreference;
+  layoutState: TerminalLayoutState;
   hosts: AuthorizedHostQueryResponse;
   tabManager: ITerminalTabManager;
   panelManager: ITerminalPanelManager;
@@ -38,7 +39,6 @@ export interface TerminalDisplaySetting {
 
 // 操作栏设置
 export interface TerminalActionBarSetting {
-  commandInput?: boolean;
   connectStatus?: boolean;
 
   [key: string]: unknown;
@@ -98,4 +98,10 @@ export interface TerminalShortcutKeyEditable extends TerminalShortcutKey {
   content: string;
   type: number;
   shortcutKey?: string;
+}
+
+// 终端布局状态
+export interface TerminalLayoutState {
+  commandBar: boolean;
+  fullscreen: boolean;
 }

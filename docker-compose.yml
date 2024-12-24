@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   service:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-service:2.2.1
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:2.2.2
     privileged: true
     ports:
       - ${SERVICE_PORT:-1081}:80
@@ -32,7 +32,7 @@ services:
       - mysql
       - redis
   mysql:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-mysql:2.2.1
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:2.2.2
     privileged: true
     ports:
       - 3307:3306
@@ -52,7 +52,7 @@ services:
       retries: 15
       start_period: 3s
   redis:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-redis:2.2.1
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:2.2.2
     privileged: true
     ports:
       - 6380:6379
@@ -68,7 +68,7 @@ services:
       retries: 15
       start_period: 3s
   adminer:
-    image: registry.cn-hangzhou.aliyuncs.com/lijiahangmax/orion-visor-adminer:2.2.1
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-adminer:2.2.2
     ports:
       - 8081:8080
     depends_on:

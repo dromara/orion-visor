@@ -1,6 +1,5 @@
 // 主机 SSH 配置
 export interface HostSshConfig {
-  osType?: string;
   username?: string;
   password?: string;
   authType?: string;

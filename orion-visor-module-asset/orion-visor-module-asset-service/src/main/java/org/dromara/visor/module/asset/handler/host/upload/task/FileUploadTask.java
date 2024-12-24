@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +38,7 @@ import org.dromara.visor.module.asset.entity.domain.UploadTaskFileDO;
 import org.dromara.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import org.dromara.visor.module.asset.enums.UploadTaskStatusEnum;
 import org.dromara.visor.module.asset.handler.host.upload.manager.FileUploadTaskManager;
+import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadConfigDTO;
 import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
 import org.dromara.visor.module.asset.handler.host.upload.uploader.FileUploader;
 import org.dromara.visor.module.asset.handler.host.upload.uploader.IFileUploader;
@@ -102,6 +110,8 @@ public class FileUploadTask implements IFileUploadTask {
         } catch (Exception e) {
             log.error("FileUploadTask.run error id: {}", id, e);
         } finally {
+            // 移除任务
+            fileUploadTaskManager.removeTask(id);
             // 修改状态
             if (canceled) {
                 this.updateStatus(UploadTaskStatusEnum.CANCELED);
@@ -110,8 +120,6 @@ public class FileUploadTask implements IFileUploadTask {
             }
             // 检查是否发送消息
             this.checkSendMessage();
-            // 移除任务
-            fileUploadTaskManager.removeTask(id);
             // 释放资源
             this.close();
         }
@@ -156,7 +164,7 @@ public class FileUploadTask implements IFileUploadTask {
                     .map(s -> FileUploadFileItemDTO.builder()
                             .id(s.getId())
                             .fileId(s.getFileId())
-                            .remotePath(s.getRealFilePath())
+                            .filePath(s.getFilePath())
                             .status(UploadTaskFileStatusEnum.WAITING.name())
                             .current(0L)
                             .build())
@@ -165,7 +173,14 @@ public class FileUploadTask implements IFileUploadTask {
                 return;
             }
             // 添加到上传器
-            uploaderList.add(new FileUploader(id, k, files));
+            FileUploadConfigDTO config = FileUploadConfigDTO.builder()
+                    .taskId(id)
+                    .hostId(k)
+                    .userId(record.getUserId())
+                    .remotePath(record.getRemotePath())
+                    .files(files)
+                    .build();
+            uploaderList.add(new FileUploader(config));
         });
     }
 

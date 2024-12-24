@@ -1,10 +1,10 @@
 <template>
   <div v-if="render"
        class="host-terminal-layout"
-       :class="{ 'terminal-full-layout': fullscreen }">
+       :class="{ 'terminal-full-layout': layoutState.fullscreen }">
     <!-- 头部区域 -->
     <header class="host-terminal-layout-header">
-      <layout-header @fullscreen="enterFullscreen" />
+      <layout-header @fullscreen="toggleFullscreen" />
     </header>
     <!-- 主体区域 -->
     <main class="host-terminal-layout-main">
@@ -21,6 +21,7 @@
                       @open-command-snippet="() => snippetRef.open()"
                       @open-path-bookmark="() => pathRef.open()"
                       @open-transfer-list="() => transferRef.open()"
+                      @open-command-bar="openCommandBar"
                       @screenshot="screenshot" />
       </main>
       <!-- 右侧操作栏 -->
@@ -28,15 +29,16 @@
         <right-sidebar @open-command-snippet="() => snippetRef.open()"
                        @open-path-bookmark="() => pathRef.open()"
                        @open-transfer-list="() => transferRef.open()"
+                       @open-command-bar="openCommandBar"
                        @screenshot="screenshot" />
       </div>
     </main>
     <!-- 退出全屏 -->
-    <a-button v-if="fullscreen"
+    <a-button v-if="layoutState.fullscreen"
               class="exit-fullscreen"
               shape="circle"
               title="退出全屏"
-              @click="exitFullscreen">
+              @click="toggleFullscreen">
       <icon-fullscreen-exit />
     </a-button>
     <!-- 命令片段列表抽屉 -->
@@ -75,7 +77,10 @@
   import '@/assets/style/host-terminal-layout.less';
   import '@xterm/xterm/css/xterm.css';
 
-  const { fetchPreference, getCurrentSession, openSession, preference, loadHosts, hosts, tabManager } = useTerminalStore();
+  const {
+    fetchPreference, getCurrentSession, openSession,
+    layoutState, preference, loadHosts, hosts, tabManager, sessionManager
+  } = useTerminalStore();
   const { loading, setLoading } = useLoading(true);
   const { enter: enterFull, exit: exitFull } = useFullscreen();
   const route = useRoute();
@@ -85,7 +90,6 @@
   const snippetRef = ref();
   const pathRef = ref();
   const transferRef = ref();
-  const fullscreen = ref();
 
   // 终端截屏
   const screenshot = () => {
@@ -95,18 +99,28 @@
     }
   };
 
-  // 进入全屏
-  const enterFullscreen = () => {
-    fullscreen.value = true;
-    // 进入全屏
-    enterFull();
+  // 打开命令发送
+  const openCommandBar = () => {
+    const session = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true);
+    if (session) {
+      layoutState.commandBar = true;
+    }
   };
 
-  // 退出全屏
-  const exitFullscreen = () => {
-    fullscreen.value = false;
-    // 退出全屏
-    exitFull();
+  // 切换全屏
+  const toggleFullscreen = () => {
+    layoutState.fullscreen = !layoutState.fullscreen;
+    if (layoutState.fullscreen) {
+      // 进入全屏
+      enterFull();
+    } else {
+      // 退出全屏
+      exitFull();
+    }
+    // 自适应
+    setTimeout(() => {
+      sessionManager.dispatchResize();
+    }, 200);
   };
 
   // 自动聚焦
@@ -215,10 +229,6 @@
         :deep(.host-terminal-layout-content) {
           width: 100%;
         }
-      }
-
-      :deep(.terminal-panels-container) {
-        height: 100vh !important;
       }
     }
 

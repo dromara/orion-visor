@@ -16,14 +16,14 @@ const columns = [
     ellipsis: true,
     tooltip: true
   }, {
+    title: '用户名',
+    dataIndex: 'username',
+    slotName: 'username',
+  }, {
     title: '类型',
     dataIndex: 'type',
     slotName: 'type',
     width: 138,
-  }, {
-    title: '用户名',
-    dataIndex: 'username',
-    slotName: 'username',
   }, {
     title: '主机密钥',
     dataIndex: 'keyId',

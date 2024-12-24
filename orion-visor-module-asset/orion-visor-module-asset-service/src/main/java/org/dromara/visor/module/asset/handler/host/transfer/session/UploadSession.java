@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +62,7 @@ public class UploadSession extends TransferSession {
             // 检查连接
             this.init();
             // 检查文件是否存在
-            SftpUtils.checkUploadFilePresent(SFTP_CONFIG, executor, path);
+            SftpUtils.checkUploadFilePresent(sftpConfig, executor, path);
             // 打开输出流
             this.outputStream = executor.openOutputStream(path);
             // 响应结果

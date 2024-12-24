@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +56,8 @@ import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.UserInfoDTO;
 import org.dromara.visor.module.infra.entity.request.user.*;
 import org.dromara.visor.module.infra.entity.vo.SystemUserVO;
+import org.dromara.visor.module.infra.enums.UpdatePasswordReasonEnum;
+import org.dromara.visor.module.infra.enums.UpdatePasswordStatusEnum;
 import org.dromara.visor.module.infra.enums.UserStatusEnum;
 import org.dromara.visor.module.infra.service.*;
 import org.springframework.scheduling.annotation.Async;
@@ -118,6 +127,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         this.checkNicknamePresent(record);
         // 加密密码
         record.setPassword(Signatures.md5(request.getPassword()));
+        record.setUpdatePasswordStatus(UpdatePasswordStatusEnum.REQUIRED.getStatus());
+        record.setUpdatePasswordReason(UpdatePasswordReasonEnum.NEW.name());
         // 插入
         int effect = systemUserDAO.insert(record);
         log.info("SystemUserService-createSystemUser effect: {}, record: {}", effect, JSON.toJSONString(record));
@@ -309,6 +320,8 @@ public class SystemUserServiceImpl implements SystemUserService {
         SystemUserDO update = new SystemUserDO();
         update.setId(id);
         update.setPassword(Signatures.md5(request.getPassword()));
+        update.setUpdatePasswordStatus(UpdatePasswordStatusEnum.NO_REQUIRE.getStatus());
+        update.setUpdatePasswordReason(Const.EMPTY);
         int effect = systemUserDAO.updateById(update);
         log.info("SystemUserService-resetPassword record: {}, effect: {}", JSON.toJSONString(update), effect);
         // 删除登录失败次数缓存

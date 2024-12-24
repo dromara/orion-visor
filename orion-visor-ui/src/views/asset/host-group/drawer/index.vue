@@ -25,7 +25,7 @@
             </div>
             <!-- 操作 -->
             <div class="tree-card-handler">
-              <a-button v-permission="['asset:host-group:create']"
+              <a-button v-permission="['asset:host-group:update']"
                         class="handler-icon-wrapper icon-button mr4"
                         title="根节点添加"
                         @click="addRootNode">

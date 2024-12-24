@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.common.constant.Const;
 import org.dromara.visor.framework.common.constant.ErrorMessage;
+import org.dromara.visor.framework.common.security.LoginUser;
 import org.dromara.visor.framework.common.utils.Valid;
 import org.dromara.visor.framework.job.core.utils.QuartzUtils;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -41,15 +49,13 @@ import org.dromara.visor.module.asset.entity.request.exec.*;
 import org.dromara.visor.module.asset.entity.vo.ExecJobVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogVO;
 import org.dromara.visor.module.asset.entity.vo.HostBaseVO;
-import org.dromara.visor.module.asset.enums.ExecJobStatusEnum;
-import org.dromara.visor.module.asset.enums.ExecSourceEnum;
-import org.dromara.visor.module.asset.enums.HostTypeEnum;
-import org.dromara.visor.module.asset.enums.ScriptExecEnum;
+import org.dromara.visor.module.asset.enums.*;
 import org.dromara.visor.module.asset.handler.host.exec.job.ExecCommandJob;
 import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
 import org.dromara.visor.module.asset.service.ExecCommandService;
 import org.dromara.visor.module.asset.service.ExecJobHostService;
 import org.dromara.visor.module.asset.service.ExecJobService;
+import org.dromara.visor.module.infra.api.SystemUserApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +63,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -84,6 +89,9 @@ public class ExecJobServiceImpl implements ExecJobService {
     private HostDAO hostDAO;
 
     @Resource
+    private SystemUserApi systemUserApi;
+
+    @Resource
     private ExecJobHostService execJobHostService;
 
     @Resource
@@ -96,6 +104,7 @@ public class ExecJobServiceImpl implements ExecJobService {
     @Transactional(rollbackFor = Exception.class)
     public Long createExecJob(ExecJobCreateRequest request) {
         log.info("ExecJobService-createExecJob request: {}", JSON.toJSONString(request));
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         // 验证表达式是否正确
         Cron.of(request.getExpression());
         Valid.valid(ScriptExecEnum::of, request.getScriptExec());
@@ -107,6 +116,10 @@ public class ExecJobServiceImpl implements ExecJobService {
         this.checkHostPermission(request.getHostIdList());
         // 插入任务
         record.setStatus(ExecJobStatusEnum.DISABLED.getStatus());
+        if (loginUser != null) {
+            record.setExecUserId(loginUser.getId());
+            record.setExecUsername(loginUser.getUsername());
+        }
         int effect = execJobDAO.insert(record);
         Long id = record.getId();
         // 设置任务主机
@@ -166,6 +179,31 @@ public class ExecJobServiceImpl implements ExecJobService {
         OperatorLogs.add(OperatorLogs.STATUS_NAME, status.getStatusName());
         // 设置 quartz 状态
         this.setQuartzJobStatus(record, true, ExecJobStatusEnum.ENABLED.equals(status));
+        return effect;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateExecJobExecUser(ExecJobUpdateExecUserRequest request) {
+        Long id = request.getId();
+        Long userId = request.getUserId();
+        log.info("ExecJobService-updateExecJobExecUser id: {}, userId: {}", id, userId);
+        // 查询任务
+        ExecJobDO job = execJobDAO.selectById(id);
+        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
+        // 查询用户
+        String username = systemUserApi.getUsernameById(userId);
+        Valid.notNull(username, ErrorMessage.USER_ABSENT);
+        // 修改任务
+        ExecJobDO update = new ExecJobDO();
+        update.setId(id);
+        update.setExecUserId(userId);
+        update.setExecUsername(username);
+        int effect = execJobDAO.updateById(update);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.NAME, job.getName());
+        OperatorLogs.add(OperatorLogs.USERNAME, username);
+        log.info("ExecJobService-setExecJobExecUser effect: {}", effect);
         return effect;
     }
 
@@ -285,25 +323,27 @@ public class ExecJobServiceImpl implements ExecJobService {
     @Transactional(rollbackFor = Exception.class)
     public void manualTriggerExecJob(Long id) {
         log.info("ExecJobService.manualTriggerExecJob start id: {}", id);
+        // 查询任务
+        ExecJobDO job = execJobDAO.selectById(id);
+        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
+        // 触发请求
         ExecJobTriggerRequest request = new ExecJobTriggerRequest();
         request.setId(id);
+        request.setExecMode(ExecModeEnum.MANUAL.name());
         // 设置执行用户
-        Optional.ofNullable(SecurityUtils.getLoginUser())
-                .ifPresent(s -> {
-                    request.setUserId(s.getId());
-                    request.setUsername(s.getUsername());
-                });
+        LoginUser user = SecurityUtils.getLoginUser();
+        if (user != null) {
+            request.setUserId(user.getId());
+            request.setUsername(user.getUsername());
+        }
         // 触发任务
-        this.triggerExecJob(request);
+        this.triggerExecJob(request, job);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void triggerExecJob(ExecJobTriggerRequest request) {
+    public void triggerExecJob(ExecJobTriggerRequest request, ExecJobDO job) {
         Long id = request.getId();
-        // 查询任务
-        ExecJobDO job = execJobDAO.selectById(id);
-        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
         // 查询任务主机
         List<Long> hostIdList = execJobHostService.getHostIdByJobId(id);
         if (hostIdList.isEmpty()) {
@@ -322,6 +362,7 @@ public class ExecJobServiceImpl implements ExecJobService {
                 .username(request.getUsername())
                 .source(ExecSourceEnum.JOB.name())
                 .sourceId(id)
+                .execMode(request.getExecMode())
                 .execSeq(execSeq)
                 .description(job.getName())
                 .timeout(job.getTimeout())

@@ -17,12 +17,14 @@
         <result column="mobile" property="mobile"/>
         <result column="email" property="email"/>
         <result column="status" property="status"/>
+        <result column="update_password_status" property="updatePasswordStatus"/>
+        <result column="update_password_reason" property="updatePasswordReason"/>
         <result column="last_login_time" property="lastLoginTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password, nickname, avatar, mobile, email, status, last_login_time, create_time, update_time, creator, updater, deleted
+        id, username, password, nickname, avatar, mobile, email, status, update_password_status, update_password_reason, last_login_time, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

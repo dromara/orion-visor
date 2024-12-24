@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +34,6 @@ import org.dromara.visor.framework.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
 import org.dromara.visor.module.asset.enums.HostSshAuthTypeEnum;
-import org.dromara.visor.module.asset.enums.HostSshOsTypeEnum;
 import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +66,6 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
         return HostSshConfigModel.builder()
                 .username(USERNAME)
                 .authType(HostSshAuthTypeEnum.PASSWORD.name())
-                .osType(HostSshOsTypeEnum.LINUX.name())
                 .connectTimeout(Const.MS_S_10)
                 .charset(Const.UTF_8)
                 .fileNameCharset(Const.UTF_8)

@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,6 +125,8 @@ public interface ErrorMessage {
     String CONNECT_ERROR = "连接失败";
 
     String AUTH_ERROR = "认证失败";
+
+    String FILE_UPLOAD_ERROR = "文件上传失败";
 
     String SCRIPT_UPLOAD_ERROR = "脚本上传失败";
 

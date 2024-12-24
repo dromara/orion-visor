@@ -65,6 +65,10 @@ export default defineStore('terminal', {
         keys: []
       } as TerminalShortcutSetting,
     },
+    layoutState: {
+      commandBar: false,
+      fullscreen: false,
+    },
     hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(),
     panelManager: new TerminalPanelManager(),
@@ -267,6 +271,17 @@ export default defineStore('terminal', {
           command = `${command}\r\n`;
         }
         handler.checkAppendMissing(command);
+      }
+    },
+
+    // 粘贴命令到会话
+    pasteCommandToSession(session: ISshSession | undefined, command: string, newLine: boolean = false) {
+      const handler = session?.handler;
+      if (handler && handler.enabledStatus('pasteOrigin')) {
+        if (newLine) {
+          command = `${command}\r\n`;
+        }
+        handler.pasteOrigin(command);
       }
     },
 

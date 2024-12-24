@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +45,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Slf4j
 public class ExecLogTracker implements IExecLogTracker {
 
-    private static final AppTrackerConfig TRACKER_CONFIG = SpringHolder.getBean(AppTrackerConfig.class);
+    private static final AppTrackerConfig trackerConfig = SpringHolder.getBean(AppTrackerConfig.class);
 
     private final WebSocketSession session;
 
@@ -69,9 +76,9 @@ public class ExecLogTracker implements IExecLogTracker {
         try {
             this.tracker = new DelayTrackerListener(absolutePath, this);
             tracker.charset(config.getCharset());
-            tracker.delayMillis(TRACKER_CONFIG.getDelay());
-            tracker.offset(FileOffsetMode.LINE, TRACKER_CONFIG.getOffset());
-            tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, TRACKER_CONFIG.getWaitTimes());
+            tracker.delayMillis(trackerConfig.getDelay());
+            tracker.offset(FileOffsetMode.LINE, trackerConfig.getOffset());
+            tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, trackerConfig.getWaitTimes());
             // 开始监听文件
             tracker.run();
         } catch (Exception e) {

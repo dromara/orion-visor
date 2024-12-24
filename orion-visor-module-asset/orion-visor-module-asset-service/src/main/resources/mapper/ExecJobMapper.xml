@@ -14,6 +14,8 @@
         <result column="parameter_schema" property="parameterSchema"/>
         <result column="status" property="status"/>
         <result column="recent_log_id" property="recentLogId"/>
+        <result column="exec_user_id" property="execUserId"/>
+        <result column="exec_username" property="execUsername"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="creator" property="creator"/>
@@ -23,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, exec_seq, expression, timeout, script_exec, command, parameter_schema, status, recent_log_id, create_time, update_time, creator, updater, deleted
+        id, name, exec_seq, expression, timeout, script_exec, command, parameter_schema, status, recent_log_id, exec_user_id, exec_username, create_time, update_time, creator, updater, deleted
     </sql>
 
     <update id="incrExecSeq">

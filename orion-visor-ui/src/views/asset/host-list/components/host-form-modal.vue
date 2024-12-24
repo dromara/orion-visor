@@ -27,6 +27,12 @@
                     placeholder="请选择主机类型"
                     :options="toOptions(hostTypeKey)" />
         </a-form-item>
+        <!-- 系统类型 -->
+        <a-form-item field="osType" label="系统类型">
+          <a-select v-model="formModel.osType"
+                    placeholder="请选择系统类型"
+                    :options="toOptions(hostOsTypeKey)" />
+        </a-form-item>
         <!-- 主机名称 -->
         <a-form-item field="name" label="主机名称">
           <a-input v-model="formModel.name" placeholder="请输入主机名称" />
@@ -80,7 +86,7 @@
   import { createHost, getHost, updateHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import { pick } from 'lodash';
-  import { tagColor, hostType, hostTypeKey } from '../types/const';
+  import { tagColor, HostType, hostTypeKey, hostOsTypeKey, HostOsType } from '../types/const';
   import { useDictStore } from '@/store';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
   import HostGroupTreeSelector from '@/components/asset/host-group/tree-selector/index.vue';
@@ -95,11 +101,12 @@
   const defaultForm = (): HostUpdateRequest => {
     return {
       id: undefined,
-      type: hostType.SSH.type,
+      type: HostType.SSH.value,
+      osType: HostOsType.LINUX.value,
       name: undefined,
       code: undefined,
       address: undefined,
-      port: hostType.SSH.default.port,
+      port: HostType.SSH.port,
       tags: undefined,
       groupIdList: undefined,
     };
@@ -142,7 +149,7 @@
       setLoading(true);
       const { data } = await getHost(id);
       const detail = Object.assign({} as Record<string, any>,
-        pick(data, 'id', 'type', 'name', 'code', 'address', 'port', 'status', 'groupIdList'));
+        pick(data, 'id', 'type', 'osType', 'name', 'code', 'address', 'port', 'status', 'groupIdList'));
       // tag
       const tags = (data.tags || []).map(s => s.id);
       // 渲染

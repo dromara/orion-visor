@@ -46,8 +46,3 @@ export interface DataGrid<T> {
 }
 
 export type TimeRanger = [string, string];
-
-export interface GeneralChart {
-  xAxis: string[];
-  data: Array<{ name: string; value: number[] }>;
-}

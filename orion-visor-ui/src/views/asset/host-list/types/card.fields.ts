@@ -10,10 +10,6 @@ const fieldConfig = {
       dataIndex: 'id',
       slotName: 'id',
     }, {
-      label: '主机类型',
-      dataIndex: 'type',
-      slotName: 'type',
-    }, {
       label: '主机编码',
       dataIndex: 'code',
       slotName: 'code',
@@ -22,6 +18,10 @@ const fieldConfig = {
       dataIndex: 'address',
       slotName: 'address',
       tooltip: true,
+    }, {
+      label: '主机类型',
+      dataIndex: 'type',
+      slotName: 'type',
     }, {
       label: '主机状态',
       dataIndex: 'status',

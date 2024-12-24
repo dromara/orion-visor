@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +38,7 @@ import org.dromara.visor.module.infra.entity.request.menu.SystemMenuUpdateReques
 import org.dromara.visor.module.infra.entity.request.menu.SystemMenuUpdateStatusRequest;
 import org.dromara.visor.module.infra.entity.vo.SystemMenuVO;
 import org.dromara.visor.module.infra.service.SystemMenuService;
+import org.dromara.visor.module.infra.service.UserPermissionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +63,9 @@ public class SystemMenuController {
 
     @Resource
     private SystemMenuService systemMenuService;
+
+    @Resource
+    private UserPermissionService userPermissionService;
 
     @DemoDisableApi
     @OperatorLog(SystemMenuOperatorType.CREATE)
@@ -108,6 +119,14 @@ public class SystemMenuController {
     @PreAuthorize("@ss.hasPermission('infra:system-menu:delete')")
     public Integer deleteSystemMenu(@RequestParam("id") Long id) {
         return systemMenuService.deleteSystemMenu(id);
+    }
+
+    @PutMapping("/refresh-cache")
+    @Operation(summary = "刷新角色权限缓存")
+    @PreAuthorize("@ss.hasPermission('infra:system-menu:management:refresh-cache')")
+    public Boolean refreshCache() {
+        userPermissionService.initPermissionCache();
+        return true;
     }
 
 }

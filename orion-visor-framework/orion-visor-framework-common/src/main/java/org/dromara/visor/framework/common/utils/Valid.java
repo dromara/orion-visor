@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +44,7 @@ import java.util.function.Function;
  */
 public class Valid extends cn.orionsec.kit.lang.utils.Valid {
 
-    private static final Validator VALIDATOR = SpringHolder.getBean(Validator.class);
+    private static final Validator validator = SpringHolder.getBean(Validator.class);
 
     public static <T> T notNull(T object) {
         return notNull(object, ErrorMessage.PARAM_MISSING);
@@ -123,7 +130,7 @@ public class Valid extends cn.orionsec.kit.lang.utils.Valid {
     public static <T> T valid(T obj, Class<?>... groups) {
         notNull(obj, ErrorMessage.PARAM_MISSING);
         // 验证对象
-        Set<ConstraintViolation<T>> set = VALIDATOR.validate(obj, groups);
+        Set<ConstraintViolation<T>> set = validator.validate(obj, groups);
         if (!set.isEmpty()) {
             throw new ConstraintViolationException(set);
         }

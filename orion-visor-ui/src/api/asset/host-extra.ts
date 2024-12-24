@@ -1,14 +1,6 @@
 import axios from 'axios';
 
 /**
- * 主机别名修改请求
- */
-export interface HostAliasUpdateRequest {
-  id?: number;
-  name?: string;
-}
-
-/**
  * 主机拓展信息查询请求
  */
 export interface HostExtraQueryRequest {

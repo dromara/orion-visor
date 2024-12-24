@@ -1,10 +1,5 @@
 import type { FieldRule } from '@arco-design/web-vue';
 
-export const osType = [{
-  required: true,
-  message: '请选择系统类型'
-}] as FieldRule[];
-
 export const authType = [{
   required: true,
   message: '请选择认证方式'
@@ -55,7 +50,6 @@ export const fileContentCharset = [{
 }] as FieldRule[];
 
 export default {
-  osType,
   authType,
   keyId,
   identityId,

@@ -44,7 +44,7 @@ const enabled = (): Partial<VitePWAOptions> => {
     },
     registerType: 'autoUpdate',
     workbox: {
-      // 缓存相关静态资源
+      // 缓存资源
       globPatterns: ['**/*.{js,css,html,ico,png,jpg,svg}'],
       // 配置自定义运行时缓存
       runtimeCaching: [
@@ -122,7 +122,9 @@ const enabled = (): Partial<VitePWAOptions> => {
             }
           }
         }
-      ]
+      ],
+      // 缓存大小
+      maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
     },
     devOptions: {
       enabled: true,

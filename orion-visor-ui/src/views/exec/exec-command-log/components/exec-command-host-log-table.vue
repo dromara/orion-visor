@@ -73,7 +73,7 @@
                     type="text"
                     size="mini"
                     status="danger"
-                    :disabled="record.status !== execHostStatus.WAITING && record.status !== execHostStatus.RUNNING">
+                    :disabled="record.status !== ExecHostStatus.WAITING && record.status !== ExecHostStatus.RUNNING">
             中断
           </a-button>
         </a-popconfirm>
@@ -106,7 +106,7 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/host-table.columns';
-  import { execHostStatusKey, execHostStatus } from '@/components/exec/log/const';
+  import { execHostStatusKey, ExecHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
   import { useExpandable } from '@/hooks/table';
   import { dateFormat, formatDuration } from '@/utils';
@@ -139,7 +139,7 @@
         hostLogId: record.id
       });
       Message.success('已中断');
-      record.status = execHostStatus.INTERRUPTED;
+      record.status = ExecHostStatus.INTERRUPTED;
     } catch (e) {
     } finally {
       setLoading(false);

@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +24,12 @@ package org.dromara.visor.module.asset.define.operator;
 
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
 
 import java.util.List;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.*;
 
 /**
  * 终端 操作日志类型
@@ -70,17 +78,17 @@ public class TerminalOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, CONNECT, "连接主机 ${connectType} <sb>${hostName}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE_SFTP_LOG, "删除 SFTP 操作日志 <sb>${count}</sb> 条"),
-                new OperatorType(OperatorRiskLevel.L, SFTP_MKDIR, "创建文件夹 ${hostName} <sb>${path}</sb>"),
-                new OperatorType(OperatorRiskLevel.L, SFTP_TOUCH, "创建文件 ${hostName} <sb>${path}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, SFTP_MOVE, "移动文件 ${hostName} <sb>${path}</sb> 至 <sb>${target}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, SFTP_REMOVE, "删除文件 ${hostName} <sb>${path}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, SFTP_TRUNCATE, "截断文件 ${hostName} <sb>${path}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, SFTP_CHMOD, "文件提权 ${hostName} <sb>${path}</sb> <sb>${mod}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, SFTP_SET_CONTENT, "修改文件内容 ${hostName} <sb>${path}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, SFTP_UPLOAD, "上传文件 ${hostName} <sb>${path}</sb>"),
-                new OperatorType(OperatorRiskLevel.M, SFTP_DOWNLOAD, "下载文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(L, CONNECT, "连接主机 ${connectType} <sb>${hostName}</sb>"),
+                new OperatorType(H, DELETE_SFTP_LOG, "删除 SFTP 操作日志 <sb>${count}</sb> 条"),
+                new OperatorType(L, SFTP_MKDIR, "创建文件夹 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(L, SFTP_TOUCH, "创建文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(M, SFTP_MOVE, "移动文件 ${hostName} <sb>${path}</sb> 至 <sb>${target}</sb>"),
+                new OperatorType(H, SFTP_REMOVE, "删除文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(H, SFTP_TRUNCATE, "截断文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(M, SFTP_CHMOD, "文件提权 ${hostName} <sb>${path}</sb> <sb>${mod}</sb>"),
+                new OperatorType(M, SFTP_SET_CONTENT, "修改文件内容 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(M, SFTP_UPLOAD, "上传文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(M, SFTP_DOWNLOAD, "下载文件 ${hostName} <sb>${path}</sb>"),
         };
     }
 

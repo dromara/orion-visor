@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,6 +112,15 @@ public class ExecJobController {
     @PreAuthorize("@ss.hasPermission('asset:exec-job:query')")
     public DataGrid<ExecJobVO> getExecJobPage(@Validated(Page.class) @RequestBody ExecJobQueryRequest request) {
         return execJobService.getExecJobPage(request);
+    }
+
+    @DemoDisableApi
+    @OperatorLog(ExecJobOperatorType.UPDATE_EXEC_USER)
+    @PutMapping("/update-exec-user")
+    @Operation(summary = "修改计划任务执行用户")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job:update-exec-user')")
+    public Integer updateExecJobExecUser(@Validated @RequestBody ExecJobUpdateExecUserRequest request) {
+        return execJobService.updateExecJobExecUser(request);
     }
 
     @DemoDisableApi

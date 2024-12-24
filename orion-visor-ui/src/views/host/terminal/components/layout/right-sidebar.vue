@@ -21,7 +21,7 @@
   import type { SidebarAction } from '../../types/define';
   import IconActions from './icon-actions.vue';
 
-  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'screenshot']);
+  const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'openCommandBar', 'screenshot']);
 
   // 顶部操作
   const topActions = [
@@ -46,6 +46,10 @@
   // 底部操作
   const bottomActions: Array<SidebarAction> = [
     {
+      icon: 'icon-send',
+      content: '发送命令',
+      click: () => emits('openCommandBar')
+    }, {
       icon: 'icon-camera',
       content: '截图',
       click: () => emits('screenshot')

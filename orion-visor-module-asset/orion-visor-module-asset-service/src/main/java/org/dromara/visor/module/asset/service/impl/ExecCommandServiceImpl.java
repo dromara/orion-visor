@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,12 +128,14 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         execRequest.setUserId(userId);
         execRequest.setUsername(user.getUsername());
         execRequest.setSource(ExecSourceEnum.BATCH.name());
+        execRequest.setExecMode(ExecModeEnum.MANUAL.name());
         return this.execCommandWithSource(execRequest);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ExecLogVO execCommandWithSource(ExecCommandExecDTO request) {
+        log.info("ExecService.execCommandWithSource start params: {}", JSON.toJSONString(request));
         String command = request.getCommand();
         List<Long> hostIdList = request.getHostIdList();
         // 查询主机信息
@@ -139,6 +148,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
                 .username(request.getUsername())
                 .source(request.getSource())
                 .sourceId(request.getSourceId())
+                .execMode(request.getExecMode())
                 .execSeq(request.getExecSeq())
                 .description(Strings.ifBlank(request.getDescription(), () -> {
                     if (command.length() < DESC_OMIT + Const.OMIT.length()) {
@@ -259,7 +269,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         // 脚本路径
         String scriptPath = null;
         if (ScriptExecEnum.isEnabled(execLog.getScriptExec())) {
-            scriptPath = this.buildScriptPath(config.getUsername(), config.getOsType(), execId, hostId);
+            scriptPath = this.buildScriptPath(config.getUsername(), host.getOsType(), execId, hostId);
         }
         // 获取参数
         String parameter = JSON.toJSONString(this.getHostParams(builtinParams, host, config, scriptPath));
@@ -328,7 +338,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         params.put("hostUsername", config.getUsername());
-        params.put("osType", config.getOsType());
+        params.put("osType", host.getOsType());
         params.put("charset", config.getCharset());
         params.put("scriptPath", scriptPath);
         return params;
@@ -379,12 +389,12 @@ public class ExecCommandServiceImpl implements ExecCommandService {
      * @return scriptPath
      */
     private String buildScriptPath(String username, String osType, Long logId, Long hostId) {
-        HostSshOsTypeEnum os = HostSshOsTypeEnum.of(osType);
+        HostOsTypeEnum os = HostOsTypeEnum.of(osType);
         String name = FileConst.EXEC
                 + "/" + logId
                 + "/" + hostId
                 + os.getScriptSuffix();
-        return PathUtils.buildAppPath(HostSshOsTypeEnum.WINDOWS.equals(os), username, FileConst.SCRIPT, name);
+        return PathUtils.buildAppPath(HostOsTypeEnum.WINDOWS.equals(os), username, FileConst.SCRIPT, name);
     }
 
 }

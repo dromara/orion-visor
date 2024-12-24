@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +23,10 @@
 package org.dromara.visor.module.infra.define.operator;
 
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
-import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+
+import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.L;
 
 /**
  * 认证服务 操作日志类型
@@ -39,9 +47,9 @@ public class AuthenticationOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(OperatorRiskLevel.L, LOGIN, "登录系统"),
-                new OperatorType(OperatorRiskLevel.L, LOGOUT, "登出系统"),
-                new OperatorType(OperatorRiskLevel.L, UPDATE_PASSWORD, "修改密码"),
+                new OperatorType(L, LOGIN, "登录系统"),
+                new OperatorType(L, LOGOUT, "登出系统"),
+                new OperatorType(L, UPDATE_PASSWORD, "修改密码"),
         };
     }
 

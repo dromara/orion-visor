@@ -78,6 +78,13 @@
                     placeholder="请选择主机类型"
                     allow-clear />
         </a-form-item>
+        <!-- 系统类型 -->
+        <a-form-item field="osType" label="系统类型">
+          <a-select v-model="formModel.osType"
+                    :options="toOptions(hostOsTypeKey)"
+                    placeholder="请选择系统类型"
+                    allow-clear />
+        </a-form-item>
         <!-- 主机状态 -->
         <a-form-item field="status" label="主机状态">
           <a-select v-model="formModel.status"
@@ -97,7 +104,14 @@
     </template>
     <!-- 标题 -->
     <template #title="{ record }">
-      {{ record.name }}
+      <div class="host-title">
+        <!-- 系统类型图标 -->
+        <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
+                   :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+                   class="os-icon" />
+        <!-- 主机名称 -->
+        <span>{{ record.name }}</span>
+      </div>
     </template>
     <!-- 编码 -->
     <template #code="{ record }">
@@ -183,16 +197,16 @@
               </span>
             </a-doption>
             <!-- SSH -->
-            <a-doption v-if="record.type === hostType.SSH.type"
-                       v-permission="['asset:terminal:access']"
+            <a-doption v-if="record.type === HostType.SSH.value"
+                       v-permission="['terminal:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
               <span class="more-doption normal">
                 <icon-thunderbolt /> SSH
               </span>
             </a-doption>
             <!-- SFTP -->
-            <a-doption v-if="record.type === hostType.SSH.type"
-                       v-permission="['asset:terminal:access']"
+            <a-doption v-if="record.type === HostType.SSH.value"
+                       v-permission="['terminal:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
               <span class="more-doption normal">
                <icon-folder /> SFTP
@@ -218,7 +232,7 @@
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { hostStatusKey, hostType, hostTypeKey, tagColor } from '../types/const';
+  import { HostOsType, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
@@ -243,6 +257,7 @@
     code: undefined,
     address: undefined,
     type: undefined,
+    osType: undefined,
     status: undefined,
     tags: undefined,
     queryTag: true
@@ -343,6 +358,18 @@
 </script>
 
 <style lang="less" scoped>
+  .host-title {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .os-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+    }
+  }
+
   .host-address::after {
     content: ':';
     user-select: text;

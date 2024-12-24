@@ -65,7 +65,7 @@
       logRefs.value.push({
         id: ref.id,
         el: ref.appenderRef,
-        openSearch: ref.openSearch
+        openSearch: ref.openSearch,
       });
     });
   };

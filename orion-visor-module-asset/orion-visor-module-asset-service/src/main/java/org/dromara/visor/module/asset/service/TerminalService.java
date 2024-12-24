@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +91,7 @@ public interface TerminalService {
      * @param userId userId
      * @return session
      */
-    TerminalConnectDTO getTerminalConnectInfo(Long userId, Long hostId);
+    TerminalConnectDTO getTerminalConnectInfo(Long hostId, Long userId);
 
     /**
      * 使用用户配置获取连接信息
@@ -93,6 +100,6 @@ public interface TerminalService {
      * @param userId userId
      * @return session
      */
-    TerminalConnectDTO getTerminalConnectInfo(Long userId, HostDO host);
+    TerminalConnectDTO getTerminalConnectInfo(HostDO host, Long userId);
 
 }

@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +27,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.asset.entity.domain.UploadTaskFileDO;
+import org.dromara.visor.module.asset.enums.UploadTaskFileStatusEnum;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,35 +67,39 @@ public interface UploadTaskFileDAO extends IMapper<UploadTaskFileDO> {
     }
 
     /**
-     * 通过 taskId hostId 更新状态
+     * 通过 taskId hostId 更新为失败
      *
-     * @param taskId taskId
-     * @param hostId hostId
-     * @param status status
+     * @param taskId       taskId
+     * @param hostId       hostId
+     * @param errorMessage errorMessage
      * @return effect
      */
-    default int updateStatusByTaskHostId(Long taskId, Long hostId, String status) {
+    default int updateToFailedByTaskHostId(Long taskId, Long hostId, String errorMessage) {
         // 条件
         LambdaQueryWrapper<UploadTaskFileDO> wrapper = this.wrapper()
                 .eq(UploadTaskFileDO::getTaskId, taskId)
                 .eq(UploadTaskFileDO::getHostId, hostId);
         // 修改值
         UploadTaskFileDO update = new UploadTaskFileDO();
-        update.setStatus(status);
+        update.setStatus(UploadTaskFileStatusEnum.FAILED.name());
+        update.setErrorMessage(errorMessage);
+        update.setStartTime(new Date());
+        update.setEndTime(new Date());
         // 更新
         return this.update(update, wrapper);
     }
 
     /**
-     * 通过 id 更新状态
+     * 通过 id 更新为取消
      *
      * @param idList idList
-     * @param status status
      * @return effect
      */
-    default int updateStatusByIdList(List<Long> idList, String status) {
+    default int updateToCanceledByIdList(List<Long> idList) {
         UploadTaskFileDO update = new UploadTaskFileDO();
-        update.setStatus(status);
+        update.setStatus(UploadTaskFileStatusEnum.CANCELED.name());
+        update.setStartTime(new Date());
+        update.setEndTime(new Date());
         // 更新
         return this.update(update, Conditions.in(UploadTaskFileDO::getId, idList));
     }

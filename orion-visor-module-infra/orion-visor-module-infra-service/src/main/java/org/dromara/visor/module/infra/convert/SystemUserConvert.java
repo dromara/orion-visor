@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +26,8 @@ import org.dromara.visor.framework.common.security.LoginUser;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.UserInfoDTO;
 import org.dromara.visor.module.infra.entity.request.user.*;
+import org.dromara.visor.module.infra.entity.vo.SystemUserBaseVO;
 import org.dromara.visor.module.infra.entity.vo.SystemUserVO;
-import org.dromara.visor.module.infra.entity.vo.UserCollectInfoVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -58,6 +65,6 @@ public interface SystemUserConvert {
 
     UserInfoDTO toUserInfo(SystemUserDO domain);
 
-    UserCollectInfoVO toCollectInfo(LoginUser user);
+    SystemUserBaseVO toBase(SystemUserDO user);
 
 }

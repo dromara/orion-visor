@@ -4,8 +4,8 @@ import type { MenuQueryResponse } from '@/api/system/menu';
 import router from '@/router';
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
-import { getMenuList } from '@/api/user/auth';
 import { EnabledStatus } from '@/types/const';
+import { getUserMenuList } from '@/api/user/user-aggregate';
 
 export default defineStore('menu', {
   state: (): MenuState => ({
@@ -54,7 +54,7 @@ export default defineStore('menu', {
     async fetchMenu() {
       try {
         // 查询菜单
-        const { data } = await getMenuList();
+        const { data } = await getUserMenuList();
         // 转换菜单
         this.serverMenus = data.map(s => {
           // 构建父目录

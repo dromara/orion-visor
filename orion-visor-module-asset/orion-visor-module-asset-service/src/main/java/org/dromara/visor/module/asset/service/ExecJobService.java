@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +23,7 @@
 package org.dromara.visor.module.asset.service;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
+import org.dromara.visor.module.asset.entity.domain.ExecJobDO;
 import org.dromara.visor.module.asset.entity.request.exec.*;
 import org.dromara.visor.module.asset.entity.vo.ExecJobVO;
 
@@ -53,6 +61,14 @@ public interface ExecJobService {
      * @return effect
      */
     Integer updateExecJobStatus(ExecJobUpdateStatusRequest request);
+
+    /**
+     * 修改执行用户
+     *
+     * @param request request
+     * @return effect
+     */
+    Integer updateExecJobExecUser(ExecJobUpdateExecUserRequest request);
 
     /**
      * 查询计划任务
@@ -112,7 +128,8 @@ public interface ExecJobService {
      * 触发任务
      *
      * @param request request
+     * @param job     job
      */
-    void triggerExecJob(ExecJobTriggerRequest request);
+    void triggerExecJob(ExecJobTriggerRequest request, ExecJobDO job);
 
 }

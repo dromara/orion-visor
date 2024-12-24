@@ -1,5 +1,12 @@
 /*
- * Copyright (c) 2023 - present Jiahang Li (visor.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2023 - present Dromara, All rights reserved.
+ *
+ *   https://visor.dromara.org
+ *   https://visor.dromara.org.cn
+ *   https://visor.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +22,7 @@
  */
 package org.dromara.visor.framework.common.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -25,16 +33,13 @@ import lombok.Data;
  * @since 2024/6/24 15:03
  */
 @Data
+@Schema(name = "AutoClearConfig", description = "自动清理配置")
 public class AutoClearConfig {
 
-    /**
-     * 是否开启
-     */
+    @Schema(description = "是否开启")
     private Boolean enabled;
 
-    /**
-     * 保留周期 (天)
-     */
+    @Schema(description = "保留周期 (天)")
     private Integer keepPeriod;
 
 }

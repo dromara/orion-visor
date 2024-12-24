@@ -1,44 +1,12 @@
 <template>
   <div class="ssh-container">
     <!-- 头部 -->
-    <div class="ssh-header">
-      <!-- 左侧操作 -->
-      <div class="ssh-header-left">
-        <!-- 主机地址 -->
-        <span class="address-wrapper">
-          <span class="text-copy"
-                :title="tab.address"
-                @click="copy(tab.address as string, true)">
-            {{ tab.address }}
-          </span>
-        </span>
-      </div>
-      <!-- 右侧操作 -->
-      <div class="ssh-header-right">
-        <!-- 命令输入框 -->
-        <a-textarea class="command-input mr8"
-                    v-if="preference.actionBarSetting.commandInput !== false"
-                    v-model="commandInput"
-                    :auto-size="{ minRows: 1, maxRows: 1 }"
-                    placeholder="F8 发送命令"
-                    allow-clear
-                    @keyup="writeCommandInput" />
-        <!-- 操作按钮 -->
-        <icon-actions class="ssh-header-right-action-bar"
-                      wrapper-class="ssh-header-icon-wrapper"
-                      icon-class="ssh-header-icon"
-                      :actions="rightActions"
-                      position="bottom" />
-        <!-- 连接状态 -->
-        <a-badge v-if="preference.actionBarSetting.connectStatus !== false"
-                 class="status-bridge"
-                 :status="getDictValue(sessionStatusKey, session ? session.status : 0, 'status')"
-                 :text="getDictValue(sessionStatusKey, session ? session.status : 0)" />
-      </div>
-    </div>
+    <ssh-header :address="tab.address"
+                :session="session"
+                @handle="doTerminalHandle" />
     <!-- 终端右键菜单 -->
     <ssh-context-menu :session="session"
-                      @click="doTerminalHandle">
+                      @handle="doTerminalHandle">
       <!-- 终端容器 -->
       <div class="ssh-wrapper"
            :style="{ background: preference.theme.schema.background }">
@@ -49,10 +17,11 @@
                             class="search-modal"
                             @find="findWords"
                             @close="focus" />
-        <!-- 上传文件模态框 -->
-        <sftp-upload-modal ref="uploadModal" @closed="focus" />
+
       </div>
     </ssh-context-menu>
+    <!-- 上传文件模态框 -->
+    <sftp-upload-modal ref="uploadModal" @closed="focus" />
     <!-- 命令编辑器 -->
     <shell-editor-modal ref="editorModal"
                         :closable="false"
@@ -71,13 +40,11 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISshSession, TerminalPanelTabItem, SidebarAction } from '../../types/define';
-  import { computed, onMounted, onUnmounted, ref } from 'vue';
+  import type { ISshSession, TerminalPanelTabItem } from '../../types/define';
+  import { onMounted, onUnmounted, ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
-  import { copy } from '@/hooks/copy';
-  import { ActionBarItems, sessionStatusKey } from '../../types/const';
+  import SshHeader from './ssh-header.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
-  import IconActions from '../layout/icon-actions.vue';
   import SshContextMenu from './ssh-context-menu.vue';
   import SftpUploadModal from '../sftp/sftp-upload-modal.vue';
   import XtermSearchModal from '@/components/xterm/search-modal/index.vue';
@@ -92,18 +59,8 @@
   const editorModal = ref();
   const searchModal = ref();
   const uploadModal = ref();
-  const commandInput = ref();
   const terminalRef = ref();
   const session = ref<ISshSession>();
-
-  // 发送命令
-  const writeCommandInput = async (e: KeyboardEvent) => {
-    const value = commandInput.value;
-    if (value && e.code === 'F8') {
-      writeCommand(value);
-      commandInput.value = undefined;
-    }
-  };
 
   // 发送命令
   const writeCommand = (value: string) => {
@@ -126,19 +83,6 @@
   const doTerminalHandle = (handle: string) => {
     session.value?.handler.invokeHandle.call(session.value?.handler, handle);
   };
-
-  // 右侧操作
-  const rightActions = computed<Array<SidebarAction>>(() => {
-    return ActionBarItems.map(s => {
-      return {
-        icon: s.icon,
-        content: s.content,
-        visible: preference.actionBarSetting[s.item] !== false,
-        disabled: session.value?.handler.enabledStatus(s.item) === false,
-        click: () => doTerminalHandle(s.item)
-      };
-    });
-  });
 
   // 初始化会话
   onMounted(async () => {
@@ -165,84 +109,6 @@
     width: 100%;
     height: 100%;
     position: relative;
-  }
-
-  .ssh-header {
-    width: 100%;
-    height: @ssh-header-height;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--color-bg-panel-bar);
-
-    &-left, &-right {
-      display: flex;
-      align-items: center;
-      height: 100%;
-    }
-
-    &-left {
-      width: 25%;
-
-      .address-wrapper {
-        height: 100%;
-        display: inline-flex;
-        align-items: center;
-        user-select: none;
-
-        &:before {
-          content: 'IP:';
-          padding-right: 4px;
-        }
-      }
-    }
-
-    &-right {
-      width: 75%;
-      justify-content: flex-end;
-
-      .command-input {
-        width: 36%;
-        user-select: none;
-      }
-    }
-
-    &-right-action-bar {
-      display: flex;
-
-      :deep(.ssh-header-icon-wrapper) {
-        width: 28px;
-        height: 28px;
-        margin: 0 2px;
-      }
-
-      :deep(.ssh-header-icon) {
-        width: 28px;
-        height: 28px;
-        font-size: 20px;
-      }
-    }
-
-    .status-bridge {
-      height: 100%;
-      margin: 0 2px 0 8px;
-      display: flex;
-      align-items: center;
-      user-select: none;
-
-      :deep(.arco-badge-status-text) {
-        width: 36px;
-      }
-
-      &::before {
-        content: "";
-        height: 56%;
-        margin: 0 12px 0 6px;
-        border-left: 2px solid var(--color-fill-4);
-        border-radius: 2px;
-      }
-    }
   }
 
   .ssh-wrapper {
