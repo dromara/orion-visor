@@ -3,7 +3,7 @@
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://app.codacy.com/gh/orionsec/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+       href="https://app.codacy.com/gh/lijiahangmax/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
       <img src="https://app.codacy.com/project/badge/Grade/49eaab3a9a474af3b87e1d21ffec71c4" alt="quality" />
     </a>
     <a target="_blank"
