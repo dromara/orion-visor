@@ -36,6 +36,11 @@
        href="https://github.com/dromara/orion-visor">
       <img src="https://img.shields.io/github/forks/dromara/orion-visor" alt="star" />
     </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://gitcode.com/dromara/orion-visor">
+      <img src="https://gitcode.com/dromara/orion-visor/star/badge.svg" alt="star"/>
+    </a>
 </p>
 
 ------------------------------
