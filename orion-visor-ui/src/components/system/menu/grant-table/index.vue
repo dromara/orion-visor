@@ -22,7 +22,13 @@
             </td>
             <!-- 子菜单 -->
             <td>
-              <a-checkbox :value="childrenMenu.id">
+              <!-- 默认路由 -->
+              <a-checkbox v-if="childrenMenu.component === DEFAULT_ROUTE_NAME"
+                          :value="childrenMenu.id">
+                {{ childrenMenu.name }} <span class="span-red">(必选)</span>
+              </a-checkbox>
+              <!-- 普通子菜单 -->
+              <a-checkbox v-else :value="childrenMenu.id">
                 {{ childrenMenu.name }}
               </a-checkbox>
             </td>
@@ -73,6 +79,7 @@
   import type { MenuQueryResponse } from '@/api/system/menu';
   import { useCacheStore } from '@/store';
   import { ref, watch } from 'vue';
+  import { DEFAULT_ROUTE_NAME } from '@/router/constants';
   import { findNode, flatNodeKeys, flatNodes } from '@/utils/tree';
 
   const cacheStore = useCacheStore();

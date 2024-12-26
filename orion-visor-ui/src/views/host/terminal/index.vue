@@ -138,7 +138,7 @@
   onBeforeMount(() => {
     // 打开默认 tab
     let openTab;
-    const tab = route.query.tab;
+    const tab = route.query.tab as string;
     if (tab) {
       openTab = Object.values(TerminalTabs).find(s => s.key === tab);
     }
@@ -167,9 +167,9 @@
       // 加载主机
       await loadHosts();
       // 默认连接主机
-      const connect = route.query.connect;
+      const connect = route.query.connect as string;
       if (connect) {
-        const connectHostId = Number.parseInt(connect as string);
+        const connectHostId = Number.parseInt(connect);
         const connectHost = hosts.hostList.find(s => s.id === connectHostId);
         // 打开连接
         if (connectHost) {

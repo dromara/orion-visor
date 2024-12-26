@@ -39,7 +39,15 @@
       return props.modelValue;
     },
     set(e) {
-      emits('update:modelValue', e);
+      if (e) {
+        emits('update:modelValue', e);
+      } else {
+        if (props.multiple) {
+          emits('update:modelValue', []);
+        } else {
+          emits('update:modelValue', null);
+        }
+      }
     }
   });
   const optionData = ref<Array<SelectOptionData>>([]);

@@ -324,7 +324,8 @@ INSERT INTO `dict_value` VALUES (431, 61, 'updatePasswordReason', 'NEW', '为了
 INSERT INTO `dict_value` VALUES (432, 2, 'operatorLogType', 'exec-job:update-exec-user', '修改计划执行用户', '{}', 45, '2024-12-13 00:17:03', '2024-12-13 00:17:03', '1', '1', 0);
 
 -- 菜单配置
-INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (1, 0, '仪表盘', NULL, 1, 10, 1, 1, 1, 0, 'IconDashboard', NULL, 'dashboard', '2023-07-28 10:51:50', '2024-08-11 00:05:44', '1', '1', 0);
+INSERT INTO `system_menu` VALUES (2, 1, '工作台', NULL, 2, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (5, 0, '用户管理', NULL, 1, 700, 1, 1, 1, 0, 'icon-user', NULL, 'userModule', '2023-07-28 10:55:38', '2024-06-17 20:45:29', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (8, 0, '项目地址', NULL, 1, 1000, 1, 1, 1, 0, 'icon-link', 'https://visor.dromara.org', '', '2023-07-28 11:04:59', '2024-08-29 18:10:57', '1', '1', 0);
 INSERT INTO `system_menu` VALUES (10, 5, '角色管理', NULL, 2, 10, 1, 1, 1, 0, 'IconUserGroup', '', 'role', '2023-07-28 10:55:52', '2024-03-07 19:10:13', '1', '1', 0);

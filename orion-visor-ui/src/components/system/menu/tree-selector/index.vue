@@ -39,7 +39,11 @@
       return props.modelValue;
     },
     set(e) {
-      emits('update:modelValue', e);
+      if (e) {
+        emits('update:modelValue', e);
+      } else {
+        emits('update:modelValue', null);
+      }
     }
   });
 

@@ -51,7 +51,7 @@ public class OrionDataSourceAutoConfiguration {
      * @return druid 广告过滤器
      */
     @Bean
-    @ConditionalOnProperty(name = "spring.datasource.druid.web-stat-filter.enabled", havingValue = "true")
+    @ConditionalOnProperty(value = "spring.datasource.druid.web-stat-filter.enabled", havingValue = "true")
     public FilterRegistrationBean<DruidAdRemoveFilter> druidAdRemoveFilterFilter(DruidStatProperties properties) {
         // 获取 druid web 监控页面的参数
         DruidStatProperties.StatViewServlet config = properties.getStatViewServlet();

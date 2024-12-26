@@ -61,7 +61,7 @@ import java.util.Optional;
  */
 @ConditionalOnClass({OpenAPI.class})
 @EnableConfigurationProperties(SwaggerConfig.class)
-@ConditionalOnProperty(name = "springdoc.api-docs.enabled", havingValue = "true")
+@ConditionalOnProperty(value = "springdoc.api-docs.enabled", havingValue = "true")
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SWAGGER)
 public class OrionSwaggerAutoConfiguration {

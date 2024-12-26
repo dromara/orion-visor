@@ -43,7 +43,7 @@
 
   // 跳转到指定页
   onBeforeMount(() => {
-    const key = route.query.key;
+    const key = route.query.key as string;
     if (key) {
       activeKey.value = Number(key);
     }

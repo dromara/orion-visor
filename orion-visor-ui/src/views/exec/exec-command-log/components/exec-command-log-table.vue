@@ -102,7 +102,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :expandable="expandable"
              :data="tableRenderData"
@@ -218,7 +218,7 @@
   } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import columns from '../types/table.columns';
+  import { tableColumns } from '../types/table.columns';
   import { ExecStatus, execStatusKey } from '@/components/exec/log/const';
   import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';

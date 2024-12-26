@@ -36,9 +36,9 @@
   };
 
   onMounted(() => {
-    const idParam = route.query.id;
+    const idParam = route.query.id as string;
     if (idParam) {
-      init(Number.parseInt(idParam as string));
+      init(Number.parseInt(idParam));
     }
   });
 
