@@ -145,6 +145,6 @@ QQ群: 755242157
 
 本项目遵循 [Apache-2.0](https://github.com/dromara/orion-visor/blob/main/LICENSE) 开源许可证。
 
-## Gite 最有价值开源项目 GVP
+## Gitee 最有价值开源项目 GVP
 
 ![GVP](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/10/24/8dd98b8d-9de5-44e6-86d3-04e27ec66123.jpg "GVP")

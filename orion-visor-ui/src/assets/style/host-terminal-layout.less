@@ -532,8 +532,14 @@ body[terminal-theme='dark'] .arco-modal-container {
 .terminal-setting-container {
   padding: 32px 16px 16px 16px;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .terminal-setting-wrapper {
     min-width: 932px;
