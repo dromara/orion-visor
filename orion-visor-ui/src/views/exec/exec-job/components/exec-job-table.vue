@@ -6,13 +6,6 @@
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      <!-- id -->
-      <a-form-item field="id" label="id">
-        <a-input-number v-model="formModel.id"
-                        placeholder="请输入id"
-                        allow-clear
-                        hide-button />
-      </a-form-item>
       <!-- 任务名称 -->
       <a-form-item field="name" label="任务名称">
         <a-input v-model="formModel.name"
@@ -25,18 +18,25 @@
                  placeholder="请输入执行命令"
                  allow-clear />
       </a-form-item>
+      <!-- 执行用户 -->
+      <a-form-item field="execUserId" label="执行用户">
+        <user-selector v-model="formModel.execUserId"
+                       placeholder="请选择执行用户"
+                       allow-clear />
+      </a-form-item>
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
+                        allow-clear
+                        hide-button />
+      </a-form-item>
       <!-- 任务状态 -->
       <a-form-item field="status" label="任务状态">
         <a-select v-model="formModel.status"
                   :options="toOptions(execJobStatusKey)"
                   placeholder="请选择状态"
                   allow-clear />
-      </a-form-item>
-      <!-- 执行用户 -->
-      <a-form-item field="execUserId" label="执行用户">
-        <user-selector v-model="formModel.execUserId"
-                       placeholder="请选择执行用户"
-                       allow-clear />
       </a-form-item>
     </query-header>
   </a-card>

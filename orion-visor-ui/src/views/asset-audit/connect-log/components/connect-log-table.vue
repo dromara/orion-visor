@@ -155,11 +155,12 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 详情 -->
-          <a-button type="text"
+          <!-- 连接 -->
+          <a-button v-permission="['asset:terminal:access']"
+                    type="text"
                     size="mini"
-                    @click="emits('openDetail', record)">
-            详情
+                    @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.type } })">
+            连接
           </a-button>
           <!-- 下线 -->
           <a-popconfirm v-if="record.status === TerminalConnectStatus.CONNECTING"
@@ -174,6 +175,12 @@
               下线
             </a-button>
           </a-popconfirm>
+          <!-- 详情 -->
+          <a-button type="text"
+                    size="mini"
+                    @click="emits('openDetail', record)">
+            详情
+          </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -210,6 +217,7 @@
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
+  import { openNewRoute } from '@/router';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 

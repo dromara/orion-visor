@@ -325,6 +325,8 @@
     }
   };
 
+  defineExpose({ setMessageBoxVisible });
+
   onMounted(() => {
     // 查询未读消息
     pullHasUnreadMessage();

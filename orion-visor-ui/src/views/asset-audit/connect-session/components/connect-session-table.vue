@@ -95,6 +95,13 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
+          <!-- 连接 -->
+          <a-button v-permission="['asset:terminal:access']"
+                    type="text"
+                    size="mini"
+                    @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.type } })">
+            连接
+          </a-button>
           <!-- 下线 -->
           <a-popconfirm content="确认要强制下线吗?"
                         position="left"
@@ -129,6 +136,7 @@
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
+  import { openNewRoute } from '@/router';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 

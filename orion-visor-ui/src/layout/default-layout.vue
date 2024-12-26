@@ -2,7 +2,7 @@
   <a-layout class="layout" :class="{ mobile: appStore.hideMenu }">
     <!-- tab bar -->
     <div v-if="navbar" class="layout-navbar">
-      <nav-bar />
+      <nav-bar ref="navRef" />
     </div>
     <a-layout style="flex-direction: row;">
       <!-- 左侧菜单栏 -->
@@ -58,7 +58,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import { useAppStore, useUserStore } from '@/store';
   import useResponsive from '@/hooks/responsive';
-  import { toggleDrawerMenuKey } from '@/types/symbol';
+  import { openMessageBox, toggleDrawerMenuKey } from '@/types/symbol';
   import PageLayout from './page-layout.vue';
   import NavBar from '@/components/app/navbar/index.vue';
   import TabBar from '@/components/app/tab-bar/index.vue';
@@ -71,7 +71,8 @@
   const route = useRoute();
   useResponsive(true);
 
-  const isInit = ref(false);
+  const render = ref(false);
+  const navRef = ref();
   const navbarHeight = `60px`;
   const navbar = computed(() => appStore.navbar);
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
@@ -95,7 +96,7 @@
 
   // 设置菜单展开状态
   const setCollapsed = (val: boolean) => {
-    if (!isInit.value) return;
+    if (!render.value) return;
     appStore.updateSettings({ menuCollapse: val });
   };
 
@@ -109,8 +110,13 @@
     drawerVisible.value = !drawerVisible.value;
   });
 
+  // 对外暴露打开消息盒子
+  provide(openMessageBox, () => {
+    navRef.value.setMessageBoxVisible();
+  });
+
   onMounted(() => {
-    isInit.value = true;
+    render.value = true;
   });
 </script>
 

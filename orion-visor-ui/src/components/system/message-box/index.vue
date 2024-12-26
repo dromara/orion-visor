@@ -30,6 +30,7 @@
             <a-button class="header-button"
                       type="text"
                       size="small"
+                      title="清空全部已读消息"
                       @click="clearAllMessage">
               清空
             </a-button>
