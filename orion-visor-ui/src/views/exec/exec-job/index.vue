@@ -13,8 +13,8 @@
                           @updated="() => table.reload()"
                           @open-host="(e) => hostModal.open(e)"
                           @open-template="() => templateModal.open()"
-                          @test-cron="openNextCron"
-                          @gen-cron="(e) => genModal.open(e)" />
+                          @gen-cron="(e) => genModal.open(e)"
+                          @test-cron="openNextCron" />
     <!-- 任务详情模态框 -->
     <exec-job-detail-drawer ref="detail" />
     <!-- 修改执行用户模态框 -->

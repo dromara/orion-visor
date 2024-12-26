@@ -56,6 +56,9 @@ public class ExecJobQueryRequest extends PageRequest {
     @Schema(description = "任务状态")
     private Integer status;
 
+    @Schema(description = "执行用户id")
+    private Long execUserId;
+
     @Schema(description = "是否查询最近执行任务")
     private Boolean queryRecentLog;
 

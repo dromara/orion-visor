@@ -408,6 +408,7 @@ public class ExecJobServiceImpl implements ExecJobService {
                 .like(ExecJobDO::getName, request.getName())
                 .like(ExecJobDO::getCommand, request.getCommand())
                 .eq(ExecJobDO::getStatus, request.getStatus())
+                .eq(ExecJobDO::getExecUserId, request.getExecUserId())
                 .orderByDesc(ExecJobDO::getId);
     }
 

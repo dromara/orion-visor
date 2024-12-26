@@ -32,6 +32,12 @@
                   placeholder="请选择状态"
                   allow-clear />
       </a-form-item>
+      <!-- 执行用户 -->
+      <a-form-item field="execUserId" label="执行用户">
+        <user-selector v-model="formModel.execUserId"
+                       placeholder="请选择执行用户"
+                       allow-clear />
+      </a-form-item>
     </query-header>
   </a-card>
   <!-- 表格 -->
@@ -209,26 +215,30 @@
   import columns from '../types/table.columns';
   import { ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
+  import { useRoute } from 'vue-router';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'updateExecUser', 'testCron']);
 
+  const route = useRoute();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { hasPermission } = usePermission();
   const { toOptions, getDictValue } = useDictStore();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<ExecJobQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<ExecJobQueryResponse>>([]);
   const formModel = reactive<ExecJobQueryRequest>({
     id: undefined,
     name: undefined,
     command: undefined,
     status: undefined,
-    queryRecentLog: true
+    execUserId: undefined,
+    queryRecentLog: true,
   });
 
   // 删除当前行
@@ -317,6 +327,12 @@
   };
 
   onMounted(() => {
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.execUserId = useUserStore().id;
+    }
+    // 查询
     fetchTableData();
   });
 

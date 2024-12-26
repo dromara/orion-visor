@@ -3,7 +3,7 @@
   <a-card class="general-card table-search-card">
     <query-header :model="formModel"
                   label-align="left"
-                  :itemOptions="{ 4: { span: 2 } }"
+                  :itemOptions="{ 5: { span: 2 } }"
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
@@ -32,6 +32,12 @@
                         placeholder="请输入id"
                         allow-clear
                         hide-button />
+      </a-form-item>
+      <!-- 执行用户 -->
+      <a-form-item field="userId" label="执行用户">
+        <user-selector v-model="formModel.userId"
+                       placeholder="请选择执行用户"
+                       allow-clear />
       </a-form-item>
       <!-- 执行时间 -->
       <a-form-item field="startTimeRange" label="执行时间">
@@ -219,7 +225,8 @@
     deleteExecJobLog,
     getExecJobHostLogList,
     getExecJobLogPage,
-    getExecJobLogStatus
+    getExecJobLogStatus,
+    interruptExecJob,
   } from '@/api/exec/exec-job-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
@@ -228,8 +235,8 @@
   import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
-  import { interruptExecJob } from '@/api/exec/exec-job-log';
   import ExecJobHostLogTable from './exec-job-host-log-table.vue';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
@@ -241,13 +248,14 @@
 
   const pullIntervalId = ref();
   const tableRef = ref();
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<ExecLogQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<ExecLogQueryResponse>>([]);
   const formModel = reactive<ExecLogQueryRequest>({
     id: undefined,
     description: undefined,
     command: undefined,
     status: undefined,
+    userId: undefined,
     startTimeRange: undefined,
   });
 
