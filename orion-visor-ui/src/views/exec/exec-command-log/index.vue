@@ -32,15 +32,12 @@
   import { ref, onBeforeMount } from 'vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from '@/components/exec/log/const';
-  import { useRouter } from 'vue-router';
   import { openNewRoute } from '@/router';
   import ExecCommandLogTable from './components/exec-command-log-table.vue';
   import ExecCommandLogClearModal from './components/exec-command-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
-
-  const router = useRouter();
 
   const render = ref(false);
   const tableRef = ref();

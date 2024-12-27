@@ -211,11 +211,12 @@
   import { deleteTerminalConnectLog, getTerminalConnectLogPage, hostForceOffline } from '@/api/asset/terminal-connect-log';
   import { connectStatusKey, connectTypeKey, TerminalConnectStatus } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
+  import { useRoute } from 'vue-router';
   import { dateFormat } from '@/utils';
   import { openNewRoute } from '@/router';
   import UserSelector from '@/components/user/user/selector/index.vue';
@@ -223,6 +224,7 @@
 
   const emits = defineEmits(['openClear', 'openDetail']);
 
+  const route = useRoute();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
@@ -316,6 +318,16 @@
   };
 
   onMounted(() => {
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.userId = useUserStore().id;
+    }
+    // id
+    const id = route.query.id as string;
+    if (id) {
+      formModel.id = Number.parseInt(id);
+    }
     fetchTableData();
   });
 

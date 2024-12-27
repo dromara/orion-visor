@@ -217,11 +217,12 @@
     getExecCommandLogStatus
   } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
+  import { useRoute } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import { tableColumns } from '../types/table.columns';
   import { ExecStatus, execStatusKey } from '@/components/exec/log/const';
   import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
   import { reExecCommand } from '@/api/exec/exec-command';
   import { interruptExecCommand } from '@/api/exec/exec-command-log';
@@ -230,6 +231,7 @@
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
+  const route = useRoute();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const expandable = useExpandable();
@@ -406,6 +408,11 @@
   });
 
   onMounted(() => {
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.userId = useUserStore().id;
+    }
     // 加载数据
     fetchTableData();
     // 注册状态轮询
