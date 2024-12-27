@@ -20,43 +20,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.service;
+package org.dromara.visor.module.infra.entity.po;
 
-import org.dromara.visor.module.infra.entity.request.user.UserSessionOfflineRequest;
-import org.dromara.visor.module.infra.entity.vo.UserSessionVO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * 用户管理服务
+ * 操作日志数量
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/11/22 18:17
+ * @since 2024/12/23 16:24
  */
-public interface SystemUserManagementService {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "OperatorLogCountPO", description = "操作日志数量")
+public class OperatorLogCountPO implements Serializable {
 
-    /**
-     * 获取用户会话数量
-     *
-     * @param userId userId
-     * @return count
-     */
-    Integer getUserSessionCount(Long userId);
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * 获取用户会话列表
-     *
-     * @param userId userId
-     * @return 会话列表
-     */
-    List<UserSessionVO> getUserSessionList(Long userId);
+    @Schema(description = "操作日期")
+    private String operatorDate;
 
-    /**
-     * 下线用户会话
-     *
-     * @param request request
-     */
-    void offlineUserSession(UserSessionOfflineRequest request);
+    @Schema(description = "结果")
+    private Integer result;
+
+    @Schema(description = "操作次数")
+    private Integer count;
 
 }

@@ -20,43 +20,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.service;
+package org.dromara.visor.framework.common.entity.chart;
 
-import org.dromara.visor.module.infra.entity.request.user.UserSessionOfflineRequest;
-import org.dromara.visor.module.infra.entity.vo.UserSessionVO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * 用户管理服务
+ * 柱状图图单系列数据
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/11/22 18:17
+ * @since 2024/12/23 13:42
  */
-public interface SystemUserManagementService {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "BarSingleChartData", description = "柱状图图单系列数据")
+public class BarSingleChartData {
 
-    /**
-     * 获取用户会话数量
-     *
-     * @param userId userId
-     * @return count
-     */
-    Integer getUserSessionCount(Long userId);
-
-    /**
-     * 获取用户会话列表
-     *
-     * @param userId userId
-     * @return 会话列表
-     */
-    List<UserSessionVO> getUserSessionList(Long userId);
-
-    /**
-     * 下线用户会话
-     *
-     * @param request request
-     */
-    void offlineUserSession(UserSessionOfflineRequest request);
+    @Schema(description = "数据")
+    private Map<String, Integer> data;
 
 }

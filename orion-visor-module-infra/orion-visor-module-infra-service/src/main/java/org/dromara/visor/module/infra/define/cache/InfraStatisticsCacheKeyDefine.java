@@ -20,43 +20,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.service;
+package org.dromara.visor.module.infra.define.cache;
 
-import org.dromara.visor.module.infra.entity.request.user.UserSessionOfflineRequest;
-import org.dromara.visor.module.infra.entity.vo.UserSessionVO;
+import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
+import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
+import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
+import org.dromara.visor.module.infra.entity.vo.InfraWorkplaceStatisticsVO;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 用户管理服务
+ * infra 模块统计缓存 key
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/11/22 18:17
+ * @since 2024/12/23 16:10
  */
-public interface SystemUserManagementService {
+public interface InfraStatisticsCacheKeyDefine {
 
-    /**
-     * 获取用户会话数量
-     *
-     * @param userId userId
-     * @return count
-     */
-    Integer getUserSessionCount(Long userId);
-
-    /**
-     * 获取用户会话列表
-     *
-     * @param userId userId
-     * @return 会话列表
-     */
-    List<UserSessionVO> getUserSessionList(Long userId);
-
-    /**
-     * 下线用户会话
-     *
-     * @param request request
-     */
-    void offlineUserSession(UserSessionOfflineRequest request);
+    CacheKeyDefine WORKPLACE_DATA = new CacheKeyBuilder()
+            .key("data:statistics:infra-workplace:{}:{}")
+            .desc("基建模块工作台统计 ${userId} ${time}")
+            .type(InfraWorkplaceStatisticsVO.class)
+            .struct(RedisCacheStruct.STRING)
+            .timeout(10, TimeUnit.MINUTES)
+            .build();
 
 }

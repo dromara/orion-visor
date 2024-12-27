@@ -26,9 +26,25 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
+    <!-- 操作数量映射结果 -->
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.infra.entity.po.OperatorLogCountPO">
+        <result column="operator_date" property="operatorDate"/>
+        <result column="result" property="result"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, username, trace_id, address, location, user_agent, risk_level, module, type, log_info, extra, result, error_message, return_value, duration, start_time, end_time, create_time, deleted
     </sql>
+
+    <select id="selectOperatorLogCount" resultMap="CountResultMap">
+        SELECT DATE(create_time) operator_date, COUNT(1) total_count
+        FROM operator_log
+        WHERE deleted = 0
+          AND user_id = #{userId}
+          AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY operator_date
+    </select>
 
 </mapper>
