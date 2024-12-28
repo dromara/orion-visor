@@ -7,16 +7,16 @@
 
 <script lang="ts" setup>
   import type { EChartsOption } from 'echarts';
-  import { computed, nextTick, ref } from 'vue';
+  import { nextTick, ref } from 'vue';
   import { useAppStore } from '@/store';
   import VCharts from 'vue-echarts';
 
-  const props = withDefaults(defineProps<{
+  const props = withDefaults(defineProps<Partial<{
     options: EChartsOption,
     autoResize: boolean,
     width: string,
     height: string,
-  }>(), {
+  }>>(), {
     options: () => {
       return {};
     },
@@ -26,12 +26,6 @@
   });
 
   const appStore = useAppStore();
-
-  // 监听暗色模式
-  const theme = computed(() => {
-    if (appStore.theme === 'dark') return 'dark';
-    return '';
-  });
 
   const renderChart = ref(false);
 

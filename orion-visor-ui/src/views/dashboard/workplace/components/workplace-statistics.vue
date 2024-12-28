@@ -142,6 +142,7 @@
       },
       xAxis: {
         type: 'category',
+        data: props.data.asset?.terminalConnectChart?.x || [],
         show: false,
       },
       yAxis: {
@@ -150,18 +151,13 @@
       tooltip: {
         show: true,
         trigger: 'axis',
-        formatter: (p: any) => {
-          return p[0].data.x + ' ' + p[0].data.value + ' 次';
-        }
       },
       series: {
         name: '连接次数',
         data: !props.data.asset?.terminalConnectChart
           ? []
-          : props.data.asset?.terminalConnectChart.data.map((s, index) => {
-            const x = props.data.asset?.terminalConnectChart.x;
+          : props.data.asset?.terminalConnectChart.data.map(s => {
             return {
-              x: x[index],
               value: s,
             };
           }),
@@ -187,6 +183,7 @@
       },
       xAxis: {
         type: 'category',
+        data: props.data.asset?.execCommandChart?.x || [],
         show: false,
       },
       yAxis: {
@@ -195,9 +192,6 @@
       tooltip: {
         show: true,
         trigger: 'axis',
-        formatter: (p: any) => {
-          return p[0].data.x + ' ' + p[0].data.value + '次';
-        }
       },
       series: {
         name: '执行次数',
