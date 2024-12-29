@@ -65,4 +65,12 @@ public interface GenericsDataStrategy<M extends GenericsDataModel> {
      */
     void toView(M model);
 
+    /**
+     * 转为视图配置
+     *
+     * @param serialModel serialModel
+     * @return model
+     */
+    M toView(String serialModel);
+
 }

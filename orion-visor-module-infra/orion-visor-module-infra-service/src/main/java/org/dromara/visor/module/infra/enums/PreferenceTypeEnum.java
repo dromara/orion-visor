@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.enums;
 
 import lombok.Getter;
-import org.dromara.visor.framework.common.handler.data.GenericsDataDefinition;
+import org.dromara.visor.framework.common.handler.data.GenericsStrategyDefinition;
 import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import org.dromara.visor.module.infra.handler.preference.strategy.SystemPreferenceStrategy;
@@ -37,7 +37,7 @@ import org.dromara.visor.module.infra.handler.preference.strategy.TerminalPrefer
  * @since 2023/10/8 11:31
  */
 @Getter
-public enum PreferenceTypeEnum implements GenericsDataDefinition {
+public enum PreferenceTypeEnum implements GenericsStrategyDefinition {
 
     /**
      * 系统偏好

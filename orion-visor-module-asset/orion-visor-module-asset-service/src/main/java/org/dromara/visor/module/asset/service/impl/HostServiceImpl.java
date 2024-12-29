@@ -116,7 +116,7 @@ public class HostServiceImpl implements HostService {
         this.checkHostNamePresent(record);
         this.checkHostCodePresent(record);
         // 设置主机配置
-        record.setConfig(type.getStrategy().getDefault().serial());
+        record.setConfig(type.getDefault().serial());
         // 插入主机
         int effect = hostDAO.insert(record);
         log.info("HostService-createHost effect: {}", effect);
@@ -193,7 +193,7 @@ public class HostServiceImpl implements HostService {
             OperatorLogs.add(OperatorLogs.ID, id);
             OperatorLogs.add(OperatorLogs.NAME, host.getName());
             // 更新前校验
-            type.getStrategy().doValid(beforeConfig, newConfig);
+            type.doValid(beforeConfig, newConfig);
             // 修改配置
             HostDO updateHost = HostDO.builder()
                     .id(id)
