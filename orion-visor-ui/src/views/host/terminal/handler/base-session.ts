@@ -28,9 +28,13 @@ export default abstract class BaseSession implements ITerminalSession {
     this.canWrite = canWrite;
   }
 
-  // 连接
-  connect(): void {
+  // 设置已连接
+  setConnected(): void {
     this.connected = true;
+  }
+
+  // 连接会话
+  connect(): void {
   }
 
   // 断开连接

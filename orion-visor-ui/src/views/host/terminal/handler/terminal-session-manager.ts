@@ -52,12 +52,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     // 添加会话
     const sessionId = tab.sessionId;
     this.sessions[sessionId] = session;
-    // 发送会话初始化请求
-    this.channel.send(InputProtocol.CHECK, {
-      sessionId,
-      hostId: tab.hostId,
-      connectType: PanelSessionType.SSH.type
-    });
+    // 连接会话
+    session.connect();
     return session;
   }
 
@@ -72,17 +68,13 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     // 添加会话
     const sessionId = tab.sessionId;
     this.sessions[sessionId] = session;
-    // 发送会话初始化请求
-    this.channel.send(InputProtocol.CHECK, {
-      sessionId,
-      hostId: tab.hostId,
-      connectType: PanelSessionType.SFTP.type
-    });
+    // 连接会话
+    session.connect();
     return session;
   }
 
   // 重新打开会话
-  async reOpenSession(type: string, sessionId: string, newSessionId: string): Promise<void> {
+  async reOpenSession(sessionId: string, newSessionId: string): Promise<void> {
     // 初始化客户端
     await this.initChannel();
     // 获取会话并且重新设置 sessionId
@@ -90,12 +82,8 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     session.sessionId = newSessionId;
     this.sessions[sessionId] = undefined as unknown as ITerminalSession;
     this.sessions[newSessionId] = session;
-    // 发送会话初始化请求
-    this.channel.send(InputProtocol.CHECK, {
-      sessionId: newSessionId,
-      hostId: session.hostId,
-      connectType: type,
-    });
+    // 连接会话
+    session.connect();
   }
 
   // 获取终端会话
