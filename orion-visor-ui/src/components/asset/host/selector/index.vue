@@ -16,7 +16,7 @@
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { HostType } from '@/api/asset/host';
-  import { computed, onBeforeMount, ref } from 'vue';
+  import { computed, onActivated, onMounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
 
@@ -51,7 +51,7 @@
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onBeforeMount(async () => {
+  const initOptions = async () => {
     setLoading(true);
     try {
       const hosts = await cacheStore.loadHosts(props.type);
@@ -66,7 +66,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化选项
+  onMounted(initOptions);
+  onActivated(initOptions);
 
 </script>
 

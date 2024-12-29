@@ -34,8 +34,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { computed, ref, onUnmounted, onBeforeMount } from 'vue';
-  import { useAppStore, useCacheStore, useDictStore } from '@/store';
+  import { computed, ref, onBeforeMount } from 'vue';
+  import { useAppStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import HostTable from './components/host-table.vue';
   import HostCardList from './components/host-card-list.vue';
@@ -50,7 +50,6 @@
   const hostGroup = ref();
 
   const appStore = useAppStore();
-  const cacheStore = useCacheStore();
 
   const renderTable = computed(() => appStore.hostView === 'table');
 
@@ -67,11 +66,6 @@
   onBeforeMount(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    cacheStore.reset('hostKeys', 'hostIdentities', 'hostGroups', 'HOST_Tags');
   });
 
 </script>

@@ -17,7 +17,7 @@
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
-  import { computed, onBeforeMount, ref } from 'vue';
+  import { computed, onActivated, onMounted, ref } from 'vue';
   import { MenuType } from '@/views/system/menu/types/const';
   import { titleFilter } from '@/types/form';
   import useLoading from '@/hooks/loading';
@@ -47,7 +47,8 @@
     }
   });
 
-  onBeforeMount(async () => {
+  // 初始化选项
+  const initOptions = async () => {
     let render = (arr: any[]): TreeNodeData[] => {
       return arr.map((s) => {
         // 为 function 返回空
@@ -81,7 +82,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化选项
+  onMounted(initOptions);
+  onActivated(initOptions);
 
 </script>
 

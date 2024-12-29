@@ -269,7 +269,7 @@
   import { Message, Modal } from '@arco-design/web-vue';
   import { tagColor, hostTypeKey, hostStatusKey, HostType, HostOsType, hostOsTypeKey } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { dataColor } from '@/utils';
   import useLoading from '@/hooks/loading';
@@ -280,6 +280,7 @@
 
   const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
@@ -334,8 +335,8 @@
       // 调用删除接口
       await deleteHost(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -350,8 +351,8 @@
       await batchDeleteHost(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -360,8 +361,13 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
+    // 清空缓存
+    cacheStore.reset('host_SSH');
   };
+
+  defineExpose({ reload });
 
   defineExpose({ reload });
 

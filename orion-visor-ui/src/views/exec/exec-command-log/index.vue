@@ -8,7 +8,7 @@
                             @open-clear="openClearModal" />
     <!-- 清理模态框 -->
     <exec-command-log-clear-modal ref="clearModal"
-                                  @clear="clearCallback" />
+                                  @clear="() => tableRef.reload()" />
     <!-- 执行日志模态框 -->
     <exec-log-panel-modal ref="logModal"
                           type="BATCH" />
@@ -67,18 +67,11 @@
       // 跳转新页面
       openNewRoute({
         name: 'execCommand',
-        query: {
-          id
-        }
+        query: { id },
       });
     } else {
       logModal.value.open(id);
     }
-  };
-
-  // 清理回调
-  const clearCallback = () => {
-    tableRef.value.fetchTableData();
   };
 
   onBeforeMount(async () => {

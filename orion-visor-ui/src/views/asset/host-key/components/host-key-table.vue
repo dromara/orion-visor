@@ -135,6 +135,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHostKey, batchDeleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
+  import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
@@ -142,6 +143,7 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
@@ -156,16 +158,14 @@
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: HostKeyQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostKey(id);
+      await deleteHostKey(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -180,8 +180,8 @@
       await batchDeleteHostKey(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -190,7 +190,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
+    // 清空缓存
+    cacheStore.reset('hostKeys', 'authorizedHostKeys');
   };
 
   defineExpose({ reload });

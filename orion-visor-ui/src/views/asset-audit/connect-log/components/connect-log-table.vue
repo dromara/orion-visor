@@ -264,8 +264,6 @@
     doFetchTableData({ page, limit, ...form });
   };
 
-  defineExpose({ fetchTableData });
-
   // 打开清空
   const openClear = () => {
     emits('openClear', { ...formModel, id: undefined });
@@ -293,8 +291,8 @@
       await deleteTerminalConnectLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -309,13 +307,21 @@
       await deleteTerminalConnectLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
     }
   };
+
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
+  };
+
+  defineExpose({ reload });
 
   onMounted(() => {
     // 当前用户

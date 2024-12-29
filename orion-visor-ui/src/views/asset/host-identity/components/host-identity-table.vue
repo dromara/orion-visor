@@ -182,7 +182,7 @@
   import useLoading from '@/hooks/loading';
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { IdentityType, identityTypeKey } from '../types/const';
@@ -190,6 +190,7 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { toOptions, getDictValue } = useDictStore();
@@ -215,8 +216,8 @@
       // 调用删除接口
       await deleteHostIdentity(id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -231,8 +232,8 @@
       await batchDeleteHostIdentity(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -241,7 +242,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
+    // 清空缓存
+    cacheStore.reset('hostIdentities', 'authorizedHostIdentities');
   };
 
   defineExpose({ reload });

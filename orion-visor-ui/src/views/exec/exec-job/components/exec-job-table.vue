@@ -215,7 +215,7 @@
   import columns from '../types/table.columns';
   import { ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore, useUserStore } from '@/store';
+  import { useCacheStore, useDictStore, useUserStore } from '@/store';
   import { useRoute } from 'vue-router';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
@@ -224,6 +224,7 @@
   const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'updateExecUser', 'testCron']);
 
   const route = useRoute();
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
@@ -242,16 +243,14 @@
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: ExecJobQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecJob(id);
+      await deleteExecJob(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -266,8 +265,8 @@
       await batchDeleteExecJob(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -276,7 +275,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
+    // 清空缓存
+    cacheStore.reset('execJob');
   };
 
   defineExpose({ reload });

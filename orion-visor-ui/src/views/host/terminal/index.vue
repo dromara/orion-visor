@@ -197,8 +197,6 @@
 
   // 卸载处理
   onUnmounted(() => {
-    // 卸载时清除 cache
-    useCacheStore().reset('authorizedHostKeys', 'authorizedHostIdentities', 'commandSnippetGroups', 'pathBookmarkGroups');
     // 去除 body style
     document.body.removeAttribute('terminal-theme');
     // 重置 title

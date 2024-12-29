@@ -21,8 +21,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
+  import { ref, onBeforeMount } from 'vue';
+  import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import RoleTable from './components/role-table.vue';
   import RoleFormModal from './components/role-form-modal.vue';
@@ -37,12 +37,6 @@
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    const cacheStore = useCacheStore();
-    cacheStore.reset('menus');
   });
 
 </script>

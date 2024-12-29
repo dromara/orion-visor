@@ -170,8 +170,8 @@
           // 调用删除接口
           await delete${vue.featureEntity}(id);
           Message.success('删除成功');
-          // 重新加载数据
-          fetchCardData();
+          // 重新加载
+          reload();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -182,6 +182,7 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchCardData();
   };
 

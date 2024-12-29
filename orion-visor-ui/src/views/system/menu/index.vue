@@ -18,11 +18,11 @@
 </script>
 
 <script lang="ts" setup>
+  import { ref, onBeforeMount } from 'vue';
+  import { useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
   import MenuTable from '@/views/system/menu/components/menu-table.vue';
   import MenuFormModal from '@/views/system/menu/components/menu-form-modal.vue';
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
-  import { dictKeys } from './types/const';
 
   const table = ref();
   const modal = ref();
@@ -33,12 +33,6 @@
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    const cacheStore = useCacheStore();
-    cacheStore.reset('menus');
   });
 
 </script>

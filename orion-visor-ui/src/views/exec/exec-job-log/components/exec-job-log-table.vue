@@ -264,6 +264,21 @@
     emits('openClear', { ...formModel, id: undefined, description: undefined });
   };
 
+  // 删除当前行
+  const deleteRow = async (record: ExecLogQueryResponse) => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await deleteExecJobLog(record.id);
+      Message.success('删除成功');
+      // 重新加载
+      reload();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 删除选中行
   const deleteSelectedRows = async () => {
     try {
@@ -272,30 +287,21 @@
       await batchDeleteExecJobLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
     }
   };
 
-  // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await deleteExecJobLog(id);
-      Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
   };
+
+  defineExpose({ reload });
 
   // 中断执行
   const doInterruptExecJob = async (record: ExecLogQueryResponse) => {
@@ -394,10 +400,6 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-
-  defineExpose({
-    fetchTableData
-  });
 
   onMounted(() => {
     // 加载数据

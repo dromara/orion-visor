@@ -28,8 +28,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, computed, onUnmounted, onBeforeMount } from 'vue';
-  import { useAppStore, useCacheStore, useDictStore } from '@/store';
+  import { ref, computed, onBeforeMount } from 'vue';
+  import { useAppStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import HostIdentityCardList from './components/host-identity-card-list.vue';
   import HostIdentityTable from './components/host-identity-table.vue';
@@ -41,7 +41,6 @@
   const modal = ref();
   const keyDrawer = ref();
   const appStore = useAppStore();
-  const cacheStore = useCacheStore();
 
   const renderTable = computed(() => appStore.hostIdentityView === 'table');
 
@@ -58,12 +57,6 @@
   onBeforeMount(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    const cacheStore = useCacheStore();
-    cacheStore.reset('hostKeys');
   });
 
 </script>

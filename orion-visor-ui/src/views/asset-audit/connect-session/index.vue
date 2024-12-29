@@ -12,8 +12,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
+  import { ref, onBeforeMount } from 'vue';
+  import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import ConnectSessionTable from './components/connect-session-table.vue';
 
@@ -24,12 +24,6 @@
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;
-  });
-
-  // 重置缓存
-  onUnmounted(() => {
-    const cacheStore = useCacheStore();
-    cacheStore.reset('users');
   });
 
 </script>

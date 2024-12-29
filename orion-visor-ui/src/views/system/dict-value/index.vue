@@ -24,9 +24,8 @@
 </script>
 
 <script lang="ts" setup>
-  import { ref, onUnmounted } from 'vue';
+  import { ref } from 'vue';
   import { historyType } from './types/const';
-  import { useCacheStore } from '@/store';
   import { rollbackDictValue } from '@/api/system/dict-value';
   import DictValueTable from './components/dict-value-table.vue';
   import DictValueFormModal from './components/dict-value-form-modal.vue';
@@ -35,17 +34,11 @@
   const table = ref();
   const modal = ref();
   const history = ref();
-  const cacheStore = useCacheStore();
 
   // 回滚
   const rollback = async (id: number, valueId: number) => {
     await rollbackDictValue({ id, valueId });
   };
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    cacheStore.reset('dictKeys');
-  });
 
 </script>
 

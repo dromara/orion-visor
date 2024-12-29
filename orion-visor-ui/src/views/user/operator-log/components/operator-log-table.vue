@@ -181,8 +181,8 @@
       await deleteOperatorLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -197,12 +197,18 @@
       await deleteOperatorLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
   };
 
   // 加载数据
@@ -227,8 +233,6 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
     doFetchTableData({ page, limit, ...form });
   };
-
-  defineExpose({ fetchTableData });
 
   // 初始化
   onMounted(() => {
