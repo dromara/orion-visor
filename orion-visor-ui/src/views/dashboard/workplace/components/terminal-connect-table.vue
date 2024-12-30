@@ -11,6 +11,7 @@
         </span>
       </div>
       <div class="card-body">
+        <!-- 表格 -->
         <a-table row-key="id"
                  :loading="loading"
                  :columns="terminalLogColumns"
@@ -18,6 +19,10 @@
                  :pagination="false"
                  :bordered="false"
                  :scroll="{ y: 258 }">
+          <!-- 空状态 -->
+          <template #empty>
+            <a-empty style="margin-top: 42px;" description="暂无连接记录" />
+          </template>
           <!-- 连接主机 -->
           <template #hostName="{ record }">
             <span class="table-cell-value" :title="record.hostName">

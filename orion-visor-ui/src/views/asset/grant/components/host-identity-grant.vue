@@ -51,7 +51,7 @@
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import type { HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onActivated } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useRowSelection } from '@/hooks/table';
   import { getAuthorizedHostIdentity, grantHostIdentity } from '@/api/asset/asset-data-grant';
@@ -125,23 +125,23 @@
     }
   };
 
-  // 初始化身份数据
-  onMounted(async () => {
+  // 初始化主机身份
+  const initIdentities = async () => {
     setLoading(true);
     try {
       // 加载主机身份
       hostIdentities.value = await cacheStore.loadHostIdentities();
+      // 加载主机密钥
+      hostKeys.value = await cacheStore.loadHostKeys();
     } catch (e) {
     } finally {
       setLoading(false);
     }
-  });
+  };
 
-  // 初始化密钥数据
-  onMounted(async () => {
-    // 加载主机密钥
-    hostKeys.value = await cacheStore.loadHostKeys();
-  });
+  // 初始化身份数据
+  onMounted(initIdentities);
+  onActivated(initIdentities);
 
 </script>
 

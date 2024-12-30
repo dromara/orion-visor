@@ -1,6 +1,36 @@
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
 import { dateFormat } from '@/utils';
 
+// 主机列
+export const hostColumns = [
+  {
+    title: 'id',
+    dataIndex: 'id',
+    slotName: 'id',
+    width: 68,
+    align: 'left',
+    fixed: 'left',
+  }, {
+    title: '主机类型',
+    dataIndex: 'type',
+    slotName: 'type',
+    align: 'center',
+    width: 100,
+  }, {
+    title: '主机名称',
+    dataIndex: 'name',
+    slotName: 'name',
+    ellipsis: true,
+    tooltip: true,
+  }, {
+    title: '主机地址',
+    dataIndex: 'address',
+    slotName: 'address',
+    ellipsis: true,
+    tooltip: true,
+  },
+] as TableColumnData[];
+
 // 主机密钥列
 export const hostKeyColumns = [
   {

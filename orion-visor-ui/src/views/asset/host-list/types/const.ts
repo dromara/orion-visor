@@ -30,7 +30,6 @@ export const HostOsType = {
   },
 };
 
-
 // 主机类型 字典项
 export const hostTypeKey = 'hostType';
 

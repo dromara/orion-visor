@@ -74,8 +74,14 @@ export const GrantTabs = [
   },
 ];
 
+// 主机类型 字典项
+export const hostTypeKey = 'hostType';
+
+// 主机系统类型 字典项
+export const hostOsTypeKey = 'hostOsType';
+
 // 身份类型 字典项
 export const identityTypeKey = 'hostIdentityType';
 
 // 加载的字典值
-export const dictKeys = [identityTypeKey];
+export const dictKeys = [hostTypeKey, hostOsTypeKey, identityTypeKey];

@@ -11,6 +11,7 @@
         </span>
       </div>
       <div class="card-body">
+        <!-- 表格 -->
         <a-table row-key="id"
                  :loading="loading"
                  :columns="batchExecColumns"
@@ -18,6 +19,10 @@
                  :pagination="false"
                  :bordered="false"
                  :scroll="{ y: 258 }">
+          <!-- 空状态 -->
+          <template #empty>
+            <a-empty style="margin-top: 42px;" description="暂无批量执行记录" />
+          </template>
           <!-- 执行状态 -->
           <template #status="{ record }">
             <a-tag :color="getDictValue(execHostStatusKey, record.status, 'color')">
