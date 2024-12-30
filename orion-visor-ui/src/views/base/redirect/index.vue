@@ -10,13 +10,20 @@
 
 <script lang="ts" setup>
   import { useRoute, useRouter } from 'vue-router';
+  import qs from 'query-string';
 
-  const router = useRouter();
   const route = useRoute();
+  const router = useRouter();
 
-  const gotoPath = route.params.path as string;
+  // 解析路径
+  const { url, query } = qs.parseUrl(route.params.path as string);
 
-  router.replace({ path: gotoPath });
+  // 重定向
+  router.replace({
+    path: url,
+    query: query,
+  });
+
 </script>
 
 <style lang="less" scoped>
