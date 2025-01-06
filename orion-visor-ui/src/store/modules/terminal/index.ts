@@ -189,7 +189,7 @@ export default defineStore('terminal', {
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([tab.hostId, ...this.hosts.latestHosts])];
       // 重新打开会话
-      await this.sessionManager.reOpenSession(tab.type, sessionId, newSessionId);
+      await this.sessionManager.reOpenSession(sessionId, newSessionId);
     },
 
     // 复制并且打开会话

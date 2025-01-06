@@ -12,10 +12,10 @@
   import VCharts from 'vue-echarts';
 
   const props = withDefaults(defineProps<Partial<{
-    options: EChartsOption,
-    autoResize: boolean,
-    width: string,
-    height: string,
+    options: EChartsOption;
+    autoResize: boolean;
+    width: string;
+    height: string;
   }>>(), {
     options: () => {
       return {};
