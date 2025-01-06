@@ -59,7 +59,7 @@
 * 🔗 演示地址: [https://dv.orionsec.cn/](https://dv.orionsec.cn/)
 * 🔏 演示账号: admin/admin
 * ⭐ 体验后可以点一下 `star`
-  这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor/overview)
+  这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
 * 🎭 演示环境部分功能不可用, 完整功能请本地部署!
 * 📛 演示环境请不要随便删除数据!
