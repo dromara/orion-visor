@@ -28,10 +28,21 @@ export default class SftpSession extends BaseSession implements ISftpSession {
   }
 
   // 设置已连接
-  connect(): void {
-    super.connect();
+  setConnected(): void {
+    super.setConnected();
     // 连接回调
     this.resolver.connectCallback();
+  }
+
+  // 连接会话
+  connect(): void {
+    super.connect();
+    // 发送会话初始化请求
+    this.channel.send(InputProtocol.CHECK, {
+      sessionId: this.sessionId,
+      hostId: this.hostId,
+      connectType: this.type,
+    });
   }
 
   // 设置显示隐藏文件

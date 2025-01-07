@@ -1,6 +1,8 @@
 <template>
   <a-config-provider :locale="locale">
+    <!-- 路由 -->
     <router-view />
+    <!-- 应用设置 -->
     <app-setting ref="appSettingRef" />
   </a-config-provider>
 </template>

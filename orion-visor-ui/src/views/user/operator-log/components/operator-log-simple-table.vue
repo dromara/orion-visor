@@ -120,6 +120,14 @@
     jsonView.value.open(getLogDetail(record));
   };
 
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
+  };
+
+  defineExpose({ reload });
+
   // 加载数据
   const doFetchTableData = async (request: OperatorLogQueryRequest) => {
     try {
@@ -150,10 +158,6 @@
   const fetchTableData = (page = 1, limit = pagination.pageSize, form = props.model) => {
     doFetchTableData({ page, limit, ...form });
   };
-
-  defineExpose({
-    fetchTableData
-  });
 
   // 初始化
   onMounted(async () => {

@@ -388,6 +388,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         }
         Valid.notEmpty(hostLogs, ErrorMessage.LOG_ABSENT);
         // 获取编码集
+        // TODO 待优化
         List<Long> hostIdList = hostLogs.stream()
                 .map(ExecHostLogDO::getHostId)
                 .collect(Collectors.toList());

@@ -60,12 +60,12 @@
 
   // 跳转日志
   onMounted(async () => {
-    const idParam = route.query.id;
-    const keyParam = route.query.key;
+    const idParam = route.query.id as string;
+    const keyParam = route.query.key as string;
     if (idParam) {
-      await openLogWithId(Number.parseInt(idParam as string));
+      await openLogWithId(Number.parseInt(idParam));
     } else if (keyParam) {
-      await openLogWithId(Number.parseInt(keyParam as string));
+      await openLogWithId(Number.parseInt(keyParam));
     }
   });
 

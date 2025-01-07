@@ -24,13 +24,13 @@
 </script>
 
 <script lang="ts" setup>
+  import { ref, onBeforeMount } from 'vue';
+  import { useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
   import UserTable from './components/user-table.vue';
   import UserFormModal from './components/user-form-modal.vue';
   import UserResetPasswordFormModal from './components/user-reset-password-form-modal.vue';
   import UserGrantRolesFormModal from './components/user-grant-roles-form-modal.vue';
-  import { ref, onBeforeMount, onUnmounted } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
-  import { dictKeys } from './types/const';
 
   const render = ref(false);
   const table = ref();
@@ -43,12 +43,6 @@
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    const cacheStore = useCacheStore();
-    cacheStore.reset('roles');
   });
 
 </script>

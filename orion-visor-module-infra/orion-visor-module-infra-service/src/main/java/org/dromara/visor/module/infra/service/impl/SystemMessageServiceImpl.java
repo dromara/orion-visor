@@ -115,6 +115,17 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     }
 
     @Override
+    public Integer getUnreadSystemMessageCount(Long receiverId) {
+        return systemMessageDAO.of()
+                .createWrapper()
+                .eq(SystemMessageDO::getReceiverId, receiverId)
+                .eq(SystemMessageDO::getStatus, MessageStatusEnum.UNREAD.getStatus())
+                .then()
+                .count()
+                .intValue();
+    }
+
+    @Override
     public Boolean checkHasUnreadMessage() {
         // 查询
         return systemMessageDAO.of()

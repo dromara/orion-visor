@@ -84,4 +84,13 @@ public abstract class AbstractGenericsDataStrategy<M extends GenericsDataModel> 
     public void toView(M model) {
     }
 
+    @Override
+    public M toView(String serialModel) {
+        // 解析
+        M parse = this.parse(serialModel);
+        // 转为视图对象
+        this.toView(parse);
+        return parse;
+    }
+
 }

@@ -63,6 +63,14 @@ public interface SystemMessageService {
     Map<String, Integer> getSystemMessageCount(Boolean queryUnread);
 
     /**
+     * 查询未读消息数量
+     *
+     * @param receiverId receiverId
+     * @return count
+     */
+    Integer getUnreadSystemMessageCount(Long receiverId);
+
+    /**
      * 查询是否有未读消息
      *
      * @return has

@@ -1,6 +1,7 @@
 <template>
   <div class="tabs-container" v-if="render">
-    <a-tabs type="rounded"
+    <a-tabs v-model:active-key="activeTab"
+            type="rounded"
             size="medium"
             position="left"
             :lazy-load="true"
@@ -64,6 +65,7 @@
   const userStore = useUserStore();
   const { hasPermission } = usePermission();
 
+  const activeTab = ref<string>('mineInfo');
   const render = ref<boolean>(false);
   const userId = ref<number>();
   const user = ref<UserQueryResponse>();
@@ -72,11 +74,18 @@
   const clickTab = (key: string) => {
     if (key === 'back') {
       router.back();
+    } else {
+      activeTab.value = key;
     }
   };
 
   // 初始化
   const init = async () => {
+    // 设置当前面板
+    const tab = route.query.tab as string;
+    if (tab) {
+      activeTab.value = tab;
+    }
     // 获取 userId
     const queryUserId = route.query.id as string;
     if (!queryUserId) {

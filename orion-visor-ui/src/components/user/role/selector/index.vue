@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import { computed, onBeforeMount, ref } from 'vue';
+  import { computed, onActivated, onMounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import { RoleStatus } from '@/views/user/role/types/const';
   import { labelFilter } from '@/types/form';
@@ -40,13 +40,21 @@
       return props.modelValue;
     },
     set(e) {
-      emits('update:modelValue', e);
+      if (e) {
+        emits('update:modelValue', e);
+      } else {
+        if (props.multiple) {
+          emits('update:modelValue', []);
+        } else {
+          emits('update:modelValue', null);
+        }
+      }
     }
   });
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onBeforeMount(async () => {
+  const initOptions = async () => {
     setLoading(true);
     try {
       const roles = await cacheStore.loadRoles();
@@ -61,7 +69,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化选项
+  onMounted(initOptions);
+  onActivated(initOptions);
 
 </script>
 

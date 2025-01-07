@@ -198,7 +198,7 @@
             </a-doption>
             <!-- SSH -->
             <a-doption v-if="record.type === HostType.SSH.value"
-                       v-permission="['terminal:terminal:access']"
+                       v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
               <span class="more-doption normal">
                 <icon-thunderbolt /> SSH
@@ -206,7 +206,7 @@
             </a-doption>
             <!-- SFTP -->
             <a-doption v-if="record.type === HostType.SSH.value"
-                       v-permission="['terminal:terminal:access']"
+                       v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
               <span class="more-doption normal">
                <icon-folder /> SFTP
@@ -234,7 +234,7 @@
   import { Message, Modal } from '@arco-design/web-vue';
   import { HostOsType, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import useLoading from '@/hooks/loading';
   import fieldConfig from '../types/card.fields';
@@ -243,6 +243,7 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup', 'openCopy']);
 
+  const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
   const { loading, setLoading } = useLoading();
@@ -308,8 +309,8 @@
           // 调用删除接口
           await deleteHost(id);
           Message.success('删除成功');
-          // 重新加载数据
-          fetchCardData();
+          // 重新加载
+          reload();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -320,7 +321,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchCardData();
+    // 清空缓存
+    cacheStore.reset('host_', 'host_SSH');
   };
 
   defineExpose({ reload });

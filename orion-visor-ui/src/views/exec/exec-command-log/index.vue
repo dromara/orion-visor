@@ -8,7 +8,7 @@
                             @open-clear="openClearModal" />
     <!-- 清理模态框 -->
     <exec-command-log-clear-modal ref="clearModal"
-                                  @clear="clearCallback" />
+                                  @clear="() => tableRef.reload()" />
     <!-- 执行日志模态框 -->
     <exec-log-panel-modal ref="logModal"
                           type="BATCH" />
@@ -32,15 +32,12 @@
   import { ref, onBeforeMount } from 'vue';
   import { useDictStore } from '@/store';
   import { dictKeys } from '@/components/exec/log/const';
-  import { useRouter } from 'vue-router';
   import { openNewRoute } from '@/router';
   import ExecCommandLogTable from './components/exec-command-log-table.vue';
   import ExecCommandLogClearModal from './components/exec-command-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import ExecLogPanelModal from '@/components/exec/log/panel-modal/index.vue';
-
-  const router = useRouter();
 
   const render = ref(false);
   const tableRef = ref();
@@ -70,18 +67,11 @@
       // 跳转新页面
       openNewRoute({
         name: 'execCommand',
-        query: {
-          id
-        }
+        query: { id },
       });
     } else {
       logModal.value.open(id);
     }
-  };
-
-  // 清理回调
-  const clearCallback = () => {
-    tableRef.value.fetchTableData();
   };
 
   onBeforeMount(async () => {

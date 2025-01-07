@@ -26,6 +26,12 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
+    <!-- 数量询映射结果 -->
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.asset.entity.po.ExecLogCountPO">
+        <result column="exec_date" property="execDate"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, username, source, source_id, exec_mode, description, exec_seq, command, parameter_schema, timeout, script_exec, status, start_time, finish_time, create_time, update_time, creator, updater, deleted
@@ -45,6 +51,18 @@
         ORDER BY max_id DESC
         LIMIT #{limit}
         ) sub ON e.id = sub.max_id
+    </select>
+
+    <select id="selectExecLogCount" resultMap="CountResultMap">
+        SELECT DATE(create_time) exec_date, COUNT(1) total_count
+        FROM exec_log
+        WHERE deleted = 0
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        AND source = #{source}
+        AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY exec_date
     </select>
 
 </mapper>

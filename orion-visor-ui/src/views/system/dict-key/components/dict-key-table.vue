@@ -173,11 +173,11 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
-  const cacheStore = useCacheStore();
 
   const selectedKeys = ref<number[]>([]);
   const tableRenderData = ref<DictKeyQueryResponse[]>([]);
@@ -188,17 +188,14 @@
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: DictKeyQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteDictKey(id);
+      await deleteDictKey(record.id);
       Message.success('删除成功');
-      cacheStore.reset('dictKeys');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -213,9 +210,8 @@
       await batchDeleteDictKey(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      cacheStore.reset('dictKeys');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -224,7 +220,9 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
+    // 清空缓存
     cacheStore.reset('dictKeys');
   };
 

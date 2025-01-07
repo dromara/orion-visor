@@ -30,7 +30,7 @@
   import type { TableData } from '@arco-design/web-vue/es/table/interface';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onActivated } from 'vue';
   import { getAuthorizedHostKey, grantHostKey } from '@/api/asset/asset-data-grant';
   import useLoading from '@/hooks/loading';
   import { useRowSelection } from '@/hooks/table';
@@ -101,8 +101,8 @@
     }
   };
 
-  // 初始化数据
-  onMounted(async () => {
+  // 初始化主机密钥
+  const initKeys = async () => {
     setLoading(true);
     try {
       hostKeys.value = await cacheStore.loadHostKeys();
@@ -110,7 +110,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化主机密钥
+  onMounted(initKeys);
+  onActivated(initKeys);
 
 </script>
 

@@ -5,7 +5,7 @@
                 @grant="doGrant"
                 @select-all="selectAll"
                 @reverse="reverseSelect">
-    <!-- 分组 -->
+    <!-- 主机分组 -->
     <host-group-tree v-model:checked-keys="checkedGroups"
                      ref="tree"
                      outer-class="group-main-tree"
@@ -15,8 +15,36 @@
                      @set-loading="setLoading"
                      @selected-node="(e) => selectedGroup = e"
                      @on-selected="clickGroup" />
-    <!-- 主机列表 -->
-    <host-list class="group-main-hosts sticky-list" :group="selectedGroup" />
+    <a-divider direction="vertical" />
+    <!-- 主机表格 -->
+    <a-table class="group-main-hosts"
+             row-key="id"
+             :sticky-header="true"
+             :loading="loading"
+             :columns="hostColumns"
+             :data="selectedGroupHosts"
+             :pagination="false"
+             :bordered="false">
+      <!-- 空状态 -->
+      <template #empty>
+        <a-empty style="margin: 32px 0;" description="当前分组内无主机" />
+      </template>
+      <!-- 主机类型 -->
+      <template #type="{ record }">
+        <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
+          <!-- 系统类型图标 -->
+          <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
+                     :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+                     class="os-icon" />
+          <!-- 主机类型 -->
+          <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
+        </a-tag>
+      </template>
+      <!-- 地址 -->
+      <template #address="{ record }">
+        {{ record.address }}:{{ record.port }}
+      </template>
+    </a-table>
   </grant-layout>
 </template>
 
@@ -28,15 +56,18 @@
 
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
+  import type { HostQueryResponse } from '@/api/asset/host';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import { getAuthorizedHostGroup, grantHostGroup } from '@/api/asset/asset-data-grant';
-  import { useCacheStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { flatNodeKeys } from '@/utils/tree';
   import { Message } from '@arco-design/web-vue';
+  import { hostColumns } from '../types/table.columns';
+  import { HostOsType, hostTypeKey } from '@/views/asset/host-list/types/const';
+  import { getHostGroupRelList } from '@/api/asset/host-group';
   import HostGroupTree from '@/components/asset/host-group/tree/index.vue';
-  import HostList from './host-list.vue';
   import GrantLayout from './grant-layout.vue';
 
   const props = defineProps<{
@@ -44,12 +75,32 @@
   }>();
 
   const cacheStore = useCacheStore();
+  const { getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
 
   const tree = ref();
   const authorizedGroups = ref<Array<number>>([]);
   const checkedGroups = ref<Array<number>>([]);
   const selectedGroup = ref<TreeNodeData>({});
+  const selectedGroupHosts = ref<Array<HostQueryResponse>>([]);
+
+  // 监听分组变化 加载组内数据
+  watch(() => selectedGroup.value?.key, async (groupId) => {
+    if (!groupId) {
+      return;
+    }
+    setLoading(true);
+    try {
+      // 加载组内数据
+      const { data } = await getHostGroupRelList(groupId as number);
+      const hosts = await cacheStore.loadHosts('');
+      selectedGroupHosts.value = data.map(s => hosts.find(h => h.id === s) as HostQueryResponse)
+        .filter(Boolean);
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  });
 
   // 点击分组
   const clickGroup = (groups: Array<number>) => {
@@ -117,12 +168,18 @@
 
 <style lang="less" scoped>
   .group-main-tree {
-    width: calc(60% - 16px);
+    width: calc(100% - 496px);
     height: 100%;
-    margin-right: 16px;
   }
 
   .group-main-hosts {
-    width: 40%;
+    width: 480px;
+    height: 100%;
+
+    .os-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
   }
 </style>

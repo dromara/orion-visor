@@ -1,44 +1,30 @@
 <template>
-  <div class="layout-container">
-    <!-- 顶部 -->
-    <div class="top-side">
-      <!-- 提示 -->
-      <div class="panel">
-        <banner />
-      </div>
-    </div>
-    <div class="row-wrapper">
-      <div class="left-side">
-        <!-- 操作日志 -->
-        <a-card class="general-card"
-                title="操作日志"
-                :body-style="{ padding: '0 20px 8px 20px' }">
-          <operator-log-simple-table :current="true"
-                                     :handle-column="false" />
-        </a-card>
-      </div>
-      <a-grid class="right-side"
-              :cols="24"
-              :row-gap="16">
-        <!-- 快捷操作 -->
-        <a-grid-item class="card-wrapper" :span="24">
-          <quick-operation />
-        </a-grid-item>
-        <!-- 文档 -->
-        <a-grid-item class="panel" :span="24">
-          <docs />
-        </a-grid-item>
-      </a-grid>
-    </div>
+  <div class="layout-container" v-if="render">
+    <!-- 头部 -->
+    <workplace-header class="mb16"
+                      :data="statisticsData" />
+    <!-- 统计信息 -->
+    <workplace-statistics class="mb16"
+                          :data="statisticsData" />
+    <a-row :gutter="16" class="mb16" align="stretch">
+      <!-- 最近终端连接表格 -->
+      <terminal-connect-table :loading="assetLoading"
+                              :data="statisticsData" />
+      <!-- 最近批量执行表格 -->
+      <batch-exec-table :loading="assetLoading"
+                        :data="statisticsData" />
+      <!-- 快捷操作 -->
+      <quick-operation />
+    </a-row>
+    <a-row :gutter="16" align="stretch">
+      <!-- 每日操作数量图表 -->
+      <operator-log-chart :data="statisticsData" />
+      <!-- 用户登录日志 -->
+      <user-login-table :loading="infraLoading"
+                        :data="statisticsData" />
+    </a-row>
   </div>
 </template>
-
-<script lang="ts" setup>
-  import Banner from './components/banner.vue';
-  import QuickOperation from './components/quick-operation.vue';
-  import Docs from './components/docs.vue';
-  import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
-</script>
 
 <script lang="ts">
   export default {
@@ -46,82 +32,87 @@
   };
 </script>
 
+<script lang="ts" setup>
+  import type { WorkplaceStatisticsData } from './types/const';
+  import { onBeforeMount, onMounted, ref } from 'vue';
+  import { useDictStore } from '@/store';
+  import { dictKeys } from './types/const';
+  import useLoading from '@/hooks/loading';
+  import { getInfraWorkplaceStatisticsData } from '@/api/statistics/infra-statistics';
+  import { getAssetWorkplaceStatisticsData } from '@/api/statistics/asset-statistics';
+  import WorkplaceHeader from './components/workplace-header.vue';
+  import WorkplaceStatistics from './components/workplace-statistics.vue';
+  import TerminalConnectTable from './components/terminal-connect-table.vue';
+  import BatchExecTable from './components/batch-exec-table.vue';
+  import QuickOperation from './components/quick-operation.vue';
+  import UserLoginTable from './components/user-login-table.vue';
+  import OperatorLogChart from './components/operator-log-chart.vue';
+
+  const { loading: infraLoading, setLoading: setInfraLoading } = useLoading();
+  const { loading: assetLoading, setLoading: setAssetLoading } = useLoading();
+
+  const render = ref(false);
+  const statisticsData = ref({} as WorkplaceStatisticsData);
+
+  const getWorkplaceData = () => {
+    // 基建模块
+    setInfraLoading(true);
+    getInfraWorkplaceStatisticsData().then(({ data }) => {
+      setInfraLoading(false);
+      statisticsData.value.infra = data;
+    }).catch(() => {
+      setInfraLoading(false);
+    });
+    // 资产模块
+    setAssetLoading(true);
+    getAssetWorkplaceStatisticsData().then(({ data }) => {
+      setAssetLoading(false);
+      statisticsData.value.asset = data;
+    }).catch(() => {
+      setAssetLoading(false);
+    });
+  };
+
+  onMounted(getWorkplaceData);
+
+  // 加载字典值
+  onBeforeMount(async () => {
+    const dictStore = useDictStore();
+    await dictStore.loadKeys(dictKeys);
+    render.value = true;
+  });
+
+</script>
+
 <style lang="less" scoped>
-  .top-side {
-    flex: 1;
-    overflow: auto;
-  }
 
-  .row-wrapper {
-    margin-top: 16px;
-    width: 100%;
-    display: flex;
-
-    .left-side {
-      width: calc(100% - 296px);
-      margin-right: 16px;
-    }
-
-    .right-side {
-      width: 280px;
-    }
-  }
-
-  .panel {
-    background-color: var(--color-bg-2);
-    border-radius: 4px;
-    overflow: auto;
-  }
-
-  :deep(.panel-border) {
-    margin-bottom: 0;
-    border-bottom: 1px solid rgb(var(--gray-2));
-  }
-
-  .card-wrapper {
+  :deep(.card) {
+    padding: 16px 20px;
     border-radius: 4px;
     background-color: var(--color-bg-2);
 
-    :deep(.text) {
-      font-size: 12px;
-      text-align: center;
-      color: rgb(var(--gray-8));
-    }
+    &-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      user-select: none;
 
-    :deep(.wrapper) {
-      margin-bottom: 8px;
-      text-align: center;
-      cursor: pointer;
-
-      &:last-child {
-        .text {
-          margin-bottom: 0;
-        }
-      }
-
-      &:hover {
-        .icon {
-          color: rgb(var(--arcoblue-6));
-          background-color: #E8F3FF;
-        }
-
-        .text {
-          color: rgb(var(--arcoblue-6));
-        }
+      &-left {
+        margin: 0;
+        color: var(--color-text-1);
+        font-weight: 600;
       }
     }
 
-    :deep(.icon) {
-      display: inline-block;
-      width: 32px;
-      height: 32px;
-      margin-bottom: 4px;
-      color: rgb(var(--dark-gray-1));
-      line-height: 32px;
-      font-size: 16px;
-      text-align: center;
-      background-color: rgb(var(--gray-1));
-      border-radius: 4px;
+    &-body {
+      height: calc(100% - 36px);
     }
   }
+
+  :deep(.arco-table-empty) {
+    .arco-table-td {
+      border-bottom: none;
+    }
+  }
+
 </style>

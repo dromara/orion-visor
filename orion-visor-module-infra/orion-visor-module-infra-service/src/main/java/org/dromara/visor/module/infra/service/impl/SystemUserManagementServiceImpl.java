@@ -63,6 +63,13 @@ public class SystemUserManagementServiceImpl implements SystemUserManagementServ
     private SystemUserDAO systemUserDAO;
 
     @Override
+    public Integer getUserSessionCount(Long userId) {
+        // 扫描缓存
+        Set<String> keys = RedisStrings.scanKeys(UserCacheKeyDefine.LOGIN_TOKEN.format(userId, "*"));
+        return Lists.size(keys);
+    }
+
+    @Override
     public List<UserSessionVO> getUserSessionList(Long userId) {
         // 扫描缓存
         Set<String> keys = RedisStrings.scanKeys(UserCacheKeyDefine.LOGIN_TOKEN.format(userId, "*"));

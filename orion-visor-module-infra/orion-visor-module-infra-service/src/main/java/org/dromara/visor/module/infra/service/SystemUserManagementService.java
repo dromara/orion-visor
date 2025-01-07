@@ -37,6 +37,14 @@ import java.util.List;
 public interface SystemUserManagementService {
 
     /**
+     * 获取用户会话数量
+     *
+     * @param userId userId
+     * @return count
+     */
+    Integer getUserSessionCount(Long userId);
+
+    /**
      * 获取用户会话列表
      *
      * @param userId userId

@@ -3,7 +3,7 @@
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://app.codacy.com/gh/orionsec/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+       href="https://app.codacy.com/gh/lijiahangmax/orion-visor/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
       <img src="https://app.codacy.com/project/badge/Grade/49eaab3a9a474af3b87e1d21ffec71c4" alt="quality" />
     </a>
     <a target="_blank"
@@ -36,6 +36,11 @@
        href="https://github.com/dromara/orion-visor">
       <img src="https://img.shields.io/github/forks/dromara/orion-visor" alt="star" />
     </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://gitcode.com/dromara/orion-visor">
+      <img src="https://gitcode.com/dromara/orion-visor/star/badge.svg" alt="star"/>
+    </a>
 </p>
 
 ------------------------------
@@ -54,7 +59,7 @@
 * 🔗 演示地址: [https://dv.orionsec.cn/](https://dv.orionsec.cn/)
 * 🔏 演示账号: admin/admin
 * ⭐ 体验后可以点一下 `star`
-  这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor/overview)
+  这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
 * 🎭 演示环境部分功能不可用, 完整功能请本地部署!
 * 📛 演示环境请不要随便删除数据!
@@ -140,6 +145,6 @@ QQ群: 755242157
 
 本项目遵循 [Apache-2.0](https://github.com/dromara/orion-visor/blob/main/LICENSE) 开源许可证。
 
-## Gite 最有价值开源项目 GVP
+## Gitee 最有价值开源项目 GVP
 
 ![GVP](https://bjuimg.obs.cn-north-4.myhuaweicloud.com/images/2024/10/24/8dd98b8d-9de5-44e6-86d3-04e27ec66123.jpg "GVP")

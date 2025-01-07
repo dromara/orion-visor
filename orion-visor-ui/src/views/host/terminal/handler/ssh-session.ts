@@ -7,7 +7,7 @@ import type { XtermAddons } from '@/types/xterm';
 import { defaultFontFamily } from '@/types/xterm';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
-import { PanelSessionType, TerminalShortcutType, TerminalSessionStatus } from '../types/const';
+import { PanelSessionType, TerminalSessionStatus, TerminalShortcutType } from '../types/const';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -205,8 +205,9 @@ export default class SshSession extends BaseSession implements ISshSession {
   }
 
   // 设置已连接
-  connect(): void {
-    super.connect();
+  setConnected(): void {
+    super.setConnected();
+    // 设置状态
     this.status = TerminalSessionStatus.CONNECTED;
     this.inst.focus();
   }
@@ -219,6 +220,19 @@ export default class SshSession extends BaseSession implements ISshSession {
     } else {
       this.inst.options.cursorBlink = false;
     }
+  }
+
+  // 连接会话
+  connect(): void {
+    super.connect();
+    // 设置状态
+    this.status = TerminalSessionStatus.CONNECTING;
+    // 发送会话初始化请求
+    this.channel.send(InputProtocol.CHECK, {
+      sessionId: this.sessionId,
+      hostId: this.hostId,
+      connectType: this.type,
+    });
   }
 
   // 写入数据

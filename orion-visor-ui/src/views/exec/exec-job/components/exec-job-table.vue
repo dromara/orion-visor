@@ -6,13 +6,6 @@
                   @submit="fetchTableData"
                   @reset="fetchTableData"
                   @keyup.enter="() => fetchTableData()">
-      <!-- id -->
-      <a-form-item field="id" label="id">
-        <a-input-number v-model="formModel.id"
-                        placeholder="请输入id"
-                        allow-clear
-                        hide-button />
-      </a-form-item>
       <!-- 任务名称 -->
       <a-form-item field="name" label="任务名称">
         <a-input v-model="formModel.name"
@@ -24,6 +17,19 @@
         <a-input v-model="formModel.command"
                  placeholder="请输入执行命令"
                  allow-clear />
+      </a-form-item>
+      <!-- 执行用户 -->
+      <a-form-item field="execUserId" label="执行用户">
+        <user-selector v-model="formModel.execUserId"
+                       placeholder="请选择执行用户"
+                       allow-clear />
+      </a-form-item>
+      <!-- id -->
+      <a-form-item field="id" label="id">
+        <a-input-number v-model="formModel.id"
+                        placeholder="请输入id"
+                        allow-clear
+                        hide-button />
       </a-form-item>
       <!-- 任务状态 -->
       <a-form-item field="status" label="任务状态">
@@ -209,39 +215,42 @@
   import columns from '../types/table.columns';
   import { ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore, useUserStore } from '@/store';
+  import { useRoute } from 'vue-router';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
+  import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'updateExecUser', 'testCron']);
 
+  const route = useRoute();
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
   const { hasPermission } = usePermission();
   const { toOptions, getDictValue } = useDictStore();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<ExecJobQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<ExecJobQueryResponse>>([]);
   const formModel = reactive<ExecJobQueryRequest>({
     id: undefined,
     name: undefined,
     command: undefined,
     status: undefined,
-    queryRecentLog: true
+    execUserId: undefined,
+    queryRecentLog: true,
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: ExecJobQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecJob(id);
+      await deleteExecJob(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -256,8 +265,8 @@
       await batchDeleteExecJob(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -266,7 +275,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
+    // 清空缓存
+    cacheStore.reset('execJob');
   };
 
   defineExpose({ reload });
@@ -317,6 +329,12 @@
   };
 
   onMounted(() => {
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.execUserId = useUserStore().id;
+    }
+    // 查询
     fetchTableData();
   });
 

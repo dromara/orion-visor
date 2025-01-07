@@ -25,7 +25,6 @@ package org.dromara.visor.module.asset.service.impl;
 import cn.orionsec.kit.lang.function.Functions;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import org.dromara.visor.framework.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraQueryRequest;
@@ -120,7 +119,6 @@ public class HostExtraServiceImpl implements HostExtraService {
         Long hostId = request.getHostId();
         Long userId = SecurityUtils.getLoginUserId();
         HostExtraItemEnum item = Valid.valid(HostExtraItemEnum::of, request.getItem());
-        GenericsDataStrategy<GenericsDataModel> strategy = item.getStrategy();
         // 查询原始配置
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
@@ -136,7 +134,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         GenericsDataModel newExtra = item.parse(request.getExtra());
         GenericsDataModel beforeExtra = item.parse(beforeExtraItem.getValue());
         // 更新验证
-        strategy.doValid(beforeExtra, newExtra);
+        item.doValid(beforeExtra, newExtra);
         // 更新配置
         return dataExtraApi.updateExtraValue(beforeExtraItem.getId(), newExtra.serial());
     }
@@ -167,9 +165,8 @@ public class HostExtraServiceImpl implements HostExtraService {
      * @return defaultValue
      */
     private String checkInitItem(HostExtraItemEnum item, Long userId, Long hostId) {
-        GenericsDataStrategy<GenericsDataModel> strategy = item.getStrategy();
         // 初始化默认数据
-        String extraValue = strategy.getDefault().serial();
+        String extraValue = item.getDefault().serial();
         // 插入默认值
         DataExtraSetDTO set = DataExtraSetDTO.builder()
                 .userId(userId)

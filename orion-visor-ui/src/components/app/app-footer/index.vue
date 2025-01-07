@@ -9,7 +9,8 @@
         <a-link target="_blank" :href="`https://github.com/dromara/orion-visor/releases/tag/v${version}`">v{{ version }}</a-link>
       </a-space>
       <span class="copyright">
-        Copyright<icon-copyright /> 2023 - {{ new Date().getFullYear() }} Jiahang Li, All rights reserved.
+        Copyright<icon-copyright /> 2023 - {{ new Date().getFullYear() }} <a href="https://dromara.org">Dromara</a>, All rights reserved. Designed by
+        <a href="https://orionsec.cn" target="_blank">Jiahang Li.</a>
       </span>
     </a-space>
   </a-layout-footer>

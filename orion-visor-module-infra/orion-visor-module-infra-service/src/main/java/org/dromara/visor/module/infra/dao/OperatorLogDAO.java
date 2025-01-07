@@ -24,9 +24,12 @@ package org.dromara.visor.module.infra.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.module.infra.entity.domain.OperatorLogDO;
+import org.dromara.visor.module.infra.entity.po.OperatorLogCountPO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,5 +65,17 @@ public interface OperatorLogDAO extends IMapper<OperatorLogDO> {
                 .in(OperatorLogDO::getUserId, userIdList);
         return this.delete(wrapper);
     }
+
+    /**
+     * 查询操作日志数量
+     *
+     * @param userId    userId
+     * @param startTime startTime
+     * @param endTime   endTime
+     * @return rows
+     */
+    List<OperatorLogCountPO> selectOperatorLogCount(@Param("userId") Long userId,
+                                                    @Param("startTime") Date startTime,
+                                                    @Param("endTime") Date endTime);
 
 }

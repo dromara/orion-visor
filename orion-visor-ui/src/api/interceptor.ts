@@ -69,8 +69,10 @@ axios.interceptors.response.use(
         if (!responseUrl || !responseUrl.includes('/logout')) {
           await useUserStore().logout();
         }
-        // 重新加载自动跳转登录页面
-        window.location.reload();
+        // 非登录页面就重新加载, 会自动跳转登录页面
+        if (!window.location.pathname.includes('/login')) {
+          window.location.reload();
+        }
       });
     } else {
       // 其他异常 判断是否弹出错误信息

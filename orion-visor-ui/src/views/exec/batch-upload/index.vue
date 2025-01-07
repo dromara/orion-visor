@@ -30,12 +30,12 @@
 
   // 跳转日志
   onMounted(async () => {
-    const idParam = route.query.id;
-    const keyParam = route.query.key;
+    const idParam = route.query.id as string;
+    const keyParam = route.query.key as string;
     if (idParam) {
-      await panel.value?.openLog(Number.parseInt(idParam as string));
+      await panel.value?.openLog(Number.parseInt(idParam));
     } else if (keyParam) {
-      await panel.value?.openLog(Number.parseInt(keyParam as string));
+      await panel.value?.openLog(Number.parseInt(keyParam));
     }
   });
 

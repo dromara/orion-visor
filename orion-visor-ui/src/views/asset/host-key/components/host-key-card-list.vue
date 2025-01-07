@@ -84,6 +84,7 @@
   import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
   import { useCardPagination, useCardColLayout } from '@/hooks/card';
   import { reactive, ref, onMounted } from 'vue';
+  import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
@@ -95,6 +96,7 @@
 
   const list = ref<HostKeyQueryResponse[]>([]);
 
+  const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
   const { loading, setLoading } = useLoading();
@@ -116,8 +118,8 @@
           // 调用删除接口
           await deleteHostKey(id);
           Message.success('删除成功');
-          // 重新加载数据
-          fetchCardData();
+          // 重新加载
+          reload();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -128,7 +130,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchCardData();
+    // 清空缓存
+    cacheStore.reset('hostKeys', 'authorizedHostKeys');
   };
 
   defineExpose({ reload });

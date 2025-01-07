@@ -139,11 +139,12 @@
   import { RoleStatus, roleStatusKey } from '../types/const';
   import { useTablePagination } from '@/hooks/table';
   import usePermission from '@/hooks/permission';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { AdminRoleCode } from '@/types/const';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
+  const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
@@ -173,8 +174,8 @@
       // 调用删除接口
       await deleteRole(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -183,7 +184,10 @@
 
   // 重新加载
   const reload = () => {
+    // 加载数据
     fetchTableData();
+    // 清空缓存
+    cacheStore.reset('roles');
   };
 
   defineExpose({ reload });

@@ -5,7 +5,7 @@
                        @open-clear="(e) => clear.open(e)" />
     <!-- 清理模态框 -->
     <upload-task-clear-modal ref="clear"
-                             @clear="clearCallback" />
+                             @clear="() => table.reload()" />
   </div>
 </template>
 
@@ -25,11 +25,6 @@
   const render = ref(false);
   const table = ref();
   const clear = ref();
-
-  // 清理回调
-  const clearCallback = () => {
-    table.value.fetchTableData();
-  };
 
   // 加载字典值
   onBeforeMount(async () => {

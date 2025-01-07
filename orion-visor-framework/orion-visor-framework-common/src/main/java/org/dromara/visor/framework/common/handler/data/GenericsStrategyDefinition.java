@@ -34,7 +34,7 @@ import org.dromara.visor.framework.common.handler.data.strategy.GenericsDataStra
  * @since 2023/12/21 0:07
  */
 @SuppressWarnings("unchecked")
-public interface GenericsDataDefinition {
+public interface GenericsStrategyDefinition {
 
     /**
      * 获取数据处理策略
@@ -55,11 +55,31 @@ public interface GenericsDataDefinition {
     }
 
     /**
+     * 获取默认值
+     *
+     * @param <M> model
+     * @return model
+     */
+    default <M extends GenericsDataModel> M getDefault() {
+        return (M) this.getStrategy().getDefault();
+    }
+
+    /**
+     * 执行完整验证链
+     *
+     * @param beforeModel beforeModel
+     * @param afterModel  afterModel
+     */
+    default void doValid(GenericsDataModel beforeModel, GenericsDataModel afterModel) {
+        this.getStrategy().doValid(beforeModel, afterModel);
+    }
+
+    /**
      * 反序列化对象
      *
      * @param serialModel serialModel
-     * @param <M>         Model
-     * @return object
+     * @param <M>         model
+     * @return model
      */
     default <M extends GenericsDataModel> M parse(String serialModel) {
         return (M) this.getStrategy().parse(serialModel);
@@ -69,14 +89,11 @@ public interface GenericsDataDefinition {
      * 转为视图对象
      *
      * @param serialModel serialModel
-     * @param <M>         Model
+     * @param <M>         model
      * @return viewModel
      */
     default <M extends GenericsDataModel> M toView(String serialModel) {
-        GenericsDataStrategy<GenericsDataModel> strategy = this.getStrategy();
-        GenericsDataModel model = strategy.parse(serialModel);
-        strategy.toView(model);
-        return (M) model;
+        return (M) this.getStrategy().toView(serialModel);
     }
 
 }

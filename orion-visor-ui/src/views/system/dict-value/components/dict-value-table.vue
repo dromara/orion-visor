@@ -175,8 +175,8 @@
       await batchDeleteDictValue(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -190,8 +190,8 @@
       // 调用删除接口
       await deleteDictValue(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -200,6 +200,7 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchTableData();
   };
 

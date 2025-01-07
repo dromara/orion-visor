@@ -26,7 +26,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.module.asset.entity.domain.ExecLogDO;
+import org.dromara.visor.module.asset.entity.po.ExecLogCountPO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,5 +68,19 @@ public interface ExecLogDAO extends IMapper<ExecLogDO> {
     List<ExecLogDO> selectExecHistory(@Param("source") String source,
                                       @Param("userId") Long userId,
                                       @Param("limit") Integer limit);
+
+    /**
+     * 获取执行日志统计
+     *
+     * @param userId    userId
+     * @param source    source
+     * @param startTime startTime
+     * @param endTime   endTime
+     * @return count
+     */
+    List<ExecLogCountPO> selectExecLogCount(@Param("userId") Long userId,
+                                            @Param("source") String source,
+                                            @Param("startTime") Date startTime,
+                                            @Param("endTime") Date endTime);
 
 }

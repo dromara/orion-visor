@@ -3,7 +3,7 @@
   <a-table row-key="id"
            ref="tableRef"
            :loading="loading"
-           :columns="columns"
+           :columns="hostColumns"
            :data="row.hosts"
            :expandable="expandable"
            :scroll="{ y: '100%' }"
@@ -106,7 +106,7 @@
   import { execHostStatusKey, ExecHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import columns from '@/views/exec/exec-command-log/types/host-table.columns';
+  import { hostColumns } from '@/views/exec/exec-command-log/types/table.columns';
   import { useExpandable } from '@/hooks/table';
   import { dateFormat, formatDuration } from '@/utils';
   import { downloadExecJobLogFile } from '@/api/exec/exec-job-log';

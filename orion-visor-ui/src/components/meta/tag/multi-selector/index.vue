@@ -26,7 +26,7 @@
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
   import type { TagCreateRequest } from '@/api/meta/tag';
-  import { ref, computed, onBeforeMount } from 'vue';
+  import { ref, computed, onMounted, onActivated } from 'vue';
   import { useCacheStore } from '@/store';
   import { dataColor } from '@/utils';
   import { createTag } from '@/api/meta/tag';
@@ -113,7 +113,7 @@
   };
 
   // 初始化选项
-  onBeforeMount(async () => {
+  const initOptions = async () => {
     setLoading(true);
     try {
       const tags = await cacheStore.loadTags(props.type as string);
@@ -130,7 +130,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化选项
+  onMounted(initOptions);
+  onActivated(initOptions);
 
 </script>
 

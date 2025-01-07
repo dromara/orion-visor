@@ -25,13 +25,12 @@
 </script>
 
 <script lang="ts" setup>
-  import { onBeforeMount, onUnmounted, ref } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
+  import { onBeforeMount, ref } from 'vue';
+  import { useDictStore } from '@/store';
   import { GrantTabs, dictKeys } from './types/const';
   import { useRoute } from 'vue-router';
 
   const route = useRoute();
-  const cacheStore = useCacheStore();
 
   const activeKey = ref();
 
@@ -43,15 +42,10 @@
 
   // 跳转到指定页
   onBeforeMount(() => {
-    const key = route.query.key;
+    const key = route.query.key as string;
     if (key) {
       activeKey.value = Number(key);
     }
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    cacheStore.reset('users', 'roles', 'hostGroups', 'hostKeys', 'hostIdentities');
   });
 
 </script>

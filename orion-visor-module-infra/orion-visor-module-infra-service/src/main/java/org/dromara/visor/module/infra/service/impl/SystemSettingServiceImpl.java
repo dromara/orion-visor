@@ -148,9 +148,7 @@ public class SystemSettingServiceImpl implements SystemSettingService {
         // 初始化
         if (Maps.isEmpty(settings)) {
             // 获取默认值
-            Map<String, Object> defaultConfig = settingType.getStrategy()
-                    .getDefault()
-                    .toMap();
+            Map<String, Object> defaultConfig = settingType.getDefault().toMap();
             settings = Maps.map(defaultConfig, Function.identity(), Refs::json);
             // 插入默认值
             List<SystemSettingDO> entities = settings

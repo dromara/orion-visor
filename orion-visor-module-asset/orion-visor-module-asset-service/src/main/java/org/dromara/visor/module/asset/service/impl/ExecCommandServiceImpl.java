@@ -141,6 +141,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         // 查询主机信息
         List<HostDO> hosts = hostDAO.selectBatchIds(hostIdList);
         // 查询主机配置
+        // TODO 待优化
         Map<Long, HostSshConfigModel> hostConfigMap = hostConfigService.buildHostConfigMap(hosts, HostTypeEnum.SSH);
         // 插入日志
         ExecLogDO execLog = ExecLogDO.builder()

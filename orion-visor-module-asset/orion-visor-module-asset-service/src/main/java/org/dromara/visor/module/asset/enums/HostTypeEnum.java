@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.dromara.visor.framework.common.handler.data.GenericsDataDefinition;
+import org.dromara.visor.framework.common.handler.data.GenericsStrategyDefinition;
 import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
 import org.dromara.visor.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
@@ -38,7 +38,7 @@ import org.dromara.visor.module.asset.handler.host.config.strategy.HostSshConfig
  */
 @Getter
 @AllArgsConstructor
-public enum HostTypeEnum implements GenericsDataDefinition {
+public enum HostTypeEnum implements GenericsStrategyDefinition {
 
     /**
      * SSH

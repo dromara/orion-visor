@@ -1,25 +1,34 @@
 import type { EChartsOption } from 'echarts';
 import { computed } from 'vue';
-import { useAppStore } from '@/store';
+import useThemes from '@/hooks/themes';
 
-// for code hints
-// import { SeriesOption } from 'echarts';
-// Because there are so many configuration items, this provides a relatively convenient code hint.
-// When using vue, pay attention to the reactive issues. It is necessary to ensure that corresponding functions can be triggered, TypeScript does not report errors, and code writing is convenient.
-interface optionsFn {
-  (isDark: boolean): EChartsOption;
+// 配置生成
+interface OptionsFn {
+  (isDark: boolean, themeTextColor: string, themeLineColor: string): EChartsOption;
 }
 
-export default function useChartOption(sourceOption: optionsFn) {
-  const appStore = useAppStore();
-  const isDark = computed(() => {
-    return appStore.theme === 'dark';
-  });
-  // echarts support https://echarts.apache.org/zh/theme-builder.html
-  // It's not used here
+// 亮色文本色
+const lightTextColor = '#4E5969';
+
+// 暗色文本色
+const darkTextColor = 'rgba(255, 255, 255, 0.7)';
+
+// 亮色线色
+const lightLineColor = '#F2F3F5';
+
+// 暗色线色
+const darkLineColor = '#2E2E30';
+
+export default function useChartOption(sourceOption: OptionsFn) {
+  const { isDark } = useThemes();
+
+  // 配置
   const chartOption = computed<EChartsOption>(() => {
-    return sourceOption(isDark.value);
+    return sourceOption(isDark.value,
+      isDark.value ? darkTextColor : lightTextColor,
+      isDark.value ? darkLineColor : lightLineColor);
   });
+
   return {
     chartOption,
   };

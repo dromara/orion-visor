@@ -155,7 +155,7 @@
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message, Modal } from '@arco-design/web-vue';
   import usePermission from '@/hooks/permission';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { IdentityType, identityTypeKey } from '../types/const';
@@ -165,6 +165,7 @@
 
   const list = ref<HostIdentityQueryResponse[]>([]);
 
+  const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
   const { toOptions, getDictValue } = useDictStore();
@@ -199,8 +200,8 @@
           // 调用删除接口
           await deleteHostIdentity(id);
           Message.success('删除成功');
-          // 重新加载数据
-          fetchCardData();
+          // 重新加载
+          reload();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -211,7 +212,10 @@
 
   // 重新加载
   const reload = () => {
+    // 重新加载数据
     fetchCardData();
+    // 清空缓存
+    cacheStore.reset('hostIdentities', 'authorizedHostIdentities');
   };
 
   defineExpose({ reload });

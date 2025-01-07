@@ -155,11 +155,12 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <!-- 详情 -->
-          <a-button type="text"
+          <!-- 连接 -->
+          <a-button v-permission="['asset:terminal:access']"
+                    type="text"
                     size="mini"
-                    @click="emits('openDetail', record)">
-            详情
+                    @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.type } })">
+            连接
           </a-button>
           <!-- 下线 -->
           <a-popconfirm v-if="record.status === TerminalConnectStatus.CONNECTING"
@@ -174,6 +175,12 @@
               下线
             </a-button>
           </a-popconfirm>
+          <!-- 详情 -->
+          <a-button type="text"
+                    size="mini"
+                    @click="emits('openDetail', record)">
+            详情
+          </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
                         position="left"
@@ -204,17 +211,20 @@
   import { deleteTerminalConnectLog, getTerminalConnectLogPage, hostForceOffline } from '@/api/asset/terminal-connect-log';
   import { connectStatusKey, connectTypeKey, TerminalConnectStatus } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
+  import { useRoute } from 'vue-router';
   import { dateFormat } from '@/utils';
+  import { openNewRoute } from '@/router';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
 
   const emits = defineEmits(['openClear', 'openDetail']);
 
+  const route = useRoute();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
@@ -254,8 +264,6 @@
     doFetchTableData({ page, limit, ...form });
   };
 
-  defineExpose({ fetchTableData });
-
   // 打开清空
   const openClear = () => {
     emits('openClear', { ...formModel, id: undefined });
@@ -283,8 +291,8 @@
       await deleteTerminalConnectLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -299,15 +307,33 @@
       await deleteTerminalConnectLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
     }
   };
 
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
+  };
+
+  defineExpose({ reload });
+
   onMounted(() => {
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.userId = useUserStore().id;
+    }
+    // id
+    const id = route.query.id as string;
+    if (id) {
+      formModel.id = Number.parseInt(id);
+    }
     fetchTableData();
   });
 

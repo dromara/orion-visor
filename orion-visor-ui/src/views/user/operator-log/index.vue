@@ -6,7 +6,7 @@
                         @open-clear="(s) => clearModal.open(s)" />
     <!-- 清理模态框 -->
     <operator-log-clear-modal ref="clearModal"
-                              @clear="() => table.fetchTableData()" />
+                              @clear="() => table.reload()" />
     <!-- json 查看器模态框 -->
     <json-editor-modal ref="jsonView" />
   </div>
@@ -20,14 +20,12 @@
 
 <script lang="ts" setup>
   import type { OperatorLogQueryResponse } from '@/api/user/operator-log';
-  import { ref, onUnmounted, onBeforeMount } from 'vue';
-  import { useCacheStore, useDictStore } from '@/store';
+  import { ref, onBeforeMount } from 'vue';
+  import { useDictStore } from '@/store';
   import { dictKeys, getLogDetail } from './types/const';
   import OperatorLogTable from './components/operator-log-table.vue';
   import OperatorLogClearModal from './components/operator-log-clear-modal.vue';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
-
-  const cacheStore = useCacheStore();
 
   const render = ref(false);
   const table = ref();
@@ -44,11 +42,6 @@
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;
-  });
-
-  // 卸载时清除 cache
-  onUnmounted(() => {
-    cacheStore.reset('users');
   });
 
 </script>

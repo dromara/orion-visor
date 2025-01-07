@@ -26,7 +26,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.module.asset.entity.domain.TerminalConnectLogDO;
+import org.dromara.visor.module.asset.entity.po.TerminalConnectLogCountPO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,5 +50,17 @@ public interface TerminalConnectLogDAO extends IMapper<TerminalConnectLogDO> {
      * @return hostId
      */
     List<Long> selectLatestConnectHostId(@Param("userId") Long userId, @Param("type") String type, @Param("limit") Integer limit);
+
+    /**
+     * 查询终端连接日志用户数量
+     *
+     * @param userId    userId
+     * @param startTime startTime
+     * @param endTime   endTime
+     * @return rows
+     */
+    List<TerminalConnectLogCountPO> selectConnectLogUserCount(@Param("userId") Long userId,
+                                                              @Param("startTime") Date startTime,
+                                                              @Param("endTime") Date endTime);
 
 }

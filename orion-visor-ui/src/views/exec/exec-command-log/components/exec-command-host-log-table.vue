@@ -3,7 +3,7 @@
   <a-table row-key="id"
            ref="tableRef"
            :loading="loading"
-           :columns="columns"
+           :columns="hostColumns"
            :data="row.hosts"
            :expandable="expandable"
            :scroll="{ y: '100%' }"
@@ -105,7 +105,7 @@
   import { deleteExecCommandHostLog } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import columns from '../types/host-table.columns';
+  import { hostColumns } from '../types/table.columns';
   import { execHostStatusKey, ExecHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
   import { useExpandable } from '@/hooks/table';

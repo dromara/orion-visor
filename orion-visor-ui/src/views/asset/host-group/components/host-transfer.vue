@@ -53,7 +53,7 @@
 <script lang="ts" setup>
   import type { TransferItem } from '@arco-design/web-vue/es/transfer/interface';
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import { onMounted, ref, watch, computed } from 'vue';
+  import { onMounted, ref, watch, computed, onActivated } from 'vue';
   import { useCacheStore } from '@/store';
   import { getHostGroupRelList } from '@/api/asset/host-group';
 
@@ -111,8 +111,9 @@
     }
   });
 
-  onMounted(() => {
-    cacheStore.loadHosts(undefined).then(hosts => {
+  // 加载主机列表
+  const loadHosts = () => {
+    cacheStore.loadHosts('').then(hosts => {
       data.value = hosts.map(s => {
         return {
           value: String(s.id),
@@ -121,7 +122,10 @@
         };
       });
     });
-  });
+  };
+
+  onMounted(loadHosts);
+  onActivated(loadHosts);
 
 </script>
 

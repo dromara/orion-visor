@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
   import type { TreeNodeData } from '@arco-design/web-vue';
-  import { computed, onBeforeMount, ref } from 'vue';
+  import { computed, onActivated, onMounted, ref } from 'vue';
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
 
@@ -44,7 +44,7 @@
   const treeData = ref<Array<TreeNodeData>>([]);
 
   // 初始化选项
-  onBeforeMount(async () => {
+  const initOptions = async () => {
     setLoading(true);
     try {
       treeData.value = await cacheStore.loadHostGroups();
@@ -52,7 +52,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化选项
+  onMounted(initOptions);
+  onActivated(initOptions);
 
 </script>
 

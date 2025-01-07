@@ -132,7 +132,7 @@ export interface ITerminalSessionManager {
   // 打开 sftp 会话
   openSftp: (tab: TerminalPanelTabItem, resolver: ISftpSessionResolver) => Promise<ISftpSession>;
   // 重新打开会话
-  reOpenSession: (type: string, sessionId: string, newSessionId: string) => Promise<void>;
+  reOpenSession: (sessionId: string, newSessionId: string) => Promise<void>;
   // 获取终端会话
   getSession: <T extends ITerminalSession>(sessionId: string) => T;
   // 关闭终端会话
@@ -211,7 +211,9 @@ export interface ITerminalSession {
 
   // 设置是否可写
   setCanWrite: (canWrite: boolean) => void;
-  // 连接
+  // 设置已连接
+  setConnected: () => void;
+  // 连接会话
   connect: () => void;
   // 断开连接
   disconnect: () => void;

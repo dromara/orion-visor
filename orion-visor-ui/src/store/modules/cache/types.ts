@@ -1,11 +1,12 @@
 // 缓存类型
 export type CacheType = 'users' | 'menus' | 'roles'
-  | 'hostGroups' | 'hostKeys' | 'hostIdentities'
+  | 'hostGroups' | 'hostKeys' | 'hostIdentities' | 'host_*'
   | 'dictKeys'
+  | 'execJob'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | 'commandSnippetGroups' | 'pathBookmarkGroups'
   | 'commandSnippets' | 'pathBookmarks'
-  | 'execJob'
+  | '*_Tags' | 'preference_*' | 'system_setting_*' | 'footer_setting'
   | string
 
 export interface CacheState {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { dateFormat } from '@/utils';
 
 /**
  * 系统配置类型
@@ -63,7 +64,7 @@ export function getSystemAppInfo() {
  * 获取应用最新版本信息
  */
 export function getAppLatestRelease() {
-  return axios.get<AppReleaseResponse>('https://visor.orionsec.cn/releases-latest.json', {
+  return axios.get<AppReleaseResponse>(`https://visor.orionsec.cn/releases-latest.json?${dateFormat(new Date(), 'yyyyMMddHH')}`, {
     // 不添加请求头 否则会报 401
     setAuthorization: false,
     // 返回原始输出

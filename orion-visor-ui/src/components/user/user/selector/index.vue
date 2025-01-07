@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import { computed, ref, onMounted } from 'vue';
+  import { computed, ref, onMounted, onActivated } from 'vue';
   import { useCacheStore } from '@/store';
   import { labelFilter } from '@/types/form';
   import useLoading from '@/hooks/loading';
@@ -39,13 +39,21 @@
       return props.modelValue;
     },
     set(e) {
-      emits('update:modelValue', e);
+      if (e) {
+        emits('update:modelValue', e);
+      } else {
+        if (props.multiple) {
+          emits('update:modelValue', []);
+        } else {
+          emits('update:modelValue', null);
+        }
+      }
     }
   });
   const optionData = ref<Array<SelectOptionData>>([]);
 
   // 初始化选项
-  onMounted(async () => {
+  const initOptions = async () => {
     setLoading(true);
     try {
       // 加载用户列表
@@ -60,7 +68,11 @@
     } finally {
       setLoading(false);
     }
-  });
+  };
+
+  // 初始化选项
+  onMounted(initOptions);
+  onActivated(initOptions);
 
 </script>
 

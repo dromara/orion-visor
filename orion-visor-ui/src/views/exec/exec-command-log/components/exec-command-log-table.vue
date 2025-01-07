@@ -102,7 +102,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :expandable="expandable"
              :data="tableRenderData"
@@ -217,11 +217,12 @@
     getExecCommandLogStatus
   } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
+  import { useRoute } from 'vue-router';
   import useLoading from '@/hooks/loading';
-  import columns from '../types/table.columns';
+  import { tableColumns } from '../types/table.columns';
   import { ExecStatus, execStatusKey } from '@/components/exec/log/const';
   import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
   import { reExecCommand } from '@/api/exec/exec-command';
   import { interruptExecCommand } from '@/api/exec/exec-command-log';
@@ -230,6 +231,7 @@
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
+  const route = useRoute();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const expandable = useExpandable();
@@ -262,8 +264,8 @@
       await batchDeleteExecCommandLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -271,16 +273,14 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: ExecLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteExecCommandLog(id);
+      await deleteExecCommandLog(record.id);
       Message.success('删除成功');
-      // 重新加载数据
-      fetchTableData();
+      // 重新加载
+      reload();
     } catch (e) {
     } finally {
       setLoading(false);
@@ -379,6 +379,14 @@
     });
   };
 
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
+  };
+
+  defineExpose({ reload });
+
   // 加载数据
   const doFetchTableData = async (request: ExecLogQueryRequest) => {
     try {
@@ -401,11 +409,12 @@
     doFetchTableData({ page, limit, ...form });
   };
 
-  defineExpose({
-    fetchTableData
-  });
-
   onMounted(() => {
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.userId = useUserStore().id;
+    }
     // 加载数据
     fetchTableData();
     // 注册状态轮询

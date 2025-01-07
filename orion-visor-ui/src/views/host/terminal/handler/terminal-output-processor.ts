@@ -65,8 +65,8 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       if (success) {
         // 设置可写
         ssh.setCanWrite(true);
-        // 执行连接逻辑
-        ssh.connect();
+        // 设置已连接
+        ssh.setConnected();
       } else {
         // 未成功展示错误信息
         ssh.write(`[91m${msg || ''}[0m\r\n\r\n[91m输入回车重新连接...[0m\r\n\r\n`);
@@ -77,8 +77,8 @@ export default class TerminalOutputProcessor implements ITerminalOutputProcessor
       if (success) {
         // 设置可写
         sftp.setCanWrite(true);
-        // 执行连接逻辑
-        sftp.connect();
+        // 设置已连接
+        sftp.setConnected();
       } else {
         // 未成功提示错误信息
         sftp.resolver?.onClose(false, msg);
