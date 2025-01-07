@@ -22,8 +22,7 @@
  */
 package org.dromara.visor.framework.security.core.crypto;
 
-import org.dromara.visor.framework.common.crypto.ValueCrypto;
-import org.dromara.visor.framework.common.utils.CryptoUtils;
+import org.dromara.visor.common.crypto.ValueCrypto;
 
 /**
  * 数据加密器
@@ -41,7 +40,6 @@ public abstract class CryptoProcessor<Config extends CryptoConfig> implements Va
         // 设置为默认加密器
         if (config.isPrimary()) {
             PrimaryValueCrypto.setDelegate(this);
-            CryptoUtils.setDelegate(this);
         }
     }
 

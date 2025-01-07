@@ -24,8 +24,8 @@ package org.dromara.visor.module.infra.service.impl;
 
 import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.entity.StatisticsRange;
-import org.dromara.visor.framework.common.entity.chart.LineSingleChartData;
+import org.dromara.visor.common.entity.StatisticsRange;
+import org.dromara.visor.common.entity.chart.LineSingleChartData;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.infra.dao.OperatorLogDAO;

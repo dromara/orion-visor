@@ -27,7 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dromara.visor.framework.common.entity.chart.LineSingleChartData;
+import org.dromara.visor.common.entity.chart.LineSingleChartData;
 
 import java.util.List;
 

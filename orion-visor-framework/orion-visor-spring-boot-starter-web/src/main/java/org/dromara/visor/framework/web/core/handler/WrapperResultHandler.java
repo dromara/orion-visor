@@ -25,7 +25,7 @@ package org.dromara.visor.framework.web.core.handler;
 import cn.orionsec.kit.lang.constant.StandardContentType;
 import cn.orionsec.kit.lang.define.wrapper.HttpWrapper;
 import cn.orionsec.kit.lang.define.wrapper.RpcWrapper;
-import org.dromara.visor.framework.common.constant.BeanOrderConst;
+import org.dromara.visor.common.constant.BeanOrderConst;
 import org.dromara.visor.framework.web.core.annotation.IgnoreWrapper;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.jetbrains.annotations.NotNull;

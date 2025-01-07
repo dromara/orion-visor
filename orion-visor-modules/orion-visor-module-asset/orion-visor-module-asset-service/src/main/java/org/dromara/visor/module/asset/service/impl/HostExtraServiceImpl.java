@@ -24,8 +24,8 @@ package org.dromara.visor.module.asset.service.impl;
 
 import cn.orionsec.kit.lang.function.Functions;
 import cn.orionsec.kit.lang.utils.collect.Maps;
-import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.handler.data.model.GenericsDataModel;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;

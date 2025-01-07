@@ -24,8 +24,8 @@ package org.dromara.visor.framework.mybatis.core.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import org.dromara.visor.framework.common.constant.ErrorMessage;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Valid;
 
 import java.util.Collection;
 

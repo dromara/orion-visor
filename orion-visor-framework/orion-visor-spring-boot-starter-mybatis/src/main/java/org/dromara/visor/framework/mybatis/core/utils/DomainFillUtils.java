@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.mybatis.core.utils;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.framework.common.security.SecurityHolder;
+import org.dromara.visor.common.security.SecurityHolder;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
 import java.util.Date;

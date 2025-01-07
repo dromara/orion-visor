@@ -24,7 +24,7 @@ package org.dromara.visor.framework.redis.core.lock;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.lock.Locker;
+import org.dromara.visor.common.lock.Locker;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 

@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.service.impl;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.framework.redis.core.utils.RedisLists;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;

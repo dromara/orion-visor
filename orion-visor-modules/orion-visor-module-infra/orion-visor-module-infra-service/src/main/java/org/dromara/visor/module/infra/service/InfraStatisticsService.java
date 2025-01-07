@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.module.infra.service;
 
-import org.dromara.visor.framework.common.entity.chart.LineSingleChartData;
+import org.dromara.visor.common.entity.chart.LineSingleChartData;
 import org.dromara.visor.module.infra.entity.vo.InfraWorkplaceStatisticsVO;
 
 /**

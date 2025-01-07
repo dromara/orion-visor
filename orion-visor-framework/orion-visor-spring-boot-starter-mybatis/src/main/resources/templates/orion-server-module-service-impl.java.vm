@@ -28,8 +28,8 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ErrorMessage;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Valid;
 #if($meta.enableCache)
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;

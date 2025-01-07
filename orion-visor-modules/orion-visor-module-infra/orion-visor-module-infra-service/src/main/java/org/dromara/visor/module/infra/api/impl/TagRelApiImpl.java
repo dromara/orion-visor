@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import cn.orionsec.kit.lang.utils.collect.Lists;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.TagRelApi;
 import org.dromara.visor.module.infra.convert.TagProviderConvert;
 import org.dromara.visor.module.infra.entity.dto.TagCacheDTO;

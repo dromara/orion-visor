@@ -23,8 +23,8 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ErrorMessage;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.AuthenticationApi;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.user.SystemUserAuthDTO;

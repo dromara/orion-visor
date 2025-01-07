@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.annotation.Keep;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.redis.core.utils.RedisLists;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;

@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.SystemMessageApi;
 import org.dromara.visor.module.infra.convert.SystemMessageProviderConvert;
 import org.dromara.visor.module.infra.define.SystemMessageDefine;

@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.define.cache;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import org.dromara.visor.framework.common.security.LoginUser;
+import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.module.infra.entity.dto.LoginTokenDTO;
 import org.dromara.visor.module.infra.entity.dto.UserInfoDTO;
 

@@ -62,7 +62,7 @@
             <!-- orion-visor-starter -->
             <dependency>
                 <groupId>org.dromara.visor</groupId>
-                <artifactId>orion-visor-framework-common</artifactId>
+                <artifactId>orion-visor-common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

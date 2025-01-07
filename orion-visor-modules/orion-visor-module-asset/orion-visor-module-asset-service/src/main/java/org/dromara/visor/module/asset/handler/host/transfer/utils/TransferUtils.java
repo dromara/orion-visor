@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.handler.host.transfer.utils;
 import cn.orionsec.kit.lang.utils.Strings;
 import com.alibaba.fastjson.JSON;
 import org.apache.catalina.connector.ClientAbortException;
-import org.dromara.visor.framework.common.constant.ErrorMessage;
+import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
 import org.dromara.visor.module.asset.handler.host.transfer.model.TransferOperatorResponse;

@@ -34,7 +34,7 @@ import cn.orionsec.kit.net.host.ssh.ExitCode;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.module.asset.dao.ExecLogDAO;
 import org.dromara.visor.module.asset.define.AssetThreadPools;
 import org.dromara.visor.module.asset.define.config.AppExecLogConfig;

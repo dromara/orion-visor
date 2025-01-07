@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.module.infra.framework.service.impl;
 
-import org.dromara.visor.framework.common.security.LoginUser;
+import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
 import org.dromara.visor.framework.security.core.service.SecurityFrameworkService;
 import org.dromara.visor.module.infra.define.cache.UserCacheKeyDefine;

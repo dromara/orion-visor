@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.module.asset.handler.host.extra.strategy;
 
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostLabelExtraModel;
 import org.springframework.stereotype.Component;
 

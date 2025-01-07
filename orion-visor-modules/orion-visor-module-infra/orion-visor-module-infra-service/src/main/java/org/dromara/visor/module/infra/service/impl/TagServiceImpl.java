@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.framework.redis.core.utils.RedisLists;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;

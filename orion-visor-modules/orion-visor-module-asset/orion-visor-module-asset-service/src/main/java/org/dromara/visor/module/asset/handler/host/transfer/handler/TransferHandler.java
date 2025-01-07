@@ -27,7 +27,7 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 import org.dromara.visor.module.asset.handler.host.jsch.SessionStores;

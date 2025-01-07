@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.enums;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.dromara.visor.framework.common.constant.ErrorCode;
+import org.dromara.visor.common.constant.ErrorCode;
 import org.dromara.visor.module.infra.entity.dto.LoginTokenDTO;
 import org.dromara.visor.module.infra.entity.dto.LoginTokenIdentityDTO;
 

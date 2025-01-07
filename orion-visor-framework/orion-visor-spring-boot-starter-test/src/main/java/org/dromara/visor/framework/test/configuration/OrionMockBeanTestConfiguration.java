@@ -23,8 +23,8 @@
 package org.dromara.visor.framework.test.configuration;
 
 import cn.orionsec.kit.lang.utils.collect.Sets;
-import org.dromara.visor.framework.common.security.LoginUser;
-import org.dromara.visor.framework.common.security.SecurityHolder;
+import org.dromara.visor.common.security.LoginUser;
+import org.dromara.visor.common.security.SecurityHolder;
 import org.dromara.visor.framework.test.core.utils.EntityRandoms;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

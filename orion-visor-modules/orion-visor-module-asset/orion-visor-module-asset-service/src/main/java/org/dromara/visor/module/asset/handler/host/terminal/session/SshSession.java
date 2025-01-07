@@ -27,7 +27,7 @@ import cn.orionsec.kit.net.host.SessionStore;
 import cn.orionsec.kit.net.host.ssh.shell.ShellExecutor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.asset.define.AssetThreadPools;
 import org.dromara.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;

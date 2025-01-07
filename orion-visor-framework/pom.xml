@@ -16,7 +16,6 @@
     <url>https://github.com/dromara/orion-visor</url>
 
     <modules>
-        <module>orion-visor-framework-common</module>
         <module>orion-visor-spring-boot-starter-web</module>
         <module>orion-visor-spring-boot-starter-banner</module>
         <module>orion-visor-spring-boot-starter-swagger</module>

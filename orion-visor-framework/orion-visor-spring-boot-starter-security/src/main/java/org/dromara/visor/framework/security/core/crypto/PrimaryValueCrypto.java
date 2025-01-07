@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.security.core.crypto;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.framework.common.crypto.ValueCrypto;
+import org.dromara.visor.common.crypto.ValueCrypto;
 
 /**
  * 默认加密器

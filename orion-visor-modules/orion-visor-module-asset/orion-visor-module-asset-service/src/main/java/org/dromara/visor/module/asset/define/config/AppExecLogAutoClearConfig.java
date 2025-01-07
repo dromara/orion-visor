@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.define.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.visor.framework.common.entity.AutoClearConfig;
+import org.dromara.visor.common.entity.AutoClearConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

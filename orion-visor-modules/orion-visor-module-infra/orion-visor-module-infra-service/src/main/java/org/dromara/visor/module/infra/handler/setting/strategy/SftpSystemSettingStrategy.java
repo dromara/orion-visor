@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.handler.setting.strategy;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
+import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import org.dromara.visor.module.infra.handler.setting.model.SftpSystemSettingModel;
 import org.springframework.stereotype.Component;
 

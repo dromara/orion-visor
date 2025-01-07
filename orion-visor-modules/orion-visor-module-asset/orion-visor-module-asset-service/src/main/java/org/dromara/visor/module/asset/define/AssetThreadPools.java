@@ -23,7 +23,7 @@
 package org.dromara.visor.module.asset.define;
 
 import cn.orionsec.kit.lang.define.thread.ExecutorBuilder;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;

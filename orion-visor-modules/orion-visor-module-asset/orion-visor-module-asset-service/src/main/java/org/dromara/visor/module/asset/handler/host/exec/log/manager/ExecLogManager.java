@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.handler.host.exec.log.manager;
 
 import cn.orionsec.kit.lang.utils.Threads;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.module.asset.handler.host.exec.log.tracker.IExecLogTracker;
 import org.springframework.stereotype.Component;
 

@@ -26,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.dromara.visor.framework.common.constant.BeanOrderConst;
-import org.dromara.visor.framework.common.constant.ErrorCode;
+import org.dromara.visor.common.constant.BeanOrderConst;
+import org.dromara.visor.common.constant.ErrorCode;
 import org.dromara.visor.framework.web.core.annotation.DemoDisableApi;
 import org.springframework.core.annotation.Order;
 

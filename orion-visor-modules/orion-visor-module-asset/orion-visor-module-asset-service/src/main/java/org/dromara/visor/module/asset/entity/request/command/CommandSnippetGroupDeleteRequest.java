@@ -27,7 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dromara.visor.framework.common.validator.group.Id;
+import org.dromara.visor.common.validator.group.Id;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.framework.job.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.framework.common.thread.ThreadPoolMdcTaskExecutor;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.thread.ThreadPoolMdcTaskExecutor;
 import org.dromara.visor.framework.job.configuration.config.AsyncExecutorConfig;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;

@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.api.impl;
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.OperatorLogApi;
 import org.dromara.visor.module.infra.convert.OperatorLogProviderConvert;
 import org.dromara.visor.module.infra.dao.OperatorLogDAO;

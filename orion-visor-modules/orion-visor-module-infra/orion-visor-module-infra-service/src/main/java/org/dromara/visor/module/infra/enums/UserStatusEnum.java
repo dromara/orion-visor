@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.dromara.visor.framework.common.constant.ErrorCode;
+import org.dromara.visor.common.constant.ErrorCode;
 
 /**
  * 用户状态枚举

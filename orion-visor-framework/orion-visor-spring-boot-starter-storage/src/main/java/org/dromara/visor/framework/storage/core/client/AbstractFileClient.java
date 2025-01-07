@@ -25,9 +25,8 @@ package org.dromara.visor.framework.storage.core.client;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.time.Dates;
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.file.FileClient;
-import org.dromara.visor.framework.common.utils.FileClientUtils;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.file.FileClient;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -49,7 +48,6 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
         // 设置默认文件客户端
         if (config.isPrimary()) {
             PrimaryFileClient.setDelegate(this);
-            FileClientUtils.setDelegate(this);
         }
     }
 

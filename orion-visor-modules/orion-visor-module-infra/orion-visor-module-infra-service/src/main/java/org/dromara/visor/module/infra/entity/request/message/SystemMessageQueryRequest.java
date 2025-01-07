@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.request.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.framework.common.entity.PageRequest;
+import org.dromara.visor.common.entity.PageRequest;
 
 /**
  * 系统消息 查询请求对象

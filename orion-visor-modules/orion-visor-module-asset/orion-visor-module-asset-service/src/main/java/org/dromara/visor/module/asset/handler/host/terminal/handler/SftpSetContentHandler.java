@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.id.UUIds;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import org.dromara.visor.framework.common.enums.BooleanBit;
+import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.module.asset.define.cache.TerminalCacheKeyDefine;
 import org.dromara.visor.module.asset.define.operator.TerminalOperatorType;

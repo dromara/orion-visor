@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.framework.redis.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.framework.common.lock.Locker;
-import org.dromara.visor.framework.common.utils.LockerUtils;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.lock.Locker;
+import org.dromara.visor.common.utils.LockerUtils;
 import org.dromara.visor.framework.redis.configuration.config.RedissonConfig;
 import org.dromara.visor.framework.redis.core.lock.RedisLocker;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;

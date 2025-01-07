@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.mybatis.core.generator.template;
 
 import cn.orionsec.kit.lang.utils.collect.Lists;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 
 import java.util.LinkedHashMap;
 

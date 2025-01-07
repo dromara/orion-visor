@@ -27,7 +27,7 @@ import cn.orionsec.kit.lang.define.barrier.GenericsAnonymousMapBarrier;
 import cn.orionsec.kit.lang.define.barrier.GenericsBarrier;
 import cn.orionsec.kit.lang.define.cache.key.model.LongCacheIdModel;
 import cn.orionsec.kit.lang.utils.collect.Lists;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 
 import java.util.Collection;
 import java.util.Map;

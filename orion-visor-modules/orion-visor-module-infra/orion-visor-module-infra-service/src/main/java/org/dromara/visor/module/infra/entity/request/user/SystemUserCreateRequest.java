@@ -27,7 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dromara.visor.framework.common.constant.ValidConst;
+import org.dromara.visor.common.constant.ValidConst;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

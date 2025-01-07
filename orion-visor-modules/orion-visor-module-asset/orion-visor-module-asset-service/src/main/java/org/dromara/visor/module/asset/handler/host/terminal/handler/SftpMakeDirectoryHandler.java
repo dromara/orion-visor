@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.handler.host.terminal.handler;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import org.dromara.visor.framework.common.enums.BooleanBit;
+import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.module.asset.define.operator.TerminalOperatorType;
 import org.dromara.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import org.dromara.visor.module.asset.handler.host.terminal.model.request.SftpBaseRequest;

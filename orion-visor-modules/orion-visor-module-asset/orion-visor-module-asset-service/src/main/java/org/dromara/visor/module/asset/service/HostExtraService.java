@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.module.asset.service;
 
-import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
+import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
 import org.dromara.visor.module.asset.enums.HostExtraItemEnum;

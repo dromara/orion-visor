@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.module.infra.api.impl;
 
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.FavoriteApi;
 import org.dromara.visor.module.infra.dao.FavoriteDAO;
 import org.dromara.visor.module.infra.entity.request.favorite.FavoriteQueryRequest;

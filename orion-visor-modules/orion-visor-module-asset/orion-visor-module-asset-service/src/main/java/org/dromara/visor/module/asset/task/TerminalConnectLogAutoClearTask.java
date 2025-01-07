@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.task;
 
 import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.utils.LockerUtils;
+import org.dromara.visor.common.utils.LockerUtils;
 import org.dromara.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig;
 import org.dromara.visor.module.asset.entity.request.host.TerminalConnectLogClearRequest;
 import org.dromara.visor.module.asset.enums.TerminalConnectStatusEnum;

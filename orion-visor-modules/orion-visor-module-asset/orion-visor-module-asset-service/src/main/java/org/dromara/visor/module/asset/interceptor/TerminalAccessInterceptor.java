@@ -24,9 +24,9 @@ package org.dromara.visor.module.asset.interceptor;
 
 import cn.orionsec.kit.lang.utils.Urls;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
-import org.dromara.visor.framework.common.meta.TraceIdHolder;
-import org.dromara.visor.framework.common.utils.Requests;
+import org.dromara.visor.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.meta.TraceIdHolder;
+import org.dromara.visor.common.utils.Requests;
 import org.dromara.visor.module.asset.entity.dto.TerminalAccessDTO;
 import org.dromara.visor.module.asset.service.TerminalService;
 import org.springframework.http.server.ServerHttpRequest;

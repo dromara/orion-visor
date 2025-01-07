@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.handler.host.terminal.utils;
 
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogFiller;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.springframework.web.socket.WebSocketSession;
 

@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.interceptor;
 
 import cn.orionsec.kit.lang.utils.Urls;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.module.infra.entity.dto.FileUploadTokenDTO;
 import org.dromara.visor.module.infra.service.FileUploadService;
 import org.springframework.http.server.ServerHttpRequest;

@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.entity.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dromara.visor.framework.common.entity.RequestIdentity;
+import org.dromara.visor.common.entity.RequestIdentity;
 
 /**
  * 身份信息

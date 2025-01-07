@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.entity.request.operator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.visor.framework.common.entity.DataClearRequest;
+import org.dromara.visor.common.entity.DataClearRequest;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

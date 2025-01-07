@@ -24,9 +24,9 @@ package org.dromara.visor.module.infra.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.dromara.visor.framework.common.handler.data.GenericsStrategyDefinition;
-import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.framework.common.handler.data.strategy.GenericsDataStrategy;
+import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
+import org.dromara.visor.common.handler.data.model.GenericsDataModel;
+import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
 import org.dromara.visor.module.infra.handler.setting.strategy.SftpSystemSettingStrategy;
 
 /**

@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.task;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.utils.LockerUtils;
+import org.dromara.visor.common.utils.LockerUtils;
 import org.dromara.visor.module.infra.service.TagService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

@@ -24,9 +24,9 @@ package org.dromara.visor.module.asset.service.impl;
 
 import cn.orionsec.kit.lang.function.Functions;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ErrorMessage;
-import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.handler.data.model.GenericsDataModel;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;

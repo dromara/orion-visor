@@ -29,7 +29,7 @@ import cn.orionsec.kit.lang.utils.ansi.AnsiAppender;
 import cn.orionsec.kit.lang.utils.ansi.style.color.AnsiForeground;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import cn.orionsec.kit.net.host.ssh.ExitCode;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.module.asset.enums.ExecHostStatusEnum;
 import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
 import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;

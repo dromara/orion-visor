@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.handler.host.terminal.handler;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.enums.BooleanBit;
+import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.module.asset.handler.host.terminal.enums.OutputTypeEnum;
 import org.dromara.visor.module.asset.handler.host.terminal.model.request.SftpListRequest;
 import org.dromara.visor.module.asset.handler.host.terminal.model.response.SftpFileVO;

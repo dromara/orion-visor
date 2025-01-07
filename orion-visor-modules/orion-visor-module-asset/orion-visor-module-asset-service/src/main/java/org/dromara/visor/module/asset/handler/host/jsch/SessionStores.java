@@ -30,9 +30,9 @@ import cn.orionsec.kit.net.host.SessionHolder;
 import cn.orionsec.kit.net.host.SessionLogger;
 import cn.orionsec.kit.net.host.SessionStore;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.AppConst;
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.utils.CryptoUtils;
+import org.dromara.visor.common.constant.AppConst;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.utils.CryptoUtils;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 
 import java.util.Optional;

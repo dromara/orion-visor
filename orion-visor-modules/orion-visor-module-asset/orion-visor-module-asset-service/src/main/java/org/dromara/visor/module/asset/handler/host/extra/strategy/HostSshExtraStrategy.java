@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.asset.handler.host.extra.strategy;
 
-import org.dromara.visor.framework.common.constant.ErrorMessage;
-import org.dromara.visor.framework.common.handler.data.strategy.AbstractGenericsDataStrategy;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;

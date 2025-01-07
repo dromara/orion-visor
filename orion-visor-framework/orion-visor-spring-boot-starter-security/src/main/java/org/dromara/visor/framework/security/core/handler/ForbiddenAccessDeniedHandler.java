@@ -24,7 +24,7 @@ package org.dromara.visor.framework.security.core.handler;
 
 import cn.orionsec.kit.web.servlet.web.Servlets;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.ErrorCode;
+import org.dromara.visor.common.constant.ErrorCode;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

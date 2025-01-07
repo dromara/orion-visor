@@ -26,8 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dromara.visor.framework.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.framework.common.security.UpdatePasswordAction;
+import org.dromara.visor.common.handler.data.model.GenericsDataModel;
+import org.dromara.visor.common.security.UpdatePasswordAction;
 
 import javax.validation.constraints.*;
 

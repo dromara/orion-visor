@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.OperatorLog;
-import org.dromara.visor.framework.common.validator.group.Page;
+import org.dromara.visor.common.validator.group.Page;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.IgnoreWrapper;

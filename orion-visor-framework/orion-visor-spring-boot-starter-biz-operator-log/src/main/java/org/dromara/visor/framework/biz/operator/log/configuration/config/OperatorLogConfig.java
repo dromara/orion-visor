@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.biz.operator.log.configuration.config;
 
 import lombok.Data;
-import org.dromara.visor.framework.common.utils.ConfigUtils;
+import org.dromara.visor.common.utils.ConfigUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;

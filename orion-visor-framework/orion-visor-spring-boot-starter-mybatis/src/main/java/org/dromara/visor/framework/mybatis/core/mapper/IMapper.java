@@ -25,7 +25,7 @@ package org.dromara.visor.framework.mybatis.core.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.framework.mybatis.core.query.DataQuery;
 

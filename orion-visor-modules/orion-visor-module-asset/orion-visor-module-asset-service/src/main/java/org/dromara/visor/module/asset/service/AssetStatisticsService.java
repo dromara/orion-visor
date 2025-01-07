@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.module.asset.service;
 
-import org.dromara.visor.framework.common.entity.chart.LineSingleChartData;
+import org.dromara.visor.common.entity.chart.LineSingleChartData;
 import org.dromara.visor.module.asset.entity.vo.AssetWorkplaceStatisticsVO;
 import org.dromara.visor.module.asset.enums.ExecSourceEnum;
 

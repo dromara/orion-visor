@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.desensitize.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.framework.desensitize.core.filter.DesensitizeValueFilter;
 import org.dromara.visor.framework.desensitize.core.serializer.DesensitizeJsonSerializer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

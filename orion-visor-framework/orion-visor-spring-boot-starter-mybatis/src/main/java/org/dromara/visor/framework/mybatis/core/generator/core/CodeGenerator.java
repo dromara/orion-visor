@@ -36,7 +36,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Mapper;
-import org.dromara.visor.framework.common.utils.Valid;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 import org.dromara.visor.framework.mybatis.core.generator.template.Table;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;

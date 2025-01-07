@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.entity.request.exec;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.framework.common.entity.PageRequest;
+import org.dromara.visor.common.entity.PageRequest;
 
 import javax.validation.constraints.Size;
 

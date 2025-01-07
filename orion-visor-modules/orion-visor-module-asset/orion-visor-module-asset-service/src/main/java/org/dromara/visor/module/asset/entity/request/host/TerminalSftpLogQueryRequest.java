@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.entity.request.host;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.framework.common.entity.PageRequest;
+import org.dromara.visor.common.entity.PageRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Date;

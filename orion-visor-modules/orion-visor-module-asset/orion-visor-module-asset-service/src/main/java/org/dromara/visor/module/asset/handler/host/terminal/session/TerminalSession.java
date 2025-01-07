@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.handler.host.terminal.session;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.enums.BooleanBit;
+import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.asset.enums.TerminalConnectStatusEnum;
 import org.dromara.visor.module.asset.handler.host.terminal.constant.TerminalMessage;
