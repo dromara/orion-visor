@@ -20,47 +20,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.common.configuration.config;
+package org.dromara.visor.launch.configuration;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import cn.orionsec.kit.spring.SpringHolder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * 线程池配置类
+ * 应用配置类
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/10 15:49
+ * @since 2023/6/20 10:34
  */
-@Data
-@ConfigurationProperties(prefix = "orion.async.executor")
-public class AsyncExecutorConfig {
+@Configuration
+public class LaunchApplicationConfiguration {
 
     /**
-     * 核心线程数量
+     * @return spring 容器工具类
      */
-    private int corePoolSize;
-
-    /**
-     * 最大线程数量
-     */
-    private int maxPoolSize;
-
-    /**
-     * 队列容量
-     */
-    private int queueCapacity;
-
-    /**
-     * 活跃时间
-     */
-    private int keepAliveSeconds;
-
-    public AsyncExecutorConfig() {
-        this.corePoolSize = 8;
-        this.maxPoolSize = 16;
-        this.queueCapacity = 200;
-        this.keepAliveSeconds = 300;
+    @Bean
+    public SpringHolder.ApplicationContextAwareStore springHolderAware() {
+        return new SpringHolder.ApplicationContextAwareStore();
     }
 
 }

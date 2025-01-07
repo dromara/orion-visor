@@ -20,12 +20,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.common.configuration;
+package org.dromara.visor.framework.job.configuration;
 
-import cn.orionsec.kit.spring.SpringHolder;
-import org.dromara.visor.framework.common.configuration.config.AsyncExecutorConfig;
 import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.framework.common.thread.ThreadPoolMdcTaskExecutor;
+import org.dromara.visor.framework.job.configuration.config.AsyncExecutorConfig;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,7 +36,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * 应用配置类
+ * async 异步任务
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -45,17 +44,9 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @EnableAsync
 @AutoConfiguration
-@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_COMMON)
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_JOB_ASYNC)
 @EnableConfigurationProperties(AsyncExecutorConfig.class)
-public class OrionCommonAutoConfiguration {
-
-    /**
-     * @return spring 容器工具类
-     */
-    @Bean
-    public SpringHolder.ApplicationContextAwareStore springHolderAware() {
-        return new SpringHolder.ApplicationContextAwareStore();
-    }
+public class OrionAsyncAutoConfiguration {
 
     /**
      * 支持 MDC 的异步线程池

@@ -33,8 +33,6 @@ package org.dromara.visor.framework.common.constant;
  */
 public interface AutoConfigureOrderConst {
 
-    int FRAMEWORK_COMMON = Integer.MIN_VALUE + 1000;
-
     int FRAMEWORK_WEB = Integer.MIN_VALUE + 1100;
 
     int FRAMEWORK_SECURITY = Integer.MIN_VALUE + 1200;
@@ -61,7 +59,9 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_JOB = Integer.MIN_VALUE + 2100;
 
-    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2150;
+    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2130;
+
+    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2160;
 
     int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2200;
 
