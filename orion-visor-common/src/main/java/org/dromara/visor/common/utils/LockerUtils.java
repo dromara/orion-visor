@@ -24,7 +24,7 @@ package org.dromara.visor.common.utils;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.lock.Locker;
+import org.dromara.visor.common.interfaces.Locker;
 
 import java.util.function.Supplier;
 

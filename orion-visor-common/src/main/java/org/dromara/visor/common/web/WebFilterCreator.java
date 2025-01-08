@@ -20,36 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.lock;
+package org.dromara.visor.common.web;
 
-import java.util.function.Supplier;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
+import javax.servlet.Filter;
 
 /**
- * 分布式锁
+ * 过滤器构造器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/5/16 12:24
+ * @since 2023/6/25 15:05
  */
-public interface Locker {
+public class WebFilterCreator {
+
+    private WebFilterCreator() {
+    }
 
     /**
-     * 尝试获取锁
+     * 创建过滤器
      *
-     * @param key key
-     * @param run run
-     * @return 是否获取到锁
+     * @param filter filter
+     * @param order  order
+     * @param <T>    type
+     * @return filter bean
      */
-    boolean tryLock(String key, Runnable run);
-
-    /**
-     * 尝试获取锁
-     *
-     * @param key  key
-     * @param call call
-     * @param <T>  T
-     * @return 执行结果
-     */
-    <T> T tryLock(String key, Supplier<T> call);
+    public static <T extends Filter> FilterRegistrationBean<T> create(T filter, Integer order) {
+        FilterRegistrationBean<T> bean = new FilterRegistrationBean<>(filter);
+        bean.setOrder(order);
+        return bean;
+    }
 
 }

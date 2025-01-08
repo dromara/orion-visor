@@ -20,43 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.crypto;
+package org.dromara.visor.common.interfaces;
 
-import cn.orionsec.kit.lang.utils.codec.Base62s;
-import cn.orionsec.kit.lang.utils.crypto.symmetric.SymmetricCrypto;
+import java.util.function.Supplier;
 
 /**
- * 数据加密器
+ * 分布式锁
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/8 0:20
+ * @since 2024/5/16 12:24
  */
-public interface ValueCrypto extends SymmetricCrypto {
+public interface Locker {
 
     /**
-     * 初始化
-     */
-    void init();
-
-    /**
-     * 加密后 base62 编码
+     * 尝试获取锁
      *
-     * @param plain 明文
-     * @return 密文
+     * @param key key
+     * @param run run
+     * @return 是否获取到锁
      */
-    default String encryptBase62(String plain) {
-        return new String(Base62s.encode(this.encrypt(plain)));
-    }
+    boolean tryLock(String key, Runnable run);
 
     /**
-     * base62 解码后解密
+     * 尝试获取锁
      *
-     * @param text 密文
-     * @return 明文
+     * @param key  key
+     * @param call call
+     * @param <T>  T
+     * @return 执行结果
      */
-    default String decryptBase62(String text) {
-        return new String(this.decrypt(Base62s.decode(text)));
-    }
+    <T> T tryLock(String key, Supplier<T> call);
 
 }

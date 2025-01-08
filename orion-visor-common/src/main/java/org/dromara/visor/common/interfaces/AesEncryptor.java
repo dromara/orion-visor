@@ -20,42 +20,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.core.crypto;
+package org.dromara.visor.common.interfaces;
 
-import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.crypto.ValueCrypto;
+import cn.orionsec.kit.lang.utils.codec.Base62s;
+import cn.orionsec.kit.lang.utils.crypto.symmetric.SymmetricCrypto;
 
 /**
- * 默认加密器
+ * aes 加密器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/21 12:11
+ * @since 2023/7/8 0:20
  */
-public class PrimaryValueCrypto implements ValueCrypto {
+public interface AesEncryptor extends SymmetricCrypto {
 
-    private static ValueCrypto delegate;
-
-    @Override
-    public void init() {
+    /**
+     * 加密后 base62 编码
+     *
+     * @param plain 明文
+     * @return 密文
+     */
+    default String encryptBase62(String plain) {
+        return new String(Base62s.encode(this.encrypt(plain)));
     }
 
-    @Override
-    public byte[] encrypt(byte[] plain) {
-        return delegate.encrypt(plain);
-    }
-
-    @Override
-    public byte[] decrypt(byte[] text) {
-        return delegate.decrypt(text);
-    }
-
-    protected static void setDelegate(ValueCrypto delegate) {
-        if (PrimaryValueCrypto.delegate != null) {
-            // unmodified
-            throw Exceptions.state();
-        }
-        PrimaryValueCrypto.delegate = delegate;
+    /**
+     * base62 解码后解密
+     *
+     * @param text 密文
+     * @return 明文
+     */
+    default String decryptBase62(String text) {
+        return new String(this.decrypt(Base62s.decode(text)));
     }
 
 }

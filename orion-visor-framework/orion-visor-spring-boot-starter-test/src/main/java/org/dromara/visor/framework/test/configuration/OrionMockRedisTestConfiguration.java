@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.test.configuration;
 
 import com.github.fppt.jedismock.RedisServer;
-import org.dromara.visor.common.lock.Locker;
+import org.dromara.visor.common.interfaces.Locker;
 import org.dromara.visor.common.utils.LockerUtils;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

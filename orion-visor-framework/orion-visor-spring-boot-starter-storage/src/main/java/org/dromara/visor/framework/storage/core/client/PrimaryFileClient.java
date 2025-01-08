@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.storage.core.client;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.file.FileClient;
+import org.dromara.visor.common.interfaces.FileClient;
 
 import java.io.InputStream;
 import java.io.OutputStream;

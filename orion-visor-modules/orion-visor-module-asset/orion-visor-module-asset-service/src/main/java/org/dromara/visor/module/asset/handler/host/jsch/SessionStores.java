@@ -32,7 +32,7 @@ import cn.orionsec.kit.net.host.SessionStore;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.utils.CryptoUtils;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 
 import java.util.Optional;
@@ -94,13 +94,13 @@ public class SessionStores {
         if (useKey) {
             // 加载密钥
             String publicKey = Optional.ofNullable(conn.getPublicKey())
-                    .map(CryptoUtils::decryptAsString)
+                    .map(AesEncryptUtils::decryptAsString)
                     .orElse(null);
             String privateKey = Optional.ofNullable(conn.getPrivateKey())
-                    .map(CryptoUtils::decryptAsString)
+                    .map(AesEncryptUtils::decryptAsString)
                     .orElse(null);
             String password = Optional.ofNullable(conn.getPrivateKeyPassword())
-                    .map(CryptoUtils::decryptAsString)
+                    .map(AesEncryptUtils::decryptAsString)
                     .orElse(null);
             sessionHolder.addIdentityValue(String.valueOf(conn.getKeyId()),
                     privateKey,
@@ -113,7 +113,7 @@ public class SessionStores {
         if (!useKey) {
             String password = conn.getPassword();
             if (!Strings.isEmpty(password)) {
-                session.password(CryptoUtils.decryptAsString(password));
+                session.password(AesEncryptUtils.decryptAsString(password));
             }
         }
         // 超时时间

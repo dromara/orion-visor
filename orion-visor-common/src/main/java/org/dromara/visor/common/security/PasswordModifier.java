@@ -25,7 +25,7 @@ package org.dromara.visor.common.security;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.utils.CryptoUtils;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 
 /**
  * 密码修改器
@@ -52,7 +52,7 @@ public class PasswordModifier {
             if (Strings.isBlank(password)) {
                 return Const.EMPTY;
             } else {
-                return CryptoUtils.encryptAsString(password);
+                return AesEncryptUtils.encryptAsString(password);
             }
         } else {
             return null;

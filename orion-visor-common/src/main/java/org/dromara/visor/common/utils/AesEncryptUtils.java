@@ -23,22 +23,20 @@
 package org.dromara.visor.common.utils;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.crypto.ValueCrypto;
+import org.dromara.visor.common.interfaces.AesEncryptor;
 
 /**
- * 加密工具类
- * <p>
- * PrimaryValueCrypto 代理类工具
+ * aes 数据加密工具类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/7/8 0:05
  */
-public class CryptoUtils {
+public class AesEncryptUtils {
 
-    private static ValueCrypto delegate;
+    private static AesEncryptor delegate;
 
-    private CryptoUtils() {
+    private AesEncryptUtils() {
     }
 
     /**
@@ -163,12 +161,12 @@ public class CryptoUtils {
         return delegate.decryptBase62(text);
     }
 
-    public static void setDelegate(ValueCrypto delegate) {
-        if (CryptoUtils.delegate != null) {
+    public static void setDelegate(AesEncryptor delegate) {
+        if (AesEncryptUtils.delegate != null) {
             // unmodified
             throw Exceptions.state();
         }
-        CryptoUtils.delegate = delegate;
+        AesEncryptUtils.delegate = delegate;
     }
 
 }

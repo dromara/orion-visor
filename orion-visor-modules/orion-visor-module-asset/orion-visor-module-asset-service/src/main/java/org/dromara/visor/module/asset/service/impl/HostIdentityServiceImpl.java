@@ -34,7 +34,7 @@ import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.PasswordModifier;
-import org.dromara.visor.common.utils.CryptoUtils;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
@@ -104,7 +104,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 加密密码
         String password = record.getPassword();
         if (!Strings.isBlank(password)) {
-            record.setPassword(CryptoUtils.encryptAsString(password));
+            record.setPassword(AesEncryptUtils.encryptAsString(password));
         }
         // 插入
         int effect = hostIdentityDAO.insert(record);

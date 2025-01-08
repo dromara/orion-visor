@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.security.core.crypto;
 
-import org.dromara.visor.common.crypto.ValueCrypto;
+import org.dromara.visor.common.interfaces.AesEncryptor;
 
 /**
  * 数据加密器
@@ -31,7 +31,7 @@ import org.dromara.visor.common.crypto.ValueCrypto;
  * @version 1.0.0
  * @since 2023/7/7 22:48
  */
-public abstract class CryptoProcessor<Config extends CryptoConfig> implements ValueCrypto {
+public abstract class CryptoProcessor<Config extends CryptoConfig> implements AesEncryptor {
 
     protected final Config config;
 
@@ -39,7 +39,7 @@ public abstract class CryptoProcessor<Config extends CryptoConfig> implements Va
         this.config = config;
         // 设置为默认加密器
         if (config.isPrimary()) {
-            PrimaryValueCrypto.setDelegate(this);
+            PrimaryAesEncryptor.setDelegate(this);
         }
     }
 

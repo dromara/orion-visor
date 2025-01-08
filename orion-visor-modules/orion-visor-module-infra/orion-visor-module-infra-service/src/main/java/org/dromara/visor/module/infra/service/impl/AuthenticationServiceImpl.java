@@ -36,7 +36,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.common.security.UserRole;
-import org.dromara.visor.common.utils.CryptoUtils;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.common.utils.IpUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -329,7 +329,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return null;
         }
         try {
-            String value = CryptoUtils.decryptBase62(loginToken);
+            String value = AesEncryptUtils.decryptBase62(loginToken);
             String[] pair = value.split(":");
             return Pair.of(Long.valueOf(pair[0]), Long.valueOf(pair[1]));
         } catch (Exception e) {
@@ -426,7 +426,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, loginValue);
         }
         // 返回token
-        return CryptoUtils.encryptBase62(id + ":" + loginTime);
+        return AesEncryptUtils.encryptBase62(id + ":" + loginTime);
     }
 
 }

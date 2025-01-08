@@ -32,7 +32,7 @@ import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.PasswordModifier;
-import org.dromara.visor.common.utils.CryptoUtils;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
@@ -97,7 +97,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         this.encryptKey(record);
         String password = record.getPassword();
         if (!Strings.isBlank(password)) {
-            record.setPassword(CryptoUtils.encryptAsString(password));
+            record.setPassword(AesEncryptUtils.encryptAsString(password));
         }
         // 插入
         int effect = hostKeyDAO.insert(record);
@@ -154,7 +154,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 解密密码
         String password = record.getPassword();
         if (!Strings.isBlank(password)) {
-            record.setPassword(CryptoUtils.decryptAsString(password));
+            record.setPassword(AesEncryptUtils.decryptAsString(password));
         }
         return record;
     }
@@ -278,11 +278,11 @@ public class HostKeyServiceImpl implements HostKeyService {
     private void encryptKey(HostKeyDO record) {
         String publicKey = record.getPublicKey();
         if (!Strings.isBlank(publicKey)) {
-            record.setPublicKey(CryptoUtils.encryptAsString(publicKey));
+            record.setPublicKey(AesEncryptUtils.encryptAsString(publicKey));
         }
         String privateKey = record.getPrivateKey();
         if (!Strings.isBlank(privateKey)) {
-            record.setPrivateKey(CryptoUtils.encryptAsString(privateKey));
+            record.setPrivateKey(AesEncryptUtils.encryptAsString(privateKey));
         }
     }
 
@@ -294,11 +294,11 @@ public class HostKeyServiceImpl implements HostKeyService {
     private void decryptKey(HostKeyDO record) {
         String publicKey = record.getPublicKey();
         if (!Strings.isBlank(publicKey)) {
-            record.setPublicKey(CryptoUtils.decryptAsString(publicKey));
+            record.setPublicKey(AesEncryptUtils.decryptAsString(publicKey));
         }
         String privateKey = record.getPrivateKey();
         if (!Strings.isBlank(privateKey)) {
-            record.setPrivateKey(CryptoUtils.decryptAsString(privateKey));
+            record.setPrivateKey(AesEncryptUtils.decryptAsString(privateKey));
         }
     }
 

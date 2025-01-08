@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.json.filter;
+package org.dromara.visor.common.json;
 
 import cn.orionsec.kit.lang.utils.Desensitizes;
 import cn.orionsec.kit.lang.utils.Objects1;

@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.common.utils;
 
-import org.dromara.visor.common.meta.TraceIdHolder;
+import org.dromara.visor.common.trace.TraceIdHolder;
 import org.slf4j.MDC;
 
 import java.util.Map;

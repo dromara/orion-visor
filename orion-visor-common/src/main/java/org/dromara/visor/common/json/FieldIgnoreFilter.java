@@ -20,36 +20,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.web.filter;
+package org.dromara.visor.common.json;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import cn.orionsec.kit.lang.utils.collect.Lists;
+import com.alibaba.fastjson.serializer.PropertyFilter;
 
-import javax.servlet.Filter;
+import java.util.List;
 
 /**
- * 过滤器构造器
+ * 字段忽略过滤器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/6/25 15:05
+ * @since 2023/10/12 11:21
  */
-public class FilterCreator {
+public class FieldIgnoreFilter implements PropertyFilter {
 
-    private FilterCreator() {
+    private final List<String> ignoreFields;
+
+    public FieldIgnoreFilter(List<String> ignoreFields) {
+        this.ignoreFields = ignoreFields;
     }
 
-    /**
-     * 创建过滤器
-     *
-     * @param filter filter
-     * @param order  order
-     * @param <T>    type
-     * @return filter bean
-     */
-    public static <T extends Filter> FilterRegistrationBean<T> create(T filter, Integer order) {
-        FilterRegistrationBean<T> bean = new FilterRegistrationBean<>(filter);
-        bean.setOrder(order);
-        return bean;
+    @Override
+    public boolean apply(Object object, String name, Object value) {
+        return Lists.isEmpty(ignoreFields) || !ignoreFields.contains(name);
     }
 
 }

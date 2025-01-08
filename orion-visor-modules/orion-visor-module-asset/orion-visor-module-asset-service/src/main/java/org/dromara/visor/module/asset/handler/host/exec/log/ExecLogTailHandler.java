@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.handler.host.exec.log;
 import cn.orionsec.kit.lang.annotation.Keep;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ExtraFieldConst;
-import org.dromara.visor.common.file.FileClient;
+import org.dromara.visor.common.interfaces.FileClient;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.asset.define.AssetThreadPools;
 import org.dromara.visor.module.asset.entity.dto.ExecHostLogTailDTO;

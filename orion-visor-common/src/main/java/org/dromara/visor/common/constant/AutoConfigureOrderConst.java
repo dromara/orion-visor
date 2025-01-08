@@ -37,8 +37,6 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_SECURITY = Integer.MIN_VALUE + 1200;
 
-    int FRAMEWORK_SECURITY_CRYPTO = Integer.MIN_VALUE + 1250;
-
     int FRAMEWORK_WEBSOCKET = Integer.MIN_VALUE + 1300;
 
     int FRAMEWORK_DESENSITIZE = Integer.MIN_VALUE + 1400;
@@ -53,19 +51,23 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_REDIS = Integer.MIN_VALUE + 1900;
 
-    int FRAMEWORK_REDIS_CACHE = Integer.MIN_VALUE + 1950;
+    int FRAMEWORK_REDIS_CACHE = Integer.MIN_VALUE + 2000;
 
-    int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2000;
+    int FRAMEWORK_CONFIG = Integer.MIN_VALUE + 2100;
 
-    int FRAMEWORK_JOB = Integer.MIN_VALUE + 2100;
+    int FRAMEWORK_ENCRYPT = Integer.MIN_VALUE + 2200;
 
-    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2130;
+    int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2300;
 
-    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2160;
+    int FRAMEWORK_JOB = Integer.MIN_VALUE + 2400;
 
-    int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2200;
+    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2500;
 
-    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 3000;
+    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2600;
+
+    int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2700;
+
+    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 2800;
 
     int FRAMEWORK_BANNER = Integer.MIN_VALUE + 10000;
 

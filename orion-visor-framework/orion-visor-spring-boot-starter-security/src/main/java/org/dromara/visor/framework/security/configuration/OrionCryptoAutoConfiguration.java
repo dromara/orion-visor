@@ -23,10 +23,10 @@
 package org.dromara.visor.framework.security.configuration;
 
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.common.crypto.ValueCrypto;
-import org.dromara.visor.common.utils.CryptoUtils;
+import org.dromara.visor.common.interfaces.AesEncryptor;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.framework.security.configuration.config.AesCryptoConfig;
-import org.dromara.visor.framework.security.core.crypto.PrimaryValueCrypto;
+import org.dromara.visor.framework.security.core.crypto.PrimaryAesEncryptor;
 import org.dromara.visor.framework.security.core.crypto.processor.AesCryptoProcessor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -52,11 +52,11 @@ public class OrionCryptoAutoConfiguration {
      */
     @Bean(name = "valueCrypto")
     @Primary
-    public ValueCrypto primaryValueCrypto() {
+    public AesEncryptor primaryValueCrypto() {
         // 创建加密器
-        PrimaryValueCrypto valueCrypto = new PrimaryValueCrypto();
+        PrimaryAesEncryptor valueCrypto = new PrimaryAesEncryptor();
         // 设置工具类
-        CryptoUtils.setDelegate(valueCrypto);
+        AesEncryptUtils.setDelegate(valueCrypto);
         return valueCrypto;
     }
 
@@ -65,7 +65,7 @@ public class OrionCryptoAutoConfiguration {
      */
     @Bean(initMethod = "init")
     @ConditionalOnProperty(value = "orion.crypto.aes.enabled", havingValue = "true")
-    public ValueCrypto aesValueCrypto(AesCryptoConfig config) {
+    public AesEncryptor aesValueCrypto(AesCryptoConfig config) {
         return new AesCryptoProcessor(config);
     }
 

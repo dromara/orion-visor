@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.meta;
+package org.dromara.visor.common.trace;
 
 import cn.orionsec.kit.lang.id.UUIds;
 import com.alibaba.ttl.TransmittableThreadLocal;

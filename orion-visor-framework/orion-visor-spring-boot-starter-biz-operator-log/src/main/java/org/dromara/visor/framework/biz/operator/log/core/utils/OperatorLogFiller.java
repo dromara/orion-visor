@@ -31,7 +31,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.dromara.visor.common.entity.RequestIdentity;
 import org.dromara.visor.common.enums.BooleanBit;
-import org.dromara.visor.common.meta.TraceIdHolder;
+import org.dromara.visor.common.trace.TraceIdHolder;
 import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.common.utils.Requests;
 import org.dromara.visor.framework.biz.operator.log.configuration.config.OperatorLogConfig;

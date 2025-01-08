@@ -40,7 +40,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.file.FileClient;
+import org.dromara.visor.common.interfaces.FileClient;
 import org.dromara.visor.common.utils.PathUtils;
 import org.dromara.visor.module.asset.dao.ExecHostLogDAO;
 import org.dromara.visor.module.asset.entity.domain.ExecHostLogDO;

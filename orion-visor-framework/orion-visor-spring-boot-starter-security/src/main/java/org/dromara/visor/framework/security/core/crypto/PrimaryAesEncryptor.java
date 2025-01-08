@@ -20,31 +20,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.json.filter;
+package org.dromara.visor.framework.security.core.crypto;
 
-import cn.orionsec.kit.lang.utils.collect.Lists;
-import com.alibaba.fastjson.serializer.PropertyFilter;
-
-import java.util.List;
+import cn.orionsec.kit.lang.utils.Exceptions;
+import org.dromara.visor.common.interfaces.AesEncryptor;
 
 /**
- * 字段忽略过滤器
+ * 默认加密器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/10/12 11:21
+ * @since 2023/7/21 12:11
  */
-public class FieldIgnoreFilter implements PropertyFilter {
+public class PrimaryAesEncryptor implements AesEncryptor {
 
-    private final List<String> ignoreFields;
+    private static AesEncryptor delegate;
 
-    public FieldIgnoreFilter(List<String> ignoreFields) {
-        this.ignoreFields = ignoreFields;
+    @Override
+    public void init() {
     }
 
     @Override
-    public boolean apply(Object object, String name, Object value) {
-        return Lists.isEmpty(ignoreFields) || !ignoreFields.contains(name);
+    public byte[] encrypt(byte[] plain) {
+        return delegate.encrypt(plain);
+    }
+
+    @Override
+    public byte[] decrypt(byte[] text) {
+        return delegate.decrypt(text);
+    }
+
+    protected static void setDelegate(AesEncryptor delegate) {
+        if (PrimaryAesEncryptor.delegate != null) {
+            // unmodified
+            throw Exceptions.state();
+        }
+        PrimaryAesEncryptor.delegate = delegate;
     }
 
 }
