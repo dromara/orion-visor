@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.core.crypto.processor;
+package org.dromara.visor.framework.encrypt.core.impl;
 
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.crypto.Keys;
@@ -28,8 +28,8 @@ import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
 import cn.orionsec.kit.lang.utils.crypto.symmetric.SymmetricBuilder;
 import cn.orionsec.kit.lang.utils.crypto.symmetric.SymmetricCrypto;
-import org.dromara.visor.framework.security.configuration.config.AesCryptoConfig;
-import org.dromara.visor.framework.security.core.crypto.CryptoProcessor;
+import org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig;
+import org.dromara.visor.framework.encrypt.core.BaseAesEncryptor;
 
 import javax.crypto.SecretKey;
 import java.security.spec.AlgorithmParameterSpec;
@@ -41,7 +41,7 @@ import java.security.spec.AlgorithmParameterSpec;
  * @version 1.0.0
  * @since 2023/7/8 0:05
  */
-public class AesCryptoProcessor extends CryptoProcessor<AesCryptoConfig> {
+public class AesEncryptorImpl extends BaseAesEncryptor<AesEncryptConfig> {
 
     /**
      * 加密器
@@ -53,12 +53,14 @@ public class AesCryptoProcessor extends CryptoProcessor<AesCryptoConfig> {
      */
     private SymmetricBuilder builder;
 
-    public AesCryptoProcessor(AesCryptoConfig config) {
+    public AesEncryptorImpl(AesEncryptConfig config) {
         super(config);
+        // 初始化
+        this.init();
     }
 
     @Override
-    public void init() {
+    protected void init() {
         // 创建构建器
         this.builder = SymmetricBuilder.aes()
                 .workingMode(config.getWorkingMode())

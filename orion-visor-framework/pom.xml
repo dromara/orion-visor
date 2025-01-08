@@ -21,10 +21,12 @@
         <module>orion-visor-spring-boot-starter-swagger</module>
         <module>orion-visor-spring-boot-starter-datasource</module>
         <module>orion-visor-spring-boot-starter-mybatis</module>
+        <module>orion-visor-spring-boot-starter-config</module>
         <module>orion-visor-spring-boot-starter-job</module>
         <module>orion-visor-spring-boot-starter-websocket</module>
         <module>orion-visor-spring-boot-starter-redis</module>
         <module>orion-visor-spring-boot-starter-desensitize</module>
+        <module>orion-visor-spring-boot-starter-encrypt</module>
         <module>orion-visor-spring-boot-starter-log</module>
         <module>orion-visor-spring-boot-starter-storage</module>
         <module>orion-visor-spring-boot-starter-security</module>

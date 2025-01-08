@@ -21,75 +21,63 @@
             <artifactId>orion-visor-common</artifactId>
         </dependency>
 
-        <!-- infra provider -->
+        <!-- module provider -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-infra-provider</artifactId>
             <version>${revision}</version>
         </dependency>
-
-        <!-- asset provider -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-asset-provider</artifactId>
             <version>${revision}</version>
         </dependency>
 
-        <!-- web -->
+        <!-- framework starter -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- websocket -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-websocket</artifactId>
         </dependency>
-
-        <!-- log -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-log</artifactId>
         </dependency>
-
-        <!-- operator-log -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
-
-        <!-- desensitize -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-desensitize</artifactId>
         </dependency>
-
-        <!-- security -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-encrypt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-security</artifactId>
         </dependency>
-
-        <!-- redis -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-redis</artifactId>
         </dependency>
-
-        <!-- mybatis -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-mybatis</artifactId>
         </dependency>
-
-        <!-- storage -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-storage</artifactId>
         </dependency>
-
-        <!-- job -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-job</artifactId>

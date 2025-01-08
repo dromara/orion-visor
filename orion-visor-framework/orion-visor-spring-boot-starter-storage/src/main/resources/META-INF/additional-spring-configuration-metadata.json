@@ -13,12 +13,6 @@
   ],
   "properties": [
     {
-      "name": "orion.storage.local.primary",
-      "type": "java.lang.Boolean",
-      "description": "是否为默认客户端.",
-      "defaultValue": false
-    },
-    {
       "name": "orion.storage.local.enabled",
       "type": "java.lang.Boolean",
       "description": "是否启用.",

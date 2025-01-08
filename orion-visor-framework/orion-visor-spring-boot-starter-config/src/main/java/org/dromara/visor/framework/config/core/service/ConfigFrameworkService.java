@@ -20,28 +20,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.core.crypto;
+package org.dromara.visor.framework.config.core.service;
 
-import lombok.Data;
+import java.util.Map;
 
 /**
- * 加密配置
+ * 配置框架服务
+ * <p>
+ * 在业务层定义 bean
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/8 0:14
+ * @since 2025/1/6 17:08
  */
-@Data
-public class CryptoConfig {
+public interface ConfigFrameworkService {
 
     /**
-     * 是否为默认加密器
+     * 获取全部配置
+     *
+     * @return config
      */
-    protected boolean primary;
-
-    /**
-     * 是否启用
-     */
-    protected boolean enabled;
+    Map<String, String> getAllConfig();
 
 }

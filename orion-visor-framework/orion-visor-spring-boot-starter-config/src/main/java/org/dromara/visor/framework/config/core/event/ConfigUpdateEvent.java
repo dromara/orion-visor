@@ -20,42 +20,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.core.crypto;
+package org.dromara.visor.framework.config.core.event;
 
-import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.interfaces.AesEncryptor;
+import cn.orionsec.kit.lang.utils.collect.Maps;
+import org.springframework.context.ApplicationEvent;
+
+import java.util.Map;
 
 /**
- * 默认加密器
+ * 配置更新事件
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/21 12:11
+ * @since 2025/1/6 17:24
  */
-public class PrimaryAesEncryptor implements AesEncryptor {
+public class ConfigUpdateEvent extends ApplicationEvent {
 
-    private static AesEncryptor delegate;
-
-    @Override
-    public void init() {
+    private ConfigUpdateEvent(Map<String, String> configs) {
+        super(configs);
     }
 
-    @Override
-    public byte[] encrypt(byte[] plain) {
-        return delegate.encrypt(plain);
+    public static ConfigUpdateEvent of(Map<String, String> configs) {
+        return new ConfigUpdateEvent(configs);
     }
 
-    @Override
-    public byte[] decrypt(byte[] text) {
-        return delegate.decrypt(text);
-    }
-
-    protected static void setDelegate(AesEncryptor delegate) {
-        if (PrimaryAesEncryptor.delegate != null) {
-            // unmodified
-            throw Exceptions.state();
-        }
-        PrimaryAesEncryptor.delegate = delegate;
+    public static ConfigUpdateEvent of(String key, String value) {
+        return new ConfigUpdateEvent(Maps.of(key, value));
     }
 
 }

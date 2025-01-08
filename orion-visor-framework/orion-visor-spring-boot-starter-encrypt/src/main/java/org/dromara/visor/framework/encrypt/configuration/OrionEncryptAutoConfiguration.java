@@ -20,53 +20,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.configuration;
+package org.dromara.visor.framework.encrypt.configuration;
 
+import org.dromara.visor.common.config.ConfigStore;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.common.interfaces.AesEncryptor;
+import org.dromara.visor.common.interfaces.RsaEncryptor;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.framework.security.configuration.config.AesCryptoConfig;
-import org.dromara.visor.framework.security.core.crypto.PrimaryAesEncryptor;
-import org.dromara.visor.framework.security.core.crypto.processor.AesCryptoProcessor;
+import org.dromara.visor.common.utils.RsaEncryptorUtils;
+import org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig;
+import org.dromara.visor.framework.encrypt.core.impl.AesEncryptorImpl;
+import org.dromara.visor.framework.encrypt.core.impl.RsaEncryptorImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 
 /**
  * 项目加密解密配置
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/7 23:59
+ * @since 2025/1/7 22:32
  */
 @AutoConfiguration
-@EnableConfigurationProperties({AesCryptoConfig.class})
-@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_SECURITY_CRYPTO)
-public class OrionCryptoAutoConfiguration {
+@EnableConfigurationProperties({AesEncryptConfig.class})
+@AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_ENCRYPT)
+public class OrionEncryptAutoConfiguration {
 
     /**
-     * @return 默认加密器
+     * @param config config
+     * @return aes 加密器
      */
-    @Bean(name = "valueCrypto")
-    @Primary
-    public AesEncryptor primaryValueCrypto() {
-        // 创建加密器
-        PrimaryAesEncryptor valueCrypto = new PrimaryAesEncryptor();
+    @Bean
+    public AesEncryptor aesEncryptor(AesEncryptConfig config) {
+        // 加密器
+        AesEncryptorImpl encryptor = new AesEncryptorImpl(config);
         // 设置工具类
-        AesEncryptUtils.setDelegate(valueCrypto);
-        return valueCrypto;
+        AesEncryptUtils.setDelegate(encryptor);
+        return encryptor;
     }
 
     /**
-     * @return aes 加密器
+     * @param configStore configStore
+     * @return rsa 加密器
      */
-    @Bean(initMethod = "init")
-    @ConditionalOnProperty(value = "orion.crypto.aes.enabled", havingValue = "true")
-    public AesEncryptor aesValueCrypto(AesCryptoConfig config) {
-        return new AesCryptoProcessor(config);
+    @Bean
+    public RsaEncryptor rsaEncryptor(ConfigStore configStore) {
+        // 加密器
+        RsaEncryptor encryptor = new RsaEncryptorImpl(configStore);
+        // 设置工具类
+        RsaEncryptorUtils.setDelegate(encryptor);
+        return encryptor;
     }
 
 }

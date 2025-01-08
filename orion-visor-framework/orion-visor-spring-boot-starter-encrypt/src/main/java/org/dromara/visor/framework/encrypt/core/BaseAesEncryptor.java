@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.core.crypto;
+package org.dromara.visor.framework.encrypt.core;
 
 import org.dromara.visor.common.interfaces.AesEncryptor;
 
@@ -31,17 +31,18 @@ import org.dromara.visor.common.interfaces.AesEncryptor;
  * @version 1.0.0
  * @since 2023/7/7 22:48
  */
-public abstract class CryptoProcessor<Config extends CryptoConfig> implements AesEncryptor {
+public abstract class BaseAesEncryptor<Config> implements AesEncryptor {
 
     protected final Config config;
 
-    protected CryptoProcessor(Config config) {
+    protected BaseAesEncryptor(Config config) {
         this.config = config;
-        // 设置为默认加密器
-        if (config.isPrimary()) {
-            PrimaryAesEncryptor.setDelegate(this);
-        }
     }
+
+    /**
+     * 初始化
+     */
+    protected abstract void init();
 
     /**
      * 初始化密钥

@@ -94,6 +94,8 @@ public interface ErrorMessage {
 
     String UNSUPPORTED_CHARSET = "不支持的编码 [{}]";
 
+    String DECRYPT_ERROR = "数据解密失败";
+
     String PASSWORD_MISSING = "请输入密码";
 
     String BEFORE_PASSWORD_ERROR = "原密码错误";

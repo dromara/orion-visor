@@ -20,14 +20,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.security.configuration.config;
+package org.dromara.visor.framework.encrypt.configuration.config;
 
 import cn.orionsec.kit.lang.utils.crypto.CryptoConst;
 import cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.dromara.visor.framework.security.core.crypto.CryptoConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -38,19 +36,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @since 2023/7/7 22:22
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties("orion.crypto.aes")
-public class AesCryptoConfig extends CryptoConfig {
+@ConfigurationProperties("orion.encrypt.aes")
+public class AesEncryptConfig {
 
     /**
      * 加密模式
      */
-    private WorkingMode workingMode = WorkingMode.ECB;
+    private WorkingMode workingMode;
 
     /**
      * 填充模式
      */
-    private PaddingMode paddingMode = PaddingMode.PKCS5_PADDING;
+    private PaddingMode paddingMode;
 
     /**
      * 加密密钥
@@ -60,12 +57,12 @@ public class AesCryptoConfig extends CryptoConfig {
     /**
      * 是否生成密钥
      */
-    private boolean useGeneratorKey = true;
+    private boolean useGeneratorKey;
 
     /**
      * 生成的密钥长度 128 192 256bytes
      */
-    private int generatorKeyLength = CryptoConst.AES_KEY_LENGTH;
+    private int generatorKeyLength;
 
     /**
      * 向量 长度为 16bytes
@@ -82,5 +79,12 @@ public class AesCryptoConfig extends CryptoConfig {
      * GCM 模式 aad
      */
     private String aad;
+
+    public AesEncryptConfig() {
+        this.workingMode = WorkingMode.ECB;
+        this.paddingMode = PaddingMode.PKCS5_PADDING;
+        this.useGeneratorKey = true;
+        this.generatorKeyLength = CryptoConst.AES_KEY_LENGTH;
+    }
 
 }
