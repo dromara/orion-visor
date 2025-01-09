@@ -115,6 +115,25 @@ public interface FileClient {
     byte[] getContent(String path) throws Exception;
 
     /**
+     * 获取文件内容
+     *
+     * @param path path
+     * @return content
+     * @throws Exception Exception
+     */
+    String getContentAsString(String path) throws Exception;
+
+    /**
+     * 获取文件内容
+     *
+     * @param path    path
+     * @param charset charset
+     * @return content
+     * @throws Exception Exception
+     */
+    String getContentAsString(String path, String charset) throws Exception;
+
+    /**
      * 获取文件输入流
      *
      * @param path path

@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 
+import java.net.InetAddress;
 import java.util.function.Supplier;
 
 /**
@@ -52,7 +53,7 @@ public class OrionMockRedisTestConfiguration {
      */
     @Bean
     public RedisServer redisMockServer(RedisProperties properties) {
-        RedisServer server = new RedisServer(properties.getPort());
+        RedisServer server = new RedisServer(properties.getPort(), InetAddress.getLoopbackAddress());
         try {
             server.start();
         } catch (Exception ignore) {

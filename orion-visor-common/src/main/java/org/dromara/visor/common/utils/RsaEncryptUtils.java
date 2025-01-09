@@ -32,11 +32,11 @@ import org.dromara.visor.common.interfaces.RsaEncryptor;
  * @version 1.0.0
  * @since 2025/1/5 21:13
  */
-public class RsaEncryptorUtils {
+public class RsaEncryptUtils {
 
     private static RsaEncryptor delegate;
 
-    private RsaEncryptorUtils() {
+    private RsaEncryptUtils() {
     }
 
     /**
@@ -60,11 +60,11 @@ public class RsaEncryptorUtils {
     }
 
     public static void setDelegate(RsaEncryptor delegate) {
-        if (RsaEncryptorUtils.delegate != null) {
+        if (RsaEncryptUtils.delegate != null) {
             // unmodified
             throw Exceptions.state();
         }
-        RsaEncryptorUtils.delegate = delegate;
+        RsaEncryptUtils.delegate = delegate;
     }
 
 }

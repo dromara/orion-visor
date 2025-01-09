@@ -105,4 +105,6 @@ public interface FieldConst {
 
     String ALL = "all";
 
+    String CONFIG = "config";
+
 }

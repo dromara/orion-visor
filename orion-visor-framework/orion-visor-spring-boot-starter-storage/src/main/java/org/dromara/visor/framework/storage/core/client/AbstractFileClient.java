@@ -80,6 +80,16 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
     }
 
     @Override
+    public String getContentAsString(String path) throws Exception {
+        return this.getContentAsString(path, Const.UTF_8);
+    }
+
+    @Override
+    public String getContentAsString(String path, String charset) throws Exception {
+        return new String(this.getContent(path), charset);
+    }
+
+    @Override
     public OutputStream getContentOutputStream(String path) throws Exception {
         return this.getContentOutputStream(path, false);
     }

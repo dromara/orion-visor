@@ -115,7 +115,7 @@ public class ReplaceVersion {
      */
     private static void replaceViteEnvFiles() {
         for (String file : VITE_ENV_FILES) {
-            readAndWrite(file, s -> s.replaceAll("VITE_APP_VERSION= '" + TARGET_VERSION + "'", "VITE_APP_VERSION= '" + REPLACE_VERSION + "'"));
+            readAndWrite(file, s -> s.replaceAll("VITE_APP_VERSION=" + TARGET_VERSION, "VITE_APP_VERSION=" + REPLACE_VERSION));
         }
     }
 

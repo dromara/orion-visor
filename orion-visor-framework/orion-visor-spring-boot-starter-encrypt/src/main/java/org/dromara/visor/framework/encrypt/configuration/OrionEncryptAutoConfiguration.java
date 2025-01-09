@@ -27,7 +27,7 @@ import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.common.interfaces.AesEncryptor;
 import org.dromara.visor.common.interfaces.RsaEncryptor;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.common.utils.RsaEncryptorUtils;
+import org.dromara.visor.common.utils.RsaEncryptUtils;
 import org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig;
 import org.dromara.visor.framework.encrypt.core.impl.AesEncryptorImpl;
 import org.dromara.visor.framework.encrypt.core.impl.RsaEncryptorImpl;
@@ -70,7 +70,7 @@ public class OrionEncryptAutoConfiguration {
         // 加密器
         RsaEncryptor encryptor = new RsaEncryptorImpl(configStore);
         // 设置工具类
-        RsaEncryptorUtils.setDelegate(encryptor);
+        RsaEncryptUtils.setDelegate(encryptor);
         return encryptor;
     }
 
