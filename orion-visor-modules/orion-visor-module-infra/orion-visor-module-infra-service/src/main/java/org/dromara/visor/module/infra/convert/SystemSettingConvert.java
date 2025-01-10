@@ -25,7 +25,6 @@ package org.dromara.visor.module.infra.convert;
 import org.dromara.visor.module.infra.entity.domain.SystemSettingDO;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateRequest;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -40,7 +39,6 @@ public interface SystemSettingConvert {
 
     SystemSettingConvert MAPPER = Mappers.getMapper(SystemSettingConvert.class);
 
-    @Mapping(target = "value", ignore = true)
     SystemSettingDO to(SystemSettingUpdateRequest request);
 
 }

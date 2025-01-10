@@ -32,16 +32,18 @@ import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.DemoDisableApi;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.dromara.visor.module.infra.define.operator.SystemSettingOperatorType;
-import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdatePartialRequest;
+import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateRequest;
 import org.dromara.visor.module.infra.entity.vo.AppInfoVO;
+import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
+import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
 import org.dromara.visor.module.infra.service.SystemSettingService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
+import javax.annotation.security.PermitAll;
 
 /**
  * 系统设置服务
@@ -68,30 +70,49 @@ public class SystemSettingController {
         return systemSettingService.getAppInfo();
     }
 
+    @PermitAll
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/setting")
+    @Operation(summary = "获取系统聚合设置")
+    public SystemSettingAggregateVO getSystemAggregateSetting() {
+        return systemSettingService.getSystemAggregateSetting();
+    }
+
+    @DemoDisableApi
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/generator-keypair")
+    @Operation(summary = "生成密钥对")
+    @PreAuthorize("@ss.hasPermission('infra:system-setting:update')")
+    public EncryptSystemSettingModel generatorKeypair() {
+        return systemSettingService.generatorKeypair();
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get")
     @Operation(summary = "查询系统设置")
     @Parameter(name = "type", description = "type", required = true)
-    public Map<String, Object> getSystemSettingByType(@RequestParam("type") String type) {
+    @PreAuthorize("@ss.hasPermission('infra:system-setting:update')")
+    public Object getSystemSettingByType(@RequestParam("type") String type) {
         return systemSettingService.getSystemSettingByType(type);
     }
 
     @DemoDisableApi
     @OperatorLog(SystemSettingOperatorType.UPDATE)
     @PutMapping("/update")
-    @Operation(summary = "更新系统设置")
+    @Operation(summary = "更新系统设置-单个")
     @PreAuthorize("@ss.hasPermission('infra:system-setting:update')")
-    public Integer updateSystemSetting(@Validated @RequestBody SystemSettingUpdateRequest request) {
-        return systemSettingService.updateSystemSetting(request);
+    public Boolean updateSystemSetting(@Validated @RequestBody SystemSettingUpdateRequest request) {
+        systemSettingService.updateSystemSetting(request);
+        return true;
     }
 
     @DemoDisableApi
     @OperatorLog(SystemSettingOperatorType.UPDATE)
-    @PutMapping("/update-partial")
-    @Operation(summary = "更新部分系统设置")
+    @PutMapping("/update-batch")
+    @Operation(summary = "更新系统设置-多个")
     @PreAuthorize("@ss.hasPermission('infra:system-setting:update')")
-    public Boolean updatePartialSystemSetting(@Validated @RequestBody SystemSettingUpdatePartialRequest request) {
-        systemSettingService.updatePartialSystemSetting(request);
+    public Boolean updateSystemSettingBatch(@Validated @RequestBody SystemSettingUpdateBatchRequest request) {
+        systemSettingService.updateSystemSettingBatch(request);
         return true;
     }
 

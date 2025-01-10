@@ -23,38 +23,46 @@
 package org.dromara.visor.module.infra.service.impl;
 
 import cn.orionsec.kit.ext.process.ProcessAwaitExecutor;
+import cn.orionsec.kit.lang.define.wrapper.Pair;
 import cn.orionsec.kit.lang.function.Functions;
 import cn.orionsec.kit.lang.support.Attempt;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Refs;
+import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.collect.Maps;
+import cn.orionsec.kit.lang.utils.crypto.Keys;
+import cn.orionsec.kit.lang.utils.crypto.RSA;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import cn.orionsec.kit.lang.utils.io.Streams;
+import cn.orionsec.kit.spring.SpringHolder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.dromara.visor.common.constant.AppConst;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import org.dromara.visor.framework.redis.core.utils.RedisMaps;
+import org.dromara.visor.framework.config.core.event.ConfigUpdateEvent;
+import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
 import org.dromara.visor.module.infra.dao.SystemSettingDAO;
 import org.dromara.visor.module.infra.define.cache.SystemSettingKeyDefine;
 import org.dromara.visor.module.infra.define.operator.SystemSettingOperatorType;
 import org.dromara.visor.module.infra.entity.domain.SystemSettingDO;
-import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdatePartialRequest;
+import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateRequest;
 import org.dromara.visor.module.infra.entity.vo.AppInfoVO;
+import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
 import org.dromara.visor.module.infra.enums.SystemSettingTypeEnum;
+import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
+import org.dromara.visor.module.infra.handler.setting.model.SftpSystemSettingModel;
 import org.dromara.visor.module.infra.service.SystemSettingService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -81,28 +89,103 @@ public class SystemSettingServiceImpl implements SystemSettingService {
     }
 
     @Override
-    public Integer updateSystemSetting(SystemSettingUpdateRequest request) {
-        String type = request.getType();
-        String item = request.getItem();
-        Object value = request.getValue();
-        // 更新
-        SystemSettingDO update = new SystemSettingDO();
-        update.setValue(Refs.json(value));
-        LambdaQueryWrapper<SystemSettingDO> wrapper = systemSettingDAO.lambda()
-                .eq(SystemSettingDO::getType, type)
-                .eq(SystemSettingDO::getItem, item);
-        int effect = systemSettingDAO.update(update, wrapper);
-        // 删除缓存
-        RedisUtils.delete(SystemSettingKeyDefine.SETTING.format(type));
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.TEXT, Strings.format(SystemSettingOperatorType.UPDATE_TEXT, type, item, value));
-        return effect;
+    public SystemSettingAggregateVO getSystemAggregateSetting() {
+        // 查询缓存
+        SystemSettingAggregateVO cache = RedisStrings.getJson(SystemSettingKeyDefine.SETTING);
+        SystemSettingAggregateVO result = Objects1.def(cache, SystemSettingAggregateVO::new);
+        if (cache == null) {
+            // 查询数据库
+            Map<String, List<SystemSettingDO>> typeGroup = systemSettingDAO.of()
+                    .createWrapper()
+                    .select(SystemSettingDO::getType,
+                            SystemSettingDO::getItem,
+                            SystemSettingDO::getValue)
+                    .in(SystemSettingDO::getType,
+                            SystemSettingTypeEnum.SFTP.name(),
+                            SystemSettingTypeEnum.ENCRYPT.name())
+                    .then()
+                    .stream()
+                    .collect(Collectors.groupingBy(SystemSettingDO::getType));
+            // 数据组合
+            typeGroup.forEach((k, v) -> {
+                // 类型数据
+                SystemSettingTypeEnum settingType = SystemSettingTypeEnum.of(k);
+                Map<String, String> typeSettings = v.stream()
+                        .collect(Collectors.toMap(
+                                SystemSettingDO::getItem,
+                                SystemSettingDO::getValue,
+                                Functions.right()));
+                Object setting = settingType.parseModel(typeSettings);
+                if (SystemSettingTypeEnum.SFTP.equals(settingType)) {
+                    // SFTP 设置
+                    result.setSftp((SftpSystemSettingModel) setting);
+                } else if (SystemSettingTypeEnum.ENCRYPT.equals(settingType)) {
+                    // 加密设置
+                    EncryptSystemSettingModel encryptSetting = (EncryptSystemSettingModel) setting;
+                    encryptSetting.setPrivateKey(null);
+                    result.setEncrypt(encryptSetting);
+                }
+            });
+            // 设置缓存
+            RedisStrings.setJson(SystemSettingKeyDefine.SETTING, result);
+        }
+        return result;
     }
 
     @Override
-    public void updatePartialSystemSetting(SystemSettingUpdatePartialRequest request) {
+    public EncryptSystemSettingModel generatorKeypair() {
+        // 生成密钥对
+        Pair<RSAPublicKey, RSAPrivateKey> pair = RSA.generatorKeys();
+        return EncryptSystemSettingModel.builder()
+                .publicKey(Keys.getPublicKey(pair.getKey()))
+                .privateKey(Keys.getPrivateKey(pair.getValue()))
+                .build();
+    }
+
+    @Override
+    public <T> T getSystemSettingByType(String type) {
+        SystemSettingTypeEnum settingType = SystemSettingTypeEnum.of(type);
+        Valid.notNull(settingType, ErrorMessage.ERROR_TYPE);
+        // 查询数据库
+        Map<String, String> settings = systemSettingDAO.of()
+                .createWrapper()
+                .eq(SystemSettingDO::getType, type)
+                .then()
+                .stream()
+                .collect(Collectors.toMap(
+                        SystemSettingDO::getItem,
+                        SystemSettingDO::getValue,
+                        Functions.right()));
+        // 解析
+        return settingType.parseModel(settings);
+    }
+
+    @Override
+    public void updateSystemSetting(SystemSettingUpdateRequest request) {
         String type = request.getType();
-        Map<String, Object> settings = request.getSettings();
+        SystemSettingTypeEnum settingType = Valid.valid(SystemSettingTypeEnum::of, type);
+        String item = request.getItem();
+        String value = request.getValue();
+        // 更新
+        SystemSettingDO update = new SystemSettingDO();
+        update.setValue(value);
+        LambdaQueryWrapper<SystemSettingDO> wrapper = systemSettingDAO.lambda()
+                .eq(SystemSettingDO::getType, type)
+                .eq(SystemSettingDO::getItem, item);
+        systemSettingDAO.update(update, wrapper);
+        // 删除缓存
+        RedisUtils.delete(SystemSettingKeyDefine.SETTING);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.TEXT, Strings.format(SystemSettingOperatorType.UPDATE_TEXT, type, item, value));
+        // 触发修改事件
+        SpringHolder.publishEvent(ConfigUpdateEvent.of(settingType.getConfigKey(item), value));
+    }
+
+    @Override
+    public void updateSystemSettingBatch(SystemSettingUpdateBatchRequest request) {
+        String type = request.getType();
+        SystemSettingTypeEnum settingType = Valid.valid(SystemSettingTypeEnum::of, type);
+        Map<String, String> settings = request.getSettings();
         // 删除
         LambdaQueryWrapper<SystemSettingDO> deleteWrapper = systemSettingDAO.lambda()
                 .eq(SystemSettingDO::getType, type)
@@ -112,63 +195,25 @@ public class SystemSettingServiceImpl implements SystemSettingService {
         List<SystemSettingDO> rows = settings.entrySet()
                 .stream()
                 .map(s -> SystemSettingDO.builder()
+                        .configKey(settingType.getConfigKey(s.getKey()))
                         .type(type)
                         .item(s.getKey())
-                        .value(Refs.json(s.getValue()))
+                        .value(s.getValue())
                         .build())
                 .collect(Collectors.toList());
         // 插入
         systemSettingDAO.insertBatch(rows);
         // 删除缓存
-        RedisUtils.delete(SystemSettingKeyDefine.SETTING.format(type));
+        RedisUtils.delete(SystemSettingKeyDefine.SETTING);
         // 设置日志参数
-        OperatorLogs.add(OperatorLogs.TEXT, Strings.format(SystemSettingOperatorType.UPDATE_PARTIAL_TEXT, type));
-    }
-
-    @Override
-    public Map<String, Object> getSystemSettingByType(String type) {
-        SystemSettingTypeEnum settingType = SystemSettingTypeEnum.of(type);
-        Valid.notNull(settingType, ErrorMessage.ERROR_TYPE);
-        // 查询缓存
-        String key = SystemSettingKeyDefine.SETTING.format(type);
-        Map<String, String> settings = RedisMaps.entities(key);
-        boolean setCache = Maps.isEmpty(settings);
-        // 查询数据库
-        if (Maps.isEmpty(settings)) {
-            settings = systemSettingDAO.of()
-                    .createWrapper()
-                    .eq(SystemSettingDO::getType, type)
-                    .then()
-                    .stream()
-                    .collect(Collectors.toMap(
-                            SystemSettingDO::getItem,
-                            SystemSettingDO::getValue,
-                            Functions.right()));
-        }
-        // 初始化
-        if (Maps.isEmpty(settings)) {
-            // 获取默认值
-            Map<String, Object> defaultConfig = settingType.getDefault().toMap();
-            settings = Maps.map(defaultConfig, Function.identity(), Refs::json);
-            // 插入默认值
-            List<SystemSettingDO> entities = settings
-                    .entrySet()
-                    .stream()
-                    .map(s -> {
-                        SystemSettingDO entity = new SystemSettingDO();
-                        entity.setType(type);
-                        entity.setItem(s.getKey());
-                        entity.setValue(s.getValue());
-                        return entity;
-                    }).collect(Collectors.toList());
-            systemSettingDAO.insertBatch(entities);
-        }
-        // 设置缓存
-        if (setCache) {
-            RedisMaps.putAll(key, SystemSettingKeyDefine.SETTING, settings);
-        }
-        // unRef
-        return Maps.map(settings, Function.identity(), Refs::unref);
+        OperatorLogs.add(OperatorLogs.TEXT, Strings.format(SystemSettingOperatorType.UPDATE_BATCH_TEXT, type));
+        // 触发修改事件
+        Map<String, String> eventConfig = rows.stream()
+                .collect(Collectors.toMap(
+                        SystemSettingDO::getConfigKey,
+                        SystemSettingDO::getValue,
+                        Functions.right()));
+        SpringHolder.publishEvent(ConfigUpdateEvent.of(eventConfig));
     }
 
     /**

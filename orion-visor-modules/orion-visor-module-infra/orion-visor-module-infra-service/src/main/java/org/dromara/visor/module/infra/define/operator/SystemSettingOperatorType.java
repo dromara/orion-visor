@@ -40,7 +40,7 @@ public class SystemSettingOperatorType extends InitializingOperatorTypes {
 
     public static final String UPDATE_TEXT = "<sb>{}</sb> - <sb>{}</sb> - <sb>{}</sb>";
 
-    public static final String UPDATE_PARTIAL_TEXT = "<sb>{}</sb>";
+    public static final String UPDATE_BATCH_TEXT = "<sb>{}</sb>";
 
     public static final String UPDATE = "system-setting:update";
 

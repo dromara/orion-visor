@@ -22,11 +22,11 @@
  */
 package org.dromara.visor.module.infra.service;
 
-import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdatePartialRequest;
+import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateRequest;
 import org.dromara.visor.module.infra.entity.vo.AppInfoVO;
-
-import java.util.Map;
+import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
+import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
 
 /**
  * 系统设置服务
@@ -45,26 +45,40 @@ public interface SystemSettingService {
     AppInfoVO getAppInfo();
 
     /**
-     * 更新系统设置
+     * 获取系统聚合设置
      *
-     * @param request request
-     * @return effect
+     * @return setting
      */
-    Integer updateSystemSetting(SystemSettingUpdateRequest request);
+    SystemSettingAggregateVO getSystemAggregateSetting();
+
+    /**
+     * 生成密钥对
+     *
+     * @return keypair
+     */
+    EncryptSystemSettingModel generatorKeypair();
+
+    /**
+     * 通过类型查询系统设置
+     *
+     * @param type type
+     * @param <T>  T
+     * @return row
+     */
+    <T> T getSystemSettingByType(String type);
 
     /**
      * 更新部分系统设置
      *
      * @param request request
      */
-    void updatePartialSystemSetting(SystemSettingUpdatePartialRequest request);
+    void updateSystemSetting(SystemSettingUpdateRequest request);
 
     /**
-     * 通过类型查询系统设置
+     * 更新系统设置
      *
-     * @param type type
-     * @return row
+     * @param request request
      */
-    Map<String, Object> getSystemSettingByType(String type);
+    void updateSystemSettingBatch(SystemSettingUpdateBatchRequest request);
 
 }

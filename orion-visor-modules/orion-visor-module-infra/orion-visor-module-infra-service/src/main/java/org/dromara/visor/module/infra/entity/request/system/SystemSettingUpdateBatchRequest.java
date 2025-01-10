@@ -20,29 +20,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.handler.setting.model;
+package org.dromara.visor.module.infra.entity.request.system;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Map;
+
 /**
- * SFTP 系统配置模型
+ * 系统设置 批量更新请求对象
  *
  * @author Jiahang Li
- * @version 1.0.0
- * @since 2024/10/9 11:45
+ * @version 3.0.0
+ * @since 2024-9-27 18:52
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SftpSystemSettingModel {
+@Schema(name = "SystemSettingUpdateBatchRequest", description = "系统设置 批量更新请求对象")
+public class SystemSettingUpdateBatchRequest implements Serializable {
 
-    /**
-     * 预览大小
-     */
-    private Integer previewSize;
+    private static final long serialVersionUID = 1L;
+
+    @NotBlank
+    @Size(max = 16)
+    @Schema(description = "配置类型")
+    private String type;
+
+    @NotEmpty
+    @Schema(description = "配置")
+    private Map<String, String> settings;
 
 }

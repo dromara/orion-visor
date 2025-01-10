@@ -20,37 +20,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.handler.setting.strategy;
+package org.dromara.visor.module.infra.entity.vo;
 
-import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
 import org.dromara.visor.module.infra.handler.setting.model.SftpSystemSettingModel;
-import org.springframework.stereotype.Component;
 
 /**
- * SFTP 系统配置策略
+ * 系统设置 聚合响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/10/9 11:44
+ * @since 2025/1/3 17:46
  */
-@Component
-public class SftpSystemSettingStrategy extends AbstractGenericsDataStrategy<SftpSystemSettingModel> {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "SystemSettingAggregateVO", description = "系统设置 聚合响应对象")
+public class SystemSettingAggregateVO {
 
-    public SftpSystemSettingStrategy() {
-        super(SftpSystemSettingModel.class);
-    }
+    @Schema(description = "SFTP 设置")
+    private SftpSystemSettingModel sftp;
 
-    @Override
-    public SftpSystemSettingModel getDefault() {
-        return SftpSystemSettingModel.builder()
-                .previewSize(2)
-                .build();
-    }
-
-    @Override
-    public SftpSystemSettingModel parse(String serialModel) {
-        throw Exceptions.unsupported();
-    }
+    @Schema(description = "加密设置")
+    private EncryptSystemSettingModel encrypt;
 
 }

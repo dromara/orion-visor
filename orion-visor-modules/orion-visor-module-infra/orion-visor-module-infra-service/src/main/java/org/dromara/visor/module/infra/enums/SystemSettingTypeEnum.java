@@ -22,12 +22,14 @@
  */
 package org.dromara.visor.module.infra.enums;
 
+import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
-import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
-import org.dromara.visor.module.infra.handler.setting.strategy.SftpSystemSettingStrategy;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
+import org.dromara.visor.module.infra.handler.setting.model.SftpSystemSettingModel;
+
+import java.util.Map;
 
 /**
  * 系统配置类型枚举
@@ -38,34 +40,55 @@ import org.dromara.visor.module.infra.handler.setting.strategy.SftpSystemSetting
  */
 @Getter
 @AllArgsConstructor
-public enum SystemSettingTypeEnum implements GenericsStrategyDefinition {
+public enum SystemSettingTypeEnum {
 
     /**
      * SFTP 配置
      */
-    SFTP(SftpSystemSettingStrategy.class),
+    SFTP("sftp", SftpSystemSettingModel.class),
+
+    /**
+     * 加密配置
+     */
+    ENCRYPT("encrypt", EncryptSystemSettingModel.class),
 
     ;
 
-    SystemSettingTypeEnum(Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass) {
-        this.type = this.name();
-        this.strategyClass = strategyClass;
+    private final String prefix;
+
+    private final Class<?> modelClass;
+
+    /**
+     * 解析
+     *
+     * @param settings settings
+     * @return model
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T parseModel(Map<String, String> settings) {
+        return (T) JSON.parseObject(JSON.toJSONString(settings)).toJavaObject(modelClass);
     }
-
-    private final String type;
-
-    private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 
     public static SystemSettingTypeEnum of(String type) {
         if (type == null) {
             return null;
         }
         for (SystemSettingTypeEnum value : values()) {
-            if (value.type.equals(type)) {
+            if (value.name().equals(type)) {
                 return value;
             }
         }
         return null;
+    }
+
+    /**
+     * 获取 key
+     *
+     * @param item item
+     * @return key
+     */
+    public String getConfigKey(String item) {
+        return prefix + Const.DOT + item;
     }
 
 }

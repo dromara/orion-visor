@@ -59,6 +59,6 @@ public class SystemSettingUpdateRequest implements Serializable {
     private String item;
 
     @Schema(description = "配置值")
-    private Object value;
+    private String value;
 
 }
