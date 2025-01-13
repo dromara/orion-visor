@@ -24,12 +24,12 @@ package org.dromara.visor.module.asset.handler.host.config.strategy;
 
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Charsets;
-import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
-import org.dromara.visor.common.security.PasswordModifier;
+import org.dromara.visor.common.utils.AesEncryptUtils;
+import org.dromara.visor.common.utils.RsaEncryptUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
@@ -126,16 +126,18 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
             after.setPassword(before.getPassword());
             return;
         }
-        // 检查是否无密码
-        if (Booleans.isTrue(after.getUseNewPassword()) && Strings.isBlank(after.getPassword())) {
-            throw Exceptions.argument(ErrorMessage.PASSWORD_MISSING);
+        // 使用原始密码
+        if (!Booleans.isTrue(after.getUseNewPassword())) {
+            after.setPassword(before.getPassword());
+            return;
         }
+        // 检查新密码
+        String newPassword = Valid.notBlank(after.getPassword(), ErrorMessage.PASSWORD_MISSING);
+        // 解密密码
+        newPassword = RsaEncryptUtils.decrypt(newPassword);
+        Valid.notBlank(newPassword, ErrorMessage.DECRYPT_ERROR);
         // 设置密码
-        String newPassword = PasswordModifier.getEncryptNewPassword(after);
-        if (newPassword == null) {
-            newPassword = before.getPassword();
-        }
-        after.setPassword(newPassword);
+        after.setPassword(AesEncryptUtils.encryptAsString(newPassword));
     }
 
     /**

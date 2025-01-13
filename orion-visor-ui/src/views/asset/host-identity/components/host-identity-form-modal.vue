@@ -78,6 +78,7 @@
   import { Message } from '@arco-design/web-vue';
   import { IdentityType, identityTypeKey } from '../types/const';
   import { useDictStore } from '@/store';
+  import { encrypt } from '@/utils/rsa';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const { toRadioOptions, getDictValue } = useDictStore();
@@ -150,14 +151,21 @@
       if (error) {
         return false;
       }
+      // 加密参数
+      let password = undefined;
+      try {
+        password = await encrypt(formModel.value.password);
+      } catch (e) {
+        return false;
+      }
       if (isAddHandle.value) {
         // 新增
-        await createHostIdentity(formModel.value);
+        await createHostIdentity({ ...formModel.value, password });
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostIdentity(formModel.value);
+        await updateHostIdentity({ ...formModel.value, password });
         Message.success('修改成功');
         emits('updated');
       }

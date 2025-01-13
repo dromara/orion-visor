@@ -106,8 +106,8 @@
     <template #title="{ record }">
       <div class="host-title">
         <!-- 系统类型图标 -->
-        <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
-                   :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+        <component v-if="getHostOsIcon(record.osType)"
+                   :is="getHostOsIcon(record.osType)"
                    class="os-icon" />
         <!-- 主机名称 -->
         <span>{{ record.name }}</span>
@@ -232,7 +232,7 @@
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { HostOsType, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor } from '../types/const';
+  import { getHostOsIcon, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';

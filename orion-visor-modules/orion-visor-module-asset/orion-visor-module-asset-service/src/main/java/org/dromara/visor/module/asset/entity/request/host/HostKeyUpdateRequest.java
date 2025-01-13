@@ -28,6 +28,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dromara.visor.common.security.UpdatePasswordAction;
+import org.dromara.visor.framework.web.core.annotation.ParamDecrypt;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -56,14 +57,16 @@ public class HostKeyUpdateRequest implements UpdatePasswordAction {
     @Schema(description = "名称")
     private String name;
 
+    @ParamDecrypt
     @Schema(description = "公钥文本")
     private String publicKey;
 
     @NotBlank
+    @ParamDecrypt
     @Schema(description = "私钥文本")
     private String privateKey;
 
-    @Size(max = 512)
+    @ParamDecrypt
     @Schema(description = "密码")
     private String password;
 

@@ -93,6 +93,7 @@
   import { createHostKey, updateHostKey, getHostKey } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import { readFileText } from '@/utils/file';
+  import { encrypt } from '@/utils/rsa';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -200,14 +201,25 @@
       if (error) {
         return false;
       }
+      let publicKey = undefined;
+      let privateKey = undefined;
+      let password = undefined;
+      // 加密参数
+      try {
+        publicKey = await encrypt(formModel.value.publicKey);
+        privateKey = await encrypt(formModel.value.privateKey);
+        password = await encrypt(formModel.value.password);
+      } catch (e) {
+        return false;
+      }
       if (isAddHandle.value) {
         // 新增
-        await createHostKey(formModel.value);
+        await createHostKey({ ...formModel.value, publicKey, privateKey, password });
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostKey(formModel.value);
+        await updateHostKey({ ...formModel.value, publicKey, privateKey, password });
         Message.success('修改成功');
         emits('updated');
       }

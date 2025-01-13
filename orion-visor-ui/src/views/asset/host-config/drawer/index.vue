@@ -39,6 +39,8 @@
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from '../types/const';
   import { getHostConfig, updateHostConfig } from '@/api/asset/host';
+  import { HostType } from '@/views/asset/host-list/types/const';
+  import { encrypt } from '@/utils/rsa';
   import SshConfigForm from '../components/ssh-config-form.vue';
 
   const { visible, setVisible } = useVisible();
@@ -74,12 +76,22 @@
 
   // 保存
   const save = async (conf: Record<string, any>) => {
+    // 加密参数
+    const newConfig = { ...conf };
+    try {
+      // 加密 SSH
+      if (record.value.type === HostType.SSH.value) {
+        newConfig.password = await encrypt(conf.password);
+      }
+    } catch (e) {
+      return;
+    }
     try {
       setLoading(true);
       // 更新
       await updateHostConfig({
         id: hostConfig.value.id,
-        config: JSON.stringify(conf)
+        config: JSON.stringify(newConfig),
       });
       // 设置参数
       hostConfig.value.config = conf;
@@ -147,7 +159,7 @@
     align-items: center;
     justify-content: space-between;
 
-    .title{
+    .title {
       font-weight: 600;
       user-select: none;
     }

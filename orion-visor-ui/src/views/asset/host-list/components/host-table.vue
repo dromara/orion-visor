@@ -140,8 +140,8 @@
       <template #type="{ record }">
         <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
           <!-- 系统类型图标 -->
-          <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
-                     :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+          <component v-if="getHostOsIcon(record.osType)"
+                     :is="getHostOsIcon(record.osType)"
                      class="os-icon" />
           <!-- 主机类型 -->
           <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
@@ -267,7 +267,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor, hostTypeKey, hostStatusKey, HostType, HostOsType, hostOsTypeKey } from '../types/const';
+  import { tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, getHostOsIcon } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';

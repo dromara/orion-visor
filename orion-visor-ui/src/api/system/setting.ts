@@ -4,7 +4,7 @@ import { dateFormat } from '@/utils';
 /**
  * 系统配置类型
  */
-export type SystemSettingType = 'SFTP';
+export type SystemSettingType = 'SFTP' | 'ENCRYPT';
 
 /**
  * 系统设置更新请求
@@ -47,6 +47,14 @@ export interface AppReleaseResponse {
 }
 
 /**
+ * 系统聚合设置响应
+ */
+export interface SystemSettingAggregateResponse {
+  sftp: SftpSetting;
+  encrypt: EncryptSetting;
+}
+
+/**
  * SFTP 配置
  */
 export interface SftpSetting {
@@ -54,10 +62,25 @@ export interface SftpSetting {
 }
 
 /**
+ * 加密配置
+ */
+export interface EncryptSetting {
+  publicKey: string;
+  privateKey: string;
+}
+
+/**
  * 查询应用信息
  */
 export function getSystemAppInfo() {
   return axios.get<AppInfoResponse>('/infra/system-setting/app-info');
+}
+
+/**
+ * 获取系统聚合设置
+ */
+export function getSystemAggregateSetting() {
+  return axios.get<SystemSettingAggregateResponse>('/infra/system-setting/setting');
 }
 
 /**
@@ -75,22 +98,29 @@ export function getAppLatestRelease() {
 }
 
 /**
- * 更新系统设置
+ * 生成密钥对
+ */
+export function generatorKeypair() {
+  return axios.get<EncryptSetting>('/infra/system-setting/generator-keypair');
+}
+
+/**
+ * 更新系统设置-单个
  */
 export function updateSystemSetting(request: SystemSettingUpdateRequest) {
   return axios.put<number>('/infra/system-setting/update', request);
 }
 
 /**
- * 更新部分系统设置
+ * 更新系统设置-多个
  */
-export function updatePartialSystemSetting(request: SystemSettingUpdateRequest) {
-  return axios.put<number>('/infra/system-setting/update-partial', request);
+export function updateSystemSettingBatch(request: SystemSettingUpdateRequest) {
+  return axios.put<number>('/infra/system-setting/update-batch', request);
 }
 
 /**
  * 查询系统设置
  */
 export function getSystemSetting<T>(type: SystemSettingType) {
-  return axios.get<T>('/infra/system-setting/setting', { params: { type } });
+  return axios.get<T>('/infra/system-setting/get', { params: { type } });
 }

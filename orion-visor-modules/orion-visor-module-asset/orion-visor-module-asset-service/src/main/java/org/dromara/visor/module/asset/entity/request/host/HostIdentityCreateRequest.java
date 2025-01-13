@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.framework.web.core.annotation.ParamDecrypt;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -61,7 +62,7 @@ public class HostIdentityCreateRequest implements Serializable {
     @Schema(description = "用户名")
     private String username;
 
-    @Size(max = 512)
+    @ParamDecrypt
     @Schema(description = "用户密码")
     private String password;
 

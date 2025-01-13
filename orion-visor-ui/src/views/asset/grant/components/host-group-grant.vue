@@ -33,8 +33,8 @@
       <template #type="{ record }">
         <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
           <!-- 系统类型图标 -->
-          <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
-                     :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+          <component v-if="getHostOsIcon(record.osType)"
+                     :is="getHostOsIcon(record.osType)"
                      class="os-icon" />
           <!-- 主机类型 -->
           <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
@@ -65,7 +65,7 @@
   import { flatNodeKeys } from '@/utils/tree';
   import { Message } from '@arco-design/web-vue';
   import { hostColumns } from '../types/table.columns';
-  import { HostOsType, hostTypeKey } from '@/views/asset/host-list/types/const';
+  import { getHostOsIcon, hostTypeKey } from '@/views/asset/host-list/types/const';
   import { getHostGroupRelList } from '@/api/asset/host-group';
   import HostGroupTree from '@/components/asset/host-group/tree/index.vue';
   import GrantLayout from './grant-layout.vue';
