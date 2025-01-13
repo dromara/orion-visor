@@ -13,11 +13,11 @@ export interface PreferenceUpdateRequest {
 }
 
 /**
- * 用户偏好更新请求-部分
+ * 用户偏好更新请求-多个
  */
-export interface PreferenceUpdatePartialRequest {
+export interface PreferenceUpdateBatchRequest {
   type: PreferenceType;
-  config: Record<string, any> | object;
+  config: Record<string, any>;
 }
 
 /**
@@ -28,10 +28,10 @@ export function updatePreference(request: PreferenceUpdateRequest) {
 }
 
 /**
- * 更新用户偏好-部分
+ * 更新用户偏好-多个
  */
-export function updatePreferencePartial(request: PreferenceUpdatePartialRequest) {
-  return axios.put('/infra/preference/update-partial', request);
+export function updatePreferenceBatch(request: PreferenceUpdateBatchRequest) {
+  return axios.put('/infra/preference/update-batch', request);
 }
 
 /**

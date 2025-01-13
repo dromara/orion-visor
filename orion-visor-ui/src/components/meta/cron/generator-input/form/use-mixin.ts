@@ -170,7 +170,7 @@ export function useFormSetup(props: any, context: any, options: any) {
   }));
 
   // 输入框属性
-  const inputNumberAttrs = computed(() => ({
+  const inputNumberAttrs = computed<any>(() => ({
     max: maxValue.value,
     min: minValue.value,
     precision: 0,

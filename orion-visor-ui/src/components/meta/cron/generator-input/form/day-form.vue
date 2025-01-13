@@ -47,7 +47,7 @@
 
 <script lang="ts">
   import { computed, defineComponent, watch } from 'vue';
-  import { TypeEnum, useFormProps, useFromEmits, useFormSetup } from './use-mixin';
+  import { TypeEnum, useFormProps, useFormSetup, useFromEmits } from './use-mixin';
 
   export default defineComponent({
     name: 'DayForm',
@@ -58,7 +58,7 @@
       },
     }),
     emits: useFromEmits(),
-    setup(props, context) {
+    setup(props: any, context) {
       const disabledChoice = computed(() => {
         return (props.week && props.week !== '?') || props.disabled;
       });
