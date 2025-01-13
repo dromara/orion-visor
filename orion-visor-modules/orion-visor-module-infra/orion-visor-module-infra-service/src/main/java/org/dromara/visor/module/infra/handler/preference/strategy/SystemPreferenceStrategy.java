@@ -22,7 +22,6 @@
  */
 package org.dromara.visor.module.infra.handler.preference.strategy;
 
-import cn.orionsec.kit.lang.utils.Exceptions;
 import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import org.dromara.visor.module.infra.handler.preference.model.SystemPreferenceModel;
 import org.springframework.stereotype.Component;
@@ -36,6 +35,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SystemPreferenceStrategy extends AbstractGenericsDataStrategy<SystemPreferenceModel> {
+
+    private static final String DEFAULT_VIEW = "table";
 
     public SystemPreferenceStrategy() {
         super(SystemPreferenceModel.class);
@@ -53,12 +54,10 @@ public class SystemPreferenceStrategy extends AbstractGenericsDataStrategy<Syste
                 .colorWeak(false)
                 .defaultTablePageSize(10)
                 .defaultCardPageSize(12)
+                .hostView(DEFAULT_VIEW)
+                .hostKeyView(DEFAULT_VIEW)
+                .hostIdentityView(DEFAULT_VIEW)
                 .build();
-    }
-
-    @Override
-    public SystemPreferenceModel parse(String serialModel) {
-        throw Exceptions.unsupported();
     }
 
 }

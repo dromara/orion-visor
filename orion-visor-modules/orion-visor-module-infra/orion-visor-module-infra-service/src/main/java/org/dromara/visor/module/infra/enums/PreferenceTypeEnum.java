@@ -26,6 +26,8 @@ import lombok.Getter;
 import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
+import org.dromara.visor.module.infra.handler.preference.model.SystemPreferenceModel;
+import org.dromara.visor.module.infra.handler.preference.model.TerminalPreferenceModel;
 import org.dromara.visor.module.infra.handler.preference.strategy.SystemPreferenceStrategy;
 import org.dromara.visor.module.infra.handler.preference.strategy.TerminalPreferenceStrategy;
 
@@ -42,21 +44,25 @@ public enum PreferenceTypeEnum implements GenericsStrategyDefinition {
     /**
      * 系统偏好
      */
-    SYSTEM(SystemPreferenceStrategy.class),
+    SYSTEM(SystemPreferenceModel.class, SystemPreferenceStrategy.class),
 
     /**
      * 终端偏好
      */
-    TERMINAL(TerminalPreferenceStrategy.class),
+    TERMINAL(TerminalPreferenceModel.class, TerminalPreferenceStrategy.class),
 
     ;
 
-    PreferenceTypeEnum(Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass) {
+    PreferenceTypeEnum(Class<? extends GenericsDataModel> modelClass,
+                       Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass) {
         this.type = this.name();
+        this.modelClass = modelClass;
         this.strategyClass = strategyClass;
     }
 
     private final String type;
+
+    private final Class<? extends GenericsDataModel> modelClass;
 
     private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 

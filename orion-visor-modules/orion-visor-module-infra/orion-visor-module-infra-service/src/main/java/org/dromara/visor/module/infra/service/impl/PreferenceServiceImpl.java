@@ -23,18 +23,19 @@
 package org.dromara.visor.module.infra.service.impl;
 
 import cn.orionsec.kit.lang.function.Functions;
-import cn.orionsec.kit.lang.utils.Refs;
+import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.collect.Maps;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.utils.Valid;
-import org.dromara.visor.framework.redis.core.utils.RedisMaps;
+import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.infra.dao.PreferenceDAO;
 import org.dromara.visor.module.infra.define.cache.PreferenceCacheKeyDefine;
 import org.dromara.visor.module.infra.entity.domain.PreferenceDO;
-import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
+import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdateRequest;
 import org.dromara.visor.module.infra.enums.PreferenceTypeEnum;
 import org.dromara.visor.module.infra.service.PreferenceService;
@@ -65,7 +66,7 @@ public class PreferenceServiceImpl implements PreferenceService {
     private PreferenceDAO preferenceDAO;
 
     @Override
-    public Integer updatePreference(PreferenceUpdateRequest request) {
+    public void updatePreference(PreferenceUpdateRequest request) {
         Long userId = SecurityUtils.getLoginUserId();
         String type = request.getType();
         String item = request.getItem();
@@ -78,33 +79,31 @@ public class PreferenceServiceImpl implements PreferenceService {
                 .eq(PreferenceDO::getItem, item)
                 .then()
                 .getOne();
-        int effect;
         if (preference == null) {
             // 插入
             PreferenceDO insertRecord = new PreferenceDO();
             insertRecord.setUserId(userId);
             insertRecord.setType(type);
             insertRecord.setItem(item);
-            insertRecord.setValue(Refs.json(request.getValue()));
-            effect = preferenceDAO.insert(insertRecord);
+            insertRecord.setValue(request.getValue());
+            preferenceDAO.insert(insertRecord);
         } else {
             // 更新
             PreferenceDO updateRecord = new PreferenceDO();
             updateRecord.setId(preference.getId());
-            updateRecord.setValue(Refs.json(request.getValue()));
-            effect = preferenceDAO.updateById(updateRecord);
+            updateRecord.setValue(request.getValue());
+            preferenceDAO.updateById(updateRecord);
         }
         // 删除缓存
-        RedisMaps.delete(PreferenceCacheKeyDefine.PREFERENCE.format(userId, type));
-        return effect;
+        RedisStrings.delete(PreferenceCacheKeyDefine.PREFERENCE.format(userId, type));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updatePreferencePartial(PreferenceUpdatePartialRequest request) {
+    public void updatePreferenceBatch(PreferenceUpdateBatchRequest request) {
         Long userId = SecurityUtils.getLoginUserId();
         String type = request.getType();
-        Map<String, Object> config = request.getConfig();
+        Map<String, String> config = request.getConfig();
         Valid.valid(PreferenceTypeEnum::of, type);
         // 查询配置
         LambdaQueryWrapper<PreferenceDO> wrapper = preferenceDAO.lambda()
@@ -125,7 +124,7 @@ public class PreferenceServiceImpl implements PreferenceService {
                 .map(s -> {
                     PreferenceDO update = new PreferenceDO();
                     update.setId(items.get(s).getId());
-                    update.setValue(Refs.json(config.get(s)));
+                    update.setValue(config.get(s));
                     return update;
                 }).collect(Collectors.toList());
         preferenceDAO.updateBatch(updateRecords);
@@ -138,46 +137,35 @@ public class PreferenceServiceImpl implements PreferenceService {
                     insert.setUserId(userId);
                     insert.setType(type);
                     insert.setItem(s);
-                    insert.setValue(Refs.json(config.get(s)));
+                    insert.setValue(config.get(s));
                     return insert;
                 }).collect(Collectors.toList());
         preferenceDAO.insertBatch(insertRecords);
         // 删除缓存
-        RedisMaps.delete(PreferenceCacheKeyDefine.PREFERENCE.format(userId, type));
+        RedisStrings.delete(PreferenceCacheKeyDefine.PREFERENCE.format(userId, type));
     }
 
     @Override
-    public Map<String, Object> getPreferenceByType(String type, List<String> items) {
+    public <T> T getPreferenceByType(String type, List<String> items) {
         Long userId = SecurityUtils.getLoginUserId();
         PreferenceTypeEnum typeEnum = Valid.valid(PreferenceTypeEnum::of, type);
         // 查询缓存
-        Map<String, Object> preference = this.getPreferenceByCache(userId, typeEnum);
-        if (Lists.isEmpty(items)) {
-            return preference;
-        }
-        Map<String, Object> partial = Maps.newMap();
-        items.forEach(s -> partial.put(s, preference.get(s)));
-        return partial;
+        return this.getPreferenceByCache(userId, typeEnum, items);
     }
 
     @Override
-    public Map<String, Object> getDefaultPreferenceByType(String type, List<String> items) {
+    public <T> T getDefaultPreferenceByType(String type, List<String> items) {
         PreferenceTypeEnum preferenceType = Valid.valid(PreferenceTypeEnum::of, type);
         // 获取默认值
-        Map<String, Object> defaultModel = preferenceType.getDefault().toMap();
-        Map<String, Object> result = Maps.newMap();
-        if (Lists.isEmpty(items)) {
-            defaultModel.forEach((k, v) -> result.put(k, defaultModel.get(k)));
-        } else {
-            items.forEach(s -> result.put(s, defaultModel.get(s)));
-        }
-        return result;
+        JSONObject config = JSONObject.parseObject(preferenceType.getDefault().serial());
+        // 解析
+        return this.parsePreference(preferenceType, config, items);
     }
 
     @Override
     @Async("asyncExecutor")
-    public Future<Map<String, Object>> getPreferenceAsync(Long userId, PreferenceTypeEnum type) {
-        Map<String, Object> config = this.getPreferenceByCache(userId, type);
+    public <T> Future<T> getPreferenceAsync(Long userId, PreferenceTypeEnum type) {
+        T config = this.getPreferenceByCache(userId, type, null);
         return CompletableFuture.completedFuture(config);
     }
 
@@ -205,7 +193,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         //             .map(s -> PreferenceCacheKeyDefine.PREFERENCE.format(userId, s))
         //             .forEach(deleteKeys::add);
         // }
-        // RedisMaps.delete(deleteKeys);
+        // RedisStrings.delete(deleteKeys);
     }
 
     /**
@@ -213,33 +201,33 @@ public class PreferenceServiceImpl implements PreferenceService {
      *
      * @param userId userId
      * @param type   type
+     * @param items  items
      * @return config
      */
-    private Map<String, Object> getPreferenceByCache(Long userId, PreferenceTypeEnum type) {
+    private <T> T getPreferenceByCache(Long userId, PreferenceTypeEnum type, List<String> items) {
         String typeValue = type.getType();
-        // 查询缓存 用 string 防止数据类型丢失
-        String key = PreferenceCacheKeyDefine.PREFERENCE.format(userId, type);
-        Map<String, String> config = RedisMaps.entities(key);
+        // 查询缓存
+        String key = PreferenceCacheKeyDefine.PREFERENCE.format(userId, typeValue);
+        JSONObject config = RedisStrings.getJson(key);
         boolean setCache = Maps.isEmpty(config);
         // 查询数据库
-        if (Maps.isEmpty(config)) {
+        if (config == null || Maps.isEmpty(config)) {
             config = preferenceDAO.of()
                     .createWrapper()
                     .eq(PreferenceDO::getUserId, userId)
-                    .eq(PreferenceDO::getType, type)
+                    .eq(PreferenceDO::getType, typeValue)
                     .then()
                     .stream()
                     .collect(Collectors.toMap(
                             PreferenceDO::getItem,
                             PreferenceDO::getValue,
-                            Functions.right())
-                    );
+                            Functions.right(),
+                            JSONObject::new));
         }
         // 初始化
         if (Maps.isEmpty(config)) {
             // 获取默认值
-            Map<String, Object> defaultConfig = type.getDefault().toMap();
-            config = Maps.map(defaultConfig, Function.identity(), Refs::json);
+            config = JSONObject.parseObject(type.getDefault().serial());
             // 插入默认值
             List<PreferenceDO> entities = config
                     .entrySet()
@@ -249,17 +237,40 @@ public class PreferenceServiceImpl implements PreferenceService {
                         entity.setUserId(userId);
                         entity.setType(typeValue);
                         entity.setItem(s.getKey());
-                        entity.setValue(s.getValue());
+                        entity.setValue(Objects1.toString(s.getValue()));
                         return entity;
                     }).collect(Collectors.toList());
             preferenceDAO.insertBatch(entities);
         }
         // 设置缓存
         if (setCache) {
-            RedisMaps.putAll(key, PreferenceCacheKeyDefine.PREFERENCE, config);
+            RedisStrings.setJson(key, PreferenceCacheKeyDefine.PREFERENCE, config);
         }
-        // unRef
-        return Maps.map(config, Function.identity(), Refs::unref);
+        // 获取偏好
+        return this.parsePreference(type, config, items);
+    }
+
+    /**
+     * 解析偏好
+     *
+     * @param type   type
+     * @param config config
+     * @param items  items
+     * @param <T>    T
+     * @return prefer
+     */
+    @SuppressWarnings("unchecked")
+    private <T> T parsePreference(PreferenceTypeEnum type, JSONObject config, List<String> items) {
+        // 设置返回的键
+        if (!Lists.isEmpty(items)) {
+            JSONObject configItems = new JSONObject();
+            for (String item : items) {
+                configItems.put(item, config.get(item));
+            }
+            config = configItems;
+        }
+        // 解析
+        return (T) config.toJavaObject(type.getModelClass());
     }
 
 }

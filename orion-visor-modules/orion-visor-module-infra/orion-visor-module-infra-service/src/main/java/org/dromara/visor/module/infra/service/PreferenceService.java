@@ -22,12 +22,11 @@
  */
 package org.dromara.visor.module.infra.service;
 
-import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
+import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdateRequest;
 import org.dromara.visor.module.infra.enums.PreferenceTypeEnum;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -43,43 +42,45 @@ public interface PreferenceService {
      * 更新用户偏好-单个
      *
      * @param request request
-     * @return effect
      */
-    Integer updatePreference(PreferenceUpdateRequest request);
+    void updatePreference(PreferenceUpdateRequest request);
 
     /**
-     * 更新用户偏好-部分
+     * 更新用户偏好-多个
      *
      * @param request request
      */
-    void updatePreferencePartial(PreferenceUpdatePartialRequest request);
+    void updatePreferenceBatch(PreferenceUpdateBatchRequest request);
 
     /**
      * 查询用户偏好
      *
      * @param type  type
      * @param items items
+     * @param <T>   T
      * @return rows
      */
-    Map<String, Object> getPreferenceByType(String type, List<String> items);
+    <T> T getPreferenceByType(String type, List<String> items);
 
     /**
      * 查询默认偏好
      *
      * @param type  type
      * @param items items
+     * @param <T>   T
      * @return rows
      */
-    Map<String, Object> getDefaultPreferenceByType(String type, List<String> items);
+    <T> T getDefaultPreferenceByType(String type, List<String> items);
 
     /**
      * 获取用户偏好
      *
      * @param userId userId
      * @param type   type
+     * @param <T>    T
      * @return 偏好
      */
-    Future<Map<String, Object>> getPreferenceAsync(Long userId, PreferenceTypeEnum type);
+    <T> Future<T> getPreferenceAsync(Long userId, PreferenceTypeEnum type);
 
     /**
      * 删除用户偏好

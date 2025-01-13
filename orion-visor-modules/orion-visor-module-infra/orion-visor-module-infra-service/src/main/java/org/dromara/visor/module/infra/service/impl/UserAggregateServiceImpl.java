@@ -90,7 +90,7 @@ public class UserAggregateServiceImpl implements UserAggregateService {
         // 获取用户信息
         Long userId = SecurityUtils.getLoginUserId();
         // 获取用户系统偏好
-        Future<Map<String, Object>> systemPreference = preferenceService.getPreferenceAsync(userId, PreferenceTypeEnum.SYSTEM);
+        Future<Object> systemPreference = preferenceService.getPreferenceAsync(userId, PreferenceTypeEnum.SYSTEM);
         // 查询用户信息
         SystemUserDO user = systemUserDAO.selectById(userId);
         // 修改密码信息

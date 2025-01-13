@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.define.cache;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import cn.orionsec.kit.lang.define.wrapper.Ref;
+import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,10 +39,10 @@ import java.util.concurrent.TimeUnit;
 public interface PreferenceCacheKeyDefine {
 
     CacheKeyDefine PREFERENCE = new CacheKeyBuilder()
-            .key("user:preference:{}:{}")
+            .key("user:prefer:{}:{}")
             .desc("用户偏好 ${userId} ${type}")
-            .type(Ref.class)
-            .struct(RedisCacheStruct.HASH)
+            .type(JSONObject.class)
+            .struct(RedisCacheStruct.STRING)
             .timeout(8, TimeUnit.HOURS)
             .build();
 

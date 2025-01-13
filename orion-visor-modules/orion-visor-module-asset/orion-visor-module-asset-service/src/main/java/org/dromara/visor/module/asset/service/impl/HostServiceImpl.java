@@ -33,6 +33,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -179,7 +180,10 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public Integer updateHostConfig(HostUpdateConfigRequest request) {
-        log.info("HostService-updateHostConfig request: {}", JSON.toJSONString(request));
+        // 设置日志参数
+        String param = OperatorLogs.toJsonString(JSON.parseObject(request.getConfig()));
+        OperatorLogs.add(ExtraFieldConst.CONFIG, param);
+        log.info("HostService-updateHostConfig request: {}", param);
         Long id = request.getId();
         try {
             CURRENT_UPDATE_CONFIG_ID.set(id);

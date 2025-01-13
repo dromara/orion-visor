@@ -22,7 +22,6 @@
  */
 package org.dromara.visor.module.infra.handler.preference.strategy;
 
-import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.net.host.ssh.TerminalType;
 import com.alibaba.fastjson.JSONObject;
@@ -155,11 +154,6 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .sessionSetting(JSONObject.parseObject(defaultSessionSetting))
                 .shortcutSetting(JSONObject.parseObject(shortcutSetting))
                 .build();
-    }
-
-    @Override
-    public TerminalPreferenceModel parse(String serialModel) {
-        throw Exceptions.unsupported();
     }
 
 }

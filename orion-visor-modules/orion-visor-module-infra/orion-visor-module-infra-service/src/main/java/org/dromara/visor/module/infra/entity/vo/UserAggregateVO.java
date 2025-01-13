@@ -30,7 +30,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户 聚合响应对象
@@ -59,7 +58,7 @@ public class UserAggregateVO {
     private UserUpdatePasswordVO updatePassword;
 
     @Schema(description = "系统偏好")
-    private Map<String, Object> systemPreference;
+    private Object systemPreference;
 
     @Schema(description = "已经提示的key")
     private List<String> tippedKeys;

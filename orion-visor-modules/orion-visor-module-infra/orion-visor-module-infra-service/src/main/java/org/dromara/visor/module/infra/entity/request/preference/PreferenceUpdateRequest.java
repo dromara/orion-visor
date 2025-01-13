@@ -57,6 +57,6 @@ public class PreferenceUpdateRequest implements Serializable {
     private String item;
 
     @Schema(description = "偏好配置")
-    private Object value;
+    private String value;
 
 }

@@ -35,7 +35,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * 用户偏好 部分更新请求对象
+ * 用户偏好 批量更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -45,8 +45,8 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "PreferenceUpdatePartialRequest", description = "用户偏好 部分更新请求对象")
-public class PreferenceUpdatePartialRequest implements Serializable {
+@Schema(name = "PreferenceUpdateBatchRequest", description = "用户偏好 批量更新请求对象")
+public class PreferenceUpdateBatchRequest implements Serializable {
 
     @NotBlank
     @Size(max = 16)
@@ -55,6 +55,6 @@ public class PreferenceUpdatePartialRequest implements Serializable {
 
     @NotEmpty
     @Schema(description = "偏好配置")
-    private Map<String, Object> config;
+    private Map<String, String> config;
 
 }

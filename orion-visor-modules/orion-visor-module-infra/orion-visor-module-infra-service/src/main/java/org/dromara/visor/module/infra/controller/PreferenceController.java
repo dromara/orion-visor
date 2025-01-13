@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
-import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdatePartialRequest;
+import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.preference.PreferenceUpdateRequest;
 import org.dromara.visor.module.infra.service.PreferenceService;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户偏好 api
@@ -58,23 +57,25 @@ public class PreferenceController {
 
     @PutMapping("/update")
     @Operation(summary = "更新用户偏好-单个")
-    public Integer updatePreference(@Validated @RequestBody PreferenceUpdateRequest request) {
-        return preferenceService.updatePreference(request);
-    }
-
-    @PutMapping("/update-partial")
-    @Operation(summary = "更新用户偏好-部分")
-    public Boolean updatePreferencePartial(@Validated @RequestBody PreferenceUpdatePartialRequest request) {
-        preferenceService.updatePreferencePartial(request);
+    public Boolean updatePreference(@Validated @RequestBody PreferenceUpdateRequest request) {
+        preferenceService.updatePreference(request);
         return true;
     }
 
+    @PutMapping("/update-update")
+    @Operation(summary = "更新用户偏好-多个")
+    public Boolean updatePreferenceBatch(@Validated @RequestBody PreferenceUpdateBatchRequest request) {
+        preferenceService.updatePreferenceBatch(request);
+        return true;
+    }
+
+    @IgnoreLog
     @GetMapping("/get")
     @Operation(summary = "查询用户偏好")
     @Parameter(name = "type", description = "type", required = true)
     @Parameter(name = "items", description = "items")
-    public Map<String, Object> getPreference(@RequestParam("type") String type,
-                                             @RequestParam(name = "items", required = false) List<String> items) {
+    public Object getPreference(@RequestParam("type") String type,
+                                @RequestParam(name = "items", required = false) List<String> items) {
         return preferenceService.getPreferenceByType(type, items);
     }
 
@@ -83,8 +84,8 @@ public class PreferenceController {
     @Operation(summary = "查询默认偏好")
     @Parameter(name = "type", description = "type", required = true)
     @Parameter(name = "items", description = "items")
-    public Map<String, Object> getDefaultPreference(@RequestParam("type") String type,
-                                                    @RequestParam(name = "items", required = false) List<String> items) {
+    public Object getDefaultPreference(@RequestParam("type") String type,
+                                       @RequestParam(name = "items", required = false) List<String> items) {
         return preferenceService.getDefaultPreferenceByType(type, items);
     }
 

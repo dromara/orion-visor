@@ -86,4 +86,19 @@ public class SystemPreferenceModel implements GenericsDataModel {
      */
     private Integer defaultCardPageSize;
 
+    /**
+     * 主机视图
+     */
+    private String hostView;
+
+    /**
+     * 主机密钥视图
+     */
+    private String hostKeyView;
+
+    /**
+     * 主机身份视图
+     */
+    private String hostIdentityView;
+
 }
