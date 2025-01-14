@@ -6,8 +6,16 @@
             position="left"
             :lazy-load="true">
       <!-- SFTP -->
-      <a-tab-pane key="sftp" title="SFTP">
+      <a-tab-pane v-permission="['infra:system-setting:update']"
+                  key="sftp"
+                  title="SFTP">
         <sftp-setting />
+      </a-tab-pane>
+      <!-- 加密设置 -->
+      <a-tab-pane v-permission="['infra:system-setting:update']"
+                  key="encrypt"
+                  title="加密设置">
+        <encrypt-setting />
       </a-tab-pane>
       <!-- 关于 -->
       <a-tab-pane key="about" title="关于">
@@ -26,10 +34,13 @@
 <script lang="ts" setup>
   import { onBeforeMount, ref } from 'vue';
   import { useRoute } from 'vue-router';
+  import usePermission from '@/hooks/permission';
   import SftpSetting from './components/sftp-setting.vue';
+  import EncryptSetting from './components/encrypt-setting.vue';
   import AboutSetting from './components/about-setting.vue';
 
   const route = useRoute();
+  const { hasPermission } = usePermission();
 
   const activeKey = ref('sftp');
 
@@ -38,6 +49,14 @@
     const key = route.query.key as string;
     if (key) {
       activeKey.value = key;
+    } else {
+      // 检查权限
+      const has = hasPermission('infra:system-setting:update');
+      if (has) {
+        activeKey.value = 'sftp';
+      } else {
+        activeKey.value = 'about';
+      }
     }
   });
 
@@ -66,6 +85,25 @@
     white-space: nowrap;
     display: flex;
     justify-content: center;
+  }
+
+  :deep(.main-container) {
+    padding-left: 24px;
+    width: 100%;
+
+    .setting-header {
+      color: var(--color-text-1);
+      margin-bottom: 20px;
+    }
+
+    .alert-href {
+      text-decoration: none;
+    }
+
+    .alert-wrapper {
+      margin: 0 0 12px 24px;
+      width: 598px;
+    }
   }
 
 </style>

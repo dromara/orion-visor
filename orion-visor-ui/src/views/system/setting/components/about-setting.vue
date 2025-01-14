@@ -53,7 +53,7 @@
 
 <script lang="ts">
   export default {
-    name: 'systemSettingAboutSetting',
+    name: 'aboutSetting',
   };
 </script>
 
@@ -104,23 +104,8 @@
 </script>
 
 <style lang="less" scoped>
-  @form-width: 628px;
-
   .main-container {
-    width: @form-width;
-    padding-left: 24px;
-
-    .setting-header {
-      color: var(--color-text-1);
-    }
-
-    .alert-href {
-      text-decoration: none;
-    }
-
-    .alert-wrapper {
-      margin-bottom: 12px;
-    }
+    width: 664px !important;
 
     .uuid-wrapper {
       color: rgb(var(--arcoblue-6));

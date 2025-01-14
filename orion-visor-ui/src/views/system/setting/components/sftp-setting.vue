@@ -21,30 +21,31 @@
           </template>
         </a-input-number>
       </a-descriptions-item>
+      <!-- 按钮 -->
+      <a-descriptions-item>
+        <a-space v-permission="['infra:system-setting:update']">
+          <!-- 保存 -->
+          <a-button type="primary"
+                    size="small"
+                    @click="save">
+            保存
+          </a-button>
+        </a-space>
+      </a-descriptions-item>
     </a-descriptions>
-    <!-- 按钮 -->
-    <a-space v-permission="['infra:system-setting:update']"
-             class="button-container">
-      <!-- 保存 -->
-      <a-button type="primary"
-                size="small"
-                @click="save">
-        保存
-      </a-button>
-    </a-space>
   </a-spin>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'systemSettingSftpSetting',
+    name: 'sftpSetting',
   };
 </script>
 
 <script lang="ts" setup>
   import type { SftpSetting } from '@/api/system/setting';
   import { onMounted, ref } from 'vue';
-  import { getSystemSetting, updatePartialSystemSetting } from '@/api/system/setting';
+  import { getSystemSetting, updateSystemSettingBatch } from '@/api/system/setting';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
 
@@ -54,9 +55,13 @@
 
   // 保存
   const save = async () => {
+    if (!setting.value.previewSize && setting.value.previewSize !== 0) {
+      Message.error('请输入文件预览大小');
+      return;
+    }
     setLoading(true);
     try {
-      await updatePartialSystemSetting({
+      await updateSystemSettingBatch({
         type: 'SFTP',
         settings: setting.value
       });
@@ -82,32 +87,7 @@
 </script>
 
 <style lang="less" scoped>
-  @form-width: 628px;
-  @input-width: 328px;
-
-  .main-container {
-    width: @form-width;
-    padding-left: 24px;
-
-    .setting-header {
-      color: var(--color-text-1);
-    }
-
-    .alert-href {
-      text-decoration: none;
-    }
-
-    .alert-wrapper {
-      margin-bottom: 12px;
-    }
-
-    .input-wrapper {
-      width: @input-width;
-    }
-
-    .button-container {
-      margin-left: 128px;
-      margin-bottom: 12px;
-    }
+  .input-wrapper {
+    width: 328px;
   }
 </style>

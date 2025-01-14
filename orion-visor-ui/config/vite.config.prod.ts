@@ -27,7 +27,8 @@ export default mergeConfig(
               '@xterm/addon-image', '@xterm/addon-search', '@xterm/addon-unicode11',
               '@xterm/addon-web-links', '@xterm/addon-webgl'],
             monaco: ['monaco-editor'],
-            pkg: ['dayjs', 'cron-parser', 'ts-md5', 'file-saver', 'html2canvas']
+            crypto: ['ts-md5', 'jsencrypt'],
+            pkg: ['dayjs', 'cron-parser', 'file-saver', 'html2canvas']
           },
         },
       },
