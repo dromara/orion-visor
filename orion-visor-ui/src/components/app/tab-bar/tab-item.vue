@@ -3,7 +3,7 @@
               :popup-max-height="false"
               @select="actionSelect">
     <span class="arco-tag arco-tag-size-medium arco-tag-checked"
-          :class="{ 'link-activated': itemData?.path === $route.path }"
+          :class="{ 'link-activated': itemData?.path === route.path }"
           @click="goto(itemData as TagProps)">
       <span class="tag-link">
         {{ itemData.title }}
@@ -69,8 +69,8 @@
     itemData: TagProps;
   }>();
 
-  const router = useRouter();
   const route = useRoute();
+  const router = useRouter();
   const tabBarStore = useTabBarStore();
 
   const goto = (tag: TagProps) => {

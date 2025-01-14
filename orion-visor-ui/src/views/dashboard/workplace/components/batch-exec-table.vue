@@ -6,7 +6,7 @@
         <!-- 跳转 -->
         <span class="pointer span-blue"
               title="详情"
-              @click="$router.push({ name: 'execCommandLog', query: { action: 'self' } })">
+              @click="router.push({ name: 'execCommandLog', query: { action: 'self' } })">
           详情
         </span>
       </div>
@@ -36,7 +36,7 @@
               <a-button v-permission="['asset:exec-command:exec']"
                         type="text"
                         size="mini"
-                        @click="() => $router.push({ name: 'execCommand', query: { id: record.id } })">
+                        @click="router.push({ name: 'execCommand', query: { id: record.id } })">
                 日志
               </a-button>
             </div>
@@ -57,6 +57,7 @@
   import type { WorkplaceStatisticsData } from '@/views/dashboard/workplace/types/const';
   import { batchExecColumns } from '../types/table.columns';
   import { useDictStore } from '@/store';
+  import { useRouter } from 'vue-router';
   import { execHostStatusKey } from '@/components/exec/log/const';
 
   const props = defineProps<{
@@ -64,6 +65,7 @@
     data: WorkplaceStatisticsData;
   }>();
 
+  const router = useRouter();
   const { getDictValue } = useDictStore();
 
 </script>

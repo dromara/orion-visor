@@ -13,6 +13,12 @@ export interface NodeOptions extends Options {
   children?: NodeOptions[];
 }
 
+export interface HttpResponse<T = unknown> {
+  msg: string;
+  code: number;
+  data: T;
+}
+
 export interface GetParams {
   body: null;
   type: string;

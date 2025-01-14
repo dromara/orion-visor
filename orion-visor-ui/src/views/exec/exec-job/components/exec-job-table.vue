@@ -124,7 +124,7 @@
                   :unchecked-text="getDictValue(execJobStatusKey, ExecJobStatus.DISABLED)"
                   :checked-value="ExecJobStatus.ENABLED"
                   :unchecked-value="ExecJobStatus.DISABLED"
-                  :before-change="(s: number) => updateStatus(record.id, s)" />
+                  :before-change="(s) => updateStatus(record.id, s as number)" />
         <!-- 状态 不可编辑 -->
         <a-tag v-else :color="getDictValue(execJobStatusKey, record.status, 'color')">
           {{ getDictValue(execJobStatusKey, record.status) }}

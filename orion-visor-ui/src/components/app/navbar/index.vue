@@ -50,7 +50,7 @@
             </template>
           </a-button>
         </a-tooltip>
-        <a-dropdown trigger="click" @select="(s: string) => changeLocale(s)">
+        <a-dropdown trigger="click" @select="(s) => changeLocale(s as string)">
           <div ref="localeRef" class="trigger-btn" />
           <template #content>
             <a-doption v-for="item in locales"
@@ -176,7 +176,7 @@
           <template #content>
             <!-- 个人中心 -->
             <a-doption>
-              <a-space @click="$router.push({ name: 'userInfo' })">
+              <a-space @click="router.push({ name: 'userInfo' })">
                 <icon-user />
                 <span>个人中心</span>
               </a-space>
