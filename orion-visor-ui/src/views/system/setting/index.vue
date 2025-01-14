@@ -88,21 +88,15 @@
   }
 
   :deep(.main-container) {
-    padding-left: 24px;
+    padding: 16px 0 0 24px;
     width: 100%;
 
-    .setting-header {
-      color: var(--color-text-1);
-      margin-bottom: 20px;
+    .arco-descriptions-title {
+      font-weight: 600;
     }
 
     .alert-href {
       text-decoration: none;
-    }
-
-    .alert-wrapper {
-      margin: 0 0 12px 24px;
-      width: 598px;
     }
   }
 

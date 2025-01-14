@@ -1,11 +1,10 @@
 <template>
   <a-spin class="main-container" :loading="loading">
-    <h3 class="setting-header">SFTP 设置</h3>
-    <!-- 系统信息 -->
-    <a-descriptions class="detail-container"
+    <a-descriptions title="SFTP 设置"
+                    class="detail-container"
                     size="large"
                     :align="{ label: 'right', value: 'left' }"
-                    :label-style="{ width: '128px' }"
+                    :label-style="{ width: '128px', 'vertical-align': 'top' }"
                     :column="1">
       <!-- 文件预览大小 -->
       <a-descriptions-item label="文件预览大小">

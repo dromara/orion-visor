@@ -1,8 +1,7 @@
 <template>
   <a-spin class="main-container" :loading="loading">
-    <h3 class="setting-header">加密设置</h3>
-    <!-- 系统信息 -->
-    <a-descriptions class="detail-container"
+    <a-descriptions title="加密设置"
+                    class="detail-container"
                     :align="{ label: 'right', value: 'left' }"
                     :label-style="{ width: '98px', 'vertical-align': 'top', 'padding-top': '8px' }"
                     :column="1">
