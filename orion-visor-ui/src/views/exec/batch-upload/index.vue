@@ -45,9 +45,7 @@
 
   .upload-container {
     width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
+    height: calc(100vh - 92px);
   }
 
 </style>

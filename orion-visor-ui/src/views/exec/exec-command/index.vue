@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container full">
+  <div class="layout-container exec-container">
     <!-- 执行面板 -->
     <div v-show="!logVisible" class="panel-wrapper">
       <exec-command-panel @submit="openLog" />
@@ -72,6 +72,11 @@
 </script>
 
 <style lang="less" scoped>
+
+  .exec-container {
+    width: 100%;
+    height: calc(100vh - 92px);
+  }
 
   .panel-wrapper {
     width: 100%;

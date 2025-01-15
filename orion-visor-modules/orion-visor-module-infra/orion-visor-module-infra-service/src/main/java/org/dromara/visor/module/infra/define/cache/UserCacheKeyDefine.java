@@ -68,7 +68,7 @@ public interface UserCacheKeyDefine {
             .desc("用户登录 token ${id} ${time}")
             .type(LoginTokenDTO.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(24, TimeUnit.HOURS)
+            .timeout(24 * 60, TimeUnit.MINUTES)
             .build();
 
     CacheKeyDefine LOGIN_REFRESH = new CacheKeyBuilder()
@@ -76,7 +76,7 @@ public interface UserCacheKeyDefine {
             .desc("用户刷新 token ${id} ${time}")
             .type(LoginTokenDTO.class)
             .struct(RedisCacheStruct.STRING)
-            .timeout(32, TimeUnit.HOURS)
+            .timeout(32 * 60, TimeUnit.MINUTES)
             .build();
 
 }

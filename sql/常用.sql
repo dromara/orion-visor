@@ -21,3 +21,4 @@ ADD COLUMN `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除 0未删除 1�
 DELETE FROM dict_key WHERE deleted = 1;
 DELETE FROM dict_value WHERE deleted = 1;
 DELETE FROM system_menu WHERE deleted = 1;
+DELETE FROM system_setting WHERE deleted = 1;
