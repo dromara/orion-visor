@@ -22,10 +22,11 @@
  */
 package org.dromara.visor.framework.config.core.store;
 
-import org.dromara.visor.common.config.ConfigRef;
-import org.dromara.visor.framework.config.core.service.ConfigFrameworkService;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.config.ConfigRef;
+import org.dromara.visor.framework.config.core.ref.ConfigRefImpl;
+import org.dromara.visor.framework.config.core.service.ConfigFrameworkService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class ManagementConfigStoreImpl implements ManagementConfigStore {
 
     @Override
     public void override(String key, String value) {
-        log.info("ManagementConfigStore.override key: {}, value: {}", key, value);
+        log.info("ConfigStore.override key: {}, value: {}", key, value);
         // 修改配置
         configMap.put(key, value);
         // 修改引用
@@ -72,9 +73,59 @@ public class ManagementConfigStoreImpl implements ManagementConfigStore {
     @Override
     public void register(ConfigRef<?> ref) {
         String key = ref.key;
-        log.info("ManagementConfigStore.register ref key: {}", key);
+        log.info("ConfigStore.register ref key: {}", key);
         // 注册引用
         configRefs.computeIfAbsent(key, k -> new ArrayList<>()).add(ref);
+    }
+
+    @Override
+    public String getString(String key) {
+        return this.getConfig(key);
+    }
+
+    @Override
+    public String getString(String key, String defaultValue) {
+        return this.getConfig(key, defaultValue);
+    }
+
+    @Override
+    public Integer getInteger(String key) {
+        return this.getConfig(key, Integer::valueOf, null);
+    }
+
+    @Override
+    public Integer getInteger(String key, Integer defaultValue) {
+        return this.getConfig(key, Integer::valueOf, defaultValue);
+    }
+
+    @Override
+    public Long getLong(String key) {
+        return this.getConfig(key, Long::valueOf, null);
+    }
+
+    @Override
+    public Long getLong(String key, Long defaultValue) {
+        return this.getConfig(key, Long::valueOf, defaultValue);
+    }
+
+    @Override
+    public Double getDouble(String key) {
+        return this.getConfig(key, Double::valueOf, null);
+    }
+
+    @Override
+    public Double getDouble(String key, Double defaultValue) {
+        return this.getConfig(key, Double::valueOf, defaultValue);
+    }
+
+    @Override
+    public Boolean getBoolean(String key) {
+        return this.getConfig(key, Boolean::valueOf, null);
+    }
+
+    @Override
+    public Boolean getBoolean(String key, Boolean defaultValue) {
+        return this.getConfig(key, Boolean::valueOf, defaultValue);
     }
 
     @Override
@@ -162,7 +213,7 @@ public class ManagementConfigStoreImpl implements ManagementConfigStore {
     @Override
     public <T> ConfigRef<T> ref(String key, Function<String, T> convert, T defaultValue) {
         // 创建引用
-        ConfigRef<T> ref = new ConfigRef<>(key, convert);
+        ConfigRef<T> ref = new ConfigRefImpl<>(key, convert);
         // 设置值
         String value = configMap.get(key);
         if (value != null) {

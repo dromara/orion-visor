@@ -34,6 +34,91 @@ import java.util.function.Function;
 public interface ConfigStore {
 
     /**
+     * 获取 string 配置
+     *
+     * @param key key
+     * @return config
+     */
+    String getString(String key);
+
+    /**
+     * 获取 string 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    String getString(String key, String defaultValue);
+
+    /**
+     * 获取 int 配置
+     *
+     * @param key key
+     * @return config
+     */
+    Integer getInteger(String key);
+
+    /**
+     * 获取 int 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    Integer getInteger(String key, Integer defaultValue);
+
+    /**
+     * 获取 long 配置
+     *
+     * @param key key
+     * @return config
+     */
+    Long getLong(String key);
+
+    /**
+     * 获取 long 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    Long getLong(String key, Long defaultValue);
+
+    /**
+     * 获取 double 配置
+     *
+     * @param key key
+     * @return config
+     */
+    Double getDouble(String key);
+
+    /**
+     * 获取 double 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    Double getDouble(String key, Double defaultValue);
+
+    /**
+     * 获取 boolean 配置
+     *
+     * @param key key
+     * @return config
+     */
+    Boolean getBoolean(String key);
+
+    /**
+     * 获取 boolean 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    Boolean getBoolean(String key, Boolean defaultValue);
+
+    /**
      * 获取配置
      *
      * @param key key
@@ -64,6 +149,7 @@ public interface ConfigStore {
      * 获取配置
      *
      * @param key          key
+     * @param convert      convert
      * @param defaultValue defaultValue
      * @param <T>          T
      * @return conf

@@ -30,7 +30,7 @@ import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 系统配置缓存 key
+ * 系统设置缓存 key
  *
  * @author Jiahang Li
  * @version 1.0.0

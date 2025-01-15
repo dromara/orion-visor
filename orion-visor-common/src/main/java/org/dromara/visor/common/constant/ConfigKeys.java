@@ -20,34 +20,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.handler.setting.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package org.dromara.visor.common.constant;
 
 /**
- * 加密系统设置模型
+ * 配置项常量
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/10/9 11:45
+ * @since 2025/1/14 16:15
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class EncryptSystemSettingModel {
+public interface ConfigKeys {
 
     /**
      * 加密公钥
      */
-    private String publicKey;
+    String ENCRYPT_PUBLIC_KEY = "encrypt.publicKey";
 
     /**
      * 加密私钥
      */
-    private String privateKey;
+    String ENCRYPT_PRIVATE_KEY = "encrypt.privateKey";
 
 }

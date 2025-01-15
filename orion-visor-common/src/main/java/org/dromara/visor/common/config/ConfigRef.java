@@ -24,6 +24,7 @@ package org.dromara.visor.common.config;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -34,13 +35,13 @@ import java.util.function.Function;
  * @since 2025/1/6 18:01
  */
 @Slf4j
-public class ConfigRef<T> {
+public abstract class ConfigRef<T> {
 
     public final String key;
 
-    private final Function<String, T> convert;
-
     public T value;
+
+    protected final Function<String, T> convert;
 
     public ConfigRef(String key, Function<String, T> convert) {
         this.key = key;
@@ -52,21 +53,28 @@ public class ConfigRef<T> {
      *
      * @param value value
      */
-    public void override(String value) {
-        try {
-            this.value = convert.apply(value);
-        } catch (Exception e) {
-            log.error("ConfigRef trigger override error key: {}, value: {}", key, value, e);
-        }
-    }
+    public abstract void override(String value);
 
     /**
-     * 设置值
+     * 修改配置
      *
      * @param value value
      */
-    public void set(T value) {
-        this.value = value;
-    }
+    public abstract void set(T value);
+
+    /**
+     * 获取配置
+     *
+     * @return value
+     */
+    public abstract T get();
+
+    /**
+     * 修改回调
+     *
+     * @param changeEvent changeEvent
+     * @return this
+     */
+    public abstract ConfigRef<T> onChange(BiConsumer<T, T> changeEvent);
 
 }

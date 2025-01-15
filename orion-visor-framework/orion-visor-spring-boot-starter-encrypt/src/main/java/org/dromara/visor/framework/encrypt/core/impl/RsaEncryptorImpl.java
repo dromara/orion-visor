@@ -25,6 +25,7 @@ package org.dromara.visor.framework.encrypt.core.impl;
 import cn.orionsec.kit.lang.utils.crypto.RSA;
 import org.dromara.visor.common.config.ConfigRef;
 import org.dromara.visor.common.config.ConfigStore;
+import org.dromara.visor.common.constant.ConfigKeys;
 import org.dromara.visor.common.interfaces.RsaEncryptor;
 
 import java.security.interfaces.RSAPrivateKey;
@@ -44,8 +45,8 @@ public class RsaEncryptorImpl implements RsaEncryptor {
     private final ConfigRef<RSAPrivateKey> privateKey;
 
     public RsaEncryptorImpl(ConfigStore configStore) {
-        this.publicKey = configStore.ref("encrypt.publicKey", RSA::getPublicKey);
-        this.privateKey = configStore.ref("encrypt.privateKey", RSA::getPrivateKey);
+        this.publicKey = configStore.ref(ConfigKeys.ENCRYPT_PUBLIC_KEY, RSA::getPublicKey);
+        this.privateKey = configStore.ref(ConfigKeys.ENCRYPT_PRIVATE_KEY, RSA::getPrivateKey);
     }
 
     @Override

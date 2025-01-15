@@ -58,7 +58,7 @@ public class SftpUtils {
         SftpFile file = executor.getFile(path);
         if (file != null) {
             // 文件存在则备份
-            SftpFileBackupParams backupParams = new SftpFileBackupParams(file.getName(), System.currentTimeMillis());
+            SftpFileBackupParams backupParams = new SftpFileBackupParams(file.getName());
             String target = Strings.format(config.getBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
             // 移动
             executor.move(path, target);

@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.asset.handler.host.transfer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 /**
  * sftp 文件备份参数
@@ -35,9 +35,6 @@ import lombok.NoArgsConstructor;
  * @since 2024/4/15 23:13
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class SftpFileBackupParams {
 
     /**
@@ -49,5 +46,17 @@ public class SftpFileBackupParams {
      * 时间戳
      */
     private Long timestamp;
+
+    /**
+     * 当前时间
+     */
+    private String time;
+
+    public SftpFileBackupParams(String fileName) {
+        this.fileName = fileName;
+        Date date = new Date();
+        this.timestamp = date.getTime();
+        this.time = Dates.format(date, Dates.YMD_HMS2);
+    }
 
 }

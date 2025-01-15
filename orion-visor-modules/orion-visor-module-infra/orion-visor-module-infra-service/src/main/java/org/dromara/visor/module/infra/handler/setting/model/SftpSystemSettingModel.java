@@ -28,7 +28,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * SFTP 系统配置模型
+ * SFTP 系统设置模型
  *
  * @author Jiahang Li
  * @version 1.0.0

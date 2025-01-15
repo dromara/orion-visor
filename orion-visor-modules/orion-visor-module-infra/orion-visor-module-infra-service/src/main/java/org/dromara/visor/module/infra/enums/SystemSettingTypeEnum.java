@@ -32,7 +32,7 @@ import org.dromara.visor.module.infra.handler.setting.model.SftpSystemSettingMod
 import java.util.Map;
 
 /**
- * 系统配置类型枚举
+ * 系统设置类型枚举
  *
  * @author Jiahang Li
  * @version 1.0.0

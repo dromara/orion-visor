@@ -43,6 +43,111 @@ public class ConfigStores {
     }
 
     /**
+     * 获取 string 配置
+     *
+     * @param key key
+     * @return config
+     */
+    public String getString(String key) {
+        return delegate.getString(key);
+    }
+
+    /**
+     * 获取 string 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    public String getString(String key, String defaultValue) {
+        return delegate.getString(key, defaultValue);
+    }
+
+    /**
+     * 获取 int 配置
+     *
+     * @param key key
+     * @return config
+     */
+    public Integer getInteger(String key) {
+        return delegate.getInteger(key);
+    }
+
+    /**
+     * 获取 int 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    public Integer getInteger(String key, Integer defaultValue) {
+        return delegate.getInteger(key, defaultValue);
+    }
+
+    /**
+     * 获取 long 配置
+     *
+     * @param key key
+     * @return config
+     */
+    public Long getLong(String key) {
+        return delegate.getLong(key);
+    }
+
+    /**
+     * 获取 long 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    public Long getLong(String key, Long defaultValue) {
+        return delegate.getLong(key, defaultValue);
+    }
+
+    /**
+     * 获取 double 配置
+     *
+     * @param key key
+     * @return config
+     */
+    public Double getDouble(String key) {
+        return delegate.getDouble(key);
+    }
+
+    /**
+     * 获取 double 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    public Double getDouble(String key, Double defaultValue) {
+        return delegate.getDouble(key, defaultValue);
+    }
+
+    /**
+     * 获取 boolean 配置
+     *
+     * @param key key
+     * @return config
+     */
+    public Boolean getBoolean(String key) {
+        return delegate.getBoolean(key);
+    }
+
+    /**
+     * 获取 boolean 配置
+     *
+     * @param key          key
+     * @param defaultValue defaultValue
+     * @return config
+     */
+    public Boolean getBoolean(String key, Boolean defaultValue) {
+        return delegate.getBoolean(key, defaultValue);
+    }
+
+    /**
      * 获取配置
      *
      * @param key key
