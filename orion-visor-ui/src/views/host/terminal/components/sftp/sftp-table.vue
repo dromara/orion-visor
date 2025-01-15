@@ -281,8 +281,8 @@
 
   // 加载配置
   onMounted(async () => {
-    const data = await useCacheStore().loadSystemSetting<SftpSetting>('SFTP');
-    previewSize.value = data?.previewSize;
+    const { sftp } = await useCacheStore().loadSystemSetting();
+    previewSize.value = sftp?.previewSize;
   });
 
 </script>

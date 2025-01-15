@@ -6,8 +6,8 @@
             :auto-switch="false"
             :show-add-button="true"
             @add="openNewConnect"
-            @tab-click="(k: string) => panel.clickTab(k)"
-            @delete="(k: string) => panel.deleteTab(k)">
+            @tab-click="(k) => panel.clickTab(k as string)"
+            @delete="(k) => panel.deleteTab(k as string)">
       <!-- 右侧按钮 -->
       <template #extra>
         <a-space class="panel-extra">
@@ -123,7 +123,7 @@
       margin-right: 6px;
     }
 
-    &:hover{
+    &:hover {
       filter: brightness(1.04);
     }
 

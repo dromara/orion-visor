@@ -133,7 +133,7 @@
 
   // 监听内容变化
   watch(formModel, (v, before) => {
-    if (!v) {
+    if (!v || !Object.keys(v).length) {
       return;
     }
     const options = previewTerminal.value?.term?.options;
@@ -149,29 +149,29 @@
         options[key] = (formModel.value as any)[key];
       }
     });
-    // 非初始化则修改终端样式
-    if (before) {
-      Object.values(sessionManager.sessions)
-        .filter(Boolean)
-        .filter(s => s.type === PanelSessionType.SSH.type)
-        .map(s => s as ISshSession)
-        .forEach(s => {
-          const options = s.inst.options;
-          s.inst;
-          // 修改样式
-          Object.keys(v).forEach(k => {
-            let value = v[k as keyof TerminalDisplaySetting];
-            if (k === 'fontFamily') {
-              value = value === '_' ? defaultFontFamily : `${value}, ${defaultFontFamily}`;
-            }
-            options[k as keyof typeof options] = value;
-          });
-          // 自适应
-          s.fit();
+    // 修改终端样式
+    Object.values(sessionManager.sessions)
+      .filter(Boolean)
+      .filter(s => s.type === PanelSessionType.SSH.type)
+      .map(s => s as ISshSession)
+      .forEach(s => {
+        const options = s.inst.options;
+        s.inst;
+        // 修改样式
+        Object.keys(v).forEach(k => {
+          let value = v[k as keyof TerminalDisplaySetting];
+          if (k === 'fontFamily') {
+            value = value === '_' ? defaultFontFamily : `${value}, ${defaultFontFamily}`;
+          }
+          options[k as keyof typeof options] = value;
         });
+        // 自适应
+        s.fit();
+      });
+    // 非初始化则同步
+    if (Object.keys(before).length) {
+      updateTerminalPreference(TerminalPreferenceItem.DISPLAY_SETTING, formModel.value, true);
     }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.DISPLAY_SETTING, formModel.value, true);
     // 聚焦
     previewTerminal.value.term.focus();
   }, { deep: true });

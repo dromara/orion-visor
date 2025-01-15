@@ -18,6 +18,7 @@ import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
 import { nextId } from '@/utils';
+import { isObject } from '@/utils/is';
 import { Message } from '@arco-design/web-vue';
 import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
@@ -121,7 +122,7 @@ export default defineStore('terminal', {
         await updatePreference({
           type: 'TERMINAL',
           item,
-          value
+          value: isObject(value) ? JSON.stringify(value) : value,
         });
       } catch (e) {
         Message.error('同步失败');

@@ -6,7 +6,9 @@ body {
   --color-bg-content: #FEFEFE;
   --color-sidebar-icon: #737070;
   --color-sidebar-icon-bg: #D7D8DB;
-  --color-sidebar-icon-checked: #CBCCCF;
+  --color-sidebar-icon-checked-bg: #CBCCCF;
+  --color-sidebar-icon-active-bg: #3860FF;
+  --color-sidebar-icon-active-text: rgba(255, 255, 255, .85);
   --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
   --color-sidebar-tooltip-bg: rgb(29, 33, 41);
   --color-content-text-1: rgba(0, 0, 0, .8);
@@ -21,7 +23,7 @@ body {
   --color-panel-gradient-start: rgba(218, 218, 218, 1);
   --color-panel-gradient-end: rgba(218, 218, 218, 0);
   --color-button-bg: #E3E3E3;
-  --color-button-bg-active: var(--color-sidebar-icon-checked);
+  --color-button-bg-active: var(--color-sidebar-icon-checked-bg);
   --search-bg-focus: rgba(234, 234, 234, .95);
   --search-bg: rgba(234, 234, 234, .75);
   --search-color-text: #0E0E0E;
@@ -40,7 +42,9 @@ body[terminal-theme='dark'] {
   --color-bg-content: #1A1B1C;
   --color-sidebar-icon: #C3C6C9;
   --color-sidebar-icon-bg: #3D3E3F;
-  --color-sidebar-icon-checked: #51525C;
+  --color-sidebar-icon-checked-bg: #51525C;
+  --color-sidebar-icon-active-bg: #3860FF;
+  --color-sidebar-icon-active-text: rgba(255, 255, 255, .85);
   --color-sidebar-tooltip-text: rgba(255, 255, 255, .9);
   --color-sidebar-tooltip-bg: var(--color-sidebar-icon-bg);
   --color-content-text-1: rgba(255, 255, 255, .8);
@@ -72,7 +76,7 @@ body[terminal-theme='dark'] {
   --panel-nav-height: 40px;
   --sidebar-width: 44px;
   --sidebar-icon-wrapper-size: var(--header-height);
-  --sidebar-icon-size: 32px;
+  --sidebar-icon-size: 30px;
   --sidebar-icon-font-size: 22px;
   --color-bg-header-tabs: var(--color-bg-header);
   --color-bg-header-tabs-active: #434343;
@@ -519,7 +523,12 @@ body[terminal-theme='dark'] .arco-modal-container {
     }
 
     &.checked-item {
-      background: var(--color-sidebar-icon-checked);
+      background: var(--color-sidebar-icon-checked-bg);
+    }
+
+    &.active-item {
+      background: var(--color-sidebar-icon-active-bg);
+      color: var(--color-sidebar-icon-active-text);
     }
 
     &.disabled-item {
