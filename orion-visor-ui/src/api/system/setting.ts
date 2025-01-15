@@ -2,7 +2,7 @@ import axios from 'axios';
 import { dateFormat } from '@/utils';
 
 /**
- * 系统配置类型
+ * 系统设置类型
  */
 export type SystemSettingType = 'SFTP' | 'ENCRYPT';
 

@@ -4,7 +4,7 @@
                     class="detail-container"
                     size="large"
                     :align="{ label: 'right', value: 'left' }"
-                    :label-style="{ width: '138px', 'vertical-align': 'top' }"
+                    :label-style="{ paddingTop: '2px', paddingLeft: '32px', verticalAlign: 'top' }"
                     :column="1">
       <!-- 机器码 -->
       <a-descriptions-item label="机器码">
@@ -15,14 +15,14 @@
       <!-- 当前前端版本 -->
       <a-descriptions-item label="当前前端版本">
         <!-- 前端版本 -->
-        {{ 'v' + webVersion }}
+        <span>{{ 'v' + webVersion }}</span>
         <!-- 不一致提示 -->
         <b v-if="app.version && webVersion !== app.version"
            class="span-red ml8">当前前端版本与后端版本不一致, 请使用 Ctrl + F5 强制刷新页面</b>
       </a-descriptions-item>
       <!-- 当前后端版本 -->
       <a-descriptions-item label="当前后端版本">
-        {{ 'v' + app.version }}
+        <span>{{ 'v' + app.version }}</span>
       </a-descriptions-item>
       <!-- 最新发布版本 -->
       <a-descriptions-item label="最新发布版本">

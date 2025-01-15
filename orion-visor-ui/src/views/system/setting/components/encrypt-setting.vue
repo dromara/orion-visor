@@ -1,39 +1,42 @@
 <template>
   <a-spin class="main-container" :loading="loading">
-    <a-descriptions title="加密设置"
-                    class="detail-container"
-                    :align="{ label: 'right', value: 'left' }"
-                    :label-style="{ width: '98px', 'vertical-align': 'top', 'padding-top': '8px' }"
-                    :column="1">
+    <!-- 标题 -->
+    <h3 class="setting-header">加密设置</h3>
+    <!-- 表单 -->
+    <a-form :model="setting"
+            ref="formRef"
+            class="setting-form"
+            label-align="right"
+            :auto-label-width="true">
       <!-- 提示 -->
-      <a-descriptions-item>
+      <a-form-item style="margin-bottom: 8px">
         <a-alert>请输入 PKCS8 格式的 RSA Base64 密钥, 用于前后端传输时的数据加密</a-alert>
-      </a-descriptions-item>
+      </a-form-item>
       <!-- 加密公钥 -->
-      <a-descriptions-item label="加密公钥">
+      <a-form-item field="publicKey"
+                   label="加密公钥"
+                   :rules="[{required: true, message: '请输入加密公钥'}]"
+                   hide-asterisk>
         <a-textarea v-model="setting.publicKey"
                     class="input-wrapper"
                     placeholder="RSA 公钥 Base64"
-                    :auto-size="{
-                      minRows: 6,
-                      maxRows: 6,
-                    }"
+                    :auto-size="{ minRows: 5, maxRows: 5 }"
                     allow-clear />
-      </a-descriptions-item>
+      </a-form-item>
       <!-- 加密私钥 -->
-      <a-descriptions-item label="加密私钥">
+      <a-form-item field="privateKey"
+                   label="加密私钥"
+                   :rules="[{required: true, message: '请输入加密私钥'}]"
+                   hide-asterisk>
         <a-textarea v-model="setting.privateKey"
                     class="input-wrapper"
                     placeholder="RSA 私钥 Base64"
-                    :auto-size="{
-                      minRows: 14,
-                      maxRows: 14,
-                    }"
+                    :auto-size="{ minRows: 14, maxRows: 14 }"
                     allow-clear />
-      </a-descriptions-item>
+      </a-form-item>
       <!-- 按钮 -->
-      <a-descriptions-item>
-        <a-space v-permission="['infra:system-setting:update']">
+      <a-form-item v-permission="['infra:system-setting:update']">
+        <a-space>
           <!-- 保存 -->
           <a-button type="primary"
                     size="small"
@@ -45,8 +48,8 @@
             生成密钥对
           </a-button>
         </a-space>
-      </a-descriptions-item>
-    </a-descriptions>
+      </a-form-item>
+    </a-form>
   </a-spin>
 </template>
 
@@ -62,25 +65,24 @@
   import { generatorKeypair, getSystemSetting, updateSystemSettingBatch } from '@/api/system/setting';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
+  import { SystemSettingTypes } from '../types/const';
 
   const { loading, setLoading } = useLoading();
 
+  const formRef = ref();
   const setting = ref<EncryptSetting>({} as EncryptSetting);
 
   // 保存
   const save = async () => {
-    if (!setting.value.publicKey) {
-      Message.error('请输入公钥');
-      return;
-    }
-    if (!setting.value.privateKey) {
-      Message.error('请输入私钥');
-      return;
+    // 验证参数
+    const error = await formRef.value.validate();
+    if (error) {
+      return false;
     }
     setLoading(true);
     try {
       await updateSystemSettingBatch({
-        type: 'ENCRYPT',
+        type: SystemSettingTypes.ENCRYPT,
         settings: { ...setting.value }
       });
       Message.success('修改成功');
@@ -107,7 +109,7 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      const { data } = await getSystemSetting<EncryptSetting>('ENCRYPT');
+      const { data } = await getSystemSetting<EncryptSetting>(SystemSettingTypes.ENCRYPT);
       setting.value = data;
     } catch (e) {
     } finally {

@@ -91,6 +91,17 @@
     padding: 16px 0 0 24px;
     width: 100%;
 
+    .setting-header {
+      color: var(--color-text-1);
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .setting-form {
+      padding-left: 24px;
+    }
+
     .arco-descriptions-title {
       font-weight: 600;
     }

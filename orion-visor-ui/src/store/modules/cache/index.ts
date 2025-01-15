@@ -168,7 +168,7 @@ export default defineStore('cache', {
       return await this.load(`preference_${type}_${item}`, () => getPreference<T>(type, [item]), undefined, force, {});
     },
 
-    // 加载系统配置
+    // 加载系统设置
     async loadSystemSetting(force = false) {
       return await this.load(`system_setting`, getSystemAggregateSetting, undefined, force, {});
     },
