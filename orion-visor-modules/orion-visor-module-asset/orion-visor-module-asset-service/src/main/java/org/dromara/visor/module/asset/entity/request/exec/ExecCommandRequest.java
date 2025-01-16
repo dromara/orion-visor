@@ -47,7 +47,7 @@ import java.util.List;
 @Schema(name = "ExecCommandRequest", description = "批量执行命令 请求对象")
 public class ExecCommandRequest {
 
-    @Size(max = 128)
+    @Size(max = 255)
     @Schema(description = "执行描述")
     private String description;
 

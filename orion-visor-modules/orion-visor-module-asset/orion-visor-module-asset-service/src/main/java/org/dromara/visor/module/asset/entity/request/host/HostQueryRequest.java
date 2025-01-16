@@ -77,6 +77,10 @@ public class HostQueryRequest extends PageRequest {
     @Schema(description = "tag")
     private List<Long> tags;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
     @Schema(description = "是否查询 tag 信息")
     private Boolean queryTag;
 

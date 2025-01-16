@@ -72,4 +72,8 @@ public class HostIdentityDO extends BaseDO {
     @TableField("key_id")
     private Long keyId;
 
+    @Schema(description = "描述")
+    @TableField("description")
+    private String description;
+
 }

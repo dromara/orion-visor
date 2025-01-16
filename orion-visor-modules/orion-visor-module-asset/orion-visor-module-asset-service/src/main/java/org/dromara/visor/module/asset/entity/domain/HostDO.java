@@ -84,4 +84,8 @@ public class HostDO extends BaseDO {
     @TableField("config")
     private String config;
 
+    @Schema(description = "描述")
+    @TableField("description")
+    private String description;
+
 }

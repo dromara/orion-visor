@@ -254,6 +254,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         return hostKeyDAO.wrapper()
                 .eq(HostKeyDO::getId, request.getId())
                 .like(HostKeyDO::getName, request.getName())
+                .like(HostKeyDO::getDescription, request.getDescription())
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .eq(HostKeyDO::getId, searchValue).or()
                         .like(HostKeyDO::getName, searchValue)

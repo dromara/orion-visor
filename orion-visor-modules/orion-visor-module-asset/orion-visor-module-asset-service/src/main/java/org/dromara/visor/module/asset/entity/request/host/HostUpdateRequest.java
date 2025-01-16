@@ -83,4 +83,8 @@ public class HostUpdateRequest implements Serializable {
     @Schema(description = "tags")
     private List<Long> tags;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

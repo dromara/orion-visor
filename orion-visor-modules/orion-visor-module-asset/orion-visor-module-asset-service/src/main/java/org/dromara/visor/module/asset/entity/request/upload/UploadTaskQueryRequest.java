@@ -51,7 +51,7 @@ public class UploadTaskQueryRequest extends PageRequest {
     @Schema(description = "用户id")
     private Long userId;
 
-    @Size(max = 128)
+    @Size(max = 255)
     @Schema(description = "描述")
     private String description;
 

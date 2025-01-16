@@ -64,4 +64,7 @@ public class HostBaseVO implements Serializable {
     @Schema(description = "主机端口")
     private Integer port;
 
+    @Schema(description = "描述")
+    private String description;
+
 }

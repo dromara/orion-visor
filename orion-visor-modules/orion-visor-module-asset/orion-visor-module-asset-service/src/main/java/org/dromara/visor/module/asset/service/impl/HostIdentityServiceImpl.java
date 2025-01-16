@@ -295,10 +295,11 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         String searchValue = request.getSearchValue();
         return hostIdentityDAO.wrapper()
                 .eq(HostIdentityDO::getId, request.getId())
-                .like(HostIdentityDO::getName, request.getName())
                 .eq(HostIdentityDO::getType, request.getType())
-                .like(HostIdentityDO::getUsername, request.getUsername())
                 .eq(HostIdentityDO::getKeyId, request.getKeyId())
+                .like(HostIdentityDO::getName, request.getName())
+                .like(HostIdentityDO::getUsername, request.getUsername())
+                .like(HostIdentityDO::getDescription, request.getDescription())
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .eq(HostIdentityDO::getId, searchValue).or()
                         .like(HostIdentityDO::getName, searchValue).or()

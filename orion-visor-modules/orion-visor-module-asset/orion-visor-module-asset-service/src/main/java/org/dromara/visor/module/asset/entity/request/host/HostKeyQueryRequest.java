@@ -53,4 +53,8 @@ public class HostKeyQueryRequest extends PageRequest {
     @Schema(description = "名称")
     private String name;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

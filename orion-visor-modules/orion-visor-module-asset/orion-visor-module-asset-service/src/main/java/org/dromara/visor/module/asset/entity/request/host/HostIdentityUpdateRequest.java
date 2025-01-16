@@ -77,4 +77,8 @@ public class HostIdentityUpdateRequest implements UpdatePasswordAction {
     @Schema(description = "是否使用新密码")
     private Boolean useNewPassword;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

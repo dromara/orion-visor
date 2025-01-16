@@ -68,4 +68,8 @@ public class HostKeyDO extends BaseDO {
     @TableField("password")
     private String password;
 
+    @Schema(description = "描述")
+    @TableField("description")
+    private String description;
+
 }

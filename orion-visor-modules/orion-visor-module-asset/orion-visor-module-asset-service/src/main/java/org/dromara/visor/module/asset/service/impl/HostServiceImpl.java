@@ -404,12 +404,13 @@ public class HostServiceImpl implements HostService {
         }
         // 基础条件
         wrapper.eq(HostDO::getId, request.getId())
-                .like(HostDO::getName, request.getName())
-                .like(HostDO::getCode, request.getCode())
-                .like(HostDO::getAddress, request.getAddress())
                 .eq(HostDO::getStatus, request.getStatus())
                 .eq(HostDO::getType, request.getType())
                 .eq(HostDO::getOsType, request.getOsType())
+                .like(HostDO::getName, request.getName())
+                .like(HostDO::getCode, request.getCode())
+                .like(HostDO::getAddress, request.getAddress())
+                .like(HostDO::getDescription, request.getDescription())
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .eq(HostDO::getId, searchValue).or()
                         .like(HostDO::getName, searchValue).or()

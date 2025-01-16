@@ -66,7 +66,7 @@ public class ExecLogQueryRequest extends PageRequest {
     @Schema(description = "执行方式")
     private String execMode;
 
-    @Size(max = 128)
+    @Size(max = 255)
     @Schema(description = "执行描述")
     private String description;
 

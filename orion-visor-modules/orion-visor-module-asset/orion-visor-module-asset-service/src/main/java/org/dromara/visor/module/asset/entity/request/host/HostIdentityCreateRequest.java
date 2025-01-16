@@ -69,4 +69,8 @@ public class HostIdentityCreateRequest implements Serializable {
     @Schema(description = "密钥id")
     private Long keyId;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

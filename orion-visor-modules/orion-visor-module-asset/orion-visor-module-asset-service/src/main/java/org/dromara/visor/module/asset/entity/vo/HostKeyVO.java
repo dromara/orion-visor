@@ -59,10 +59,19 @@ public class HostKeyVO implements Serializable {
     @Schema(description = "私钥文本")
     private String privateKey;
 
+    @Schema(description = "描述")
+    private String description;
+
     @Schema(description = "创建时间")
     private Date createTime;
 
     @Schema(description = "修改时间")
     private Date updateTime;
+
+    @Schema(description = "创建人")
+    private String creator;
+
+    @Schema(description = "修改人")
+    private String updater;
 
 }

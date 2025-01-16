@@ -74,6 +74,9 @@ public class HostVO implements Serializable {
     @Schema(description = "主机状态")
     private String status;
 
+    @Schema(description = "描述")
+    private String description;
+
     @Schema(description = "创建时间")
     private Date createTime;
 

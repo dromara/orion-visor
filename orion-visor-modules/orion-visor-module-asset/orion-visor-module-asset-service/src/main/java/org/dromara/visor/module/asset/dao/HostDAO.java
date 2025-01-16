@@ -50,6 +50,7 @@ public interface HostDAO extends IMapper<HostDO> {
             HostDO::getAddress,
             HostDO::getPort,
             HostDO::getStatus,
+            HostDO::getDescription,
             HostDO::getCreateTime,
             HostDO::getUpdateTime,
             HostDO::getCreator,

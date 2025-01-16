@@ -56,7 +56,7 @@ public class UploadTaskCreateRequest implements Serializable {
     @Schema(description = "远程路径")
     private String remotePath;
 
-    @Size(max = 128)
+    @Size(max = 255)
     @Schema(description = "描述")
     private String description;
 

@@ -5,20 +5,21 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.asset.entity.domain.HostIdentityDO">
         <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="key_id" property="keyId"/>
+        <result column="description" property="description"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="creator" property="creator"/>
         <result column="updater" property="updater"/>
         <result column="deleted" property="deleted"/>
-        <result column="name" property="name"/>
-        <result column="username" property="username"/>
-        <result column="password" property="password"/>
-        <result column="key_id" property="keyId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, username, password, key_id, create_time, update_time, creator, updater, deleted
+        id, name, username, password, key_id, description, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

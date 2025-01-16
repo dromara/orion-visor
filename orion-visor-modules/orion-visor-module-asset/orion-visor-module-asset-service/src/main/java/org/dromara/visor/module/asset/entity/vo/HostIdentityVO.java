@@ -65,10 +65,19 @@ public class HostIdentityVO implements Serializable {
     @Schema(description = "密钥名称")
     private String keyName;
 
+    @Schema(description = "描述")
+    private String description;
+
     @Schema(description = "创建时间")
     private Date createTime;
 
     @Schema(description = "修改时间")
     private Date updateTime;
+
+    @Schema(description = "创建人")
+    private String creator;
+
+    @Schema(description = "修改人")
+    private String updater;
 
 }
