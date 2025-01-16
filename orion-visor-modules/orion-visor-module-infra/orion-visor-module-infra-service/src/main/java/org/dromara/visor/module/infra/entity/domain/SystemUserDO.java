@@ -94,4 +94,8 @@ public class SystemUserDO extends BaseDO {
     @TableField("last_login_time")
     private Date lastLoginTime;
 
+    @Schema(description = "描述")
+    @TableField("description")
+    private String description;
+
 }

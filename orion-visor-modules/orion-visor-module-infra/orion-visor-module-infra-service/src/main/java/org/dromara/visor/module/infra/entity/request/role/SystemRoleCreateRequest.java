@@ -56,4 +56,8 @@ public class SystemRoleCreateRequest implements Serializable {
     @Schema(description = "角色编码")
     private String code;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

@@ -58,4 +58,7 @@ public class SystemRoleDTO implements Serializable {
     @Schema(description = "状态 0停用 1启用")
     private Integer status;
 
+    @Schema(description = "描述")
+    private String description;
+
 }

@@ -64,4 +64,8 @@ public class SystemRoleDO extends BaseDO {
     @TableField("status")
     private Integer status;
 
+    @Schema(description = "描述")
+    @TableField("description")
+    private String description;
+
 }

@@ -56,4 +56,8 @@ public class SystemRoleUpdateRequest implements Serializable {
     @Schema(description = "角色名称")
     private String name;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

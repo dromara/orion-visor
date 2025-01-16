@@ -171,9 +171,10 @@ public class SystemRoleServiceImpl implements SystemRoleService {
         // 构造条件
         LambdaQueryWrapper<SystemRoleDO> wrapper = systemRoleDAO.wrapper()
                 .eq(SystemRoleDO::getId, request.getId())
-                .like(SystemRoleDO::getName, request.getName())
                 .eq(SystemRoleDO::getCode, request.getCode())
-                .eq(SystemRoleDO::getStatus, request.getStatus());
+                .eq(SystemRoleDO::getStatus, request.getStatus())
+                .like(SystemRoleDO::getName, request.getName())
+                .like(SystemRoleDO::getDescription, request.getDescription());
         // 查询
         return systemRoleDAO.of(wrapper)
                 .page(request)

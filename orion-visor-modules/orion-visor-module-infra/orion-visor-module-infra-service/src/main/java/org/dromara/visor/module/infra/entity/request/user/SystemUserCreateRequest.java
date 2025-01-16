@@ -72,4 +72,8 @@ public class SystemUserCreateRequest implements Serializable {
     @Schema(description = "邮箱")
     private String email;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

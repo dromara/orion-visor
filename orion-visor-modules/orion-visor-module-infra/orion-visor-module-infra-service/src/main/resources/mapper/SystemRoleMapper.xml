@@ -5,19 +5,20 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.infra.entity.domain.SystemRoleDO">
         <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="creator" property="creator"/>
         <result column="updater" property="updater"/>
         <result column="deleted" property="deleted"/>
-        <result column="name" property="name"/>
-        <result column="code" property="code"/>
-        <result column="status" property="status"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, code, status, create_time, update_time, creator, updater, deleted
+        id, name, code, status, description, create_time, update_time, creator, updater, deleted
     </sql>
 
     <select id="getRoleIdByUserIdAndRoleCode" resultType="java.lang.Long">

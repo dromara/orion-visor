@@ -395,11 +395,12 @@ public class SystemUserServiceImpl implements SystemUserService {
     public LambdaQueryWrapper<SystemUserDO> buildQueryWrapper(SystemUserQueryRequest request) {
         return systemUserDAO.wrapper()
                 .eq(SystemUserDO::getId, request.getId())
+                .eq(SystemUserDO::getStatus, request.getStatus())
                 .like(SystemUserDO::getUsername, request.getUsername())
                 .like(SystemUserDO::getNickname, request.getNickname())
                 .like(SystemUserDO::getMobile, request.getMobile())
                 .like(SystemUserDO::getEmail, request.getEmail())
-                .eq(SystemUserDO::getStatus, request.getStatus());
+                .like(SystemUserDO::getDescription, request.getDescription());
     }
 
 }

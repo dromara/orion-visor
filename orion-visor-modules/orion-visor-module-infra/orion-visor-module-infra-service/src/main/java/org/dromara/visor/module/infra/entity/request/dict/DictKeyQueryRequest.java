@@ -53,7 +53,7 @@ public class DictKeyQueryRequest extends PageRequest {
     @Schema(description = "配置项")
     private String keyName;
 
-    @Size(max = 64)
+    @Size(max = 255)
     @Schema(description = "配置描述")
     private String description;
 

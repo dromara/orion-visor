@@ -65,4 +65,8 @@ public class SystemUserQueryRequest extends PageRequest {
     @Schema(description = "用户状态 0停用 1启用")
     private Integer status;
 
+    @Size(max = 255)
+    @Schema(description = "描述")
+    private String description;
+
 }

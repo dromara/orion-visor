@@ -63,7 +63,7 @@ public class DictKeyCreateRequest implements Serializable {
     private String extraSchema;
 
     @NotBlank
-    @Size(max = 64)
+    @Size(max = 255)
     @Schema(description = "配置描述")
     private String description;
 
