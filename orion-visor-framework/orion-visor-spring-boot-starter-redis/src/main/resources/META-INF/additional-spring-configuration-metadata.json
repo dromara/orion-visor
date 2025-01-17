@@ -24,6 +24,12 @@
       "type": "java.lang.Integer",
       "description": "最小空闲连接数.",
       "defaultValue": "16"
+    },
+    {
+      "name": "no.redis",
+      "type": "java.lang.Boolean",
+      "description": "是否无 redis.",
+      "defaultValue": false
     }
   ]
 }

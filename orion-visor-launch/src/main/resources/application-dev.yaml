@@ -35,3 +35,6 @@ mybatis-plus:
   configuration:
     # sql 日志打印
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+no:
+  redis: false
