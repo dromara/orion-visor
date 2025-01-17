@@ -72,6 +72,12 @@
                     checked-text="使用新密码"
                     unchecked-text="使用原密码" />
         </a-form-item>
+        <!-- 描述 -->
+        <a-form-item field="description" label="描述">
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入描述"
+                      allow-clear />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-drawer>
@@ -109,7 +115,8 @@
       publicKey: undefined,
       privateKey: undefined,
       password: undefined,
-      useNewPassword: false
+      description: undefined,
+      useNewPassword: false,
     };
   };
 

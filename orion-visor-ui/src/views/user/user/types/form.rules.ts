@@ -38,10 +38,16 @@ export const email = [{
   message: '邮箱长度不能大于64位'
 }] as FieldRule[];
 
+export const description = [{
+  maxLength: 255,
+  message: '用户描述长度不能大于255位'
+}] as FieldRule[];
+
 export default {
   username,
   password,
   nickname,
   mobile,
   email,
+  description,
 } as Record<string, FieldRule | FieldRule[]>;

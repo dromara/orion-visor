@@ -27,7 +27,7 @@
       <!-- 角色授权 -->
       <a-button v-permission="['asset:host-group:grant']"
                 class="card-header-button"
-                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
+                @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
         角色授权
         <template #icon>
           <icon-user-group />
@@ -36,7 +36,7 @@
       <!-- 用户授权 -->
       <a-button v-permission="['asset:host-group:grant']"
                 class="card-header-button"
-                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
+                @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
         用户授权
         <template #icon>
           <icon-user />
@@ -95,10 +95,16 @@
         <!-- 主机标签 -->
         <a-form-item field="tags" label="主机标签">
           <tag-multi-selector v-model="formModel.tags"
-                              :limit="0"
                               type="HOST"
-                              :tagColor="tagColor"
+                              :limit="0"
+                              :tag-color="tagColor"
                               placeholder="请选择主机标签" />
+        </a-form-item>
+        <!-- 描述 -->
+        <a-form-item field="description" label="描述">
+          <a-input v-model="formModel.description"
+                   placeholder="请输入描述"
+                   allow-clear />
         </a-form-item>
       </a-form>
     </template>
@@ -116,6 +122,12 @@
     <!-- 编码 -->
     <template #code="{ record }">
       {{ record.code }}
+    </template>
+    <!-- 描述 -->
+    <template #description="{ record }">
+      <span :title="record.description">
+        {{ record.description || '-' }}
+      </span>
     </template>
     <!-- 主机类型 -->
     <template #type="{ record }">
@@ -236,6 +248,7 @@
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import fieldConfig from '../types/card.fields';
   import { openNewRoute } from '@/router';
@@ -243,6 +256,7 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup', 'openCopy']);
 
+  const router = useRouter();
   const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
@@ -261,7 +275,8 @@
     osType: undefined,
     status: undefined,
     tags: undefined,
-    queryTag: true
+    description: undefined,
+    queryTag: true,
   });
 
   // 条件数量

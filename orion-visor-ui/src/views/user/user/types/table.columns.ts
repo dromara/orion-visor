@@ -38,6 +38,13 @@ const columns = [
     ellipsis: true,
     tooltip: true,
   }, {
+    title: '用户描述',
+    dataIndex: 'description',
+    slotName: 'description',
+    minWidth: 128,
+    ellipsis: true,
+    tooltip: true,
+  }, {
     title: '用户状态',
     dataIndex: 'status',
     slotName: 'status',

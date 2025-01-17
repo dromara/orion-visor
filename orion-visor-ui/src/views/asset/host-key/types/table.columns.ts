@@ -16,6 +16,13 @@ const columns = [
     ellipsis: true,
     tooltip: true
   }, {
+    title: '描述',
+    dataIndex: 'description',
+    slotName: 'description',
+    minWidth: 128,
+    ellipsis: true,
+    tooltip: true,
+  }, {
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',

@@ -77,5 +77,7 @@ export function getOperatorLogCount(request: OperatorLogQueryRequest) {
  * 清空操作日志
  */
 export function clearOperatorLog(request: OperatorLogClearRequest) {
-  return axios.post<number>('/infra/operator-log/clear', request);
+  return axios.post<number>('/infra/operator-log/clear', request, {
+    timeout: 60000,
+  });
 }

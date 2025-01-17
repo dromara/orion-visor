@@ -53,7 +53,7 @@
 
   const renderTable = computed(() => appStore.hostView === 'table');
 
-  // 重新加载
+  // 添加回调
   const reload = () => {
     if (renderTable.value) {
       table.value.reload();

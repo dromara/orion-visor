@@ -90,7 +90,9 @@ export function getExecCommandLogCount(request: ExecLogQueryRequest) {
  * 清空批量执行日志
  */
 export function clearExecCommandLog(request: ExecLogClearRequest) {
-  return axios.post<number>('/asset/exec-command-log/clear', request);
+  return axios.post<number>('/asset/exec-command-log/clear', request, {
+    timeout: 60000,
+  });
 }
 
 /**

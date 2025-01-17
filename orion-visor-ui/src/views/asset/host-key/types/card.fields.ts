@@ -11,6 +11,11 @@ const fieldConfig = {
       dataIndex: 'id',
       slotName: 'id',
     }, {
+      label: '描述',
+      dataIndex: 'description',
+      slotName: 'description',
+      ellipsis: true,
+    }, {
       label: '创建时间',
       dataIndex: 'createTime',
       slotName: 'createTime',

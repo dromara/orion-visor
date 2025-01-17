@@ -101,7 +101,9 @@ export function getTerminalConnectLogCount(request: TerminalConnectLogQueryReque
  * 清空终端连接日志
  */
 export function clearTerminalConnectLog(request: TerminalConnectLogClearRequest) {
-  return axios.post<number>('/asset/terminal-connect-log/clear', request);
+  return axios.post<number>('/asset/terminal-connect-log/clear', request, {
+    timeout: 60000,
+  });
 }
 
 /**

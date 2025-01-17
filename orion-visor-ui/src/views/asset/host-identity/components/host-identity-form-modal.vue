@@ -20,7 +20,9 @@
               :rules="formRules">
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
-          <a-input v-model="formModel.name" placeholder="请输入名称" />
+          <a-input v-model="formModel.name"
+                   placeholder="请输入名称"
+                   allow-clear />
         </a-form-item>
         <!-- 类型 -->
         <a-form-item field="type" label="类型">
@@ -31,7 +33,9 @@
         </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" placeholder="请输入用户名" />
+          <a-input v-model="formModel.username"
+                   placeholder="请输入用户名"
+                   allow-clear />
         </a-form-item>
         <!-- 用户密码 -->
         <a-form-item v-if="formModel.type === IdentityType.PASSWORD"
@@ -55,6 +59,12 @@
                      label="主机密钥"
                      :hide-asterisk="true">
           <host-key-selector v-model="formModel.keyId" />
+        </a-form-item>
+        <!-- 描述 -->
+        <a-form-item field="description" label="描述">
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入描述"
+                      allow-clear />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -97,6 +107,7 @@
       password: undefined,
       useNewPassword: false,
       keyId: undefined,
+      description: undefined,
     };
   };
 
@@ -146,7 +157,7 @@
   const handlerOk = async () => {
     setLoading(true);
     try {
-      // 验证参数
+      // 认证参数
       const error = await formRef.value.validate();
       if (error) {
         return false;

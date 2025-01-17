@@ -1,8 +1,8 @@
 import type { FieldRule } from '@arco-design/web-vue';
 
 export const description = [{
-  maxLength: 128,
-  message: '描述长度不能大于128位'
+  maxLength: 255,
+  message: '描述长度不能大于255位'
 }] as FieldRule[];
 
 export const hostIdList = [{

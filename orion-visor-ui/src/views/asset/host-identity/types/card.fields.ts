@@ -25,11 +25,16 @@ const fieldConfig = {
       slotName: 'keyId',
       height: '24px',
     }, {
-      label: '修改时间',
-      dataIndex: 'updateTime',
-      slotName: 'updateTime',
+      label: '描述',
+      dataIndex: 'description',
+      slotName: 'description',
+      ellipsis: true,
+    }, {
+      label: '创建时间',
+      dataIndex: 'createTime',
+      slotName: 'createTime',
       render: ({ record }) => {
-        return dateFormat(new Date(record.updateTime));
+        return dateFormat(new Date(record.createTime));
       },
     }
   ] as CardField[]

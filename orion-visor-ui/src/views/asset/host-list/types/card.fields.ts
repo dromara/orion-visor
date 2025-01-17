@@ -31,6 +31,11 @@ const fieldConfig = {
       dataIndex: 'tags',
       slotName: 'tags',
       rowAlign: 'start',
+    }, {
+      label: '主机描述',
+      dataIndex: 'description',
+      slotName: 'description',
+      ellipsis: true,
     },
   ] as CardField[]
 } as CardFieldConfig;

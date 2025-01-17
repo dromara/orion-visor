@@ -185,5 +185,7 @@ export function getUploadTaskCount(request: UploadTaskQueryRequest) {
  * 清空查询批量上传任务
  */
 export function clearUploadTask(request: UploadTaskClearRequest) {
-  return axios.post<number>('/asset/upload-task/clear', request);
+  return axios.post<number>('/asset/upload-task/clear', request, {
+    timeout: 60000,
+  });
 }

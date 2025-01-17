@@ -25,6 +25,12 @@
                   :options="toOptions(roleStatusKey)"
                   allow-clear />
       </a-form-item>
+      <!-- 角色描述 -->
+      <a-form-item field="description" label="角色描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入角色描述"
+                 allow-clear />
+      </a-form-item>
     </query-header>
   </a-card>
   <!-- 表格 -->
@@ -77,7 +83,7 @@
                   :unchecked-text="getDictValue(roleStatusKey, RoleStatus.DISABLED)"
                   :checked-value="RoleStatus.ENABLED"
                   :unchecked-value="RoleStatus.DISABLED"
-                  :before-change="(s: number) => updateStatus(record.id, s)" />
+                  :before-change="(s) => updateStatus(record.id, s as number)" />
         <!-- 无修改权限 -->
         <span v-else>
           <span class="circle" :style="{
@@ -156,6 +162,7 @@
     name: undefined,
     code: undefined,
     status: undefined,
+    description: undefined,
   });
 
   // 更新状态
