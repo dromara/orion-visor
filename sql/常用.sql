@@ -22,3 +22,11 @@ DELETE FROM dict_key WHERE deleted = 1;
 DELETE FROM dict_value WHERE deleted = 1;
 DELETE FROM system_menu WHERE deleted = 1;
 DELETE FROM system_setting WHERE deleted = 1;
+
+-- 删除已删除的记录数据
+DELETE FROM operator_log WHERE deleted = 1;
+DELETE FROM exec_log WHERE deleted = 1;
+DELETE FROM exec_host_log WHERE deleted = 1;
+DELETE FROM terminal_connect_log WHERE deleted = 1;
+DELETE FROM upload_task WHERE deleted = 1;
+DELETE FROM upload_task_file WHERE deleted = 1;

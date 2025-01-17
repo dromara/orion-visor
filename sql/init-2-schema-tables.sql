@@ -152,16 +152,16 @@ CREATE TABLE `data_permission`
 DROP TABLE IF EXISTS `dict_key`;
 CREATE TABLE `dict_key`
 (
-    `id`           bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `key_name`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '配置项',
-    `value_type`   char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '配置值定义',
-    `extra_schema` json                                                         NULL COMMENT '额外配置定义',
-    `description`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置描述',
-    `create_time`  datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`  datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
-    `creator`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `updater`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `deleted`      tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    `id`           bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `key_name`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '配置项',
+    `value_type`   char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '配置值定义',
+    `extra_schema` json                                                          NULL COMMENT '额外配置定义',
+    `description`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置描述',
+    `create_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`  datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`      varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`      tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_key` (`key_name`) USING BTREE
 ) ENGINE = InnoDB
@@ -294,7 +294,7 @@ CREATE TABLE `exec_log`
     `source`           char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '执行来源',
     `source_id`        bigint(0)                                                     NULL DEFAULT NULL COMMENT '执行来源id',
     `exec_mode`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '执行方式',
-    `description`      varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '执行描述',
+    `description`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '执行描述',
     `exec_seq`         int(0)                                                        NULL DEFAULT 0 COMMENT '执行序列',
     `command`          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '执行命令',
     `parameter_schema` json                                                          NULL COMMENT '参数 schema',
@@ -422,6 +422,7 @@ CREATE TABLE `host`
     `port`        int(0)                                                        NULL DEFAULT NULL COMMENT '主机端口',
     `status`      char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '主机状态',
     `config`      json                                                          NULL COMMENT '主机配置',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机描述',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -447,6 +448,7 @@ CREATE TABLE `host_identity`
     `username`    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户名',
     `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户密码',
     `key_id`      bigint(0)                                                     NULL DEFAULT NULL COMMENT '密钥id',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -470,6 +472,7 @@ CREATE TABLE `host_key`
     `public_key`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '公钥文本',
     `private_key` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '私钥文本',
     `password`    varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密码',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -552,7 +555,7 @@ CREATE TABLE `preference`
     `user_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '用户id',
     `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '偏好类型',
     `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置项',
-    `value`       json                                                         NULL COMMENT '配置值',
+    `value`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -629,15 +632,16 @@ CREATE TABLE `system_message`
 DROP TABLE IF EXISTS `system_role`;
 CREATE TABLE `system_role`
 (
-    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名称',
-    `code`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色编码',
-    `status`      tinyint(0)                                                   NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
-    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
-    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
-    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
-    `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '角色名称',
+    `code`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '角色编码',
+    `status`      tinyint(0)                                                    NULL DEFAULT 1 COMMENT '状态 0停用 1启用',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色描述',
+    `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
@@ -674,15 +678,18 @@ DROP TABLE IF EXISTS `system_setting`;
 CREATE TABLE `system_setting`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `config_key`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置key',
     `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '配置类型',
     `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置项',
-    `value`       json                                                         NULL COMMENT '配置值',
+    `value`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
     `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
     `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
-    PRIMARY KEY (`id`) USING BTREE
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `type_item_idx` (`type`, `item`) USING BTREE,
+    INDEX `key_idx` (`config_key`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
@@ -706,6 +713,7 @@ CREATE TABLE `system_user`
     `update_password_status` tinyint(0)                                                    NULL DEFAULT 0 COMMENT '修改密码状态 0无需修改 1需要修改',
     `update_password_reason` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '修改密码原因',
     `last_login_time`        datetime(0)                                                   NULL DEFAULT NULL COMMENT '最后登录时间',
+    `description`            varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户描述',
     `create_time`            datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`            datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
     `creator`                varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
@@ -829,7 +837,7 @@ CREATE TABLE `upload_task`
     `user_id`     bigint(0)                                                      NULL DEFAULT NULL COMMENT '用户id',
     `username`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '用户名',
     `remote_path` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '远程路径',
-    `description` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '描述',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '描述',
     `status`      char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '状态',
     `file_count`  int(0)                                                         NULL DEFAULT NULL COMMENT '文件数量',
     `host_count`  int(0)                                                         NULL DEFAULT NULL COMMENT '主机数量',
