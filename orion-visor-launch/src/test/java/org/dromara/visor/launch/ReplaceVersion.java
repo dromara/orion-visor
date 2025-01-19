@@ -61,7 +61,7 @@ public class ReplaceVersion {
             "orion-visor-dependencies/pom.xml"
     };
 
-    private static final String APP_CONST_FILE = "orion-visor-common/src/main/java/org/dromara/visor/framework/common/constant/AppConst.java";
+    private static final String APP_CONST_FILE = "orion-visor-common/src/main/java/org/dromara/visor/common/constant/AppConst.java";
 
     private static final String PACKAGE_JSON_FILE = "orion-visor-ui/package.json";
 

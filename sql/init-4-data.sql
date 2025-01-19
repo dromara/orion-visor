@@ -3,7 +3,7 @@
 INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NULL, NOW(), NOW(), '1', '1', 0);
 
 -- 角色配置
-INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, '2023-07-16 21:13:14', '2023-07-17 17:31:29', '1', '1', 0);
+INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, '2023-07-16 21:13:14', '2023-07-17 17:31:29', '1', '1', 0);
 
 -- 角色用户关联
 INSERT INTO `system_user_role` VALUES (1, 1, 1, '2023-07-16 21:15:49', '2023-07-17 18:18:02', '1', '1', 0);

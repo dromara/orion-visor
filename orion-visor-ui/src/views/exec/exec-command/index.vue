@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container exec-container">
+  <div class="layout-container full">
     <!-- 执行面板 -->
     <div v-show="!logVisible" class="panel-wrapper">
       <exec-command-panel @submit="openLog" />
@@ -73,15 +73,10 @@
 
 <style lang="less" scoped>
 
-  .exec-container {
-    width: 100%;
-    height: calc(100vh - 92px);
-  }
-
   .panel-wrapper {
     width: 100%;
-    height: 100%;
     position: relative;
+    height: calc(100vh - 124px);
   }
 
 </style>
