@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-framework-common</artifactId>
+            <artifactId>orion-visor-common</artifactId>
         </dependency>
 
         <dependency>
@@ -35,6 +35,12 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
+        </dependency>
+
+        <!-- test redis noRedis -->
+        <dependency>
+            <groupId>com.github.fppt</groupId>
+            <artifactId>jedis-mock</artifactId>
         </dependency>
     </dependencies>
 

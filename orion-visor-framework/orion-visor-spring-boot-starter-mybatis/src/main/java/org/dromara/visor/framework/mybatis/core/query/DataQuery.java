@@ -37,8 +37,8 @@ import com.baomidou.mybatisplus.core.conditions.interfaces.Join;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.utils.SqlUtils;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
 import java.io.Serializable;
@@ -96,8 +96,8 @@ public class DataQuery<T> {
         return new DataQuery<>(dao, wrapper);
     }
 
-    public DataQuery<T> page(org.dromara.visor.framework.common.entity.PageRequest page) {
-        org.dromara.visor.framework.common.entity.PageRequest pr = Valid.notNull(page, "page is null");
+    public DataQuery<T> page(org.dromara.visor.common.entity.PageRequest page) {
+        org.dromara.visor.common.entity.PageRequest pr = Valid.notNull(page, "page is null");
         this.page = new PageRequest(pr.getPage(), pr.getLimit());
         return this;
     }

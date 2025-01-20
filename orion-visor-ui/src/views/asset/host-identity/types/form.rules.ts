@@ -26,9 +26,15 @@ export const username = [{
   message: '用户名长度不能大于128位'
 }] as FieldRule[];
 
+export const description = [{
+  maxLength: 255,
+  message: '描述长度不能大于255位'
+}] as FieldRule[];
+
 export default {
   name,
   type,
   keyId,
   username,
+  description,
 } as Record<string, FieldRule | FieldRule[]>;

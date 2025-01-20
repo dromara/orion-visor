@@ -47,6 +47,12 @@ export const hostKeyColumns = [
     ellipsis: true,
     tooltip: true
   }, {
+    title: '描述',
+    dataIndex: 'description',
+    slotName: 'description',
+    ellipsis: true,
+    tooltip: true,
+  }, {
     title: '创建时间',
     dataIndex: 'createTime',
     slotName: 'createTime',
@@ -54,15 +60,6 @@ export const hostKeyColumns = [
     width: 180,
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
-    },
-  }, {
-    title: '修改时间',
-    dataIndex: 'updateTime',
-    slotName: 'updateTime',
-    align: 'center',
-    width: 180,
-    render: ({ record }) => {
-      return dateFormat(new Date(record.updateTime));
     },
   },
 ] as TableColumnData[];
@@ -98,13 +95,19 @@ export const hostIdentityColumns = [
     dataIndex: 'keyId',
     slotName: 'keyId',
   }, {
-    title: '修改时间',
-    dataIndex: 'updateTime',
-    slotName: 'updateTime',
+    title: '描述',
+    dataIndex: 'description',
+    slotName: 'description',
+    ellipsis: true,
+    tooltip: true,
+  }, {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    slotName: 'createTime',
     align: 'center',
     width: 180,
     render: ({ record }) => {
-      return dateFormat(new Date(record.updateTime));
+      return dateFormat(new Date(record.createTime));
     },
   },
 ] as TableColumnData[];

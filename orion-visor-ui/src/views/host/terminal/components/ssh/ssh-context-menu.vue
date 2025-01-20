@@ -11,7 +11,7 @@
     <template v-if="session && preference.interactSetting.enableRightClickMenu" #content>
       <a-doption v-for="(action, index) in actions"
                  :key="index"
-                 :disabled="!session.handler.enabledStatus(action.item)"
+                 :disabled="!session || !session.handler.enabledStatus(action.item)"
                  @click="emits('handle', action.item)">
         <!-- 图标 -->
         <div class="terminal-context-menu-icon">

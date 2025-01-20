@@ -64,7 +64,7 @@
           <!-- 上传 -->
           <a-button v-permission="['asset:upload-task:upload']"
                     type="primary"
-                    @click="$router.push({ name: 'batchUpload' })">
+                    @click="router.push({ name: 'batchUpload' })">
             上传
             <template #icon>
               <icon-upload />
@@ -140,7 +140,7 @@
           <a-button v-permission="['asset:upload-task:query']"
                     type="text"
                     size="mini"
-                    @click="$router.push({ name: 'batchUpload', query: { id: record.id } })">
+                    @click="router.push({ name: 'batchUpload', query: { id: record.id } })">
             详情
           </a-button>
           <!-- 取消 -->
@@ -190,10 +190,12 @@
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
+  import { useRouter } from 'vue-router';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
   const emits = defineEmits(['openClear']);
 
+  const router = useRouter();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();

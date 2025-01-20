@@ -21,6 +21,7 @@ const columns = [
     slotName: 'command',
     align: 'left',
     minWidth: 238,
+    ellipsis: true,
   }, {
     title: '执行用户',
     dataIndex: 'username',

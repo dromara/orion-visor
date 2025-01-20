@@ -39,9 +39,9 @@ import java.util.function.Function;
  */
 public class ReplaceVersion {
 
-    private static final String TARGET_VERSION = "2.2.2";
+    private static final String TARGET_VERSION = "2.2.3";
 
-    private static final String REPLACE_VERSION = "2.2.3";
+    private static final String REPLACE_VERSION = "2.3.0";
 
     private static final String PATH = new File("").getAbsolutePath();
 
@@ -61,7 +61,7 @@ public class ReplaceVersion {
             "orion-visor-dependencies/pom.xml"
     };
 
-    private static final String APP_CONST_FILE = "orion-visor-framework/orion-visor-framework-common/src/main/java/org/dromara/visor/framework/common/constant/AppConst.java";
+    private static final String APP_CONST_FILE = "orion-visor-common/src/main/java/org/dromara/visor/common/constant/AppConst.java";
 
     private static final String PACKAGE_JSON_FILE = "orion-visor-ui/package.json";
 
@@ -115,7 +115,7 @@ public class ReplaceVersion {
      */
     private static void replaceViteEnvFiles() {
         for (String file : VITE_ENV_FILES) {
-            readAndWrite(file, s -> s.replaceAll("VITE_APP_VERSION= '" + TARGET_VERSION + "'", "VITE_APP_VERSION= '" + REPLACE_VERSION + "'"));
+            readAndWrite(file, s -> s.replaceAll("VITE_APP_VERSION=" + TARGET_VERSION, "VITE_APP_VERSION=" + REPLACE_VERSION));
         }
     }
 

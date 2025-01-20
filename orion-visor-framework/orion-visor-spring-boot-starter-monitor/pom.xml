@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-framework-common</artifactId>
+            <artifactId>orion-visor-common</artifactId>
         </dependency>
 
         <!-- actuator -->

@@ -83,7 +83,9 @@ export function getExecJobLogCount(request: ExecLogQueryRequest) {
  * 清空计划任务日志
  */
 export function clearExecJobLog(request: ExecLogClearRequest) {
-  return axios.post<number>('/asset/exec-job-log/clear', request);
+  return axios.post<number>('/asset/exec-job-log/clear', request, {
+    timeout: 60000,
+  });
 }
 
 /**

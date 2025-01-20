@@ -18,7 +18,7 @@
       <!-- 角色授权 -->
       <a-button v-permission="['asset:host-key:grant']"
                 class="card-header-button"
-                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_ROLE }})">
+                @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_ROLE }})">
         角色授权
         <template #icon>
           <icon-user-group />
@@ -27,7 +27,7 @@
       <!-- 用户授权 -->
       <a-button v-permission="['asset:host-key:grant']"
                 class="card-header-button"
-                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_USER }})">
+                @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_USER }})">
         用户授权
         <template #icon>
           <icon-user />
@@ -37,6 +37,12 @@
     <!-- 标题 -->
     <template #title="{ record }">
       {{ record.name }}
+    </template>
+    <!-- 描述 -->
+    <template #description="{ record }">
+      <span :title="record.description">
+        {{ record.description || '-' }}
+      </span>
     </template>
     <!-- 拓展操作 -->
     <template #extra="{ record }">
@@ -85,6 +91,7 @@
   import { useCardPagination, useCardColLayout } from '@/hooks/card';
   import { reactive, ref, onMounted } from 'vue';
   import { useCacheStore } from '@/store';
+  import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import { resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
@@ -94,13 +101,13 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
-  const list = ref<HostKeyQueryResponse[]>([]);
-
+  const router = useRouter();
   const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
   const { loading, setLoading } = useLoading();
 
+  const list = ref<HostKeyQueryResponse[]>([]);
   const formModel = reactive<HostKeyQueryRequest>({
     searchValue: undefined,
   });

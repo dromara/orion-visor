@@ -23,8 +23,8 @@
 package org.dromara.visor.framework.test.configuration;
 
 import com.github.fppt.jedismock.RedisServer;
-import org.dromara.visor.framework.common.lock.Locker;
-import org.dromara.visor.framework.common.utils.LockerUtils;
+import org.dromara.visor.common.interfaces.Locker;
+import org.dromara.visor.common.utils.LockerUtils;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 
+import java.net.InetAddress;
 import java.util.function.Supplier;
 
 /**
@@ -52,7 +53,7 @@ public class OrionMockRedisTestConfiguration {
      */
     @Bean
     public RedisServer redisMockServer(RedisProperties properties) {
-        RedisServer server = new RedisServer(properties.getPort());
+        RedisServer server = new RedisServer(properties.getPort(), InetAddress.getLoopbackAddress());
         try {
             server.start();
         } catch (Exception ignore) {

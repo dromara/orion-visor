@@ -25,7 +25,7 @@ package org.dromara.visor.framework.job.core.utils;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.collect.Maps;
-import org.dromara.visor.framework.common.constant.FieldConst;
+import org.dromara.visor.common.constant.FieldConst;
 import org.quartz.*;
 
 import java.util.Map;

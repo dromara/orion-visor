@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.biz.operator.log.core.model;
 
 import lombok.Data;
-import org.dromara.visor.framework.common.entity.RequestIdentity;
+import org.dromara.visor.common.entity.RequestIdentity;
 
 import java.util.Date;
 

@@ -30,6 +30,11 @@ export const HostOsType = {
   },
 };
 
+// 获取系统类型 icon
+export const getHostOsIcon = (osType: string) => {
+  return HostOsType[osType as keyof typeof HostOsType]?.icon;
+};
+
 // 主机类型 字典项
 export const hostTypeKey = 'hostType';
 

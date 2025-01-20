@@ -6,7 +6,7 @@
         <!-- 跳转 -->
         <span class="pointer span-blue"
               title="详情"
-              @click="$router.push({ name: 'userInfo', query: { tab: 'loginHistory' } })">
+              @click="router.push({ name: 'userInfo', query: { tab: 'loginHistory' } })">
           详情
         </span>
       </div>
@@ -44,6 +44,7 @@
   import type { WorkplaceStatisticsData } from '@/views/dashboard/workplace/types/const';
   import { userLoginColumns } from '../types/table.columns';
   import { operatorLogResultKey } from '../types/const';
+  import { useRouter } from 'vue-router';
   import { useDictStore } from '@/store';
 
   const props = defineProps<{
@@ -51,6 +52,7 @@
     data: WorkplaceStatisticsData;
   }>();
 
+  const router = useRouter();
   const { getDictValue } = useDictStore();
 
 </script>

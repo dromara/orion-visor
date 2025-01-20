@@ -1,2 +1,3 @@
 org.dromara.visor.framework.job.configuration.OrionSchedulerAutoConfiguration
 org.dromara.visor.framework.job.configuration.OrionQuartzAutoConfiguration
+org.dromara.visor.framework.job.configuration.OrionAsyncAutoConfiguration

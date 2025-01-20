@@ -25,9 +25,8 @@ package org.dromara.visor.framework.storage.core.client;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.time.Dates;
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.file.FileClient;
-import org.dromara.visor.framework.common.utils.FileClientUtils;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.interfaces.FileClient;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,11 +45,6 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
 
     public AbstractFileClient(Config config) {
         this.config = config;
-        // 设置默认文件客户端
-        if (config.isPrimary()) {
-            PrimaryFileClient.setDelegate(this);
-            FileClientUtils.setDelegate(this);
-        }
     }
 
     @Override
@@ -83,6 +77,16 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
         try (InputStream in = this.getContentInputStream(path)) {
             return Streams.toByteArray(in);
         }
+    }
+
+    @Override
+    public String getContentAsString(String path) throws Exception {
+        return this.getContentAsString(path, Const.UTF_8);
+    }
+
+    @Override
+    public String getContentAsString(String path, String charset) throws Exception {
+        return new String(this.getContent(path), charset);
     }
 
     @Override

@@ -22,13 +22,26 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
         <!-- starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- orion-visor starter -->
+        <!-- modules -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-infra-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-asset-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- framework starter -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-banner</artifactId>
@@ -48,6 +61,14 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-encrypt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
@@ -85,19 +106,6 @@
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
-
-        <!-- orion-visor modules -->
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-module-infra-service</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-module-asset-service</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
     </dependencies>
 
     <build>

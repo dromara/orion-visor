@@ -50,10 +50,16 @@
       <a-form-item field="tags" label="主机标签">
         <tag-multi-selector v-model="formModel.tags"
                             ref="tagSelector"
-                            :limit="0"
                             type="HOST"
-                            :tagColor="tagColor"
+                            :limit="0"
+                            :tag-color="tagColor"
                             placeholder="请选择主机标签" />
+      </a-form-item>
+      <!-- 主机描述 -->
+      <a-form-item field="description" label="主机描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入主机描述"
+                 allow-clear />
       </a-form-item>
     </query-header>
   </a-card>
@@ -82,7 +88,7 @@
           <!-- 角色授权 -->
           <a-button type="primary"
                     v-permission="['asset:host-group:grant']"
-                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
+                    @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_ROLE }})">
             角色授权
             <template #icon>
               <icon-user-group />
@@ -91,7 +97,7 @@
           <!-- 用户授权 -->
           <a-button type="primary"
                     v-permission="['asset:host-group:grant']"
-                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
+                    @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_GROUP_USER }})">
             用户授权
             <template #icon>
               <icon-user />
@@ -140,8 +146,8 @@
       <template #type="{ record }">
         <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
           <!-- 系统类型图标 -->
-          <component v-if="HostOsType[record.osType as keyof typeof HostOsType]"
-                     :is="HostOsType[record.osType as keyof typeof HostOsType].icon"
+          <component v-if="getHostOsIcon(record.osType)"
+                     :is="getHostOsIcon(record.osType)"
                      class="os-icon" />
           <!-- 主机类型 -->
           <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
@@ -267,11 +273,12 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor, hostTypeKey, hostStatusKey, HostType, HostOsType, hostOsTypeKey } from '../types/const';
+  import { tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, getHostOsIcon } from '../types/const';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { dataColor } from '@/utils';
+  import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
@@ -280,6 +287,7 @@
 
   const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
+  const router = useRouter();
   const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
@@ -298,7 +306,8 @@
     osType: undefined,
     status: undefined,
     tags: undefined,
-    queryTag: true
+    description: undefined,
+    queryTag: true,
   });
 
   // 更新状态

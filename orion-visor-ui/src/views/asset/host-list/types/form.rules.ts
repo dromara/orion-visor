@@ -49,6 +49,11 @@ export const tags = [{
   message: '最多选择5个标签'
 }] as FieldRule[];
 
+export const description = [{
+  maxLength: 255,
+  message: '主机描述长度不能大于255位'
+}] as FieldRule[];
+
 export default {
   type,
   osType,
@@ -57,4 +62,5 @@ export default {
   address,
   port,
   tags,
+  description,
 } as Record<string, FieldRule | FieldRule[]>;

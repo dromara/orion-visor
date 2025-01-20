@@ -72,6 +72,12 @@
                     checked-text="使用新密码"
                     unchecked-text="使用原密码" />
         </a-form-item>
+        <!-- 描述 -->
+        <a-form-item field="description" label="描述">
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入描述"
+                      allow-clear />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-drawer>
@@ -93,6 +99,7 @@
   import { createHostKey, updateHostKey, getHostKey } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import { readFileText } from '@/utils/file';
+  import { encrypt } from '@/utils/rsa';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -108,7 +115,8 @@
       publicKey: undefined,
       privateKey: undefined,
       password: undefined,
-      useNewPassword: false
+      description: undefined,
+      useNewPassword: false,
     };
   };
 
@@ -200,14 +208,25 @@
       if (error) {
         return false;
       }
+      let publicKey = undefined;
+      let privateKey = undefined;
+      let password = undefined;
+      // 加密参数
+      try {
+        publicKey = await encrypt(formModel.value.publicKey);
+        privateKey = await encrypt(formModel.value.privateKey);
+        password = await encrypt(formModel.value.password);
+      } catch (e) {
+        return false;
+      }
       if (isAddHandle.value) {
         // 新增
-        await createHostKey(formModel.value);
+        await createHostKey({ ...formModel.value, publicKey, privateKey, password });
         Message.success('创建成功');
         emits('added');
       } else {
         // 修改
-        await updateHostKey(formModel.value);
+        await updateHostKey({ ...formModel.value, publicKey, privateKey, password });
         Message.success('修改成功');
         emits('updated');
       }

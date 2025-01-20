@@ -25,31 +25,40 @@
                      help="主机创建后, 类型则无法修改">
           <a-select v-model="formModel.type"
                     placeholder="请选择主机类型"
-                    :options="toOptions(hostTypeKey)" />
+                    :options="toOptions(hostTypeKey)"
+                    allow-clear />
         </a-form-item>
         <!-- 系统类型 -->
         <a-form-item field="osType" label="系统类型">
           <a-select v-model="formModel.osType"
                     placeholder="请选择系统类型"
-                    :options="toOptions(hostOsTypeKey)" />
+                    :options="toOptions(hostOsTypeKey)"
+                    allow-clear />
         </a-form-item>
         <!-- 主机名称 -->
         <a-form-item field="name" label="主机名称">
-          <a-input v-model="formModel.name" placeholder="请输入主机名称" />
+          <a-input v-model="formModel.name"
+                   placeholder="请输入主机名称"
+                   allow-clear />
         </a-form-item>
         <!-- 主机编码 -->
         <a-form-item field="code" label="主机编码">
-          <a-input v-model="formModel.code" placeholder="请输入主机编码 (定义主机唯一值)" />
+          <a-input v-model="formModel.code"
+                   placeholder="请输入主机编码 (定义主机唯一值)"
+                   allow-clear />
         </a-form-item>
         <!-- 主机地址 -->
         <a-form-item field="address" label="主机地址">
-          <a-input v-model="formModel.address" placeholder="请输入主机地址" />
+          <a-input v-model="formModel.address"
+                   placeholder="请输入主机地址"
+                   allow-clear />
         </a-form-item>
         <!-- 主机端口 -->
         <a-form-item field="port" label="主机端口">
           <a-input-number v-model="formModel.port"
                           placeholder="请输入主机端口"
-                          hide-button />
+                          hide-button
+                          allow-clear />
         </a-form-item>
         <!-- 主机分组 -->
         <a-form-item field="groupIdList" label="主机分组">
@@ -59,12 +68,18 @@
         <!-- 主机标签 -->
         <a-form-item field="tags" label="主机标签">
           <tag-multi-selector v-model="formModel.tags"
-                              :allowCreate="true"
-                              :limit="5"
                               type="HOST"
-                              :tagColor="tagColor"
+                              :limit="5"
+                              :tag-color="tagColor"
+                              :allow-create="true"
                               placeholder="请选择主机标签"
                               @on-limited="onLimitedTag" />
+        </a-form-item>
+        <!-- 主机描述 -->
+        <a-form-item field="description" label="主机描述">
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入主机描述"
+                      allow-clear />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -109,6 +124,7 @@
       port: HostType.SSH.port,
       tags: undefined,
       groupIdList: undefined,
+      description: undefined,
     };
   };
 
@@ -149,7 +165,7 @@
       setLoading(true);
       const { data } = await getHost(id);
       const detail = Object.assign({} as Record<string, any>,
-        pick(data, 'id', 'type', 'osType', 'name', 'code', 'address', 'port', 'status', 'groupIdList'));
+        pick(data, 'id', 'type', 'osType', 'name', 'code', 'address', 'port', 'status', 'groupIdList', 'description'));
       // tag
       const tags = (data.tags || []).map(s => s.id);
       // 渲染

@@ -256,7 +256,6 @@ orion:
   storage:
     # 本地文件存储
     local:
-      primary: true
       enabled: true
       timestamp-prefix: false
       date-directory: false
@@ -274,11 +273,9 @@ orion:
     # 匿名接口
     permit-url:
       - ${orion.api.prefix}/server/bootstrap/health
-  crypto:
+  encrypt:
     # aes加密器
     aes:
-      primary: true
-      enabled: true
       working-mode: ECB
       padding-mode: PKCS5_PADDING
       # 加密密钥

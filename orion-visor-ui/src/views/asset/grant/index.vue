@@ -1,5 +1,5 @@
 <template>
-  <div class="view-container">
+  <div class="layout-container view-container">
     <a-tabs v-model:active-key="activeKey"
             class="tabs-container simple-card"
             size="large"
@@ -52,11 +52,8 @@
 
 <style lang="less" scoped>
   .view-container {
-    display: flex;
     width: 100%;
-    height: 100%;
-    position: relative;
-    padding: 16px;
+    height: calc(100vh - 92px);
   }
 
   .tabs-container {

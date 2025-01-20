@@ -19,42 +19,50 @@
 
 <script lang="ts" setup>
   import type { SidebarAction } from '../../types/define';
+  import { computed } from 'vue';
+  import { useTerminalStore } from '@/store';
+  import { TerminalTabs } from '../../types/const';
   import IconActions from './icon-actions.vue';
 
   const emits = defineEmits(['openCommandSnippet', 'openPathBookmark', 'openTransferList', 'openCommandBar', 'screenshot']);
 
+  const { layoutState, tabManager } = useTerminalStore();
+
   // 顶部操作
-  const topActions = [
+  const topActions: Array<SidebarAction> = [
     {
       icon: 'icon-code-block',
       content: '打开命令片段',
-      click: () => emits('openCommandSnippet')
+      click: () => emits('openCommandSnippet'),
     }, {
       icon: 'icon-bookmark',
       content: '打开路径书签',
-      click: () => emits('openPathBookmark')
+      click: () => emits('openPathBookmark'),
     }, {
       icon: 'icon-swap',
       content: '文件传输列表',
       iconStyle: {
         transform: 'rotate(90deg)'
       },
-      click: () => emits('openTransferList')
+      click: () => emits('openTransferList'),
     },
   ];
 
   // 底部操作
-  const bottomActions: Array<SidebarAction> = [
-    {
-      icon: 'icon-send',
-      content: '发送命令',
-      click: () => emits('openCommandBar')
-    }, {
-      icon: 'icon-camera',
-      content: '截图',
-      click: () => emits('screenshot')
-    },
-  ];
+  const bottomActions = computed<Array<SidebarAction>>(() => {
+    return [
+      {
+        icon: 'icon-send',
+        content: '发送命令',
+        active: layoutState.commandBar && tabManager.active === TerminalTabs.TERMINAL_PANEL.key,
+        click: () => emits('openCommandBar'),
+      }, {
+        icon: 'icon-camera',
+        content: '截图',
+        click: () => emits('screenshot'),
+      },
+    ];
+  });
 
 </script>
 

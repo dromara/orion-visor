@@ -31,7 +31,7 @@ import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.framework.swagger.configuration.config.SwaggerConfig;
 import org.springdoc.core.*;
 import org.springdoc.core.customizers.OpenApiBuilderCustomizer;

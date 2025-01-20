@@ -6,7 +6,7 @@ export type CacheType = 'users' | 'menus' | 'roles'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | 'commandSnippetGroups' | 'pathBookmarkGroups'
   | 'commandSnippets' | 'pathBookmarks'
-  | '*_Tags' | 'preference_*' | 'system_setting_*' | 'footer_setting'
+  | '*_Tags' | 'preference_*' | 'system_setting'
   | string
 
 export interface CacheState {

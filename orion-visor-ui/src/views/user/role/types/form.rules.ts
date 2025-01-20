@@ -16,7 +16,13 @@ export const code = [{
   message: '角色编码长度不能大于32位'
 }] as FieldRule[];
 
+export const description = [{
+  maxLength: 255,
+  message: '角色描述长度不能大于255位'
+}] as FieldRule[];
+
 export default {
   name,
   code,
+  description,
 } as Record<string, FieldRule | FieldRule[]>;

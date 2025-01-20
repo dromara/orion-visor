@@ -24,15 +24,15 @@ package org.dromara.visor.framework.biz.operator.log.configuration;
 
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.json.FieldDesensitizeFilter;
+import org.dromara.visor.common.json.FieldIgnoreFilter;
 import org.dromara.visor.framework.biz.operator.log.configuration.config.OperatorLogConfig;
 import org.dromara.visor.framework.biz.operator.log.core.aspect.OperatorLogAspect;
 import org.dromara.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import org.dromara.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkServiceDelegate;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogFiller;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.framework.common.json.filter.FieldDesensitizeFilter;
-import org.dromara.visor.framework.common.json.filter.FieldIgnoreFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

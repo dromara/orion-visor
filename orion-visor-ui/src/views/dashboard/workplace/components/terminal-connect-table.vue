@@ -6,7 +6,7 @@
         <!-- 跳转 -->
         <span class="pointer span-blue"
               title="详情"
-              @click="$router.push({ name: 'connectLog', query: { action: 'self' } })">
+              @click="router.push({ name: 'connectLog', query: { action: 'self' } })">
           详情
         </span>
       </div>
@@ -70,6 +70,7 @@
   import { copy } from '@/hooks/copy';
   import { terminalLogColumns } from '../types/table.columns';
   import { terminalConnectTypeKey } from '../types/const';
+  import { useRouter } from 'vue-router';
   import { useDictStore } from '@/store';
   import { openNewRoute } from '@/router';
 
@@ -78,6 +79,7 @@
     data: WorkplaceStatisticsData;
   }>();
 
+  const router = useRouter();
   const { getDictValue } = useDictStore();
 
 </script>

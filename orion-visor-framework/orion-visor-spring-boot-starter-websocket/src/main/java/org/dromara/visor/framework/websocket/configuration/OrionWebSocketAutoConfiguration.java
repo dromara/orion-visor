@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.websocket.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.framework.websocket.configuration.config.WebSocketConfig;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;

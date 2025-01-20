@@ -31,8 +31,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import org.dromara.visor.framework.common.constant.AppConst;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.AppConst;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.mybatis.core.generator.template.Table;
 import org.jetbrains.annotations.NotNull;
 

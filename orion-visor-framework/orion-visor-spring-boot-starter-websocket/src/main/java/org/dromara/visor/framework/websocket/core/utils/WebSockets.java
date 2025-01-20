@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Threads;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.websocket.core.constant.WsCloseCode;
 import org.dromara.visor.framework.websocket.core.session.WebSocketSyncSession;
 import org.springframework.web.socket.CloseStatus;

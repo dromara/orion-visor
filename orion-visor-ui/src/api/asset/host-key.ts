@@ -11,6 +11,7 @@ export interface HostKeyCreateRequest {
   publicKey?: string;
   privateKey?: string;
   password?: string;
+  description?: string;
 }
 
 /**
@@ -30,6 +31,7 @@ export interface HostKeyQueryRequest extends Pagination {
   name?: string;
   publicKey?: string;
   privateKey?: string;
+  description?: string;
 }
 
 /**
@@ -41,8 +43,11 @@ export interface HostKeyQueryResponse extends TableData {
   publicKey: string;
   privateKey: string;
   password: string;
+  description: string;
   createTime: number;
   updateTime: number;
+  creator: string;
+  updater: string;
 }
 
 /**

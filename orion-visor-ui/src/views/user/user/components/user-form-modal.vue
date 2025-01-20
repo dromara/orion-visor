@@ -20,25 +20,42 @@
               :rules="formRules">
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" :disabled="!isAddHandle" placeholder="请输入用户名" />
+          <a-input v-model="formModel.username"
+                   :disabled="!isAddHandle"
+                   placeholder="请输入用户名"
+                   allow-clear />
         </a-form-item>
         <!-- 花名 -->
         <a-form-item field="nickname" label="花名">
-          <a-input v-model="formModel.nickname" placeholder="请输入花名" />
+          <a-input v-model="formModel.nickname"
+                   placeholder="请输入花名"
+                   allow-clear />
         </a-form-item>
         <!-- 密码 -->
         <a-form-item v-if="isAddHandle"
                      field="password"
                      label="密码">
-          <a-input-password v-model="formModel.password" placeholder="请输入密码" />
+          <a-input-password v-model="formModel.password"
+                            placeholder="请输入密码"
+                            allow-clear />
         </a-form-item>
         <!-- 手机号 -->
         <a-form-item field="mobile" label="手机号">
-          <a-input v-model="formModel.mobile" placeholder="请输入手机号" />
+          <a-input v-model="formModel.mobile"
+                   placeholder="请输入手机号"
+                   allow-clear />
         </a-form-item>
         <!-- 邮箱 -->
         <a-form-item field="email" label="邮箱">
-          <a-input v-model="formModel.email" placeholder="请输入邮箱" />
+          <a-input v-model="formModel.email"
+                   placeholder="请输入邮箱"
+                   allow-clear />
+        </a-form-item>
+        <!-- 用户描述 -->
+        <a-form-item field="description" label="用户描述">
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入用户描述"
+                      allow-clear />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -75,6 +92,7 @@
       nickname: undefined,
       mobile: undefined,
       email: undefined,
+      description: undefined,
     };
   };
 

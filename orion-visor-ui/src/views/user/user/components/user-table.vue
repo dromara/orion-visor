@@ -15,11 +15,15 @@
       </a-form-item>
       <!-- 用户名 -->
       <a-form-item field="username" label="用户名">
-        <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
+        <a-input v-model="formModel.username"
+                 placeholder="请输入用户名"
+                 allow-clear />
       </a-form-item>
       <!-- 花名 -->
       <a-form-item field="nickname" label="花名">
-        <a-input v-model="formModel.nickname" placeholder="请输入花名" allow-clear />
+        <a-input v-model="formModel.nickname"
+                 placeholder="请输入花名"
+                 allow-clear />
       </a-form-item>
       <!-- 用户状态 -->
       <a-form-item field="status" label="用户状态">
@@ -30,11 +34,21 @@
       </a-form-item>
       <!-- 手机号 -->
       <a-form-item field="mobile" label="手机号">
-        <a-input v-model="formModel.mobile" placeholder="请输入手机号" allow-clear />
+        <a-input v-model="formModel.mobile"
+                 placeholder="请输入手机号"
+                 allow-clear />
       </a-form-item>
       <!-- 邮箱 -->
       <a-form-item field="email" label="邮箱">
-        <a-input v-model="formModel.email" placeholder="请输入邮箱" allow-clear />
+        <a-input v-model="formModel.email"
+                 placeholder="请输入邮箱"
+                 allow-clear />
+      </a-form-item>
+      <!-- 用户描述 -->
+      <a-form-item field="description" label="用户描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入用户描述"
+                 allow-clear />
       </a-form-item>
     </query-header>
   </a-card>
@@ -107,7 +121,7 @@
                   :unchecked-text="getDictValue(userStatusKey, UserStatus.DISABLED)"
                   :checked-value="UserStatus.ENABLED"
                   :unchecked-value="UserStatus.DISABLED"
-                  :before-change="(s: number) => updateStatus(record.id, s)" />
+                  :before-change="(s) => updateStatus(record.id, s as number)" />
         <!-- 无修改权限 -->
         <span v-else>
           <span class="circle" :style="{
@@ -208,7 +222,7 @@
     mobile: undefined,
     email: undefined,
     status: undefined,
-    lastLoginTime: undefined,
+    description: undefined,
   });
 
   // 删除当前行

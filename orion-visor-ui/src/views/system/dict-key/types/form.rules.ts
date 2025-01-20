@@ -20,8 +20,8 @@ export const description = [{
   required: true,
   message: '请输入配置描述'
 }, {
-  maxLength: 64,
-  message: '配置描述长度不能大于64位'
+  maxLength: 255,
+  message: '配置描述长度不能大于255位'
 }] as FieldRule[];
 
 export default {

@@ -22,6 +22,13 @@ const columns = [
     slotName: 'code',
     minWidth: 118,
   }, {
+    title: '角色描述',
+    dataIndex: 'description',
+    slotName: 'description',
+    minWidth: 128,
+    ellipsis: true,
+    tooltip: true,
+  }, {
     title: '角色状态',
     dataIndex: 'status',
     slotName: 'status',

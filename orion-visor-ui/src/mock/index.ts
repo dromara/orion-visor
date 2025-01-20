@@ -24,6 +24,7 @@ interface XHRCustom extends XHR {
   match: boolean;
 }
 
+// 防止 blob 格式的文件流被污染
 // @ts-ignore
 Mock.XHR.prototype.send = (() => {
   // @ts-ignore

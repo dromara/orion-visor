@@ -20,11 +20,22 @@
               :rules="formRules">
         <!-- 角色名称 -->
         <a-form-item field="name" label="角色名称">
-          <a-input v-model="formModel.name" placeholder="请输入角色名称" />
+          <a-input v-model="formModel.name"
+                   placeholder="请输入角色名称"
+                   allow-clear />
         </a-form-item>
         <!-- 角色编码 -->
-        <a-form-item field="code" label="角色编码" v-if="isAddHandle">
-          <a-input v-model="formModel.code" placeholder="请输入角色编码" />
+        <a-form-item field="code" label="角色编码">
+          <a-input v-model="formModel.code"
+                   :disabled="!isAddHandle"
+                   placeholder="请输入角色编码"
+                   allow-clear />
+        </a-form-item>
+        <!-- 角色描述 -->
+        <a-form-item field="description" label="角色描述">
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入角色描述"
+                      allow-clear />
         </a-form-item>
       </a-form>
     </a-spin>

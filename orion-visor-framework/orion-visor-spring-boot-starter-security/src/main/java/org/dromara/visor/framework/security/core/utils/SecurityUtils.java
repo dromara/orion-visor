@@ -24,8 +24,8 @@ package org.dromara.visor.framework.security.core.utils;
 
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
 import cn.orionsec.kit.lang.utils.Strings;
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.security.LoginUser;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.security.LoginUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

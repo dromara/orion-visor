@@ -1,16 +1,10 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import { Message } from '@arco-design/web-vue';
 import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';
 import { httpBaseUrl } from '@/utils/env';
 import { reLoginTipsKey } from '@/types/symbol';
-
-export interface HttpResponse<T = unknown> {
-  msg: string;
-  code: number;
-  data: T;
-}
 
 axios.defaults.timeout = 10000;
 axios.defaults.setAuthorization = true;
@@ -19,17 +13,12 @@ axios.defaults.promptRequestErrorMessage = true;
 axios.defaults.baseURL = httpBaseUrl;
 
 axios.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     // 获取 token
     const token = getToken();
-    if (token) {
-      if (!config.headers) {
-        config.headers = {};
-      }
-      // 设置 Authorization 头
-      if (config.setAuthorization === true) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    // 设置 Authorization 头
+    if (token && config.setAuthorization === true) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -39,7 +28,7 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-  (response: AxiosResponse<HttpResponse>) => {
+  (response: AxiosResponse) => {
     // 不转换
     if (response.config.unwrap) {
       return response;

@@ -24,7 +24,6 @@ package org.dromara.visor.framework.test.core.base;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
-import org.dromara.visor.framework.common.configuration.OrionCommonAutoConfiguration;
 import org.dromara.visor.framework.datasource.configuration.OrionDataSourceAutoConfiguration;
 import org.dromara.visor.framework.mybatis.configuration.OrionMybatisAutoConfiguration;
 import org.dromara.visor.framework.redis.configuration.OrionRedisAutoConfiguration;
@@ -58,8 +57,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BaseUnitTest {
 
     @Import({
-            // holder
-            OrionCommonAutoConfiguration.class,
             // mock
             OrionMockBeanTestConfiguration.class,
             OrionMockRedisTestConfiguration.class,
@@ -77,6 +74,7 @@ public class BaseUnitTest {
             RedisAutoConfiguration.class,
             RedissonAutoConfiguration.class,
     })
+    // TODO
     public static class Application {
     }
 

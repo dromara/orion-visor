@@ -15,7 +15,15 @@
       </a-form-item>
       <!-- 名称 -->
       <a-form-item field="name" label="名称">
-        <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
+        <a-input v-model="formModel.name"
+                 placeholder="请输入名称"
+                 allow-clear />
+      </a-form-item>
+      <!-- 描述 -->
+      <a-form-item field="description" label="描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入描述"
+                 allow-clear />
       </a-form-item>
     </query-header>
   </a-card>
@@ -35,7 +43,7 @@
           <!-- 角色授权 -->
           <a-button type="primary"
                     v-permission="['asset:host-key:grant']"
-                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_ROLE }})">
+                    @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_ROLE }})">
             角色授权
             <template #icon>
               <icon-user-group />
@@ -44,7 +52,7 @@
           <!-- 用户授权 -->
           <a-button type="primary"
                     v-permission="['asset:host-key:grant']"
-                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_USER }})">
+                    @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_KEY_USER }})">
             用户授权
             <template #icon>
               <icon-user />
@@ -136,6 +144,7 @@
   import { deleteHostKey, batchDeleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
+  import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { useTablePagination, useRowSelection } from '@/hooks/table';
@@ -143,18 +152,20 @@
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
+  const router = useRouter();
   const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const { loading, setLoading } = useLoading();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<HostKeyQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<HostKeyQueryResponse>>([]);
   const formModel = reactive<HostKeyQueryRequest>({
     id: undefined,
     name: undefined,
     publicKey: undefined,
     privateKey: undefined,
+    description: undefined,
   });
 
   // 删除当前行

@@ -1,5 +1,5 @@
 import type { AxiosResponse } from 'axios';
-import type { HttpResponse } from '@/api/interceptor';
+import type { HttpResponse } from '@/types/global';
 import type { UnwrapRef } from 'vue';
 import { ref } from 'vue';
 import useLoading from './loading';

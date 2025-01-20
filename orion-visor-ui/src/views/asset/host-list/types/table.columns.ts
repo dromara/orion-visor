@@ -45,6 +45,13 @@ const columns = [
     align: 'center',
     fixed: 'right',
   }, {
+    title: '主机描述',
+    dataIndex: 'description',
+    slotName: 'description',
+    minWidth: 128,
+    ellipsis: true,
+    tooltip: true,
+  }, {
     title: '操作',
     slotName: 'handle',
     width: 192,

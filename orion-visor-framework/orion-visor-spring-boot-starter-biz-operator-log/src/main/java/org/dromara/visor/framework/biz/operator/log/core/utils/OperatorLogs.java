@@ -23,11 +23,13 @@
 package org.dromara.visor.framework.biz.operator.log.core.utils;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
-import org.dromara.visor.framework.common.constant.ExtraFieldConst;
-import org.dromara.visor.framework.common.security.LoginUser;
+import org.dromara.visor.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.security.LoginUser;
 
 import java.util.Map;
 
@@ -74,7 +76,7 @@ public class OperatorLogs implements ExtraFieldConst {
      * @param value value
      */
     public static void addJson(String key, Object value) {
-        EXTRA_HOLDER.get().put(key, JSON.parseObject(JSON.toJSONString(value, serializeFilters)));
+        EXTRA_HOLDER.get().put(key, JSON.parseObject(toJsonString(value)));
     }
 
     /**
@@ -96,11 +98,23 @@ public class OperatorLogs implements ExtraFieldConst {
         if (obj == null) {
             return;
         }
-        if (obj instanceof Map) {
+        if (obj instanceof JSONObject || obj instanceof com.alibaba.fastjson2.JSONObject) {
+            EXTRA_HOLDER.get().putAll(JSON.parseObject(toJsonString(obj)));
+        } else if (obj instanceof Map) {
             EXTRA_HOLDER.get().putAll((Map<String, ?>) obj);
         } else {
-            EXTRA_HOLDER.get().putAll(JSON.parseObject(JSON.toJSONString(obj, serializeFilters)));
+            EXTRA_HOLDER.get().putAll(JSON.parseObject(toJsonString(obj)));
         }
+    }
+
+    /**
+     * 获取 json
+     *
+     * @param value value
+     * @return json
+     */
+    public static String toJsonString(Object value) {
+        return JSON.toJSONString(value, serializeFilters);
     }
 
     /**
@@ -165,6 +179,29 @@ public class OperatorLogs implements ExtraFieldConst {
     public static void clear() {
         EXTRA_HOLDER.remove();
         USER_HOLDER.remove();
+    }
+
+    /**
+     * 清空 html tag
+     *
+     * @param log log
+     * @return cleared
+     */
+    public static String clearHtmlTag(String log) {
+        if (Strings.isBlank(log)) {
+            return log;
+        }
+        return log.replaceAll("<sb 0>", "")
+                .replaceAll("<sb 2>", "")
+                .replaceAll("<sb>", "")
+                .replaceAll("</sb>", "")
+                .replaceAll("<sr 0>", "")
+                .replaceAll("<sr 2>", "")
+                .replaceAll("<sr>", "")
+                .replaceAll("</sr>", "")
+                .replaceAll("<b>", "")
+                .replaceAll("</b>", "")
+                .replaceAll("<br/>", "\n");
     }
 
     public static void setSerializeFilters(SerializeFilter[] serializeFilters) {

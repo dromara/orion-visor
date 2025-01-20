@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 
 import java.io.Serializable;
 import java.util.Date;

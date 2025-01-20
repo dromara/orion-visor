@@ -27,8 +27,8 @@ import cn.orionsec.kit.lang.utils.Strings;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import org.dromara.visor.framework.common.constant.Const;
-import org.dromara.visor.framework.common.constant.FieldConst;
+import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.constant.FieldConst;
 import org.dromara.visor.framework.mybatis.core.generator.template.DictMeta;
 import org.dromara.visor.framework.mybatis.core.generator.template.Table;
 

@@ -61,7 +61,7 @@ orion:
   logging:
     printer:
       mode: ROW
-  crypto:
+  encrypt:
     aes:
       # 加密密钥
       secret-key: ${SECRET_KEY:uQeacXV8b3isvKLK}

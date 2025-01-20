@@ -15,6 +15,7 @@
                   :class="[
                     iconClass,
                     action.checked === true ? 'checked-item' : '',
+                    action.active === true ? 'active-item' : '',
                   ]"
                   :disabled="action.disabled === true"
                   @click="action.click()">

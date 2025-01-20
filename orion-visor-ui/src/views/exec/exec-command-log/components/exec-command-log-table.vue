@@ -64,7 +64,7 @@
           <!-- 执行命令 -->
           <a-button v-permission="['asset:exec-command:exec']"
                     type="primary"
-                    @click="$router.push({ name: 'execCommand' })">
+                    @click="router.push({ name: 'execCommand' })">
             执行命令
             <template #icon>
               <icon-thunderbolt />
@@ -217,7 +217,7 @@
     getExecCommandLogStatus
   } from '@/api/exec/exec-command-log';
   import { Message } from '@arco-design/web-vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import { tableColumns } from '../types/table.columns';
   import { ExecStatus, execStatusKey } from '@/components/exec/log/const';
@@ -232,6 +232,7 @@
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
   const route = useRoute();
+  const router = useRouter();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const expandable = useExpandable();

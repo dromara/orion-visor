@@ -9,6 +9,7 @@ export interface RoleCreateRequest {
   name?: string;
   code?: string;
   status?: number;
+  description?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ export interface RoleQueryRequest extends Pagination {
   name?: string;
   code?: string;
   status?: number;
+  description?: string;
 }
 
 /**
@@ -44,6 +46,7 @@ export interface RoleQueryResponse extends TableData {
   name: string;
   code: string;
   status: number;
+  description: string;
   createTime: number;
   updateTime: number;
   creator: string;

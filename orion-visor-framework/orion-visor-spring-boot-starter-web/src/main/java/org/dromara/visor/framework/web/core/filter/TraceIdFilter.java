@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.web.core.filter;
 
-import org.dromara.visor.framework.common.meta.TraceIdHolder;
+import org.dromara.visor.common.trace.TraceIdHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

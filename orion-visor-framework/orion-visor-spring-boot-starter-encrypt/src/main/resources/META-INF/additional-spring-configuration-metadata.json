@@ -1,0 +1,55 @@
+{
+  "groups": [
+    {
+      "name": "orion.encrypt.aes",
+      "type": "org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig",
+      "sourceType": "org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.encrypt.aes.working-mode",
+      "type": "cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode",
+      "description": "加密模式.",
+      "defaultValue": "ECB"
+    },
+    {
+      "name": "orion.encrypt.aes.padding-mode",
+      "type": "cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode",
+      "description": "填充模式.",
+      "defaultValue": "PKCS5_PADDING"
+    },
+    {
+      "name": "orion.encrypt.aes.secret-key",
+      "type": "java.lang.String",
+      "description": "加密密钥."
+    },
+    {
+      "name": "orion.encrypt.aes.use-generator-key",
+      "type": "java.lang.Boolean",
+      "description": "是否生成密钥.",
+      "defaultValue": "true"
+    },
+    {
+      "name": "orion.encrypt.aes.generator-key-length",
+      "type": "java.lang.Integer",
+      "description": "生成的密钥长度 128 192 256bytes.",
+      "defaultValue": "128"
+    },
+    {
+      "name": "orion.encrypt.aes.iv",
+      "type": "java.lang.String",
+      "description": "向量 长度为 16bytes."
+    },
+    {
+      "name": "orion.encrypt.aes.gcm",
+      "type": "java.lang.String",
+      "description": "GCM 模式参数 长度为 96 104 112 120 128bytes."
+    },
+    {
+      "name": "orion.encrypt.aes.aad",
+      "type": "java.lang.String",
+      "description": "GCM 模式 aad."
+    }
+  ]
+}

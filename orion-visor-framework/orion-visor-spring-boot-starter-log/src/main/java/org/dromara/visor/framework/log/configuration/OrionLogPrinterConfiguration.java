@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.framework.log.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.framework.common.constant.BeanOrderConst;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.BeanOrderConst;
 import org.dromara.visor.framework.log.configuration.config.LogPrinterConfig;
 import org.dromara.visor.framework.log.core.interceptor.LogPrinterInterceptor;
 import org.dromara.visor.framework.log.core.interceptor.PrettyLogPrinterInterceptor;

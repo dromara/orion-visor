@@ -15,7 +15,9 @@
       </a-form-item>
       <!-- 名称 -->
       <a-form-item field="name" label="名称">
-        <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
+        <a-input v-model="formModel.name"
+                 placeholder="请输入名称"
+                 allow-clear />
       </a-form-item>
       <!-- 类型 -->
       <a-form-item field="type" label="类型">
@@ -26,11 +28,19 @@
       </a-form-item>
       <!-- 用户名 -->
       <a-form-item field="username" label="用户名">
-        <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
+        <a-input v-model="formModel.username"
+                 placeholder="请输入用户名"
+                 allow-clear />
       </a-form-item>
       <!-- 主机密钥 -->
       <a-form-item field="keyId" label="主机密钥">
         <host-key-selector v-model="formModel.keyId" allow-clear />
+      </a-form-item>
+      <!-- 描述 -->
+      <a-form-item field="description" label="描述">
+        <a-input v-model="formModel.description"
+                 placeholder="请输入描述"
+                 allow-clear />
       </a-form-item>
     </query-header>
   </a-card>
@@ -50,7 +60,7 @@
           <!-- 角色授权 -->
           <a-button type="primary"
                     v-permission="['asset:host-identity:grant']"
-                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
+                    @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
             角色授权
             <template #icon>
               <icon-user-group />
@@ -59,7 +69,7 @@
           <!-- 用户授权 -->
           <a-button type="primary"
                     v-permission="['asset:host-identity:grant']"
-                    @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
+                    @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
             用户授权
             <template #icon>
               <icon-user />
@@ -186,10 +196,12 @@
   import { useTablePagination, useRowSelection } from '@/hooks/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { IdentityType, identityTypeKey } from '../types/const';
+  import { useRouter } from 'vue-router';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
+  const router = useRouter();
   const cacheStore = useCacheStore();
   const pagination = useTablePagination();
   const rowSelection = useRowSelection();
@@ -197,24 +209,23 @@
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<HostIdentityQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<HostIdentityQueryResponse>>([]);
   const formModel = reactive<HostIdentityQueryRequest>({
     id: undefined,
     name: undefined,
     type: undefined,
     username: undefined,
     keyId: undefined,
+    description: undefined,
   });
 
   // 删除当前行
-  const deleteRow = async ({ id }: {
-    id: number
-  }) => {
+  const deleteRow = async (record: HostIdentityQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteHostIdentity(id);
+      await deleteHostIdentity(record.id);
       Message.success('删除成功');
       // 重新加载
       reload();

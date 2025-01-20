@@ -103,7 +103,7 @@
   const openCommandBar = () => {
     const session = getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true);
     if (session) {
-      layoutState.commandBar = true;
+      layoutState.commandBar = !layoutState.commandBar;
     }
   };
 

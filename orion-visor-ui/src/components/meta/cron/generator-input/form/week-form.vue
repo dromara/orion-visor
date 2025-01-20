@@ -55,7 +55,7 @@
       },
     }),
     emits: useFromEmits(),
-    setup(props, context) {
+    setup(props: any, context) {
       const disabledChoice = computed(() => {
         return (props.day && props.day !== '?') || props.disabled;
       });
@@ -81,13 +81,13 @@
         return options;
       });
 
-      const typeRangeSelectAttrs = computed(() => ({
+      const typeRangeSelectAttrs = computed<any>(() => ({
         disabled: setup.typeRangeAttrs.value.disabled,
         size: 'small',
         class: ['w80'],
       }));
 
-      const typeLoopSelectAttrs = computed(() => ({
+      const typeLoopSelectAttrs = computed<any>(() => ({
         disabled: setup.typeLoopAttrs.value.disabled,
         size: 'small',
         class: ['w80'],

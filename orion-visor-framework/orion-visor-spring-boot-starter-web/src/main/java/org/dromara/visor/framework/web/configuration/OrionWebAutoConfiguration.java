@@ -25,9 +25,9 @@ package org.dromara.visor.framework.web.configuration;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.framework.common.constant.FilterOrderConst;
-import org.dromara.visor.framework.common.web.filter.FilterCreator;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.FilterOrderConst;
+import org.dromara.visor.common.web.WebFilterCreator;
 import org.dromara.visor.framework.web.core.aspect.DemoDisableApiAspect;
 import org.dromara.visor.framework.web.core.filter.TraceIdFilter;
 import org.dromara.visor.framework.web.core.handler.GlobalExceptionHandler;
@@ -151,7 +151,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         // 创建 UrlBasedCorsConfigurationSource 对象
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return FilterCreator.create(new CorsFilter(source), FilterOrderConst.CORS_FILTER);
+        return WebFilterCreator.create(new CorsFilter(source), FilterOrderConst.CORS_FILTER);
     }
 
     /**
@@ -159,7 +159,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public FilterRegistrationBean<TraceIdFilter> traceIdFilterBean() {
-        return FilterCreator.create(new TraceIdFilter(), FilterOrderConst.TRICE_ID_FILTER);
+        return WebFilterCreator.create(new TraceIdFilter(), FilterOrderConst.TRICE_ID_FILTER);
     }
 
     /**

@@ -30,6 +30,7 @@ export interface SidebarAction {
   visible?: boolean;
   disabled?: boolean;
   checked?: boolean;
+  active?: boolean;
   iconStyle?: CSSProperties;
   click: () => void;
 }

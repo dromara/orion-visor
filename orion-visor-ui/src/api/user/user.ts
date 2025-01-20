@@ -14,6 +14,7 @@ export interface UserCreateRequest {
   avatar?: string;
   mobile?: string;
   email?: string;
+  description?: string;
 }
 
 /**
@@ -23,7 +24,6 @@ export interface UserUpdateRequest extends UserCreateRequest {
   id?: number;
   status?: number;
   roleIdList?: Array<number>;
-  password?: string;
 }
 
 /**
@@ -39,6 +39,7 @@ export interface UserQueryRequest extends Pagination {
   email?: string;
   status?: number;
   lastLoginTime?: string;
+  description?: string;
 }
 
 /**
@@ -53,6 +54,7 @@ export interface UserQueryResponse extends TableData {
   email: string;
   status: number;
   lastLoginTime?: number;
+  description: string;
   createTime: number;
   updateTime: number;
   creator: string;

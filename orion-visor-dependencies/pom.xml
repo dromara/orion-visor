@@ -14,7 +14,7 @@
     <url>https://github.com/dromara/orion-visor</url>
 
     <properties>
-        <revision>2.2.3</revision>
+        <revision>2.3.0</revision>
         <spring.boot.version>2.7.17</spring.boot.version>
         <spring.boot.admin.version>2.7.15</spring.boot.admin.version>
         <flatten.maven.plugin.version>1.5.0</flatten.maven.plugin.version>
@@ -62,7 +62,7 @@
             <!-- orion-visor-starter -->
             <dependency>
                 <groupId>org.dromara.visor</groupId>
-                <artifactId>orion-visor-framework-common</artifactId>
+                <artifactId>orion-visor-common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -73,6 +73,11 @@
             <dependency>
                 <groupId>org.dromara.visor</groupId>
                 <artifactId>orion-visor-spring-boot-starter-web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara.visor</groupId>
+                <artifactId>orion-visor-spring-boot-starter-config</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -108,6 +113,11 @@
             <dependency>
                 <groupId>org.dromara.visor</groupId>
                 <artifactId>orion-visor-spring-boot-starter-desensitize</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara.visor</groupId>
+                <artifactId>orion-visor-spring-boot-starter-encrypt</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

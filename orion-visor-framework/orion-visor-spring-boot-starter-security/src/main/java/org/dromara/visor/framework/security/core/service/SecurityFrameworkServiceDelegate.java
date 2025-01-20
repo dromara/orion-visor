@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.security.core.service;
 
-import org.dromara.visor.framework.common.security.LoginUser;
+import org.dromara.visor.common.security.LoginUser;
 
 /**
  * 权限校验服务委托类

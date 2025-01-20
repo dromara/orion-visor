@@ -15,14 +15,14 @@
 
     <modules>
         <module>orion-visor-dependencies</module>
+        <module>orion-visor-common</module>
         <module>orion-visor-framework</module>
         <module>orion-visor-launch</module>
-        <module>orion-visor-module-infra</module>
-        <module>orion-visor-module-asset</module>
+        <module>orion-visor-modules</module>
     </modules>
 
     <properties>
-        <revision>2.2.3</revision>
+        <revision>2.3.0</revision>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>

@@ -30,7 +30,7 @@ import cn.orionsec.kit.lang.utils.reflect.Annotations;
 import cn.orionsec.kit.lang.utils.reflect.Fields;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ValueFilter;
-import org.dromara.visor.framework.common.constant.Const;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.desensitize.core.annotation.Desensitize;
 import org.dromara.visor.framework.desensitize.core.annotation.DesensitizeObject;
 

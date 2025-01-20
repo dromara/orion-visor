@@ -10,7 +10,7 @@
                        type="button"
                        class="usn"
                        :options="toRadioOptions(newConnectionTypeKey)"
-                       @change="(s: string) => updateTerminalPreference(TerminalPreferenceItem.NEW_CONNECTION_TYPE, s, true)" />
+                       @change="(s) => updateTerminalPreference(TerminalPreferenceItem.NEW_CONNECTION_TYPE, s as string, true)" />
         <!-- 过滤 -->
         <a-auto-complete v-model="filterValue"
                          class="host-filter"

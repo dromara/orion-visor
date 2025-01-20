@@ -18,7 +18,7 @@
       <!-- 角色授权 -->
       <a-button v-permission="['asset:host-identity:grant']"
                 class="card-header-button"
-                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
+                @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_ROLE }})">
         角色授权
         <template #icon>
           <icon-user-group />
@@ -27,7 +27,7 @@
       <!-- 用户授权 -->
       <a-button v-permission="['asset:host-identity:grant']"
                 class="card-header-button"
-                @click="$router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
+                @click="router.push({ name: GrantRouteName, query: { key: GrantKey.HOST_IDENTITY_USER }})">
         用户授权
         <template #icon>
           <icon-user />
@@ -52,7 +52,9 @@
         </a-form-item>
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
-          <a-input v-model="formModel.name" placeholder="请输入名称" allow-clear />
+          <a-input v-model="formModel.name"
+                   placeholder="请输入名称"
+                   allow-clear />
         </a-form-item>
         <!-- 类型 -->
         <a-form-item field="type" label="类型">
@@ -63,11 +65,19 @@
         </a-form-item>
         <!-- 用户名 -->
         <a-form-item field="username" label="用户名">
-          <a-input v-model="formModel.username" placeholder="请输入用户名" allow-clear />
+          <a-input v-model="formModel.username"
+                   placeholder="请输入用户名"
+                   allow-clear />
         </a-form-item>
         <!-- 密钥 -->
         <a-form-item field="keyId" label="密钥">
           <host-key-selector v-model="formModel.keyId" allow-clear />
+        </a-form-item>
+        <!-- 描述 -->
+        <a-form-item field="description" label="描述">
+          <a-input v-model="formModel.description"
+                   placeholder="请输入描述"
+                   allow-clear />
         </a-form-item>
       </a-form>
     </template>
@@ -109,6 +119,12 @@
       <template v-else>
         <span>-</span>
       </template>
+    </template>
+    <!-- 描述 -->
+    <template #description="{ record }">
+      <span :title="record.description">
+        {{ record.description || '-' }}
+      </span>
     </template>
     <!-- 拓展操作 -->
     <template #extra="{ record }">
@@ -154,6 +170,7 @@
   import fieldConfig from '../types/card.fields';
   import { deleteHostIdentity, getHostIdentityPage } from '@/api/asset/host-identity';
   import { Message, Modal } from '@arco-design/web-vue';
+  import { useRouter } from 'vue-router';
   import usePermission from '@/hooks/permission';
   import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
@@ -165,6 +182,7 @@
 
   const list = ref<HostIdentityQueryResponse[]>([]);
 
+  const router = useRouter();
   const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();

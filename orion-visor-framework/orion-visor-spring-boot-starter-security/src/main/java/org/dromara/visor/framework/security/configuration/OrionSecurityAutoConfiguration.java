@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.security.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.framework.security.configuration.config.SecurityConfig;
 import org.dromara.visor.framework.security.core.context.TransmittableThreadLocalSecurityContextHolderStrategy;
 import org.dromara.visor.framework.security.core.filter.TokenAuthenticationFilter;

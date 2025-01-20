@@ -22,18 +22,16 @@
  */
 package org.dromara.visor.framework.storage.configuration;
 
-import org.dromara.visor.framework.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.framework.common.file.FileClient;
+import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.interfaces.FileClient;
 import org.dromara.visor.framework.storage.configuration.config.LocalStorageConfig;
 import org.dromara.visor.framework.storage.configuration.config.LogsStorageConfig;
-import org.dromara.visor.framework.storage.core.client.PrimaryFileClient;
 import org.dromara.visor.framework.storage.core.client.local.LocalFileClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 
 /**
  * 存储配置类
@@ -48,15 +46,6 @@ import org.springframework.context.annotation.Primary;
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_STORAGE)
 @EnableConfigurationProperties({LocalStorageConfig.class, LogsStorageConfig.class})
 public class OrionStorageAutoConfiguration {
-
-    /**
-     * @return 默认文件客户端
-     */
-    @Bean(name = "primaryFileClient")
-    @Primary
-    public FileClient primaryFileClient() {
-        return new PrimaryFileClient();
-    }
 
     /**
      * @return 本地文件客户端

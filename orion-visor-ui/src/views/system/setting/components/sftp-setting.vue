@@ -1,14 +1,18 @@
 <template>
   <a-spin class="main-container" :loading="loading">
+    <!-- 标题 -->
     <h3 class="setting-header">SFTP 设置</h3>
-    <!-- 系统信息 -->
-    <a-descriptions class="detail-container"
-                    size="large"
-                    :align="{ label: 'right', value: 'left' }"
-                    :label-style="{ width: '128px' }"
-                    :column="1">
+    <!-- 表单 -->
+    <a-form :model="setting"
+            ref="formRef"
+            class="setting-form"
+            label-align="right"
+            :auto-label-width="true">
       <!-- 文件预览大小 -->
-      <a-descriptions-item label="文件预览大小">
+      <a-form-item field="previewSize"
+                   label="文件预览大小"
+                   :rules="[{required: true, message: '请输入文件预览大小'}]"
+                   hide-asterisk>
         <a-input-number v-model="setting.previewSize"
                         class="input-wrapper"
                         :min="0"
@@ -20,44 +24,50 @@
             MB
           </template>
         </a-input-number>
-      </a-descriptions-item>
-    </a-descriptions>
-    <!-- 按钮 -->
-    <a-space v-permission="['infra:system-setting:update']"
-             class="button-container">
-      <!-- 保存 -->
-      <a-button type="primary"
-                size="small"
-                @click="save">
-        保存
-      </a-button>
-    </a-space>
+      </a-form-item>
+      <!-- 按钮 -->
+      <a-form-item v-permission="['infra:system-setting:update']">
+        <!-- 保存 -->
+        <a-button type="primary"
+                  size="small"
+                  @click="save">
+          保存
+        </a-button>
+      </a-form-item>
+    </a-form>
   </a-spin>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'systemSettingSftpSetting',
+    name: 'sftpSetting',
   };
 </script>
 
 <script lang="ts" setup>
   import type { SftpSetting } from '@/api/system/setting';
   import { onMounted, ref } from 'vue';
-  import { getSystemSetting, updatePartialSystemSetting } from '@/api/system/setting';
+  import { getSystemSetting, updateSystemSettingBatch } from '@/api/system/setting';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
+  import { SystemSettingTypes } from '../types/const';
 
   const { loading, setLoading } = useLoading();
 
+  const formRef = ref();
   const setting = ref<SftpSetting>({} as SftpSetting);
 
   // 保存
   const save = async () => {
+    // 验证参数
+    const error = await formRef.value.validate();
+    if (error) {
+      return false;
+    }
     setLoading(true);
     try {
-      await updatePartialSystemSetting({
-        type: 'SFTP',
+      await updateSystemSettingBatch({
+        type: SystemSettingTypes.SFTP,
         settings: setting.value
       });
       Message.success('修改成功');
@@ -71,7 +81,7 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      const { data } = await getSystemSetting<SftpSetting>('SFTP');
+      const { data } = await getSystemSetting<SftpSetting>(SystemSettingTypes.SFTP);
       setting.value = data;
     } catch (e) {
     } finally {
@@ -82,32 +92,7 @@
 </script>
 
 <style lang="less" scoped>
-  @form-width: 628px;
-  @input-width: 328px;
-
-  .main-container {
-    width: @form-width;
-    padding-left: 24px;
-
-    .setting-header {
-      color: var(--color-text-1);
-    }
-
-    .alert-href {
-      text-decoration: none;
-    }
-
-    .alert-wrapper {
-      margin-bottom: 12px;
-    }
-
-    .input-wrapper {
-      width: @input-width;
-    }
-
-    .button-container {
-      margin-left: 128px;
-      margin-bottom: 12px;
-    }
+  .input-wrapper {
+    width: 328px;
   }
 </style>

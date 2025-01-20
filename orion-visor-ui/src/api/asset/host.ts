@@ -1,4 +1,3 @@
-import type { SelectOptionData } from '@arco-design/web-vue';
 import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
 import axios from 'axios';
@@ -19,6 +18,7 @@ export interface HostCreateRequest {
   port?: number;
   tags?: Array<number>;
   groupIdList?: Array<number>;
+  description?: string;
 }
 
 /**
@@ -58,6 +58,7 @@ export interface HostQueryRequest extends Pagination {
   status?: string;
   tags?: Array<number>;
   queryTag?: boolean;
+  description?: string;
 }
 
 /**
@@ -81,6 +82,7 @@ export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   color: string;
   tags: Array<{ id: number, name: string }>;
   groupIdList: Array<number>;
+  description: string;
 }
 
 /**

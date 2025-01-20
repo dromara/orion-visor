@@ -12,6 +12,7 @@ export interface HostIdentityCreateRequest {
   username?: string;
   password?: string;
   keyId?: number;
+  description?: string;
 }
 
 /**
@@ -32,6 +33,7 @@ export interface HostIdentityQueryRequest extends Pagination {
   type?: string;
   username?: string;
   keyId?: number;
+  description?: string;
 }
 
 /**
@@ -44,6 +46,7 @@ export interface HostIdentityQueryResponse extends TableData {
   username: string;
   password: string;
   keyId: number;
+  description: string;
   createTime: number;
   updateTime: number;
   creator: string;

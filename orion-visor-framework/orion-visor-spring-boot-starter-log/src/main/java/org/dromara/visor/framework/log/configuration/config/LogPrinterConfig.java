@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.log.configuration.config;
 
 import lombok.Data;
-import org.dromara.visor.framework.common.utils.ConfigUtils;
+import org.dromara.visor.common.utils.ConfigUtils;
 import org.dromara.visor.framework.log.core.enums.LogPrinterMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
