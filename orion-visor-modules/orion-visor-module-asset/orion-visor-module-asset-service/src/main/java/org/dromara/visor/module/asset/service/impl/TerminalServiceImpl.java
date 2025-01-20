@@ -234,6 +234,7 @@ public class TerminalServiceImpl implements TerminalService {
         TerminalConnectDTO conn = new TerminalConnectDTO();
         conn.setHostId(host.getId());
         conn.setHostName(host.getName());
+        conn.setHostCode(host.getCode());
         conn.setHostAddress(host.getAddress());
         conn.setHostPort(host.getPort());
         conn.setOsType(host.getOsType());

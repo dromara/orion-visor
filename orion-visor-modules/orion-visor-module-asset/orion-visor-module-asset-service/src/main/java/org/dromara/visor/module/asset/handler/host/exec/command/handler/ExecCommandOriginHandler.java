@@ -25,8 +25,9 @@ package org.dromara.visor.module.asset.handler.host.exec.command.handler;
 import cn.orionsec.kit.lang.support.timeout.TimeoutChecker;
 import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
+import org.dromara.visor.module.asset.entity.domain.ExecLogDO;
+
+import java.util.Map;
 
 /**
  * 命令执行器 原始日志输出
@@ -38,8 +39,11 @@ import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecComman
 @Slf4j
 public class ExecCommandOriginHandler extends BaseExecCommandHandler {
 
-    public ExecCommandOriginHandler(ExecCommandDTO execCommand, ExecCommandHostDTO execHostCommand, TimeoutChecker<TimeoutEndpoint> timeoutChecker) {
-        super(execCommand, execHostCommand, timeoutChecker);
+    public ExecCommandOriginHandler(Long id,
+                                    ExecLogDO execLog,
+                                    Map<String, Object> builtParams,
+                                    TimeoutChecker<TimeoutEndpoint> timeoutChecker) {
+        super(id, execLog, builtParams, timeoutChecker);
     }
 
 }

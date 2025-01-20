@@ -82,6 +82,9 @@ public class ExecLogManager {
      * @param path path
      */
     public void asyncCloseTailFile(String path) {
+        if (path == null) {
+            return;
+        }
         Threads.start(() -> {
             try {
                 // 获取当前路径的全部追踪器

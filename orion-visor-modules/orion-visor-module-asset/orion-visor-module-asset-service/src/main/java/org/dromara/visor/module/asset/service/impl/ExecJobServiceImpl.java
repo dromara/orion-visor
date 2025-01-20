@@ -27,6 +27,7 @@ import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.time.cron.Cron;
+import cn.orionsec.kit.spring.SpringHolder;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,10 @@ import org.dromara.visor.module.asset.entity.request.exec.*;
 import org.dromara.visor.module.asset.entity.vo.ExecJobVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogVO;
 import org.dromara.visor.module.asset.entity.vo.HostBaseVO;
-import org.dromara.visor.module.asset.enums.*;
+import org.dromara.visor.module.asset.enums.ExecJobStatusEnum;
+import org.dromara.visor.module.asset.enums.ExecModeEnum;
+import org.dromara.visor.module.asset.enums.ExecSourceEnum;
+import org.dromara.visor.module.asset.enums.HostTypeEnum;
 import org.dromara.visor.module.asset.handler.host.exec.job.ExecCommandJob;
 import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
 import org.dromara.visor.module.asset.service.ExecCommandService;
@@ -57,6 +61,7 @@ import org.dromara.visor.module.asset.service.ExecJobHostService;
 import org.dromara.visor.module.asset.service.ExecJobService;
 import org.dromara.visor.module.infra.api.SystemUserApi;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -107,7 +112,6 @@ public class ExecJobServiceImpl implements ExecJobService {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         // 验证表达式是否正确
         Cron.of(request.getExpression());
-        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 转换
         ExecJobDO record = ExecJobConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -137,7 +141,6 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-updateExecJobById id: {}, request: {}", id, JSON.toJSONString(request));
         // 验证表达式是否正确
         Cron.of(request.getExpression());
-        Valid.valid(ScriptExecEnum::of, request.getScriptExec());
         // 查询
         ExecJobDO record = execJobDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
@@ -164,7 +167,6 @@ public class ExecJobServiceImpl implements ExecJobService {
     public Integer updateExecJobStatus(ExecJobUpdateStatusRequest request) {
         Long id = request.getId();
         ExecJobStatusEnum status = ExecJobStatusEnum.of(request.getStatus());
-        Valid.notNull(status, ErrorMessage.PARAM_ERROR);
         log.info("ExecJobService-updateExecJobStatus id: {}, status: {}", id, status);
         // 查询任务
         ExecJobDO record = execJobDAO.selectById(id);
@@ -203,7 +205,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.NAME, job.getName());
         OperatorLogs.add(OperatorLogs.USERNAME, username);
-        log.info("ExecJobService-setExecJobExecUser effect: {}", effect);
+        log.info("ExecJobService-updateExecJobExecUser effect: {}", effect);
         return effect;
     }
 
@@ -320,7 +322,6 @@ public class ExecJobServiceImpl implements ExecJobService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void manualTriggerExecJob(Long id) {
         log.info("ExecJobService.manualTriggerExecJob start id: {}", id);
         // 查询任务
@@ -336,12 +337,12 @@ public class ExecJobServiceImpl implements ExecJobService {
             request.setUserId(user.getId());
             request.setUsername(user.getUsername());
         }
-        // 触发任务
-        this.triggerExecJob(request, job);
+        // 上下文触发任务
+        SpringHolder.getBean(ExecJobService.class).triggerExecJob(request, job);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void triggerExecJob(ExecJobTriggerRequest request, ExecJobDO job) {
         Long id = request.getId();
         // 查询任务主机

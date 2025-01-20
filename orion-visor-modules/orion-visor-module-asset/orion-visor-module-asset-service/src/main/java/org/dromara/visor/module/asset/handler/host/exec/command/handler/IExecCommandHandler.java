@@ -61,10 +61,10 @@ public interface IExecCommandHandler extends Runnable, SafeCloseable {
     Integer getExitCode();
 
     /**
-     * 获取主机 id
+     * 获取任务 id
      *
      * @return hostId
      */
-    Long getHostId();
+    Long getId();
 
 }

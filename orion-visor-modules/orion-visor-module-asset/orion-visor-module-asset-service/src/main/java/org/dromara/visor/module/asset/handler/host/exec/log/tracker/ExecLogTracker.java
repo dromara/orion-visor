@@ -29,8 +29,9 @@ import cn.orionsec.kit.ext.tail.mode.FileOffsetMode;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
-import org.dromara.visor.module.asset.define.config.AppTrackerConfig;
+import org.dromara.visor.module.asset.define.config.AppLogConfig;
 import org.dromara.visor.module.asset.entity.dto.ExecHostLogTailDTO;
 import org.dromara.visor.module.asset.handler.host.exec.log.constant.LogConst;
 import org.springframework.web.socket.WebSocketSession;
@@ -45,7 +46,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Slf4j
 public class ExecLogTracker implements IExecLogTracker {
 
-    private static final AppTrackerConfig trackerConfig = SpringHolder.getBean(AppTrackerConfig.class);
+    private static final AppLogConfig appLogConfig = SpringHolder.getBean(AppLogConfig.class);
 
     private final WebSocketSession session;
 
@@ -76,9 +77,9 @@ public class ExecLogTracker implements IExecLogTracker {
         try {
             this.tracker = new DelayTrackerListener(absolutePath, this);
             tracker.charset(config.getCharset());
-            tracker.delayMillis(trackerConfig.getDelay());
-            tracker.offset(FileOffsetMode.LINE, trackerConfig.getOffset());
-            tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, trackerConfig.getWaitTimes());
+            tracker.delayMillis(appLogConfig.getTrackerDelay());
+            tracker.offset(FileOffsetMode.LINE, appLogConfig.getTrackerOffset());
+            tracker.notFoundMode(FileNotFoundMode.WAIT_COUNT, Const.N_10);
             // 开始监听文件
             tracker.run();
         } catch (Exception e) {
