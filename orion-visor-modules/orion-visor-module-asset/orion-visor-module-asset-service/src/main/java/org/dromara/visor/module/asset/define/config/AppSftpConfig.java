@@ -22,8 +22,9 @@
  */
 package org.dromara.visor.module.asset.define.config;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.dromara.visor.common.config.ConfigRef;
+import org.dromara.visor.common.config.ConfigStore;
+import org.dromara.visor.common.constant.ConfigKeys;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,24 +34,40 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  * @since 2024/4/15 22:00
  */
-@Data
 @Component
-@ConfigurationProperties(prefix = "app.sftp")
 public class AppSftpConfig {
 
     /**
-     * 上传文件时 文件存在是否备份
+     * 文件预览大小
      */
-    private Boolean uploadPresentBackup;
+    private final ConfigRef<Integer> previewSize;
+
+    /**
+     * 重复文件备份
+     */
+    private final ConfigRef<Boolean> uploadPresentBackup;
 
     /**
      * 备份文件名称
      */
-    private String backupFileName;
+    private final ConfigRef<String> uploadBackupFileName;
 
-    public AppSftpConfig() {
-        this.uploadPresentBackup = true;
-        this.backupFileName = "bk_${fileName}_${timestamp}";
+    public AppSftpConfig(ConfigStore configStore) {
+        this.previewSize = configStore.int32(ConfigKeys.SFTP_PREVIEW_SIZE);
+        this.uploadPresentBackup = configStore.bool(ConfigKeys.SFTP_UPLOAD_PRESENT_BACKUP);
+        this.uploadBackupFileName = configStore.string(ConfigKeys.SFTP_UPLOAD_BACKUP_FILE_NAME);
+    }
+
+    public Integer getPreviewSize() {
+        return previewSize.value;
+    }
+
+    public Boolean getUploadPresentBackup() {
+        return uploadPresentBackup.value;
+    }
+
+    public String getUploadBackupFileName() {
+        return uploadBackupFileName.value;
     }
 
 }

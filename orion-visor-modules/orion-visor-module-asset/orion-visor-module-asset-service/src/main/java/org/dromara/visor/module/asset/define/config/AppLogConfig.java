@@ -22,29 +22,52 @@
  */
 package org.dromara.visor.module.asset.define.config;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.dromara.visor.common.config.ConfigRef;
+import org.dromara.visor.common.config.ConfigStore;
+import org.dromara.visor.common.constant.ConfigKeys;
 import org.springframework.stereotype.Component;
 
 /**
- * 应用执行日志配置
+ * 应用日志设置
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/4/25 13:36
+ * @since 2024/4/15 22:00
  */
-@Data
 @Component
-@ConfigurationProperties(prefix = "app.exec-log")
-public class AppExecLogConfig {
+public class AppLogConfig {
+
+    /**
+     * 日志加载偏移行
+     */
+    private final ConfigRef<Integer> trackerOffset;
+
+    /**
+     * 日志加载间隔毫秒
+     */
+    private final ConfigRef<Integer> trackerDelay;
 
     /**
      * 是否拼接 ansi 执行状态日志
      */
-    private Boolean appendAnsi;
+    private final ConfigRef<Boolean> execAppendAnsi;
 
-    public AppExecLogConfig() {
-        this.appendAnsi = true;
+    public AppLogConfig(ConfigStore configStore) {
+        this.trackerOffset = configStore.int32(ConfigKeys.LOG_TRACKER_OFFSET);
+        this.trackerDelay = configStore.int32(ConfigKeys.LOG_TRACKER_DELAY);
+        this.execAppendAnsi = configStore.bool(ConfigKeys.LOG_EXEC_APPEND_ANSI);
+    }
+
+    public Integer getTrackerOffset() {
+        return trackerOffset.value;
+    }
+
+    public Integer getTrackerDelay() {
+        return trackerDelay.value;
+    }
+
+    public Boolean getExecAppendAnsi() {
+        return execAppendAnsi.value;
     }
 
 }
