@@ -1,59 +1,66 @@
 <template>
   <a-spin class="main-container" :loading="loading">
     <!-- 标题 -->
-    <h3 class="setting-header">SFTP 设置</h3>
+    <h3 class="setting-header">日志设置</h3>
     <!-- 表单 -->
     <a-form :model="setting"
             ref="formRef"
             class="setting-form"
             label-align="right"
             :auto-label-width="true">
-      <!-- 重复文件备份 -->
-      <a-form-item field="sftp_uploadPresentBackup"
-                   label="重复文件备份"
+      <!-- 执行详细日志 -->
+      <a-form-item field="log_execAppendAnsi"
+                   label="执行详细日志"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.sftp_uploadPresentBackup"
+        <a-switch v-model="setting.log_execAppendAnsi"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
-                  checked-text="备份"
-                  unchecked-text="覆盖" />
+                  checked-text="详细输出"
+                  unchecked-text="原始输出" />
         <template #extra>
-          文件上传时, 若文件存在是否备份原始文件
+          开启后在命令执行时会拼接详细的日志信息, 关闭后则只显示命令的标准输出
         </template>
       </a-form-item>
-      <!-- 备份文件名称 -->
-      <a-form-item field="sftp_uploadBackupFileName"
-                   label="备份文件名称"
-                   :rules="[{required: true, message: '请输入备份文件名称'}]"
+      <!-- 日志加载行数 -->
+      <a-form-item field="log_trackerOffset"
+                   label="日志加载行数"
+                   :rules="[{required: true, message: '请输入日志加载行数'}]"
                    hide-asterisk>
-        <a-input v-model="setting.sftp_uploadBackupFileName"
-                 class="input-wrapper"
-                 placeholder="请输入备份文件名称模板"
-                 allow-clear />
-        <template #extra>
-          ${fileName} 文件名称, ${timestamp} 时间戳, ${time} 时间
-        </template>
-      </a-form-item>
-      <!-- 文件预览大小 -->
-      <a-form-item field="sftp_previewSize"
-                   label="文件预览大小"
-                   :rules="[{required: true, message: '请输入文件预览大小'}]"
-                   hide-asterisk>
-        <a-input-number v-model="setting.sftp_previewSize"
+        <a-input-number v-model="setting.log_trackerOffset"
                         class="input-wrapper"
                         :min="0"
-                        :max="200"
-                        placeholder="请输入文件预览大小"
+                        :max="99999"
+                        placeholder="请输入日志加载行数"
                         allow-clear
                         hide-button>
           <template #suffix>
-            MB
+            行
           </template>
         </a-input-number>
         <template #extra>
-          可以直接查看或编辑小于等于该大小的普通文件
+          当查看日志时, 默认读取的行数
+        </template>
+      </a-form-item>
+      <!-- 日志监听间隔 -->
+      <a-form-item field="log_trackerDelay"
+                   label="日志监听间隔"
+                   :rules="[{required: true, message: '请输入日志监听间隔'}]"
+                   hide-asterisk>
+        <a-input-number v-model="setting.log_trackerDelay"
+                        class="input-wrapper"
+                        :min="0"
+                        :max="99999"
+                        placeholder="请输入日志监听间隔"
+                        allow-clear
+                        hide-button>
+          <template #suffix>
+            ms
+          </template>
+        </a-input-number>
+        <template #extra>
+          日志增量刷新的间隔 (毫秒)
         </template>
       </a-form-item>
       <!-- 按钮 -->
@@ -71,12 +78,12 @@
 
 <script lang="ts">
   export default {
-    name: 'sftpSetting',
+    name: 'logSetting',
   };
 </script>
 
 <script lang="ts" setup>
-  import type { SftpSetting } from '@/api/system/setting';
+  import type { LogSetting } from '@/api/system/setting';
   import { onMounted, ref } from 'vue';
   import { getSystemSetting, updateSystemSettingBatch } from '@/api/system/setting';
   import useLoading from '@/hooks/loading';
@@ -87,7 +94,7 @@
   const { loading, setLoading } = useLoading();
 
   const formRef = ref();
-  const setting = ref<SftpSetting>({} as SftpSetting);
+  const setting = ref<LogSetting>({} as LogSetting);
 
   // 保存
   const save = async () => {
@@ -99,8 +106,8 @@
     setLoading(true);
     try {
       await updateSystemSettingBatch({
-        type: SystemSettingTypes.SFTP,
-        settings: setting.value,
+        type: SystemSettingTypes.LOG,
+        settings: setting.value
       });
       Message.success('修改成功');
     } catch (e) {
@@ -113,10 +120,11 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      const { data } = await getSystemSetting(SystemSettingTypes.SFTP);
+      const { data } = await getSystemSetting(SystemSettingTypes.LOG);
       setting.value = {
         ...data,
-        sftp_previewSize: toAnonymousNumber(data.sftp_previewSize),
+        log_trackerDelay: toAnonymousNumber(data.log_trackerDelay),
+        log_trackerOffset: toAnonymousNumber(data.log_trackerOffset),
       };
     } catch (e) {
     } finally {
