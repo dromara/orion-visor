@@ -9,26 +9,46 @@
             label-align="right"
             :auto-label-width="true">
       <!-- 执行详细日志 -->
-      <a-form-item field="log_execAppendAnsi"
+      <a-form-item field="log_execDetailLog"
                    label="执行详细日志"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.log_execAppendAnsi"
+        <a-switch v-model="setting.log_execDetailLog"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
                   checked-text="详细输出"
                   unchecked-text="原始输出" />
         <template #extra>
-          开启后在命令执行时会拼接详细的日志信息, 关闭后则只显示命令的标准输出
+          开启后在命令执行时会展示详细的日志信息(执行主机、命令等), 关闭后则只显示命令的标准输出
+        </template>
+      </a-form-item>
+      <!-- 最大显示行数 -->
+      <a-form-item field="log_webScrollLines"
+                   label="最大显示行数"
+                   :rules="[{required: true, message: '请输入日志最大显示行数'}]"
+                   hide-asterisk>
+        <a-input-number v-model="setting.log_webScrollLines"
+                        class="input-wrapper"
+                        :min="0"
+                        :max="999999"
+                        placeholder="请输入日志最大显示行数"
+                        allow-clear
+                        hide-button>
+          <template #suffix>
+            行
+          </template>
+        </a-input-number>
+        <template #extra>
+          前端日志组件最大显示的行数, 超出部分将会被覆盖 (数值越大内存占用越多)
         </template>
       </a-form-item>
       <!-- 日志加载行数 -->
-      <a-form-item field="log_trackerOffset"
+      <a-form-item field="log_trackerLoadLines"
                    label="日志加载行数"
                    :rules="[{required: true, message: '请输入日志加载行数'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.log_trackerOffset"
+        <a-input-number v-model="setting.log_trackerLoadLines"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -44,11 +64,11 @@
         </template>
       </a-form-item>
       <!-- 日志监听间隔 -->
-      <a-form-item field="log_trackerDelay"
+      <a-form-item field="log_trackerLoadInterval"
                    label="日志监听间隔"
                    :rules="[{required: true, message: '请输入日志监听间隔'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.log_trackerDelay"
+        <a-input-number v-model="setting.log_trackerLoadInterval"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -123,8 +143,9 @@
       const { data } = await getSystemSetting(SystemSettingTypes.LOG);
       setting.value = {
         ...data,
-        log_trackerDelay: toAnonymousNumber(data.log_trackerDelay),
-        log_trackerOffset: toAnonymousNumber(data.log_trackerOffset),
+        log_webScrollLines: toAnonymousNumber(data.log_webScrollLines),
+        log_trackerLoadInterval: toAnonymousNumber(data.log_trackerLoadInterval),
+        log_trackerLoadLines: toAnonymousNumber(data.log_trackerLoadLines),
       };
     } catch (e) {
     } finally {

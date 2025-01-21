@@ -78,9 +78,10 @@ export interface EncryptSetting {
  * 日志设置
  */
 export interface LogSetting {
-  log_trackerOffset: number;
-  log_trackerDelay: number;
-  log_execAppendAnsi: string;
+  log_webScrollLines: number;
+  log_trackerLoadLines: number;
+  log_trackerLoadInterval: number;
+  log_execDetailLog: string;
 }
 
 /**

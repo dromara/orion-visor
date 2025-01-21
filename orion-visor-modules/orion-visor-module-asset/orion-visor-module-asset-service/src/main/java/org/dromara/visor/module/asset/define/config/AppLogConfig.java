@@ -40,34 +40,34 @@ public class AppLogConfig {
     /**
      * 日志加载偏移行
      */
-    private final ConfigRef<Integer> trackerOffset;
+    private final ConfigRef<Integer> trackerLoadLines;
 
     /**
      * 日志加载间隔毫秒
      */
-    private final ConfigRef<Integer> trackerDelay;
+    private final ConfigRef<Integer> trackerLoadInterval;
 
     /**
-     * 是否拼接 ansi 执行状态日志
+     * 是否生成详细的执行日志
      */
-    private final ConfigRef<Boolean> execAppendAnsi;
+    private final ConfigRef<Boolean> execDetailLog;
 
     public AppLogConfig(ConfigStore configStore) {
-        this.trackerOffset = configStore.int32(ConfigKeys.LOG_TRACKER_OFFSET);
-        this.trackerDelay = configStore.int32(ConfigKeys.LOG_TRACKER_DELAY);
-        this.execAppendAnsi = configStore.bool(ConfigKeys.LOG_EXEC_APPEND_ANSI);
+        this.trackerLoadLines = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_LINES);
+        this.trackerLoadInterval = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_INTERVAL);
+        this.execDetailLog = configStore.bool(ConfigKeys.LOG_EXEC_DETAIL_LOG);
     }
 
-    public Integer getTrackerOffset() {
-        return trackerOffset.value;
+    public Integer getTrackerLoadLines() {
+        return trackerLoadLines.value;
     }
 
-    public Integer getTrackerDelay() {
-        return trackerDelay.value;
+    public Integer getTrackerLoadInterval() {
+        return trackerLoadInterval.value;
     }
 
-    public Boolean getExecAppendAnsi() {
-        return execAppendAnsi.value;
+    public Boolean getExecDetailLog() {
+        return execDetailLog.value;
     }
 
 }
