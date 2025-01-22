@@ -29,7 +29,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.common.utils.RsaEncryptUtils;
+import org.dromara.visor.common.utils.RsaParamDecryptUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
@@ -134,7 +134,7 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
         // 检查新密码
         String newPassword = Valid.notBlank(after.getPassword(), ErrorMessage.PASSWORD_MISSING);
         // 解密密码
-        newPassword = RsaEncryptUtils.decrypt(newPassword);
+        newPassword = RsaParamDecryptUtils.decrypt(newPassword);
         Valid.notBlank(newPassword, ErrorMessage.DECRYPT_ERROR);
         // 设置密码
         after.setPassword(AesEncryptUtils.encryptAsString(newPassword));

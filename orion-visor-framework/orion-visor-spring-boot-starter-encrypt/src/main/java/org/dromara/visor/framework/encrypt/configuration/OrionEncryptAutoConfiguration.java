@@ -25,12 +25,12 @@ package org.dromara.visor.framework.encrypt.configuration;
 import org.dromara.visor.common.config.ConfigStore;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.common.interfaces.AesEncryptor;
-import org.dromara.visor.common.interfaces.RsaEncryptor;
+import org.dromara.visor.common.interfaces.RsaDecryptor;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.common.utils.RsaEncryptUtils;
+import org.dromara.visor.common.utils.RsaParamDecryptUtils;
 import org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig;
 import org.dromara.visor.framework.encrypt.core.impl.AesEncryptorImpl;
-import org.dromara.visor.framework.encrypt.core.impl.RsaEncryptorImpl;
+import org.dromara.visor.framework.encrypt.core.impl.RsaDecryptorImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -63,15 +63,15 @@ public class OrionEncryptAutoConfiguration {
 
     /**
      * @param configStore configStore
-     * @return rsa 加密器
+     * @return rsa 参数解密器
      */
     @Bean
-    public RsaEncryptor rsaEncryptor(ConfigStore configStore) {
-        // 加密器
-        RsaEncryptor encryptor = new RsaEncryptorImpl(configStore);
+    public RsaDecryptor rsaParamDecryptor(ConfigStore configStore) {
+        // 解密器
+        RsaDecryptor decryptor = new RsaDecryptorImpl(configStore);
         // 设置工具类
-        RsaEncryptUtils.setDelegate(encryptor);
-        return encryptor;
+        RsaParamDecryptUtils.setDelegate(decryptor);
+        return decryptor;
     }
 
 }

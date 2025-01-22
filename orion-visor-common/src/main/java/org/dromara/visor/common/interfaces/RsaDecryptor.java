@@ -20,34 +20,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.utils;
-
-import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.interfaces.RsaEncryptor;
+package org.dromara.visor.common.interfaces;
 
 /**
- * rsa 加密工具类
+ * rsa 解密器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/1/5 21:13
+ * @since 2025/1/5 20:58
  */
-public class RsaEncryptUtils {
-
-    private static RsaEncryptor delegate;
-
-    private RsaEncryptUtils() {
-    }
-
-    /**
-     * 加密
-     *
-     * @param value value
-     * @return value
-     */
-    public static String encrypt(String value) {
-        return delegate.encrypt(value);
-    }
+public interface RsaDecryptor {
 
     /**
      * 解密
@@ -55,16 +37,6 @@ public class RsaEncryptUtils {
      * @param value value
      * @return value
      */
-    public static String decrypt(String value) {
-        return delegate.decrypt(value);
-    }
-
-    public static void setDelegate(RsaEncryptor delegate) {
-        if (RsaEncryptUtils.delegate != null) {
-            // unmodified
-            throw Exceptions.state();
-        }
-        RsaEncryptUtils.delegate = delegate;
-    }
+    String decrypt(String value);
 
 }
