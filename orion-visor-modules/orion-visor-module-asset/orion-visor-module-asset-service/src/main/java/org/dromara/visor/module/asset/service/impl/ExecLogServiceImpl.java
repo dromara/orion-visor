@@ -328,7 +328,7 @@ public class ExecLogServiceImpl implements ExecLogService {
             log.info("ExecLogService.interruptHostExec interrupt logId: {}, hostLogId: {}", logId, hostLogId);
             IExecCommandHandler handler = task.getHandlers()
                     .stream()
-                    .filter(s -> s.getHostId().equals(hostLog.getHostId()))
+                    .filter(s -> hostLogId.equals(s.getId()))
                     .findFirst()
                     .orElse(null);
             // 中断

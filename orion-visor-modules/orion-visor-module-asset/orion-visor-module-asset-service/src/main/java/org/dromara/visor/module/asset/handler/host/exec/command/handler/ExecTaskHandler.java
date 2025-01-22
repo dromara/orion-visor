@@ -22,11 +22,14 @@
  */
 package org.dromara.visor.module.asset.handler.host.exec.command.handler;
 
+import cn.orionsec.kit.lang.id.UUIds;
 import cn.orionsec.kit.lang.support.timeout.TimeoutChecker;
 import cn.orionsec.kit.lang.support.timeout.TimeoutCheckers;
 import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
 import cn.orionsec.kit.lang.utils.Booleans;
+import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Threads;
+import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.time.Dates;
@@ -34,17 +37,17 @@ import cn.orionsec.kit.net.host.ssh.ExitCode;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.module.asset.dao.ExecLogDAO;
 import org.dromara.visor.module.asset.define.AssetThreadPools;
-import org.dromara.visor.module.asset.define.config.AppExecLogConfig;
+import org.dromara.visor.module.asset.define.config.AppLogConfig;
 import org.dromara.visor.module.asset.define.message.ExecMessageDefine;
 import org.dromara.visor.module.asset.entity.domain.ExecLogDO;
 import org.dromara.visor.module.asset.enums.ExecHostStatusEnum;
 import org.dromara.visor.module.asset.enums.ExecStatusEnum;
 import org.dromara.visor.module.asset.handler.host.exec.command.manager.ExecTaskManager;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
+import org.dromara.visor.module.asset.utils.ExecUtils;
 import org.dromara.visor.module.infra.api.SystemMessageApi;
 import org.dromara.visor.module.infra.entity.dto.message.SystemMessageDTO;
 
@@ -63,15 +66,21 @@ import java.util.Map;
 @Slf4j
 public class ExecTaskHandler implements IExecTaskHandler {
 
+    private static final AppLogConfig appLogConfig = SpringHolder.getBean(AppLogConfig.class);
+
     private static final ExecLogDAO execLogDAO = SpringHolder.getBean(ExecLogDAO.class);
 
     private static final ExecTaskManager execTaskManager = SpringHolder.getBean(ExecTaskManager.class);
 
-    private static final AppExecLogConfig appExecLogConfig = SpringHolder.getBean(AppExecLogConfig.class);
-
     private static final SystemMessageApi systemMessageApi = SpringHolder.getBean(SystemMessageApi.class);
 
-    private final ExecCommandDTO execCommand;
+    private final Long id;
+
+    private final List<Long> execHostIdList;
+
+    private ExecLogDO execLog;
+
+    private Map<String, Object> builtParams;
 
     private TimeoutChecker<TimeoutEndpoint> timeoutChecker;
 
@@ -80,14 +89,19 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     private Date startTime;
 
-    public ExecTaskHandler(ExecCommandDTO execCommand) {
-        this.execCommand = execCommand;
+    public ExecTaskHandler(Long id, List<Long> execHostIdList) {
+        this.id = id;
+        this.execHostIdList = execHostIdList;
         this.handlers = Lists.newList();
     }
 
     @Override
     public void run() {
-        Long id = execCommand.getLogId();
+        log.info("ExecTaskHandler start id: {}", id);
+        // 初始化数据
+        if (!this.initData()) {
+            return;
+        }
         // 添加任务
         execTaskManager.addTask(id, this);
         log.info("ExecTaskHandler.run start id: {}", id);
@@ -115,15 +129,35 @@ public class ExecTaskHandler implements IExecTaskHandler {
 
     @Override
     public void interrupt() {
-        log.info("ExecTaskHandler-interrupt id: {}", execCommand.getLogId());
+        log.info("ExecTaskHandler-interrupt id: {}", id);
         handlers.forEach(IExecCommandHandler::interrupt);
     }
 
     @Override
     public void close() {
-        log.info("ExecTaskHandler-close id: {}", execCommand.getLogId());
+        log.info("ExecTaskHandler-close id: {}", id);
         Streams.close(timeoutChecker);
         this.handlers.forEach(Streams::close);
+    }
+
+    /**
+     * 初始化数据
+     *
+     * @return pass
+     */
+    private boolean initData() {
+        try {
+            // 查询任务
+            this.execLog = execLogDAO.selectById(id);
+            Valid.notNull(execLog, ErrorMessage.TASK_ABSENT);
+            Valid.eq(execLog.getStatus(), ExecStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
+            // 获取内置变量
+            this.builtParams = this.getBaseBuiltinParams();
+            return true;
+        } catch (Exception e) {
+            log.error("ExecTaskHandler.init error id: {}", id, e);
+            return false;
+        }
     }
 
     /**
@@ -133,19 +167,18 @@ public class ExecTaskHandler implements IExecTaskHandler {
      */
     private void runHostCommand() throws Exception {
         // 超时检查
-        if (execCommand.getTimeout() != 0) {
+        if (execLog.getTimeout() != 0) {
             this.timeoutChecker = TimeoutCheckers.create();
             AssetThreadPools.TIMEOUT_CHECK.execute(this.timeoutChecker);
         }
         // 执行命令
-        List<ExecCommandHostDTO> hosts = execCommand.getHosts();
-        if (hosts.size() == 1) {
+        if (execHostIdList.size() == 1) {
             // 单个主机直接执行
-            IExecCommandHandler handler = this.createCommandHandler(hosts.get(0));
+            IExecCommandHandler handler = this.createCommandHandler(execHostIdList.get(0));
             handlers.add(handler);
             handler.run();
         } else {
-            hosts.stream()
+            execHostIdList.stream()
                     .map(this::createCommandHandler)
                     .forEach(handlers::add);
             // 多个主机异步阻塞执行
@@ -156,16 +189,16 @@ public class ExecTaskHandler implements IExecTaskHandler {
     /**
      * 创建命令执行器
      *
-     * @param host host
+     * @param execHostId execHostId
      * @return handler
      */
-    private IExecCommandHandler createCommandHandler(ExecCommandHostDTO host) {
-        if (Booleans.isTrue(appExecLogConfig.getAppendAnsi())) {
-            // ansi 日志
-            return new ExecCommandAnsiHandler(execCommand, host, timeoutChecker);
+    private IExecCommandHandler createCommandHandler(Long execHostId) {
+        if (Booleans.isTrue(appLogConfig.getExecAppendAnsi())) {
+            // 详细日志
+            return new ExecCommandDetailHandler(id, execLog, builtParams, timeoutChecker);
         } else {
             // 原始日志
-            return new ExecCommandOriginHandler(execCommand, host, timeoutChecker);
+            return new ExecCommandOriginHandler(id, execLog, builtParams, timeoutChecker);
         }
     }
 
@@ -175,7 +208,6 @@ public class ExecTaskHandler implements IExecTaskHandler {
      * @param status status
      */
     private void updateStatus(ExecStatusEnum status) {
-        Long id = execCommand.getLogId();
         try {
             String statusName = status.name();
             log.info("ExecTaskHandler-updateStatus start id: {}, status: {}", id, statusName);
@@ -214,16 +246,43 @@ public class ExecTaskHandler implements IExecTaskHandler {
         }
         // 参数
         Map<String, Object> params = new HashMap<>();
-        params.put(ExtraFieldConst.ID, execCommand.getLogId());
+        params.put(ExtraFieldConst.ID, id);
         params.put(ExtraFieldConst.TIME, Dates.format(this.startTime, Dates.MD_HM));
         SystemMessageDTO message = SystemMessageDTO.builder()
-                .receiverId(execCommand.getUserId())
-                .receiverUsername(execCommand.getUsername())
-                .relKey(String.valueOf(execCommand.getLogId()))
+                .receiverId(execLog.getUserId())
+                .receiverUsername(execLog.getUsername())
+                .relKey(String.valueOf(id))
                 .params(params)
                 .build();
         // 发送
         systemMessageApi.create(ExecMessageDefine.EXEC_FAILED, message);
+    }
+
+    /**
+     * 获取基础内置参数
+     *
+     * @return params
+     */
+    private Map<String, Object> getBaseBuiltinParams() {
+        String uuid = UUIds.random();
+        Date date = new Date();
+        // 输入参数
+        Map<String, Object> params = ExecUtils.extraSchemaParams(execLog.getParameterSchema());
+        // 添加内置参数
+        params.put("userId", execLog.getUserId());
+        params.put("username", execLog.getUsername());
+        params.put("source", execLog.getSource());
+        params.put("sourceId", execLog.getSourceId());
+        params.put("seq", execLog.getExecSeq());
+        params.put("execId", id);
+        params.put("scriptExec", execLog.getScriptExec());
+        params.put("uuid", uuid);
+        params.put("uuidShort", uuid.replace("-", Strings.EMPTY));
+        params.put("timestampMillis", date.getTime());
+        params.put("timestamp", date.getTime() / Dates.SECOND_STAMP);
+        params.put("date", Dates.format(date, Dates.YMD));
+        params.put("datetime", Dates.format(date, Dates.YMD_HMS));
+        return params;
     }
 
 }

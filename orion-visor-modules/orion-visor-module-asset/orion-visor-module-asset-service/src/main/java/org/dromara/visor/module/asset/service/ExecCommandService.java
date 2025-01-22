@@ -36,20 +36,12 @@ import org.dromara.visor.module.asset.entity.vo.ExecLogVO;
 public interface ExecCommandService {
 
     /**
-     * 批量执行命令
+     * 执行命令
      *
      * @param request request
      * @return result
      */
     ExecLogVO execCommand(ExecCommandRequest request);
-
-    /**
-     * 批量执行命令
-     *
-     * @param request request
-     * @return result
-     */
-    ExecLogVO execCommandWithSource(ExecCommandExecDTO request);
 
     /**
      * 重新执行命令
@@ -58,5 +50,21 @@ public interface ExecCommandService {
      * @return result
      */
     ExecLogVO reExecCommand(Long logId);
+
+    /**
+     * 执行命令
+     *
+     * @param request request
+     * @return result
+     */
+    ExecLogVO execCommandWithSource(ExecCommandExecDTO request);
+
+    /**
+     * 创建执行命令
+     *
+     * @param request request
+     * @return result
+     */
+    ExecLogVO createCommandWithSource(ExecCommandExecDTO request);
 
 }

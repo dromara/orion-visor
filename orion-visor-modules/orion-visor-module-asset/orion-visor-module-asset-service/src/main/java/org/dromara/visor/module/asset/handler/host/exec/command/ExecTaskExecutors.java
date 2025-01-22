@@ -24,7 +24,8 @@ package org.dromara.visor.module.asset.handler.host.exec.command;
 
 import org.dromara.visor.module.asset.define.AssetThreadPools;
 import org.dromara.visor.module.asset.handler.host.exec.command.handler.ExecTaskHandler;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
+
+import java.util.List;
 
 /**
  * 批量执行命令执行器
@@ -38,10 +39,11 @@ public class ExecTaskExecutors {
     /**
      * 执行命令
      *
-     * @param command command
+     * @param id             id
+     * @param execHostIdList execHostIdList
      */
-    public static void start(ExecCommandDTO command) {
-        AssetThreadPools.EXEC_TASK.execute(new ExecTaskHandler(command));
+    public static void start(Long id, List<Long> execHostIdList) {
+        AssetThreadPools.EXEC_TASK.execute(new ExecTaskHandler(id, execHostIdList));
     }
 
 }
