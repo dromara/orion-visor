@@ -26,10 +26,11 @@ import cn.orionsec.kit.lang.utils.crypto.RSA;
 import org.dromara.visor.common.config.ConfigRef;
 import org.dromara.visor.common.config.ConfigStore;
 import org.dromara.visor.common.constant.ConfigKeys;
-import org.dromara.visor.common.interfaces.RsaEncryptor;
+import org.dromara.visor.common.interfaces.RsaDecryptor;
 
 import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * rsa 加密器
@@ -38,25 +39,21 @@ import java.security.interfaces.RSAPublicKey;
  * @version 1.0.0
  * @since 2025/1/7 11:32
  */
-public class RsaEncryptorImpl implements RsaEncryptor {
+public class RsaDecryptorImpl implements RsaDecryptor {
 
-    private final ConfigRef<RSAPublicKey> publicKey;
+    private static final String SPLIT = "\\|";
 
     private final ConfigRef<RSAPrivateKey> privateKey;
 
-    public RsaEncryptorImpl(ConfigStore configStore) {
-        this.publicKey = configStore.ref(ConfigKeys.ENCRYPT_PUBLIC_KEY, RSA::getPublicKey);
+    public RsaDecryptorImpl(ConfigStore configStore) {
         this.privateKey = configStore.ref(ConfigKeys.ENCRYPT_PRIVATE_KEY, RSA::getPrivateKey);
     }
 
     @Override
-    public String encrypt(String value) {
-        return RSA.encrypt(value, publicKey.value);
-    }
-
-    @Override
     public String decrypt(String value) {
-        return RSA.decrypt(value, privateKey.value);
+        return Arrays.stream(value.split(SPLIT))
+                .map(s -> RSA.decrypt(s, privateKey.value))
+                .collect(Collectors.joining());
     }
 
 }
