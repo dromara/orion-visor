@@ -25,8 +25,9 @@ package org.dromara.visor.module.infra.service;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateRequest;
 import org.dromara.visor.module.infra.entity.vo.AppInfoVO;
-import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
-import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
+import org.dromara.visor.module.infra.entity.vo.RsaKeyPairVO;
+
+import java.util.Map;
 
 /**
  * 系统设置服务
@@ -49,33 +50,32 @@ public interface SystemSettingService {
      *
      * @return setting
      */
-    SystemSettingAggregateVO getSystemAggregateSetting();
+    Map<String, String> getSystemAggregateSetting();
 
     /**
      * 生成密钥对
      *
      * @return keypair
      */
-    EncryptSystemSettingModel generatorKeypair();
+    RsaKeyPairVO generatorKeypair();
 
     /**
      * 通过类型查询系统设置
      *
      * @param type type
-     * @param <T>  T
-     * @return row
+     * @return rows
      */
-    <T> T getSystemSettingByType(String type);
+    Map<String, String> getSystemSettingByType(String type);
 
     /**
-     * 更新部分系统设置
+     * 更新系统设置-单个
      *
      * @param request request
      */
     void updateSystemSetting(SystemSettingUpdateRequest request);
 
     /**
-     * 更新系统设置
+     * 更新系统设置-多个
      *
      * @param request request
      */

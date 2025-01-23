@@ -54,9 +54,9 @@ public class SystemSettingUpdateRequest implements Serializable {
     private String type;
 
     @NotBlank
-    @Size(max = 32)
+    @Size(max = 64)
     @Schema(description = "配置项")
-    private String item;
+    private String configKey;
 
     @Schema(description = "配置值")
     private String value;

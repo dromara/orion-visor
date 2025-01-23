@@ -52,17 +52,13 @@ public class SystemSettingDO extends BaseDO {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @Schema(description = "配置key")
-    @TableField("config_key")
-    private String configKey;
-
     @Schema(description = "配置类型")
     @TableField("type")
     private String type;
 
-    @Schema(description = "配置项")
-    @TableField("item")
-    private String item;
+    @Schema(description = "配置key")
+    @TableField("config_key")
+    private String configKey;
 
     @Schema(description = "配置值")
     @TableField("value")

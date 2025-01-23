@@ -20,34 +20,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.handler.setting.model;
+package org.dromara.visor.module.infra.entity.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 加密系统设置模型
+ * RSA 密钥对响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/10/9 11:45
+ * @since 2025/1/3 17:46
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EncryptSystemSettingModel {
+@Schema(name = "RsaKeyPairVO", description = "RSA 密钥对响应对象")
+public class RsaKeyPairVO {
 
-    /**
-     * 加密公钥
-     */
+    @Schema(description = "公钥")
     private String publicKey;
 
-    /**
-     * 加密私钥
-     */
+    @Schema(description = "私钥")
     private String privateKey;
 
 }
