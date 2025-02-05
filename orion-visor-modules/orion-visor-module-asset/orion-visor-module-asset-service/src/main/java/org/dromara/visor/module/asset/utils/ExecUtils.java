@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 public class ExecUtils {
 
     private static final ReplacementFormatter FORMATTER = ReplacementFormatters.create("@{{ ", " }}")
-            .noMatchStrategy(NoMatchStrategy.KEEP);
+            .noMatchStrategy(NoMatchStrategy.EMPTY);
 
     private ExecUtils() {
     }
@@ -61,6 +61,17 @@ public class ExecUtils {
      */
     public static String format(String command, Map<String, Object> params) {
         return Strings.replaceCRLF(FORMATTER.format(command, params));
+    }
+
+    /**
+     * 替换命令
+     *
+     * @param command command
+     * @param json    json
+     * @return command
+     */
+    public static String format(String command, String json) {
+        return Strings.replaceCRLF(FORMATTER.format(command, json));
     }
 
     /**

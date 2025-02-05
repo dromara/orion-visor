@@ -61,6 +61,13 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
     private ExecTaskManager execTaskManager;
 
     @Override
+    public ExecHostLogVO getExecHostLog(Long id) {
+        ExecHostLogDO record = execHostLogDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        return ExecHostLogConvert.MAPPER.to(record);
+    }
+
+    @Override
     public List<ExecHostLogVO> getExecHostLogList(Long logId) {
         return execHostLogDAO.of()
                 .createWrapper()
