@@ -50,7 +50,6 @@ import org.dromara.visor.module.infra.dao.SystemUserDAO;
 import org.dromara.visor.module.infra.dao.SystemUserRoleDAO;
 import org.dromara.visor.module.infra.define.cache.TipsCacheKeyDefine;
 import org.dromara.visor.module.infra.define.cache.UserCacheKeyDefine;
-import org.dromara.visor.module.infra.define.config.AppAuthenticationConfig;
 import org.dromara.visor.module.infra.entity.domain.SystemRoleDO;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.UserInfoDTO;
@@ -64,10 +63,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -80,9 +76,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class SystemUserServiceImpl implements SystemUserService {
-
-    @Resource
-    private AppAuthenticationConfig appAuthenticationConfig;
 
     @Resource
     private SystemUserDAO systemUserDAO;
@@ -322,6 +315,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         update.setPassword(Signatures.md5(request.getPassword()));
         update.setUpdatePasswordStatus(UpdatePasswordStatusEnum.NO_REQUIRE.getStatus());
         update.setUpdatePasswordReason(Const.EMPTY);
+        update.setUpdatePasswordTime(new Date());
         int effect = systemUserDAO.updateById(update);
         log.info("SystemUserService-resetPassword record: {}, effect: {}", JSON.toJSONString(update), effect);
         // 删除登录失败次数缓存
@@ -329,9 +323,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         // 删除登录缓存
         RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_TOKEN.format(id, "*"));
         // 删除续签信息
-        if (appAuthenticationConfig.getAllowRefresh()) {
-            RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
-        }
+        RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
     }
 
     /**

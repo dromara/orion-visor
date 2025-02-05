@@ -68,9 +68,6 @@ public class SystemUserDTO implements Serializable {
     @Schema(description = "用户状态 0停用 1启用")
     private Integer status;
 
-    @Schema(description = "最后登录时间")
-    private Date lastLoginTime;
-
     @Schema(description = "描述")
     private String description;
 

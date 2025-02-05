@@ -72,6 +72,9 @@ public class SystemUserVO implements Serializable {
     @Schema(description = "最后登录时间")
     private Date lastLoginTime;
 
+    @Schema(description = "描述")
+    private String description;
+
     @Schema(description = "创建时间")
     private Date createTime;
 
@@ -83,9 +86,6 @@ public class SystemUserVO implements Serializable {
 
     @Schema(description = "修改人")
     private String updater;
-
-    @Schema(description = "描述")
-    private String description;
 
     @Schema(description = "用户角色")
     private List<SystemRoleVO> roles;

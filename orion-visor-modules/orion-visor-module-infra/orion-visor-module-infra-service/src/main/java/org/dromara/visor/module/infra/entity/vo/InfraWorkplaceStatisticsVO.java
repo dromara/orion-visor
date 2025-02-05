@@ -58,7 +58,7 @@ public class InfraWorkplaceStatisticsVO {
     @Schema(description = "未读消息数量")
     private Integer unreadMessageCount;
 
-    @Schema(description = "上次登录时间")
+    @Schema(description = "最后登录时间")
     private Date lastLoginTime;
 
     @Schema(description = "当前登录会话数量")
