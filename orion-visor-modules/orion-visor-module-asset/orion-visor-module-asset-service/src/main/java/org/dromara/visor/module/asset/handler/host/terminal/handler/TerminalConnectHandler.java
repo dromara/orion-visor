@@ -34,6 +34,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
+import org.dromara.visor.module.asset.define.config.AppSftpConfig;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 import org.dromara.visor.module.asset.enums.TerminalConnectStatusEnum;
 import org.dromara.visor.module.asset.enums.TerminalConnectTypeEnum;
@@ -63,6 +64,9 @@ import java.util.Map;
 @Slf4j
 @Component
 public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConnectRequest> {
+
+    @Resource
+    private AppSftpConfig appSftpConfig;
 
     @Resource
     private TerminalConnectLogService terminalConnectLogService;
@@ -136,6 +140,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<TerminalConn
                     .charset(connect.getCharset())
                     .fileNameCharset(connect.getFileNameCharset())
                     .fileContentCharset(connect.getFileContentCharset())
+                    .filePreviewSize(appSftpConfig.getPreviewSize())
                     .build();
             // 建立连接
             SessionStore sessionStore = SessionStores.openSessionStore(connect);

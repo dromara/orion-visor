@@ -85,4 +85,9 @@ public class TerminalConfig {
      */
     private String fileContentCharset;
 
+    /**
+     * 文件预览大小
+     */
+    private Integer filePreviewSize;
+
 }
