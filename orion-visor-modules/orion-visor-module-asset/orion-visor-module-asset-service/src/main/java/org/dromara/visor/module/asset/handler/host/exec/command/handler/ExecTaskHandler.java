@@ -193,12 +193,12 @@ public class ExecTaskHandler implements IExecTaskHandler {
      * @return handler
      */
     private IExecCommandHandler createCommandHandler(Long execHostId) {
-        if (Booleans.isTrue(appLogConfig.getExecAppendAnsi())) {
+        if (Booleans.isTrue(appLogConfig.getExecDetailLog())) {
             // 详细日志
-            return new ExecCommandDetailHandler(id, execLog, builtParams, timeoutChecker);
+            return new ExecCommandDetailHandler(execHostId, execLog, builtParams, timeoutChecker);
         } else {
             // 原始日志
-            return new ExecCommandOriginHandler(id, execLog, builtParams, timeoutChecker);
+            return new ExecCommandOriginHandler(execHostId, execLog, builtParams, timeoutChecker);
         }
     }
 

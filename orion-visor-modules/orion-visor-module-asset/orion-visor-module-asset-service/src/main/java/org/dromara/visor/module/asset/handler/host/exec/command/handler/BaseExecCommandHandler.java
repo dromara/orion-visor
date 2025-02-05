@@ -167,21 +167,12 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
             Valid.eq(this.status, ExecHostStatusEnum.WAITING, ErrorMessage.TASK_ABSENT, ErrorMessage.ILLEGAL_STATUS);
             // 获取主机会话
             this.connect = terminalService.getTerminalConnectInfo(execHostLog.getHostId(), execLog.getUserId());
-            // 获取内置参数
-            Map<String, Object> commandParams = this.getCommandParams();
-            // 获取实际命令
-            String command = ExecUtils.format(execLog.getCommand(), commandParams);
-            // 获取日志路径
-            String logPath = fileClient.getReturnPath(EndpointDefine.EXEC_LOG.format(execHostLog.getLogId(), execHostLog.getHostId()));
-            // 获取脚本路径
-            String scriptPath = null;
-            if (BooleanBit.toBoolean(execLog.getScriptExec())) {
-                scriptPath = this.buildScriptPath();
-            }
-            execHostLog.setCommand(command);
-            execHostLog.setParameter(JSON.toJSONString(commandParams));
-            execHostLog.setLogPath(logPath);
-            execHostLog.setScriptPath(scriptPath);
+            // 设置日志路径
+            this.setLogPath();
+            // 设置脚本路径
+            this.setScriptPath();
+            // 设置执行的命令以及参数
+            this.setExecCommand();
         } catch (Exception e) {
             log.error("BaseExecCommandHandler.initData error id: {}", id, e);
             ex = e;
@@ -191,6 +182,9 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         this.updateStatus(passed ? ExecHostStatusEnum.RUNNING : ExecHostStatusEnum.FAILED, ex, (s) -> {
             // 修改其他参数
             s.setCommand(execHostLog.getCommand());
+            s.setParameter(execHostLog.getParameter());
+            s.setLogPath(execHostLog.getLogPath());
+            s.setScriptPath(execHostLog.getScriptPath());
         });
         return passed;
     }
@@ -371,7 +365,59 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         Streams.close(logOutputStream);
         Streams.close(executor);
         Streams.close(sessionStore);
-        execLogManager.asyncCloseTailFile(execHostLog.getLogPath());
+        execLogManager.asyncCloseTailFile(id);
+    }
+
+    /**
+     * 设置日志路径
+     */
+    private void setLogPath() {
+        // 构建日志路径
+        String logPath = fileClient.getReturnPath(EndpointDefine.EXEC_LOG.format(execHostLog.getLogId(), id));
+        execHostLog.setLogPath(logPath);
+    }
+
+    /**
+     * 设置脚本路径
+     */
+    private void setScriptPath() {
+        String scriptPath = null;
+        // 获取脚本路径
+        if (BooleanBit.toBoolean(execLog.getScriptExec())) {
+            HostOsTypeEnum os = HostOsTypeEnum.of(connect.getOsType());
+            String name = FileConst.EXEC
+                    + "/" + execHostLog.getLogId()
+                    + "/" + id
+                    + os.getScriptSuffix();
+            scriptPath = PathUtils.buildAppPath(HostOsTypeEnum.WINDOWS.equals(os), connect.getUsername(), FileConst.SCRIPT, name);
+        }
+        execHostLog.setScriptPath(scriptPath);
+    }
+
+    /**
+     * 设置实际执行的命令以及参数
+     */
+    private void setExecCommand() {
+        String uuid = UUIds.random();
+        // 参数列表
+        Map<String, Object> params = Maps.newMap(builtParams);
+        params.put("execHostId", id);
+        params.put("hostId", connect.getHostId());
+        params.put("hostName", connect.getHostName());
+        params.put("hostCode", connect.getHostCode());
+        params.put("hostAddress", connect.getHostAddress());
+        params.put("hostPort", connect.getHostPort());
+        params.put("hostUsername", connect.getUsername());
+        params.put("hostUuid", uuid);
+        params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
+        params.put("osType", connect.getOsType());
+        params.put("charset", connect.getCharset());
+        params.put("scriptPath", execHostLog.getScriptPath());
+        // 获取实际命令
+        String paramsJson = JSON.toJSONString(params);
+        String command = ExecUtils.format(execLog.getCommand(), paramsJson);
+        execHostLog.setCommand(command);
+        execHostLog.setParameter(paramsJson);
     }
 
     /**
@@ -402,42 +448,6 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
             message = ErrorMessage.EXEC_ERROR;
         }
         return Strings.retain(message, 250);
-    }
-
-    /**
-     * 获取命令实际参数
-     *
-     * @return params
-     */
-    private Map<String, Object> getCommandParams() {
-        String uuid = UUIds.random();
-        Map<String, Object> params = Maps.newMap(builtParams);
-        params.put("hostId", connect.getHostId());
-        params.put("hostName", connect.getHostName());
-        params.put("hostCode", connect.getHostCode());
-        params.put("hostAddress", connect.getHostAddress());
-        params.put("hostPort", connect.getHostPort());
-        params.put("hostUsername", connect.getUsername());
-        params.put("hostUuid", uuid);
-        params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
-        params.put("osType", connect.getOsType());
-        params.put("charset", connect.getCharset());
-        params.put("scriptPath", execHostLog.getScriptPath());
-        return params;
-    }
-
-    /**
-     * 构建脚本路径
-     *
-     * @return scriptPath
-     */
-    private String buildScriptPath() {
-        HostOsTypeEnum os = HostOsTypeEnum.of(connect.getOsType());
-        String name = FileConst.EXEC
-                + "/" + execHostLog.getLogId()
-                + "/" + id
-                + os.getScriptSuffix();
-        return PathUtils.buildAppPath(HostOsTypeEnum.WINDOWS.equals(os), connect.getUsername(), FileConst.SCRIPT, name);
     }
 
 }
