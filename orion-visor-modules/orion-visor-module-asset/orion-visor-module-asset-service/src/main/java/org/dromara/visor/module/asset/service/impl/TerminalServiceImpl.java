@@ -42,7 +42,10 @@ import org.dromara.visor.module.asset.entity.dto.TerminalAccessDTO;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 import org.dromara.visor.module.asset.entity.dto.TerminalTransferDTO;
 import org.dromara.visor.module.asset.entity.vo.TerminalThemeVO;
-import org.dromara.visor.module.asset.enums.*;
+import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
+import org.dromara.visor.module.asset.enums.HostExtraSshAuthTypeEnum;
+import org.dromara.visor.module.asset.enums.HostIdentityTypeEnum;
+import org.dromara.visor.module.asset.enums.HostSshAuthTypeEnum;
 import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
 import org.dromara.visor.module.asset.service.HostConfigService;
@@ -171,7 +174,7 @@ public class TerminalServiceImpl implements TerminalService {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         // 查询主机配置
-        HostSshConfigModel config = hostConfigService.buildHostConfig(host, HostTypeEnum.SSH);
+        HostSshConfigModel config = hostConfigService.getHostConfig(host);
         // 获取配置
         return this.getHostConnectInfo(host, config, null);
     }
@@ -195,7 +198,7 @@ public class TerminalServiceImpl implements TerminalService {
                 ErrorMessage.ANY_NO_PERMISSION,
                 DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
         // 获取主机配置
-        HostSshConfigModel config = hostConfigService.buildHostConfig(host, HostTypeEnum.SSH);
+        HostSshConfigModel config = hostConfigService.getHostConfig(host);
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostSshExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.SSH);

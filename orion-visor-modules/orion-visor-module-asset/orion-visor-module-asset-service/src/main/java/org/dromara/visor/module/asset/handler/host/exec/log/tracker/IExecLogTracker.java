@@ -35,29 +35,22 @@ import cn.orionsec.kit.lang.able.SafeCloseable;
 public interface IExecLogTracker extends Runnable, DataHandler, SafeCloseable {
 
     /**
+     * 获取 execId
+     *
+     * @return execId
+     */
+    Long getExecId();
+
+    /**
+     * 获取 execHostId
+     *
+     * @return execHostId
+     */
+    Long getExecHostId();
+
+    /**
      * 设置最后修改时间
      */
     void setLastModify();
-
-    /**
-     * 获取 id
-     *
-     * @return id
-     */
-    String getTrackerId();
-
-    /**
-     * 获取路径
-     *
-     * @return path
-     */
-    String getPath();
-
-    /**
-     * 获取绝对路径
-     *
-     * @return 绝对路径
-     */
-    String getAbsolutePath();
 
 }

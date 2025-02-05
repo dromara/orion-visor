@@ -22,13 +22,11 @@
  */
 package org.dromara.visor.module.asset.handler.host.exec.log;
 
-import cn.orionsec.kit.lang.annotation.Keep;
+import cn.orionsec.kit.lang.utils.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ExtraFieldConst;
-import org.dromara.visor.common.interfaces.FileClient;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.asset.define.AssetThreadPools;
-import org.dromara.visor.module.asset.entity.dto.ExecHostLogTailDTO;
 import org.dromara.visor.module.asset.entity.dto.ExecLogTailDTO;
 import org.dromara.visor.module.asset.handler.host.exec.log.constant.LogConst;
 import org.dromara.visor.module.asset.handler.host.exec.log.manager.ExecLogManager;
@@ -52,41 +50,27 @@ import javax.annotation.Resource;
 @Component
 public class ExecLogTailHandler extends AbstractWebSocketHandler {
 
-    @Keep
-    @Resource
-    private FileClient logsFileClient;
-
     @Resource
     private ExecLogManager execLogManager;
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         String id = session.getId();
-        log.info("ExecLogTailHandler-afterConnectionEstablished id: {}", id);
-        // 获取参数
-        ExecLogTailDTO info = WebSockets.getAttr(session, ExtraFieldConst.INFO);
-        // 打开会话
-        for (ExecHostLogTailDTO host : info.getHosts()) {
-            String trackerId = this.getTrackerId(id, info, host);
-            String absolutePath = logsFileClient.getAbsolutePath(host.getPath());
-            // 追踪器
-            ExecLogTracker tracker = new ExecLogTracker(trackerId,
-                    absolutePath,
-                    WebSockets.createSyncSession(session),
-                    host);
-            // 执行
+        String payload = message.getPayload();
+        if (LogConst.PING_PAYLOAD.equals(payload)) {
+            // ping
+            WebSockets.sendText(session, LogConst.PONG_PAYLOAD);
+        } else if (Strings.isInteger(payload)) {
+            // 获取日志
+            ExecLogTailDTO info = WebSockets.getAttr(session, ExtraFieldConst.INFO);
+            Long execHostId = Long.valueOf(payload);
+            ExecLogTracker tracker = new ExecLogTracker(info.getExecId(),
+                    execHostId,
+                    WebSockets.createSyncSession(session));
+            // 执行追踪器
             AssetThreadPools.EXEC_LOG.execute(tracker);
             // 添加追踪器
-            execLogManager.addTracker(tracker);
-        }
-    }
-
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-        String payload = message.getPayload();
-        // ping
-        if (LogConst.PING_PAYLOAD.equals(payload)) {
-            WebSockets.sendText(session, LogConst.PONG_PAYLOAD);
+            execLogManager.addTracker(id, tracker);
         }
     }
 
@@ -99,24 +83,8 @@ public class ExecLogTailHandler extends AbstractWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String id = session.getId();
         log.info("ExecLogTailHandler-afterConnectionClosed id: {}, code: {}, reason: {}", id, status.getCode(), status.getReason());
-        // 关闭会话
-        ExecLogTailDTO info = WebSockets.getAttr(session, ExtraFieldConst.INFO);
         // 移除追踪器
-        for (ExecHostLogTailDTO host : info.getHosts()) {
-            execLogManager.removeTracker(this.getTrackerId(id, info, host));
-        }
-    }
-
-    /**
-     * 获取追踪器 id
-     *
-     * @param id   id
-     * @param info info
-     * @param host host
-     * @return trackerId
-     */
-    private String getTrackerId(String id, ExecLogTailDTO info, ExecHostLogTailDTO host) {
-        return id + "_" + info.getId() + "_" + host.getId();
+        execLogManager.removeTrackers(id);
     }
 
 }

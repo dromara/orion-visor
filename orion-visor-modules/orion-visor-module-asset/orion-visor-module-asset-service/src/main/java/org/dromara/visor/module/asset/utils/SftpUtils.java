@@ -26,6 +26,7 @@ import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.net.host.sftp.SftpFile;
+import cn.orionsec.kit.spring.SpringHolder;
 import com.alibaba.fastjson.JSON;
 import org.dromara.visor.module.asset.define.config.AppSftpConfig;
 import org.dromara.visor.module.asset.handler.host.transfer.model.SftpFileBackupParams;
@@ -39,19 +40,20 @@ import org.dromara.visor.module.asset.handler.host.transfer.model.SftpFileBackup
  */
 public class SftpUtils {
 
+    private static final AppSftpConfig appSftpConfig = SpringHolder.getBean(AppSftpConfig.class);
+
     private SftpUtils() {
     }
 
     /**
      * 检查上传文件是否存在 并且执行响应策略
      *
-     * @param config   config
      * @param executor executor
      * @param path     path
      */
-    public static void checkUploadFilePresent(AppSftpConfig config, SftpExecutor executor, String path) {
+    public static void checkUploadFilePresent(SftpExecutor executor, String path) {
         // 重复不备份
-        if (!Booleans.isTrue(config.getUploadPresentBackup())) {
+        if (!Booleans.isTrue(appSftpConfig.getUploadPresentBackup())) {
             return;
         }
         // 检查文件是否存在
@@ -59,7 +61,7 @@ public class SftpUtils {
         if (file != null) {
             // 文件存在则备份
             SftpFileBackupParams backupParams = new SftpFileBackupParams(file.getName());
-            String target = Strings.format(config.getBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
+            String target = Strings.format(appSftpConfig.getUploadBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
             // 移动
             executor.move(path, target);
         }

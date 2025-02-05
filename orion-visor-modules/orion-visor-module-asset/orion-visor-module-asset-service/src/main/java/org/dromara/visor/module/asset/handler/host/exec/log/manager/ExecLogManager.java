@@ -28,6 +28,8 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.module.asset.handler.host.exec.log.tracker.IExecLogTracker;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -43,61 +45,58 @@ import java.util.stream.Collectors;
 @Component
 public class ExecLogManager {
 
-    private final ConcurrentHashMap<String, IExecLogTracker> execTrackers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, List<IExecLogTracker>> execTrackers = new ConcurrentHashMap<>();
 
     /**
      * 添加执行日志追踪器
      *
+     * @param id      id
      * @param tracker tracker
      */
-    public void addTracker(IExecLogTracker tracker) {
-        execTrackers.put(tracker.getTrackerId(), tracker);
-    }
-
-    /**
-     * 获取日志追踪器
-     *
-     * @param trackerId trackerId
-     * @return tracker
-     */
-    public IExecLogTracker getTracker(String trackerId) {
-        return execTrackers.get(trackerId);
+    public void addTracker(String id, IExecLogTracker tracker) {
+        execTrackers.computeIfAbsent(id, k -> new ArrayList<>()).add(tracker);
     }
 
     /**
      * 移除日志追踪器
      *
-     * @param trackerId trackerId
+     * @param id id
      */
-    public void removeTracker(String trackerId) {
-        IExecLogTracker tracker = execTrackers.remove(trackerId);
-        if (tracker != null) {
-            tracker.close();
+    public void removeTrackers(String id) {
+        // 移除并且关闭
+        List<IExecLogTracker> trackers = execTrackers.remove(id);
+        if (trackers != null) {
+            trackers.forEach(IExecLogTracker::close);
         }
     }
 
     /**
      * 异步关闭进行中的追踪器
      *
-     * @param path path
+     * @param execHostId execHostId
      */
-    public void asyncCloseTailFile(String path) {
-        if (path == null) {
+    public void asyncCloseTailFile(Long execHostId) {
+        if (execHostId == null) {
             return;
         }
+        // 获取当前路径的全部追踪器
+        List<IExecLogTracker> trackers = execTrackers.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(s -> s.getExecHostId().equals(execHostId))
+                .collect(Collectors.toList());
+        if (trackers.isEmpty()) {
+            return;
+        }
+        // 异步设置更新并且关闭
         Threads.start(() -> {
             try {
-                // 获取当前路径的全部追踪器
-                List<IExecLogTracker> trackers = execTrackers.values()
-                        .stream()
-                        .filter(s -> s.getPath().equals(path))
-                        .collect(Collectors.toList());
                 Threads.sleep(Const.MS_S_1);
                 trackers.forEach(IExecLogTracker::setLastModify);
                 Threads.sleep(Const.MS_S_5);
                 trackers.forEach(IExecLogTracker::close);
             } catch (Exception e) {
-                log.error("ExecLogManager.asyncCloseTailFile error path: {}", path, e);
+                log.error("ExecLogManager.asyncCloseTailFile error execHostId: {}", execHostId, e);
             }
         });
     }
