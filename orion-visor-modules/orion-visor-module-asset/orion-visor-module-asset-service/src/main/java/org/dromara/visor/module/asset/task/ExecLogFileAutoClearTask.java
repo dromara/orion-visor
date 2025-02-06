@@ -22,14 +22,15 @@
  */
 package org.dromara.visor.module.asset.task;
 
+import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.utils.LockerUtils;
-import org.dromara.visor.module.asset.define.config.AppExecLogAutoClearConfig;
+import org.dromara.visor.module.asset.define.config.AppAutoClearConfig;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import org.dromara.visor.module.asset.enums.ExecStatusEnum;
 import org.dromara.visor.module.asset.service.ExecLogService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -45,16 +46,14 @@ import java.util.Date;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "app.auto-clear.exec-log.enabled", havingValue = "true")
 public class ExecLogFileAutoClearTask {
 
-    /**
-     * 分布式锁名称
-     */
+    private static final Integer BATCH_SIZE = Const.N_1000;
+
     private static final String LOCK_KEY = "clear:exl:lock";
 
     @Resource
-    private AppExecLogAutoClearConfig appExecLogAutoClearConfig;
+    private AppAutoClearConfig appAutoClearConfig;
 
     @Resource
     private ExecLogService execLogService;
@@ -65,6 +64,11 @@ public class ExecLogFileAutoClearTask {
     @Scheduled(cron = "0 0 3 * * ?")
     public void clear() {
         log.info("ExecLogFileAutoClearTask.clear start");
+        // 检查是否开启
+        if (!Booleans.isTrue(appAutoClearConfig.getExecLogEnabled())) {
+            log.info("ExecLogFileAutoClearTask.clear disabled");
+            return;
+        }
         // 获取锁并执行
         LockerUtils.tryLock(LOCK_KEY, this::doClear);
         log.info("ExecLogFileAutoClearTask.clear finish");
@@ -76,13 +80,22 @@ public class ExecLogFileAutoClearTask {
     private void doClear() {
         // 删除的时间区间
         Date createLessEq = Dates.stream()
-                .subDay(appExecLogAutoClearConfig.getKeepPeriod())
+                .subDay(appAutoClearConfig.getExecLogKeepDays())
                 .date();
         // 清理
-        ExecLogClearRequest request = new ExecLogClearRequest();
-        request.setCreateTimeLe(createLessEq);
-        request.setStatusList(ExecStatusEnum.FINISH_STATUS_LIST);
-        execLogService.clearExecLog(request);
+        for (int i = 0; ; i++) {
+            log.info("ExecLogFileAutoClearTask.doClear start batch: {}", i + 1);
+            ExecLogClearRequest request = new ExecLogClearRequest();
+            request.setCreateTimeLe(createLessEq);
+            request.setStatusList(ExecStatusEnum.FINISH_STATUS_LIST);
+            request.setLimit(BATCH_SIZE);
+            Integer count = execLogService.clearExecLog(request);
+            log.info("ExecLogFileAutoClearTask.doClear end batch: {}, count: {}", i + 1, count);
+            // 最后一批
+            if (count < BATCH_SIZE) {
+                return;
+            }
+        }
     }
 
 }
