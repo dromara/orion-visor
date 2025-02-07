@@ -63,9 +63,9 @@ public class TerminalConnectLogCreateRequest {
     @Schema(description = "状态")
     private String status;
 
-    @Size(max = 128)
-    @Schema(description = "token")
-    private String token;
+    @Size(max = 64)
+    @Schema(description = "sessionId")
+    private String sessionId;
 
     @Schema(description = "拓展信息")
     private Map<String, Object> extra;

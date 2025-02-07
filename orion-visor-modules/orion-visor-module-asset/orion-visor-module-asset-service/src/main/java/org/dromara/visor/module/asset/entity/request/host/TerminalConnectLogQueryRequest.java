@@ -69,9 +69,9 @@ public class TerminalConnectLogQueryRequest extends PageRequest {
     @Schema(description = "类型")
     private String type;
 
-    @Size(max = 128)
-    @Schema(description = "token")
-    private String token;
+    @Size(max = 64)
+    @Schema(description = "sessionId")
+    private String sessionId;
 
     @Size(max = 16)
     @Schema(description = "状态")
