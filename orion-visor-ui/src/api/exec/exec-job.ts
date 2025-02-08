@@ -48,8 +48,8 @@ export interface ExecJobQueryRequest extends Pagination {
   name?: string;
   command?: string;
   status?: number;
-  execUserId?: number;
   queryRecentLog?: boolean;
+  execUserId?: number;
 }
 
 /**

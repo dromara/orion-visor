@@ -12,7 +12,7 @@ export interface TerminalConnectLogQueryRequest extends Pagination {
   hostId?: number;
   hostAddress?: string;
   type?: string;
-  token?: string;
+  sessionId?: string;
   status?: string;
   startTimeRange?: string[];
 }
@@ -34,7 +34,7 @@ export interface TerminalConnectLogQueryResponse extends TableData {
   hostName: string;
   hostAddress: string;
   type: string;
-  token: string;
+  sessionId: string;
   status: string;
   startTime: number;
   endTime: number;
@@ -65,7 +65,7 @@ export function getTerminalConnectLogPage(request: TerminalConnectLogQueryReques
  * 查询全部终端连接会话
  */
 export function getTerminalConnectSessions(request: TerminalConnectLogQueryRequest) {
-  return axios.post<Array<TerminalConnectLogQueryResponse>>('/asset/terminal-connect-log/session', request);
+  return axios.post<Array<TerminalConnectLogQueryResponse>>('/asset/terminal-connect-log/sessions', request);
 }
 
 /**

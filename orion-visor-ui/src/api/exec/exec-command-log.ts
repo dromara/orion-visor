@@ -5,8 +5,7 @@ import type {
   ExecLogInterruptRequest,
   ExecLogQueryRequest,
   ExecLogQueryResponse,
-  ExecLogStatusResponse,
-  ExecLogTailRequest
+  ExecLogStatusResponse
 } from './exec-log';
 import axios from 'axios';
 import qs from 'query-string';
@@ -23,6 +22,13 @@ export function getExecCommandLogPage(request: ExecLogQueryRequest) {
  */
 export function getExecCommandLog(id: number) {
   return axios.get<ExecLogQueryResponse>('/asset/exec-command-log/get', { params: { id } });
+}
+
+/**
+ * 查询主机计划任务日志
+ */
+export function getExecCommandHostLog(id: number) {
+  return axios.get<ExecHostLogQueryResponse>('/asset/exec-command-log/get-host', { params: { id } });
 }
 
 /**
@@ -98,8 +104,8 @@ export function clearExecCommandLog(request: ExecLogClearRequest) {
 /**
  * 查看批量执行日志
  */
-export function getExecCommandLogTailToken(request: ExecLogTailRequest) {
-  return axios.post<string>('/asset/exec-command-log/tail', request);
+export function getExecCommandLogTailToken(id: number) {
+  return axios.get<string>('/asset/exec-command-log/tail', { params: { id } });
 }
 
 /**
