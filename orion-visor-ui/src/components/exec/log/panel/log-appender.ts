@@ -1,7 +1,6 @@
-import type { ExecType, ILogAppender, LogAppenderConf, LogDomRef } from '../const';
+import type { ILogAppender, LogAppenderConfig, LogAppenderView } from '../const';
 import { LogAppenderOptions } from '../const';
 import type { XtermAddons } from '@/types/xterm';
-import type { ExecLogTailRequest } from '@/api/exec/exec-log';
 import { openExecLogChannel } from '@/api/exec/exec-log';
 import { getExecCommandLogTailToken } from '@/api/exec/exec-command-log';
 import { getExecJobLogTailToken } from '@/api/exec/exec-job-log';
@@ -19,58 +18,58 @@ import { Unicode11Addon } from '@xterm/addon-unicode11';
 // 执行日志 appender 实现
 export default class LogAppender implements ILogAppender {
 
-  private current: LogAppenderConf;
+  private current: LogAppenderView;
 
   private client?: WebSocket;
 
-  private readonly config: ExecLogTailRequest;
+  private readonly appenderViews: Record<string, LogAppenderView>;
 
-  private readonly appenderRel: Record<string, LogAppenderConf>;
+  private readonly config: LogAppenderConfig;
 
   private keepAliveTask?: number;
 
-  private readonly fitAllFn: () => {};
+  private readonly fitAllFn: () => void;
 
-  private readonly type: ExecType;
-
-  constructor(type: ExecType, config: ExecLogTailRequest) {
-    this.current = undefined as unknown as LogAppenderConf;
-    this.type = type;
+  constructor(config: LogAppenderConfig) {
     this.config = config;
-    this.appenderRel = {};
+    this.current = undefined as unknown as LogAppenderView;
+    this.appenderViews = {};
     this.fitAllFn = useDebounceFn(this.fitAll).bind(this);
   }
 
   // 初始化
-  async init(logDomRefs: Array<LogDomRef>) {
+  async init(configs: Array<LogAppenderView>) {
     // 初始化 appender
-    await this.initAppender(logDomRefs);
+    await this.initAppender(configs);
     // 初始化 client
     await this.openClient();
   }
 
   // 初始化 appender
-  async initAppender(logDomRefs: Array<LogDomRef>) {
+  async initAppender(configs: Array<LogAppenderView>) {
     // 打开 log-view
-    for (let logDomRef of logDomRefs) {
+    for (let config of configs) {
       // 初始化 terminal
-      const terminal = new Terminal(LogAppenderOptions);
+      const terminal = new Terminal({
+        ...LogAppenderOptions,
+        scrollback: this.config.scrollLines,
+      });
       // 初始化快捷键
       this.initCustomKey(terminal);
       // 初始化插件
       const addons = this.initAddons(terminal);
       // 打开终端
-      terminal.open(logDomRef.el);
+      terminal.open(config.el);
       // 自适应
       addons.fit.fit();
-      this.appenderRel[logDomRef.id] = {
-        ...logDomRef,
+      this.appenderViews[config.id] = {
+        ...config,
         terminal,
         addons
       };
     }
     // 设置当前对象
-    this.current = this.appenderRel[logDomRefs[0].id];
+    this.current = this.appenderViews[configs[0].id];
     // 注册自适应事件
     addEventListen(window, 'resize', this.fitAllFn);
   }
@@ -152,12 +151,12 @@ export default class LogAppender implements ILogAppender {
   async openClient() {
     let tokenMaker;
     // 获取 token
-    if (this.type === 'BATCH') {
+    if (this.config.type === 'BATCH') {
       // 获取批量执行日志 token
-      tokenMaker = getExecCommandLogTailToken(this.config);
+      tokenMaker = getExecCommandLogTailToken(this.config.id);
     } else {
       // 获取计划任务日志 token
-      tokenMaker = getExecJobLogTailToken(this.config);
+      tokenMaker = getExecJobLogTailToken(this.config.id);
     }
     const { data } = await tokenMaker;
     // 打开会话
@@ -180,15 +179,26 @@ export default class LogAppender implements ILogAppender {
     }, 15000) as unknown as number;
   }
 
-  // 设置当前元素
-  setCurrent(id: number): void {
-    const rel = this.appenderRel[id];
-    if (!rel) {
+  // 打开日志
+  openLog(id: number): void {
+    const view = this.appenderViews[id];
+    if (!view || view.opened || this.client?.readyState !== WebSocket.OPEN) {
       return;
     }
-    this.current = rel;
+    // 发送打开日志
+    this.client?.send(id.toString());
+    view.opened = true;
+  }
+
+  // 设置当前元素
+  setCurrent(id: number): void {
+    const view = this.appenderViews[id];
+    if (!view) {
+      return;
+    }
+    this.current = view;
     // 自适应
-    rel.addons.fit.fit();
+    view.addons.fit.fit();
     this.focus();
   }
 
@@ -259,7 +269,7 @@ export default class LogAppender implements ILogAppender {
 
   // 自适应全部
   fitAll(): void {
-    Object.values(this.appenderRel).forEach(s => {
+    Object.values(this.appenderViews).forEach(s => {
       s.addons.fit.fit();
     });
   }
@@ -282,7 +292,7 @@ export default class LogAppender implements ILogAppender {
     // 移除自适应事件
     removeEventListen(window, 'resize', this.fitAllFn);
     // 关闭 terminal
-    Object.values(this.appenderRel).forEach(s => {
+    Object.values(this.appenderViews).forEach(s => {
       try {
         // 卸载插件
         Object.values(s.addons)
@@ -313,12 +323,12 @@ export default class LogAppender implements ILogAppender {
     const separatorIndex = data.indexOf('|');
     const id = data.substring(0, separatorIndex);
     const text = data.substring(separatorIndex + 1, data.length);
-    // 获取 appender
-    const appender = this.appenderRel[id];
-    if (!appender) {
+    // 获取 view
+    const view = this.appenderViews[id];
+    if (!view) {
       return;
     }
-    appender.terminal.write(text);
+    view.terminal.write(text);
   }
 
 }

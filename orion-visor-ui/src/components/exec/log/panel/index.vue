@@ -4,7 +4,7 @@
     <exec-host class="exec-host-container"
                :visibleBack="visibleBack"
                :current="currentHostExecId"
-               :hosts="execLog.hosts"
+               :hosts="execLog.hosts as any"
                @selected="selectedHost"
                @back="emits('back')" />
     <!-- 日志容器 -->
@@ -13,7 +13,8 @@
               :type="type"
               :current="currentHostExecId"
               :exec-log="execLog"
-              :appender="appender" />
+              :appender="appender"
+              @ready="openLog(currentHostExecId)" />
   </div>
 </template>
 
@@ -30,7 +31,8 @@
   import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
   import { getExecJobLogStatus } from '@/api/exec/exec-job-log';
   import { dictKeys, ExecHostStatus, ExecStatus } from '../const';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
+  import { toAnonymousNumber } from '@/utils';
   import ExecHost from './exec-host.vue';
   import LogView from './log-view.vue';
   import LogAppender from './log-appender';
@@ -43,16 +45,24 @@
   const emits = defineEmits(['back']);
 
   const logViewRef = ref();
-  const currentHostExecId = ref();
+  const currentHostExecId = ref(0);
   const pullIntervalId = ref();
   const execLog = ref<ExecLogQueryResponse>();
   const appender = ref<ILogAppender>();
 
   // 打开
-  const open = (record: ExecLogQueryResponse) => {
-    appender.value = new LogAppender(props.type, { execId: record.id });
-    execLog.value = record;
+  const open = async (record: ExecLogQueryResponse) => {
+    execLog.value = { ...record };
     currentHostExecId.value = record.hosts[0].id;
+    // 获取最大显示行数
+    const { log_webScrollLines } = await useCacheStore().loadSystemSetting();
+    const scrollLines = toAnonymousNumber(log_webScrollLines) || 1000;
+    // 创建 appender
+    appender.value = new LogAppender({
+      id: record.id,
+      type: props.type,
+      scrollLines,
+    });
     // 定时查询执行状态
     if (record.status === ExecStatus.WAITING ||
       record.status === ExecStatus.RUNNING) {
@@ -88,55 +98,45 @@
       execLog.value.finishTime = logList[0].finishTime;
     }
     // 设置主机状态
-    for (let host of execLog.value.hosts) {
-      const hostStatus = hostList.find(s => s.id === host.id);
-      if (hostStatus) {
-        host.status = hostStatus.status;
-        host.startTime = hostStatus.startTime;
+    for (let hostRow of hostList) {
+      const execLogHost = execLog.value.hosts.find(s => s.id === hostRow.id);
+      if (execLogHost) {
+        execLogHost.status = hostRow.status;
+        execLogHost.startTime = hostRow.startTime;
         // 结束时间绑定了使用时间 如果未完成则使用当前时间
-        host.finishTime = hostStatus.finishTime || Date.now();
-        host.exitCode = hostStatus.exitCode;
-        host.errorMessage = hostStatus.errorMessage;
+        execLogHost.finishTime = hostRow.finishTime || Date.now();
+        execLogHost.exitCode = hostRow.exitCode;
+        execLogHost.errorMessage = hostRow.errorMessage;
+      }
+      // 当前选中主机非等待状态则打开日志
+      if (hostRow.id === currentHostExecId.value) {
+        openLog(hostRow.id);
       }
     }
-    // 已完成跳过
+    // 已完成关闭轮询
     if (execLog.value.status === ExecStatus.COMPLETED ||
       execLog.value.status === ExecStatus.FAILED) {
-      closeClient();
+      clearAllInterval();
     }
-  };
-
-  // 设置完成时间
-  const setTaskFinishTime = () => {
-    const hosts = execLog.value?.hosts;
-    if (!hosts) {
-      return;
-    }
-    hosts.forEach(s => {
-      // 未完成自动设置完成时间为当前时间 用于展示使用时间
-      if (s.status === ExecHostStatus.WAITING ||
-        s.status === ExecHostStatus.RUNNING) {
-        if (!s.startTime) {
-          s.startTime = Date.now();
-        }
-        s.finishTime = Date.now();
-      }
-    });
   };
 
   defineExpose({ open });
 
   // 选中主机
-  const selectedHost = (hostId: number) => {
-    currentHostExecId.value = hostId;
+  const selectedHost = (id: number) => {
+    currentHostExecId.value = id;
+    // 打开日志
+    openLog(id);
   };
 
-  // 关闭连接
-  const closeClient = () => {
-    // 清理轮询
-    clearAllInterval();
-    // 关闭 client
-    appender.value?.closeClient();
+  // 打开日志
+  const openLog = (id: number) => {
+    // 获取状态
+    const status = execLog.value?.hosts.find(s => s.id === id)?.status;
+    if (status && status !== ExecHostStatus.WAITING) {
+      // 打开日志
+      appender.value?.openLog(id);
+    }
   };
 
   // 清理并且关闭

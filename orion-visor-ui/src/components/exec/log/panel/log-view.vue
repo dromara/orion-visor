@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <log-item class="log-item"
-              v-show="current === host.id"
               v-for="host in execLog.hosts"
+              v-show="current === host.id"
               :key="host.id"
               :ref="addRef as unknown as VNodeRef"
               :type="type"
@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
   import type { VNodeRef } from 'vue';
-  import type { LogDomRef, ILogAppender } from '../const';
+  import type { ILogAppender, LogAppenderView } from '../const';
   import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecType } from '../const';
   import { nextTick, ref, watch } from 'vue';
@@ -33,7 +33,9 @@
     type: ExecType;
   }>();
 
-  const logRefs = ref<Array<LogDomRef>>([]);
+  const emits = defineEmits(['ready']);
+
+  const logRefs = ref<Array<LogAppenderView>>([]);
 
   // 切换标签
   watch(() => props.current, (val) => {
@@ -50,6 +52,7 @@
       if (props.appender) {
         // 初始化
         await props.appender.init(logRefs.value);
+        emits('ready');
       }
     });
   };
@@ -61,12 +64,16 @@
     if (!ref) {
       return;
     }
+    if (logRefs.value.find(s => s.id === ref.id)) {
+      return;
+    }
     nextTick(() => {
       logRefs.value.push({
         id: ref.id,
         el: ref.appenderRef,
+        opened: false,
         openSearch: ref.openSearch,
-      });
+      } as LogAppenderView);
     });
   };
 
