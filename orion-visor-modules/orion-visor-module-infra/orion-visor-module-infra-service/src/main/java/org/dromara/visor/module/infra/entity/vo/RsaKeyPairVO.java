@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.entity.request.exec;
+package org.dromara.visor.module.infra.entity.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,31 +28,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
 /**
- * 执行日志查看 请求对象
+ * RSA 密钥对响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/3/11 11:46
+ * @since 2025/1/3 17:46
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ExecLogTailRequest", description = "执行日志查看 请求对象")
-public class ExecLogTailRequest {
+@Schema(name = "RsaKeyPairVO", description = "RSA 密钥对响应对象")
+public class RsaKeyPairVO {
 
-    @Schema(description = "执行来源")
-    private String source;
+    @Schema(description = "公钥")
+    private String publicKey;
 
-    @NotNull
-    @Schema(description = "执行id")
-    private Long execId;
-
-    @Schema(description = "执行主机id")
-    private List<Long> hostExecIdList;
+    @Schema(description = "私钥")
+    private String privateKey;
 
 }

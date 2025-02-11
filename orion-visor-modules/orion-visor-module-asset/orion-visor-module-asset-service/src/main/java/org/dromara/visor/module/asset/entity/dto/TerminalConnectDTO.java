@@ -57,6 +57,9 @@ public class TerminalConnectDTO {
     @Schema(description = "hostName")
     private String hostName;
 
+    @Schema(description = "主机编码")
+    private String hostCode;
+
     @Schema(description = "主机地址")
     private String hostAddress;
 

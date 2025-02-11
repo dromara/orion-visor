@@ -225,7 +225,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
                 .hostName(hostName)
                 .hostAddress(host.getAddress())
                 .status(ex == null ? TerminalConnectStatusEnum.CONNECTING.name() : TerminalConnectStatusEnum.FAILED.name())
-                .token(sessionId)
+                .sessionId(sessionId)
                 .extra(extra)
                 .build();
         // 填充其他信息

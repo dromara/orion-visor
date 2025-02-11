@@ -52,4 +52,20 @@ public interface ExecHostLogDAO extends IMapper<ExecHostLogDO> {
                 .list();
     }
 
+    /**
+     * 通过 logId 查询
+     *
+     * @param id    id
+     * @param logId logId
+     * @return row
+     */
+    default ExecHostLogDO selectByIdAndLogId(Long id, Long logId) {
+        return this.of()
+                .createWrapper()
+                .eq(ExecHostLogDO::getId, id)
+                .eq(ExecHostLogDO::getLogId, logId)
+                .then()
+                .get();
+    }
+
 }

@@ -130,6 +130,21 @@ export function formatDuration(start: number, end?: number): string {
 }
 
 /**
+ * 转为匿名数字 number | undefined
+ */
+export function toAnonymousNumber(value: string | undefined): number {
+  if (value === undefined || value === null) {
+    return value as unknown as number;
+  }
+  const num = Number.parseInt(value);
+  if (Number.isNaN(num)) {
+    return undefined as unknown as number;
+  } else {
+    return num;
+  }
+}
+
+/**
  * 格式化数字为 ,分割
  */
 export function formatNumber(value: number = 0) {

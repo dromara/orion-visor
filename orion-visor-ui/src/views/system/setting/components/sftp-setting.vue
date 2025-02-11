@@ -8,12 +8,40 @@
             class="setting-form"
             label-align="right"
             :auto-label-width="true">
+      <!-- 重复文件备份 -->
+      <a-form-item field="sftp_uploadPresentBackup"
+                   label="重复文件备份"
+                   :rules="[{required: true, message: '请选择此项'}]"
+                   hide-asterisk>
+        <a-switch v-model="setting.sftp_uploadPresentBackup"
+                  type="round"
+                  checked-value="true"
+                  unchecked-value="false"
+                  checked-text="备份"
+                  unchecked-text="覆盖" />
+        <template #extra>
+          文件上传时, 若文件存在是否备份原始文件
+        </template>
+      </a-form-item>
+      <!-- 备份文件名称 -->
+      <a-form-item field="sftp_uploadBackupFileName"
+                   label="备份文件名称"
+                   :rules="[{required: true, message: '请输入备份文件名称'}]"
+                   hide-asterisk>
+        <a-input v-model="setting.sftp_uploadBackupFileName"
+                 class="input-wrapper"
+                 placeholder="请输入备份文件名称模板"
+                 allow-clear />
+        <template #extra>
+          ${fileName} 文件名称, ${timestamp} 时间戳, ${time} 时间
+        </template>
+      </a-form-item>
       <!-- 文件预览大小 -->
-      <a-form-item field="previewSize"
+      <a-form-item field="sftp_previewSize"
                    label="文件预览大小"
                    :rules="[{required: true, message: '请输入文件预览大小'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.previewSize"
+        <a-input-number v-model="setting.sftp_previewSize"
                         class="input-wrapper"
                         :min="0"
                         :max="200"
@@ -24,6 +52,9 @@
             MB
           </template>
         </a-input-number>
+        <template #extra>
+          可以直接查看或编辑小于等于该大小的普通文件
+        </template>
       </a-form-item>
       <!-- 按钮 -->
       <a-form-item v-permission="['infra:system-setting:update']">
@@ -50,6 +81,7 @@
   import { getSystemSetting, updateSystemSettingBatch } from '@/api/system/setting';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
+  import { toAnonymousNumber } from '@/utils';
   import { SystemSettingTypes } from '../types/const';
 
   const { loading, setLoading } = useLoading();
@@ -68,7 +100,7 @@
     try {
       await updateSystemSettingBatch({
         type: SystemSettingTypes.SFTP,
-        settings: setting.value
+        settings: setting.value,
       });
       Message.success('修改成功');
     } catch (e) {
@@ -81,8 +113,11 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      const { data } = await getSystemSetting<SftpSetting>(SystemSettingTypes.SFTP);
-      setting.value = data;
+      const { data } = await getSystemSetting(SystemSettingTypes.SFTP);
+      setting.value = {
+        ...data,
+        sftp_previewSize: toAnonymousNumber(data.sftp_previewSize),
+      };
     } catch (e) {
     } finally {
       setLoading(false);
@@ -93,6 +128,6 @@
 
 <style lang="less" scoped>
   .input-wrapper {
-    width: 328px;
+    width: 368px;
   }
 </style>

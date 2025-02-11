@@ -86,11 +86,11 @@ docker compose up -d
 
 ## 技术栈
 
-* SpringBoot 2.7.+
-* Mysql 8.0.+
-* Redis 6.0.+
-* Vue3 3.2.+
-* Arco Design 2.55.+
+* SpringBoot 2.7+
+* Mysql 8+
+* Redis 6+
+* Vue3 3+
+* Arco Design 2+
 
 ## 主要功能预览
 

@@ -26,7 +26,6 @@ import cn.orionsec.kit.lang.annotation.Keep;
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import cn.orionsec.kit.lang.id.UUIds;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Files1;
@@ -53,24 +52,19 @@ import org.dromara.visor.module.asset.dao.ExecLogDAO;
 import org.dromara.visor.module.asset.define.cache.ExecCacheKeyDefine;
 import org.dromara.visor.module.asset.entity.domain.ExecHostLogDO;
 import org.dromara.visor.module.asset.entity.domain.ExecLogDO;
-import org.dromara.visor.module.asset.entity.dto.ExecHostLogTailDTO;
 import org.dromara.visor.module.asset.entity.dto.ExecLogTailDTO;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
-import org.dromara.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import org.dromara.visor.module.asset.entity.vo.ExecHostLogVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogStatusVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogVO;
 import org.dromara.visor.module.asset.enums.ExecHostStatusEnum;
 import org.dromara.visor.module.asset.enums.ExecStatusEnum;
-import org.dromara.visor.module.asset.enums.HostTypeEnum;
-import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.dromara.visor.module.asset.handler.host.exec.command.handler.IExecCommandHandler;
 import org.dromara.visor.module.asset.handler.host.exec.command.handler.IExecTaskHandler;
 import org.dromara.visor.module.asset.handler.host.exec.command.manager.ExecTaskManager;
 import org.dromara.visor.module.asset.service.ExecHostLogService;
 import org.dromara.visor.module.asset.service.ExecLogService;
-import org.dromara.visor.module.asset.service.HostConfigService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +73,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -104,9 +101,6 @@ public class ExecLogServiceImpl implements ExecLogService {
 
     @Resource
     private ExecTaskManager execTaskManager;
-
-    @Resource
-    private HostConfigService hostConfigService;
 
     @Keep
     @Resource
@@ -328,7 +322,7 @@ public class ExecLogServiceImpl implements ExecLogService {
             log.info("ExecLogService.interruptHostExec interrupt logId: {}, hostLogId: {}", logId, hostLogId);
             IExecCommandHandler handler = task.getHandlers()
                     .stream()
-                    .filter(s -> s.getHostId().equals(hostLog.getHostId()))
+                    .filter(s -> hostLogId.equals(s.getId()))
                     .findFirst()
                     .orElse(null);
             // 中断
@@ -366,55 +360,17 @@ public class ExecLogServiceImpl implements ExecLogService {
     }
 
     @Override
-    public String getExecLogTailToken(ExecLogTailRequest request) {
-        String source = request.getSource();
-        Long execId = request.getExecId();
-        List<Long> hostExecIdList = request.getHostExecIdList();
-        log.info("ExecLogService.getExecLogTailToken start execId: {}, hostExecIdList: {}", execId, hostExecIdList);
-        // 查询执行日志
-        ExecLogDO execLog = execLogDAO.selectByIdSource(execId, source);
-        Valid.notNull(execLog, ErrorMessage.LOG_ABSENT);
-        // 查询主机日志
-        List<ExecHostLogDO> hostLogs;
-        if (hostExecIdList == null) {
-            hostLogs = execHostLogDAO.selectByLogId(execId);
-        } else {
-            hostLogs = execHostLogDAO.of()
-                    .createWrapper()
-                    .eq(ExecHostLogDO::getLogId, execId)
-                    .in(ExecHostLogDO::getId, hostExecIdList)
-                    .then()
-                    .list();
-        }
-        Valid.notEmpty(hostLogs, ErrorMessage.LOG_ABSENT);
-        // 获取编码集
-        // TODO 待优化
-        List<Long> hostIdList = hostLogs.stream()
-                .map(ExecHostLogDO::getHostId)
-                .collect(Collectors.toList());
-        Map<Long, HostSshConfigModel> configMap = hostConfigService.getHostConfigMap(hostIdList, HostTypeEnum.SSH);
+    public String getExecLogTailToken(Long id) {
         // 生成缓存
         String token = UUIds.random19();
         String cacheKey = ExecCacheKeyDefine.EXEC_TAIL.format(token);
         ExecLogTailDTO cache = ExecLogTailDTO.builder()
+                .execId(id)
                 .token(token)
-                .id(execId)
                 .userId(SecurityUtils.getLoginUserId())
-                .hosts(hostLogs.stream()
-                        .map(s -> ExecHostLogTailDTO.builder()
-                                .id(s.getId())
-                                .hostId(s.getHostId())
-                                .path(s.getLogPath())
-                                .charset(Optional.ofNullable(configMap.get(s.getHostId()))
-                                        .map(HostSshConfigModel::getCharset)
-                                        .map(Objects1::toString)
-                                        .orElse(Const.UTF_8))
-                                .build())
-                        .collect(Collectors.toList()))
                 .build();
         // 设置缓存
         RedisStrings.setJson(cacheKey, ExecCacheKeyDefine.EXEC_TAIL, cache);
-        log.info("ExecLogService.getExecLogTailToken finish token: {}, execId: {}, hostExecIdList: {}", token, execId, hostExecIdList);
         return token;
     }
 

@@ -38,16 +38,12 @@ import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRi
 @Module("infra:system-setting")
 public class SystemSettingOperatorType extends InitializingOperatorTypes {
 
-    public static final String UPDATE_TEXT = "<sb>{}</sb> - <sb>{}</sb> - <sb>{}</sb>";
-
-    public static final String UPDATE_BATCH_TEXT = "<sb>{}</sb>";
-
     public static final String UPDATE = "system-setting:update";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(M, UPDATE, "更新系统设置 ${text}"),
+                new OperatorType(M, UPDATE, "更新系统设置 <sb>${type}</sb>"),
         };
     }
 

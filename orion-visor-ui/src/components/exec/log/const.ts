@@ -65,17 +65,18 @@ export const LogAppenderOptions: ITerminalOptions & ITerminalInitOnlyOptions = {
   fontFamily: defaultFontFamily,
 };
 
-// dom 引用
-export interface LogDomRef {
+// append 配置
+export interface LogAppenderConfig {
   id: number;
-  el: HTMLElement;
-  openSearch: () => {};
+  type: ExecType;
+  scrollLines: number;
 }
 
-// appender 配置
-export interface LogAppenderConf {
+// appender 视口
+export interface LogAppenderView {
   id: number;
   el: HTMLElement;
+  opened: boolean;
   openSearch: () => {};
   terminal: Terminal;
   addons: XtermAddons;
@@ -84,7 +85,10 @@ export interface LogAppenderConf {
 // 执行日志 appender 定义
 export interface ILogAppender {
   // 初始化
-  init(refs: Array<LogDomRef>): Promise<void>;
+  init(refs: Array<LogAppenderView>): Promise<void>;
+
+  // 打开日志
+  openLog(id: number): void;
 
   // 设置当前元素
   setCurrent(id: number): void;

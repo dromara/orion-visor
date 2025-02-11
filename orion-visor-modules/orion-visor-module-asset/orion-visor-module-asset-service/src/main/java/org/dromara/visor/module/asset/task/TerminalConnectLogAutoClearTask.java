@@ -22,14 +22,15 @@
  */
 package org.dromara.visor.module.asset.task;
 
+import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.utils.LockerUtils;
-import org.dromara.visor.module.asset.define.config.AppTerminalConnectLogAutoClearConfig;
+import org.dromara.visor.module.asset.define.config.AppAutoClearConfig;
 import org.dromara.visor.module.asset.entity.request.host.TerminalConnectLogClearRequest;
 import org.dromara.visor.module.asset.enums.TerminalConnectStatusEnum;
 import org.dromara.visor.module.asset.service.TerminalConnectLogService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -45,16 +46,14 @@ import java.util.Date;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "app.auto-clear.terminal-connect-log.enabled", havingValue = "true")
 public class TerminalConnectLogAutoClearTask {
 
-    /**
-     * 分布式锁名称
-     */
+    private static final Integer BATCH_SIZE = Const.N_1000;
+
     private static final String LOCK_KEY = "clear:tcl:lock";
 
     @Resource
-    private AppTerminalConnectLogAutoClearConfig appTerminalConnectLogAutoClearConfig;
+    private AppAutoClearConfig appAutoClearConfig;
 
     @Resource
     private TerminalConnectLogService terminalConnectLogService;
@@ -65,6 +64,11 @@ public class TerminalConnectLogAutoClearTask {
     @Scheduled(cron = "0 10 3 * * ?")
     public void clear() {
         log.info("TerminalConnectLogAutoClearTask.clear start");
+        // 检查是否开启
+        if (!Booleans.isTrue(appAutoClearConfig.getTerminalLogEnabled())) {
+            log.info("TerminalConnectLogAutoClearTask.clear disabled");
+            return;
+        }
         // 获取锁并执行
         LockerUtils.tryLock(LOCK_KEY, this::doClear);
         log.info("TerminalConnectLogAutoClearTask.clear finish");
@@ -76,13 +80,22 @@ public class TerminalConnectLogAutoClearTask {
     private void doClear() {
         // 删除的时间区间
         Date createLessEq = Dates.stream()
-                .subDay(appTerminalConnectLogAutoClearConfig.getKeepPeriod())
+                .subDay(appAutoClearConfig.getTerminalLogKeepDays())
                 .date();
         // 清理
-        TerminalConnectLogClearRequest request = new TerminalConnectLogClearRequest();
-        request.setCreateTimeLe(createLessEq);
-        request.setStatusList(TerminalConnectStatusEnum.FINISH_STATUS_LIST);
-        terminalConnectLogService.clearTerminalConnectLog(request);
+        for (int i = 0; ; i++) {
+            log.info("TerminalConnectLogAutoClearTask.doClear start batch: {}", i + 1);
+            TerminalConnectLogClearRequest request = new TerminalConnectLogClearRequest();
+            request.setCreateTimeLe(createLessEq);
+            request.setStatusList(TerminalConnectStatusEnum.FINISH_STATUS_LIST);
+            request.setLimit(BATCH_SIZE);
+            Integer count = terminalConnectLogService.clearTerminalConnectLog(request);
+            log.info("TerminalConnectLogAutoClearTask.doClear end batch: {}, count: {}", i + 1, count);
+            // 最后一批
+            if (count < BATCH_SIZE) {
+                return;
+            }
+        }
     }
 
 }

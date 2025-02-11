@@ -24,15 +24,16 @@ package org.dromara.visor.module.asset.handler.host.exec.command.handler;
 
 import cn.orionsec.kit.lang.support.timeout.TimeoutChecker;
 import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
-import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.ansi.AnsiAppender;
 import cn.orionsec.kit.lang.utils.ansi.style.color.AnsiForeground;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import cn.orionsec.kit.net.host.ssh.ExitCode;
 import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.enums.BooleanBit;
+import org.dromara.visor.module.asset.entity.domain.ExecLogDO;
 import org.dromara.visor.module.asset.enums.ExecHostStatusEnum;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandDTO;
-import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecCommandHostDTO;
+
+import java.util.Map;
 
 /**
  * 命令执行器 ansi 日志输出
@@ -41,10 +42,13 @@ import org.dromara.visor.module.asset.handler.host.exec.command.model.ExecComman
  * @version 1.0.0
  * @since 2024/4/25 18:19
  */
-public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
+public class ExecCommandDetailHandler extends BaseExecCommandHandler {
 
-    public ExecCommandAnsiHandler(ExecCommandDTO execCommand, ExecCommandHostDTO execHostCommand, TimeoutChecker<TimeoutEndpoint> timeoutChecker) {
-        super(execCommand, execHostCommand, timeoutChecker);
+    public ExecCommandDetailHandler(Long id,
+                                    ExecLogDO execLog,
+                                    Map<String, Object> builtParams,
+                                    TimeoutChecker<TimeoutEndpoint> timeoutChecker) {
+        super(id, execLog, builtParams, timeoutChecker);
     }
 
     @Override
@@ -56,52 +60,52 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
                 .append(this.getCurrentTime())
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "执行记录: ")
-                .append(execCommand.getLogId())
+                .append(execLog.getId())
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "执行描述: ")
-                .append(execCommand.getDescription())
+                .append(execLog.getDescription())
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "执行用户: ")
-                .append(execCommand.getUsername());
+                .append(execLog.getUsername());
         // 非系统用户执行添加 userId
-        if (Const.SYSTEM_USER_ID.equals(execCommand.getUserId())) {
+        if (Const.SYSTEM_USER_ID.equals(execLog.getUserId())) {
             appender.newLine();
         } else {
             appender.append(" (")
-                    .append(execCommand.getUserId())
+                    .append(execLog.getUserId())
                     .append(")")
                     .newLine();
         }
         // 执行序列
-        if (execCommand.getExecSeq() != null) {
+        if (execLog.getExecSeq() != null) {
             appender.append(AnsiForeground.BRIGHT_BLUE, "执行序列: ")
                     .append('#')
-                    .append(execCommand.getExecSeq())
+                    .append(execLog.getExecSeq())
                     .newLine();
         }
         appender.append(AnsiForeground.BRIGHT_BLUE, "执行主机: ")
-                .append(execHostCommand.getHostName())
+                .append(execHostLog.getHostName())
                 .append(" (")
-                .append(execHostCommand.getHostId())
+                .append(execHostLog.getHostId())
                 .append(")")
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "主机地址: ")
-                .append(execHostCommand.getHostAddress())
+                .append(execHostLog.getHostAddress())
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "超时时间: ")
-                .append(execCommand.getTimeout())
+                .append(execLog.getTimeout())
                 .newLine()
                 .append(AnsiForeground.BRIGHT_BLUE, "脚本执行: ")
-                .append(execCommand.getScriptExec())
+                .append(execLog.getScriptExec())
                 .newLine()
                 .newLine()
                 .append(AnsiForeground.BRIGHT_GREEN, "> 执行命令        ")
                 .newLine()
-                .append(execHostCommand.getCommand())
+                .append(execHostLog.getCommand())
                 .newLine()
                 .newLine();
         // 非脚本执行拼接开始执行日志
-        if (!Booleans.isTrue(execCommand.getScriptExec())) {
+        if (!BooleanBit.toBoolean(execLog.getScriptExec())) {
             appender.append(AnsiForeground.BRIGHT_GREEN, "> 开始执行命令    ")
                     .append(this.getCurrentTime())
                     .newLine();
@@ -119,7 +123,7 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
                     .append(this.getCurrentTime())
                     .newLine()
                     .append(AnsiForeground.BRIGHT_BLUE, "文件路径: ")
-                    .append(execHostCommand.getScriptPath())
+                    .append(execHostLog.getScriptPath())
                     .newLine();
             this.appendLog(startAppender);
             // 上传脚本文件
@@ -170,9 +174,9 @@ public class ExecCommandAnsiHandler extends BaseExecCommandHandler {
             appender.append(AnsiForeground.BRIGHT_YELLOW, "< 命令执行超时    ")
                     .append(this.getCurrentTime())
                     .newLine();
-        } else {
-            long ms = updateRecord.getFinishTime().getTime() - updateRecord.getStartTime().getTime();
-            Integer exitCode = updateRecord.getExitCode();
+        } else if (this.status == ExecHostStatusEnum.COMPLETED) {
+            long ms = execHostLog.getFinishTime().getTime() - execHostLog.getStartTime().getTime();
+            Integer exitCode = execHostLog.getExitCode();
             // 执行完成
             appender.append(AnsiForeground.BRIGHT_GREEN, "< 命令执行完成    ")
                     .append(this.getCurrentTime())

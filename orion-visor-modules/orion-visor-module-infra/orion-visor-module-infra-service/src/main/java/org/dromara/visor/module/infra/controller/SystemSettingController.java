@@ -35,8 +35,7 @@ import org.dromara.visor.module.infra.define.operator.SystemSettingOperatorType;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateBatchRequest;
 import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateRequest;
 import org.dromara.visor.module.infra.entity.vo.AppInfoVO;
-import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
-import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
+import org.dromara.visor.module.infra.entity.vo.RsaKeyPairVO;
 import org.dromara.visor.module.infra.service.SystemSettingService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +43,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
+import java.util.Map;
 
 /**
  * 系统设置服务
@@ -74,7 +74,7 @@ public class SystemSettingController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/setting")
     @Operation(summary = "获取系统聚合设置")
-    public SystemSettingAggregateVO getSystemAggregateSetting() {
+    public Map<String, String> getSystemAggregateSetting() {
         return systemSettingService.getSystemAggregateSetting();
     }
 
@@ -83,7 +83,7 @@ public class SystemSettingController {
     @GetMapping("/generator-keypair")
     @Operation(summary = "生成密钥对")
     @PreAuthorize("@ss.hasPermission('infra:system-setting:update')")
-    public EncryptSystemSettingModel generatorKeypair() {
+    public RsaKeyPairVO generatorKeypair() {
         return systemSettingService.generatorKeypair();
     }
 
@@ -92,7 +92,7 @@ public class SystemSettingController {
     @Operation(summary = "查询系统设置")
     @Parameter(name = "type", description = "type", required = true)
     @PreAuthorize("@ss.hasPermission('infra:system-setting:update')")
-    public Object getSystemSettingByType(@RequestParam("type") String type) {
+    public Map<String, String> getSystemSettingByType(@RequestParam("type") String type) {
         return systemSettingService.getSystemSettingByType(type);
     }
 

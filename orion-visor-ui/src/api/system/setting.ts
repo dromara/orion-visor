@@ -2,32 +2,12 @@ import axios from 'axios';
 import { dateFormat } from '@/utils';
 
 /**
- * 系统设置类型
- */
-export type SystemSettingType = 'SFTP' | 'ENCRYPT';
-
-/**
  * 系统设置更新请求
  */
 export interface SystemSettingUpdateRequest {
-  type?: SystemSettingType;
-  item?: string;
-  value?: any;
+  type?: string;
+  value?: string;
   settings?: Record<string, any>;
-}
-
-/**
- * 应用信息查询响应
- */
-export interface SystemLicenseResponse {
-  userCount: number;
-  hostCount: number;
-  release: string;
-  releaseName: string;
-  issueDate: number;
-  expireDate: number;
-  expireDay: number;
-  uuid: string;
 }
 
 /**
@@ -47,26 +27,71 @@ export interface AppReleaseResponse {
 }
 
 /**
- * 系统聚合设置响应
+ * RSA 密钥对响应
  */
-export interface SystemSettingAggregateResponse {
-  sftp: SftpSetting;
-  encrypt: EncryptSetting;
-}
-
-/**
- * SFTP 配置
- */
-export interface SftpSetting {
-  previewSize: number;
-}
-
-/**
- * 加密配置
- */
-export interface EncryptSetting {
+export interface RsaKeyPairResponse {
   publicKey: string;
   privateKey: string;
+}
+
+/**
+ * 系统设置
+ */
+export type SystemSetting = SftpSetting
+  & LoginSetting & EncryptSetting
+  & LogSetting & AutoClearSetting;
+
+/**
+ * SFTP 设置
+ */
+export interface SftpSetting {
+  sftp_previewSize: number;
+  sftp_uploadPresentBackup: string;
+  sftp_uploadBackupFileName: string;
+}
+
+/**
+ * 登录设置
+ */
+export interface LoginSetting {
+  login_allowMultiDevice: string;
+  login_allowRefresh: string;
+  login_maxRefreshCount: number;
+  login_refreshInterval: number;
+  login_loginFailedLock: string;
+  login_loginFailedLockThreshold: number;
+  login_loginFailedLockTime: number;
+  login_loginFailedSend: string;
+  login_loginFailedSendThreshold: number;
+  login_loginSessionTime: number;
+}
+
+/**
+ * 加密设置
+ */
+export interface EncryptSetting {
+  encrypt_publicKey: string;
+  encrypt_privateKey: string;
+}
+
+/**
+ * 日志设置
+ */
+export interface LogSetting {
+  log_webScrollLines: number;
+  log_trackerLoadLines: number;
+  log_trackerLoadInterval: number;
+  log_execDetailLog: string;
+}
+
+/**
+ * 自动清理设置
+ */
+export interface AutoClearSetting {
+  autoClear_execLogEnabled: string;
+  autoClear_execLogKeepDays: number;
+  autoClear_terminalLogEnabled: string;
+  autoClear_terminalLogKeepDays: number;
 }
 
 /**
@@ -80,7 +105,7 @@ export function getSystemAppInfo() {
  * 获取系统聚合设置
  */
 export function getSystemAggregateSetting() {
-  return axios.get<SystemSettingAggregateResponse>('/infra/system-setting/setting');
+  return axios.get<Record<keyof SystemSetting, string>>('/infra/system-setting/setting');
 }
 
 /**
@@ -101,26 +126,26 @@ export function getAppLatestRelease() {
  * 生成密钥对
  */
 export function generatorKeypair() {
-  return axios.get<EncryptSetting>('/infra/system-setting/generator-keypair');
+  return axios.get<RsaKeyPairResponse>('/infra/system-setting/generator-keypair');
 }
 
 /**
  * 更新系统设置-单个
  */
 export function updateSystemSetting(request: SystemSettingUpdateRequest) {
-  return axios.put<number>('/infra/system-setting/update', request);
+  return axios.put<string>('/infra/system-setting/update', request);
 }
 
 /**
  * 更新系统设置-多个
  */
 export function updateSystemSettingBatch(request: SystemSettingUpdateRequest) {
-  return axios.put<number>('/infra/system-setting/update-batch', request);
+  return axios.put<string>('/infra/system-setting/update-batch', request);
 }
 
 /**
  * 查询系统设置
  */
-export function getSystemSetting<T>(type: SystemSettingType) {
-  return axios.get<T>('/infra/system-setting/get', { params: { type } });
+export function getSystemSetting(type: string) {
+  return axios.get<Record<keyof SystemSetting, string>>('/infra/system-setting/get', { params: { type } });
 }

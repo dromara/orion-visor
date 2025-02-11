@@ -90,6 +90,10 @@ public class SystemUserDO extends BaseDO {
     @TableField("update_password_reason")
     private String updatePasswordReason;
 
+    @Schema(description = "修改密码时间")
+    @TableField("update_password_time")
+    private Date updatePasswordTime;
+
     @Schema(description = "最后登录时间")
     @TableField("last_login_time")
     private Date lastLoginTime;

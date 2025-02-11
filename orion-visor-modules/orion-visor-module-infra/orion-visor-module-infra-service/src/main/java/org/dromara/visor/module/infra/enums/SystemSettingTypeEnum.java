@@ -22,14 +22,8 @@
  */
 package org.dromara.visor.module.infra.enums;
 
-import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.module.infra.handler.setting.model.EncryptSystemSettingModel;
-import org.dromara.visor.module.infra.handler.setting.model.SftpSystemSettingModel;
-
-import java.util.Map;
 
 /**
  * 系统设置类型枚举
@@ -43,52 +37,32 @@ import java.util.Map;
 public enum SystemSettingTypeEnum {
 
     /**
-     * SFTP 配置
+     * SFTP 设置
      */
-    SFTP("sftp", SftpSystemSettingModel.class),
+    SFTP("sftp"),
 
     /**
-     * 加密配置
+     * 加密设置
      */
-    ENCRYPT("encrypt", EncryptSystemSettingModel.class),
+    ENCRYPT("encrypt"),
+
+    /**
+     * 登录设置
+     */
+    LOGIN("login"),
+
+    /**
+     * 日志设置
+     */
+    LOG("log"),
+
+    /**
+     * 自动清理设置
+     */
+    AUTO_CLEAR("autoClear"),
 
     ;
 
-    private final String prefix;
-
-    private final Class<?> modelClass;
-
-    /**
-     * 解析
-     *
-     * @param settings settings
-     * @return model
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T parseModel(Map<String, String> settings) {
-        return (T) JSON.parseObject(JSON.toJSONString(settings)).toJavaObject(modelClass);
-    }
-
-    public static SystemSettingTypeEnum of(String type) {
-        if (type == null) {
-            return null;
-        }
-        for (SystemSettingTypeEnum value : values()) {
-            if (value.name().equals(type)) {
-                return value;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取 key
-     *
-     * @param item item
-     * @return key
-     */
-    public String getConfigKey(String item) {
-        return prefix + Const.DOT + item;
-    }
+    private final String type;
 
 }

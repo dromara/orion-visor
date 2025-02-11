@@ -11,11 +11,29 @@
                   title="SFTP">
         <sftp-setting />
       </a-tab-pane>
+      <!-- 登录设置 -->
+      <a-tab-pane v-permission="['infra:system-setting:update']"
+                  key="login"
+                  title="登录设置">
+        <login-setting />
+      </a-tab-pane>
       <!-- 加密设置 -->
       <a-tab-pane v-permission="['infra:system-setting:update']"
                   key="encrypt"
                   title="加密设置">
         <encrypt-setting />
+      </a-tab-pane>
+      <!-- 日志设置 -->
+      <a-tab-pane v-permission="['infra:system-setting:update']"
+                  key="log"
+                  title="日志设置">
+        <log-setting />
+      </a-tab-pane>
+      <!-- 自动清理 -->
+      <a-tab-pane v-permission="['infra:system-setting:update']"
+                  key="auto-clear"
+                  title="自动清理">
+        <auto-clear-setting />
       </a-tab-pane>
       <!-- 关于 -->
       <a-tab-pane key="about" title="关于">
@@ -36,7 +54,10 @@
   import { useRoute } from 'vue-router';
   import usePermission from '@/hooks/permission';
   import SftpSetting from './components/sftp-setting.vue';
+  import LoginSetting from './components/login-setting.vue';
   import EncryptSetting from './components/encrypt-setting.vue';
+  import LogSetting from './components/log-setting.vue';
+  import AutoClearSetting from './components/auto-clear-setting.vue';
   import AboutSetting from './components/about-setting.vue';
 
   const route = useRoute();
@@ -96,6 +117,7 @@
       margin-top: 0;
       margin-bottom: 20px;
       font-weight: 600;
+      user-select: none;
     }
 
     .setting-form {
@@ -104,6 +126,7 @@
 
     .arco-descriptions-title {
       font-weight: 600;
+      user-select: none;
     }
 
     .alert-href {

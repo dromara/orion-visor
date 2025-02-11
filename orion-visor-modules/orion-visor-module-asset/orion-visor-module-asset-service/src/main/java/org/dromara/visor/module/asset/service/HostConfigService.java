@@ -24,10 +24,6 @@ package org.dromara.visor.module.asset.service;
 
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
-import org.dromara.visor.module.asset.enums.HostTypeEnum;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 主机配置 服务类
@@ -36,47 +32,24 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2023-9-11 14:16
  */
-// TODO 待优化
 public interface HostConfigService {
 
     /**
      * 获取主机配置
      *
-     * @param id   id
-     * @param type type
-     * @param <T>  T
+     * @param id  id
+     * @param <T> T
      * @return host
      */
-    <T extends GenericsDataModel> T getHostConfig(Long id, HostTypeEnum type);
-
-    /**
-     * 构建主机配置
-     *
-     * @param host host
-     * @param type type
-     * @param <T>  T
-     * @return host
-     */
-    <T extends GenericsDataModel> T buildHostConfig(HostDO host, HostTypeEnum type);
+    <T extends GenericsDataModel> T getHostConfig(Long id);
 
     /**
      * 获取主机配置
      *
-     * @param idList idList
-     * @param type   type
-     * @param <T>    T
-     * @return config
+     * @param host host
+     * @param <T>  T
+     * @return host
      */
-    <T extends GenericsDataModel> Map<Long, T> getHostConfigMap(List<Long> idList, HostTypeEnum type);
-
-    /**
-     * 构建主机配置
-     *
-     * @param hostList hostList
-     * @param type     type
-     * @param <T>      T
-     * @return config
-     */
-    <T extends GenericsDataModel> Map<Long, T> buildHostConfigMap(List<HostDO> hostList, HostTypeEnum type);
+    <T extends GenericsDataModel> T getHostConfig(HostDO host);
 
 }

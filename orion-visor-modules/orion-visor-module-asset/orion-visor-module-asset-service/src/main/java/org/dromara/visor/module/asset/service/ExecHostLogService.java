@@ -36,6 +36,14 @@ import java.util.List;
 public interface ExecHostLogService {
 
     /**
+     * 查询批量执行主机日志
+     *
+     * @param id id
+     * @return row
+     */
+    ExecHostLogVO getExecHostLog(Long id);
+
+    /**
      * 查询全部批量执行主机日志
      *
      * @param logId logId

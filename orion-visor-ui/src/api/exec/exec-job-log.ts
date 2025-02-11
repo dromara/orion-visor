@@ -6,7 +6,6 @@ import type {
   ExecLogQueryRequest,
   ExecLogQueryResponse,
   ExecLogStatusResponse,
-  ExecLogTailRequest
 } from './exec-log';
 import axios from 'axios';
 import qs from 'query-string';
@@ -23,6 +22,13 @@ export function getExecJobLogPage(request: ExecLogQueryRequest) {
  */
 export function getExecJobLog(id: number) {
   return axios.get<ExecLogQueryResponse>('/asset/exec-job-log/get', { params: { id } });
+}
+
+/**
+ * 查询主机计划任务日志
+ */
+export function getExecJobHostLog(id: number) {
+  return axios.get<ExecHostLogQueryResponse>('/asset/exec-job-log/get-host', { params: { id } });
 }
 
 /**
@@ -91,8 +97,8 @@ export function clearExecJobLog(request: ExecLogClearRequest) {
 /**
  * 查看计划任务日志
  */
-export function getExecJobLogTailToken(request: ExecLogTailRequest) {
-  return axios.post<string>('/asset/exec-job-log/tail', request);
+export function getExecJobLogTailToken(id: number) {
+  return axios.get<string>('/asset/exec-job-log/tail', { params: { id } });
 }
 
 /**

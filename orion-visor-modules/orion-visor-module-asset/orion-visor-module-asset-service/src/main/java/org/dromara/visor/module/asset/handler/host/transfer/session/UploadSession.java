@@ -62,7 +62,7 @@ public class UploadSession extends TransferSession {
             // 检查连接
             this.init();
             // 检查文件是否存在
-            SftpUtils.checkUploadFilePresent(sftpConfig, executor, path);
+            SftpUtils.checkUploadFilePresent(executor, path);
             // 打开输出流
             this.outputStream = executor.openOutputStream(path);
             // 响应结果

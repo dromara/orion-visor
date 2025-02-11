@@ -92,4 +92,9 @@ public class SftpFileVO {
      */
     private Date modifyTime;
 
+    /**
+     * 是否可预览
+     */
+    private Boolean canPreview;
+
 }

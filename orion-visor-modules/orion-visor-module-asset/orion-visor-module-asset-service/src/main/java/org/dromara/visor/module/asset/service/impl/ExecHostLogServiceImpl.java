@@ -61,6 +61,13 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
     private ExecTaskManager execTaskManager;
 
     @Override
+    public ExecHostLogVO getExecHostLog(Long id) {
+        ExecHostLogDO record = execHostLogDAO.selectById(id);
+        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        return ExecHostLogConvert.MAPPER.to(record);
+    }
+
+    @Override
     public List<ExecHostLogVO> getExecHostLogList(Long logId) {
         return execHostLogDAO.of()
                 .createWrapper()
@@ -99,7 +106,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
                 .map(execTaskManager::getTask)
                 .map(IExecTaskHandler::getHandlers)
                 .flatMap(s -> s.stream()
-                        .filter(h -> h.getHostId().equals(record.getHostId()))
+                        .filter(h -> id.equals(h.getId()))
                         .findFirst())
                 .ifPresent(IExecCommandHandler::interrupt);
         // 删除

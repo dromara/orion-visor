@@ -47,15 +47,21 @@
     <template #handle="{ record }">
       <div class="table-handle-wrapper">
         <!-- 命令 -->
-        <a-button type="text"
+        <a-button v-permission="['asset:exec-job-log:query']"
+                  type="text"
                   size="mini"
-                  @click="emits('viewCommand', record.command)">
+                  :disabled="record.status === ExecHostStatus.WAITING"
+                  :title="record.status === ExecHostStatus.WAITING ? '命令正在等待执行' : '查看命令'"
+                  @click="doViewCommand(record)">
           命令
         </a-button>
         <!-- 参数 -->
-        <a-button type="text"
+        <a-button v-permission="['asset:exec-job-log:query']"
+                  type="text"
                   size="mini"
-                  @click="emits('viewParams', record.parameter)">
+                  :disabled="record.status === ExecHostStatus.WAITING"
+                  :title="record.status === ExecHostStatus.WAITING ? '命令正在等待执行' : '查看参数'"
+                  @click="doViewParams(record)">
           参数
         </a-button>
         <!-- 下载 -->
@@ -102,7 +108,7 @@
 
 <script lang="ts" setup>
   import type { ExecLogQueryResponse, ExecHostLogQueryResponse } from '@/api/exec/exec-log';
-  import { deleteExecJobHostLog, interruptHostExecJob } from '@/api/exec/exec-job-log';
+  import { deleteExecJobHostLog, getExecJobHostLog, interruptHostExecJob } from '@/api/exec/exec-job-log';
   import { execHostStatusKey, ExecHostStatus } from '@/components/exec/log/const';
   import { useDictStore } from '@/store';
   import useLoading from '@/hooks/loading';
@@ -123,6 +129,43 @@
   const expandable = useExpandable({ width: 90 });
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
+
+  // 查看命令
+  const doViewCommand = async (record: ExecHostLogQueryResponse) => {
+    // 刷新记录
+    if (!record.refreshed) {
+      await refreshRecord(record);
+    }
+    emits('viewCommand', record.command);
+  };
+
+  // 查看参数
+  const doViewParams = async (record: ExecHostLogQueryResponse) => {
+    // 刷新记录
+    if (!record.refreshed) {
+      await refreshRecord(record);
+    }
+    emits('viewParams', record.parameter);
+  };
+
+  // 刷新记录
+  const refreshRecord = async (record: ExecHostLogQueryResponse) => {
+    try {
+      setLoading(true);
+      const { data } = await getExecJobHostLog(record.id);
+      record.status = data.status;
+      record.command = data.command;
+      record.parameter = data.parameter;
+      record.exitCode = data.exitCode;
+      record.errorMessage = data.errorMessage;
+      record.startTime = data.startTime;
+      record.finishTime = data.finishTime;
+      record.refreshed = true;
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 下载文件
   const downloadLogFile = async (id: number) => {
@@ -147,10 +190,7 @@
   };
 
   // 删除当前行
-  const deleteRow = async ({ id, logId }: {
-    id: number,
-    logId: number
-  }) => {
+  const deleteRow = async ({ id, logId }: ExecHostLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口

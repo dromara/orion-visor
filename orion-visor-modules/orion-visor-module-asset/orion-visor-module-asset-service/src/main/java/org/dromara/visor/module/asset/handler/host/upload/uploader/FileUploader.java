@@ -38,7 +38,6 @@ import org.dromara.visor.common.enums.EndpointDefine;
 import org.dromara.visor.common.interfaces.FileClient;
 import org.dromara.visor.common.utils.PathUtils;
 import org.dromara.visor.module.asset.dao.UploadTaskFileDAO;
-import org.dromara.visor.module.asset.define.config.AppSftpConfig;
 import org.dromara.visor.module.asset.entity.domain.UploadTaskFileDO;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 import org.dromara.visor.module.asset.enums.HostOsTypeEnum;
@@ -69,8 +68,6 @@ public class FileUploader implements IFileUploader {
     private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
 
     private static final UploadTaskFileDAO uploadTaskFileDAO = SpringHolder.getBean(UploadTaskFileDAO.class);
-
-    private static final AppSftpConfig sftpConfig = SpringHolder.getBean(AppSftpConfig.class);
 
     private static final FileClient localFileClient = SpringHolder.getBean("localFileClient");
 
@@ -189,7 +186,7 @@ public class FileUploader implements IFileUploader {
             String endpoint = EndpointDefine.UPLOAD_SWAP.format(taskId);
             String localPath = localFileClient.getReturnPath(endpoint + Const.SLASH + file.getFileId());
             // 检查文件是否存在
-            SftpUtils.checkUploadFilePresent(sftpConfig, executor, path);
+            SftpUtils.checkUploadFilePresent(executor, path);
             // 打开输出流
             this.inputStream = localFileClient.getContentInputStream(localPath);
             this.outputStream = executor.openOutputStream(path);

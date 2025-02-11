@@ -23,6 +23,7 @@
 package org.dromara.visor.module.asset.handler.host.terminal.session;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.FileType;
 import cn.orionsec.kit.lang.utils.io.Files1;
@@ -85,7 +86,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
                 false,
                 true);
         return files.stream()
-                .map(SftpSession::fileMapping)
+                .map(this::fileMapping)
                 .sorted(Comparator.comparing(SftpFileVO::getName))
                 .collect(Collectors.toList());
     }
@@ -133,7 +134,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
         return Arrays.stream(paths)
                 .map(s -> executor.listFiles(s, true, false))
                 .flatMap(Collection::stream)
-                .map(SftpSession::fileMapping)
+                .map(this::fileMapping)
                 .collect(Collectors.toList());
     }
 
@@ -197,7 +198,7 @@ public class SftpSession extends TerminalSession implements ISftpSession {
      * @param sftpFile sftpFile
      * @return file
      */
-    private static SftpFileVO fileMapping(SftpFile sftpFile) {
+    private SftpFileVO fileMapping(SftpFile sftpFile) {
         SftpFileVO file = new SftpFileVO();
         file.setName(sftpFile.getName());
         file.setPath(sftpFile.getPath());
@@ -212,7 +213,19 @@ public class SftpSession extends TerminalSession implements ISftpSession {
                 .map(FileType.DIRECTORY::equals)
                 .orElse(false);
         file.setIsDir(isDir);
+        file.setCanPreview(this.calcCanPreview(sftpFile));
         return file;
+    }
+
+    /**
+     * 检查是否可预览
+     *
+     * @param file file
+     * @return canPreview
+     */
+    private boolean calcCanPreview(SftpFile file) {
+        // 检查文件类型及大小
+        return file.isRegularFile() && file.getSize() <= Objects1.def(config.getFilePreviewSize(), Const.N_2) * 1024 * 1024;
     }
 
 }

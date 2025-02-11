@@ -11,7 +11,7 @@
         <result column="host_name" property="hostName"/>
         <result column="host_address" property="hostAddress"/>
         <result column="type" property="type"/>
-        <result column="token" property="token"/>
+        <result column="session_id" property="sessionId"/>
         <result column="status" property="status"/>
         <result column="start_time" property="startTime"/>
         <result column="end_time" property="endTime"/>
@@ -30,7 +30,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, username, host_id, host_name, host_address, type, token, status, start_time, end_time, extra_info, create_time, update_time, deleted
+        id, user_id, username, host_id, host_name, host_address, type, session_id, status, start_time, end_time, extra_info, create_time, update_time, deleted
     </sql>
 
     <select id="selectLatestConnectHostId" resultType="java.lang.Long">

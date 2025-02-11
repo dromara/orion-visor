@@ -678,9 +678,8 @@ DROP TABLE IF EXISTS `system_setting`;
 CREATE TABLE `system_setting`
 (
     `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `config_key`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置key',
     `type`        char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci    NULL DEFAULT NULL COMMENT '配置类型',
-    `item`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置项',
+    `config_key`  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '配置key',
     `value`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci        NULL COMMENT '配置值',
     `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -688,8 +687,7 @@ CREATE TABLE `system_setting`
     `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
     `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `type_item_idx` (`type`, `item`) USING BTREE,
-    INDEX `key_idx` (`config_key`) USING BTREE
+    INDEX `idx_key` (`config_key`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
@@ -712,6 +710,7 @@ CREATE TABLE `system_user`
     `status`                 tinyint(0)                                                    NULL DEFAULT 1 COMMENT '用户状态 0停用 1启用',
     `update_password_status` tinyint(0)                                                    NULL DEFAULT 0 COMMENT '修改密码状态 0无需修改 1需要修改',
     `update_password_reason` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '修改密码原因',
+    `update_password_time`   datetime(0)                                                   NULL DEFAULT NULL COMMENT '修改密码时间',
     `last_login_time`        datetime(0)                                                   NULL DEFAULT NULL COMMENT '最后登录时间',
     `description`            varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户描述',
     `create_time`            datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -810,7 +809,7 @@ CREATE TABLE `terminal_connect_log`
     `host_address` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机地址',
     `type`         varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '类型',
     `status`       varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '状态',
-    `token`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT 'token',
+    `session_id`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT 'sessionId',
     `start_time`   datetime(3)                                                   NULL DEFAULT NULL COMMENT '开始时间',
     `end_time`     datetime(3)                                                   NULL DEFAULT NULL COMMENT '结束时间',
     `extra_info`   json                                                          NULL COMMENT '额外信息',
@@ -820,7 +819,7 @@ CREATE TABLE `terminal_connect_log`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX `idx_user_id` (`user_id`) USING BTREE,
     INDEX `idx_host_type` (`host_id`, `type`) USING BTREE,
-    INDEX `idx_token` (`token`) USING BTREE
+    INDEX `idx_session_id` (`session_id`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4

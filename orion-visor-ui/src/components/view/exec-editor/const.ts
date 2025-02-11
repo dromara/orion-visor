@@ -29,6 +29,9 @@ export const builtinParams: Array<TemplateParam> = [
     name: 'execId',
     desc: '执行记录id'
   }, {
+    name: 'execHostId',
+    desc: '执行记录主机id'
+  }, {
     name: 'hostId',
     desc: '执行主机id'
   }, {

@@ -51,7 +51,7 @@ export interface ExecLogQueryExtraResponse {
 /**
  * 主机执行日志查询响应
  */
-export interface ExecHostLogQueryResponse extends TableData {
+export interface ExecHostLogQueryResponse extends TableData, ExecHostLogQueryResponseExtra {
   id: number;
   logId: number;
   hostId: number;
@@ -67,19 +67,18 @@ export interface ExecHostLogQueryResponse extends TableData {
 }
 
 /**
+ * 主机执行日志额外参数
+ */
+export interface ExecHostLogQueryResponseExtra {
+  refreshed: boolean;
+}
+
+/**
  * 执行状态查询响应
  */
 export interface ExecLogStatusResponse {
   logList: Array<ExecLogQueryResponse>;
   hostList: Array<ExecHostLogQueryResponse>;
-}
-
-/**
- * 执行日志 tail 请求
- */
-export interface ExecLogTailRequest {
-  execId?: number;
-  hostExecIdList?: Array<number>;
 }
 
 /**

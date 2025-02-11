@@ -28,7 +28,6 @@ import org.dromara.visor.module.asset.entity.domain.ExecLogDO;
 import org.dromara.visor.module.asset.entity.dto.ExecLogTailDTO;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
-import org.dromara.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import org.dromara.visor.module.asset.entity.vo.ExecLogStatusVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogVO;
 
@@ -139,10 +138,10 @@ public interface ExecLogService {
     /**
      * 查看执行日志
      *
-     * @param request request
+     * @param id id
      * @return token
      */
-    String getExecLogTailToken(ExecLogTailRequest request);
+    String getExecLogTailToken(Long id);
 
     /**
      * 获取查看执行日志参数

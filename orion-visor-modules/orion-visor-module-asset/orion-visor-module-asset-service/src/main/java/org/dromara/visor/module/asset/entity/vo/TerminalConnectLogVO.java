@@ -72,6 +72,9 @@ public class TerminalConnectLogVO implements Serializable {
     @Schema(description = "状态")
     private String status;
 
+    @Schema(description = "sessionId")
+    private String sessionId;
+
     @Schema(description = "开始时间")
     private Date startTime;
 

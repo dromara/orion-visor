@@ -263,7 +263,7 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
                 .eq(TerminalConnectLogDO::getHostId, request.getHostId())
                 .like(TerminalConnectLogDO::getHostAddress, request.getHostAddress())
                 .eq(TerminalConnectLogDO::getType, request.getType())
-                .like(TerminalConnectLogDO::getToken, request.getToken())
+                .like(TerminalConnectLogDO::getSessionId, request.getSessionId())
                 .eq(TerminalConnectLogDO::getStatus, request.getStatus())
                 .in(TerminalConnectLogDO::getStatus, request.getStatusList())
                 .ge(TerminalConnectLogDO::getStartTime, Arrays1.getIfPresent(request.getStartTimeRange(), 0))

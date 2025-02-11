@@ -83,8 +83,8 @@
       </a-descriptions-item>
       <!-- sessionId -->
       <a-descriptions-item label="sessionId">
-        <span class="text-copy" @click="copy(record.extra?.sessionId)">
-          {{ record.extra?.sessionId }}
+        <span class="text-copy" @click="copy(record.sessionId)">
+          {{ record.sessionId }}
         </span>
       </a-descriptions-item>
     </a-descriptions>

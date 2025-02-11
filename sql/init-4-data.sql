@@ -1,6 +1,6 @@
 -- 默认管理员账号
 -- 账号: admin 密码: admin
-INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NULL, NOW(), NOW(), '1', '1', 0);
+INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NULL, NULL, NOW(), NOW(), '1', '1', 0);
 
 -- 角色配置
 INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, '2023-07-16 21:13:14', '2023-07-17 17:31:29', '1', '1', 0);
@@ -9,10 +9,29 @@ INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, '2023-07-16 
 INSERT INTO `system_user_role` VALUES (1, 1, 1, '2023-07-16 21:15:49', '2023-07-17 18:18:02', '1', '1', 0);
 
 -- 系统设置
-INSERT INTO `system_setting` VALUES (1, 'sftp.previewSize', 'SFTP', 'previewSize', '2', '2024-09-27 17:33:05', '2025-01-07 11:15:39', '1', '1', 0);
-INSERT INTO `system_setting` VALUES (2, 'encrypt.publicKey', 'ENCRYPT', 'publicKey', 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6++dxyeNdij6ZfM2I9ojLQ1tzmqyuL3rkectm9uXJsXOFiN0aFi4glsoGVZO5hMH5/pppdSQnYz3rSV9b0qjFTRMv5u1BHHzuzoOkI43WqXCX96f8diHIZsEu9fZ+AkxVck/kDPfmR2dVjwo8ZBuJ7drsP8fDbs8N3vtEwPSotwIDAQAB', '2025-01-07 15:40:18', '2025-01-07 15:40:18', '1', '1', 0);
-INSERT INTO `system_setting` VALUES (3, 'encrypt.privateKey', 'ENCRYPT', 'privateKey', 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALr753HJ412KPpl8zYj2iMtDW3OarK4veuR5y2b25cmxc4WI3RoWLiCWygZVk7mEwfn+mml1JCdjPetJX1vSqMVNEy/m7UEcfO7Og6QjjdapcJf3p/x2IchmwS719n4CTFVyT+QM9+ZHZ1WPCjxkG4nt2uw/x8Nuzw3e+0TA9Ki3AgMBAAECgYA+sD3ENH952ONr6h+uj5kFLKv4ch76twhomTzMZHJd0JR+bIhUOqN0YZmRzhcc15mBCw8R1Cgu3GLiA1NpIZNbH6ujsGzwOGn9E+1TIgRAfgOV1JmMIJ4sVa2zb5+seZ4TkU2MfpKjToa/cX1kovoiNR8gPV+HCE8HUBXgOziF4QJBAOf2LGTjjKSag8WBQjgy2OCi6l0260jGSCGBJYCG884feeH/msTbTdvo44iYyd3P9txxBmmnpdJLvPgJWCu01q0CQQDOXH8yPkSCBL+ZvFizBHayhoO0FN/YFyrYf1wewt43mCDHbx4fzwXtc2CLrSt+nqgwTA4M73Sf2DAOW9pk9T1zAkBIT1d7g+v+DCTz1t2bw04UiPTiZhJmt1kZCLd2H5u1L97A8vt+Tpcw7KKxnF+hhAkCo0FKgnaQ3gdkkxUnWtJpAkEAoA4v/bk8C5hBP61NIrRQmBEq767NG16Etdy6h4VfM8GDkwvFUqiQkWZOuKc8t/24t5UVxMSpMR1N0KU/k9R+rwJBALjw7SzSeqWV2VLUZVqtWPu9nZvX79SWZWMp0gtmYYgzKa1dttzdJsXY5i/cfKH6RO2hwicO1rVBpiZ5zMggljo=', '2025-01-07 15:40:18', '2025-01-07 15:40:18', '1', '1', 0);
-
+INSERT INTO `system_setting` VALUES (6, 'sftp', 'sftp_previewSize', '2', '2025-02-10 22:19:46', '2025-02-10 22:19:46', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (7, 'sftp', 'sftp_uploadPresentBackup', 'true', '2025-02-10 22:19:46', '2025-02-10 22:19:46', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (8, 'sftp', 'sftp_uploadBackupFileName', 'bk_${fileName}_${timestamp}', '2025-02-10 22:19:46', '2025-02-10 22:19:46', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (9, 'login', 'login_loginSessionTime', '1440', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (10, 'login', 'login_maxRefreshCount', '3', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (11, 'login', 'login_refreshInterval', '480', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (12, 'login', 'login_loginFailedLockThreshold', '5', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (13, 'login', 'login_loginFailedLockTime', '30', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (14, 'login', 'login_loginFailedSendThreshold', '5', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (15, 'login', 'login_allowMultiDevice', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (16, 'login', 'login_allowRefresh', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (17, 'login', 'login_loginFailedLock', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (18, 'login', 'login_loginFailedSend', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (21, 'encrypt', 'encrypt_publicKey', 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6++dxyeNdij6ZfM2I9ojLQ1tzmqyuL3rkectm9uXJsXOFiN0aFi4glsoGVZO5hMH5/pppdSQnYz3rSV9b0qjFTRMv5u1BHHzuzoOkI43WqXCX96f8diHIZsEu9fZ+AkxVck/kDPfmR2dVjwo8ZBuJ7drsP8fDbs8N3vtEwPSotwIDAQAB', '2025-02-10 22:21:11', '2025-02-10 22:21:11', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (22, 'encrypt', 'encrypt_privateKey', 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALr753HJ412KPpl8zYj2iMtDW3OarK4veuR5y2b25cmxc4WI3RoWLiCWygZVk7mEwfn+mml1JCdjPetJX1vSqMVNEy/m7UEcfO7Og6QjjdapcJf3p/x2IchmwS719n4CTFVyT+QM9+ZHZ1WPCjxkG4nt2uw/x8Nuzw3e+0TA9Ki3AgMBAAECgYA+sD3ENH952ONr6h+uj5kFLKv4ch76twhomTzMZHJd0JR+bIhUOqN0YZmRzhcc15mBCw8R1Cgu3GLiA1NpIZNbH6ujsGzwOGn9E+1TIgRAfgOV1JmMIJ4sVa2zb5+seZ4TkU2MfpKjToa/cX1kovoiNR8gPV+HCE8HUBXgOziF4QJBAOf2LGTjjKSag8WBQjgy2OCi6l0260jGSCGBJYCG884feeH/msTbTdvo44iYyd3P9txxBmmnpdJLvPgJWCu01q0CQQDOXH8yPkSCBL+ZvFizBHayhoO0FN/YFyrYf1wewt43mCDHbx4fzwXtc2CLrSt+nqgwTA4M73Sf2DAOW9pk9T1zAkBIT1d7g+v+DCTz1t2bw04UiPTiZhJmt1kZCLd2H5u1L97A8vt+Tpcw7KKxnF+hhAkCo0FKgnaQ3gdkkxUnWtJpAkEAoA4v/bk8C5hBP61NIrRQmBEq767NG16Etdy6h4VfM8GDkwvFUqiQkWZOuKc8t/24t5UVxMSpMR1N0KU/k9R+rwJBALjw7SzSeqWV2VLUZVqtWPu9nZvX79SWZWMp0gtmYYgzKa1dttzdJsXY5i/cfKH6RO2hwicO1rVBpiZ5zMggljo=', '2025-02-10 22:21:11', '2025-02-10 22:21:11', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (23, 'log', 'log_webScrollLines', '1500', '2025-02-10 22:21:54', '2025-02-10 22:21:54', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (24, 'log', 'log_trackerLoadInterval', '100', '2025-02-10 22:21:54', '2025-02-10 22:21:54', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (25, 'log', 'log_trackerLoadLines', '300', '2025-02-10 22:21:54', '2025-02-10 22:21:54', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (26, 'log', 'log_execDetailLog', 'true', '2025-02-10 22:21:54', '2025-02-10 22:21:54', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (27, 'autoClear', 'autoClear_execLogKeepDays', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (28, 'autoClear', 'autoClear_terminalLogKeepDays', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (29, 'autoClear', 'autoClear_execLogEnabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', '1', '1', 0);
+INSERT INTO `system_setting` VALUES (30, 'autoClear', 'autoClear_terminalLogEnabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', '1', '1', 0);
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', '1', '1', 0);
 INSERT INTO `dict_key` VALUES (2, 'operatorLogType', 'STRING', '[]', '操作日志类型', '2023-10-21 02:06:04', '2023-10-21 02:06:04', '1', '1', 0);

@@ -78,9 +78,9 @@ public class TerminalConnectLogDO extends BaseDO {
     @TableField("type")
     private String type;
 
-    @Schema(description = "token")
-    @TableField("token")
-    private String token;
+    @Schema(description = "sessionId")
+    @TableField("session_id")
+    private String sessionId;
 
     @Schema(description = "状态")
     @TableField("status")

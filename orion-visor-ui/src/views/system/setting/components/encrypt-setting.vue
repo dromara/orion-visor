@@ -13,22 +13,22 @@
         <a-alert>请输入 PKCS8 格式的 RSA Base64 密钥, 用于前后端传输时的数据加密</a-alert>
       </a-form-item>
       <!-- 加密公钥 -->
-      <a-form-item field="publicKey"
+      <a-form-item field="encrypt_publicKey"
                    label="加密公钥"
                    :rules="[{required: true, message: '请输入加密公钥'}]"
                    hide-asterisk>
-        <a-textarea v-model="setting.publicKey"
+        <a-textarea v-model="setting.encrypt_publicKey"
                     class="input-wrapper"
                     placeholder="RSA 公钥 Base64"
                     :auto-size="{ minRows: 5, maxRows: 5 }"
                     allow-clear />
       </a-form-item>
       <!-- 加密私钥 -->
-      <a-form-item field="privateKey"
+      <a-form-item field="encrypt_privateKey"
                    label="加密私钥"
                    :rules="[{required: true, message: '请输入加密私钥'}]"
                    hide-asterisk>
-        <a-textarea v-model="setting.privateKey"
+        <a-textarea v-model="setting.encrypt_privateKey"
                     class="input-wrapper"
                     placeholder="RSA 私钥 Base64"
                     :auto-size="{ minRows: 14, maxRows: 14 }"
@@ -97,8 +97,8 @@
     setLoading(true);
     try {
       const { data } = await generatorKeypair();
-      setting.value.publicKey = data.publicKey;
-      setting.value.privateKey = data.privateKey;
+      setting.value.encrypt_publicKey = data.publicKey;
+      setting.value.encrypt_privateKey = data.privateKey;
     } catch (e) {
     } finally {
       setLoading(false);
@@ -109,8 +109,10 @@
   onMounted(async () => {
     setLoading(true);
     try {
-      const { data } = await getSystemSetting<EncryptSetting>(SystemSettingTypes.ENCRYPT);
-      setting.value = data;
+      const { data } = await getSystemSetting(SystemSettingTypes.ENCRYPT);
+      setting.value = {
+        ...data
+      };
     } catch (e) {
     } finally {
       setLoading(false);

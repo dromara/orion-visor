@@ -24,6 +24,7 @@ package org.dromara.visor.module.infra.service.impl;
 
 import cn.orionsec.kit.lang.annotation.Keep;
 import cn.orionsec.kit.lang.define.wrapper.Pair;
+import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
@@ -31,6 +32,8 @@ import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import cn.orionsec.kit.web.servlet.web.Servlets;
 import com.alibaba.fastjson.JSON;
+import org.dromara.visor.common.config.ConfigStore;
+import org.dromara.visor.common.constant.ConfigKeys;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
@@ -48,7 +51,7 @@ import org.dromara.visor.module.infra.convert.SystemUserConvert;
 import org.dromara.visor.module.infra.dao.SystemUserDAO;
 import org.dromara.visor.module.infra.dao.SystemUserRoleDAO;
 import org.dromara.visor.module.infra.define.cache.UserCacheKeyDefine;
-import org.dromara.visor.module.infra.define.config.AppAuthenticationConfig;
+import org.dromara.visor.module.infra.define.config.AppLoginConfig;
 import org.dromara.visor.module.infra.define.message.SystemUserMessageDefine;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.LoginTokenDTO;
@@ -63,6 +66,7 @@ import org.dromara.visor.module.infra.service.UserPermissionService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -80,7 +84,7 @@ import java.util.stream.Collectors;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Resource
-    private AppAuthenticationConfig appAuthenticationConfig;
+    private AppLoginConfig appLoginConfig;
 
     @Resource
     private SystemUserDAO systemUserDAO;
@@ -97,6 +101,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Keep
     @Resource
     private RedisTemplate<String, String> redisTemplate;
+
+    @Resource
+    private ConfigStore configStore;
+
+    @PostConstruct
+    public void initCacheExpireTime() {
+        // 监听并且设置缓存过期时间
+        configStore.int32(ConfigKeys.LOGIN_LOGIN_SESSION_TIME).onChange((v, b) -> this.setCacheExpireTime());
+        configStore.int32(ConfigKeys.LOGIN_REFRESH_INTERVAL).onChange((v, b) -> this.setCacheExpireTime());
+        this.setCacheExpireTime();
+    }
 
     @Override
     public UserLoginVO login(UserLoginRequest request, HttpServletRequest servletRequest) {
@@ -118,7 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 用户状态校验
         this.checkUserStatus(user);
         Long id = user.getId();
-        // 设置上次登录时间
+        // 设置最后登录时间
         this.setLastLoginTime(id);
         // 删除用户缓存
         this.deleteUserCache(user);
@@ -126,7 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.setUserCache(user);
         long current = System.currentTimeMillis();
         // 不允许多端登录
-        if (!appAuthenticationConfig.getAllowMultiDevice()) {
+        if (Booleans.isFalse(appLoginConfig.getAllowMultiDevice())) {
             // 无效化其他缓存
             this.invalidOtherDeviceToken(id, current, remoteAddr, location, userAgent);
         }
@@ -188,7 +203,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return JSON.parseObject(loginCache, LoginTokenDTO.class);
         }
         // loginToken 不存在 需要查询 refreshToken
-        if (!appAuthenticationConfig.getAllowRefresh()) {
+        if (Booleans.isFalse(appLoginConfig.getAllowRefresh())) {
             return null;
         }
         String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(pair.getKey(), pair.getValue());
@@ -203,7 +218,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         refresh.setRefreshCount(refreshCount);
         // 设置登录缓存
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, refresh);
-        if (refreshCount < appAuthenticationConfig.getMaxRefreshCount()) {
+        if (refreshCount < appLoginConfig.getMaxRefreshCount()) {
             // 小于续签最大次数 则再次设置 refreshToken
             RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, refresh);
         } else {
@@ -219,12 +234,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (password.length() != Const.MD5_LEN) {
             throw Exceptions.argument(ErrorMessage.USERNAME_PASSWORD_ERROR);
         }
-        // 检查登录失败次数
-        String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(username);
-        String failedCount = redisTemplate.opsForValue().get(failedCountKey);
-        if (failedCount != null
-                && Integer.parseInt(failedCount) >= appAuthenticationConfig.getLoginFailedLockCount()) {
-            throw Exceptions.argument(ErrorMessage.MAX_LOGIN_FAILED);
+        // 检查登录失败次数锁定
+        if (Booleans.isTrue(appLoginConfig.getLoginFailedLock())) {
+            String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(username);
+            String failedCount = redisTemplate.opsForValue().get(failedCountKey);
+            if (failedCount != null
+                    && Integer.parseInt(failedCount) >= appLoginConfig.getLoginFailedLockThreshold()) {
+                throw Exceptions.argument(ErrorMessage.MAX_LOGIN_FAILED);
+            }
         }
         // 获取登录用户
         SystemUserDO user = systemUserDAO.of()
@@ -244,7 +261,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             // 刷新登录失败缓存
             String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
             redisTemplate.opsForValue().increment(failedCountKey);
-            RedisUtils.setExpire(failedCountKey, appAuthenticationConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
+            RedisUtils.setExpire(failedCountKey, appLoginConfig.getLoginFailedLockTime(), TimeUnit.MINUTES);
         }
         return passRight;
     }
@@ -268,13 +285,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (passRight) {
             return;
         }
+        // 检查是否开启登录失败发信
+        if (!Booleans.isTrue(appLoginConfig.getLoginFailedSend())) {
+            return;
+        }
         String failedCountKey = UserCacheKeyDefine.LOGIN_FAILED_COUNT.format(user.getUsername());
         String failedCountStr = redisTemplate.opsForValue().get(failedCountKey);
         if (failedCountStr == null || !Strings.isInteger(failedCountStr)) {
             return;
         }
         // 直接用相等 因为只触发一次
-        if (!appAuthenticationConfig.getLoginFailedSendThreshold().equals(Integer.valueOf(failedCountStr))) {
+        if (!Integer.valueOf(failedCountStr).equals(appLoginConfig.getLoginFailedSendThreshold())) {
             return;
         }
         // 发送站内信
@@ -393,7 +414,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
         }
         // 删除续签信息
-        if (appAuthenticationConfig.getAllowRefresh()) {
+        if (Booleans.isTrue(appLoginConfig.getAllowRefresh())) {
             RedisUtils.scanKeysDelete(UserCacheKeyDefine.LOGIN_REFRESH.format(id, "*"));
         }
     }
@@ -421,12 +442,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         RedisStrings.setJson(loginKey, UserCacheKeyDefine.LOGIN_TOKEN, loginValue);
         // 生成 refreshToken
-        if (appAuthenticationConfig.getAllowRefresh()) {
+        if (Booleans.isTrue(appLoginConfig.getAllowRefresh())) {
             String refreshKey = UserCacheKeyDefine.LOGIN_REFRESH.format(id, loginTime);
             RedisStrings.setJson(refreshKey, UserCacheKeyDefine.LOGIN_REFRESH, loginValue);
         }
         // 返回token
         return AesEncryptUtils.encryptBase62(id + ":" + loginTime);
+    }
+
+    /**
+     * 重新设置缓存时间
+     */
+    private void setCacheExpireTime() {
+        Integer loginSessionTime = appLoginConfig.getLoginSessionTime();
+        if (loginSessionTime != null) {
+            UserCacheKeyDefine.LOGIN_TOKEN.setTimeout(loginSessionTime);
+            UserCacheKeyDefine.LOGIN_REFRESH.setTimeout(loginSessionTime + appLoginConfig.getRefreshInterval());
+        }
     }
 
 }

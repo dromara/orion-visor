@@ -5,9 +5,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.infra.entity.domain.SystemSettingDO">
         <id column="id" property="id"/>
-        <result column="config_key" property="configKey"/>
         <result column="type" property="type"/>
-        <result column="item" property="item"/>
+        <result column="config_key" property="configKey"/>
         <result column="value" property="value"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -18,7 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, config_key, type, item, value, create_time, update_time, creator, updater, deleted
+        id, config_key, type, value, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

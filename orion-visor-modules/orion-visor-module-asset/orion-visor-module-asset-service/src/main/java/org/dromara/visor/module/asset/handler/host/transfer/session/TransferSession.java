@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import org.dromara.visor.framework.biz.operator.log.core.service.OperatorLogFrameworkService;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
-import org.dromara.visor.module.asset.define.config.AppSftpConfig;
 import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 import org.dromara.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
 import org.dromara.visor.module.asset.handler.host.transfer.enums.TransferReceiver;
@@ -53,8 +52,6 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class TransferSession implements ITransferSession {
-
-    protected static final AppSftpConfig sftpConfig = SpringHolder.getBean(AppSftpConfig.class);
 
     protected final TerminalConnectDTO connectInfo;
 

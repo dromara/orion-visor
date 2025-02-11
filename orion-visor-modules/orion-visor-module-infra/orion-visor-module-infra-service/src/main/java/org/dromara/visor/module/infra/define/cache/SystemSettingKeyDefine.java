@@ -25,7 +25,6 @@ package org.dromara.visor.module.infra.define.cache;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import org.dromara.visor.module.infra.entity.vo.SystemSettingAggregateVO;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,10 +38,10 @@ import java.util.concurrent.TimeUnit;
 public interface SystemSettingKeyDefine {
 
     CacheKeyDefine SETTING = new CacheKeyBuilder()
-            .key("system:setting:agg")
+            .key("system:setting:view")
             .desc("系统聚合设置")
-            .type(SystemSettingAggregateVO.class)
-            .struct(RedisCacheStruct.STRING)
+            .type(String.class)
+            .struct(RedisCacheStruct.HASH)
             .timeout(8, TimeUnit.HOURS)
             .build();
 

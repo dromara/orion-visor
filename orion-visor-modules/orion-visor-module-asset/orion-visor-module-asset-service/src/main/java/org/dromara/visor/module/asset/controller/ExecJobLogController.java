@@ -37,7 +37,6 @@ import org.dromara.visor.module.asset.define.operator.ExecJobLogOperatorType;
 import org.dromara.visor.module.asset.entity.request.exec.ExecInterruptRequest;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogClearRequest;
 import org.dromara.visor.module.asset.entity.request.exec.ExecLogQueryRequest;
-import org.dromara.visor.module.asset.entity.request.exec.ExecLogTailRequest;
 import org.dromara.visor.module.asset.entity.vo.ExecHostLogVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogStatusVO;
 import org.dromara.visor.module.asset.entity.vo.ExecLogVO;
@@ -90,6 +89,14 @@ public class ExecJobLogController {
     @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public ExecLogVO getExecJobLog(@RequestParam("id") Long id) {
         return execLogService.getExecLog(id, SOURCE);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/get-host")
+    @Operation(summary = "查询执行主机日志")
+    @PreAuthorize("@ss.hasPermission('exec:exec-job-log:query')")
+    public ExecHostLogVO getExecJobHostLog(@RequestParam("id") Long id) {
+        return execHostLogService.getExecHostLog(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -153,12 +160,12 @@ public class ExecJobLogController {
         return execLogService.clearExecLog(request);
     }
 
-    @PostMapping("/tail")
+    @GetMapping("/tail")
     @Operation(summary = "查看计划任务日志")
-    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
-    public String getExecJobLogTailToken(@Validated @RequestBody ExecLogTailRequest request) {
-        request.setSource(SOURCE);
-        return execLogService.getExecLogTailToken(request);
+    @Parameter(name = "id", description = "id", required = true)
+    @PreAuthorize("@ss.hasPermission('exec:exec-job-log:query')")
+    public String getExecJobLogTailToken(@RequestParam("id") Long id) {
+        return execLogService.getExecLogTailToken(id);
     }
 
     @OperatorLog(ExecJobLogOperatorType.DOWNLOAD)

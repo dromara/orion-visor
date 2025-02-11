@@ -369,6 +369,7 @@ export interface SftpFile {
   uid: number;
   gid: number;
   modifyTime: number;
+  canPreview: boolean;
 }
 
 // sftp 传输管理器定义
