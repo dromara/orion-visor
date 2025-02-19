@@ -94,7 +94,7 @@ public class ExecJobLogController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get-host")
     @Operation(summary = "查询执行主机日志")
-    @PreAuthorize("@ss.hasPermission('exec:exec-job-log:query')")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public ExecHostLogVO getExecJobHostLog(@RequestParam("id") Long id) {
         return execHostLogService.getExecHostLog(id);
     }
@@ -163,7 +163,7 @@ public class ExecJobLogController {
     @GetMapping("/tail")
     @Operation(summary = "查看计划任务日志")
     @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('exec:exec-job-log:query')")
+    @PreAuthorize("@ss.hasPermission('asset:exec-job-log:query')")
     public String getExecJobLogTailToken(@RequestParam("id") Long id) {
         return execLogService.getExecLogTailToken(id);
     }
