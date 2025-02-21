@@ -45,4 +45,9 @@ public class SecurityHolderDelegate implements SecurityHolder {
         return SecurityUtils.getLoginUserId();
     }
 
+    @Override
+    public String getLoginUsername() {
+        return SecurityUtils.getLoginUsername();
+    }
+
 }
