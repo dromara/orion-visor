@@ -343,6 +343,7 @@ INSERT INTO `dict_value` VALUES (424, 1, 'operatorLogModule', 'infra:system-sett
 INSERT INTO `dict_value` VALUES (425, 2, 'operatorLogType', 'system-setting:update', '更新系统设置', '{}', 10, '2024-10-09 19:30:17', '2024-10-09 19:30:43', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (431, 61, 'updatePasswordReason', 'NEW', '为了保障账户安全，请立即修改初始密码。', '{}', 10, '2024-12-11 17:24:19', '2024-12-11 17:24:19', '1', '1', 0);
 INSERT INTO `dict_value` VALUES (432, 2, 'operatorLogType', 'exec-job:update-exec-user', '修改计划执行用户', '{}', 45, '2024-12-13 00:17:03', '2024-12-13 00:17:03', '1', '1', 0);
+INSERT INTO `dict_value` VALUES (443, 21, 'terminalFontFamily', 'Cascadia Mono', 'Cascadia Mono', '{}', 50, '2023-12-11 16:48:03', '2024-05-15 15:26:42', 'admin', 'admin', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '仪表盘', NULL, 1, 10, 1, 1, 1, 0, 'IconDashboard', NULL, 'dashboard', '2023-07-28 10:51:50', '2024-08-11 00:05:44', '1', '1', 0);
