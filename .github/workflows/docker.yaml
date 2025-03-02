@@ -1,0 +1,153 @@
+name: Docker
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - 'v*'
+permissions: # This is needed to push to GitHub Container Registry. See https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+  contents: read
+  packages: write
+concurrency: # This is needed to prevent concurrent builds from running at the same time
+  group: ${{github.workflow}} - ${{github.ref}} - ${{github.ref_name}}
+  cancel-in-progress: true
+env:
+  # https://github.com/docker/metadata-action/tree/v5/?tab=readme-ov-file#semver
+  # Event: push,     Ref: refs/head/main,       Tags: main
+  # Event: push tag, Ref: refs/tags/v1.2.3,     Tags: 1.2.3, 1.2, 1, latest
+  # Event: push tag, Ref: refs/tags/v2.0.8-rc1, Tags: 2.0.8-rc1
+  metadata-action-tags: |
+    type=ref,event=branch
+    type=semver,pattern={{version}}
+    type=semver,pattern={{major}}.{{minor}}
+    type=semver,pattern={{major}}
+jobs:
+  build-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 检出代码
+        uses: actions/checkout@main
+      - name: ☕ 配置Java环境
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: maven
+      - name: 🛠️ 配置Maven环境
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.9
+      - name: 🏗️ Maven构建
+        run: |
+          mvn --batch-mode clean install -Dmaven.test.skip=true --threads=1C --settings=.github/settings.xml
+          #  -Dspring.profiles.active=prod
+      - name: 🔑 登录 GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🏷️ 准备 Docker 镜像元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}-service
+          tags: ${{ env.metadata-action-tags }}
+      - name: 🖥️ 设置 QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: 🐳 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: 🚀 构建并推送 Docker 镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: '.'
+          push: true
+          file: docker-multiarch/Dockerfile.service
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  build-mysql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 检出代码
+        uses: actions/checkout@main
+      - name: 🔑 登录 GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🏷️ 准备 Docker 镜像元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}-mysql
+          tags: ${{ env.metadata-action-tags }}
+      - name: 🖥️ 设置 QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: 🐳 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: 🚀 构建并推送 Docker 镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: '.'
+          push: true
+          file: docker-multiarch/Dockerfile.mysql
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  build-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 检出代码
+        uses: actions/checkout@main
+      - name: 📦 安装 PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - name: 🟢 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: 'orion-visor-ui/pnpm-lock.yaml'
+      - name: 📥 安装依赖
+        run: pnpm install --frozen-lockfile
+        working-directory: orion-visor-ui
+      - name: 🏗️ 构建UI
+        run: pnpm build
+        working-directory: orion-visor-ui
+      - name: 🔑 登录 GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🏷️ 准备 Docker 镜像元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}-ui
+          tags: ${{ env.metadata-action-tags }}
+      - name: 🖥️ 设置 QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: 🐳 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: 🚀 构建并推送 Docker 镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: '.'
+          push: true
+          file: docker-multiarch/Dockerfile.ui
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
