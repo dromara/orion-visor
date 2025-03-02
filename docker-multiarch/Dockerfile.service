@@ -1,0 +1,13 @@
+FROM amazoncorretto:17-alpine
+
+WORKDIR /app
+
+ENV TZ=Asia/Shanghai
+
+ARG JAR_FILE=orion-visor-launch/target/orion-visor-launch.jar
+COPY ${JAR_FILE} /app/app.jar
+
+HEALTHCHECK --interval=15s --timeout=5s --retries=5 --start-period=10s \
+  CMD wget -T5 -qO- http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health | grep ok || exit 1
+
+CMD ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
