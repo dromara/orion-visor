@@ -1,0 +1,11 @@
+FROM mysql:8
+
+COPY ./sql/init-*.sql /docker-entrypoint-initdb.d
+
+ENV TZ=Asia/Shanghai
+ENV LANG=C.UTF-8
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=3s --retries=3 \
+  CMD mysqladmin ping -h localhost -u root --password=${MYSQL_ROOT_PASSWORD} || exit 1
+
+CMD ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--lower-case-table-names=1"]

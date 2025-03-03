@@ -1,0 +1,6 @@
+FROM caddy:2-alpine
+
+ENV CADDY_TRUSTED_PROXIES=''
+
+COPY docker-multiarch/Caddyfile /etc/caddy/Caddyfile
+COPY orion-visor-ui/dist /usr/share/caddy

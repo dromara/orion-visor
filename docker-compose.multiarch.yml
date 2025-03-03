@@ -1,0 +1,76 @@
+services:
+  ui:
+    depends_on:
+      - service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: docker-multiarch/Dockerfile.ui
+    # environment:
+    #   CADDY_TRUSTED_PROXIES: |-
+    #     192.168.1.1
+    ports:
+      - ${SERVICE_PORT:-1081}:80
+    image: ghcr.io/dromara/orion-visor-ui:2
+  service:
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: docker-multiarch/Dockerfile.service
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
+      MYSQL_USER: ${MYSQL_USER:-orion}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
+      SECRET_KEY: ${SECRET_KEY:-uQeacXV8b3isvKLK}
+      DEMO_MODE: ${DEMO_MODE:-false}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/service/root-orion:/root/orion
+    image: ghcr.io/dromara/orion-visor-service:2
+  mysql:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: docker-multiarch/Dockerfile.mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
+      MYSQL_USER: ${MYSQL_USER:-orion}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Data@123456}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql:/var/lib/mysql
+    image: ghcr.io/dromara/orion-visor-mysql:2
+  redis:
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-Data@123456}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/redis/data:/data
+    command: sh -c "redis-server --requirepass $${REDIS_PASSWORD}"
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 1s
+      start_interval: 1s
+    image: redis:7-alpine
+  adminer:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - 8081:8080
+    environment:
+      - ADMINER_DEFAULT_SERVER=${MYSQL_HOST:-mysql}
+    image: adminer:latest

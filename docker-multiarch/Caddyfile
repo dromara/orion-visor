@@ -1,0 +1,19 @@
+{
+	servers {
+		trusted_proxies static {$CADDY_TRUSTED_PROXIES}
+	}
+}
+
+:80 {
+	@api {
+		path /orion-visor/*
+	}
+	handle @api {
+		reverse_proxy http://service:9200
+	}
+	handle {
+		root * /usr/share/caddy
+		try_files {path} /index.html
+		file_server
+	}
+}
