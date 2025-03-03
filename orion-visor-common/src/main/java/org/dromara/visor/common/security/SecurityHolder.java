@@ -45,4 +45,11 @@ public interface SecurityHolder {
      */
     Long getLoginUserId();
 
+    /**
+     * 获取当前用户名
+     *
+     * @return username
+     */
+    String getLoginUsername();
+
 }
