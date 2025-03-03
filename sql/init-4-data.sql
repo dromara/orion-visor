@@ -3,10 +3,10 @@
 INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NULL, NULL, NOW(), NOW(), 'admin', 'admin', 0);
 
 -- 角色配置
-INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, '2023-07-16 21:13:14', '2023-07-17 17:31:29', 'admin', 'admin', 0);
+INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, NOW(), NOW(), 'admin', 'admin', 0);
 
 -- 角色用户关联
-INSERT INTO `system_user_role` VALUES (1, 1, 1, '2023-07-16 21:15:49', '2023-07-17 18:18:02', 'admin', 'admin', 0);
+INSERT INTO `system_user_role` VALUES (1, 1, 1, NOW(), NOW(), 'admin', 'admin', 0);
 
 -- 系统设置
 INSERT INTO `system_setting` VALUES (6, 'sftp', 'sftp_previewSize', '2', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
