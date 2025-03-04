@@ -71,6 +71,11 @@ public class OrionMockBeanTestConfiguration {
             public Long getLoginUserId() {
                 return DEFAULT.getId();
             }
+
+            @Override
+            public String getLoginUsername() {
+                return DEFAULT.getUsername();
+            }
         };
     }
 

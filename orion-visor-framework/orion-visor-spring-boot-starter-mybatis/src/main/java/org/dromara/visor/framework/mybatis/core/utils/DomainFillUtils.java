@@ -50,6 +50,7 @@ public class DomainFillUtils {
      */
     public static void fillInsert(BaseDO baseDO) {
         Date now = new Date();
+        String username = securityHolder.getLoginUsername();
         // 创建时间
         if (Objects.isNull(baseDO.getCreateTime())) {
             baseDO.setCreateTime(now);
@@ -58,15 +59,13 @@ public class DomainFillUtils {
         if (Objects.isNull(baseDO.getUpdateTime())) {
             baseDO.setUpdateTime(now);
         }
-
-        Long userId = securityHolder.getLoginUserId();
         // 创建人
-        if (Objects.nonNull(userId) && Objects.isNull(baseDO.getCreator())) {
-            baseDO.setCreator(userId.toString());
+        if (Objects.nonNull(username) && Objects.isNull(baseDO.getCreator())) {
+            baseDO.setCreator(username);
         }
         // 更新人
-        if (Objects.nonNull(userId) && Objects.isNull(baseDO.getUpdater())) {
-            baseDO.setUpdater(userId.toString());
+        if (Objects.nonNull(username) && Objects.isNull(baseDO.getUpdater())) {
+            baseDO.setUpdater(username);
         }
         // 逻辑删除字段
         if (Objects.isNull(baseDO.getDeleted())) {
@@ -85,9 +84,9 @@ public class DomainFillUtils {
             baseDO.setUpdateTime(new Date());
         }
         // 更新人
-        Long userId = securityHolder.getLoginUserId();
-        if (Objects.nonNull(userId) && Objects.isNull(baseDO.getUpdater())) {
-            baseDO.setUpdater(userId.toString());
+        String username = securityHolder.getLoginUsername();
+        if (Objects.nonNull(username) && Objects.isNull(baseDO.getUpdater())) {
+            baseDO.setUpdater(username);
         }
     }
 
