@@ -1,4 +1,4 @@
-import type { ISftpSession, ISftpSessionResolver, ITerminalChannel, TerminalPanelTabItem } from '../types/define';
+import type { ISftpSession, ISftpSessionResolver, ITerminalChannel, TerminalPanelTabItem, TerminalStatus } from '../types/define';
 import { h } from 'vue';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
 import { PanelSessionType } from '../types/const';
@@ -6,7 +6,7 @@ import { Modal } from '@arco-design/web-vue';
 import BaseSession from './base-session';
 
 // sftp 会话实现
-export default class SftpSession extends BaseSession implements ISftpSession {
+export default class SftpSession extends BaseSession<TerminalStatus> implements ISftpSession {
 
   public resolver: ISftpSessionResolver;
 
@@ -16,7 +16,7 @@ export default class SftpSession extends BaseSession implements ISftpSession {
 
   constructor(tab: TerminalPanelTabItem,
               channel: ITerminalChannel) {
-    super(PanelSessionType.SFTP.type, tab);
+    super(PanelSessionType.SFTP.type, tab, {});
     this.channel = channel;
     this.showHiddenFile = false;
     this.resolver = undefined as unknown as ISftpSessionResolver;
@@ -25,13 +25,6 @@ export default class SftpSession extends BaseSession implements ISftpSession {
   // 初始化
   init(resolver: ISftpSessionResolver): void {
     this.resolver = resolver;
-  }
-
-  // 设置已连接
-  setConnected(): void {
-    super.setConnected();
-    // 连接回调
-    this.resolver.connectCallback();
   }
 
   // 连接会话
@@ -169,6 +162,13 @@ export default class SftpSession extends BaseSession implements ISftpSession {
     this.channel.send(InputProtocol.CLOSE, {
       sessionId: this.sessionId
     });
+  }
+
+  // 设置已连接
+  setConnected(): void {
+    super.setConnected();
+    // 连接回调
+    this.resolver.connectCallback();
   }
 
 }

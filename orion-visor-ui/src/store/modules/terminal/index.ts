@@ -14,6 +14,7 @@ import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
 import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/terminal';
 import { getTerminalThemes } from '@/api/asset/terminal';
+import { markRaw } from 'vue';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
 import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
@@ -73,7 +74,7 @@ export default defineStore('terminal', {
     hosts: {} as AuthorizedHostQueryResponse,
     tabManager: new TerminalTabManager(),
     panelManager: new TerminalPanelManager(),
-    sessionManager: new TerminalSessionManager(),
+    sessionManager: markRaw(new TerminalSessionManager()),
     transferManager: new SftpTransferManager(),
   }),
 

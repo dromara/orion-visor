@@ -2,12 +2,12 @@ import type { UnwrapRef } from 'vue';
 import type { ISearchOptions } from '@xterm/addon-search';
 import { SearchAddon } from '@xterm/addon-search';
 import type { TerminalPreference } from '@/store/modules/terminal/types';
-import type { ISshSession, ISshSessionHandler, ITerminalChannel, TerminalPanelTabItem, XtermDomRef } from '../types/define';
+import type { ISshSession, ISshSessionHandler, ITerminalChannel, TerminalPanelTabItem, TerminalStatus, XtermDomRef } from '../types/define';
 import type { XtermAddons } from '@/types/xterm';
 import { defaultFontFamily } from '@/types/xterm';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '@/types/protocol/terminal.protocol';
-import { PanelSessionType, TerminalSessionStatus, TerminalShortcutType } from '../types/const';
+import { PanelSessionType, TerminalShortcutType } from '../types/const';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -21,11 +21,9 @@ import SshSessionHandler from './ssh-session-handler';
 import BaseSession from './base-session';
 
 // ssh 会话实现
-export default class SshSession extends BaseSession implements ISshSession {
+export default class SshSession extends BaseSession<TerminalStatus> implements ISshSession {
 
   public inst: Terminal;
-
-  public status: number;
 
   public handler: ISshSessionHandler;
 
@@ -38,10 +36,9 @@ export default class SshSession extends BaseSession implements ISshSession {
   constructor(tab: TerminalPanelTabItem,
               channel: ITerminalChannel,
               canUseWebgl: boolean) {
-    super(PanelSessionType.SSH.type, tab);
+    super(PanelSessionType.SSH.type, tab, {});
     this.channel = channel;
     this.canUseWebgl = canUseWebgl;
-    this.status = TerminalSessionStatus.CONNECTING;
     this.inst = undefined as unknown as Terminal;
     this.handler = undefined as unknown as ISshSessionHandler;
     this.addons = {} as XtermAddons;
@@ -93,9 +90,9 @@ export default class SshSession extends BaseSession implements ISshSession {
         e.preventDefault();
       }
       // 检查重新连接
-      if (!this.connected && this.canReconnect && e.key === 'Enter') {
+      if (!this.status.connected && this.status.canReconnect && e.key === 'Enter') {
         // 防止重复回车
-        this.canReconnect = false;
+        this.status.canReconnect = false;
         // 异步作用域重新连接
         setTimeout(async () => {
           await useTerminalStore().reOpenSession(this.sessionId);
@@ -120,7 +117,7 @@ export default class SshSession extends BaseSession implements ISshSession {
   private registerEvent(dom: HTMLElement, preference: UnwrapRef<TerminalPreference>) {
     // 注册输入事件
     this.inst.onData(s => {
-      if (!this.canWrite || !this.connected) {
+      if (!this.status.canWrite || !this.status.connected) {
         return;
       }
       // 输入
@@ -145,7 +142,7 @@ export default class SshSession extends BaseSession implements ISshSession {
     }
     // 注册 resize 事件
     this.inst.onResize(({ cols, rows }) => {
-      if (!this.connected) {
+      if (!this.status.connected) {
         return;
       }
       this.channel.send(InputProtocol.SSH_RESIZE, {
@@ -158,7 +155,7 @@ export default class SshSession extends BaseSession implements ISshSession {
     addEventListen(dom, 'contextmenu', async () => {
       // 右键粘贴逻辑
       if (preference.interactSetting.rightClickPaste) {
-        if (!this.canWrite || !this.connected) {
+        if (!this.status.canWrite || !this.status.connected) {
           return;
         }
         // 未开启右键选中 || 开启并无选中的内容则粘贴
@@ -204,29 +201,9 @@ export default class SshSession extends BaseSession implements ISshSession {
     }
   }
 
-  // 设置已连接
-  setConnected(): void {
-    super.setConnected();
-    // 设置状态
-    this.status = TerminalSessionStatus.CONNECTED;
-    this.inst.focus();
-  }
-
-  // 设置是否可写
-  setCanWrite(canWrite: boolean): void {
-    super.setCanWrite(canWrite);
-    if (canWrite) {
-      this.inst.options.cursorBlink = useTerminalStore().preference.displaySetting.cursorBlink;
-    } else {
-      this.inst.options.cursorBlink = false;
-    }
-  }
-
   // 连接会话
   connect(): void {
     super.connect();
-    // 设置状态
-    this.status = TerminalSessionStatus.CONNECTING;
     // 发送会话初始化请求
     this.channel.send(InputProtocol.CHECK, {
       sessionId: this.sessionId,
@@ -292,6 +269,22 @@ export default class SshSession extends BaseSession implements ISshSession {
       }, 300);
     } catch (e) {
       // 卸载可能会报错
+    }
+  }
+
+  // 设置已连接
+  setConnected(): void {
+    super.setConnected();
+    this.inst.focus();
+  }
+
+  // 设置是否可写
+  setCanWrite(canWrite: boolean): void {
+    super.setCanWrite(canWrite);
+    if (canWrite) {
+      this.inst.options.cursorBlink = useTerminalStore().preference.displaySetting.cursorBlink;
+    } else {
+      this.inst.options.cursorBlink = false;
     }
   }
 

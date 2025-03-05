@@ -23,8 +23,8 @@
       <!-- 连接状态 -->
       <a-badge v-if="preference.actionBarSetting.connectStatus !== false"
                class="status-bridge"
-               :status="getDictValue(sessionStatusKey, session ? session.status : 0, 'status')"
-               :text="getDictValue(sessionStatusKey, session ? session.status : 0)" />
+               :status="getDictValue(sessionStatusKey, session ? session.status.connectStatus : 0, 'status')"
+               :text="getDictValue(sessionStatusKey, session ? session.status.connectStatus : 0)" />
     </div>
   </div>
 </template>

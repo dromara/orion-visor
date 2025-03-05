@@ -64,7 +64,7 @@
 
   // 发送命令
   const writeCommand = (value: string) => {
-    if (session.value?.canWrite) {
+    if (session.value?.status.canWrite) {
       session.value?.handler.pasteTrimEnd(value);
     }
   };
