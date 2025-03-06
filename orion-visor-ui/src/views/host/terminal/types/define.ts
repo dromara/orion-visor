@@ -1,6 +1,6 @@
 import type { Terminal } from '@xterm/xterm';
 import type { ISearchOptions } from '@xterm/addon-search';
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, Reactive } from 'vue';
 import type { HostQueryResponse } from '@/api/asset/host';
 import type { InputPayload, OutputPayload, Protocol } from '@/types/protocol/terminal.protocol';
 
@@ -196,38 +196,47 @@ export interface XtermDomRef {
   uploadModal: any;
 }
 
-// 终端会话定义
-export interface ITerminalSession {
-  type: string;
-  title: string;
-  address: string;
-  hostId: number;
-  sessionId: string;
+// 终端状态
+export interface TerminalStatus {
+  // 连接状态
+  connectStatus: number;
   // 是否已连接
   connected: boolean;
-  // 是否可以重新连接
-  canReconnect: boolean;
   // 是否可写
   canWrite: boolean;
+  // 是否可以重新连接
+  canReconnect: boolean;
+}
 
-  // 设置是否可写
-  setCanWrite: (canWrite: boolean) => void;
-  // 设置已连接
-  setConnected: () => void;
+// 终端会话定义
+export interface ITerminalSession<Status extends TerminalStatus = TerminalStatus> {
+  readonly type: string;
+  readonly title: string;
+  readonly address: string;
+  readonly hostId: number;
+  // 终端状态
+  readonly status: Reactive<Status>;
+  sessionId: string;
+
   // 连接会话
   connect: () => void;
   // 断开连接
   disconnect: () => void;
   // 关闭
   close: () => void;
+
+  // 设置是否可写
+  setCanWrite: (canWrite: boolean) => void;
+  // 设置已连接
+  setConnected: () => void;
+  // 设置已关闭
+  setClosed: () => void;
 }
 
 // ssh 会话定义
 export interface ISshSession extends ITerminalSession {
   // terminal 实例
   inst: Terminal;
-  // 状态
-  status: number;
   // 处理器
   handler: ISshSessionHandler;
 

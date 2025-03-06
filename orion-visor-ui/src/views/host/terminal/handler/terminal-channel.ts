@@ -77,7 +77,7 @@ export default class TerminalChannel implements ITerminalChannel {
   private closeCallback(): void {
     // 关闭时将手动触发 close 消息, 有可能是其他原因关闭的, 没有接收到 close 消息, 导致已断开是终端还是显示已连接
     Object.values(this.sessionManager.sessions).forEach(s => {
-      if (!s?.connected) {
+      if (!s?.status.connected) {
         return;
       }
       // close 消息

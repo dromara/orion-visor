@@ -23,6 +23,8 @@
 package org.dromara.visor.framework.mybatis.core.generator;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.ansi.AnsiAppender;
 import cn.orionsec.kit.lang.utils.ansi.style.AnsiFont;
 import cn.orionsec.kit.lang.utils.ansi.style.color.AnsiForeground;
@@ -32,6 +34,8 @@ import org.dromara.visor.framework.mybatis.core.generator.template.Table;
 import org.dromara.visor.framework.mybatis.core.generator.template.Template;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 代码生成器
@@ -41,6 +45,8 @@ import java.io.File;
  * @since 2022/4/20 10:33
  */
 public class CodeGenerators {
+
+    private static final Pattern ENV_VAR_PATTERN = Pattern.compile("\\$\\{([^:]+):([^}]+)\\}");
 
     public static void main(String[] args) {
         // 输出路径
@@ -76,11 +82,6 @@ public class CodeGenerators {
                         .disableUnitTest()
                         .enableProviderApi()
                         .vue("system", "message")
-                        .dict("messageClassify", "classify", "messageClassify")
-                        .comment("消息分类")
-                        .fields("NOTICE", "TODO")
-                        .labels("通知", "待办")
-                        .valueUseFields()
                         .dict("messageType", "type", "messageType")
                         .comment("消息类型")
                         .fields("EXEC_FAILED", "UPLOAD_FAILED")
@@ -94,9 +95,9 @@ public class CodeGenerators {
         // jdbc 配置 - 使用配置文件
         File yamlFile = new File("orion-visor-launch/src/main/resources/application-dev.yaml");
         YmlExt yaml = YmlExt.load(yamlFile);
-        String url = yaml.getValue("spring.datasource.druid.url");
-        String username = yaml.getValue("spring.datasource.druid.username");
-        String password = yaml.getValue("spring.datasource.druid.password");
+        String url = resolveConfigValue(yaml.getValue("spring.datasource.druid.url"));
+        String username = resolveConfigValue(yaml.getValue("spring.datasource.druid.username"));
+        String password = resolveConfigValue(yaml.getValue("spring.datasource.druid.password"));
 
         // 执行
         runGenerator(outputDir, author,
@@ -145,6 +146,33 @@ public class CodeGenerators {
                 .append(AnsiForeground.BRIGHT_BLUE.and(AnsiFont.BOLD), "- 字典 sql 执行完成后 需要在字典配置项页面刷新缓存\n")
                 .toString();
         System.out.print(line);
+    }
+
+    /**
+     * 解析实际的配置
+     *
+     * @param value value
+     * @return value
+     */
+    private static String resolveConfigValue(String value) {
+        if (Strings.isBlank(value)) {
+            return value;
+        }
+        Matcher matcher = ENV_VAR_PATTERN.matcher(value);
+        StringBuffer resultString = new StringBuffer();
+        while (matcher.find()) {
+            // 环境变量名
+            String envVar = matcher.group(1);
+            // 默认值
+            String defaultValue = matcher.group(2);
+            // 获取环境变量的值
+            String envValue = Systems.getEnv(envVar, defaultValue);
+            // 替换占位符
+            matcher.appendReplacement(resultString, Matcher.quoteReplacement(envValue));
+        }
+        // 处理结尾的剩余部分
+        matcher.appendTail(resultString);
+        return resultString.toString();
     }
 
 }

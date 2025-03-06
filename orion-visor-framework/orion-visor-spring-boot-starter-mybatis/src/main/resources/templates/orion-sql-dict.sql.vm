@@ -11,10 +11,10 @@ SELECT @TYPE_KEY_ID:= id FROM dict_key WHERE key_name = 'operatorLogType' AND de
 INSERT INTO dict_value
   (`key_id`, `key_name`, `value`, `label`, `extra`, `sort`, `create_time`, `update_time`, `creator`, `updater`, `deleted`)
 VALUES
-  (@MODULE_KEY_ID, 'operatorLogModule', '${package.ModuleName}:${typeHyphen}', '$!{table.comment}', '{}', @MODULE_KEY_MAX_SORT + 10, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:create', '创建$!{table.comment}', '{}', 10, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:update', '更新$!{table.comment}', '{}', 20, now(), now(), '1', '1', 0),
-  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', 30, now(), now(), '1', '1', 0);
+  (@MODULE_KEY_ID, 'operatorLogModule', '${package.ModuleName}:${typeHyphen}', '$!{table.comment}', '{}', @MODULE_KEY_MAX_SORT + 10, now(), now(), 'admin', 'admin', 0),
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:create', '创建$!{table.comment}', '{}', 10, now(), now(), 'admin', 'admin', 0),
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:update', '更新$!{table.comment}', '{}', 20, now(), now(), 'admin', 'admin', 0),
+  (@TYPE_KEY_ID, 'operatorLogType', '${typeHyphen}:delete', '删除$!{table.comment}', '{}', 30, now(), now(), 'admin', 'admin', 0);
 #end
 
 #if($dictMap.entrySet().size() > 0)
@@ -23,7 +23,7 @@ VALUES
 INSERT INTO dict_key
   (`key_name`, `value_type`, `extra_schema`, `description`, `create_time`, `update_time`, `creator`, `updater`, `deleted`)
 VALUES
-  ('$enumEntity.value.keyName', 'STRING', '$enumEntity.value.extraSchema', '$enumEntity.value.comment', now(), now(), '1', '1', 0);
+  ('$enumEntity.value.keyName', 'STRING', '$enumEntity.value.extraSchema', '$enumEntity.value.comment', now(), now(), 'admin', 'admin', 0);
 
 -- 设置临时配置项id
 SELECT @TMP_KEY_ID:=LAST_INSERT_ID();
@@ -35,7 +35,7 @@ VALUES
 #set($count = $enumEntity.value.fields.size() - 1)
 #foreach($index in [0..$count])
 #set($sort = $index * 10 + 10)
-  (@TMP_KEY_ID, '$enumEntity.value.keyName', '$enumEntity.value.values.get($index)', '$enumEntity.value.labels.get($index)', #if($enumEntity.value.extraJson.size() > $index)'$enumEntity.value.extraJson.get($index)'#else'{}'#end, $sort, now(), now(), '1', '1', 0)#if($foreach.hasNext),#else;#end
+  (@TMP_KEY_ID, '$enumEntity.value.keyName', '$enumEntity.value.values.get($index)', '$enumEntity.value.labels.get($index)', #if($enumEntity.value.extraJson.size() > $index)'$enumEntity.value.extraJson.get($index)'#else'{}'#end, $sort, now(), now(), 'admin', 'admin', 0)#if($foreach.hasNext),#else;#end
 #end
 
 #end
