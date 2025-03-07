@@ -9,37 +9,37 @@ const EXEC: Array<AppRouteRecordRaw> = [
     children: [
       {
         name: 'execCommand',
-        path: '/exec-command',
+        path: '/exec/command',
         component: () => import('@/views/exec/exec-command/index.vue'),
       },
       {
         name: 'execCommandLog',
-        path: '/exec-log',
+        path: '/exec/command-log',
         component: () => import('@/views/exec/exec-command-log/index.vue'),
       },
       {
         name: 'execJob',
-        path: '/exec-job',
+        path: '/exec/job',
         component: () => import('@/views/exec/exec-job/index.vue'),
       },
       {
         name: 'execJobLog',
-        path: '/exec-job-log',
+        path: '/exec/job-log',
         component: () => import('@/views/exec/exec-job-log/index.vue'),
       },
       {
         name: 'batchUpload',
-        path: '/batch-upload',
+        path: '/exec/upload',
         component: () => import('@/views/exec/batch-upload/index.vue'),
       },
       {
         name: 'uploadTask',
-        path: '/upload-task',
+        path: '/exec/upload-task',
         component: () => import('@/views/exec/upload-task/index.vue'),
       },
       {
         name: 'execTemplate',
-        path: '/exec-template',
+        path: '/exec/template',
         component: () => import('@/views/exec/exec-template/index.vue'),
       },
     ],
@@ -50,7 +50,7 @@ const EXEC: Array<AppRouteRecordRaw> = [
     children: [
       {
         name: 'execJobLogView',
-        path: '/job-log-view',
+        path: '/exec/job-log/view',
         component: () => import('@/views/exec/exec-job-log-view/index.vue'),
       },
     ],

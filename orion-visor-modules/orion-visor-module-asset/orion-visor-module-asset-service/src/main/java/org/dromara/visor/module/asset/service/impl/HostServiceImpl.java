@@ -83,8 +83,6 @@ import java.util.stream.Collectors;
 @Service
 public class HostServiceImpl implements HostService {
 
-    private static final ThreadLocal<Long> CURRENT_UPDATE_CONFIG_ID = new ThreadLocal<>();
-
     @Resource
     private HostDAO hostDAO;
 
@@ -185,30 +183,25 @@ public class HostServiceImpl implements HostService {
         OperatorLogs.add(ExtraFieldConst.CONFIG, param);
         log.info("HostService-updateHostConfig request: {}", param);
         Long id = request.getId();
-        try {
-            CURRENT_UPDATE_CONFIG_ID.set(id);
-            // 查询主机信息
-            HostDO host = hostDAO.selectById(id);
-            Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-            HostTypeEnum type = Valid.valid(HostTypeEnum::of, host.getType());
-            GenericsDataModel beforeConfig = type.parse(host.getConfig());
-            GenericsDataModel newConfig = type.parse(request.getConfig());
-            // 添加日志参数
-            OperatorLogs.add(OperatorLogs.ID, id);
-            OperatorLogs.add(OperatorLogs.NAME, host.getName());
-            // 更新前校验
-            type.doValid(beforeConfig, newConfig);
-            // 修改配置
-            HostDO updateHost = HostDO.builder()
-                    .id(id)
-                    .config(newConfig.serial())
-                    .build();
-            int effect = hostDAO.updateById(updateHost);
-            log.info("HostService-updateHostConfig effect: {}", effect);
-            return effect;
-        } finally {
-            CURRENT_UPDATE_CONFIG_ID.remove();
-        }
+        // 查询主机信息
+        HostDO host = hostDAO.selectById(id);
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        HostTypeEnum type = Valid.valid(HostTypeEnum::of, host.getType());
+        GenericsDataModel beforeConfig = type.parse(host.getConfig());
+        GenericsDataModel newConfig = type.parse(request.getConfig());
+        // 添加日志参数
+        OperatorLogs.add(OperatorLogs.ID, id);
+        OperatorLogs.add(OperatorLogs.NAME, host.getName());
+        // 更新前校验
+        type.doValid(beforeConfig, newConfig);
+        // 修改配置
+        HostDO updateHost = HostDO.builder()
+                .id(id)
+                .config(newConfig.serial())
+                .build();
+        int effect = hostDAO.updateById(updateHost);
+        log.info("HostService-updateHostConfig effect: {}", effect);
+        return effect;
     }
 
     @Override
@@ -346,11 +339,6 @@ public class HostServiceImpl implements HostService {
         favoriteApi.deleteByRelIdList(FavoriteTypeEnum.HOST, idList);
         // 删除额外配置
         dataExtraApi.deleteByRelIdList(DataExtraTypeEnum.HOST, idList);
-    }
-
-    @Override
-    public Long getCurrentUpdateConfigHostId() {
-        return CURRENT_UPDATE_CONFIG_ID.get();
     }
 
     @Override

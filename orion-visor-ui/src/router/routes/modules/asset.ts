@@ -8,19 +8,19 @@ const ASSET: AppRouteRecordRaw = {
   children: [
     {
       name: 'hostList',
-      path: '/host-list',
+      path: '/asset/host',
       component: () => import('@/views/asset/host-list/index.vue'),
     }, {
       name: 'hostKey',
-      path: '/host-key',
+      path: '/asset/host-key',
       component: () => import('@/views/asset/host-key/index.vue'),
     }, {
       name: 'hostIdentity',
-      path: '/host-identity',
+      path: '/asset/host-identity',
       component: () => import('@/views/asset/host-identity/index.vue'),
     }, {
       name: 'assetGrant',
-      path: '/asset-grant',
+      path: '/asset/grant',
       component: () => import('@/views/asset/grant/index.vue'),
     },
   ],
