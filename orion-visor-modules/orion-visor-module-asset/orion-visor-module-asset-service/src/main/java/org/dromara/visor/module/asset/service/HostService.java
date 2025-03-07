@@ -136,13 +136,6 @@ public interface HostService {
     void deleteHostRelByIdListAsync(List<Long> idList);
 
     /**
-     * 获取当前更新配置的 hostId
-     *
-     * @return hostId
-     */
-    Long getCurrentUpdateConfigHostId();
-
-    /**
      * 清除缓存
      */
     void clearCache();

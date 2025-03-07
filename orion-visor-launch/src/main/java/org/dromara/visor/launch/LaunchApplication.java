@@ -42,7 +42,11 @@ import java.util.Optional;
  * @version 1.0.0
  * @since 2023/6/19 16:55
  */
-@SpringBootApplication(scanBasePackages = {"org.dromara.visor.launch", "org.dromara.visor.module"})
+@SpringBootApplication(scanBasePackages = {
+        "org.dromara.visor.launch",
+        "org.dromara.visor.common",
+        "org.dromara.visor.module"
+})
 public class LaunchApplication {
 
     public static void main(String[] args) {
