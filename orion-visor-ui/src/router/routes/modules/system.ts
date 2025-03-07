@@ -8,17 +8,17 @@ const SYSTEM: AppRouteRecordRaw = {
   children: [
     {
       name: 'systemMenu',
-      path: '/menu',
+      path: '/system/menu',
       component: () => import('@/views/system/menu/index.vue'),
     },
     {
       name: 'dictKey',
-      path: '/dict-key',
+      path: '/system/dict-key',
       component: () => import('@/views/system/dict-key/index.vue'),
     },
     {
       name: 'dictValue',
-      path: '/dict-value',
+      path: '/system/dict-value',
       component: () => import('@/views/system/dict-value/index.vue'),
     },
     {

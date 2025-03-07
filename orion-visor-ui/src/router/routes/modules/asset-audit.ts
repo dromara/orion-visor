@@ -8,17 +8,17 @@ const ASSET_AUDIT: AppRouteRecordRaw = {
   children: [
     {
       name: 'connectLog',
-      path: '/connect-log',
+      path: '/audit/connect-log',
       component: () => import('@/views/asset-audit/connect-log/index.vue'),
     },
     {
       name: 'connectSession',
-      path: '/connect-session',
+      path: '/audit/connect-session',
       component: () => import('@/views/asset-audit/connect-session/index.vue'),
     },
     {
       name: 'sftpLog',
-      path: '/sftp-log',
+      path: '/audit/sftp-log',
       component: () => import('@/views/asset-audit/sftp-log/index.vue'),
     },
   ],
