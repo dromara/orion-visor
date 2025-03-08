@@ -2,7 +2,7 @@ import type { CardField, CardFieldConfig } from '@/types/card';
 
 const fieldConfig = {
   rowGap: '10px',
-  labelSpan: 8,
+  labelSpan: 6,
   minHeight: '22px',
   fields: [
     {

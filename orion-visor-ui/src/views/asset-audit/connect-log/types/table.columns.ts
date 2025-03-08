@@ -1,5 +1,4 @@
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
-import { dateFormat } from '@/utils';
 
 const columns = [
   {
@@ -32,8 +31,8 @@ const columns = [
     title: '状态',
     dataIndex: 'status',
     slotName: 'status',
-    align: 'center',
-    width: 106,
+    align: 'left',
+    width: 118,
   }, {
     title: '留痕地址',
     dataIndex: 'address',

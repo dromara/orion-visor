@@ -19,6 +19,8 @@ const columns = [
     title: '用户名',
     dataIndex: 'username',
     slotName: 'username',
+    ellipsis: true,
+    tooltip: true
   }, {
     title: '类型',
     dataIndex: 'type',
@@ -28,6 +30,7 @@ const columns = [
     title: '主机密钥',
     dataIndex: 'keyId',
     slotName: 'keyId',
+    width: 180,
   }, {
     title: '描述',
     dataIndex: 'description',

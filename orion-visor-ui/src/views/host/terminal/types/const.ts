@@ -363,7 +363,7 @@ export const TransferReceiver = {
 };
 
 // 会话关闭信息
-export const sessionCloseMsg = 'session closed...';
+export const sessionCloseMsg = '会话已结束...';
 
 // 打开 settingModal key
 export const openSettingModalKey = Symbol();

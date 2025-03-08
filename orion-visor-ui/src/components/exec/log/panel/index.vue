@@ -27,7 +27,7 @@
 <script lang="ts" setup>
   import type { ExecLogQueryResponse } from '@/api/exec/exec-log';
   import type { ExecType, ILogAppender } from '../const';
-  import { onUnmounted, ref, nextTick, onMounted } from 'vue';
+  import { onUnmounted, ref, nextTick, onMounted, markRaw } from 'vue';
   import { getExecCommandLogStatus } from '@/api/exec/exec-command-log';
   import { getExecJobLogStatus } from '@/api/exec/exec-job-log';
   import { dictKeys, ExecHostStatus, ExecStatus } from '../const';
@@ -58,11 +58,11 @@
     const { log_webScrollLines } = await useCacheStore().loadSystemSetting();
     const scrollLines = toAnonymousNumber(log_webScrollLines) || 1000;
     // 创建 appender
-    appender.value = new LogAppender({
+    appender.value = markRaw(new LogAppender({
       id: record.id,
       type: props.type,
       scrollLines,
-    });
+    }));
     // 定时查询执行状态
     if (record.status === ExecStatus.WAITING ||
       record.status === ExecStatus.RUNNING) {

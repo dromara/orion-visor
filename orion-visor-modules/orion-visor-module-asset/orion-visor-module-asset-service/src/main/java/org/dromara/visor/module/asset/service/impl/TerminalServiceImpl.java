@@ -48,6 +48,7 @@ import org.dromara.visor.module.asset.enums.HostIdentityTypeEnum;
 import org.dromara.visor.module.asset.enums.HostSshAuthTypeEnum;
 import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
+import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
 import org.dromara.visor.module.asset.service.HostConfigService;
 import org.dromara.visor.module.asset.service.HostExtraService;
 import org.dromara.visor.module.asset.service.TerminalService;
@@ -81,7 +82,7 @@ public class TerminalServiceImpl implements TerminalService {
     private HostExtraService hostExtraService;
 
     @Resource
-    private AssetAuthorizedDataServiceImpl assetAuthorizedDataService;
+    private AssetAuthorizedDataService assetAuthorizedDataService;
 
     @Resource
     private HostDAO hostDAO;

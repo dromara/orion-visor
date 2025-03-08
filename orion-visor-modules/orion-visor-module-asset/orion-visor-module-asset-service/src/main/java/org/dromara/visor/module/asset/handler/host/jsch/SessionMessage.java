@@ -31,10 +31,10 @@ package org.dromara.visor.module.asset.handler.host.jsch;
  */
 public interface SessionMessage {
 
-    String AUTHENTICATION_FAILURE = "authentication failed. please check the configuration. - {}";
+    String AUTHENTICATION_FAILURE = "身份认证失败. {}";
 
-    String SERVER_UNREACHABLE = "remote server unreachable. please check the configuration. - {}";
+    String SERVER_UNREACHABLE = "无法连接至服务器. {}";
 
-    String CONNECTION_TIMEOUT = "connection timeout. - {}";
+    String CONNECTION_TIMEOUT = "连接服务器超时. {}";
 
 }
