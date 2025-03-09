@@ -58,7 +58,7 @@
                     v-model:selected-group="selectedGroup"
                     :host-list="hostList"
                     :groups="hosts?.groupTree as any"
-                    :nodes="treeNodes" />
+                    :nodes="treeNodes as any" />
         <!-- 列表视图 -->
         <host-table v-else
                     v-model:selected-keys="selectedKeys"
@@ -83,13 +83,13 @@
   import { onMounted, ref, watch, computed } from 'vue';
   import { dataColor } from '@/utils';
   import { dictKeys, NewConnectionType, newConnectionTypeKey } from './types/const';
-  import { useDictStore } from '@/store';
+  import { useCacheStore, useDictStore } from '@/store';
   import { tagLabelFilter } from '@/types/form';
   import { tagColor } from '@/views/asset/host-list/types/const';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
   import { getAuthorizedHostOptions } from '@/types/options';
+  import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
   import HostTable from './components/host-table.vue';
   import HostGroup from './components/host-group.vue';
 
@@ -151,10 +151,13 @@
     setLoading(true);
     try {
       // 加载主机列表
-      const { data } = await getCurrentAuthorizedHost(props.type);
-      hosts.value = data;
+      const data = await useCacheStore().loadAuthorizedHosts(props.type);
       // 禁用别名
       data.hostList.forEach(s => s.alias = undefined as unknown as string);
+      // 查询最近连接的主机
+      const { data: latestHosts } = await getLatestConnectHostId(props.type, 30);
+      data.latestHosts = latestHosts;
+      hosts.value = data;
       // 设置主机搜索选项
       filterOptions.value = getAuthorizedHostOptions(data.hostList);
     } catch (e) {

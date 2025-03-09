@@ -15,7 +15,7 @@ import { getHostKeyList } from '@/api/asset/host-key';
 import { getHostIdentityList } from '@/api/asset/host-identity';
 import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
-import { getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
+import { getCurrentAuthorizedHost, getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
 import { getExecJobList } from '@/api/exec/exec-job';
 import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
@@ -99,8 +99,8 @@ export default defineStore('cache', {
     },
 
     // 获取主机列表
-    async loadHosts(type: HostType, force = false) {
-      return await this.load(`host_${type}`, () => getHostList(type), ['asset:host:query'], force);
+    async loadHosts(type: HostType = '', force = false) {
+      return await this.load(`host_${type || 'ALL'}`, () => getHostList(type), ['asset:host:query'], force);
     },
 
     // 获取主机密钥列表
@@ -121,6 +121,11 @@ export default defineStore('cache', {
     // 加载 tags
     async loadTags(type: TagType, force = false) {
       return await this.load(`${type}_Tags`, () => getTagList(type), undefined, force);
+    },
+
+    // 获取已授权的主机列表
+    async loadAuthorizedHosts(type: HostType = '', force = false) {
+      return await this.load(`authorizedHost_${type || 'ALL'}`, () => getCurrentAuthorizedHost(type), undefined, force);
     },
 
     // 获取已授权的主机密钥列表

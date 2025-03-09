@@ -1,6 +1,7 @@
 // 缓存类型
 export type CacheType = 'users' | 'menus' | 'roles'
-  | 'hostGroups' | 'hostKeys' | 'hostIdentities' | 'host_*'
+  | 'hostGroups' | 'host_*' | 'authorizedHost_*'
+  | 'hostKeys' | 'hostIdentities'
   | 'dictKeys'
   | 'execJob'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'

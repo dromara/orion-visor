@@ -10,7 +10,6 @@ import type {
 } from './types';
 import type { ISshSession, ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/define';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
-import { getCurrentAuthorizedHost } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
 import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/terminal';
 import { getTerminalThemes } from '@/api/asset/terminal';
@@ -21,6 +20,7 @@ import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
 import { nextId } from '@/utils';
 import { isObject } from '@/utils/is';
 import { Message } from '@arco-design/web-vue';
+import { useCacheStore } from '@/store';
 import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/const';
 import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
 import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
@@ -131,18 +131,18 @@ export default defineStore('terminal', {
     },
 
     // 加载主机列表
-    async loadHosts() {
+    async loadHostList() {
       if (this.hosts.hostList?.length) {
         return;
       }
       // 查询授权主机
-      const { data } = await getCurrentAuthorizedHost('SSH');
+      const data = await useCacheStore().loadAuthorizedHosts();
       Object.keys(data).forEach(k => {
         this.hosts[k as keyof AuthorizedHostQueryResponse] = data[k as keyof AuthorizedHostQueryResponse] as any;
       });
       this.hosts.latestHosts = [];
       // 查询最近连接的主机
-      const { data: latestHosts } = await getLatestConnectHostId('SSH', 30);
+      const { data: latestHosts } = await getLatestConnectHostId('', 30);
       this.hosts.latestHosts = latestHosts;
     },
 

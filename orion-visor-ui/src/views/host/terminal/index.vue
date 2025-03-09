@@ -79,7 +79,7 @@
 
   const {
     fetchPreference, getCurrentSession, openSession,
-    layoutState, preference, loadHosts, hosts, tabManager, sessionManager
+    layoutState, preference, loadHostList, hosts, tabManager, sessionManager
   } = useTerminalStore();
   const { loading, setLoading } = useLoading(true);
   const { enter: enterFull, exit: exitFull } = useFullscreen();
@@ -165,7 +165,7 @@
   onMounted(async () => {
     try {
       // 加载主机
-      await loadHosts();
+      await loadHostList();
       // 默认连接主机
       const connect = route.query.connect as string;
       if (connect) {

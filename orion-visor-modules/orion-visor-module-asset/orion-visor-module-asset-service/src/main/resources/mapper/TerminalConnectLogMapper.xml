@@ -33,16 +33,6 @@
         id, user_id, username, host_id, host_name, host_address, type, session_id, status, start_time, end_time, extra_info, create_time, update_time, deleted
     </sql>
 
-    <select id="selectLatestConnectHostId" resultType="java.lang.Long">
-        SELECT host_id
-        FROM terminal_connect_log
-        WHERE deleted = 0
-          AND type = #{type}
-          AND user_id = #{userId}
-        ORDER BY id DESC
-        LIMIT #{limit}
-    </select>
-
     <select id="selectConnectLogUserCount" resultMap="CountResultMap">
         SELECT DATE(create_time) connect_date, COUNT(1) total_count
         FROM terminal_connect_log
