@@ -155,7 +155,7 @@
       // 禁用别名
       data.hostList.forEach(s => s.alias = undefined as unknown as string);
       // 查询最近连接的主机
-      const { data: latestHosts } = await getLatestConnectHostId(props.type, 30);
+      const { data: latestHosts } = await getLatestConnectHostId(props.type as string, 30);
       data.latestHosts = latestHosts;
       hosts.value = data;
       // 设置主机搜索选项
