@@ -63,7 +63,7 @@ public class AssetAuthorizedDataServiceController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/current-host")
     @Operation(summary = "查询当前用户已授权的主机")
-    public AuthorizedHostWrapperVO getCurrentAuthorizedHost(@RequestParam("type") String type) {
+    public AuthorizedHostWrapperVO getCurrentAuthorizedHost(@RequestParam(value = "type", required = false) String type) {
         return assetAuthorizedDataService.getUserAuthorizedHost(SecurityUtils.getLoginUserId(), type);
     }
 

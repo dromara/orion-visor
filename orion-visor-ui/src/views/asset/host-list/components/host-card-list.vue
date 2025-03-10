@@ -339,7 +339,8 @@
     // 重新加载数据
     fetchCardData();
     // 清空缓存
-    cacheStore.reset('host_', 'host_SSH');
+    cacheStore.reset('host_ALL', 'host_SSH',
+      'authorizedHost_ALL', 'authorizedHost_SSH');
   };
 
   defineExpose({ reload });

@@ -49,7 +49,17 @@ public interface TerminalConnectLogDAO extends IMapper<TerminalConnectLogDO> {
      * @param limit  limit
      * @return hostId
      */
-    List<Long> selectLatestConnectHostId(@Param("userId") Long userId, @Param("type") String type, @Param("limit") Integer limit);
+    default List<Long> selectLatestConnectHostId(Long userId, String type, Integer limit) {
+        return this.of()
+                .createWrapper(true)
+                .select(TerminalConnectLogDO::getHostId)
+                .eq(TerminalConnectLogDO::getUserId, userId)
+                .eq(TerminalConnectLogDO::getType, type)
+                .orderByDesc(TerminalConnectLogDO::getId)
+                .then()
+                .limit(limit)
+                .list(TerminalConnectLogDO::getHostId);
+    }
 
     /**
      * 查询终端连接日志用户数量

@@ -8,7 +8,7 @@ const $vue.moduleConst: AppRouteRecordRaw = {
   children: [
     {
       name: '$vue.featureEntityFirstLower',
-      path: '/$vue.feature',
+      path: '/$vue.module/$vue.feature',
       component: () => import('@/views/$vue.module/$vue.feature/index.vue'),
     },
   ],

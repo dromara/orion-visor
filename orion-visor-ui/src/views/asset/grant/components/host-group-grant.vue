@@ -93,7 +93,7 @@
     try {
       // 加载组内数据
       const { data } = await getHostGroupRelList(groupId as number);
-      const hosts = await cacheStore.loadHosts('');
+      const hosts = await cacheStore.loadHosts();
       selectedGroupHosts.value = data.map(s => hosts.find(h => h.id === s) as HostQueryResponse)
         .filter(Boolean);
     } catch (e) {
@@ -138,6 +138,8 @@
         idList: checkedGroups.value
       });
       Message.success('授权成功');
+      // 清空缓存
+      cacheStore.reset('authorizedHost_ALL', 'authorizedHost_SSH');
     } catch (e) {
     } finally {
       setLoading(false);

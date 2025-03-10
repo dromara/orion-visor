@@ -45,7 +45,7 @@
       </div>
     </div>
     <!-- 已关闭-右侧操作 -->
-    <div v-if="session?.connected === false && closeMessage !== undefined"
+    <div v-if="session?.status.connected === false && closeMessage !== undefined"
          class="sftp-table-header-right">
       <!-- 错误信息 -->
       <a-tag class="close-message"
@@ -54,7 +54,7 @@
         已断开: {{ closeMessage }}
       </a-tag>
       <!-- 重连 -->
-      <a-tooltip v-if="session?.canReconnect"
+      <a-tooltip v-if="session?.status.canReconnect"
                  position="top"
                  :mini="true"
                  :overlay-inverse="true"
@@ -245,7 +245,7 @@
   // 设置命令编辑模式
   const setPathEditable = (editable: boolean) => {
     // 检查是否断开
-    if (editable && !props.session?.connected) {
+    if (editable && !props.session?.status.connected) {
       return;
     }
     pathEditable.value = editable;
@@ -267,7 +267,7 @@
   // 加载文件列表
   const loadFileList = (path: string = props.currentPath) => {
     // 检查是否断开
-    if (!props.session?.connected) {
+    if (!props.session?.status.connected) {
       return;
     }
     emits('loadFile', path);

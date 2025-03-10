@@ -38,7 +38,27 @@ public class StaticResourceAuthorizeRequestsCustomizer extends AuthorizeRequests
     @Override
     public void customize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry) {
         // 静态资源可匿名访问
-        registry.antMatchers(HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js").permitAll();
+        registry.antMatchers(HttpMethod.GET,
+                "/*.html",
+                "/*.css",
+                "/*.js",
+                "/*.gz",
+                "/*.ico",
+                "/*.jpg",
+                "/*.png",
+                "/*.svg",
+                "/*.json",
+                "/*.webmanifest",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js",
+                "/**/*.gz",
+                "/**/*.ico",
+                "/**/*.jpg",
+                "/**/*.png",
+                "/**/*.svg",
+                "/**/*.json"
+        ).permitAll();
     }
 
 }

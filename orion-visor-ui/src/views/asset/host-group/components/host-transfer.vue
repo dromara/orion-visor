@@ -113,7 +113,7 @@
 
   // 加载主机列表
   const loadHosts = () => {
-    cacheStore.loadHosts('').then(hosts => {
+    cacheStore.loadHosts().then(hosts => {
       data.value = hosts.map(s => {
         return {
           value: String(s.id),

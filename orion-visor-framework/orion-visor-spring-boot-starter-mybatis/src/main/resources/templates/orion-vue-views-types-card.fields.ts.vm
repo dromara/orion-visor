@@ -3,7 +3,7 @@ import { dateFormat } from '@/utils';
 
 const fieldConfig = {
   rowGap: '10px',
-  labelSpan: 8,
+  labelSpan: 6,
   minHeight: '22px',
   fields: [
     {

@@ -20,21 +20,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.launch.configuration;
+package org.dromara.visor.common.configuration;
 
 import cn.orionsec.kit.spring.SpringHolder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 应用配置类
+ * spring 配置类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/20 10:34
  */
 @Configuration
-public class LaunchApplicationConfiguration {
+public class SpringConfiguration {
 
     /**
      * @return spring 容器工具类

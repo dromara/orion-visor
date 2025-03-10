@@ -135,10 +135,10 @@
   const { chartOption: terminalConnectChart } = useChartOption(() => {
     return {
       grid: {
-        left: 0,
-        right: 0,
-        top: 10,
-        bottom: 0,
+        left: 8,
+        right: 8,
+        top: 8,
+        bottom: 8,
       },
       xAxis: {
         type: 'category',
@@ -176,10 +176,10 @@
   const { chartOption: execCommandChart } = useChartOption(() => {
     return {
       grid: {
-        left: 0,
-        right: 0,
-        top: 10,
-        bottom: 0,
+        left: 8,
+        right: 8,
+        top: 8,
+        bottom: 8,
       },
       xAxis: {
         type: 'category',

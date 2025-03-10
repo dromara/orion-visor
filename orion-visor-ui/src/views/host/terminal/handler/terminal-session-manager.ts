@@ -104,7 +104,10 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     // 移除 session
     this.sessions[sessionId] = undefined as unknown as ITerminalSession;
     // session 全部关闭后 关闭 channel
-    if (Object.values(this.sessions).filter(Boolean).every(s => !s?.connected)) {
+    const allClosed = Object.values(this.sessions)
+      .filter(Boolean)
+      .every(s => !s?.status.connected);
+    if (allClosed) {
       this.reset();
     }
   }

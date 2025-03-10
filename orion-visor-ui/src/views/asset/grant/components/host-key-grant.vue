@@ -72,6 +72,8 @@
         idList: selectedKeys.value
       });
       Message.success('授权成功');
+      // 清空缓存
+      cacheStore.reset('authorizedHostKeys');
     } catch (e) {
     } finally {
       setLoading(false);
