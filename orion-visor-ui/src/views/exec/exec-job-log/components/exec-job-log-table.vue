@@ -217,7 +217,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TableData } from '@arco-design/web-vue/es/table/interface';
+  import type { TableData } from '@arco-design/web-vue';
   import type { ExecLogQueryRequest, ExecLogQueryResponse } from '@/api/exec/exec-log';
   import { reactive, ref, onMounted, onUnmounted } from 'vue';
   import {

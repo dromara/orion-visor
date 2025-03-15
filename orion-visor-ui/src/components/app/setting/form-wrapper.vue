@@ -30,8 +30,8 @@
 </template>
 
 <script lang="ts" setup>
+  import type { SelectOption } from '@arco-design/web-vue';
   import type { RadioOption } from '@arco-design/web-vue/es/radio/interface';
-  import type { SelectOption } from '@arco-design/web-vue/es/select/interface';
 
   const props = withDefaults(defineProps<Partial<{
     type: string;

@@ -142,7 +142,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TableData } from '@arco-design/web-vue/es/table/interface';
+  import type { TableData } from '@arco-design/web-vue';
   import type { SftpFile, ISftpSession } from '../../types/define';
   import { ref, computed, watch, inject } from 'vue';
   import { useRowSelection } from '@/hooks/table';

@@ -1,9 +1,9 @@
 <template>
   <div class="login-form-wrapper">
     <!-- 标题 -->
-    <div class="login-form-title usn">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title usn">{{ t('login.form.title') }}</div>
     <!-- 子标题 -->
-    <div class="login-form-sub-title">{{ $t('login.form.sub.title') }}</div>
+    <div class="login-form-sub-title">{{ t('login.form.sub.title') }}</div>
     <!-- 错误信息 -->
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <!-- 登录表单 -->
@@ -13,22 +13,22 @@
             layout="vertical"
             @submit="handleSubmit">
       <a-form-item field="username"
-                   :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
+                   :rules="[{ required: true, message: t('login.form.userName.errMsg') }]"
                    :validate-trigger="['change', 'blur']"
                    hide-label>
         <a-input v-model="userInfo.username"
-                 :placeholder="$t('login.form.userName.placeholder')">
+                 :placeholder="t('login.form.userName.placeholder')">
           <template #prefix>
             <icon-user />
           </template>
         </a-input>
       </a-form-item>
       <a-form-item field="password"
-                   :rules="[{ required: true, message: $t('login.form.password.errMsg') }]"
+                   :rules="[{ required: true, message: t('login.form.password.errMsg') }]"
                    :validate-trigger="['change', 'blur']"
                    hide-label>
         <a-input-password v-model="userInfo.password"
-                          :placeholder="$t('login.form.password.placeholder')"
+                          :placeholder="t('login.form.password.placeholder')"
                           allow-clear>
           <template #prefix>
             <icon-lock />
@@ -38,7 +38,7 @@
       <!-- 登录按钮 -->
       <a-space :size="16" direction="vertical">
         <a-button type="primary" html-type="submit" long :loading="loading">
-          {{ $t('login.form.login') }}
+          {{ t('login.form.login') }}
         </a-button>
       </a-space>
     </a-form>
@@ -46,11 +46,11 @@
 </template>
 
 <script lang="ts" setup>
-  import type { ValidatedError } from '@arco-design/web-vue/es/form/interface';
+  import type { ValidatedError } from '@arco-design/web-vue';
+  import { Message } from '@arco-design/web-vue';
   import type { LoginRequest } from '@/api/user/auth';
   import { reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { Message } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';

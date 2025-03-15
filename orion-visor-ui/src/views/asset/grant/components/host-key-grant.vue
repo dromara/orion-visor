@@ -27,7 +27,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TableData } from '@arco-design/web-vue/es/table/interface';
+  import type { TableData } from '@arco-design/web-vue';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';
   import { ref, onMounted, onActivated } from 'vue';

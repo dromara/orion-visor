@@ -1,5 +1,4 @@
-import type { PaginationProps, TableRowSelection } from '@arco-design/web-vue';
-import type { TableExpandable } from '@arco-design/web-vue/es/table/interface';
+import type { PaginationProps, TableExpandable, TableRowSelection } from '@arco-design/web-vue';
 import { reactive } from 'vue';
 import { useAppStore } from '@/store';
 import { isNumber } from '@/utils/is';

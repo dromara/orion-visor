@@ -1,4 +1,4 @@
-import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+import type { TableColumnData } from '@arco-design/web-vue';
 import { getFileSize } from '@/utils/file';
 
 // 表格列

@@ -9,10 +9,10 @@
 
 <script lang="ts" setup>
   import { computed, provide, ref } from 'vue';
+  import { openAppSettingKey } from '@/types/symbol';
+  import useLocale from '@/hooks/locale';
   import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn';
   import AppSetting from '@/components/app/setting/index.vue';
-  import useLocale from '@/hooks/locale';
-  import { openAppSettingKey } from '@/types/symbol';
 
   const { currentLocale } = useLocale();
   const locale = computed(() => {

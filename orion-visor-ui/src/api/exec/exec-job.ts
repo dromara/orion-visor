@@ -1,5 +1,5 @@
 import type { DataGrid, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { TableData } from '@arco-design/web-vue';
 import type { HostQueryResponse } from '@/api/asset/host';
 import axios from 'axios';
 import qs from 'query-string';

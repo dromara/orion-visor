@@ -1,5 +1,5 @@
 import type { ClearRequest, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { TableData } from '@arco-design/web-vue';
 import { createAppWebSocket } from '@/utils/http';
 
 /**
