@@ -1,5 +1,3 @@
-import { isEmptyStr } from './index';
-
 /**
  * 获取 base64 实际数据
  */
@@ -56,7 +54,7 @@ export function getPathAnalysis(path: string, paths: PathAnalysis[] = []): PathA
     return paths;
   }
   const name = path.substring(lastSeparatorIndex, path.length);
-  if (!isEmptyStr(name) && name !== '/') {
+  if (name && name !== '/') {
     paths.unshift({
       name: name.substring(1, name.length),
       path: path

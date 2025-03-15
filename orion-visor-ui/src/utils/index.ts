@@ -51,13 +51,6 @@ export function dataColor(str: string, colors: string[], defaultColor = ''): str
   return colors[total % colors.length];
 }
 
-/**
- * 判断值是否非空
- */
-export function isEmptyStr(val: any) {
-  return typeof (val) === 'undefined' || val == null || val === '';
-}
-
 export const YMD_HMS = 'yyyy-MM-dd HH:mm:ss';
 
 /**
@@ -142,54 +135,6 @@ export function toAnonymousNumber(value: string | undefined): number {
   } else {
     return num;
   }
-}
-
-/**
- * 格式化数字为 ,分割
- */
-export function formatNumber(value: number = 0) {
-  const list = (value + '').split('.');
-  const prefix = list[0].charAt(0) === '-' ? '-' : '';
-  let num = prefix ? list[0].slice(1) : list[0];
-  let result = '';
-  while (num.length > 3) {
-    result = `,${num.slice(-3)}${result}`;
-    num = num.slice(0, num.length - 3);
-  }
-  if (num) {
-    result = num + result;
-  }
-  return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
-}
-
-/**
- * 判断是否为数字
- */
-export function isNumber(value: any, decimal = true, negative = true) {
-  let reg;
-  if (decimal && negative) {
-    reg = /^-?[0-9]*(\.[0-9]*)?$/;
-  } else if (!decimal && negative) {
-    reg = /^-?[0-9]*$/;
-  } else if (decimal && !negative) {
-    reg = /^[0-9]*(\.[0-9]*)?$/;
-  } else if (!decimal && !negative) {
-    reg = /^[0-9]*$/;
-  } else {
-    return false;
-  }
-  return (!isNaN(value) && reg.test(value)) || value === '';
-}
-
-/**
- * 替换数字
- */
-export function replaceNumber(value: string) {
-  const s = value.charAt(value.length - 1);
-  if (s === '.' || s === '-') {
-    return s.substring(0, value.length - 1);
-  }
-  return value;
 }
 
 /**

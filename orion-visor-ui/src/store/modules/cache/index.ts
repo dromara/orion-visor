@@ -93,9 +93,9 @@ export default defineStore('cache', {
       return await this.load('menus', () => getMenuList({}), ['infra:system-menu:query'], force);
     },
 
-    // 获取主机分组列表
-    async loadHostGroups(force = false) {
-      return await this.load('hostGroups', getHostGroupTree, ['asset:host-group:update'], force);
+    // 获取主机分组树
+    async loadHostGroupTree(force = false) {
+      return await this.load('hostGroups', getHostGroupTree, ['asset:host-group:update', 'asset:host:query'], force);
     },
 
     // 获取主机列表
