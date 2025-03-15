@@ -23,7 +23,7 @@ const SYSTEM: AppRouteRecordRaw = {
     },
     {
       name: 'systemSetting',
-      path: '/system-setting',
+      path: '/system/setting',
       component: () => import('@/views/system/setting/index.vue'),
     },
   ],
