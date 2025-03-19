@@ -75,6 +75,11 @@
             </a-button>
           </a-popconfirm>
           #end
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -87,7 +92,7 @@
     #end
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              #if($vue.enableRowSelection)
              :row-selection="rowSelection"
              #end
@@ -146,25 +151,29 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   #if($dictMap.entrySet().size() > 0)
-  import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
+  import { TableName, #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
   #else
-  import {} from '../types/const';
+  import { TableName } from '../types/const';
   #end
   #if($vue.enableRowSelection)
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   #else
-  import { useTablePagination } from '@/hooks/table';
+  import { useTablePagination, useTableColumns } from '@/hooks/table';
   #end
   #if($dictMap.entrySet().size() > 0)
   import { useDictStore } from '@/store';
   #end
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
-  const pagination = useTablePagination();
   #if($vue.enableRowSelection)
   const rowSelection = useRowSelection();
   #end
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
   const { toOptions, getDictValue } = useDictStore();
@@ -227,7 +236,7 @@
   const doFetchTableData = async (request: ${vue.featureEntity}QueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await get${vue.featureEntity}Page(request);
+      const { data } = await get${vue.featureEntity}Page(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

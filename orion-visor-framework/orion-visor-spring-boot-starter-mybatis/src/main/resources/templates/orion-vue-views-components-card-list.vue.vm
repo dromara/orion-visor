@@ -3,12 +3,14 @@
              search-input-placeholder="输入搜索值"
              :create-card-position="false"
              :loading="loading"
-             :field-config="fieldConfig"
+             :field-config="cardFieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
              :add-permission="['${package.ModuleName}:${typeHyphen}:create']"
+             :query-order="queryOrder"
+             :fields-hook="fieldsHook"
              @add="emits('openAdd')"
              @reset="reset"
              @search="fetchCardData"
@@ -118,26 +120,29 @@
 
 <script lang="ts" setup>
   import type { ${vue.featureEntity}QueryRequest, ${vue.featureEntity}QueryResponse } from '@/api/${vue.module}/${vue.feature}';
-  import { useCardPagination, useCardColLayout } from '@/hooks/card';
+  import { useCardPagination, useCardColLayout, useCardFieldConfig } from '@/hooks/card';
   import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
   import fieldConfig from '../types/card.fields';
   #if($dictMap.entrySet().size() > 0)
-  import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
+  import { TableName, #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
   #else
-  import {} from '../types/const';
+  import { TableName } from '../types/const';
   #end
   import { delete${vue.featureEntity}, get${vue.featureEntity}Page } from '@/api/${vue.module}/${vue.feature}';
   import { Message, Modal } from '@arco-design/web-vue';
   #if($dictMap.entrySet().size() > 0)
   import { useDictStore } from '@/store';
   #end
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
 
   const emits = defineEmits(['openAdd', 'openUpdate']);
 
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { cardFieldConfig, fieldsHook } = useCardFieldConfig(TableName, fieldConfig);
   const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
   const { toOptions, getDictValue } = useDictStore();
@@ -198,7 +203,7 @@
   const doFetchCardData = async (request: ${vue.featureEntity}QueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await get${vue.featureEntity}Page(request);
+      const { data } = await get${vue.featureEntity}Page(queryOrder.markOrderly(request));
       list.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
