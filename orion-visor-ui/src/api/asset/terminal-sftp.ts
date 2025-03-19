@@ -1,4 +1,4 @@
-import type { DataGrid, Pagination } from '@/types/global';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue';
 import { httpBaseUrl } from '@/utils/env';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import qs from 'query-string';
 /**
  * SFTP 操作日志 查询请求
  */
-export interface TerminalSftpLogQueryRequest extends Pagination {
+export interface TerminalSftpLogQueryRequest extends Pagination, OrderDirection {
   userId?: number;
   hostId?: number;
   type?: string;

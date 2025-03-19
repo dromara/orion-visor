@@ -9,6 +9,7 @@ const columns = [
     width: 68,
     align: 'left',
     fixed: 'left',
+    default: true,
   }, #foreach($field in ${table.fields})#if("$!field.propertyName" != "id"){
     title: '${field.comment}',
     dataIndex: '${field.propertyName}',
@@ -24,6 +25,7 @@ const columns = [
       return record.${field.propertyName} && dateFormat(new Date(record.${field.propertyName}));
     },
     #end
+    default: true,
   }, #end#end{
     title: '创建时间',
     dataIndex: 'createTime',

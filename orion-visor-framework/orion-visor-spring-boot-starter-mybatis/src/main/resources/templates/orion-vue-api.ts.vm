@@ -1,5 +1,5 @@
-import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -32,7 +32,7 @@ export interface ${vue.featureEntity}UpdateRequest extends ${vue.featureEntity}C
 /**
  * ${table.comment}查询请求
  */
-export interface ${vue.featureEntity}QueryRequest extends Pagination {
+export interface ${vue.featureEntity}QueryRequest extends Pagination, OrderDirection {
   searchValue?: string;
   #foreach($field in ${table.fields})
   #if("$field.propertyType" == "String" || "$field.propertyType" == "Date")

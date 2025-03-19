@@ -1,3 +1,5 @@
+export const TABLE_NAME = '$table.name';
+
 #if($dictMap.entrySet().size() > 0)
 #foreach($enumEntity in $dictMap.entrySet())
 // $enumEntity.value.comment

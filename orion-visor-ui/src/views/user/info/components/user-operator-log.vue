@@ -35,12 +35,12 @@
 
 <script lang="ts" setup>
   import type { UserQueryResponse } from '@/api/user/user';
+  import type { OperatorLogQueryRequest } from '@/api/user/operator-log';
   import { ref, reactive, onBeforeMount } from 'vue';
   import { useCacheStore, useDictStore } from '@/store';
   import { dictKeys } from '@/views/user/operator-log/types/const';
   import OperatorLogQueryHeader from '@/views/user/operator-log/components/operator-log-query-header.vue';
   import OperatorLogSimpleTable from '@/views/user/operator-log/components/operator-log-simple-table.vue';
-  import { OperatorLogQueryRequest } from '@/api/user/operator-log';
 
   const props = defineProps<{
     user?: UserQueryResponse;

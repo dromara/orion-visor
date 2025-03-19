@@ -1,4 +1,4 @@
-import type { DataGrid, Pagination } from '@/types/global';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 import qs from 'query-string';
@@ -25,7 +25,7 @@ export interface HostKeyUpdateRequest extends HostKeyCreateRequest {
 /**
  * 主机密钥查询请求
  */
-export interface HostKeyQueryRequest extends Pagination {
+export interface HostKeyQueryRequest extends Pagination, OrderDirection {
   searchValue?: string;
   id?: number;
   name?: string;

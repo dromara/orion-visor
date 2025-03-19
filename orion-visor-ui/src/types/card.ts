@@ -50,6 +50,7 @@ export interface CardField {
   valueClass?: string;
   ellipsis?: boolean;
   tooltip?: boolean;
+  default: boolean;
   render?: (data: {
     record: CardRecord;
     index: number;

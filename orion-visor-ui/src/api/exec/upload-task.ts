@@ -1,4 +1,4 @@
-import type { ClearRequest, DataGrid, Pagination } from '@/types/global';
+import type { ClearRequest, DataGrid, OrderDirection, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 import qs from 'query-string';
@@ -33,7 +33,7 @@ export interface UploadTaskCreateResponse {
 /**
  * 上传任务查询请求
  */
-export interface UploadTaskQueryRequest extends Pagination {
+export interface UploadTaskQueryRequest extends Pagination, OrderDirection {
   id?: number;
   userId?: number;
   remotePath?: string;

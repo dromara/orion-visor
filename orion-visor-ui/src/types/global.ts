@@ -31,6 +31,10 @@ export interface PostData {
   url: string;
 }
 
+export interface OrderDirection {
+  order?: number;
+}
+
 export interface Pagination {
   page?: number;
   limit?: number;

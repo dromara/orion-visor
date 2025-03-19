@@ -80,12 +80,12 @@
 </script>
 
 <script lang="ts" setup>
+  import type { CardProps } from './types/props';
+  import { Emitter } from './types/emits';
+  import useEmitter from '@/hooks/emitter';
   import CreateCard from './components/create-card.vue';
   import CardHeader from './components/card-header.vue';
   import CardItem from './components/card-item.vue';
-  import { Emitter } from './types/emits';
-  import { CardProps } from './types/props';
-  import useEmitter from '@/hooks/emitter';
 
   const props = withDefaults(defineProps<CardProps>(), {
     rowKey: 'id',

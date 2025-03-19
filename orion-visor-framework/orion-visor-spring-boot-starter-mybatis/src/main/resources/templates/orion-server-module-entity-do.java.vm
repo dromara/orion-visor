@@ -26,6 +26,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.*;
 import java.math.*;
@@ -38,7 +39,7 @@ import java.math.*;
  * @since ${date}
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -66,17 +67,8 @@ public class ${entity} {
 #if("$!field.comment" != "")
     @Schema(description = "${field.comment}")
 #end
-#if(${field.keyFlag})
-## 主键
-  #if(${field.keyIdentityFlag})
-    @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
-  #elseif(!$null.isNull(${idType}) && "$!idType" != "")
-    @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
-  #elseif(${field.convert})
-    @TableId("${field.annotationColumnName}")
-  #end
 ## 普通字段
-#elseif(${field.fill})
+#if(${field.fill})
 ## -----   存在字段填充设置   -----
   #if(${field.convert})
     @TableField(value = "${field.annotationColumnName}", fill = FieldFill.${field.fill})
