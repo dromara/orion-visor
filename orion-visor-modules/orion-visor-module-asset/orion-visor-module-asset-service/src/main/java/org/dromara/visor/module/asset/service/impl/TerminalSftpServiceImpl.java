@@ -225,6 +225,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
                 .build();
         query.setPage(request.getPage());
         query.setLimit(request.getLimit());
+        query.setOrder(request.getOrder());
         if (Strings.isBlank(type)) {
             // 查询全部 SFTP 类型
             query.setTypeList(TerminalOperatorType.SFTP_TYPES);

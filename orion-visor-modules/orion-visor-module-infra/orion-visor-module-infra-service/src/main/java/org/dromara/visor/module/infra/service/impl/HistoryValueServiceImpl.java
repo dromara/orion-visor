@@ -70,8 +70,10 @@ public class HistoryValueServiceImpl implements HistoryValueService {
         // 条件
         LambdaQueryWrapper<HistoryValueDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return historyValueDAO.of(wrapper)
+        return historyValueDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, HistoryValueDO::getId)
                 .dataGrid(HistoryValueConvert.MAPPER::to);
     }
 
@@ -121,8 +123,7 @@ public class HistoryValueServiceImpl implements HistoryValueService {
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .like(HistoryValueDO::getBeforeValue, searchValue).or()
                         .like(HistoryValueDO::getAfterValue, searchValue)
-                )
-                .orderByDesc(HistoryValueDO::getId);
+                );
     }
 
 }

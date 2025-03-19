@@ -146,8 +146,10 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         // 条件
         LambdaQueryWrapper<ExecTemplateDO> wrapper = this.buildQueryWrapper(request);
         // 查询模板
-        return execTemplateDAO.of(wrapper)
+        return execTemplateDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, ExecTemplateDO::getId)
                 .dataGrid(ExecTemplateConvert.MAPPER::to);
     }
 
@@ -204,8 +206,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         return execTemplateDAO.wrapper()
                 .eq(ExecTemplateDO::getId, request.getId())
                 .like(ExecTemplateDO::getName, request.getName())
-                .like(ExecTemplateDO::getCommand, request.getCommand())
-                .orderByDesc(ExecTemplateDO::getId);
+                .like(ExecTemplateDO::getCommand, request.getCommand());
     }
 
 }

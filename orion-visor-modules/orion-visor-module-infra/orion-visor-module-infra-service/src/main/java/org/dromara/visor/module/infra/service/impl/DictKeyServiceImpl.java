@@ -148,8 +148,10 @@ public class DictKeyServiceImpl implements DictKeyService {
         // 条件
         LambdaQueryWrapper<DictKeyDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return dictKeyDAO.of(wrapper)
+        return dictKeyDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, DictKeyDO::getId)
                 .dataGrid(DictKeyConvert.MAPPER::to);
     }
 
@@ -264,7 +266,7 @@ public class DictKeyServiceImpl implements DictKeyService {
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .like(DictKeyDO::getKeyName, searchValue).or()
                         .like(DictKeyDO::getDescription, searchValue)
-                ).orderByDesc(DictKeyDO::getId);
+                );
     }
 
 }

@@ -190,11 +190,12 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     @Override
     public DataGrid<UploadTaskVO> getUploadTaskPage(UploadTaskQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request)
-                .orderByDesc(UploadTaskDO::getId);
+        LambdaQueryWrapper<UploadTaskDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return uploadTaskDAO.of(wrapper)
+        return uploadTaskDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, UploadTaskDO::getId)
                 .dataGrid(UploadTaskConvert.MAPPER::to);
     }
 

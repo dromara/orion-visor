@@ -71,11 +71,12 @@ public class OperatorLogServiceImpl implements OperatorLogService {
     @Override
     public DataGrid<OperatorLogVO> getOperatorLogPage(OperatorLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request)
-                .orderByDesc(OperatorLogDO::getId);
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return operatorLogDAO.of(wrapper)
+        return operatorLogDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, OperatorLogDO::getId)
                 .dataGrid(OperatorLogConvert.MAPPER::to);
     }
 

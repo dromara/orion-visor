@@ -109,11 +109,12 @@ public class ExecLogServiceImpl implements ExecLogService {
     @Override
     public DataGrid<ExecLogVO> getExecLogPage(ExecLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request)
-                .orderByDesc(ExecLogDO::getId);
+        LambdaQueryWrapper<ExecLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return execLogDAO.of(wrapper)
+        return execLogDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, ExecLogDO::getId)
                 .dataGrid(ExecLogConvert.MAPPER::to);
     }
 

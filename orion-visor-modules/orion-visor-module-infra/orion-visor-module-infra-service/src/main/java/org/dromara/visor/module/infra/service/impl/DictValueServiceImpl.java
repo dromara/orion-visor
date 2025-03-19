@@ -231,8 +231,10 @@ public class DictValueServiceImpl implements DictValueService {
         // 条件
         LambdaQueryWrapper<DictValueDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        DataGrid<DictValueVO> dataGrid = dictValueDAO.of(wrapper)
+        DataGrid<DictValueVO> dataGrid = dictValueDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, DictValueDO::getId)
                 .dataGrid(DictValueConvert.MAPPER::to);
         if (!dataGrid.isEmpty()) {
             List<Long> keyIdList = dataGrid.stream()
@@ -408,8 +410,7 @@ public class DictValueServiceImpl implements DictValueService {
                 .like(DictValueDO::getKeyName, request.getKeyName())
                 .like(DictValueDO::getValue, request.getValue())
                 .like(DictValueDO::getLabel, request.getLabel())
-                .like(DictValueDO::getExtra, request.getExtra())
-                .orderByDesc(DictValueDO::getId);
+                .like(DictValueDO::getExtra, request.getExtra());
     }
 
     /**

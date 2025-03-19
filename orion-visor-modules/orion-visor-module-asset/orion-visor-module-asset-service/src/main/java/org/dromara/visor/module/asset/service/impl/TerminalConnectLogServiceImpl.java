@@ -92,11 +92,12 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
     @Override
     public DataGrid<TerminalConnectLogVO> getTerminalConnectLogPage(TerminalConnectLogQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<TerminalConnectLogDO> wrapper = this.buildQueryWrapper(request)
-                .orderByDesc(TerminalConnectLogDO::getId);
+        LambdaQueryWrapper<TerminalConnectLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        return terminalConnectLogDAO.of(wrapper)
+        return terminalConnectLogDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, TerminalConnectLogDO::getId)
                 .dataGrid(s -> {
                     TerminalConnectLogVO vo = TerminalConnectLogConvert.MAPPER.to(s);
                     vo.setExtra(JSON.parseObject(s.getExtraInfo(), TerminalConnectLogExtraDTO.class));

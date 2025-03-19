@@ -182,8 +182,10 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 条件
         LambdaQueryWrapper<HostIdentityDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        DataGrid<HostIdentityVO> dataGrid = hostIdentityDAO.of(wrapper)
+        DataGrid<HostIdentityVO> dataGrid = hostIdentityDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, HostIdentityDO::getId)
                 .dataGrid(HostIdentityConvert.MAPPER::to);
         if (dataGrid.isEmpty()) {
             return dataGrid;
