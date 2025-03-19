@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.entity.request.operator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -43,7 +43,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "OperatorLogQueryRequest", description = "操作日志 查询请求对象")
-public class OperatorLogQueryRequest extends PageRequest {
+public class OperatorLogQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "用户id")
     private Long userId;

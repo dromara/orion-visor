@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.request.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 /**
  * 系统消息 查询请求对象
@@ -39,7 +39,7 @@ import org.dromara.visor.common.entity.PageRequest;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "SystemMessageQueryRequest", description = "系统消息 查询请求对象")
-public class SystemMessageQueryRequest extends PageRequest {
+public class SystemMessageQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "maxId")
     private Long maxId;

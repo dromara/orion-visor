@@ -22,12 +22,14 @@
  */
 package org.dromara.visor.module.asset.entity.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
 import java.util.Date;
@@ -40,7 +42,7 @@ import java.util.Date;
  * @since 2024-3-11 14:05
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -49,10 +51,6 @@ import java.util.Date;
 public class ExecHostLogDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;
-
-    @Schema(description = "id")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
 
     @Schema(description = "执行日志id")
     @TableField("log_id")

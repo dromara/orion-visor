@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.request.role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 
@@ -41,7 +41,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "SystemRoleQueryRequest", description = "角色 查询请求对象")
-public class SystemRoleQueryRequest extends PageRequest {
+public class SystemRoleQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;

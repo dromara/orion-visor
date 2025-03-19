@@ -31,15 +31,15 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * 公共页码请求
+ * 基本查询请求
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/7/12 23:14
  */
 @Data
-@Schema(name = "PageRequest", description = "公共页码请求")
-public class PageRequest {
+@Schema(name = "BaseQueryRequest", description = "基本查询请求")
+public class BaseQueryRequest implements IPageRequest, IOrderRequest {
 
     @NotNull(groups = Page.class)
     @Min(value = 1, groups = Page.class)
@@ -52,5 +52,8 @@ public class PageRequest {
     @Max(value = 200, groups = Page.class)
     @Schema(description = "大小")
     private Integer limit;
+
+    @Schema(description = "查询排序")
+    private Integer order;
 
 }

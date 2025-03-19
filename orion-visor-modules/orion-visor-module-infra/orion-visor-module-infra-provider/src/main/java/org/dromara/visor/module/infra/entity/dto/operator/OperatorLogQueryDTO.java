@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.dto.operator;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -43,7 +43,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "OperatorLogQueryDTO", description = "操作日志 查询对象")
-public class OperatorLogQueryDTO extends PageRequest {
+public class OperatorLogQueryDTO extends BaseQueryRequest {
 
     private static final long serialVersionUID = 1L;
 

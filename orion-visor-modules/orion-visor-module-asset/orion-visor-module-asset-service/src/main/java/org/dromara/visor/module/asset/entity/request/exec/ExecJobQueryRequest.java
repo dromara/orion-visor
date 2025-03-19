@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.entity.request.exec;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 
@@ -41,7 +41,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "ExecJobQueryRequest", description = "计划任务 查询请求对象")
-public class ExecJobQueryRequest extends PageRequest {
+public class ExecJobQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;

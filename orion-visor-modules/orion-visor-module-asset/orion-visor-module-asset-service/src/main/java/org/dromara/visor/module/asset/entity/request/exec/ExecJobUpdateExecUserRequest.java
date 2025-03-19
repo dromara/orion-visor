@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.entity.request.exec;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.NotNull;
 
@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "ExecJobUpdateExecUserRequest", description = "修改计划任务执行用户 查询请求对象")
-public class ExecJobUpdateExecUserRequest extends PageRequest {
+public class ExecJobUpdateExecUserRequest extends BaseQueryRequest {
 
     @NotNull
     @Schema(description = "id")

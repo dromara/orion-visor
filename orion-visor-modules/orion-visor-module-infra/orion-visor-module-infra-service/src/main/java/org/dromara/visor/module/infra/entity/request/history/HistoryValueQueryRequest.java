@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.request.history;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -43,7 +43,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "HistoryValueQueryRequest", description = "历史归档 查询请求对象")
-public class HistoryValueQueryRequest extends PageRequest {
+public class HistoryValueQueryRequest extends BaseQueryRequest {
 
     @NotNull
     @Schema(description = "引用id")

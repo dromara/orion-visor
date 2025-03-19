@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.entity.request.exec;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -44,7 +44,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "ExecLogQueryRequest", description = "批量执行日志 查询请求对象")
-public class ExecLogQueryRequest extends PageRequest {
+public class ExecLogQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;
