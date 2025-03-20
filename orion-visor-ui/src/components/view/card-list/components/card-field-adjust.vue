@@ -14,7 +14,7 @@
       <!-- 顶部按钮 -->
       <div class="table-adjust-popover-header">
         <span class="table-adjust-title">
-          表格展示字段
+          卡片展示字段
         </span>
         <a-button type="text"
                   size="mini"

@@ -1,10 +1,10 @@
-import type { OrderDirection, Pagination } from '@/types/global';
+import type { Pagination } from '@/types/global';
 import axios from 'axios';
 
 /**
  * 系统消息查询请求
  */
-export interface MessageQueryRequest extends Pagination, OrderDirection {
+export interface MessageQueryRequest extends Pagination {
   maxId?: number;
   classify?: string;
   queryUnread?: boolean;

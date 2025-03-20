@@ -39,6 +39,10 @@ export interface DictKeyQueryResponse extends TableData {
   valueType: string;
   extraSchema: string;
   description: string;
+  createTime: number;
+  updateTime: number;
+  creator: string;
+  updater: string;
 }
 
 /**

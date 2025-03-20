@@ -68,12 +68,12 @@ public class HistoryValueServiceImpl implements HistoryValueService {
     @Override
     public DataGrid<HistoryValueVO> getHistoryValuePage(HistoryValueQueryRequest request) {
         // 条件
-        LambdaQueryWrapper<HistoryValueDO> wrapper = this.buildQueryWrapper(request);
+        LambdaQueryWrapper<HistoryValueDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(HistoryValueDO::getId);
         // 查询
         return historyValueDAO.of()
                 .wrapper(wrapper)
                 .page(request)
-                .order(request, HistoryValueDO::getId)
                 .dataGrid(HistoryValueConvert.MAPPER::to);
     }
 

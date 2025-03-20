@@ -71,6 +71,8 @@ export interface ExecJobQueryResponse extends TableData {
   execUsername: string;
   createTime: number;
   updateTime: number;
+  creator: string;
+  updater: string;
   hostIdList: Array<number>;
   hostList: Array<HostQueryResponse>;
 }

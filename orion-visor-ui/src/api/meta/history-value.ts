@@ -1,11 +1,11 @@
-import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { DataGrid, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 
 /**
  * 历史归档查询请求
  */
-export interface HistoryValueQueryRequest extends Pagination, OrderDirection {
+export interface HistoryValueQueryRequest extends Pagination {
   searchValue?: string;
   relId?: number;
   type?: string;

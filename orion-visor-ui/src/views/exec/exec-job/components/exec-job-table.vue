@@ -133,12 +133,14 @@
       <!-- 最近执行 -->
       <template #recentLog="{ record }">
         <div class="flex-center" v-if="record.recentLogId && record.recentLogStatus">
+          <!-- 执行时间 -->
+          <span class="mr8">
+            {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm:ss') }}
+          </span>
           <!-- 执行状态 -->
-          <a-tag class="mr8" :color="getDictValue(execStatusKey, record.recentLogStatus, 'color')">
+          <a-tag :color="getDictValue(execStatusKey, record.recentLogStatus, 'color')">
             {{ getDictValue(execStatusKey, record.recentLogStatus) }}
           </a-tag>
-          <!-- 执行时间 -->
-          {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm:ss') }}
         </div>
         <!-- 无任务 -->
         <div v-else class="mx8">-</div>
