@@ -78,6 +78,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -86,7 +91,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -165,22 +170,26 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
-  import { dictValueTypeKey } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
+  import { TableName, dictValueTypeKey } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { getDictValueList } from '@/api/system/dict-value';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const cacheStore = useCacheStore();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<DictKeyQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<DictKeyQueryResponse>>([]);
   const formModel = reactive<DictKeyQueryRequest>({
     id: undefined,
     keyName: undefined,
@@ -259,7 +268,7 @@
   const doFetchTableData = async (request: DictKeyQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getDictKeyPage(request);
+      const { data } = await getDictKeyPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

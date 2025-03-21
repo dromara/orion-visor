@@ -94,6 +94,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -102,7 +107,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -186,18 +191,22 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { UploadTaskStatus, uploadTaskStatusKey } from '../types/const';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { TableName, UploadTaskStatus, uploadTaskStatusKey } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { useRouter } from 'vue-router';
+  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openClear']);
 
   const router = useRouter();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
@@ -292,7 +301,7 @@
   const doFetchTableData = async (request: UploadTaskQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getUploadTaskPage(request);
+      const { data } = await getUploadTaskPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

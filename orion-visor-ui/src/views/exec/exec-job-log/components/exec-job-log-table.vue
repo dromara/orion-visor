@@ -85,6 +85,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -93,7 +98,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :expandable="expandable"
              :data="tableRenderData"
@@ -111,11 +116,13 @@
       </template>
       <!-- 任务名称 -->
       <template #description="{ record }">
-        <span class="span-blue mr4 usn">
-          #{{ record.execSeq }}
-        </span>
-        <span :title="record.description">
-          {{ record.description }}
+        <span>
+          <span class="span-blue mr4 usn">
+            #{{ record.execSeq }}
+          </span>
+          <span :title="record.description">
+            {{ record.description }}
+          </span>
         </span>
       </template>
       <!-- 执行命令 -->
@@ -231,18 +238,23 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
+  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import { ExecStatus, execStatusKey, ExecMode } from '@/components/exec/log/const';
-  import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
+  import { useExpandable, useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
+  import { TableName } from '../types/const';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
   import ExecJobHostLogTable from './exec-job-host-log-table.vue';
   import UserSelector from '@/components/user/user/selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
   const expandable = useExpandable();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
@@ -383,7 +395,7 @@
   const doFetchTableData = async (request: ExecLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getExecJobLogPage(request);
+      const { data } = await getExecJobLogPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

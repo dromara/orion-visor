@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'upload-task';
+
 // 上传任务状态
 export const UploadTaskStatus = {
   // 等待中

@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'user';
+
 // 用户状态
 export const UserStatus = {
   // 禁用
