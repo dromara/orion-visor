@@ -76,16 +76,12 @@
             <!-- 修改 -->
             <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
                        @click="emits('openUpdate', record)">
-              <span class="more-doption normal">
-                <icon-edit /> 修改
-              </span>
+              <span class="more-doption normal">修改</span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
                        @click="deleteRow(record.id)">
-              <span class="more-doption error">
-                <icon-delete /> 删除
-              </span>
+              <span class="more-doption error">删除</span>
             </a-doption>
           </template>
         </a-dropdown>
@@ -96,17 +92,13 @@
       <!-- 修改 -->
       <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:update']"
                  @click="emits('openUpdate', record)">
-        <span class="more-doption normal">
-          <icon-edit /> 修改
-        </span>
+        <span class="more-doption normal">修改</span>
       </a-doption>
       <!-- 删除 -->
       <a-doption v-permission="['${package.ModuleName}:${typeHyphen}:delete']"
                  class="span-red"
                  @click="deleteRow(record.id)">
-        <span class="more-doption error">
-          <icon-delete /> 删除
-        </span>
+        <span class="more-doption error">删除</span>
       </a-doption>
     </template>
   </card-list>

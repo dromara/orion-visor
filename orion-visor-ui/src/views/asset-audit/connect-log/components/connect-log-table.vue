@@ -87,6 +87,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -96,7 +101,7 @@
              ref="tableRef"
              :loading="loading"
              :row-selection="rowSelection"
-             :columns="columns"
+             :columns="tableColumns"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
@@ -209,8 +214,8 @@
   import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
   import { reactive, ref, onMounted } from 'vue';
   import { deleteTerminalConnectLog, getTerminalConnectLogPage, hostForceOffline } from '@/api/asset/terminal-connect-log';
-  import { connectStatusKey, connectTypeKey, TerminalConnectStatus } from '../types/const';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { TableName, connectStatusKey, connectTypeKey, TerminalConnectStatus } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore, useUserStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
@@ -219,14 +224,18 @@
   import { useRoute } from 'vue-router';
   import { dateFormat } from '@/utils';
   import { openNewRoute } from '@/router';
+  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openClear', 'openDetail']);
 
   const route = useRoute();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
@@ -247,7 +256,7 @@
   const doFetchTableData = async (request: TerminalConnectLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getTerminalConnectLogPage(request);
+      const { data } = await getTerminalConnectLogPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
