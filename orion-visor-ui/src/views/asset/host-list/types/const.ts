@@ -1,6 +1,9 @@
 import WindowsIcon from '@/assets/images/icon/os_windows.svg';
 import LinuxIcon from '@/assets/images/icon/os_linux.svg';
 
+// 表名称
+export const TableName = 'host';
+
 // tag 颜色
 export const tagColor = [
   'arcoblue',

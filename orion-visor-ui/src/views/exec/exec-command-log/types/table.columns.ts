@@ -2,7 +2,7 @@ import type { TableColumnData } from '@arco-design/web-vue';
 import { isNumber } from '@/utils/is';
 
 // 表格列
-export const tableColumns = [
+export const logColumns = [
   {
     title: 'id',
     dataIndex: 'id',

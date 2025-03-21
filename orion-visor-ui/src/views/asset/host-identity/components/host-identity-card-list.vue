@@ -3,12 +3,14 @@
              search-input-placeholder="输入 id / 名称 / 用户名"
              :create-card-position="false"
              :loading="loading"
-             :field-config="fieldConfig"
+             :field-config="cardFieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
              :add-permission="['asset:host-identity:create']"
+             :query-order="queryOrder"
+             :fields-hook="fieldsHook"
              @add="emits('openAdd')"
              @reset="reset"
              @search="fetchCardData"
@@ -136,17 +138,13 @@
             <!-- 修改 -->
             <a-doption v-permission="['asset:host-identity:update']"
                        @click="emits('openUpdate', record)">
-              <span class="more-doption normal">
-                <icon-edit /> 修改
-              </span>
+              <span class="more-doption normal">修改</span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['asset:host-identity:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
-              <span class="more-doption error">
-                <icon-delete /> 删除
-              </span>
+              <span class="more-doption error">删除</span>
             </a-doption>
           </template>
         </a-dropdown>
@@ -163,7 +161,7 @@
 
 <script lang="ts" setup>
   import type { HostIdentityQueryRequest, HostIdentityQueryResponse } from '@/api/asset/host-identity';
-  import { useCardPagination, useCardColLayout } from '@/hooks/card';
+  import { useCardPagination, useCardColLayout, useCardFieldConfig } from '@/hooks/card';
   import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { objectTruthKeyCount, resetObject } from '@/utils';
@@ -175,7 +173,8 @@
   import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
-  import { IdentityType, identityTypeKey } from '../types/const';
+  import { TableName, IdentityType, identityTypeKey } from '../types/const';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
@@ -186,6 +185,8 @@
   const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { cardFieldConfig, fieldsHook } = useCardFieldConfig(TableName, fieldConfig);
   const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();
@@ -248,7 +249,7 @@
   const doFetchCardData = async (request: HostIdentityQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostIdentityPage(request);
+      const { data } = await getHostIdentityPage(queryOrder.markOrderly(request));
       list.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

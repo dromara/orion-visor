@@ -10,11 +10,13 @@ const fieldConfig = {
       label: 'id',
       dataIndex: 'id',
       slotName: 'id',
+      default: true,
     }, {
       label: '描述',
       dataIndex: 'description',
       slotName: 'description',
       ellipsis: true,
+      default: true,
     }, {
       label: '创建时间',
       dataIndex: 'createTime',
@@ -22,6 +24,7 @@ const fieldConfig = {
       render: ({ record }) => {
         return dateFormat(new Date(record.createTime));
       },
+      default: true,
     }, {
       label: '修改时间',
       dataIndex: 'updateTime',
@@ -29,6 +32,19 @@ const fieldConfig = {
       render: ({ record }) => {
         return dateFormat(new Date(record.updateTime));
       },
+      default: true,
+    }, {
+      label: '创建人',
+      dataIndex: 'creator',
+      slotName: 'creator',
+      ellipsis: true,
+      default: true,
+    }, {
+      label: '修改人',
+      dataIndex: 'updater',
+      slotName: 'updater',
+      ellipsis: true,
+      default: true,
     }
   ] as CardField[]
 } as CardFieldConfig;

@@ -3,12 +3,14 @@
              search-input-placeholder="输入 id / 名称"
              :create-card-position="false"
              :loading="loading"
-             :field-config="fieldConfig"
+             :field-config="cardFieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :handle-visible="{disableFilter: true}"
              :add-permission="['asset:host-key:create']"
+             :query-order="queryOrder"
+             :fields-hook="fieldsHook"
              @add="emits('openAdd')"
              @reset="reset"
              @search="fetchCardData"
@@ -54,24 +56,18 @@
             <!-- 详情 -->
             <a-doption v-permission="['asset:host-key:detail', 'asset:host-key:update']"
                        @click="emits('openView', record)">
-              <span class="more-doption normal">
-                <icon-list /> 详情
-              </span>
+              <span class="more-doption normal">详情</span>
             </a-doption>
             <!-- 修改 -->
             <a-doption v-permission="['asset:host-key:update']"
                        @click="emits('openUpdate', record)">
-              <span class="more-doption normal">
-                <icon-edit /> 修改
-              </span>
+              <span class="more-doption normal">修改</span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['asset:host-key:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
-              <span class="more-doption error">
-                <icon-delete /> 删除
-              </span>
+              <span class="more-doption error">删除</span>
             </a-doption>
           </template>
         </a-dropdown>
@@ -88,7 +84,7 @@
 
 <script lang="ts" setup>
   import type { HostKeyQueryRequest, HostKeyQueryResponse } from '@/api/asset/host-key';
-  import { useCardPagination, useCardColLayout } from '@/hooks/card';
+  import { useCardPagination, useCardColLayout, useCardFieldConfig } from '@/hooks/card';
   import { reactive, ref, onMounted } from 'vue';
   import { useCacheStore } from '@/store';
   import { useRouter } from 'vue-router';
@@ -98,6 +94,8 @@
   import { deleteHostKey, getHostKeyPage } from '@/api/asset/host-key';
   import { Message, Modal } from '@arco-design/web-vue';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { TableName } from '../types/const';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
@@ -105,6 +103,8 @@
   const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { cardFieldConfig, fieldsHook } = useCardFieldConfig(TableName, fieldConfig);
   const { loading, setLoading } = useLoading();
 
   const list = ref<HostKeyQueryResponse[]>([]);
@@ -155,7 +155,7 @@
   const doFetchCardData = async (request: HostKeyQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostKeyPage(request);
+      const { data } = await getHostKeyPage(queryOrder.markOrderly(request));
       list.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

@@ -3,7 +3,7 @@
   <a-table row-key="id"
            ref="tableRef"
            :loading="loading"
-           :columns="tableColumns"
+           :columns="logColumns"
            :data="tableRenderData"
            :pagination="pagination"
            :bordered="false"
@@ -112,7 +112,7 @@
   const { getDictValue } = useDictStore();
 
   const jsonView = ref();
-  const tableColumns = ref();
+  const logColumns = ref();
   const tableRenderData = ref<OperatorLogQueryResponse[]>([]);
 
   // 查看详情
@@ -178,7 +178,7 @@
       // 不显示操作
       cols = cols.filter(s => s.dataIndex !== 'handle');
     }
-    tableColumns.value = cols;
+    logColumns.value = cols;
     // 加载数据
     fetchTableData();
   });
