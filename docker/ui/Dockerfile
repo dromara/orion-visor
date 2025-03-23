@@ -1,5 +1,4 @@
 FROM nginx:alpine
-USER root
 # 系统时区
 ARG TZ=Asia/Shanghai
 # 添加包
