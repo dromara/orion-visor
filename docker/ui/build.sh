@@ -1,4 +1,5 @@
 #/bin/bash
+set -e
 version=2.3.6
 mv ../../orion-visor-ui/dist ./dist
 docker build -t orion-visor-ui:${version} .
