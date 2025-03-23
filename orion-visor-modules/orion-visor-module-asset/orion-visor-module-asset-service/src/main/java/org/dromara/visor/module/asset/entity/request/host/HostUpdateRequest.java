@@ -76,8 +76,7 @@ public class HostUpdateRequest implements Serializable {
     @Schema(description = "主机端口")
     private Integer port;
 
-    // TODO
-    // @NotEmpty
+    @NotEmpty
     @Schema(description = "主机分组")
     private List<Long> groupIdList;
 
