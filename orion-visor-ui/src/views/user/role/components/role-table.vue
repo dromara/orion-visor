@@ -55,6 +55,11 @@
               <icon-plus />
             </template>
           </a-button>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -62,7 +67,7 @@
     <a-table row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
@@ -142,16 +147,20 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { RoleStatus, roleStatusKey } from '../types/const';
-  import { useTablePagination } from '@/hooks/table';
+  import { TableName, RoleStatus, roleStatusKey } from '../types/const';
+  import { useTablePagination, useTableColumns } from '@/hooks/table';
   import usePermission from '@/hooks/permission';
   import { useCacheStore, useDictStore } from '@/store';
   import { AdminRoleCode } from '@/types/const';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openGrant']);
 
   const cacheStore = useCacheStore();
   const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
@@ -203,7 +212,7 @@
   const doFetchTableData = async (request: RoleQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getRolePage(request);
+      const { data } = await getRolePage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

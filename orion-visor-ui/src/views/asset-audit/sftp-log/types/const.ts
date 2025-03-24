@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'sftp-log';
+
 // sftp 操作类型
 export const SftpOperatorType = {
   SFTP_MOVE: 'terminal:sftp-move',

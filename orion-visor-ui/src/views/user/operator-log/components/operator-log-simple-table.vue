@@ -83,7 +83,7 @@
   import { ref, onMounted } from 'vue';
   import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey, dictKeys } from '../types/const';
   import columns from '../types/table.columns';
-  import { getLogDetail } from '../types/const';
+  import { TableName, getLogDetail } from '../types/const';
   import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
   import { useTablePagination } from '@/hooks/table';
@@ -91,6 +91,7 @@
   import { getOperatorLogPage } from '@/api/user/operator-log';
   import { getCurrentUserOperatorLog } from '@/api/user/mine';
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import JsonEditorModal from '@/components/view/json-editor/modal/index.vue';
 
   const props = withDefaults(defineProps<Partial<{
@@ -108,8 +109,9 @@
   });
 
   const pagination = useTablePagination();
+  const { markOrderly } = useQueryOrder(TableName, DESC);
   const { loading, setLoading } = useLoading();
-  const { getDictValue } = useDictStore();
+  const { getDictValue, loadKeys } = useDictStore();
 
   const jsonView = ref();
   const tableColumns = ref();
@@ -135,11 +137,11 @@
       let rows;
       if (props.current) {
         // 查询当前用户
-        const { data } = await getCurrentUserOperatorLog(request);
+        const { data } = await getCurrentUserOperatorLog(markOrderly(request));
         rows = data;
       } else {
         // 查询所有
-        const { data } = await getOperatorLogPage({ ...request, ...props.baseParams });
+        const { data } = await getOperatorLogPage(markOrderly({ ...request, ...props.baseParams }));
         rows = data;
       }
       tableRenderData.value = rows.rows.map(s => {
@@ -162,8 +164,7 @@
   // 初始化
   onMounted(async () => {
     // 加载字典值
-    const dictStore = useDictStore();
-    await dictStore.loadKeys(dictKeys);
+    await loadKeys(dictKeys);
     // 设置表格列
     let cols = columns.map(s => {
       return { ...s };

@@ -77,6 +77,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -85,7 +90,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -133,12 +138,14 @@
       <!-- 最近执行 -->
       <template #recentLog="{ record }">
         <div class="flex-center" v-if="record.recentLogId && record.recentLogStatus">
+          <!-- 执行时间 -->
+          <span class="mr8">
+            {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm:ss') }}
+          </span>
           <!-- 执行状态 -->
-          <a-tag class="mr8" :color="getDictValue(execStatusKey, record.recentLogStatus, 'color')">
+          <a-tag :color="getDictValue(execStatusKey, record.recentLogStatus, 'color')">
             {{ getDictValue(execStatusKey, record.recentLogStatus) }}
           </a-tag>
-          <!-- 执行时间 -->
-          {{ dateFormat(new Date(record.recentLogTime), 'MM-dd HH:mm:ss') }}
         </div>
         <!-- 无任务 -->
         <div v-else class="mx8">-</div>
@@ -213,20 +220,24 @@
   import usePermission from '@/hooks/permission';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { TableName, ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useCacheStore, useDictStore, useUserStore } from '@/store';
   import { useRoute } from 'vue-router';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
+  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openDetail', 'updateExecUser', 'testCron']);
 
   const route = useRoute();
   const cacheStore = useCacheStore();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { hasPermission } = usePermission();
   const { toOptions, getDictValue } = useDictStore();
@@ -311,7 +322,7 @@
   const doFetchTableData = async (request: ExecJobQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getExecJobPage(request);
+      const { data } = await getExecJobPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

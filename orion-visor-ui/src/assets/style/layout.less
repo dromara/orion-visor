@@ -66,6 +66,43 @@
   }
 }
 
+.table-adjust-popover {
+  user-select: none;
+
+  &-header {
+    padding: 4px 4px 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .table-adjust-title {
+      margin-left: 4px;
+      color: var(--color-text-1);
+    }
+  }
+
+  .arco-checkbox-group {
+    min-width: 168px;
+  }
+
+  .arco-radio-group {
+    min-width: 148px;
+  }
+
+  .arco-checkbox-group, .arco-radio-group {
+    padding: 0 4px 4px 4px;
+
+    .arco-checkbox, .radio-checkbox {
+      border-radius: 4px;
+      padding: 0 6px;
+
+      &:hover {
+        background: var(--color-fill-2);
+      }
+    }
+  }
+}
+
 // -- drawer
 .drawer-form-small {
   padding: 20px 20px 2px 20px;
@@ -196,7 +233,7 @@
 .more-doption {
   min-width: 42px;
   padding: 0 4px;
-  font-size: 12px;
+  font-size: 13px;
   display: inline-block;
 
   svg {

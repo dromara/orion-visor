@@ -1,5 +1,5 @@
-import type { DataGrid, Options, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { DataGrid, Options, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -33,7 +33,7 @@ export interface DictValueRollbackRequest {
 /**
  * 字典配置值查询请求
  */
-export interface DictValueQueryRequest extends Pagination {
+export interface DictValueQueryRequest extends Pagination, OrderDirection {
   keyId?: number;
   keyName?: string;
   value?: string;

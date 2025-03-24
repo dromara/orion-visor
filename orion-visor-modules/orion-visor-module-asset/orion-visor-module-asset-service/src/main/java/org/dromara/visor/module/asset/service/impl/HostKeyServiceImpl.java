@@ -185,8 +185,10 @@ public class HostKeyServiceImpl implements HostKeyService {
         // 条件
         LambdaQueryWrapper<HostKeyDO> wrapper = this.buildQueryWrapper(request);
         // 查询
-        DataGrid<HostKeyVO> dataGrid = hostKeyDAO.of(wrapper)
+        DataGrid<HostKeyVO> dataGrid = hostKeyDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, HostKeyDO::getId)
                 .dataGrid(HostKeyConvert.MAPPER::to);
         dataGrid.forEach(this::toSafe);
         return dataGrid;

@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.request.tag;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -42,7 +42,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "TagRelQueryRequest", description = "标签引用 查询请求对象")
-public class TagRelQueryRequest extends PageRequest {
+public class TagRelQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;

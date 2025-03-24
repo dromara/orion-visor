@@ -1,12 +1,12 @@
-import type { ClearRequest, DataGrid, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { ClearRequest, DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 import qs from 'query-string';
 
 /**
  * 终端连接日志查询请求
  */
-export interface TerminalConnectLogQueryRequest extends Pagination {
+export interface TerminalConnectLogQueryRequest extends Pagination, OrderDirection {
   id?: number;
   userId?: number;
   hostId?: number;

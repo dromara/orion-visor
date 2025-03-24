@@ -90,6 +90,13 @@
                       @click="bubblesEmitter(HeaderEmitter.RESET)">
               <icon-refresh />
             </a-button>
+            <!-- 调整字段 -->
+            <card-field-adjust v-if="fieldsHook"
+                               :fields-hook="fieldsHook" />
+            <!-- 调整排序 -->
+            <card-sort-adjust v-if="queryOrder"
+                              :query-order="queryOrder"
+                              @query="bubblesEmitter(HeaderEmitter.SEARCH)" />
           </a-space>
         </div>
       </div>
@@ -110,13 +117,14 @@
   import { triggerMouseEvent } from '@/utils/event';
   import { HeaderEmitter } from '../types/emits';
   import useEmitter from '@/hooks/emitter';
+  import CardFieldAdjust from './card-field-adjust.vue';
+  import CardSortAdjust from './card-sort-adjust.vue';
 
   const props = defineProps<CardProps>();
   const emits = defineEmits(['emitter']);
 
-  const { bubblesEmitter } = useEmitter(emits);
-
   const appStore = useAppStore();
+  const { bubblesEmitter } = useEmitter(emits);
 
   const filterRef = ref();
 

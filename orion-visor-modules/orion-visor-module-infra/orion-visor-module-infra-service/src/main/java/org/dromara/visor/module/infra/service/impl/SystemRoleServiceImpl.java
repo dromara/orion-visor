@@ -176,8 +176,10 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .like(SystemRoleDO::getName, request.getName())
                 .like(SystemRoleDO::getDescription, request.getDescription());
         // 查询
-        return systemRoleDAO.of(wrapper)
+        return systemRoleDAO.of()
+                .wrapper(wrapper)
                 .page(request)
+                .order(request, SystemRoleDO::getId)
                 .dataGrid(SystemRoleConvert.MAPPER::to);
     }
 

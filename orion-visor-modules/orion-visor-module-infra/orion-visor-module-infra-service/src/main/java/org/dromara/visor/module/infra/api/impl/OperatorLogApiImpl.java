@@ -58,8 +58,9 @@ public class OperatorLogApiImpl implements OperatorLogApi {
         LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询
         return operatorLogDAO.of()
-                .page(request)
                 .wrapper(wrapper)
+                .page(request)
+                .order(request, OperatorLogDO::getId)
                 .dataGrid(OperatorLogProviderConvert.MAPPER::to);
     }
 
@@ -85,8 +86,7 @@ public class OperatorLogApiImpl implements OperatorLogApi {
                 .eq(OperatorLogDO::getResult, request.getResult())
                 .like(OperatorLogDO::getExtra, request.getExtra())
                 .ge(OperatorLogDO::getStartTime, request.getStartTimeStart())
-                .le(OperatorLogDO::getStartTime, request.getStartTimeEnd())
-                .orderByDesc(OperatorLogDO::getId);
+                .le(OperatorLogDO::getStartTime, request.getStartTimeEnd());
     }
 
 }

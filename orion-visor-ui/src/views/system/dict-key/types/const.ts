@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'dict-key';
+
 // 配置值类型定义
 export const ValueType = {
   // 字符串

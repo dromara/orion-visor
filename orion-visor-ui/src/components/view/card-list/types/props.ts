@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'vue';
 import type { PaginationProps, ResponsiveValue } from '@arco-design/web-vue';
+import type { CardFieldsHook } from '@/hooks/card';
+import type { QueryOrderData } from '@/hooks/query-order';
 import type { CardFieldConfig, CardPosition, CardRecord, ColResponsiveValue, HandleVisible } from '@/types/card';
 
 // 卡片属性
@@ -19,7 +21,9 @@ export interface CardProps {
   createCardDescription?: string;
   createCardPosition?: CardPosition;
   addPermission?: Array<string>;
-  cardLayoutGutter?: Number | ResponsiveValue | Array<Number> | Array<ResponsiveValue>;
+  fieldsHook?: CardFieldsHook;
+  queryOrder?: QueryOrderData;
+  cardLayoutGutter?: number | ResponsiveValue | Array<number> | Array<ResponsiveValue>;
   cardLayoutCols?: ColResponsiveValue;
   handleVisible?: HandleVisible;
   list?: Array<CardRecord>;

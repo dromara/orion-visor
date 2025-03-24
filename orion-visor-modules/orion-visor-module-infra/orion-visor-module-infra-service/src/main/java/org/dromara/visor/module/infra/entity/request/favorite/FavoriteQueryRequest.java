@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.entity.request.favorite;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 /**
  * 收藏 查询请求对象
@@ -39,7 +39,7 @@ import org.dromara.visor.common.entity.PageRequest;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "FavoriteQueryRequest", description = "收藏 查询请求对象")
-public class FavoriteQueryRequest extends PageRequest {
+public class FavoriteQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "用户id")
     private Long userId;

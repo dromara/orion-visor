@@ -1,5 +1,5 @@
-import type { DataGrid, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -26,7 +26,7 @@ export interface HostIdentityUpdateRequest extends HostIdentityCreateRequest {
 /**
  * 主机身份查询请求
  */
-export interface HostIdentityQueryRequest extends Pagination {
+export interface HostIdentityQueryRequest extends Pagination, OrderDirection {
   searchValue?: string;
   id?: number;
   name?: string;

@@ -23,7 +23,6 @@
 package org.dromara.visor.framework.mybatis.core.query;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
-import cn.orionsec.kit.lang.define.wrapper.IPageRequest;
 import cn.orionsec.kit.lang.define.wrapper.PageRequest;
 import cn.orionsec.kit.lang.define.wrapper.Pager;
 import cn.orionsec.kit.lang.utils.Exceptions;
@@ -33,11 +32,16 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 import cn.orionsec.kit.spring.SpringHolder;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.interfaces.Func;
 import com.baomidou.mybatisplus.core.conditions.interfaces.Join;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.entity.IOrderRequest;
+import org.dromara.visor.common.entity.IPageRequest;
+import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
@@ -96,9 +100,9 @@ public class DataQuery<T> {
         return new DataQuery<>(dao, wrapper);
     }
 
-    public DataQuery<T> page(org.dromara.visor.common.entity.PageRequest page) {
-        org.dromara.visor.common.entity.PageRequest pr = Valid.notNull(page, "page is null");
-        this.page = new PageRequest(pr.getPage(), pr.getLimit());
+    public DataQuery<T> page(IPageRequest request) {
+        Valid.notNull(request, "page is null");
+        this.page = new PageRequest(request.getPage(), request.getLimit());
         return this;
     }
 
@@ -130,15 +134,30 @@ public class DataQuery<T> {
         return then;
     }
 
-    public DataQuery<T> limit(IPageRequest page) {
-        return this.last(Pager.of(page).getSql());
+    public DataQuery<T> order(IOrderRequest request, SFunction<T, ?> column) {
+        BooleanBit sorted = BooleanBit.of(request.getOrder());
+        if (sorted == null) {
+            return this;
+        }
+        return this.order(sorted.booleanValue(), column);
     }
 
-    public DataQuery<T> limit(int limit) {
+    @SuppressWarnings("unchecked")
+    public DataQuery<T> order(boolean asc, SFunction<T, ?> column) {
+        // 设置排序
+        if (wrapper instanceof Func) {
+            ((Func<? extends T, SFunction<? extends T, ?>>) wrapper).orderBy(true, asc, column);
+            return this;
+        } else {
+            throw Exceptions.argument("wrapper not implements Func");
+        }
+    }
+
+    public DataQuery<T> limit(Number limit) {
         return this.last(SqlUtils.limit(limit));
     }
 
-    public DataQuery<T> limit(int offset, int limit) {
+    public DataQuery<T> limit(Number offset, Number limit) {
         return this.last(SqlUtils.limit(offset, limit));
     }
 

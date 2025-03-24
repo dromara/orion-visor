@@ -28,10 +28,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -78,6 +75,7 @@ public class HostCreateRequest implements Serializable {
     @Schema(description = "主机端口")
     private Integer port;
 
+    @NotEmpty
     @Schema(description = "主机分组")
     private List<Long> groupIdList;
 

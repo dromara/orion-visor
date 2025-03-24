@@ -127,6 +127,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -135,7 +140,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -234,25 +239,19 @@
               <!-- 复制 -->
               <a-doption v-permission="['asset:host:create']"
                          @click="emits('openCopy', record)">
-                <span class="more-doption normal">
-                  复制
-                </span>
+                <span class="more-doption normal">复制</span>
               </a-doption>
               <!-- SSH -->
               <a-doption v-if="record.type === HostType.SSH.value"
                          v-permission="['asset:terminal:access']"
                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
-                <span class="more-doption normal">
-                  SSH
-                </span>
+                <span class="more-doption normal">SSH</span>
               </a-doption>
               <!-- SFTP -->
               <a-doption v-if="record.type === HostType.SSH.value"
                          v-permission="['asset:terminal:access']"
                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
-                <span class="more-doption normal">
-                  SFTP
-                </span>
+                <span class="more-doption normal">SFTP</span>
               </a-doption>
             </template>
           </a-dropdown>
@@ -273,8 +272,8 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, getHostOsIcon } from '../types/const';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { TableName, tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, getHostOsIcon } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
   import { dataColor } from '@/utils';
@@ -282,15 +281,19 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { ASC, useQueryOrder } from '@/hooks/query-order';
   import { openNewRoute } from '@/router';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
 
   const router = useRouter();
   const cacheStore = useCacheStore();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
@@ -383,7 +386,7 @@
   const doFetchTableData = async (request: HostQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostPage(request);
+      const { data } = await getHostPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

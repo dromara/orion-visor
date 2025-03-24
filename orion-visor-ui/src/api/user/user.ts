@@ -1,5 +1,5 @@
-import type { DataGrid, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import type { RoleQueryResponse } from '@/api/user/role';
 import axios from 'axios';
 import qs from 'query-string';
@@ -29,7 +29,7 @@ export interface UserUpdateRequest extends UserCreateRequest {
 /**
  * 用户查询请求
  */
-export interface UserQueryRequest extends Pagination {
+export interface UserQueryRequest extends Pagination, OrderDirection {
   id?: number;
   username?: string;
   password?: string;

@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'role';
+
 // 角色状态
 export const RoleStatus = {
   // 停用

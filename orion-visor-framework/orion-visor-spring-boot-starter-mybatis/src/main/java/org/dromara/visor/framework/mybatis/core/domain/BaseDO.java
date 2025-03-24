@@ -22,11 +22,12 @@
  */
 package org.dromara.visor.framework.mybatis.core.domain;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.ibatis.type.JdbcType;
 import org.dromara.visor.common.constant.Const;
 
@@ -41,9 +42,16 @@ import java.util.Date;
  * @since 2023/6/23 18:42
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BaseDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @Schema(description = "id")
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)

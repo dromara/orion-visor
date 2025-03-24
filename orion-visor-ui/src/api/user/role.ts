@@ -1,5 +1,5 @@
-import type { DataGrid, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 
 /**
@@ -30,7 +30,7 @@ export interface RoleGrantMenuRequest extends RoleCreateRequest {
 /**
  * 角色查询请求
  */
-export interface RoleQueryRequest extends Pagination {
+export interface RoleQueryRequest extends Pagination, OrderDirection {
   id?: number;
   name?: string;
   code?: string;

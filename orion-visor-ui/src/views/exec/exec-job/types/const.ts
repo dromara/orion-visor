@@ -1,5 +1,8 @@
 import type { TemplateParam } from '@/components/view/exec-editor/const';
 
+// 表名称
+export const TableName = 'exec-job';
+
 // cron 下次执行次数
 export const CronNextTimes = 5;
 

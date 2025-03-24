@@ -71,6 +71,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -80,7 +85,7 @@
              ref="tableRef"
              :loading="loading"
              :row-selection="rowSelection"
-             :columns="columns"
+             :columns="tableColumns"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
@@ -187,19 +192,23 @@
   import type { TerminalSftpLogQueryRequest, TerminalSftpLogQueryResponse } from '@/api/asset/terminal-sftp';
   import { reactive, ref, onMounted } from 'vue';
   import { getTerminalSftpLogPage, deleteTerminalSftpLog } from '@/api/asset/terminal-sftp';
-  import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount } from '../types/const';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount, TableName } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
   import { permission10toString } from '@/utils/file';
+  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
@@ -218,7 +227,7 @@
     try {
       setLoading(true);
       // 查询
-      const { data } = await getTerminalSftpLogPage(request);
+      const { data } = await getTerminalSftpLogPage(queryOrder.markOrderly(request));
       // 设置最大数量
       data.rows.forEach(s => {
         s.extra.maxCount = showPathMaxCount;

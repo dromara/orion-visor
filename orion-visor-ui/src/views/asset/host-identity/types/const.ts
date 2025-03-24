@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'host-id';
+
 // 身份类型
 export const IdentityType = {
   PASSWORD: 'PASSWORD',

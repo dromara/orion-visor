@@ -310,7 +310,7 @@
   const fetchTreeData = async (force = false) => {
     try {
       emits('setLoading', true);
-      const groups = await cacheStore.loadHostGroups(force);
+      const groups = await cacheStore.loadHostGroupTree(force);
       treeData.value = groups || [];
     } catch (e) {
     } finally {

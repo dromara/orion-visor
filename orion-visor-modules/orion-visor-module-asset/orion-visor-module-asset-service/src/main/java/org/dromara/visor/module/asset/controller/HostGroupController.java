@@ -85,7 +85,7 @@ public class HostGroupController {
     @OperatorLog(HostGroupOperatorType.RENAME)
     @PutMapping("/rename")
     @Operation(summary = "修改名称")
-    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
+    @PreAuthorize("@ss.hasAnyPermission('asset:host-group:update', 'asset:host:query')")
     public Integer updateHostGroupName(@Validated @RequestBody DataGroupRenameDTO request) {
         return hostGroupService.updateHostGroupName(request);
     }
@@ -112,7 +112,7 @@ public class HostGroupController {
     @GetMapping("/rel-list")
     @Operation(summary = "查询分组内主机")
     @Parameter(name = "groupId", description = "groupId", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host-group:update')")
+    @PreAuthorize("@ss.hasAnyPermission('asset:host-group:update', 'asset:host:query')")
     public Set<Long> queryHostGroupRel(@RequestParam("groupId") Long groupId) {
         return hostGroupService.queryHostGroupRel(groupId);
     }

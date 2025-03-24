@@ -1,11 +1,11 @@
-import type { ClearRequest, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { ClearRequest, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import { createAppWebSocket } from '@/utils/http';
 
 /**
  * 执行日志查询请求
  */
-export interface ExecLogQueryRequest extends Pagination {
+export interface ExecLogQueryRequest extends Pagination, OrderDirection {
   id?: number;
   userId?: number;
   sourceId?: number;

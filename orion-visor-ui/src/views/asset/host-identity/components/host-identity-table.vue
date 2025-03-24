@@ -99,6 +99,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -107,7 +112,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -193,18 +198,22 @@
   import usePermission from '@/hooks/permission';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
-  import { IdentityType, identityTypeKey } from '../types/const';
+  import { TableName, IdentityType, identityTypeKey } from '../types/const';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
   import { useRouter } from 'vue-router';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openKeyView']);
 
   const router = useRouter();
   const cacheStore = useCacheStore();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { toOptions, getDictValue } = useDictStore();
   const { loading, setLoading } = useLoading();
   const { hasAnyPermission } = usePermission();
@@ -265,7 +274,7 @@
   const doFetchTableData = async (request: HostIdentityQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostIdentityPage(request);
+      const { data } = await getHostIdentityPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

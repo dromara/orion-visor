@@ -151,7 +151,7 @@
   // 全选
   const selectAll = async () => {
     // 从缓存中查询全部分组
-    const groups = await cacheStore.loadHostGroups();
+    const groups = await cacheStore.loadHostGroupTree();
     const groupKeys: number[] = [];
     flatNodeKeys(groups, groupKeys);
     checkedGroups.value = groupKeys;
@@ -160,7 +160,7 @@
   // 反选
   const reverseSelect = async () => {
     // 从缓存中查询全部分组
-    const groups = await cacheStore.loadHostGroups();
+    const groups = await cacheStore.loadHostGroupTree();
     const groupKeys: number[] = [];
     flatNodeKeys(groups, groupKeys);
     checkedGroups.value = groupKeys.filter(s => !checkedGroups.value.includes(s));

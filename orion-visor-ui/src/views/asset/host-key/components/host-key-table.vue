@@ -82,6 +82,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -90,7 +95,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -147,15 +152,20 @@
   import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { TableName } from '../types/const';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openView']);
 
   const router = useRouter();
   const cacheStore = useCacheStore();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
 
   const selectedKeys = ref<Array<number>>([]);
@@ -213,7 +223,7 @@
   const doFetchTableData = async (request: HostKeyQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostKeyPage(request);
+      const { data } = await getHostKeyPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

@@ -1,11 +1,11 @@
-import type { ClearRequest, DataGrid, Pagination } from '@/types/global';
+import type { ClearRequest, DataGrid, OrderDirection, Pagination } from '@/types/global';
 import axios from 'axios';
 import qs from 'query-string';
 
 /**
  * 操作日志查询参数
  */
-export interface OperatorLogQueryRequest extends Pagination {
+export interface OperatorLogQueryRequest extends Pagination, OrderDirection {
   userId?: number;
   username?: string;
   module?: string;

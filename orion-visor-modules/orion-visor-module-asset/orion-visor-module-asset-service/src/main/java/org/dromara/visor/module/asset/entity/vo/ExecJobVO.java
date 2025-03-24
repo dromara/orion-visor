@@ -93,6 +93,12 @@ public class ExecJobVO implements Serializable {
     @Schema(description = "修改时间")
     private Date updateTime;
 
+    @Schema(description = "创建人")
+    private String creator;
+
+    @Schema(description = "修改人")
+    private String updater;
+
     @Schema(description = "执行主机")
     private List<Long> hostIdList;
 

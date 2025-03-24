@@ -1,3 +1,6 @@
+// 表名称
+export const TableName = 'conn-log';
+
 // 终端连接类型
 export const TerminalConnectType = {
   SSH: 'SSH',

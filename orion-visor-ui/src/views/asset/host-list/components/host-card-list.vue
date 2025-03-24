@@ -3,12 +3,14 @@
              search-input-placeholder="输入 id / 名称 / 编码 / 地址"
              :create-card-position="false"
              :loading="loading"
-             :field-config="fieldConfig"
+             :field-config="cardFieldConfig"
              :list="list"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
              :add-permission="['asset:host:create']"
+             :query-order="queryOrder"
+             :fields-hook="fieldsHook"
              @add="emits('openAdd')"
              @reset="reset"
              @search="fetchCardData"
@@ -174,55 +176,43 @@
             <!-- 修改 -->
             <a-doption v-permission="['asset:host:update']"
                        @click="emits('openUpdate', record)">
-              <span class="more-doption normal">
-                <icon-edit /> 修改
-              </span>
+              <span class="more-doption normal">修改</span>
             </a-doption>
             <!-- 配置 -->
             <a-doption v-permission="['asset:host:update-config']"
                        @click="emits('openUpdateConfig', record)">
-              <span class="more-doption normal">
-                <icon-settings /> 配置
-              </span>
+              <span class="more-doption normal">配置</span>
             </a-doption>
             <!-- 修改状态 -->
             <a-doption v-permission="['asset:host:update-status']"
                        @click="updateStatus(record as HostQueryResponse)">
               <span class="more-doption"
                     :class="[toggleDictValue(hostStatusKey, record.status, 'status')]">
-                <icon-sync /> {{ toggleDictValue(hostStatusKey, record.status, 'label') }}
+                {{ toggleDictValue(hostStatusKey, record.status, 'label') }}
               </span>
             </a-doption>
             <!-- 复制 -->
             <a-doption v-permission="['asset:host:create']"
                        @click="emits('openCopy', record)">
-              <span class="more-doption normal">
-                <icon-copy /> 复制
-              </span>
+              <span class="more-doption normal">复制</span>
             </a-doption>
             <!-- 删除 -->
             <a-doption v-permission="['asset:host:delete']"
                        class="span-red"
                        @click="deleteRow(record.id)">
-              <span class="more-doption error">
-                <icon-delete /> 删除
-              </span>
+              <span class="more-doption error">删除</span>
             </a-doption>
             <!-- SSH -->
             <a-doption v-if="record.type === HostType.SSH.value"
                        v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
-              <span class="more-doption normal">
-                <icon-thunderbolt /> SSH
-              </span>
+              <span class="more-doption normal">SSH</span>
             </a-doption>
             <!-- SFTP -->
             <a-doption v-if="record.type === HostType.SSH.value"
                        v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
-              <span class="more-doption normal">
-               <icon-folder /> SFTP
-              </span>
+              <span class="more-doption normal">SFTP</span>
             </a-doption>
           </template>
         </a-dropdown>
@@ -239,18 +229,19 @@
 
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
-  import { useCardPagination, useCardColLayout } from '@/hooks/card';
+  import { useCardPagination, useCardColLayout, useCardFieldConfig } from '@/hooks/card';
   import { computed, reactive, ref, onMounted } from 'vue';
   import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { getHostOsIcon, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor } from '../types/const';
+  import { getHostOsIcon, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, TableName, tagColor } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import fieldConfig from '../types/card.fields';
+  import { ASC, useQueryOrder } from '@/hooks/query-order';
   import { openNewRoute } from '@/router';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
@@ -260,6 +251,8 @@
   const cacheStore = useCacheStore();
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { cardFieldConfig, fieldsHook } = useCardFieldConfig(TableName, fieldConfig);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
@@ -355,7 +348,7 @@
   const doFetchCardData = async (request: HostQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getHostPage(request);
+      const { data } = await getHostPage(queryOrder.markOrderly(request));
       list.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

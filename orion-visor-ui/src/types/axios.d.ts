@@ -1,9 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosRequestConfig } from 'axios';
 
 declare module 'axios' {
-  // eslint-disable-next-line no-shadow
-  export interface AxiosRequestConfig {
+  export interface AxiosRequestConfig<D = any> extends AxiosRequestConfig<D> {
     // 是否添加 Authorization
     setAuthorization?: boolean;
     // 是否使用原始返回

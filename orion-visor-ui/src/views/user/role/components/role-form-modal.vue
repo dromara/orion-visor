@@ -68,6 +68,7 @@
       id: undefined,
       name: undefined,
       code: undefined,
+      description: undefined,
     };
   };
 

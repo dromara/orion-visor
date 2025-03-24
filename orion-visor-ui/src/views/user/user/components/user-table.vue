@@ -89,6 +89,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -97,7 +102,7 @@
              row-key="id"
              ref="tableRef"
              :loading="loading"
-             :columns="columns"
+             :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
@@ -192,19 +197,23 @@
   import { batchDeleteUser, deleteUser, getUserPage, updateUserStatus } from '@/api/user/user';
   import { Message } from '@arco-design/web-vue';
   import columns from '../types/table.columns';
-  import { userStatusKey, UserStatus } from '../types/const';
+  import { TableName, userStatusKey, UserStatus } from '../types/const';
   import useLoading from '@/hooks/loading';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import usePermission from '@/hooks/permission';
   import { useRouter } from 'vue-router';
   import { useCacheStore, useDictStore, useUserStore } from '@/store';
   import { copy } from '@/hooks/copy';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openImport', 'openExport', 'openResetPassword', 'openGrantRole']);
 
   const cacheStore = useCacheStore();
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, ASC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { hasPermission } = usePermission();
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
@@ -218,7 +227,6 @@
     username: undefined,
     password: undefined,
     nickname: undefined,
-    avatar: undefined,
     mobile: undefined,
     email: undefined,
     status: undefined,
@@ -287,7 +295,7 @@
   const doFetchTableData = async (request: UserQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getUserPage(request);
+      const { data } = await getUserPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

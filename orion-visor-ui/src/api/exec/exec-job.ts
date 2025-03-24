@@ -1,5 +1,5 @@
-import type { DataGrid, Pagination } from '@/types/global';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { TableData } from '@arco-design/web-vue';
 import type { HostQueryResponse } from '@/api/asset/host';
 import axios from 'axios';
 import qs from 'query-string';
@@ -43,7 +43,7 @@ export interface ExecJobUpdateExecUserRequest {
 /**
  * 计划任务查询请求
  */
-export interface ExecJobQueryRequest extends Pagination {
+export interface ExecJobQueryRequest extends Pagination, OrderDirection {
   id?: number;
   name?: string;
   command?: string;
@@ -71,6 +71,8 @@ export interface ExecJobQueryResponse extends TableData {
   execUsername: string;
   createTime: number;
   updateTime: number;
+  creator: string;
+  updater: string;
   hostIdList: Array<number>;
   hostList: Array<HostQueryResponse>;
 }

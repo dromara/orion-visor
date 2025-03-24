@@ -1,8 +1,8 @@
-import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
+import type { TableColumnData } from '@arco-design/web-vue';
 import { isNumber } from '@/utils/is';
 
 // 表格列
-export const tableColumns = [
+export const logColumns = [
   {
     title: 'id',
     dataIndex: 'id',
@@ -10,6 +10,7 @@ export const tableColumns = [
     width: 100,
     align: 'left',
     fixed: 'left',
+    default: true,
   }, {
     title: '执行描述',
     dataIndex: 'description',
@@ -18,6 +19,7 @@ export const tableColumns = [
     width: 168,
     ellipsis: true,
     tooltip: true,
+    default: true,
   }, {
     title: '执行命令',
     dataIndex: 'command',
@@ -25,6 +27,7 @@ export const tableColumns = [
     align: 'left',
     ellipsis: true,
     minWidth: 238,
+    default: true,
   }, {
     title: '执行用户',
     dataIndex: 'username',
@@ -32,28 +35,32 @@ export const tableColumns = [
     align: 'left',
     width: 118,
     ellipsis: true,
+    default: true,
   }, {
     title: '执行状态',
     dataIndex: 'status',
     slotName: 'status',
     align: 'left',
     width: 118,
+    default: true,
   }, {
     title: '执行时间',
     dataIndex: 'startTime',
     slotName: 'startTime',
     align: 'left',
     width: 190,
+    default: true,
   }, {
     title: '操作',
     slotName: 'handle',
     width: 288,
     align: 'center',
     fixed: 'right',
+    default: true,
   },
 ] as TableColumnData[];
 
-// 主机列
+// 主机表格列
 export const hostColumns = [
   {
     title: 'id',

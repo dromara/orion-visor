@@ -2,6 +2,9 @@ import type { OperatorLogQueryResponse } from '@/api/user/operator-log';
 import { pick } from 'lodash';
 import { dateFormat } from '@/utils';
 
+// 表名称
+export const TableName = 'opt-log';
+
 // 结果状态
 export const ResultStatus = {
   // 失败

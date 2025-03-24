@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.entity.request.host;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 import org.dromara.visor.common.validator.group.Id;
 
 import javax.validation.constraints.NotNull;
@@ -46,7 +46,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "TerminalConnectLogQueryRequest", description = "终端连接日志 查询请求对象")
-public class TerminalConnectLogQueryRequest extends PageRequest {
+public class TerminalConnectLogQueryRequest extends BaseQueryRequest {
 
     @NotNull(groups = Id.class)
     @Schema(description = "id")

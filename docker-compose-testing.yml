@@ -1,11 +1,13 @@
 version: '3.3'
+
 services:
   service:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:latest
     privileged: true
     ports:
-      - 1081:80
+      - 9200:9200
     environment:
+      - SPRING_PROFILES_ACTIVE=prod
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=orion_visor
@@ -19,18 +21,18 @@ services:
       - /data/orion-visor-space/docker-volumes/service/root-orion:/root/orion
     healthcheck:
       test: [ "CMD", "curl", "http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health" ]
-      interval: 3s
-      timeout: 300s
-      retries: 200
-      start_period: 3s
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
-    links:
-      - mysql
-      - redis
+    networks:
+      - orion-visor-net
+
   mysql:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:latest
     privileged: true
@@ -44,13 +46,15 @@ services:
     volumes:
       - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql:/var/lib/mysql
       - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
-      - /data/orion-visor-space/docker-volumes/mysql/etc-mysql:/etc/mysql
     healthcheck:
       test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3306" ]
-      interval: 3s
-      timeout: 60s
+      interval: 15s
+      timeout: 5s
       retries: 10
-      start_period: 3s
+      start_period: 5s
+    networks:
+      - orion-visor-net
+
   redis:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:latest
     privileged: true
@@ -63,10 +67,13 @@ services:
     command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-      interval: 3s
-      timeout: 60s
+      interval: 15s
+      timeout: 5s
       retries: 10
-      start_period: 3s
+      start_period: 5s
+    networks:
+      - orion-visor-net
+
   testing:
     build:
       context: ./docker/e2e
@@ -75,5 +82,9 @@ services:
     depends_on:
       service:
         condition: service_healthy
-    links:
-      - service
+    networks:
+      - orion-visor-net
+
+networks:
+  orion-visor-net:
+    driver: bridge

@@ -10,6 +10,7 @@ const fieldConfig = {
       label: 'id',
       dataIndex: 'id',
       slotName: 'id',
+      default: true,
     }, #foreach($field in ${table.fields})#if("$!field.propertyName" != "id"){
       label: '${field.comment}',
       dataIndex: '${field.propertyName}',
@@ -21,6 +22,7 @@ const fieldConfig = {
         return record.${field.propertyName} && dateFormat(new Date(record.${field.propertyName}));
       },
       #end
+      default: true,
     }, #end#end{
       label: '创建时间',
       dataIndex: 'createTime',

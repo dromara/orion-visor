@@ -22,12 +22,14 @@
  */
 package org.dromara.visor.module.infra.entity.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
 /**
@@ -38,7 +40,7 @@ import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
  * @since 2023-7-16 01:19
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -47,10 +49,6 @@ import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 public class SystemUserRoleDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;
-
-    @Schema(description = "id")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
 
     @Schema(description = "用户id")
     @TableField("user_id")

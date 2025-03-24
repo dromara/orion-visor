@@ -1,11 +1,24 @@
 version: '3.3'
+
 services:
+  ui:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
+    ports:
+      - ${SERVICE_PORT:-1081}:80
+    restart: unless-stopped
+    depends_on:
+      service:
+        condition: service_healthy
+    networks:
+      - orion-visor-net
+
   service:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:latest
     privileged: true
     ports:
-      - ${SERVICE_PORT:-1081}:80
+      - 9200:9200
     environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
       - MYSQL_HOST=${MYSQL_HOST:-mysql}
       - MYSQL_PORT=${MYSQL_PORT:-3306}
       - MYSQL_DATABASE=${MYSQL_DATABASE:-orion_visor}
@@ -17,20 +30,21 @@ services:
       - DEMO_MODE=${DEMO_MODE:-false}
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/service/root-orion:/root/orion
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "curl", "http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health" ]
       interval: 15s
-      timeout: 300s
+      timeout: 5s
       retries: 15
-      start_period: 3s
+      start_period: 30s
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
-    links:
-      - mysql
-      - redis
+    networks:
+      - orion-visor-net
+
   mysql:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:latest
     privileged: true
@@ -44,13 +58,16 @@ services:
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql:/var/lib/mysql
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql-files:/var/lib/mysql-files
-      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/etc-mysql:/etc/mysql
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3306" ]
       interval: 15s
-      timeout: 60s
-      retries: 15
-      start_period: 3s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
   redis:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:latest
     privileged: true
@@ -61,18 +78,28 @@ services:
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/redis/data:/data
     command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 15s
-      timeout: 60s
-      retries: 15
-      start_period: 3s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
   adminer:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-adminer:latest
     ports:
       - 8081:8080
+    environment:
+      - ADMINER_DEFAULT_SERVER=${MYSQL_HOST:-mysql}
     depends_on:
       mysql:
         condition: service_healthy
-    links:
-      - mysql
+    networks:
+      - orion-visor-net
+
+networks:
+  orion-visor-net:
+    driver: bridge

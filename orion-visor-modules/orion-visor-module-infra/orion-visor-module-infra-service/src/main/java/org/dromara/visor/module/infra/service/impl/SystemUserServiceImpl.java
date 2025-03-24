@@ -230,8 +230,9 @@ public class SystemUserServiceImpl implements SystemUserService {
         LambdaQueryWrapper<SystemUserDO> wrapper = this.buildQueryWrapper(request);
         // 查询
         return systemUserDAO.of()
-                .page(request)
                 .wrapper(wrapper)
+                .page(request)
+                .order(request, SystemUserDO::getId)
                 .dataGrid(SystemUserConvert.MAPPER::to);
     }
 

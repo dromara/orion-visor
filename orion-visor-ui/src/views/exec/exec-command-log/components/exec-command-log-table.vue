@@ -94,6 +94,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="logColumns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -206,7 +211,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TableData } from '@arco-design/web-vue/es/table/interface';
+  import type { TableData } from '@arco-design/web-vue';
   import type { ExecLogQueryResponse, ExecLogQueryRequest } from '@/api/exec/exec-log';
   import { reactive, ref, onMounted, onUnmounted } from 'vue';
   import {
@@ -219,30 +224,35 @@
   import { Message } from '@arco-design/web-vue';
   import { useRoute, useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
-  import { tableColumns } from '../types/table.columns';
+  import { logColumns } from '../types/table.columns';
   import { ExecStatus, execStatusKey } from '@/components/exec/log/const';
-  import { useExpandable, useTablePagination, useRowSelection } from '@/hooks/table';
+  import { useExpandable, useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
+  import { TableName } from '../types/const';
   import { useDictStore, useUserStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
   import { reExecCommand } from '@/api/exec/exec-command';
   import { interruptExecCommand } from '@/api/exec/exec-command-log';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import ExecCommandHostLogTable from './exec-command-host-log-table.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
   const route = useRoute();
   const router = useRouter();
-  const pagination = useTablePagination();
-  const rowSelection = useRowSelection();
   const expandable = useExpandable();
+  const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, logColumns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
   const pullIntervalId = ref();
   const tableRef = ref();
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<ExecLogQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<ExecLogQueryResponse>>([]);
   const formModel = reactive<ExecLogQueryRequest>({
     id: undefined,
     userId: undefined,
@@ -392,7 +402,7 @@
   const doFetchTableData = async (request: ExecLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getExecCommandLogPage(request);
+      const { data } = await getExecCommandLogPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;

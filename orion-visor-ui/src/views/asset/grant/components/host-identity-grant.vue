@@ -47,7 +47,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TableData } from '@arco-design/web-vue/es/table/interface';
+  import type { TableData } from '@arco-design/web-vue';
   import type { AssetAuthorizedDataQueryRequest, AssetDataGrantRequest } from '@/api/asset/asset-data-grant';
   import type { HostIdentityQueryResponse } from '@/api/asset/host-identity';
   import type { HostKeyQueryResponse } from '@/api/asset/host-key';

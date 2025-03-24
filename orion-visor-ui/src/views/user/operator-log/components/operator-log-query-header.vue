@@ -63,7 +63,7 @@
 
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest } from '@/api/user/operator-log';
-  import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface';
+  import type { SelectOptionData } from '@arco-design/web-vue';
   import { ref, watch } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';

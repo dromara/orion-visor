@@ -42,6 +42,11 @@
               </template>
             </a-button>
           </a-popconfirm>
+          <!-- 调整 -->
+          <table-adjust :columns="columns"
+                        :columns-hook="columnsHook"
+                        :query-order="queryOrder"
+                        @query="fetchTableData" />
         </a-space>
       </div>
     </template>
@@ -51,7 +56,7 @@
              ref="tableRef"
              :loading="loading"
              :row-selection="rowSelection"
-             :columns="columns"
+             :columns="tableColumns"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
@@ -140,21 +145,26 @@
 <script lang="ts" setup>
   import type { OperatorLogQueryRequest, OperatorLogQueryResponse } from '@/api/user/operator-log';
   import { ref, reactive, onMounted } from 'vue';
-  import { operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
+  import { TableName, operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey } from '../types/const';
   import columns from '../types/table.columns';
   import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
-  import { useTablePagination, useRowSelection } from '@/hooks/table';
+  import { useRoute } from 'vue-router';
   import { useDictStore } from '@/store';
+  import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { getOperatorLogPage, deleteOperatorLog } from '@/api/user/operator-log';
   import { replaceHtmlTag, clearHtmlTag } from '@/utils';
   import { Message } from '@arco-design/web-vue';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import OperatorLogQueryHeader from './operator-log-query-header.vue';
+  import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openClear', 'openDetail']);
 
-  const pagination = useTablePagination();
   const rowSelection = useRowSelection();
+  const pagination = useTablePagination();
+  const queryOrder = useQueryOrder(TableName, DESC);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
   const { getDictValue } = useDictStore();
 
@@ -211,11 +221,13 @@
     fetchTableData();
   };
 
+  defineExpose({ reload });
+
   // 加载数据
   const doFetchTableData = async (request: OperatorLogQueryRequest) => {
     try {
       setLoading(true);
-      const { data } = await getOperatorLogPage(request);
+      const { data } = await getOperatorLogPage(queryOrder.markOrderly(request));
       tableRenderData.value = data.rows.map(s => {
         return { ...s, originLogInfo: clearHtmlTag(s.logInfo) };
       });
@@ -236,6 +248,11 @@
 
   // 初始化
   onMounted(() => {
+    const operatorType = useRoute().query.operatorType as string;
+    if (operatorType) {
+      formModel.type = operatorType;
+    }
+    // 查询数据
     fetchTableData();
   });
 

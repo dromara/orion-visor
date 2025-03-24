@@ -44,6 +44,11 @@ export const port = [{
   message: '输入的端口不合法'
 }] as FieldRule[];
 
+export const groupIdList = [{
+  required: true,
+  message: '请选择主机分组'
+}] as FieldRule[];
+
 export const tags = [{
   maxLength: 5,
   message: '最多选择5个标签'
@@ -61,6 +66,7 @@ export default {
   code,
   address,
   port,
+  groupIdList,
   tags,
   description,
 } as Record<string, FieldRule | FieldRule[]>;

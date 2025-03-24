@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.entity.request.upload;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -43,7 +43,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "UploadTaskQueryRequest", description = "上传任务 查询请求对象")
-public class UploadTaskQueryRequest extends PageRequest {
+public class UploadTaskQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;

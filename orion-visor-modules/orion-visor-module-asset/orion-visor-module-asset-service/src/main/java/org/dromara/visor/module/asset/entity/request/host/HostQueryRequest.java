@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.entity.request.host;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.dromara.visor.common.entity.PageRequest;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "HostQueryRequest", description = "主机 查询请求对象")
-public class HostQueryRequest extends PageRequest {
+public class HostQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "搜索")
     private String searchValue;

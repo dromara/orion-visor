@@ -90,11 +90,11 @@
     width: 32px;
     height: 32px;
     margin-bottom: 4px;
-    color: rgb(var(--dark-gray-1));
+    color: var(--color-text-2);
     line-height: 32px;
     font-size: 16px;
     text-align: center;
-    background-color: rgb(var(--gray-1));
+    background: var(--color-fill-2);
     border-radius: 4px;
   }
 
