@@ -12,6 +12,11 @@
       "defaultValue": false
     },
     {
+      "name": "orion.prefix",
+      "type": "java.lang.String",
+      "description": "项目前缀."
+    },
+    {
       "name": "orion.api.prefix",
       "type": "java.lang.String",
       "description": "项目 api 前缀."

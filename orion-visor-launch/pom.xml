@@ -112,8 +112,12 @@
         <!-- 设置构建的 jar 包名 -->
         <finalName>${project.artifactId}</finalName>
         <resources>
+            <!-- 应用配置过滤 -->
             <resource>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.yaml</include>
+                </includes>
                 <filtering>true</filtering>
             </resource>
         </resources>
