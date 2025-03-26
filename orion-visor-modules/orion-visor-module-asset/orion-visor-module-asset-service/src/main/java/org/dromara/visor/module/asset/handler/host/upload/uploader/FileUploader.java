@@ -161,7 +161,7 @@ public class FileUploader implements IFileUploader {
         if (containsEnv) {
             // 替换占位符
             String username = connectInfo.getUsername();
-            String home = PathUtils.getHomePath(HostOsTypeEnum.isWindows(connectInfo.getOsType()), username);
+            String home = PathUtils.getHomePath(HostOsTypeEnum.WINDOWS.is(connectInfo.getOsType()), username);
             // 替换环境变量路径
             Map<String, String> env = Maps.newMap(4);
             env.put(ExtraFieldConst.USERNAME, username);

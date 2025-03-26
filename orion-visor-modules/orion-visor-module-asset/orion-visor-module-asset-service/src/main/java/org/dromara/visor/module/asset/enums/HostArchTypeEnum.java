@@ -26,7 +26,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 主机系统类型
+ * 主机系统架构类型
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -34,26 +34,19 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum HostOsTypeEnum {
+public enum HostArchTypeEnum {
 
     /**
-     * linux
+     * X86_64
      */
-    LINUX(".sh"),
+    AMD64,
 
     /**
-     * windows
+     * arm64
      */
-    WINDOWS(".cmd"),
-
-    /**
-     * darwin
-     */
-    DARWIN(".sh"),
+    ARM64,
 
     ;
-
-    private final String scriptSuffix;
 
     public boolean is(String type) {
         if (type == null) {
@@ -62,17 +55,17 @@ public enum HostOsTypeEnum {
         return type.equalsIgnoreCase(this.name());
     }
 
-    public static HostOsTypeEnum of(String type) {
+    public static HostArchTypeEnum of(String type) {
         if (type == null) {
-            return LINUX;
+            return AMD64;
         }
         type = type.toUpperCase();
-        for (HostOsTypeEnum value : values()) {
+        for (HostArchTypeEnum value : values()) {
             if (value.name().equals(type) || type.contains(value.name())) {
                 return value;
             }
         }
-        return LINUX;
+        return AMD64;
     }
 
 }
