@@ -1,6 +1,9 @@
-import HostGroupGrant from '../components/host-group-grant.vue';
-import HostKeyGrant from '../components/host-key-grant.vue';
-import HostIdentityGrant from '../components/host-identity-grant.vue';
+import { defineAsyncComponent } from 'vue';
+
+// 组件
+const HostGroupGrant = defineAsyncComponent(() => import('../components/host-group-grant.vue'))
+const HostKeyGrant = defineAsyncComponent(() => import('../components/host-key-grant.vue'))
+const HostIdentityGrant = defineAsyncComponent(() => import('../components/host-identity-grant.vue'))
 
 // 路由
 export const GrantRouteName = 'assetGrant';

@@ -42,7 +42,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SshExtraSettingModel } from '../../../types/define';
+  import type { HostSshExtraSettingModel } from '@/api/asset/host-extra';
   import { onMounted, ref } from 'vue';
   import { getHostExtraItem } from '@/api/asset/host-extra';
   import { ExtraSshAuthType, extraSshAuthTypeKey } from '../../../types/const';
@@ -58,13 +58,13 @@
   const { toRadioOptions } = useDictStore();
 
   const formRef = ref();
-  const formModel = ref<SshExtraSettingModel>({
-    authType: ExtraSshAuthType.DEFAULT
+  const formModel = ref<Partial<HostSshExtraSettingModel>>({
+    authType: ExtraSshAuthType.DEFAULT,
   });
 
   // 渲染表单
   const renderForm = async () => {
-    const { data } = await getHostExtraItem<SshExtraSettingModel>({ hostId: props.hostId, item: props.item });
+    const { data } = await getHostExtraItem<HostSshExtraSettingModel>({ hostId: props.hostId, item: props.item });
     formModel.value = data;
   };
 

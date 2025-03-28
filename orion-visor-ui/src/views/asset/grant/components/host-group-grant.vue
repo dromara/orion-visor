@@ -29,20 +29,17 @@
       <template #empty>
         <a-empty style="margin: 32px 0;" description="当前分组内无主机" />
       </template>
-      <!-- 主机类型 -->
-      <template #type="{ record }">
-        <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
-          <!-- 系统类型图标 -->
-          <component v-if="getHostOsIcon(record.osType)"
-                     :is="getHostOsIcon(record.osType)"
-                     class="os-icon" />
-          <!-- 主机类型 -->
-          <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
-        </a-tag>
-      </template>
-      <!-- 地址 -->
-      <template #address="{ record }">
-        {{ record.address }}:{{ record.port }}
+      <!-- 主机协议 -->
+      <template #protocols="{ record }">
+        <a-space v-if="record.types?.length"
+                 style="margin-bottom: -8px;"
+                 wrap>
+          <a-tag v-for="type in record.types"
+                 :key="type"
+                 :color="getDictValue(hostTypeKey, type, 'color')">
+            {{ getDictValue(hostTypeKey, type) }}
+          </a-tag>
+        </a-space>
       </template>
     </a-table>
   </grant-layout>
@@ -65,7 +62,7 @@
   import { flatNodeKeys } from '@/utils/tree';
   import { Message } from '@arco-design/web-vue';
   import { hostColumns } from '../types/table.columns';
-  import { getHostOsIcon, hostTypeKey } from '@/views/asset/host-list/types/const';
+  import { hostTypeKey } from '@/views/asset/host-list/types/const';
   import { getHostGroupRelList } from '@/api/asset/host-group';
   import HostGroupTree from '@/components/asset/host-group/tree/index.vue';
   import GrantLayout from './grant-layout.vue';
@@ -169,19 +166,15 @@
 </script>
 
 <style lang="less" scoped>
+  @host-width: 560px;
+
   .group-main-tree {
-    width: calc(100% - 496px);
+    width: calc(100% - 16px - @host-width);
     height: 100%;
   }
 
   .group-main-hosts {
-    width: 480px;
+    width: @host-width;
     height: 100%;
-
-    .os-icon {
-      width: 16px;
-      height: 16px;
-      margin-right: 6px;
-    }
   }
 </style>

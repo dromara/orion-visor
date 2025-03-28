@@ -73,11 +73,11 @@
         <a-form-item field="address" label="主机地址">
           <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
         </a-form-item>
-        <!-- 主机类型 -->
-        <a-form-item field="type" label="主机类型">
+        <!-- 主机协议 -->
+        <a-form-item field="type" label="主机协议">
           <a-select v-model="formModel.type"
                     :options="toOptions(hostTypeKey)"
-                    placeholder="请选择主机类型"
+                    placeholder="请选择主机协议"
                     allow-clear />
         </a-form-item>
         <!-- 系统类型 -->
@@ -85,6 +85,13 @@
           <a-select v-model="formModel.osType"
                     :options="toOptions(hostOsTypeKey)"
                     placeholder="请选择系统类型"
+                    allow-clear />
+        </a-form-item>
+        <!-- 系统架构 -->
+        <a-form-item field="archType" label="系统架构">
+          <a-select v-model="formModel.archType"
+                    :options="toOptions(hostArchTypeKey)"
+                    placeholder="请选择系统架构"
                     allow-clear />
         </a-form-item>
         <!-- 主机状态 -->
@@ -118,7 +125,7 @@
                    :is="getHostOsIcon(record.osType)"
                    class="os-icon" />
         <!-- 主机名称 -->
-        <span>{{ record.name }}</span>
+        <span class="host-name">{{ record.name }}</span>
       </div>
     </template>
     <!-- 编码 -->
@@ -131,24 +138,42 @@
         {{ record.description || '-' }}
       </span>
     </template>
-    <!-- 主机类型 -->
-    <template #type="{ record }">
-      <a-tag :color="getDictValue(hostTypeKey, record.type, 'color')">
-        {{ getDictValue(hostTypeKey, record.type) }}
-      </a-tag>
+    <!-- 主机协议 -->
+    <template #protocols="{ record }">
+      <a-space v-if="record.types?.length"
+               style="margin-bottom: -8px;"
+               wrap>
+        <a-tag v-for="type in record.types"
+               :key="type"
+               :color="getDictValue(hostTypeKey, type, 'color')">
+          {{ getDictValue(hostTypeKey, type) }}
+        </a-tag>
+      </a-space>
     </template>
-    <!-- 地址 -->
+    <!-- 主机地址 -->
     <template #address="{ record }">
-       <span class="span-blue text-copy host-address"
-             title="复制"
-             @click="copy(record.address)">
-          {{ record.address }}
-        </span>
-      <span class="span-blue text-copy"
+      <span class="span-blue text-copy host-address"
             title="复制"
-            @click="copy(record.port)">
-          {{ record.port }}
-        </span>
+            @click="copy(record.address)">
+          {{ record.address }}
+      </span>
+    </template>
+    <!-- 主机规格 -->
+    <template #hostSpec="{ record }">
+      <span v-if="record.spec">
+        {{
+          [
+            addSuffix(record.spec.cpuCore, 'C'),
+            addSuffix(record.spec.memorySize, 'G'),
+            addSuffix(record.spec.diskSize, 'G')
+          ].filter(Boolean).join('/') || '-'
+        }}
+      </span>
+      <span v-else>-</span>
+      <!-- 系统架构 -->
+      <span class="ml4">
+        - {{ getDictValue(hostArchTypeKey, record.archType) }}
+      </span>
     </template>
     <!-- 主机状态 -->
     <template #status="{ record }">
@@ -156,15 +181,31 @@
         {{ getDictValue(hostStatusKey, record.status) }}
       </a-tag>
     </template>
+    <!-- 主机分组 -->
+    <template #groups="{ record }">
+      <a-space v-if="record.groupIdList?.length"
+               style="margin-bottom: -8px;"
+               :wrap="true">
+        <template v-for="groupId in record.groupIdList"
+                  :key="groupId">
+          <a-tag color="green">
+            {{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}
+          </a-tag>
+        </template>
+      </a-space>
+    </template>
     <!-- 标签 -->
     <template #tags="{ record }">
-      <a-space v-if="record.tags" wrap style="margin-bottom: -8px;">
+      <a-space v-if="record.tags?.length"
+               style="margin-bottom: -8px;"
+               :wrap="true">
         <a-tag v-for="tag in record.tags"
                :key="tag.id"
                :color="dataColor(tag.name, tagColor)">
           {{ tag.name }}
         </a-tag>
       </a-space>
+      <span v-else>-</span>
     </template>
     <!-- 拓展操作 -->
     <template #extra="{ record }">
@@ -177,11 +218,6 @@
             <a-doption v-permission="['asset:host:update']"
                        @click="emits('openUpdate', record)">
               <span class="more-doption normal">修改</span>
-            </a-doption>
-            <!-- 配置 -->
-            <a-doption v-permission="['asset:host:update-config']"
-                       @click="emits('openUpdateConfig', record)">
-              <span class="more-doption normal">配置</span>
             </a-doption>
             <!-- 修改状态 -->
             <a-doption v-permission="['asset:host:update-status']"
@@ -203,13 +239,13 @@
               <span class="more-doption error">删除</span>
             </a-doption>
             <!-- SSH -->
-            <a-doption v-if="record.type === HostType.SSH.value"
+            <a-doption v-if="record.types.includes(HostType.SSH.value)"
                        v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
               <span class="more-doption normal">SSH</span>
             </a-doption>
             <!-- SFTP -->
-            <a-doption v-if="record.type === HostType.SSH.value"
+            <a-doption v-if="record.types.includes(HostType.SSH.value)"
                        v-permission="['asset:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
               <span class="more-doption normal">SFTP</span>
@@ -229,23 +265,24 @@
 
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import type { HostGroupQueryResponse } from '@/api/asset/host-group';
   import { useCardPagination, useCardColLayout, useCardFieldConfig } from '@/hooks/card';
   import { computed, reactive, ref, onMounted } from 'vue';
-  import { dataColor, objectTruthKeyCount, resetObject } from '@/utils';
+  import { addSuffix, dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { getHostOsIcon, hostOsTypeKey, hostStatusKey, HostType, hostTypeKey, TableName, tagColor } from '../types/const';
+  import { getHostOsIcon, hostOsTypeKey, hostArchTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor, TableName } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import fieldConfig from '../types/card.fields';
-  import { ASC, useQueryOrder } from '@/hooks/query-order';
   import { openNewRoute } from '@/router';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup', 'openCopy']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openHostGroup', 'openCopy']);
 
   const router = useRouter();
   const cacheStore = useCacheStore();
@@ -257,6 +294,7 @@
   const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
   const list = ref<HostQueryResponse[]>([]);
+  const hostGroupList = ref<Array<HostGroupQueryResponse>>([]);
   const formRef = ref();
   const formModel = reactive<HostQueryRequest>({
     searchValue: undefined,
@@ -266,15 +304,18 @@
     address: undefined,
     type: undefined,
     osType: undefined,
+    archType: undefined,
     status: undefined,
     tags: undefined,
     description: undefined,
+    queryGroup: true,
     queryTag: true,
+    querySpec: true,
   });
 
   // 条件数量
   const filterCount = computed(() => {
-    return objectTruthKeyCount(formModel, ['searchValue', 'queryTag']);
+    return objectTruthKeyCount(formModel, ['searchValue', 'queryTag', 'queryGroup', 'querySpec']);
   });
 
   // 更新状态
@@ -340,7 +381,7 @@
 
   // 重置条件
   const reset = () => {
-    resetObject(formModel, ['queryTag']);
+    resetObject(formModel, ['queryTag', 'queryGroup', 'querySpec']);
     fetchCardData();
   };
 
@@ -364,7 +405,10 @@
     doFetchCardData({ page, limit, ...form });
   };
 
-  onMounted(() => {
+  onMounted(async () => {
+    // 加载分组数据
+    hostGroupList.value = await useCacheStore().loadHostGroupList();
+    // 加载主机数据
     fetchCardData();
   });
 
@@ -381,10 +425,9 @@
       height: 20px;
       margin-right: 6px;
     }
-  }
 
-  .host-address::after {
-    content: ':';
-    user-select: text;
+    .host-name {
+      font-size: 16px;
+    }
   }
 </style>

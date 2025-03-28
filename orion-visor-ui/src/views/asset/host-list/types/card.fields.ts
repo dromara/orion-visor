@@ -7,7 +7,7 @@ const fieldConfig = {
   minHeight: '22px',
   fields: [
     {
-      label: 'id',
+      label: '主机ID',
       dataIndex: 'id',
       slotName: 'id',
       default: true,
@@ -23,9 +23,10 @@ const fieldConfig = {
       tooltip: true,
       default: true,
     }, {
-      label: '主机类型',
-      dataIndex: 'type',
-      slotName: 'type',
+      label: '主机规格',
+      dataIndex: 'hostSpec',
+      slotName: 'hostSpec',
+      tooltip: true,
       default: true,
     }, {
       label: '主机状态',
@@ -33,10 +34,19 @@ const fieldConfig = {
       slotName: 'status',
       default: true,
     }, {
+      label: '主机协议',
+      dataIndex: 'protocols',
+      slotName: 'protocols',
+      default: true,
+    }, {
+      label: '主机分组',
+      dataIndex: 'groups',
+      slotName: 'groups',
+      default: true,
+    }, {
       label: '主机标签',
       dataIndex: 'tags',
       slotName: 'tags',
-      rowAlign: 'start',
       default: true,
     }, {
       label: '主机描述',

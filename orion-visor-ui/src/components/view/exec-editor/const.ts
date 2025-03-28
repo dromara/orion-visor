@@ -51,7 +51,10 @@ export const builtinParams: Array<TemplateParam> = [
     desc: '执行主机用户名'
   }, {
     name: 'osType',
-    desc: '执行主机系统版本'
+    desc: '执行主机系统类型'
+  }, {
+    name: 'archType',
+    desc: '执行主机系统架构'
   }, {
     name: 'charset',
     desc: 'SSH 编码集'

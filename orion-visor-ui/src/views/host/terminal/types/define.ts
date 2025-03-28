@@ -57,20 +57,6 @@ export interface ShortcutKeyItem {
   type: number;
 }
 
-// SSH 额外配置
-export interface SshExtraSettingModel {
-  authType?: string;
-  username?: string;
-  keyId?: number;
-  identityId?: number;
-}
-
-// 标签额外配置
-export interface LabelExtraSettingModel {
-  alias?: string;
-  color?: string;
-}
-
 // session tab
 export interface PanelSessionTabType {
   type: string;
