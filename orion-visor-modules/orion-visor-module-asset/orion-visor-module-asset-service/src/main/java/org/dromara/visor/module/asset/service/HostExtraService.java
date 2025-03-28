@@ -23,10 +23,11 @@
 package org.dromara.visor.module.asset.service;
 
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.module.asset.entity.request.host.HostExtraQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
 import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,7 +46,7 @@ public interface HostExtraService {
      * @param item   item
      * @return extra
      */
-    Map<String, Object> getHostExtra(Long hostId, String item);
+    Map<String, Object> getHostExtraView(Long hostId, String item);
 
     /**
      * 获取主机额外配置
@@ -59,12 +60,12 @@ public interface HostExtraService {
     <T extends GenericsDataModel> T getHostExtra(Long userId, Long hostId, HostExtraItemEnum item);
 
     /**
-     * 获取多个主机拓展信息
+     * 获取主机规格信息
      *
-     * @param request request
-     * @return type:extra
+     * @param hostIdList hostIdList
+     * @return models
      */
-    Map<String, Map<String, Object>> getHostExtraList(HostExtraQueryRequest request);
+    Map<Long, HostSpecExtraModel> getHostSpecMap(List<Long> hostIdList);
 
     /**
      * 修改主机拓展信息

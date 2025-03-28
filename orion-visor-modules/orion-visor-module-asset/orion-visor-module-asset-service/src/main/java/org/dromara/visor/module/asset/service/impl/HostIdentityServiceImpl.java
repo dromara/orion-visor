@@ -40,7 +40,7 @@ import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.module.asset.convert.HostIdentityConvert;
-import org.dromara.visor.module.asset.dao.HostDAO;
+import org.dromara.visor.module.asset.dao.HostConfigDAO;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
 import org.dromara.visor.module.asset.define.cache.HostCacheKeyDefine;
@@ -84,7 +84,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     private HostKeyDAO hostKeyDAO;
 
     @Resource
-    private HostDAO hostDAO;
+    private HostConfigDAO hostConfigDAO;
 
     @Resource
     private DataExtraApi dataExtraApi;
@@ -233,7 +233,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         // 删除数据库
         int effect = hostIdentityDAO.deleteBatchIds(idList);
         // 删除主机配置
-        hostDAO.setIdentityIdWithNull(idList);
+        hostConfigDAO.setIdentityIdWithNull(idList);
         // 删除主机身份额外配置
         dataExtraApi.deleteHostIdentityExtra(idList);
         // 删除数据权限

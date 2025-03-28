@@ -22,56 +22,50 @@
  */
 package org.dromara.visor.module.asset.service;
 
-import org.dromara.visor.module.asset.entity.dto.TerminalAccessDTO;
-import org.dromara.visor.module.asset.entity.dto.TerminalTransferDTO;
-import org.dromara.visor.module.asset.entity.vo.TerminalThemeVO;
-
-import java.util.List;
+import org.dromara.visor.module.asset.entity.domain.HostDO;
+import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
+import org.dromara.visor.module.asset.entity.request.host.HostTestConnectRequest;
 
 /**
- * 终端服务
+ * 主机连接服务
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/26 14:22
+ * @since 2024/10/12 23:54
  */
-public interface TerminalService {
+public interface HostConnectService {
 
     /**
-     * 获取主机终端主题
+     * 测试主机连接
      *
-     * @return themes
+     * @param request request
      */
-    List<TerminalThemeVO> getTerminalThemes();
+    void testHostConnect(HostTestConnectRequest request);
 
     /**
-     * 获取主机终端访问 accessToken
+     * 获取 SSH 连接信息
      *
-     * @return accessToken
+     * @param hostId hostId
+     * @return session
      */
-    String getTerminalAccessToken();
+    TerminalConnectDTO getSshConnectInfo(Long hostId);
 
     /**
-     * 获取主机终端传输 transferToken
+     * 使用用户配置获取 SSH 连接信息
      *
-     * @return transferToken
+     * @param hostId hostId
+     * @param userId userId
+     * @return session
      */
-    String getTerminalTransferToken();
+    TerminalConnectDTO getSshConnectInfo(Long hostId, Long userId);
 
     /**
-     * 通过 accessToken 获取终端访问信息
+     * 使用用户配置获取 SSH 连接信息
      *
-     * @param token token
-     * @return config
+     * @param host   host
+     * @param userId userId
+     * @return session
      */
-    TerminalAccessDTO getAccessInfoByToken(String token);
-
-    /**
-     * 通过 transferToken 获取终端传输信息
-     *
-     * @param token token
-     * @return config
-     */
-    TerminalTransferDTO getTransferInfoByToken(String token);
+    TerminalConnectDTO getSshConnectInfo(HostDO host, Long userId);
 
 }

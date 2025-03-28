@@ -40,7 +40,7 @@ import org.dromara.visor.module.asset.handler.host.transfer.session.DownloadSess
 import org.dromara.visor.module.asset.handler.host.transfer.session.ITransferSession;
 import org.dromara.visor.module.asset.handler.host.transfer.session.UploadSession;
 import org.dromara.visor.module.asset.handler.host.transfer.utils.TransferUtils;
-import org.dromara.visor.module.asset.service.TerminalService;
+import org.dromara.visor.module.asset.service.HostConnectService;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,7 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class TransferHandler implements ITransferHandler {
 
-    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
+    private static final HostConnectService hostConnectService = SpringHolder.getBean(HostConnectService.class);
 
     private final WebSocketSession channel;
 
@@ -117,7 +117,7 @@ public class TransferHandler implements ITransferHandler {
             if (terminalConnection == null) {
                 // 获取终端连接信息
                 Long userId = WebSockets.getAttr(channel, ExtraFieldConst.USER_ID);
-                TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(hostId, userId);
+                TerminalConnectDTO connectInfo = hostConnectService.getSshConnectInfo(hostId, userId);
                 terminalConnection = new TerminalConnection(connectInfo, SessionStores.openSessionStore(connectInfo));
                 terminalConnections.put(hostId, terminalConnection);
             }

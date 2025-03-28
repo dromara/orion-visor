@@ -33,24 +33,27 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.constant.ExtraFieldConst;
-import org.dromara.visor.common.handler.data.model.GenericsDataModel;
+import org.dromara.visor.common.enums.EnableStatus;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.module.asset.convert.HostConvert;
+import org.dromara.visor.module.asset.dao.HostConfigDAO;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.define.cache.HostCacheKeyDefine;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
-import org.dromara.visor.module.asset.entity.request.host.*;
-import org.dromara.visor.module.asset.entity.vo.HostConfigVO;
+import org.dromara.visor.module.asset.entity.request.host.HostCreateRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostQueryRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostUpdateRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostUpdateStatusRequest;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
-import org.dromara.visor.module.asset.enums.HostTypeEnum;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 import org.dromara.visor.module.asset.service.ExecJobHostService;
 import org.dromara.visor.module.asset.service.ExecTemplateHostService;
+import org.dromara.visor.module.asset.service.HostExtraService;
 import org.dromara.visor.module.asset.service.HostService;
 import org.dromara.visor.module.infra.api.DataExtraApi;
 import org.dromara.visor.module.infra.api.DataGroupRelApi;
@@ -63,6 +66,7 @@ import org.dromara.visor.module.infra.enums.FavoriteTypeEnum;
 import org.dromara.visor.module.infra.enums.TagTypeEnum;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -87,6 +91,12 @@ public class HostServiceImpl implements HostService {
     private HostDAO hostDAO;
 
     @Resource
+    private HostConfigDAO hostConfigDAO;
+
+    @Resource
+    private HostExtraService hostExtraService;
+
+    @Resource
     private ExecJobHostService execJobHostService;
 
     @Resource
@@ -105,8 +115,8 @@ public class HostServiceImpl implements HostService {
     private DataExtraApi dataExtraApi;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long createHost(HostCreateRequest request) {
-        HostTypeEnum type = Valid.valid(HostTypeEnum::of, request.getType());
         log.info("HostService-createHost request: {}", JSON.toJSONString(request));
         // 转换
         HostDO record = HostConvert.MAPPER.to(request);
@@ -114,8 +124,6 @@ public class HostServiceImpl implements HostService {
         // 查询数据是否冲突
         this.checkHostNamePresent(record);
         this.checkHostCodePresent(record);
-        // 设置主机配置
-        record.setConfig(type.getDefault().serial());
         // 插入主机
         int effect = hostDAO.insert(record);
         log.info("HostService-createHost effect: {}", effect);
@@ -133,74 +141,54 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateHostById(HostUpdateRequest request) {
         log.info("HostService-updateHostById request: {}", JSON.toJSONString(request));
+        List<String> types = request.getTypes();
         // 查询
         Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        HostDO record = hostDAO.selectBaseById(id);
+        HostDO record = hostDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostDO updateRecord = HostConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkHostNamePresent(updateRecord);
         this.checkHostCodePresent(updateRecord);
-        // 更新
+        // 更新主机
         int effect = hostDAO.updateById(updateRecord);
         log.info("HostService-updateHostById effect: {}", effect);
         // 引用分组
         dataGroupRelApi.updateRelGroup(DataGroupTypeEnum.HOST, request.getGroupIdList(), id);
         // 更新 tag
         tagRelApi.setTagRel(TagTypeEnum.HOST, id, request.getTags());
+        // 修改 config 状态
+        hostConfigDAO.updateConfigStatus(id, types, EnableStatus.ENABLED.name());
+        hostConfigDAO.updateConfigInvertStatus(id, types, EnableStatus.DISABLED.name());
         // 删除缓存
         this.clearCache();
         return effect;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateHostStatus(HostUpdateStatusRequest request) {
         log.info("HostService-updateHostStatus request: {}", JSON.toJSONString(request));
         Long id = request.getId();
-        HostStatusEnum status = Valid.valid(HostStatusEnum::of, request.getStatus());
+        String status = Valid.valid(HostStatusEnum::of, request.getStatus()).name();
         // 查询主机
-        HostDO record = hostDAO.selectBaseById(id);
+        HostDO record = hostDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 更新
         HostDO update = HostDO.builder()
                 .id(id)
-                .status(status.name())
+                .status(status)
                 .build();
         int effect = hostDAO.updateById(update);
         log.info("HostService-updateHostStatus effect: {}", effect);
+        // 更新主机配置
+        hostConfigDAO.updateConfigStatus(id, null, status);
         // 删除缓存
         this.clearCache();
-        return effect;
-    }
-
-    @Override
-    public Integer updateHostConfig(HostUpdateConfigRequest request) {
-        // 设置日志参数
-        String param = OperatorLogs.toJsonString(JSON.parseObject(request.getConfig()));
-        OperatorLogs.add(ExtraFieldConst.CONFIG, param);
-        log.info("HostService-updateHostConfig request: {}", param);
-        Long id = request.getId();
-        // 查询主机信息
-        HostDO host = hostDAO.selectById(id);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        HostTypeEnum type = Valid.valid(HostTypeEnum::of, host.getType());
-        GenericsDataModel beforeConfig = type.parse(host.getConfig());
-        GenericsDataModel newConfig = type.parse(request.getConfig());
-        // 添加日志参数
-        OperatorLogs.add(OperatorLogs.ID, id);
-        OperatorLogs.add(OperatorLogs.NAME, host.getName());
-        // 更新前校验
-        type.doValid(beforeConfig, newConfig);
-        // 修改配置
-        HostDO updateHost = HostDO.builder()
-                .id(id)
-                .config(newConfig.serial())
-                .build();
-        int effect = hostDAO.updateById(updateHost);
-        log.info("HostService-updateHostConfig effect: {}", effect);
         return effect;
     }
 
@@ -212,31 +200,13 @@ public class HostServiceImpl implements HostService {
         // 查询分组信息
         Future<Set<Long>> groupIdFuture = dataGroupRelApi.getGroupIdByRelIdAsync(DataGroupTypeEnum.HOST, id);
         // 查询主机
-        HostDO record = hostDAO.selectBaseById(id);
+        HostDO record = hostDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostVO vo = HostConvert.MAPPER.to(record);
         vo.setTags(tagFuture.get());
         vo.setGroupIdList(groupIdFuture.get());
         return vo;
-    }
-
-    @Override
-    public HostConfigVO getHostConfig(Long id) {
-        // 查询主机
-        HostDO host = hostDAO.selectById(id);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        // 获取主机类型
-        String type = host.getType();
-        HostTypeEnum hostType = HostTypeEnum.of(type);
-        // 获取主机配置
-        Map<String, Object> config = hostType.toView(host.getConfig()).toMap();
-        // 返回
-        return HostConfigVO.builder()
-                .id(id)
-                .type(type)
-                .config(config)
-                .build();
     }
 
     @Override
@@ -253,8 +223,7 @@ public class HostServiceImpl implements HostService {
             // 查询数据库
             list = hostDAO.of()
                     .createWrapper(true)
-                    .select(HostDAO.BASE_COLUMN)
-                    .eq(HostDO::getType, type)
+                    .like(HostDO::getTypes, type)
                     .then()
                     .list(HostConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
@@ -278,16 +247,12 @@ public class HostServiceImpl implements HostService {
         if (wrapper == null) {
             return DataGrid.of(Lists.empty());
         }
-        // 数量条件
-        LambdaQueryWrapper<HostDO> countWrapper = wrapper.clone();
-        // 基础条件
-        wrapper.select(HostDAO.BASE_COLUMN);
         // 查询
         DataGrid<HostVO> hosts = hostDAO.of()
                 .wrapper(wrapper)
                 .page(request)
                 .order(request, HostDO::getId)
-                .dataGrid(countWrapper, HostConvert.MAPPER::to);
+                .dataGrid(HostConvert.MAPPER::to);
         // 查询拓展信息
         this.setExtraInfo(request, hosts.getRows());
         return hosts;
@@ -328,6 +293,8 @@ public class HostServiceImpl implements HostService {
     @Async("asyncExecutor")
     public void deleteHostRelByIdListAsync(List<Long> idList) {
         log.info("HostService-deleteHostRelByIdListAsync idList: {}", idList);
+        // 删除主机配置
+        hostConfigDAO.deleteByHostIdList(idList);
         // 删除计划任务主机
         execJobHostService.deleteByHostIdList(idList);
         // 删除执行模板主机
@@ -393,12 +360,13 @@ public class HostServiceImpl implements HostService {
         }
         // 基础条件
         wrapper.eq(HostDO::getId, request.getId())
-                .eq(HostDO::getStatus, request.getStatus())
-                .eq(HostDO::getType, request.getType())
                 .eq(HostDO::getOsType, request.getOsType())
+                .eq(HostDO::getArchType, request.getArchType())
+                .eq(HostDO::getStatus, request.getStatus())
                 .like(HostDO::getName, request.getName())
                 .like(HostDO::getCode, request.getCode())
                 .like(HostDO::getAddress, request.getAddress())
+                .like(HostDO::getTypes, request.getType())
                 .like(HostDO::getDescription, request.getDescription())
                 .and(Strings.isNotEmpty(searchValue), c -> c
                         .eq(HostDO::getId, searchValue).or()
@@ -426,6 +394,20 @@ public class HostServiceImpl implements HostService {
             List<List<TagDTO>> tagList = tagRelApi.getRelTags(TagTypeEnum.HOST, idList);
             for (int i = 0; i < hosts.size(); i++) {
                 hosts.get(i).setTags(tagList.get(i));
+            }
+        }
+        // 查询分组信息
+        if (Booleans.isTrue(request.getQueryGroup())) {
+            Map<Long, Set<Long>> groupRelList = dataGroupRelApi.getGroupRelByRelIdList(DataGroupTypeEnum.HOST, idList);
+            for (HostVO host : hosts) {
+                host.setGroupIdList(groupRelList.get(host.getId()));
+            }
+        }
+        // 查询规格信息
+        if (Booleans.isTrue(request.getQuerySpec())) {
+            Map<Long, HostSpecExtraModel> specMap = hostExtraService.getHostSpecMap(idList);
+            for (HostVO host : hosts) {
+                host.setSpec(specMap.get(host.getId()));
             }
         }
     }

@@ -20,52 +20,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.entity.vo;
+package org.dromara.visor.module.asset.entity.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.List;
+import lombok.experimental.SuperBuilder;
+import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
 /**
- * 主机基本信息 视图响应对象
+ * 主机配置 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-9-11 14:16
+ * @since 2025-3-6 10:59
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostBaseVO", description = "主机基本信息 视图响应对象")
-public class HostBaseVO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@TableName(value = "host_config", autoResultMap = true)
+@Schema(name = "HostConfigDO", description = "主机配置 实体对象")
+public class HostConfigDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "id")
-    private Long id;
+    @Schema(description = "主机id")
+    @TableField("host_id")
+    private Long hostId;
 
-    @Schema(description = "主机类型")
-    private List<String> types;
+    @Schema(description = "配置类型")
+    @TableField("type")
+    private String type;
 
-    @Schema(description = "主机名称")
-    private String name;
+    @Schema(description = "配置状态")
+    @TableField("status")
+    private String status;
 
-    @Schema(description = "主机编码")
-    private String code;
-
-    @Schema(description = "主机地址")
-    private String address;
-
-    @Schema(description = "主机端口")
-    private Integer port;
-
-    @Schema(description = "描述")
-    private String description;
+    @Schema(description = "配置值")
+    @TableField("config")
+    private String config;
 
 }

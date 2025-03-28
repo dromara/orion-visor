@@ -90,7 +90,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         Long userId = user.getId();
         List<Long> hostIdList = request.getHostIdList();
         // 检查主机权限
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(userId, HostTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(userId, HostTypeEnum.SSH.name());
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
         log.info("ExecService.startExecCommand host hostList: {}", hostIdList);
         Valid.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);

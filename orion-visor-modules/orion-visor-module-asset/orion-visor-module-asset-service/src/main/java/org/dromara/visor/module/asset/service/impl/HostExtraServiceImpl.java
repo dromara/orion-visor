@@ -22,14 +22,14 @@
  */
 package org.dromara.visor.module.asset.service.impl;
 
-import cn.orionsec.kit.lang.function.Functions;
-import cn.orionsec.kit.lang.utils.collect.Maps;
+import cn.orionsec.kit.lang.utils.Strings;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
-import org.dromara.visor.module.asset.entity.request.host.HostExtraQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
 import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 import org.dromara.visor.module.asset.service.HostExtraService;
 import org.dromara.visor.module.infra.api.DataExtraApi;
 import org.dromara.visor.module.infra.entity.dto.data.DataExtraDTO;
@@ -57,10 +57,10 @@ public class HostExtraServiceImpl implements HostExtraService {
     private DataExtraApi dataExtraApi;
 
     @Override
-    public Map<String, Object> getHostExtra(Long hostId, String item) {
+    public Map<String, Object> getHostExtraView(Long hostId, String item) {
         HostExtraItemEnum extraItem = Valid.valid(HostExtraItemEnum::of, item);
+        Long userId = this.getExtraUserId(extraItem);
         // 查询配置项
-        Long userId = SecurityUtils.getLoginUserId();
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
                 .relId(hostId)
@@ -83,42 +83,26 @@ public class HostExtraServiceImpl implements HostExtraService {
     }
 
     @Override
-    public Map<String, Map<String, Object>> getHostExtraList(HostExtraQueryRequest request) {
-        Long hostId = request.getHostId();
-        List<String> items = request.getItems();
-        List<HostExtraItemEnum> extraItems = items.stream()
-                .map(s -> Valid.valid(HostExtraItemEnum::of, s))
-                .collect(Collectors.toList());
-        // 查询配置项
-        Long userId = SecurityUtils.getLoginUserId();
+    public Map<Long, HostSpecExtraModel> getHostSpecMap(List<Long> hostIdList) {
+        // 查询条件
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
-                .userId(userId)
-                .relId(hostId)
-                .items(items)
+                .userId(Const.SYSTEM_USER_ID)
+                .item(HostExtraItemEnum.SPEC.name())
+                .relIdList(hostIdList)
                 .build();
-        Map<String, String> extraValues = dataExtraApi.getExtraItems(query, DataExtraTypeEnum.HOST)
+        // 查询
+        return dataExtraApi.getExtraItems(query, DataExtraTypeEnum.HOST)
                 .stream()
-                .collect(Collectors.toMap(
-                        DataExtraDTO::getItem,
-                        DataExtraDTO::getValue,
-                        Functions.right())
-                );
-        // 检查初始化
-        Map<String, Map<String, Object>> result = Maps.newMap();
-        for (HostExtraItemEnum extraItem : extraItems) {
-            String item = extraItem.name();
-            // 检查初始化并转为视图
-            Map<String, Object> extraValue = this.checkItemAndToView(extraItem, extraValues.get(item), userId, hostId);
-            result.put(item, extraValue);
-        }
-        return result;
+                .filter(s -> Strings.isNotBlank(s.getValue()))
+                .collect(Collectors.toMap(DataExtraDTO::getRelId,
+                        s -> HostExtraItemEnum.SPEC.toView(s.getValue())));
     }
 
     @Override
     public Integer updateHostExtra(HostExtraUpdateRequest request) {
-        Long hostId = request.getHostId();
-        Long userId = SecurityUtils.getLoginUserId();
         HostExtraItemEnum item = Valid.valid(HostExtraItemEnum::of, request.getItem());
+        Long hostId = request.getHostId();
+        Long userId = this.getExtraUserId(item);
         // 查询原始配置
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
                 .userId(userId)
@@ -176,6 +160,16 @@ public class HostExtraServiceImpl implements HostExtraService {
                 .build();
         dataExtraApi.addExtraItem(set, DataExtraTypeEnum.HOST);
         return extraValue;
+    }
+
+    /**
+     * 获取额外配置 userId
+     *
+     * @param item item
+     * @return userId
+     */
+    private Long getExtraUserId(HostExtraItemEnum item) {
+        return item.isUserExtra() ? SecurityUtils.getLoginUserId() : Const.SYSTEM_USER_ID;
     }
 
 }

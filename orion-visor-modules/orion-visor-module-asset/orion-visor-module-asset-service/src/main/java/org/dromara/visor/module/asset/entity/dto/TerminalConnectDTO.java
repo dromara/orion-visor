@@ -69,6 +69,9 @@ public class TerminalConnectDTO {
     @Schema(description = "系统类型")
     private String osType;
 
+    @Schema(description = "系统架构")
+    private String archType;
+
     @Schema(description = "超时时间")
     private Integer timeout;
 

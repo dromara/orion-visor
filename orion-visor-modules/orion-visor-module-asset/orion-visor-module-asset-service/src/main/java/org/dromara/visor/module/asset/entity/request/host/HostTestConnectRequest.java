@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.entity.vo;
+package org.dromara.visor.module.asset.entity.request.host;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,11 +28,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
- * 主机基本信息 视图响应对象
+ * 主机 测试连接请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -42,30 +42,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostBaseVO", description = "主机基本信息 视图响应对象")
-public class HostBaseVO implements Serializable {
+@Schema(name = "HostTestConnectRequest", description = "主机 测试连接请求对象")
+public class HostTestConnectRequest {
 
-    private static final long serialVersionUID = 1L;
-
+    @NotNull
     @Schema(description = "id")
     private Long id;
 
+    @NotBlank
     @Schema(description = "主机类型")
-    private List<String> types;
-
-    @Schema(description = "主机名称")
-    private String name;
-
-    @Schema(description = "主机编码")
-    private String code;
-
-    @Schema(description = "主机地址")
-    private String address;
-
-    @Schema(description = "主机端口")
-    private Integer port;
-
-    @Schema(description = "描述")
-    private String description;
+    private String type;
 
 }

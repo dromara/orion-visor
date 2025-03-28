@@ -359,7 +359,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
      */
     private void checkHostPermission(List<Long> hostIdList) {
         // 查询有权限的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH.name());
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }

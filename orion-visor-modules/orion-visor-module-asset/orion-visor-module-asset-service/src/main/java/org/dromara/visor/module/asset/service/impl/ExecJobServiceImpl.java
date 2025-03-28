@@ -221,7 +221,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         vo.setHostIdList(hostIdList);
         // 查询主机列表
         if (!Lists.isEmpty(hostIdList)) {
-            List<HostBaseVO> hosts = hostDAO.selectBaseByIdList(hostIdList)
+            List<HostBaseVO> hosts = hostDAO.selectBatchIds(hostIdList)
                     .stream()
                     .map(HostConvert.MAPPER::toBase)
                     .collect(Collectors.toList());
@@ -440,7 +440,7 @@ public class ExecJobServiceImpl implements ExecJobService {
      */
     private void checkHostPermission(List<Long> hostIdList) {
         // 查询有权限的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH.name());
         for (Long hostId : hostIdList) {
             Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }

@@ -64,6 +64,7 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
     @Override
     public HostSshConfigModel getDefault() {
         return HostSshConfigModel.builder()
+                .port(22)
                 .username(USERNAME)
                 .authType(HostSshAuthTypeEnum.PASSWORD.name())
                 .connectTimeout(Const.MS_S_10)

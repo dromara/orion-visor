@@ -35,8 +35,8 @@ import org.dromara.visor.framework.web.core.annotation.DemoDisableApi;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.dromara.visor.module.asset.define.operator.HostOperatorType;
 import org.dromara.visor.module.asset.entity.request.host.*;
-import org.dromara.visor.module.asset.entity.vo.HostConfigVO;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
+import org.dromara.visor.module.asset.service.HostConnectService;
 import org.dromara.visor.module.asset.service.HostService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -62,6 +62,9 @@ public class HostController {
 
     @Resource
     private HostService hostService;
+
+    @Resource
+    private HostConnectService hostConnectService;
 
     @DemoDisableApi
     @OperatorLog(HostOperatorType.CREATE)
@@ -90,15 +93,6 @@ public class HostController {
         return hostService.updateHostStatus(request);
     }
 
-    @DemoDisableApi
-    @OperatorLog(HostOperatorType.UPDATE_CONFIG)
-    @PutMapping("/update-config")
-    @Operation(summary = "更新主机配置")
-    @PreAuthorize("@ss.hasPermission('asset:host:update-config')")
-    public Integer updateHostConfig(@Validated @RequestBody HostUpdateConfigRequest request) {
-        return hostService.updateHostConfig(request);
-    }
-
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询主机")
@@ -106,15 +100,6 @@ public class HostController {
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
     public HostVO getHost(@RequestParam("id") Long id) {
         return hostService.getHostById(id);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/get-config")
-    @Operation(summary = "查询主机配置")
-    @Parameter(name = "id", description = "id", required = true)
-    @PreAuthorize("@ss.hasPermission('asset:host:query')")
-    public HostConfigVO getHostConfig(@RequestParam("id") Long id) {
-        return hostService.getHostConfig(id);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -160,6 +145,15 @@ public class HostController {
     @PreAuthorize("@ss.hasPermission('asset:host:delete')")
     public Integer batchDeleteHost(@RequestParam("idList") List<Long> idList) {
         return hostService.deleteHostByIdList(idList);
+    }
+
+    @DemoDisableApi
+    @PostMapping("/test-connect")
+    @Operation(summary = "测试主机连接")
+    @PreAuthorize("@ss.hasAnyPermission('asset:host:update', 'asset:host:update-config')")
+    public Boolean testHostConnect(@Validated @RequestBody HostTestConnectRequest request) {
+        hostConnectService.testHostConnect(request);
+        return true;
     }
 
 }

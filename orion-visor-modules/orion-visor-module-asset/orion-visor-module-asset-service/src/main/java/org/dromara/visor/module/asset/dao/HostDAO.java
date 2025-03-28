@@ -22,13 +22,10 @@
  */
 package org.dromara.visor.module.asset.dao;
 
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,54 +38,8 @@ import java.util.List;
 @Mapper
 public interface HostDAO extends IMapper<HostDO> {
 
-    List<SFunction<HostDO, ?>> BASE_COLUMN = Arrays.asList(
-            HostDO::getId,
-            HostDO::getType,
-            HostDO::getOsType,
-            HostDO::getName,
-            HostDO::getCode,
-            HostDO::getAddress,
-            HostDO::getPort,
-            HostDO::getStatus,
-            HostDO::getDescription,
-            HostDO::getCreateTime,
-            HostDO::getUpdateTime,
-            HostDO::getCreator,
-            HostDO::getUpdater
-    );
-
     /**
-     * 通过 id 查询基本信息
-     *
-     * @param id id
-     * @return id
-     */
-    default HostDO selectBaseById(Long id) {
-        return this.of()
-                .createWrapper()
-                .select(BASE_COLUMN)
-                .eq(HostDO::getId, id)
-                .then()
-                .getOne();
-    }
-
-    /**
-     * 通过 id 查询基本信息
-     *
-     * @param idList idList
-     * @return id
-     */
-    default List<HostDO> selectBaseByIdList(List<Long> idList) {
-        return this.of()
-                .createWrapper()
-                .select(BASE_COLUMN)
-                .in(HostDO::getId, idList)
-                .then()
-                .list();
-    }
-
-    /**
-     * 获取的 hostId
+     * 通过类型查询 hostId
      *
      * @param hostIdList hostIdList
      * @param type       type
@@ -100,26 +51,10 @@ public interface HostDAO extends IMapper<HostDO> {
                 .createWrapper(true)
                 .select(HostDO::getId)
                 .in(HostDO::getId, hostIdList)
-                .eq(HostDO::getType, type)
                 .eq(HostDO::getStatus, status)
+                .like(HostDO::getTypes, type)
                 .then()
                 .list(HostDO::getId);
     }
-
-    /**
-     * 设置 keyId 为 NULL
-     *
-     * @param keyIdList keyIdList
-     * @return effect
-     */
-    int setKeyIdWithNull(@Param("keyIdList") List<Long> keyIdList);
-
-    /**
-     * 设置 identityId 为 NULL
-     *
-     * @param identityIdList identityIdList
-     * @return effect
-     */
-    int setIdentityIdWithNull(@Param("identityIdList") List<Long> identityIdList);
 
 }

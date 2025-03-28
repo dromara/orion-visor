@@ -49,10 +49,13 @@ public class HostCacheDTO implements LongCacheIdModel, Serializable {
     private Long id;
 
     @Schema(description = "主机类型")
-    private String type;
+    private String types;
 
     @Schema(description = "系统类型")
     private String osType;
+
+    @Schema(description = "系统架构")
+    private String archType;
 
     @Schema(description = "主机名称")
     private String name;
@@ -69,7 +72,7 @@ public class HostCacheDTO implements LongCacheIdModel, Serializable {
     @Schema(description = "主机状态")
     private String status;
 
-    @Schema(description = "描述")
+    @Schema(description = "主机描述")
     private String description;
 
 }

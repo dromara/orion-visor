@@ -50,6 +50,10 @@ public class HostQueryRequest extends BaseQueryRequest {
     @Schema(description = "id")
     private Long id;
 
+    @Size(max = 8)
+    @Schema(description = "主机类型")
+    private String type;
+
     @Size(max = 64)
     @Schema(description = "主机名称")
     private String name;
@@ -62,13 +66,13 @@ public class HostQueryRequest extends BaseQueryRequest {
     @Schema(description = "主机地址")
     private String address;
 
-    @Size(max = 8)
-    @Schema(description = "主机类型")
-    private String type;
-
     @Size(max = 12)
     @Schema(description = "系统类型")
     private String osType;
+
+    @Size(max = 12)
+    @Schema(description = "系统架构")
+    private String archType;
 
     @Size(max = 8)
     @Schema(description = "主机状态")
@@ -81,7 +85,13 @@ public class HostQueryRequest extends BaseQueryRequest {
     @Schema(description = "描述")
     private String description;
 
+    @Schema(description = "是否查询分组信息")
+    private Boolean queryGroup;
+
     @Schema(description = "是否查询 tag 信息")
     private Boolean queryTag;
+
+    @Schema(description = "是否查询规格信息")
+    private Boolean querySpec;
 
 }

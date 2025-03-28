@@ -45,6 +45,14 @@ import javax.validation.constraints.*;
 public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordAction {
 
     /**
+     * 主机端口
+     */
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 65535)
+    private Integer port;
+
+    /**
      * 用户名
      */
     @Size(max = 128)

@@ -28,7 +28,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
@@ -46,14 +48,19 @@ import java.util.List;
 @Schema(name = "HostCreateRequest", description = "主机 创建请求对象")
 public class HostCreateRequest implements Serializable {
 
-    @NotBlank
+    @NotEmpty
     @Schema(description = "主机类型")
-    private String type;
+    private List<String> types;
 
-    @NotBlank
     @Size(max = 12)
+    @NotBlank
     @Schema(description = "系统类型")
     private String osType;
+
+    @Size(max = 12)
+    @NotBlank
+    @Schema(description = "系统架构")
+    private String archType;
 
     @NotBlank
     @Size(max = 64)
@@ -69,11 +76,6 @@ public class HostCreateRequest implements Serializable {
     @Size(max = 128)
     @Schema(description = "主机地址")
     private String address;
-
-    @Min(value = 1)
-    @Max(value = 65535)
-    @Schema(description = "主机端口")
-    private Integer port;
 
     @NotEmpty
     @Schema(description = "主机分组")

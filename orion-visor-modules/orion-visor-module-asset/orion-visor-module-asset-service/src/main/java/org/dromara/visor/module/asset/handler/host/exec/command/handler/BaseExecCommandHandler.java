@@ -55,7 +55,7 @@ import org.dromara.visor.module.asset.enums.ExecHostStatusEnum;
 import org.dromara.visor.module.asset.enums.HostOsTypeEnum;
 import org.dromara.visor.module.asset.handler.host.exec.log.manager.ExecLogManager;
 import org.dromara.visor.module.asset.handler.host.jsch.SessionStores;
-import org.dromara.visor.module.asset.service.TerminalService;
+import org.dromara.visor.module.asset.service.HostConnectService;
 import org.dromara.visor.module.asset.utils.ExecUtils;
 
 import java.io.IOException;
@@ -79,7 +79,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
 
     private static final ExecLogManager execLogManager = SpringHolder.getBean(ExecLogManager.class);
 
-    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
+    private static final HostConnectService hostConnectService = SpringHolder.getBean(HostConnectService.class);
 
     private static final ExecHostLogDAO execHostLogDAO = SpringHolder.getBean(ExecHostLogDAO.class);
 
@@ -166,7 +166,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
             this.status = ExecHostStatusEnum.of(execHostLog.getStatus());
             Valid.eq(this.status, ExecHostStatusEnum.WAITING, ErrorMessage.TASK_ABSENT, ErrorMessage.ILLEGAL_STATUS);
             // 获取主机会话
-            this.connect = terminalService.getTerminalConnectInfo(execHostLog.getHostId(), execLog.getUserId());
+            this.connect = hostConnectService.getSshConnectInfo(execHostLog.getHostId(), execLog.getUserId());
             // 设置日志路径
             this.setLogPath();
             // 设置脚本路径
@@ -411,6 +411,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         params.put("osType", connect.getOsType());
+        params.put("archType", connect.getArchType());
         params.put("charset", connect.getCharset());
         params.put("scriptPath", execHostLog.getScriptPath());
         // 获取实际命令
