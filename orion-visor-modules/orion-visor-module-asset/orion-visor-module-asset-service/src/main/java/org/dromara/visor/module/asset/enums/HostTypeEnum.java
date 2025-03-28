@@ -24,10 +24,17 @@ package org.dromara.visor.module.asset.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
 import org.dromara.visor.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 主机配置类型枚举
@@ -59,6 +66,17 @@ public enum HostTypeEnum implements GenericsStrategyDefinition {
             }
         }
         return null;
+    }
+
+    public static List<String> split(String types) {
+        if (types == null) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(types.split(Const.COMMA))
+                .map(HostTypeEnum::of)
+                .filter(Objects::nonNull)
+                .map(Enum::name)
+                .collect(Collectors.toList());
     }
 
 }

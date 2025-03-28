@@ -90,6 +90,8 @@ public interface ErrorMessage {
 
     String HOST_NOT_ENABLED = "主机未启用";
 
+    String CONFIG_NOT_ENABLED = "配置未启用";
+
     String UNABLE_OPERATE_ADMIN_ROLE = "无法操作管理员账号";
 
     String UNSUPPORTED_CHARSET = "不支持的编码 [{}]";

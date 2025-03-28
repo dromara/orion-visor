@@ -55,6 +55,13 @@ public interface DataExtraService {
     Long addExtraItem(DataExtraSetRequest request);
 
     /**
+     * 批量新增数据拓展信息
+     *
+     * @param rows rows
+     */
+    void addExtraItems(List<DataExtraSetRequest> rows);
+
+    /**
      * 更新数据拓展信息
      *
      * @param id    id

@@ -59,6 +59,14 @@ public interface DataExtraApi {
     Long addExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type);
 
     /**
+     * 新增数据拓展信息
+     *
+     * @param rows rows
+     * @param type type
+     */
+    void addExtraItems(List<DataExtraSetDTO> rows, DataExtraTypeEnum type);
+
+    /**
      * 更新数据拓展信息
      *
      * @param id    id

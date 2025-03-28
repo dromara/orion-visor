@@ -229,6 +229,17 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
     }
 
     @Override
+    public List<DataGroupRelDO> getGroupRelByRelIdList(String type, Long userId, List<Long> relIdList) {
+        return dataGroupRelDAO.of()
+                .createWrapper()
+                .eq(DataGroupRelDO::getType, type)
+                .eq(DataGroupRelDO::getUserId, userId)
+                .in(DataGroupRelDO::getRelId, relIdList)
+                .then()
+                .list();
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer deleteByRelId(String type, Long userId, Long relId) {
         return SpringHolder.getBean(DataGroupRelService.class)
