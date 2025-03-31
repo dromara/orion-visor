@@ -7,7 +7,9 @@
             :auto-label-width="true"
             :rules="sshFormRules">
       <!-- 端口 -->
-      <a-form-item field="port" label="端口">
+      <a-form-item field="port"
+                   label="端口"
+                   hide-asterisk>
         <a-input-number v-model="formModel.port"
                         placeholder="请输入 SSH 端口"
                         hide-button />
@@ -16,23 +18,27 @@
       <a-form-item field="username"
                    label="用户名"
                    :rules="usernameRules"
-                   :help="SshAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
+                   :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined"
+                   hide-asterisk>
         <a-input v-model="formModel.username"
-                 :disabled="SshAuthType.IDENTITY === formModel.authType"
+                 :disabled="HostAuthType.IDENTITY === formModel.authType"
                  placeholder="请输入用户名" />
       </a-form-item>
       <!-- 认证方式 -->
-      <a-form-item field="authType" label="认证方式">
+      <a-form-item field="authType"
+                   label="认证方式"
+                   hide-asterisk>
         <a-radio-group type="button"
                        class="auth-type-group usn"
                        v-model="formModel.authType"
                        :options="toRadioOptions(sshAuthTypeKey)" />
       </a-form-item>
       <!-- 主机密码 -->
-      <a-form-item v-if="SshAuthType.PASSWORD === formModel.authType"
+      <a-form-item v-if="HostAuthType.PASSWORD === formModel.authType"
                    field="password"
                    label="主机密码"
-                   :rules="passwordRules">
+                   :rules="passwordRules"
+                   hide-asterisk>
         <a-input-password v-model="formModel.password"
                           :disabled="!formModel.useNewPassword && formModel.hasPassword"
                           placeholder="主机密码" />
@@ -44,19 +50,23 @@
                   unchecked-text="使用原密码" />
       </a-form-item>
       <!-- 主机密钥 -->
-      <a-form-item v-if="SshAuthType.KEY === formModel.authType"
+      <a-form-item v-if="HostAuthType.KEY === formModel.authType"
                    field="keyId"
-                   label="主机密钥">
+                   label="主机密钥"
+                   hide-asterisk>
         <host-key-selector v-model="formModel.keyId" />
       </a-form-item>
       <!-- 主机身份 -->
-      <a-form-item v-if="SshAuthType.IDENTITY === formModel.authType"
+      <a-form-item v-if="HostAuthType.IDENTITY === formModel.authType"
                    field="identityId"
-                   label="主机身份">
+                   label="主机身份"
+                   hide-asterisk>
         <host-identity-selector v-model="formModel.identityId" />
       </a-form-item>
       <!-- 连接超时时间 -->
-      <a-form-item field="connectTimeout" label="连接超时时间">
+      <a-form-item field="connectTimeout"
+                   label="连接超时时间"
+                   hide-asterisk>
         <a-input-number v-model="formModel.connectTimeout"
                         placeholder="请输入连接超时时间"
                         hide-button>
@@ -66,15 +76,21 @@
         </a-input-number>
       </a-form-item>
       <!-- SSH 输出编码 -->
-      <a-form-item field="charset" label="SSH输出编码">
+      <a-form-item field="charset"
+                   label="SSH输出编码"
+                   hide-asterisk>
         <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
       </a-form-item>
       <!-- 文件名称编码 -->
-      <a-form-item field="fileNameCharset" label="文件名称编码">
+      <a-form-item field="fileNameCharset"
+                   label="文件名称编码"
+                   hide-asterisk>
         <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
       </a-form-item>
       <!-- 文件内容编码 -->
-      <a-form-item field="fileContentCharset" label="文件内容编码">
+      <a-form-item field="fileContentCharset"
+                   label="文件内容编码"
+                   hide-asterisk>
         <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
       </a-form-item>
       <!-- 操作 -->
@@ -114,12 +130,12 @@
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
-  import { sshAuthTypeKey, SshAuthType, HostType } from '../types/const';
+  import { sshAuthTypeKey, HostAuthType, HostType } from '../types/const';
   import { sshFormRules } from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import { encrypt } from '@/utils/rsa';
   import { testHostConnect } from '@/api/asset/host';
-  import { getHostSshConfig, updateHostConfig } from '@/api/asset/host-config';
+  import { getHostConfig, updateHostConfig } from '@/api/asset/host-config';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
@@ -129,7 +145,7 @@
 
   const { loading, setLoading } = useLoading();
   const { loading: connectLoading, setLoading: setConnectLoading } = useLoading();
-  const { toOptions, toRadioOptions } = useDictStore();
+  const { toRadioOptions } = useDictStore();
 
   const formRef = ref();
   const formModel = ref<HostSshConfig>({} as HostSshConfig);
@@ -141,7 +157,7 @@
         cb('用户名长度不能大于128位');
         return;
       }
-      if (formModel.value.authType !== SshAuthType.IDENTITY && !value) {
+      if (formModel.value.authType !== HostAuthType.IDENTITY && !value) {
         cb('请输入用户名');
         return;
       }
@@ -167,7 +183,7 @@
     try {
       setLoading(true);
       // 加载配置
-      const { data } = await getHostSshConfig<HostSshConfig>({
+      const { data } = await getHostConfig<HostSshConfig>({
         hostId: props.hostId,
         type: HostType.SSH.value,
       });
@@ -212,7 +228,7 @@
     // 加密参数
     const requestData = { ...formModel.value };
     try {
-      requestData.password = await encrypt(formRef.value.password);
+      requestData.password = await encrypt(formModel.value.password);
     } catch (e) {
       return;
     }

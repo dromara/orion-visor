@@ -39,7 +39,7 @@ export const HostOsType = {
 };
 
 // 主机认证方式
-export const SshAuthType = {
+export const HostAuthType = {
   // 密码认证
   PASSWORD: 'PASSWORD',
   // 密钥认证
@@ -65,7 +65,7 @@ export const hostArchTypeKey = 'hostArchType';
 // 主机状态 字典项
 export const hostStatusKey = 'hostStatus';
 
-// 主机认证方式 字典项
+// 主机 SSH 认证方式 字典项
 export const sshAuthTypeKey = 'hostSshAuthType';
 
 // 加载的字典值

@@ -47,4 +47,11 @@ public interface UpdatePasswordAction extends Serializable {
      */
     String getPassword();
 
+    /**
+     * 设置密码
+     *
+     * @param password password
+     */
+    void setPassword(String password);
+
 }

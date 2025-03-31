@@ -54,18 +54,16 @@
 </script>
 
 <script lang="ts" setup>
-  import type { HostUpdateRequest } from '@/api/asset/host';
   import { ref, nextTick } from 'vue';
   import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
-  import { useCacheStore, useDictStore } from '@/store';
+  import { useCacheStore } from '@/store';
   import { HostType } from '../types/const';
   import { useCounter } from '@vueuse/core';
   import HostFormInfo from './host-form-info.vue';
   import HostFormSsh from './host-form-ssh.vue';
   import HostFormSpec from './host-form-spec.vue';
 
-  const { toOptions } = useDictStore();
   const { count: updatedCount, inc: incrUpdatedCount, reset: resetCounter } = useCounter();
   const { visible, setVisible } = useVisible();
 
@@ -74,8 +72,6 @@
   const hostId = ref<number>();
   const types = ref<string[]>([]);
   const infoRef = ref();
-  const formRef = ref();
-  const formModel = ref<HostUpdateRequest>({});
 
   const emits = defineEmits(['reload']);
 

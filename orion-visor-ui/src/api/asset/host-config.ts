@@ -17,20 +17,23 @@ export interface HostUpdateConfigRequest {
   config: string;
 }
 
-// 主机 SSH 配置
-export interface HostSshConfig {
+export interface HostBaseConfig {
   username?: string;
   port?: number;
   password?: string;
   authType?: string;
+  useNewPassword?: boolean;
+  hasPassword?: boolean;
+}
+
+// 主机 SSH 配置
+export interface HostSshConfig extends HostBaseConfig {
   keyId?: number;
   identityId?: number;
   connectTimeout?: number;
   charset?: string;
   fileNameCharset?: string;
   fileContentCharset?: string;
-  useNewPassword?: boolean;
-  hasPassword?: boolean;
 }
 
 /**
@@ -43,6 +46,6 @@ export function updateHostConfig(request: HostUpdateConfigRequest) {
 /**
  * 查询主机配置
  */
-export function getHostSshConfig<T>(request: HostUpdateQueryRequest) {
+export function getHostConfig<T>(request: HostUpdateQueryRequest) {
   return axios.post<T>('/asset/host-config/get', request);
 }
