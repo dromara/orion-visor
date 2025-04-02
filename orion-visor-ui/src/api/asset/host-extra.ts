@@ -33,6 +33,7 @@ export interface HostLabelExtraSettingModel {
 
 // 标签规格模型
 export interface HostSpecExtraModel {
+  sn: string;
   osName: string;
   cpuCore: number;
   cpuFrequency: number;

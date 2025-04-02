@@ -42,6 +42,11 @@ import java.util.List;
 public class HostSpecExtraModel implements GenericsDataModel {
 
     /**
+     * sn
+     */
+    private String sn;
+
+    /**
      * 系统名称
      */
     private String osName;

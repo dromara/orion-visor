@@ -2,6 +2,15 @@
   <a-spin :loading="loading">
     <!-- 表单 -->
     <a-descriptions :column="1" bordered>
+      <!-- SN -->
+      <a-descriptions-item label="SN" :span="2">
+        <a-input v-if="editing"
+                 v-model="formModel.sn"
+                 class="input"
+                 size="mini"
+                 allow-clear />
+        <span v-else class="text">{{ formModel.sn }}</span>
+      </a-descriptions-item>
       <!-- 系统名称 -->
       <a-descriptions-item label="系统名称" :span="2">
         <a-input v-if="editing"
