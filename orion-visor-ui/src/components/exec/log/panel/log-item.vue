@@ -105,7 +105,7 @@
       <!-- 日志面板 -->
       <div class="log-wrapper">
         <!-- terminal -->
-        <div class="log-appender" ref="appenderRef" />
+        <div class="log-viewport" ref="viewport" />
         <!-- 搜索框 -->
         <xterm-search-modal ref="searchRef"
                             class="search-modal"
@@ -187,7 +187,7 @@
 
   const { getDictValue } = useDictStore();
 
-  const appenderRef = ref();
+  const viewport = ref();
   const searchRef = ref();
 
   // 打开搜索
@@ -197,7 +197,7 @@
 
   defineExpose({
     id: props.host.id,
-    appenderRef,
+    viewport,
     openSearch
   });
 
@@ -265,7 +265,7 @@
     background: #1C1C1C;
     padding: 4px 0 4px 4px;
 
-    .log-appender {
+    .log-viewport {
       width: 100%;
       height: 100%;
 

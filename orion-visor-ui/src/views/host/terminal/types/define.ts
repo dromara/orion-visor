@@ -176,7 +176,7 @@ export interface ITerminalOutputProcessor {
 
 // xterm dom 元素引用
 export interface XtermDomRef {
-  el: HTMLElement;
+  viewport: HTMLElement;
   searchModal: any;
   editorModal: any;
   uploadModal: any;

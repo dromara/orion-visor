@@ -11,7 +11,7 @@
       <div class="ssh-wrapper"
            :style="{ background: preference.theme.schema.background }">
         <!-- 终端实例 -->
-        <div class="ssh-inst" ref="terminalRef" />
+        <div class="ssh-viewport" ref="viewport" />
         <!-- 搜索模态框 -->
         <xterm-search-modal ref="searchModal"
                             class="search-modal"
@@ -59,7 +59,7 @@
   const editorModal = ref();
   const searchModal = ref();
   const uploadModal = ref();
-  const terminalRef = ref();
+  const viewport = ref();
   const session = ref<ISshSession>();
 
   // 发送命令
@@ -88,7 +88,7 @@
   onMounted(async () => {
     // 创建终端处理器
     session.value = await sessionManager.openSsh(props.tab, {
-      el: terminalRef.value,
+      viewport: viewport.value,
       editorModal: editorModal.value,
       searchModal: searchModal.value,
       uploadModal: uploadModal.value,
@@ -117,7 +117,7 @@
     position: relative;
     padding: 8px 4px 4px 8px;
 
-    .ssh-inst {
+    .ssh-viewport {
       width: 100%;
       height: 100%;
 
