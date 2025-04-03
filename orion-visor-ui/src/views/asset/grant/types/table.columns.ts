@@ -11,11 +11,11 @@ export const hostColumns = [
     align: 'left',
     fixed: 'left',
   }, {
-    title: '主机类型',
-    dataIndex: 'type',
-    slotName: 'type',
-    align: 'center',
-    width: 100,
+    title: '主机协议',
+    dataIndex: 'protocols',
+    slotName: 'protocols',
+    align: 'left',
+    width: 134,
   }, {
     title: '主机名称',
     dataIndex: 'name',

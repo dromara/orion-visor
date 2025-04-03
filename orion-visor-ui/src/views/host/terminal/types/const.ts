@@ -63,8 +63,8 @@ export const ExtraSettingItems = {
   LABEL: 'LABEL',
 };
 
-// 主机额外配置 ssh 认证方式
-export const ExtraSshAuthType = {
+// 主机额外配置认证方式
+export const ExtraHostAuthType = {
   // 使用默认认证方式
   DEFAULT: 'DEFAULT',
   // 自定义密钥

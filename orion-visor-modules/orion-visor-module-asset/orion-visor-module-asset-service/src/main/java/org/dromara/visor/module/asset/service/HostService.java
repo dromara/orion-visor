@@ -25,8 +25,10 @@ package org.dromara.visor.module.asset.service;
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
-import org.dromara.visor.module.asset.entity.request.host.*;
-import org.dromara.visor.module.asset.entity.vo.HostConfigVO;
+import org.dromara.visor.module.asset.entity.request.host.HostCreateRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostQueryRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostUpdateRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostUpdateStatusRequest;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
 
 import java.util.List;
@@ -65,28 +67,12 @@ public interface HostService {
     Integer updateHostStatus(HostUpdateStatusRequest request);
 
     /**
-     * 更新主机配置
-     *
-     * @param request request
-     * @return effect
-     */
-    Integer updateHostConfig(HostUpdateConfigRequest request);
-
-    /**
      * 通过 id 查询主机
      *
      * @param id id
      * @return row
      */
     HostVO getHostById(Long id);
-
-    /**
-     * 查询主机配置
-     *
-     * @param id id
-     * @return config
-     */
-    HostConfigVO getHostConfig(Long id);
 
     /**
      * 查询主机

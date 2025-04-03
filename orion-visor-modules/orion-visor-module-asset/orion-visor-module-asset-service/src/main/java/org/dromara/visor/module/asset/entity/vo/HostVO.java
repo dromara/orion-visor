@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 import org.dromara.visor.module.infra.entity.dto.tag.TagDTO;
 
 import java.io.Serializable;
@@ -54,10 +55,13 @@ public class HostVO implements Serializable {
     private Long id;
 
     @Schema(description = "主机类型")
-    private String type;
+    private List<String> types;
 
     @Schema(description = "系统类型")
     private String osType;
+
+    @Schema(description = "系统架构")
+    private String archType;
 
     @Schema(description = "主机名称")
     private String name;
@@ -103,5 +107,8 @@ public class HostVO implements Serializable {
 
     @Schema(description = "颜色")
     private String color;
+
+    @Schema(description = "规格")
+    private HostSpecExtraModel spec;
 
 }

@@ -5,14 +5,13 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.asset.entity.domain.HostDO">
         <id column="id" property="id"/>
-        <result column="type" property="type"/>
+        <result column="types" property="types"/>
         <result column="os_type" property="osType"/>
+        <result column="arch_type" property="archType"/>
         <result column="name" property="name"/>
         <result column="code" property="code"/>
         <result column="address" property="address"/>
-        <result column="port" property="port"/>
         <result column="status" property="status"/>
-        <result column="config" property="config"/>
         <result column="description" property="description"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -23,25 +22,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, type, os_type, name, code, address, port, status, config, description, create_time, update_time, creator, updater, deleted
+        id, types, os_type, arch_type, name, code, address, status, description, create_time, update_time, creator, updater, deleted
     </sql>
-
-    <update id="setKeyIdWithNull">
-        UPDATE host
-        SET config = JSON_REMOVE(config, '$.keyId')
-        WHERE deleted = 0
-        <foreach collection="keyIdList" item="item" separator="OR" open="AND (" close=")">
-            JSON_CONTAINS(config, JSON_OBJECT('keyId', #{item}))
-        </foreach>
-    </update>
-
-    <update id="setIdentityIdWithNull">
-        UPDATE host
-        SET config = JSON_REMOVE(config, '$.identityId')
-        WHERE deleted = 0
-        <foreach collection="identityIdList" item="item" separator="OR" open="AND (" close=")">
-            JSON_CONTAINS(config, JSON_OBJECT('identityId', #{item}))
-        </foreach>
-    </update>
 
 </mapper>

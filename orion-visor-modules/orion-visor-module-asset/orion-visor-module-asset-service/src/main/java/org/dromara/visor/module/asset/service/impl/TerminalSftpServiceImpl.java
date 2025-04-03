@@ -54,7 +54,7 @@ import org.dromara.visor.module.asset.entity.vo.TerminalSftpLogVO;
 import org.dromara.visor.module.asset.handler.host.jsch.SessionStores;
 import org.dromara.visor.module.asset.handler.host.transfer.manager.TerminalTransferManager;
 import org.dromara.visor.module.asset.handler.host.transfer.session.DownloadSession;
-import org.dromara.visor.module.asset.service.TerminalService;
+import org.dromara.visor.module.asset.service.HostConnectService;
 import org.dromara.visor.module.asset.service.TerminalSftpService;
 import org.dromara.visor.module.infra.api.OperatorLogApi;
 import org.dromara.visor.module.infra.entity.dto.operator.OperatorLogQueryDTO;
@@ -85,7 +85,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
     private OperatorLogApi operatorLogApi;
 
     @Resource
-    private TerminalService terminalService;
+    private HostConnectService hostConnectService;
 
     @Resource
     private TerminalTransferManager terminalTransferManager;
@@ -138,7 +138,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
+            TerminalConnectDTO connectInfo = hostConnectService.getSshConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -171,7 +171,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         InputStream in = null;
         try {
             // 获取终端连接信息
-            TerminalConnectDTO connectInfo = terminalService.getTerminalConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
+            TerminalConnectDTO connectInfo = hostConnectService.getSshConnectInfo(cache.getHostId(), SecurityUtils.getLoginUserId());
             sessionStore = SessionStores.openSessionStore(connectInfo);
             executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();

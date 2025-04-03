@@ -230,7 +230,7 @@ public class OrionSecurityAutoConfiguration {
         return httpSecurity
                 // 开启跨域
                 .cors().and()
-                // 因为不使用session 禁用CSRF
+                // 因为不使用 session 禁用 CSRF
                 .csrf().disable()
                 // 基于 token 机制所以不需要 session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

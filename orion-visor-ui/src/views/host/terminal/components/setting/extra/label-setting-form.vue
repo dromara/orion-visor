@@ -35,7 +35,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { LabelExtraSettingModel } from '../../../types/define';
+  import type { HostLabelExtraSettingModel } from '@/api/asset/host-extra';
   import { onMounted, ref } from 'vue';
   import { tabColorKey } from '../../../types/const';
   import { getHostExtraItem } from '@/api/asset/host-extra';
@@ -48,13 +48,13 @@
 
   const { toOptions } = useDictStore();
 
-  const formModel = ref<LabelExtraSettingModel>({
+  const formModel = ref<Partial<HostLabelExtraSettingModel>>({
     color: '',
   });
 
   // 渲染表单
   const renderForm = async () => {
-    const { data } = await getHostExtraItem<LabelExtraSettingModel>({ hostId: props.hostId, item: props.item });
+    const { data } = await getHostExtraItem<HostLabelExtraSettingModel>({ hostId: props.hostId, item: props.item });
     formModel.value = data;
   };
 

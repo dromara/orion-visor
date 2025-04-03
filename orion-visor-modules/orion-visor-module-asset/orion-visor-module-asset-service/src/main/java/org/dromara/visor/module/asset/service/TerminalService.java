@@ -22,9 +22,7 @@
  */
 package org.dromara.visor.module.asset.service;
 
-import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.TerminalAccessDTO;
-import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 import org.dromara.visor.module.asset.entity.dto.TerminalTransferDTO;
 import org.dromara.visor.module.asset.entity.vo.TerminalThemeVO;
 
@@ -75,31 +73,5 @@ public interface TerminalService {
      * @return config
      */
     TerminalTransferDTO getTransferInfoByToken(String token);
-
-    /**
-     * 获取连接信息
-     *
-     * @param hostId hostId
-     * @return session
-     */
-    TerminalConnectDTO getTerminalConnectInfo(Long hostId);
-
-    /**
-     * 使用用户配置获取连接信息
-     *
-     * @param hostId hostId
-     * @param userId userId
-     * @return session
-     */
-    TerminalConnectDTO getTerminalConnectInfo(Long hostId, Long userId);
-
-    /**
-     * 使用用户配置获取连接信息
-     *
-     * @param host   host
-     * @param userId userId
-     * @return session
-     */
-    TerminalConnectDTO getTerminalConnectInfo(HostDO host, Long userId);
 
 }

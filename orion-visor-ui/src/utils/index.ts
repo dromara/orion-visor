@@ -167,6 +167,15 @@ export const sleep = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+// 添加后缀
+export const addSuffix = (value: any, suffix: string) => {
+  if (value === undefined || value === '') {
+    return '';
+  } else {
+    return `${value}${suffix}`;
+  }
+};
+
 /**
  * 获取当前页面的缩放值
  */

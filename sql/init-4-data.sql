@@ -32,6 +32,7 @@ INSERT INTO `system_setting` VALUES (27, 'autoClear', 'autoClear_execLogKeepDays
 INSERT INTO `system_setting` VALUES (28, 'autoClear', 'autoClear_terminalLogKeepDays', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
 INSERT INTO `system_setting` VALUES (29, 'autoClear', 'autoClear_execLogEnabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
 INSERT INTO `system_setting` VALUES (30, 'autoClear', 'autoClear_terminalLogEnabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
+
 -- 字典项
 INSERT INTO `dict_key` VALUES (1, 'operatorLogModule', 'STRING', '[]', '操作日志模块', '2023-10-21 02:04:22', '2023-10-30 14:11:38', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (2, 'operatorLogType', 'STRING', '[]', '操作日志类型', '2023-10-21 02:06:04', '2023-10-21 02:06:04', 'admin', 'admin', 0);
@@ -73,6 +74,7 @@ INSERT INTO `dict_key` VALUES (53, 'terminalTheme', 'STRING', '[{\"name\": \"dar
 INSERT INTO `dict_key` VALUES (57, 'hostStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"status\", \"type\": \"STRING\"}]', '主机状态', '2024-07-17 12:51:10', '2024-07-22 16:53:23', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (58, 'hostType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}]', '主机类型', '2024-07-17 12:51:10', '2024-07-22 14:02:44', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (61, 'updatePasswordReason', 'STRING', '[]', '修改密码原因', '2024-12-11 17:19:40', '2024-12-11 17:20:04', 'admin', 'admin', 0);
+INSERT INTO `dict_key` VALUES (65, 'hostArchType', 'STRING', '[]', '主机系统架构', '2025-03-26 16:31:42', '2025-03-26 16:31:42', 'admin', 'admin', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', 'admin', 'admin', 0);
@@ -290,8 +292,8 @@ INSERT INTO `dict_value` VALUES (268, 2, 'operatorLogType', 'exec-job-log:interr
 INSERT INTO `dict_value` VALUES (269, 2, 'operatorLogType', 'exec-job-log:interrupt-host', '中断计划任务主机', '{}', 60, '2024-03-13 15:08:43', '2024-04-12 15:23:42', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (270, 37, 'hostIdentityType', 'PASSWORD', '密码', '{\"color\": \"purple\"}', 10, '2024-04-16 17:17:49', '2024-04-16 17:17:49', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (271, 37, 'hostIdentityType', 'KEY', '密钥', '{\"color\": \"arcoblue\"}', 20, '2024-04-16 17:18:12', '2024-05-17 12:49:16', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (272, 38, 'hostOsType', 'LINUX', 'linux', '{}', 10, '2024-04-16 22:19:25', '2024-12-12 16:20:39', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (273, 38, 'hostOsType', 'WINDOWS', 'windows', '{}', 20, '2024-04-16 22:19:39', '2024-12-12 16:20:39', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (272, 38, 'hostOsType', 'LINUX', 'Linux', '{}', 10, '2024-04-16 22:19:25', '2025-03-26 22:46:23', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (273, 38, 'hostOsType', 'WINDOWS', 'Windows', '{}', 20, '2024-04-16 22:19:39', '2025-03-26 22:46:27', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (274, 39, 'pathBookmarkType', 'FILE', '文件', '{}', 10, '2024-04-24 13:43:28', '2024-04-24 13:43:28', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (275, 39, 'pathBookmarkType', 'DIR', '文件夹', '{}', 20, '2024-04-24 13:43:39', '2024-04-24 13:43:39', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (276, 40, 'sftpTransferStatus', 'waiting', '传输中', '{\"icon\": \"icon-clock-circle\", \"color\": \"gray\", \"status\": \"waiting\"}', 10, '2024-05-06 12:00:04', '2024-05-06 12:00:04', 'admin', 'admin', 0);
@@ -344,10 +346,12 @@ INSERT INTO `dict_value` VALUES (425, 2, 'operatorLogType', 'system-setting:upda
 INSERT INTO `dict_value` VALUES (431, 61, 'updatePasswordReason', 'NEW', '为了保障账户安全，请立即修改初始密码。', '{}', 10, '2024-12-11 17:24:19', '2024-12-11 17:24:19', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (432, 2, 'operatorLogType', 'exec-job:update-exec-user', '修改计划执行用户', '{}', 45, '2024-12-13 00:17:03', '2024-12-13 00:17:03', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (443, 21, 'terminalFontFamily', 'Cascadia Mono', 'Cascadia Mono', '{}', 50, '2023-12-11 16:48:03', '2024-05-15 15:26:42', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (448, 65, 'hostArchType', 'AMD64', 'amd64', '{}', 10, '2025-03-26 16:33:07', '2025-03-26 16:33:07', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (449, 65, 'hostArchType', 'ARM64', 'arm64', '{}', 20, '2025-03-26 16:33:23', '2025-03-26 16:33:23', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (452, 38, 'hostOsType', 'DRAWIN', 'Drawin', '{}', 30, '2024-04-16 22:19:25', '2025-03-26 22:46:23', 'admin', 'admin', 0);
 
 -- 菜单配置
-INSERT INTO `system_menu` VALUES (1, 0, '仪表盘', NULL, 1, 10, 1, 1, 1, 0, 'IconDashboard', NULL, 'dashboard', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (2, 1, '工作台', NULL, 2, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (5, 0, '用户管理', NULL, 1, 700, 1, 1, 1, 0, 'icon-user', NULL, 'userModule', '2023-07-28 10:55:38', '2024-06-17 20:45:29', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (8, 0, '项目地址', NULL, 1, 1000, 1, 1, 1, 0, 'icon-link', 'https://visor.orionsec.cn', '', '2023-07-28 11:04:59', '2024-08-29 18:10:57', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (10, 5, '角色管理', NULL, 2, 10, 1, 1, 1, 0, 'IconUserGroup', '', 'role', '2023-07-28 10:55:52', '2024-03-07 19:10:13', 'admin', 'admin', 0);

@@ -95,8 +95,6 @@ public class SystemUserController {
         return systemUserService.updateSystemUserById(request);
     }
 
-    // TODO 修改头像 最后再说 可有可无的功能 要是有 http 文件需求就写
-
     @DemoDisableApi
     @OperatorLog(SystemUserOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")

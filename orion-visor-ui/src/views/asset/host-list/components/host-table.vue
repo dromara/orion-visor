@@ -25,11 +25,11 @@
       <a-form-item field="address" label="主机地址">
         <a-input v-model="formModel.address" placeholder="请输入主机地址" allow-clear />
       </a-form-item>
-      <!-- 主机类型 -->
-      <a-form-item field="type" label="主机类型">
+      <!-- 主机协议 -->
+      <a-form-item field="type" label="主机协议">
         <a-select v-model="formModel.type"
                   :options="toOptions(hostTypeKey)"
-                  placeholder="请选择主机类型"
+                  placeholder="请选择主机协议"
                   allow-clear />
       </a-form-item>
       <!-- 系统类型 -->
@@ -37,6 +37,13 @@
         <a-select v-model="formModel.osType"
                   :options="toOptions(hostOsTypeKey)"
                   placeholder="请选择系统类型"
+                  allow-clear />
+      </a-form-item>
+      <!-- 系统架构 -->
+      <a-form-item field="archType" label="系统架构">
+        <a-select v-model="formModel.archType"
+                  :options="toOptions(hostArchTypeKey)"
+                  placeholder="请选择系统架构"
                   allow-clear />
       </a-form-item>
       <!-- 主机状态 -->
@@ -147,33 +154,71 @@
              :bordered="false"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
-      <!-- 主机类型 -->
-      <template #type="{ record }">
-        <a-tag class="flex-center" :color="getDictValue(hostTypeKey, record.type, 'color')">
-          <!-- 系统类型图标 -->
-          <component v-if="getHostOsIcon(record.osType)"
-                     :is="getHostOsIcon(record.osType)"
-                     class="os-icon" />
-          <!-- 主机类型 -->
-          <span>{{ getDictValue(hostTypeKey, record.type) }}</span>
-        </a-tag>
+      <!-- 主机信息 -->
+      <template #hostInfo="{ record }">
+        <div class="info-wrapper">
+          <div class="info-item">
+            <span class="info-label">主机名称</span>
+            <span class="info-value text-copy text-ellipsis"
+                  :title="record.name"
+                  @click="copy(record.name, true)">
+              {{ record.name }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">主机编码</span>
+            <span class="info-value text-copy text-ellipsis"
+                  :title="record.code"
+                  @click="copy(record.code, true)">
+              {{ record.code }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">主机地址</span>
+            <span class="info-value span-blue text-copy text-ellipsis"
+                  :title="record.address"
+                  @click="copy(record.address, true)">
+              {{ record.address }}
+            </span>
+          </div>
+        </div>
       </template>
-      <!-- 主机编码 -->
-      <template #code="{ record }">
-        <a-tag>{{ record.code }}</a-tag>
+      <!-- 主机规格 -->
+      <template #hostSpec="{ record }">
+        <div class="info-wrapper">
+          <div class="info-item">
+            <span class="spec-label">规格</span>
+            <span v-if="record.spec" class="spec-value text-ellipsis">
+              {{
+                [
+                  addSuffix(record.spec.cpuCore, 'C'),
+                  addSuffix(record.spec.memorySize, 'G'),
+                  addSuffix(record.spec.diskSize, 'G')
+                ].filter(Boolean).join(' / ') || '-'
+              }}
+            </span>
+            <span v-else class="spec-value text-ellipsis">-</span>
+          </div>
+          <!-- 系统类型 -->
+          <div class="info-item">
+            <span class="spec-label">系统</span>
+            <span class="spec-value text-ellipsis">
+              {{ getDictValue(hostOsTypeKey, record.osType) }} - {{ getDictValue(hostArchTypeKey, record.archType) }}
+            </span>
+          </div>
+        </div>
       </template>
-      <!-- 地址 -->
-      <template #address="{ record }">
-        <span class="span-blue text-copy host-address"
-              title="复制"
-              @click="copy(record.address)">
-          {{ record.address }}
-        </span>
-        <span class="span-blue text-copy"
-              title="复制"
-              @click="copy(record.port)">
-          {{ record.port }}
-        </span>
+      <!-- 主机协议 -->
+      <template #protocols="{ record }">
+        <a-space v-if="record.types?.length"
+                 style="margin-bottom: -8px;"
+                 wrap>
+          <a-tag v-for="type in record.types"
+                 :key="type"
+                 :color="getDictValue(hostTypeKey, type, 'color')">
+            {{ getDictValue(hostTypeKey, type) }}
+          </a-tag>
+        </a-space>
       </template>
       <!-- 主机状态 -->
       <template #status="{ record }">
@@ -181,16 +226,30 @@
           {{ getDictValue(hostStatusKey, record.status) }}
         </a-tag>
       </template>
-      <!-- 标签 -->
-      <template #tags="{ record }">
-        <a-space v-if="record.tags"
+      <!-- 主机分组 -->
+      <template #groups="{ record }">
+        <a-space v-if="record.groupIdList?.length"
                  style="margin-bottom: -8px;"
                  :wrap="true">
-          <a-tag v-for="tag in record.tags"
-                 :key="tag.id"
-                 :color="dataColor(tag.name, tagColor)">
-            {{ tag.name }}
-          </a-tag>
+          <template v-for="groupId in record.groupIdList"
+                    :key="groupId">
+            <a-tag color="green">
+              {{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}
+            </a-tag>
+          </template>
+        </a-space>
+      </template>
+      <!-- 主机标签 -->
+      <template #tags="{ record }">
+        <a-space v-if="record.tags?.length"
+                 style="margin-bottom: -8px;"
+                 :wrap="true">
+          <template v-for="tag in record.tags"
+                    :key="tag.id">
+            <a-tag :color="dataColor(tag.name, tagColor)">
+              {{ tag.name }}
+            </a-tag>
+          </template>
         </a-space>
       </template>
       <!-- 操作 -->
@@ -202,13 +261,6 @@
                     v-permission="['asset:host:update']"
                     @click="emits('openUpdate', record)">
             修改
-          </a-button>
-          <!-- 配置 -->
-          <a-button type="text"
-                    size="mini"
-                    v-permission="['asset:host:update-config']"
-                    @click="emits('openUpdateConfig', record)">
-            配置
           </a-button>
           <!-- 删除 -->
           <a-popconfirm content="确认删除这条记录吗?"
@@ -242,13 +294,13 @@
                 <span class="more-doption normal">复制</span>
               </a-doption>
               <!-- SSH -->
-              <a-doption v-if="record.type === HostType.SSH.value"
+              <a-doption v-if="record.types.includes(HostType.SSH.value)"
                          v-permission="['asset:terminal:access']"
                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
                 <span class="more-doption normal">SSH</span>
               </a-doption>
               <!-- SFTP -->
-              <a-doption v-if="record.type === HostType.SSH.value"
+              <a-doption v-if="record.types.includes(HostType.SSH.value)"
                          v-permission="['asset:terminal:access']"
                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
                 <span class="more-doption normal">SFTP</span>
@@ -269,24 +321,25 @@
 
 <script lang="ts" setup>
   import type { HostQueryRequest, HostQueryResponse } from '@/api/asset/host';
+  import type { HostGroupQueryResponse } from '@/api/asset/host-group';
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { TableName, tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, getHostOsIcon } from '../types/const';
+  import { tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, hostArchTypeKey, TableName } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
+  import { useQueryOrder, ASC } from '@/hooks/query-order';
   import { useCacheStore, useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
-  import { dataColor } from '@/utils';
+  import { addSuffix, dataColor } from '@/utils';
   import { useRouter } from 'vue-router';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
-  import { ASC, useQueryOrder } from '@/hooks/query-order';
   import { openNewRoute } from '@/router';
-  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
+  import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
-  const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openUpdateConfig', 'openHostGroup']);
+  const emits = defineEmits(['openCopy', 'openAdd', 'openUpdate', 'openHostGroup']);
 
   const router = useRouter();
   const cacheStore = useCacheStore();
@@ -297,6 +350,7 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue, toggleDictValue, toggleDict } = useDictStore();
 
+  const hostGroupList = ref<Array<HostGroupQueryResponse>>([]);
   const tagSelector = ref();
   const selectedKeys = ref<Array<number>>([]);
   const tableRenderData = ref<Array<HostQueryResponse>>([]);
@@ -307,10 +361,13 @@
     address: undefined,
     type: undefined,
     osType: undefined,
+    archType: undefined,
     status: undefined,
     tags: undefined,
     description: undefined,
+    queryGroup: true,
     queryTag: true,
+    querySpec: true,
   });
 
   // 更新状态
@@ -403,7 +460,10 @@
     doFetchTableData({ page, limit, ...form });
   };
 
-  onMounted(() => {
+  onMounted(async () => {
+    // 加载分组数据
+    hostGroupList.value = await useCacheStore().loadHostGroupList();
+    // 加载数据
     fetchTableData();
   });
 
@@ -411,20 +471,47 @@
 
 <style lang="less" scoped>
 
-  .os-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 6px;
+  .info-wrapper {
+    padding: 4px 0;
+
+    .info-item {
+      display: flex;
+
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
+
+      .info-label, .spec-label {
+        margin-right: 8px;
+        user-select: none;
+        font-weight: 600;
+
+        &::after {
+          content: ':';
+        }
+      }
+
+      .info-label {
+        width: 60px;
+      }
+
+      .spec-label {
+        width: 34px;
+      }
+
+      .info-value {
+        width: calc(100% - 68px);
+      }
+
+      .spec-value {
+        width: calc(100% - 42px);
+      }
+    }
   }
 
   .row-handle-wrapper {
     display: flex;
     align-items: center;
-  }
-
-  .host-address::after {
-    content: ':';
-    user-select: text;
   }
 
 </style>

@@ -20,37 +20,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.entity.vo;
+package org.dromara.visor.module.asset.handler.host.extra.strategy;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Map;
+import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
+import org.springframework.stereotype.Component;
 
 /**
- * 主机配置 视图响应对象
+ * 主机规格额外信息策略
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/11 17:58
+ * @since 2025/3/24 0:21
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Schema(name = "HostConfigVO", description = "主机配置 视图响应对象")
-public class HostConfigVO {
+@Component
+public class HostSpecExtraStrategy extends AbstractGenericsDataStrategy<HostSpecExtraModel> {
 
-    @Schema(description = "id")
-    private Long id;
+    public HostSpecExtraStrategy() {
+        super(HostSpecExtraModel.class);
+    }
 
-    @Schema(description = "type")
-    private String type;
-
-    @Schema(description = "config")
-    private Map<String, Object> config;
+    @Override
+    public HostSpecExtraModel getDefault() {
+        return new HostSpecExtraModel();
+    }
 
 }

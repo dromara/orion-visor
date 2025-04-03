@@ -163,14 +163,16 @@ orion:
   version: @revision@
   # 是否为演示模式
   demo: false
+  # 前缀
+  prefix: /orion-visor
   api:
     # 公共 api 前缀
-    prefix: /orion-visor/api
+    prefix: ${orion.prefix}/api
     # 是否允许跨域
     cors: true
   websocket:
     # 公共 websocket 前缀
-    prefix: /orion-visor/keep-alive
+    prefix: ${orion.prefix}/keep-alive
     # 1MB
     binary-buffer-size: 1048576
     # 1MB

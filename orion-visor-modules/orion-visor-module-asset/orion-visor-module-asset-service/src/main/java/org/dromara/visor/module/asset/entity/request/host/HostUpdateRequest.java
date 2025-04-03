@@ -28,7 +28,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
@@ -56,6 +59,11 @@ public class HostUpdateRequest implements Serializable {
     private String osType;
 
     @NotBlank
+    @Size(max = 12)
+    @Schema(description = "系统架构")
+    private String archType;
+
+    @NotBlank
     @Size(max = 64)
     @Schema(description = "主机名称")
     private String name;
@@ -70,11 +78,9 @@ public class HostUpdateRequest implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
-    @NotNull
-    @Min(value = 1)
-    @Max(value = 65535)
-    @Schema(description = "主机端口")
-    private Integer port;
+    @NotEmpty
+    @Schema(description = "主机类型")
+    private List<String> types;
 
     @NotEmpty
     @Schema(description = "主机分组")

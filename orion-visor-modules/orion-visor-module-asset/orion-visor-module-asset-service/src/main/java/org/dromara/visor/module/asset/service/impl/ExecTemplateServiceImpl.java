@@ -135,7 +135,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
             return template;
         }
         // 过滤认证的主机
-        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
+        List<Long> authorizedHostIdList = assetAuthorizedDataService.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH.name());
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
         template.setHostIdList(hostIdList);
         return template;

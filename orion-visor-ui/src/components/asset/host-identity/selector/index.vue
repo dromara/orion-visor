@@ -36,6 +36,7 @@
   const props = withDefaults(defineProps<Partial<{
     modelValue: number;
     authorized: boolean;
+    type: string;
   }>>(), {
     authorized: false
   });
@@ -66,13 +67,14 @@
       const hostIdentities = props.authorized
         ? await cacheStore.loadAuthorizedHostIdentities()
         : await cacheStore.loadHostIdentities();
-      optionData.value = hostIdentities.map(s => {
-        return {
-          label: s.name,
-          value: s.id,
-          username: s.username,
-        };
-      });
+      optionData.value = hostIdentities.filter(s => !props.type || s.type === props.type)
+        .map(s => {
+          return {
+            label: s.name,
+            value: s.id,
+            username: s.username,
+          };
+        });
     } catch (e) {
     } finally {
       setLoading(false);

@@ -22,12 +22,20 @@
  */
 package org.dromara.visor.module.asset.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.enums.EnableStatus;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import org.dromara.visor.module.asset.dao.HostConfigDAO;
 import org.dromara.visor.module.asset.dao.HostDAO;
+import org.dromara.visor.module.asset.entity.domain.HostConfigDO;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
+import org.dromara.visor.module.asset.entity.request.host.HostConfigQueryRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
 import org.dromara.visor.module.asset.enums.HostTypeEnum;
 import org.dromara.visor.module.asset.service.HostConfigService;
@@ -49,24 +57,76 @@ public class HostConfigServiceImpl implements HostConfigService {
     @Resource
     private HostDAO hostDAO;
 
+    @Resource
+    private HostConfigDAO hostConfigDAO;
+
     @Override
-    public <T extends GenericsDataModel> T getHostConfig(Long id) {
+    public Integer updateHostConfig(HostConfigUpdateRequest request) {
+        log.info("HostConfigService-updateHostConfig request: {}", request);
+        Long hostId = request.getHostId();
+        String type = request.getType();
+        String param = OperatorLogs.toJsonString(JSON.parseObject(request.getConfig()));
+        OperatorLogs.add(ExtraFieldConst.CONFIG, param);
         // 查询主机
-        HostDO host = hostDAO.selectById(id);
-        // 转换为配置
-        return this.getHostConfig(host);
+        HostDO host = hostDAO.selectById(hostId);
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        OperatorLogs.add(OperatorLogs.NAME, host.getName());
+        // 获取处理策略
+        HostTypeEnum strategy = HostTypeEnum.of(type);
+        GenericsDataModel newConfig = strategy.parse(request.getConfig());
+        // 查询配置
+        HostConfigDO record = hostConfigDAO.selectByHostIdType(hostId, type);
+        if (record == null) {
+            // 新增验证
+            strategy.doValid(null, newConfig);
+            // 新增
+            HostConfigDO entity = HostConfigDO.builder()
+                    .hostId(hostId)
+                    .type(type)
+                    .status(EnableStatus.ENABLED.name())
+                    .config(newConfig.serial())
+                    .build();
+            return hostConfigDAO.insert(entity);
+        } else {
+            // 修改验证
+            GenericsDataModel beforeConfig = strategy.parse(record.getConfig());
+            strategy.doValid(beforeConfig, newConfig);
+            // 修改
+            HostConfigDO entity = HostConfigDO.builder()
+                    .id(record.getId())
+                    .hostId(hostId)
+                    .type(type)
+                    .config(newConfig.serial())
+                    .build();
+            return hostConfigDAO.updateById(entity);
+        }
     }
 
     @Override
-    public <T extends GenericsDataModel> T getHostConfig(HostDO host) {
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
-        HostTypeEnum type = HostTypeEnum.of(host.getType());
-        // 检查主机状态
-        Valid.isTrue(HostStatusEnum.ENABLED.name().equals(host.getStatus()), ErrorMessage.HOST_NOT_ENABLED);
-        // 查询主机配置
-        T config = type.parse(host.getConfig());
+    public <T extends GenericsDataModel> T getHostConfig(Long hostId, String type) {
+        // 查询配置信息
+        HostConfigDO config = hostConfigDAO.selectByHostIdType(hostId, type);
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
-        return (T) config;
+        // 检查配置状态
+        Valid.isTrue(HostStatusEnum.ENABLED.name().equals(config.getStatus()), ErrorMessage.CONFIG_NOT_ENABLED);
+        // 解析配置
+        T model = HostTypeEnum.of(type).parse(config.getConfig());
+        Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
+        return model;
+    }
+
+    @Override
+    public <T extends GenericsDataModel> T getHostConfigView(HostConfigQueryRequest request) {
+        String type = request.getType();
+        HostTypeEnum strategy = HostTypeEnum.of(type);
+        // 查询配置
+        HostConfigDO record = hostConfigDAO.selectByHostIdType(request.getHostId(), type);
+        if (record == null) {
+            // 获取默认值
+            return strategy.toView(strategy.getDefault().serial());
+        } else {
+            return strategy.toView(record.getConfig());
+        }
     }
 
 }

@@ -1,5 +1,6 @@
-import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { HostSpecExtraModel } from './host-extra';
 import type { TableData } from '@arco-design/web-vue';
+import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -10,15 +11,15 @@ export type HostType = 'SSH' | string | undefined;
  * 主机创建请求
  */
 export interface HostCreateRequest {
-  type?: string;
+  types?: Array<string>;
   osType?: string;
+  archType?: string;
   name?: string;
   code?: string;
   address?: string;
-  port?: number;
+  description?: string;
   tags?: Array<number>;
   groupIdList?: Array<number>;
-  description?: string;
 }
 
 /**
@@ -37,14 +38,6 @@ export interface HostUpdateStatusRequest {
 }
 
 /**
- * 主机更新配置请求
- */
-export interface HostUpdateConfigRequest {
-  id: number;
-  config: string;
-}
-
-/**
  * 主机查询请求
  */
 export interface HostQueryRequest extends Pagination, OrderDirection {
@@ -52,12 +45,15 @@ export interface HostQueryRequest extends Pagination, OrderDirection {
   id?: number;
   type?: string;
   osType?: string;
+  archType?: string;
   name?: string;
   code?: string;
   address?: string;
   status?: string;
   tags?: Array<number>;
   queryTag?: boolean;
+  queryGroup?: boolean;
+  querySpec?: boolean;
   description?: string;
 }
 
@@ -66,13 +62,14 @@ export interface HostQueryRequest extends Pagination, OrderDirection {
  */
 export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   id: number;
-  type: string;
-  osType?: string;
+  types: Array<string>;
+  osType: string;
+  archType: string;
   name: string;
   code: string;
   address: string;
-  port: string;
   status: string;
+  description: string;
   createTime: number;
   updateTime: number;
   creator: string;
@@ -82,7 +79,7 @@ export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   color: string;
   tags: Array<{ id: number, name: string }>;
   groupIdList: Array<number>;
-  description: string;
+  spec: HostSpecExtraModel;
 }
 
 /**
@@ -92,22 +89,15 @@ export interface HostQueryResponseExtra {
   editable: boolean;
   loading: boolean;
   modCount: number;
+  extra?: Record<string, any>;
 }
 
 /**
- * 主机 配置查询响应
+ * 主机测试连接请求
  */
-export interface HostConfigQueryResponse extends HostConfigQueryResponseExtra {
+export interface HostTestConnectRequest {
   id: number;
   type: string;
-  config: Record<string, any>;
-}
-
-/**
- * 主机配置拓展
- */
-export interface HostConfigQueryResponseExtra {
-  current: number;
 }
 
 /**
@@ -132,13 +122,6 @@ export function updateHostStatus(request: HostUpdateStatusRequest) {
 }
 
 /**
- * 通过 id 更新主机配置
- */
-export function updateHostConfig(request: HostUpdateConfigRequest) {
-  return axios.put('/asset/host/update-config', request);
-}
-
-/**
  * 查询主机
  */
 export function getHost(id: number) {
@@ -150,13 +133,6 @@ export function getHost(id: number) {
  */
 export function getHostList(type: HostType) {
   return axios.get<Array<HostQueryResponse>>('/asset/host/list', { params: { type } });
-}
-
-/**
- * 通过 id 查询主机配置
- */
-export function getHostConfig(id: number) {
-  return axios.get<HostConfigQueryResponse>('/asset/host/get-config', { params: { id } });
 }
 
 /**
@@ -190,4 +166,11 @@ export function batchDeleteHost(idList: Array<number>) {
       return qs.stringify(params, { arrayFormat: 'comma' });
     }
   });
+}
+
+/**
+ * 测试连接主机
+ */
+export function testHostConnect(request: HostTestConnectRequest) {
+  return axios.post('/asset/host/test-connect', request, { timeout: 60000 });
 }

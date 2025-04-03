@@ -70,7 +70,7 @@
     nextTick(() => {
       logRefs.value.push({
         id: ref.id,
-        el: ref.appenderRef,
+        viewport: ref.viewport,
         opened: false,
         openSearch: ref.openSearch,
       } as LogAppenderView);

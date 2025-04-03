@@ -46,40 +46,33 @@ public enum HostOsTypeEnum {
      */
     WINDOWS(".cmd"),
 
+    /**
+     * darwin
+     */
+    DARWIN(".sh"),
+
     ;
 
     private final String scriptSuffix;
+
+    public boolean is(String type) {
+        if (type == null) {
+            return false;
+        }
+        return type.equalsIgnoreCase(this.name());
+    }
 
     public static HostOsTypeEnum of(String type) {
         if (type == null) {
             return LINUX;
         }
+        type = type.toUpperCase();
         for (HostOsTypeEnum value : values()) {
-            if (value.name().equals(type)) {
+            if (value.name().equals(type) || type.contains(value.name())) {
                 return value;
             }
         }
         return LINUX;
-    }
-
-    /**
-     * 是否为 linux 系统
-     *
-     * @param type type
-     * @return isLinux
-     */
-    public static boolean isLinux(String type) {
-        return LINUX.name().equals(type);
-    }
-
-    /**
-     * 是否为 windows 系统
-     *
-     * @param type type
-     * @return isWindows
-     */
-    public static boolean isWindows(String type) {
-        return WINDOWS.name().equals(type);
     }
 
 }

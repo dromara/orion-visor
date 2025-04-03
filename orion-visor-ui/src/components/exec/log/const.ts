@@ -75,7 +75,7 @@ export interface LogAppenderConfig {
 // appender 视口
 export interface LogAppenderView {
   id: number;
-  el: HTMLElement;
+  viewport: HTMLElement;
   opened: boolean;
   openSearch: () => {};
   terminal: Terminal;

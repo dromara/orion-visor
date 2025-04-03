@@ -50,13 +50,17 @@ public class HostDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "主机类型")
-    @TableField("type")
-    private String type;
+    @Schema(description = "类型")
+    @TableField("types")
+    private String types;
 
     @Schema(description = "系统类型")
     @TableField("os_type")
     private String osType;
+
+    @Schema(description = "系统架构")
+    @TableField("arch_type")
+    private String archType;
 
     @Schema(description = "主机名称")
     @TableField("name")
@@ -70,19 +74,11 @@ public class HostDO extends BaseDO {
     @TableField("address")
     private String address;
 
-    @Schema(description = "主机端口")
-    @TableField("port")
-    private Integer port;
-
     @Schema(description = "主机状态")
     @TableField("status")
     private String status;
 
-    @Schema(description = "主机配置")
-    @TableField("config")
-    private String config;
-
-    @Schema(description = "描述")
+    @Schema(description = "主机描述")
     @TableField("description")
     private String description;
 

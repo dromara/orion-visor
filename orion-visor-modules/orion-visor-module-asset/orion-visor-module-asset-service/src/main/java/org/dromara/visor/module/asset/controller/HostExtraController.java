@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
-import org.dromara.visor.module.asset.entity.request.host.HostExtraQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
 import org.dromara.visor.module.asset.service.HostExtraService;
 import org.springframework.validation.annotation.Validated;
@@ -61,15 +60,8 @@ public class HostExtraController {
     @Operation(summary = "获取主机拓展信息")
     @Parameter(name = "hostId", description = "hostId", required = true)
     @Parameter(name = "item", description = "item", required = true)
-    public Map<String, Object> getHostExtra(@RequestParam("hostId") Long hostId, @RequestParam("item") String item) {
-        return hostExtraService.getHostExtra(hostId, item);
-    }
-
-    @IgnoreLog(IgnoreLogMode.RET)
-    @PostMapping("/list")
-    @Operation(summary = "获取多个主机拓展信息")
-    public Map<String, Map<String, Object>> getHostExtraList(@Validated @RequestBody HostExtraQueryRequest request) {
-        return hostExtraService.getHostExtraList(request);
+    public Map<String, Object> getHostExtraView(@RequestParam("hostId") Long hostId, @RequestParam("item") String item) {
+        return hostExtraService.getHostExtraView(hostId, item);
     }
 
     @PutMapping("/update")

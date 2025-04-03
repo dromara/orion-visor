@@ -62,7 +62,7 @@ public class DataExtraSetDTO implements Serializable {
     @Schema(description = "配置项")
     private String item;
 
-    @NotBlank
+    @NotNull
     @Schema(description = "配置值")
     private String value;
 

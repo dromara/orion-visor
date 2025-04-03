@@ -28,6 +28,7 @@ import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
 import org.dromara.visor.module.asset.handler.host.extra.strategy.HostLabelExtraStrategy;
+import org.dromara.visor.module.asset.handler.host.extra.strategy.HostSpecExtraStrategy;
 import org.dromara.visor.module.asset.handler.host.extra.strategy.HostSshExtraStrategy;
 
 /**
@@ -44,16 +45,23 @@ public enum HostExtraItemEnum implements GenericsStrategyDefinition {
     /**
      * SSH 额外配置
      */
-    SSH(HostSshExtraStrategy.class),
+    SSH(HostSshExtraStrategy.class, true),
 
     /**
      * 标签额外配置
      */
-    LABEL(HostLabelExtraStrategy.class),
+    LABEL(HostLabelExtraStrategy.class, true),
+
+    /**
+     * 规格信息配置
+     */
+    SPEC(HostSpecExtraStrategy.class, false),
 
     ;
 
     private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
+
+    private final boolean userExtra;
 
     public static HostExtraItemEnum of(String item) {
         if (item == null) {

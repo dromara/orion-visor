@@ -6,7 +6,6 @@ import axios from 'axios';
 export interface HostExtraQueryRequest {
   hostId?: number;
   item: string;
-  items?: Array<string>;
 }
 
 /**
@@ -18,18 +17,47 @@ export interface HostExtraUpdateRequest {
   extra: string;
 }
 
+// SSH 额外配置
+export interface HostSshExtraSettingModel {
+  authType: string;
+  username: string;
+  keyId: number;
+  identityId: number;
+}
+
+// 标签额外配置
+export interface HostLabelExtraSettingModel {
+  alias: string;
+  color: string;
+}
+
+// 标签规格模型
+export interface HostSpecExtraModel {
+  sn: string;
+  osName: string;
+  cpuCore: number;
+  cpuFrequency: number;
+  cpuModel: string;
+  memorySize: number;
+  diskSize: number;
+  inBandwidth: number;
+  outBandwidth: number;
+  publicIpAddress: Array<string>;
+  privateIpAddress: Array<string>;
+  chargePerson: string;
+  createdTime: number;
+  expiredTime: number;
+  items: Array<{
+    label: string;
+    value: string;
+  }>;
+}
+
 /**
  * 获取主机拓展信息
  */
 export function getHostExtraItem<T>(params: HostExtraQueryRequest) {
   return axios.get<T>('/asset/host-extra/get', { params });
-}
-
-/**
- * 获取多个主机拓展信息
- */
-export function getHostExtraItemList(request: HostExtraQueryRequest) {
-  return axios.post<Record<string, Record<string, any>>>('/asset/host-extra/list', request);
 }
 
 /**

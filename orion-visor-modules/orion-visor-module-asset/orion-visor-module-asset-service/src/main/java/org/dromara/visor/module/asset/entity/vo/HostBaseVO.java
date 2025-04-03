@@ -29,6 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 主机基本信息 视图响应对象
@@ -50,7 +51,7 @@ public class HostBaseVO implements Serializable {
     private Long id;
 
     @Schema(description = "主机类型")
-    private String type;
+    private List<String> types;
 
     @Schema(description = "主机名称")
     private String name;

@@ -26,7 +26,6 @@ import org.dromara.visor.module.asset.entity.request.asset.AssetAuthorizedDataQu
 import org.dromara.visor.module.asset.entity.vo.AuthorizedHostWrapperVO;
 import org.dromara.visor.module.asset.entity.vo.HostIdentityVO;
 import org.dromara.visor.module.asset.entity.vo.HostKeyVO;
-import org.dromara.visor.module.asset.enums.HostTypeEnum;
 import org.dromara.visor.module.infra.enums.DataPermissionTypeEnum;
 
 import java.util.List;
@@ -64,10 +63,10 @@ public interface AssetAuthorizedDataService {
      * @param type   type
      * @return hostId
      */
-    List<Long> getUserAuthorizedEnabledHostId(Long userId, HostTypeEnum type);
+    List<Long> getUserAuthorizedEnabledHostId(Long userId, String type);
 
     /**
-     * 查询用户已授权的主机
+     * 查询用户已授权并且启用的主机
      *
      * @param userId userId
      * @param type   type

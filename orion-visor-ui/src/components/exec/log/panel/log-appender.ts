@@ -59,7 +59,7 @@ export default class LogAppender implements ILogAppender {
       // 初始化插件
       const addons = this.initAddons(terminal);
       // 打开终端
-      terminal.open(config.el);
+      terminal.open(config.viewport);
       // 自适应
       addons.fit.fit();
       this.appenderViews[config.id] = {

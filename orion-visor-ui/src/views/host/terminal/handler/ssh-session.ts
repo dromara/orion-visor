@@ -65,11 +65,11 @@ export default class SshSession extends BaseSession<TerminalStatus> implements I
     // 注册快捷键
     this.registerShortcut(preference);
     // 注册事件
-    this.registerEvent(domRef.el, preference);
+    this.registerEvent(domRef.viewport, preference);
     // 注册插件
     this.registerAddons(preference);
     // 打开终端
-    this.inst.open(domRef.el);
+    this.inst.open(domRef.viewport);
     // 自适应
     this.addons.fit.fit();
   }

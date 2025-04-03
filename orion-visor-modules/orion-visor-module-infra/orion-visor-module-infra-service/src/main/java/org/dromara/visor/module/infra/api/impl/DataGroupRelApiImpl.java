@@ -108,6 +108,14 @@ public class DataGroupRelApiImpl implements DataGroupRelApi {
     }
 
     @Override
+    public Map<Long, Set<Long>> getGroupRelByRelIdList(DataGroupTypeEnum type, List<Long> relIdList) {
+        return dataGroupRelService.getGroupRelByRelIdList(type.name(), Const.SYSTEM_USER_ID, relIdList)
+                .stream()
+                .collect(Collectors.groupingBy(DataGroupRelDO::getRelId,
+                        Collectors.mapping(DataGroupRelDO::getGroupId, Collectors.toSet())));
+    }
+
+    @Override
     public Integer deleteByRelId(DataGroupTypeEnum type, Long relId) {
         return dataGroupRelService.deleteByRelId(type.name(), Const.SYSTEM_USER_ID, relId);
     }

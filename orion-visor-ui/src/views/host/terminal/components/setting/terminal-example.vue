@@ -1,5 +1,5 @@
 <template>
-  <div class="terminal-example" ref="terminalRef" />
+  <div class="terminal-example" ref="viewport" />
 </template>
 
 <script lang="ts">
@@ -17,7 +17,7 @@
     schema: TerminalThemeSchema | Record<string, any>;
   }>();
 
-  const terminalRef = ref();
+  const viewport = ref();
   const term = ref();
 
   onMounted(() => {
@@ -28,7 +28,7 @@
       fontSize: 15,
       cursorInactiveStyle: 'none',
     });
-    terminal.open(terminalRef.value);
+    terminal.open(viewport.value);
     terminal.write(
       '[1;94m[root[0m@[1;96mOrionServer usr]#[0m\r\n' +
       'dr-xr-xr-x.  2 root root [0m[01;34mbin[0m\r\n' +

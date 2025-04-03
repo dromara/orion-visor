@@ -48,8 +48,8 @@ import org.dromara.visor.module.asset.handler.host.terminal.model.request.Termin
 import org.dromara.visor.module.asset.handler.host.terminal.model.response.TerminalCheckResponse;
 import org.dromara.visor.module.asset.handler.host.terminal.session.ITerminalSession;
 import org.dromara.visor.module.asset.handler.host.terminal.utils.TerminalUtils;
+import org.dromara.visor.module.asset.service.HostConnectService;
 import org.dromara.visor.module.asset.service.TerminalConnectLogService;
-import org.dromara.visor.module.asset.service.TerminalService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -71,7 +71,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
     private HostDAO hostDAO;
 
     @Resource
-    private TerminalService terminalService;
+    private HostConnectService hostConnectService;
 
     @Resource
     private TerminalConnectLogService terminalConnectLogService;
@@ -102,7 +102,7 @@ public class TerminalCheckHandler extends AbstractTerminalHandler<TerminalCheckR
         Exception ex = null;
         try {
             // 获取连接信息
-            connect = terminalService.getTerminalConnectInfo(host, userId);
+            connect = hostConnectService.getSshConnectInfo(host, userId);
             connect.setConnectType(connectType.name());
             // 设置到缓存中
             channel.getAttributes().put(sessionId, connect);

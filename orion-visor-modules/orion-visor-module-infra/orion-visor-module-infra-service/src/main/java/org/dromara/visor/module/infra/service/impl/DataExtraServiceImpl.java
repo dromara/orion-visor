@@ -42,6 +42,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -93,6 +94,27 @@ public class DataExtraServiceImpl implements DataExtraService {
         // 删除缓存
         RedisMaps.delete(DataExtraCacheKeyDefine.DATA_EXTRA.format(request.getUserId(), request.getType(), request.getItem()));
         return insert.getId();
+    }
+
+    @Override
+    public void addExtraItems(List<DataExtraSetRequest> rows) {
+        // 插入
+        List<DataExtraDO> list = rows.stream()
+                .map(s -> {
+                    DataExtraDO row = new DataExtraDO();
+                    row.setUserId(s.getUserId());
+                    row.setRelId(s.getRelId());
+                    row.setType(s.getType());
+                    row.setItem(s.getItem());
+                    row.setValue(s.getValue());
+                    return row;
+                }).collect(Collectors.toList());
+        dataExtraDAO.insertBatch(list);
+        // 删除缓存
+        Set<String> keys = rows.stream()
+                .map(s -> DataExtraCacheKeyDefine.DATA_EXTRA.format(s.getUserId(), s.getType(), s.getItem()))
+                .collect(Collectors.toSet());
+        RedisMaps.delete(keys);
     }
 
     @Override

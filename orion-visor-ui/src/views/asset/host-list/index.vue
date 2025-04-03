@@ -4,24 +4,18 @@
     <host-table v-if="renderTable"
                 ref="table"
                 @open-host-group="() => hostGroup.open()"
-                @open-copy="(e) => modal.openCopy(e.id)"
-                @open-add="() => modal.openAdd()"
-                @open-update="(e) => modal.openUpdate(e.id)"
-                @open-update-config="(e) => hostConfig.open(e)" />
+                @open-copy="(e) => drawer.openCopy(e.id)"
+                @open-add="() => drawer.openAdd()"
+                @open-update="(e) => drawer.openUpdate(e.id)" />
     <!-- 列表-卡片 -->
     <host-card-list v-else
                     ref="card"
                     @open-host-group="() => hostGroup.open()"
-                    @open-copy="(e) => modal.openCopy(e.id)"
-                    @open-add="() => modal.openAdd()"
-                    @open-update="(e) => modal.openUpdate(e.id)"
-                    @open-update-config="(e) => hostConfig.open(e)" />
-    <!-- 添加修改模态框 -->
-    <host-form-modal ref="modal"
-                     @added="reload"
-                     @updated="reload" />
-    <!-- 配置面板 -->
-    <host-config-drawer ref="hostConfig" />
+                    @open-copy="(e) => drawer.openCopy(e.id)"
+                    @open-add="() => drawer.openAdd()"
+                    @open-update="(e) => drawer.openUpdate(e.id)" />
+    <!-- 添加修改抽屉 -->
+    <host-form-drawer ref="drawer" @reload="reload" />
     <!-- 分组配置 -->
     <host-group-drawer ref="hostGroup" />
   </div>
@@ -39,14 +33,12 @@
   import { dictKeys } from './types/const';
   import HostTable from './components/host-table.vue';
   import HostCardList from './components/host-card-list.vue';
-  import HostFormModal from './components/host-form-modal.vue';
-  import HostConfigDrawer from '../host-config/drawer/index.vue';
+  import HostFormDrawer from './components/host-form-drawer.vue';
   import HostGroupDrawer from '../host-group/drawer/index.vue';
 
   const table = ref();
   const card = ref();
-  const modal = ref();
-  const hostConfig = ref();
+  const drawer = ref();
   const hostGroup = ref();
 
   const appStore = useAppStore();
@@ -63,9 +55,8 @@
   };
 
   // 加载字典配置
-  onBeforeMount(async () => {
-    const dictStore = useDictStore();
-    await dictStore.loadKeys(dictKeys);
+  onBeforeMount(() => {
+    useDictStore().loadKeys(dictKeys);
   });
 
 </script>

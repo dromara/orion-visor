@@ -45,7 +45,7 @@ import org.dromara.visor.module.asset.enums.UploadTaskFileStatusEnum;
 import org.dromara.visor.module.asset.handler.host.jsch.SessionStores;
 import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadConfigDTO;
 import org.dromara.visor.module.asset.handler.host.upload.model.FileUploadFileItemDTO;
-import org.dromara.visor.module.asset.service.TerminalService;
+import org.dromara.visor.module.asset.service.HostConnectService;
 import org.dromara.visor.module.asset.utils.SftpUtils;
 
 import java.io.InputStream;
@@ -65,7 +65,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FileUploader implements IFileUploader {
 
-    private static final TerminalService terminalService = SpringHolder.getBean(TerminalService.class);
+    private static final HostConnectService hostConnectService = SpringHolder.getBean(HostConnectService.class);
 
     private static final UploadTaskFileDAO uploadTaskFileDAO = SpringHolder.getBean(UploadTaskFileDAO.class);
 
@@ -136,7 +136,7 @@ public class FileUploader implements IFileUploader {
         log.info("HostFileUploader.initSession start taskId: {}, hostId: {}", taskId, hostId);
         try {
             // 打开会话
-            this.connectInfo = terminalService.getTerminalConnectInfo(hostId, config.getUserId());
+            this.connectInfo = hostConnectService.getSshConnectInfo(hostId, config.getUserId());
             this.sessionStore = SessionStores.openSessionStore(connectInfo);
             this.executor = sessionStore.getSftpExecutor(connectInfo.getFileNameCharset());
             executor.connect();
@@ -161,7 +161,7 @@ public class FileUploader implements IFileUploader {
         if (containsEnv) {
             // 替换占位符
             String username = connectInfo.getUsername();
-            String home = PathUtils.getHomePath(HostOsTypeEnum.isWindows(connectInfo.getOsType()), username);
+            String home = PathUtils.getHomePath(HostOsTypeEnum.WINDOWS.is(connectInfo.getOsType()), username);
             // 替换环境变量路径
             Map<String, String> env = Maps.newMap(4);
             env.put(ExtraFieldConst.USERNAME, username);

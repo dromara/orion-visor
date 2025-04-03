@@ -55,7 +55,7 @@
         {{ dateFormat(new Date(record.updateTime)) }}
       </a-descriptions-item>
       <!-- 执行主机 -->
-      <a-descriptions-item :span="3">
+      <a-descriptions-item :span="2">
         <template #label>
           <span class="host-label">执行主机</span>
         </template>
@@ -67,7 +67,7 @@
         </a-space>
       </a-descriptions-item>
       <!-- 执行命令 -->
-      <a-descriptions-item label="执行命令" :span="3">
+      <a-descriptions-item label="执行命令" :span="2">
         <editor v-model="record.command"
                 language="shell"
                 theme="vs-dark"
@@ -78,7 +78,7 @@
       <!-- 执行参数 -->
       <a-descriptions-item v-if="record.parameterSchema"
                            label="执行参数"
-                           :span="3">
+                           :span="2">
         <editor v-model="record.parameterSchema"
                 language="json"
                 theme="vs-dark"

@@ -36,7 +36,6 @@ import org.dromara.visor.module.asset.entity.request.asset.AssetAuthorizedDataQu
 import org.dromara.visor.module.asset.entity.vo.*;
 import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
-import org.dromara.visor.module.asset.enums.HostTypeEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostLabelExtraModel;
 import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
 import org.dromara.visor.module.asset.service.HostIdentityService;
@@ -128,14 +127,14 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     }
 
     @Override
-    public List<Long> getUserAuthorizedEnabledHostId(Long userId, HostTypeEnum type) {
+    public List<Long> getUserAuthorizedEnabledHostId(Long userId, String type) {
         // 获取有权限的的主机
         List<Long> hostIdList = this.getUserAuthorizedHostId(userId);
         if (hostIdList.isEmpty()) {
             return hostIdList;
         }
         // 获取启用的主机
-        return hostDAO.getHostIdList(hostIdList, type.name(), HostStatusEnum.ENABLED.name());
+        return hostDAO.getHostIdList(hostIdList, type, HostStatusEnum.ENABLED.name());
     }
 
     @SneakyThrows

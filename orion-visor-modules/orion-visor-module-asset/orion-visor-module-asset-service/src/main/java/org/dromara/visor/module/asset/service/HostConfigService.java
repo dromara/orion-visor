@@ -23,7 +23,8 @@
 package org.dromara.visor.module.asset.service;
 
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.module.asset.entity.domain.HostDO;
+import org.dromara.visor.module.asset.entity.request.host.HostConfigQueryRequest;
+import org.dromara.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
 
 /**
  * 主机配置 服务类
@@ -35,21 +36,29 @@ import org.dromara.visor.module.asset.entity.domain.HostDO;
 public interface HostConfigService {
 
     /**
-     * 获取主机配置
+     * 更新主机配置
      *
-     * @param id  id
-     * @param <T> T
-     * @return host
+     * @param request request
+     * @return effect
      */
-    <T extends GenericsDataModel> T getHostConfig(Long id);
+    Integer updateHostConfig(HostConfigUpdateRequest request);
 
     /**
      * 获取主机配置
      *
-     * @param host host
-     * @param <T>  T
-     * @return host
+     * @param hostId hostId
+     * @param type   type
+     * @param <T>    T
+     * @return config
      */
-    <T extends GenericsDataModel> T getHostConfig(HostDO host);
+    <T extends GenericsDataModel> T getHostConfig(Long hostId, String type);
+
+    /**
+     * 查询主机配置
+     *
+     * @param request request
+     * @return config
+     */
+    <T extends GenericsDataModel> T getHostConfigView(HostConfigQueryRequest request);
 
 }

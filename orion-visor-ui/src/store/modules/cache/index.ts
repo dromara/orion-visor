@@ -6,14 +6,16 @@ import type { HostType } from '@/api/asset/host';
 import { getHostList } from '@/api/asset/host';
 import type { PreferenceType } from '@/api/user/preference';
 import { getPreference } from '@/api/user/preference';
+import type { HostGroupQueryResponse } from '@/api/asset/host-group';
+import { getHostGroupTree } from '@/api/asset/host-group';
 import usePermission from '@/hooks/permission';
 import { defineStore } from 'pinia';
+import { flatNodes } from '@/utils/tree';
 import { getUserList } from '@/api/user/user';
 import { getRoleList } from '@/api/user/role';
 import { getDictKeyList } from '@/api/system/dict-key';
 import { getHostKeyList } from '@/api/asset/host-key';
 import { getHostIdentityList } from '@/api/asset/host-identity';
-import { getHostGroupTree } from '@/api/asset/host-group';
 import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHost, getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
 import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
@@ -96,6 +98,14 @@ export default defineStore('cache', {
     // 获取主机分组树
     async loadHostGroupTree(force = false) {
       return await this.load('hostGroups', getHostGroupTree, ['asset:host-group:update', 'asset:host:query'], force);
+    },
+
+    // 获取主机分组列表
+    async loadHostGroupList(force = false) {
+      const arr: Array<HostGroupQueryResponse> = [];
+      // 展开节点
+      flatNodes(await this.loadHostGroupTree(force), arr);
+      return arr;
     },
 
     // 获取主机列表

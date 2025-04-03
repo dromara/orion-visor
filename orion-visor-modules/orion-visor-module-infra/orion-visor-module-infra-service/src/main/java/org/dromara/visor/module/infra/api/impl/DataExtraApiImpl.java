@@ -80,6 +80,18 @@ public class DataExtraApiImpl implements DataExtraApi {
     }
 
     @Override
+    public void addExtraItems(List<DataExtraSetDTO> rows, DataExtraTypeEnum type) {
+        for (DataExtraSetDTO row : rows) {
+            Valid.valid(row);
+        }
+        List<DataExtraSetRequest> extras = rows.stream()
+                .map(DataExtraProviderConvert.MAPPER::to)
+                .peek(s -> s.setType(type.name()))
+                .collect(Collectors.toList());
+        dataExtraService.addExtraItems(extras);
+    }
+
+    @Override
     public Integer updateExtraValue(Long id, String value) {
         return dataExtraService.updateExtraValue(id, value);
     }

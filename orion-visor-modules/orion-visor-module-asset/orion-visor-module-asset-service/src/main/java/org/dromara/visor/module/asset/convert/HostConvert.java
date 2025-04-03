@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.asset.convert;
 
+import org.dromara.visor.common.mapstruct.StringConversion;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
 import org.dromara.visor.module.asset.entity.request.host.HostCreateRequest;
@@ -41,7 +42,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023-9-11 14:16
  */
-@Mapper
+@Mapper(uses = StringConversion.class)
 public interface HostConvert {
 
     HostConvert MAPPER = Mappers.getMapper(HostConvert.class);

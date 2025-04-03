@@ -78,7 +78,7 @@ services:
     build:
       context: ./docker/e2e
     environment:
-      SERVER: http://service:80
+      SERVER: http://service:9200
     depends_on:
       service:
         condition: service_healthy

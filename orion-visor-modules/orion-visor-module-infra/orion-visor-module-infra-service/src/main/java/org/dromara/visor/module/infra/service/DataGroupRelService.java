@@ -103,6 +103,16 @@ public interface DataGroupRelService {
     List<DataGroupRelDO> getGroupRelByRelId(String type, Long userId, Long relId);
 
     /**
+     * 通过 relId 查询 groupRel
+     *
+     * @param type      type
+     * @param userId    userId
+     * @param relIdList relIdList
+     * @return rows
+     */
+    List<DataGroupRelDO> getGroupRelByRelIdList(String type, Long userId, List<Long> relIdList);
+
+    /**
      * 删除数据分组关联
      *
      * @param type   type
