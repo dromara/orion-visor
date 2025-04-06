@@ -48,6 +48,8 @@ public class HostOperatorType extends InitializingOperatorTypes {
 
     public static final String UPDATE_CONFIG = "host:update-config";
 
+    public static final String UPDATE_SPEC = "host:update-spec";
+
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
@@ -56,6 +58,7 @@ public class HostOperatorType extends InitializingOperatorTypes {
                 new OperatorType(H, DELETE, "删除主机 <sb>${count}</sb> 条"),
                 new OperatorType(M, UPDATE_STATUS, "修改主机状态 <sb>${name}</sb> - <sb>${status}</sb>"),
                 new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE_SPEC, "修改主机规格信息 <sb>${name}</sb>"),
         };
     }
 

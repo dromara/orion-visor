@@ -349,6 +349,7 @@ INSERT INTO `dict_value` VALUES (443, 21, 'terminalFontFamily', 'Cascadia Mono',
 INSERT INTO `dict_value` VALUES (448, 65, 'hostArchType', 'AMD64', 'amd64', '{}', 10, '2025-03-26 16:33:07', '2025-03-26 16:33:07', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (449, 65, 'hostArchType', 'ARM64', 'arm64', '{}', 20, '2025-03-26 16:33:23', '2025-03-26 16:33:23', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (452, 38, 'hostOsType', 'DRAWIN', 'Drawin', '{}', 30, '2024-04-16 22:19:25', '2025-03-26 22:46:23', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (458, 2, 'operatorLogType', 'host:update-spec', '修改主机规格', '{}', 60, '2025-04-06 12:02:13', '2025-04-06 12:02:13', 'admin', 'admin', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);

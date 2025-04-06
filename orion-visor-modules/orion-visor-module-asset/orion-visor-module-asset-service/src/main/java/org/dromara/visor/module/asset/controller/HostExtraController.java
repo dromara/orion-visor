@@ -26,10 +26,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
+import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
 import org.dromara.visor.module.asset.service.HostExtraService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +70,8 @@ public class HostExtraController {
     @PutMapping("/update")
     @Operation(summary = "修改主机拓展信息")
     public Integer updateHostExtra(@Validated @RequestBody HostExtraUpdateRequest request) {
+        HostExtraItemEnum item = Valid.valid(HostExtraItemEnum::of, request.getItem());
+        Valid.isTrue(item.isUserExtra(), ErrorMessage.PARAM_ERROR);
         return hostExtraService.updateHostExtra(request);
     }
 

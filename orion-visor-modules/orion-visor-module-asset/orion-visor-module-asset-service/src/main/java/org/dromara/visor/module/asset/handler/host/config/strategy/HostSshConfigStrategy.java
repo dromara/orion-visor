@@ -122,14 +122,12 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
      * @param after  after
      */
     private void checkEncryptPassword(HostSshConfigModel before, HostSshConfigModel after) {
-        // 非密码认证则直接赋值
-        if (!HostSshAuthTypeEnum.PASSWORD.name().equals(after.getAuthType())) {
-            after.setPassword(before.getPassword());
-            return;
-        }
-        // 使用原始密码
-        if (!Booleans.isTrue(after.getUseNewPassword())) {
-            after.setPassword(before.getPassword());
+        // 非密码认证/使用原始密码则直接赋值
+        if (!HostSshAuthTypeEnum.PASSWORD.name().equals(after.getAuthType())
+                || !Booleans.isTrue(after.getUseNewPassword())) {
+            if (before != null) {
+                after.setPassword(before.getPassword());
+            }
             return;
         }
         // 检查新密码

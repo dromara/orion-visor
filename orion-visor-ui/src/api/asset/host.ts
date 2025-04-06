@@ -1,4 +1,4 @@
-import type { HostSpecExtraModel } from './host-extra';
+import type { HostSpecExtraModel, HostExtraUpdateRequest } from './host-extra';
 import type { TableData } from '@arco-design/web-vue';
 import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
 import axios from 'axios';
@@ -119,6 +119,13 @@ export function updateHost(request: HostUpdateRequest) {
  */
 export function updateHostStatus(request: HostUpdateStatusRequest) {
   return axios.put('/asset/host/update-status', request);
+}
+
+/**
+ * 修改主机规格信息
+ */
+export function updateHostSpec(request: Partial<HostExtraUpdateRequest>) {
+  return axios.put('/asset/host/update-spec', request);
 }
 
 /**
