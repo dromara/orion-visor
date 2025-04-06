@@ -252,10 +252,11 @@
 <script lang="ts" setup>
   import type { HostSpecExtraModel } from '@/api/asset/host-extra';
   import { onMounted, ref } from 'vue';
+  import { updateHostSpec } from '@/api/asset/host';
+  import { getHostExtraItem } from '@/api/asset/host-extra';
   import { addSuffix, dateFormat } from '@/utils';
   import { useToggle } from '@vueuse/core';
   import useLoading from '@/hooks/loading';
-  import { getHostExtraItem, updateHostExtra } from '@/api/asset/host-extra';
 
   const props = defineProps<{
     hostId: number;
@@ -297,9 +298,8 @@
   const saveSpec = async () => {
     setLoading(true);
     try {
-      await updateHostExtra({
+      await updateHostSpec({
         hostId: props.hostId,
-        item: 'SPEC',
         extra: JSON.stringify(formModel.value)
       });
       toggleEditing();

@@ -42,7 +42,7 @@
 <script lang="ts" setup>
   import type { ISshSession, TerminalPanelTabItem } from '../../types/define';
   import { onMounted, onUnmounted, ref } from 'vue';
-  import { useDictStore, useTerminalStore } from '@/store';
+  import { useTerminalStore } from '@/store';
   import SshHeader from './ssh-header.vue';
   import ShellEditorModal from '@/components/view/shell-editor/modal/index.vue';
   import SshContextMenu from './ssh-context-menu.vue';
@@ -53,7 +53,6 @@
     tab: TerminalPanelTabItem;
   }>();
 
-  const { getDictValue } = useDictStore();
   const { preference, sessionManager } = useTerminalStore();
 
   const editorModal = ref();

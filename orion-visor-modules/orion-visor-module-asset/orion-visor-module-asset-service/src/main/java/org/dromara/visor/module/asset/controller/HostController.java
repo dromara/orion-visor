@@ -93,6 +93,15 @@ public class HostController {
         return hostService.updateHostStatus(request);
     }
 
+    @DemoDisableApi
+    @OperatorLog(HostOperatorType.UPDATE_SPEC)
+    @PutMapping("/update-spec")
+    @Operation(summary = "修改主机规格信息")
+    @PreAuthorize("@ss.hasPermission('asset:host:update')")
+    public Integer updateHostSpec(@Validated @RequestBody HostExtraUpdateRequest request) {
+        return hostService.updateHostSpec(request);
+    }
+
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/get")
     @Operation(summary = "通过 id 查询主机")

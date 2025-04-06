@@ -44,11 +44,9 @@ import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.define.cache.HostCacheKeyDefine;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
-import org.dromara.visor.module.asset.entity.request.host.HostCreateRequest;
-import org.dromara.visor.module.asset.entity.request.host.HostQueryRequest;
-import org.dromara.visor.module.asset.entity.request.host.HostUpdateRequest;
-import org.dromara.visor.module.asset.entity.request.host.HostUpdateStatusRequest;
+import org.dromara.visor.module.asset.entity.request.host.*;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
+import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 import org.dromara.visor.module.asset.service.ExecJobHostService;
@@ -190,6 +188,19 @@ public class HostServiceImpl implements HostService {
         // 删除缓存
         this.clearCache();
         return effect;
+    }
+
+    @Override
+    public Integer updateHostSpec(HostExtraUpdateRequest request) {
+        log.info("HostService-updateHostSpec request: {}", JSON.toJSONString(request));
+        // 查询主机
+        HostDO record = hostDAO.selectById(request.getHostId());
+        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        // 设置日志参数
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
+        // 更新
+        request.setItem(HostExtraItemEnum.SPEC.name());
+        return hostExtraService.updateHostExtra(request);
     }
 
     @Override

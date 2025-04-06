@@ -49,7 +49,6 @@ public class HostExtraUpdateRequest {
     @Schema(description = "主机id")
     private Long hostId;
 
-    @NotNull
     @Schema(description = "配置项")
     private String item;
 

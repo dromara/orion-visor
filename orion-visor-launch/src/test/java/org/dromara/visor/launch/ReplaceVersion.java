@@ -39,9 +39,9 @@ import java.util.function.Function;
  */
 public class ReplaceVersion {
 
-    private static final String TARGET_VERSION = "2.3.6";
+    private static final String TARGET_VERSION = "2.3.7";
 
-    private static final String REPLACE_VERSION = "2.3.7";
+    private static final String REPLACE_VERSION = "2.3.8";
 
     private static final String PATH = new File("").getAbsolutePath();
 
