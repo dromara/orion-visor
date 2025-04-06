@@ -1,6 +1,6 @@
 #/bin/bash
 set -e
-version=2.3.7
+version=2.3.8
 docker push registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-adminer:${version}
 docker push registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:${version}
 docker push registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:${version}
