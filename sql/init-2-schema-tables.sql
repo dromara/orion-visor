@@ -414,14 +414,13 @@ DROP TABLE IF EXISTS `host`;
 CREATE TABLE `host`
 (
     `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `type`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '主机类型',
+    `types`       varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机类型',
     `os_type`     char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '系统类型',
+    `arch_type`   char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '系统架构',
     `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机名称',
     `code`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机编码',
     `address`     varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机地址',
-    `port`        int(0)                                                        NULL DEFAULT NULL COMMENT '主机端口',
     `status`      char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '主机状态',
-    `config`      json                                                          NULL COMMENT '主机配置',
     `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '主机描述',
     `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
@@ -429,11 +428,35 @@ CREATE TABLE `host`
     `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
     `deleted`     tinyint(1)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `idx_type_address` (`type`, `address`) USING BTREE
+    INDEX `idx_name` (`name`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '主机'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for host_config
+-- ----------------------------
+DROP TABLE IF EXISTS `host_config`;
+CREATE TABLE `host_config`
+(
+    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `host_id`     bigint(0)                                                    NULL DEFAULT NULL COMMENT '主机id',
+    `type`        char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '配置类型',
+    `status`      char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '配置状态',
+    `config`      json                                                         NULL COMMENT '配置值',
+    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(1)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `host_type_idx` (`host_id`, `type`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '主机配置表'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
