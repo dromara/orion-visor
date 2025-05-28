@@ -1,5 +1,6 @@
 import type { Router } from 'vue-router';
 import { useMenuStore } from '@/store';
+import { getRouteTitle } from '@/router';
 import { NOT_FOUND_ROUTER_NAME, WHITE_ROUTER_LIST } from '../constants';
 import NProgress from 'nprogress';
 import usePermission from '@/hooks/permission';
@@ -30,10 +31,7 @@ export default function setupPermissionGuard(router: Router) {
       next({ name: NOT_FOUND_ROUTER_NAME });
     }
     // 修改页面标题
-    const locale = to.meta?.locale;
-    if (locale) {
-      document.title = locale;
-    }
+    document.title = getRouteTitle(to);
     NProgress.done();
   });
 }

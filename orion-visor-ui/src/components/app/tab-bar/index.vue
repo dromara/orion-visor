@@ -18,11 +18,15 @@
 
 <script lang="ts" setup>
   import type { RouteLocationNormalized } from 'vue-router';
+  import { useRouter } from 'vue-router';
   import { computed, onUnmounted, ref, watch } from 'vue';
-  import { routerToTag } from '@/router/constants';
-  import { listenerRouteChange, removeRouteListener, } from '@/utils/route-listener';
+  import { getRouteTag, getRouteTitle } from '@/router';
+  import { listenerRouteChange, removeRouteListener } from '@/utils/route-listener';
   import { useAppStore, useTabBarStore } from '@/store';
+  import qs from 'query-string';
   import TabItem from './tab-item.vue';
+
+  const router = useRouter();
 
   const appStore = useAppStore();
   const tabBarStore = useTabBarStore();
@@ -35,27 +39,33 @@
     return appStore.navbar ? 60 : 0;
   });
 
-  watch(
-    () => appStore.navbar,
-    () => {
-      affixRef.value.updatePosition();
-    }
-  );
+  // 监听修改位置
+  watch(() => appStore.navbar, () => {
+    affixRef.value.updatePosition();
+  });
 
   // 监听路由变化
   listenerRouteChange((route: RouteLocationNormalized) => {
-    if (
-      !route.meta.noAffix &&
-      !tagList.value.some((tag) => tag.path === route.path)
-    ) {
-      // 固定并且没有此 tab 则添加
-      tabBarStore.addTab(routerToTag(route), route.meta?.ignoreCache as unknown as boolean);
+    // 不固定
+    if (route.meta.noAffix) {
+      return;
+    }
+    const tag = tagList.value.find((tag) => tag.path === route.path);
+    if (tag) {
+      // 找到 更新信息
+      tag.fullPath = route.fullPath;
+      tag.query = qs.parseUrl(route.fullPath).query;
+      tag.title = getRouteTitle(route);
+    } else {
+      // 未找到 添加标签
+      tabBarStore.addTab(getRouteTag(route), route.meta?.ignoreCache as unknown as boolean);
     }
   }, true);
 
   onUnmounted(() => {
     removeRouteListener();
   });
+
 </script>
 
 <style lang="less" scoped>

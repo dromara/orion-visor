@@ -1,4 +1,5 @@
-import type { RouteLocationRaw } from 'vue-router';
+import type { RouteLocationNormalized, RouteLocationRaw } from 'vue-router';
+import type { TagProps } from '@/store/modules/tab-bar/types';
 import { createRouter, createWebHistory } from 'vue-router';
 import { appRoutes } from './routes';
 import { openWindow } from '@/utils';
@@ -35,6 +36,29 @@ export const openNewRoute = (route: RouteLocationRaw) => {
     // 浏览器 则直接打开
     openWindow(href);
   }
+};
+
+// route 转 tag
+export const getRouteTag = (route: RouteLocationNormalized): TagProps => {
+  const { name, meta, path, fullPath, query } = route;
+  return {
+    title: getRouteTitle(route),
+    name: String(name),
+    path,
+    fullPath,
+    query,
+    ignoreCache: meta.ignoreCache,
+  };
+};
+
+// 获取 router title
+export const getRouteTitle = (route: RouteLocationNormalized) => {
+  const { meta } = route;
+  // 如果 meta.localeTemplate 则根据路由生成
+  if (meta.localeTemplate) {
+    return meta?.localeTemplate(route) || meta.locale || '';
+  }
+  return meta.locale || '';
 };
 
 export default router;

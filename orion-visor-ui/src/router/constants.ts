@@ -1,6 +1,3 @@
-import type { RouteLocationNormalized } from 'vue-router';
-import type { TagProps } from '@/store/modules/tab-bar/types';
-
 export const LOGIN_ROUTE_NAME = 'login';
 
 export const REDIRECT_ROUTE_NAME = 'redirect';
@@ -36,18 +33,3 @@ export const STATUS_ROUTER_LIST = [
   { name: NOT_FOUND_ROUTER_NAME, children: [] },
   { name: FORBIDDEN_ROUTER_NAME, children: [] },
 ];
-
-/**
- * router 转 tag
- */
-export const routerToTag = (route: RouteLocationNormalized): TagProps => {
-  const { name, meta, path, fullPath, query } = route;
-  return {
-    title: meta.locale || String(name),
-    name: String(name),
-    path,
-    fullPath,
-    query,
-    ignoreCache: meta.ignoreCache,
-  };
-};

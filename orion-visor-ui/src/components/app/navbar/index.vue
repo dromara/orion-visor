@@ -215,8 +215,8 @@
   import { triggerMouseEvent } from '@/utils/event';
   import { openAppSettingKey, toggleDrawerMenuKey } from '@/types/symbol';
   import { preferenceTipsKey } from './const';
-  import { REDIRECT_ROUTE_NAME, routerToTag } from '@/router/constants';
-  import { openNewRoute } from '@/router';
+  import { getRouteTag, openNewRoute } from '@/router';
+  import { REDIRECT_ROUTE_NAME } from '@/router/constants';
   import { checkHasUnreadMessage } from '@/api/system/message';
   import SystemMenuTree from '@/components/system/menu/tree/index.vue';
   import MessageBox from '@/components/system/message-box/index.vue';
@@ -291,13 +291,13 @@
   const reloadCurrent = async () => {
     if (appStore.tabBar) {
       // 重新加载 tab
-      const itemData = routerToTag(route);
-      tabBarStore.deleteCache(itemData);
+      const tag = getRouteTag(route);
+      tabBarStore.deleteCache(tag);
       await router.push({
         name: REDIRECT_ROUTE_NAME,
         params: { path: route.fullPath },
       });
-      tabBarStore.addCache(itemData.name);
+      tabBarStore.addCache(tag.name);
     } else {
       // 刷新页面
       router.go(0);
