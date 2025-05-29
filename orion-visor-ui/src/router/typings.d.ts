@@ -1,3 +1,4 @@
+import type { RouteLocationNormalized } from 'vue-router';
 import 'vue-router';
 
 /**
@@ -21,5 +22,7 @@ declare module 'vue-router' {
     newWindow?: boolean;
     // 是否活跃
     activeMenu?: string;
+    // 名称模板
+    localeTemplate?: (key: RouteLocationNormalized) => string;
   }
 }
