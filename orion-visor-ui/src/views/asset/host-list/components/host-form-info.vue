@@ -5,28 +5,6 @@
             label-align="right"
             :auto-label-width="true"
             :rules="hostFormRules">
-      <!-- 主机协议 -->
-      <a-form-item field="types" label="主机协议">
-        <a-select v-model="formModel.types"
-                  placeholder="请选择支持的主机协议"
-                  :options="toOptions(hostTypeKey)"
-                  multiple
-                  allow-clear />
-      </a-form-item>
-      <!-- 系统类型 -->
-      <a-form-item field="osType" label="系统类型">
-        <a-select v-model="formModel.osType"
-                  placeholder="请选择系统类型"
-                  :options="toOptions(hostOsTypeKey)"
-                  allow-clear />
-      </a-form-item>
-      <!-- 系统架构 -->
-      <a-form-item field="archType" label="系统架构">
-        <a-select v-model="formModel.archType"
-                  placeholder="请选择系统架构"
-                  :options="toOptions(hostArchTypeKey)"
-                  allow-clear />
-      </a-form-item>
       <!-- 主机名称 -->
       <a-form-item field="name" label="主机名称">
         <a-input v-model="formModel.name"
@@ -44,6 +22,28 @@
         <a-input v-model="formModel.address"
                  placeholder="请输入主机地址"
                  allow-clear />
+      </a-form-item>
+      <!-- 系统类型 -->
+      <a-form-item field="osType" label="系统类型">
+        <a-select v-model="formModel.osType"
+                  placeholder="请选择系统类型"
+                  :options="toOptions(hostOsTypeKey)"
+                  allow-clear />
+      </a-form-item>
+      <!-- 系统架构 -->
+      <a-form-item field="archType" label="系统架构">
+        <a-select v-model="formModel.archType"
+                  placeholder="请选择系统架构"
+                  :options="toOptions(hostArchTypeKey)"
+                  allow-clear />
+      </a-form-item>
+      <!-- 主机协议 -->
+      <a-form-item field="types" label="主机协议">
+        <a-select v-model="formModel.types"
+                  placeholder="请选择支持的主机协议"
+                  :options="toOptions(hostTypeKey)"
+                  multiple
+                  allow-clear />
       </a-form-item>
       <!-- 主机分组 -->
       <a-form-item field="groupIdList" label="主机分组">
@@ -90,7 +90,7 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import { hostFormRules } from '../types/form.rules';
-  import { createHost, getHost, updateHost } from '@/api/asset/host';
+  import { createHost, getHost, updateHost, copyHost } from '@/api/asset/host';
   import { Message } from '@arco-design/web-vue';
   import { pick } from 'lodash';
   import { tagColor, hostTypeKey, hostOsTypeKey, HostOsType, hostArchTypeKey } from '../types/const';
@@ -118,6 +118,7 @@
     };
   };
 
+  const isCopy = ref(false);
   const formRef = ref();
   const formModel = ref<HostUpdateRequest>({});
 
@@ -135,6 +136,7 @@
   // 打开复制
   const openCopy = async (id: number) => {
     renderForm({ ...defaultForm() });
+    isCopy.value = true;
     await fetchHostRender(id);
   };
 
@@ -188,7 +190,12 @@
       if (error) {
         return;
       }
-      if (!formModel.value.id) {
+      if (isCopy.value) {
+        // 复制
+        const { data } = await copyHost(formModel.value);
+        Message.success('复制成功');
+        emits('updated', data);
+      } else if (!formModel.value.id) {
         // 新增
         const { data } = await createHost(formModel.value);
         Message.success('创建成功');

@@ -21,7 +21,7 @@
           <host-form-info ref="infoRef"
                           class="form-panel"
                           @change-type="(ts: string[]) => types = ts"
-                          @updated="updateHostInfo" />
+                          @updated="onUpdateHostInfo" />
         </a-tab-pane>
         <!-- 规格配置 -->
         <a-tab-pane v-permission="['asset:host:update']"
@@ -31,7 +31,7 @@
           <host-form-spec v-if="hostId"
                           class="form-panel"
                           :hostId="hostId"
-                          @updated="incrUpdatedCount" />
+                          @updated="onUpdateHostSpec" />
         </a-tab-pane>
         <!-- SSH 配置 -->
         <a-tab-pane v-permission="['asset:host:update-config']"
@@ -59,12 +59,10 @@
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { HostType } from '../types/const';
-  import { useCounter } from '@vueuse/core';
   import HostFormInfo from './host-form-info.vue';
-  import HostFormSsh from './host-form-ssh.vue';
   import HostFormSpec from './host-form-spec.vue';
+  import HostFormSsh from './host-form-ssh.vue';
 
-  const { count: updatedCount, inc: incrUpdatedCount, reset: resetCounter } = useCounter();
   const { visible, setVisible } = useVisible();
 
   const activeTab = ref<string>('info');
@@ -72,6 +70,7 @@
   const hostId = ref<number>();
   const types = ref<string[]>([]);
   const infoRef = ref();
+  const hostViewUpdated = ref(false);
 
   const emits = defineEmits(['reload']);
 
@@ -93,7 +92,7 @@
 
   // 打开复制
   const openCopy = (id: number) => {
-    init('复制主机', id);
+    init('复制主机', undefined);
     nextTick(() => {
       infoRef.value.openCopy(id);
     });
@@ -104,9 +103,9 @@
     title.value = _title;
     activeTab.value = 'info';
     hostId.value = id;
+    hostViewUpdated.value = false;
     types.value = [];
     checkHostGroup();
-    resetCounter();
     setVisible(true);
   };
 
@@ -123,14 +122,20 @@
   defineExpose({ openAdd, openUpdate, openCopy });
 
   // 更新主机信息
-  const updateHostInfo = (id: number) => {
+  const onUpdateHostInfo = (id: number) => {
     hostId.value = id;
-    incrUpdatedCount();
+    hostViewUpdated.value = true;
+  };
+
+  // 更新主机信息
+  const onUpdateHostSpec = () => {
+    hostViewUpdated.value = true;
   };
 
   // 处理关闭
   const handleClose = () => {
-    if (updatedCount.value) {
+    // 修改主机视图信息后刷新列表
+    if (hostViewUpdated.value) {
       emits('reload');
     }
   };

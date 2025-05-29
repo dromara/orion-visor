@@ -1,4 +1,4 @@
-import type { HostSpecExtraModel, HostExtraUpdateRequest } from './host-extra';
+import type { HostExtraUpdateRequest, HostSpecExtraModel } from './host-extra';
 import type { TableData } from '@arco-design/web-vue';
 import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
 import axios from 'axios';
@@ -112,6 +112,13 @@ export function createHost(request: HostCreateRequest) {
  */
 export function updateHost(request: HostUpdateRequest) {
   return axios.put('/asset/host/update', request);
+}
+
+/**
+ * 复制主机
+ */
+export function copyHost(request: HostUpdateRequest) {
+  return axios.post('/asset/host/copy', request);
 }
 
 /**
