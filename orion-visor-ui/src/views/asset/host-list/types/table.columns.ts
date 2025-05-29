@@ -14,7 +14,7 @@ const columns = [
     title: '主机信息',
     dataIndex: 'hostInfo',
     slotName: 'hostInfo',
-    minWidth: 344,
+    width: 288,
     align: 'left',
     fixed: 'left',
     default: true,
@@ -22,7 +22,7 @@ const columns = [
     title: '主机规格',
     dataIndex: 'hostSpec',
     slotName: 'hostSpec',
-    width: 188,
+    width: 198,
     align: 'left',
     default: true,
   }, {
