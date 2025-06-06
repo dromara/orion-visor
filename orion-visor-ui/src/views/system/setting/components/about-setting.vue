@@ -32,7 +32,11 @@
         <b v-if="app.version && repo.tagName && ('v' + app.version) !== repo.tagName"
            class="span-green ml8">新版本已发布, 请及时升级版本</b>
       </a-descriptions-item>
-      <!-- 当前后端版本 -->
+      <!-- 最近更新时间 -->
+      <a-descriptions-item label="最近更新时间">
+        <span>{{ repo.releaseTime }}</span>
+      </a-descriptions-item>
+      <!-- 最新更新日志 -->
       <a-descriptions-item label="最新更新日志">
         <a-textarea v-model="repo.body"
                     :auto-size="{ minRows: 3, maxRows: 16 }"
@@ -51,22 +55,23 @@
 
 <script lang="ts" setup>
   import type { AppInfoResponse, AppReleaseResponse } from '@/api/system/setting';
-  import { onMounted, reactive } from 'vue';
-  import { getAppLatestRelease, getSystemAppInfo } from '@/api/system/setting';
+  import { onMounted, ref } from 'vue';
   import { copy } from '@/hooks/copy';
   import useLoading from '@/hooks/loading';
+  import { getAppLatestRelease, getSystemAppInfo } from '@/api/system/setting';
 
   const { loading, setLoading } = useLoading();
 
   const webVersion = import.meta.env.VITE_APP_VERSION;
 
-  const app = reactive<AppInfoResponse>({
+  const app = ref<AppInfoResponse>({
     version: '',
     uuid: '',
   });
 
-  const repo = reactive<AppReleaseResponse>({
+  const repo = ref<AppReleaseResponse>({
     tagName: '',
+    releaseTime: '',
     body: '',
   });
 
@@ -75,8 +80,7 @@
     setLoading(true);
     try {
       const { data } = await getSystemAppInfo();
-      app.version = data.version;
-      app.uuid = data.uuid;
+      app.value = data;
     } catch (e) {
     } finally {
       setLoading(false);
@@ -87,8 +91,7 @@
   onMounted(async () => {
     try {
       const { data } = await getAppLatestRelease();
-      repo.tagName = data.tagName;
-      repo.body = data.body;
+      repo.value = data;
     } catch (e) {
     }
   });
