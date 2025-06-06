@@ -75,4 +75,12 @@ public interface HostExtraService {
      */
     Integer updateHostExtra(HostExtraUpdateRequest request);
 
+    /**
+     * 复制主机拓展信息
+     *
+     * @param originId originId
+     * @param newId    newId
+     */
+    void copyHostExtra(Long originId, Long newId);
+
 }

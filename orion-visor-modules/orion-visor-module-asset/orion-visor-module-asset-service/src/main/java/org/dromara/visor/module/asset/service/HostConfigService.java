@@ -26,6 +26,8 @@ import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.module.asset.entity.request.host.HostConfigQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
 
+import java.util.List;
+
 /**
  * 主机配置 服务类
  *
@@ -42,6 +44,15 @@ public interface HostConfigService {
      * @return effect
      */
     Integer updateHostConfig(HostConfigUpdateRequest request);
+
+    /**
+     * 复制主机配置
+     *
+     * @param originId originId
+     * @param newId    newId
+     * @param types    types
+     */
+    void copyHostConfig(Long originId, Long newId, List<String> types);
 
     /**
      * 获取主机配置
