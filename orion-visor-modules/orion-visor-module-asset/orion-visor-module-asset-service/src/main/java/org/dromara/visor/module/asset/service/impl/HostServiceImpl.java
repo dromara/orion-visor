@@ -49,10 +49,7 @@ import org.dromara.visor.module.asset.entity.vo.HostVO;
 import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
-import org.dromara.visor.module.asset.service.ExecJobHostService;
-import org.dromara.visor.module.asset.service.ExecTemplateHostService;
-import org.dromara.visor.module.asset.service.HostExtraService;
-import org.dromara.visor.module.asset.service.HostService;
+import org.dromara.visor.module.asset.service.*;
 import org.dromara.visor.module.infra.api.DataExtraApi;
 import org.dromara.visor.module.infra.api.DataGroupRelApi;
 import org.dromara.visor.module.infra.api.FavoriteApi;
@@ -90,6 +87,9 @@ public class HostServiceImpl implements HostService {
 
     @Resource
     private HostConfigDAO hostConfigDAO;
+
+    @Resource
+    private HostConfigService hostConfigService;
 
     @Resource
     private HostExtraService hostExtraService;
@@ -136,6 +136,23 @@ public class HostServiceImpl implements HostService {
         // 删除缓存
         this.clearCache();
         return id;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long copyHost(Long originId, HostUpdateRequest request) {
+        log.info("HostService-copyHost originId: {}, request: {}", originId, JSON.toJSONString(request));
+        // 查询原始主机
+        HostDO originHost = hostDAO.selectById(originId);
+        Valid.notNull(originHost, ErrorMessage.HOST_ABSENT);
+        // 创建主机
+        Long newId = SpringHolder.getBean(HostService.class)
+                .createHost(HostConvert.MAPPER.toCreate(request));
+        // 复制主机额外信息
+        hostExtraService.copyHostExtra(originId, newId);
+        // 复制主机配置信息
+        hostConfigService.copyHostConfig(originId, newId, request.getTypes());
+        return newId;
     }
 
     @Override

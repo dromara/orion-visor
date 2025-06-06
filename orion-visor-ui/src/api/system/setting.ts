@@ -23,6 +23,7 @@ export interface AppInfoResponse {
  */
 export interface AppReleaseResponse {
   tagName: string;
+  releaseTime: string;
   body: string;
 }
 

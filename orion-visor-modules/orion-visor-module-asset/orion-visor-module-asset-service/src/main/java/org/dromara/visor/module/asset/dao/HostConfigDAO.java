@@ -58,6 +58,20 @@ public interface HostConfigDAO extends IMapper<HostConfigDO> {
     }
 
     /**
+     * 通过 hostId 查询
+     *
+     * @param hostId hostId
+     * @return config
+     */
+    default List<HostConfigDO> selectByHostId(Long hostId) {
+        return this.of()
+                .createWrapper()
+                .eq(HostConfigDO::getHostId, hostId)
+                .then()
+                .list();
+    }
+
+    /**
      * 更新配置状态
      *
      * @param hostId hostId

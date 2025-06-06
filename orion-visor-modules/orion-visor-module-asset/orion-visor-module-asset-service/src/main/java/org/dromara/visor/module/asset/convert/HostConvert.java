@@ -61,6 +61,8 @@ public interface HostConvert {
 
     HostBaseVO toBase(HostDO domain);
 
+    HostCreateRequest toCreate(HostUpdateRequest request);
+
     List<HostVO> toList(List<HostDO> domain);
 
     List<HostBaseVO> toBaseList(List<HostDO> domain);

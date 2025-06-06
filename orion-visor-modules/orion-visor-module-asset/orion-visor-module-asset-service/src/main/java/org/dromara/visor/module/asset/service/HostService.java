@@ -48,6 +48,15 @@ public interface HostService {
     Long createHost(HostCreateRequest request);
 
     /**
+     * 复制主机
+     *
+     * @param originId originId
+     * @param request  request
+     * @return id
+     */
+    Long copyHost(Long originId, HostUpdateRequest request);
+
+    /**
      * 通过 id 更新主机
      *
      * @param request request

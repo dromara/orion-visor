@@ -85,6 +85,17 @@ public class HostController {
     }
 
     @DemoDisableApi
+    @OperatorLog(HostOperatorType.CREATE)
+    @PostMapping("/copy")
+    @Operation(summary = "复制主机")
+    @PreAuthorize("@ss.hasPermission('asset:host:create')")
+    public Long copyHost(@Validated @RequestBody HostUpdateRequest request) {
+        Long id = request.getId();
+        request.setId(null);
+        return hostService.copyHost(id, request);
+    }
+
+    @DemoDisableApi
     @OperatorLog(HostOperatorType.UPDATE_STATUS)
     @PutMapping("/update-status")
     @Operation(summary = "更新主机状态")

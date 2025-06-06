@@ -123,6 +123,29 @@ public class HostExtraServiceImpl implements HostExtraService {
         return dataExtraApi.updateExtraValue(beforeExtraItem.getId(), newExtra.serial());
     }
 
+    @Override
+    public void copyHostExtra(Long originId, Long newId) {
+        // 查询原始配置
+        DataExtraQueryDTO query = DataExtraQueryDTO.builder()
+                .userId(Const.SYSTEM_USER_ID)
+                .relId(originId)
+                .build();
+        List<DataExtraDTO> items = dataExtraApi.getExtraItems(query, DataExtraTypeEnum.HOST);
+        if (items.isEmpty()) {
+            return;
+        }
+        // 插入新配置
+        List<DataExtraSetDTO> newItems = items.stream()
+                .map(s -> DataExtraSetDTO.builder()
+                        .userId(Const.SYSTEM_USER_ID)
+                        .relId(newId)
+                        .item(s.getItem())
+                        .value(s.getValue())
+                        .build())
+                .collect(Collectors.toList());
+        dataExtraApi.addExtraItems(newItems, DataExtraTypeEnum.HOST);
+    }
+
     /**
      * 检查配置项并且转为视图 (不存在则初始化默认值)
      *

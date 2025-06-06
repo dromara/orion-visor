@@ -22,6 +22,8 @@
  */
 package org.dromara.visor.module.asset.service.impl;
 
+import cn.orionsec.kit.lang.function.Functions;
+import cn.orionsec.kit.lang.utils.Strings;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
@@ -42,6 +44,10 @@ import org.dromara.visor.module.asset.service.HostConfigService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 主机配置 服务实现类
@@ -100,6 +106,34 @@ public class HostConfigServiceImpl implements HostConfigService {
                     .build();
             return hostConfigDAO.updateById(entity);
         }
+    }
+
+    @Override
+    public void copyHostConfig(Long originId, Long newId, List<String> types) {
+        // 查询原始主机配置
+        Map<String, String> originHostConfigMap = hostConfigDAO.selectByHostId(originId)
+                .stream()
+                .collect(Collectors.toMap(HostConfigDO::getType,
+                        HostConfigDO::getConfig,
+                        Functions.right()));
+        // 新增
+        List<HostConfigDO> records = new ArrayList<>();
+        for (String type : types) {
+            // 获取原始配置
+            String configValue = originHostConfigMap.get(type);
+            if (Strings.isBlank(configValue)) {
+                // 获取默认值
+                configValue = HostTypeEnum.of(type).getDefault().serial();
+            }
+            HostConfigDO newConfig = HostConfigDO.builder()
+                    .hostId(newId)
+                    .type(type)
+                    .status(EnableStatus.ENABLED.name())
+                    .config(configValue)
+                    .build();
+            records.add(newConfig);
+        }
+        hostConfigDAO.insertBatch(records);
     }
 
     @Override
