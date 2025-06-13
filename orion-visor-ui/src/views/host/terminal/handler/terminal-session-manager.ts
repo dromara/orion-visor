@@ -30,7 +30,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
   constructor() {
     this.sessions = {};
     this.channel = new TerminalChannel(this);
-    this.dispatchResizeFn = useDebounceFn(this.dispatchResize).bind(this);
+    this.dispatchResizeFn = useDebounceFn(this.dispatchResize, 300).bind(this);
   }
 
   // 打开 ssh 会话
