@@ -233,9 +233,7 @@
                  :wrap="true">
           <template v-for="groupId in record.groupIdList"
                     :key="groupId">
-            <a-tag color="green">
-              {{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}
-            </a-tag>
+            <a-tag>{{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}</a-tag>
           </template>
         </a-space>
       </template>
@@ -255,6 +253,41 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper row-handle-wrapper">
+          <!-- 单协议连接 -->
+          <a-button v-if="record.types?.length === 1"
+                    type="text"
+                    size="mini"
+                    v-permission="['asset:terminal:access']"
+                    @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: record.types[0] } })">
+            连接
+          </a-button>
+          <!-- 多协议连接 -->
+          <a-popover v-else-if="(record.types?.length || 0) > 1"
+                     v-permission="['asset:terminal:access']"
+                     :title="undefined"
+                     :content-style="{ padding: '8px' }">
+            <a-button type="text" size="mini">
+              连接
+            </a-button>
+            <template #content>
+              <a-space>
+                <!-- SSH -->
+                <a-button v-if="record.types.includes(HostType.SSH.value)"
+                          type="text"
+                          size="mini"
+                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: record.types[0] } })">
+                  SSH
+                </a-button>
+                <!-- RDP -->
+                <a-button v-if="record.types.includes(HostType.RDP.value)"
+                          type="text"
+                          size="mini"
+                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'RDP' } })">
+                  RDP
+                </a-button>
+              </a-space>
+            </template>
+          </a-popover>
           <!-- 修改 -->
           <a-button type="text"
                     size="mini"
@@ -292,18 +325,6 @@
               <a-doption v-permission="['asset:host:create']"
                          @click="emits('openCopy', record)">
                 <span class="more-doption normal">复制</span>
-              </a-doption>
-              <!-- SSH -->
-              <a-doption v-if="record.types.includes(HostType.SSH.value)"
-                         v-permission="['asset:terminal:access']"
-                         @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
-                <span class="more-doption normal">SSH</span>
-              </a-doption>
-              <!-- SFTP -->
-              <a-doption v-if="record.types.includes(HostType.SSH.value)"
-                         v-permission="['asset:terminal:access']"
-                         @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
-                <span class="more-doption normal">SFTP</span>
               </a-doption>
             </template>
           </a-dropdown>

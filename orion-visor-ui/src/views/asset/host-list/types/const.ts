@@ -20,6 +20,10 @@ export const HostType = {
     value: 'SSH',
     port: 22,
   },
+  RDP: {
+    value: 'RDP',
+    port: 3389,
+  },
 };
 
 // 系统类型
