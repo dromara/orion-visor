@@ -117,8 +117,9 @@ public class TerminalConnectLogController {
     @PutMapping("/force-offline")
     @Operation(summary = "强制断开终端连接")
     @PreAuthorize("@ss.hasAnyPermission('asset:terminal-connect-log:management:force-offline', 'asset:terminal-connect-session:management:force-offline')")
-    public Integer forceOffline(@Validated(Id.class) @RequestBody TerminalConnectLogQueryRequest request) {
-        return terminalConnectLogService.forceOffline(request);
+    public Boolean forceOffline(@Validated(Id.class) @RequestBody TerminalConnectLogQueryRequest request) {
+        terminalConnectLogService.forceOffline(request);
+        return true;
     }
 
 }

@@ -236,7 +236,7 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
     }
 
     @Override
-    public Integer forceOffline(TerminalConnectLogQueryRequest request) {
+    public void forceOffline(TerminalConnectLogQueryRequest request) {
         Long id = request.getId();
         // 查询数据是否存在
         TerminalConnectLogDO record = terminalConnectLogDAO.selectById(id);
@@ -251,8 +251,12 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
             // 关闭会话
             session.forceOffline();
         }
+        // 再次查询数据
+        record = terminalConnectLogDAO.selectById(id);
         // 更新状态
-        return this.updateStatus(record, TerminalConnectStatusEnum.FORCE_OFFLINE, null);
+        if (!record.getStatus().equals(TerminalConnectStatusEnum.FORCE_OFFLINE.name())) {
+            this.updateStatus(record, TerminalConnectStatusEnum.FORCE_OFFLINE, null);
+        }
     }
 
     @Override

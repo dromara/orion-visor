@@ -116,9 +116,8 @@ public interface TerminalConnectLogService {
      * 强制断开终端连接
      *
      * @param request request
-     * @return effect
      */
-    Integer forceOffline(TerminalConnectLogQueryRequest request);
+    void forceOffline(TerminalConnectLogQueryRequest request);
 
     /**
      * 构建查询 wrapper
