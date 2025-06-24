@@ -100,7 +100,7 @@
   // // 监听同步
   watch(rightActionItems, (v) => {
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RIGHT_MENU_SETTING, v, true);
+    updateTerminalPreference(TerminalPreferenceItem.RIGHT_MENU_SETTING, JSON.stringify(v), true);
   }, { deep: true });
 
   // 实际操作项
