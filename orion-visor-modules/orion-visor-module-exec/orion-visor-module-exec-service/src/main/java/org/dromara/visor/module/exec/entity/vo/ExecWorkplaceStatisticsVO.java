@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.exec.entity.vo;
 
-import org.dromara.visor.common.entity.chart.LineSingleChartData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.common.entity.chart.LineSingleChartData;
 
 import java.util.List;
 

@@ -22,6 +22,8 @@
  */
 package org.dromara.visor.module.exec.handler.exec.job;
 
+import cn.orionsec.kit.spring.SpringHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.FieldConst;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.module.exec.dao.ExecJobDAO;
@@ -29,8 +31,6 @@ import org.dromara.visor.module.exec.entity.domain.ExecJobDO;
 import org.dromara.visor.module.exec.entity.request.exec.ExecJobTriggerRequest;
 import org.dromara.visor.module.exec.enums.ExecModeEnum;
 import org.dromara.visor.module.exec.service.ExecJobService;
-import cn.orionsec.kit.spring.SpringHolder;
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 

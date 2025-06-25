@@ -22,10 +22,9 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.sender;
 
+import com.alibaba.fastjson.JSON;
 import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.module.terminal.handler.terminal.enums.OutputProtocolEnum;
-import org.dromara.visor.module.terminal.handler.terminal.model.response.*;
-import com.alibaba.fastjson.JSON;
 import org.dromara.visor.module.terminal.handler.terminal.model.response.*;
 import org.springframework.web.socket.WebSocketSession;
 

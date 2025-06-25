@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.module.exec.handler.exec.command.handler;
 
-import org.dromara.visor.module.exec.enums.ExecHostStatusEnum;
 import cn.orionsec.kit.lang.able.SafeCloseable;
+import org.dromara.visor.module.exec.enums.ExecHostStatusEnum;
 
 /**
  * 命令执行器定义

@@ -22,7 +22,6 @@
  */
 package org.dromara.visor.module.exec.entity.domain;
 
-import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,6 +30,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
 import java.util.Date;
 

@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.exec.entity.request.exec;
 
-import org.dromara.visor.common.entity.BaseQueryRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 

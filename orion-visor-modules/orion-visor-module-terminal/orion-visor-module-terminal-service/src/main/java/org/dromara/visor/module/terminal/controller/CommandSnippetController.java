@@ -22,6 +22,10 @@
  */
 package org.dromara.visor.module.terminal.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
@@ -29,10 +33,6 @@ import org.dromara.visor.module.terminal.entity.request.snippet.CommandSnippetCr
 import org.dromara.visor.module.terminal.entity.request.snippet.CommandSnippetUpdateRequest;
 import org.dromara.visor.module.terminal.entity.vo.CommandSnippetWrapperVO;
 import org.dromara.visor.module.terminal.service.CommandSnippetService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

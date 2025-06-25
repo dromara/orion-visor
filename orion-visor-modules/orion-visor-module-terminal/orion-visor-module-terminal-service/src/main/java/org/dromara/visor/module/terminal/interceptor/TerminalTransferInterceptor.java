@@ -22,6 +22,9 @@
  */
 package org.dromara.visor.module.terminal.interceptor;
 
+import cn.orionsec.kit.lang.define.collect.MutableHashMap;
+import cn.orionsec.kit.lang.utils.Urls;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.FieldConst;
 import org.dromara.visor.common.trace.TraceIdHolder;
 import org.dromara.visor.common.utils.Requests;
@@ -31,9 +34,6 @@ import org.dromara.visor.module.terminal.handler.terminal.enums.SessionTypeEnum;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelExtra;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.service.TerminalService;
-import cn.orionsec.kit.lang.define.collect.MutableHashMap;
-import cn.orionsec.kit.lang.utils.Urls;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;

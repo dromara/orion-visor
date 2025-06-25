@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.terminal.define.message;
 
+import lombok.Getter;
 import org.dromara.visor.module.infra.define.SystemMessageDefine;
 import org.dromara.visor.module.infra.enums.MessageClassifyEnum;
-import lombok.Getter;
 
 /**
  * 上传任务 系统消息定义

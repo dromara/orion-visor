@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.terminal.handler.transfer.handler;
 
+import cn.orionsec.kit.lang.able.SafeCloseable;
 import org.dromara.visor.module.terminal.handler.transfer.model.TransferOperatorRequest;
 import org.dromara.visor.module.terminal.handler.transfer.session.ITransferSession;
-import cn.orionsec.kit.lang.able.SafeCloseable;
 
 /**
  * 传输处理器定义

@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.terminal.entity.request.path;
 
-import org.dromara.visor.common.validator.group.Id;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.common.validator.group.Id;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

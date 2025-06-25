@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.terminal.entity.vo;
 
-import org.dromara.visor.module.terminal.entity.dto.TerminalConnectLogExtraDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.module.terminal.entity.dto.TerminalConnectLogExtraDTO;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.exec.entity.request.exec;
 
-import org.dromara.visor.framework.desensitize.core.annotation.Desensitize;
-import org.dromara.visor.framework.desensitize.core.annotation.DesensitizeObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.dromara.visor.framework.desensitize.core.annotation.Desensitize;
+import org.dromara.visor.framework.desensitize.core.annotation.DesensitizeObject;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;

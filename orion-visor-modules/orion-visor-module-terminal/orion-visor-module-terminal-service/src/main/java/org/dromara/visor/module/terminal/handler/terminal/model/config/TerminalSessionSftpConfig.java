@@ -22,13 +22,13 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.model.config;
 
-import org.dromara.visor.common.session.config.SshConnectConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.dromara.visor.common.session.config.SshConnectConfig;
 
 /**
  * 终端会话配置 SFTP

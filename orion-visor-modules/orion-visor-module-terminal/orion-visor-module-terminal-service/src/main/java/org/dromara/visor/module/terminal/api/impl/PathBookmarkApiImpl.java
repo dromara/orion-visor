@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.terminal.api.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.terminal.api.PathBookmarkApi;
 import org.dromara.visor.module.terminal.service.PathBookmarkService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

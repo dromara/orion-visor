@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.module.terminal.handler.transfer.session;
 
-import org.dromara.visor.module.terminal.handler.transfer.model.TransferOperatorRequest;
 import cn.orionsec.kit.lang.able.SafeCloseable;
+import org.dromara.visor.module.terminal.handler.transfer.model.TransferOperatorRequest;
 
 /**
  * 主机传输会话定义

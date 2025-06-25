@@ -22,6 +22,9 @@
  */
 package org.dromara.visor.module.terminal.service.impl;
 
+import cn.orionsec.kit.lang.utils.Booleans;
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Valid;
@@ -41,9 +44,6 @@ import org.dromara.visor.module.terminal.entity.request.path.PathBookmarkGroupUp
 import org.dromara.visor.module.terminal.entity.vo.PathBookmarkGroupVO;
 import org.dromara.visor.module.terminal.service.PathBookmarkGroupService;
 import org.dromara.visor.module.terminal.service.PathBookmarkService;
-import cn.orionsec.kit.lang.utils.Booleans;
-import com.alibaba.fastjson.JSON;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -22,13 +22,13 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.handler;
 
+import cn.orionsec.kit.lang.utils.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.request.SftpDownloadFlatDirectoryRequest;
 import org.dromara.visor.module.terminal.handler.terminal.model.response.SftpFileVO;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ISftpTerminalSender;
 import org.dromara.visor.module.terminal.handler.terminal.session.ISftpSession;
-import cn.orionsec.kit.lang.utils.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

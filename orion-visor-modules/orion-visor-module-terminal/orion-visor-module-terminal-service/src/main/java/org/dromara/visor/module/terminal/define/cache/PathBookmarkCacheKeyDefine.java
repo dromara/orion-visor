@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.terminal.define.cache;
 
-import org.dromara.visor.module.terminal.entity.dto.PathBookmarkCacheDTO;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
+import org.dromara.visor.module.terminal.entity.dto.PathBookmarkCacheDTO;
 
 import java.util.concurrent.TimeUnit;
 

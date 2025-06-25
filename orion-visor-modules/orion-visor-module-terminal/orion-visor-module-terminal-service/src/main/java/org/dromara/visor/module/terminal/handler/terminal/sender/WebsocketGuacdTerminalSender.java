@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.sender;
 
+import org.apache.guacamole.protocol.GuacamoleInstruction;
 import org.dromara.visor.module.terminal.handler.terminal.enums.OutputProtocolEnum;
 import org.dromara.visor.module.terminal.handler.terminal.model.response.GuacdInstructionResponse;
-import org.apache.guacamole.protocol.GuacamoleInstruction;
 import org.springframework.web.socket.WebSocketSession;
 
 /**

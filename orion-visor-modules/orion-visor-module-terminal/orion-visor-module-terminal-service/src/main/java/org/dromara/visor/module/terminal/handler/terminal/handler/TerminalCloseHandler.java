@@ -22,11 +22,11 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalBasePayload;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ITerminalSender;
 import org.dromara.visor.module.terminal.handler.terminal.session.ITerminalSession;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**

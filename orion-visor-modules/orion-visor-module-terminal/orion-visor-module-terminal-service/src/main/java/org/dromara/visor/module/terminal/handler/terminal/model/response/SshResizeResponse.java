@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.model.response;
 
-import org.dromara.visor.module.terminal.handler.terminal.model.TerminalBasePayload;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.dromara.visor.module.terminal.handler.terminal.model.TerminalBasePayload;
 
 /**
  * ssh 重置大小响应

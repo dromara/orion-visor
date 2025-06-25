@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.terminal.entity.request.terminal;
 
-import org.dromara.visor.common.entity.BaseQueryRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
 import java.util.Date;

@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.terminal.dao;
 
-import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
-import org.dromara.visor.module.terminal.entity.domain.PathBookmarkDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.ibatis.annotations.Mapper;
+import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
+import org.dromara.visor.module.terminal.entity.domain.PathBookmarkDO;
 
 import java.util.List;
 

@@ -22,9 +22,9 @@
  */
 package org.dromara.visor.module.terminal.api.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.terminal.api.CommandSnippetApi;
 import org.dromara.visor.module.terminal.service.CommandSnippetService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

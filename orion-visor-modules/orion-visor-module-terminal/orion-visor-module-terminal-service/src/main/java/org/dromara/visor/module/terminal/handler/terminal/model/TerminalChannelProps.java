@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.terminal.handler.terminal.model;
 
-import org.dromara.visor.common.entity.RequestIdentity;
 import cn.orionsec.kit.lang.define.collect.MutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.common.entity.RequestIdentity;
 
 /**
  * 终端连接属性

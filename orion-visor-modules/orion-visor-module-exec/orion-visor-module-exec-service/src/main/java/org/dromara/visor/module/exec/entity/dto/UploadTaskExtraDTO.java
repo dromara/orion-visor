@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.exec.entity.dto;
 
-import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
 
 import java.util.List;
 

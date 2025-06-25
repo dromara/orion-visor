@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.terminal.utils;
 
-import org.dromara.visor.module.terminal.handler.terminal.model.response.SftpFileVO;
 import cn.orionsec.kit.lang.utils.io.FileType;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.net.host.sftp.SftpFile;
+import org.dromara.visor.module.terminal.handler.terminal.model.response.SftpFileVO;
 
 import java.util.Optional;
 

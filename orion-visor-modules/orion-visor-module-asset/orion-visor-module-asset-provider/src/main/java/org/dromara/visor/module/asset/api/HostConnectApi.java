@@ -87,5 +87,4 @@ public interface HostConnectApi {
      */
     RdpConnectConfig getRdpConnectConfig(HostDTO host, Long userId);
 
-
 }

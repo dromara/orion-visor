@@ -22,12 +22,12 @@
  */
 package org.dromara.visor.module.terminal.handler.transfer.model;
 
-import org.dromara.visor.common.session.config.SshConnectConfig;
 import cn.orionsec.kit.net.host.SessionStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.common.session.config.SshConnectConfig;
 
 /**
  * 终端连接信息

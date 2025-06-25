@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.terminal.entity.request.terminal;
 
-import org.dromara.visor.common.entity.DataClearRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.visor.common.entity.DataClearRequest;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

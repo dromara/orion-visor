@@ -22,6 +22,11 @@
  */
 package org.dromara.visor.module.terminal.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
@@ -39,11 +44,6 @@ import org.dromara.visor.module.terminal.entity.vo.CommandSnippetVO;
 import org.dromara.visor.module.terminal.entity.vo.CommandSnippetWrapperVO;
 import org.dromara.visor.module.terminal.service.CommandSnippetGroupService;
 import org.dromara.visor.module.terminal.service.CommandSnippetService;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

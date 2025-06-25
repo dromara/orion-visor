@@ -22,10 +22,10 @@
  */
 package org.dromara.visor.module.exec.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.exec.dao.ExecJobHostDAO;
 import org.dromara.visor.module.exec.entity.domain.ExecJobHostDO;
 import org.dromara.visor.module.exec.service.ExecJobHostService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
