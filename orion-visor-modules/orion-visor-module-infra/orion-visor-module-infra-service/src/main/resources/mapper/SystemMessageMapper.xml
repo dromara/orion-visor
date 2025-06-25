@@ -18,9 +18,10 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
+    <!-- 数量询映射结果 -->
     <resultMap id="CountResultMap" type="org.dromara.visor.module.infra.entity.po.SystemMessageCountPO">
         <result column="classify" property="classify"/>
-        <result column="count" property="count"/>
+        <result column="total_count" property="count"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -30,7 +31,7 @@
 
     <!-- 查询消息数量 -->
     <select id="selectSystemMessageCount" resultMap="CountResultMap">
-        SELECT classify, count(1) count
+        SELECT classify, count(1) total_count
         FROM system_message
         WHERE deleted = 0
         AND receiver_id = #{receiverId}

@@ -55,9 +55,7 @@ public interface SystemUserConvert {
 
     SystemUserVO to(SystemUserDO domain);
 
-    SystemUserVO to(UserInfoDTO user);
-
-    List<SystemUserVO> to(List<SystemUserDO> list);
+    SystemUserVO to(UserInfoDTO dto);
 
     LoginUser toLoginUser(UserLoginRequest request);
 
@@ -66,5 +64,7 @@ public interface SystemUserConvert {
     UserInfoDTO toUserInfo(SystemUserDO domain);
 
     SystemUserBaseVO toBase(SystemUserDO user);
+
+    List<SystemUserVO> to(List<SystemUserDO> list);
 
 }

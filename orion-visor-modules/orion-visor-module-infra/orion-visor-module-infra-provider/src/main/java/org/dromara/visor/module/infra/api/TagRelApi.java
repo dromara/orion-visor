@@ -26,6 +26,7 @@ import org.dromara.visor.module.infra.entity.dto.tag.TagDTO;
 import org.dromara.visor.module.infra.enums.TagTypeEnum;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -45,6 +46,14 @@ public interface TagRelApi {
      * @param tagIdList tagIdList
      */
     void addTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList);
+
+    /**
+     * 创建标签引用 只新增
+     *
+     * @param type         type
+     * @param relTagIdList relTagIdList
+     */
+    void addTagRel(TagTypeEnum type, Map<Long, List<Long>> relTagIdList);
 
     /**
      * 设置标签引用 先删除后新增

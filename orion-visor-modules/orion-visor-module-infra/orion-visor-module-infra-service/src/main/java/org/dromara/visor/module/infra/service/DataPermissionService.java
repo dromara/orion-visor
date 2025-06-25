@@ -36,13 +36,6 @@ import java.util.List;
 public interface DataPermissionService {
 
     /**
-     * 添加数据权限
-     *
-     * @param request request
-     */
-    void addDataPermission(DataPermissionUpdateRequest request);
-
-    /**
      * 更新数据权限
      *
      * @param request request
@@ -58,6 +51,24 @@ public interface DataPermissionService {
      * @return effect
      */
     boolean hasPermission(String type, Long userId, Long relId);
+
+    /**
+     * 通过 relId 查询 userId
+     *
+     * @param type  type
+     * @param relId relId
+     * @return relId
+     */
+    List<Long> getUserIdListByRelId(String type, Long relId);
+
+    /**
+     * 通过 relId 查询 roleId
+     *
+     * @param type  type
+     * @param relId relId
+     * @return relId
+     */
+    List<Long> getRoleIdListByRelId(String type, Long relId);
 
     /**
      * 通过 userId 查询数据权限 (不包含角色 不走缓存)

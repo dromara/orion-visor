@@ -162,6 +162,13 @@ public class SystemUserController {
         return systemUserService.getSystemUserPage(request);
     }
 
+    @PostMapping("/count")
+    @Operation(summary = "查询系统用户数量")
+    @PreAuthorize("@ss.hasPermission('infra:system-user:query')")
+    public Long getSystemUserCount(@Validated @RequestBody SystemUserQueryRequest request) {
+        return systemUserService.getSystemUserCount(request);
+    }
+
     @DemoDisableApi
     @OperatorLog(SystemUserOperatorType.DELETE)
     @DeleteMapping("/delete")

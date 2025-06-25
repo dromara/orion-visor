@@ -5,14 +5,14 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.infra.entity.domain.FavoriteDO">
         <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="rel_id" property="relId"/>
+        <result column="type" property="type"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="creator" property="creator"/>
         <result column="updater" property="updater"/>
         <result column="deleted" property="deleted"/>
-        <result column="user_id" property="userId"/>
-        <result column="rel_id" property="relId"/>
-        <result column="type" property="type"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

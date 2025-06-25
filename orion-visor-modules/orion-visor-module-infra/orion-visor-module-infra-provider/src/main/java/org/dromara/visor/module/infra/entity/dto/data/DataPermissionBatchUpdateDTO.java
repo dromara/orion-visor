@@ -20,20 +20,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.dao;
+package org.dromara.visor.module.infra.entity.dto.data;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
-import org.dromara.visor.module.infra.entity.domain.DataPermissionDO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * 数据权限 Mapper 接口
+ * 数据权限 更新请求业务对象
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023-11-21 10:32
  */
-@Mapper
-public interface DataPermissionDAO extends IMapper<DataPermissionDO> {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "DataPermissionBatchUpdateDTO", description = "数据权限 批量更新请求业务对象")
+public class DataPermissionBatchUpdateDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "用户id")
+    private List<Long> userIdList;
+
+    @Schema(description = "角色id")
+    private List<Long> roleIdList;
+
+    @Schema(description = "引用id")
+    private List<Long> relIdList;
 
 }

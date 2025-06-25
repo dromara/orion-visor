@@ -40,8 +40,6 @@ import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
-import org.dromara.visor.module.asset.api.CommandSnippetApi;
-import org.dromara.visor.module.asset.api.PathBookmarkApi;
 import org.dromara.visor.module.infra.convert.SystemRoleConvert;
 import org.dromara.visor.module.infra.convert.SystemUserConvert;
 import org.dromara.visor.module.infra.dao.OperatorLogDAO;
@@ -59,6 +57,8 @@ import org.dromara.visor.module.infra.enums.UpdatePasswordReasonEnum;
 import org.dromara.visor.module.infra.enums.UpdatePasswordStatusEnum;
 import org.dromara.visor.module.infra.enums.UserStatusEnum;
 import org.dromara.visor.module.infra.service.*;
+import org.dromara.visor.module.terminal.api.CommandSnippetApi;
+import org.dromara.visor.module.terminal.api.PathBookmarkApi;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -388,12 +388,12 @@ public class SystemUserServiceImpl implements SystemUserService {
     public LambdaQueryWrapper<SystemUserDO> buildQueryWrapper(SystemUserQueryRequest request) {
         return systemUserDAO.wrapper()
                 .eq(SystemUserDO::getId, request.getId())
-                .eq(SystemUserDO::getStatus, request.getStatus())
                 .like(SystemUserDO::getUsername, request.getUsername())
                 .like(SystemUserDO::getNickname, request.getNickname())
                 .like(SystemUserDO::getMobile, request.getMobile())
                 .like(SystemUserDO::getEmail, request.getEmail())
-                .like(SystemUserDO::getDescription, request.getDescription());
+                .like(SystemUserDO::getDescription, request.getDescription())
+                .eq(SystemUserDO::getStatus, request.getStatus());
     }
 
 }

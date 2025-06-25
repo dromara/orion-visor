@@ -67,6 +67,18 @@ public interface OperatorLogDAO extends IMapper<OperatorLogDO> {
     }
 
     /**
+     * 查询操作日志类型结果数量
+     *
+     * @param type      type
+     * @param startTime startTime
+     * @param endTime   endTime
+     * @return rows
+     */
+    List<OperatorLogCountPO> selectOperatorLogTypeResultCount(@Param("type") String type,
+                                                              @Param("startTime") Date startTime,
+                                                              @Param("endTime") Date endTime);
+
+    /**
      * 查询操作日志数量
      *
      * @param userId    userId

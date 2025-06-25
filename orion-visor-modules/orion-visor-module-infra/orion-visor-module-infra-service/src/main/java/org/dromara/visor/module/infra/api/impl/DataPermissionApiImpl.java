@@ -22,10 +22,11 @@
  */
 package org.dromara.visor.module.infra.api.impl;
 
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.DataPermissionApi;
-import org.dromara.visor.module.infra.convert.DataPermissionProviderConvert;
+import org.dromara.visor.module.infra.entity.dto.data.DataPermissionBatchUpdateDTO;
 import org.dromara.visor.module.infra.entity.dto.data.DataPermissionUpdateDTO;
 import org.dromara.visor.module.infra.entity.request.data.DataPermissionUpdateRequest;
 import org.dromara.visor.module.infra.enums.DataPermissionTypeEnum;
@@ -50,24 +51,38 @@ public class DataPermissionApiImpl implements DataPermissionApi {
     private DataPermissionService dataPermissionService;
 
     @Override
-    public void addDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto) {
+    public void updateDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto) {
+        Long userId = dto.getUserId();
+        Long roleId = dto.getRoleId();
         // 校验参数
-        List<Long> relIdList = dto.getRelIdList();
-        Valid.isTrue(dto.getUserId() != null || dto.getRoleId() != null);
-        Valid.notEmpty(relIdList);
-        // 添加权限
-        DataPermissionUpdateRequest request = DataPermissionProviderConvert.MAPPER.toRequest(dto);
-        request.setType(type.name());
-        dataPermissionService.addDataPermission(request);
+        Valid.isTrue(userId != null || roleId != null);
+        // 修改权限
+        DataPermissionUpdateRequest request = DataPermissionUpdateRequest.builder()
+                .type(type.name())
+                .relIdList(dto.getRelIdList())
+                .build();
+        if (userId != null) {
+            request.setUserIdList(Lists.singleton(userId));
+        }
+        if (roleId != null) {
+            request.setRoleIdList(Lists.singleton(roleId));
+        }
+        dataPermissionService.updateDataPermission(request);
     }
 
     @Override
-    public void updateDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto) {
+    public void updateDataPermission(DataPermissionTypeEnum type, DataPermissionBatchUpdateDTO dto) {
+        List<Long> userIdList = dto.getUserIdList();
+        List<Long> roleIdList = dto.getRoleIdList();
         // 校验参数
-        Valid.isTrue(dto.getUserId() != null || dto.getRoleId() != null);
+        Valid.isTrue(Lists.isNotEmpty(userIdList) || Lists.isNotEmpty(roleIdList));
         // 修改权限
-        DataPermissionUpdateRequest request = DataPermissionProviderConvert.MAPPER.toRequest(dto);
-        request.setType(type.name());
+        DataPermissionUpdateRequest request = DataPermissionUpdateRequest.builder()
+                .type(type.name())
+                .relIdList(dto.getRelIdList())
+                .userIdList(userIdList)
+                .roleIdList(roleIdList)
+                .build();
         dataPermissionService.updateDataPermission(request);
     }
 
@@ -75,6 +90,16 @@ public class DataPermissionApiImpl implements DataPermissionApi {
     public boolean hasPermission(DataPermissionTypeEnum type, Long userId, Long relId) {
         Valid.allNotNull(userId, relId);
         return dataPermissionService.hasPermission(type.name(), userId, relId);
+    }
+
+    @Override
+    public List<Long> getUserIdListByRelId(DataPermissionTypeEnum type, Long relId) {
+        return dataPermissionService.getUserIdListByRelId(type.name(), relId);
+    }
+
+    @Override
+    public List<Long> getRoleIdListByRelId(DataPermissionTypeEnum type, Long relId) {
+        return dataPermissionService.getRoleIdListByRelId(type.name(), relId);
     }
 
     @Override

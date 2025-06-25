@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 
 /**
- * 系统偏好模型
+ * 系统偏好模型 未配置的使用前端默认配置
  *
  * @author Jiahang Li
  * @version 1.0.0

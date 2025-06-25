@@ -38,18 +38,20 @@ import org.dromara.visor.common.constant.ErrorCode;
 public enum UserStatusEnum {
 
     /**
-     * 0 停用
+     * 停用
      */
-    DISABLED(0),
+    DISABLED(0, "停用"),
 
     /**
-     * 1 启用
+     * 启用
      */
-    ENABLED(1),
+    ENABLED(1, "启用"),
 
     ;
 
     private final Integer status;
+
+    private final String label;
 
     public static UserStatusEnum of(Integer status) {
         if (status == null) {

@@ -22,6 +22,13 @@
             <artifactId>orion-visor-common</artifactId>
         </dependency>
 
+        <!-- module common -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-common</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- module provider -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
@@ -31,6 +38,11 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-asset-provider</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-terminal-provider</artifactId>
             <version>${revision}</version>
         </dependency>
 

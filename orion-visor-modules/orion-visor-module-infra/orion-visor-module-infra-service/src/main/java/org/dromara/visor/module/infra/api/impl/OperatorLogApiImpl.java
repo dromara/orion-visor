@@ -65,6 +65,30 @@ public class OperatorLogApiImpl implements OperatorLogApi {
     }
 
     @Override
+    public List<OperatorLogDTO> getOperatorLogList(OperatorLogQueryDTO request) {
+        Valid.valid(request);
+        // 条件
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request)
+                .orderByDesc(OperatorLogDO::getId);
+        // 查询
+        return operatorLogDAO.of()
+                .wrapper(wrapper)
+                .limit(request.getLimit())
+                .list(OperatorLogProviderConvert.MAPPER::to);
+    }
+
+    @Override
+    public Long getOperatorLogCount(OperatorLogQueryDTO request) {
+        Valid.valid(request);
+        // 条件
+        LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
+        // 查询
+        return operatorLogDAO.of()
+                .wrapper(wrapper)
+                .countMax(request.getLimit());
+    }
+
+    @Override
     public Integer deleteOperatorLog(List<Long> idList) {
         return operatorLogDAO.deleteBatchIds(idList);
     }
@@ -78,6 +102,7 @@ public class OperatorLogApiImpl implements OperatorLogApi {
     private LambdaQueryWrapper<OperatorLogDO> buildQueryWrapper(OperatorLogQueryDTO request) {
         return operatorLogDAO.wrapper()
                 .eq(OperatorLogDO::getId, request.getId())
+                .lt(OperatorLogDO::getId, request.getIdLt())
                 .eq(OperatorLogDO::getUserId, request.getUserId())
                 .eq(OperatorLogDO::getRiskLevel, request.getRiskLevel())
                 .eq(OperatorLogDO::getModule, request.getModule())

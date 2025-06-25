@@ -64,65 +64,49 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addDataPermission(DataPermissionUpdateRequest request) {
-        Long userId = request.getUserId();
-        Long roleId = request.getRoleId();
-        String type = request.getType();
-        // 查询
-        LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.wrapper()
-                .eq(DataPermissionDO::getUserId, userId)
-                .eq(DataPermissionDO::getRoleId, roleId)
-                .eq(DataPermissionDO::getType, type);
-        List<Long> beforeRelIdList = dataPermissionDAO.selectList(wrapper)
-                .stream()
-                .map(DataPermissionDO::getRelId)
-                .distinct()
-                .collect(Collectors.toList());
-        // 新增
-        List<DataPermissionDO> records = request.getRelIdList()
-                .stream()
-                .distinct()
-                .filter(s -> !beforeRelIdList.contains(s))
-                .map(s -> DataPermissionDO.builder()
-                        .type(type)
-                        .userId(userId)
-                        .roleId(roleId)
-                        .relId(s)
-                        .build())
-                .collect(Collectors.toList());
-        dataPermissionDAO.insertBatch(records);
-        // 删除缓存
-        this.deleteCache(type, userId, roleId);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void updateDataPermission(DataPermissionUpdateRequest request) {
-        Long userId = request.getUserId();
-        Long roleId = request.getRoleId();
         String type = request.getType();
+        List<Long> userIdList = request.getUserIdList();
+        List<Long> roleIdList = request.getRoleIdList();
+        List<Long> relIdList = request.getRelIdList();
         // 删除
         LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.wrapper()
-                .eq(DataPermissionDO::getUserId, userId)
-                .eq(DataPermissionDO::getRoleId, roleId)
+                .in(DataPermissionDO::getUserId, userIdList)
+                .in(DataPermissionDO::getRoleId, roleIdList)
                 .eq(DataPermissionDO::getType, type);
         dataPermissionDAO.delete(wrapper);
         // 删除缓存
-        this.deleteCache(type, userId, roleId);
-        if (Lists.isEmpty(request.getRelIdList())) {
+        this.deleteCache(type, userIdList, roleIdList);
+        if (Lists.isEmpty(relIdList)) {
             return;
         }
         // 新增
-        List<DataPermissionDO> records = request.getRelIdList()
-                .stream()
-                .distinct()
-                .map(s -> DataPermissionDO.builder()
-                        .type(type)
-                        .userId(userId)
-                        .roleId(roleId)
-                        .relId(s)
-                        .build())
-                .collect(Collectors.toList());
+        relIdList = new ArrayList<>(new HashSet<>(relIdList));
+        List<DataPermissionDO> records = new ArrayList<>();
+        if (!Lists.isEmpty(userIdList)) {
+            userIdList = new ArrayList<>(new HashSet<>(userIdList));
+            for (Long relId : relIdList) {
+                for (Long userId : userIdList) {
+                    records.add(DataPermissionDO.builder()
+                            .type(type)
+                            .userId(userId)
+                            .relId(relId)
+                            .build());
+                }
+            }
+        }
+        if (!Lists.isEmpty(roleIdList)) {
+            roleIdList = new ArrayList<>(new HashSet<>(roleIdList));
+            for (Long relId : relIdList) {
+                for (Long roleId : roleIdList) {
+                    records.add(DataPermissionDO.builder()
+                            .type(type)
+                            .roleId(roleId)
+                            .relId(relId)
+                            .build());
+                }
+            }
+        }
         dataPermissionDAO.insertBatch(records);
     }
 
@@ -134,6 +118,38 @@ public class DataPermissionServiceImpl implements DataPermissionService {
             return false;
         }
         return relIdList.contains(relId);
+    }
+
+    @Override
+    public List<Long> getUserIdListByRelId(String type, Long relId) {
+        return dataPermissionDAO.of()
+                .createWrapper()
+                .select(DataPermissionDO::getUserId)
+                .eq(DataPermissionDO::getType, type)
+                .eq(DataPermissionDO::getRelId, relId)
+                .isNotNull(DataPermissionDO::getUserId)
+                .then()
+                .stream()
+                .map(DataPermissionDO::getUserId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getRoleIdListByRelId(String type, Long relId) {
+        return dataPermissionDAO.of()
+                .createWrapper()
+                .select(DataPermissionDO::getRoleId)
+                .eq(DataPermissionDO::getType, type)
+                .eq(DataPermissionDO::getRelId, relId)
+                .isNotNull(DataPermissionDO::getRoleId)
+                .then()
+                .stream()
+                .map(DataPermissionDO::getRoleId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -291,32 +307,6 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                 .collect(Collectors.toList());
         // 扫描并删除
         RedisUtils.scanKeysDelete(keyMatches);
-    }
-
-    /**
-     * 删除缓存
-     *
-     * @param type   type
-     * @param userId userId
-     * @param roleId roleId
-     */
-    private void deleteCache(String type, Long userId, Long roleId) {
-        List<Long> userIdList = new ArrayList<>();
-        if (userId != null) {
-            userIdList.add(userId);
-        }
-        // 查询角色的权限
-        if (roleId != null) {
-            List<Long> roleUserIdList = systemUserRoleDAO.selectUserIdByRoleId(roleId);
-            userIdList.addAll(roleUserIdList);
-        }
-        // 删除缓存
-        if (!userIdList.isEmpty()) {
-            List<String> keys = userIdList.stream()
-                    .map(s -> DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type, s))
-                    .collect(Collectors.toList());
-            RedisUtils.delete(keys);
-        }
     }
 
     /**

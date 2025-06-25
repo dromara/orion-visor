@@ -38,7 +38,7 @@
                                  )
         WHERE deleted = 0
         AND type = 'HOST'
-        AND item = 'ssh'
+        AND item = 'SSH'
         <foreach collection="keyIdList" item="item" separator="OR" open="AND (" close=")">
             JSON_CONTAINS(value, JSON_OBJECT('keyId', #{item}))
         </foreach>
@@ -60,7 +60,7 @@
                                  )
         WHERE deleted = 0
         AND type = 'HOST'
-        AND item = 'ssh'
+        AND item IN ('SSH', 'RDP')
         <foreach collection="identityIdList" item="item" separator="OR" open="AND (" close=")">
             JSON_CONTAINS(value, JSON_OBJECT('identityId', #{item}))
         </foreach>

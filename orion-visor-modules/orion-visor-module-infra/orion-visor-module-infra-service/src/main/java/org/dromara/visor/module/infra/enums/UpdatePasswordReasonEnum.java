@@ -41,4 +41,6 @@ public enum UpdatePasswordReasonEnum {
      */
     NEW,
 
+    ;
+
 }
