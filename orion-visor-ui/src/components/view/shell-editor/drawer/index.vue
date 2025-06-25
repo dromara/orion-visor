@@ -1,17 +1,12 @@
 <template>
-  <a-modal v-model:visible="visible"
-           title-align="start"
-           :width="width"
-           :body-style="{ padding: '8px' }"
-           :top="80"
-           :title="title"
-           :align-center="false"
-           :draggable="true"
-           :esc-to-close="false"
-           :mask-closable="false"
-           :unmount-on-close="true"
-           @close="handleClose">
-    <div :style="{ width: '100%', 'height': height }">
+  <a-drawer v-model:visible="visible"
+            :title="title"
+            :esc-to-close="false"
+            :mask-closable="false"
+            :unmount-on-close="true"
+            @ok="handleOk"
+            @cancel="handleCancel">
+    <div class="full">
       <editor v-model="value"
               language="shell"
               :suggestions="true"
@@ -19,12 +14,12 @@
               :theme="dark ? 'vs-dark' : 'vs'"
               :readonly="readonly" />
     </div>
-  </a-modal>
+  </a-drawer>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'shellEditorModal'
+    name: 'shellEditorDrawer'
   };
 </script>
 
@@ -32,16 +27,12 @@
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
 
-  const emits = defineEmits(['close']);
+  const emits = defineEmits(['ok', 'cancel']);
 
   const props = withDefaults(defineProps<Partial<{
-    width: string | number;
-    height: string;
     dark: boolean;
     readonly: boolean;
   }>>(), {
-    width: '60%',
-    height: 'calc(100vh - 280px)',
     dark: true,
     readonly: false,
   });
@@ -65,16 +56,19 @@
 
   defineExpose({ open, getValue });
 
-  // 关闭
-  const handleClose = () => {
+  // 确定
+  const handleOk = () => {
     setVisible(false);
-    emits('close', value.value);
+    emits('ok', value.value);
+  };
+
+  // 取消
+  const handleCancel = () => {
+    setVisible(false);
+    emits('cancel', value.value);
   };
 
 </script>
 
 <style lang="less" scoped>
-  :deep(.arco-modal-title) {
-    font-size: 14px;
-  }
 </style>

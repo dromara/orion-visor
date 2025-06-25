@@ -8,7 +8,7 @@
              alt="logo"
              draggable="false"
              src="@/assets/logo.svg?url" />
-        <!-- 标头 -->
+        <!-- 名称 -->
         <a-typography-title :heading="5"
                             :style="{ margin: 0, fontSize: '18px', height: '1.4em', overflow: 'hidden' }">
           Orion Visor
@@ -26,7 +26,7 @@
     <!-- 右侧操作 -->
     <ul class="right-side">
       <!-- 主机终端 -->
-      <li v-permission="['asset:terminal:access']">
+      <li v-permission="['terminal:terminal:access']">
         <a-tooltip content="主机终端">
           <a-button class="nav-btn"
                     type="outline"
