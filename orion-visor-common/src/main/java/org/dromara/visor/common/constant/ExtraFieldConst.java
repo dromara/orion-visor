@@ -55,7 +55,7 @@ public interface ExtraFieldConst extends FieldConst {
 
     String GRANT_NAME = "grantName";
 
-    String CHANNEL_ID = "channelId";
+    String CHANNEL = "channel";
 
     String SESSION_ID = "sessionId";
 

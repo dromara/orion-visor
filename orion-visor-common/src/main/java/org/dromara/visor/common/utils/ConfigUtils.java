@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.common.utils;
 
-import cn.orionsec.kit.lang.constant.Const;
+import org.dromara.visor.common.constant.Const;
 
 import java.util.Arrays;
 import java.util.List;

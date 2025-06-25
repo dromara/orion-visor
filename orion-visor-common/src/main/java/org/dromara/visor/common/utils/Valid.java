@@ -25,6 +25,7 @@ package org.dromara.visor.common.utils;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.spring.SpringHolder;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 
 import javax.validation.ConstraintViolation;
@@ -157,6 +158,19 @@ public class Valid extends cn.orionsec.kit.lang.utils.Valid {
         Valid.notBlank(path);
         Valid.isTrue(Files1.isNormalize(path), ErrorMessage.PATH_NOT_NORMALIZE);
         return Files1.getPath(path);
+    }
+
+    /**
+     * 检查后缀
+     *
+     * @param file   file
+     * @param suffix suffix
+     * @return file
+     */
+    public static String checkSuffix(String file, String suffix) {
+        Valid.notBlank(file);
+        Valid.isTrue(file.toLowerCase().endsWith(Const.DOT + suffix), ErrorMessage.PLEASE_SELECT_SUFFIX_FILE, suffix);
+        return file;
     }
 
 }

@@ -20,10 +20,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.handler.host.jsch;
+package org.dromara.visor.common.session.ssh;
 
-import cn.orionsec.kit.lang.exception.AuthenticationException;
-import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.net.host.SessionHolder;
@@ -31,9 +29,9 @@ import cn.orionsec.kit.net.host.SessionLogger;
 import cn.orionsec.kit.net.host.SessionStore;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
-import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.session.SessionMessage;
+import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
 
 import java.util.Optional;
 
@@ -47,25 +45,22 @@ import java.util.Optional;
 @Slf4j
 public class SessionStores {
 
-    protected static final ThreadLocal<String> CURRENT_ADDRESS = new ThreadLocal<>();
-
     /**
      * 打开 sessionStore
      *
-     * @param conn conn
+     * @param config config
      * @return sessionStore
      */
-    public static SessionStore openSessionStore(TerminalConnectDTO conn) {
-        Long hostId = conn.getHostId();
-        String address = conn.getHostAddress();
-        String username = conn.getUsername();
+    public static SessionStore openSessionStore(SshConnectConfig config) {
+        Long hostId = config.getHostId();
+        String address = config.getHostAddress();
+        String username = config.getUsername();
         log.info("SessionStores-open-start hostId: {}, address: {}, username: {}", hostId, address, username);
         try {
-            CURRENT_ADDRESS.set(address);
             // 创建会话
             SessionHolder sessionHolder = SessionHolder.create();
             sessionHolder.setLogger(SessionLogger.INFO);
-            SessionStore session = createSessionStore(conn, sessionHolder);
+            SessionStore session = createSessionStore(config, sessionHolder);
             // 设置版本
             session.getSession().setClientVersion("SSH-2.0-ORION_VISOR_V" + AppConst.VERSION);
             // 连接
@@ -75,81 +70,48 @@ public class SessionStores {
         } catch (Exception e) {
             String message = e.getMessage();
             log.error("SessionStores-open-error hostId: {}, address: {}, username: {}, message: {}", hostId, address, username, message, e);
-            throw Exceptions.app(getErrorMessage(e), e);
-        } finally {
-            CURRENT_ADDRESS.remove();
+            throw Exceptions.app(SessionMessage.getErrorMessage(address, e), e);
         }
     }
 
     /**
      * 创建 sessionStore
      *
-     * @param conn          conn
+     * @param config        config
      * @param sessionHolder sessionHolder
      * @return sessionStore
      */
-    private static SessionStore createSessionStore(TerminalConnectDTO conn, SessionHolder sessionHolder) {
-        final boolean useKey = conn.getKeyId() != null;
+    private static SessionStore createSessionStore(SshConnectConfig config, SessionHolder sessionHolder) {
+        final boolean useKey = config.getKeyId() != null;
         // 使用密钥认证
         if (useKey) {
             // 加载密钥
-            String publicKey = Optional.ofNullable(conn.getPublicKey())
+            String publicKey = Optional.ofNullable(config.getPublicKey())
                     .map(AesEncryptUtils::decryptAsString)
                     .orElse(null);
-            String privateKey = Optional.ofNullable(conn.getPrivateKey())
+            String privateKey = Optional.ofNullable(config.getPrivateKey())
                     .map(AesEncryptUtils::decryptAsString)
                     .orElse(null);
-            String password = Optional.ofNullable(conn.getPrivateKeyPassword())
+            String password = Optional.ofNullable(config.getPrivateKeyPassword())
                     .map(AesEncryptUtils::decryptAsString)
                     .orElse(null);
-            sessionHolder.addIdentityValue(String.valueOf(conn.getKeyId()),
+            sessionHolder.addIdentityValue(String.valueOf(config.getKeyId()),
                     privateKey,
                     publicKey,
                     password);
         }
         // 获取会话
-        SessionStore session = sessionHolder.getSession(conn.getHostAddress(), conn.getHostPort(), conn.getUsername());
+        SessionStore session = sessionHolder.getSession(config.getHostAddress(), config.getHostPort(), config.getUsername());
         // 使用密码认证
         if (!useKey) {
-            String password = conn.getPassword();
+            String password = config.getPassword();
             if (!Strings.isEmpty(password)) {
                 session.password(AesEncryptUtils.decryptAsString(password));
             }
         }
         // 超时时间
-        session.timeout(conn.getTimeout());
+        session.timeout(config.getTimeout());
         return session;
-    }
-
-    /**
-     * 获取错误信息
-     *
-     * @param e e
-     * @return errorMessage
-     */
-    private static String getErrorMessage(Exception e) {
-        if (e == null) {
-            return null;
-        }
-        String host = CURRENT_ADDRESS.get();
-        String message = e.getMessage();
-        if (Strings.contains(message, Const.TIMEOUT)) {
-            // 连接超时
-            return Strings.format(SessionMessage.CONNECTION_TIMEOUT, host);
-        } else if (Exceptions.isCausedBy(e, AuthenticationException.class)) {
-            // 认证失败
-            return Strings.format(SessionMessage.AUTHENTICATION_FAILURE, host);
-        } else if (Exceptions.isCausedBy(e, InvalidArgumentException.class)) {
-            // 参数错误
-            if (Strings.isBlank(message)) {
-                return Strings.format(SessionMessage.SERVER_UNREACHABLE, host);
-            } else {
-                return message;
-            }
-        } else {
-            // 其他错误
-            return Strings.format(SessionMessage.SERVER_UNREACHABLE, host);
-        }
     }
 
 }

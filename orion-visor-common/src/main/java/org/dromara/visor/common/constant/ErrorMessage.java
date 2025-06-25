@@ -24,6 +24,14 @@ package org.dromara.visor.common.constant;
 
 import cn.orionsec.kit.lang.exception.ApplicationException;
 import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
+import cn.orionsec.kit.lang.utils.Strings;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * 错误信息
@@ -51,6 +59,12 @@ public interface ErrorMessage {
     String KEY_ABSENT = "主机密钥不存在";
 
     String IDENTITY_ABSENT = "主机身份不存在";
+
+    String CHECK_IDENTITY_PASSWORD = "请选择类型为[密码]的主机身份";
+
+    String KEY_ABSENT_WITH = "主机密钥不存在 {}";
+
+    String IDENTITY_ABSENT_WITH = "主机身份不存在 {}";
 
     String CONFIG_ABSENT = "配置不存在";
 
@@ -96,23 +110,35 @@ public interface ErrorMessage {
 
     String UNSUPPORTED_CHARSET = "不支持的编码 [{}]";
 
-    String DECRYPT_ERROR = "数据解密失败";
-
     String PASSWORD_MISSING = "请输入密码";
 
     String BEFORE_PASSWORD_ERROR = "原密码错误";
 
     String DATA_NO_PERMISSION = "数据无权限";
 
+    String EXPRESSION_ERROR = "表达式错误";
+
     String ANY_NO_PERMISSION = "{}无权限";
+
+    String OPT_NO_PERMISSION = "无操作权限";
 
     String SESSION_PRESENT = "会话已存在";
 
     String SESSION_ABSENT = "会话不存在";
 
+    String SESSION_CLOSED = "会话已关闭";
+
+    String USER_UNSUPPORTED_OPT = "用户不支持此操作";
+
+    String CURRENT_USER_UNSUPPORTED_OPT = "当前" + USER_UNSUPPORTED_OPT;
+
     String PATH_NOT_NORMALIZE = "路径不合法";
 
     String OPERATE_ERROR = "操作失败";
+
+    String ENCRYPT_KEY_UNSET = "加密密钥未配置";
+
+    String DECRYPT_ERROR = "数据解密失败";
 
     String UNKNOWN_TYPE = "未知类型";
 
@@ -148,7 +174,25 @@ public interface ErrorMessage {
 
     String CLIENT_ABORT = "手动中断";
 
+    String COMMAND_EXEC_ERROR = "命令执行失败 [{}]";
+
+    String COMPRESS_ERROR = "压缩失败";
+
+    String DECOMPRESS_ERROR = "解压失败";
+
+    String COMPRESS_FILE_ABSENT = "压缩文件不存在";
+
     String UNABLE_DOWNLOAD_FOLDER = "无法下载文件夹";
+
+    String VALID_ERROR = "验证失败";
+
+    String CONVERT_ERROR = "转换失败";
+
+    String PRESENT_MODIFY = "{} 已存在, 请修改后重试";
+
+    String ILLEGAL_MODIFY = "{} 不正确, 请修改后重试";
+
+    String PLEASE_SELECT_SUFFIX_FILE = "请选择 {} 类型的文件";
 
     /**
      * 是否为业务异常
@@ -185,6 +229,39 @@ public interface ErrorMessage {
             return message;
         }
         return defaultMsg;
+    }
+
+    /**
+     * 获取验证错误消息
+     *
+     * @param ex         ex
+     * @param defaultMsg defaultMsg
+     * @return message
+     */
+    static String getValidErrorMessage(Exception ex, String defaultMsg) {
+        if (ex == null) {
+            return null;
+        }
+        // 参数不存在异常
+        if (ex instanceof MissingServletRequestParameterException) {
+            return Strings.format(ErrorMessage.MISSING, ((MissingServletRequestParameterException) ex).getParameterName());
+        }
+        // 参数绑定异常
+        if (ex instanceof BindException) {
+            return Optional.ofNullable(((BindException) ex)
+                            .getFieldError())
+                    .map(error -> error.getField() + Const.SPACE + error.getDefaultMessage())
+                    .orElse(defaultMsg);
+        }
+        // 参数验证异常
+        if (ex instanceof ConstraintViolationException) {
+            return Optional.ofNullable(((ConstraintViolationException) ex).getConstraintViolations())
+                    .map(Set::iterator)
+                    .map(Iterator::next)
+                    .map(s -> s.getPropertyPath().toString() + Const.SPACE + s.getMessage())
+                    .orElse(defaultMsg);
+        }
+        return getErrorMessage(ex, defaultMsg);
     }
 
 }

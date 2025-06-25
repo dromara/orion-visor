@@ -43,6 +43,9 @@ public class SqlUtils {
      * @return limit
      */
     public static String limit(Number limit) {
+        if (limit == null) {
+            return Const.EMPTY;
+        }
         return Const.LIMIT + Const.SPACE + limit;
     }
 
@@ -54,6 +57,9 @@ public class SqlUtils {
      * @return limit
      */
     public static String limit(Number offset, Number limit) {
+        if (offset == null) {
+            return limit(limit);
+        }
         return Const.LIMIT + Const.SPACE + offset + Const.COMMA + limit;
     }
 

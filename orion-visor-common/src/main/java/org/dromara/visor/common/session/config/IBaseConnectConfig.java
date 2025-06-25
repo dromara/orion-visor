@@ -20,42 +20,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.constant;
+package org.dromara.visor.common.session.config;
 
 /**
- * 常量
+ * 基础连接配置定义
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/6/23 18:49
+ * @since 2025/6/24 17:11
  */
-public interface Const extends cn.orionsec.kit.lang.constant.Const, FieldConst, CnConst {
+public interface IBaseConnectConfig {
 
-    Integer NOT_DELETE = 0;
+    // -------------------- getter/setter --------------------
 
-    Integer IS_DELETED = 1;
+    String getOsType();
 
-    int BEARER_PREFIX_LEN = 7;
+    void setOsType(String osType);
 
-    int MD5_LEN = 32;
+    String getArchType();
 
-    Long ROOT_PARENT_ID = 0L;
+    void setArchType(String archType);
 
-    Integer DEFAULT_SORT = 10;
+    Long getHostId();
 
-    Long NONE_ID = -1L;
+    void setHostId(Long hostId);
 
-    Integer DEFAULT_VERSION = 1;
+    String getHostName();
 
-    Long SYSTEM_USER_ID = 0L;
+    void setHostName(String hostName);
 
-    String SYSTEM_USERNAME = "system";
+    String getHostCode();
 
-    // FIXME KIT
-    String ADMINISTRATOR = "Administrator";
+    void setHostCode(String hostCode);
 
-    Long ALL_HOST_ID = -1L;
+    String getHostAddress();
 
-    int BATCH_COUNT = 500;
+    void setHostAddress(String hostAddress);
+
+    Integer getHostPort();
+
+    void setHostPort(Integer hostPort);
+
+    String getUsername();
+
+    void setUsername(String username);
+
+    String getPassword();
+
+    void setPassword(String password);
 
 }

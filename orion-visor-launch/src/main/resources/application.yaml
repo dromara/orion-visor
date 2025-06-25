@@ -196,6 +196,12 @@ orion:
       asset:
         group: "asset - 资产模块"
         path: "asset"
+      exec:
+        group: "exec - 执行模块"
+        path: "exec"
+      terminal:
+        group: "terminal - 终端模块"
+        path: "terminal"
   logging:
     # 全局日志打印
     printer:
@@ -208,6 +214,7 @@ orion:
       field:
         ignore:
           - password,beforePassword,newPassword,useNewPassword,publicKey,privateKey,privateKeyPassword
+          - accessKey,secretKey
           - metrics
         desensitize:
   storage:

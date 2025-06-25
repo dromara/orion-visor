@@ -24,6 +24,11 @@ spring:
       server:
         enabled: false
 
+guacd:
+  host: ${GUACD_HOST:127.0.0.1}
+  port: ${GUACD_PORT:4822}
+  drive-path: ${GUACD_DRIVE_PATH:/home/guacd}
+
 management:
   endpoints:
     enabled-by-default: false
@@ -33,7 +38,7 @@ management:
 
 mybatis-plus:
   configuration:
-    # sql 日志打印
+    # 日志打印
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 no:
