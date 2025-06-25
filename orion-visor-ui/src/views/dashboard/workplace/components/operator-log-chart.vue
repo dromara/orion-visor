@@ -25,7 +25,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { WorkplaceStatisticsData } from '@/views/dashboard/workplace/types/const';
+  import type { WorkplaceStatisticsData } from '../types/const';
   import { createLineSeries, LineSeriesColors } from '@/types/chart';
   import { useRouter } from 'vue-router';
   import useChartOption from '@/hooks/chart-option';
@@ -95,7 +95,6 @@
       ],
     };
   });
-
 </script>
 
 <style lang="less" scoped>

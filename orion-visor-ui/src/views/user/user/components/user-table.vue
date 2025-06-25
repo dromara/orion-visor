@@ -207,7 +207,7 @@
   import { useQueryOrder, ASC } from '@/hooks/query-order';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
 
-  const emits = defineEmits(['openAdd', 'openUpdate', 'openImport', 'openExport', 'openResetPassword', 'openGrantRole']);
+  const emits = defineEmits(['openAdd', 'openUpdate', 'openResetPassword', 'openGrantRole']);
 
   const cacheStore = useCacheStore();
   const rowSelection = useRowSelection();

@@ -107,7 +107,7 @@
                          :hide-label="true"
                          :help="'使用 @{{ xxx }} 来替换参数, 输入_可以获取全部变量'">
               <template #extra>
-                <span v-permission="['asset:exec-template:query']"
+                <span v-permission="['exec:exec-template:query']"
                       class="span-blue usn pointer"
                       @click="emits('openTemplate')">
                   从模板中选择

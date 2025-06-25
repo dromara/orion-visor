@@ -89,6 +89,7 @@
     }
 
     &-text {
+      display: flex;
       margin-right: 4px;
       margin-left: 4px;
       color: var(--color-fill-1);

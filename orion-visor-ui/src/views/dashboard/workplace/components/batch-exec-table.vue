@@ -15,7 +15,7 @@
         <a-table row-key="id"
                  :loading="loading"
                  :columns="batchExecColumns"
-                 :data="data.asset?.execLogList || []"
+                 :data="data.exec?.execLogList || []"
                  :pagination="false"
                  :bordered="false"
                  :scroll="{ y: 258 }">
@@ -33,7 +33,7 @@
           <template #handle="{ record }">
             <div class="table-handle-wrapper">
               <!-- 日志 -->
-              <a-button v-permission="['asset:exec-command:exec']"
+              <a-button v-permission="['exec:exec-command:exec']"
                         type="text"
                         size="mini"
                         @click="router.push({ name: 'execCommand', query: { id: record.id } })">
@@ -54,7 +54,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { WorkplaceStatisticsData } from '@/views/dashboard/workplace/types/const';
+  import type { WorkplaceStatisticsData } from '../types/const';
   import { batchExecColumns } from '../types/table.columns';
   import { useDictStore } from '@/store';
   import { useRouter } from 'vue-router';

@@ -257,13 +257,13 @@
           <a-button v-if="record.types?.length === 1"
                     type="text"
                     size="mini"
-                    v-permission="['asset:terminal:access']"
+                    v-permission="['terminal:terminal:access']"
                     @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: record.types[0] } })">
             连接
           </a-button>
           <!-- 多协议连接 -->
           <a-popover v-else-if="(record.types?.length || 0) > 1"
-                     v-permission="['asset:terminal:access']"
+                     v-permission="['terminal:terminal:access']"
                      :title="undefined"
                      :content-style="{ padding: '8px' }">
             <a-button type="text" size="mini">

@@ -2,13 +2,15 @@
 export const TableName = 'conn-log';
 
 // 终端连接类型
-export const TerminalConnectType = {
+export const HostConnectType = {
   SSH: 'SSH',
   SFTP: 'SFTP',
+  RDP: 'RDP',
+  VNC: 'VNC',
 };
 
 // 终端连接状态
-export const TerminalConnectStatus = {
+export const HostConnectStatus = {
   CONNECTING: 'CONNECTING',
   COMPLETE: 'COMPLETE',
   FAILED: 'FAILED',

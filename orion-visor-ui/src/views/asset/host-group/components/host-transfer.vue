@@ -124,6 +124,7 @@
     });
   };
 
+  // 初始化选项
   onMounted(loadHosts);
   onActivated(loadHosts);
 

@@ -54,7 +54,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 新增 -->
-          <a-button v-permission="['asset:exec-job:create']"
+          <a-button v-permission="['exec:exec-job:create']"
                     type="primary"
                     @click="emits('openAdd')">
             新增
@@ -67,7 +67,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['asset:exec-job:delete']"
+            <a-button v-permission="['exec:exec-job:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -122,7 +122,7 @@
       <!-- 任务状态 -->
       <template #status="{ record }">
         <!-- 状态开关 可编辑 -->
-        <a-switch v-if="hasPermission('asset:exec-job:update-status')"
+        <a-switch v-if="hasPermission('exec:exec-job:update-status')"
                   type="round"
                   :default-checked="record.status === ExecJobStatus.ENABLED"
                   :checked-text="getDictValue(execJobStatusKey, ExecJobStatus.ENABLED)"
@@ -164,7 +164,7 @@
                         position="left"
                         type="warning"
                         @ok="triggerJob(record.id)">
-            <a-button v-permission="['asset:exec-job:trigger']"
+            <a-button v-permission="['exec:exec-job:trigger']"
                       type="text"
                       size="mini">
               手动触发
@@ -175,7 +175,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:exec-job:delete']"
+            <a-button v-permission="['exec:exec-job:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -189,12 +189,12 @@
             </a-button>
             <template #content>
               <!-- 修改任务 -->
-              <a-doption v-permission="['asset:exec-job:update']"
+              <a-doption v-permission="['exec:exec-job:update']"
                          @click="emits('openUpdate', record.id)">
                 <span class="more-doption normal">修改任务</span>
               </a-doption>
               <!-- 修改执行用户 -->
-              <a-doption v-permission="['asset:exec-job:update-exec-user']"
+              <a-doption v-permission="['exec:exec-job:update-exec-user']"
                          @click="emits('updateExecUser', record)">
                 <span class="more-doption normal">修改执行用户</span>
               </a-doption>
@@ -223,10 +223,10 @@
   import { TableName, ExecJobStatus, execJobStatusKey, execStatusKey } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useCacheStore, useDictStore, useUserStore } from '@/store';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import { useRoute } from 'vue-router';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
-  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
 

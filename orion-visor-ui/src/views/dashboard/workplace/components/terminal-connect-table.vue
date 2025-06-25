@@ -15,7 +15,7 @@
         <a-table row-key="id"
                  :loading="loading"
                  :columns="terminalLogColumns"
-                 :data="data.asset?.terminalConnectList || []"
+                 :data="data.terminal?.terminalConnectList || []"
                  :pagination="false"
                  :bordered="false"
                  :scroll="{ y: 258 }">
@@ -44,8 +44,8 @@
           <!-- 操作 -->
           <template #handle="{ record }">
             <div class="table-handle-wrapper">
-              <!-- 连接 SSH -->
-              <a-button v-permission="['asset:terminal:access']"
+              <!-- 连接 -->
+              <a-button v-permission="['terminal:terminal:access']"
                         type="text"
                         size="mini"
                         @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.type } })">
@@ -68,9 +68,9 @@
 <script lang="ts" setup>
   import type { WorkplaceStatisticsData } from '../types/const';
   import { copy } from '@/hooks/copy';
+  import { useRouter } from 'vue-router';
   import { terminalLogColumns } from '../types/table.columns';
   import { terminalConnectTypeKey } from '../types/const';
-  import { useRouter } from 'vue-router';
   import { useDictStore } from '@/store';
   import { openNewRoute } from '@/router';
 

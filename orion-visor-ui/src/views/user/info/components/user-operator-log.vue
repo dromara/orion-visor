@@ -5,7 +5,7 @@
       <!-- 查询头组件 -->
       <operator-log-query-header :model="formModel"
                                  :visible-user="false"
-                                 @submit="() => table.fetchTableData()" />
+                                 @submit="() => table.reload()" />
     </a-card>
     <!-- 表格 -->
     <a-card class="general-card table-card">
@@ -22,7 +22,7 @@
       <operator-log-simple-table ref="table"
                                  :current="!user"
                                  :base-params="{ userId: user?.id }"
-                                 :model="formModel"/>
+                                 :model="formModel" />
     </a-card>
   </div>
 </template>

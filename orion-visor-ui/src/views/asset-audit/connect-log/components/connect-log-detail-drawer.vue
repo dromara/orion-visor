@@ -75,12 +75,6 @@
           {{ record.extra?.traceId }}
         </span>
       </a-descriptions-item>
-      <!-- channelId -->
-      <a-descriptions-item label="channelId">
-        <span class="text-copy" @click="copy(record.extra?.channelId)">
-          {{ record.extra?.channelId }}
-        </span>
-      </a-descriptions-item>
       <!-- sessionId -->
       <a-descriptions-item label="sessionId">
         <span class="text-copy" @click="copy(record.sessionId)">
@@ -98,7 +92,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
+  import type { TerminalConnectLogQueryResponse } from '@/api/terminal/terminal-connect-log';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
@@ -147,7 +141,6 @@
     display: inline-block;
     color: rgb(var(--arcoblue-6));
   }
-
 
   :deep(.arco-collapse-item-content) {
     background: unset;

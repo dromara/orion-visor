@@ -46,8 +46,8 @@
   import { CronNextTimes, dictKeys } from './types/const';
   import ExecJobTable from './components/exec-job-table.vue';
   import ExecJobFormDrawer from './components/exec-job-form-drawer.vue';
-  import ExecUserUpdateModal from './components/exec-user-update-modal.vue';
   import ExecJobDetailDrawer from './components/exec-job-detail-drawer.vue';
+  import ExecUserUpdateModal from './components/exec-user-update-modal.vue';
   import AuthorizedHostModal from '@/components/asset/host/authorized-host-modal/index.vue';
   import ExecTemplateModal from '@/components/exec/template/modal/index.vue';
   import CronNextModal from '@/components/meta/cron/next-modal/index.vue';

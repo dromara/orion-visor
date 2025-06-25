@@ -26,7 +26,7 @@ const columns = [
     title: '类型',
     dataIndex: 'type',
     slotName: 'type',
-    width: 98,
+    width: 116,
     align: 'left',
   }, {
     title: '留痕地址',
@@ -47,8 +47,8 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 154,
-    align: 'center',
+    width: 208,
+    align: 'left',
     fixed: 'right',
   },
 ] as TableColumnData[];

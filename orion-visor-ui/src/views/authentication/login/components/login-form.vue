@@ -1,7 +1,9 @@
 <template>
   <div class="login-form-wrapper">
     <!-- 标题 -->
-    <div class="login-form-title usn">{{ t('login.form.title') }}</div>
+    <div class="login-form-title usn">
+      {{ t('login.form.title') }}
+    </div>
     <!-- 子标题 -->
     <div class="login-form-sub-title">{{ t('login.form.sub.title') }}</div>
     <!-- 错误信息 -->
@@ -103,6 +105,9 @@
     }
 
     &-title {
+      margin-bottom: 2px;
+      display: flex;
+      align-items: flex-start;
       color: var(--color-text-1);
       font-weight: 500;
       font-size: 24px;

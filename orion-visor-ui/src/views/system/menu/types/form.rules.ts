@@ -33,7 +33,6 @@ export const cache = [{
   message: '请选择是否缓存'
 }] as FieldRule[];
 
-
 export default {
   parentId,
   name,

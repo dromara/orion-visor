@@ -47,5 +47,3 @@ export const operatorLogResultKey = 'operatorLogResult';
 
 // 加载的字典值
 export const dictKeys = [operatorLogModuleKey, operatorLogTypeKey, operatorRiskLevelKey, operatorLogResultKey];
-
-

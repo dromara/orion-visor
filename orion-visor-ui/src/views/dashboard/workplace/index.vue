@@ -8,10 +8,10 @@
                           :data="statisticsData" />
     <a-row :gutter="16" class="mb16" align="stretch">
       <!-- 最近终端连接表格 -->
-      <terminal-connect-table :loading="assetLoading"
+      <terminal-connect-table :loading="terminalLoading"
                               :data="statisticsData" />
       <!-- 最近批量执行表格 -->
-      <batch-exec-table :loading="assetLoading"
+      <batch-exec-table :loading="execLoading"
                         :data="statisticsData" />
       <!-- 快捷操作 -->
       <quick-operation />
@@ -38,8 +38,9 @@
   import { useDictStore } from '@/store';
   import { dictKeys } from './types/const';
   import useLoading from '@/hooks/loading';
+  import { getExecWorkplaceStatisticsData } from '@/api/statistics/exec-statistics';
+  import { getTerminalWorkplaceStatisticsData } from '@/api/statistics/terminal-statistics';
   import { getInfraWorkplaceStatisticsData } from '@/api/statistics/infra-statistics';
-  import { getAssetWorkplaceStatisticsData } from '@/api/statistics/asset-statistics';
   import WorkplaceHeader from './components/workplace-header.vue';
   import WorkplaceStatistics from './components/workplace-statistics.vue';
   import TerminalConnectTable from './components/terminal-connect-table.vue';
@@ -49,7 +50,8 @@
   import OperatorLogChart from './components/operator-log-chart.vue';
 
   const { loading: infraLoading, setLoading: setInfraLoading } = useLoading();
-  const { loading: assetLoading, setLoading: setAssetLoading } = useLoading();
+  const { loading: execLoading, setLoading: setExecLoading } = useLoading();
+  const { loading: terminalLoading, setLoading: setTerminalLoading } = useLoading();
 
   const render = ref(false);
   const statisticsData = ref({} as WorkplaceStatisticsData);
@@ -63,13 +65,21 @@
     }).catch(() => {
       setInfraLoading(false);
     });
-    // 资产模块
-    setAssetLoading(true);
-    getAssetWorkplaceStatisticsData().then(({ data }) => {
-      setAssetLoading(false);
-      statisticsData.value.asset = data;
+    // 执行模块
+    setExecLoading(true);
+    getExecWorkplaceStatisticsData().then(({ data }) => {
+      setExecLoading(false);
+      statisticsData.value.exec = data;
     }).catch(() => {
-      setAssetLoading(false);
+      setExecLoading(false);
+    });
+    // 终端模块
+    setTerminalLoading(true);
+    getTerminalWorkplaceStatisticsData().then(({ data }) => {
+      setTerminalLoading(false);
+      statisticsData.value.terminal = data;
+    }).catch(() => {
+      setTerminalLoading(false);
     });
   };
 

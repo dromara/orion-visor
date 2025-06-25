@@ -33,7 +33,7 @@
         <div class="chart-container">
           <div class="statistics-wrapper">
             <a-statistic title="连接终端次数 (7日)"
-                         :value="data.asset?.weekTerminalConnectCount || 0"
+                         :value="data.terminal?.weekTerminalConnectCount || 0"
                          :value-from="0"
                          :animation-duration="1000"
                          animation
@@ -55,7 +55,7 @@
         <div class="chart-container">
           <div class="statistics-wrapper">
             <a-statistic title="批量执行次数 (7日)"
-                         :value="data.asset?.weekExecCommandCount || 0"
+                         :value="data.exec?.weekExecCommandCount || 0"
                          :value-from="0"
                          :animation-duration="1000"
                          animation
@@ -93,7 +93,7 @@
   const summaryItems = computed(() => [
     {
       title: '今日连接终端次数',
-      value: props.data.asset?.todayTerminalConnectCount || 0,
+      value: props.data.terminal?.todayTerminalConnectCount || 0,
       prefix: {
         icon: 'icon-history',
         background: isDark.value ? '#354276' : '#E8F3FF',
@@ -102,7 +102,7 @@
       go: () => router.push({ name: 'connectLog', query: { action: 'self' } })
     }, {
       title: '今日批量执行次数',
-      value: props.data.asset?.todayExecCommandCount || 0,
+      value: props.data.exec?.todayExecCommandCount || 0,
       prefix: {
         icon: 'icon-code-block',
         background: isDark.value ? '#3F385E' : '#F5E8FF',
@@ -122,7 +122,7 @@
 
     }, {
       title: '管理的任务数量',
-      value: props.data.asset?.execJobCount || 0,
+      value: props.data.exec?.execJobCount || 0,
       prefix: {
         icon: 'icon-calendar-clock',
         background: isDark.value ? '#3F385E' : '#F5E8FF',
@@ -142,7 +142,7 @@
       },
       xAxis: {
         type: 'category',
-        data: props.data.asset?.terminalConnectChart?.x || [],
+        data: props.data.terminal?.terminalConnectChart?.x || [],
         show: false,
       },
       yAxis: {
@@ -154,9 +154,9 @@
       },
       series: {
         name: '连接次数',
-        data: !props.data.asset?.terminalConnectChart
+        data: !props.data.terminal?.terminalConnectChart
           ? []
-          : props.data.asset?.terminalConnectChart.data.map(s => {
+          : props.data.terminal?.terminalConnectChart.data.map(s => {
             return {
               value: s,
             };
@@ -183,8 +183,8 @@
       },
       xAxis: {
         type: 'category',
-        data: props.data.asset?.execCommandChart?.x || [],
         show: false,
+        data: props.data.exec?.execCommandChart?.x || [],
       },
       yAxis: {
         show: false,
@@ -195,10 +195,10 @@
       },
       series: {
         name: '执行次数',
-        data: !props.data.asset?.execCommandChart
+        data: !props.data.exec?.execCommandChart
           ? []
-          : props.data.asset?.execCommandChart.data.map((s, index) => {
-            const x = props.data.asset?.execCommandChart.x;
+          : props.data.exec?.execCommandChart.data.map((s, index) => {
+            const x = props.data.exec?.execCommandChart.x;
             return {
               x: x[index],
               value: s,

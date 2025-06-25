@@ -4,21 +4,23 @@
     <a-form :model="formModel"
             ref="formRef"
             label-align="right"
-            :auto-label-width="true"
-            :rules="sshFormRules">
+            :label-col-props="{ span: 6 }"
+            :wrapper-col-props="{ span: 18 }"
+            :rules="rdpFormRules">
       <!-- 端口 -->
       <a-form-item field="port"
                    label="端口"
                    hide-asterisk>
         <a-input-number v-model="formModel.port"
-                        placeholder="请输入 SSH 端口"
+                        placeholder="请输入 RDP 端口"
                         hide-button />
       </a-form-item>
       <!-- 用户名 -->
       <a-form-item field="username"
                    label="用户名"
                    :rules="usernameRules"
-                   :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
+                   :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined"
+                   hide-asterisk>
         <a-input v-model="formModel.username"
                  :disabled="HostAuthType.IDENTITY === formModel.authType"
                  placeholder="请输入用户名" />
@@ -30,13 +32,14 @@
         <a-radio-group type="button"
                        class="auth-type-group usn"
                        v-model="formModel.authType"
-                       :options="toRadioOptions(sshAuthTypeKey)" />
+                       :options="toRadioOptions(passwordAuthTypeKey)" />
       </a-form-item>
       <!-- 主机密码 -->
       <a-form-item v-if="HostAuthType.PASSWORD === formModel.authType"
                    field="password"
                    label="主机密码"
-                   :rules="passwordRules">
+                   :rules="passwordRules"
+                   hide-asterisk>
         <a-input-password v-model="formModel.password"
                           :disabled="!formModel.useNewPassword && formModel.hasPassword"
                           placeholder="主机密码" />
@@ -47,50 +50,101 @@
                   checked-text="使用新密码"
                   unchecked-text="使用原密码" />
       </a-form-item>
-      <!-- 主机密钥 -->
-      <a-form-item v-if="HostAuthType.KEY === formModel.authType"
-                   field="keyId"
-                   label="主机密钥"
-                   hide-asterisk>
-        <host-key-selector v-model="formModel.keyId" />
-      </a-form-item>
       <!-- 主机身份 -->
       <a-form-item v-if="HostAuthType.IDENTITY === formModel.authType"
                    field="identityId"
                    label="主机身份"
                    hide-asterisk>
-        <host-identity-selector v-model="formModel.identityId" />
+        <host-identity-selector v-model="formModel.identityId"
+                                :type="IdentityType.PASSWORD" />
       </a-form-item>
-      <!-- 连接超时时间 -->
-      <a-form-item field="connectTimeout"
-                   label="连接超时时间"
+      <!-- RDP版本 -->
+      <a-form-item field="versionGt81"
+                   label="RDP版本"
                    hide-asterisk>
-        <a-input-number v-model="formModel.connectTimeout"
-                        placeholder="请输入连接超时时间"
-                        hide-button>
-          <template #suffix>
-            ms
-          </template>
-        </a-input-number>
+        <a-switch v-model="formModel.versionGt81"
+                  type="round"
+                  checked-text=">= 8.1"
+                  unchecked-text="< 8.1" />
       </a-form-item>
-      <!-- SSH 输出编码 -->
-      <a-form-item field="charset"
-                   label="SSH输出编码"
-                   hide-asterisk>
-        <a-input v-model="formModel.charset" placeholder="请输入 SSH 输出编码" />
-      </a-form-item>
-      <!-- 文件名称编码 -->
-      <a-form-item field="fileNameCharset"
-                   label="文件名称编码"
-                   hide-asterisk>
-        <a-input v-model="formModel.fileNameCharset" placeholder="请输入 SFTP 文件名称编码" />
-      </a-form-item>
-      <!-- 文件内容编码 -->
-      <a-form-item field="fileContentCharset"
-                   label="文件内容编码"
-                   hide-asterisk>
-        <a-input v-model="formModel.fileContentCharset" placeholder="请输入 SFTP 文件内容编码" />
-      </a-form-item>
+      <a-collapse class="advanced-settings" :bordered="false">
+        <a-collapse-item header="高级设置" key="1">
+          <!-- 域 -->
+          <a-form-item field="domain"
+                       label="域"
+                       hide-asterisk>
+            <a-input v-model="formModel.domain"
+                     placeholder="身份验证时使用的域"
+                     allow-clear />
+          </a-form-item>
+          <!-- 系统时区 -->
+          <a-form-item field="timezone"
+                       label="系统时区"
+                       hide-asterisk>
+            <a-select v-model="formModel.timezone"
+                      placeholder="请选择系统时区"
+                      :options="toOptions(timezoneKey)" />
+          </a-form-item>
+          <!-- 键盘布局 -->
+          <a-form-item field="keyboardLayout"
+                       label="键盘布局"
+                       hide-asterisk>
+            <a-select v-model="formModel.keyboardLayout"
+                      placeholder="请选择系统键盘布局"
+                      :options="toOptions(keyboardLayoutKey)" />
+          </a-form-item>
+          <!-- 剪切板规范 -->
+          <a-form-item field="clipboardNormalize"
+                       label="剪切板规范"
+                       hide-asterisk>
+            <a-select v-model="formModel.clipboardNormalize"
+                      placeholder="请选择剪切板规范"
+                      :options="toOptions(clipboardNormalizeKey)" />
+          </a-form-item>
+          <!-- 预连接id -->
+          <a-form-item field="preConnectionId"
+                       label="预连接id"
+                       hide-asterisk>
+            <a-input v-model="formModel.preConnectionId"
+                     placeholder="请输入预连接id"
+                     allow-clear />
+          </a-form-item>
+          <!-- 预连接数据 -->
+          <a-form-item field="preConnectionBlob"
+                       label="预连接数据"
+                       hide-asterisk>
+            <a-input v-model="formModel.preConnectionBlob"
+                     placeholder="请输入预连接数据"
+                     allow-clear />
+          </a-form-item>
+          <!-- 远程应用 -->
+          <a-form-item field="remoteApp"
+                       label="远程应用"
+                       tooltip="RemoteApp 一般使用双竖线开头, 如 ||notepad, RemoteApp 一般在 Windows Server 系统下可用"
+                       hide-asterisk>
+            <a-input v-model="formModel.remoteApp"
+                     placeholder="请输入 RemoteApp"
+                     allow-clear />
+          </a-form-item>
+          <!-- 远程应用路径 -->
+          <a-form-item field="remoteAppDir"
+                       label="远程应用路径"
+                       hide-asterisk>
+            <a-input v-model="formModel.remoteAppDir"
+                     placeholder="请输入 RemoteApp 路径"
+                     allow-clear />
+          </a-form-item>
+          <!-- 远程应用参数 -->
+          <a-form-item field="remoteAppArgs"
+                       label="远程应用参数"
+                       style="margin-bottom: 0;"
+                       hide-asterisk>
+            <a-input v-model="formModel.remoteAppArgs"
+                     placeholder="请输入 RemoteApp 参数"
+                     allow-clear />
+          </a-form-item>
+        </a-collapse-item>
+      </a-collapse>
       <!-- 操作 -->
       <a-form-item style="margin-bottom: 0;">
         <!-- 保存 -->
@@ -118,24 +172,24 @@
 
 <script lang="ts">
   export default {
-    name: 'hostFormSsh'
+    name: 'hostFormRdp'
   };
 </script>
 
 <script lang="ts" setup>
   import type { FieldRule } from '@arco-design/web-vue';
-  import type { HostSshConfig } from '@/api/asset/host-config';
+  import type { HostRdpConfig } from '@/api/asset/host-config';
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import { useDictStore } from '@/store';
-  import { sshAuthTypeKey, HostAuthType, HostType } from '../types/const';
-  import { sshFormRules } from '../types/form.rules';
+  import { passwordAuthTypeKey, HostAuthType, HostType, timezoneKey, keyboardLayoutKey, clipboardNormalizeKey } from '../types/const';
+  import { IdentityType } from '@/views/asset/host-identity/types/const';
+  import { rdpFormRules } from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
   import { encrypt } from '@/utils/rsa';
   import { testHostConnect } from '@/api/asset/host';
   import { getHostConfig, updateHostConfig } from '@/api/asset/host-config';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
-  import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
   const props = defineProps<{
     hostId: number;
@@ -143,10 +197,10 @@
 
   const { loading, setLoading } = useLoading();
   const { loading: connectLoading, setLoading: setConnectLoading } = useLoading();
-  const { toRadioOptions } = useDictStore();
+  const { toOptions, toRadioOptions } = useDictStore();
 
   const formRef = ref();
-  const formModel = ref<HostSshConfig>({} as HostSshConfig);
+  const formModel = ref<HostRdpConfig>({} as HostRdpConfig);
 
   // 用户名验证
   const usernameRules = [{
@@ -181,9 +235,9 @@
     try {
       setLoading(true);
       // 加载配置
-      const { data } = await getHostConfig<HostSshConfig>({
+      const { data } = await getHostConfig<HostRdpConfig>({
         hostId: props.hostId,
-        type: HostType.SSH.value,
+        type: HostType.RDP.value,
       });
       formModel.value = data;
       // 使用新密码默认为不包含密码
@@ -207,7 +261,7 @@
       // 测试连接
       await testHostConnect({
         id: props.hostId,
-        type: HostType.SSH.value,
+        type: HostType.RDP.value,
       });
       Message.success('连接成功');
     } catch (e) {
@@ -235,7 +289,7 @@
       // 更新
       await updateHostConfig({
         hostId: props.hostId,
-        type: HostType.SSH.value,
+        type: HostType.RDP.value,
         config: JSON.stringify(requestData),
       });
       Message.success('修改成功');
@@ -256,7 +310,7 @@
     justify-content: space-between;
 
     :deep(.arco-radio-button) {
-      width: 33%;
+      width: 50%;
       text-align: center;
     }
   }
@@ -264,6 +318,25 @@
   .password-switch {
     width: 148px;
     margin-left: 8px;
+  }
+
+  .advanced-settings {
+    margin-bottom: 16px;
+
+    :deep(.arco-collapse-item-header) {
+      border: none;
+      user-select: none;
+      background: var(--color-fill-1);
+    }
+
+    :deep(.arco-collapse-item-content) {
+      padding: 0;
+      background: unset;
+
+      &-box {
+        padding: 12px 0 0 0;
+      }
+    }
   }
 
 </style>

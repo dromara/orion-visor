@@ -238,13 +238,13 @@
             </a-doption>
             <!-- SSH -->
             <a-doption v-if="record.types.includes(HostType.SSH.value)"
-                       v-permission="['asset:terminal:access']"
+                       v-permission="['terminal:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
               <span class="more-doption normal">SSH</span>
             </a-doption>
             <!-- RDP -->
             <a-doption v-if="record.types.includes(HostType.RDP.value)"
-                       v-permission="['asset:terminal:access']"
+                       v-permission="['terminal:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'RDP' } })">
               <span class="more-doption normal">RDP</span>
             </a-doption>

@@ -62,7 +62,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 上传 -->
-          <a-button v-permission="['asset:upload-task:upload']"
+          <a-button v-permission="['exec:upload-task:upload']"
                     type="primary"
                     @click="router.push({ name: 'batchUpload' })">
             上传
@@ -71,7 +71,7 @@
             </template>
           </a-button>
           <!-- 清空 -->
-          <a-button v-permission="['asset:upload-task:management:clear']"
+          <a-button v-permission="['exec:upload-task:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -84,7 +84,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['asset:upload-task:delete']"
+            <a-button v-permission="['exec:upload-task:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -142,7 +142,7 @@
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 详情 -->
-          <a-button v-permission="['asset:upload-task:query']"
+          <a-button v-permission="['exec:upload-task:query']"
                     type="text"
                     size="mini"
                     @click="router.push({ name: 'batchUpload', query: { id: record.id } })">
@@ -154,7 +154,7 @@
                         position="left"
                         type="warning"
                         @ok="doCancel(record)">
-            <a-button v-permission="['asset:upload-task:upload']"
+            <a-button v-permission="['exec:upload-task:upload']"
                       type="text"
                       size="mini">
               取消
@@ -165,7 +165,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:upload-task:delete']"
+            <a-button v-permission="['exec:upload-task:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -193,10 +193,10 @@
   import columns from '../types/table.columns';
   import { TableName, UploadTaskStatus, uploadTaskStatusKey } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
+  import { useRouter } from 'vue-router';
   import { useDictStore } from '@/store';
   import { copy } from '@/hooks/copy';
-  import { useRouter } from 'vue-router';
-  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
 
@@ -211,8 +211,8 @@
   const { toOptions, getDictValue } = useDictStore();
 
   const pullIntervalId = ref();
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<UploadTaskQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<UploadTaskQueryResponse>>([]);
   const formModel = reactive<UploadTaskQueryRequest>({
     id: undefined,
     userId: undefined,
@@ -277,6 +277,8 @@
     // 重新加载数据
     fetchTableData();
   };
+
+  defineExpose({ reload });
 
   // 加载状态
   const pullTaskStatus = async () => {
