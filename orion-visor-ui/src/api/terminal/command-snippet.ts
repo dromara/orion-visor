@@ -43,26 +43,26 @@ export interface CommandSnippetWrapperResponse {
  * 创建命令片段
  */
 export function createCommandSnippet(request: CommandSnippetCreateRequest) {
-  return axios.post('/asset/command-snippet/create', request);
+  return axios.post('/terminal/command-snippet/create', request);
 }
 
 /**
  * 更新命令片段
  */
 export function updateCommandSnippet(request: CommandSnippetUpdateRequest) {
-  return axios.put('/asset/command-snippet/update', request);
+  return axios.put('/terminal/command-snippet/update', request);
 }
 
 /**
  * 查询全部命令片段
  */
 export function getCommandSnippetList() {
-  return axios.get<CommandSnippetWrapperResponse>('/asset/command-snippet/list');
+  return axios.get<CommandSnippetWrapperResponse>('/terminal/command-snippet/list');
 }
 
 /**
  * 删除命令片段
  */
 export function deleteCommandSnippet(id: number) {
-  return axios.delete('/asset/command-snippet/delete', { params: { id } });
+  return axios.delete('/terminal/command-snippet/delete', { params: { id } });
 }

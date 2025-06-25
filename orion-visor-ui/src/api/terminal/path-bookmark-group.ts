@@ -28,27 +28,27 @@ export interface PathBookmarkGroupQueryResponse {
  * 创建路径书签分组
  */
 export function createPathBookmarkGroup(request: PathBookmarkGroupCreateRequest) {
-  return axios.post('/asset/path-bookmark-group/create', request);
+  return axios.post('/terminal/path-bookmark-group/create', request);
 }
 
 /**
  * 更新路径书签分组
  */
 export function updatePathBookmarkGroup(request: PathBookmarkGroupUpdateRequest) {
-  return axios.put('/asset/path-bookmark-group/update', request);
+  return axios.put('/terminal/path-bookmark-group/update', request);
 }
 
 /**
  * 查询全部路径书签分组
  */
 export function getPathBookmarkGroupList() {
-  return axios.get<Array<PathBookmarkGroupQueryResponse>>('/asset/path-bookmark-group/list');
+  return axios.get<Array<PathBookmarkGroupQueryResponse>>('/terminal/path-bookmark-group/list');
 }
 
 /**
  * 删除路径书签分组
  */
 export function deletePathBookmarkGroup(id: number) {
-  return axios.delete('/asset/path-bookmark-group/delete', { params: { id } });
+  return axios.delete('/terminal/path-bookmark-group/delete', { params: { id } });
 }
 

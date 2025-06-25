@@ -28,27 +28,27 @@ export interface CommandSnippetGroupQueryResponse {
  * 创建命令片段分组
  */
 export function createCommandSnippetGroup(request: CommandSnippetGroupCreateRequest) {
-  return axios.post('/asset/command-snippet-group/create', request);
+  return axios.post('/terminal/command-snippet-group/create', request);
 }
 
 /**
  * 更新命令片段分组
  */
 export function updateCommandSnippetGroup(request: CommandSnippetGroupUpdateRequest) {
-  return axios.put('/asset/command-snippet-group/update', request);
+  return axios.put('/terminal/command-snippet-group/update', request);
 }
 
 /**
  * 查询全部命令片段分组
  */
 export function getCommandSnippetGroupList() {
-  return axios.get<Array<CommandSnippetGroupQueryResponse>>('/asset/command-snippet-group/list');
+  return axios.get<Array<CommandSnippetGroupQueryResponse>>('/terminal/command-snippet-group/list');
 }
 
 /**
  * 删除命令片段分组
  */
 export function deleteCommandSnippetGroup(id: number) {
-  return axios.delete('/asset/command-snippet-group/delete', { params: { id } });
+  return axios.delete('/terminal/command-snippet-group/delete', { params: { id } });
 }
 

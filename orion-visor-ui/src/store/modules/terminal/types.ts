@@ -1,6 +1,5 @@
-import type { ISftpTransferManager, ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager } from '@/views/host/terminal/types/define';
+import type { ISftpTransferManager, ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager, TerminalTheme } from '@/views/terminal/interfaces';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
-import type { TerminalTheme } from '@/api/asset/terminal';
 
 export interface TerminalState {
   preference: TerminalPreference;
@@ -16,8 +15,10 @@ export interface TerminalState {
 export interface TerminalPreference {
   newConnectionType: string;
   theme: TerminalTheme;
-  displaySetting: TerminalDisplaySetting;
-  actionBarSetting: TerminalActionBarSetting;
+  sshDisplaySetting: TerminalSshDisplaySetting;
+  rdpGraphSetting: TerminalRdpGraphSetting;
+  sshActionBarSetting: TerminalSshActionBarSetting;
+  rdpActionBarSetting: TerminalRdpActionBarSetting;
   rightMenuSetting: Array<string>,
   interactSetting: TerminalInteractSetting;
   pluginsSetting: TerminalPluginsSetting;
@@ -25,8 +26,8 @@ export interface TerminalPreference {
   shortcutSetting: TerminalShortcutSetting;
 }
 
-// 显示设置
-export interface TerminalDisplaySetting {
+// SSH 显示设置
+export interface TerminalSshDisplaySetting {
   fontFamily?: string;
   fontSize?: number;
   lineHeight?: number;
@@ -37,9 +38,44 @@ export interface TerminalDisplaySetting {
   cursorBlink?: boolean;
 }
 
-// 操作栏设置
-export interface TerminalActionBarSetting {
+// RDP 图形化设置
+export interface TerminalRdpGraphSetting {
+  displaySize?: string;
+  displayWidth?: number;
+  displayHeight?: number;
+  enableAudioInput?: boolean;
+  enableAudioOutput?: boolean;
+  colorDepth?: number;
+  forceLossless?: boolean;
+  enableWallpaper?: boolean;
+  enableTheming?: boolean;
+  enableFontSmoothing?: boolean;
+  enableFullWindowDrag?: boolean;
+  enableDesktopComposition?: boolean;
+  enableMenuAnimations?: boolean;
+  disableBitmapCaching?: boolean;
+  disableOffscreenCaching?: boolean;
+  disableGlyphCaching?: boolean;
+}
+
+// SSH 操作栏设置
+export interface TerminalSshActionBarSetting {
   connectStatus?: boolean;
+  share?: boolean;
+
+  [key: string]: unknown;
+}
+
+// RDP 操作栏设置
+export interface TerminalRdpActionBarSetting {
+  position?: string;
+  display?: boolean;
+  combinationKey?: boolean;
+  clipboard?: boolean;
+  upload?: boolean;
+  saveRdp?: boolean;
+  disconnect?: boolean;
+  close?: boolean;
 
   [key: string]: unknown;
 }

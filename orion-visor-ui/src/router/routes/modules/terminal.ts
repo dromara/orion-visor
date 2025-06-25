@@ -1,15 +1,15 @@
 import type { AppRouteRecordRaw } from '../types';
 import { FULL_LAYOUT } from '../base';
 
-const HOST: AppRouteRecordRaw = {
-  name: 'hostModule',
-  path: '/host-module',
+const TERMINAL: AppRouteRecordRaw = {
+  name: 'terminalModule',
+  path: '/terminal-module',
   component: FULL_LAYOUT,
   children: [
     {
       name: 'terminal',
       path: '/terminal',
-      component: () => import('@/views/host/terminal/index.vue'),
+      component: () => import('@/views/terminal/index.vue'),
       meta: {
         noAffix: true
       }
@@ -17,4 +17,4 @@ const HOST: AppRouteRecordRaw = {
   ],
 };
 
-export default HOST;
+export default TERMINAL;

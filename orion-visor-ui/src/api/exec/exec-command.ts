@@ -18,12 +18,12 @@ export interface ExecCommandRequest {
  * 批量执行命令
  */
 export function batchExecCommand(request: ExecCommandRequest) {
-  return axios.post<ExecLogQueryResponse>('/asset/exec-command/exec', request);
+  return axios.post<ExecLogQueryResponse>('/exec/exec-command/exec', request);
 }
 
 /**
  * 重新执行命令
  */
 export function reExecCommand(request: ExecCommandRequest) {
-  return axios.post<ExecLogQueryResponse>('/asset/exec-command/re-exec', request);
+  return axios.post<ExecLogQueryResponse>('/exec/exec-command/re-exec', request);
 }

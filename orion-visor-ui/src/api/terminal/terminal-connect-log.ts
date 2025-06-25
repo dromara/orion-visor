@@ -46,6 +46,7 @@ export interface TerminalConnectLogQueryResponse extends TableData {
  */
 export interface TerminalConnectLogExtra {
   traceId: string;
+  channel: string;
   channelId: string;
   sessionId: string;
   address: string;
@@ -58,21 +59,21 @@ export interface TerminalConnectLogExtra {
  * 分页查询终端连接日志
  */
 export function getTerminalConnectLogPage(request: TerminalConnectLogQueryRequest) {
-  return axios.post<DataGrid<TerminalConnectLogQueryResponse>>('/asset/terminal-connect-log/query', request);
+  return axios.post<DataGrid<TerminalConnectLogQueryResponse>>('/terminal/terminal-connect-log/query', request);
 }
 
 /**
  * 查询全部终端连接会话
  */
 export function getTerminalConnectSessions(request: TerminalConnectLogQueryRequest) {
-  return axios.post<Array<TerminalConnectLogQueryResponse>>('/asset/terminal-connect-log/sessions', request);
+  return axios.post<Array<TerminalConnectLogQueryResponse>>('/terminal/terminal-connect-log/sessions', request);
 }
 
 /**
  * 查询用户最近连接的主机
  */
 export function getLatestConnectHostId(type: string, limit: number) {
-  return axios.post<Array<number>>('/asset/terminal-connect-log/latest-connect', {
+  return axios.post<Array<number>>('/terminal/terminal-connect-log/latest-connect', {
     type,
     limit
   });
@@ -82,7 +83,7 @@ export function getLatestConnectHostId(type: string, limit: number) {
  * 删除终端连接日志
  */
 export function deleteTerminalConnectLog(idList: Array<number>) {
-  return axios.delete('/asset/terminal-connect-log/delete', {
+  return axios.delete('/terminal/terminal-connect-log/delete', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
@@ -94,14 +95,14 @@ export function deleteTerminalConnectLog(idList: Array<number>) {
  * 查询终端连接日志数量
  */
 export function getTerminalConnectLogCount(request: TerminalConnectLogQueryRequest) {
-  return axios.post<number>('/asset/terminal-connect-log/count', request);
+  return axios.post<number>('/terminal/terminal-connect-log/count', request);
 }
 
 /**
  * 清空终端连接日志
  */
 export function clearTerminalConnectLog(request: TerminalConnectLogClearRequest) {
-  return axios.post<number>('/asset/terminal-connect-log/clear', request, {
+  return axios.post<number>('/terminal/terminal-connect-log/clear', request, {
     timeout: 60000,
   });
 }
@@ -110,5 +111,5 @@ export function clearTerminalConnectLog(request: TerminalConnectLogClearRequest)
  * 强制断开终端连接
  */
 export function hostForceOffline(request: TerminalConnectLogQueryRequest) {
-  return axios.put('/asset/terminal-connect-log/force-offline', request);
+  return axios.put('/terminal/terminal-connect-log/force-offline', request);
 }

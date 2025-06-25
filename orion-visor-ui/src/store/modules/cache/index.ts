@@ -2,12 +2,13 @@ import type { CacheState, CacheType } from './types';
 import type { AxiosResponse } from 'axios';
 import type { TagType } from '@/api/meta/tag';
 import { getTagList } from '@/api/meta/tag';
+import type { HostGroupQueryResponse } from '@/api/asset/host-group';
+import { getHostGroupTree } from '@/api/asset/host-group';
+import { getSystemAggregateSetting } from '@/api/system/setting';
 import type { HostType } from '@/api/asset/host';
 import { getHostList } from '@/api/asset/host';
 import type { PreferenceType } from '@/api/user/preference';
 import { getPreference } from '@/api/user/preference';
-import type { HostGroupQueryResponse } from '@/api/asset/host-group';
-import { getHostGroupTree } from '@/api/asset/host-group';
 import usePermission from '@/hooks/permission';
 import { defineStore } from 'pinia';
 import { flatNodes } from '@/utils/tree';
@@ -18,12 +19,11 @@ import { getHostKeyList } from '@/api/asset/host-key';
 import { getHostIdentityList } from '@/api/asset/host-identity';
 import { getMenuList } from '@/api/system/menu';
 import { getCurrentAuthorizedHost, getCurrentAuthorizedHostIdentity, getCurrentAuthorizedHostKey } from '@/api/asset/asset-authorized-data';
-import { getCommandSnippetGroupList } from '@/api/asset/command-snippet-group';
+import { getCommandSnippetGroupList } from '@/api/terminal/command-snippet-group';
 import { getExecJobList } from '@/api/exec/exec-job';
-import { getPathBookmarkGroupList } from '@/api/asset/path-bookmark-group';
-import { getCommandSnippetList } from '@/api/asset/command-snippet';
-import { getPathBookmarkList } from '@/api/asset/path-bookmark';
-import { getSystemAggregateSetting } from '@/api/system/setting';
+import { getPathBookmarkGroupList } from '@/api/terminal/path-bookmark-group';
+import { getCommandSnippetList } from '@/api/terminal/command-snippet';
+import { getPathBookmarkList } from '@/api/terminal/path-bookmark';
 
 export default defineStore('cache', {
   state: (): CacheState => ({}),
@@ -170,7 +170,7 @@ export default defineStore('cache', {
 
     // 获取执行计划列表
     async loadExecJobs(force = false) {
-      return await this.load('execJob', getExecJobList, ['asset:exec-job:query'], force);
+      return await this.load('execJob', getExecJobList, ['exec:exec-job:query'], force);
     },
 
     // 加载偏好

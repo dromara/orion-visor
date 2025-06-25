@@ -110,48 +110,48 @@ export interface UploadTaskStatusResponse extends TableData {
  * 创建上传任务
  */
 export function createUploadTask(request: UploadTaskCreateRequest) {
-  return axios.post<UploadTaskCreateResponse>('/asset/upload-task/create', request);
+  return axios.post<UploadTaskCreateResponse>('/exec/upload-task/create', request);
 }
 
 /**
  * 创建上传任务
  */
 export function startUploadTask(id: number) {
-  return axios.post('/asset/upload-task/start', { id });
+  return axios.post('/exec/upload-task/start', { id });
 }
 
 /**
  * 创建上传任务
  */
 export function cancelUploadTask(id: number, failed: boolean) {
-  return axios.post('/asset/upload-task/cancel', { id, failed });
+  return axios.post('/exec/upload-task/cancel', { id, failed });
 }
 
 /**
  * 查询上传任务
  */
 export function getUploadTask(id: number) {
-  return axios.get<UploadTaskQueryResponse>('/asset/upload-task/get', { params: { id } });
+  return axios.get<UploadTaskQueryResponse>('/exec/upload-task/get', { params: { id } });
 }
 
 /**
  * 分页查询上传任务
  */
 export function getUploadTaskPage(request: UploadTaskQueryRequest) {
-  return axios.post<DataGrid<UploadTaskQueryResponse>>('/asset/upload-task/query', request);
+  return axios.post<DataGrid<UploadTaskQueryResponse>>('/exec/upload-task/query', request);
 }
 
 /**
  * 查询上传任务状态
  */
 export function getUploadTaskStatus(idList: Array<number>, queryFiles: boolean) {
-  return axios.get<Array<UploadTaskStatusResponse>>('/asset/upload-task/status', {
+  return axios.get<Array<UploadTaskStatusResponse>>('/exec/upload-task/status', {
     params: { idList, queryFiles },
     promptBizErrorMessage: false,
     promptRequestErrorMessage: false,
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
-    }
+    },
   });
 }
 
@@ -159,14 +159,14 @@ export function getUploadTaskStatus(idList: Array<number>, queryFiles: boolean) 
  * 删除上传任务
  */
 export function deleteUploadTask(id: number) {
-  return axios.delete('/asset/upload-task/delete', { params: { id } });
+  return axios.delete('/exec/upload-task/delete', { params: { id } });
 }
 
 /**
  * 批量删除上传任务
  */
 export function batchDeleteUploadTask(idList: Array<number>) {
-  return axios.delete('/asset/upload-task/batch-delete', {
+  return axios.delete('/exec/upload-task/batch-delete', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
@@ -178,14 +178,14 @@ export function batchDeleteUploadTask(idList: Array<number>) {
  * 查询批量上传任务数量
  */
 export function getUploadTaskCount(request: UploadTaskQueryRequest) {
-  return axios.post<number>('/asset/upload-task/count', request);
+  return axios.post<number>('/exec/upload-task/count', request);
 }
 
 /**
- * 清空查询批量上传任务
+ * 清空批量上传任务
  */
 export function clearUploadTask(request: UploadTaskClearRequest) {
-  return axios.post<number>('/asset/upload-task/clear', request, {
+  return axios.post<number>('/exec/upload-task/clear', request, {
     timeout: 60000,
   });
 }

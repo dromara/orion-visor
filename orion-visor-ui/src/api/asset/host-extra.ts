@@ -25,6 +25,13 @@ export interface HostSshExtraSettingModel {
   identityId: number;
 }
 
+// RDP 额外配置
+export interface HostRdpExtraSettingModel {
+  authType: string;
+  identityId: number;
+  lowBandwidthMode: boolean;
+}
+
 // 标签额外配置
 export interface HostLabelExtraSettingModel {
   alias: string;

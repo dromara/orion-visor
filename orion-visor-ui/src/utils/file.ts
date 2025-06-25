@@ -27,7 +27,11 @@ export function readBlobText(blob: Blob) {
 export function readFileText(e: File, encoding = 'UTF-8'): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.readAsText(e, encoding);
+    if (encoding === 'base64') {
+      reader.readAsDataURL(e);
+    } else {
+      reader.readAsText(e, encoding);
+    }
     reader.onload = res => {
       resolve(res.target?.result as string);
     };

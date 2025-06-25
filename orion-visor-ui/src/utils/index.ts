@@ -167,6 +167,11 @@ export const sleep = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+// ansi 着色
+export const ansi = (code: number | string, msg: string, newLine: boolean = true) => {
+  return `[${code}m${msg}[0m${newLine ? '\r\n' : ''}`;
+};
+
 // 添加后缀
 export const addSuffix = (value: any, suffix: string) => {
   if (value === undefined || value === '') {
@@ -206,7 +211,7 @@ export function getUUID() {
 /**
  * 获取会话id
  */
-export const nextId = (len: number): string => {
+export const nextId = (len: number = 10): string => {
   return getUUID().replaceAll('-', '').substring(0, len);
 };
 

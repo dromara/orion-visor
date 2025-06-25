@@ -34,11 +34,9 @@ export interface UserQueryRequest extends Pagination, OrderDirection {
   username?: string;
   password?: string;
   nickname?: string;
-  avatar?: string;
   mobile?: string;
   email?: string;
   status?: number;
-  lastLoginTime?: string;
   description?: string;
 }
 
@@ -156,6 +154,13 @@ export function getUserRoleIdList(userId: number) {
  */
 export function getUserPage(request: UserQueryRequest) {
   return axios.post<DataGrid<UserQueryResponse>>('/infra/system-user/query', request);
+}
+
+/**
+ * 查询用户数量
+ */
+export function getUserCount(request: UserQueryRequest) {
+  return axios.post<number>('/infra/system-user/count', request);
 }
 
 /**

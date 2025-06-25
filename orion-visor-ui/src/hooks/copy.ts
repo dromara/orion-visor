@@ -18,7 +18,7 @@ export const copy = async (value: string | undefined, tips: string | boolean = `
 };
 
 // 获取剪切板内容
-export const readText = () => {
+export const readText = (tips: boolean = true) => {
   if (navigator.clipboard) {
     return navigator.clipboard.readText();
   } else {
@@ -30,7 +30,7 @@ export const readText = () => {
       textarea.select();
       try {
         const success = document.execCommand('paste');
-        if (!success) {
+        if (!success && tips) {
           Message.error('当前环境无法读取剪切板内容');
         }
         resolve(textarea.value);

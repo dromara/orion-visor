@@ -4,6 +4,8 @@ import type { Options } from '@/types/global';
 import { defineStore } from 'pinia';
 import { getDictValueList } from '@/api/system/dict-value';
 
+export const ALL_OPTION: Options = { label: '全部', value: '' };
+
 export default defineStore('dict', {
   state: (): DictState => ({}),
 
@@ -25,13 +27,41 @@ export default defineStore('dict', {
     },
 
     // 获取字典选项
-    toOptions(key: string) {
-      return this.$state[key];
+    toOptions(key: string, firstOption: boolean | Record<string, any> = false): Options[] {
+      if (firstOption === true) {
+        return [{ ...ALL_OPTION }, ...this.$state[key]];
+      } else if (firstOption) {
+        return [{ ...ALL_OPTION, ...firstOption }, ...this.$state[key]];
+      } else {
+        return this.$state[key];
+      }
+    },
+
+    // 转为 unref 的字典选项
+    toUnrefOptions(key: string, firstOption: boolean | Record<string, any> = false): Options[] {
+      return this.toOptions(key, firstOption)
+        .map(s => {
+          return { ...s };
+        });
     },
 
     // 获取字典选项
-    toRadioOptions(key: string) {
-      return this.$state[key] as RadioOption[];
+    toRadioOptions(key: string, firstOption: boolean | Record<string, any> = false): RadioOption[] {
+      if (firstOption === true) {
+        return [{ ...ALL_OPTION }, ...this.$state[key]] as RadioOption[];
+      } else if (firstOption) {
+        return [{ ...ALL_OPTION, ...firstOption }, ...this.$state[key]] as RadioOption[];
+      } else {
+        return this.$state[key] as RadioOption[];
+      }
+    },
+
+    // 转为 unref 的字典选项
+    toUnrefRadioOptions(key: string, firstOption: boolean | Record<string, any> = false): RadioOption[] {
+      return this.toRadioOptions(key, firstOption)
+        .map(s => {
+          return { ...s };
+        });
     },
 
     // 获取字典值

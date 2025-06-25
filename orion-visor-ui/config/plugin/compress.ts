@@ -2,7 +2,7 @@ import type { Plugin } from 'vite';
 import compressPlugin from 'vite-plugin-compression';
 
 /**
- * gzip压缩
+ * gzip 压缩
  * https://github.com/anncwb/vite-plugin-compression
  */
 export default function configCompressPlugin(
@@ -19,7 +19,7 @@ export default function configCompressPlugin(
       })
     );
   }
-
+  // br 压缩
   if (compress === 'brotli') {
     plugins.push(
       compressPlugin({

@@ -20,14 +20,6 @@ export interface RoleUpdateRequest extends RoleCreateRequest {
 }
 
 /**
- * 角色 分配绑定请求
- */
-export interface RoleGrantMenuRequest extends RoleCreateRequest {
-  roleId: number;
-  menuIdList: Array<number>;
-}
-
-/**
  * 角色查询请求
  */
 export interface RoleQueryRequest extends Pagination, OrderDirection {
@@ -36,6 +28,14 @@ export interface RoleQueryRequest extends Pagination, OrderDirection {
   code?: string;
   status?: number;
   description?: string;
+}
+
+/**
+ * 角色 分配绑定请求
+ */
+export interface RoleGrantMenuRequest extends RoleCreateRequest {
+  roleId: number;
+  menuIdList: Array<number>;
 }
 
 /**

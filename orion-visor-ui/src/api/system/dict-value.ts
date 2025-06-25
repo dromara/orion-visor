@@ -1,4 +1,4 @@
-import type { DataGrid, Options, OrderDirection, Pagination } from '@/types/global';
+import type { DataGrid, OrderDirection, Options, Pagination } from '@/types/global';
 import type { TableData } from '@arco-design/web-vue';
 import axios from 'axios';
 import qs from 'query-string';

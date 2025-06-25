@@ -14,7 +14,7 @@ export const isStandaloneMode = (() => (
 
 // http base url
 export const httpBaseUrl = (() => {
-  const configBase = import.meta.env.VITE_API_BASE_URL;
+  const configBase = import.meta.env.VITE_API_BASE_URL || '';
   if (configBase.startsWith('http')) {
     // 固定
     return configBase;
@@ -28,7 +28,7 @@ export const httpBaseUrl = (() => {
 
 // websocket base url
 export const webSocketBaseUrl = (() => {
-  const configBase = import.meta.env.VITE_WS_BASE_URL;
+  const configBase = import.meta.env.VITE_WS_BASE_URL || '';
   if (configBase.startsWith('ws')) {
     // 固定
     return configBase;

@@ -1,31 +1,40 @@
 import type {
-  TerminalActionBarSetting,
-  TerminalDisplaySetting,
   TerminalInteractSetting,
   TerminalPluginsSetting,
   TerminalPreference,
+  TerminalRdpActionBarSetting,
+  TerminalRdpGraphSetting,
   TerminalSessionSetting,
   TerminalShortcutSetting,
+  TerminalSshActionBarSetting,
+  TerminalSshDisplaySetting,
   TerminalState
 } from './types';
-import type { ISshSession, ITerminalSession, PanelSessionTabType, TerminalPanelTabItem } from '@/views/host/terminal/types/define';
+import type {
+  IDomViewportHandler,
+  ISshSession,
+  ITerminalSession,
+  TerminalSessionTabItem,
+  TerminalSessionType,
+  TerminalTheme,
+  TerminalThemeSchema
+} from '@/views/terminal/interfaces';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 import type { HostQueryResponse } from '@/api/asset/host';
-import type { TerminalTheme, TerminalThemeSchema } from '@/api/asset/terminal';
-import { getTerminalThemes } from '@/api/asset/terminal';
 import { markRaw } from 'vue';
+import { getTerminalThemes } from '@/api/terminal/terminal';
 import { defineStore } from 'pinia';
 import { getPreference, updatePreference } from '@/api/user/preference';
-import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
+import { getLatestConnectHostId } from '@/api/terminal/terminal-connect-log';
+import { useCacheStore } from '@/store';
 import { nextId } from '@/utils';
 import { isObject } from '@/utils/is';
 import { Message } from '@arco-design/web-vue';
-import { useCacheStore } from '@/store';
-import { PanelSessionType, TerminalTabs } from '@/views/host/terminal/types/const';
-import TerminalTabManager from '@/views/host/terminal/handler/terminal-tab-manager';
-import TerminalSessionManager from '@/views/host/terminal/handler/terminal-session-manager';
-import TerminalPanelManager from '@/views/host/terminal/handler/terminal-panel-manager';
-import SftpTransferManager from '@/views/host/terminal/handler/sftp-transfer-manager';
+import { TerminalSessionTypes, TerminalTabs } from '@/views/terminal/types/const';
+import TerminalTabManager from '@/views/terminal/service/tab/terminal-tab-manager';
+import TerminalPanelManager from '@/views/terminal/service/tab/terminal-panel-manager';
+import TerminalSessionManager from '@/views/terminal/service/session/terminal-session-manager';
+import SftpTransferManager from '@/views/terminal/service/transfer/sftp-transfer-manager';
 
 // 终端偏好项
 export const TerminalPreferenceItem = {
@@ -33,10 +42,14 @@ export const TerminalPreferenceItem = {
   NEW_CONNECTION_TYPE: 'newConnectionType',
   // 终端主题
   THEME: 'theme',
-  // 显示设置
-  DISPLAY_SETTING: 'displaySetting',
-  // 操作栏设置
-  ACTION_BAR_SETTING: 'actionBarSetting',
+  // ssh 显示设置
+  SSH_DISPLAY_SETTING: 'sshDisplaySetting',
+  // rdp 图形化设置
+  RDP_GRAPH_SETTING: 'rdpGraphSetting',
+  // ssh 操作栏设置
+  SSH_ACTION_BAR_SETTING: 'sshActionBarSetting',
+  // rdp 操作栏设置
+  RDP_ACTION_BAR_SETTING: 'rdpActionBarSetting',
   // 右键菜单设置
   RIGHT_MENU_SETTING: 'rightMenuSetting',
   // 交互设置
@@ -56,8 +69,10 @@ export default defineStore('terminal', {
       theme: {
         schema: {} as TerminalThemeSchema
       } as TerminalTheme,
-      displaySetting: {} as TerminalDisplaySetting,
-      actionBarSetting: {} as TerminalActionBarSetting,
+      sshDisplaySetting: {} as TerminalSshDisplaySetting,
+      rdpGraphSetting: {} as TerminalRdpGraphSetting,
+      sshActionBarSetting: {} as TerminalSshActionBarSetting,
+      rdpActionBarSetting: {} as TerminalRdpActionBarSetting,
       rightMenuSetting: [],
       interactSetting: {} as TerminalInteractSetting,
       pluginsSetting: {} as TerminalPluginsSetting,
@@ -147,7 +162,10 @@ export default defineStore('terminal', {
     },
 
     // 打开会话
-    openSession(record: HostQueryResponse, type: PanelSessionTabType, panelIndex: number = 0) {
+    openSession(record: HostQueryResponse, type: TerminalSessionType, panelIndex: number | undefined = undefined) {
+      if (panelIndex === undefined) {
+        panelIndex = this.panelManager.active;
+      }
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([record.id, ...this.hosts.latestHosts])];
       // 切换到终端面板页面
@@ -163,39 +181,41 @@ export default defineStore('terminal', {
         ? Math.max(...seqArr) + 1
         : 1;
       // 打开 tab
-      const sessionId = nextId(10);
       this.panelManager.getPanel(panelIndex).openTab({
-        key: sessionId,
-        sessionId,
+        key: nextId(),
+        panelIndex: panelIndex,
         seq: nextSeq,
+        name: record.alias || record.name,
         title: `(${nextSeq}) ${record.alias || record.name}`,
         hostId: record.id,
         address: record.address,
         color: record.color,
         icon: type.icon,
-        type: type.type
+        type: type.type,
+        extra: record.extra,
       });
     },
 
     // 重新打开会话
-    async reOpenSession(sessionId: string, panelIndex: number = 0) {
+    async reOpenSession(sessionKey: string) {
       // 切换到终端面板页面
       this.tabManager.openTab(TerminalTabs.TERMINAL_PANEL);
-      // 获取当前面板 tab 并且分配新的 sessionId
-      const panel = this.panelManager.getPanel(panelIndex);
-      const tab = panel.items.find(s => s.sessionId === sessionId);
+      // 获取当前面板 tab
+      const tab = this.panelManager.panels
+        .map(s => s.items)
+        .flat()
+        .find(s => s.key === sessionKey);
       if (!tab) {
         return;
       }
-      const newSessionId = tab.sessionId = nextId(10);
       // 添加到最近连接
       this.hosts.latestHosts = [...new Set([tab.hostId, ...this.hosts.latestHosts])];
       // 重新打开会话
-      await this.sessionManager.reOpenSession(sessionId, newSessionId);
+      await this.sessionManager.reOpenSession(sessionKey);
     },
 
     // 复制并且打开会话
-    copySession(item: TerminalPanelTabItem, panelIndex: number = 0) {
+    copySession(item: TerminalSessionTabItem, panelIndex: number) {
       const host = this.hosts.hostList
         .find(s => s.id === item.hostId);
       if (host) {
@@ -207,83 +227,90 @@ export default defineStore('terminal', {
       }
     },
 
-    // 获取当前会话类型
-    getCurrentSessionType(tips: boolean = false) {
+    // 检查是否在终端面板
+    checkTerminalPanelActive(): boolean {
       // 获取当前 activeTab
       const activeTab = this.tabManager.active;
       if (activeTab !== TerminalTabs.TERMINAL_PANEL.key) {
-        if (tips) {
-          Message.warning('请切换到终端标签页');
-        }
-        return;
+        Message.warning('请切换到终端标签页');
+        return false;
       }
-      // 获取面板会话
-      const type = this.panelManager
+      return true;
+    },
+
+    // 获取当前会话类型
+    getCurrentSessionType() {
+      return this.panelManager
         .getCurrentPanel()
         .getCurrentTab()
         ?.type;
-      if (!type && tips) {
-        Message.warning(`请打开 ${type}`);
+    },
+
+    // 获取当前 domViewportHandler
+    getCurrentDomViewportHandler(): IDomViewportHandler | undefined {
+      // 获取当前会话
+      const session = this._getCurrentSession<ISshSession>();
+      if (!session) {
         return;
       }
-      return type;
+      return session as unknown as IDomViewportHandler;
     },
 
     // 获取当前会话
-    getCurrentSession<T extends ITerminalSession>(type: string, tips: boolean = false) {
+    getCurrentSession<T extends ITerminalSession>(type?: string, check: boolean = false) {
       // 获取当前 activeTab
-      const activeTab = this.tabManager.active;
-      if (activeTab !== TerminalTabs.TERMINAL_PANEL.key) {
-        if (tips) {
-          Message.warning('请切换到终端标签页');
-        }
+      if (check && !this.checkTerminalPanelActive()) {
         return;
       }
       // 获取当前会话
       const session = this._getCurrentSession<T>(type);
-      if (!session && tips) {
-        Message.warning(`请打开 ${type}`);
+      if (!session && check) {
+        Message.warning(`请打开 ${type || '终端'}`);
+        return;
       }
       return session;
     },
 
     // 获取当前会话
-    _getCurrentSession<T extends ITerminalSession>(type: string): T | undefined {
+    _getCurrentSession<T extends ITerminalSession>(type?: string): T | undefined {
       // 获取面板会话
       const sessionTab = this.panelManager
         .getCurrentPanel()
         .getCurrentTab();
-      if (!sessionTab || sessionTab.type !== type) {
+      if (!sessionTab) {
+        return;
+      }
+      if (type && sessionTab.type !== type) {
         return;
       }
       // 获取会话
-      return this.sessionManager.getSession<T>(sessionTab.sessionId);
+      return this.sessionManager.getSession<T>(sessionTab.key);
     },
 
     // 拼接命令到当前会话
-    appendCommandToCurrentSession(command: string, newLine: boolean = false) {
-      this.appendCommandToSession(this.getCurrentSession<ISshSession>(PanelSessionType.SSH.type, true), command, newLine);
+    appendCommandToCurrentSession(command: string, newLine: boolean = false, focus?: boolean) {
+      this.appendCommandToSession(this.getCurrentSession<ISshSession>(TerminalSessionTypes.SSH.type, true), command, newLine, focus);
     },
 
     // 拼接命令到会话
-    appendCommandToSession(session: ISshSession | undefined, command: string, newLine: boolean = false) {
+    appendCommandToSession(session: ISshSession | undefined, command: string, newLine: boolean = false, focus?: boolean) {
       const handler = session?.handler;
       if (handler && handler.enabledStatus('checkAppendMissing')) {
         if (newLine) {
           command = `${command}\r\n`;
         }
-        handler.checkAppendMissing(command);
+        handler.checkAppendMissing(command, focus);
       }
     },
 
     // 粘贴命令到会话
-    pasteCommandToSession(session: ISshSession | undefined, command: string, newLine: boolean = false) {
+    pasteCommandToSession(session: ISshSession | undefined, command: string, newLine: boolean = false, focus?: boolean) {
       const handler = session?.handler;
       if (handler && handler.enabledStatus('pasteOrigin')) {
         if (newLine) {
           command = `${command}\r\n`;
         }
-        handler.pasteOrigin(command);
+        handler.pasteOrigin(command, focus);
       }
     },
 
