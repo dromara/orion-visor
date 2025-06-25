@@ -1,5 +1,6 @@
 version: '3.3'
 
+# latest = 2.4.0
 services:
   ui:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
@@ -100,7 +101,6 @@ services:
       GUACD_LOG_FILE: /var/log/guacd.log
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/drive:/drive
-      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/record:/record
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/var-logs:/var/log
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-lib:/usr/local/guacamole/lib
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-extensions:/usr/local/guacamole/extensions
