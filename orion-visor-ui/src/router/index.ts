@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from 'vue-router';
-import type { TagProps } from '@/store/modules/tab-bar/types';
 import { createRouter, createWebHistory } from 'vue-router';
+import type { TagProps } from '@/store/modules/tab-bar/types';
 import { appRoutes } from './routes';
 import { openWindow } from '@/utils';
 import { isStandaloneMode } from '@/utils/env';

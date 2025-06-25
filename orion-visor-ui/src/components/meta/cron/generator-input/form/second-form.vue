@@ -40,7 +40,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { useFromEmits, useFormProps, useFormSetup } from './use-mixin';
+  import { useFormProps, useFormSetup, useFromEmits } from './use-mixin';
 
   export default defineComponent({
     name: 'SecondForm',

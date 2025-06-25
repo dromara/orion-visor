@@ -1,7 +1,7 @@
 import type { Ref } from 'vue';
 import { reactive, ref } from 'vue';
 import type { PaginationProps } from '@arco-design/web-vue';
-import type { ColResponsiveValue, CardFieldConfig, CardField } from '@/types/card';
+import type { CardField, CardFieldConfig, ColResponsiveValue } from '@/types/card';
 import { isNumber } from '@/utils/is';
 import { useAppStore } from '@/store';
 import { CardPageSizeOptions } from '@/types/const';

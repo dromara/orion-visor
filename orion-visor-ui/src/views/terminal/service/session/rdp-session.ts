@@ -1,15 +1,15 @@
 import type {
+  GuacdInitConfig,
+  GuacdReactiveSessionStatus,
   IGuacdChannel,
   IRdpSession,
-  TerminalSessionTabItem,
-  GuacdInitConfig,
+  IRdpSessionClipboardHandler,
   IRdpSessionDisplayHandler,
-  GuacdReactiveSessionStatus,
-  IRdpSessionClipboardHandler
+  TerminalSessionTabItem
 } from '@/views/terminal/interfaces';
 import type { OutputPayload } from '@/views/terminal/types/protocol';
 import { InputProtocol } from '@/views/terminal/types/protocol';
-import { TerminalMessages, fitDisplayValue, TerminalCloseCode } from '@/views/terminal/types/const';
+import { fitDisplayValue, TerminalCloseCode, TerminalMessages } from '@/views/terminal/types/const';
 import { screenshot } from '@/views/terminal/types/utils';
 import { useTerminalStore } from '@/store';
 import Guacamole from 'guacamole-common-js';

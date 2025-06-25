@@ -1,7 +1,7 @@
 import type { ITerminalChannel, ITerminalSession } from '@/views/terminal/interfaces';
 import type { InputPayload, OutputPayload, Protocol } from '@/views/terminal/types/protocol';
 import { format, InputProtocol, OutputProtocol, parse } from '@/views/terminal/types/protocol';
-import { TerminalMessages, TerminalCloseCode } from '../../types/const';
+import { TerminalCloseCode, TerminalMessages } from '../../types/const';
 import { Message } from '@arco-design/web-vue';
 
 // 终端通信处理器 实现

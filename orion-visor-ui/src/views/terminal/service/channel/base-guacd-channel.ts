@@ -1,4 +1,4 @@
-import type { ITerminalSession, IGuacdChannel, GuacdReactiveSessionStatus } from '@/views/terminal/interfaces';
+import type { GuacdReactiveSessionStatus, IGuacdChannel, ITerminalSession } from '@/views/terminal/interfaces';
 import type { OutputPayload } from '../../types/protocol';
 import { InputProtocol, OutputProtocol } from '../../types/protocol';
 import { TerminalCloseCode, TerminalMessages } from '@/views/terminal/types/const';

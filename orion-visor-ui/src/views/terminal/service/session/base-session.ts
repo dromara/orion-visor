@@ -1,6 +1,6 @@
 import type { Reactive } from 'vue';
 import { reactive } from 'vue';
-import type { ITerminalChannel, ITerminalSession, ReactiveSessionStatus, TerminalSessionTabItem, SessionHostInfo } from '@/views/terminal/interfaces';
+import type { ITerminalChannel, ITerminalSession, ReactiveSessionStatus, SessionHostInfo, TerminalSessionTabItem } from '@/views/terminal/interfaces';
 import { TerminalStatus } from '@/views/terminal/types/const';
 
 // 会话基类
