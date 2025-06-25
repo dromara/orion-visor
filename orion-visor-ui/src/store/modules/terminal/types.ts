@@ -61,7 +61,6 @@ export interface TerminalRdpGraphSetting {
 // SSH 操作栏设置
 export interface TerminalSshActionBarSetting {
   connectStatus?: boolean;
-  share?: boolean;
 
   [key: string]: unknown;
 }

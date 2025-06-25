@@ -30,12 +30,6 @@
                       :default-checked="true"
                       type="round" />
           </a-form-item>
-          <!-- 分享按钮 -->
-          <a-form-item field="share" label="分享按钮">
-            <a-switch v-model="formModel.share"
-                      :default-checked="true"
-                      type="round" />
-          </a-form-item>
         </a-space>
       </a-form>
     </div>

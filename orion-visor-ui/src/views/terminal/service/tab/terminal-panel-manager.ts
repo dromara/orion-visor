@@ -10,7 +10,7 @@ export default class TerminalPanelManager implements ITerminalPanelManager {
 
   constructor() {
     this.active = 0;
-    this.panels = [new TerminalTabManager(), new TerminalTabManager()];
+    this.panels = [new TerminalTabManager()];
   }
 
   // 获取当前面板

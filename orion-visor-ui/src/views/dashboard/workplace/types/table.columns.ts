@@ -8,6 +8,7 @@ export const terminalLogColumns = [
     dataIndex: 'hostName',
     slotName: 'hostName',
     align: 'left',
+    minWidth: 98,
     ellipsis: true,
   }, {
     title: '类型',
@@ -20,7 +21,7 @@ export const terminalLogColumns = [
     dataIndex: 'startTime',
     slotName: 'startTime',
     align: 'center',
-    width: 180,
+    width: 168,
     render: ({ record }) => {
       return dateFormat(new Date(record.startTime));
     },
@@ -40,6 +41,7 @@ export const batchExecColumns = [
     dataIndex: 'description',
     slotName: 'description',
     align: 'left',
+    minWidth: 98,
     ellipsis: true,
     tooltip: true,
   }, {
@@ -53,7 +55,7 @@ export const batchExecColumns = [
     dataIndex: 'startTime',
     slotName: 'startTime',
     align: 'center',
-    width: 180,
+    width: 168,
     render: ({ record }) => {
       return dateFormat(new Date(record.startTime));
     },
@@ -72,6 +74,7 @@ export const userLoginColumns = [
     title: '登录设备',
     dataIndex: 'content',
     slotName: 'content',
+    minWidth: 98,
     ellipsis: true,
     tooltip: true,
   }, {

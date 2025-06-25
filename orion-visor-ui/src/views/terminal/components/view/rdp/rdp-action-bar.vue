@@ -311,7 +311,7 @@
     border-radius: 8px;
     transition: .3s all;
     background: var(--color-bg-rdp-toolbar);
-    filter: contrast(150%) brightness(80%);
+    filter: contrast(50%) brightness(50%);
 
     &.top {
       width: 240px;

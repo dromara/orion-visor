@@ -28,7 +28,6 @@ import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.asset.entity.domain.HostConfigDO;
-import org.dromara.visor.module.asset.entity.po.HostTypeCountPO;
 
 import java.util.List;
 
@@ -133,12 +132,5 @@ public interface HostConfigDAO extends IMapper<HostConfigDO> {
      * @return effect
      */
     int setIdentityIdWithNull(@Param("identityIdList") List<Long> identityIdList);
-
-    /**
-     * 查询启用的主机类型数量
-     *
-     * @return count
-     */
-    List<HostTypeCountPO> selectEnabledTypeCount();
 
 }

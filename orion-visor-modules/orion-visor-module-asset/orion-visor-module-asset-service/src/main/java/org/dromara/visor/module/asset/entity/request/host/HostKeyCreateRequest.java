@@ -61,7 +61,6 @@ public class HostKeyCreateRequest implements Serializable {
     @Schema(description = "私钥文本")
     private String privateKey;
 
-    @NotBlank
     @ParamDecrypt
     @Schema(description = "密码")
     private String password;

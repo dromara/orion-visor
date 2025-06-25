@@ -96,7 +96,6 @@ export const TerminalCloseCode = {
 export const TerminalMessages = {
   sessionClosed: '会话已结束...',
   waitingReconnect: '输入回车重新连接...',
-  waitingJoin: '等待分享者同意...',
   loggedElsewhere: '该账号已在另一台设备登录',
   rdpConnectTimeout: '请检查远程计算机网络及其他配置是否正常',
 };

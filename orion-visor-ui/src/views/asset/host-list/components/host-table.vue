@@ -262,28 +262,22 @@
             连接
           </a-button>
           <!-- 多协议连接 -->
-          <a-popover v-else-if="(record.types?.length || 0) > 1"
-                     v-permission="['terminal:terminal:access']"
+          <a-popover v-if="(record.types?.length || 0) > 1"
                      :title="undefined"
                      :content-style="{ padding: '8px' }">
-            <a-button type="text" size="mini">
+            <a-button v-permission="['terminal:terminal:access']"
+                      type="text"
+                      size="mini">
               连接
             </a-button>
             <template #content>
               <a-space>
-                <!-- SSH -->
-                <a-button v-if="record.types.includes(HostType.SSH.value)"
+                <a-button v-for="type in record.types"
+                          :key="type"
                           type="text"
                           size="mini"
-                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: record.types[0] } })">
-                  SSH
-                </a-button>
-                <!-- RDP -->
-                <a-button v-if="record.types.includes(HostType.RDP.value)"
-                          type="text"
-                          size="mini"
-                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'RDP' } })">
-                  RDP
+                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type} })">
+                  {{ type }}
                 </a-button>
               </a-space>
             </template>
@@ -346,7 +340,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { deleteHost, batchDeleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { tagColor, hostTypeKey, hostStatusKey, HostType, hostOsTypeKey, hostArchTypeKey, TableName } from '../types/const';
+  import { tagColor, hostTypeKey, hostStatusKey, hostOsTypeKey, hostArchTypeKey, TableName } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useQueryOrder, ASC } from '@/hooks/query-order';
   import { useCacheStore, useDictStore } from '@/store';

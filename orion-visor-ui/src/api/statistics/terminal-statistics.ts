@@ -7,11 +7,8 @@ import axios from 'axios';
  */
 export interface TerminalWorkplaceStatisticsResponse {
   todayTerminalConnectCount: number;
-  todayTerminalCommandCount: number;
   weekTerminalConnectCount: number;
-  weekTerminalCommandCount: number;
   terminalConnectChart: LineSingleChartData;
-  terminalCommandChart: LineSingleChartData;
   terminalConnectList: Array<TerminalConnectLogQueryResponse>;
 }
 

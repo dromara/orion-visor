@@ -73,6 +73,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    :deep(> div) {
+      position: relative;
+      z-index: 8;
+    }
   }
 
   .rdp-status-mask {

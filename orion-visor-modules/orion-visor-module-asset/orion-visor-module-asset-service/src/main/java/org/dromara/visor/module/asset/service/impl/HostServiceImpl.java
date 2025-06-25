@@ -37,12 +37,10 @@ import org.dromara.visor.common.enums.EnableStatus;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
-import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.module.asset.convert.HostConvert;
 import org.dromara.visor.module.asset.dao.HostConfigDAO;
 import org.dromara.visor.module.asset.dao.HostDAO;
-import org.dromara.visor.module.asset.define.cache.AssetStatisticsCacheKeyDefine;
 import org.dromara.visor.module.asset.define.cache.HostCacheKeyDefine;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
@@ -346,7 +344,6 @@ public class HostServiceImpl implements HostService {
     @Override
     public void clearCache() {
         RedisMaps.scanKeysDelete(HostCacheKeyDefine.HOST_INFO.format("*"));
-        RedisStrings.delete(AssetStatisticsCacheKeyDefine.HOST_TYPE_COUNT.getKey());
     }
 
     /**
