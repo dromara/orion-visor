@@ -7,16 +7,16 @@ services:
     ports:
       - 9200:9200
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=orion_visor
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=Data@123456
-      - REDIS_HOST=redis
-      - REDIS_PASSWORD=Data@123456
-      - SECRET_KEY=uQeacXV8b3isvKLK
-      - DEMO_MODE=false
+      SPRING_PROFILES_ACTIVE: prod
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: orion_visor
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Data@123456
+      REDIS_HOST: redis
+      REDIS_PASSWORD: Data@123456
+      SECRET_KEY: uQeacXV8b3isvKLK
+      DEMO_MODE: false
     volumes:
       - /data/orion-visor-space/docker-volumes/service/root-orion:/root/orion
     healthcheck:
@@ -39,10 +39,10 @@ services:
     ports:
       - 3307:3306
     environment:
-      - MYSQL_DATABASE=orion_visor
-      - MYSQL_USER=orion
-      - MYSQL_PASSWORD=Data@123456
-      - MYSQL_ROOT_PASSWORD=Data@123456
+      MYSQL_DATABASE: orion_visor
+      MYSQL_USER: orion
+      MYSQL_PASSWORD: Data@123456
+      MYSQL_ROOT_PASSWORD: Data@123456
     volumes:
       - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql:/var/lib/mysql
       - /data/orion-visor-space/docker-volumes/mysql/var-lib-mysql-files:/var/lib/mysql-files
@@ -61,7 +61,7 @@ services:
     ports:
       - 6380:6379
     environment:
-      - REDIS_PASSWORD=Data@123456
+      REDIS_PASSWORD: Data@123456
     volumes:
       - /data/orion-visor-space/docker-volumes/redis/data:/data
     command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
