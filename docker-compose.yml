@@ -29,7 +29,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
       GUACD_HOST: ${GUACD_HOST:-guacd}
       GUACD_PORT: ${GUACD_PORT:-4822}
-      GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:/drive}
+      GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}
       SECRET_KEY: ${SECRET_KEY:-uQeacXV8b3isvKLK}
       DEMO_MODE: ${DEMO_MODE:-false}
     volumes:
@@ -100,7 +100,7 @@ services:
       GUACD_LOG_LEVEL: info
       GUACD_LOG_FILE: /var/log/guacd.log
     volumes:
-      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/drive:/drive
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/drive:${GUACD_DRIVE_PATH:-/drive}
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/var-logs:/var/log
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-lib:/usr/local/guacamole/lib
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-extensions:/usr/local/guacamole/extensions
