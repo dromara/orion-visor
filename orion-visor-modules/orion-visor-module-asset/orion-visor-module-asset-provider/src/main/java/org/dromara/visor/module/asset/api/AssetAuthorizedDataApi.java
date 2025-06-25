@@ -20,30 +20,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define.cache;
+package org.dromara.visor.module.asset.api;
 
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
-import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import com.alibaba.fastjson.JSONObject;
+import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
+import org.dromara.visor.module.asset.enums.HostTypeEnum;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 /**
- * asset 模块统计缓存 key
+ * 资产模块 授权数据对外服务
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/12/23 16:10
+ * @since 2024/10/12 16:13
  */
-public interface AssetStatisticsCacheKeyDefine {
+public interface AssetAuthorizedDataApi {
 
-    CacheKeyDefine HOST_TYPE_COUNT = new CacheKeyBuilder()
-            .key("data:statistics:host:count")
-            .desc("主机类型数量")
-            .type(JSONObject.class)
-            .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
-            .build();
+    /**
+     * 获取用户已授权&配置已启用的主机id 查询角色
+     *
+     * @param userId userId
+     * @param type   type
+     * @return hostId
+     */
+    List<Long> getUserAuthorizedEnabledHostId(Long userId, HostTypeEnum type);
+
+    /**
+     * 查询用户已授权并且启用的主机
+     *
+     * @param userId userId
+     * @param type   type
+     * @return group
+     */
+    List<HostDTO> getUserAuthorizedHostList(Long userId, HostTypeEnum type);
 
 }

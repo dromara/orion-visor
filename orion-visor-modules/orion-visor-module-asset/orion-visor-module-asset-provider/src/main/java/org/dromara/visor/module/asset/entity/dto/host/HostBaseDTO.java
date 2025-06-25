@@ -20,54 +20,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.entity.request.host;
+package org.dromara.visor.module.asset.entity.dto.host;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dromara.visor.framework.web.core.annotation.ParamDecrypt;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * 主机密钥 创建请求对象
+ * 主机基本信息 业务响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023-9-20 11:55
+ * @since 2023-9-11 14:16
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "HostKeyCreateRequest", description = "主机密钥 创建请求对象")
-public class HostKeyCreateRequest implements Serializable {
+@Schema(name = "HostBaseDTO", description = "主机基本信息 业务响应对象")
+public class HostBaseDTO implements Serializable {
 
-    @NotBlank
-    @Size(max = 64)
-    @Schema(description = "名称")
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "id")
+    private Long id;
+
+    @Schema(description = "主机类型")
+    private String types;
+
+    @Schema(description = "系统类型")
+    private String osType;
+
+    @Schema(description = "系统架构")
+    private String archType;
+
+    @Schema(description = "主机名称")
     private String name;
 
-    @ParamDecrypt
-    @Schema(description = "公钥文本")
-    private String publicKey;
+    @Schema(description = "主机编码")
+    private String code;
 
-    @NotBlank
-    @ParamDecrypt
-    @Schema(description = "私钥文本")
-    private String privateKey;
+    @Schema(description = "主机地址")
+    private String address;
 
-    @NotBlank
-    @ParamDecrypt
-    @Schema(description = "密码")
-    private String password;
-
-    @Size(max = 255)
-    @Schema(description = "描述")
-    private String description;
+    @Schema(description = "主机端口")
+    private Integer port;
 
 }

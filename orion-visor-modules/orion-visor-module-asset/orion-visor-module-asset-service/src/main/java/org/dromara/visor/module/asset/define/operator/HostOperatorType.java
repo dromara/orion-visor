@@ -57,7 +57,7 @@ public class HostOperatorType extends InitializingOperatorTypes {
                 new OperatorType(L, UPDATE, "修改主机 <sb>${name}</sb>"),
                 new OperatorType(H, DELETE, "删除主机 <sb>${count}</sb> 条"),
                 new OperatorType(M, UPDATE_STATUS, "修改主机状态 <sb>${name}</sb> - <sb>${status}</sb>"),
-                new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb> - <sb>${type}</sb>"),
                 new OperatorType(M, UPDATE_SPEC, "修改主机规格信息 <sb>${name}</sb>"),
         };
     }

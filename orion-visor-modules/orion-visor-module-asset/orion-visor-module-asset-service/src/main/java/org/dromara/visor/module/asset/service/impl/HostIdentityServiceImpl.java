@@ -298,8 +298,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         return hostIdentityDAO.wrapper()
                 .eq(HostIdentityDO::getId, request.getId())
                 .eq(HostIdentityDO::getType, request.getType())
-                .eq(HostIdentityDO::getKeyId, request.getKeyId())
                 .like(HostIdentityDO::getName, request.getName())
+                .eq(HostIdentityDO::getKeyId, request.getKeyId())
                 .like(HostIdentityDO::getUsername, request.getUsername())
                 .like(HostIdentityDO::getDescription, request.getDescription())
                 .and(Strings.isNotEmpty(searchValue), c -> c

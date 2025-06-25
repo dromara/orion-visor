@@ -20,44 +20,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.enums;
+package org.dromara.visor.module.asset.convert;
+
+import org.dromara.visor.common.mapstruct.StringConversion;
+import org.dromara.visor.module.asset.entity.domain.HostDO;
+import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
+import org.dromara.visor.module.asset.entity.vo.HostVO;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 /**
- * 主机认证类型
+ * 主机 对外对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/20 21:41
+ * @since 2023-9-11 14:16
  */
-public enum HostExtraSshAuthTypeEnum {
+@Mapper(uses = StringConversion.class)
+public interface HostProviderConvert {
 
-    /**
-     * 默认认证方式
-     */
-    DEFAULT,
+    HostProviderConvert MAPPER = Mappers.getMapper(HostProviderConvert.class);
 
-    /**
-     * 自定义密钥认证
-     */
-    CUSTOM_KEY,
+    HostDO to(HostDTO host);
 
-    /**
-     * 自定义身份认证
-     */
-    CUSTOM_IDENTITY,
+    HostDTO to(HostDO domain);
 
-    ;
+    HostDTO to(HostVO vo);
 
-    public static HostExtraSshAuthTypeEnum of(String type) {
-        if (type == null) {
-            return DEFAULT;
-        }
-        for (HostExtraSshAuthTypeEnum value : values()) {
-            if (value.name().equals(type)) {
-                return value;
-            }
-        }
-        return DEFAULT;
-    }
+    HostBaseDTO toBase(HostDO domain);
 
 }

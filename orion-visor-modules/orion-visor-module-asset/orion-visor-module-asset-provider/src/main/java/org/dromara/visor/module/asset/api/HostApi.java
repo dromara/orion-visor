@@ -20,30 +20,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define.cache;
+package org.dromara.visor.module.asset.api;
 
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
-import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import com.alibaba.fastjson.JSONObject;
+import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 /**
- * asset 模块统计缓存 key
+ * 主机 对外服务
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/12/23 16:10
+ * @since 2024/10/12 16:14
  */
-public interface AssetStatisticsCacheKeyDefine {
+public interface HostApi {
 
-    CacheKeyDefine HOST_TYPE_COUNT = new CacheKeyBuilder()
-            .key("data:statistics:host:count")
-            .desc("主机类型数量")
-            .type(JSONObject.class)
-            .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
-            .build();
+    /**
+     * 通过 id 查询
+     *
+     * @param id id
+     * @return row
+     */
+    HostDTO selectById(Long id);
+
+    /**
+     * 通过 id 查询
+     *
+     * @param idList idList
+     * @return rows
+     */
+    List<HostDTO> selectByIdList(List<Long> idList);
 
 }

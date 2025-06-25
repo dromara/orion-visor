@@ -25,11 +25,12 @@ package org.dromara.visor.module.asset.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.entity.chart.PieChartData;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
-import org.dromara.visor.module.asset.entity.vo.AssetWorkplaceStatisticsVO;
 import org.dromara.visor.module.asset.service.AssetStatisticsService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ import javax.annotation.Resource;
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/12/23 16:07
+ * @since 2024/12/23 15:56
  */
 @Tag(name = "asset - 统计服务")
 @Slf4j
@@ -56,10 +57,11 @@ public class AssetStatisticsController {
     private AssetStatisticsService assetStatisticsService;
 
     @IgnoreLog(IgnoreLogMode.RET)
-    @GetMapping("/get-workplace")
-    @Operation(summary = "查询工作台统计信息")
-    public AssetWorkplaceStatisticsVO getWorkplaceStatisticsData() {
-        return assetStatisticsService.getWorkplaceStatisticsData();
+    @GetMapping("/host-type-chart")
+    @Operation(summary = "查询主机类型图表")
+    @PreAuthorize("@ss.hasPermission('asset:statistics:query')")
+    public PieChartData getHostTypeChart() {
+        return assetStatisticsService.getHostTypeChart();
     }
 
 }

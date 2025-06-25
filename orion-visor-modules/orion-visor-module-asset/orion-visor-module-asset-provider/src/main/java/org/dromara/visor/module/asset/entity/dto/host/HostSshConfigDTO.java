@@ -20,8 +20,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.handler.host.config.model;
+package org.dromara.visor.module.asset.entity.dto.host;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,81 +43,58 @@ import javax.validation.constraints.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HostSshConfigModel implements GenericsDataModel, UpdatePasswordAction {
+@Schema(name = "HostSshConfigDTO", description = "主机 SSH 配置业务对象")
+public class HostSshConfigDTO implements GenericsDataModel, UpdatePasswordAction {
 
-    /**
-     * 主机端口
-     */
     @NotNull
     @Min(value = 1)
     @Max(value = 65535)
+    @Schema(description = "主机端口")
     private Integer port;
 
-    /**
-     * 用户名
-     */
     @Size(max = 128)
+    @Schema(description = "用户名")
     private String username;
 
-    /**
-     * 认证方式
-     */
     @NotBlank
     @Size(max = 12)
+    @Schema(description = "认证方式")
     private String authType;
 
-    /**
-     * 密码
-     */
+    @Schema(description = "密码")
     private String password;
 
-    /**
-     * 身份id
-     */
+    @Schema(description = "身份id")
     private Long identityId;
 
-    /**
-     * 密钥id
-     */
+    @Schema(description = "密钥id")
     private Long keyId;
 
-    /**
-     * 连接超时时间
-     */
     @NotNull
     @Min(value = 1)
     @Max(value = 100000)
+    @Schema(description = "连接超时时间")
     private Integer connectTimeout;
 
-    /**
-     * SSH输出编码
-     */
     @NotBlank
     @Size(max = 12)
+    @Schema(description = "SSH输出编码")
     private String charset;
 
-    /**
-     * 文件名称编码
-     */
     @NotBlank
     @Size(max = 12)
+    @Schema(description = "文件名称编码")
     private String fileNameCharset;
 
-    /**
-     * 文件内容编码
-     */
     @NotBlank
     @Size(max = 12)
+    @Schema(description = "文件内容编码")
     private String fileContentCharset;
 
-    /**
-     * 是否使用新密码 仅参数
-     */
+    @Schema(description = "是否使用新密码 仅参数")
     private Boolean useNewPassword;
 
-    /**
-     * 是否已设置密码 仅返回
-     */
+    @Schema(description = "是否已设置密码 仅返回")
     private Boolean hasPassword;
 
 }

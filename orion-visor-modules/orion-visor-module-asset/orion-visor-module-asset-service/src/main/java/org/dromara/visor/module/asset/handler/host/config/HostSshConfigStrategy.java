@@ -20,21 +20,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.handler.host.config.strategy;
+package org.dromara.visor.module.asset.handler.host.config;
 
-import cn.orionsec.kit.lang.utils.Booleans;
-import cn.orionsec.kit.lang.utils.Charsets;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
-import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.common.utils.RsaParamDecryptUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
-import org.dromara.visor.module.asset.enums.HostSshAuthTypeEnum;
-import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
+import org.dromara.visor.module.asset.entity.dto.host.HostSshConfigDTO;
+import org.dromara.visor.module.asset.enums.HostAuthTypeEnum;
+import org.dromara.visor.module.asset.enums.HostTypeEnum;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -47,7 +43,7 @@ import javax.annotation.Resource;
  * @since 2023/9/19 14:26
  */
 @Component
-public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshConfigModel> {
+public class HostSshConfigStrategy extends AbstractHostConfigStrategy<HostSshConfigDTO> {
 
     @Resource
     private HostKeyDAO hostKeyDAO;
@@ -55,18 +51,16 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
     @Resource
     private HostIdentityDAO hostIdentityDAO;
 
-    private static final String USERNAME = "root";
-
     public HostSshConfigStrategy() {
-        super(HostSshConfigModel.class);
+        super(HostSshConfigDTO.class);
     }
 
     @Override
-    public HostSshConfigModel getDefault() {
-        return HostSshConfigModel.builder()
+    public HostSshConfigDTO getDefault() {
+        return HostSshConfigDTO.builder()
                 .port(22)
-                .username(USERNAME)
-                .authType(HostSshAuthTypeEnum.PASSWORD.name())
+                .username(Const.ROOT)
+                .authType(HostAuthTypeEnum.PASSWORD.name())
                 .connectTimeout(Const.MS_S_10)
                 .charset(Const.UTF_8)
                 .fileNameCharset(Const.UTF_8)
@@ -75,7 +69,7 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
     }
 
     @Override
-    protected void preValid(HostSshConfigModel model) {
+    protected void preValid(HostSshConfigDTO model) {
         // 验证编码格式
         this.validCharset(model.getCharset());
         this.validCharset(model.getFileNameCharset());
@@ -93,59 +87,31 @@ public class HostSshConfigStrategy extends AbstractGenericsDataStrategy<HostSshC
     }
 
     @Override
-    protected void valid(HostSshConfigModel model) {
+    protected void valid(HostSshConfigDTO model) {
         // 验证填充后的参数
         Valid.valid(model);
     }
 
     @Override
-    protected void updateFill(HostSshConfigModel beforeModel, HostSshConfigModel afterModel) {
+    protected void updateFill(HostSshConfigDTO beforeModel, HostSshConfigDTO afterModel) {
         // 加密密码
-        this.checkEncryptPassword(beforeModel, afterModel);
+        this.checkEncryptPassword(afterModel.getAuthType(), beforeModel, afterModel);
         afterModel.setHasPassword(null);
         afterModel.setUseNewPassword(null);
     }
 
     @Override
-    public void toView(HostSshConfigModel model) {
+    public HostSshConfigDTO parse(String serialModel) {
+        return HostTypeEnum.SSH.parse(serialModel);
+    }
+
+    @Override
+    public void toView(HostSshConfigDTO model) {
         if (model == null) {
             return;
         }
         model.setHasPassword(Strings.isNotBlank(model.getPassword()));
         model.setPassword(null);
-    }
-
-    /**
-     * 检查加密密码
-     *
-     * @param before before
-     * @param after  after
-     */
-    private void checkEncryptPassword(HostSshConfigModel before, HostSshConfigModel after) {
-        // 非密码认证/使用原始密码则直接赋值
-        if (!HostSshAuthTypeEnum.PASSWORD.name().equals(after.getAuthType())
-                || !Booleans.isTrue(after.getUseNewPassword())) {
-            if (before != null) {
-                after.setPassword(before.getPassword());
-            }
-            return;
-        }
-        // 检查新密码
-        String newPassword = Valid.notBlank(after.getPassword(), ErrorMessage.PASSWORD_MISSING);
-        // 解密密码
-        newPassword = RsaParamDecryptUtils.decrypt(newPassword);
-        Valid.notBlank(newPassword, ErrorMessage.DECRYPT_ERROR);
-        // 设置密码
-        after.setPassword(AesEncryptUtils.encryptAsString(newPassword));
-    }
-
-    /**
-     * 检查编码格式
-     *
-     * @param charset charset
-     */
-    private void validCharset(String charset) {
-        Valid.isTrue(Charsets.isSupported(charset), ErrorMessage.UNSUPPORTED_CHARSET, charset);
     }
 
 }

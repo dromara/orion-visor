@@ -28,7 +28,7 @@ import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
-import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
+import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 import org.dromara.visor.module.asset.service.HostExtraService;
 import org.dromara.visor.module.infra.api.DataExtraApi;

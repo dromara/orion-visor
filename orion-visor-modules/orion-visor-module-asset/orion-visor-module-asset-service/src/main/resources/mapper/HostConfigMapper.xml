@@ -16,6 +16,12 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
+    <!-- 类型数量结果映射 -->
+    <resultMap id="TypeCountResultMap" type="org.dromara.visor.module.asset.entity.po.HostTypeCountPO">
+        <result column="type" property="type"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, host_id, type, status, config, create_time, update_time, creator, updater, deleted
@@ -38,5 +44,13 @@
             JSON_CONTAINS(config, JSON_OBJECT('identityId', #{item}))
         </foreach>
     </update>
+
+    <select id="selectEnabledTypeCount" resultMap="TypeCountResultMap">
+        SELECT type, COUNT(1) total_count
+        FROM host_config
+        WHERE deleted = 0
+        AND status = 'ENABLED'
+        GROUP BY type
+    </select>
 
 </mapper>

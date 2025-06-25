@@ -61,10 +61,16 @@ public class HostIdentityCacheDTO implements LongCacheIdModel, Serializable {
     @Schema(description = "密钥id")
     private Long keyId;
 
-    @Schema(description = "描述")
-    private String description;
-
-    @Schema(description = "创建时间 资产页面展示")
+    /**
+     * 资产页面展示
+     */
+    @Schema(description = "创建时间")
     private Date createTime;
+
+    /**
+     * 资产页面展示
+     */
+    @Schema(description = "修改时间")
+    private Date updateTime;
 
 }

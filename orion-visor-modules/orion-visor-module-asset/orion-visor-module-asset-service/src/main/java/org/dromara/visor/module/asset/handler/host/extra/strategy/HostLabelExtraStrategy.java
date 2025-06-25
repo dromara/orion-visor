@@ -53,12 +53,14 @@ public class HostLabelExtraStrategy extends AbstractGenericsDataStrategy<HostLab
 
     @Override
     public void updateFill(HostLabelExtraModel beforeModel, HostLabelExtraModel afterModel) {
-        // 为空则覆盖
-        if (afterModel.getAlias() == null) {
-            afterModel.setAlias(beforeModel.getAlias());
-        }
-        if (afterModel.getColor() == null) {
-            afterModel.setColor(beforeModel.getColor());
+        if (beforeModel != null) {
+            // 为空则覆盖
+            if (afterModel.getAlias() == null) {
+                afterModel.setAlias(beforeModel.getAlias());
+            }
+            if (afterModel.getColor() == null) {
+                afterModel.setColor(beforeModel.getColor());
+            }
         }
     }
 

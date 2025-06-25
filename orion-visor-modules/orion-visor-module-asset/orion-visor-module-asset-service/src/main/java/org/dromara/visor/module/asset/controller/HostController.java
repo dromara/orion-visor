@@ -143,7 +143,7 @@ public class HostController {
     @PostMapping("/count")
     @Operation(summary = "查询主机数量")
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
-    public Long getHostExportCount(@Validated @RequestBody HostQueryRequest request) {
+    public Long getHostCount(@Validated @RequestBody HostQueryRequest request) {
         return hostService.getHostCount(request);
     }
 

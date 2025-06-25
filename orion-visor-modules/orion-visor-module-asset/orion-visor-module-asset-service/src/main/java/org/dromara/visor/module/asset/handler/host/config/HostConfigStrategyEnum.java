@@ -20,55 +20,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.enums;
+package org.dromara.visor.module.asset.handler.host.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
-import org.dromara.visor.module.asset.handler.host.extra.strategy.HostLabelExtraStrategy;
-import org.dromara.visor.module.asset.handler.host.extra.strategy.HostSpecExtraStrategy;
-import org.dromara.visor.module.asset.handler.host.extra.strategy.HostSshExtraStrategy;
 
 /**
- * 主机额外配置项枚举
+ * 主机配置类型策略枚举
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/20 22:48
+ * @since 2023/9/11 14:37
  */
 @Getter
 @AllArgsConstructor
-public enum HostExtraItemEnum implements GenericsStrategyDefinition {
+public enum HostConfigStrategyEnum implements GenericsStrategyDefinition {
 
     /**
-     * SSH 额外配置
+     * SSH
      */
-    SSH(HostSshExtraStrategy.class, true),
+    SSH(HostSshConfigStrategy.class),
 
     /**
-     * 标签额外配置
+     * RDP
      */
-    LABEL(HostLabelExtraStrategy.class, true),
-
-    /**
-     * 规格信息配置
-     */
-    SPEC(HostSpecExtraStrategy.class, false),
+    RDP(HostRdpConfigStrategy.class),
 
     ;
 
     private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
 
-    private final boolean userExtra;
-
-    public static HostExtraItemEnum of(String item) {
-        if (item == null) {
+    public static HostConfigStrategyEnum of(String type) {
+        if (type == null) {
             return null;
         }
-        for (HostExtraItemEnum value : values()) {
-            if (value.name().equals(item)) {
+        for (HostConfigStrategyEnum value : values()) {
+            if (value.name().equals(type)) {
                 return value;
             }
         }

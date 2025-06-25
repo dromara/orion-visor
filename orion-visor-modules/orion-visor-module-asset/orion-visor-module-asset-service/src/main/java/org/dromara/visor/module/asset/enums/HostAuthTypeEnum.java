@@ -20,26 +20,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.handler.host.terminal.handler;
-
-import org.dromara.visor.module.asset.handler.host.terminal.model.TerminalBasePayload;
-import org.springframework.web.socket.WebSocketSession;
+package org.dromara.visor.module.asset.enums;
 
 /**
- * 终端消息处理器
+ * 主机认证类型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/12/29 18:53
+ * @since 2023/9/21 19:01
  */
-public interface ITerminalHandler<T extends TerminalBasePayload> {
+public enum HostAuthTypeEnum {
 
     /**
-     * 处理消息
-     *
-     * @param channel channel
-     * @param payload payload
+     * 密码认证
      */
-    void handle(WebSocketSession channel, T payload);
+    PASSWORD,
+
+    /**
+     * 密钥认证
+     */
+    KEY,
+
+    /**
+     * 身份认证
+     */
+    IDENTITY,
+
+    ;
+
+    public static HostAuthTypeEnum of(String type) {
+        if (type == null) {
+            return PASSWORD;
+        }
+        for (HostAuthTypeEnum value : values()) {
+            if (value.name().equals(type)) {
+                return value;
+            }
+        }
+        return PASSWORD;
+    }
 
 }

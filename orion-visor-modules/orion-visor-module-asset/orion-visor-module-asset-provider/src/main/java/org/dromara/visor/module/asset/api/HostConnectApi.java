@@ -20,28 +20,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.service;
+package org.dromara.visor.module.asset.api;
 
 import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
-import org.dromara.visor.module.asset.entity.domain.HostDO;
-import org.dromara.visor.module.asset.entity.request.host.HostTestConnectRequest;
+import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 
 /**
- * 主机连接服务
+ * 主机连接 对外服务
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/10/12 23:54
+ * @since 2024/10/12 23:53
  */
-public interface HostConnectService {
-
-    /**
-     * 测试主机连接
-     *
-     * @param request request
-     */
-    void testHostConnect(HostTestConnectRequest request);
+public interface HostConnectApi {
 
     /**
      * 获取 SSH 连接配置
@@ -67,7 +59,7 @@ public interface HostConnectService {
      * @param userId userId
      * @return session
      */
-    SshConnectConfig getSshConnectConfig(HostDO host, Long userId);
+    SshConnectConfig getSshConnectConfig(HostDTO host, Long userId);
 
     /**
      * 获取 RDP 连接配置
@@ -93,6 +85,7 @@ public interface HostConnectService {
      * @param userId userId
      * @return session
      */
-    RdpConnectConfig getRdpConnectConfig(HostDO host, Long userId);
+    RdpConnectConfig getRdpConnectConfig(HostDTO host, Long userId);
+
 
 }

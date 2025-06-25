@@ -22,13 +22,11 @@
  */
 package org.dromara.visor.module.asset.enums;
 
+import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
-import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
-import org.dromara.visor.module.asset.handler.host.config.strategy.HostSshConfigStrategy;
+import org.dromara.visor.module.asset.entity.dto.host.HostRdpConfigDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostSshConfigDTO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,24 +35,28 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 主机配置类型枚举
+ * 主机类型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/11 14:37
+ * @since 2024/10/12 18:12
  */
-@Getter
 @AllArgsConstructor
-public enum HostTypeEnum implements GenericsStrategyDefinition {
+public enum HostTypeEnum {
 
     /**
      * SSH
      */
-    SSH(HostSshConfigStrategy.class),
+    SSH(HostSshConfigDTO.class),
+
+    /**
+     * RDP
+     */
+    RDP(HostRdpConfigDTO.class),
 
     ;
 
-    private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
+    private final Class<?> clazz;
 
     public static HostTypeEnum of(String type) {
         if (type == null) {
@@ -77,6 +79,11 @@ public enum HostTypeEnum implements GenericsStrategyDefinition {
                 .filter(Objects::nonNull)
                 .map(Enum::name)
                 .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T parse(String config) {
+        return (T) JSON.parseObject(config, this.clazz);
     }
 
 }

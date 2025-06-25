@@ -20,30 +20,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define.cache;
-
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
-import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import com.alibaba.fastjson.JSONObject;
-
-import java.util.concurrent.TimeUnit;
+package org.dromara.visor.module.asset.enums;
 
 /**
- * asset 模块统计缓存 key
+ * 主机认证类型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/12/23 16:10
+ * @since 2023/12/20 21:41
  */
-public interface AssetStatisticsCacheKeyDefine {
+public enum HostExtraAuthTypeEnum {
 
-    CacheKeyDefine HOST_TYPE_COUNT = new CacheKeyBuilder()
-            .key("data:statistics:host:count")
-            .desc("主机类型数量")
-            .type(JSONObject.class)
-            .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
-            .build();
+    /**
+     * 默认认证方式
+     */
+    DEFAULT,
+
+    /**
+     * 自定义密钥认证
+     */
+    CUSTOM_KEY,
+
+    /**
+     * 自定义身份认证
+     */
+    CUSTOM_IDENTITY,
+
+    ;
+
+    public static HostExtraAuthTypeEnum of(String type) {
+        if (type == null) {
+            return DEFAULT;
+        }
+        for (HostExtraAuthTypeEnum value : values()) {
+            if (value.name().equals(type)) {
+                return value;
+            }
+        }
+        return DEFAULT;
+    }
 
 }

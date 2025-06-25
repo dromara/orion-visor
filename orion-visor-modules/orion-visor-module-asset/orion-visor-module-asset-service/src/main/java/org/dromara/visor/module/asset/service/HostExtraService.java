@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.service;
 
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
-import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
+import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 
 import java.util.List;

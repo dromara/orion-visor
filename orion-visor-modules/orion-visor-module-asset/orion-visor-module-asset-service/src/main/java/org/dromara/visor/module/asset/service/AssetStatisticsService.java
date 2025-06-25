@@ -22,41 +22,22 @@
  */
 package org.dromara.visor.module.asset.service;
 
-import org.dromara.visor.common.entity.chart.LineSingleChartData;
-import org.dromara.visor.module.asset.entity.vo.AssetWorkplaceStatisticsVO;
-import org.dromara.visor.module.asset.enums.ExecSourceEnum;
+import org.dromara.visor.common.entity.chart.PieChartData;
 
 /**
  * 资产模块统计服务
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/12/23 22:24
+ * @since 2025/3/7 16:26
  */
 public interface AssetStatisticsService {
 
     /**
-     * 查询工作台统计信息
+     * 获取主机类型图表
      *
      * @return data
      */
-    AssetWorkplaceStatisticsVO getWorkplaceStatisticsData();
-
-    /**
-     * 获取用户终端连接日志数量图表
-     *
-     * @param userId userId
-     * @return data
-     */
-    LineSingleChartData getTerminalConnectCountChart(Long userId);
-
-    /**
-     * 获取用户执行日志数量图表
-     *
-     * @param userId userId
-     * @param source source
-     * @return chart
-     */
-    LineSingleChartData getUserExecLogCountChart(Long userId, ExecSourceEnum source);
+    PieChartData getHostTypeChart();
 
 }

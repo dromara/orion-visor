@@ -20,30 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define.cache;
+package org.dromara.visor.module.asset.entity.po;
 
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
-import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import com.alibaba.fastjson.JSONObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.concurrent.TimeUnit;
+import java.io.Serializable;
 
 /**
- * asset 模块统计缓存 key
+ * 主机类型数量对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/12/23 16:10
+ * @since 2024/7/14 15:03
  */
-public interface AssetStatisticsCacheKeyDefine {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "HostTypeCountPO", description = "主机类型数量对象")
+public class HostTypeCountPO implements Serializable {
 
-    CacheKeyDefine HOST_TYPE_COUNT = new CacheKeyBuilder()
-            .key("data:statistics:host:count")
-            .desc("主机类型数量")
-            .type(JSONObject.class)
-            .struct(RedisCacheStruct.STRING)
-            .timeout(1, TimeUnit.DAYS)
-            .build();
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "类型")
+    private String type;
+
+    @Schema(description = "数量")
+    private Integer count;
 
 }

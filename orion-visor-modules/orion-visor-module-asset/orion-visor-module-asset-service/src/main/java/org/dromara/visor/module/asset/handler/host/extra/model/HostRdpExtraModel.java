@@ -20,44 +20,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.enums;
+package org.dromara.visor.module.asset.handler.host.extra.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 
 /**
- * 主机认证类型 - ssh
+ * 主机拓展信息 - rdp 模型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/21 19:01
+ * @since 2023/12/20 21:36
  */
-public enum HostSshAuthTypeEnum {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class HostRdpExtraModel implements GenericsDataModel {
 
     /**
-     * 密码认证
+     * 认证方式
      */
-    PASSWORD,
+    private String authType;
 
     /**
-     * 密钥认证
+     * 主机身份
      */
-    KEY,
+    private Long identityId;
 
     /**
-     * 身份认证
+     * 低带宽模式
      */
-    IDENTITY,
-
-    ;
-
-    public static HostSshAuthTypeEnum of(String type) {
-        if (type == null) {
-            return PASSWORD;
-        }
-        for (HostSshAuthTypeEnum value : values()) {
-            if (value.name().equals(type)) {
-                return value;
-            }
-        }
-        return PASSWORD;
-    }
+    private Boolean lowBandwidthMode;
 
 }
