@@ -22,18 +22,23 @@
  */
 package org.dromara.visor.framework.websocket.core.utils;
 
+import cn.orionsec.kit.lang.constant.StandardHttpHeader;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Threads;
+import cn.orionsec.kit.lang.utils.io.Streams;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.framework.websocket.core.constant.WsCloseCode;
+import org.dromara.visor.framework.websocket.core.constant.CloseCode;
 import org.dromara.visor.framework.websocket.core.session.WebSocketSyncSession;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * websocket 工具类
@@ -133,17 +138,53 @@ public class WebSockets {
     }
 
     /**
+     * 设置子协议
+     *
+     * @param request  request
+     * @param response response
+     */
+    public static void setSubProtocols(ServerHttpRequest request, ServerHttpResponse response) {
+        List<String> subProtocols = request.getHeaders().get(StandardHttpHeader.SEC_WEBSOCKET_PROTOCOL);
+        if (subProtocols != null) {
+            response.getHeaders().put(StandardHttpHeader.SEC_WEBSOCKET_PROTOCOL, subProtocols);
+        }
+    }
+
+    /**
+     * 关闭会话
+     *
+     * @param session session
+     */
+    public static void close(WebSocketSession session) {
+        if (!session.isOpen()) {
+            return;
+        }
+        Streams.close(session);
+    }
+
+    /**
      * 关闭会话
      *
      * @param session session
      * @param code    code
      */
-    public static void close(WebSocketSession session, WsCloseCode code) {
+    public static void close(WebSocketSession session, CloseCode code) {
+        close(session, code.getCode(), code.getReason());
+    }
+
+    /**
+     * 关闭会话
+     *
+     * @param session session
+     * @param code    code
+     * @param reason  reason
+     */
+    public static void close(WebSocketSession session, int code, String reason) {
         if (!session.isOpen()) {
             return;
         }
         try {
-            session.close(new CloseStatus(code.getCode(), code.getReason()));
+            session.close(new CloseStatus(code, reason));
         } catch (Exception e) {
             log.error("websocket close failure", e);
         }

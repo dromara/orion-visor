@@ -20,38 +20,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.websocket.core.constant;
+package org.dromara.visor.module.common.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import cn.orionsec.kit.lang.utils.time.Dates;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
- * ws 关闭码
- * <p>
- * > 2999 && < 5000
+ * sftp 文件备份参数
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/7/31 17:41
+ * @since 2024/4/15 23:13
  */
-@Getter
-@AllArgsConstructor
-public enum WsCloseCode implements CloseCode {
+@Data
+public class SftpFileBackupDTO {
 
     /**
-     * 初始化失败
+     * 文件名称
      */
-    INIT_ERROR(3000, "init error"),
+    private String fileName;
 
     /**
-     * 会话已关闭
+     * 时间戳
      */
-    SESSION_CLOSED(3100, "session closed"),
+    private Long timestamp;
 
-    ;
+    /**
+     * 当前时间
+     */
+    private String time;
 
-    private final int code;
-
-    private final String reason;
+    public SftpFileBackupDTO(String fileName) {
+        Date date = new Date();
+        this.fileName = fileName;
+        this.timestamp = date.getTime();
+        this.time = Dates.format(date, Dates.YMD_HMS2);
+    }
 
 }

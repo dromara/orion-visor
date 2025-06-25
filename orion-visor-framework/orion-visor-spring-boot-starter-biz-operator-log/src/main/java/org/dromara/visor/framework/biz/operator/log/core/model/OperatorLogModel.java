@@ -122,4 +122,9 @@ public class OperatorLogModel implements RequestIdentity {
      */
     private Date endTime;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
 }

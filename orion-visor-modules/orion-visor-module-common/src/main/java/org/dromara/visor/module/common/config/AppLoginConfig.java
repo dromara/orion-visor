@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.infra.define.config;
+package org.dromara.visor.module.common.config;
 
 import org.dromara.visor.common.config.ConfigRef;
 import org.dromara.visor.common.config.ConfigStore;

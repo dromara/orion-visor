@@ -4,23 +4,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.dromara.visor</groupId>
-        <artifactId>orion-visor</artifactId>
+        <artifactId>orion-visor-modules</artifactId>
         <version>${revision}</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>orion-visor-modules</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>orion-visor-module-common</artifactId>
+    <packaging>jar</packaging>
 
-    <description>项目业务模块包</description>
+    <description>项目公共模块</description>
     <url>https://github.com/dromara/orion-visor</url>
 
-    <modules>
-        <module>orion-visor-module-common</module>
-        <module>orion-visor-module-infra</module>
-        <module>orion-visor-module-asset</module>
-        <module>orion-visor-module-exec</module>
-        <module>orion-visor-module-terminal</module>
-    </modules>
+    <dependencies>
+        <!-- common -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-common</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

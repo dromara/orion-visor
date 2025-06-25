@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define.config;
+package org.dromara.visor.module.common.config;
 
 import org.dromara.visor.common.config.ConfigRef;
 import org.dromara.visor.common.config.ConfigStore;
@@ -28,46 +28,46 @@ import org.dromara.visor.common.constant.ConfigKeys;
 import org.springframework.stereotype.Component;
 
 /**
- * 应用 sftp 配置
+ * 应用日志设置
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/4/15 22:00
  */
 @Component
-public class AppSftpConfig {
+public class AppLogConfig {
 
     /**
-     * 文件预览大小
+     * 日志加载偏移行
      */
-    private final ConfigRef<Integer> previewSize;
+    private final ConfigRef<Integer> trackerLoadLines;
 
     /**
-     * 重复文件备份
+     * 日志加载间隔毫秒
      */
-    private final ConfigRef<Boolean> uploadPresentBackup;
+    private final ConfigRef<Integer> trackerLoadInterval;
 
     /**
-     * 备份文件名称
+     * 是否生成详细的执行日志
      */
-    private final ConfigRef<String> uploadBackupFileName;
+    private final ConfigRef<Boolean> execDetailLog;
 
-    public AppSftpConfig(ConfigStore configStore) {
-        this.previewSize = configStore.int32(ConfigKeys.SFTP_PREVIEW_SIZE);
-        this.uploadPresentBackup = configStore.bool(ConfigKeys.SFTP_UPLOAD_PRESENT_BACKUP);
-        this.uploadBackupFileName = configStore.string(ConfigKeys.SFTP_UPLOAD_BACKUP_FILE_NAME);
+    public AppLogConfig(ConfigStore configStore) {
+        this.trackerLoadLines = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_LINES);
+        this.trackerLoadInterval = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_INTERVAL);
+        this.execDetailLog = configStore.bool(ConfigKeys.LOG_EXEC_DETAIL_LOG);
     }
 
-    public Integer getPreviewSize() {
-        return previewSize.value;
+    public Integer getTrackerLoadLines() {
+        return trackerLoadLines.value;
     }
 
-    public Boolean getUploadPresentBackup() {
-        return uploadPresentBackup.value;
+    public Integer getTrackerLoadInterval() {
+        return trackerLoadInterval.value;
     }
 
-    public String getUploadBackupFileName() {
-        return uploadBackupFileName.value;
+    public Boolean getExecDetailLog() {
+        return execDetailLog.value;
     }
 
 }

@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define.config;
+package org.dromara.visor.module.common.config;
 
 import org.dromara.visor.common.config.ConfigRef;
 import org.dromara.visor.common.config.ConfigStore;
@@ -28,46 +28,46 @@ import org.dromara.visor.common.constant.ConfigKeys;
 import org.springframework.stereotype.Component;
 
 /**
- * 应用日志设置
+ * 应用 sftp 配置
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/4/15 22:00
  */
 @Component
-public class AppLogConfig {
+public class AppSftpConfig {
 
     /**
-     * 日志加载偏移行
+     * 文件预览大小
      */
-    private final ConfigRef<Integer> trackerLoadLines;
+    private final ConfigRef<Integer> previewSize;
 
     /**
-     * 日志加载间隔毫秒
+     * 重复文件备份
      */
-    private final ConfigRef<Integer> trackerLoadInterval;
+    private final ConfigRef<Boolean> uploadPresentBackup;
 
     /**
-     * 是否生成详细的执行日志
+     * 备份文件名称
      */
-    private final ConfigRef<Boolean> execDetailLog;
+    private final ConfigRef<String> uploadBackupFileName;
 
-    public AppLogConfig(ConfigStore configStore) {
-        this.trackerLoadLines = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_LINES);
-        this.trackerLoadInterval = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_INTERVAL);
-        this.execDetailLog = configStore.bool(ConfigKeys.LOG_EXEC_DETAIL_LOG);
+    public AppSftpConfig(ConfigStore configStore) {
+        this.previewSize = configStore.int32(ConfigKeys.SFTP_PREVIEW_SIZE);
+        this.uploadPresentBackup = configStore.bool(ConfigKeys.SFTP_UPLOAD_PRESENT_BACKUP);
+        this.uploadBackupFileName = configStore.string(ConfigKeys.SFTP_UPLOAD_BACKUP_FILE_NAME);
     }
 
-    public Integer getTrackerLoadLines() {
-        return trackerLoadLines.value;
+    public Integer getPreviewSize() {
+        return previewSize.value;
     }
 
-    public Integer getTrackerLoadInterval() {
-        return trackerLoadInterval.value;
+    public Boolean getUploadPresentBackup() {
+        return uploadPresentBackup.value;
     }
 
-    public Boolean getExecDetailLog() {
-        return execDetailLog.value;
+    public String getUploadBackupFileName() {
+        return uploadBackupFileName.value;
     }
 
 }

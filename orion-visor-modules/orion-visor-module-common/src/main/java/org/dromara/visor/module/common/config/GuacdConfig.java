@@ -20,43 +20,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.handler.host.transfer.model;
+package org.dromara.visor.module.common.config;
 
-import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.Data;
-
-import java.util.Date;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
- * sftp 文件备份参数
+ * guacd 配置
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/4/15 23:13
+ * @since 2025/6/9 19:41
  */
 @Data
-public class SftpFileBackupParams {
+@Component
+@ConfigurationProperties(prefix = "guacd")
+public class GuacdConfig {
 
     /**
-     * 文件名称
+     * guacd 主机
      */
-    private String fileName;
+    private String host;
 
     /**
-     * 时间戳
+     * guacd 端口
      */
-    private Long timestamp;
+    private Integer port;
 
     /**
-     * 当前时间
+     * guacd 驱动路径
      */
-    private String time;
-
-    public SftpFileBackupParams(String fileName) {
-        this.fileName = fileName;
-        Date date = new Date();
-        this.timestamp = date.getTime();
-        this.time = Dates.format(date, Dates.YMD_HMS2);
-    }
+    private String drivePath;
 
 }
