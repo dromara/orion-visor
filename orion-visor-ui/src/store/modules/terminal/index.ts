@@ -34,7 +34,7 @@ import { TerminalSessionTypes, TerminalTabs } from '@/views/terminal/types/const
 import TerminalTabManager from '@/views/terminal/service/tab/terminal-tab-manager';
 import TerminalPanelManager from '@/views/terminal/service/tab/terminal-panel-manager';
 import TerminalSessionManager from '@/views/terminal/service/session/terminal-session-manager';
-import SftpTransferManager from '@/views/terminal/service/transfer/sftp-transfer-manager';
+import TerminalTransferManager from '@/views/terminal/service/transfer/terminal-transfer-manager';
 
 // 终端偏好项
 export const TerminalPreferenceItem = {
@@ -90,7 +90,7 @@ export default defineStore('terminal', {
     tabManager: new TerminalTabManager(),
     panelManager: new TerminalPanelManager(),
     sessionManager: markRaw(new TerminalSessionManager()),
-    transferManager: new SftpTransferManager(),
+    transferManager: new TerminalTransferManager(),
   }),
 
   actions: {

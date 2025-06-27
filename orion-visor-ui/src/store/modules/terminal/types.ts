@@ -1,4 +1,4 @@
-import type { ISftpTransferManager, ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager, TerminalTheme } from '@/views/terminal/interfaces';
+import type { ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager, ITerminalTransferManager, TerminalTheme } from '@/views/terminal/interfaces';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 
 export interface TerminalState {
@@ -8,7 +8,7 @@ export interface TerminalState {
   tabManager: ITerminalTabManager;
   panelManager: ITerminalPanelManager;
   sessionManager: ITerminalSessionManager;
-  transferManager: ISftpTransferManager;
+  transferManager: ITerminalTransferManager;
 }
 
 // 终端配置
